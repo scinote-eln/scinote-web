@@ -1,6 +1,6 @@
 <template>
   <div class="relative" v-click-outside="closeMenu" >
-    <div ref="field" class="cursor-pointer" @click.stop="isOpen = (!isOpen || fieldOnlyOpen)">
+    <div ref="field" class="cursor-pointer w-full" @click.stop="isOpen = (!isOpen || fieldOnlyOpen)">
       <slot name="field"></slot>
     </div>
     <template v-if="isOpen">

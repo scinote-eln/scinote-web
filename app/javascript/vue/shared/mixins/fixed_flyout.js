@@ -1,4 +1,7 @@
 export default {
+  props: {
+    fieldOffset: { type: Object, default: () => ({ right: 0, left: 0 }) }
+  },
   data() {
     return {
       overflowContainerScrollTop: 0,
@@ -66,9 +69,9 @@ export default {
 
       if (window.innerWidth - (rect.x + flyoutRect.width) < 0) { // when flyout is out of screen
         flyout.style.left = 'unset';
-        flyout.style.right = `${width - Math.abs(right)}px`;
+        flyout.style.right = `${window.innerWidth - rect.x - this.fieldOffset.left}px`;
       } else if (this.position === 'right') {
-        flyout.style.right = `${right - rightScrollOffset}px`;
+        flyout.style.right = `${right + this.fieldOffset.right - rightScrollOffset}px`;
         flyout.style.left = 'unset';
       } else {
         flyout.style.left = `${left}px`;

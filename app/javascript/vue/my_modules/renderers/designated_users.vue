@@ -1,6 +1,6 @@
 <template>
   <div v-if="params.data.designated_users.length > 0 || params.data.permissions.manage_designated_users">
-    <GeneralDropdown @open="loadUsers" @close="closeFlyout">
+    <GeneralDropdown @open="loadUsers" @close="closeFlyout" :fieldOffset="{  left: -15, right: -10 }">
       <template v-slot:field>
         <div v-if="!params.data.folder" class="flex items-center gap-1 cursor-pointer h-9" @click="openAccessModal">
           <div v-for="(user, i) in visibleUsers" :key="i" :title="user.full_name">
@@ -17,7 +17,7 @@
         </div>
       </template>
       <template v-slot:flyout>
-        <div v-if="canManage" class="sci-input-container-v2 left-icon mb-1">
+        <div v-if="canManage" class="sci-input-container-v2 left-icon mb-1 -mx-2.5 w-[280px]">
           <input type="text"
                   v-model="query"
                   class="sci-input-field"
@@ -25,7 +25,7 @@
                   :placeholder="i18n.t('general.search')" />
           <i class="sn-icon sn-icon-search"></i>
         </div>
-        <perfect-scrollbar class="flex flex-col relative max-h-96 overflow-y-auto max-w-[280px] pr-4 pl-2 gap-y-px">
+        <perfect-scrollbar class="flex flex-col relative max-h-96 overflow-y-auto max-w-[280px] pt-1 -mx-2.5 pr-4 pl-2 gap-y-px">
           <div v-for="user in allUsers"
               :key="user.value"
               @click="selectUser(user)"
