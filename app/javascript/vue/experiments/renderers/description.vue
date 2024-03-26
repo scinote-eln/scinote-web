@@ -11,7 +11,7 @@
             v-html="params.data.sa_description">
       </span>
       <span v-else class="grow" v-html="params.data.sa_description"></span>
-      <span v-if="shouldTruncateText" @click.stop="showDescriptionModal" class="text-sn-blue cursor-pointer shrink-0 text-sm">{{ i18n.t('experiments.card.more') }}</span>
+      <span v-if="shouldTruncateText" @click.stop="showDescriptionModal" class="text-sn-blue cursor-pointer shrink-0 text-xs">{{ i18n.t('experiments.card.more') }}</span>
     </div>
   </div>
 </template>
