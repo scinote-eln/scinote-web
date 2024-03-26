@@ -716,15 +716,16 @@ var dropdownSelector = (function() {
 
     // Add timeout for deleting animation
     setTimeout(() => {
-      if (selector.data('combine-tags')) {
+      const $selector = $(selector);
+      if ($selector.data('combine-tags')) {
         // if we use combine-tags options we simply clear all values
         container.find('.data-field').val('[]');
-        updateTags(selector, container);
+        updateTags($selector, container);
       } else {
         // Or delete specific one
-        deleteValue(selector, container, tagLabel.data('ds-tag-id'), tagLabel.data('ds-tag-group'));
-        if (selector.data('config').tagClass) {
-          removeOptionFromSelector(selector, tagLabel.data('ds-tag-id'));
+        deleteValue($selector, container, tagLabel.data('ds-tag-id'), tagLabel.data('ds-tag-group'));
+        if ($selector.data('config').tagClass) {
+          removeOptionFromSelector($selector, tagLabel.data('ds-tag-id'));
         }
       }
     }, 350);

@@ -28,13 +28,6 @@ export default {
 
       return range;
     },
-    fallbackDate(customOffset = 0) {
-      const d = new Date();
-      const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-      const offset = $('#filterContainer').data('user-utc-offset');
-      const tz = new Date(utc + (1000 * offset) + (1000 * customOffset));
-      return tz;
-    },
     dateTimeFromTimeString(timeString) {
       let dateTime = new Date();
 

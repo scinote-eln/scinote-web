@@ -12,7 +12,7 @@ describe MyModuleRepositoryRow, type: :model do
   let(:my_module_repository_row_stock) { create :mm_repository_row,
                                                  repository_row: repository_row,
                                                  assigned_by: user,
-                                                 last_modified_by: user
+                                                 last_modified_by_id: user.id
                                         }
 
   it 'is valid' do

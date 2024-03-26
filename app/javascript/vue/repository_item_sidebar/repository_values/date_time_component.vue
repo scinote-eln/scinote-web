@@ -100,6 +100,8 @@ export default {
           return this.i18n.t('repositories.item_card.repository_time_value.placeholder');
         case 'datetime':
           return this.i18n.t('repositories.item_card.repository_date_time_value.placeholder');
+        default:
+          return '';
       }
     },
     viewPlaceholder() {
@@ -119,6 +121,8 @@ export default {
             return this.i18n.t('repositories.item_card.repository_date_time_range_value.no_date_time_range');
           }
           return this.i18n.t('repositories.item_card.repository_date_time_value.no_date_time');
+        default:
+          return '';
       }
     }
   },
@@ -131,10 +135,26 @@ export default {
       this.endDate = date;
       if (!(this.endDate instanceof Date)) this.update();
     },
+    trimSecondsAndMilliseconds(date) {
+      if (!date) return null;
+      if (!(date instanceof Date)) return null;
+
+      if (this.mode === 'time') {
+        return new Date().setHours(date.getHours(), date.getMinutes(), 0, 0);
+      }
+
+      return date.setSeconds(0, 0);
+    },
     validateValue() {
       this.error = null;
+      const oldStart = this.trimSecondsAndMilliseconds(this.defaultStartDate);
+      const oldEnd = this.trimSecondsAndMilliseconds(this.defaultEndDate);
+      const newStart = this.trimSecondsAndMilliseconds(this.startDate);
+      const newEnd = this.trimSecondsAndMilliseconds(this.endDate);
       // Date is not changed
-      if (this.defaultStartDate === this.startDate && this.defaultEndDate === this.endDate) return false;
+      if (oldEnd) {
+        if (oldStart === newStart && oldEnd === newEnd) return false;
+      } else if (oldStart === newStart) return false;
 
       if (this.range) {
         // Both empty

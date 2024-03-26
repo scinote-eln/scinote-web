@@ -1,5 +1,5 @@
 <template>
-  <div class="date-time-picker grow">
+  <div class="date-time-picker grow" :class="`size-${size}`" >
     <VueDatePicker
       ref="datetimePicker"
       :class="{
@@ -27,7 +27,10 @@
         <template #arrow-left>
             <img class="slot-icon" src="/images/calendar/navigate_before.svg"/>
         </template>
-        <template v-if="mode == 'time'" #input-icon>
+        <template v-if="customIcon" #input-icon>
+            <i :class="customIcon + ' -ml-1'"></i>
+        </template>
+        <template v-else-if="mode == 'time'" #input-icon>
             <img class="input-slot-image" src="/images/calendar/clock.svg"/>
         </template>
         <template v-else #input-icon>
@@ -63,7 +66,9 @@ export default {
     standAlone: { type: Boolean, default: false, required: false },
     dateClassName: { type: String, default: '' },
     timeClassName: { type: String, default: '' },
-    disabled: { type: Boolean, default: false }
+    disabled: { type: Boolean, default: false },
+    customIcon: { type: String },
+    size: { type: String, default: 'xs' }
   },
   data() {
     return {
@@ -101,7 +106,7 @@ export default {
       }
     },
     datetime() {
-      if (this.mode == 'time') {
+      if (this.mode === 'time') {
         this.time = null;
 
         if (this.datetime instanceof Date) {
@@ -123,7 +128,7 @@ export default {
         this.$emit('cleared');
       }
 
-      if (this.defaultValue != this.datetime) {
+      if (this.defaultValue !== this.datetime) {
         this.$emit('change', this.datetime);
       }
     },
@@ -133,7 +138,7 @@ export default {
         return;
       }
 
-      if (this.mode != 'time') return;
+      if (this.mode !== 'time') return;
 
       let newDate;
 
@@ -149,7 +154,7 @@ export default {
         this.$emit('cleared');
       }
 
-      if (this.defaultValue != newDate) {
+      if (this.defaultValue !== newDate) {
         this.$emit('change', newDate);
       }
     }
@@ -157,13 +162,13 @@ export default {
   computed: {
     compDatetime: {
       get() {
-        if (this.mode == 'time') {
+        if (this.mode === 'time') {
           return this.time;
         }
         return this.datetime;
       },
       set(val) {
-        if (this.mode == 'time') {
+        if (this.mode === 'time') {
           this.time = val;
         } else {
           this.datetime = val;
@@ -171,8 +176,8 @@ export default {
       }
     },
     format() {
-      if (this.mode == 'time') return 'HH:mm';
-      if (this.mode == 'date') return document.body.dataset.datetimePickerFormatVue;
+      if (this.mode === 'time') return 'HH:mm';
+      if (this.mode === 'date') return document.body.dataset.datetimePickerFormatVue;
       return `${document.body.dataset.datetimePickerFormatVue} HH:mm`;
     }
   },

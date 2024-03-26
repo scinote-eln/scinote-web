@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:  url('fonts/SN-icon-font.eot?h4j5vh');
-  src:  url('fonts/SN-icon-font.eot?h4j5vh#iefix') format('embedded-opentype'),
-    url('fonts/SN-icon-font.woff2?h4j5vh') format('woff2'),
-    url('fonts/SN-icon-font.ttf?h4j5vh') format('truetype'),
-    url('fonts/SN-icon-font.woff?h4j5vh') format('woff'),
-    url('fonts/SN-icon-font.svg?h4j5vh#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?ipmaca');
+  src:  url('fonts/SN-icon-font.eot?ipmaca#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?ipmaca') format('woff2'),
+    url('fonts/SN-icon-font.ttf?ipmaca') format('truetype'),
+    url('fonts/SN-icon-font.woff?ipmaca') format('woff'),
+    url('fonts/SN-icon-font.svg?ipmaca#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -469,4 +469,40 @@
 }
 .sn-icon-pinned:before {
   content: "\e994";
+}
+.sn-icon-teams-small:before {
+  content: "\e991";
+}
+.sn-icon-manage-columns:before {
+  content: "\e995";
+}
+.sn-icon-expand-right:before {
+  content: "\e996";
+}
+.sn-icon-collapse-left:before {
+  content: "\e997";
+}
+.sn-icon-collapse-all:before {
+  content: "\e998";
+}
+.sn-icon-expand-all:before {
+  content: "\e999";
+}
+.sn-icon-clear-notifications:before {
+  content: "\e99a";
+}
+.sn-icon-label-templates:before {
+  content: "\e99b";
+}
+.sn-icon-file:before {
+  content: "\e99c";
+}
+.sn-icon-corner-gripper:before {
+  content: "\e99d";
+}
+.sn-icon-Stock:before {
+  content: "\e99e";
+}
+.sn-icon-Publish:before {
+  content: "\e99f";
 }

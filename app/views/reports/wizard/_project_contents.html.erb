@@ -22,7 +22,7 @@
         </div>
       </div>
       <ul class="experiment-contents collapse in" id="experimentContentContainer<%= experiment.id %>">
-        <% experiment.my_modules.viewable_by_user(current_user, current_team).active.sort_by { |m| @project_contents[:my_modules].index(m.id) || @project_contents[:my_modules].length if report }.each do |my_module| %>
+        <% experiment.my_modules.viewable_by_user(current_user, current_team).active.order(id: :asc).each do |my_module| %>
           <li class="experiment-my-module">
             <span class="sci-checkbox-container">
               <input type="checkbox" value="<%= my_module.id %>" class="sci-checkbox report-my-module-checkbox"

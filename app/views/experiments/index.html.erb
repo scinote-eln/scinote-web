@@ -1,0 +1,18 @@
+<% provide(:head_title, t("projects.show.head_title", project: h(@project.name)).html_safe) %>
+
+<div class="content-pane flexible projects-show">
+  <%= render partial: 'experiments/index/header' %>
+  <div id="ExperimentsList" class="fixed-content-body">
+    <experiments-list
+      actions-url="<%= actions_toolbar_experiments_path %>"
+      create-url="<%= project_experiments_path(@project) if can_create_project_experiments?(@project) %>"
+      data-source="<%= experiments_path(project_id: @project, format: :json) %>"
+      active-page-url="<%= experiments_path(project_id: @project, view_mode: :active) %>"
+      archived-page-url="<%= experiments_path(project_id: @project, view_mode: :archived) %>"
+      current-view-mode="<%= params[:view_mode] || :active %>"
+      user-roles-url="<%= user_roles_projects_path %>"
+      :archived="<%= @project.archived?%>"
+    />
+  </div>
+  <%= javascript_include_tag 'vue_experiments_list' %>
+</div>

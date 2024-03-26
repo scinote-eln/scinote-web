@@ -10,11 +10,19 @@
       @dropdown:changed="updateOperator" />
     </div>
     <div class="filter-datepicker-input">
-      <DateTimePicker @change="updateDate" :data-e2e="`e2e-TP-invInventoryFilterCO-inputFrom${this.filter.column.id}`" :selectorId="`TimePicker${filter.id}`" :mode="'time'"  :defaultValue="date || fallbackDate()" />
+      <DateTimePicker @change="updateDate"
+                      :data-e2e="`e2e-TP-invInventoryFilterCO-inputFrom${this.filter.column.id}`"
+                      :selectorId="`TimePicker${filter.id}`"
+                      :mode="'time'"
+                      :defaultValue="date" />
     </div>
     <span class="between-delimiter">—</span>
     <div class="filter-datepicker-to-input">
-      <DateTimePicker @change="updateDateTo" :data-e2e="`e2e-TP-invInventoryFilterCO-inputTo${this.filter.column.id}`" :selectorId="`TimePickerTo${filter.id}`" :mode="'time'" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
+      <DateTimePicker @change="updateDateTo"
+                      :data-e2e="`e2e-TP-invInventoryFilterCO-inputTo${this.filter.column.id}`"
+                      :selectorId="`TimePickerTo${filter.id}`"
+                      :mode="'time'"
+                      :defaultValue="dateTo" />
     </div>
   </div>
 </template>
@@ -22,7 +30,7 @@
 <script>
 import FilterMixin from '../mixins/filter.js';
 import RangeDateTimeFilterMixin from '../mixins/filters/range_date_time_filter.js';
-import DropdownSelector from '../../shared/dropdown_selector.vue';
+import DropdownSelector from '../../shared/legacy/dropdown_selector.vue';
 import DateTimePicker from '../../shared/date_time_picker.vue';
 
 export default {

@@ -1,5 +1,5 @@
 <template>
-  <div ref="modal" class="modal" tabindex="-1" role="dialog">
+  <div ref="modal" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog !w-[900px]" role="document">
       <div class="modal-content !p-0 grid grid-cols-3">
         <div class="bg-sn-super-light-grey p-6 mb-1.5">

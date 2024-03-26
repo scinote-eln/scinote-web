@@ -25,14 +25,46 @@
       </div>
     </div>
     <div class="protocols-container">
-      <%= render partial: "protocols/index/protocols_datatable" %>
-
-      <div id="actionToolbar" data-behaviour="vue">
-        <action-toolbar actions-url="<%= actions_toolbar_protocols_url %>" />
+      <div id="ProtocolsTable" class="fixed-content-body">
+        <protocols-table
+          ref="table"
+          :actions-url="'<%= actions_toolbar_protocols_url %>'"
+          :data-source="'<%= protocols_path(format: :json) %>'"
+          :active-page-url="'<%= protocols_path %>'"
+          :archived-page-url="'<%= protocols_path(view_mode: :archived) %>'"
+          current-view-mode="<%= params[:view_mode] || :active %>"
+          :docx-parser-enabled="<%= Protocol.docx_parser_enabled? %>"
+          user-roles-url="<%= user_roles_protocols_path %>"
+          :create-url="'<%= protocols_path if can_create_protocols_in_repository?(current_team) %>'"
+          users-filter-url="<%= users_filter_projects_path %>"
+        />
       </div>
     </div>
   </div>
 <% end %>
+
+<%= javascript_include_tag 'vue_protocols_list' %>
+
+<!-- Legacy code -->
+<a class="btn-open-file tw-hidden" data-action='import' >
+  <input type="file" ref="importFileBtn" value="" id="importFileInput" accept=".eln" data-role="import-file-input"
+         data-team-id="<%= current_team.id %>" data-import-url="<%= import_protocols_path %>">
+</a>
+<a class="btn-open-file tw-hidden" data-action='import' >
+  <input type="file" value="" id="importDocx"  accept=".docx" data-role="import-file-input"
+  data-team-id="<%= @current_team.id %>" data-import-url="<%= import_protocols_path %>">
+</a>
+<%= link_to t("protocols.index.import_protocols_io"), '',
+            id: "importProtocolsIo",
+            class: 'tw-hidden',
+            data: { target: '#protocolsioModal', toggle: 'modal' } %>
+
+<%= render partial: "protocols/index/protocol_preview_modal" %>
+<%= render partial: "protocols/index/protocolsio_modal" %>
+<div id="protocolsio-preview-modal-target"></div>
+<%= javascript_include_tag "protocols/index" %>
+<%= javascript_include_tag "handsontable.full" %>
+<%= render partial: "shared/formulas_libraries" %>
 
 <div id="protocolFileImportModal">
   <protocol-file-import-modal
@@ -40,27 +72,9 @@
     protocol-template-table-url="<%= protocols_path %>"
   />
 </div>
-<%= javascript_include_tag 'vue_protocol_file_import_modal' %>
-
-<div id="protocolsio-preview-modal-target"></div>
-<%= render partial: "protocols/index/general_toolbar" %>
-<%= render partial: "protocols/index/protocol_filters" %>
-<%= render partial: "protocols/index/delete_draft_modal" %>
-<%= render partial: "protocols/index/linked_children_modal" %>
-<%= render partial: "protocols/index/protocol_preview_modal" %>
-<%= render partial: "protocols/index/protocolsio_modal" %>
-<%= render partial: "protocols/index/new_protocol_modal", locals: {type: 'new'} %>
 
 <%= render partial: "protocols/import_export/import_elements" %>
-<%= javascript_include_tag "vue_components_action_toolbar" %>
-<%= javascript_include_tag "handsontable.full" %>
-
-<!-- Libraries for formulas -->
-<%= render partial: "shared/formulas_libraries" %>
-
-<%= stylesheet_link_tag 'datatables' %>
+<%= javascript_include_tag 'vue_protocol_file_import_modal' %>
 <%= javascript_include_tag "assets/wopi/create_wopi_file" %>
-<%= javascript_include_tag "protocols/index" %>
-<%= javascript_include_tag "protocols/new_protocol" %>
 <%= javascript_include_tag 'pdf_js' %>
 <%= stylesheet_link_tag 'pdf_js_styles' %>

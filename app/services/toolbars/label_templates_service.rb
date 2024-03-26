@@ -56,8 +56,8 @@ module Toolbars
         name: 'set_as_default',
         label: I18n.t("label_templates.index.toolbar.set_#{@label_templates.first.type}_default"),
         icon: 'fas fa-thumbtack',
-        button_id: 'setZplDefaultLabelTemplate',
-        type: :legacy
+        path: set_default_label_template_path(@label_templates.first),
+        type: :emit
       }
     end
 
@@ -70,9 +70,8 @@ module Toolbars
         name: 'duplicate',
         label: I18n.t('label_templates.index.toolbar.duplicate'),
         icon: 'sn-icon sn-icon-duplicate',
-        button_id: 'duplicateLabelTemplate',
         path: duplicate_label_templates_path,
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -87,8 +86,8 @@ module Toolbars
         name: 'delete',
         label: I18n.t('label_templates.index.toolbar.delete'),
         icon: 'sn-icon sn-icon-delete',
-        button_id: 'deleteLabelTemplate',
-        type: :legacy
+        path: delete_label_templates_path,
+        type: :emit
       }
     end
   end

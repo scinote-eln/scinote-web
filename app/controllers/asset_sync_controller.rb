@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AssetSyncController < ApplicationController
+  include FileIconsHelper
+
   skip_before_action :authenticate_user!, only: %i(update download)
   skip_before_action :verify_authenticity_token, only: %i(update download)
   before_action :authenticate_asset_sync_token!, only: %i(update download)
@@ -36,9 +38,19 @@ class AssetSyncController < ApplicationController
       return
     end
 
+    orig_file_size = @asset.file_size
+
     ActiveRecord::Base.transaction do
       @asset.update(last_modified_by: current_user)
-      @asset.file.attach(io: request.body, filename: @asset.file.filename)
+      if wopi_file?(@asset)
+        @asset.update_contents(request.body)
+      else
+        @asset.file.attach(io: request.body, filename: @asset.file.filename)
+        @asset.touch
+      end
+
+      @asset.team.release_space(orig_file_size)
+      @asset.post_process_file
 
       log_activity(:edit)
     end
@@ -75,10 +87,14 @@ class AssetSyncController < ApplicationController
     Asset.transaction do
       new_asset = @asset.dup
       new_asset.save
-      new_asset.file.attach(
+
+      blob = ActiveStorage::Blob.create_and_upload!(
         io: request.body,
-        filename: "#{@asset.file.filename.base} (#{t('general.copy')}).#{@asset.file.filename.extension}"
+        filename: "#{@asset.file.filename.base} (#{t('general.copy')}).#{@asset.file.filename.extension}",
+        metadata: @asset.blob.metadata
       )
+
+      new_asset.file.attach(blob)
 
       case @asset.parent
       when Step
@@ -88,6 +104,8 @@ class AssetSyncController < ApplicationController
       end
 
       @asset = new_asset.reload
+
+      new_asset.post_process_file
 
       current_user.asset_sync_tokens.create!(asset_id: new_asset.id)
     end

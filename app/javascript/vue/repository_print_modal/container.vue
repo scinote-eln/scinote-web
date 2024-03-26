@@ -1,6 +1,6 @@
 <template>
   <div ref="modal" class="modal fade" id="modal-print-repository-row-label" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document" data-e2e="e2e-MD-printLabel">
+    <div class="modal-dialog" role="document" data-e2e="e2e-MD-printLabel" v-if="showModal && fetchedPrintersAndTemplates">
       <div class="modal-content">
         <div v-if="availablePrinters.length > 0" class="printers-available">
           <div class="modal-header">
@@ -92,8 +92,7 @@
 
 <script>
 /* global HelperModule */
-
-import DropdownSelector from '../shared/dropdown_selector.vue';
+import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
 import LabelPreview from '../label_template/components/label_preview.vue';
 
 export default {
@@ -114,7 +113,8 @@ export default {
       copies: 1,
       zebraPrinters: null,
       labelTemplateError: null,
-      labelTemplateCode: null
+      labelTemplateCode: null,
+      fetchedPrintersAndTemplates: false
     };
   },
   components: {
@@ -122,13 +122,18 @@ export default {
     LabelPreview
   },
   mounted() {
-    $.get(this.urls.labelTemplates, (result) => {
-      this.templates = result.data;
-      this.selectDefaultLabelTemplate();
-    });
+    $(this.$refs.modal).on('show.bs.modal', () => {
+      if (!this.fetchedPrintersAndTemplates) {
+        $.get(this.urls.labelTemplates, (result) => {
+          this.templates = result.data;
+          this.selectDefaultLabelTemplate();
+        });
 
-    $.get(this.urls.printers, (result) => {
-      this.printers = result.data;
+        $.get(this.urls.printers, (result) => {
+          this.printers = result.data;
+        });
+        this.fetchedPrintersAndTemplates = true;
+      }
     });
 
     $(this.$refs.modal).on('hidden.bs.modal', () => {
@@ -165,7 +170,9 @@ export default {
       if (this.showModal) {
         this.initZebraPrinter();
         $(this.$refs.modal).modal('show');
-        this.validateTemplate();
+        if (!this.fetchedPrintersAndTemplates) {
+          this.validateTemplate();
+        }
       }
     },
     row_ids() {

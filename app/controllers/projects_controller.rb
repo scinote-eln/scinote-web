@@ -8,98 +8,38 @@ class ProjectsController < ApplicationController
   include CardsViewHelper
   include ExperimentsHelper
   include Breadcrumbs
+  include UserRolesHelper
 
   attr_reader :current_folder
 
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(show permissions edit update notifications
-                                     sidebar experiments_cards view_type actions_dropdown create_tag)
-  before_action :load_current_folder, only: %i(index cards new show)
-  before_action :check_view_permissions, except: %i(index cards new create edit update archive_group restore_group
-                                                    users_filter actions_dropdown inventory_assigning_project_filter
-                                                    actions_toolbar)
-  before_action :check_create_permissions, only: %i(new create)
-  before_action :check_manage_permissions, only: :edit
-  before_action :load_exp_sort_var, only: :show
-  before_action :reset_invalid_view_state, only: %i(index cards show)
+  before_action :load_vars, only: %i(update notifications create_tag)
+  before_action :load_current_folder, only: :index
+  before_action :check_view_permissions, except: %i(index create update archive_group restore_group
+                                                    inventory_assigning_project_filter
+                                                    actions_toolbar user_roles users_filter)
+  before_action :check_create_permissions, only: :create
+  before_action :check_manage_permissions, only: :update
   before_action :set_folder_inline_name_editing, only: %i(index cards)
-  before_action :set_breadcrumbs_items, only: %i(index show)
-  before_action :set_navigator, only: %i(index show)
-  before_action :set_current_projects_view_type, only: %i(index cards)
+  before_action :set_breadcrumbs_items, only: :index
+  before_action :set_navigator, only: :index
   layout 'fluid'
 
-  def index; end
-
-  def cards
-    overview_service = ProjectsOverviewService.new(current_team, current_user, current_folder, params)
-    title = params[:view_mode] == 'archived' ? t('projects.index.head_title_archived') : t('projects.index.head_title')
-
-    if filters_included?
-      render json: {
-        toolbar_html: render_to_string(partial: 'projects/index/toolbar'),
-        filtered: true,
-        cards_html: render_to_string(
-          partial: 'projects/index/team_projects_grouped_by_folder',
-          locals: { projects_by_folder: overview_service.grouped_by_folder_project_cards }
-        )
-      }
-    else
-      if current_folder
-        projects_cards_url = project_folder_cards_url(current_folder)
-        title_html = if @inline_editable_title_config.present?
-                       render_to_string(partial: 'shared/inline_editing',
-                                        locals: {
-                                          initial_value: current_folder&.name,
-                                          config: @inline_editable_title_config
-                                        })
-                     else
-                       escape_input(current_folder.name)
-                     end
-      else
-        projects_cards_url = cards_projects_url
-        title_html = title
+  def index
+    respond_to do |format|
+      format.json do
+        projects = Lists::ProjectsService.new(current_team, current_user, current_folder, params).call
+        render json: projects, each_serializer: Lists::ProjectAndFolderSerializer, user: current_user,
+               meta: pagination_dict(projects)
       end
-
-      cards = Kaminari.paginate_array(overview_service.project_and_folder_cards)
-                      .page(params[:page] || 1).per(Constants::DEFAULT_ELEMENTS_PER_PAGE)
-
-      render json: {
-        projects_cards_url: projects_cards_url,
-        title_html: title_html,
-        next_page: cards.next_page,
-        cards_html: render_to_string(
-          partial: 'projects/index/team_projects',
-          locals: { cards: cards, view_mode: params[:view_mode] }
-        )
-      }
+      format.html do
+        render 'projects/index'
+      end
     end
   end
 
-  def permissions
-    if stale?([@product, current_team])
-      render json: {
-        editable: can_manage_project?(@project),
-        moveable: can_manage_team?(current_team),
-        archivable: can_archive_project?(@project),
-        restorable: can_restore_project?(@project)
-      }
-    end
-  end
-
-  def sidebar
-    @current_sort = params[:sort] || @project.current_view_state(current_user)
-                                             .state.dig('experiments', params[:view_mode], 'sort')
-    render json: {
-      html: render_to_string(
-        partial: 'shared/sidebar/experiments', locals: {
-          project: @project,
-          view_mode: experiments_view_mode(@project)
-        }
-      )
-    }
-  end
 
   def inventory_assigning_project_filter
     viewable_experiments = Experiment.viewable_by_user(current_user, current_team)
@@ -110,19 +50,13 @@ class ProjectsController < ApplicationController
                       .joins(experiments: :my_modules)
                       .where(experiments: { id: viewable_experiments })
                       .where(my_modules: { id: assignable_my_modules })
+                      .order(:name)
                       .distinct
                       .pluck(:id, :name)
 
     return render plain: [].to_json if projects.blank?
 
     render json: projects
-  end
-
-  def new
-    @project = current_team.projects.new(project_folder: current_folder)
-    render json: {
-      html: render_to_string(partial: 'projects/index/modals/new_project')
-    }
   end
 
   def create
@@ -137,14 +71,6 @@ class ProjectsController < ApplicationController
     else
       render json: @project.errors, status: :unprocessable_entity
     end
-  end
-
-  def edit
-    render json: {
-      html: render_to_string(partial: 'projects/index/modals/edit_project_contents',
-                             formats: :html,
-                             locals: { project: @project })
-    }
   end
 
   def update
@@ -321,72 +247,25 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def show
-    view_state = @project.current_view_state(current_user)
-    @current_sort = view_state.state.dig('experiments', experiments_view_mode(@project), 'sort') || 'atoz'
-    @current_view_type = view_state.state.dig('experiments', 'view_type')
-    @project_is_managable = can_manage_project?(@project)
-    set_inline_name_editing if @project_is_managable
-  end
-
-  def experiments_cards
-    overview_service = ExperimentsOverviewService.new(@project, current_user, params)
-    cards = overview_service.experiments
-                            .preload(my_modules: { my_module_status: :my_module_status_implications })
-                            .page(params[:page] || 1)
-                            .per(Constants::DEFAULT_ELEMENTS_PER_PAGE)
-    render json: {
-      next_page: cards.next_page,
-      cards_html: render_to_string(
-        partial: 'projects/show/experiments_list',
-        locals: { cards: cards,
-                  view_mode: params[:view_mode],
-                  filters_included: filters_included? }
-      )
-    }
-  end
-
-  def notifications
-    @modules = @project.assigned_modules(current_user).order(due_date: :desc)
-    render json: {
-      html: render_to_string(partial: 'notifications', formats: :html)
-    }
-  end
-
   def users_filter
     users = current_team.users.search(false, params[:query]).map do |u|
-      { value: u.id, label: escape_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
+      [u.id, u.name, { avatar_url: avatar_path(u, :icon_small) }]
     end
 
-    render json: users, status: :ok
+    render json: { data: users }, status: :ok
   end
 
-  def view_type
-    view_state = @project.current_view_state(current_user)
-    view_state.state['experiments']['view_type'] = view_type_params
-    view_state.save!
-
-    render json: { cards_view_type_class: cards_view_type_class(view_type_params) }, status: :ok
+  def user_roles
+    render json: { data: user_roles_collection(Project.new).map(&:reverse) }
   end
 
-  def actions_dropdown
-    if stale?(@project)
-      render json: {
-        html: render_to_string(
-          partial: 'projects/index/project_actions_dropdown',
-          locals: { project: @project }
-        )
-      }
-    end
-  end
 
   def actions_toolbar
     render json: {
       actions:
         Toolbars::ProjectsService.new(
           current_user,
-          project_ids: params[:project_ids].split(','),
-          project_folder_ids: params[:project_folder_ids].split(',')
+          items: JSON.parse(params[:items])
         ).actions
     }
   end
@@ -464,30 +343,6 @@ class ProjectsController < ApplicationController
     }
   end
 
-  def load_exp_sort_var
-    if params[:sort]
-      @project.experiments_order = params[:sort].to_s
-      @project.save
-    end
-    @current_sort = @project.experiments_order || 'new'
-  end
-
-  def filters_included?
-    %i(search created_on_from created_on_to updated_on_from updated_on_to members
-       archived_on_from archived_on_to folders_search)
-      .any? { |param_name| params.dig(param_name).present? }
-  end
-
-  def reset_invalid_view_state
-    view_state = if action_name == 'show'
-                   @project.current_view_state(current_user)
-                 else
-                   current_team.current_view_state(current_user)
-                 end
-
-    view_state.destroy unless view_state.valid?
-  end
-
   def log_activity(type_of, project = nil, message_items = {})
     project ||= @project
     message_items = { project: project.id }.merge(message_items)
@@ -520,13 +375,5 @@ class ProjectsController < ApplicationController
                      archived: params[:view_mode] == 'archived'
                    }
                  end
-  end
-
-  def set_current_projects_view_type
-    if current_team
-      view_state = current_team.current_view_state(current_user)
-      @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
-      @current_view_type = view_state.state.dig('projects', 'view_type')
-    end
   end
 end

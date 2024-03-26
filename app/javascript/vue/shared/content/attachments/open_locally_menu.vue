@@ -1,6 +1,10 @@
 <template>
   <div class="sn-open-locally-menu" @mouseenter="fetchLocalAppInfo">
-    <div v-if="!canOpenLocally && (attachment.attributes.wopi && attachment.attributes.urls.edit_asset)">
+    <button class="btn btn-light" v-if="!editWopiSupported" style="pointer-events: all;"
+        :title="attachment.attributes.wopi_context.title" disabled="true">
+      {{ attachment.attributes.wopi_context.button_text }}
+    </button>
+    <div v-else-if="!canOpenLocally && (attachment.attributes.wopi && attachment.attributes.urls.edit_asset)">
       <a :href="`${attachment.attributes.urls.edit_asset}`" target="_blank"
       class="block whitespace-nowrap rounded px-3 py-2.5
               hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey">
@@ -99,6 +103,9 @@ export default {
     usesWebIntegration() {
       return this.attachment.attributes.asset_type === 'gene_sequence'
         || this.attachment.attributes.asset_type === 'marvinjs';
+    },
+    editWopiSupported() {
+      return this.attachment.attributes.wopi_context.edit_supported;
     }
   },
   methods: {

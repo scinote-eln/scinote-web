@@ -8,7 +8,6 @@
 // Currently selected row in "load from protocol" modal
 var selectedRow = null;
 
-
 function initEditMyModuleDescription() {
   var viewObject = $('#my_module_description_view');
   viewObject.on('click', function(e) {
@@ -305,6 +304,39 @@ function initProtocolSectionOpenEvent() {
     });
   });
 }
+
+function initAccessModal() {
+  $('#openAccessModal').on('click', (e) => {
+    e.preventDefault();
+    const container = document.getElementById('accessModalContainer');
+    $.get(container.dataset.url, (data) => {
+      const object = {
+        ...data.data.attributes,
+        id: data.data.id,
+        type: data.data.type
+      };
+      const { rolesUrl } = container.dataset;
+      const params = {
+        object: object,
+        roles_path: rolesUrl
+      };
+      const modal = $('#accessModalComponent').data('accessModal');
+      modal.params = params;
+      modal.open();
+    });
+  });
+}
+
+function initWrapTables() {
+  const viewMode = new URLSearchParams(window.location.search).get('view_mode');
+  if (['archived', 'locked', 'active'].includes(viewMode)) {
+    setTimeout(() => {
+      const notesContainerEl = document.getElementById('notes-container');
+      window.wrapTables(notesContainerEl);
+    }, 100);
+  }
+}
+
 /**
  * Initializes page
  */
@@ -315,6 +347,8 @@ function init() {
   initLoadFromRepository();
   initProtocolSectionOpenEvent();
   initDetailsDropdown();
+  initAccessModal();
+  initWrapTables();
 }
 
 init();

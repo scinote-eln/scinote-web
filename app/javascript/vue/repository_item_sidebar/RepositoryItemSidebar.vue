@@ -504,7 +504,8 @@ export default {
         '.modal',
         '.dp__instance_calendar',
         '.label-printing-progress-modal',
-        '.atwho-view'
+        '.atwho-view',
+        '.sn-select-dropdown'
       ];
 
       const excludeSelectors = ['#myModuleRepositoryFullViewModal'];
@@ -565,7 +566,7 @@ export default {
       }
       axios.get(
         repositoryRowUrl,
-        { my_module_id: this.myModuleId }
+        { params: { my_module_id: this.myModuleId } }
       ).then((response) => {
         const result = response.data;
         this.repositoryRowId = result.id;

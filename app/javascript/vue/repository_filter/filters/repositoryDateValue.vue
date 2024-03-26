@@ -11,11 +11,18 @@
     </div>
     <template v-if="!isPreset">
       <div class="filter-datepicker-input">
-        <DateTimePicker @change="updateDate" :data-e2e="`e2e-DP-invInventoryFilterCO-input${this.filter.column.id}`" :selectorId="`DatePicker${filter.id}`" :mode="'date'" :defaultValue="date || fallbackDate()" />
+        <DateTimePicker @change="updateDate"
+                        :data-e2e="`e2e-DP-invInventoryFilterCO-input${this.filter.column.id}`"
+                        :selectorId="`DatePicker${filter.id}`"
+                        :mode="'date'"
+                        :defaultValue="date" />
       </div>
       <span class="between-delimiter" v-if="operator == 'between'">—</span>
       <div class="filter-datepicker-to-input" v-if="operator == 'between'">
-        <DateTimePicker @change="updateDateTo" :data-e2e="`e2e-DP-invInventoryFilterCO-inputUpdate${this.filter.column.id}`" :selectorId="`DatePickerTo${filter.id}`" :mode="'date'" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
+        <DateTimePicker @change="updateDateTo"
+                        :data-e2e="`e2e-DP-invInventoryFilterCO-inputUpdate${this.filter.column.id}`"
+                        :selectorId="`DatePickerTo${filter.id}`"
+                        :mode="'date'" :defaultValue="dateTo" />
       </div>
     </template>
   </div>
@@ -24,7 +31,7 @@
 <script>
 import FilterMixin from '../mixins/filter.js';
 import DateTimeFilterMixin from '../mixins/filters/date_time_filter.js';
-import DropdownSelector from '../../shared/dropdown_selector.vue';
+import DropdownSelector from '../../shared/legacy/dropdown_selector.vue';
 import DateTimePicker from '../../shared/date_time_picker.vue';
 
 export default {

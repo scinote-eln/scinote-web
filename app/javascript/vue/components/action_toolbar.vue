@@ -15,7 +15,7 @@
           <div v-if="action.type === 'group' && Array.isArray(action.actions) && action.actions.length > 1" class="export-actions-dropdown sci-dropdown dropup">
             <button class="btn btn-primary dropdown-toggle single-object-action rounded" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-e2e="e2e-DD-actionToolbar-export">
               <i class="sn-icon sn-icon-export"></i>
-              <span>{{ action.group_label }}</span>
+              <span class="sn-action-toolbar__button-text">{{ action.group_label }}</span>
               <span class="sn-icon sn-icon-down"></span>
             </button>
             <ul class="sci-dropdown dropup dropdown-menu dropdown-menu-right px-2" aria-labelledby="<%= id %>">
@@ -31,7 +31,7 @@
                   :data-object-id="groupAction.item_id"
                   :data-action="groupAction.type"
                   @click="closeExportDropdown($event); doAction(groupAction, $event);">
-                  <span class="sn-action-toolbar__button-text">{{ groupAction.label }}</span>
+                  <span>{{ groupAction.label }}</span>
                 </a>
               </li>
             </ul>

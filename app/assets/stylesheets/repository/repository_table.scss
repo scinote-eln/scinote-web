@@ -256,6 +256,12 @@
   .dropdown-selector-container {
     width: 150px;
 
+    .dropdown-container {
+      left: 0 !important;
+      margin: 0 !important;
+      position: absolute !important;
+    }
+
     .emoji-status {
       .emoji {
         height: 24px;

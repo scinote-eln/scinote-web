@@ -1,0 +1,27 @@
+<% provide(:head_title, t("projects.show.head_title", project: h(@experiment.name)).html_safe) %>
+
+<div class="content-pane flexible">
+  <%= render partial: 'my_modules/index/header' %>
+  <div id="MyModulesList" class="fixed-content-body">
+    <% view_mode = params[:view_mode] || 'active' %>
+    <my-modules-list
+      actions-url="<%= actions_toolbar_my_modules_path %>"
+      create-url="<%= modules_experiment_path(@experiment) if can_manage_experiment?(@experiment) %>"
+      data-source="<%= my_modules_path(experiment_id: @experiment, format: :json) %>"
+      active-page-url="<%= my_modules_path(experiment_id: @experiment, view_mode: :active) %>"
+      archived-page-url="<%= my_modules_path(experiment_id: @experiment, view_mode: :archived) %>"
+      current-view-mode="<%= view_mode %>"
+      assigned-users-url="<%= (assigned_users_experiment_path(@experiment) if can_designate_users_to_new_task?(@experiment)) %>"
+      current-user-id="<%= current_user.id %>"
+      users-filter-url="<%= users_filter_projects_path %>"v
+      user-roles-url="<%= user_roles_projects_path %>"
+      :tags-colors="<%= Constants::TAG_COLORS.to_json %>"
+      project-name="<%= @experiment.project.name %>"
+      :statuses-list="<%= MyModuleStatus.all.order(:id).map{ |i| [i.id, i.name] }.to_json %>"
+      project-tags-url="<%= project_tags_path(@experiment.project) %>"
+      canvas-url="<%= view_mode == 'active' ? canvas_experiment_path(@experiment) : module_archive_experiment_path(@experiment) %>"
+      :archived="<%= @experiment.archived_branch?%>"
+    />
+  </div>
+  <%= javascript_include_tag 'vue_my_modules_list' %>
+</div>

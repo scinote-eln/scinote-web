@@ -4,8 +4,12 @@
     @apply text-sm font-medium text-sn-dark-grey;
   }
 
+  .sci-label.error {
+    @apply text-sn-coral;
+  }
+
   .sci-input-container-v2 {
-    @apply relative h-[2.75rem] flex items-center;
+    @apply relative h-[2.75rem] flex items-center transition-all;
   }
 
   .sci-input-container-v2.input-sm {
@@ -22,6 +26,18 @@
 
   .sci-input-container-v2 .error {
     @apply !border-sn-coral;
+  }
+
+  .sci-input-container-v2.error::before {
+    @apply !text-sn-coral;
+    @apply !text-xs;
+
+    bottom: -1rem;
+    content: attr(data-error-text);
+    left: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 100%;
   }
 
   .sci-input-container-v2 input:focus {
@@ -76,5 +92,14 @@
 
   .sci-input-container-v2 .history-flyout li:hover {
     @apply bg-sn-super-light-grey;
+  }
+
+  .sci-input-container-v2.error input {
+    @apply border-sn-alert-passion;
+  }
+
+  .sci-input-container-v2.error::after {
+    @apply absolute -bottom-5 text-sn-alert-passion text-xs;
+    content: attr(data-error);
   }
 }

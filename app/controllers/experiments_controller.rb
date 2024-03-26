@@ -8,34 +8,44 @@ class ExperimentsController < ApplicationController
   include Rails.application.routes.url_helpers
   include Breadcrumbs
 
-  before_action :load_project, only: %i(new create archive_group restore_group move)
-  before_action :load_experiment, except: %i(new create archive_group restore_group
-                                             inventory_assigning_experiment_filter actions_toolbar
-                                             move move_modal)
-  before_action :load_experiments, only: %i(move_modal move)
-  before_action :check_move_permissions, only: %i(move_modal move)
-  before_action :check_read_permissions, except: %i(edit archive clone move move_modal new
+  before_action :load_project, only: %i(index create archive_group restore_group move)
+  before_action :load_experiment, except: %i(create archive_group restore_group
+                                             inventory_assigning_experiment_filter actions_toolbar index move)
+  before_action :load_experiments, only: :move
+  before_action :check_read_permissions, except: %i(index edit archive clone move new
                                                     create archive_group restore_group
                                                     inventory_assigning_experiment_filter actions_toolbar)
   before_action :check_canvas_read_permissions, only: %i(canvas)
-  before_action :check_create_permissions, only: %i(new create move)
-  before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
-  before_action :check_update_permissions, only: %i(update)
+  before_action :check_create_permissions, only: %i(create move)
+  before_action :check_manage_permissions, only: :batch_clone_my_modules
+  before_action :check_update_permissions, only: :update
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
-  before_action :set_inline_name_editing, only: %i(canvas table module_archive)
-  before_action :set_breadcrumbs_items, only: %i(canvas table module_archive)
-  before_action :set_navigator, only: %i(canvas module_archive table)
+  before_action :set_inline_name_editing, only: %i(index canvas module_archive)
+  before_action :set_breadcrumbs_items, only: %i(index canvas module_archive)
+  before_action :set_navigator, only: %i(index canvas module_archive)
 
   layout 'fluid'
 
-  def new
-    @experiment = Experiment.new
-    render json: {
-      html: render_to_string(
-        partial: 'new_modal', formats: :html
-      )
-    }
+  def index
+    respond_to do |format|
+      format.json do
+        experiments = Lists::ExperimentsService.new(@project.experiments,
+                                                    params.merge(project: @project),
+                                                    user: current_user).call
+        render json: experiments, each_serializer: Lists::ExperimentSerializer, user: current_user,
+               meta: pagination_dict(experiments)
+      end
+      format.html do
+        render 'experiments/index'
+      end
+    end
+  end
+
+  def assigned_users
+    render json: User.where(id: @experiment.user_assignments.select(:user_id)),
+           each_serializer: UserSerializer,
+           user: current_user
   end
 
   def create
@@ -46,30 +56,12 @@ class ExperimentsController < ApplicationController
     if @experiment.save
       experiment_annotation_notification
       log_activity(:create_experiment, @experiment)
-      flash[:success] = t('experiments.create.success_flash',
+      flash[:success] = t('.success_flash',
                           experiment: @experiment.name)
 
       render json: { path: my_modules_experiment_url(@experiment) }, status: :ok
     else
       render json: @experiment.errors, status: :unprocessable_entity
-    end
-  end
-
-  def show
-    render json: {
-      html: render_to_string(partial: 'experiments/details_modal', formats: :html)
-    }
-  end
-
-  def permissions
-    if stale?([@experiment, @experiment.project])
-      render json: {
-        editable: can_manage_experiment?(@experiment),
-        moveable: can_move_experiment?(@experiment),
-        archivable: can_archive_experiment?(@experiment),
-        restorable: can_restore_experiment?(@experiment),
-        duplicable: can_clone_experiment?(@experiment)
-      }
     end
   end
 
@@ -84,40 +76,8 @@ class ExperimentsController < ApplicationController
                                    .select('COUNT(DISTINCT comments.id) as task_comments_count')
                                    .select('my_modules.*').group(:id)
                       end
-  end
 
-  def table
-    @project = @experiment.project
-    @experiment.current_view_state(current_user)
-    @my_module_visible_table_columns = current_user.my_module_visible_table_columns
-
-    view_state = @experiment.current_view_state(current_user)
-    @current_sort = view_state.state.dig('my_modules', my_modules_view_mode(@project), 'sort') || 'atoz'
-  end
-
-  def my_modules_view_mode(my_module)
-    return 'archived' if  my_module.archived?
-
-    params[:view_mode] == 'archived' ? 'archived' : 'active'
-  end
-
-  def load_table
-    active_view_mode = params[:view_mode] != 'archived'
-    my_modules = nil
-
-    unless @experiment.archived_branch? && active_view_mode
-      my_modules = @experiment.my_modules.readable_by_user(current_user)
-
-      unless @experiment.archived_branch?
-        my_modules = if active_view_mode
-                       my_modules.active
-                     else
-                       my_modules.archived
-                     end
-      end
-    end
-
-    render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
+    save_view_type('canvas')
   end
 
   def my_modules
@@ -133,12 +93,6 @@ class ExperimentsController < ApplicationController
     view_state.save!
 
     redirect_to view_mode_redirect_url(view_type_params)
-  end
-
-  def edit
-    render json: {
-      html: render_to_string(partial: 'edit_modal', formats: :html)
-    }
   end
 
   def update
@@ -160,25 +114,9 @@ class ExperimentsController < ApplicationController
                       end
       log_activity(activity_type, @experiment)
 
-      respond_to do |format|
-        format.json do
-          render json: {}, status: :ok
-        end
-        format.html do
-          flash[:success] = t('experiments.update.success_flash', experiment: @experiment.name)
-          redirect_to project_path(@experiment.project)
-        end
-      end
+      render json: { message: t('experiments.update.success_flash', experiment: @experiment.name) }, status: :ok
     else
-      respond_to do |format|
-        format.json do
-          render json: @experiment.errors, status: :unprocessable_entity
-        end
-        format.html do
-          flash[:alert] = t('experiments.update.error_flash')
-          redirect_back(fallback_location: root_path)
-        end
-      end
+      render json: { message: @experiment.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -241,45 +179,48 @@ class ExperimentsController < ApplicationController
     end
   end
 
-  # GET: clone_modal_experiment_path(id)
-  def clone_modal
-    @projects = @experiment.project.team.projects.active
-                           .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
-    render json: {
-      html: render_to_string(
-        partial: 'clone_modal',
-        locals: { view_mode: params[:view_mode] },
-        formats: :html
-      )
-    }
+  def projects_to_clone
+    projects = @experiment.project.team.projects.active
+                          .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
+                          .where('trim_html_tags(projects.name) ILIKE ?',
+                                 "%#{ActiveRecord::Base.sanitize_sql_like(params['query'])}%")
+                          .map { |p| [p.id, p.name] }
+    render json: { data: projects }, status: :ok
+  end
+
+  def projects_to_move
+    projects = @experiment.movable_projects(current_user)
+                          .where('trim_html_tags(projects.name) ILIKE ?',
+                                 "%#{ActiveRecord::Base.sanitize_sql_like(params['query'])}%")
+                          .map { |p| [p.id, p.name] }
+    render json: { data: projects }, status: :ok
+  end
+
+  def experiments_to_move
+    experiments = @experiment.project.experiments.active.where.not(id: @experiment)
+                             .managable_by_user(current_user).order(name: :asc).map { |e| [e.id, e.name] }
+    render json: { data: experiments }, status: :ok
   end
 
   # POST: clone_experiment(id)
   def clone
     @project = current_team.projects.find(move_experiment_param)
-    return render_403 unless can_create_project_experiments?(project)
+    return render_403 unless can_create_project_experiments?(@project)
 
     service = Experiments::CopyExperimentAsTemplateService.call(experiment: @experiment,
-                                                                project: project,
+                                                                project: @project,
                                                                 user: current_user)
 
     if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',
                           experiment: @experiment.name)
-      redirect_to canvas_experiment_path(service.cloned_experiment)
+      render json: { url: canvas_experiment_path(service.cloned_experiment) }
     else
-      flash[:error] = t('experiments.clone.error_flash',
-                        experiment: @experiment.name)
-      redirect_to project_path(@experiment.project)
+      render json: {
+        message: t('experiments.clone.error_flash',
+        experiment: @experiment.name)
+      }, status: :unprocessable_entity
     end
-  end
-
-  # GET: move_modal_experiment_path(id)
-  def move_modal
-    @projects = @experiments.first.movable_projects(current_user)
-    render json: {
-      html: render_to_string(partial: 'move_modal', formats: :html)
-    }
   end
 
   def search_tags
@@ -297,8 +238,10 @@ class ExperimentsController < ApplicationController
     render json: tags
   end
 
-  # POST: move_experiment(id)
+  # POST: move_experiments(ids)
   def move
+    return render_403 unless @experiments.all? { |e| can_move_experiment?(e) }
+
     @project.transaction do
       @experiments.each do |experiment|
         service = Experiments::MoveToProjectService
@@ -386,35 +329,7 @@ class ExperimentsController < ApplicationController
     end
 
     render json: {
-      workflowimg: render_to_string(
-        partial: 'projects/show/workflow_img',
-        locals: { experiment: @experiment },
-        formats: :html
-      )
-    }
-  end
-
-  def sidebar
-    view_state = @experiment.current_view_state(current_user)
-    view_mode = params[:view_mode].presence || 'active'
-    default_sort = view_state.state.dig('my_modules', view_mode, 'sort') || 'atoz'
-    my_modules = if @experiment.archived_branch?
-                   @experiment.my_modules
-                 elsif params[:view_mode] == 'archived'
-                   @experiment.my_modules.archived
-                 else
-                   @experiment.my_modules.active
-                 end
-
-    my_modules = sort_my_modules(my_modules, params[:sort].presence || default_sort)
-    render json: {
-      html: render_to_string(
-        partial: if params[:view_mode] == 'archived'
-                    'shared/sidebar/archived_my_modules'
-                  else
-                    'shared/sidebar/my_modules'
-                  end, locals: { experiment: @experiment, my_modules: my_modules }
-      )
+      workflowimg_url: rails_blob_path(@experiment.workflowimg, only_path: true),
     }
   end
 
@@ -435,23 +350,13 @@ class ExperimentsController < ApplicationController
                          .joins(:my_modules)
                          .where(experiments: { id: viewable_experiments })
                          .where(my_modules: { id: assignable_my_modules })
+                         .order(:name)
                          .distinct
                          .pluck(:id, :name)
 
     return render plain: [].to_json if experiments.blank?
 
     render json: experiments
-  end
-
-  def actions_dropdown
-    if stale?([@experiment, @experiment.project])
-      render json: {
-        html: render_to_string(
-          partial: 'projects/show/experiment_actions_dropdown',
-          locals: { experiment: @experiment }
-        )
-      }
-    end
   end
 
   def assigned_users_to_tasks
@@ -526,7 +431,7 @@ class ExperimentsController < ApplicationController
       actions:
         Toolbars::ExperimentsService.new(
           current_user,
-          experiment_ids: params[:experiment_ids].split(',')
+          experiment_ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions
     }
   end
@@ -545,7 +450,9 @@ class ExperimentsController < ApplicationController
 
   def load_project
     @project = Project.find_by(id: params[:project_id])
+
     render_404 unless @project
+    render_403 unless can_read_project?(@project)
   end
 
   def experiment_params
@@ -558,6 +465,12 @@ class ExperimentsController < ApplicationController
 
   def view_type_params
     params.require(:experiment).require(:view_type)
+  end
+
+  def save_view_type(view_type)
+    view_state = @experiment.current_view_state(current_user)
+    view_state.state['my_modules']['view_type'] = view_type
+    view_state.save!
   end
 
   def check_read_permissions
@@ -594,20 +507,28 @@ class ExperimentsController < ApplicationController
     render_403 unless can_clone_experiment?(@experiment)
   end
 
-  def check_move_permissions
-    render_403 unless @experiments.all? { |e| can_move_experiment?(e) }
-  end
-
   def set_inline_name_editing
-    return unless can_manage_experiment?(@experiment)
+    if @experiment
+      return unless can_manage_experiment?(@experiment)
 
-    @inline_editable_title_config = {
-      name: 'title',
-      params_group: 'experiment',
-      item_id: @experiment.id,
-      field_to_udpate: 'name',
-      path_to_update: experiment_path(@experiment)
-    }
+      @inline_editable_title_config = {
+        name: 'title',
+        params_group: 'experiment',
+        item_id: @experiment.id,
+        field_to_udpate: 'name',
+        path_to_update: experiment_path(@experiment)
+      }
+    else
+      return unless can_manage_project?(@project)
+
+      @inline_editable_title_config = {
+        name: 'title',
+        params_group: 'project',
+        item_id: @project.id,
+        field_to_udpate: 'name',
+        path_to_update: project_path(@project)
+      }
+    end
   end
 
   def experiment_annotation_notification(old_text = nil)
@@ -652,10 +573,10 @@ class ExperimentsController < ApplicationController
       when 'canvas'
         module_archive_experiment_path(@experiment)
       else
-        table_experiment_path(@experiment, view_mode: :archived)
+        my_modules_path(experiment_id: @experiment, view_mode: :archived)
       end
     else
-      view_type == 'canvas' ? canvas_experiment_path(@experiment) : table_experiment_path(@experiment)
+      view_type == 'canvas' ? canvas_experiment_path(@experiment) : my_modules_path(experiment_id: @experiment)
     end
   end
 
@@ -689,10 +610,18 @@ class ExperimentsController < ApplicationController
   end
 
   def set_navigator
-    @navigator = {
-      url: tree_navigator_experiment_path(@experiment),
-      archived: (action_name == 'module_archive' || params[:view_mode] == 'archived'),
-      id: @experiment.code
-    }
+    @navigator = if @experiment
+                   {
+                     url: tree_navigator_experiment_path(@experiment),
+                     archived: (action_name == 'module_archive' || params[:view_mode] == 'archived'),
+                     id: @experiment.code
+                   }
+                 else
+                   {
+                     url: tree_navigator_project_path(@project),
+                     archived: (action_name == 'index' && params[:view_mode] == 'archived'),
+                     id: @project.code
+                   }
+                 end
   end
 end

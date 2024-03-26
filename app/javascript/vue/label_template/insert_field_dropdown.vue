@@ -1,6 +1,7 @@
 <template>
   <div ref="dropdown" class="insert-field-dropdown dropdown">
-    <a class="open-dropdown-button collapsed" role="button" data-toggle="dropdown" id="fieldsContainer" aria-expanded="false">
+    <a class="open-dropdown-button collapsed" role="button" data-toggle="dropdown"
+       id="fieldsContainer" aria-expanded="false">
       {{ i18n.t('label_templates.show.insert_dropdown.button') }}
       <i class="fas fa-chevron-down"></i>
     </a>

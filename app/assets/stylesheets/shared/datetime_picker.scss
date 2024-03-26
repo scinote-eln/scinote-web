@@ -105,16 +105,16 @@
 
 .dp__input_wrap {
   .dp__input_icon {
+    display: flex;
     height: 1.5rem;
-    left: .75rem;
-  }
+    left: .5rem;
 
-  .dp__clear_icon {
-    width: 1.375rem;
+    img {
+      width: 1rem;
+    }
   }
 
   .dp__input {
-    height: 2.25rem;
     line-height: unset;
   }
 }
@@ -126,6 +126,26 @@
 
   .dp__overlay_container {
     padding-bottom: 0;
+  }
+}
+
+.date-time-picker {
+  &.size-mb {
+    .dp__input {
+      height: 44px;
+    }
+  }
+
+  &.size-sm {
+    .dp__input {
+      height: 40px;
+    }
+  }
+
+  &.size-xs {
+    .dp__input {
+      height: 36px;
+    }
   }
 }
 

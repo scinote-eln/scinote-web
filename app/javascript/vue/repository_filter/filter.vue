@@ -21,6 +21,7 @@
 <script>
 // filter types
 import RepositoryNonEmptyTextValue from './filters/repositoryNonEmptyTextValue.vue';
+import RepositoryRelationshipValue from './filters/repositoryRelationshipValue.vue';
 import RepositoryAssetValue from './filters/repositoryAssetValue.vue';
 import RepositoryTextValue from './filters/repositoryTextValue.vue';
 import RepositoryNumberValue from './filters/repositoryNumberValue.vue';
@@ -36,7 +37,7 @@ import RepositoryStatusValue from './filters/repositoryStatusValue.vue';
 import RepositoryChecklistValue from './filters/repositoryChecklistValue.vue';
 import RepositoryUserValue from './filters/repositoryUserValue.vue';
 import RepositoryStockValue from './filters/repositoryStockValue.vue';
-import DropdownSelector from '../shared/dropdown_selector.vue';
+import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
 
 export default {
   name: 'FilterElement',
@@ -47,6 +48,7 @@ export default {
   components: {
     DropdownSelector,
     RepositoryNonEmptyTextValue,
+    RepositoryRelationshipValue,
     RepositoryAssetValue,
     RepositoryTextValue,
     RepositoryNumberValue,
