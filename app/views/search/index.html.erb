@@ -4,6 +4,8 @@
   <global_search
     :query="'<%= @display_query %>'"
     :search-url="'<%= search_path(format: :json) %>'"
+    teams-url="<%= visible_teams_teams_path %>"
+    users-url="<%= visible_users_teams_path %>"
   />
 </div>
 

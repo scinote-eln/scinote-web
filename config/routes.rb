@@ -216,6 +216,11 @@ Rails.application.routes.draw do
         end
       end
 
+      collection do
+        get :visible_users
+        get :visible_teams
+      end
+
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'

@@ -1,14 +1,30 @@
 <template>
-  <GeneralDropdown ref="container" :canOpen="canOpen" :fieldOnlyOpen="true">
+  <GeneralDropdown ref="container" :canOpen="canOpen" :fieldOnlyOpen="true" @close="filtersOpened = false">
     <template v-slot:field>
       <div class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}" :title="i18n.t('nav.search')">
-        <input ref="searchField" type="text" class="!pr-9" v-model="searchQuery" :placeholder="i18n.t('nav.search')" @keyup.enter="saveQuery"/>
+        <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery" :placeholder="i18n.t('nav.search')" @keyup.enter="saveQuery"/>
         <i class="sn-icon sn-icon-search"></i>
-        <i v-if="this.searchQuery.length > 0" class="sn-icon sn-icon-close absolute right-1 top-0.5" @click="this.searchQuery = ''"></i>
+        <div v-if="this.searchQuery.length > 1" class="flex items-center gap-1 absolute right-2 top-1.5">
+          <div class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''">
+            <i class="sn-icon sn-icon-close  m-0"></i>
+          </div>
+          <div class="btn btn-light icon-btn btn-xs" :class="{'active': filtersOpened}" @click="filtersOpened = !filtersOpened">
+            <i class="sn-icon sn-icon-search-options m-0"></i>
+          </div>
+        </div>
       </div>
     </template>
     <template v-slot:flyout >
-      <div v-if="showHistory" class="max-w-[600px]">
+      <SearchFilters
+        v-if="filtersOpened"
+        :teamsUrl="teamsUrl"
+        :usersUrl="usersUrl"
+        :currentTeam="currentTeam"
+        :searchUrl="searchUrl"
+        :searchQuery="searchQuery"
+        @cancel="filtersOpened = false"
+      ></SearchFilters>
+      <div v-else-if="showHistory" class="max-w-[600px]">
         <div v-for="(query, i) in previousQueries.reverse()" @click="setQuery(query)" :key="i"
              class="flex px-3 h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
           <i class="sn-icon sn-icon-history-search"></i>
@@ -17,16 +33,24 @@
       </div>
       <div v-else class="max-w-[600px]">
         <div class="flex items-center gap-2">
-          <button class="btn btn-secondary btn-xs" @click="setQuickFilter('experiments')">
+          <button class="btn btn-secondary btn-xs"
+                  :class="{'active': quickFilter === 'experiments'}"
+                  @click="setQuickFilter('experiments')">
             {{ i18n.t('search.quick_search.experiments') }}
           </button>
-          <button class="btn btn-secondary btn-xs" @click="setQuickFilter('my_modules')">
+          <button class="btn btn-secondary btn-xs"
+                  :class="{'active': quickFilter === 'my_modules'}"
+                  @click="setQuickFilter('my_modules')">
             {{ i18n.t('search.quick_search.tasks') }}
           </button>
-          <button class="btn btn-secondary btn-xs" @click="setQuickFilter('results')">
+          <button class="btn btn-secondary btn-xs"
+                  :class="{'active': quickFilter === 'results'}"
+                  @click="setQuickFilter('results')">
             {{ i18n.t('search.quick_search.results') }}
           </button>
-          <button class="btn btn-secondary btn-xs" @click="setQuickFilter('repository_rows')">
+          <button class="btn btn-secondary btn-xs"
+                  :class="{'active': quickFilter === 'repository_rows'}"
+                  @click="setQuickFilter('repository_rows')">
             {{ i18n.t('search.quick_search.inventory_items') }}
           </button>
         </div>
@@ -84,6 +108,7 @@
 <script>
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import StringWithEllipsis from '../shared/string_with_ellipsis.vue';
+import SearchFilters from '../global_search/filters.vue';
 import axios from '../../packs/custom_axios.js';
 
 export default {
@@ -99,11 +124,20 @@ export default {
     searchUrl: {
       type: String,
       required: true
+    },
+    teamsUrl: {
+      type: String,
+      required: true
+    },
+    usersUrl: {
+      type: String,
+      required: true
     }
   },
   components: {
     GeneralDropdown,
-    StringWithEllipsis
+    StringWithEllipsis,
+    SearchFilters
   },
   computed: {
     canOpen() {
@@ -128,7 +162,8 @@ export default {
       previousQueries: [],
       quickFilter: null,
       results: [],
-      loading: false
+      loading: false,
+      filtersOpened: false
     };
   },
   mounted() {
