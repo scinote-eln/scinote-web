@@ -1,6 +1,10 @@
 <template>
-  <div class="group relative flex items-center group-hover:marker text-xs">
-    <div class="flex items-end gap-2">
+  <div class="group relative flex items-center group-hover:marker text-xs h-full w-full">
+    <div class="flex gap-2"
+        :class="{
+                  'items-center': params.dtComponent.currentViewRender === 'table',
+                  'items-end': params.dtComponent.currentViewRender === 'cards'
+                }">
       <span v-if="shouldTruncateText"
             class="cursor-pointer grow"
             :class="{
