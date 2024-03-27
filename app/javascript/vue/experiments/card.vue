@@ -1,5 +1,5 @@
 <template>
-  <div class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col h-56"
+  <div class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col"
        :class="{ 'bg-sn-light-grey': dtComponent.currentViewMode === 'archived', [cardMinWidth]: true}">
     <div class="flex items-center gap-4 mb-2">
       <div class="sci-checkbox-container">
@@ -16,7 +16,7 @@
     <a :href="params.urls.show"
        :title="params.name"
        :class="{'pointer-events-none text-sn-grey': !params.urls.show}"
-       class="font-bold mb-auto text-sn-blue hover:no-underline line-clamp-2 hover:text-sn-blue h-10">
+       class="font-bold mb-4 shrink-0 text-sn-blue hover:no-underline line-clamp-2 hover:text-sn-blue h-10">
       {{ params.name }}
     </a>
     <div class="flex gap-4 mb-2.5">
