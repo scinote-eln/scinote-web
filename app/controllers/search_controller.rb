@@ -13,10 +13,10 @@ class SearchController < ApplicationController
 
         case params[:group]
         when 'projects'
-          @project_search_count = fetch_cached_count Project
+          @project_search_count = fetch_cached_count(Project)
           search_projects
           if params[:preview] == 'true'
-            results = @project_results.limit(4)
+            results = @project_results&.limit(4) || []
           else
             results = @project_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
           end
@@ -27,6 +27,22 @@ class SearchController < ApplicationController
                   total: @search_count,
                   next_page: (results.next_page if results.respond_to?(:next_page)),
                 }
+          return
+        when 'protocols'
+          @protocol_search_count = fetch_cached_count(Protocol)
+          search_protocols
+          results = if params[:preview] == 'true'
+                      @protocol_results&.limit(4) || []
+                    else
+                      @protocol_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
+                    end
+
+          render json: results,
+                 each_serializer: GlobalSearch::ProtocolSerializer,
+                 meta: {
+                          total: @search_count,
+                          next_page: (results.next_page if results.respond_to?(:next_page)),
+                        }
           return
         end
 
