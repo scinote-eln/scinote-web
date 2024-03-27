@@ -79,9 +79,9 @@ export default {
         this.close();
       } catch (error) {
         if (error.response) {
-          console.error('Error: ', error.response.data.error || error.response.statusText);
+          this.error = error.response.data.errors || error.response.statusText;
         } else {
-          console.error('Error: ', error.message);
+          this.error = error.message;
         }
       }
     }
