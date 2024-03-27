@@ -459,6 +459,7 @@ en:
       created_at: "Created on"
       team: "Team"
       folder: "Folder"
+      project: "Project"
   comments:
     save_changes: "Save changes"
     empty_state:
