@@ -41,7 +41,6 @@ class SearchController < ApplicationController
                    total: @search_count,
                    next_page: results.try(:next_page)
                  }
-        else
           return
         when 'protocols'
           @protocol_search_count = fetch_cached_count(Protocol)
