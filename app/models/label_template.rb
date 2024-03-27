@@ -7,6 +7,9 @@ class LabelTemplate < ApplicationRecord
   belongs_to :created_by, class_name: 'User', optional: true
   belongs_to :last_modified_by, class_name: 'User', optional: true
 
+  SEARCHABLE_ATTRIBUTES = ['label_templates.name',
+                           'label_templates.description'].freeze
+
   enum unit: { in: 0, mm: 1 }
 
   validates :name, presence: true, length: { minimum: Constants::NAME_MIN_LENGTH,
@@ -19,6 +22,25 @@ class LabelTemplate < ApplicationRecord
 
   def self.enabled?
     ApplicationSettings.instance.values['label_templates_enabled'] == true
+  end
+
+  def self.search(
+    user = nil,
+    include_archived = nil,
+    query = nil,
+    page = 1,
+    current_team = nil,
+    options = {}
+  )
+
+    new_query = LabelTemplate.where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
+
+    # Show all results if needed
+    if page == Constants::SEARCH_NO_LIMIT
+      new_query
+    else
+      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
+    end
   end
 
   def icon
