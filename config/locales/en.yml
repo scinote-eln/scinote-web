@@ -2226,26 +2226,26 @@ en:
     modal_assign_items_to_task:
       title: "Assign to task"
       body:
-        description: "Type in the fields below to find the right task."
+        description: "Select the fields below to assign item to task(s)."
         project_select:
           label: "Project"
-          placeholder: "Enter project name"
+          placeholder: "Select or enter Project name"
           no_options_placeholder: "No projects available to select"
         experiment_select:
           label: "Experiment"
-          placeholder: "Enter Experiment name"
+          placeholder: "Select or enter Experiment name"
           disabled_placeholder: "Select Project to enable Experiment"
           no_options_placeholder: "No experiments available to select"
         task_select:
           label: "Task"
           placeholder: "Enter Task name"
-          disabled_placeholder: "Select Experiment to enable Task"
+          disabled_placeholder: "Select or enter Task name"
           no_options_placeholder: "No tasks available to assign items"
       assign:
         text: "Assign to task"
-        flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task."
-        flash_some_assignments_success: "Successfully assigned %{assigned_count} item(s) to the task. %{skipped_count} item(s) were already assigned to the task."
-        flash_assignments_failure: "Failed to assign item(s) to task."
+        flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task(s)."
+        flash_some_assignments_success: "Successfully assigned %{assigned_count} item(s) to the task(s). %{skipped_count} item(s) were already assigned to the task(s)."
+        flash_assignments_failure: "Failed to assign item(s) to task(s)."
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"

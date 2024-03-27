@@ -553,6 +553,7 @@ Rails.application.routes.draw do
         end
       end
     end
+    post 'repository/:id/assign_my_modules', to: 'my_module_repositories#assign_my_modules', as: :assign_my_modules
 
     resources :steps, only: %i(index update destroy show) do
       resources :step_orderable_elements do
