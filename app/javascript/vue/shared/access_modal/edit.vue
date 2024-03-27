@@ -26,7 +26,7 @@
       <MenuDropdown
         v-if="params.object.top_level_assignable && params.object.urls.update_access"
         class="ml-auto"
-        :listItems="rolesFromatted"
+        :listItems="rolesFromatted(default_role)"
         :btnText="this.roles.find((role) => role[0] == default_role)[1]"
         :position="'right'"
         :caret="true"
@@ -59,7 +59,7 @@
         <MenuDropdown
           v-if="!userAssignment.attributes.last_owner && params.object.urls.update_access && !(userAssignment.attributes.current_user && userAssignment.attributes.inherit_message)"
           class="ml-auto"
-          :listItems="rolesFromatted(userAssignment)"
+          :listItems="rolesFromatted(userAssignment.attributes.user_role.id)"
           :btnText="userAssignment.attributes.user_role.name"
           :position="'right'"
           :caret="true"
@@ -140,7 +140,7 @@ export default {
           this.$emit('usersReloaded');
         });
     },
-    rolesFromatted(userAssignment = null) {
+    rolesFromatted(activeRoleId = null) {
       let roles = [];
 
       if (!this.params.object.top_level_assignable) {
@@ -157,7 +157,7 @@ export default {
           emit: 'setRole',
           text: role[1],
           params: role[0],
-          active: (userAssignment?.attributes?.user_role?.id === role[0])
+          active: (activeRoleId === role[0])
         }
       )));
 
