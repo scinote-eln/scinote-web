@@ -1,5 +1,6 @@
 import axios from '../../../packs/custom_axios.js';
 import StringWithEllipsis from '../../shared/string_with_ellipsis.vue';
+/* global GLOBAL_CONSTANTS */
 
 export default {
   props: {
@@ -48,6 +49,9 @@ export default {
         return this.results;
       }
       return this.results.slice(0, 4);
+    },
+    viewAll() {
+      return !this.selected && this.total > GLOBAL_CONSTANTS.GLOBAL_SEARCH_PREVIEW_LIMIT;
     }
   },
   methods: {
