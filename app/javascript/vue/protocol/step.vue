@@ -550,8 +550,6 @@
         this.$emit('stepUpdated');
       },
       updateAttachment(attachment) {
-        console.log(this.attachments)
-        console.log(attachment)
         const index = this.attachments.findIndex(a => a.id === attachment.id);
         if (index !== -1) {
           this.attachments[index] = attachment;

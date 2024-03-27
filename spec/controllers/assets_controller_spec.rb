@@ -23,7 +23,7 @@ describe AssetsController, type: :controller do
 
   describe 'POST start_edit' do
     before do
-      allow(controller).to receive(:check_edit_permission).and_return(true)
+      allow(controller).to receive(:check_manage_permission).and_return(true)
     end
     let(:action) { post :create_start_edit_image_activity, params: params, format: :json }
     let!(:params) do

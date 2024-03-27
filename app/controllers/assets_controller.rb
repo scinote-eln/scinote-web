@@ -18,7 +18,7 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: %i(edit destroy create_wopi_file toggle_view_mode)
-  before_action :check_edit_permission, only: %i(edit destroy toggle_view_mode rename)
+  before_action :check_manage_permission, only: %i(edit destroy toggle_view_mode rename)
 
   def file_preview
     render json: { html: render_to_string(
@@ -315,22 +315,43 @@ class AssetsController < ApplicationController
     new_name = params.require(:asset).permit(:name)[:name]
 
     if new_name.empty?
-      render json: { error: 'File name must be at least 1 character long.' }, status: :unprocessable_entity
+      render json: { error: I18n.t('assets.rename_modal.min_length_error') }, status: :unprocessable_entity
       return
     elsif new_name.length > Constants::NAME_MAX_LENGTH
-      render json: { error: 'File name is too long (maximum number is 255 characters).' }, status: :unprocessable_entity
+      render json: { error: I18n.t('assets.rename_modal.max_length_error') }, status: :unprocessable_entity
       return
     end
 
     ActiveRecord::Base.transaction do
+      old_name = @asset.name
       @asset.last_modified_by = current_user
       @asset.rename_file(new_name)
       @asset.save!
+
+      case @asset.parent
+      when Step
+        message_items = { old_name:, new_name:, user: current_user.id }
+        message_items[:my_module] = @assoc.protocol.my_module.id if @assoc.protocol.in_module?
+
+        log_step_activity(
+          "#{@assoc.protocol.in_module? ? 'task' : 'protocol'}_step_asset_renamed",
+          @assoc,
+          @assoc.my_module&.project,
+          message_items
+        )
+      when Result
+        log_result_activity(
+          :result_asset_renamed,
+          @assoc,
+          old_name:,
+          new_name:,
+          user: current_user.id,
+          my_module: @assoc.my_module.id
+        )
+      end
     end
 
     render json: @asset, serializer: AssetSerializer, user: current_user
-  rescue ActiveRecord::RecordInvalid
-    render json: @asset.errors, status: :unprocessable_entity
   end
 
   def checksum
@@ -362,7 +383,7 @@ class AssetsController < ApplicationController
     render_403 and return unless can_read_asset?(@asset)
   end
 
-  def check_edit_permission
+  def check_manage_permission
     render_403 and return unless can_manage_asset?(@asset)
   end
 

@@ -64,34 +64,6 @@ class GeneSequenceAssetsController < ApplicationController
     head :ok
   end
 
-  def rename
-    new_name = params.require(:asset).permit(:name)[:name]
-
-    if new_name.empty?
-      render json: { error: 'File name must be at least 1 character long.' }, status: :unprocessable_entity
-      return
-    elsif new_name.length > Constants::NAME_MAX_LENGTH
-      render json: { error: 'File name is too long (maximum number is 255 characters).' }, status: :unprocessable_entity
-      return
-    end
-
-    asset = current_team.assets.find_by(id: params[:id])
-    return render_404 unless asset
-
-    ActiveRecord::Base.transaction do
-      asset.last_modified_by = current_user
-      asset.rename_file(new_name)
-      asset.save!
-      # log_activity(TODO)
-    end
-
-    render json: asset, serializer: AssetSerializer, user: current_user
-  rescue StandardError => e
-    Rails.logger.error(e.message)
-    Rails.logger.error(e.backtrace.join("\n"))
-    render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
-  end
-
   private
 
   def save_asset!

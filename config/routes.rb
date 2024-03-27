@@ -1007,7 +1007,6 @@ Rails.application.routes.draw do
     end
     member do
       post :start_editing
-      patch :rename
     end
   end
 
@@ -1026,11 +1025,7 @@ Rails.application.routes.draw do
     post 'wopi/files/:id', to: 'wopi#post_file_endpoint'
   end
 
-  resources :gene_sequence_assets, only: %i(new create edit update) do
-    member do
-      patch :rename
-    end
-  end
+  resources :gene_sequence_assets, only: %i(new create edit update)
 
   if Rails.env.development? || ENV['ENABLE_DESIGN_ELEMENTS'] == 'true'
     resources :design_elements, only: %i(index) do

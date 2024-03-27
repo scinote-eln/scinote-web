@@ -314,6 +314,9 @@ en:
       edit_image_on_inventory_item_html: "%{user} edited image %{asset_name} on inventory item %{repository_row} in inventory %{repository}: %{action}."
       edit_wopi_file_on_inventory_item_html: "%{user} edited Office online file %{asset_name} on inventory item %{repository_row} in inventory %{repository}: %{action}."
       export_inventory_stock_consumption_html: "%{user} exported stock consumption for inventory item(s) %{inventory_items} in inventory %{repository}."
+      task_step_asset_renamed_html: "%{user} renamed file %{old_name} to %{new_name} on protocol’s step <strong>%{step}</strong> on task <strong>%{my_module}</strong>."
+      protocol_step_asset_renamed_html: "%{user} renamed file %{old_name} to %{new_name} on protocol’s step <strong>%{step}</strong> in Protocol repository."
+      result_asset_renamed_html: "%{user} renamed file %{old_name} to %{new_name} on result <strong>%{result}</strong> on task <strong>%{my_module}</strong>."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -585,6 +588,9 @@ en:
       edit_image_on_inventory_item: "Inventory item image edited"
       edit_wopi_file_on_inventory_item: "Inventory item wopi file edited"
       export_inventory_stock_consumption: "Inventory stock consumptions exported"
+      task_step_asset_renamed: "File attachment on Task step renamed"
+      protocol_step_asset_renamed: "File attachment on Protocol step renamed"
+      result_asset_renamed: "File attachment on Task result renamed"
     activity_group:
       projects: "Projects"
       task_results: "Task results"
