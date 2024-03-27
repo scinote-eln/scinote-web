@@ -42,6 +42,21 @@ class SearchController < ApplicationController
                    next_page: results.try(:next_page)
                  }
           return
+        when 'experiments'
+          @experiment_search_count = fetch_cached_count Experiment
+          search_experiments
+          results = if params[:preview] == 'true'
+                      @experiment_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
+                    else
+                      @experiment_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
+                    end
+          render json: results.includes(project: :team),
+                 each_serializer: GlobalSearch::ExperimentSerializer,
+                 meta: {
+                   total: @search_count,
+                   next_page: results.try(:next_page)
+                 }
+          return
         when 'protocols'
           @protocol_search_count = fetch_cached_count(Protocol)
           search_protocols
@@ -293,7 +308,7 @@ class SearchController < ApplicationController
   end
 
   def search_experiments
-    @experiment_results = []
+    @experiment_results = Experiment.none
     @experiment_results = search_by_name(Experiment) if @experiment_search_count.positive?
     @search_count = @experiment_search_count
   end
