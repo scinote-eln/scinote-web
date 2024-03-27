@@ -17,7 +17,7 @@
         </div>
       </template>
       <template v-slot:flyout>
-        <div v-if="canManage" class="sci-input-container-v2 left-icon mb-1">
+        <div v-if="canManage" class="sci-input-container-v2 left-icon mb-1 -mx-2.5">
           <input type="text"
                   v-model="query"
                   class="sci-input-field"
@@ -25,7 +25,7 @@
                   :placeholder="i18n.t('general.search')" />
           <i class="sn-icon sn-icon-search"></i>
         </div>
-        <perfect-scrollbar class="flex flex-col relative max-h-80 overflow-y-auto max-w-[280px] pr-4 pl-2 gap-y-px">
+        <perfect-scrollbar class="flex flex-col relative max-h-80 overflow-y-auto max-w-[280px] pt-1 -mx-2.5 pr-4 pl-2 gap-y-px">
           <div v-for="user in allUsers"
               :key="user.value"
               @click="selectUser(user)"
