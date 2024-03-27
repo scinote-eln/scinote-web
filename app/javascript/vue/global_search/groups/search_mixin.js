@@ -17,6 +17,7 @@ export default {
       total: 0,
       loading: false,
       page: 1,
+      disabled: false,
       fullDataLoaded: false
     };
   },
@@ -80,6 +81,7 @@ export default {
           if (this.selected) this.fullDataLoaded = true;
           this.results = this.results.concat(response.data.data);
           this.total = response.data.meta.total;
+          this.disabled = response.data.meta.disabled;
           this.loading = false;
           this.page = response.data.meta.next_page;
         })

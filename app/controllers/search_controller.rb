@@ -16,7 +16,7 @@ class SearchController < ApplicationController
           @project_search_count = fetch_cached_count(Project)
           search_projects
           if params[:preview] == 'true'
-            results = @project_results&.limit(4) || []
+            results = @project_results.take(4) || []
           else
             results = @project_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
           end
@@ -61,7 +61,7 @@ class SearchController < ApplicationController
           @protocol_search_count = fetch_cached_count(Protocol)
           search_protocols
           results = if params[:preview] == 'true'
-                      @protocol_results&.limit(4) || []
+                      @protocol_results.take(4) || []
                     else
                       @protocol_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
                     end
@@ -70,8 +70,26 @@ class SearchController < ApplicationController
                  each_serializer: GlobalSearch::ProtocolSerializer,
                  meta: {
                           total: @search_count,
-                          next_page: (results.next_page if results.respond_to?(:next_page)),
-                        }
+                          next_page: (results.next_page if results.respond_to?(:next_page))
+                       }
+          return
+        when 'label_templates'
+          return render json: [], meta: { disabled: true }, status: :ok unless LabelTemplate.enabled?
+
+          @label_template_search_count = fetch_cached_count(LabelTemplate)
+          search_label_templates
+          results = if params[:preview] == 'true'
+                      @label_template_results.take(4) || []
+                    else
+                      @label_template_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
+                    end
+
+          render json: results,
+                 each_serializer: GlobalSearch::LabelTemplateSerializer,
+                 meta: {
+                          total: @search_count,
+                          next_page: (results.next_page if results.respond_to?(:next_page))
+                       }
           return
         end
 
@@ -341,6 +359,12 @@ class SearchController < ApplicationController
     @protocol_results = []
     @protocol_results = search_by_name(Protocol) if @protocol_search_count.positive?
     @search_count = @protocol_search_count
+  end
+
+  def search_label_templates
+    @label_template_results = []
+    @label_template_results = search_by_name(LabelTemplate) if @label_template_search_count.positive?
+    @search_count = @label_template_search_count
   end
 
   def search_steps
