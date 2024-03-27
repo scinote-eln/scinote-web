@@ -21,8 +21,8 @@
           </div>
           <div class="h-full py-2 px-4 grid grid-cols-[auto_1fr] items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey">
             <b class="shrink-0">{{ i18n.t('search.index.team') }}:</b>
-            <a :href="row.attributes.team.url" class="shrink-0 overflow-hidden">
-              <StringWithEllipsis class="w-full" :text="row.attributes.team.name"></StringWithEllipsis>
+            <a :href="row.attributes.team.url" target="_blank" class="shrink-0 truncate overflow-hidden max-w-[300px]">
+              <span class="shrink-0 truncate">{{ row.attributes.team.name }}</span>
             </a>
           </div>
           <div class="h-full py-2 px-4 border-0 border-b border-solid border-sn-light-grey">
