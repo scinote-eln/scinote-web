@@ -52,6 +52,8 @@ class Constants
 
   # General limited/unlimited query/display elements for pages
   SEARCH_LIMIT = 20
+  # General global search limit for object groups
+  GLOBAL_SEARCH_PREVIEW_LIMIT = 4
   SEARCH_NO_LIMIT = -1
   # General limited query/display elements for popup modals
   MODAL_SEARCH_LIMIT = 5
