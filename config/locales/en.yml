@@ -462,6 +462,7 @@ en:
       team: "Team"
       folder: "Folder"
       project: "Project"
+      experiment: "Experiment"
   comments:
     save_changes: "Save changes"
     empty_state:
