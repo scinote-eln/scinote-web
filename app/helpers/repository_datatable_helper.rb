@@ -239,8 +239,10 @@ module RepositoryDatatableHelper
       '4': "#{record.parent_connections_count || 0} / #{record.child_connections_count || 0}",
       '5': I18n.l(record.created_at, format: :full),
       '6': escape_input(record.created_by.full_name),
-      '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-      '8': escape_input(record.archived_by&.full_name)
+      '7': (record.updated_at ? I18n.l(record.updated_at, format: :full) : ''),
+      '8': escape_input(record.last_modified_by.full_name),
+      '9': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '10': escape_input(record.archived_by&.full_name)
     }
   end
 
@@ -251,9 +253,11 @@ module RepositoryDatatableHelper
       '3': escape_input(record.name),
       '4': I18n.l(record.created_at, format: :full),
       '5': escape_input(record.created_by.full_name),
-      '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-      '7': escape_input(record.archived_by&.full_name),
-      '8': escape_input(record.external_id)
+      '6': (record.updated_at ? I18n.l(record.updated_at, format: :full) : ''),
+      '7': escape_input(record.last_modified_by.full_name),
+      '8': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '9': escape_input(record.archived_by&.full_name),
+      '10': escape_input(record.external_id)
     }
   end
 

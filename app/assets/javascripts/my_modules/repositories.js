@@ -339,10 +339,6 @@ var MyModuleRepositories = (function() {
           if (!options.assign_mode) {
             json.state.columns[0].visible = false;
           }
-          if ($(tableContainer).data('type') !== 'snapshot') {
-            json.state.columns[6].visible = false;
-            json.state.columns[7].visible = false;
-          }
           if (json.state.search) delete json.state.search;
           if ($(tableContainer).data('stockConsumptionColumn')) {
             json.state.columns.push({});
