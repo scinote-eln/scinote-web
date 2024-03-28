@@ -62,6 +62,21 @@
   <div id="actionToolbar" data-behaviour="vue">
     <action-toolbar actions-url="<%= actions_toolbar_repository_repository_rows_path(@repository) %>" />
   </div>
+
+
+  <div id="repositoryTable" class="fixed-content-body">
+    <repository-table
+      actions-url="<%= actions_toolbar_repository_repository_rows_path(@repository) %>"
+      data-source="<%= index_new_repository_repository_rows_path(@repository, format: :json) %>"
+      columns-url="<%= index_new_repository_repository_columns_path(@repository) %>"
+      create-url="<%= repository_path(@repository) %>"
+      active-page-url="<%= repository_path(@repository) %>"
+      archived-page-url="<%= repository_path(@repository, view_mode: :archived) %>"
+      current-view-mode="<%= params[:view_mode] || :active %>"
+      linked-repository="<%= @repository.is_a?(LinkedRepository) %>"
+    />
+  </div>
+  <%= javascript_include_tag 'vue_repository_table' %>
 </div>
 
 <%= render partial: 'repositories/import_repository_records_modal',

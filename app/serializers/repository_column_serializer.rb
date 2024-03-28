@@ -4,7 +4,7 @@ class RepositoryColumnSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   include InputSanitizeHelper
 
-  attributes :message
+  attributes :message, :name, :data_type, :metadata
 
   def message
     if instance_options[:creating]
