@@ -140,7 +140,8 @@ export default {
       },
       {
         field: 'shared_label',
-        headerName: this.i18n.t('libraries.index.table.shared')
+        headerName: this.i18n.t('libraries.index.table.shared'),
+        sortable: true
       },
       {
         field: 'team',
