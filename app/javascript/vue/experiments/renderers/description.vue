@@ -1,5 +1,6 @@
 <template>
-  <div class="group relative flex items-center group-hover:marker text-xs h-full w-full">
+  <div class="group relative flex items-center group-hover:marker text-xs h-full w-full"
+       :style="{ lineHeight: 'unset' }">
     <div class="flex gap-2"
         :class="{
                   'items-center': params.dtComponent.currentViewRender === 'table',
