@@ -72,7 +72,7 @@
             data-object-type="Result"
             :data-object-id="result.id">
             <i class="sn-icon sn-icon-comments"></i>
-            <span class="comments-counter" v-show="result.attributes.comments_count"
+            <span class="comments-counter" :class="{ 'hidden': !result.attributes.comments_count }"
                   :id="`comment-count-${result.id}`">
                 {{ result.attributes.comments_count }}
             </span>
