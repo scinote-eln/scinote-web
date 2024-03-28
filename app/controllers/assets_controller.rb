@@ -357,7 +357,6 @@ class AssetsController < ApplicationController
   def duplicate
     ActiveRecord::Base.transaction do
       case @asset.parent
-
       when Step, Result
         new_asset = @asset.duplicate(
           new_name:
@@ -365,6 +364,27 @@ class AssetsController < ApplicationController
         )
 
         @asset.parent.assets << new_asset
+      end
+
+      case @asset.parent
+      when Step
+        message_items = { file: @asset.file_name }
+        message_items[:my_module] = @assoc.protocol.my_module.id if @assoc.protocol.in_module?
+
+        log_step_activity(
+          "#{@assoc.protocol.in_module? ? 'task' : 'protocol'}_step_file_duplicated",
+          @assoc,
+          @assoc.my_module&.project,
+          message_items
+        )
+      when Result
+        log_result_activity(
+          :result_file_duplicated,
+          @assoc,
+          file: @asset.file_name,
+          user: current_user.id,
+          my_module: @assoc.my_module.id
+        )
       end
 
       render json: new_asset, serializer: AssetSerializer, user: current_user
