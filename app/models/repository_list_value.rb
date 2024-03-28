@@ -57,10 +57,10 @@ class RepositoryListValue < ApplicationRecord
     new_data.to_i != repository_list_item_id
   end
 
-  def update_data!(new_data, user)
+  def update_data!(new_data, user, preview: false)
     self.repository_list_item_id = new_data.to_i
     self.last_modified_by = user
-    save!
+    preview ? validate : save!
   end
 
   def snapshot!(cell_snapshot)
