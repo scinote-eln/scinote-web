@@ -2,8 +2,8 @@
 
 require 'csv'
 
-module RepositoryZipExport
-  def self.to_csv(rows, column_ids, user, repository, handle_file_name_func = nil, in_module = false)
+module RepositoryCsvExport
+  def self.to_csv(rows, column_ids, user, repository, handle_file_name_func, in_module)
     # Parse column names
     csv_header = []
     add_consumption = in_module && !repository.is_a?(RepositorySnapshot) && repository.has_stock_management?
@@ -72,6 +72,6 @@ module RepositoryZipExport
         csv_row << row.row_consumption(row.stock_consumption) if add_consumption
         csv << csv_row
       end
-    end
+    end.encode('UTF-8', invalid: :replace, undef: :replace)
   end
 end
