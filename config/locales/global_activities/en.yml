@@ -317,6 +317,9 @@ en:
       task_step_file_duplicated_html: "%{user} duplicated file <strong>%{file}</strong> on protocol's step <strong>%{step}</strong> on task <strong>%{my_module}</strong>."
       result_file_duplicated_html: "%{user} duplicated file <strong>%{file}</strong> on result <strong>%{result}</strong> on task <strong>%{my_module}</strong>."
       protocol_step_file_duplicated_html: "%{user} duplicated file <strong>%{file}</strong> on protocol's step <strong>%{step}</strong> in Protocol repository."
+      task_step_asset_renamed_html: "%{user} renamed file %{old_name} to %{new_name} on protocol’s step <strong>%{step}</strong> on task <strong>%{my_module}</strong>."
+      protocol_step_asset_renamed_html: "%{user} renamed file %{old_name} to %{new_name} on protocol’s step <strong>%{step}</strong> in Protocol repository."
+      result_asset_renamed_html: "%{user} renamed file %{old_name} to %{new_name} on result <strong>%{result}</strong> on task <strong>%{my_module}</strong>."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -591,6 +594,9 @@ en:
       task_step_file_duplicated: "File attachment on Task step duplicated"
       result_file_duplicated: "File attachment on Task result duplicated"
       protocol_step_file_duplicated: "File attachment on Protocol step duplicated"
+      task_step_asset_renamed: "File attachment on Task step renamed"
+      protocol_step_asset_renamed: "File attachment on Protocol step renamed"
+      result_asset_renamed: "File attachment on Task result renamed"
     activity_group:
       projects: "Projects"
       task_results: "Task results"

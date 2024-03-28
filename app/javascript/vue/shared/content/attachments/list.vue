@@ -65,6 +65,7 @@
           @attachment:moved="attachmentMoved"
           @attachment:uploaded="reloadAttachments"
           @menu-toggle="toggleContextMenu"
+          @attachment:update="$emit('attachment:update', $event)"
         />
       </div>
   </div>

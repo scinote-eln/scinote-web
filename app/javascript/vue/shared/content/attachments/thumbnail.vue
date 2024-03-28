@@ -126,6 +126,8 @@
       @attachment:moved="attachmentMoved"
       @attachment:uploaded="reloadAttachments"
       @attachment:changed="$emit('attachment:changed', $event)"
+      @attachment:update="$emit('attachment:update', $event)"
+      @menu-visibility-changed="handleMenuVisibilityChange"
       @menu-toggle="toggleMenu"
       :withBorder="true"
     />

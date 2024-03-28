@@ -823,6 +823,7 @@ Rails.application.routes.draw do
     post 'files/:id/move', to: 'assets#move', as: 'asset_move'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
     post 'files/:id/duplicate', to: 'assets#duplicate', as: 'asset_duplicate'
+    patch 'files/:id/rename', to: 'assets#rename', as: 'asset_rename'
     post 'files/create_wopi_file',
          to: 'assets#create_wopi_file',
          as: 'create_wopi_file'

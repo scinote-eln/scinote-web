@@ -3640,12 +3640,17 @@ en:
       edit_in_marvinjs: "Open in Marvin JS"
     context_menu:
       set_view_size: "SET PREVIEW SIZE"
+      rename: "Rename"
       delete: "Delete"
       duplicate: "Duplicate"
       move: "Move"
       inline_html: "Large"
       thumbnail_html: "Thumbnail"
       list_html: "List"
+    rename_modal:
+      title: "Rename file"
+      min_length_error: "File name must be at least 1 character long."
+      max_length_error: "File name is too long (maximum number is 255 characters)."
     delete_file_modal:
       title: "Delete file"
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"

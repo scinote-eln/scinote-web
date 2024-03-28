@@ -146,7 +146,8 @@ class AssetSerializer < ActiveModel::Serializer
         delete: asset_destroy_path(object),
         duplicate: asset_duplicate_path(object),
         move_targets: asset_move_tagets_path(object),
-        move: asset_move_path(object)
+        move: asset_move_path(object),
+        rename: asset_rename_path(object)
       )
     end
 
