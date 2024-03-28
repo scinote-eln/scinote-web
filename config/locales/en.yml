@@ -461,6 +461,9 @@ en:
       updated_at: "Updated on"
       team: "Team"
       folder: "Folder"
+      experiment: "Experiment"
+      task: "Task"
+      untitled_protocol: 'Untitled protocol'
   comments:
     save_changes: "Save changes"
     empty_state:

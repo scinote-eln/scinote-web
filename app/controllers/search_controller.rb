@@ -42,6 +42,20 @@ class SearchController < ApplicationController
                    next_page: results.try(:next_page)
                  }
           return
+        when 'module_protocols'
+          search_module_protocols
+          results = if params[:preview] == 'true'
+                      @module_protocol_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
+                    else
+                      @module_protocol_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
+                    end
+          render json: results.joins({ my_module: :experiment }, :team),
+                 each_serializer: GlobalSearch::MyModuleProtocolSerializer,
+                 meta: {
+                   total: @search_count,
+                   next_page: results.try(:next_page)
+                 }
+          return
         when 'protocols'
           @protocol_search_count = fetch_cached_count(Protocol)
           search_protocols
@@ -302,6 +316,11 @@ class SearchController < ApplicationController
     @module_results = []
     @module_results = search_by_name(MyModule) if @module_search_count.positive?
     @search_count = @module_search_count
+  end
+
+  def search_module_protocols
+    @module_protocol_results = search_by_name(Protocol)
+    @search_count = @module_protocol_results.joins(:my_module).count
   end
 
   def search_results
