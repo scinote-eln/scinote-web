@@ -27,7 +27,7 @@
     <MenuDropdown
       class="ml-auto"
       :listItems="this.menu"
-      :btnClasses="`btn btn-sm icon-btn !bg-sn-white ${ withBorder ? 'btn-secondary' : 'btn-light'}`"
+      :btnClasses="`btn icon-btn bg-sn-white ${ withBorder ? 'btn-secondary' : 'btn-light'}`"
       :position="'right'"
       :btnIcon="'sn-icon sn-icon-more-hori'"
       @open_ove_editor="openOVEditor(attachment.attributes.urls.open_vector_editor_edit)"
@@ -35,9 +35,10 @@
       @open_scinote_editor="openScinoteEditor"
       @open_locally="openLocally"
       @delete="deleteModal = true"
+      @duplicate="duplicate"
       @viewMode="changeViewMode"
       @move="showMoveModal"
-      @menu-visibility-changed="$emit('menu-visibility-changed', $event)"
+      @menu-toggle="$emit('menu-toggle', $event)"
     ></MenuDropdown>
     <Teleport to="body">
       <deleteAttachmentModal
@@ -46,7 +47,7 @@
         @confirm="deleteAttachment"
         @cancel="deleteModal = false"
       />
-      <moveAssetModal
+      <MoveAssetModal
         v-if="movingAttachment"
         :parent_type="attachment.attributes.parent_type"
         :targets_url="attachment.attributes.urls.move_targets"
@@ -73,16 +74,17 @@
 
 <script>
 import deleteAttachmentModal from './delete_modal.vue';
-import moveAssetModal from '../modal/move.vue';
+import MoveAssetModal from '../modal/move.vue';
 import MoveMixin from './mixins/move.js';
 import OpenLocallyMixin from './mixins/open_locally.js';
 import MenuDropdown from '../../menu_dropdown.vue';
+import axios from '../../../../packs/custom_axios.js';
 
 export default {
   name: 'contextMenu',
   components: {
     deleteAttachmentModal,
-    moveAssetModal,
+    MoveAssetModal,
     MenuDropdown
   },
   mixins: [MoveMixin, OpenLocallyMixin],
@@ -91,7 +93,11 @@ export default {
       type: Object,
       required: true
     },
-    withBorder: { default: false, type: Boolean }
+    withBorder: { default: false, type: Boolean },
+    displayInDropdown: {
+      type: Array,
+      default: []
+    }
   },
   data() {
     return {
@@ -136,18 +142,27 @@ export default {
 
         menu.push({
           text,
-          emit: 'open_locally'
+          emit: 'open_locally',
+          data_e2e: 'e2e-BT-attachmentOptions-openLocally'
         });
       }
-      menu.push({
-        text: this.i18n.t('Download'),
-        url: this.attachment.attributes.urls.download,
-        url_target: '_blank'
-      });
-      if (this.attachment.attributes.urls.move_targets) {
+      if (this.displayInDropdown.includes('download')) {
+        menu.push({
+          text: this.i18n.t('Download'),
+          url: this.attachment.attributes.urls.download,
+          url_target: '_blank'
+        });
+      }
+      if (this.attachment.attributes.urls.move_targets && this.displayInDropdown.includes('move')) {
         menu.push({
           text: this.i18n.t('assets.context_menu.move'),
           emit: 'move'
+        });
+      }
+      if (this.attachment.attributes.urls.duplicate) {
+        menu.push({
+          text: this.i18n.t('assets.context_menu.duplicate'),
+          emit: 'duplicate'
         });
       }
       if (this.attachment.attributes.urls.delete) {
@@ -178,6 +193,13 @@ export default {
         type: 'PATCH',
         dataType: 'json',
         data: { asset: { view_mode: viewMode } }
+      });
+    },
+    duplicate() {
+      axios.post(this.attachment.attributes.urls.duplicate).then(() => {
+        this.reloadAttachments();
+      }).catch((e) => {
+        console.error(e);
       });
     },
     deleteAttachment() {

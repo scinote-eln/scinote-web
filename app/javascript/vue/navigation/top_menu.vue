@@ -37,6 +37,7 @@
       </template>
       <template v-slot:flyout >
         <NotificationsFlyout
+          :preferencesUrl="user.preferences_url"
           :notificationsUrl="notificationsUrl"
           :unseenNotificationsCount="unseenNotificationsCount"
           @update:unseenNotificationsCount="checkUnseenNotifications()"

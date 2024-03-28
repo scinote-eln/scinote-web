@@ -7,6 +7,7 @@ class ProtocolsController < ApplicationController
   include ProtocolsIoHelper
   include TeamsHelper
   include ProtocolsExporterV2
+  include UserRolesHelper
 
   before_action :check_create_permissions, only: %i(
     create
@@ -76,7 +77,7 @@ class ProtocolsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        protocols = Lists::ProtocolsService.new(Protocol.where(team: @current_team), params).call
+        protocols = Lists::ProtocolsService.new(Protocol.viewable_by_user(current_user, @current_team), params).call
         render json: protocols,
                each_serializer: Lists::ProtocolSerializer,
                user: current_user,
@@ -88,21 +89,12 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def datatable
-    render json: ::ProtocolsDatatable.new(
-      view_context,
-      @current_team,
-      @type,
-      current_user
-    )
-  end
-
   def versions_modal
     return render_403 unless @protocol.in_repository_published_original? || @protocol.initial_draft?
 
     @published_versions = @protocol.published_versions_with_original.order(version_number: :desc)
 
-    if @protocol.draft.present?
+    if @protocol.draft.present? || @protocol.initial_draft?
       draft = @protocol.initial_draft? ? @protocol : @protocol.draft
       draft_hash = ProtocolDraftSerializer.new(draft, scope: current_user).as_json
     end
@@ -129,17 +121,26 @@ class ProtocolsController < ApplicationController
       records = records.where(parent_id: @protocol.published_versions)
                        .or(records.where(parent_id: @protocol.id))
     end
-    records.preload(my_module: { experiment: :project }).distinct
+    records = records.preload(my_module: { experiment: { project: :project_folder } })
+                     .distinct.order(updated_at: :desc).page(params[:page]).per(10)
 
-    render json: records.map { |record|
-      {
-        my_module_name: record.my_module.name,
-        experiment_name: record.my_module.experiment.name,
-        project_name: record.my_module.experiment.project.name,
-        my_module_url: protocols_my_module_path(record.my_module),
-        experiment_url: my_modules_path(experiment_id: record.my_module.experiment.id),
-        project_url: experiments_path(project_id: record.my_module.experiment.project.id)
-      }
+    render json: {
+      data: records.map { |record|
+        project_folder = record.my_module.experiment.project.project_folder
+
+        {
+          my_module_name: record.my_module.name,
+          experiment_name: record.my_module.experiment.name,
+          project_name: record.my_module.experiment.project.name,
+          my_module_url: protocols_my_module_path(record.my_module),
+          experiment_url: my_modules_path(experiment_id: record.my_module.experiment.id),
+          project_url: experiments_path(project_id: record.my_module.experiment.project.id),
+          project_folder_name: project_folder.present? ? project_folder.name : nil,
+          project_folder_url: project_folder.present? ? project_folder_projects_url(project_folder) : nil
+        }
+      },
+      next_page: records.next_page,
+      total_pages: records.total_pages
     }
   end
 
@@ -485,19 +486,16 @@ class ProtocolsController < ApplicationController
       transaction_error = false
       Protocol.transaction do
         @protocol.load_from_repository(@source, current_user)
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.error(e.message)
+        Rails.logger.error(e.backtrace.join("\n"))
         transaction_error = true
         raise ActiveRecord::Rollback
       end
 
       if transaction_error
         # Bad request error
-        format.json do
-          render json: {
-            message: t('my_modules.protocols.load_from_repository_error')
-          },
-          status: :bad_request
-        end
+        render json: { message: t('my_modules.protocols.load_from_repository_error') }, status: :bad_request
       else
         # Everything good, record activity, display flash & render 200
         log_activity(:load_protocol_to_task_from_repository,
@@ -506,7 +504,7 @@ class ProtocolsController < ApplicationController
                      protocol_repository: @protocol.parent.id)
         flash[:success] = t('my_modules.protocols.load_from_repository_flash')
         flash.keep(:success)
-        render json: {}, status: :ok
+        render json: {}
       end
     else
       render json: {
@@ -850,6 +848,10 @@ class ProtocolsController < ApplicationController
     end
     @job = Protocols::DocxImportJob.perform_later(temp_files_ids, user_id: current_user.id, team_id: current_team.id)
     render json: { job_id: @job.job_id }
+  end
+
+  def user_roles
+    render json: { data: user_roles_collection(Protocol.new).map(&:reverse) }
   end
 
   private

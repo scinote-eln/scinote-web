@@ -92,9 +92,16 @@ class MyModulesController < ApplicationController
   end
 
   def show
-    render json: {
-      html: render_to_string(partial: 'show')
-    }
+    respond_to do |format|
+      format.html do
+        render json: {
+          html: render_to_string(partial: 'show')
+        }
+      end
+      format.json do
+        render json: @my_module, serializer: Lists::MyModuleSerializer, user: current_user
+      end
+    end
   end
 
   # Description modal window in full-zoom canvas
@@ -370,14 +377,7 @@ class MyModulesController < ApplicationController
       log_activity(:change_status_on_task_flow, @my_module, my_module_status_old: old_status_id,
                    my_module_status_new: @my_module.my_module_status.id)
 
-      render json: {
-        status: :changed,
-        html: render_to_string(
-          partial: 'my_modules/status_flow/task_flow_button',
-          locals: { my_module: @my_module },
-          formats: :html
-        )
-      }
+      render json: { status: :changed }
     else
       render json: { errors: @my_module.errors.messages.values.flatten.join('\n') }, status: :unprocessable_entity
     end
@@ -456,7 +456,9 @@ class MyModulesController < ApplicationController
   def load_experiment
     @experiment = Experiment.preload(user_assignments: %i(user user_role))
                             .find_by(id: params[:id] || params[:experiment_id])
+
     render_404 unless @experiment
+    render_403 unless can_read_experiment?(@experiment)
   end
 
   def load_experiment_my_modules

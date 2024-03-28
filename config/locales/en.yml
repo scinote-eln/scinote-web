@@ -567,12 +567,15 @@ en:
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
       card:
-        start_date: "Started on"
+        start_date: "Created on"
+        updated_on: "Updated on"
         id: "ID"
         visibility: "Visible to"
         users: "Access"
         name: "Project name"
         archived_date: "Archived on"
+        comments: 'Comments'
+        updated_at: 'Updated on'
       end_of_list_placeholder: 'You’ve reached the end of the list'
       folder:
         description: "%{projects_count} projects | %{folders_count} folders"
@@ -982,6 +985,7 @@ en:
         logo_params_error: 'Failed to parse logo parameters!'
     index:
       head_title: 'Label templates'
+      default_label: "Default label"
       search_templates: 'Search labels'
       thead_name: 'Label name'
       format: 'Format'
@@ -1340,7 +1344,10 @@ en:
         delete: "Delete"
       move_modal:
         search_placeholder: "Enter result name"
-        no_options_placeholder: "No steps available to select"
+        step:
+          no_options_placeholder: "No steps available to select"
+        result:
+          no_options_placeholder: "No results available to select"
       delete_modal:
         title: "Delete result"
         description_1: "You’re about to delete the result. It might contain data you don’t want to lose. You won’t be able to get it back."
@@ -1462,13 +1469,13 @@ en:
     card:
       name: "Experiment name"
       id: "ID"
-      start_date: "Started on"
-      modified_date: "Modified date"
+      start_date: "Created on"
+      modified_date: "Updated on"
       archived_date: "Archived on"
       completed_task: "Completed"
       completed_value: "%{completed}/%{all} tasks"
       description: "Description"
-      more: "more"
+      more: "More"
     index:
       edit_option: "Edit"
       clone_option: "Duplicate"
@@ -1991,6 +1998,8 @@ en:
             operators:
               contains: "Contains"
               does_not_contain: "Doesn’t contain"
+              contains_relationship: "Contains relationships"
+              does_not_contain_relationship: "Doesn’t contain relationships"
               equal_to: "Equal to"
               unequal_to: "Not equal to"
               greater_than: "Greater than"
@@ -2030,6 +2039,8 @@ en:
                 input_placeholder: "Enter text"
               RepositoryTextValue:
                 input_placeholder: "Enter %{name}"
+              RepositoryRelationshipValue:
+                input_placeholder: "Enter related item ID or name"
               RepositoryNumberValue:
                 input_placeholder: "Enter %{name}"
                 to_placeholder: "To"
@@ -2111,6 +2122,8 @@ en:
       file_columns: "Imported columns:"
       example_value: "Imported file content:"
       do_not_include_column: "Do not include this column"
+      edit_existing_items_checkbox: "Edit existing items"
+      overwrite_with_empty_cells: "Overwrite with empty cells"
       errors:
         invalid_file: "The file you provided is invalid. Make sure the file is encoded using %{encoding}."
         invalid_extension: "The file has invalid extension."
@@ -2127,6 +2140,7 @@ en:
       partial_success_flash: "%{nr} of %{total_nr} successfully imported. Other rows contained errors."
       error_message:
         items_limit: "The imported file contains too many rows. Max %{items_size} items allowed to upload at once."
+        importing_duplicates: "Items with duplicates detected: %{duplicate_ids}. These will be ignored on import."
         temp_file_not_found: "This file could not be found. Your session might expire."
         session_expired: "Your session expired. Please try again."
         no_data_to_parse: "There's nothing to be parsed."
@@ -2539,6 +2553,7 @@ en:
       head_title_archived: "Archived Inventories"
       table:
         name: "Inventory name"
+        id: "ID"
         number_of_items: "No. of items"
         shared: "Shared"
         ownership: "Owned by"
@@ -2989,6 +3004,18 @@ en:
     draft: "Draft"
     draft_name: "(Draft) %{name}"
     no_text_placeholder: 'No protocol description'
+    table:
+      filters:
+        label_name_and_keywords: 'Name and keywords'
+        published_on: 'Published on'
+        modified_on: 'Modified on'
+        has_draft: 'Has draft'
+        published_by:
+          label: 'Published by'
+          placeholder: 'Select a publisher'
+        members:
+          label: 'Access'
+          placeholder: 'Select who has access'
     reorder_steps:
         button: "Rearrange steps"
         modal:
@@ -3222,7 +3249,7 @@ en:
         published_on: "Published on"
         created_at: "Created at"
         archived_on: "Archived on"
-        updated_at: "Modified on"
+        updated_at: "Updated on"
       table:
         draft: "Draft"
       preview:
@@ -3232,7 +3259,7 @@ en:
         used_in: "Number of tasks linked to this protocol: %{nr}"
         no_linked_children: "This protocol is not linked to any task."
         length_menu: "Show %{number} per page"
-        show_version: "Show version"
+        show_version: "Show version:"
       restore: "Restore"
       restore_flash_html: "<b>%{count} protocol</b> template(s) successfully restored."
       make_private_unauthorized: "You do not have permission to move selected protocols to My protocols."
@@ -3614,6 +3641,7 @@ en:
     context_menu:
       set_view_size: "SET PREVIEW SIZE"
       delete: "Delete"
+      duplicate: "Duplicate"
       move: "Move"
       inline_html: "Large"
       thumbnail_html: "Thumbnail"
@@ -3698,6 +3726,7 @@ en:
     remove_access: "Remove access"
     grant_access: "Grant new access"
     you: "you"
+    no_results: "No results"
     create:
       success: "You have successfully granted access to %{member_name}."
       failure: "Something went wrong"
@@ -3814,6 +3843,11 @@ en:
   # This section contains general words that can be used in any parts of
   # application.
   datatable:
+    entries:
+      total:
+        one: "%{count} entry"
+        other: "%{count} entries"
+      selected: "%{selected} of %{count} selected"
     show: 'Show:'
     rows: 'rows'
   tiny_mce:
@@ -4061,6 +4095,10 @@ en:
   From: 'From'
   To: 'To'
 
+  input:
+    errors:
+      invalid_value: 'Invalid value'
+
   marvinjs:
     new_sketch: "New chemical drawing"
     new_button: "New chemical drawing"
@@ -4100,7 +4138,6 @@ en:
     title: "Filters"
     text:
       label: "Contains text"
-      label_name_and_keywords: "Name and keywords"
       placeholder: "Enter search terms..."
     from_placeholder: "From"
     to_placeholder: "To"

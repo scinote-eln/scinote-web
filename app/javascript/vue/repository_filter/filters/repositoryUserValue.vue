@@ -70,10 +70,10 @@ export default {
       this.value = value;
     },
     renderOption(data) {
-      return `<span class="user-filter-option" title="${data.label.trim()} | ${data.params.email}">
-                  <img class="item-avatar" src="${data.params.avatar_url}"/>
-                  ${data.label}
-                </span>`;
+      return `<div class="user-filter-option truncate flex items-center" title="${data.label.trim()} | ${data.params.email}">
+                  <img class="item-avatar rounded-full h-6 w-6" src="${data.params.avatar_url}"/>
+                  <span class='truncate'>${data.label}</span>
+                </div>`;
     }
   },
   computed: {

@@ -101,8 +101,8 @@ export default {
       const data = {
         select_all_teams: this.sharedWithAllRead,
         select_all_write_permission: this.sharedWithAllWrite,
-        share_team_ids: this.shareableTeams.filter((team) => team.private_shared_with).map((team) => team.id),
-        write_permissions: this.shareableTeams.filter((team) => team.private_shared_with_write).map((team) => team.id),
+        share_team_ids: this.shareableTeams.filter((team) => team.attributes.private_shared_with).map((team) => team.id),
+        write_permissions: this.shareableTeams.filter((team) => team.attributes.private_shared_with_write).map((team) => team.id),
         permission_changes: this.permission_changes
       };
       axios.post(this.repository.urls.share, data).then(() => {

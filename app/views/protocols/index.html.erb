@@ -34,8 +34,9 @@
           :archived-page-url="'<%= protocols_path(view_mode: :archived) %>'"
           current-view-mode="<%= params[:view_mode] || :active %>"
           :docx-parser-enabled="<%= Protocol.docx_parser_enabled? %>"
-          user-roles-url="<%= user_roles_projects_path %>"
+          user-roles-url="<%= user_roles_protocols_path %>"
           :create-url="'<%= protocols_path if can_create_protocols_in_repository?(current_team) %>'"
+          users-filter-url="<%= users_filter_projects_path %>"
         />
       </div>
     </div>
@@ -58,6 +59,7 @@
             class: 'tw-hidden',
             data: { target: '#protocolsioModal', toggle: 'modal' } %>
 
+<%= render partial: "protocols/index/protocol_preview_modal" %>
 <%= render partial: "protocols/index/protocolsio_modal" %>
 <div id="protocolsio-preview-modal-target"></div>
 <%= javascript_include_tag "protocols/index" %>

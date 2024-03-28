@@ -17,8 +17,8 @@ class AssetsController < ApplicationController
   helper_method :wopi_file_edit_button_status
 
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: %i(edit destroy create_wopi_file toggle_view_mode)
-  before_action :check_edit_permission, only: %i(edit destroy toggle_view_mode)
+  before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode)
+  before_action :check_edit_permission, only: %i(edit destroy duplicate toggle_view_mode)
 
   def file_preview
     render json: { html: render_to_string(
@@ -308,6 +308,43 @@ class AssetsController < ApplicationController
       render json: { flash: I18n.t('assets.file_deleted', file_name: escape_input(@asset.file_name)) }
     else
       render json: {}, status: :unprocessable_entity
+    end
+  end
+
+  def duplicate
+    ActiveRecord::Base.transaction do
+      case @asset.parent
+      when Step, Result
+        new_asset = @asset.duplicate(
+          new_name:
+            "#{@asset.file.filename.base} (1).#{@asset.file.filename.extension}"
+        )
+
+        @asset.parent.assets << new_asset
+      end
+
+      case @asset.parent
+      when Step
+        message_items = { file: @asset.file_name }
+        message_items[:my_module] = @assoc.protocol.my_module.id if @assoc.protocol.in_module?
+
+        log_step_activity(
+          "#{@assoc.protocol.in_module? ? 'task' : 'protocol'}_step_file_duplicated",
+          @assoc,
+          @assoc.my_module&.project,
+          message_items
+        )
+      when Result
+        log_result_activity(
+          :result_file_duplicated,
+          @assoc,
+          file: @asset.file_name,
+          user: current_user.id,
+          my_module: @assoc.my_module.id
+        )
+      end
+
+      render json: new_asset, serializer: AssetSerializer, user: current_user
     end
   end
 

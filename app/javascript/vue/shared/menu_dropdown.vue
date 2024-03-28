@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" v-if="listItems.length > 0 || alwaysShow" v-click-outside="closeMenu" >
+  <div class="inline" v-if="listItems.length > 0 || alwaysShow" v-click-outside="closeMenu" >
     <button ref="field" :class="btnClasses" :title="title" @click="isOpen = !isOpen">
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}
@@ -9,7 +9,7 @@
     <template v-if="isOpen">
       <teleport to="body">
         <div ref="flyout"
-            class="fixed z-[3000] sn-menu-dropdown bg-sn-white inline-block rounded p-2.5 sn-shadow-menu-sm flex flex-col gap-[1px]"
+            class="fixed z-[3000] sn-menu-dropdown bg-sn-white rounded p-2.5 sn-shadow-menu-sm flex flex-col gap-[1px]"
             :class="{
                 'right-0': position === 'right',
                 'left-0': position === 'left',
@@ -22,6 +22,7 @@
               :class="{ 'bg-sn-super-light-blue': item.active }"
               :data-toggle="item.modalTarget && 'modal'"
               :data-target="item.modalTarget"
+              :data-e2e="item.data_e2e"
               class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5"
               @click="handleClick($event, item)"
             >
@@ -87,6 +88,11 @@ export default {
     'click-outside': vOnClickOutside
   },
   mixins: [FixedFlyoutMixin],
+  watch: {
+    isOpen(newValue) {
+      this.$emit('menu-toggle', newValue);
+    }
+  },
   methods: {
     closeMenu() {
       this.isOpen = false;

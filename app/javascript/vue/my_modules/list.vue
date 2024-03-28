@@ -12,6 +12,8 @@
     :currentViewMode="currentViewMode"
     :filters="filters"
     :viewRenders="viewRenders"
+    :objectArchived="archived"
+    :hiddenDataMessage="i18n.t('experiments.empty_state.no_active_modules_archived_branch')"
     scrollMode="infinite"
     @tableReloaded="reloadingTable = false"
     @create="newModalOpen = true"
@@ -33,6 +35,7 @@
             :createUrl="createUrl"
             :projectTagsUrl="projectTagsUrl"
             :assignedUsersUrl="assignedUsersUrl"
+            :currentUserId="currentUserId"
             @create="updateTable"
             @close="newModalOpen = false" />
   <EditModal v-if="editModalObject"
@@ -57,7 +60,7 @@ import DueDateRenderer from './renderers/due_date.vue';
 import DesignatedUsers from './renderers/designated_users.vue';
 import TagsModal from './modals/tags.vue';
 import TagsRenderer from './renderers/tags.vue';
-import CommentsRenderer from './renderers/comments.vue';
+import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
 import NewModal from './modals/new.vue';
 import EditModal from './modals/edit.vue';
 import MoveModal from './modals/move.vue';
@@ -82,6 +85,7 @@ export default {
     activePageUrl: { type: String },
     archivedPageUrl: { type: String },
     currentViewMode: { type: String, required: true },
+    currentUserId: { type: String, required: true },
     createUrl: { type: String, required: true },
     userRolesUrl: { type: String, required: true },
     canvasUrl: { type: String, required: true },
@@ -90,7 +94,8 @@ export default {
     assignedUsersUrl: { type: String, required: true },
     usersFilterUrl: { type: String, required: true },
     statusesList: { type: Array, required: true },
-    projectName: { type: String }
+    projectName: { type: String },
+    archived: { type: Boolean }
   },
   data() {
     return {
@@ -126,18 +131,18 @@ export default {
       {
         field: 'results',
         headerName: this.i18n.t('experiments.table.column.results_html'),
-        sortable: false,
+        sortable: true,
         cellRenderer: this.resultsRenderer
       },
       {
         field: 'age',
         headerName: this.i18n.t('experiments.table.column.age_html'),
-        sortable: false
+        sortable: true
       },
       {
         field: 'status',
         headerName: this.i18n.t('experiments.table.column.status_html'),
-        sortable: false,
+        sortable: true,
         cellRenderer: this.statusRenderer
       }
     ];
@@ -153,14 +158,14 @@ export default {
     columns.push({
       field: 'designated',
       headerName: this.i18n.t('experiments.table.column.assigned_html'),
-      sortable: false,
+      sortable: true,
       cellRenderer: DesignatedUsers,
       minWidth: 220
     });
     columns.push({
       field: 'tags',
       headerName: this.i18n.t('experiments.table.column.tags_html'),
-      sortable: false,
+      sortable: true,
       cellRenderer: TagsRenderer
     });
     columns.push({
@@ -267,10 +272,14 @@ export default {
       this.editModalObject = null;
       this.moveModalObject = null;
     },
+    updateNavigator(withExpanedChildren = false) {
+      window.navigatorContainer.reloadNavigator(withExpanedChildren);
+    },
     async archive(event, rows) {
       axios.post(event.path, { my_modules: rows.map((row) => row.id) }).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
+        this.updateNavigator(true);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
@@ -279,6 +288,7 @@ export default {
       axios.post(event.path, { my_modules_ids: rows.map((row) => row.id), view: 'table' }).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
+        this.updateNavigator(true);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
@@ -305,20 +315,37 @@ export default {
         roles_path: this.userRolesUrl
       };
     },
+    checkProvisioning(params) {
+      if (params.data.provisioning_status === 'done') return;
+
+      axios.get(params.data.urls.provisioning_status).then((response) => {
+        const provisioningStatus = response.data.provisioning_status;
+        if (provisioningStatus === 'done') {
+          this.reloadingTable = true;
+        } else {
+          setTimeout(() => {
+            this.checkProvisioning(params);
+          }, 5000);
+        }
+      });
+    },
     // Renderers
     nameRenderer(params) {
       const { name, urls } = params.data;
       const provisioningStatus = params.data.provisioning_status;
       if (provisioningStatus === 'in_progress') {
+        setTimeout(() => {
+          this.checkProvisioning(params);
+        }, 5000);
         return `
           <span class="flex gap-2 items-center">
             <div title="${this.i18n.t('experiments.duplicate_tasks.duplicating')}"
                  class="loading-overlay w-6 h-6 !relative" data-toggle="tooltip" data-placement="right"></div>
-            ${name}
+            <span class="truncate">${name}</span>
           </span>`;
       }
 
-      return `<a href="${urls.show}" title="${name}" >${name}</a>`;
+      return `<a href="${urls.show}" title="${name}" ><span class="truncate">${name}</span></a>`;
     },
     statusRenderer(params) {
       const { status } = params.data;
@@ -338,7 +365,7 @@ export default {
     usersFilterRenderer(option) {
       return `<div class="flex items-center gap-2">
                 <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
-                <span>${option[1]}</span>
+                <span title="${option[1]}" class="truncate">${option[1]}</span>
               </div>`;
     }
   }

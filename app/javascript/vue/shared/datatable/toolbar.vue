@@ -27,7 +27,7 @@
         <MenuDropdown
           v-if="viewRenders"
           :listItems="this.viewRendersMenu"
-          :btnClasses="'btn btn-light icon-btn btn-black'"
+          :btnClasses="'btn btn-secondary !border-sn-light-grey px-3'"
           :btnText="i18n.t(`toolbar.${currentViewRender}_view`)"
           :caret="true"
           :position="'right'"
@@ -37,8 +37,8 @@
         <MenuDropdown
           v-if="archivedPageUrl"
           :listItems="this.viewModesMenu"
-          :btnClasses="'btn btn-light icon-btn btn-black'"
-          :btnText="i18n.t(`projects.index.${currentViewMode}`)"
+          :btnClasses="'btn btn-secondary !border-sn-light-grey px-3'"
+          :btnText="i18n.t(`toolbar.${currentViewMode}_state`)"
           :caret="true"
           :position="'right'"
         ></MenuDropdown>
@@ -56,7 +56,7 @@
            :class="{'w-48': showSearch, 'w-11': !showSearch}">
         <input
           ref="searchInput"
-          class="sci-input-field !pr-8"
+          class="sci-input-field !pr-9"
           type="text"
           @focus="openSearch"
           @blur="hideSearch"
@@ -184,20 +184,29 @@ export default {
   computed: {
     viewModesMenu() {
       return [
-        { text: this.i18n.t('projects.index.active'), url: this.activePageUrl },
-        { text: this.i18n.t('projects.index.archived'), url: this.archivedPageUrl }
+        {
+          text: this.i18n.t('toolbar.active_state'),
+          url: this.activePageUrl,
+          active: this.currentViewMode === 'active'
+        },
+        {
+          text: this.i18n.t('toolbar.archived_state'),
+          url: this.archivedPageUrl,
+          active: this.currentViewMode === 'archived'
+        }
       ];
     },
     viewRendersMenu() {
       return this.viewRenders.map((view) => {
         const { type } = view;
+        const active = this.currentViewRender === type;
         switch (type) {
           case 'cards':
-            return { text: this.i18n.t('toolbar.cards_view'), emit: 'setCardsView' };
+            return { text: this.i18n.t('toolbar.cards_view'), emit: 'setCardsView', active };
           case 'table':
-            return { text: this.i18n.t('toolbar.table_view'), emit: 'setTableView' };
+            return { text: this.i18n.t('toolbar.table_view'), emit: 'setTableView', active };
           case 'custom':
-            return { text: view.name, url: view.url };
+            return { text: view.name, url: view.url, active };
           default:
             return view;
         }

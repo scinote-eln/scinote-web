@@ -123,7 +123,7 @@ module Navigator
                     'project_folders.archived',
                     "#{has_children_sql} AS has_children"
                   ).group('project_folders.id')
-                  .having("project_folders.archived = :archived OR #{has_children_sql}", archived: archived)
+                  .having('project_folders.archived = :archived', archived: archived)
     end
 
     def fetch_experiments(object, archived = false)

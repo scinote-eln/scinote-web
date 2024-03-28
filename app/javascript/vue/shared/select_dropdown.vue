@@ -1,12 +1,17 @@
 <template>
-  <div v-click-outside="close" class="w-full">
+  <div v-click-outside="close"
+       @focus="open"
+       @keydown="keySelectOptions($event)"
+       tabindex="0" class="w-full focus:outline-none "
+  >
     <div
       ref="field"
-      class="px-3 py-1 border border-solid border-sn-light-grey rounded flex items-center cursor-pointer"
+      class="px-3 py-1 border border-solid rounded flex items-center cursor-pointer"
       @click="open"
       :class="[sizeClass, {
-        'border-sn-blue': isOpen,
-        'bg-sn-sleepy-grey': disabled
+        '!border-sn-blue': isOpen,
+        '!border-sn-light-grey': !isOpen,
+        'bg-sn-super-light-grey': disabled
       }]"
     >
     <template v-if="!tagsView">
@@ -53,7 +58,7 @@
                     fixed z-[3000]">
           <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
             <div @click="selectAll" :class="sizeClass"
-                class="border-x-0 border-transparent border-solid border-b-sn-light-grey
+                class="border border-x-0 !border-transparent border-solid !border-b-sn-light-grey
                         py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
               <div class="sn-checkbox-icon"
                   :class="selectAllState"
@@ -62,21 +67,25 @@
             </div>
           </div>
           <perfect-scrollbar class="p-2.5 flex flex-col max-h-80 relative" :class="{ 'pt-0': withCheckboxes }">
-            <template v-for="option in filteredOptions" :key="option[0]">
+            <template v-for="(option, i) in filteredOptions" :key="option[0]">
               <div
                 @click.stop="setValue(option[0])"
+                ref="options"
                 class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0"
-                :class="[sizeClass, {'!bg-sn-super-light-blue': valueSelected(option[0])}]"
+                :class="[sizeClass, {
+                  '!bg-sn-super-light-blue': valueSelected(option[0]) && focusedOption !== i,
+                  '!bg-sn-super-light-grey': focusedOption === i ,
+                }]"
               >
                 <div v-if="withCheckboxes"
-                    class="sn-checkbox-icon"
+                    class="sn-checkbox-icon shrink-0"
                     :class="{
                       'checked': valueSelected(option[0]),
                       'unchecked': !valueSelected(option[0]),
                     }"
                 ></div>
-                <div v-if="optionRenderer" v-html="optionRenderer(option)"></div>
-                <div v-else >{{ option[1] }}</div>
+                <div class="truncate" v-if="optionRenderer" v-html="optionRenderer(option)"></div>
+                <div class="truncate" v-else >{{ option[1] }}</div>
               </div>
             </template>
             <div v-if="filteredOptions.length === 0" class="text-sn-grey text-center py-2.5">
@@ -117,7 +126,7 @@ export default {
     urlParams: { type: Object, default: () => ({}) }
   },
   directives: {
-    'click-outside': vOnClickOutside,
+    'click-outside': vOnClickOutside
   },
   data() {
     return {
@@ -127,6 +136,7 @@ export default {
       selectAllState: 'unchecked',
       query: '',
       fixedWidth: true,
+      focusedOption: null
     };
   },
   mixins: [FixedFlyoutMixin],
@@ -243,7 +253,7 @@ export default {
     },
     query() {
       if (this.optionsUrl) this.fetchOptions();
-    },
+    }
   },
   methods: {
     renderLabel(option) {
@@ -289,7 +299,7 @@ export default {
         if (this.newValue.includes(value)) {
           this.newValue = this.newValue.filter((v) => v !== value);
         } else {
-          this.newValue.push(value);
+          this.newValue = [...this.newValue, value];
         }
       } else {
         this.newValue = value;
@@ -331,6 +341,23 @@ export default {
       }
       return true;
     },
-  },
+    keySelectOptions(e) {
+      if (e.key === 'Tab') this.close();
+      if (['ArrowDown', 'ArrowUp', 'Enter'].some((key) => e.key === key)) {
+        if (e.key === 'ArrowDown') {
+          this.focusedOption = this.focusedOption === null ? 0 : this.focusedOption + 1;
+          if (this.focusedOption > this.$refs.options.length - 1) this.focusedOption = 0;
+        } else if (e.key === 'ArrowUp') {
+          this.focusedOption = (this.focusedOption || this.$refs.options.length) - 1;
+          if (this.focusedOption < 0) this.focusedOption = this.$refs.options.length - 1;
+        } else if (e.key === 'Enter' && this.focusedOption !== null) {
+          this.setValue(this.filteredOptions[this.focusedOption][0]);
+        }
+      }
+      if (this.$refs.options) {
+        this.$refs.options[this.focusedOption]?.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }
 };
 </script>

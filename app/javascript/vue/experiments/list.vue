@@ -11,6 +11,8 @@
     :currentViewMode="currentViewMode"
     :filters="filters"
     :viewRenders="viewRenders"
+    :objectArchived="archived"
+    :hiddenDataMessage="i18n.t('projects.show.empty_state.no_active_experiment_archived_project')"
     scrollMode="infinite"
     @tableReloaded="reloadingTable = false"
     @archive="archive"
@@ -91,7 +93,8 @@ export default {
     archivedPageUrl: { type: String },
     currentViewMode: { type: String, required: true },
     createUrl: { type: String, required: true },
-    userRolesUrl: { type: String, required: true }
+    userRolesUrl: { type: String, required: true },
+    archived: { type: Boolean }
   },
   data() {
     return {
@@ -112,23 +115,26 @@ export default {
           flex: 1,
           headerName: this.i18n.t('experiments.card.name'),
           sortable: true,
-          cellRenderer: NameRenderer
+          cellRenderer: NameRenderer,
+          minWidth: 150
         },
         {
           field: 'code',
           headerName: this.i18n.t('experiments.id'),
-          sortable: true
+          sortable: true,
+          minWidth: 80
         },
         {
           field: 'created_at',
           headerName: this.i18n.t('experiments.card.start_date'),
           sortable: true,
-          minWidth: 130
+          minWidth: 110
         },
         {
           field: 'updated_at',
           headerName: this.i18n.t('experiments.card.modified_date'),
-          sortable: false
+          sortable: true,
+          minWidth: 110
         }
       ];
 
@@ -141,19 +147,20 @@ export default {
       }
 
       columns.push({
-        field: 'total_tasks',
+        field: 'completed_tasks',
         headerName: this.i18n.t('experiments.card.completed_task'),
         cellRenderer: CompletedTasksRenderer,
-        sortable: false,
-        minWidth: 120
+        sortable: true,
+        minWidth: 110
       });
       columns.push({
         field: 'description',
         headerName: this.i18n.t('experiments.card.description'),
-        sortable: false,
+        sortable: true,
         cellStyle: { 'white-space': 'normal' },
         cellRenderer: DescriptionRenderer,
-        autoHeight: true
+        autoHeight: true,
+        minWidth: 110
       });
 
       return columns;
@@ -218,10 +225,14 @@ export default {
       this.descriptionModalObject = null;
       this.reloadingTable = true;
     },
+    updateNavigator(withExpanedChildren = false) {
+      window.navigatorContainer.reloadNavigator(withExpanedChildren);
+    },
     async archive(event, rows) {
       axios.post(event.path, { experiment_ids: rows.map((row) => row.id) }).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
+        this.updateNavigator(false);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
@@ -230,6 +241,7 @@ export default {
       axios.post(event.path, { experiment_ids: rows.map((row) => row.id) }).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
+        this.updateNavigator(false);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
@@ -240,8 +252,9 @@ export default {
     duplicate(_e, experiment) {
       [this.duplicateModalObject] = experiment;
     },
-    move(_e, experiment) {
-      [this.moveModalObject] = experiment;
+    move(event, rows) {
+      [this.moveModalObject] = rows;
+      this.moveModalObject.movePath = event.path;
     },
     edit(_e, experiment) {
       [this.editModalObject] = experiment;

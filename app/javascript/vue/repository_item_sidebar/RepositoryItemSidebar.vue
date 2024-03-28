@@ -504,7 +504,8 @@ export default {
         '.modal',
         '.dp__instance_calendar',
         '.label-printing-progress-modal',
-        '.atwho-view'
+        '.atwho-view',
+        '.sn-select-dropdown'
       ];
 
       const excludeSelectors = ['#myModuleRepositoryFullViewModal'];

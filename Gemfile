@@ -11,7 +11,7 @@ gem 'figaro'
 gem 'pg', '~> 1.5'
 gem 'pg_search' # PostgreSQL full text search
 gem 'psych', '< 4.0'
-gem 'rails', '~> 7.0.5'
+gem 'rails', '~> 7.0.8'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize'
 gem 'sprockets-rails'

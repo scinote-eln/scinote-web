@@ -144,10 +144,12 @@ class AssetSerializer < ActiveModel::Serializer
         marvin_js_start_edit: start_editing_marvin_js_asset_path(object),
         start_edit_image: start_edit_image_path(object),
         delete: asset_destroy_path(object),
+        duplicate: asset_duplicate_path(object),
         move_targets: asset_move_tagets_path(object),
         move: asset_move_path(object)
       )
     end
+
     urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)
 
     if can_manage_asset?(user, object) && can_open_asset_locally?(user, object)
@@ -157,7 +159,7 @@ class AssetSerializer < ActiveModel::Serializer
       urls[:asset_checksum] = asset_checksum_path(object)
     end
 
-    urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi && can_manage_asset?(user, object)
+    urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi && can_read_asset?(user, object)
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?
 
     urls

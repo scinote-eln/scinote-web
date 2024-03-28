@@ -6,6 +6,7 @@
 # @mappings: mappings for columns
 # @user: current_user
 # @repository: the repository in which we import the items
+
 module RepositoryImportParser
   class Importer
     IMPORT_BATCH_SIZE = 500
@@ -24,11 +25,11 @@ module RepositoryImportParser
       @repository_columns = @repository.repository_columns
     end
 
-    def run
+    def run(can_edit_existing_items, should_overwrite_with_empty_cells)
       fetch_columns
       return check_for_duplicate_columns if check_for_duplicate_columns
 
-      import_rows!
+      import_rows!(can_edit_existing_items, should_overwrite_with_empty_cells)
     end
 
     private
@@ -54,8 +55,9 @@ module RepositoryImportParser
       end
     end
 
-    def import_rows!
+    def import_rows!(can_edit_existing_items, should_overwrite_with_empty_cells)
       errors = false
+      duplicate_ids = SpreadsheetParser.duplicate_ids(@sheet)
 
       @repository.transaction do
         batch_counter = 0
@@ -65,6 +67,9 @@ module RepositoryImportParser
           # Skip empty rows
           next if row.blank?
 
+          # Skip duplicates
+          next if duplicate_ids.include?(row.first)
+
           unless @header_skipped
             @header_skipped = true
             next
@@ -72,27 +77,47 @@ module RepositoryImportParser
           @total_new_rows += 1
 
           new_full_row = {}
-          SpreadsheetParser.parse_row(
+          incoming_row = SpreadsheetParser.parse_row(
             row,
             @sheet,
             date_format: @user.settings['date_format']
-          ).each_with_index do |value, index|
+          )
+
+          incoming_row.each_with_index do |value, index|
             if index == @name_index
-              new_row =
+
+              # check if row (inventory) already exists
+              existing_row = RepositoryRow.find_by(id: incoming_row[0])
+
+              # if it doesn't exist create it
+              unless existing_row
+                new_row =
                 RepositoryRow.new(name: try_decimal_to_string(value),
                                   repository: @repository,
                                   created_by: @user,
                                   last_modified_by: @user)
-              unless new_row.valid?
+                unless new_row.valid?
+                  errors = true
+                  break
+                end
+                new_full_row[:repository_row] = new_row
+                next
+              end
+
+              # if it does exist but shouldn't be edited, error out and break
+              if existing_row && can_edit_existing_items == '0'
                 errors = true
                 break
               end
 
-              new_full_row[:repository_row] = new_row
-              next
+              # if it does exist and should be edited, update the existing row
+              if existing_row && can_edit_existing_items == '1'
+                # update the existing row with incoming row data
+                new_full_row[:repository_row] = existing_row
+              end
             end
-            next unless @columns[index]
 
+            next unless @columns[index]
             new_full_row[index] = value
           end
 
@@ -103,13 +128,13 @@ module RepositoryImportParser
 
           next if batch_counter < IMPORT_BATCH_SIZE
 
-          import_batch_to_database(full_row_import_batch)
+          import_batch_to_database(full_row_import_batch, can_edit_existing_items, should_overwrite_with_empty_cells)
           full_row_import_batch = []
           batch_counter = 0
         end
 
         # Import of the remaining rows
-        import_batch_to_database(full_row_import_batch) if full_row_import_batch.any?
+        import_batch_to_database(full_row_import_batch, can_edit_existing_items, should_overwrite_with_empty_cells) if full_row_import_batch.any?
       end
 
       if errors
@@ -120,44 +145,65 @@ module RepositoryImportParser
       { status: :ok, nr_of_added: @new_rows_added, total_nr: @total_new_rows }
     end
 
-    def import_batch_to_database(full_row_import_batch)
-      repository_rows = full_row_import_batch.collect { |row| row[:repository_row] }
-      @new_rows_added += RepositoryRow.import(repository_rows, recursive: false, validate: false).ids.length
-      repository_rows.each { |row| row.run_callbacks(:create) }
+    def import_batch_to_database(full_row_import_batch, can_edit_existing_items, should_overwrite_with_empty_cells)
+      skipped_rows = []
 
-      import_mappings = Hash[@columns.map { |column| column&.data_type&.to_sym }
-                                     .compact
-                                     .uniq
-                                     .map { |data_type| [data_type, []] }]
+      full_row_import_batch.each do |full_row|
+        # skip archived rows and rows that belong to other repositories
+        if full_row[:repository_row].archived || full_row[:repository_row].repository_id != @repository.id
+          skipped_rows << full_row[:repository_row]
+          next
+        end
 
-      full_row_import_batch.each do |row|
-        next unless row[:repository_row].id
+        full_row[:repository_row].save!(validate: false)
+        @new_rows_added += 1
 
-        row.reject { |k| k == :repository_row }.each do |index, value|
+        full_row.reject { |k| k == :repository_row }.each do |index, value|
           column = @columns[index]
           value = try_decimal_to_string(value) unless column.repository_number_value?
           next if value.nil?
 
-          cell_value_attributes = { created_by: @user,
-                                    last_modified_by: @user,
-                                    repository_cell_attributes: { repository_row: row[:repository_row],
-                                                                  repository_column: column,
-                                                                  importing: true } }
+          cell_value_attributes = {
+            created_by: @user,
+            last_modified_by: @user,
+            repository_cell_attributes: {
+              repository_row: full_row[:repository_row],
+              repository_column: column,
+              importing: true
+            }
+          }
+
           cell_value = column.data_type.constantize.import_from_text(
             value,
             cell_value_attributes,
             @user.as_json(root: true, only: :settings).deep_symbolize_keys
           )
-          next if cell_value.nil?
 
-          cell_value.repository_cell.value = cell_value
+          existing_cell = full_row[:repository_row].repository_cells.find_by(repository_column: column)
 
-          import_mappings[column.data_type.to_sym] << cell_value
+          next if cell_value.nil? && existing_cell.nil?
+
+          # no existing_cell. Create a new one.
+          if !existing_cell
+            cell_value.repository_cell.value = cell_value
+            cell_value.save!(validate: false)
+          else
+            # existing_cell present && !can_edit_existing_items
+            next if can_edit_existing_items == '0'
+
+            # existing_cell present && can_edit_existing_items
+            if can_edit_existing_items == '1'
+              # if incoming cell is not empty
+              existing_cell.value.update_data!(cell_value.data, @user) if !cell_value.nil?
+
+              # if incoming cell is empty && should_overwrite_with_empty_cells
+              existing_cell.value.destroy! if cell_value.nil? && should_overwrite_with_empty_cells == '1'
+
+              # if incoming cell is empty && !should_overwrite_with_empty_cells
+              next if cell_value.nil? && should_overwrite_with_empty_cells == '0'
+            end
+          end
         end
-      end
-
-      import_mappings.each do |data_type, cell_values|
-        data_type.to_s.constantize.import(cell_values, recursive: true, validate: false)
       end
     end
 

@@ -34,8 +34,7 @@ module Lists
 
     def fetch_projects
       @team.projects
-           .includes(:team, user_assignments: %i(user user_role))
-           .includes(:project_comments, experiments: { my_modules: { my_module_status: :my_module_status_implications } })
+           .includes(:team, :project_comments, user_assignments: %i(user user_role))
            .visible_to(@user, @team)
            .left_outer_joins(:project_comments)
            .select('projects.*')
@@ -115,11 +114,35 @@ module Lists
         @records = @records.sort_by(&:archived_on)
       when 'archived_on_DESC'
         @records = @records.sort_by(&:archived_on).reverse!
+      when 'users_ASC'
+        @records = @records.sort_by { |object| project_users_count(object) }
+      when 'users_DESC'
+        @records = @records.sort_by { |object| project_users_count(object) }.reverse!
+      when 'updated_at_ASC'
+        @records = @records.sort_by(&:updated_at).reverse!
+      when 'updated_at_DESC'
+        @records = @records.sort_by(&:updated_at)
+      when 'comments_ASC'
+        @records = @records.sort_by { |object| project_comments_count(object) }
+      when 'comments_DESC'
+        @records = @records.sort_by { |object| project_comments_count(object) }.reverse!
       end
     end
 
     def paginate_records
       @records = Kaminari.paginate_array(@records).page(@params[:page]).per(@params[:per_page])
+    end
+
+    def project_comments_count(object)
+      project?(object) ? object.comments.count : -1
+    end
+
+    def project_users_count(object)
+      project?(object) ? object.users.count : -1
+    end
+
+    def project?(object)
+      object.instance_of?(Project)
     end
   end
 end

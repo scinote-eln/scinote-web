@@ -52,9 +52,15 @@
     min-height: 300px;
     padding: 0;
 
-    .dropdown-selector,
-    .users-filter-dropdown {
-      overflow: hidden;
+    .dropdown-selector {
+      .ps__rail-x,
+      .ps__rail-x::after,
+      .ps__rail-x::before,
+      .ps__rail-y,
+      .ps__rail-y::after,
+      .ps__rail-y::before {
+        background-color: transparent !important;
+      }
     }
 
     .header {

@@ -61,7 +61,9 @@
         updateStartDate();
       };
     });
-    window.initDateTimePickerComponent('#calendarStartDateContainer');
+    if ($('#calendarStartDateContainer').length) {
+      window.initDateTimePickerComponent('#calendarStartDateContainer');
+    }
   }
 
   function updateDueDate() {
@@ -90,7 +92,10 @@
         updateDueDate();
       };
     });
-    window.initDateTimePickerComponent('#calendarDueDateContainer');
+
+    if ($('#calendarDueDateContainer').length) {
+      window.initDateTimePickerComponent('#calendarDueDateContainer');
+    }
   }
 
   function initTagsSelector() {

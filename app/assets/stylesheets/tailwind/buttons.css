@@ -59,7 +59,9 @@
   }
 
   .btn.btn-primary:hover,
-  .btn.btn-success:hover{
+  .btn.btn-success:hover,
+  .btn.btn-primary:focus,
+  .btn.btn-success:focus{
     @apply bg-sn-blue-hover text-sn-white;
   }
 
@@ -67,7 +69,7 @@
   .btn.btn-primary.disabled,
   .btn.btn-success:disabled,
   .btn.btn-success.disabled {
-    @apply bg-sn-light-grey text-sn-sleepy-grey border-sn-light-grey;
+    @apply bg-sn-super-light-grey text-sn-grey border-sn-grey;
   }
 
   .btn.btn-secondary,
@@ -80,7 +82,8 @@
   }
 
   .btn.btn-secondary:hover,
-  .btn.btn-default:hover {
+  .btn.btn-default:hover,
+  .btn.btn-secondary:focus {
     @apply  border-sn-blue-hover;
   }
 
@@ -129,7 +132,8 @@
     @apply bg-sn-delete-red text-sn-white;
   }
 
-  .btn.btn-danger:hover {
+  .btn.btn-danger:hover,
+  .btn.btn-danger:focus {
     @apply bg-sn-delete-red-hover;
   }
 
