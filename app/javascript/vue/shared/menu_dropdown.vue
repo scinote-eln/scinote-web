@@ -19,7 +19,9 @@
             <div v-if="item.dividerBefore" class="border-0 border-t border-solid border-sn-light-grey"></div>
             <a :href="item.url" v-if="!item.submenu"
               :target="item.url_target || '_self'"
-              :class="{ 'bg-sn-super-light-blue': item.active }"
+              :class="{ 'bg-sn-super-light-blue': item.active, 'disabled': item.disabled }"
+              :style="item.disabled === 'style-only' && 'pointer-events: all'"
+              :title="item.title"
               :data-toggle="item.modalTarget && 'modal'"
               :data-target="item.modalTarget"
               :data-e2e="item.data_e2e"
