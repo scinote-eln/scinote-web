@@ -7,7 +7,15 @@
         @change="switchTeam"
       ></SelectDropdown>
     </div>
-    <QuickSearch v-if="user && !hideSearch" :quickSearchUrl="quickSearchUrl" :searchUrl="searchUrl" :currentTeam="currentTeam"></QuickSearch>
+    <QuickSearch
+      v-if="user"
+      :class="{'hidden': hideSearch}"
+      :quickSearchUrl="quickSearchUrl"
+      :searchUrl="searchUrl"
+      :currentTeam="currentTeam"
+      :teamsUrl="teamsUrl"
+      :usersUrl="usersUrl"
+    ></QuickSearch>
     <MenuDropdown
       class="ml-auto"
       v-if="settingsMenu && settingsMenu.length > 0"
@@ -84,7 +92,9 @@ export default {
     url: String,
     notificationsUrl: String,
     unseenNotificationsUrl: String,
-    quickSearchUrl: String
+    quickSearchUrl: String,
+    teamsUrl: String,
+    usersUrl: String
   },
   data() {
     return {
