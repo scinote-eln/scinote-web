@@ -12,6 +12,7 @@ amazon:
   secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
   region: <%= ENV["S3_REGION"] || ENV["AWS_REGION"] %>
   bucket: <%= ENV["S3_BUCKET"] %>
+  staging_bucket: <%= ENV["S3_STAGING_BUCKET"] %>
   subfolder: <%= ENV["S3_SUBFOLDER"] %>
 
 # Remember not to checkin your GCS keyfile to a repository

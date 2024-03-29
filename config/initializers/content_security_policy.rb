@@ -45,6 +45,9 @@ Rails.application.configure do
   config.after_initialize do
     if ActiveStorage::Blob.service.name == :amazon
       Extends::EXTERNAL_SERVICES += [ActiveStorage::Blob.service.bucket.url]
+      if ActiveStorage::Blob.service.staging_bucket.present?
+        Extends::EXTERNAL_SERVICES += [ActiveStorage::Blob.service.staging_bucket.url]
+      end
       Rails.application.config.content_security_policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
     end
   end

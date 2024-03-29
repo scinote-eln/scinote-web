@@ -13,8 +13,7 @@ class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
   end
 
   discard_on ActiveRecord::RecordNotFound
-
-  retry_on ActiveStorage::IntegrityError, attempts: 3, wait: :exponentially_longer
+  retry_on ActiveStorage::IntegrityError, attempts: 10, wait: :exponentially_longer
 
   def perform(blob_id)
     blob = ActiveStorage::Blob.find(blob_id)
