@@ -126,7 +126,8 @@ export default {
         field: 'due_date',
         headerName: this.i18n.t('experiments.table.column.due_date_html'),
         sortable: true,
-        cellRenderer: DueDateRenderer
+        cellRenderer: DueDateRenderer,
+        minWidth: 200
       },
       {
         field: 'results',
@@ -143,7 +144,8 @@ export default {
         field: 'status',
         headerName: this.i18n.t('experiments.table.column.status_html'),
         sortable: true,
-        cellRenderer: this.statusRenderer
+        cellRenderer: this.statusRenderer,
+        minWidth: 200
       }
     ];
 

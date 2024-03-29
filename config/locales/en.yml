@@ -1545,7 +1545,7 @@ en:
       column:
         id_html: 'ID'
         task_name_html: 'Task name'
-        due_date_html: 'Due'
+        due_date_html: 'Due date'
         archived_html: 'Archived on'
         age_html: 'Age'
         results_html: 'Results'
