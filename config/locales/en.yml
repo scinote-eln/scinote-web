@@ -461,6 +461,7 @@ en:
       updated_at: "Updated on"
       team: "Team"
       folder: "Folder"
+      project: "Project"
   comments:
     save_changes: "Save changes"
     empty_state:
