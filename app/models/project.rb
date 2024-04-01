@@ -322,6 +322,10 @@ class Project < ApplicationRecord
     report.destroy if report.present?
   end
 
+  def archived_branch?
+    archived?
+  end
+
   private
 
   def project_folder_team
