@@ -18,6 +18,7 @@
           <span v-for="(item, i) in listItems" :key="i" class="contents">
             <div v-if="item.dividerBefore" class="border-0 border-t border-solid border-sn-light-grey"></div>
             <a :href="item.url" v-if="!item.submenu"
+              v-html="item.text"
               :target="item.url_target || '_self'"
               :class="{ 'bg-sn-super-light-blue': item.active, 'disabled': item.disabled }"
               :style="item.disabled === 'style-only' && 'pointer-events: all'"
@@ -25,10 +26,9 @@
               :data-toggle="item.modalTarget && 'modal'"
               :data-target="item.modalTarget"
               :data-e2e="item.data_e2e"
-              class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5"
+              class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative"
               @click="handleClick($event, item)"
             >
-              {{ item.text }}
             </a>
             <div v-else class="-mx-2.5 px-2.5 group relative">
               <span
