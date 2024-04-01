@@ -27,11 +27,11 @@
       <div class="actions-block">
         <div class="protocol-buttons-group shrink-0">
           <a v-if="urls.add_step_url"
-            class="btn btn-secondary"
-            :title="i18n.t('protocols.steps.new_step_title')"
-            @keyup.enter="addStep(steps.length)"
-            @click="addStep(steps.length)"
-            tabindex="0">
+             class="btn btn-secondary"
+             :title="i18n.t('protocols.steps.new_step_title')"
+             @keyup.enter="addStep(steps.length)"
+             @click="addStep(steps.length)"
+             tabindex="0">
               <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
               <span v-if="!isSmallScreen">{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
