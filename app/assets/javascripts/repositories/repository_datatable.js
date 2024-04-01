@@ -661,18 +661,17 @@ var RepositoryDatatable = (function(global) {
         targets: 6,
         class: 'added-by',
         visible: true
-      },{
+      }, {
         // Updated on column
         targets: 7,
         class: 'updated-on',
         visible: true
-      },{
+      }, {
         // Updated by column
         targets: 8,
         class: 'updated-by',
         visible: true
-      }
-      , {
+      }, {
         targets: '_all',
         render: function(data) {
           if (typeof data === 'object' && $.fn.dataTable.render[data.value_type]) {
