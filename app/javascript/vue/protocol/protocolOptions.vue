@@ -9,8 +9,10 @@
         aria-haspopup="true"
         aria-expanded="true"
         tabindex="0"
+        :title="i18n.t('my_modules.protocol.options_dropdown.title')"
       >
-        <span>{{ i18n.t("my_modules.protocol.options_dropdown.title") }}</span>
+        <span v-if="isSmallScreen">{{ i18n.t("my_modules.protocol.options_dropdown.shrunk_title") }}</span>
+        <span v-else>{{ i18n.t("my_modules.protocol.options_dropdown.title") }}</span>
         <span class="sn-icon sn-icon-down"></span>
       </button>
       <ul
@@ -118,6 +120,9 @@ export default {
     canDeleteSteps: {
       type: Boolean,
       required: true
+    },
+    isSmallScreen: {
+      type: Boolean
     }
   },
   mounted() {

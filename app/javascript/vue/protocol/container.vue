@@ -27,38 +27,44 @@
       <div class="actions-block">
         <div class="protocol-buttons-group shrink-0">
           <a v-if="urls.add_step_url"
-             class="btn btn-secondary"
-             :title="i18n.t('protocols.steps.new_step_title')"
-             @keyup.enter="addStep(steps.length)"
-             @click="addStep(steps.length)"
-             tabindex="0">
+            class="btn btn-secondary"
+            :title="i18n.t('protocols.steps.new_step_title')"
+            @keyup.enter="addStep(steps.length)"
+            @click="addStep(steps.length)"
+            tabindex="0">
               <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
-              <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+              <span v-if="!isSmallScreen">{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
           <template v-if="steps.length > 0">
-            <button class="btn btn-secondary" @click="collapseSteps" tabindex="0">
-              {{ i18n.t("protocols.steps.collapse_label") }}
-            </button>
-            <button class="btn btn-secondary" @click="expandSteps" tabindex="0">
-              {{ i18n.t("protocols.steps.expand_label") }}
+            <button class="btn btn-secondary max-w-[120px]" @click="toggleAllSteps" tabindex="0">
+              <span v-if="areAllStepsCollapsed" :title="i18n.t('protocols.steps.expand_label')">
+                <i class="sn-icon sn-icon-expand"></i>
+                <span v-if="!isSmallScreen">{{ i18n.t("protocols.steps.expand_label") }}</span>
+              </span>
+              <span v-else :title="i18n.t('protocols.steps.collapse_label')">
+                <i class="sn-icon sn-icon-collapse"></i>
+                <span v-if="!isSmallScreen">{{ i18n.t("protocols.steps.collapse_label") }}</span>
+              </span>
             </button>
           </template>
           <ProtocolOptions
             v-if="protocol.attributes && protocol.attributes.urls"
             :protocol="protocol"
             @protocol:delete_steps="deleteSteps"
+            :isSmallScreen="isSmallScreen"
             :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
           />
-          <button class="btn btn-light icon-btn" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+          <button class="btn btn-secondary icon-btn" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0" :title="i18n.t('protocols.print.modal.title')">
             <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
           </button>
           <a v-if="steps.length > 0 && urls.reorder_steps_url"
-            class="btn btn-light icon-btn"
+            class="btn btn-secondary icon-btn"
             data-toggle="modal"
             @click="startStepReorder"
             @keyup.enter="startStepReorder"
             :class="{'disabled': steps.length == 1}"
-            tabindex="0" >
+            tabindex="0"
+            :title="i18n.t('protocols.reorder_steps.modal.title')" >
               <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
           </a>
         </div>
@@ -185,7 +191,7 @@
                 :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
               />
-              <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step" @click="addStep(index + 1)">
+              <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step last-insert-step" @click="addStep(index + 1)">
                 <i class="sn-icon sn-icon-new-task"></i>
               </div>
             </div>
@@ -277,7 +283,9 @@ export default {
       reordering: false,
       publishing: false,
       stepToReload: null,
-      activeDragStep: null
+      activeDragStep: null,
+      areAllStepsCollapsed: false,
+      isSmallScreen: false
     };
   },
   mounted() {
@@ -294,11 +302,16 @@ export default {
         this.steps = result.data;
       });
     });
+    this.checkScreenSize();
+    window.addEventListener('resize', this.checkScreenSize);
   },
   beforeUnmount() {
     if (!this.inRepository) {
       window.removeEventListener('scroll', this.initStackableHeaders, false);
     }
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.checkScreenSize);
   },
   methods: {
     getHeader() {
@@ -306,6 +319,14 @@ export default {
     },
     reloadStep(step) {
       this.stepToReload = step;
+    },
+    toggleAllSteps() {
+      if (this.areAllStepsCollapsed) {
+        this.expandSteps();
+      } else {
+        this.collapseSteps();
+      }
+      this.areAllStepsCollapsed = !this.areAllStepsCollapsed;
     },
     collapseSteps() {
       $('.step-container .collapse').collapse('hide');
@@ -440,6 +461,9 @@ export default {
     },
     closePublishModal() {
       this.publishing = false;
+    },
+    checkScreenSize() {
+      this.isSmallScreen = window.innerWidth < 600;
     },
     scrollToBottom() {
       window.scrollTo(0, document.body.scrollHeight);
