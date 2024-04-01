@@ -335,9 +335,11 @@ export default {
     this.setGridColsClass();
 
     window.addEventListener('resize', this.resize);
+    window.dtComponent = this;
   },
   beforeDestroy() {
     delete window.resetGridColumns;
+    delete window.dtComponent;
     window.removeEventListener('resize', this.resize);
   },
   methods: {

@@ -7,6 +7,7 @@
         <input
           type="checkbox"
           class="sci-checkbox"
+          :checked="cardSelected"
           @change="itemSelected"
         />
         <label :for="params.id" class="sci-checkbox-label"></label>
@@ -49,6 +50,7 @@
         <input
           type="checkbox"
           class="sci-checkbox"
+          :checked="cardSelected"
           @change="itemSelected"
         />
         <label :for="params.id" class="sci-checkbox-label"></label>
