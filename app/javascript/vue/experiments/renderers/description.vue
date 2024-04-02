@@ -2,9 +2,10 @@
   <div class="group relative flex items-center group-hover:marker text-xs h-full w-full"
        :style="{ lineHeight: 'unset' }">
     <div class="flex gap-2"
+        :style="{ lineHeight: 'unset' }"
         :class="{
-                  'items-center': params.dtComponent.currentViewRender === 'table',
-                  'items-end': params.dtComponent.currentViewRender === 'cards'
+                  'items-center text-sm': params.dtComponent.currentViewRender === 'table',
+                  'items-end text-xs': params.dtComponent.currentViewRender === 'cards'
                 }">
       <span v-if="shouldTruncateText"
             class="cursor-pointer grow"
@@ -16,7 +17,14 @@
             v-html="params.data.sa_description">
       </span>
       <span v-else class="grow" v-html="params.data.sa_description"></span>
-      <span v-if="shouldTruncateText" @click.stop="showDescriptionModal" class="text-sn-blue cursor-pointer shrink-0 text-xs">{{ i18n.t('experiments.card.more') }}</span>
+      <span v-if="shouldTruncateText" @click.stop="showDescriptionModal" class="text-sn-blue cursor-pointer shrink-0 inline-block"
+            :style="{ lineHeight: 'unset' }"
+            :class="{
+                      'text-xs': params.dtComponent.currentViewRender === 'cards',
+                      'text-sm': params.dtComponent.currentViewRender === 'table'
+                    }">
+        {{ i18n.t('experiments.card.more') }}
+      </span>
     </div>
   </div>
 </template>
