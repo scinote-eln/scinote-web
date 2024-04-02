@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       group: 'label_templates',
-      enabled: false,
+      enabled: false
     };
   },
   created() {

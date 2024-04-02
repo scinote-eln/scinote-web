@@ -25,11 +25,11 @@ class LabelTemplate < ApplicationRecord
   end
 
   def self.search(
-    user = nil,
-    include_archived = nil,
+    _user,
+    _include_archived,
     query = nil,
     page = 1,
-    current_team = nil,
+    _current_team = nil,
     options = {}
   )
 
