@@ -302,7 +302,7 @@ export default {
         this.updateTable();
         this.$nextTick(() => {
           this.selectedRows = [];
-          this.gridApi.deselectAll();
+          this.gridApi?.deselectAll();
         });
       }
     },
@@ -482,7 +482,7 @@ export default {
       this.dataLoading = true;
       if (clearSelection) {
         this.selectedRows = [];
-        this.gridApi.deselectAll();
+        this.gridApi?.deselectAll();
       }
       this.page = 1;
       this.loadData(true);
@@ -611,11 +611,11 @@ export default {
       if (this.currentViewRender === view) return;
       this.currentViewRender = view;
       this.columnApi = null;
+      this.gridApi?.deselectAll();
       this.gridApi = null;
       this.saveTableState();
       this.initializing = true;
       this.selectedRows = [];
-      this.gridApi.deselectAll();
     },
     hideColumn(column) {
       this.columnApi.setColumnVisible(column.field, false);
