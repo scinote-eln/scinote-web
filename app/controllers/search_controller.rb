@@ -85,9 +85,9 @@ class SearchController < ApplicationController
           render json: results,
                  each_serializer: GlobalSearch::RepositoryRowSerializer,
                  meta: {
-                          total: @search_count,
-                          next_page: (results.next_page if results.respond_to?(:next_page))
-                        }
+                   total: @search_count,
+                   next_page: (results.next_page if results.respond_to?(:next_page))
+                 }
           return
         end
 
