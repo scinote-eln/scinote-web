@@ -141,6 +141,7 @@ export default {
     onBlurHandler() {
       this.$nextTick(() => {
         this.editingText = false;
+        this.$emit('editEnd');
       });
     },
     updateText(text, withKey) {
