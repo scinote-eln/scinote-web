@@ -302,6 +302,7 @@ export default {
         this.updateTable();
         this.$nextTick(() => {
           this.selectedRows = [];
+          this.gridApi.deselectAll();
         });
       }
     },
@@ -479,7 +480,10 @@ export default {
       if (this.dataLoading) return;
 
       this.dataLoading = true;
-      if (clearSelection) this.selectedRows = [];
+      if (clearSelection) {
+        this.selectedRows = [];
+        this.gridApi.deselectAll();
+      }
       this.page = 1;
       this.loadData(true);
     },
@@ -611,6 +615,7 @@ export default {
       this.saveTableState();
       this.initializing = true;
       this.selectedRows = [];
+      this.gridApi.deselectAll();
     },
     hideColumn(column) {
       this.columnApi.setColumnVisible(column.field, false);
