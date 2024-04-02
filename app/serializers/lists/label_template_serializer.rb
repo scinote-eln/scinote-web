@@ -35,7 +35,7 @@ module Lists
     end
 
     def urls
-      return {} unless can_manage_label_templates?(object.team)
+      return {} unless can_view_label_templates?(object.team)
 
       {
         show: label_template_path(object)
