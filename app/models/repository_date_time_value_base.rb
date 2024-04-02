@@ -19,10 +19,15 @@ class RepositoryDateTimeValueBase < ApplicationRecord
     I18n.l(data, format: format)
   end
 
-  def update_data!(new_data, user)
-    self.data = Time.zone.parse(new_data)
+  def update_data!(new_data, user, preview: false)
+    self.data = if new_data.is_a?(String)
+                  Time.zone.parse(new_data)
+                else
+                  new_data
+                end
+
     self.last_modified_by = user
-    save!
+    preview ? validate : save!
   end
 
   def snapshot!(cell_snapshot)

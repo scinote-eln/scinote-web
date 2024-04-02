@@ -70,17 +70,19 @@ class RepositoryChecklistValue < ApplicationRecord
     end
   end
 
-  def update_data!(new_data, user)
+  # TODO: after ticket for tracking changes on checklist items
+  def update_data!(new_data, user, preview: false)
     item_ids = new_data.is_a?(String) ? JSON.parse(new_data) : new_data
+
     return destroy! if item_ids.blank?
 
-    # update!(repository_checklist_items: repository_cell.repository_column.repository_checklist_items.where(id: item_ids), last_modified_by: user)
+    self.last_modified_by = user
 
     self.repository_checklist_items = repository_cell.repository_column
                                                      .repository_checklist_items
                                                      .where(id: item_ids)
-    self.last_modified_by = user
-    save!
+
+    preview ? validate : save!
   end
 
   def snapshot!(cell_snapshot)
