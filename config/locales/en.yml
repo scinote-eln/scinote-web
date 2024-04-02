@@ -453,6 +453,7 @@ en:
       protocol_templates: "Protocol templates"
       label_templates: "Label templates"
       reports: "Reports"
+      repository: "Inventory"
       more_search_options: "More search options"
       clear_filters: "Clear filters"
       id: "ID"

@@ -73,6 +73,22 @@ class SearchController < ApplicationController
                           next_page: (results.next_page if results.respond_to?(:next_page)),
                         }
           return
+        when 'repository_rows'
+          @repository_row_search_count = fetch_cached_count(RepositoryRow)
+          search_repository_rows
+          results = if params[:preview] == 'true'
+                      @repository_row_results.take(4)
+                    else
+                      @repository_row_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
+                    end
+
+          render json: results,
+                 each_serializer: GlobalSearch::RepositoryRowSerializer,
+                 meta: {
+                          total: @search_count,
+                          next_page: (results.next_page if results.respond_to?(:next_page))
+                        }
+          return
         end
 
         #@search_id = params[:search_id] ? params[:search_id] : generate_search_id
@@ -370,6 +386,12 @@ class SearchController < ApplicationController
                           whole_phrase: @search_whole_phrase)
     end
     @search_count = current_repository_search_count
+  end
+
+  def search_repository_rows
+    @repository_row_results = []
+    @repository_row_results = search_by_name(RepositoryRow) if @repository_row_search_count.positive?
+    @search_count = @repository_row_search_count
   end
 
   def search_assets
