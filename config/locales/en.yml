@@ -3224,6 +3224,7 @@ en:
       import: "Import"
       import_eln: "SciNote file (.eln)"
       import_docx: "MS Word (.docx)"
+      beta: "BETA"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
