@@ -5,7 +5,7 @@ require 'omniauth/strategies/custom_azure_active_directory'
 AZURE_SETUP_PROC = lambda do |env|
   settings = ApplicationSettings.instance
   providers = settings.values['azure_ad_apps'].select { |v| v['enable_sign_in'] }
-  raise StandardError, 'No Azure AD config available for sign in' if providers.blank?
+  raise StandardError, 'No Azure AD config available for sign in' unless providers.present? && providers[0]['enabled']
 
   req = Rack::Request.new(env)
 
@@ -61,7 +61,7 @@ end
 OKTA_SETUP_PROC = lambda do |env|
   settings = ApplicationSettings.instance
   provider_conf = settings.values['okta']
-  raise StandardError, 'No Okta config available for sign in' if provider_conf.blank?
+  raise StandardError, 'No Okta config available for sign in' unless provider_conf.present? && provider_conf['enabled']
 
   oauth2_base_url =
     if provider_conf['auth_server_id'].blank?
