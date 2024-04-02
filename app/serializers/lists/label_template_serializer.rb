@@ -7,7 +7,8 @@ module Lists
 
     attributes :name, :language_type, :urls, :type,
                :default, :format, :modified_by, :created_by,
-               :created_at, :updated_at, :id, :icon_url, :description
+               :created_at, :updated_at, :id, :icon_url, :description,
+               :width_mm, :height_mm, :unit, :density
 
     def icon_url
       ActionController::Base.helpers.image_tag(
