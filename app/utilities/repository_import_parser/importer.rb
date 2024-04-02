@@ -39,10 +39,18 @@ module RepositoryImportParser
 
     def fetch_columns
       @mappings.each_with_index do |(_, value), index|
+        value = JSON.parse(value) rescue value
+        value = value.to_s unless value.is_a?(Hash)
+
         if value == '-1'
           # Fill blank space, so our indices stay the same
           @columns << nil
           @name_index = index
+
+        # creating a custom option column
+        elsif value.is_a?(Hash)
+          new_repository_column = @repository.repository_columns.create!(created_by: @user, name: value['name']+rand(10000).to_s, data_type: "Repository#{value['type']}Value")
+          @columns << new_repository_column
         else
           @columns << @repository_columns.where(data_type: Extends::REPOSITORY_IMPORTABLE_TYPES)
                                          .preload(Extends::REPOSITORY_IMPORT_COLUMN_PRELOADS)
