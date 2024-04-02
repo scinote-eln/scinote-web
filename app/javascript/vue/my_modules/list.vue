@@ -145,7 +145,7 @@ export default {
         headerName: this.i18n.t('experiments.table.column.status_html'),
         sortable: true,
         cellRenderer: this.statusRenderer,
-        minWidth: 200
+        minWidth: 120
       }
     ];
 
