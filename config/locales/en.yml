@@ -457,8 +457,11 @@ en:
       clear_filters: "Clear filters"
       id: "ID"
       created_at: "Created on"
+      created_by: "Created by"
+      updated_at: "Updated on"
       team: "Team"
       folder: "Folder"
+      project: "Project"
   comments:
     save_changes: "Save changes"
     empty_state:
