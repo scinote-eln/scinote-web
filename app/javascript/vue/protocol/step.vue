@@ -183,6 +183,9 @@
       reorderStepUrl: {
         required: false
       },
+      userSettingsUrl: {
+        required: false
+      },
       assignableMyModuleId: {
         type: Number,
         required: false
@@ -249,6 +252,15 @@
       }
     },
     mounted() {
+      this.$nextTick(() => {
+        const stepId = `#stepBody${this.step.id}`;
+        this.isCollapsed = this.step.attributes.collapsed;
+        if (this.isCollapsed) {
+          $(stepId).collapse('hide');
+        } else {
+          $(stepId).collapse('show');
+        }
+      });
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar);
       $(this.$refs.comments).data('openCallback', this.closeCommentsSidebar);
       $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
@@ -402,6 +414,13 @@
       },
       toggleCollapsed() {
         this.isCollapsed = !this.isCollapsed;
+
+        const settings = {
+          key: 'task_step_states',
+          data: { [this.step.id]: this.isCollapsed }
+        };
+
+        axios.put(this.userSettingsUrl, { settings: [settings] });
       },
       showDeleteModal() {
         this.confirmingDelete = true;
