@@ -345,7 +345,7 @@ class RepositoryRowsController < ApplicationController
       actions:
         Toolbars::RepositoryRowsService.new(
           current_user,
-          repository_row_ids: params[:repository_row_ids].split(',')
+          repository_row_ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions
     }
   end

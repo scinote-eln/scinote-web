@@ -5,6 +5,7 @@
       :class="{'overflow-y-hidden pb-20': currentViewRender === 'cards'}"
     >
       <Toolbar
+        v-if="!withoutToolbar"
         :toolbarActions="toolbarActions"
         @toolbar:action="emitAction"
         :searchValue="searchValue"
@@ -179,6 +180,10 @@ export default {
     },
     hiddenDataMessage: {
       type: String
+    },
+    withoutToolbar: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -237,6 +242,7 @@ export default {
         suppressCellFocus: true,
         rowHeight: 40,
         headerHeight: 40,
+        suppressPropertyNamesCheck: true,
         getRowId: (params) => `e2e-TB-row-${params.data.code || params.data.id}`
       };
     },

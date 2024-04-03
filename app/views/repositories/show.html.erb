@@ -64,12 +64,12 @@
   </div>
 
 
-  <div id="repositoryTable" class="fixed-content-body">
+  <div id="repositoryTable" class="fixed-content-body repository-table">
     <repository-table
       actions-url="<%= actions_toolbar_repository_repository_rows_path(@repository) %>"
       data-source="<%= index_new_repository_repository_rows_path(@repository, format: :json) %>"
       columns-url="<%= index_new_repository_repository_columns_path(@repository) %>"
-      create-url="<%= repository_path(@repository) %>"
+      create-url="<%= repository_repository_rows_path(@repository) if can_create_repository_rows?(@repository) %>"
       active-page-url="<%= repository_path(@repository) %>"
       archived-page-url="<%= repository_path(@repository, view_mode: :archived) %>"
       current-view-mode="<%= params[:view_mode] || :active %>"

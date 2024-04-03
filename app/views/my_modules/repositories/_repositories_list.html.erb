@@ -16,17 +16,30 @@
         </span>
       <% end %>
       <div class="action-buttons">
-        <button class="btn btn-light icon-btn full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %><%= '?include_stock_consumption=true' if repository.has_stock_consumption? %>">
+        <button class="btn btn-light icon-btn full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository, :assigned) %><%= '&include_stock_consumption=true' if repository.has_stock_consumption? %>">
           <i class="sn-icon sn-icon-expand"></i>
         </button>
       </div>
     </a>
-    <div class="collapse assigned-repository-container"
+    <div class="collapse assigned-repository-container px-4"
          id="assigned-repository-items-container-<%= repository.id %>"
          data-repository-url="<%= assigned_repository_simple_view_index_path(@my_module, repository) %>"
          data-footer-label="<%= assigned_repository_simple_view_footer_label(repository) %>"
          data-name-column-id="<%=  assigned_repository_simple_view_name_column_id(repository) %>"
     >
+      <div id="repositoryTable_<%= repository.id %>" class="h-96">
+        <repository-table
+          actions-url="<%= actions_toolbar_repository_repository_rows_path(repository) %>"
+          :read-only="true"
+          :assigned-view="true"
+          :simple-view="true"
+          data-source="<%= index_dt_my_module_repository_path(@my_module, repository, assigned: params[:assigned]) %>"
+          columns-url="<%= index_new_repository_repository_columns_path(repository) %>"
+          linked-repository="<%= @repository.is_a?(LinkedRepository) %>"
+        />
+      </div>
+      <table class="table hidden repository-table repository-dataTable" data-element="#repositoryTable_<%= repository.id %>"></table>
+      <!--
       <table class="table hidden repository-table repository-dataTable"
              data-stock-management="<%= repository.has_stock_management? && repository.has_stock_consumption? %>"
              data-stock-consumption-editable="<%= can_update_my_module_stock_consumption?(@my_module) && repository.has_stock_consumption? %>">
@@ -41,6 +54,7 @@
         </thead>
         <tbody></tbody>
       </table>
+      -->
     </div>
     <%= render 'shared/dialog',
                id: "snapshot-error-#{repository.id}",
@@ -55,3 +69,5 @@
     %>
   </div>
 <% end %>
+
+<%= javascript_include_tag 'vue_repository_table' %>

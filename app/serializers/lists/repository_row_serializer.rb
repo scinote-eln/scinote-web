@@ -35,7 +35,13 @@ class Lists::RepositoryRowSerializer < ActiveModel::Serializer
     object.archived_by&.full_name
   end
 
-
+  attribute :urls do
+    urls_list = {}
+    if can_manage_repository_rows?(object.repository)
+      urls_list[:update] = update_cell_repository_repository_row_path(object.repository, object)
+    end
+    urls_list
+  end
 
   def attributes(_options = {})
     data = super
@@ -92,5 +98,12 @@ class Lists::RepositoryRowSerializer < ActiveModel::Serializer
 
   def display_stock_warnings?(repository)
     !repository.is_a?(RepositorySnapshot)
+  end
+
+  def stock_consumption_managable?(record, repository, my_module)
+    return false unless my_module
+    return false if repository.archived? || record.archived?
+
+    true
   end
 end

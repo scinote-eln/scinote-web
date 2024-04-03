@@ -59,27 +59,27 @@ module Lists
         )
 
       # Adding assigned counters
-      # if @my_module
-      #   if @assigned_view
-      #     repository_rows = repository_rows.joins(:my_module_repository_rows)
-      #                                     .where(my_module_repository_rows: { my_module_id: @my_module })
-      #     if @repository.has_stock_management?
-      #       repository_rows = repository_rows
-      #                         .select('SUM(DISTINCT my_module_repository_rows.stock_consumption) AS "consumed_stock"')
-      #     end
-      #   else
-      #     repository_rows = repository_rows
-      #                       .joins(:repository)
-      #                       .joins('LEFT OUTER JOIN "my_module_repository_rows" "current_my_module_repository_rows"'\
-      #                             'ON "current_my_module_repository_rows"."repository_row_id" = "repository_rows"."id" '\
-      #                             'AND "current_my_module_repository_rows"."my_module_id" = ' + @my_module.id.to_s)
-      #                       .where('current_my_module_repository_rows.id IS NOT NULL '\
-      #                             'OR (repository_rows.archived = FALSE AND repositories.archived = FALSE)')
-      #                       .select('CASE WHEN current_my_module_repository_rows.id IS NOT NULL '\
-      #                               'THEN true ELSE false END as row_assigned')
-      #                       .group('current_my_module_repository_rows.id')
-      #   end
-      # end
+      if @my_module
+        if @assigned_view
+          repository_rows = repository_rows.joins(:my_module_repository_rows)
+                                          .where(my_module_repository_rows: { my_module_id: @my_module })
+          if @repository.has_stock_management?
+            repository_rows = repository_rows
+                              .select('SUM(DISTINCT my_module_repository_rows.stock_consumption) AS "consumed_stock"')
+          end
+        else
+          repository_rows = repository_rows
+                            .joins(:repository)
+                            .joins('LEFT OUTER JOIN "my_module_repository_rows" "current_my_module_repository_rows"'\
+                                  'ON "current_my_module_repository_rows"."repository_row_id" = "repository_rows"."id" '\
+                                  'AND "current_my_module_repository_rows"."my_module_id" = ' + @my_module.id.to_s)
+                            .where('current_my_module_repository_rows.id IS NOT NULL '\
+                                  'OR (repository_rows.archived = FALSE AND repositories.archived = FALSE)')
+                            .select('CASE WHEN current_my_module_repository_rows.id IS NOT NULL '\
+                                    'THEN true ELSE false END as row_assigned')
+                            .group('current_my_module_repository_rows.id')
+        end
+      end
       repository_rows = repository_rows
                         .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
                         .select('COUNT(DISTINCT all_my_module_repository_rows.id) AS "assigned_my_modules_count"')
@@ -99,14 +99,14 @@ module Lists
         repository_rows = repository_rows.where(archived: @params[:view_mode] == 'archived')
       end
 
-      @all_count = repository_rows.count
-        # if @my_module && @assigned_view
-        #   repository_rows.joins(:my_module_repository_rows)
-        #                 .where(my_module_repository_rows: { my_module_id: @my_module })
-        #                 .count
-        # else
-        #   repository_rows.count
-        # end
+      @all_count = if @my_module && @assigned_view
+          repository_rows.joins(:my_module_repository_rows)
+                        .where(my_module_repository_rows: { my_module_id: @my_module })
+                        .count
+        else
+          repository_rows.count
+        end
+
 
       repository_rows = repository_rows.where(external_id: @params[:external_ids]) if @params[:external_ids]
 
