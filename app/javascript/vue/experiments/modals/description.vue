@@ -10,7 +10,9 @@
             {{ experiment.name }}
           </h4>
         </div>
-        <div class="modal-body" v-html="experiment.sa_description"></div>
+        <div class="modal-body">
+          <div class="[&_.atwho-user-container]:!whitespace-normal" v-html="experiment.sa_description"></div>
+        </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-dismiss="modal">{{ i18n.t('general.close') }}</button>
         </div>
