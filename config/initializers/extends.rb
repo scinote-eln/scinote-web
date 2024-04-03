@@ -647,6 +647,8 @@ class Extends
     ReportTemplates_archived_state
     Repositories_active_state
     Repositories_archived_state
+    Repository_active_state
+    Repository_archived_state
   ).freeze
 end
 

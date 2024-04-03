@@ -42,6 +42,12 @@ class RepositoryRowsController < ApplicationController
     render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.value_not_found') }
   end
 
+  def index_new
+    repository_rows = Lists::RepositoryRowsService.new(@repository, params, current_user).call
+    render json: repository_rows, each_serializer: Lists::RepositoryRowSerializer, user: current_user,
+           meta: pagination_dict(repository_rows)
+  end
+
   def show
     respond_to do |format|
       format.html do
@@ -339,7 +345,7 @@ class RepositoryRowsController < ApplicationController
       actions:
         Toolbars::RepositoryRowsService.new(
           current_user,
-          repository_row_ids: params[:repository_row_ids].split(',')
+          repository_row_ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions
     }
   end

@@ -11,34 +11,38 @@ class MyModuleRepositoriesController < ApplicationController
   before_action :check_assign_repository_records_permissions, only: %i(update create)
 
   def index_dt
-    @draw = params[:draw].to_i
-    per_page = params[:length].to_i < 1 ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
-    page = (params[:start].to_i / per_page) + 1
-    datatable_service = RepositoryDatatableService.new(@repository, params, current_user, @my_module)
+    repository_rows = Lists::RepositoryRowsService.new(@repository, params, current_user, @my_module).call
+    render json: repository_rows, each_serializer: Lists::RepositoryRowSerializer, user: current_user, my_module: @my_module,
+            meta: pagination_dict(repository_rows)
 
-    @datatable_params = {
-      view_mode: params[:view_mode],
-      my_module: @my_module,
-      include_stock_consumption: @repository.has_stock_management? && params[:assigned].present?,
-      disable_stock_management: true # stock management is always disabled in MyModule context
-    }
+    # @draw = params[:draw].to_i
+    # per_page = params[:length].to_i < 1 ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
+    # page = (params[:start].to_i / per_page) + 1
+    # datatable_service = RepositoryDatatableService.new(@repository, params, current_user, @my_module)
 
-    @all_rows_count = datatable_service.all_count
-    @columns_mappings = datatable_service.mappings
+    # @datatable_params = {
+    #   view_mode: params[:view_mode],
+    #   my_module: @my_module,
+    #   include_stock_consumption: @repository.has_stock_management? && params[:assigned].present?,
+    #   disable_stock_management: true # stock management is always disabled in MyModule context
+    # }
 
-    if params[:simple_view]
-      repository_rows = datatable_service.repository_rows
-      rows_view = 'repository_rows/simple_view_index'
-    else
-      repository_rows = datatable_service.repository_rows
-                                         .preload(:repository_columns,
-                                                  :created_by,
-                                                  repository_cells: { value: @repository.cell_preload_includes })
-      rows_view = 'repository_rows/index'
-    end
-    @repository_rows = repository_rows.page(page).per(per_page)
+    # @all_rows_count = datatable_service.all_count
+    # @columns_mappings = datatable_service.mappings
 
-    render rows_view
+    # if params[:simple_view]
+    #   repository_rows = datatable_service.repository_rows
+    #   rows_view = 'repository_rows/simple_view_index'
+    # else
+    #   repository_rows = datatable_service.repository_rows
+    #                                      .preload(:repository_columns,
+    #                                               :created_by,
+    #                                               repository_cells: { value: @repository.cell_preload_includes })
+    #   rows_view = 'repository_rows/index'
+    # end
+    # @repository_rows = repository_rows.page(page).per(per_page)
+
+    # render rows_view
   end
 
   def create

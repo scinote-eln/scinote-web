@@ -210,6 +210,9 @@ var MyModuleRepositories = (function() {
   }
 
   function renderSimpleTable(tableContainer) {
+    console.log(tableContainer.attr('data-element'))
+    window.mountRepositoryTable(tableContainer.attr('data-element'));
+    return
     if (SIMPLE_TABLE) SIMPLE_TABLE.destroy();
     SIMPLE_TABLE = $(tableContainer).DataTable({
       dom: "Rt<'pagination-row'<'version-label'><'pagination-actions'p>>",
@@ -265,6 +268,15 @@ var MyModuleRepositories = (function() {
   }
 
   function renderFullViewTable(tableContainer, options = {}) {
+    renderFullViewRepositoryName(
+      tableContainer.attr('data-repository-name'),
+      tableContainer.attr('data-repository-snapshot-created'),
+      options.assign_mode
+    );
+    updateFullViewRowsCount(tableContainer.attr('data-assigned-items-count'));
+    window.mountRepositoryTable();
+    return
+
     if (FULL_VIEW_TABLE) FULL_VIEW_TABLE.destroy();
     SELECTED_ROWS = {};
     FULL_VIEW_TABLE_SCROLLBAR = false;
@@ -448,7 +460,7 @@ var MyModuleRepositories = (function() {
       repositoryTable.attr('data-version-label', $(this).data('footer-label'));
       repositoryTable.attr('data-name-column-id', $(this).data('name-column-id'));
       repositoryTable.attr('data-stock-management', $(this).data('data-stock-management'));
-      repositoryContainer.html(repositoryTable);
+      //repositoryContainer.html(repositoryTable);
       renderSimpleTable(repositoryTable);
     });
 
@@ -591,6 +603,7 @@ var MyModuleRepositories = (function() {
     });
 
     FULL_VIEW_MODAL.on('hidden.bs.modal', function() {
+      return
       FULL_VIEW_MODAL.find('.repository-versions-sidebar').empty();
       FULL_VIEW_MODAL.find('.modal-content').removeClass('show-sidebar');
       FULL_VIEW_MODAL.find('#showVersionsSidebar').removeClass('active');

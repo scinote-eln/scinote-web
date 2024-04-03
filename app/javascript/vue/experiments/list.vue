@@ -157,9 +157,7 @@ export default {
         field: 'description',
         headerName: this.i18n.t('experiments.card.description'),
         sortable: true,
-        cellStyle: { 'white-space': 'normal' },
         cellRenderer: DescriptionRenderer,
-        autoHeight: true,
         minWidth: 110
       });
 

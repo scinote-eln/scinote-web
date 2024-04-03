@@ -50,9 +50,7 @@ module Toolbars
         name: 'restore',
         label: I18n.t('repositories.restore_record'),
         icon: 'sn-icon sn-icon-restore',
-        button_class: 'resotre-repository-row-btn',
-        button_id: 'restoreRepositoryRecords',
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -65,9 +63,7 @@ module Toolbars
         name: 'edit',
         label: I18n.t('repositories.edit_record'),
         icon: 'sn-icon sn-icon-edit',
-        button_class: 'edit-repository-row-btn',
-        button_id: 'editRepositoryRecord',
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -80,9 +76,7 @@ module Toolbars
         name: 'assign',
         label: I18n.t('repositories.assign_record'),
         icon: 'sn-icon sn-icon-assign-to-task',
-        button_class: 'assign-repository-rows-btn',
-        button_id: 'assignRepositoryRecords',
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -95,9 +89,7 @@ module Toolbars
         name: 'duplicate',
         label: I18n.t('repositories.copy_record'),
         icon: 'sn-icon sn-icon-duplicate',
-        button_class: 'copy-repository-row-btn',
-        button_id: 'copyRepositoryRecords',
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -108,9 +100,7 @@ module Toolbars
         name: 'export_records',
         label: I18n.t('repositories.exports.records'),
         icon: 'sn-icon sn-icon-export',
-        button_class: 'export-repository-row-btn',
-        button_id: 'exportRepositoryRowsButton',
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -121,10 +111,8 @@ module Toolbars
         name: 'export_consumption',
         label: I18n.t('repositories.exports.stock_consumption'),
         icon: 'sn-icon sn-icon-reports',
-        button_class: 'export-consumption-button',
-        button_id: 'exportStockConsumptionButton',
         item_id: @repository.id,
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -144,9 +132,7 @@ module Toolbars
         name: 'print_label',
         label: I18n.t('repositories.print_label'),
         icon: 'sn-icon sn-icon-printer',
-        button_class: 'print-label-button',
-        button_id: 'toolbarPrintLabel',
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -159,9 +145,7 @@ module Toolbars
         name: 'archive',
         label: I18n.t('repositories.archive_record'),
         icon: 'sn-icon sn-icon-archive',
-        button_class: 'resotre-repository-row-btn',
-        button_id: 'archiveRepositoryRecordsButton',
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -174,9 +158,7 @@ module Toolbars
         name: 'delete',
         label: I18n.t('repositories.delete_record'),
         icon: 'sn-icon sn-icon-delete',
-        button_class: 'resotre-repository-row-btn',
-        button_id: 'deleteRepositoryRecords',
-        type: :legacy
+        type: :emit
       }
     end
   end

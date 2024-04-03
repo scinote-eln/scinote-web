@@ -466,7 +466,7 @@ Rails.application.routes.draw do
       resources :repositories, controller: :my_module_repositories, only: %i(update create) do
         member do
           get :full_view_table
-          post :index_dt, defaults: { format: 'json' }
+          get :index_dt, defaults: { format: 'json' }
           post :export_repository
           get :assign_repository_records_modal, as: :assign_modal
           get :update_repository_records_modal, as: :update_modal
@@ -719,6 +719,7 @@ Rails.application.routes.draw do
 
       resources :repository_columns, only: %i(index new edit destroy) do
         collection do
+          get :index_new
           get :describe_all
         end
       end
@@ -732,6 +733,7 @@ Rails.application.routes.draw do
         end
 
         collection do
+          get :index_new
           get :actions_toolbar
         end
 

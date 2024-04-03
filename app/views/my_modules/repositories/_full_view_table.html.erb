@@ -1,3 +1,20 @@
+<tabel class="table repository-dataTable"
+       data-repository-name="<%= @repository.name %>"
+       data-assigned-items-count="<%= @my_module.repository_rows_count(@repository) %>" >
+
+ <div id="repositoryTable" class="h-[calc(100vh_-_55px)]">
+    <repository-table
+      actions-url="<%= actions_toolbar_repository_repository_rows_path(@repository) %>"
+      :read-only="true"
+      :assigned-view="<%= params[:assigned].present? %>"
+      data-source="<%= index_dt_my_module_repository_path(@my_module, @repository, assigned: params[:assigned]) %>"
+      columns-url="<%= index_new_repository_repository_columns_path(@repository) %>"
+      linked-repository="<%= @repository.is_a?(LinkedRepository) %>"
+    />
+  </div>
+</div>
+
+<!--
 <table class="table repository-dataTable"
        data-id="<%= @repository.id %>"
        data-type="live"
@@ -50,3 +67,4 @@
   </thead>
   <tbody></tbody>
 </table>
+-->
