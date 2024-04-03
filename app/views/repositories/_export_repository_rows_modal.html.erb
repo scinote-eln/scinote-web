@@ -16,6 +16,11 @@
            <div><%=t('zip_export.repository_header_html', repository: repository.name) %></div>
            <div class="custom-alert-info"><%=t 'zip_export.files_alert' %></div>
            <div><%=t 'zip_export.repository_footer_html' %></div>
+           <%= f.label :file_type %><br />
+           <%= f.label :file_type, "Csv", value: "csv"  %>
+           <%= f.radio_button :file_type, "csv", checked: true %>
+           <%= f.label :file_type, "xlsx", value: "false" %>
+           <%= f.radio_button :file_type, "xlsx" %>
          </div>
          <div class="modal-footer">
            <button type='button' data-e2e='e2e-BT-exportMD-cancel' class='btn btn-secondary' data-dismiss='modal' id='close-modal-export-repository-rows'><%= t('general.cancel')%></button>
