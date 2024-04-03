@@ -5,14 +5,11 @@
       <i class="sn-icon sn-icon-search"></i>
     </div>
     <div v-if="currentTeam" class="w-64">
-      <Select
+      <SelectDropdown
         :value="currentTeam"
         :options="teams"
-        :placeholder="'test'"
-        :noOptionsPlaceholder="'test'"
-        v-bind:disabled="false"
         @change="switchTeam"
-      ></Select>
+      ></SelectDropdown>
     </div>
     <MenuDropdown
       class="ml-auto"
@@ -24,25 +21,29 @@
       :btnIcon="'sn-icon sn-icon-settings'"
       :data-e2e="'e2e-DD-topMenu-settings'"
     ></MenuDropdown>
-    <div v-if="user" class="sci--navigation--notificaitons-flyout-container">
-      <button class="btn btn-light icon-btn btn-black"
-              :data-e2e="'e2e-DD-topMenu-notifications'"
+    <GeneralDropdown
+      v-if="user"
+      ref="notificationDropdown"
+      position="right"
+      class="sci--navigation--notificaitons-flyout-container">
+      <template v-slot:field>
+        <button class="btn btn-light icon-btn btn-black" :data-e2e="'e2e-DD-topMenu-notifications'"
               :title="i18n.t('nav.notifications.title')"
               :class="{ 'has-unseen': unseenNotificationsCount > 0 }"
               :data-unseen="unseenNotificationsCount"
-              data-toggle="dropdown"
-              @click="notificationsOpened = !notificationsOpened">
-        <i class="sn-icon sn-icon-notifications"></i>
-      </button>
-      <div v-if="notificationsOpened" class="sci--navigation--notificaitons-flyout-backdrop" @click="notificationsOpened = false"></div>
-      <NotificationsFlyout
-        v-if="notificationsOpened"
-        :notificationsUrl="notificationsUrl"
-        :preferencesUrl="this.userMenu.find((item) => item.name === i18n.t('users.settings.sidebar.account_nav.preferences'))?.url"
-        :unseenNotificationsCount="unseenNotificationsCount"
-        @update:unseenNotificationsCount="checkUnseenNotifications()"
-        @close="notificationsOpened = false" />
-    </div>
+              data-toggle="dropdown">
+          <i class="sn-icon sn-icon-notifications"></i>
+        </button>
+      </template>
+      <template v-slot:flyout >
+        <NotificationsFlyout
+          :preferencesUrl="user.preferences_url"
+          :notificationsUrl="notificationsUrl"
+          :unseenNotificationsCount="unseenNotificationsCount"
+          @update:unseenNotificationsCount="checkUnseenNotifications()"
+          @close="$refs.notificationDropdown.$refs.field.click();"/>
+      </template>
+    </GeneralDropdown>
     <div v-if="user" class="dropdown" :title="i18n.t('nav.user_profile')">
       <div class="sci--navigation--top-menu-user btn btn-light icon-btn btn-black" data-toggle="dropdown" data-e2e="e2e-DD-topMenu-avatar">
         <img class="avatar w-6 h-6" :src="user.avatar_url">
@@ -64,18 +65,21 @@
 </template>
 
 <script>
+/* global HelperModule */
 import NotificationsFlyout from './notifications/notifications_flyout.vue';
-import DropdownSelector from '../shared/dropdown_selector.vue';
-import Select from '../shared/select.vue';
+import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
+import SelectDropdown from '../shared/select_dropdown.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
+import GeneralDropdown from '../shared/general_dropdown.vue';
 
 export default {
   name: 'TopMenuContainer',
   components: {
     DropdownSelector,
     NotificationsFlyout,
-    Select,
-    MenuDropdown
+    SelectDropdown,
+    MenuDropdown,
+    GeneralDropdown
   },
   props: {
     url: String,
@@ -93,7 +97,6 @@ export default {
       helpMenu: null,
       settingsMenu: null,
       userMenu: null,
-      notificationsOpened: false,
       unseenNotificationsCount: 0
     };
   },
@@ -124,15 +127,6 @@ export default {
       );
     }
   },
-  watch: {
-    notificationsOpened(newVal) {
-      if (newVal === true) {
-        document.body.style.overflow = 'hidden';
-      } else if (newVal === false) {
-        document.body.style.overflow = 'scroll';
-      }
-    }
-  },
   methods: {
     fetchData() {
       $.get(this.url, (result) => {
@@ -148,15 +142,14 @@ export default {
       });
     },
     switchTeam(team) {
-      if (this.currentTeam == team) return;
+      if (this.currentTeam === team) return;
 
-      const newTeam = this.teams.find((e) => e[0] == team);
+      const newTeam = this.teams.find((e) => e[0] === team);
 
       if (!newTeam) return;
 
       $.post(this.teamSwitchUrl, { team_id: team }, (result) => {
         this.currentTeam = result.current_team;
-        dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
         $('body').attr('data-current-team-id', this.currentTeam);
         window.open(this.rootUrl, '_self');
       }).fail((msg) => {
@@ -174,10 +167,9 @@ export default {
       });
     },
     refreshCurrentTeam() {
-      const newTeam = parseInt($('body').attr('data-current-team-id'));
+      const newTeam = parseInt($('body').attr('data-current-team-id'), 10);
       if (newTeam !== this.currentTeam) {
         this.currentTeam = newTeam;
-        dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
       }
     }
   }

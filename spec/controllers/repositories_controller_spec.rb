@@ -15,10 +15,15 @@ describe RepositoriesController, type: :controller do
 
     it 'correct JSON format' do
       repository
+
       action
+
       parsed_response = JSON.parse(response.body)
-      expect(parsed_response[0].keys).to contain_exactly(
-        'DT_RowId', '1', '2', '3', '4', '5', '6', '7', '8', 'repositoryUrl', 'DT_RowAttr'
+      expect(parsed_response['data'][0].keys).to contain_exactly(
+        'id', 'type', 'attributes'
+      )
+      expect(parsed_response['data'][0]['attributes'].keys).to contain_exactly(
+        'name', 'code', 'nr_of_rows', 'shared', 'shared_label', 'ishared', 'team', 'created_at', 'created_by', 'archived_on', 'archived_by', 'urls', 'shared_read', 'shared_write', 'shareable_write'
       )
     end
   end

@@ -3,7 +3,7 @@
 <div class="ga-breadcrumb">
   <%= image_tag 'icon_small/project.svg' %>
   <% if subject %>
-    <% path = subject.archived? ? projects_path(team: team) : project_path(subject) %>
+    <% path = subject.archived? ? projects_path(team: team) : experiments_path(project_id: subject) %>
     <%= route_to_other_team(path,
                             team,
                             subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),

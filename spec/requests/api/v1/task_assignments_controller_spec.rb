@@ -46,9 +46,8 @@ RSpec.describe 'Api::V1::TaskAssignmentsController', type: :request do
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
         [JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@user,
-                 each_serializer: Api::V1::UserSerializer)
+          serialized_user = ActiveModelSerializers::SerializableResource
+            .new(@user, serializer: Api::V1::UserSerializer)
             .to_json
         )['data']]
       )

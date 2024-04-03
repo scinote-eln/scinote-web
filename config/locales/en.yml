@@ -559,7 +559,6 @@ en:
       delete_button: "Delete"
       edit_option: "Edit"
       archive_option: "Archive"
-      archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
       project_members_access: "Access"
       comments_option: "Comments"
@@ -568,12 +567,15 @@ en:
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
       card:
-        start_date: "Start date"
+        start_date: "Created on"
+        updated_on: "Updated on"
         id: "ID"
         visibility: "Visible to"
-        users: "Members"
+        users: "Access"
         name: "Project name"
-        archived_date: "Archived"
+        archived_date: "Archived on"
+        comments: 'Comments'
+        updated_at: 'Updated on'
       end_of_list_placeholder: 'You’ve reached the end of the list'
       folder:
         description: "%{projects_count} projects | %{folders_count} folders"
@@ -605,9 +607,11 @@ en:
         title: "Move %{items}"
         description: "Select where you want to move your %{items}"
         submit: "Move"
+        find_folder: "Find folder"
+        projects: "Projects"
         items:
           projects: 'projects'
-          folders: 'folders'
+          project_folders: 'folders'
           projects_and_folders: 'projects & folders'
       modal_delete_folders:
         title: "Delete project folder(s)"
@@ -693,9 +697,9 @@ en:
         thead_project_name: "Project name"
         thead_name: "Report name"
         thead_created_by: "Created by"
-        thead_last_modified_by: "Last modified by"
-        thead_created_at: "Creation date"
-        thead_updated_at: "Last update date"
+        thead_last_modified_by: "Updated by"
+        thead_created_at: "Created on"
+        thead_updated_at: "Updated on"
         thead_id: "ID"
         no_reports: "No reports!"
         pdf: "PDF"
@@ -722,6 +726,7 @@ en:
           head_title: "Delete report/s"
           message: "Are you sure to delete selected report/s?"
           delete: "Delete"
+          success: "Report/s successfully deleted."
       wizard:
         statuses:
           step_1: "Select project"
@@ -980,12 +985,13 @@ en:
         logo_params_error: 'Failed to parse logo parameters!'
     index:
       head_title: 'Label templates'
+      default_label: "Default label"
       search_templates: 'Search labels'
-      thead_name: 'Name'
+      thead_name: 'Label name'
       format: 'Format'
       description: 'Description'
-      updated_by: 'Last updated by'
-      updated_at: 'Last updated on'
+      updated_by: 'Updated by'
+      updated_at: 'Updated on'
       created_by: 'Created by'
       created_at: 'Created on'
       templates_duplicated: '[%{count}] Label template(s) successfully copied'
@@ -1338,7 +1344,10 @@ en:
         delete: "Delete"
       move_modal:
         search_placeholder: "Enter result name"
-        no_options_placeholder: "No results available to select"
+        step:
+          no_options_placeholder: "No steps available to select"
+        result:
+          no_options_placeholder: "No results available to select"
       delete_modal:
         title: "Delete result"
         description_1: "You’re about to delete the result. It might contain data you don’t want to lose. You won’t be able to get it back."
@@ -1458,11 +1467,11 @@ en:
       archive_button: "Archive"
       restore_button: "Restore"
     card:
-      name: "Experiment"
+      name: "Experiment name"
       id: "ID"
-      start_date: "Start date"
-      modified_date: "Modified date"
-      archived_date: "Archived date"
+      start_date: "Created on"
+      modified_date: "Updated on"
+      archived_date: "Archived on"
       completed_task: "Completed"
       completed_value: "%{completed}/%{all} tasks"
       description: "Description"
@@ -1472,7 +1481,6 @@ en:
       clone_option: "Duplicate"
       move_option: "Move"
       archive_option: "Archive"
-      archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
       more_link: "More"
       experiment_access: "Access"
@@ -1538,7 +1546,7 @@ en:
         id_html: 'ID'
         task_name_html: 'Task name'
         due_date_html: 'Due date'
-        archived_html: 'Archived'
+        archived_html: 'Archived on'
         age_html: 'Age'
         results_html: 'Results'
         status_html: 'Status'
@@ -1552,8 +1560,13 @@ en:
         success_flash: "Successfully moved task(s) to experiment %{experiment}."
         error_flash: "Failed to move task(s) to experiment %{experiment}."
       column_display_modal:
-        title: 'Task data display'
+        title: 'Manage columns'
         description: 'Click the eye buttons to hide or show columns in the table'
+        reset_to_default: 'Reset to default'
+        confirmation:
+          title: 'Reset to defaults'
+          description_html: 'Once reset, the order, width, and visibility of columns will be returned to the default values.<br><br><b>Are you sure you want to reset to default?</b>'
+          confirm: 'Reset'
         id: 'ID'
         task_name: 'Task name'
         due_date: 'Due date'
@@ -1597,7 +1610,8 @@ en:
         archived_tasks: 'Go to Archived tasks'
         active_tasks: 'Go to Active tasks'
       add_tag: '+ Add tag'
-      search: 'Search...'
+      used_tags: 'Used tags'
+      search: 'Manage assignees'
       not_set: 'not set'
       archive_group:
         success_flash: "<strong>%{number}</strong> task(s) successfully archived."
@@ -1626,17 +1640,20 @@ en:
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:
         head_title: "Manage tags"
+        head_title_read: "Tags"
         subtitle: "Showing tags of task %{module}"
         no_tags: "No tags!"
         edit_tag: "Edit tag."
         remove_tag: "Remove tag from task %{module}."
         delete_tag: "Permanently delete tag from all tasks."
-        delete_tag_confirmation: "Deleting a tag will remove it from all tagged tasks. Are you sure you wish to continue?"
-        explanatory_text: "Add a set of tags to mark the tasks inside this project. Changing the tag applies to all tagged tasks. Deleting a tag removes it from all tagged tasks."
+        delete_tag_confirmation: "Deleting a tag will remove it from all tagged tasks. You wont be able to get it back.<br><br><b>Are you sure you wish to continue?</b>"
+        explanatory_text: "Add a set of tags to mark the tasks inside this project."
+        project_tags: "%{project} project tags"
         save_tag: "Save tag."
         cancel_tag: "Cancel changes to the tag."
         create: "Add"
-        create_new: "New"
+        create_new: "Create a new tag"
+        new_tag_name: "Tag name"
       edit:
         id: "ID:"
         new_module: "New task"
@@ -1700,7 +1717,7 @@ en:
         comment_placeholder: "Your Message"
         new_comment: "New comment"
       full_zoom:
-        due_date: "Due date"
+        due_date: "Due"
         no_due_date: "not set"
         status_transitioning_label: "Transitioning to:"
         no_access: "You don’t have permission to view this task"
@@ -1981,6 +1998,8 @@ en:
             operators:
               contains: "Contains"
               does_not_contain: "Doesn’t contain"
+              contains_relationship: "Contains relationships"
+              does_not_contain_relationship: "Doesn’t contain relationships"
               equal_to: "Equal to"
               unequal_to: "Not equal to"
               greater_than: "Greater than"
@@ -2020,6 +2039,8 @@ en:
                 input_placeholder: "Enter text"
               RepositoryTextValue:
                 input_placeholder: "Enter %{name}"
+              RepositoryRelationshipValue:
+                input_placeholder: "Enter related item ID or name"
               RepositoryNumberValue:
                 input_placeholder: "Enter %{name}"
                 to_placeholder: "To"
@@ -2058,7 +2079,7 @@ en:
       assigned_search: 'Search...'
       assigned_tooltip: "%{tasks} tasks in &#10;%{experiments} experiments,&#10;%{projects} projects"
       row_name: "Name"
-      added_on: "Added on"
+      added_on: "Created on"
       added_by: "Added by"
       archived_on: "Archived on"
       archived_by: "Archived by"
@@ -2528,12 +2549,13 @@ en:
       head_title: "Inventories"
       head_title_archived: "Archived Inventories"
       table:
-        name: "Name"
+        name: "Inventory name"
+        id: "ID"
         number_of_items: "No. of items"
         shared: "Shared"
-        ownership: "Ownership"
-        added_on: "Added on"
-        added_by: "Added by"
+        ownership: "Owned by"
+        added_on: "Created on"
+        added_by: "Created by"
         archived_on: "Archived on"
         archived_by: "Archived by"
       shared_for_viewing: "For viewing"
@@ -2979,6 +3001,18 @@ en:
     draft: "Draft"
     draft_name: "(Draft) %{name}"
     no_text_placeholder: 'No protocol description'
+    table:
+      filters:
+        label_name_and_keywords: 'Name and keywords'
+        published_on: 'Published on'
+        modified_on: 'Modified on'
+        has_draft: 'Has draft'
+        published_by:
+          label: 'Published by'
+          placeholder: 'Select a publisher'
+        members:
+          label: 'Access'
+          placeholder: 'Select who has access'
     reorder_steps:
         button: "Rearrange steps"
         modal:
@@ -3190,6 +3224,7 @@ en:
       import: "Import"
       import_eln: "SciNote file (.eln)"
       import_docx: "MS Word (.docx)"
+      beta: "BETA"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
@@ -3200,7 +3235,7 @@ en:
       archive_action: "Archive"
       archive_flash_html: "<b>%{count} protocol</b> template(s) successfully archived."
       thead:
-        name: "Name"
+        name: "Protocol name"
         id: "ID"
         keywords: "Keywords"
         nr_of_linked_children: "Linked tasks"
@@ -3212,7 +3247,7 @@ en:
         published_on: "Published on"
         created_at: "Created at"
         archived_on: "Archived on"
-        updated_at: "Modified on"
+        updated_at: "Updated on"
       table:
         draft: "Draft"
       preview:
@@ -3222,7 +3257,7 @@ en:
         used_in: "Number of tasks linked to this protocol: %{nr}"
         no_linked_children: "This protocol is not linked to any task."
         length_menu: "Show %{number} per page"
-        show_version: "Show version"
+        show_version: "Show version:"
       restore: "Restore"
       restore_flash_html: "<b>%{count} protocol</b> template(s) successfully restored."
       make_private_unauthorized: "You do not have permission to move selected protocols to My protocols."
@@ -3687,8 +3722,10 @@ en:
     reset: "Inherit role"
     remove_access: "Remove access"
     grant_access: "Grant new access"
+    you: "you"
+    no_results: "No results"
     create:
-      success: "You have successfully granted access to %{count} member(s)."
+      success: "You have successfully granted access to %{member_name}."
       failure: "Something went wrong"
     destroy:
       success: "You have successfully removed %{member_name}."
@@ -3705,20 +3742,22 @@ en:
         submit: "Grant access"
         submit_singular: "Grant access to 1 member"
         submit_plural: "Grant access to {num} members"
-        find_people_html: "Find people"
+        find_people_html: "Search members"
+        grant_access: "Grant new access"
+        people_with_access: "People with access"
       new_protocol_assignments_form:
         title: "Select members"
         submit: "Grant access"
         submit_singular: "Grant access to 1 member"
         submit_plural: "Grant access to {num} members"
-        find_people_html: "Find people"
+        find_people_html: "Search members"
       experiment_member_field:
         reset: "Inherit role"
         reset_description: "The inherited role from project will be applied"
       my_module_member_field:
         reset: "Inherit role"
         reset_description: "The inherited role from project or experiment will be applied"
-      project: "Project"
+      projects: "Project"
       project_tooltip: "This role was set on this project."
       project_tooltip_inherit: "This role was inherited from the project."
       protocol: "Protocol"
@@ -3800,6 +3839,14 @@ en:
       secret_key_hint: "(Optional) A secret key that will be included in the Webhook-Secret-Key header, for authentication purposes."
   # This section contains general words that can be used in any parts of
   # application.
+  datatable:
+    entries:
+      total:
+        one: "%{count} entry"
+        other: "%{count} entries"
+      selected: "%{selected} of %{count} selected"
+    show: 'Show:'
+    rows: 'rows'
   tiny_mce:
     upload_window_title: 'Insert an image from your computer'
     upload_window_label: 'Choose an image'
@@ -3822,6 +3869,7 @@ en:
     edit: "Edit"
     delete: "Delete"
     cancel: "Cancel"
+    confirm: "Confirm"
     copy: "Copy"
     duplicate: "Duplicate"
     okay: "Okay"
@@ -3837,6 +3885,8 @@ en:
     selected: "Selected"
     loading: "Loading..."
     replace: "Replace"
+    archive: "Archive"
+    assign: "Assign"
     options_selected: 'options selected'
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
@@ -3904,7 +3954,11 @@ en:
     no_teams:
       title: "Your dashboard is empty!"
       text: "You should request access from your team administrators."
-
+    select_dropdown:
+      placeholder: "Select an option"
+      few_options_placeholder: 'options selected'
+      all_options_placeholder: 'All options selected'
+      no_options_placeholder: 'No options found'
   api:
     core:
       status_ok: "Ok"
@@ -4038,6 +4092,10 @@ en:
   From: 'From'
   To: 'To'
 
+  input:
+    errors:
+      invalid_value: 'Invalid value'
+
   marvinjs:
     new_sketch: "New chemical drawing"
     new_button: "New chemical drawing"
@@ -4077,7 +4135,6 @@ en:
     title: "Filters"
     text:
       label: "Contains text"
-      label_name_and_keywords: "Name and keywords"
       placeholder: "Enter search terms..."
     from_placeholder: "From"
     to_placeholder: "To"
@@ -4086,7 +4143,7 @@ en:
     updated_on:
       label: "Modified date"
     archived_on:
-      label: "Archived date"
+      label: "Archived on"
     recent_searches_label: "Recent searches"
     show_btn:
      one: "Show results"

@@ -1,0 +1,71 @@
+<template>
+  <div ref="modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <form @submit.prevent="submit">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <i class="sn-icon sn-icon-close"></i>
+            </button>
+            <h4 class="modal-title truncate !block" id="edit-project-modal-label">
+              {{ i18n.t('repositories.index.modal_create.title') }}
+            </h4>
+          </div>
+          <div class="modal-body">
+            <div class="mb-6">
+              <label class="sci-label">{{ i18n.t("repositories.index.modal_create.name_label") }}</label>
+              <div class="sci-input-container-v2" :class="{'error': error}" :data-error="error">
+                <input type="text" v-model="name"
+                       class="sci-input-field"
+                       autofocus="true" ref="input"
+                       :placeholder="i18n.t('repositories.index.modal_create.name_placeholder')" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
+            <button class="btn btn-primary" type="submit">
+              {{ i18n.t('repositories.index.modal_create.submit') }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
+
+<script>
+/* global HelperModule */
+
+import axios from '../../../packs/custom_axios.js';
+import modalMixin from '../../shared/modal_mixin';
+
+export default {
+  name: 'NewRepositoryModal',
+  props: {
+    createUrl: String
+  },
+  mixins: [modalMixin],
+  data() {
+    return {
+      name: '',
+      error: null
+    };
+  },
+  methods: {
+    submit() {
+      axios.post(this.createUrl, {
+        repository: {
+          name: this.name
+        }
+      }).then((response) => {
+        this.error = null;
+        this.$emit('create');
+        HelperModule.flashAlertMsg(response.data.message, 'success');
+      }).catch((error) => {
+        this.error = error.response.data.name;
+      });
+    }
+  }
+};
+</script>

@@ -55,7 +55,7 @@ class TeamRepositoriesController < ApplicationController
   end
 
   def update_params
-    params.permit(:permission_changes, share_team_ids: [], write_permissions: [])
+    params.permit(permission_changes: {}, share_team_ids: [], write_permissions: [])
   end
 
   def check_sharing_permissions
@@ -79,7 +79,7 @@ class TeamRepositoriesController < ApplicationController
   def teams_to_update
     return [] if update_params[:permission_changes].blank?
 
-    teams_to_update = JSON.parse(update_params[:permission_changes]).keys.map(&:to_i).to_a &
+    teams_to_update = update_params[:permission_changes].keys.map(&:to_i).to_a &
                       update_params[:share_team_ids]&.map(&:to_i).to_a
     wp = update_params[:write_permissions]&.map(&:to_i)
 

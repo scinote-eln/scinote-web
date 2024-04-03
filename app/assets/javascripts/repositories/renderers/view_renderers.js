@@ -162,9 +162,9 @@ $.fn.dataTable.render.defaultRepositoryNumberValue = function() {
   return '';
 };
 
-$.fn.dataTable.render.RepositoryNumberValue = function(data) {
+$.fn.dataTable.render.RepositoryNumberValue = function (data) {
   return `<span class="number-value" data-value="${data.value}">
-            ${data.value.toLocaleString('en-US', { timeZone: 'UTC' })}
+            ${data.value}
           </span>`;
 };
 

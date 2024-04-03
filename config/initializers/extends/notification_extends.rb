@@ -57,6 +57,10 @@ class NotificationExtends
       code: 7,
       recipients_module: :AssignedRecipients
     },
+    project_access_changed_all_team_members_activity: {
+      code: 241,
+      recipients_module: :AssignedGroupRecipients
+    },
     project_grant_access_to_all_team_members_activity: {
       code: 242,
       recipients_module: :AssignedGroupRecipients
@@ -135,6 +139,7 @@ class NotificationExtends
         change_user_role_on_project_activity
         change_user_role_on_experiment_activity
         change_user_role_on_my_module_activity
+        project_access_changed_all_team_members_activity
       ]
     },
     repository: {

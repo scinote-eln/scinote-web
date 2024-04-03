@@ -48,10 +48,21 @@ const entryList = {
   vue_user_preferences: './app/javascript/packs/vue/user_preferences.js',
   vue_components_manage_stock_value_modal: './app/javascript/packs/vue/manage_stock_value_modal.js',
   vue_legacy_datetime_picker: './app/javascript/packs/vue/legacy/datetime_picker.js',
+  vue_label_templates_table: './app/javascript/packs/vue/label_templates_table.js',
+  vue_projects_list: './app/javascript/packs/vue/projects_list.js',
+  vue_experiments_list: './app/javascript/packs/vue/experiments_list.js',
+  vue_my_modules_list: './app/javascript/packs/vue/my_modules_list.js',
+  vue_design_system_select: './app/javascript/packs/vue/design_system/select.js',
+  vue_protocols_list: './app/javascript/packs/vue/protocols_list.js',
+  vue_repositories_table: './app/javascript/packs/vue/repositories_table.js',
+  vue_reports_table: './app/javascript/packs/vue/reports_table.js',
   vue_open_locally_menu: './app/javascript/packs/vue/open_locally_menu.js',
   vue_scinote_edit_download: './app/javascript/packs/vue/scinote_edit_download.js',
-  vue_design_system_modals: './app/javascript/packs/vue/design_system/modals.js'
-}
+  vue_design_system_modals: './app/javascript/packs/vue/design_system/modals.js',
+  vue_legacy_tags_modal: './app/javascript/packs/vue/legacy/tags_modal.js',
+  vue_legacy_access_modal: './app/javascript/packs/vue/legacy/access_modal.js',
+  vue_legacy_repository_menu_dropdown: './app/javascript/packs/vue/legacy/repository_menu_dropdown.js'
+};
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949
 // Get paths to all engines' folders

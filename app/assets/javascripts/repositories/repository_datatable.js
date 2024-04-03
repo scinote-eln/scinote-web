@@ -406,35 +406,6 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  function initRepositoryViewSwitcher() {
-    const viewSwitch = $('.view-switch');
-    const repositoryShow = $('.repository-show');
-    const stateViewSwitchBtnName = $('.state-view-switch-btn-name');
-    const selectedSwitchOptionClass = 'form-dropdown-state-item prevent-shrink';
-
-    function switchView(event, activeClass, inactiveClass) {
-      event.preventDefault();
-      event.stopPropagation();
-
-      repositoryShow.removeClass(inactiveClass).addClass(activeClass);
-
-      $(`.view-switch-${inactiveClass} a`).removeClass(selectedSwitchOptionClass);
-      $(`.view-switch-${activeClass} a`).addClass(selectedSwitchOptionClass);
-
-      stateViewSwitchBtnName.text($(`.view-switch-${activeClass}`).text());
-      viewSwitch.removeClass('open');
-      RepositoryDatatable.reload();
-    }
-
-    viewSwitch.on('click', '.view-switch-archived', function(event) {
-      switchView(event, 'archived', 'active');
-    });
-
-    viewSwitch.on('click', '.view-switch-active', function(event) {
-      switchView(event, 'active', 'archived');
-    });
-  }
-
   function initExportActions() {
     const exportModal = $('#exportRepositoryRowsModal');
     $(document).on('click', '#exportRepositoryRowsButton', (e) => {
@@ -825,7 +796,7 @@ var RepositoryDatatable = (function(global) {
         initSaveButton();
         initCancelButton();
         initBSTooltips();
-        initRepositoryViewSwitcher();
+        window.initRepositoryStateMenu();
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 
         $('.dataTables_wrapper').on('click', '.pagination', () => {

@@ -41,10 +41,8 @@ module Toolbars
         name: 'restore',
         label: I18n.t('experiments.table.toolbar.restore'),
         icon: 'sn-icon sn-icon-restore',
-        button_class: 'restore-my-modules-btn',
-        button_id: 'restoreTask',
         path: restore_my_modules_experiment_path(experiment),
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -59,8 +57,7 @@ module Toolbars
         name: 'edit',
         label: I18n.t('experiments.table.toolbar.edit'),
         icon: 'sn-icon sn-icon-edit',
-        button_id: 'editTask',
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -81,9 +78,7 @@ module Toolbars
         name: 'access',
         label: I18n.t('experiments.table.my_module_actions.access'),
         icon: 'sn-icon sn-icon-project-member-access',
-        button_class: 'access-btn',
-        path: path,
-        type: 'remote-modal'
+        type: :emit
       }
     end
 
@@ -94,9 +89,7 @@ module Toolbars
         name: 'move',
         label: I18n.t('experiments.table.toolbar.move'),
         icon: 'sn-icon sn-icon-move',
-        button_id: 'moveTask',
-        button_class: 'move-my-modules-btn',
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -110,10 +103,8 @@ module Toolbars
         name: 'duplicate',
         label: I18n.t('experiments.table.toolbar.duplicate'),
         icon: 'sn-icon sn-icon-duplicate',
-        button_id: 'duplicateTasks',
-        button_class: 'duplicate-tasks-btn',
         path: batch_clone_my_modules_experiment_path(experiment),
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -126,9 +117,8 @@ module Toolbars
         name: 'archive',
         label: I18n.t('experiments.table.toolbar.archive'),
         icon: 'sn-icon sn-icon-archive',
-        button_id: 'archiveTask',
         path: archive_my_modules_experiment_path(experiment),
-        type: :legacy
+        type: :emit
       }
     end
   end

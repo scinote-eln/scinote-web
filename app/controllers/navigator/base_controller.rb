@@ -8,7 +8,7 @@ module Navigator
       {
         id: project.code,
         name: project.name,
-        url: project_path(project, view_mode: archived ? 'archived' : 'active'),
+        url: experiments_path(project_id: project, view_mode: archived ? 'archived' : 'active'),
         archived: project.archived,
         type: :project,
         has_children: project.has_children,
@@ -24,7 +24,7 @@ module Navigator
         url: project_folder_path(folder, view_mode: archived ? 'archived' : 'active'),
         archived: folder.archived,
         type: :folder,
-        has_children: folder.has_children,
+        has_children: folder.try(:has_children),
         children_url: navigator_project_folder_path(folder)
       }
     end
@@ -123,7 +123,7 @@ module Navigator
                     'project_folders.archived',
                     "#{has_children_sql} AS has_children"
                   ).group('project_folders.id')
-                  .having("project_folders.archived = :archived OR #{has_children_sql}", archived: archived)
+                  .having('project_folders.archived = :archived', archived: archived)
     end
 
     def fetch_experiments(object, archived = false)
@@ -180,6 +180,8 @@ module Navigator
       archived = params[:archived] == 'true'
       tree = fetch_projects(folder.parent_folder, archived).map { |i| project_serializer(i, archived) } +
              fetch_project_folders(folder.parent_folder, archived).map { |i| folder_serializer(i, archived) }
+      # Tree will not contain folder when folder archived state and params archived values are contradictory
+      tree.find { |i| i[:id] == folder.code } || (tree << folder_serializer(folder, archived))
       tree.find { |i| i[:id] == folder.code }[:children] = children
       tree = build_folder_tree(folder.parent_folder, tree) if folder.parent_folder.present?
       tree

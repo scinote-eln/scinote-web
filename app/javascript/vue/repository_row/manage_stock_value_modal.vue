@@ -26,7 +26,7 @@
           <form class="flex flex-col gap-6" @submit.prevent novalidate>
             <fieldset class="w-full flex justify-between">
               <div class="flex flex-col w-40">
-                <label class="text-sn-grey text-sm font-normal" for="operations">{{ i18n.t('repository_stock_values.manage_modal.operation') }}</label>
+                <label class="sci-label" for="operations">{{ i18n.t('repository_stock_values.manage_modal.operation') }}</label>
                 <Select
                   :disabled="!stockValue?.id"
                   :value="operation"
@@ -39,21 +39,18 @@
                   @update="value => amount = value"
                   name="stock_amount"
                   id="stock-amount"
-                  :inputClass="`sci-input-container-v2 ${errors.amount ? 'error' : ''}`"
-                  :labelClass="`text-sm font-normal ${errors.amount ? 'text-sn-delete-red' : 'text-sn-grey'}`"
                   type="number"
                   :value="amount"
                   :decimals="stockValue.decimals"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.amount_placeholder_new')"
-                  required
                   :label="i18n.t('repository_stock_values.manage_modal.amount')"
-                  showLabel
-                  autoFocus
+                  :required="true"
+                  :min="0"
                   :error="errors.amount"
                 />
               </div>
               <div class="flex flex-col w-40">
-                <label :class="`text-sm font-normal ${errors.unit ? 'text-sn-delete-red' : 'text-sn-grey'}`" for="stock-unit">
+                <label class="sci-label" :class="{ 'error': !!errors.unit }" for="stock-unit">
                   {{ i18n.t('repository_stock_values.manage_modal.unit') }}
                 </label>
                 <Select
@@ -61,10 +58,10 @@
                   :value="unit"
                   :options="units"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.unit_prompt')"
-                  @change="unit = $event"
+                  @change="unit = $event; validateStockValue()"
                   :className="`${errors.unit ? 'error' : ''}`"
                 ></Select>
-                <div class="text-sn-delete-red text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
+                <div class="text-sn-coral text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
                   {{ errors.unit }}
                 </div>
               </div>
@@ -93,44 +90,41 @@
               </div>
               <span class="ml-2">{{ i18n.t('repository_stock_values.manage_modal.create_reminder') }}</span>
             </div>
-            <div v-if="reminderEnabled" class="stock-reminder-value flex gap-2 items-center">
+            <div v-if="reminderEnabled" class="stock-reminder-value flex gap-2 items-center w-40">
               <Input
                   @update="value => lowStockTreshold = value"
                   name="treshold_amount"
                   id="treshold-amount"
-                  fieldClass="flex gap-2"
-                  inputClass="sci-input-container-v2 w-40"
-                  labelClass="text-sm font-normal flex items-center"
                   type="number"
                   :value="lowStockTreshold"
                   :decimals="stockValue.decimals"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.amount_placeholder_new')"
-                  required
+                  :required="true"
                   :label="i18n.t('repository_stock_values.manage_modal.reminder_at')"
-                  showLabel
+                  :min="0"
                   :error="errors.tresholdAmount"
                 />
-              <span class="text-sm font-normal">
+              <span class="text-sm font-normal mt-5 shrink-0">
                 {{ unitLabel }}
               </span>
             </div>
-            <div class="sci-input-container flex flex-col" :data-error-text="i18n.t('repository_stock_values.manage_modal.comment_limit')">
-              <label class="text-sn-grey text-sm font-normal" for="stock-value-comment">{{ i18n.t('repository_stock_values.manage_modal.comment') }}</label>
-              <input class="sci-input-field"
-                @input="event => comment = event.target.value"
-                type="text"
-                name="comment"
-                id="stock-value-comment"
-                :placeholder="i18n.t('repository_stock_values.manage_modal.comment_placeholder')"
-              />
-            </div>
+            <Input
+              @input="event => comment = event.target.value"
+              :value="comment"
+              type="text"
+              name="comment"
+              id="stock-value-comment"
+              :label=" i18n.t('repository_stock_values.manage_modal.comment')"
+              :error="errors.comment"
+              :placeholder="i18n.t('repository_stock_values.manage_modal.comment_placeholder')"
+            />
           </form>
         </div>
         <div class="modal-footer">
           <button type='button' class='btn btn-secondary' data-dismiss='modal'>
             {{ i18n.t('general.cancel') }}
           </button>
-          <button class="btn btn-primary" @click="validateAndsaveStockValue">
+          <button class="btn btn-primary" @click="saveStockValue" :disabled="isSaving">
             {{ i18n.t('repository_stock_values.manage_modal.save_stock') }}
           </button>
         </div>
@@ -141,8 +135,8 @@
 
 <script>
 import Decimal from 'decimal.js';
-import Select from '../shared/select.vue';
-import Input from '../shared/input.vue';
+import Select from '../shared/legacy/select.vue';
+import Input from '../shared/legacy/input.vue';
 
 export default {
   name: 'ManageStockValueModal',
@@ -155,12 +149,13 @@ export default {
       operation: null,
       operations: [],
       stockValue: null,
-      amount: '',
+      amount: null,
       repositoryRowName: null,
       stockUrl: null,
       units: null,
       unit: null,
       reminderEnabled: false,
+      isSaving: false,
       lowStockTreshold: null,
       comment: null,
       errors: {}
@@ -176,7 +171,7 @@ export default {
       return unit ? unit[1] : '';
     },
     newAmount() {
-      const currentAmount = new Decimal(this.stockValue?.amount || 0);
+      const currentAmount = this.stockValue?.amount ? new Decimal(this.stockValue?.amount || 0) : null;
       const amount = new Decimal(this.amount || 0);
       let value;
       switch (this.operation) {
@@ -226,7 +221,7 @@ export default {
         success: (result) => {
           this.repositoryRowName = result.repository_row_name;
           this.stockValue = result.stock_value;
-          this.amount = Number(new Decimal(result.stock_value.amount || 0));
+          this.amount = this.stockValue?.amount && Number(new Decimal(this.stockValue.amount));
           this.units = result.stock_value.units;
           this.unit = result.stock_value.unit;
           this.reminderEnabled = result.stock_value.reminder_enabled;
@@ -249,20 +244,26 @@ export default {
     },
     showModal(stockValueUrl, closeCallback) {
       $(this.$refs.modal).modal('show');
+      this.comment = null;
       this.fetchStockValueData(stockValueUrl);
       this.closeCallback = closeCallback;
     },
-    validateAndsaveStockValue() {
+    validateStockValue() {
       const newErrors = {};
-      this.errors = newErrors;
       if (!this.unit) { newErrors.unit = I18n.t('repository_stock_values.manage_modal.unit_error'); }
       if (!this.amount) { newErrors.amount = I18n.t('repository_stock_values.manage_modal.amount_error'); }
       if (this.amount && this.amount < 0) { newErrors.amount = I18n.t('repository_stock_values.manage_modal.negative_error'); }
       if (this.reminderEnabled && !this.lowStockTreshold) { newErrors.tresholdAmount = I18n.t('repository_stock_values.manage_modal.amount_error'); }
-
+      if (this.comment && this.comment.length > 255) { newErrors.comment = I18n.t('repository_stock_values.manage_modal.comment_limit'); }
       this.errors = newErrors;
+      return newErrors;
+    },
 
-      if (!$.isEmptyObject(newErrors)) return;
+    saveStockValue() {
+      this.validateStockValue();
+
+      if (!$.isEmptyObject(this.errors)) return;
+      this.isSaving = true;
 
       const $this = this;
       $.ajax({
@@ -282,6 +283,7 @@ export default {
         },
         success: (result) => {
           $this.stockValue = null;
+          $this.isSaving = false;
           $this.closeModal();
           $this.closeCallback && $this.closeCallback(result);
         }

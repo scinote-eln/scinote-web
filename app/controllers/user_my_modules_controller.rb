@@ -91,12 +91,11 @@ class UserMyModulesController < ApplicationController
     users = @my_module.users
                       .joins("LEFT OUTER JOIN user_my_modules ON user_my_modules.user_id = users.id "\
                              "AND user_my_modules.my_module_id = #{@my_module.id}")
-                      .search(false, params[:query])
-                      .order(:full_name)
-                      .limit(Constants::SEARCH_LIMIT)
+                      .where('trim_html_tags(users.full_name) ILIKE ?',
+                             "%#{ActiveRecord::Base.sanitize_sql_like(params[:query])}%")
                       .select('users.*', 'user_my_modules.id as user_my_module_id')
-                      .select('CASE WHEN user_my_modules.id IS NOT NULL '\
-                              'THEN true ELSE false END as designated')
+                      .select('CASE WHEN user_my_modules.id IS NOT NULL THEN true ELSE false END as designated')
+                      .order('designated DESC', :full_name)
 
     users = users.map do |user|
       next if params[:skip_assigned] && user.designated

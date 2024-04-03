@@ -86,9 +86,9 @@
            @click="openCommentsSidebar"
            :data-object-id="step.id">
           <i class="sn-icon sn-icon-comments"></i>
-          <span class="comments-counter" v-if="step.attributes.comments_count"
+          <span class="comments-counter"
                 :id="`comment-count-${step.id}`"
-                :class="{'unseen': step.attributes.unseen_comments}"
+                :class="{'unseen': step.attributes.unseen_comments, 'hidden': !step.attributes.comments_count}"
           >
             {{ step.attributes.comments_count }}
           </span>

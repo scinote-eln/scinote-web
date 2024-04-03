@@ -138,7 +138,7 @@ module MyModulesHelper
     {
       type: project.class.name.underscore,
       value: project.name,
-      url: project_path(project, view_mode: archived ? 'archived' : 'active'),
+      url: experiments_path(project_id: project, view_mode: archived ? 'archived' : 'active'),
       archived: archived
     }
   end

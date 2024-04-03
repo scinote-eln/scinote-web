@@ -35,7 +35,7 @@
             'max-h-[4rem]': collapsed,
             'max-h-[40rem]': !collapsed
           }">
-      {{ colVal.toLocaleString('en-US', { timezone: 'UTC' }) }}
+      {{ colval }}
     </div>
     <div v-else
           class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
@@ -46,7 +46,7 @@
 
 <script>
 import repositoryValueMixin from './mixins/repository_value.js';
-import Textarea from '../../shared/Textarea.vue';
+import Textarea from '../../shared/legacy/Textarea.vue';
 
 export default {
   name: 'RepositoryNumberValue',

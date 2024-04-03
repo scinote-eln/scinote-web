@@ -54,7 +54,7 @@ Rails.application.routes.draw do
       end
       collection do
         post :duplicate
-        post :delete
+        delete :delete
         get :datatable
         get :template_tags
         get :zpl_preview
@@ -136,11 +136,14 @@ Rails.application.routes.draw do
 
     namespace :users do
       namespace :settings do
+        resource :user_settings, only: %i(show update)
+
         resources :teams, only: [] do
           collection do
             post :switch
           end
         end
+
         resources :webhooks, only: %i(index create update destroy) do
           collection do
             post :destroy_filter
@@ -149,7 +152,6 @@ Rails.application.routes.draw do
         end
       end
     end
-
 
     # Invite users
     devise_scope :user do
@@ -192,6 +194,9 @@ Rails.application.routes.draw do
               defaults: { format: 'json' }
           get 'actions_toolbar'
           get 'export_modal'
+        end
+        member do
+          get :shareable_teams
         end
         get 'destroy_modal', to: 'repositories#destroy_modal',
             defaults: { format: 'json' }
@@ -255,9 +260,9 @@ Rails.application.routes.draw do
     end
     get 'reports/datatable', to: 'reports#datatable'
     get 'reports/new_template_values', to: 'reports#new_template_values', defaults: { format: 'json' }
-    post 'reports/available_repositories', to: 'reports#available_repositories',
+    get 'reports/available_repositories', to: 'reports#available_repositories',
                                            defaults: { format: 'json' }
-    post 'available_asset_type_columns',
+    get 'available_asset_type_columns',
           to: 'repository_columns#available_asset_type_columns',
           defaults: { format: 'json' }
     post 'reports/destroy', to: 'reports#destroy'
@@ -321,11 +326,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, except: [:destroy] do
+    resources :projects, except: [:destroy, :new, :show, :edit] do
       # Activities popup (JSON) for individual project in projects index,
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
-      resources :tags, only: [:create, :update, :destroy]
+      resources :tags, only: %i(index create update destroy)
       post :create_tag
 
       resources :reports,
@@ -347,24 +352,14 @@ Rails.application.routes.draw do
           post 'restore_group' # restore group of experiments
         end
       end
-      member do
-        # Notifications popup for individual project in projects index
-        get 'notifications'
-        get 'permissions'
-        get 'experiments_cards'
-        get 'sidebar'
-        get 'actions_dropdown'
-        put 'view_type'
-      end
 
       collection do
         get 'inventory_assigning_project_filter'
-        get 'cards', to: 'projects#cards'
         get 'users_filter'
         post 'archive_group'
         post 'restore_group'
-        put 'view_type', to: 'teams#view_type'
         get 'actions_toolbar'
+        get :user_roles
       end
     end
 
@@ -372,6 +367,7 @@ Rails.application.routes.draw do
       get 'cards', to: 'projects#cards'
 
       collection do
+        get :tree
         post 'move_to', to: 'project_folders#move_to', defaults: { format: 'json' }
         get 'move_to_modal', to: 'project_folders#move_to_modal', defaults: { format: 'json' }
         post 'destroy', to: 'project_folders#destroy', as: 'destroy', defaults: { format: 'json' }
@@ -380,10 +376,11 @@ Rails.application.routes.draw do
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
-    resources :experiments, only: %i(show edit update) do
+    get 'projects/:project_id', to: 'experiments#index'
+    get 'projects/:project_id/experiments', to: 'experiments#index', as: :experiments
+    resources :experiments, only: %i(update) do
       collection do
         get 'inventory_assigning_experiment_filter'
-        get 'edit', action: :edit
         get 'clone_modal', action: :clone_modal
         get 'move_modal', action: :move_modal
         get 'actions_toolbar'
@@ -391,11 +388,8 @@ Rails.application.routes.draw do
         post 'move' # move experiment
       end
       member do
-        get 'permissions'
-        get 'actions_dropdown'
+        get :assigned_users
         put :view_type
-        get :table
-        get :load_table
         get :move_modules_modal
         post :move_modules
         get :my_modules
@@ -421,11 +415,16 @@ Rails.application.routes.draw do
         post :archive_my_modules
         post :batch_clone_my_modules
         get :search_tags
+        get :projects_to_clone
+        get :projects_to_move
+        get :experiments_to_move
       end
     end
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
     # as well as 'module info' page for single module (HTML)
+    get 'experiments/:experiment_id/table', to: 'my_modules#index'
+    get 'experiments/:experiment_id/modules', to: 'my_modules#index', as: :my_modules
     resources :my_modules, path: '/modules', only: [:show, :update] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
 
@@ -442,6 +441,7 @@ Rails.application.routes.draw do
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do
           get :search_tags
+          get :assigned_tags
         end
         member do
           post :destroy_by_tag_id
@@ -622,6 +622,7 @@ Rails.application.routes.draw do
         post :publish
         post :destroy_draft
         post :save_as_draft
+        get :versions_list
         get 'version_comment', to: 'protocols#version_comment'
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
@@ -655,7 +656,6 @@ Rails.application.routes.draw do
         put :update_version_comment
       end
       collection do
-        post 'datatable', to: 'protocols#datatable'
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'clone', to: 'protocols#clone'
@@ -667,6 +667,7 @@ Rails.application.routes.draw do
         get 'export', to: 'protocols#export'
         get 'protocolsio', to: 'protocols#protocolsio_index'
         get 'actions_toolbar', to: 'protocols#actions_toolbar'
+        get 'user_roles', to: 'protocols#user_roles'
       end
     end
 
@@ -752,7 +753,7 @@ Rails.application.routes.draw do
 
       collection do
         get :sidebar
-        post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
+        get 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
         get 'export_repository_stock_items_modal'
         get :rows_to_print, to: 'repository_rows#rows_to_print'
         get :print_zpl, to: 'repository_rows#print_zpl'
@@ -1026,6 +1027,10 @@ Rails.application.routes.draw do
   resources :gene_sequence_assets, only: %i(new create edit update)
 
   if Rails.env.development? || ENV['ENABLE_DESIGN_ELEMENTS'] == 'true'
-    resources :design_elements, only: %i(index)
+    resources :design_elements, only: %i(index) do
+      collection do
+        get :test_select
+      end
+    end
   end
 end

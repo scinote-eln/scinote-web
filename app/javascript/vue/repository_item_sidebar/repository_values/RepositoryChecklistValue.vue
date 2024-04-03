@@ -4,29 +4,26 @@
       {{ colName }}
     </div>
     <div v-if="canEdit">
-      <checklist-select
-        @change="changeSelected"
-        @update="update"
-        :initialSelectedValues="selectedValues"
-        :shouldUpdateWithoutValues="true"
-        :withButtons="true"
-        :withEditCursor="true"
-        ref="ChecklistSelector"
-        :options="checklistItems"
-        :placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
-        :no-options-placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
-        className="h-[38px] !pl-3"
-        optionsClassName="max-h-[300px]"
-      ></checklist-select>
+      <select-dropdown
+        @change="handleChange"
+        :options="availableChecklistItems"
+        :value="selectedChecklistItemsIds"
+        :with-checkboxes="true"
+        :multiple="true"
+        :clearable="true"
+        :searchable="true"
+        :size="'sm'"
+        >
+      </select-dropdown>
     </div>
-    <div v-else-if="selectedChecklistItems?.length > 0"
+    <div v-else-if="computedArrOfItemObjects && computedArrOfItemObjects.length > 0"
          class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-[370px] overflow-x-auto flex flex-wrap gap-1">
-      <span v-for="(checklistItem, index) in selectedChecklistItems"
+      <span v-for="(checklistItem, index) in computedArrOfItemObjects"
             :key="index"
             :id="`checklist-item-${index}`"
             class="flex w-fit break-words">
         {{
-          index + 1 === selectedChecklistItems.length
+          index + 1 === computedArrOfItemObjects.length
             ? checklistItem?.label
             : `${checklistItem?.label} |`
         }}
@@ -40,15 +37,13 @@
 </template>
 
 <script>
-import ChecklistSelect from '../../shared/checklist_select.vue';
+import SelectDropdown from '../../shared/select_dropdown.vue';
 import repositoryValueMixin from './mixins/repository_value.js';
 
 export default {
   name: 'RepositoryChecklistValue',
   mixins: [repositoryValueMixin],
-  components: {
-    'checklist-select': ChecklistSelect
-  },
+  components: { 'select-dropdown': SelectDropdown },
   props: {
     data_type: String,
     colId: Number,
@@ -61,16 +56,26 @@ export default {
     return {
       id: null,
       isLoading: false,
-      checklistItems: [],
-      selectedChecklistItems: [],
-      selectedValues: []
+      availableChecklistItems: [],
+      selectedChecklistItemsIds: []
     };
   },
   mounted() {
     this.fetchChecklistItems();
-    if (this.colVal) {
-      this.selectedChecklistItems = Array.isArray(this.colVal) ? this.colVal : [this.colVal];
-      this.selectedValues = this.selectedChecklistItems.map((item) => item?.value);
+    if (this.colVal && Array.isArray(this.colVal)) {
+      this.selectedChecklistItemsIds = this.colVal.map((item) => String(item.value));
+    }
+  },
+  computed: {
+    computedArrOfItemObjects() {
+      const arrOfItemObjects = this.selectedChecklistItemsIds.map((id) => {
+        const matchingItem = this.availableChecklistItems.find((item) => item[0] === id);
+        return {
+          id: matchingItem ? matchingItem[0] : null,
+          label: matchingItem ? matchingItem[1] : null
+        };
+      });
+      return arrOfItemObjects;
     }
   },
   methods: {
@@ -79,20 +84,22 @@ export default {
 
       $.get(this.optionsPath, (data) => {
         if (Array.isArray(data)) {
-          this.checklistItems = data.map((option) => {
-            const { value, label } = option;
-            return { id: value, label };
-          });
+          this.availableChecklistItems = data.map((option) => [String(option.value), option.label]);
           return false;
         }
 
-        this.checklistItems = [];
+        this.availableChecklistItems = [];
       }).always(() => {
         this.isLoading = false;
       });
     },
-    changeSelected(selectedChecklistItems) {
-      this.selectedChecklistItems = selectedChecklistItems;
+    handleChange(selectedChecklistItemsIds) {
+      if (selectedChecklistItemsIds instanceof Event) {
+        return;
+      }
+
+      this.selectedChecklistItemsIds = selectedChecklistItemsIds;
+      this.update(selectedChecklistItemsIds);
     }
   }
 };

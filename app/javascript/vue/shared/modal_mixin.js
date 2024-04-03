@@ -1,6 +1,7 @@
 export default {
   mounted() {
     $(this.$refs.modal).modal('show');
+    this.$refs.input?.focus();
     $(this.$refs.modal).on('hidden.bs.modal', () => {
       this.$emit('close');
     });

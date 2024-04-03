@@ -18,15 +18,12 @@
           </div>
           <div class="w-full py-6">
             <label class="sci-label">{{i18n.t(`assets.from_clipboard.select_${objectType}`)}}</label>
-            <SelectSearch
+            <SelectDropdown
               :value="target"
               @change="setTarget"
               :options="targets"
-              :isLoading="false"
+              :searchable="true"
               :placeholder="
-                i18n.t(`protocols.steps.modals.move_element.${objectType}.search_placeholder`)
-              "
-              :searchPlaceholder="
                 i18n.t(`protocols.steps.modals.move_element.${objectType}.search_placeholder`)
               "
             />
@@ -49,7 +46,7 @@
   </div>
 </template>
 <script>
-import SelectSearch from '../../select_search.vue';
+  import SelectDropdown from "../../select_dropdown.vue";
 
 export default {
   name: 'clipboardPasteModal',
@@ -68,7 +65,7 @@ export default {
     };
   },
   components: {
-    SelectSearch
+    SelectDropdown
   },
   computed: {
     valid() {
@@ -123,8 +120,8 @@ export default {
         const extension = imageBlog.name.slice(
           (Math.max(0, imageBlog.name.lastIndexOf('.')) || Infinity) + 1
         );
-          // hack to inject custom name in File object
-        const name = `${newName}.${extension}`;
+        // hack to inject custom name in File object
+        const name = newName + '.' + extension;
         const blob = imageBlog.slice(0, imageBlog.size, imageBlog.type);
         // make new blob with the correct name;
         this.imageBlob = new File([blob], name, { type: imageBlog.type });

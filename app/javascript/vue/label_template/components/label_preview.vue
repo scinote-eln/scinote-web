@@ -76,7 +76,6 @@
 </template>
 
 <script>
-import DropdownSelector from '../../shared/dropdown_selector.vue';
 
 const DPI_RESOLUTION_OPTIONS = [
   { value: 6, label: '152 dpi' },
@@ -91,6 +90,8 @@ const DPMM_RESOLUTION_OPTIONS = [
   { value: 12, label: '12 dpmm (300 dpi)' },
   { value: 24, label: '24 dpmm (600 dpi)' }
 ];
+
+import DropdownSelector from '../../shared/legacy/dropdown_selector.vue'
 
 export default {
   name: 'LabelPreview',

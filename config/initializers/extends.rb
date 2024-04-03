@@ -631,6 +631,23 @@ class Extends
       in_app: true
     }
   }
+
+  WHITELISTED_USER_SETTINGS = %w(
+    LabelTemplates_active_state
+    LabelTemplates_archived_state
+    ExperimentList_active_state
+    ExperimentList_archived_state
+    MyModuleList_active_state
+    MyModuleList_archived_state
+    ProjectList_active_state
+    ProjectList_archived_state
+    ProtocolTemplates_active_state
+    ProtocolTemplates_archived_state
+    ReportTemplates_active_state
+    ReportTemplates_archived_state
+    Repositories_active_state
+    Repositories_archived_state
+  ).freeze
 end
 
 # rubocop:enable Style/MutableConstant

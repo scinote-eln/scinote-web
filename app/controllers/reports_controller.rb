@@ -12,7 +12,7 @@ class ReportsController < ApplicationController
   before_action :load_available_repositories, only: %i(index save_pdf_to_inventory_modal available_repositories)
   before_action :check_project_read_permissions, only: %i(create edit update generate_pdf
                                                           generate_docx new_template_values project_contents)
-  before_action :check_read_permissions, except: %i(index datatable new create edit update destroy actions_toolbar generate_pdf
+  before_action :check_read_permissions, except: %i(index new create edit update destroy actions_toolbar generate_pdf
                                                     generate_docx new_template_values project_contents
                                                     available_repositories)
   before_action :check_create_permissions, only: %i(new create)
@@ -21,14 +21,17 @@ class ReportsController < ApplicationController
   after_action :generate_pdf_report, only: %i(create update generate_pdf)
 
   # Index showing all reports of a single project
-  def index; end
-
-  def datatable
-    render json: ::ReportDatatable.new(
-      view_context,
-      current_user,
-      Report.viewable_by_user(current_user, current_team)
-    )
+  def index
+    respond_to do |format|
+      format.json do
+        reports = Lists::ReportsService.new(Report.viewable_by_user(current_user, current_team), params).call
+        render json: reports, each_serializer: Lists::ReportSerializer,
+               user: current_user, meta: pagination_dict(reports)
+      end
+      format.html do
+        render 'index'
+      end
+    end
   end
 
   # Report grouped by modules
@@ -137,7 +140,7 @@ class ReportsController < ApplicationController
   # Destroy multiple entries action
   def destroy
     begin
-      report_ids = JSON.parse(params[:report_ids])
+      report_ids = params[:report_ids]
     rescue
       render_404
     end
@@ -151,25 +154,11 @@ class ReportsController < ApplicationController
       report.destroy
     end
 
-    redirect_to reports_path
+    render json: { message: I18n.t('projects.reports.index.modal_delete.success') }
   end
 
   def status
-    docx = @report.docx_preview_file.attached? ? document_preview_report_path(@report, report_type: :docx) : nil
-    pdf = @report.pdf_file.attached? ? document_preview_report_path(@report, report_type: :pdf) : nil
-
-    render json: {
-      docx: {
-        processing: @report.docx_processing?,
-        preview_url: docx,
-        error: @report.docx_error?
-      },
-      pdf: {
-        processing: @report.pdf_processing?,
-        preview_url: pdf,
-        error: @report.pdf_error?
-      }
-    }
+    render json: @report, serializer: Lists::ReportSerializer
   end
 
   # Generation actions
@@ -283,7 +272,7 @@ class ReportsController < ApplicationController
   end
 
   def available_repositories
-    render json: { results: @available_repositories }, status: :ok
+    render json: { data: @available_repositories.map { |r| [r.id, r.name] } }
   end
 
   def document_preview
@@ -302,7 +291,7 @@ class ReportsController < ApplicationController
       actions:
         Toolbars::ReportsService.new(
           current_user,
-          report_ids: params[:report_ids].split(',')
+          report_ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions
     }
   end
@@ -360,7 +349,7 @@ class ReportsController < ApplicationController
     @available_repositories = []
     repositories = Repository.active
                              .accessible_by_teams(current_team)
-                             .name_like(search_params[:q])
+                             .name_like(search_params[:query])
                              .limit(Constants::SEARCH_LIMIT)
     repositories.each do |repository|
       next unless can_manage_repository_rows?(current_user, repository)
@@ -376,11 +365,11 @@ class ReportsController < ApplicationController
   end
 
   def search_params
-    params.permit(:q)
+    params.permit(:query)
   end
 
   def save_pdf_params
-    params.permit(:repository_id, :respository_column_id, :repository_item_id)
+    params.permit(:repository_id, :repository_column_id, :repository_item_id)
   end
 
   def log_activity(type_of, report = @report)
@@ -401,6 +390,8 @@ class ReportsController < ApplicationController
 
     ensure_report_template!
     Reports::PdfJob.perform_later(@report.id, user_id: current_user.id)
+  rescue ActiveRecord::ActiveRecordError => e
+    Rails.logger.error e.message
   end
 
   def ensure_report_template!

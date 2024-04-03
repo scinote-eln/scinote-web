@@ -2,6 +2,7 @@
 
 class ResultsController < ApplicationController
   include Breadcrumbs
+  include TeamsHelper
   skip_before_action :verify_authenticity_token, only: %i(create update destroy duplicate)
   before_action :load_my_module
   before_action :load_vars, only: %i(destroy elements assets upload_attachment archive restore destroy
@@ -148,17 +149,17 @@ class ResultsController < ApplicationController
   def apply_sort!
     case params[:sort]
     when 'updated_at_asc'
-      @results = @results.order(updated_at: :asc)
+      @results = @results.order('results.updated_at' => :asc)
     when 'updated_at_desc'
-      @results = @results.order(updated_at: :desc)
+      @results = @results.order('results.updated_at' => :desc)
     when 'created_at_asc'
-      @results = @results.order(created_at: :asc)
+      @results = @results.order('results.created_at' => :asc)
     when 'created_at_desc'
-      @results = @results.order(created_at: :desc)
+      @results = @results.order('results.created_at' => :desc)
     when 'name_asc'
-      @results = @results.order(name: :asc)
+      @results = @results.order('results.name' => :asc)
     when 'name_desc'
-      @results = @results.order(name: :desc)
+      @results = @results.order('results.name' => :desc)
     end
   end
 
@@ -167,14 +168,15 @@ class ResultsController < ApplicationController
       @results = @results.search(current_user, params[:view_mode] == 'archived', params[:query], params[:page] || 1)
     end
 
-    @results = @results.where('created_at >= ?', params[:created_at_from]) if params[:created_at_from]
-    @results = @results.where('created_at <= ?', params[:created_at_to]) if params[:created_at_to]
-    @results = @results.where('updated_at >= ?', params[:updated_at_from]) if params[:updated_at_from]
-    @results = @results.where('updated_at <= ?', params[:updated_at_to]) if params[:updated_at_to]
+    @results = @results.where('results.created_at >= ?', params[:created_at_from]) if params[:created_at_from]
+    @results = @results.where('results.created_at <= ?', params[:created_at_to]) if params[:created_at_to]
+    @results = @results.where('results.updated_at >= ?', params[:updated_at_from]) if params[:updated_at_from]
+    @results = @results.where('results.updated_at <= ?', params[:updated_at_to]) if params[:updated_at_to]
   end
 
   def load_my_module
     @my_module = MyModule.readable_by_user(current_user).find(params[:my_module_id])
+    current_team_switch(@my_module.team) if current_team != @my_module.team
   end
 
   def load_vars
