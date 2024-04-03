@@ -1,13 +1,12 @@
 <template>
   <div class="sn-open-locally-menu" @mouseenter="fetchLocalAppInfo">
-    <button class="btn btn-light" v-if="!editWopiSupported" style="pointer-events: all;"
-        :title="attachment.attributes.wopi_context.title" disabled="true">
-      {{ attachment.attributes.wopi_context.button_text }}
-    </button>
-    <div v-else-if="!canOpenLocally && (attachment.attributes.wopi && attachment.attributes.urls.edit_asset)">
-      <a :href="`${attachment.attributes.urls.edit_asset}`" target="_blank"
-      class="block whitespace-nowrap rounded px-3 py-2.5
-              hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey">
+    <div v-if="!canOpenLocally && (attachment.attributes.wopi && attachment.attributes.urls.edit_asset)">
+      <a :href="editWopiSupported ? attachment.attributes.urls.edit_asset : null" target="_blank"
+         class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey"
+         :class="{ 'disabled': !editWopiSupported }"
+         :title="editWopiSupported ? null : attachment.attributes.wopi_context.title"
+         style="pointer-events: all"
+      >
           {{ attachment.attributes.wopi_context.button_text }}
       </a>
     </div>
@@ -75,7 +74,9 @@ export default {
       if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
         menu.push({
           text: this.attachment.attributes.wopi_context.button_text,
-          url: this.attachment.attributes.urls.edit_asset,
+          url: this.editWopiSupported ? this.attachment.attributes.urls.edit_asset : null,
+          disabled: !this.editWopiSupported && 'style-only',
+          title: this.editWopiSupported ? null : this.attachment.attributes.wopi_context.title,
           url_target: '_blank'
         });
       }

@@ -75,11 +75,31 @@ module Lists
         created_at: 'experiments.created_at',
         name: 'experiments.name',
         code: 'experiments.id',
-        archived_on: 'COALESCE(experiments.archived_on, projects.archived_on)',
+        archived_on: 'archived_on',
         updated_at: 'experiments.updated_at',
         completed_tasks: 'completed_task_count',
         description: 'experiments.description'
       }
+    end
+
+    def sort_records
+      return unless @params[:order] && sortable_columns[order_params[:column].to_sym].present?
+
+      @records = case order_params[:column]
+                 when 'archived_on'
+                   if order_params[:dir] == 'asc'
+                     @records.order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) ASC'))
+                             .group('experiments.archived_on', 'projects.archived_on')
+                   else
+                     @records.order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) DESC'))
+                             .group('experiments.archived_on', 'projects.archived_on')
+                   end
+                 else
+                   sort_by = "#{sortable_columns[order_params[:column].to_sym]} #{sort_direction(order_params)}"
+                   @records.order(sort_by)
+                 end
+
+      @records = @records.order(:id)
     end
   end
 end

@@ -199,7 +199,7 @@ export default {
           label: this.i18n.t('filters_modal.created_on.label')
         },
         {
-          key: 'created_at',
+          key: 'updated_on',
           type: 'DateRange',
           label: this.i18n.t('filters_modal.updated_on.label')
         }
