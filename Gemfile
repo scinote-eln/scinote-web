@@ -7,7 +7,6 @@ ruby '3.2.2'
 gem 'bootsnap', require: false
 gem 'devise', '~> 4.8.1'
 gem 'devise_invitable'
-gem 'figaro'
 gem 'pg', '~> 1.5'
 gem 'pg_search' # PostgreSQL full text search
 gem 'psych', '< 4.0'
@@ -106,6 +105,7 @@ group :development, :test do
   gem 'bullet'
   gem 'byebug'
   gem 'factory_bot_rails'
+  gem 'figaro'
   gem 'listen'
   gem 'overcommit'
   gem 'pry'
