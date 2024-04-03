@@ -183,13 +183,13 @@ export default {
     tagsRenderer(tag) {
       return `<div class="flex items-center gap-2">
                 <span class="w-4 h-4 rounded-full" style="background-color: ${tag[2]}"></span>
-                ${tag[1]}
+                <span title="${tag[1]}" class="truncate">${tag[1]}</span>
               </div>`;
     },
     usersRenderer(user) {
-      return `<div class="flex items-center gap-2">
+      return `<div class="flex items-center gap-2 truncate">
                 <img class="w-6 h-6 rounded-full" src="${user[2]}">
-                ${user[1]}
+                <span title="${user[1]}" class="truncate">${user[1]}</span>
               </div>`;
     }
   }

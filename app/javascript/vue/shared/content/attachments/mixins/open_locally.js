@@ -8,8 +8,7 @@ export default {
   data() {
     return {
       localAppName: null,
-      scinoteEditRunning: false,
-      scinoteEditVersion: null,
+      scinoteEditRunning: null,
       showNoPredefinedAppModal: false,
       showUpdateVersionModal: false,
       editAppModal: false,
@@ -36,34 +35,65 @@ export default {
     this.stopPolling();
   },
   methods: {
-    async fetchLocalAppInfo() {
+    async checkScinoteEditRunning() {
+      // responses will be cached on window, so the requests only run once per page load
+      if (window.scinoteEditRunning !== undefined) {
+        this.scinoteEditRunning = window.scinoteEditRunning;
+        return;
+      }
+
       try {
         const statusResponse = await axios.get(
           `${this.attributes.urls.open_locally_api}/status`
         );
 
         if (statusResponse.status === 200) {
-          this.scinoteEditRunning = true;
-          this.scinoteEditVersion = statusResponse.data.version;
+          window.scinoteEditRunning = true;
+          window.scinoteEditVersion = statusResponse.data.version;
         } else {
-          return;
+          window.scinoteEditRunning = false;
         }
+      } catch (error) {
+        window.scinoteEditRunning = false;
+      }
 
+      this.scinoteEditRunning = window.scinoteEditRunning;
+    },
+    async fetchLocalAppInfo() {
+      this.checkScinoteEditRunning();
+
+      // responses will be cached on window, so the requests only run once per page load
+      if (window.scinoteEditRunning === false) return;
+
+      if (window.scinoteEditLocalApps === undefined) {
+        window.scinoteEditLocalApps = {};
+      }
+
+      if (window.scinoteEditLocalApps[this.attributes.file_extension] !== undefined) {
+        this.localAppName = window.scinoteEditLocalApps[this.attributes.file_extension];
+        return;
+      }
+
+      try {
         const response = await axios.get(
           `${this.attributes.urls.open_locally_api}/default-application/${this.attributes.file_extension}`
         );
 
         if (response.data.application.toLowerCase() !== 'pick an app') {
+          window.scinoteEditLocalApps[this.attributes.file_extension] = response.data.application;
           this.localAppName = response.data.application;
         }
       } catch (error) {
-        if (error.response?.status === 404) return; // all good, no app was found for the file
+        if (error.response?.status === 404) {
+          window.scinoteEditLocalApps[this.attributes.file_extension] = null;
+          return; // all good, no app was found for the file
+        }
 
         console.error('Error in request: ', error);
       }
     },
     async openLocally() {
-      if (this.isWrongVersion(this.scinoteEditVersion)) {
+      if (this.isWrongVersion(window.scinoteEditVersion)) {
         this.showUpdateVersionModal = true;
         return;
       } else if (this.localAppName === null) {

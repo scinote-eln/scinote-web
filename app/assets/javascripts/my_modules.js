@@ -140,7 +140,7 @@
                 HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
               }
             });
-        } else {
+        } else if (lastTag.length > 0) {
           newTag = {
             tag: {
               name: lastTag.find('.tag-label').html(),
@@ -166,7 +166,7 @@
       },
       onUnSelect: (id) => {
         $.post(`${$(myModuleTagsSelector).data('update-module-tags-url')}/${id}/destroy_by_tag_id`)
-          .success(function() {
+          .done(() => {
             dropdownSelector.closeDropdown(myModuleTagsSelector);
           })
           .fail(function(r) {

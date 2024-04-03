@@ -302,6 +302,7 @@ export default {
         this.updateTable();
         this.$nextTick(() => {
           this.selectedRows = [];
+          this.gridApi?.deselectAll();
         });
       }
     },
@@ -352,6 +353,8 @@ export default {
         const gap = (maxGridCols - 1) * GLOBAL_CONSTANTS.TABLE_CARD_GAP;
         maxGridCols = Math.floor((availableGridWidth - gap - padding) / GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH);
       }
+      // grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10
+      if (maxGridCols > 10) maxGridCols = 10;
 
       if (this.navigatorCollapsed) {
         this.gridColsClass = 'grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4';
@@ -477,7 +480,10 @@ export default {
       if (this.dataLoading) return;
 
       this.dataLoading = true;
-      if (clearSelection) this.selectedRows = [];
+      if (clearSelection) {
+        this.selectedRows = [];
+        this.gridApi?.deselectAll();
+      }
       this.page = 1;
       this.loadData(true);
     },
@@ -605,6 +611,7 @@ export default {
       if (this.currentViewRender === view) return;
       this.currentViewRender = view;
       this.columnApi = null;
+      this.gridApi?.deselectAll();
       this.gridApi = null;
       this.saveTableState();
       this.initializing = true;

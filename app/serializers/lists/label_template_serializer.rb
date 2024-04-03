@@ -7,7 +7,8 @@ module Lists
 
     attributes :name, :language_type, :urls, :type,
                :default, :format, :modified_by, :created_by,
-               :created_at, :updated_at, :id, :icon_url, :description
+               :created_at, :updated_at, :id, :icon_url, :description,
+               :width_mm, :height_mm, :unit, :density
 
     def icon_url
       ActionController::Base.helpers.image_tag(
@@ -35,7 +36,7 @@ module Lists
     end
 
     def urls
-      return {} unless can_manage_label_templates?(object.team)
+      return {} unless can_view_label_templates?(object.team)
 
       {
         show: label_template_path(object)
