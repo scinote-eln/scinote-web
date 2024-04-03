@@ -45,7 +45,6 @@ export default {
       if (!field || !flyout) return;
 
       const rect = field.getBoundingClientRect();
-      const flyoutRect = flyout.getBoundingClientRect();
       const screenHeight = window.innerHeight;
 
       const windowHasScroll = document.documentElement.scrollHeight > document.documentElement.clientHeight;
@@ -64,10 +63,7 @@ export default {
         flyout.style.minWidth = `${width}px`;
       }
 
-      if (window.innerWidth - (field.x + flyoutRect.width) < 0) { // when flyout is out of screen
-        flyout.style.left = 'unset';
-        flyout.style.right = `${width - Math.abs(right)}px`;
-      } else if (this.position === 'right') {
+      if (this.position === 'right') {
         flyout.style.right = `${right - rightScrollOffset}px`;
         flyout.style.left = 'unset';
       } else {

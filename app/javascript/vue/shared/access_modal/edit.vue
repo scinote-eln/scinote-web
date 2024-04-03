@@ -26,7 +26,7 @@
       <MenuDropdown
         v-if="params.object.top_level_assignable && params.object.urls.update_access"
         class="ml-auto"
-        :listItems="rolesFromatted"
+        :listItems="rolesFromatted(default_role)"
         :btnText="this.roles.find((role) => role[0] == default_role)[1]"
         :position="'right'"
         :caret="true"
@@ -57,9 +57,9 @@
           <div class="text-xs text-sn-grey text-nowrap">{{ userAssignment.attributes.inherit_message }}</div>
         </div>
         <MenuDropdown
-          v-if="!userAssignment.attributes.last_owner && params.object.urls.update_access"
+          v-if="!userAssignment.attributes.last_owner && params.object.urls.update_access && !(userAssignment.attributes.current_user && userAssignment.attributes.inherit_message)"
           class="ml-auto"
-          :listItems="rolesFromatted"
+          :listItems="rolesFromatted(userAssignment.attributes.user_role.id)"
           :btnText="userAssignment.attributes.user_role.name"
           :position="'right'"
           :caret="true"
@@ -114,36 +114,6 @@ export default {
     GeneralDropdown
   },
   computed: {
-    rolesFromatted() {
-      let roles = [];
-
-      if (!this.params.object.top_level_assignable) {
-        roles.push({
-          emit: 'setRole',
-          text: this.i18n.t('access_permissions.reset'),
-          params: 'reset'
-        });
-      }
-
-      roles = roles.concat(this.roles.map((role, index) => (
-        {
-          dividerBefore: !this.params.object.top_level_assignable && index === 0,
-          emit: 'setRole',
-          text: role[1],
-          params: role[0]
-        }
-      )));
-
-      if (this.params.object.top_level_assignable) {
-        roles.push({
-          dividerBefore: true,
-          emit: 'removeRole',
-          text: this.i18n.t('access_permissions.remove_access')
-        });
-      }
-
-      return roles;
-    },
     manuallyAssignedUsers() {
       return this.assignedUsers.filter((user) => (
         user.attributes?.assigned === 'manually'
@@ -169,6 +139,37 @@ export default {
           this.assignedUsers = response.data.data;
           this.$emit('usersReloaded');
         });
+    },
+    rolesFromatted(activeRoleId = null) {
+      let roles = [];
+
+      if (!this.params.object.top_level_assignable) {
+        roles.push({
+          emit: 'setRole',
+          text: this.i18n.t('access_permissions.reset'),
+          params: 'reset'
+        });
+      }
+
+      roles = roles.concat(this.roles.map((role, index) => (
+        {
+          dividerBefore: !this.params.object.top_level_assignable && index === 0,
+          emit: 'setRole',
+          text: role[1],
+          params: role[0],
+          active: (activeRoleId === role[0])
+        }
+      )));
+
+      if (this.params.object.top_level_assignable) {
+        roles.push({
+          dividerBefore: true,
+          emit: 'removeRole',
+          text: this.i18n.t('access_permissions.remove_access')
+        });
+      }
+
+      return roles;
     },
     getRoles() {
       axios.get(this.params.roles_path)

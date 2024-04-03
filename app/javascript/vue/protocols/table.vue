@@ -211,7 +211,10 @@ export default {
         if (this.docxParserEnabled) {
           importMenu.menuItems.push({
             emit: 'import_docx',
-            text: this.i18n.t('protocols.index.import_docx')
+            text: `<span>${this.i18n.t('protocols.index.import_docx')}</span>
+                   <span class="bg-sn-coral text-sn-white text-[8px] absolute leading-none p-1 top-px rounded-[1px] right-px">
+                     ${this.i18n.t('protocols.index.beta')}
+                   </span>`
           });
         }
 

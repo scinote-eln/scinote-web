@@ -30,9 +30,9 @@ module Reports::Docx::PrivateMethods
   end
 
   def insert_logo
-    logo_data = File.read(Rails.root.join('app/assets/images/scinote_logo.svg'))
+    logo_data = File.read(Rails.root.join('app/assets/images/scinote_logo.png'))
 
-    @docx.img 'logo.svg' do
+    @docx.img 'logo.png' do
       data logo_data
       height 20
       width 100

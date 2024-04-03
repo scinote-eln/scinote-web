@@ -1475,7 +1475,7 @@ en:
       completed_task: "Completed"
       completed_value: "%{completed}/%{all} tasks"
       description: "Description"
-      more: "More"
+      more: "more"
     index:
       edit_option: "Edit"
       clone_option: "Duplicate"
@@ -1545,7 +1545,7 @@ en:
       column:
         id_html: 'ID'
         task_name_html: 'Task name'
-        due_date_html: 'Due'
+        due_date_html: 'Due date'
         archived_html: 'Archived on'
         age_html: 'Age'
         results_html: 'Results'
@@ -3227,6 +3227,7 @@ en:
       import: "Import"
       import_eln: "SciNote file (.eln)"
       import_docx: "MS Word (.docx)"
+      beta: "BETA"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
