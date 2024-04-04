@@ -2,6 +2,7 @@
   <div class="h-full">
     <DataTable :columnDefs="columnDefs"
                :tableId="'ReportTemplates'"
+               ref="table"
                :dataUrl="dataSource"
                :reloadingTable="reloadingTable"
                :toolbarActions="toolbarActions"
@@ -48,6 +49,13 @@ import UpdateReportModal from './modals/update.vue';
 
 export default {
   name: 'ReportsTable',
+  mounted() {
+    this.$nextTick(() => {
+      if (this.searchValue) {
+        this.$refs.table.searchValue = this.searchValue;
+      }
+    });
+  },
   components: {
     DataTable,
     DocxRenderer,
@@ -60,6 +68,10 @@ export default {
     dataSource: {
       type: String,
       required: true
+    },
+    searchValue: {
+      type: String,
+      default: ''
     },
     actionsUrl: {
       type: String,

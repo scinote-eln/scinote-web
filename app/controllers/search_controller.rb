@@ -42,6 +42,21 @@ class SearchController < ApplicationController
                    next_page: results.try(:next_page)
                  }
           return
+        when 'reports'
+          @report_search_count = fetch_cached_count Report
+          search_reports
+          results = if params[:preview] == 'true'
+                      @report_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
+                    else
+                      @report_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
+                    end
+          render json: results.includes(:team, :project, :user),
+                 each_serializer: GlobalSearch::ReportSerializer,
+                 meta: {
+                   total: @search_count,
+                   next_page: results.try(:next_page)
+                 }
+          return
         when 'experiments'
           @experiment_search_count = fetch_cached_count Experiment
           search_experiments
@@ -365,7 +380,7 @@ class SearchController < ApplicationController
   end
 
   def search_reports
-    @report_results = []
+    @report_results = Report.none
     @report_results = search_by_name(Report) if @report_search_count.positive?
     @search_count = @report_search_count
   end

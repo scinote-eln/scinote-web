@@ -174,6 +174,11 @@ export default {
       type: Object
     }
   },
+  mounted() {
+    if (this.searchValue.length > 0) {
+      this.openSearch();
+    }
+  },
   components: {
     MenuDropdown,
     FilterDropdown,
