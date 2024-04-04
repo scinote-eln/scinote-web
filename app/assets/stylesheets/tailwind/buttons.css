@@ -33,7 +33,7 @@
   }
 
   .btn.btn-xs.icon-btn {
-    @apply px-0.5;
+    @apply px-0.5 w-[30px];
   }
 
   .btn:hover {

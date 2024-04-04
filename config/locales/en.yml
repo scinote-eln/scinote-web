@@ -438,6 +438,14 @@ en:
     whole_phrase: "Match whole phrase"
     match_case: "Match case sensitive"
     object_id: "ID:"
+    filters:
+      by_type: "Filter by type"
+      by_created_date: "Filter by created date"
+      by_updated_date: "Filter by updated date"
+      by_team: "Filter by team"
+      by_user: "Filter by user"
+      include_archived: "Include Archived objects"
+      clear: "Clear filters"
     index:
       head_title: "Search"
       page_title: "Search"

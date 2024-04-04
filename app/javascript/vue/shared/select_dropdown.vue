@@ -29,8 +29,8 @@
              :placeholder="label || placeholder || this.i18n.t('general.select_dropdown.placeholder')"
              class="w-full border-0 outline-none pl-0 placeholder:text-sn-grey" />
       </template>
-      <div v-else class="flex items-center gap-1 flex-wrap max-w-[calc(100%-24px)]">
-        <div v-for="tag in tags" class=" truncate px-2 py-1 rounded-sm bg-sn-super-light-grey flex items-center gap-1">
+      <div v-else class="flex items-center gap-1 flex-wrap">
+        <div v-for="tag in tags" class="px-2 py-1 rounded-sm bg-sn-super-light-grey grid grid-cols-[auto_1fr] items-center gap-1">
           <div class="truncate" v-if="labelRenderer" v-html="tag.label"></div>
           <div class="truncate" v-else>{{ tag.label }}</div>
           <i @click="removeTag(tag.value)" class="sn-icon mini ml-auto sn-icon-close cursor-pointer"></i>
@@ -71,7 +71,7 @@
               <div
                 @click.stop="setValue(option[0])"
                 ref="options"
-                class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0"
+                class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0 hover:bg-sn-super-light-grey"
                 :class="[sizeClass, {
                   '!bg-sn-super-light-blue': valueSelected(option[0]) && focusedOption !== i,
                   '!bg-sn-super-light-grey': focusedOption === i ,
@@ -178,6 +178,13 @@ export default {
     },
     tags() {
       if (!this.newValue) return [];
+
+      this.selectAllState = 'indeterminate';
+      if (this.newValue.length === 0) {
+        this.selectAllState = 'unchecked';
+      } else if (this.newValue.length === this.rawOptions.length) {
+        this.selectAllState = 'checked';
+      }
 
       return this.newValue.map((value) => {
         const option = this.rawOptions.find((i) => i[0] === value);
