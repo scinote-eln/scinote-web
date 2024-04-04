@@ -471,6 +471,8 @@ en:
       updated_at: "Updated on"
       team: "Team"
       folder: "Folder"
+      task: "Task"
+      untitled_protocol: 'Untitled protocol'
       project: "Project"
       experiment: "Experiment"
       task: "Task"
