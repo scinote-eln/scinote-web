@@ -120,6 +120,35 @@ class RepositoryRow < ApplicationRecord
     where(repository: Repository.viewable_by_user(user, teams))
   end
 
+  def self.search(user,
+                  include_archived,
+                  query = nil,
+                  page = 1,
+                  _current_team = nil,
+                  options = {})
+
+    searchable_row_fields = [RepositoryRow::PREFIXED_ID_SQL, 'repository_rows.name', 'users.full_name']
+    repositories = Repository.search(user).pluck(:id)
+
+    new_query =
+      RepositoryRow
+      .joins(:repository, :created_by)
+      .where(repository_id: repositories)
+      .distinct
+      .where_attributes_like(
+        searchable_row_fields, query, options
+      )
+
+    new_query = new_query.active unless include_archived
+
+    # Show all results if needed
+    if page == Constants::SEARCH_NO_LIMIT
+      new_query
+    else
+      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
+    end
+  end
+
   def self.filter_by_teams(teams = [])
     return self if teams.blank?
 
