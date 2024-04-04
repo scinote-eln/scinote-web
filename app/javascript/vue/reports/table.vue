@@ -48,6 +48,9 @@ import UpdateReportModal from './modals/update.vue';
 
 export default {
   name: 'ReportsTable',
+  provide() {
+    return { initSearchValue: this.initSearchValue };
+  },
   components: {
     DataTable,
     DocxRenderer,
@@ -60,6 +63,10 @@ export default {
     dataSource: {
       type: String,
       required: true
+    },
+    initSearchValue: {
+      type: String,
+      default: ''
     },
     actionsUrl: {
       type: String,
