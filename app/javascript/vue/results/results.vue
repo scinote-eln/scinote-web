@@ -69,7 +69,7 @@ export default {
   data() {
     return {
       results: [],
-      sort: 'created_at_desc',
+      sort: null,
       filters: {},
       resultToReload: null,
       nextPageUrl: null,
@@ -107,8 +107,10 @@ export default {
 
       if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
         this.loadingPage = true;
-        axios.get(this.nextPageUrl, { params: { sort: this.sort, ...this.filters } }).then((response) => {
+        const params = this.sort ? { ...this.filters, sort: this.sort } : { ...this.filters };
+        axios.get(this.nextPageUrl, { params }).then((response) => {
           this.results = this.results.concat(response.data.data);
+          this.sort = response.data.meta.sort;
           this.nextPageUrl = response.data.links.next;
           this.loadingPage = false;
         });
