@@ -58,9 +58,10 @@ module ActiveStorage
 
     private
 
-    def upload_with_single_part(key, io, checksum: nil, content_type: nil, content_disposition: nil)
+    def upload_with_single_part(key, io, checksum: nil, content_type: nil, content_disposition: nil, custom_metadata: {})
       object_for_upload(key)
-        .put(body: io, content_md5: checksum, content_type:, content_disposition:, metadata:, **upload_options)
+        .put(body: io, content_md5: checksum, content_type:,
+             content_disposition:, metadata: custom_metadata, **upload_options)
     rescue Aws::S3::Errors::BadDigest
       raise ActiveStorage::IntegrityError
     end
