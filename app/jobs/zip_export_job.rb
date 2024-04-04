@@ -10,13 +10,11 @@ class ZipExportJob < ApplicationJob
     zip_input_dir = FileUtils.mkdir_p(Rails.root.join("tmp/temp_zip_#{Time.now.to_i}").to_s).first
     zip_dir = FileUtils.mkdir_p(Rails.root.join('tmp/zip-ready').to_s).first
     full_zip_name = File.join(zip_dir, zip_name)
-    ZipExport.transaction do
-      @zip_export = ZipExport.create!(user: @user)
-      fill_content(zip_input_dir, params)
-      @zip_export.zip!(zip_input_dir, full_zip_name)
-      @zip_export.zip_file.attach(io: File.open(full_zip_name), filename: zip_name)
-      generate_notification!
-    end
+    @zip_export = ZipExport.create!(user: @user)
+    fill_content(zip_input_dir, params)
+    @zip_export.zip!(zip_input_dir, full_zip_name)
+    @zip_export.zip_file.attach(io: File.open(full_zip_name), filename: zip_name)
+    generate_notification!
   rescue Errno::ENOENT => e
     Rails.logger.error(e.message)
   ensure
