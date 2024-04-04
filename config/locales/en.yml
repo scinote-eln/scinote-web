@@ -460,6 +460,7 @@ en:
       inventory_items: "Inventory items"
       protocol_templates: "Protocol templates"
       label_templates: "Label templates"
+      format: "Format"
       reports: "Reports"
       repository: "Inventory"
       more_search_options: "More search options"
