@@ -463,6 +463,11 @@ en:
       team: "Team"
       folder: "Folder"
       project: "Project"
+      experiment: "Experiment"
+      task: "Task"
+      untitled_protocol: 'Untitled protocol'
+      protocol_template: "Protocol template"
+      inventory_item: "Inventory item"
   comments:
     save_changes: "Save changes"
     empty_state:

@@ -89,6 +89,23 @@ class SearchController < ApplicationController
                    next_page: (results.next_page if results.respond_to?(:next_page))
                  }
           return
+        when 'assets'
+          @asset_search_count = fetch_cached_count(Protocol)
+          search_assets
+          includes = [{ step: { protocol: { my_module: :experiment } } }, { result: { my_module: :experiment } }, :team]
+          results = if params[:preview] == 'true'
+                      @asset_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
+                    else
+                      @asset_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
+                    end
+
+          render json: results.includes(includes),
+                 each_serializer: GlobalSearch::AssetSerializer,
+                 meta: {
+                   total: @search_count,
+                   next_page: (results.next_page if results.respond_to?(:next_page))
+                 }
+          return
         end
 
         #@search_id = params[:search_id] ? params[:search_id] : generate_search_id
@@ -395,7 +412,7 @@ class SearchController < ApplicationController
   end
 
   def search_assets
-    @asset_results = []
+    @asset_results = Asset.none
     @asset_results = search_by_name(Asset) if @asset_search_count.positive?
     @search_count = @asset_search_count
   end
