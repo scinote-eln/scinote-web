@@ -16,7 +16,7 @@ class SearchController < ApplicationController
           @project_search_count = fetch_cached_count(Project)
           search_projects
           if params[:preview] == 'true'
-            results = @project_results.take(4)
+            results = @project_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
           else
             results = @project_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
           end
