@@ -120,7 +120,6 @@ import RowMenuRenderer from './row_menu_renderer.vue';
 
 export default {
   name: 'App',
-  inject: ['initSearchValue'],
   props: {
     withCheckboxes: {
       type: Boolean,
@@ -335,9 +334,6 @@ export default {
   mounted() {
     this.navigatorCollapsed = document.querySelector('.sci--layout').getAttribute('data-navigator-collapsed') === 'true';
     this.setGridColsClass();
-    if (this.initSearchValue) {
-      this.searchValue = this.initSearchValue;
-    }
 
     window.addEventListener('resize', this.resize);
   },

@@ -17,7 +17,7 @@
       available-columns-url="<%= available_asset_type_columns_path %>"
       available-rows-url="<%= available_rows_repositories_path %>"
       data-source="<%= reports_path(format: :json) %>"
-      init-search-value="<%= params[:search] %>"
+      search-value="<%= params[:search] %>"
       create-url="<%= new_report_path if can_create_reports?(current_team) %>"
     />
   </div>
