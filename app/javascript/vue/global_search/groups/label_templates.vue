@@ -51,19 +51,8 @@ export default {
   mixins: [searchMixin],
   data() {
     return {
-      group: 'label_templates',
-      enabled: false
+      group: 'label_templates'
     };
-  },
-  created() {
-    this.checkEnabled();
-  },
-  methods: {
-    checkEnabled() {
-      if (!this.enabled) {
-        this.$emit('selectGroup', 'LabelTemplatesComponent');
-      }
-    }
   }
 };
 </script>
