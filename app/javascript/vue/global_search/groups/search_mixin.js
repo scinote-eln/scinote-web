@@ -6,7 +6,8 @@ export default {
   props: {
     searchUrl: String,
     query: String,
-    selected: Boolean
+    selected: Boolean,
+    filters: Object
   },
   components: {
     StringWithEllipsis
@@ -57,7 +58,7 @@ export default {
   },
   methods: {
     handleScroll() {
-      if (this.loading) return;
+      if (this.loading || !this.selected) return;
 
       if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
         if (this.results.length < this.total) {
@@ -72,6 +73,7 @@ export default {
       axios.get(this.searchUrl, {
         params: {
           q: this.query,
+          filters: this.filters,
           group: this.group,
           preview: !this.selected,
           page: this.page

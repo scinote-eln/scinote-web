@@ -48,7 +48,7 @@
         </div>
       </div>
       <i v-if="canClear" @click="clear" class="sn-icon ml-auto sn-icon-close"></i>
-      <i v-else class="sn-icon ml-auto self-start"
+      <i v-else class="sn-icon ml-auto"
                 :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen, 'text-sn-grey': disabled}"></i>
     </div>
     <template v-if="isOpen">

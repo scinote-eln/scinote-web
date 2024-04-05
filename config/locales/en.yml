@@ -439,6 +439,8 @@ en:
     match_case: "Match case sensitive"
     object_id: "ID:"
     filters:
+      title: "More search options"
+      sub_filters: "Refine your search by applying the filters below."
       by_type: "Filter by type"
       by_created_date: "Filter by created date"
       by_updated_date: "Filter by updated date"

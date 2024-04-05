@@ -24,24 +24,19 @@
           {{ i18n.t('search.index.task_results') }}
         </button>
       </div>
-      <GeneralDropdown ref="filterFlyout" position="right">
-        <template v-slot:field>
-          <button class="btn btn-light btn-sm">
-            <i class="sn-icon sn-icon-search-options"></i>
-            {{ i18n.t('search.index.more_search_options') }}
-          </button>
-        </template>
-        <template v-slot:flyout >
-          <SearchFilters
-            :teamsUrl="teamsUrl"
-            :usersUrl="usersUrl"
-            @cancel="this.$refs.container.close()"
-          ></SearchFilters>
-        </template>
-      </GeneralDropdown>
-      <template v-if="activeGroup">
+      <button class="btn btn-light btn-sm" @click="filterModalOpened = true">
+        <i class="sn-icon sn-icon-search-options"></i>
+        {{ i18n.t('search.index.more_search_options') }}
+        <span
+          v-if="activeFilters.length > 0"
+          class="absolute -right-1 -top-1 rounded-full bg-sn-science-blue text-white flex items-center justify-center w-4 h-4 text-[9px]"
+        >
+          {{ activeFilters.length }}
+        </span>
+      </button>
+      <template v-if="activeFilters.length > 0">
         <div class="h-4 w-[1px] bg-sn-grey"></div>
-        <button class="btn btn-light btn-sm" @click="activeGroup = null">
+        <button class="btn btn-light btn-sm" @click="resetFilters">
           <i class="sn-icon sn-icon-close"></i>
           {{ i18n.t('search.index.clear_filters') }}
         </button>
@@ -55,9 +50,21 @@
         :selected="activeGroup === group"
         :query="localQuery"
         :searchUrl="searchUrl"
+        :filters="filters"
         @selectGroup="setActiveGroup"
       />
     </template>
+    <teleport to='body'>
+      <FiltersModal
+        v-if="filterModalOpened"
+        :teamsUrl="teamsUrl"
+        :usersUrl="usersUrl"
+        :filters="filters"
+        :currentTeam="currentTeam"
+        @search="applyFilters"
+        @close="filterModalOpened = false"
+      />
+    </teleport>
   </div>
 </template>
 
@@ -73,10 +80,11 @@ import RepositoryRowsComponent from './groups/repository_rows.vue';
 import ProtocolsComponent from './groups/protocols.vue';
 import LabelTemplatesComponent from './groups/label_templates.vue';
 import ReportsComponent from './groups/reports.vue';
-import SearchFilters from './filters.vue';
+import FiltersModal from './filters_modal.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
 
 export default {
+  emits: ['search', 'selectGroup'],
   name: 'GlobalSearch',
   props: {
     query: {
@@ -94,6 +102,10 @@ export default {
     usersUrl: {
       type: String,
       required: true
+    },
+    currentTeam: {
+      type: Number || String,
+      required: true
     }
   },
   components: {
@@ -108,12 +120,14 @@ export default {
     ProtocolsComponent,
     LabelTemplatesComponent,
     ReportsComponent,
-    SearchFilters,
+    FiltersModal,
     GeneralDropdown
   },
   data() {
     return {
+      filters: {},
       localQuery: this.query,
+      filterModalOpened: false,
       activeGroup: null,
       searchGroups: [
         'FoldersComponent',
@@ -130,6 +144,48 @@ export default {
       ]
     };
   },
+  computed: {
+    activeFilters() {
+      return Object.keys(this.filters).filter((key) => {
+        if (key === 'created_at' || key === 'updated_at') {
+          return this.filters[key].on || this.filters[key].from || this.filters[key].to;
+        } if (key === 'teams' || key === 'users') {
+          return this.filters[key].length > 0;
+        }
+        return this.filters[key];
+      });
+    }
+  },
+  created() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.filters = {
+      created_at: {
+        on: null,
+        from: null,
+        to: null
+      },
+      updated_at: {
+        on: null,
+        from: null,
+        to: null
+      },
+      include_archived: urlParams.get('include_archived') === 'true',
+      teams: urlParams.getAll('teams[]').map((team) => parseInt(team, 10)),
+      users: urlParams.getAll('users[]').map((user) => parseInt(user, 10)),
+      group: urlParams.get('group')
+    };
+    ['created_at', 'updated_at'].forEach((key) => {
+      ['on', 'from', 'to', 'mode'].forEach((subKey) => {
+        if (urlParams.get(`${key}[${subKey}]`)) {
+          this.filters[key][subKey] = subKey !== 'mode' ? new Date(urlParams.get(`${key}[${subKey}]`)) : urlParams.get(`${key}[${subKey}]`);
+        }
+      });
+    });
+
+    if (this.filters.group) {
+      this.activeGroup = this.filters.group;
+    }
+  },
   methods: {
     setActiveGroup(group) {
       if (group === this.activeGroup) {
@@ -137,9 +193,36 @@ export default {
       } else {
         this.activeGroup = group;
       }
+
+      this.filters.group = this.activeGroup;
     },
     changeQuery(event) {
       this.localQuery = event.target.value;
+    },
+    applyFilters(filters) {
+      this.filters = filters;
+      this.filterModalOpened = false;
+
+      this.activeGroup = this.filters.group;
+    },
+    resetFilters() {
+      this.filters = {
+        created_at: {
+          on: null,
+          from: null,
+          to: null
+        },
+        updated_at: {
+          on: null,
+          from: null,
+          to: null
+        },
+        include_archived: false,
+        teams: [],
+        users: [],
+        group: null
+      };
+      this.activeGroup = null;
     }
   }
 };
