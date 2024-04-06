@@ -2898,13 +2898,13 @@ en:
           not_connected: "You have no Connected accounts"
           unlink_success: "Successfully unlinked"
           azure_ad:
-            title: "Your Azure AD Account"
-            connect_hint: "Allows you to sign in with your Azure AD account."
+            title: "Your Microsoft Azure (Active Directory) Account"
+            connect_hint: "Allows you to sign in with your Microsoft Azure (Active Directory) account."
             connected: "Connected"
             unlink_button: "Unlink"
             unlink_modal:
-              title: "Unlink Azure AD account?"
-              description_1: "Are you sure you would like unlink Azure AD and SciNote accounts?"
+              title: "Unlink Microsoft Azure (Active Directory) account?"
+              description_1: "Are you sure you would like unlink Microsoft Azure (Active Directory) and SciNote accounts?"
               submit_button: "Submit"
           okta:
             title: "Your Okta Account"
@@ -2914,6 +2914,24 @@ en:
             unlink_modal:
               title: "Unlink Okta account?"
               description_1: "Are you sure you would like unlink Okta and SciNote accounts?"
+              submit_button: "Submit"
+          openid_connect:
+            title: "Your OpenID Connect Account"
+            connect_hint: "Allows you to sign in with your OpenID Connect account."
+            connected: "Connected"
+            unlink_button: "Unlink"
+            unlink_modal:
+              title: "Unlink OpenID Connect account?"
+              description_1: "Are you sure you would like unlink OpenID Connect and SciNote accounts?"
+              submit_button: "Submit"
+          saml:
+            title: "Your SAML Account"
+            connect_hint: "Allows you to sign in with your SAML account."
+            connected: "Connected"
+            unlink_button: "Unlink"
+            unlink_modal:
+              title: "Unlink SAML account?"
+              description_1: "Are you sure you would like unlink SAML and SciNote accounts?"
               submit_button: "Submit"
           errors:
             not_found: "You have no Connected accounts for this provider"
