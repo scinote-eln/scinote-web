@@ -22,13 +22,17 @@ export default {
       loading: false,
       page: 1,
       disabled: false,
-      fullDataLoaded: false
+      fullDataLoaded: false,
+      loaderHeight: 24,
+      loaderGap: 10,
+      loaderYPadding: 10
     };
   },
   watch: {
     selected() {
       if (this.selected) {
         if (!this.fullDataLoaded) {
+          this.total = 0;
           this.results = [];
           this.loadData();
         }
@@ -37,6 +41,7 @@ export default {
     query() {
       this.results = [];
       this.page = 1;
+      this.total = 0;
       this.fullDataLoaded = false;
       this.loadData();
     }
@@ -57,6 +62,22 @@ export default {
     },
     viewAll() {
       return !this.selected && this.total > GLOBAL_CONSTANTS.GLOBAL_SEARCH_PREVIEW_LIMIT;
+    },
+    loaderRows() {
+      // h-[24px] gap-y-[10px] py-[10px]
+      if (this.loading && (!this.selected || this.total)) return GLOBAL_CONSTANTS.GLOBAL_SEARCH_PREVIEW_LIMIT;
+      if (this.selected && this.loading) {
+        const availableHeight = window.innerHeight - this.$refs.content.getBoundingClientRect().top;
+        // loaderHeight + loaderGap +  headerLoaderHeight + headerContentGap
+        const offSet = this.loaderHeight + this.loaderGap + 32 + 20;
+
+        return Math.floor((availableHeight - offSet) / (this.loaderHeight + this.loaderGap + (2 * this.loaderYPadding)));
+      }
+
+      return 0;
+    },
+    reachedEnd() {
+      return Math.ceil(this.total / GLOBAL_CONSTANTS.SEARCH_LIMIT) === this.page;
     }
   },
   methods: {

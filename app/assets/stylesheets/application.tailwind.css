@@ -60,3 +60,15 @@ html {
 .ag-theme-alpine {
   --ag-font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif !important;
 }
+
+.animate-skeleton {
+  background-image: linear-gradient(90deg, #ddd 0px, #e8e8e8 40px, #ddd 80px);
+  background-size: 500px;
+  animation: shine-lines 1.6s infinite linear
+}
+
+@keyframes shine-lines {
+  0% { background-position: -150px }
+  
+  40%, 100% { background-position: 320px }
+}

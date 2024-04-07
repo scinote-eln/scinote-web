@@ -1,14 +1,14 @@
 <template>
-  <div v-if="total" class="bg-white rounded p-4 mb-4">
-    <div class="flex items-center">
-      <h2 class="flex items-center gap-2 mt-0 mb-4">
-        <i class="sn-icon sn-icon-reports"></i>
-        {{ i18n.t('search.index.reports') }}
-        [{{ total }}]
-      </h2>
-      <SortFlyout v-if="selected" :sort="sort" @changeSort="changeSort"></SortFlyout>
-    </div>
-    <div>
+  <div ref="content" class="bg-white rounded" :class="{ 'p-4 mb-4': total || loading }">
+    <template v-if="total">
+      <div class="flex items-center">
+        <h2 class="flex items-center gap-2 mt-0 mb-4">
+          <i class="sn-icon sn-icon-reports"></i>
+          {{ i18n.t('search.index.reports') }}
+          [{{ total }}]
+        </h2>
+        <SortFlyout v-if="selected" :sort="sort" @changeSort="changeSort"></SortFlyout>
+      </div>
       <div class="grid grid-cols-[auto_110px_auto_auto_auto_auto_auto] items-center">
         <template v-for="row in preparedResults" :key="row.id">
           <a target="_blank" :href="row.attributes.url" class="h-full py-2 px-4 overflow-hidden font-bold border-0 border-b border-solid border-sn-light-grey">
@@ -50,16 +50,22 @@
       <div v-if="viewAll" class="mt-4">
         <button class="btn btn-light" @click="$emit('selectGroup', 'ReportsComponent')">View all</button>
       </div>
-    </div>
+    </template>
+    <Loader v-if="loading" :total="total" :loaderRows="loaderRows" :loaderYPadding="loaderYPadding"
+              :loaderHeight="loaderHeight" :loaderGap="loaderGap" :reachedEnd="reachedEnd" />
   </div>
 </template>
 
 <script>
+import Loader from '../loader.vue';
 import searchMixin from './search_mixin';
 
 export default {
   name: 'ReportsComponent',
   mixins: [searchMixin],
+  components: {
+    Loader
+  },
   data() {
     return {
       group: 'reports'

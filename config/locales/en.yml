@@ -485,6 +485,7 @@ en:
       created_asc: "Created first"
       atoz: "Name A to Z"
       ztoa: "Name Z to A"
+      reached_end: "You’ve reached the end of the list"
   comments:
     save_changes: "Save changes"
     empty_state:
