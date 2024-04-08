@@ -7,7 +7,7 @@
           <div id="info-part">
             <info-component
               v-if="showingInfo"
-              :params="this.params"
+              :params="this.infoParams"
             />
           </div>
           <!-- content -->
@@ -15,10 +15,10 @@
             <!-- header -->
             <div id="info-modal-header" class="flex flex-row h-fit w-full justify-between">
               <div id="title-with-help" class="flex flex-row gap-3">
-                <h3 class="modal-title text-sn-dark-grey">{{ params.modalTitle }}</h3>
+                <h3 class="modal-title text-sn-dark-grey">{{ title }}</h3>
                 <button class="btn btn-light btn-sm" @click="showingInfo = !showingInfo">
                   <i class="sn-icon sn-icon-help-s"></i>
-                  {{ params.helpText }}
+                  {{ helpText }}
                 </button>
               </div>
               <button id="close-btn" type="button" class="close my-auto" data-dismiss="modal" aria-label="Close">
@@ -43,9 +43,19 @@ import InfoComponent from './info_component.vue';
 export default {
   name: 'InfoModal',
   props: {
-    params: {
+    title: {
+      type: String, required: true
+    },
+    helpText: {
+      type: String, required: true
+    },
+    infoParams: {
       type: Object,
       required: true
+    },
+    startHidden: {
+      type: Boolean,
+      default: false
     }
   },
   mixins: [modalMixin],

@@ -28,19 +28,19 @@ const app = createApp({
         steps: [
           {
             id: 'step1',
-            icon: 'sn-icon sn-icon-open',
+            icon: 'sn-icon-open',
             label: 'Step 1',
             component: shallowRef(Step1)
           },
           {
             id: 'step2',
-            icon: 'sn-icon sn-icon-edit',
+            icon: 'sn-icon-edit',
             label: 'Step 2',
             component: shallowRef(Step2)
           },
           {
             id: 'step3',
-            icon: 'sn-icon sn-icon-inventory',
+            icon: 'sn-icon-inventory',
             label: 'Step 3',
             component: shallowRef(Step3)
           }
@@ -53,37 +53,37 @@ const app = createApp({
 
       // Info modal
       infoParams: {
-        componentTitle: 'Guide for updating the inventory',
+        title: 'Guide for updating the inventory',
         modalTitle: 'Update inventory',
         helpText: 'Help',
-        elements: [
+        steps: [
           {
             id: 'el1',
-            icon: 'sn-icon sn-icon-export',
+            icon: 'sn-icon-export',
             label: 'Export inventory',
             subtext: "Before making edits, we advise you to export the latest inventory information. If you're only adding new items, consider exporting empty inventory."
           },
           {
             id: 'el2',
-            icon: 'sn-icon sn-icon-edit',
+            icon: 'sn-icon-edit',
             label: 'Edit your data',
             subtext: 'Make sure to include header names in first row, followed by item data.'
           },
           {
             id: 'el3',
-            icon: 'sn-icon sn-icon-import',
+            icon: 'sn-icon-import',
             label: 'Import new or update items',
             subtext: 'Upload your data using .xlsx, .csv or .txt files.'
           },
           {
             id: 'el4',
-            icon: 'sn-icon sn-icon-tables',
+            icon: 'sn-icon-tables',
             label: 'Merge your data',
             subtext: 'Complete the process by merging the columns you want to update.'
           },
           {
             id: 'el5',
-            icon: 'sn-icon sn-icon-open',
+            icon: 'sn-icon-open',
             label: 'Learn more',
             linkTo: 'https://knowledgebase.scinote.net/en/knowledge/how-to-add-items-to-an-inventory'
           }

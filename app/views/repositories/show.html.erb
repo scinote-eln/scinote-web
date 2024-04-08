@@ -79,9 +79,13 @@
 <%= render partial: 'repository_filters' %>
 <%= render partial: 'save_repository_filter_modal' %>
 
+<div id="importRepositoryModal" data-behaviour="vue">
+  <import-repository-modal repositoryUrl="<%= repository_path(@repository) %>" />
+</div>
 
 <%= javascript_include_tag 'vue_components_action_toolbar' %>
 <%= javascript_include_tag 'vue_repository_search' %>
+<%= javascript_include_tag 'vue_import_repository_modal' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>
 <%= javascript_include_tag "repositories/show" %>
 <%= javascript_include_tag 'inputmask' %>

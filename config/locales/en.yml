@@ -2134,6 +2134,30 @@ en:
         list_row: "Row %{row}"
         list_error: "%{key}: %{val}"
     import_records:
+      update_inventory: 'Update inventory'
+      info_sidebar:
+        title: 'Guide for updating the inventory'
+        elements:
+          element0:
+            icon: 'sn-icon-export'
+            label: 'Export inventory'
+            subtext: "Before making edits, we advise you to export the latest inventory information. If you're only adding new items, consider exporting empty inventory."
+          element1:
+            icon: 'sn-icon-edit'
+            label: 'Edit your data'
+            subtext: 'Make sure to include header names in first row, followed by item data.'
+          element2:
+            icon: 'sn-icon-import'
+            label: 'Import new or update items'
+            subtext: 'Upload your data using .xlsx, .csv or .txt files.'
+          element3:
+            icon: 'sn-icon-tables'
+            label: 'Merge your data'
+            subtext: 'Complete the process by merging the columns you want to update.'
+          element4:
+            icon: 'sn-icon-open'
+            label: 'Learn more'
+            linkTo: 'https://knowledgebase.scinote.net/en/knowledge/how-to-add-items-to-an-inventory'
       import: 'Import'
       no_header_name: 'No column name'
       success_flash: "%{number_of_rows} of %{total_nr} new item(s) successfully imported."
