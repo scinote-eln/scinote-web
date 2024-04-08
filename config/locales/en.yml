@@ -1927,8 +1927,8 @@ en:
           one: "You are about to export <strong>1</strong> inventory in %{team_name}'s team."
           other: "You are about to export <strong>%{count}</strong> inventories in %{team_name}'s team."
         description_alert: "This process may take minutes to hours, depending on the file size. Any new data entered afterward won't be included in the export."
-        description_p2: "You will receive an email when the .zip file is ready. A link to your file will also appear in your SciNote notification. For security reasons, this link will expire in 7 days."
-        description_p3_html: "After you confirm this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
+        description_p2: "You will receive an email and a notification when the download file is ready. For security reasons, the link will expire in 7 days."
+        description_p3_html: "After this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
         export: "Export"
       modal_export_limit_exceeded:
         title: "Export denied"
@@ -3812,9 +3812,9 @@ en:
     expired_title: 'Looks like your link has expired.'
     expired_description: 'Please export the data again in order to receive a new link.'
     modal_html: "<p>Your export request is being processed.</p><p>When completed we will <strong>send an email to %{email}</strong> inbox with a link to your exported items. Note that the link will expire in 7 days.</p>"
-    repository_header_html: 'You are about to export selected items in inventory %{repository}.'
+    repository_header_html: 'You are about to export selected items in the inventory %{repository}. The export will exclude the files uploaded to items (only filenames will be exported).'
     files_alert: 'Files uploaded to inventory items will not be exported. Only filenames will be exported.'
-    repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
+    repository_footer_html: 'You will receive an <strong>email and a notification</strong> when the download file is ready. For security reasons, the link will expire in 7 days.'
     export_request_success: "Export request received. Your export request is being processed."
     export_error: "Error when creating zip export."
     consumption_modal_label: 'Export consumption'
