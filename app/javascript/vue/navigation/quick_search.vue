@@ -16,6 +16,7 @@
     </template>
     <template v-slot:flyout >
       <SearchFilters
+        class="px-3.5"
         v-if="filtersOpened"
         :teamsUrl="teamsUrl"
         :usersUrl="usersUrl"

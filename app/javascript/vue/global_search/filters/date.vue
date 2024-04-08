@@ -66,28 +66,44 @@ export default {
 
       switch (this.selectedOption) {
         case 'today':
-          this.newDate = { on: today, from: null, to: null };
+          this.newDate = {
+            on: today, from: null, to: null, mode: 'today'
+          };
           break;
         case 'yesterday':
-          this.newDate = { on: yesterday, from: null, to: null };
+          this.newDate = {
+            on: yesterday, from: null, to: null, mode: 'yesterday'
+          };
           break;
         case 'last_week':
-          this.newDate = { on: null, from: lastWeekStart, to: lastWeekEnd };
+          this.newDate = {
+            on: null, from: lastWeekStart, to: lastWeekEnd, mode: 'last_week'
+          };
           break;
         case 'this_month':
-          this.newDate = { on: null, from: firstMonthDay, to: today };
+          this.newDate = {
+            on: null, from: firstMonthDay, to: today, mode: 'this_month'
+          };
           break;
         case 'this_year':
-          this.newDate = { on: null, from: firstYearDay, to: today };
+          this.newDate = {
+            on: null, from: firstYearDay, to: today, mode: 'this_year'
+          };
           break;
         case 'last_year':
-          this.newDate = { on: null, from: lastYearStart, to: lastYearEnd };
+          this.newDate = {
+            on: null, from: lastYearStart, to: lastYearEnd, mode: 'last_year'
+          };
           break;
         case 'on':
-          this.newDate = { on: null, from: null, to: null };
+          this.newDate = {
+            on: null, from: null, to: null, mode: 'on'
+          };
           break;
         case 'custom':
-          this.newDate = { on: null, from: null, to: null };
+          this.newDate = {
+            on: null, from: null, to: null, mode: 'custom'
+          };
           break;
         default:
           break;
@@ -99,7 +115,7 @@ export default {
   data() {
     return {
       newDate: this.date,
-      selectedOption: 'on',
+      selectedOption: (this.date.mode || 'on'),
       dateOptions: [
         ['today', 'Today'],
         ['yesterday', 'Yesterday'],
@@ -114,15 +130,19 @@ export default {
   },
   methods: {
     setOn(v) {
-      this.newDate = { on: v, from: null, to: null };
+      this.newDate = {
+        on: v, from: null, to: null, mode: 'on'
+      };
       this.$emit('change', this.newDate);
     },
     setFrom(v) {
+      this.newDate.mode = 'custom';
       this.newDate.on = null;
       this.newDate.from = v;
       this.$emit('change', this.newDate);
     },
     setTo(v) {
+      this.newDate.mode = 'custom';
       this.newDate.on = null;
       this.newDate.to = v;
       this.$emit('change', this.newDate);

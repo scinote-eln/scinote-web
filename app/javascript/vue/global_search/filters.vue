@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-[600px] p-3.5">
+  <div class="max-w-[600px] py-3.5">
     <div class="sci-label mb-2">{{ i18n.t('search.filters.by_type') }}</div>
     <div class="flex items-center gap-2 flex-wrap mb-6">
       <template v-for="group in searchGroups" :key="group.value">
@@ -75,7 +75,8 @@ export default {
       type: String,
       required: true
     },
-    currentTeam: Number,
+    filters: Object,
+    currentTeam: Number || String,
     searchUrl: String,
     searchQuery: String
   },
@@ -83,6 +84,17 @@ export default {
     this.fetchTeams();
     if (this.currentTeam) {
       this.selectedTeams = [this.currentTeam];
+    }
+
+    if (this.filters) {
+      this.createdAt = this.filters.created_at;
+      this.updatedAt = this.filters.updated_at;
+      this.selectedTeams = this.filters.teams;
+      this.$nextTick(() => {
+        this.selectedUsers = this.filters.users;
+      });
+      this.includeArchived = this.filters.include_archived;
+      this.activeGroup = this.filters.group;
     }
   },
   watch: {
@@ -175,6 +187,15 @@ export default {
     search() {
       if (this.searchUrl) {
         this.openSearchPage();
+      } else {
+        this.$emit('search', {
+          created_at: this.createdAt,
+          updated_at: this.updatedAt,
+          teams: this.selectedTeams,
+          users: this.selectedUsers,
+          include_archived: this.includeArchived,
+          group: this.activeGroup
+        });
       }
     },
     openSearchPage() {
@@ -182,9 +203,11 @@ export default {
         'created_at[on]': this.createdAt.on || '',
         'created_at[from]': this.createdAt.from || '',
         'created_at[to]': this.createdAt.to || '',
+        'created_at[mode]': this.createdAt.mode || '',
         'updated_at[on]': this.updatedAt.on || '',
         'updated_at[from]': this.updatedAt.from || '',
         'updated_at[to]': this.updatedAt.to || '',
+        'updated_at[mode]': this.updatedAt.mode || '',
         include_archived: this.includeArchived,
         group: this.activeGroup || '',
         q: this.searchQuery
