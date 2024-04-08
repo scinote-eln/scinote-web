@@ -1,10 +1,13 @@
 <template>
   <div v-if="total" class="bg-white rounded p-4 mb-4">
-    <h2 class="flex items-center gap-2 mt-0 mb-4">
-      <i class="sn-icon sn-icon-projects"></i>
-      {{ i18n.t('search.index.projects') }}
-      [{{ total }}]
-    </h2>
+    <div class="flex items-center">
+      <h2 class="flex items-center gap-2 mt-0 mb-4">
+        <i class="sn-icon sn-icon-projects"></i>
+        {{ i18n.t('search.index.projects') }}
+        [{{ total }}]
+      </h2>
+      <SortFlyout v-if="selected" :sort="sort" @changeSort="changeSort"></SortFlyout>
+    </div>
     <div>
       <div class="grid grid-cols-[auto_80px_auto_auto_auto] items-center">
         <template v-for="row in preparedResults" :key="row.id">

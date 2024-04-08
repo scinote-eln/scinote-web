@@ -481,6 +481,10 @@ en:
       untitled_protocol: 'Untitled protocol'
       protocol_template: "Protocol template"
       inventory_item: "Inventory item"
+      created_desc: "Created last"
+      created_asc: "Created first"
+      atoz: "Name A to Z"
+      ztoa: "Name Z to A"
   comments:
     save_changes: "Save changes"
     empty_state:

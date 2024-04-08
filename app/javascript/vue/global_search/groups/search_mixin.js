@@ -1,5 +1,6 @@
 import axios from '../../../packs/custom_axios.js';
 import StringWithEllipsis from '../../shared/string_with_ellipsis.vue';
+import SortFlyout from './sort_flyout.vue';
 /* global GLOBAL_CONSTANTS */
 
 export default {
@@ -10,10 +11,12 @@ export default {
     filters: Object
   },
   components: {
-    StringWithEllipsis
+    StringWithEllipsis,
+    SortFlyout
   },
   data() {
     return {
+      sort: 'created_desc',
       results: [],
       total: 0,
       loading: false,
@@ -66,6 +69,12 @@ export default {
         }
       }
     },
+    changeSort(sort) {
+      this.sort = sort;
+      this.results = [];
+      this.page = 1;
+      this.loadData();
+    },
     loadData() {
       if (this.loading && this.page) return;
 
@@ -73,6 +82,7 @@ export default {
       axios.get(this.searchUrl, {
         params: {
           q: this.query,
+          sort: this.sort,
           filters: this.filters,
           group: this.group,
           preview: !this.selected,
