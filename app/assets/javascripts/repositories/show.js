@@ -87,9 +87,7 @@
 
   function initImportRecordsModal() {
     $('.repository-show').on('click', '#importRecordsButton', function() {
-      $('#modal-import-records').modal('show');
-      $('#modal-import-records').find('#file').val('');
-      initParseRecordsModal();
+      window.importRepositoryModalComponent.open();
     });
 
     // Handling cancel click in #modal-import-records

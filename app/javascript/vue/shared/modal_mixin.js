@@ -1,6 +1,9 @@
 export default {
   mounted() {
-    $(this.$refs.modal).modal('show');
+    if (!this.startHidden) {
+      $(this.$refs.modal).modal('show');
+    }
+
     this.$refs.input?.focus();
     $(this.$refs.modal).on('hidden.bs.modal', () => {
       this.$emit('close');
@@ -13,6 +16,10 @@ export default {
     close() {
       this.$emit('close');
       $(this.$refs.modal).modal('hide');
+    },
+    open() {
+      this.$emit('open');
+      $(this.$refs.modal).modal('show');
     }
   },
 }
