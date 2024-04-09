@@ -42,6 +42,8 @@ export default {
           newItem.url = item.path;
         }
 
+        newItem.data_e2e = `e2e-BT-cardActions-${item.name}`
+
         newItem.params = item;
 
         return newItem;

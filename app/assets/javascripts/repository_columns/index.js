@@ -285,12 +285,14 @@ var RepositoryColumns = (function() {
         let editUrl = $(el).attr('data-edit-column-url');
         let destroyUrl = $(el).attr('data-destroy-column-url');
         let thederName;
+        let e2eName;
         if ($(el).find('.modal-tooltiptext').length > 0) {
           thederName = $(el).find('.modal-tooltiptext').text();
         } else {
           thederName = el.innerText;
         }
         thederName = _.escape(thederName);
+        e2eName = thederName.toLowerCase().replace(' ', '_');
 
         if (['row-name', 'archived-by', 'archived-on'].includes(el.id)) {
           visClass = '';
@@ -303,24 +305,24 @@ var RepositoryColumns = (function() {
           destroyButton = `<button class="btn icon-btn btn-light btn-xs delete-repo-column manage-repo-column"
                               data-action="destroy"
                               data-modal-url="${destroyUrl}">
-                              <span class="sn-icon sn-icon-delete" title="Delete"></span>
+                              <span class="sn-icon sn-icon-delete" title="Delete" data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-delete"></span>
                           </button>`;
         }
 
         let listItem = `<li class="col-list-el ${visLi} ${customColumn} ${editableRow}" data-position="${colIndex}" data-id="${colId}">
-          <i class="grippy sn-icon sn-icon-drag"></i>
+          <i class="grippy sn-icon sn-icon-drag" data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-drag"></i>
           <span class="vis-controls">
-            <span class="vis sn-icon ${visClass}" title="${visText}"></span>
+            <span class="vis sn-icon ${visClass}" title="${visText}"  data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-visibility"></span>
           </span>
-          <div class="text truncate" title="${thederName}">${thederName}</div>
+          <div class="text truncate" title="${thederName}"  data-e2e="e2e-TX-invItems-manageColumnsModal-${e2eName}-columnName">${thederName}</div>
           <span class="column-type pull-right shrink-0">${
-            getColumnTypeText(el, colId) || '<i class="sn-icon sn-icon-locked-task"></i>'
+            getColumnTypeText(el, colId) || `<i class="sn-icon sn-icon-locked-task"  data-e2e="e2e-IC-invItems-manageColumnsModal-${e2eName}-locked"></i>`
           }</span>
           <span class="sci-btn-group manage-controls pull-right" data-view-mode="active">
             <button class="btn icon-btn btn-light btn-xs edit-repo-column manage-repo-column"
                     data-action="edit"
                     data-modal-url="${editUrl}">
-              <span class="sn-icon sn-icon-edit" title="Edit"></span>
+              <span class="sn-icon sn-icon-edit" title="Edit"  data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-edit"></span>
             </button>
             ${destroyButton}
           </span>
