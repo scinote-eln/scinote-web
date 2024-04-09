@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RepositoryExportService
-  def initialize(file_type, rows, columns, user, repository, handle_name_func = nil, in_module: false, empty_export: true)
+  def initialize(file_type, rows, columns, user, repository, handle_name_func = nil, in_module: false, empty_export: false)
     @file_type = file_type
     @user = user
     @rows = rows
