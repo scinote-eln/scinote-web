@@ -365,7 +365,8 @@ class RepositoriesController < ApplicationController
           row_ids: params[:row_ids],
           header_ids: params[:header_ids]
         },
-        file_type: params[:file_type]
+        file_type:  params[:empty_export] == '1' ? 'csv' : params[:file_type],
+        empty_export: params[:empty_export] == '1'
       )
       log_activity(:export_inventory_items)
       render json: { message: t('zip_export.export_request_success') }

@@ -128,6 +128,19 @@ module Toolbars
       }
     end
 
+    def export_empty_inventory_action
+      return unless can_read_repository?(@repository)
+
+      {
+        name: 'export_records',
+        label: I18n.t('repositories.exports.records'),
+        icon: 'sn-icon sn-icon-export',
+        button_class: 'export-repository-row-btn',
+        button_id: 'exportRepositoryRowsButton',
+        type: :legacy
+      }
+    end
+
     def export_actions
       {
         name: 'export_group',
