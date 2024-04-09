@@ -59,7 +59,7 @@ module Reports
     end
 
     def generate_pdf_content
-      @has_cover = Rails.root.join('app', 'views', 'reports', 'templates', @template, 'cover.html.erb').exist?
+      @num_of_cover_pages = cover_pages_count
 
       render_header_footer_and_report
 
@@ -83,7 +83,7 @@ module Reports
         template: 'reports/report',
         layout: false,
         assigns: { settings: @report.settings },
-        locals: { report: @report, user: @user, has_cover: @has_cover }
+        locals: { report: @report, user: @user, num_of_cover_pages: @num_of_cover_pages }
       )
     end
 
@@ -130,8 +130,6 @@ module Reports
       current_margin = extract_margins_from_header ||
                        { top: '2cm', bottom: '2cm', left: '1cm', right: '1.5cm' }
 
-      cover_pages_shift = cover_page_shift_from_template
-
       Grover.new(
         @report_html,
         format: 'A4',
@@ -142,7 +140,7 @@ module Reports
         footer_template: @footer_html,
         style_tag_options: @style_tag_options,
         script_tag_options: @script_tag_options,
-        page_ranges: "#{cover_pages_shift}-999999",
+        page_ranges: "#{@num_of_cover_pages + 1}-999999",
         emulate_media: 'screen',
         display_url: Rails.application.routes.default_url_options[:host]
       ).to_pdf(@file.path)
@@ -150,7 +148,7 @@ module Reports
 
     def process_attach_pdf_report_and_notify
       @file.rewind
-      @file = prepend_title_page if @has_cover
+      @file = prepend_title_page if @num_of_cover_pages.positive?
       @file = append_result_asset_previews if @report.settings.dig(:task, :file_results_previews)
 
       @report.pdf_file.attach(io: @file, filename: 'report.pdf')
@@ -337,16 +335,16 @@ module Reports
       margins
     end
 
-    def cover_page_shift_from_template
+    def cover_pages_count
       cover_file_path = Rails.root.join('app', 'views', 'reports', 'templates', @template, 'cover.html.erb')
-      return 1 unless cover_file_path.exist?
+      return 0 unless cover_file_path.exist?
 
       content = File.read(cover_file_path)
 
       cover_pages_comment = content.match(/<!--\s*cover_pages_count:(\d+)\s*-->/)
-      return 2 unless cover_pages_comment
+      return 1 unless cover_pages_comment
 
-      cover_pages_comment[1].to_i + 1
+      cover_pages_comment[1].to_i
     end
   end
 end
