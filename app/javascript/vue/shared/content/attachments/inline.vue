@@ -29,6 +29,7 @@
         </div>
       </div>
       <ContextMenu
+        v-if="!externalProcessing"
         :attachment="attachment"
         @attachment:viewMode="updateViewMode"
         @attachment:delete="deleteAttachment"
@@ -36,7 +37,12 @@
         @attachment:uploaded="reloadAttachments"
       />
     </div>
-    <template v-if="attachment.attributes.wopi">
+    <div v-if="externalProcessing"
+          class="general-file-container flex-col gap-4">
+      <img src="/images/medium/loading.svg" alt="Loading" />
+      {{ i18n.t('attachments.virus_scaning') }}
+    </div>
+    <template v-else-if="attachment.attributes.wopi">
       <div v-if="showWopi"
            class="iframe-placeholder"
            :data-iframe-url="attachment.attributes.urls.wopi_action"></div>
@@ -72,6 +78,7 @@ import AttachmentMovedMixin from './mixins/attachment_moved.js';
 import ContextMenuMixin from './mixins/context_menu.js';
 import ContextMenu from './context_menu.vue';
 import PdfViewer from '../../pdf_viewer.vue';
+import axios from '../../../../packs/custom_axios.js';
 
 export default {
   name: 'inlineAttachment',
@@ -89,10 +96,19 @@ export default {
   },
   data() {
     return {
+      externalProcessing: false,
       showWopi: false
     };
   },
+  watch: {
+    externalProcessing() {
+      if (this.externalProcessing) {
+        this.checkProcessing();
+      }
+    }
+  },
   mounted() {
+    this.externalProcessing = this.attachment.attributes.external_processing;
     this.showWopi = this.attachment.attributes.file_size > 0;
     $(this.$nextTick(() => {
       $('.image-container img')
@@ -101,6 +117,17 @@ export default {
     }));
   },
   methods: {
+    checkProcessing() {
+      axios.get(this.attachment.attributes.urls.show)
+        .then((response) => {
+          this.externalProcessing = response.data.data.attributes.external_processing;
+          if (this.externalProcessing) {
+            setTimeout(() => {
+              this.checkProcessing();
+            }, 5000);
+          }
+        });
+    },
     reloadAsset() {
       $.ajax({
         method: 'GET',

@@ -393,6 +393,7 @@ en:
       office_file: "New Office file"
       chemical_drawing: "New chemical drawing"
       file_from_pc: "File from your PC"
+    virus_scaning: "Virus scanning..."
     modified_label: "Modified:"
     preview_menu: "View"
     add: "ADD"

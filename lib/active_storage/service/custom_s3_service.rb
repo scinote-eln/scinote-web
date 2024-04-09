@@ -20,15 +20,21 @@ module ActiveStorage
     def download(key, &block)
       return super unless staging_bucket
 
-      if bucket.client
-               .get_object_tagging(bucket: bucket.name, key: subfolder.present? ? File.join(subfolder, key) : key)
-               .tag_set.find { |tag| tag.key == STAGING_TAG_KEY && tag.value == STAGING_TAG_VALUE }
+      if file_in_staging_bucket(key)
         raise FileNotReadyError
       end
 
       super
     rescue Aws::S3::Errors::NoSuchKey
       raise ActiveStorage::FileNotFoundError
+    end
+
+    def ready?(key)
+      if staging_bucket && file_in_staging_bucket(key)
+        return false
+      end
+
+      true
     end
 
     def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:, custom_metadata: {})
@@ -57,6 +63,12 @@ module ActiveStorage
     end
 
     private
+
+    def file_in_staging_bucket(key)
+      bucket.client
+            .get_object_tagging(bucket: bucket.name, key: subfolder.present? ? File.join(subfolder, key) : key)
+            .tag_set.find { |tag| tag.key == STAGING_TAG_KEY && tag.value == STAGING_TAG_VALUE }
+    end
 
     def upload_with_single_part(key, io, checksum: nil, content_type: nil, content_disposition: nil, custom_metadata: {})
       object_for_upload(key)
