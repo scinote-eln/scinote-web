@@ -22,6 +22,9 @@
 
             <%= f.radio_button :file_type, "csv", checked: true %>
             <%= f.label :file_type, "Csv", value: "csv", class: "mr-6 ml-3" %>
+
+            <%= f.label :empty_export, "Empty Export", class: "ml-1" %>
+            <%= f.check_box :empty_export, id: "empty-export-checkbox", class: "mr-2" %>
          </div>
          <div class="modal-footer">
            <button type='button' data-e2e='e2e-BT-exportMD-cancel' class='btn btn-secondary' data-dismiss='modal' id='close-modal-export-repository-rows'><%= t('general.cancel')%></button>
