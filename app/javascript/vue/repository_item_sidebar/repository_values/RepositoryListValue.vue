@@ -66,7 +66,7 @@ export default {
   mounted() {
     this.isLoading = true;
 
-    $.get(this.optionsPath, (data) => {
+    $.get(this.optionsPath, { all_options: true }, (data) => {
       if (Array.isArray(data)) {
         this.options = data.map((option) => {
           const { value, label } = option;
@@ -75,6 +75,7 @@ export default {
         return false;
       }
       this.options = [];
+      return true;
     }).always(() => {
       this.isLoading = false;
       this.selected = this.id;
