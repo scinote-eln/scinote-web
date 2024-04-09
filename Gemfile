@@ -94,7 +94,7 @@ gem 'graphviz'
 gem 'cssbundling-rails'
 gem 'jsbundling-rails'
 
-gem 'tailwindcss-rails', '~> 2.0'
+gem 'tailwindcss-rails', '~> 2.4'
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
