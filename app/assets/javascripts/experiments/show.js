@@ -7,7 +7,7 @@
     let myModuleUserSelector = '#my_module_user_ids';
     var myModuleTagsSelector = '#module-tags-selector';
 
-    $(document).on('submit', '#new-my-module-modal form', (event) => {
+    $('#experiment-canvas').on('submit', '#new-my-module-modal form', (event) => {
       event.preventDefault();
 
       $.post({
