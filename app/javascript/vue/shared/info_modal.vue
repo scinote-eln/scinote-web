@@ -5,13 +5,13 @@
         <div id="body-container" class="flex flex-row w-full h-full">
           <!-- info -->
           <div id="info-part">
-            <info-component
+            <InfoComponent
               v-if="showingInfo"
-              :params="this.infoParams"
+              :infoParams="infoParams"
             />
           </div>
           <!-- content -->
-          <div id="content-part" class="flex flex-col w-full p-6 gap-3">
+          <div id="content-part" class="flex flex-col w-full p-6 gap-6">
             <!-- header -->
             <div id="info-modal-header" class="flex flex-row h-fit w-full justify-between">
               <div id="title-with-help" class="flex flex-row gap-3">
@@ -26,7 +26,7 @@
               </button>
             </div>
             <!-- main content -->
-            <div id="info-modal-main-content">
+            <div id="info-modal-main-content" class="h-full">
               <slot></slot>
             </div>
           </div>
@@ -44,10 +44,12 @@ export default {
   name: 'InfoModal',
   props: {
     title: {
-      type: String, required: true
+      type: String,
+      required: true
     },
     helpText: {
-      type: String, required: true
+      type: String,
+      required: true
     },
     infoParams: {
       type: Object,
@@ -59,9 +61,7 @@ export default {
     }
   },
   mixins: [modalMixin],
-  components: {
-    'info-component': InfoComponent
-  },
+  components: { InfoComponent },
   data() {
     return {
       showingInfo: true

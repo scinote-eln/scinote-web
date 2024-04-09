@@ -54,9 +54,7 @@ const app = createApp({
       // Info modal
       infoParams: {
         title: 'Guide for updating the inventory',
-        modalTitle: 'Update inventory',
-        helpText: 'Help',
-        steps: [
+        elements: [
           {
             id: 'el1',
             icon: 'sn-icon-export',

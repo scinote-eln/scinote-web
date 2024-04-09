@@ -2135,29 +2135,57 @@ en:
         list_error: "%{key}: %{val}"
     import_records:
       update_inventory: 'Update inventory'
+      steps:
+        step0:
+          id: 'step0'
+          icon: 'sn-icon-open'
+          label: 'Step 1'
+          title: 'Update inventory'
+          helpText: 'Help'
+          exportTitle: 'Export'
+          exportFullInvBtnText: 'Export full inventory'
+          exportEmptyInvBtnText: 'Export empty inventory'
+          importTitle: 'Import'
+          importBtnText: 'Import'
+          cancelBtnText: 'Cancel'
+          dragAndDropSupportingText: '.XLSX, .XLS or .CSV file'
       info_sidebar:
         title: 'Guide for updating the inventory'
         elements:
           element0:
+            id: 'el0'
             icon: 'sn-icon-export'
             label: 'Export inventory'
             subtext: "Before making edits, we advise you to export the latest inventory information. If you're only adding new items, consider exporting empty inventory."
           element1:
+            id: 'el1'
             icon: 'sn-icon-edit'
             label: 'Edit your data'
             subtext: 'Make sure to include header names in first row, followed by item data.'
           element2:
+            id: 'el2'
             icon: 'sn-icon-import'
             label: 'Import new or update items'
             subtext: 'Upload your data using .xlsx, .csv or .txt files.'
           element3:
+            id: 'el3'
             icon: 'sn-icon-tables'
             label: 'Merge your data'
             subtext: 'Complete the process by merging the columns you want to update.'
           element4:
+            id: 'el4'
             icon: 'sn-icon-open'
             label: 'Learn more'
             linkTo: 'https://knowledgebase.scinote.net/en/knowledge/how-to-add-items-to-an-inventory'
+      dragAndDropUpload:
+        notSingleFileError: 'Single file import only. Please import one file at a time.'
+        wrongFileTypeError: 'The file has invalid extension (.csv, .xlsx, .txt or .tsv.)'
+        emptyFileError: 'You have uploaded empty file. There is not much to import.'
+        fileTooLargeError: 'File too large. Max file size limit is'
+        importText:
+          firstPart: 'Import'
+          secondPart: 'or drag and drop'
+
       import: 'Import'
       no_header_name: 'No column name'
       success_flash: "%{number_of_rows} of %{total_nr} new item(s) successfully imported."
