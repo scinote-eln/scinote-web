@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
   </head>
   <body class="print-report-body">
-    <% if has_cover %>
-      <div style="break-after: page;"></div>
+    <% num_of_cover_pages.times do %>
+      <div style="min-height: 100vh; break-after: page;"></div>
     <% end %>
     <div class="print-report">
       <% report.root_elements.each do |el| %>
