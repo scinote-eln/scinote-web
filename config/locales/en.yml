@@ -1043,6 +1043,7 @@ en:
         refresh: 'Refresh preview'
         save: 'Save template code'
     default_columns:
+      inventory_name: 'Inventory name'
       item_id: 'Item ID'
       name: 'Name'
       added_on: 'Added On'
