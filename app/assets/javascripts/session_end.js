@@ -36,7 +36,7 @@
     timeoutID = setTimeout(functionCallback, timeoutTime);
   }
 
-  function toogleDocumentTitle(timeString = null) {
+  function toggleDocumentTitle(timeString = null) {
     var sleepEmoticon = String.fromCodePoint(0x1F62A);
     var originalTitle = document.title.split(sleepEmoticon).pop().trim();
 
@@ -70,21 +70,21 @@
 
   function reviveSession() {
     $.post($('meta[name=\'revive-url\']').attr('content'));
-    toogleDocumentTitle();
+    toggleDocumentTitle();
     window.localStorage.removeItem('sessionEnd');
     setSessionTimeout(initializeSessionCountdown, oneSecondTimeout);
   }
 
   function initializeSessionReviveCallbacks() {
     $('#session-expire').modal().off('hide.bs.modal').on('hide.bs.modal', function() {
-      if (sessionExpireIn() > 0) {
+      if (sessionExpireIn() > 0 && sessionExpireIn() < expireLimit) {
         reviveSession();
       }
     });
 
     // for manual page reload
     $(window).off('beforeunload').on('beforeunload', function() {
-      if (sessionExpireIn() > 0) {
+      if (sessionExpireIn() > 0 && sessionExpireIn() < expireLimit) {
         reviveSession();
       }
     });
@@ -98,7 +98,7 @@
       initializeSessionCountdown();
     } else if (expireIn > 0 && expireIn <= expireLimit) {
       timeString = newTimerStr(expireIn / 1000);
-      toogleDocumentTitle(timeString);
+      toggleDocumentTitle(timeString);
       $('.expiring').text(I18n.t('devise.sessions.expire_modal.session_end_in.header', { time: timeString }));
 
       if (!$('#session-expire').hasClass('in')) {
@@ -107,7 +107,7 @@
 
       setSessionTimeout(sessionCountdown, oneSecondTimeout);
     } else if (expireIn <= 0) {
-      toogleDocumentTitle();
+      toggleDocumentTitle();
       $('#session-expire').modal('hide');
       $('#session-finished').modal();
     }
@@ -130,7 +130,7 @@
         }
         setSessionTimeout(initializeSessionCountdown, oneSecondTimeout);
       } else if (expireOn && !event.originalEvent.newValue) {
-        toogleDocumentTitle();
+        toggleDocumentTitle();
       }
 
       expireOn = event.originalEvent.newValue;
