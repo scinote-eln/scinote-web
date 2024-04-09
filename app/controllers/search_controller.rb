@@ -453,13 +453,13 @@ class SearchController < ApplicationController
   end
 
   def search_protocols
-    @protocol_results = []
+    @protocol_results = Protocol.none
     @protocol_results = search_by_name(Protocol) if @protocol_search_count.positive?
     @search_count = @protocol_search_count
   end
 
   def search_label_templates
-    @label_template_results = []
+    @label_template_results = LabelTemplate.none
     @label_template_results = search_by_name(LabelTemplate) if @label_template_search_count.positive?
     @search_count = @label_template_search_count
   end
@@ -494,7 +494,7 @@ class SearchController < ApplicationController
   end
 
   def search_repository_rows
-    @repository_row_results = []
+    @repository_row_results = RepositoryRow.none
     @repository_row_results = search_by_name(RepositoryRow) if @repository_row_search_count.positive?
     @search_count = @repository_row_search_count
   end
