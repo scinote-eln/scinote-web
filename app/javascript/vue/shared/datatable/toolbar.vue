@@ -223,7 +223,7 @@ export default {
               data_e2e: 'e2e-BT-topToolbar-view-table'
             };
           case 'custom':
-            return { text: view.name, url: view.url, active};
+            return { text: view.name, url: view.url, active };
           default:
             return view;
         }

@@ -41,11 +41,8 @@ export default {
         if (item.type === 'link') {
           newItem.url = item.path;
         }
-
-        newItem.data_e2e = `e2e-BT-cardActions-${item.name}`
-
+        newItem.data_e2e = `e2e-BT-cardActions-${item.name}`;
         newItem.params = item;
-
         return newItem;
       });
     },
