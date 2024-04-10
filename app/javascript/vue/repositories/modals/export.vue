@@ -57,18 +57,17 @@ export default {
   methods: {
     submit() {
       const payload = {
-        repository_ids: this.rows.map(row => row.id),
+        repository_ids: this.rows.map((row) => row.id),
         file_type: this.selectedOption
       };
 
-      axios.post(this.exportAction.path, payload).then(response => {
+      axios.post(this.exportAction.path, payload).then((response) => {
         this.$emit('export');
         HelperModule.flashAlertMsg(response.data.message, 'success');
-      }).catch(error => {
+      }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
     }
   }
 };
 </script>
-  

@@ -21,5 +21,5 @@ export default {
       this.$emit('open');
       $(this.$refs.modal).modal('show');
     }
-  },
-}
+  }
+};

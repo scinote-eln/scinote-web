@@ -53,13 +53,21 @@ class RepositoriesController < ApplicationController
   end
 
   def show
-    current_team_switch(@repository.team) unless @repository.shared_with?(current_team)
-    @display_edit_button = can_create_repository_rows?(@repository)
-    @display_delete_button = can_delete_repository_rows?(@repository)
-    @display_duplicate_button = can_create_repository_rows?(@repository)
-    @snapshot_provisioning = @repository.repository_snapshots.provisioning.any?
+    respond_to do |format|
+      format.html do
+        current_team_switch(@repository.team) unless @repository.shared_with?(current_team)
+        @display_edit_button = can_create_repository_rows?(@repository)
+        @display_delete_button = can_delete_repository_rows?(@repository)
+        @display_duplicate_button = can_create_repository_rows?(@repository)
+        @snapshot_provisioning = @repository.repository_snapshots.provisioning.any?
 
-    @busy_printer = LabelPrinter.where.not(current_print_job_ids: []).first
+        @busy_printer = LabelPrinter.where.not(current_print_job_ids: []).first
+      end
+      format.json do
+        # render serialized repository json
+        render json: @repository, serializer: RepositorySerializer
+      end
+    end
   end
 
   def table_toolbar
@@ -281,13 +289,9 @@ class RepositoriesController < ApplicationController
         session: session
       )
       if parsed_file.too_large?
-        repository_response(t('general.file.size_exceeded',
-                              file_size: Rails.configuration.x.file_max_size_mb))
+        return render json: { error: t('general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb) }, status: :unprocessable_entity
       elsif parsed_file.has_too_many_rows?
-        repository_response(
-          t('repositories.import_records.error_message.items_limit',
-            items_size: Constants::IMPORT_REPOSITORY_ITEMS_LIMIT)
-        )
+        return render json: { error: t('repositories.import_records.error_message.items_limit', items_size: Constants::IMPORT_REPOSITORY_ITEMS_LIMIT) }, status: :unprocessable_entity
       else
         sheet = SpreadsheetParser.open_spreadsheet(import_params[:file])
         duplicate_ids = SpreadsheetParser.duplicate_ids(sheet)
@@ -298,22 +302,22 @@ class RepositoriesController < ApplicationController
         @import_data = parsed_file.data
 
         if @import_data.header.blank? || @import_data.columns.blank?
-          return repository_response(t('repositories.parse_sheet.errors.empty_file'))
+          return render json: { error: t('repositories.parse_sheet.errors.empty_file') }, status: :unprocessable_entity
         end
 
         if (@temp_file = parsed_file.generate_temp_file)
           render json: {
-            html: render_to_string(partial: 'repositories/parse_records_modal', formats: :html)
+            import_data: @import_data,
+            temp_file: @temp_file
           }
         else
-          repository_response(t('repositories.parse_sheet.errors.temp_file_failure'))
+          return render json: { error: t('repositories.parse_sheet.errors.temp_file_failure') }, status: :unprocessable_entity
         end
       end
     rescue ArgumentError, CSV::MalformedCSVError
-      repository_response(t('repositories.parse_sheet.errors.invalid_file',
-                            encoding: ''.encoding))
+      return render json: { error: t('repositories.parse_sheet.errors.invalid_file', encoding: ''.encoding) }, status: :unprocessable_entity
     rescue TypeError
-      repository_response(t('repositories.parse_sheet.errors.invalid_extension'))
+      return render json: { error: t('repositories.parse_sheet.errors.invalid_extension') }, status: :unprocessable_entity
     end
   end
 
@@ -326,7 +330,7 @@ class RepositoriesController < ApplicationController
     should_overwrite_with_empty_cells = params[:overwrite_with_empty_cells]
 
     # Check if there exist mapping for repository record (it's mandatory)
-    if import_params[:mappings].value?('-1')
+    if import_params[:mappings].present? && import_params[:mappings].value?('-1')
       import_records = repostiory_import_actions
       status = import_records.import!(can_edit_existing_items, should_overwrite_with_empty_cells)
 
@@ -365,7 +369,8 @@ class RepositoriesController < ApplicationController
           row_ids: params[:row_ids],
           header_ids: params[:header_ids]
         },
-        file_type: params[:file_type]
+        file_type:  params[:empty_export] == '1' ? 'csv' : params[:file_type],
+        empty_export: params[:empty_export] == '1'
       )
       update_user_export_file_type if current_user.settings[:repository_export_file_type] != params[:file_type]
       log_activity(:export_inventory_items)

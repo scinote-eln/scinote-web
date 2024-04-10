@@ -12,13 +12,16 @@
       />
     </div>
 
-    <div ref="infoModal">
+    <div ref="infoModalWrapper">
       <button @click="showInfo = true" class="btn btn-primary">Show Info Modal</button>
       <info-modal
         v-if="showInfo"
         @close="showInfo = false"
-        :infoParams="infoParams"
-      >
+        ref="modal"
+        :start-hidden="false"
+        :info-params="infoParams"
+        title="Some title"
+        help-text="Help">
         <div>I am a component that gets consumed by the slot</div>
       </info-modal>
     </div>
