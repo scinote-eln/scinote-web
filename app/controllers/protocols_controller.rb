@@ -371,7 +371,11 @@ class ProtocolsController < ApplicationController
 
   def save_as_draft
     Protocol.transaction do
-      draft = @protocol.save_as_draft(current_user)
+      draft = nil
+
+      @protocol.with_lock do
+        draft = @protocol.save_as_draft(current_user)
+      end
 
       if draft.invalid?
         render json: { error: draft.errors.messages.map { |_, value| value }.join(' ') }, status: :unprocessable_entity
