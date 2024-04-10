@@ -589,22 +589,25 @@ class Extends
     'FluicsLabelTemplate' => 'Fluics'
   }
 
-  EXTERNAL_SERVICES = %w(
+  EXTERNAL_SCRIPT_SERVICES = %w(
+    https://marvinjs.chemicalize.com/
+    www.recaptcha.net/
+    www.gstatic.com/recaptcha/
+  )
+
+  EXTERNAL_CONNECT_SERVICES = %w(
     https://www.protocols.io/
     http://127.0.0.1:9100/
-    https://marvinjs.chemicalize.com/
     newrelic.com
     *.newrelic.com
     *.nr-data.net
-    www.recaptcha.net/
-    www.gstatic.com/recaptcha/
     extras.scinote.net
     https://www.scinote.net
   )
 
-  if Constants::ASSET_SYNC_URL && EXTERNAL_SERVICES.exclude?(Constants::ASSET_SYNC_URL)
+  if Constants::ASSET_SYNC_URL && EXTERNAL_CONNECT_SERVICES.exclude?(Constants::ASSET_SYNC_URL)
     asset_sync_url = URI.parse(Constants::ASSET_SYNC_URL)
-    EXTERNAL_SERVICES << "#{asset_sync_url.scheme}://#{asset_sync_url.host}:#{asset_sync_url.port}"
+    EXTERNAL_CONNECT_SERVICES << "#{asset_sync_url.scheme}://#{asset_sync_url.host}:#{asset_sync_url.port}"
   end
 
   COLORED_BACKGROUND_ACTIONS = %w(

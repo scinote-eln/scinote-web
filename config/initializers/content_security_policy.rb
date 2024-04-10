@@ -11,9 +11,9 @@ ActiveSupport::Reloader.to_prepare do
     policy.font_src    :self, :https, :data
     policy.img_src     :self, :https, :data, :blob
     policy.object_src  :none
-    policy.script_src  :self, :unsafe_eval, *Extends::EXTERNAL_SERVICES
+    policy.script_src  :self, :unsafe_eval, *Extends::EXTERNAL_SCRIPT_SERVICES
     policy.style_src   :self, :https, :unsafe_inline, :data
-    policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
+    policy.connect_src :self, :data, *Extends::EXTERNAL_CONNECT_SERVICES
 
     # Specify URI for violation reports
     # policy.report_uri "/csp-violation-report-endpoint"
@@ -44,8 +44,8 @@ Rails.application.config.content_security_policy_nonce_directives = %w(script-sr
 Rails.application.configure do
   config.after_initialize do
     if ActiveStorage::Blob.service.name == :amazon
-      Extends::EXTERNAL_SERVICES += [ActiveStorage::Blob.service.bucket.url]
-      Rails.application.config.content_security_policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
+      Extends::EXTERNAL_CONNECT_SERVICES += [ActiveStorage::Blob.service.bucket.url]
+      Rails.application.config.content_security_policy.connect_src :self, :data, *Extends::EXTERNAL_CONNECT_SERVICES
     end
   end
 end
