@@ -5,7 +5,7 @@ class AssetSyncController < ApplicationController
 
   skip_before_action :authenticate_user!, only: %i(update download)
   skip_before_action :verify_authenticity_token, only: %i(update download)
-  before_action :authenticate_asset_sync_token!, only: %i(update download)
+  prepend_before_action :authenticate_asset_sync_token!, only: %i(update download)
   before_action :check_asset_sync
 
   def show
