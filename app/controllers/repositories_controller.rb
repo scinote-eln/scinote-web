@@ -367,6 +367,7 @@ class RepositoriesController < ApplicationController
         },
         file_type: params[:file_type]
       )
+      update_user_export_file_type if current_user.settings[:repository_export_file_type] != params[:file_type]
       log_activity(:export_inventory_items)
       render json: { message: t('zip_export.export_request_success') }
     else
@@ -380,6 +381,7 @@ class RepositoriesController < ApplicationController
       current_user.increase_daily_exports_counter!
       RepositoriesExportJob
         .perform_later(params[:file_type], repositories.pluck(:id), user_id: current_user.id, team_id: current_team.id)
+      update_user_export_file_type if current_user.settings[:repository_export_file_type] != params[:file_type]
       log_activity(:export_inventories, inventories: repositories.pluck(:name).join(', '))
       render json: { message: t('zip_export.export_request_success') }
     else
@@ -599,5 +601,9 @@ class RepositoriesController < ApplicationController
 
   def validate_file_type
     render json: { message: 'Invalid file type' }, status: :bad_request unless %w(csv xlsx).include?(params[:file_type])
+  end
+
+  def update_user_export_file_type
+    current_user.update_simple_setting(key: 'repository_export_file_type', value: params[:file_type])
   end
 end
