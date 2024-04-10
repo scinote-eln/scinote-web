@@ -4,16 +4,9 @@
               method: :delete,
               data: { id: 'leave-user-team-form' } do |f| %>
   <%= hidden_field_tag :leave, true %>
-  <p><%= t("users.settings.user_teams.leave_uo_message", team: @user_assignment.team.name) %></p>
-  <div class="alert alert-danger" role="alert">
-    <span class="fas fa-exclamation-triangle"></span>
-    &nbsp;
-    <%= t("users.settings.user_teams.leave_uo_alert_heading") %>
-    <ul>
-      <li><%= t("users.settings.user_teams.leave_uo_alert_line_1") %></li>
-      <li><%= t("users.settings.user_teams.leave_uo_alert_line_2").html_safe %></li>
-      <li><%= t("users.settings.user_teams.leave_uo_alert_line_3")%></li>
-      <li><%= t("users.settings.user_teams.leave_uo_alert_line_4")%></li>
-    </ul>
+  <div class='flex flex-col gap-6'>
+    <div><%= t("users.settings.user_teams.leave_message") %></div>
+    <div><%= t("users.settings.user_teams.message_owner") %></div>
+    <div><%= t("users.settings.user_teams.message_alert") %></div>
   </div>
 <% end %>
