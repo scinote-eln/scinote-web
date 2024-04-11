@@ -17,14 +17,29 @@
            <div class="mb-6 custom-alert-info"><%=t 'zip_export.files_alert' %></div>
            <div class="mb-6"><%=t 'zip_export.repository_footer_html' %></div>
 
-            <%= f.radio_button :file_type, "xlsx" %>
-            <%= f.label :file_type, "xlsx", value: "false", class: "mr-6 ml-3" %>
+          <div class="sci-radio-container">
+            <%= f.radio_button(
+                  :file_type,
+                  "xlsx",
+                  id: 'file_type_radio',
+                  class: 'sci-radio',
+                  checked: current_user.settings[:repository_export_file_type].nil? || current_user.settings[:repository_export_file_type] == "xlsx"
+                ) %>
+            <span class="sci-radio-label"></span>
+          </div>
+          <%= f.label :file_type, ".xlsx", value: "xlsx", class: "mr-6 ml-3" %>
 
-            <%= f.radio_button :file_type, "csv", checked: true %>
-            <%= f.label :file_type, "Csv", value: "csv", class: "mr-6 ml-3" %>
-
-            <%= f.label :empty_export, "Empty Export", class: "ml-1" %>
-            <%= f.check_box :empty_export, id: "empty-export-checkbox", class: "mr-2" %>
+          <div class="sci-radio-container">
+            <%= f.radio_button(
+                  :file_type,
+                  "csv",
+                  id: 'file_type_radio',
+                  class: 'sci-radio',
+                  checked: current_user.settings[:repository_export_file_type] == "csv"
+                ) %>
+            <span class="sci-radio-label"></span>
+          </div>
+          <%= f.label :file_type, ".csv", value: "csv", class: "mr-6 ml-3" %>
          </div>
          <div class="modal-footer">
            <button type='button' data-e2e='e2e-BT-exportMD-cancel' class='btn btn-secondary' data-dismiss='modal' id='close-modal-export-repository-rows'><%= t('general.cancel')%></button>

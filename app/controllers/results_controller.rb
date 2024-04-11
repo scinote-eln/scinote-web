@@ -149,9 +149,7 @@ class ResultsController < ApplicationController
 
   def update_and_apply_user_sort_preference!
     if params[:sort].present?
-      current_user.settings['results_order'] ||= {}
-      current_user.settings['results_order'][@my_module.id.to_s] = params[:sort]
-      current_user.save
+      current_user.update_nested_setting(key: 'results_order', id: @my_module.id.to_s, value: params[:sort])
       @sort_preference = params[:sort]
     else
       @sort_preference = current_user.settings.fetch('results_order', {})[@my_module.id.to_s] || 'created_at_desc'
