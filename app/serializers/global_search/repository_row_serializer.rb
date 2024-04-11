@@ -27,7 +27,8 @@ module GlobalSearch
     def repository
       {
         name: object.repository.name,
-        url: repository_path(object.repository)
+        url: repository_path(object.repository),
+        archived: object.repository.archived
       }
     end
 

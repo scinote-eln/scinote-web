@@ -16,14 +16,16 @@ module GlobalSearch
     def experiment
       {
         name: object.my_module.experiment.name,
-        url: my_modules_experiment_path(object.my_module.experiment.id)
+        url: my_modules_experiment_path(object.my_module.experiment.id),
+        archived: object.my_module.experiment.archived?
       }
     end
 
     def my_module
       {
         name: object.my_module.name,
-        url: protocols_my_module_path(object.my_module.id)
+        url: protocols_my_module_path(object.my_module.id),
+        archived: object.my_module.archived?
       }
     end
 

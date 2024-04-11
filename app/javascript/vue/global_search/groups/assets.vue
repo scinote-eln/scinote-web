@@ -33,14 +33,14 @@
           <div class="h-full py-2 px-4 grid grid-cols-[auto_1fr] items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey">
             <b class="shrink-0">{{ i18n.t(`search.index.${row.attributes.parent.type}`) }}:</b>
             <a target="_blank" :href="row.attributes.parent.url" class="shrink-0 overflow-hidden">
-              <StringWithEllipsis class="w-full" :text="row.attributes.parent.name"></StringWithEllipsis>
+              <StringWithEllipsis class="w-full" :text="labelName(row.attributes.parent)"></StringWithEllipsis>
             </a>
           </div>
           <div class="s h-full py-2 px-4 grid grid-cols-[auto_1fr] items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey"
                :class="{ 'invisible': !row.attributes.experiment.name }">
             <b class="shrink-0">{{ i18n.t('search.index.experiment') }}:</b>
             <a target="_blank" :href="row.attributes.experiment.url" class="shrink-0 overflow-hidden">
-              <StringWithEllipsis class="w-full" :text="row.attributes.experiment.name"></StringWithEllipsis>
+              <StringWithEllipsis class="w-full" :text="labelName(row.attributes.experiment)"></StringWithEllipsis>
             </a>
           </div>
         </template>

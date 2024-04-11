@@ -167,7 +167,7 @@ class SearchController < ApplicationController
                  }
           return
         when 'assets'
-          @asset_search_count = fetch_cached_count(Protocol)
+          @asset_search_count = fetch_cached_count(Asset)
           search_assets
           includes = [{ step: { protocol: { my_module: :experiment } } }, { result: { my_module: :experiment } }, :team]
           results = if params[:preview] == 'true'

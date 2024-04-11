@@ -3,7 +3,7 @@ import StringWithEllipsis from '../../shared/string_with_ellipsis.vue';
 import SortFlyout from './sort_flyout.vue';
 import Loader from '../loader.vue';
 import NoSearchResult from '../no_search_result.vue';
-/* global GLOBAL_CONSTANTS */
+/* global GLOBAL_CONSTANTS I18n */
 
 export default {
   props: {
@@ -89,6 +89,11 @@ export default {
     }
   },
   methods: {
+    labelName(object) {
+      if (!object.archived) return object.name;
+
+      return `${I18n.t('labels.archived')} ${object.name}`;
+    },
     handleScroll() {
       if (this.loading || !this.selected) return;
 

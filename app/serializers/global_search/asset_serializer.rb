@@ -31,7 +31,8 @@ module GlobalSearch
 
       {
         name: object.my_module.experiment.name,
-        url: my_modules_experiment_path(id: object.my_module.experiment.id, search: object.my_module.code)
+        url: my_modules_experiment_path(id: object.my_module.experiment.id, search: object.my_module.code),
+        archived: object.my_module.experiment.archived?
       }
     end
 
@@ -40,22 +41,28 @@ module GlobalSearch
       if parent.is_a?(Result) && object.my_module
         parent_type = 'task'
         parent_name = object.my_module.name
-        parent_url = my_module_results_path(my_module_id: object.my_module.id)
+        parent_archived = parent.archived?
+        view_mode = parent_archived ? 'archived' : 'active'
+        parent_url = my_module_results_path(my_module_id: object.my_module.id, view_mode: view_mode)
       elsif parent.is_a?(Step) && object.my_module
         parent_type = 'task'
         parent_name = object.my_module.name
+        parent_archived = object.my_module.archived?
         parent_url = protocols_my_module_path(object.my_module.id)
       elsif parent.is_a?(Step)
         parent_type = 'protocol_template'
         parent_name = parent.protocol.name || I18n.t('search.index.untitled_protocol')
         parent_url = protocol_path(parent.protocol_id)
+        parent_archived = parent.protocol.archived?
       elsif parent.is_a?(RepositoryCell)
         parent_type = 'inventory_item'
         parent_name = parent.repository_row.name
-        parent_url = repository_repository_rows_path(repository_id: parent.repository_row.repository_id)
+        parent_archived = parent.repository_row.archived?
+        parent_url =
+          repository_path(id: parent.repository_row.repository_id, repository_row_id: parent.repository_row.id)
       end
 
-      { name: parent_name, url: parent_url, type: parent_type }
+      { name: parent_name, url: parent_url, type: parent_type, archived: parent_archived }
     end
   end
 end

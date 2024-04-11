@@ -25,7 +25,8 @@ module GlobalSearch
       if object.parent_folder_id?
         {
           name: object.parent_folder.name,
-          url: project_folder_path(object.parent_folder.id)
+          url: project_folder_path(object.parent_folder.id),
+          archived: object.parent_folder.archived?
         }
       end
     end

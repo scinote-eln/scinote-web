@@ -16,7 +16,8 @@ module GlobalSearch
     def experiment
       {
         name: object.experiment.name,
-        url: my_modules_experiment_path(object.experiment.id)
+        url: my_modules_experiment_path(object.experiment.id),
+        archived: object.experiment.archived?
       }
     end
 

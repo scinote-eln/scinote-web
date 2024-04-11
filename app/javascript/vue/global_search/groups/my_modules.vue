@@ -12,7 +12,9 @@
       <div class="grid grid-cols-[auto_80px_auto_auto_auto_auto] items-center">
         <template v-for="row in preparedResults" :key="row.id">
           <a :href="row.attributes.url" target="_blank" class="h-full py-2 px-4 overflow-hidden font-bold border-0 border-b border-solid border-sn-light-grey">
-            <StringWithEllipsis class="w-full" :text="row.attributes.name"></StringWithEllipsis>
+            <StringWithEllipsis class="w-full"
+              :text="labelName({ name: row.attributes.name, archived: row.attributes.archived})">
+            </StringWithEllipsis>
           </a>
           <div class="h-full py-2 px-4 flex items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey">
             <b class="shrink-0">{{ i18n.t('search.index.id') }}:</b>
@@ -36,7 +38,7 @@
             <div class="grid grid-cols-[auto_1fr] items-center gap-1 text-xs w-full">
               <b class="shrink-0">{{ i18n.t('search.index.experiment') }}:</b>
               <a :href="row.attributes.experiment.url" class="shrink-0 overflow-hidden" target="_blank">
-                <StringWithEllipsis class="w-full" :text="row.attributes.experiment.name"></StringWithEllipsis>
+                <StringWithEllipsis class="w-full" :text="labelName(row.attributes.experiment)"></StringWithEllipsis>
               </a>
             </div>
           </div>
