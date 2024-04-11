@@ -656,6 +656,8 @@ class Extends
     task_step_states
     results_order
     repository_export_file_type
+    navigator_collapsed
+    navigator_width
   ).freeze
 end
 
