@@ -52,6 +52,8 @@ module LabelTemplates
         end
 
         fetch_custom_column_value(name)
+      when 'INVENTORY_NAME'
+        @repository_row.repository.name
       when 'ITEM_ID'
         @repository_row.code
       when 'NAME'
