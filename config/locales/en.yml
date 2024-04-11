@@ -2899,13 +2899,13 @@ en:
           not_connected: "You have no Connected accounts"
           unlink_success: "Successfully unlinked"
           azure_ad:
-            title: "Your Microsoft Azure (Active Directory) Account"
-            connect_hint: "Allows you to sign in with your Microsoft Azure (Active Directory) account."
+            title: "Your Microsoft Entra ID Account"
+            connect_hint: "Allows you to sign in with your Microsoft Entra ID account."
             connected: "Connected"
             unlink_button: "Unlink"
             unlink_modal:
-              title: "Unlink Microsoft Azure (Active Directory) account?"
-              description_1: "Are you sure you would like unlink Microsoft Azure (Active Directory) and SciNote accounts?"
+              title: "Unlink Microsoft Entra ID account?"
+              description_1: "Are you sure you would like unlink Microsoft Entra ID and SciNote accounts?"
               submit_button: "Submit"
           okta:
             title: "Your Okta Account"
