@@ -26,7 +26,7 @@
         @cancel="filtersOpened = false"
       ></SearchFilters>
       <div v-else-if="showHistory" class="max-w-[600px]">
-        <div v-for="(query, i) in previousQueries.reverse()" @click="setQuery(query)" :key="i"
+        <div v-for="(query, i) in reversedPreviousQueries" @click="setQuery(query)" :key="i"
              class="flex px-3 h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
           <i class="sn-icon sn-icon-history-search"></i>
           {{ query }}
@@ -141,6 +141,9 @@ export default {
     SearchFilters
   },
   computed: {
+    reversedPreviousQueries() {
+      return this.previousQueries.reverse();
+    },
     canOpen() {
       return this.previousQueries.length > 0 || this.searchQuery.length > 1;
     },
