@@ -1,6 +1,6 @@
 <template>
-  <div ref="content" class="bg-white rounded" :class="{ 'p-4 mb-4': total || loading }">
-    <template v-if="total">
+  <div ref="content" class="bg-white rounded" :class="{ 'p-4 mb-4': results.length || loading }">
+    <template v-if="total && results.length">
       <div class="flex items-center">
         <h2 class="flex items-center gap-2 mt-0 mb-4">
           <i class="sn-icon sn-icon-projects"></i>
@@ -12,7 +12,9 @@
       <div class="grid grid-cols-[auto_80px_auto_auto_auto] items-center">
         <template v-for="row in preparedResults" :key="row.id">
           <a :href="row.attributes.url" class="h-full py-2 px-4 overflow-hidden font-bold border-0 border-b border-solid border-sn-light-grey">
-            <StringWithEllipsis class="w-full" :text="row.attributes.name"></StringWithEllipsis>
+            <StringWithEllipsis class="w-full"
+              :text="labelName({ name: row.attributes.name, archived: row.attributes.archived})">
+            </StringWithEllipsis>
           </a>
           <div class="h-full py-2 px-4 flex items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey">
             <b class="shrink-0">{{ i18n.t('search.index.id') }}:</b>
@@ -33,7 +35,7 @@
               <div class="grid grid-cols-[auto_1fr] items-center gap-1 text-xs w-full">
                 <b class="shrink-0">{{ i18n.t('search.index.folder') }}:</b>
                 <a :href="row.attributes.folder.url" class="shrink-0 overflow-hidden">
-                  <StringWithEllipsis class="w-full" :text="row.attributes.folder.name"></StringWithEllipsis>
+                  <StringWithEllipsis class="w-full" :text="labelName(row.attributes.folder)"></StringWithEllipsis>
                 </a>
               </div>
             </template>
@@ -46,19 +48,16 @@
     </template>
     <Loader v-if="loading" :total="total" :loaderRows="loaderRows" :loaderYPadding="loaderYPadding"
             :loaderHeight="loaderHeight" :loaderGap="loaderGap" :reachedEnd="reachedEnd" />
+    <NoSearchResult v-else-if="showNoSearchResult" :noSearchResultHeight="noSearchResultHeight"  />
   </div>
 </template>
 
 <script>
-import Loader from '../loader.vue';
 import searchMixin from './search_mixin';
 
 export default {
   name: 'ProjectsComponent',
   mixins: [searchMixin],
-  components: {
-    Loader
-  },
   data() {
     return {
       group: 'projects'

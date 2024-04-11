@@ -24,7 +24,8 @@ class GlobalSearch::ProjectSerializer < ActiveModel::Serializer
     if object.project_folder
       {
         name: object.project_folder.name,
-        url: project_folder_path(object.project_folder)
+        url: project_folder_path(object.project_folder),
+        archived: object.project_folder.archived?
       }
     end
   end

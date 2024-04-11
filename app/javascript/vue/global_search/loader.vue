@@ -18,7 +18,7 @@
         <div :class="`h-[${loaderHeight}px]`" class="w-96 max-w-96 animate-skeleton rounded"></div>
       </div>
     </div>
-    <div v-if="reachedEnd" class="flex items-center">
+    <div v-if="reachedEnd" class="flex items-center mb-6">
       <p class="text-sm text-sn-blue flex items-center gap-3 m-auto">
         <span class="sn-icon sn-icon-flag"></span>
         <span>{{ i18n.t('search.index.reached_end') }}</span>

@@ -1,6 +1,6 @@
 <template>
-  <div ref="content" class="bg-white rounded" :class="{ 'p-4 mb-4': total || loading }">
-    <template v-if="total">
+  <div ref="content" class="bg-white rounded" :class="{ 'p-4 mb-4': results.length || loading }">
+    <template v-if="total && results.length">
       <div class="flex items-center">
         <h2 class="flex items-center gap-2 mt-0 mb-4">
           <i class="sn-icon sn-icon-reports"></i>
@@ -42,7 +42,7 @@
           <div class="h-full py-2 px-4 grid grid-cols-[auto_1fr] items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey">
             <b class="shrink-0">{{ i18n.t('search.index.project') }}:</b>
             <a target="_blank" :href="row.attributes.project.url" class="shrink-0 overflow-hidden">
-              <StringWithEllipsis class="w-full" :text="row.attributes.project.name"></StringWithEllipsis>
+              <StringWithEllipsis class="w-full" :text="labelName(row.attributes.project)"></StringWithEllipsis>
             </a>
           </div>
         </template>
@@ -53,19 +53,16 @@
     </template>
     <Loader v-if="loading" :total="total" :loaderRows="loaderRows" :loaderYPadding="loaderYPadding"
               :loaderHeight="loaderHeight" :loaderGap="loaderGap" :reachedEnd="reachedEnd" />
+    <NoSearchResult v-else-if="showNoSearchResult" :noSearchResultHeight="noSearchResultHeight"  />
   </div>
 </template>
 
 <script>
-import Loader from '../loader.vue';
 import searchMixin from './search_mixin';
 
 export default {
   name: 'ReportsComponent',
   mixins: [searchMixin],
-  components: {
-    Loader
-  },
   data() {
     return {
       group: 'reports'

@@ -16,7 +16,8 @@ module GlobalSearch
     def project
       {
         name: object.project.name,
-        url: project_experiments_path(project_id: object.project.id)
+        url: project_experiments_path(project_id: object.project.id),
+        archived: object.project.archived?
       }
     end
 

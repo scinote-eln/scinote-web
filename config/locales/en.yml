@@ -486,6 +486,8 @@ en:
       atoz: "Name A to Z"
       ztoa: "Name Z to A"
       reached_end: "You’ve reached the end of the list"
+      no_results_text: "No search results found"
+      adjust_search_text: "Try adjusting your search or filter to find what you are looking for."
   comments:
     save_changes: "Save changes"
     empty_state:
