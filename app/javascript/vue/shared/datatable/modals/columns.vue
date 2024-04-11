@@ -1,12 +1,12 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content" data-e2e="e2e-MD-manageColumns">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-manageColumnsModal-close">
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <h4 class="modal-title truncate !block">
+          <h4 class="modal-title truncate !block"  data-e2e="e2e-TX-manageColumnsModal-title">
             {{ i18n.t('experiments.table.column_display_modal.title') }}
           </h4>
         </div>
@@ -30,18 +30,18 @@
                 >
                   <div v-if="element.field == 'pinnedSeparator'" class="h-[1px] w-full bg-sn-sleepy-grey"></div>
                   <template v-else>
-                    <div class="opacity-0 group-hover/column:!opacity-100 element-grip cursor-pointer">
+                    <div class="opacity-0 group-hover/column:!opacity-100 element-grip cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-drag'">
                       <i class="sn-icon sn-icon-drag"></i>
                     </div>
                     <div v-if="element.field === 'name'" class="w-6 h-6"></div>
                     <template v-else>
                       <i v-if="columnVisbile(element)" @click="toggleColumn(element, true)"
-                        class="sn-icon sn-icon-visibility-show cursor-pointer"></i>
+                        class="sn-icon sn-icon-visibility-show cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-hide'"></i>
                       <i v-else @click="toggleColumn(element, false)"
-                        class="sn-icon sn-icon-visibility-hide cursor-pointer"></i>
+                        class="sn-icon sn-icon-visibility-hide cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-show'"></i>
                     </template>
-                    <div class="truncate">{{ element.headerName }}</div>
-                    <div class="ml-auto cursor-pointer">
+                    <div class="truncate" :data-e2e="'e2e-TX-manageColumnsModal-'+element.field+'-columnName'">{{ element.headerName }}</div>
+                    <div class="ml-auto cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-pin'">
                       <i v-if="columnPinned(element)" @click="unPinColumn(element)" class="sn-icon sn-icon-pinned"></i>
                       <i v-else @click="pinColumn(element)" class="sn-icon sn-icon-pin"></i>
                     </div>
@@ -52,7 +52,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary mr-auto" @click="resetToDefault">
+          <button type="button" class="btn btn-secondary mr-auto" @click="resetToDefault" data-e2e="e2e-BT-manageColumnsModal-resetToDefault">
             {{ i18n.t('experiments.table.column_display_modal.reset_to_default') }}
           </button>
         </div>
