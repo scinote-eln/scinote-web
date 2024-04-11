@@ -1,6 +1,6 @@
 <template>
-  <div ref="content" class="bg-white rounded" :class="{ 'p-4 mb-4': total || loading }">
-    <template v-if="total">
+  <div ref="content" class="bg-white rounded" :class="{ 'p-4 mb-4': results.length || loading }">
+    <template v-if="total && results.length">
       <div class="flex items-center">
         <h2 class="flex items-center gap-2 mt-0 mb-4">
           <i class="sn-icon sn-icon-folder"></i>
@@ -42,19 +42,16 @@
     </template>
     <Loader v-if="loading" :total="total" :loaderRows="loaderRows" :loaderYPadding="loaderYPadding"
             :loaderHeight="loaderHeight" :loaderGap="loaderGap" :reachedEnd="reachedEnd" />
+    <NoSearchResult v-else-if="showNoSearchResult" :noSearchResultHeight="noSearchResultHeight"  />
   </div>
 </template>
 
 <script>
-import Loader from '../loader.vue';
 import searchMixin from './search_mixin';
 
 export default {
   name: 'FoldersComponent',
   mixins: [searchMixin],
-  components: {
-    Loader
-  },
   data() {
     return {
       group: 'project_folders'

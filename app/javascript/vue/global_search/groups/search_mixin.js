@@ -1,6 +1,8 @@
 import axios from '../../../packs/custom_axios.js';
 import StringWithEllipsis from '../../shared/string_with_ellipsis.vue';
 import SortFlyout from './sort_flyout.vue';
+import Loader from '../loader.vue';
+import NoSearchResult from '../no_search_result.vue';
 /* global GLOBAL_CONSTANTS */
 
 export default {
@@ -12,7 +14,9 @@ export default {
   },
   components: {
     StringWithEllipsis,
-    SortFlyout
+    SortFlyout,
+    Loader,
+    NoSearchResult
   },
   data() {
     return {
@@ -25,7 +29,8 @@ export default {
       fullDataLoaded: false,
       loaderHeight: 24,
       loaderGap: 10,
-      loaderYPadding: 10
+      loaderYPadding: 10,
+      noSearchResultHeight: 0
     };
   },
   watch: {
@@ -78,6 +83,9 @@ export default {
     },
     reachedEnd() {
       return Math.ceil(this.total / GLOBAL_CONSTANTS.SEARCH_LIMIT) === this.page;
+    },
+    showNoSearchResult() {
+      return this.selected && !this.loading && !this.results.length;
     }
   },
   methods: {
@@ -117,6 +125,10 @@ export default {
           this.disabled = response.data.meta.disabled;
           this.loading = false;
           this.page = response.data.meta.next_page;
+          if (this.results.length === 0 && this.selected) {
+            const availableHeight = window.innerHeight - this.$refs.content.getBoundingClientRect().top;
+            this.noSearchResultHeight = availableHeight - 20;
+          }
         })
         .finally(() => {
           this.loading = false;
