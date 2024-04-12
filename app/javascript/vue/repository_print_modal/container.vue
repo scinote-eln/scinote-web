@@ -272,7 +272,7 @@ export default {
     templateOption(option) {
       return `
           <div class="label-template-option" data-toggle="tooltip" data-placement="right" title="${option.params.description}">
-            ${option.params.icon}
+            <img src="${option.params.icon}"></img>
             ${option.label}
           </div>
         `;
