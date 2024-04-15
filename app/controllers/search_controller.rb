@@ -224,22 +224,32 @@ class SearchController < ApplicationController
   end
 
   def quick
-    results = [
-      Project.first,
-      Experiment.first,
-      MyModule.first,
-      Protocol.first,
-      RepositoryRow.first,
-      Result.first,
-      Step.first,
-      Report.first,
-      LabelTemplate.first
-    ].compact
+    results = if params[:filter].present?
+                object_quick_search(params[:filter].singularize,
+                                    search_by_id: Constants::QUICK_SEARCH_SEARCHABLE_BY_NAME
+                                                  .exclude?(params[:filter].singularize))
+              else
+                Constants::QUICK_SEARCH_SEARCHABLE_OBJECTS.filter_map do |object|
+                  next if object == 'label_template' && !LabelTemplate.enabled?
+
+                  object_quick_search(object, search_by_id: Constants::QUICK_SEARCH_SEARCHABLE_BY_NAME.exclude?(object))
+                end.flatten.sort_by(&:updated_at).reverse.take(Constants::QUICK_SEARCH_LIMIT)
+              end
 
     render json: results, each_serializer: QuickSearchSerializer
   end
 
   private
+
+  def object_quick_search(class_name, search_by_id: true)
+    search_method = class_name.to_s.camelize.constantize.method(search_by_id ? :search_by_name_and_id : :search_by_name)
+
+    search_method.call(current_user,
+                       current_team,
+                       params[:query],
+                       limit: Constants::QUICK_SEARCH_LIMIT)
+                 .order(updated_at: :desc)
+  end
 
   def load_vars
     query = (params.fetch(:q) { '' }).strip

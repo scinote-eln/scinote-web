@@ -13,9 +13,7 @@ class QuickSearchSerializer < ActiveModel::Serializer
   end
 
   def code
-    @object.code
-  rescue StandardError
-    @object.id
+    @object.code unless @object.is_a?(ProjectFolder) || object.is_a?(Result) || object.is_a?(LabelTemplate)
   end
 
   def updated_at
