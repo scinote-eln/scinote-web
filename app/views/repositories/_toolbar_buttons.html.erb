@@ -22,7 +22,7 @@
                 class="btn btn-light editImport auto-shrink-button"
                 id="importRecordsButton" data-view-mode="active">
           <span class="sn-icon sn-icon-import"></span>
-          <span class="button-text"><%= t('repositories.index.options_dropdown.import_items') %></span>
+          <span class="button-text"><%= t('repositories.import_records.update_inventory') %></span>
         </button>
       <% end %>
 
@@ -57,7 +57,7 @@
   <div class="toolbar-middle-block">
     <div id='repositoryStateMenu' data-behaviour="vue">
       <repository-state-menu
-        view-mode="<%= view_mode %>"
+        view-mode="<%= params[:archived] %>"
         active-url="<%= repository_url(@repository) %>"
         archived-url="<%= repository_url(@repository, params: { archived: true }) %>">
       </repository-state-menu>

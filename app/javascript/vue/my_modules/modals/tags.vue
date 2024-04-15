@@ -21,7 +21,7 @@
             <h5>{{ i18n.t("experiments.canvas.modal_manage_tags.project_tags", { project: this.projectName }) }}</h5>
           </div>
           <div class="max-h-80 overflow-y-auto" v-click-outside="finishEditMode">
-            <template v-for="tag in allTags" :key="tag.id">
+            <template v-for="tag in sortedAllTags" :key="tag.id">
               <div
                   class="flex items-center gap-3 px-3 py-2.5 group"
                   :class="{
@@ -184,10 +184,13 @@ export default {
     },
     canManage() {
       return this.params.permissions.manage_tags;
+    },
+    sortedAllTags() {
+      return this.allTags.sort((a, b) => b.assigned - a.assigned);
     }
   },
   created() {
-    this.loadAlltags();
+    this.loadAlltags(false);
   },
   methods: {
     startEditMode(tag) {
@@ -211,15 +214,15 @@ export default {
         this.updateTag(this.tagToUpdate);
       }
     },
-    loadAlltags() {
+    loadAlltags(emitTagsLoaded = true) {
       this.loadingTags = true;
       axios.get(this.projectTagsUrl).then((response) => {
         this.allTags = response.data.data;
 
-        this.loadAssignedTags();
+        this.loadAssignedTags(emitTagsLoaded);
       });
     },
-    loadAssignedTags() {
+    loadAssignedTags(emitTagsLoaded = true) {
       axios.get(this.params.urls.assigned_tags).then((response) => {
         this.assignedTags = response.data.data;
         this.allTags.forEach((tag) => {
@@ -231,7 +234,9 @@ export default {
             tag.assigned = false;
           }
         });
-        this.$emit('tagsLoaded', this.allTags);
+        if (emitTagsLoaded) {
+          this.$emit('tagsLoaded', this.allTags);
+        }
         this.loadingTags = false;
       });
     },

@@ -86,9 +86,9 @@
            @click="openCommentsSidebar"
            :data-object-id="step.id">
           <i class="sn-icon sn-icon-comments"></i>
-          <span class="comments-counter" v-show="step.attributes.comments_count"
+          <span class="comments-counter"
                 :id="`comment-count-${step.id}`"
-                :class="{'unseen': step.attributes.unseen_comments}"
+                :class="{'unseen': step.attributes.unseen_comments, 'hidden': !step.attributes.comments_count}"
           >
             {{ step.attributes.comments_count }}
           </span>
@@ -184,6 +184,9 @@
       reorderStepUrl: {
         required: false
       },
+      userSettingsUrl: {
+        required: false
+      },
       assignableMyModuleId: {
         type: Number,
         required: false
@@ -250,6 +253,15 @@
       }
     },
     mounted() {
+      this.$nextTick(() => {
+        const stepId = `#stepBody${this.step.id}`;
+        this.isCollapsed = this.step.attributes.collapsed;
+        if (this.isCollapsed) {
+          $(stepId).collapse('hide');
+        } else {
+          $(stepId).collapse('show');
+        }
+      });
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar);
       $(this.$refs.comments).data('openCallback', this.closeCommentsSidebar);
       $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
@@ -403,6 +415,13 @@
       },
       toggleCollapsed() {
         this.isCollapsed = !this.isCollapsed;
+
+        const settings = {
+          key: 'task_step_states',
+          data: { [this.step.id]: this.isCollapsed }
+        };
+
+        axios.put(this.userSettingsUrl, { settings: [settings] });
       },
       showDeleteModal() {
         this.confirmingDelete = true;

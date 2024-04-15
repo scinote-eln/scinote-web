@@ -653,6 +653,9 @@ class Extends
     ReportTemplates_archived_state
     Repositories_active_state
     Repositories_archived_state
+    task_step_states
+    results_order
+    repository_export_file_type
   ).freeze
 end
 

@@ -22,12 +22,13 @@ class ResultsController < ApplicationController
                      @my_module.results.active
                    end
 
-        apply_sort!
+        update_and_apply_user_sort_preference!
         apply_filters!
 
         @results = @results.page(params.dig(:page, :number) || 1)
 
-        render json: @results, each_serializer: ResultSerializer, scope: current_user
+        render json: @results, each_serializer: ResultSerializer, scope: current_user,
+               meta: { sort: @sort_preference }
       end
 
       format.html do
@@ -146,8 +147,18 @@ class ResultsController < ApplicationController
     params.require(:result).permit(:name)
   end
 
-  def apply_sort!
-    case params[:sort]
+  def update_and_apply_user_sort_preference!
+    if params[:sort].present?
+      current_user.update_nested_setting(key: 'results_order', id: @my_module.id.to_s, value: params[:sort])
+      @sort_preference = params[:sort]
+    else
+      @sort_preference = current_user.settings.fetch('results_order', {})[@my_module.id.to_s] || 'created_at_desc'
+    end
+    apply_sort!(@sort_preference)
+  end
+
+  def apply_sort!(sort_order)
+    case sort_order
     when 'updated_at_asc'
       @results = @results.order('results.updated_at' => :asc)
     when 'updated_at_desc'

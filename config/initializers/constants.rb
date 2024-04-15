@@ -239,7 +239,7 @@ class Constants
   }
 
   SCINOTE_FLUICS_URL = 'https://www.scinote.net/fluics/'.freeze
-  SCINOTE_ZEBRA_DOWNLOAD_URL = 'https://www.zebra.com/us/en/products/software/barcode-printers/link-os/browser-print.html'.freeze
+  SCINOTE_ZEBRA_DOWNLOAD_URL = 'https://www.zebra.com/us/en/software/printer-software/browser-print.html'.freeze
   SCINOTE_ZEBRA_BLOG_URL = 'https://www.scinote.net/blog/connect-zebra-printers/'.freeze
   SCINOTE_ZEBRA_SUPPORT_URL = 'https://www.zebra.com/us/en/about-zebra/contact-zebra/contact-tech-support.html'.freeze
   TWO_FACTOR_RECOVERY_CODE_COUNT = 6
