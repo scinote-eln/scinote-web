@@ -23,10 +23,14 @@ module RepositoryXlsxExport
         when -6
           header << I18n.t('repositories.table.added_on')
         when -7
-          header << I18n.t('repositories.table.archived_by')
+          header << I18n.t('repositories.table.updated_on')
         when -8
-          header << I18n.t('repositories.table.archived_on')
+          header << I18n.t('repositories.table.updated_by')
         when -9
+          header << I18n.t('repositories.table.archived_by')
+        when -10
+          header << I18n.t('repositories.table.archived_on')
+        when -11
           header << I18n.t('repositories.table.parents')
           header << I18n.t('repositories.table.children')
         else
@@ -51,10 +55,14 @@ module RepositoryXlsxExport
           when -6
             row_data << I18n.l(row.created_at, format: :full)
           when -7
-            row_data << (row.archived? && row.archived_by.present? ? row.archived_by.full_name : '')
+            row_data << row.updated_at ? I18n.l(row.updated_at, format: :full) : ''
           when -8
-            row_data << (row.archived? && row.archived_on.present? ? I18n.l(row.archived_on, format: :full) : '')
+            row_data << row.last_modified_by.full_name
           when -9
+            row_data << (row.archived? && row.archived_by.present? ? row.archived_by.full_name : '')
+          when -10
+            row_data << (row.archived? && row.archived_on.present? ? I18n.l(row.archived_on, format: :full) : '')
+          when -11
             row_data << row.parent_repository_rows.map(&:code).join(' | ')
             row_data << row.child_repository_rows.map(&:code).join(' | ')
           else
