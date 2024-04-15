@@ -382,26 +382,6 @@ mark,.mark {
   width: 100%;
 }
 
-.azure-sign-in-actions {
-  margin-bottom: 10px;
-  margin-top: 10px;
-
-  .btn-azure-ad {
-    background-color: $office-ms-word;
-    color: $color-white;
-  }
-}
-
-.okta-sign-in-actions {
-  margin-bottom: 10px;
-  margin-top: 10px;
-
-  .btn-okta {
-    background-color: #00297a;
-    color: $color-white;
-  }
-}
-
 .navbar-secondary {
   min-height: 77px;
   transition: .4s $timing-function-sharp;
