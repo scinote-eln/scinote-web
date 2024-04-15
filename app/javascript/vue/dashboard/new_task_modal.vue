@@ -230,6 +230,7 @@ export default {
       await axios.post(this.createTaskUrl, {
         my_module: { name: this.task },
         project: {
+          id: this.projectId,
           name: this.projectName,
           visibility: this.visible ? 1 : 0,
           default_public_user_role_id: this.role

@@ -27,6 +27,7 @@ module Dashboard
       projects = Project.readable_by_user(current_user)
                         .search(current_user, false, params[:query], 1, current_team)
                         .select(:id, :name)
+                        .order(:name)
                         .map { |i| [i.id, escape_input(i.name)] }
       if (projects.none? { |el| el[1] == params[:query] }) && params[:query].present?
         projects = [[0, params[:query]]] + projects
@@ -39,6 +40,7 @@ module Dashboard
         experiments = @project.experiments
                               .managable_by_user(current_user)
                               .search(current_user, false, params[:query], 1, current_team)
+                              .order(:name)
                               .select(:id, :name)
         experiments = experiments.map { |i| [i.id, escape_input(i.name)] }
         if (experiments.none? { |el| el[1] == params[:query] }) &&
