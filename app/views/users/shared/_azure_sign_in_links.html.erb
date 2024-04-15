@@ -1,7 +1,7 @@
 <% ApplicationSettings.instance.values['azure_ad_apps'].select { |v| v['enable_sign_in'] }.each do |config| %>
   <div class="form-group">
     <%= form_tag user_customazureactivedirectory_omniauth_authorize_path(provider: config['provider_name']), method: :post, class: "azureAdForm" do %>
-      <%= submit_tag config['sign_in_label'] || t('devise.sessions.new.azure_ad_submit'), class: 'btn btn-azure-ad' %>
+      <%= submit_tag config['sign_in_label'] || t('devise.sessions.new.azure_ad_submit'), class: 'btn btn-primary w-full text-base' %>
     <% end %>
   </div>
 <% end %>
