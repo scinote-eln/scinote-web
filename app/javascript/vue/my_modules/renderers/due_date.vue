@@ -2,6 +2,7 @@
   <div class="flex relative items-center gap-2">
     <DateTimePicker
       v-if="this.params.data.urls.update_due_date"
+      class="borderless-input -mt-[1px]"
       :defaultValue="dueDate"
       @change="updateDueDate"
       mode="datetime"
