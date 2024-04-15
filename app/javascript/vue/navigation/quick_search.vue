@@ -210,9 +210,7 @@ export default {
       const breadcrumbs = attributes.breadcrumbs.map((breadcrumb) => breadcrumb.name);
       breadcrumbs.pop();
       breadcrumbs.shift();
-      if (attributes.code) {
-        breadcrumbs.push(`ID: ${attributes.code}`);
-      }
+      breadcrumbs.push(`ID: ${attributes.code}`);
       return breadcrumbs;
     },
     setQuery(query) {

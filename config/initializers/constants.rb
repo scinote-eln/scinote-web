@@ -443,12 +443,6 @@ class Constants
   MIN_SCINOTE_EDIT_VERSION = ENV['MIN_SCINOTE_EDIT_VERSION'].freeze
   MAX_SCINOTE_EDIT_VERSION = ENV['MAX_SCINOTE_EDIT_VERSION'].freeze
 
-  # quick search
-  QUICK_SEARCH_LIMIT = 5
-  QUICK_SEARCH_SEARCHABLE_OBJECTS = %w(project experiment my_module protocol repository_row
-                                       report project_folder result label_template).freeze
-  QUICK_SEARCH_SEARCHABLE_BY_NAME = %w(project_folder result label_template).freeze
-
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\
   #   *                       / | \    (/\|/\)   / | \                      *
