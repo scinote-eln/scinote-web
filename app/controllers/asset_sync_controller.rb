@@ -117,7 +117,8 @@ class AssetSyncController < ApplicationController
     render_error(:unauthorized) and return unless @asset_sync_token&.token_valid?
 
     @asset = @asset_sync_token.asset
-    @current_user = @asset_sync_token.user
+
+    sign_in(@asset_sync_token.user)
 
     render_error(:forbidden, @asset.file.filename) and return unless can_manage_asset?(@asset)
   end
