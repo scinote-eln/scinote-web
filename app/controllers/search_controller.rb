@@ -225,14 +225,12 @@ class SearchController < ApplicationController
 
   def quick
     results = if params[:filter].present?
-                object_quick_search(params[:filter].singularize,
-                                    search_by_id: Constants::QUICK_SEARCH_SEARCHABLE_BY_NAME
-                                                  .exclude?(params[:filter].singularize))
+                object_quick_search(params[:filter].singularize)
               else
                 Constants::QUICK_SEARCH_SEARCHABLE_OBJECTS.filter_map do |object|
                   next if object == 'label_template' && !LabelTemplate.enabled?
 
-                  object_quick_search(object, search_by_id: Constants::QUICK_SEARCH_SEARCHABLE_BY_NAME.exclude?(object))
+                  object_quick_search(object)
                 end.flatten.sort_by(&:updated_at).reverse.take(Constants::QUICK_SEARCH_LIMIT)
               end
 
@@ -241,8 +239,9 @@ class SearchController < ApplicationController
 
   private
 
-  def object_quick_search(class_name, search_by_id: true)
-    search_method = class_name.to_s.camelize.constantize.method(search_by_id ? :search_by_name_and_id : :search_by_name)
+  def object_quick_search(class_name)
+    search_model = class_name.to_s.camelize.constantize
+    search_method = search_model.method(search_model.respond_to?(:code) ? :search_by_name_and_id : :search_by_name)
 
     search_method.call(current_user,
                        current_team,
