@@ -94,7 +94,7 @@
             </label>
 
             <SelectDropdown
-              :value="selectedTask"
+              :value="selectedTasks"
               :disabled="!selectedExperiment"
               :searchable="true"
               ref="tasksSelector"
@@ -102,6 +102,8 @@
               :options="tasks"
               :isLoading="tasksLoading"
               :placeholder="tasksSelectorPlaceholder"
+              :multiple="true"
+              :withCheckboxes="true"
               :no-options-placeholder="
                 i18n.t(
                   'repositories.modal_assign_items_to_task.body.task_select.no_options_placeholder'
@@ -115,7 +117,7 @@
             type="button"
             class="btn btn-primary"
             data-dismiss="modal"
-            :disabled="!selectedTask"
+            :disabled="!selectedTasks.length"
             @click="assign"
           >
             {{ i18n.t("repositories.modal_assign_items_to_task.assign.text") }}
@@ -127,6 +129,7 @@
 </template>
 
 <script>
+/* global HelperModule */
 import SelectDropdown from "../shared/select_dropdown.vue";
 
 export default {
@@ -143,7 +146,7 @@ export default {
       tasks: [],
       selectedProject: null,
       selectedExperiment: null,
-      selectedTask: null,
+      selectedTasks: [],
       projectsLoading: null,
       experimentsLoading: null,
       tasksLoading: null
@@ -206,9 +209,6 @@ export default {
     taskURL() {
       return `${this.urls.tasks}?experiment_id=${this.selectedExperiment
         || ''}`;
-    },
-    assignURL() {
-      return this.urls.assign.replace(':module_id', this.selectedTask);
     }
   },
   watch: {
@@ -259,7 +259,7 @@ export default {
       });
     },
     changeTask(value) {
-      this.selectedTask = value;
+      this.selectedTasks = value;
     },
     resetProjectSelector() {
       this.projects = [];
@@ -271,7 +271,7 @@ export default {
     },
     resetTaskSelector() {
       this.tasks = [];
-      this.selectedTask = null;
+      this.selectedTasks = [];
     },
     resetSelectors() {
       this.resetTaskSelector();
@@ -279,20 +279,33 @@ export default {
       this.resetProjectSelector();
     },
     assign() {
-      if (!this.selectedTask) return;
+      if (!this.selectedTasks.length) return;
 
       $.ajax({
-        url: this.assignURL,
-        type: 'PATCH',
+        url: this.urls.assign,
+        type: 'POST',
         dataType: 'json',
-        data: { rows_to_assign: this.rowsToAssign }
-      }).done(({ assigned_count }) => {
-        const skipped_count = this.rowsToAssign.length - assigned_count;
-
-        if (skipped_count) {
-          HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_some_assignments_success', { assigned_count, skipped_count }), 'success');
+        data: {
+          rows_to_assign: this.rowsToAssign,
+          my_module_ids: this.selectedTasks
+        }
+      }).done(({ assigned_count: assignedCount, skipped_count: skippedCount }) => {
+        if (skippedCount) {
+          HelperModule.flashAlertMsg(
+            this.i18n.t(
+              'repositories.modal_assign_items_to_task.assign.flash_some_assignments_success',
+              { assigned_count: assignedCount, skipped_count: skippedCount }
+            ),
+            'success'
+          );
         } else {
-          HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_all_assignments_success', { count: assigned_count }), 'success');
+          HelperModule.flashAlertMsg(
+            this.i18n.t(
+              'repositories.modal_assign_items_to_task.assign.flash_all_assignments_success',
+              { count: assignedCount }
+            ),
+            'success'
+          );
         }
       }).fail(() => {
         HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_assignments_failure'), 'danger');
@@ -309,7 +322,7 @@ export default {
         .dataTable()
         .api()
         .ajax
-        .reload();
+        .reload(null, false);
     }
   }
 };
