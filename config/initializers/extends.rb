@@ -146,7 +146,7 @@ class Extends
   API_VERSIONS = ['v1']
 
   # Array used for injecting names of additional authentication methods for API
-  API_PLUGABLE_AUTH_METHODS = [:azure_jwt_auth]
+  API_PLUGABLE_AUTH_METHODS = []
 
   API_REPOSITORY_DATA_TYPE_MAPPINGS = { 'RepositoryTextValue' => 'text',
                                         'RepositoryDateValue' => 'date',
