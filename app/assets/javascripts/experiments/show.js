@@ -16,7 +16,7 @@
           my_module: {
             name: $('#new-my-module-modal input[name="my_module[name]"]').val(),
             view_mode: $('#new-my-module-modal input[name="my_module[view_mode]"]').val(),
-            due_date: $('#new-my-module-modal input[name="my_module[due-date]"]').val(),
+            due_date: $('#new-my-module-modal input[name="my_module[due_date]"]').val(),
             tag_ids: dropdownSelector.getValues(myModuleTagsSelector),
             user_ids: dropdownSelector.getValues(myModuleUserSelector)
           }
