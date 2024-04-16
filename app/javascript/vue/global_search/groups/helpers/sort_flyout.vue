@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import MenuDropdown from '../../shared/menu_dropdown.vue';
+import MenuDropdown from '../../../shared/menu_dropdown.vue';
 
 export default {
   name: 'SortFlyout',

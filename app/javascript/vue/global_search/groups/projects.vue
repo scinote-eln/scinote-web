@@ -10,45 +10,23 @@
         <SortFlyout v-if="selected" :sort="sort" @changeSort="changeSort"></SortFlyout>
       </div>
       <div class="grid grid-cols-[auto_80px_auto_auto_auto] items-center">
-        <template v-for="row in preparedResults" :key="row.id">
-          <a :href="row.attributes.url" class="h-full py-2 px-4 overflow-hidden font-bold border-0 border-b border-solid border-sn-light-grey">
-            <StringWithEllipsis class="w-full"
-              :text="labelName({ name: row.attributes.name, archived: row.attributes.archived})">
-            </StringWithEllipsis>
-          </a>
-          <div class="h-full py-2 px-4 flex items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey">
-            <b class="shrink-0">{{ i18n.t('search.index.id') }}:</b>
-            <span class="shrink-0">{{ row.attributes.code }}</span>
-          </div>
-          <div class="h-full py-2 px-4 flex items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey">
-            <b class="shrink-0">{{ i18n.t('search.index.created_at') }}:</b>
-            <span class="shrink-0">{{ row.attributes.created_at }}</span>
-          </div>
-          <div class="h-full py-2 px-4 grid grid-cols-[auto_1fr] items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey">
-            <b class="shrink-0">{{ i18n.t('search.index.team') }}:</b>
-            <a :href="row.attributes.team.url" class="shrink-0 overflow-hidden">
-              <StringWithEllipsis class="w-full" :text="row.attributes.team.name"></StringWithEllipsis>
-            </a>
-          </div>
-          <div class="h-full py-2 px-4 border-0 border-b border-solid border-sn-light-grey">
-            <template v-if="row.attributes.folder">
-              <div class="grid grid-cols-[auto_1fr] items-center gap-1 text-xs w-full">
-                <b class="shrink-0">{{ i18n.t('search.index.folder') }}:</b>
-                <a :href="row.attributes.folder.url" class="shrink-0 overflow-hidden">
-                  <StringWithEllipsis class="w-full" :text="labelName(row.attributes.folder)"></StringWithEllipsis>
-                </a>
-              </div>
-            </template>
-          </div>
-        </template>
+        <div v-for="(row, index) in preparedResults" :key="row.id" class="contents group">
+          <hr class="col-span-5 w-full m-0" v-if="index > 0">
+          <LinkTemplate :url="row.attributes.url" :value="labelName({ name: row.attributes.name, archived: row.attributes.archived})"/>
+          <CellTemplate :label="i18n.t('search.index.id')" :value="row.attributes.code"/>
+          <CellTemplate :label="i18n.t('search.index.created_at')" :value="row.attributes.created_at"/>
+          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
+          <CellTemplate :label="i18n.t('search.index.folder')" :visible="row.attributes.folder"
+                        :url="row.attributes.folder?.url" :value="labelName(row.attributes.folder)"/>
+        </div>
       </div>
       <div v-if="viewAll" class="mt-4">
         <button class="btn btn-light" @click="$emit('selectGroup', 'ProjectsComponent')">View all</button>
       </div>
     </template>
-    <Loader v-if="loading" :total="total" :loaderRows="loaderRows" :loaderYPadding="loaderYPadding"
-            :loaderHeight="loaderHeight" :loaderGap="loaderGap" :reachedEnd="reachedEnd" />
-    <NoSearchResult v-else-if="showNoSearchResult" :noSearchResultHeight="noSearchResultHeight"  />
+    <Loader v-if="loading" :loaderRows="loaderRows" />
+    <ListEnd v-if="reachedEnd" />
+    <NoSearchResult v-else-if="showNoSearchResult"  />
   </div>
 </template>
 
