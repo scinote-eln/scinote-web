@@ -1,5 +1,5 @@
 <template>
-  <div ref="noSearchResult">
+  <div ref="noSearchResult" class="h-[60vh]">
     <div class="flex flex-col gap-6 bg-sn-white text-center relative top-1/4">
        <div><span class=" inline-block sn-icon sn-icon-search"></span></div>
        <div class="">
@@ -17,12 +17,6 @@
 <script>
 
 export default {
-  name: 'NoSearchResult',
-  props: {
-    noSearchResultHeight: { type: Number, default: 0 }
-  },
-  mounted() {
-    this.$refs.noSearchResult.style.height = `${this.noSearchResultHeight}px`;
-  }
+  name: 'NoSearchResult'
 };
 </script>

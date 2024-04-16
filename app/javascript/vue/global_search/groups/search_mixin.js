@@ -1,8 +1,11 @@
 import axios from '../../../packs/custom_axios.js';
 import StringWithEllipsis from '../../shared/string_with_ellipsis.vue';
-import SortFlyout from './sort_flyout.vue';
+import SortFlyout from './helpers/sort_flyout.vue';
 import Loader from '../loader.vue';
-import NoSearchResult from '../no_search_result.vue';
+import ListEnd from './helpers/list_end.vue';
+import NoSearchResult from './helpers/no_search_result.vue';
+import CellTemplate from './helpers/cell_template.vue';
+import LinkTemplate from './helpers/link_template.vue';
 /* global GLOBAL_CONSTANTS I18n */
 
 export default {
@@ -16,7 +19,10 @@ export default {
     StringWithEllipsis,
     SortFlyout,
     Loader,
-    NoSearchResult
+    NoSearchResult,
+    ListEnd,
+    CellTemplate,
+    LinkTemplate
   },
   data() {
     return {
@@ -27,10 +33,6 @@ export default {
       page: 1,
       disabled: false,
       fullDataLoaded: false,
-      loaderHeight: 24,
-      loaderGap: 10,
-      loaderYPadding: 10,
-      noSearchResultHeight: 0
     };
   },
   watch: {
@@ -69,20 +71,10 @@ export default {
       return !this.selected && this.total > GLOBAL_CONSTANTS.GLOBAL_SEARCH_PREVIEW_LIMIT;
     },
     loaderRows() {
-      // h-[24px] gap-y-[10px] py-[10px]
-      if (this.loading && (!this.selected || this.total)) return GLOBAL_CONSTANTS.GLOBAL_SEARCH_PREVIEW_LIMIT;
-      if (this.selected && this.loading) {
-        const availableHeight = window.innerHeight - this.$refs.content.getBoundingClientRect().top;
-        // loaderHeight + loaderGap +  headerLoaderHeight + headerContentGap
-        const offSet = this.loaderHeight + this.loaderGap + 32 + 20;
-
-        return Math.floor((availableHeight - offSet) / (this.loaderHeight + this.loaderGap + (2 * this.loaderYPadding)));
-      }
-
-      return 0;
+      return !this.selected ? 4 : 20;
     },
     reachedEnd() {
-      return Math.ceil(this.total / GLOBAL_CONSTANTS.SEARCH_LIMIT) === this.page;
+      return !this.page && this.selected;
     },
     showNoSearchResult() {
       return this.selected && !this.loading && !this.results.length;
@@ -90,6 +82,8 @@ export default {
   },
   methods: {
     labelName(object) {
+      if (!object) return '';
+
       if (!object.archived) return object.name;
 
       return `${I18n.t('labels.archived')} ${object.name}`;
@@ -130,10 +124,6 @@ export default {
           this.disabled = response.data.meta.disabled;
           this.loading = false;
           this.page = response.data.meta.next_page;
-          if (this.results.length === 0 && this.selected) {
-            const availableHeight = window.innerHeight - this.$refs.content.getBoundingClientRect().top;
-            this.noSearchResultHeight = availableHeight - 20;
-          }
         })
         .finally(() => {
           this.loading = false;
