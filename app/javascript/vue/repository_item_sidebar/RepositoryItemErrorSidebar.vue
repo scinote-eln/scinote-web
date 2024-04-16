@@ -13,11 +13,11 @@
             <i id="close-icon" @click="close"
               class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
           </div>
-          <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
+          <div id="divider" class="bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
         </div>
         <div class="flex flex-col flex-1 justify-center items-center gap-1">
           <i class="sn-icon sn-icon-alert-warning text-sn-alert-passion"></i>
-          <span class="font-semibold leading-5">{{ i18n.t('repositories.item_card_errors.item_not_found') }}</span>
+          <h4 class="font-semibold text-lg">{{ i18n.t('repositories.item_card_errors.item_not_found') }}</h4>
         </div>
       </div>
     </div>

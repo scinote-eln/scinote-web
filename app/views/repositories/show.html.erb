@@ -51,9 +51,9 @@
   </div>
 
   <!-- Inventory Item landing page link-->
-  <% if @repository_row %>
+  <% if @repository_row && @repository_row_landing_page %>
     <a id="itemLandingPagelink" href="<%= repository_repository_row_path(@repository, @repository_row) %>" class="hidden record-info-link"></a>
-  <% else %>
+  <% elsif @repository_row_landing_page %>
     <div id="repositoryItemErrorSidebar" data-behaviour="vue" class="fixed top-0 right-0 h-full z-[2039]">
       <repository-item-error-sidebar />
     </div>

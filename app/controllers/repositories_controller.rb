@@ -473,6 +473,7 @@ class RepositoriesController < ApplicationController
 
   def load_repository_row
     @repository_row = nil
+    @repository_row_landing_page = true if params[:landing_page].present?
     return if params[:row_id].blank?
 
     @repository_row = @repository.repository_rows.find_by(id: params[:row_id])

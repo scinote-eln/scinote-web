@@ -22,7 +22,7 @@
             <i id="close-icon" @click="toggleShowHideSidebar(null)"
               class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
           </div>
-          <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
+          <div id="divider" class="bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
         </div>
 
         <div ref="bodyWrapper" id="body-wrapper" class="overflow-y-auto overflow-x-hidden h-[calc(100%-78px)] pt-6 ">
@@ -122,7 +122,7 @@
                 </div>
               </section>
 
-              <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px "></div>
+              <div id="divider" class="bg-sn-light-grey flex items-center self-stretch h-px "></div>
 
               <!-- CUSTOM COLUMNS, RELATIONSHIPS, ASSIGNED, QR CODE -->
               <div id="custom-col-assigned-qr-wrapper" class="flex flex-col gap-6">
@@ -138,7 +138,7 @@
                     :permissions="permissions" :updatePath="updatePath" :actions="actions" @update="update" />
                 </section>
 
-                <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
+                <div id="divider" class="bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
 
                 <!-- RELATIONSHIPS -->
                 <section v-if="!repository?.is_snapshot" id="relationships-section" class="flex flex-col" ref="relationshipsSectionRef">
@@ -241,7 +241,7 @@
                   </div>
                 </section>
 
-                <div v-if="!repository?.is_snapshot" id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
+                <div v-if="!repository?.is_snapshot" id="divider" class="bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
 
                 <!-- ASSIGNED -->
                 <section v-if="!repository?.is_snapshot" id="assigned-section" class="flex flex-col" ref="assignedSectionRef">
@@ -292,7 +292,7 @@
                   </div>
                 </section>
 
-                <div v-if="!repository?.is_snapshot" id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
+                <div v-if="!repository?.is_snapshot" id="divider" class="bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
 
                 <!-- QR -->
                 <section id="qr-section" ref="QR-label">
@@ -318,7 +318,7 @@
           <!-- BOTTOM -->
           <div id="bottom" v-show="!dataLoading && !loadingError" class="h-[100px] flex flex-col justify-end mt-4 mr-6"
             :class="{ 'pb-6': customColumns?.length }">
-            <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
+            <div id="divider" class="bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
             <div id="bottom-button-wrapper" class="flex h-10 justify-end">
               <button type="button" class="btn btn-primary print-label-button" data-e2e="e2e-BT-repoItemSB-print"
                 :data-rows="JSON.stringify([repositoryRowId])"
