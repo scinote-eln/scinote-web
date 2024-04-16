@@ -10,48 +10,24 @@
         <SortFlyout v-if="selected" :sort="sort" @changeSort="changeSort"></SortFlyout>
       </div>
       <div class="grid grid-cols-[auto_auto_auto_auto_auto_auto] items-center">
-        <template v-for="row in preparedResults" :key="row.id">
-          <a target="_blank" :href="row.attributes.parent.url"
-             class="h-full py-2 px-4 grid grid-cols-[auto_1fr] items-center gap-1 font-bold border-0 border-b border-solid border-sn-light-grey">
-            <span :class="row.attributes.icon" class="shrink-0"></span>
-            <StringWithEllipsis class="w-full" :text="row.attributes.file_name"></StringWithEllipsis>
-          </a>
-          <div class="h-full py-2 px-4 flex items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey">
-            <b class="shrink-0">{{ i18n.t('search.index.created_at') }}:</b>
-            <span class="truncate">{{ row.attributes.created_at }}</span>
-          </div>
-          <div class="h-full py-2 px-4 flex items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey">
-            <b class="shrink-0">{{ i18n.t('search.index.updated_at') }}:</b>
-            <span class="truncate">{{ row.attributes.updated_at }}</span>
-          </div>
-          <div class="h-full py-2 px-4 grid grid-cols-[auto_1fr] items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey">
-            <b class="shrink-0">{{ i18n.t('search.index.team') }}:</b>
-            <a target="_blank" :href="row.attributes.team.url" class="shrink-0 overflow-hidden">
-              <StringWithEllipsis class="w-full" :text="row.attributes.team.name"></StringWithEllipsis>
-            </a>
-          </div>
-          <div class="h-full py-2 px-4 grid grid-cols-[auto_1fr] items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey">
-            <b class="shrink-0">{{ i18n.t(`search.index.${row.attributes.parent.type}`) }}:</b>
-            <a target="_blank" :href="row.attributes.parent.url" class="shrink-0 overflow-hidden">
-              <StringWithEllipsis class="w-full" :text="labelName(row.attributes.parent)"></StringWithEllipsis>
-            </a>
-          </div>
-          <div class="s h-full py-2 px-4 grid grid-cols-[auto_1fr] items-center gap-1 text-xs border-0 border-b border-solid border-sn-light-grey"
-               :class="{ 'invisible': !row.attributes.experiment.name }">
-            <b class="shrink-0">{{ i18n.t('search.index.experiment') }}:</b>
-            <a target="_blank" :href="row.attributes.experiment.url" class="shrink-0 overflow-hidden">
-              <StringWithEllipsis class="w-full" :text="labelName(row.attributes.experiment)"></StringWithEllipsis>
-            </a>
-          </div>
-        </template>
+        <div v-for="(row, index) in preparedResults" :key="row.id" class="contents group">
+          <hr class="col-span-6 w-full m-0" v-if="index > 0">
+          <LinkTemplate :url="row.attributes.parent.url" :icon="row.attributes.icon" :value="row.attributes.file_name"/>
+          <CellTemplate :label="i18n.t('search.index.created_at')" :value="row.attributes.created_at"/>
+          <CellTemplate :label=" i18n.t('search.index.updated_at')" :value="row.attributes.updated_at"/>
+          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
+          <CellTemplate :label="i18n.t(`search.index.${row.attributes.parent.type}`)" :url="row.attributes.parent.url" :value="labelName(row.attributes.parent)"/>
+          <CellTemplate :label="i18n.t(`search.index.${row.attributes.parent.type}`)" :visible="!!row.attributes.experiment.name"
+                        :url="row.attributes.experiment.url" :value="labelName(row.attributes.experiment)"/>
+        </div>
       </div>
       <div v-if="viewAll" class="mt-4">
         <button class="btn btn-light" @click="$emit('selectGroup', 'AssetsComponent')">View all</button>
       </div>
     </template>
-    <Loader v-if="loading" :total="total" :loaderRows="loaderRows" :loaderYPadding="loaderYPadding"
-            :loaderHeight="loaderHeight" :loaderGap="loaderGap" :reachedEnd="reachedEnd" />
-   <NoSearchResult v-else-if="showNoSearchResult" :noSearchResultHeight="noSearchResultHeight"  />
+    <Loader v-if="loading" :loaderRows="loaderRows" />
+    <ListEnd v-if="reachedEnd" />
+   <NoSearchResult v-else-if="showNoSearchResult"  />
   </div>
 </template>
 
