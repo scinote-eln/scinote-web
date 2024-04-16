@@ -19,9 +19,13 @@ class Users::PasswordsController < Devise::PasswordsController
     self.resource = resource_class.reset_password_by_token(resource_params)
     yield resource if block_given?
 
+    two_fa_enforced =
+      Scinote::Enterprise::OrganizationManagement::OrganizationSettings.instance.values['security.2fa.enforced']
     if resource.errors.blank?
       resource.unlock_access! if unlockable?(resource)
-      if !resource.two_factor_auth_enabled?
+      if two_fa_enforced
+        return redirect_to user_session_path
+      elsif !resource.two_factor_auth_enabled?
         flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
         set_flash_message!(:notice, flash_message)
         resource.after_database_authentication
