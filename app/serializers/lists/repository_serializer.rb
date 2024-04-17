@@ -10,7 +10,7 @@ module Lists
                :urls, :shared_read, :shared_write, :shareable_write
 
     def nr_of_rows
-      object[:row_count]
+      object.repository_rows&.active.count
     end
 
     def shared
