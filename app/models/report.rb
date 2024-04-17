@@ -116,7 +116,7 @@ class Report < ApplicationRecord
       'experiments' => [],
       'repositories' => project.assigned_repositories_and_snapshots.pluck(:id)
     }
-    project.experiments.includes(:my_modules).each do |experiment|
+    project.experiments.includes(:my_modules).find_each do |experiment|
       content['experiments'].push(
         { id: experiment.id, my_module_ids: experiment.my_module_ids }
       )

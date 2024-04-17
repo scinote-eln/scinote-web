@@ -31,7 +31,11 @@ module Lists
     end
 
     def code
-      object.code if project?
+      if project?
+        object.code
+      else
+        "F#{object.id}" # We don't have proper code for folders, but we need to correct selection
+      end
     end
 
     def created_at

@@ -213,7 +213,7 @@ module ApplicationHelper
 
   # Check whether the wopi file can be edited and return appropriate response
   def wopi_file_edit_button_status(asset)
-    file_ext = asset.file_name.split('.').last
+    file_ext = asset.file_name.split('.').last&.downcase
     if Constants::WOPI_EDITABLE_FORMATS.include?(file_ext)
       edit_supported = true
       title = ''

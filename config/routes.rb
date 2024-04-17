@@ -53,6 +53,7 @@ Rails.application.routes.draw do
         post :set_default
       end
       collection do
+        get :list
         post :duplicate
         delete :delete
         get :datatable

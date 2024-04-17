@@ -252,6 +252,7 @@ class Project < ApplicationRecord
     project_comments
   end
 
+  # rubocop:disable Metrics/BlockLength
   def generate_teams_export_report_html(
     user, team, html_title, obj_filenames = nil
   )
@@ -260,50 +261,54 @@ class Project < ApplicationRecord
     proxy.set_user(user, scope: :user, store: false)
     ApplicationController.renderer.defaults[:http_host] = Rails.application.routes.default_url_options[:host]
     renderer = ApplicationController.renderer.new(warden: proxy)
+    report = nil
+    parsed_html = ''
 
-    report = Report.generate_whole_project_report(self, user, team)
+    Report.transaction do
+      report = Report.generate_whole_project_report(self, user, team)
 
-    page_html_string =
-      renderer.render 'reports/export',
-                      locals: { report: report, export_all: true },
-                      assigns: { settings: report.settings, obj_filenames: obj_filenames }
-    parsed_page_html = Nokogiri::HTML(page_html_string)
-    parsed_html = parsed_page_html.at_css('#report-content')
+      page_html_string =
+        renderer.render 'reports/export',
+                        locals: { report: report, export_all: true },
+                        assigns: { settings: report.settings, obj_filenames: obj_filenames }
+      parsed_page_html = Nokogiri::HTML(page_html_string)
+      parsed_html = parsed_page_html.at_css('#report-content')
 
-    # Style tables (mimick frontend processing)
+      # Style tables (mimick frontend processing)
 
-    tables = parsed_html.css('.hot-table-contents')
-                        .zip(parsed_html.css('.hot-table-container'), parsed_html.css('.hot-table-metadata'))
-    tables.each do |table_input, table_container, metadata|
-      is_plate_template = JSON.parse(metadata['value'])['plateTemplate'] if metadata && metadata['value'].present?
-      table_vals = JSON.parse(table_input['value'])
-      table_data = table_vals['data']
-      table_headers = table_vals['headers']
-      table_headers ||= Array.new(table_data[0].count) do |index|
-        is_plate_template ? index + 1 : convert_index_to_letter(index)
-      end
+      tables = parsed_html.css('.hot-table-contents')
+                          .zip(parsed_html.css('.hot-table-container'), parsed_html.css('.hot-table-metadata'))
+      tables.each do |table_input, table_container, metadata|
+        is_plate_template = JSON.parse(metadata['value'])['plateTemplate'] if metadata && metadata['value'].present?
+        table_vals = JSON.parse(table_input['value'])
+        table_data = table_vals['data']
+        table_headers = table_vals['headers']
+        table_headers ||= Array.new(table_data[0].count) do |index|
+          is_plate_template ? index + 1 : convert_index_to_letter(index)
+        end
 
-      table_el = table_container.add_child('<table class="handsontable"></table>').first
+        table_el = table_container.add_child('<table class="handsontable"></table>').first
 
-      # Add header row
-      header_cell = '<th><div class="relative"><span>%s</span></div></th>'
+        # Add header row
+        header_cell = '<th><div class="relative"><span>%s</span></div></th>'
 
-      header_el = table_el.add_child('<thead></thead>').first
-      row_el = header_el.add_child('<tr></tr>').first
-      row_el.add_child(format(header_cell, '')).first
-      table_headers.each do |col|
-        row_el.add_child(format(header_cell, col)).first
-      end
+        header_el = table_el.add_child('<thead></thead>').first
+        row_el = header_el.add_child('<tr></tr>').first
+        row_el.add_child(format(header_cell, '')).first
+        table_headers.each do |col|
+          row_el.add_child(format(header_cell, col)).first
+        end
 
-      # Add body rows
-      body_cell = '<td>%s</td>'
-      body_el = table_el.add_child('<tbody></tbody>').first
-      table_data.each.with_index(1) do |row, idx|
-        row_name = is_plate_template ? convert_index_to_letter(idx - 1) : idx
-        row_el = body_el.add_child('<tr></tr>').first
-        row_el.add_child(format(header_cell, row_name)).first
-        row.each do |col|
-          row_el.add_child(format(body_cell, col)).first
+        # Add body rows
+        body_cell = '<td>%s</td>'
+        body_el = table_el.add_child('<tbody></tbody>').first
+        table_data.each.with_index(1) do |row, idx|
+          row_name = is_plate_template ? convert_index_to_letter(idx - 1) : idx
+          row_el = body_el.add_child('<tr></tr>').first
+          row_el.add_child(format(header_cell, row_name)).first
+          row.each do |col|
+            row_el.add_child(format(body_cell, col)).first
+          end
         end
       end
     end
@@ -321,6 +326,7 @@ class Project < ApplicationRecord
   ensure
     report.destroy if report.present?
   end
+  # rubocop:enable Metrics/BlockLength
 
   def archived_branch?
     archived?
