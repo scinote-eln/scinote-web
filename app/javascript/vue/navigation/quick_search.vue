@@ -2,13 +2,15 @@
   <GeneralDropdown ref="container" :canOpen="canOpen" :fieldOnlyOpen="true" @close="filtersOpened = false">
     <template v-slot:field>
       <div class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}" :title="i18n.t('nav.search')">
-        <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery" :placeholder="i18n.t('nav.search')" @keyup.enter="saveQuery"/>
+        <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery" @keydown="focusHistoryItem"
+               @focus="openHistory" :placeholder="i18n.t('nav.search')" @keyup.enter="saveQuery"/>
         <i class="sn-icon sn-icon-search"></i>
         <div v-if="this.searchQuery.length > 1" class="flex items-center gap-1 absolute right-2 top-1.5">
           <div class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''">
             <i class="sn-icon sn-icon-close  m-0"></i>
           </div>
-          <div class="btn btn-light icon-btn btn-xs" :class="{'active': filtersOpened}" @click="filtersOpened = !filtersOpened">
+          <div class="btn btn-light icon-btn btn-xs" :title="i18n.t('search.quick_search.search_options')"
+               :class="{'active': filtersOpened}" @click="filtersOpened = !filtersOpened">
             <i class="sn-icon sn-icon-search-options m-0"></i>
           </div>
         </div>
@@ -27,6 +29,10 @@
       ></SearchFilters>
       <div v-else-if="showHistory" class="max-w-[600px]">
         <div v-for="(query, i) in reversedPreviousQueries" @click="setQuery(query)" :key="i"
+             ref="historyItems"
+             tabindex="1"
+             @keydown="focusHistoryItem"
+             @keydown.enter="setQuery(query)"
              class="flex px-3 h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
           <i class="sn-icon sn-icon-history-search"></i>
           {{ query }}
@@ -62,7 +68,7 @@
                   text-sn-black hover:no-underline active:no-underline hover:text-black block"
         >
           <div class="flex items-center gap-2">
-            <i class="sn-icon shrink-0" :class="getIcon(result.type)"></i>
+            <i class="sn-icon shrink-0" :class="getIcon(result.type)" :title="getTitle(result.type)"></i>
             <span v-if="result.attributes.archived">(A)</span>
             <StringWithEllipsis class="grow max-w-[400px]" :text="getName(result.attributes)"></StringWithEllipsis>
             <div class="ml-auto pl-4 text-sn-grey text-xs shrink-0">
@@ -80,9 +86,9 @@
         </a>
         <div v-else v-for="i in Array(5).fill(5)" class="px-3 py-2">
           <div class="flex items-center gap-2 mb-2">
-            <div class="h-6 w-6 bg-sn-light-grey rounded shrink-0"></div>
-            <div class="h-6 grow max-w-[200px] bg-sn-light-grey rounded shrink-0"></div>
-            <div class="h-6 w-12 bg-sn-light-grey rounded shrink-0 ml-auto"></div>
+            <div class="h-5 w-5 bg-sn-light-grey rounded shrink-0"></div>
+            <div class="h-5 grow max-w-[200px] bg-sn-light-grey rounded shrink-0"></div>
+            <div class="h-5 w-12 bg-sn-light-grey rounded shrink-0 ml-auto"></div>
           </div>
           <div class="flex items-center gap-2 pl-8">
             <div class="h-3 grow max-w-[200px] bg-sn-light-grey rounded shrink-0"></div>
@@ -153,7 +159,7 @@ export default {
   },
   watch: {
     searchQuery() {
-      this.$refs.container.isOpen = this.canOpen;
+      this.openHistory();
 
       if (this.searchQuery.length > 1) {
         this.fetchQuickSearchResults();
@@ -167,13 +173,17 @@ export default {
       quickFilter: null,
       results: [],
       loading: false,
-      filtersOpened: false
+      filtersOpened: false,
+      focusedHistoryItem: null
     };
   },
   mounted() {
     this.previousQueries = JSON.parse(localStorage.getItem('quickSearchHistory') || '[]');
   },
   methods: {
+    openHistory() {
+      this.$refs.container.isOpen = this.canOpen;
+    },
     getIcon(type) {
       switch (type) {
         case 'projects':
@@ -194,8 +204,38 @@ export default {
           return 'sn-icon-reports';
         case 'steps':
           return 'sn-icon-steps';
-        case 'label-templates':
+        case 'zebra_label_templates':
           return 'sn-icon-label-templates';
+        case 'fluics_label_templates':
+          return 'sn-icon-label-templates';
+        default:
+          return null;
+      }
+    },
+    getTitle(type) {
+      switch (type) {
+        case 'projects':
+          return this.i18n.t('search.quick_search.project');
+        case 'experiments':
+          return this.i18n.t('search.quick_search.experiment');
+        case 'my_modules':
+          return this.i18n.t('search.quick_search.task');
+        case 'project_folders':
+          return this.i18n.t('search.quick_search.folder');
+        case 'protocols':
+          return this.i18n.t('search.quick_search.protocol');
+        case 'results':
+          return this.i18n.t('search.quick_search.result');
+        case 'repository_rows':
+          return this.i18n.t('search.quick_search.inventory_item');
+        case 'reports':
+          return this.i18n.t('search.quick_search.report');
+        case 'steps':
+          return this.i18n.t('search.quick_search.step');
+        case 'zebra_label_templates':
+          return this.i18n.t('search.quick_search.label_template');
+        case 'fluics_label_templates':
+          return this.i18n.t('search.quick_search.label_template');
         default:
           return null;
       }
@@ -263,6 +303,26 @@ export default {
     },
     searchValue() {
       window.open(`${this.searchUrl}?q=${this.searchQuery}`, '_self');
+    },
+    focusHistoryItem(event) {
+      if (this.focusedHistoryItem === null && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+        this.focusedHistoryItem = 0;
+        this.$refs.historyItems[this.focusedHistoryItem].focus();
+      } else if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        this.focusedHistoryItem += 1;
+        if (this.focusedHistoryItem >= this.$refs.historyItems.length) {
+          this.focusedHistoryItem = 0;
+        }
+        this.$refs.historyItems[this.focusedHistoryItem].focus();
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        this.focusedHistoryItem -= 1;
+        if (this.focusedHistoryItem < 0) {
+          this.focusedHistoryItem = this.$refs.historyItems.length - 1;
+        }
+        this.$refs.historyItems[this.focusedHistoryItem].focus();
+      }
     }
   }
 };
