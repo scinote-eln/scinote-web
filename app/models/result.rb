@@ -9,6 +9,9 @@ class Result < ApplicationRecord
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
 
+  SEARCHABLE_ATTRIBUTES = ['results.name', 'result_texts.name', 'result_texts.text',
+                           'tables.name', 'comments.message'].freeze
+
   enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
   belongs_to :user, inverse_of: :results
@@ -35,33 +38,21 @@ class Result < ApplicationRecord
   def self.search(user,
                   include_archived,
                   query = nil,
-                  page = 1,
-                  _current_team = nil,
+                  current_team = nil,
                   options = {})
-    module_ids = MyModule.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT).pluck(:id)
+    teams = options[:teams] || current_team || user.teams.select(:id)
 
-    new_query =
-      Result
-      .distinct
-      .left_outer_joins(:result_texts, result_tables: :table)
-      .where(results: { my_module_id: module_ids })
-      .where_attributes_like(
-        [
-          'results.name',
-          'result_texts.name',
-          'result_texts.text',
-          'tables.name'
-        ], query, options
-      )
+    new_query = distinct.left_joins(:result_comments, :result_texts, result_tables: :table)
+                        .joins(:my_module)
+                        .joins("INNER JOIN user_assignments my_module_user_assignments " \
+                               "ON my_module_user_assignments.assignable_type = 'MyModule' " \
+                               "AND my_module_user_assignments.assignable_id = my_modules.id")
+                        .where(my_module_user_assignments: { user_id: user, team_id: teams })
+                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
     new_query = new_query.active unless include_archived
 
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
+    new_query
   end
 
   def duplicate(my_module, user, result_name: nil)

@@ -165,7 +165,9 @@ class ResultsController < ApplicationController
 
   def apply_filters!
     if params[:query].present?
-      @results = @results.search(current_user, params[:view_mode] == 'archived', params[:query], params[:page] || 1)
+      @results = @results.search(current_user, params[:view_mode] == 'archived', params[:query])
+                         .page(params[:page] || 1)
+                         .per(Constants::SEARCH_LIMIT)
     end
 
     @results = @results.where('results.created_at >= ?', params[:created_at_from]) if params[:created_at_from]

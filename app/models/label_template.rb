@@ -37,22 +37,15 @@ class LabelTemplate < ApplicationRecord
   end
 
   def self.search(
-    _user,
+    user,
     _include_archived,
     query = nil,
-    page = 1,
-    _current_team = nil,
+    current_team = nil,
     options = {}
   )
-
-    new_query = LabelTemplate.where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
-
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
+    teams = options[:teams] || current_team || user.teams.select(:id)
+    distinct.viewable_by_user(user, teams)
+            .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
   end
 
   def icon

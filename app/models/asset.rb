@@ -11,6 +11,7 @@ class Asset < ApplicationRecord
   require 'tempfile'
   # Lock duration set to 30 minutes
   LOCK_DURATION = 60 * 30
+  SEARCHABLE_ATTRIBUTES = ['active_storage_blobs.filename', 'asset_text_data.data_vector'].freeze
 
   enum view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
@@ -58,101 +59,36 @@ class Asset < ApplicationRecord
     user,
     include_archived,
     query = nil,
-    page = 1,
-    _current_team = nil,
+    current_team = nil,
     options = {}
   )
 
-    teams = user.teams.select(:id)
+    teams = options[:teams] || current_team || user.teams.select(:id)
 
     assets_in_steps = Asset.joins(:step).where(
       'steps.id IN (?)',
-      Step.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+      Step.search(user, include_archived, nil, teams)
           .select(:id)
     ).pluck(:id)
 
     assets_in_results = Asset.joins(:result).where(
       'results.id IN (?)',
-      Result.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-            .select(:id)
+      Result.search(user, include_archived, nil, teams).select(:id)
     ).pluck(:id)
 
     assets_in_inventories = Asset.joins(
       repository_cell: { repository_column: :repository }
-    ).where('repositories.team_id IN (?)', teams).pluck(:id)
+    ).where(repositories: { team_id: teams }).pluck(:id)
 
     assets =
       Asset.distinct
            .where('assets.id IN (?) OR assets.id IN (?) OR assets.id IN (?)',
                   assets_in_steps, assets_in_results, assets_in_inventories)
 
-    new_query = Asset.left_outer_joins(:asset_text_datum)
-                     .joins(file_attachment: :blob)
-                     .from(assets, 'assets')
-
-    a_query = s_query = ''
-
-    if options[:whole_word].to_s == 'true' ||
-       options[:whole_phrase].to_s == 'true'
-      like = options[:match_case].to_s == 'true' ? '~' : '~*'
-      s_query = query.gsub(/[!()&|:]/, ' ')
-                     .strip
-                     .split(/\s+/)
-                     .map { |t| t + ':*' }
-      if options[:whole_word].to_s == 'true'
-        a_query = query.split
-                       .map { |a| Regexp.escape(a) }
-                       .join('|')
-        s_query = s_query.join('|')
-      else
-        a_query = Regexp.escape(query)
-        s_query = s_query.join('&')
-      end
-      a_query = '\\y(' + a_query + ')\\y'
-      s_query = s_query.tr('\'', '"')
-
-      new_query = new_query.where(
-        "(active_storage_blobs.filename #{like} ? " \
-        "OR asset_text_data.data_vector @@ plainto_tsquery(?))",
-        a_query,
-        s_query
-      )
-    else
-      like = options[:match_case].to_s == 'true' ? 'LIKE' : 'ILIKE'
-      a_query = query.split.map { |a| "%#{sanitize_sql_like(a)}%" }
-
-      # Trim whitespace and replace it with OR character. Make prefixed
-      # wildcard search term and escape special characters.
-      # For example, search term 'demo project' is transformed to
-      # 'demo:*|project:*' which makes word inclusive search with postfix
-      # wildcard.
-      s_query = query.gsub(/[!()&|:]/, ' ')
-                     .strip
-                     .split(/\s+/)
-                     .map { |t| t + ':*' }
-                     .join('|')
-                     .tr('\'', '"')
-      new_query = new_query.where(
-        "(active_storage_blobs.filename #{like} ANY (array[?]) " \
-        "OR asset_text_data.data_vector @@ plainto_tsquery(?))",
-        a_query,
-        s_query
-      )
-    end
-
-    # Show all results if needed
-    if page != Constants::SEARCH_NO_LIMIT
-      new_query = new_query.select('assets.*, asset_text_data.data AS data')
-                           .limit(Constants::SEARCH_LIMIT)
-                           .offset((page - 1) * Constants::SEARCH_LIMIT)
-      Asset.select(
-        "assets_search.*, " \
-        "ts_headline(assets_search.data, plainto_tsquery('#{sanitize_sql_for_conditions(s_query)}'), " \
-        "'StartSel=<mark>, StopSel=</mark>') AS headline"
-      ).from(new_query, 'assets_search')
-    else
-      new_query
-    end
+    Asset.left_outer_joins(:asset_text_datum)
+         .joins(file_attachment: :blob)
+         .from(assets, 'assets')
+         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
   end
 
   def blob

@@ -3,7 +3,7 @@
 class Project < ApplicationRecord
   ID_PREFIX = 'PR'
   include PrefixedIdModel
-  SEARCHABLE_ATTRIBUTES = ['projects.name', PREFIXED_ID_SQL].freeze
+  SEARCHABLE_ATTRIBUTES = ['projects.name', PREFIXED_ID_SQL, 'comments.message'].freeze
 
   include ArchivableModel
   include SearchableModel
@@ -84,21 +84,17 @@ class Project < ApplicationRecord
     user,
     include_archived,
     query = nil,
-    page = 1,
     current_team = nil,
     options = {}
   )
+    teams = options[:teams] || current_team || user.teams.select(:id)
+    new_query = distinct.viewable_by_user(user, teams)
+                        .left_joins(:project_comments)
+                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
-    new_query = Project.viewable_by_user(user, current_team || user.teams)
-                       .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
     new_query = new_query.active unless include_archived
 
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
+    new_query
   end
 
   def self.viewable_by_user(user, teams)

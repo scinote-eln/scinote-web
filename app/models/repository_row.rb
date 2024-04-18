@@ -123,30 +123,28 @@ class RepositoryRow < ApplicationRecord
   def self.search(user,
                   include_archived,
                   query = nil,
-                  page = 1,
                   _current_team = nil,
                   options = {})
 
+    teams = options[:teams] || current_team || user.teams.select(:id)
     searchable_row_fields = [RepositoryRow::PREFIXED_ID_SQL, 'repository_rows.name', 'users.full_name']
-    repositories = Repository.search(user).pluck(:id)
 
-    new_query =
-      RepositoryRow
-      .joins(:repository, :created_by)
-      .where(repository_id: repositories)
-      .distinct
-      .where_attributes_like(
-        searchable_row_fields, query, options
-      )
+    readable_rows = distinct.joins(:repository, :created_by)
+                            .joins("INNER JOIN user_assignments repository_user_assignments " \
+                                   "ON repository_user_assignments.assignable_type = 'RepositoryBase' " \
+                                   "AND repository_user_assignments.assignable_id = repositories.id")
+                            .where(repository_user_assignments: { user_id: user, team_id: teams })
 
-    new_query = new_query.active unless include_archived
+    readable_rows = readable_rows.active unless include_archived
+    repository_rows = readable_rows.where_attributes_like_boolean(searchable_row_fields, query, options)
 
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
+    Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |_data_type, config|
+      custom_cell_matches = readable_rows.joins(config[:includes])
+                                         .where_attributes_like_boolean(config[:field], query, options)
+      repository_rows = repository_rows.or(readable_rows.where(id: custom_cell_matches))
     end
+
+    repository_rows
   end
 
   def self.filter_by_teams(teams = [])

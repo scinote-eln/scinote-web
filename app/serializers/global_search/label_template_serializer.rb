@@ -15,7 +15,7 @@ module GlobalSearch
 
     def created_by
       {
-        name: object.created_by ? object.created_by.name : object.created_by_user,
+        name: object.type == 'FluicsLabelTemplate' ? object.created_by_user : object.created_by&.name,
         avatar_url: object.created_by ? avatar_path(object.created_by, :icon_small) : nil
       }
     end
