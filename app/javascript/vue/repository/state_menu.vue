@@ -1,7 +1,7 @@
 <template>
   <MenuDropdown
     :listItems="viewModesMenu"
-    :btnClasses="'btn btn-secondary !border-sn-light-grey px-3'"
+    :btnClasses="'btn btn-secondary !border-sn-light-grey px-3 prevent-shrink' + disabled"
     :btnText="btnText"
     :caret="true"
     position='right'>
@@ -26,6 +26,9 @@ export default {
     delete window.initRepositoryStateMenu;
   },
   computed: {
+    disabled() {
+      return this.viewMode === 'archived' ? ' disabled' : '';
+    },
     btnText() {
       return I18n.t(`toolbar.${this.viewMode}_state`);
     },
