@@ -1,6 +1,6 @@
 <template>
   <div class="sci--navigation--top-menu-container">
-    <div v-if="currentTeam" class="w-64">
+    <div v-if="currentTeam" class="w-64" :data-e2e="'e2e-DD-topMenu-teams'">
       <SelectDropdown
         :value="currentTeam"
         :options="teams"

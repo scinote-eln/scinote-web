@@ -324,7 +324,7 @@ class Asset < ApplicationRecord
   end
 
   def get_action_url(user, action, with_tokens = true)
-    file_ext = file_name.split('.').last
+    file_ext = file_name.split('.').last&.downcase
     action = get_action(file_ext, action)
     if !action.nil?
       action_url = action[:urlsrc]

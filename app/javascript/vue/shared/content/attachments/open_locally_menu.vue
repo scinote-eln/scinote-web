@@ -1,6 +1,6 @@
 <template>
   <div class="sn-open-locally-menu" @mouseenter="fetchLocalAppInfo">
-    <div v-if="!canOpenLocally && (attachment.attributes.wopi && attachment.attributes.urls.edit_asset)">
+    <div v-if="(!canOpenLocally || disableLocalOpen) && (attachment.attributes.wopi && attachment.attributes.urls.edit_asset)">
       <a :href="editWopiSupported ? attachment.attributes.urls.edit_asset : null" target="_blank"
          class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey"
          :class="{ 'disabled': !editWopiSupported }"

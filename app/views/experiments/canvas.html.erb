@@ -17,7 +17,7 @@
                     title: t('experiments.canvas.new_my_module_tooltip'),
                     data: { view_mode: 'active' },
                     remote: true do %>
-                <span class="sn-icon sn-icon-new-task"></span>
+                <span class="sn-icon sn-icon-new-task" data-e2e="e2e-BT-canvasToolbar-createTask"></span>
                 <span class="hidden-sm hidden-xs"><%= t('experiments.canvas.new_my_module') %></span>
         <% end %>
         <%=link_to canvas_edit_experiment_url(@experiment),
@@ -27,7 +27,7 @@
               title: t('experiments.canvas.canvas_edit'),
               data: { action: 'edit' },
               class: 'ajax btn btn-light' do %>
-                <span class="sn-icon sn-icon-edit"></span>
+                <span class="sn-icon sn-icon-edit" data-e2e="e2e-BT-canvasToolbar-editWorkflow"></span>
                 <span class="hidden-sm hidden-xs"><%= t('experiments.canvas.canvas_edit') %></span>
               <% end %>
       <% end %>

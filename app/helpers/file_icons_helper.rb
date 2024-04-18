@@ -62,7 +62,7 @@ module FileIconsHelper
 
   # For showing in view/edit icon url (WOPI)
   def file_application_url(asset)
-    file_ext = asset.file_name.split('.').last
+    file_ext = asset.file_name.split('.').last&.downcase
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
       'icon_small/docx_file.svg'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
@@ -73,7 +73,7 @@ module FileIconsHelper
   end
 
   def sn_icon_for(asset)
-    file_ext = asset.file_name.split('.').last
+    file_ext = asset.file_name.split('.').last&.downcase
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
       'file-word'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
@@ -95,7 +95,7 @@ module FileIconsHelper
 
   # Shows correct WOPI application text (Word Online/Excel ..)
   def wopi_button_text(asset, action)
-    file_ext = asset.file_name.split('.').last
+    file_ext = asset.file_name.split('.').last&.downcase
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
       app = I18n.t('result_assets.wopi_word')
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)

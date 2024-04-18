@@ -437,7 +437,7 @@ class Constants
   ASSET_SYNC_URL = ENV['ASSET_SYNC_URL'].freeze
 
   # Grover timeout in ms
-  GROVER_TIMEOUT_MS = 300000
+  GROVER_TIMEOUT_MS = 450000
 
   # SciNote Edit supported versions
   MIN_SCINOTE_EDIT_VERSION = ENV['MIN_SCINOTE_EDIT_VERSION'].freeze

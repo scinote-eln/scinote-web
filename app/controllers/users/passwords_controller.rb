@@ -21,7 +21,7 @@ class Users::PasswordsController < Devise::PasswordsController
 
     if resource.errors.blank?
       resource.unlock_access! if unlockable?(resource)
-      if !resource.two_factor_auth_enabled?
+      if !two_factor_auth_enabled_for(resource)
         flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
         set_flash_message!(:notice, flash_message)
         resource.after_database_authentication
@@ -39,7 +39,11 @@ class Users::PasswordsController < Devise::PasswordsController
   protected
 
   def after_resetting_password_path_for(resource)
-    resource.two_factor_auth_enabled? ? new_session_path(resource_name) : after_sign_in_path_for(resource)
+    two_factor_auth_enabled_for(resource) ? new_session_path(resource_name) : after_sign_in_path_for(resource)
+  end
+
+  def two_factor_auth_enabled_for(user)
+    user.two_factor_auth_enabled?
   end
 
   # The path used after sending reset password instructions
