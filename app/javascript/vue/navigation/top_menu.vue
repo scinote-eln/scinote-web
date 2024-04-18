@@ -1,10 +1,10 @@
 <template>
   <div class="sci--navigation--top-menu-container">
     <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}" :title="i18n.t('nav.search')">
-      <input type="text" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
+      <input type="text" :placeholder="i18n.t('nav.search')" @change="searchValue" :data-e2e="'e2e-IF-topMenu-search'"/>
       <i class="sn-icon sn-icon-search"></i>
     </div>
-    <div v-if="currentTeam" class="w-64">
+    <div v-if="currentTeam" class="w-64" :data-e2e="'e2e-DD-topMenu-teams'">
       <SelectDropdown
         :value="currentTeam"
         :options="teams"
