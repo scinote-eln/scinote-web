@@ -120,6 +120,13 @@ GEM
       activesupport (= 7.0.8.1)
     activerecord-import (1.4.1)
       activerecord (>= 4.2)
+    activerecord-session_store (2.1.0)
+      actionpack (>= 6.1)
+      activerecord (>= 6.1)
+      cgi (>= 0.3.6)
+      multi_json (~> 1.11, >= 1.11.2)
+      rack (>= 2.0.8, < 4)
+      railties (>= 6.1)
     activestorage (7.0.8.1)
       actionpack (= 7.0.8.1)
       activejob (= 7.0.8.1)
@@ -141,6 +148,7 @@ GEM
       railties (>= 3.1)
     aspector (0.14.0)
     ast (2.4.2)
+    attr_required (1.0.1)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
     awesome_print (1.9.2)
@@ -219,6 +227,7 @@ GEM
       mail
     case_transform (0.2)
       activesupport
+    cgi (0.4.1)
     childprocess (4.1.0)
     chunky_png (1.4.0)
     coderay (1.1.3)
@@ -478,6 +487,25 @@ GEM
     omniauth-rails_csrf_protection (1.0.1)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
+    omniauth-saml (2.1.0)
+      omniauth (~> 2.0)
+      ruby-saml (~> 1.12)
+    omniauth_openid_connect (0.7.1)
+      omniauth (>= 1.9, < 3)
+      openid_connect (~> 2.2)
+    openid_connect (2.2.0)
+      activemodel
+      attr_required (>= 1.0.0)
+      faraday (~> 2.0)
+      faraday-follow_redirects
+      json-jwt (>= 1.16)
+      net-smtp
+      rack-oauth2 (~> 2.2)
+      swd (~> 2.0)
+      tzinfo
+      validate_email
+      validate_url
+      webfinger (~> 2.0)
     orm_adapter (0.5.0)
     overcommit (0.60.0)
       childprocess (>= 0.6.3, < 5)
@@ -518,6 +546,13 @@ GEM
       rack (>= 1.0, < 3)
     rack-cors (2.0.2)
       rack (>= 2.0.0)
+    rack-oauth2 (2.2.0)
+      activesupport
+      attr_required
+      faraday (~> 2.0)
+      faraday-follow_redirects
+      json-jwt (>= 1.11.0)
+      rack (>= 2.1.0)
     rack-protection (3.0.6)
       rack
     rack-test (2.1.0)
@@ -626,6 +661,9 @@ GEM
       rubocop (>= 1.33.0, < 2.0)
     ruby-progressbar (1.13.0)
     ruby-rc4 (0.1.5)
+    ruby-saml (1.16.0)
+      nokogiri (>= 1.13.10)
+      rexml
     ruby-vips (2.1.4)
       ffi (~> 1.12)
     rubyzip (2.3.2)
@@ -663,13 +701,18 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     stream (0.5.5)
+    swd (2.0.2)
+      activesupport (>= 3)
+      attr_required (>= 0.0.5)
+      faraday (~> 2.0)
+      faraday-follow_redirects
     sys-uname (1.2.3)
       ffi (~> 1.1)
-    tailwindcss-rails (2.0.29)
+    tailwindcss-rails (2.4.0)
       railties (>= 6.0.0)
-    tailwindcss-rails (2.0.29-arm64-darwin)
+    tailwindcss-rails (2.4.0-arm64-darwin)
       railties (>= 6.0.0)
-    tailwindcss-rails (2.0.29-x86_64-linux)
+    tailwindcss-rails (2.4.0-x86_64-linux)
       railties (>= 6.0.0)
     thor (1.3.1)
     tilt (2.2.0)
@@ -688,6 +731,12 @@ GEM
     unf_ext (0.0.8.2)
     unicode-display_width (2.4.2)
     uniform_notifier (1.16.0)
+    validate_email (0.1.6)
+      activemodel (>= 3.0)
+      mail (>= 2.2.5)
+    validate_url (1.0.15)
+      activemodel (>= 3.0.0)
+      public_suffix
     uri (0.13.0)
     version_gem (1.1.3)
     view_component (3.9.0)
@@ -696,6 +745,10 @@ GEM
       method_source (~> 1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
+    webfinger (2.1.2)
+      activesupport
+      faraday (~> 2.0)
+      faraday-follow_redirects
     webmock (3.18.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -722,6 +775,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (~> 0.10.7)
   activerecord-import
+  activerecord-session_store
   acts_as_list
   ajax-datatables-rails (~> 0.3.1)
   aspector
@@ -780,6 +834,8 @@ DEPENDENCIES
   omniauth-linkedin-oauth2
   omniauth-okta!
   omniauth-rails_csrf_protection (~> 1.0)
+  omniauth-saml
+  omniauth_openid_connect
   overcommit
   pg (~> 1.5)
   pg_search
@@ -814,7 +870,7 @@ DEPENDENCIES
   simplecov
   sneaky-save!
   sprockets-rails
-  tailwindcss-rails (~> 2.0)
+  tailwindcss-rails (~> 2.4)
   timecop
   turbolinks (~> 5.2.0)
   tzinfo-data
