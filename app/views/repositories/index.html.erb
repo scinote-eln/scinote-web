@@ -3,7 +3,7 @@
 
 <% if current_team %>
   <% provide(:sidebar_url, sidebar_repositories_path) %>
-  <div class="content-pane flexible <%= params[:archived] ? :archived : :active %> repositories-index">
+  <div class="content-pane flexible <%= params[:view_mode] ? :archived : :active %> repositories-index">
     <div class="content-header">
       <div class="title-row">
         <h1 data-view-mode="active"><%= t('libraries.index.head_title') %></h1>
