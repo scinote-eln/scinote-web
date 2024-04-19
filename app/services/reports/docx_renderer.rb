@@ -5,6 +5,7 @@ module Reports
     def self.render_p_element(docx, element, options = {})
       docx.p do
         element[:children].each do |text_el|
+          next if text_el[:value].blank?
           if text_el[:type] == 'text'
             style = text_el[:style] || {}
             text text_el[:value], style

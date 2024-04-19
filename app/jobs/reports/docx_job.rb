@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'caracal'
 
 module Reports
   class DocxJob < ApplicationJob

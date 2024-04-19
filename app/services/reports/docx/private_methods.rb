@@ -12,19 +12,19 @@ module Reports::Docx::PrivateMethods
     @docx.page_margins do
       left    Constants::REPORT_DOCX_MARGIN_LEFT
       right   Constants::REPORT_DOCX_MARGIN_RIGHT
-      top     Constants::REPORT_DOCX_MARGIN_TOP
+      top     200#Constants::REPORT_DOCX_MARGIN_TOP
       bottom  Constants::REPORT_DOCX_MARGIN_BOTTOM
     end
 
-    @docx.page_numbers true, align: :right
+    #@docx.page_numbers true, align: :right
 
-    insert_logo
+    #insert_logo
 
-    @docx.p do
-      text I18n.t('projects.reports.new.generate_PDF.generated_on', timestamp: I18n.l(Time.zone.now, format: :full))
-    end
+    #@docx.p do
+    #  text I18n.t('projects.reports.new.generate_PDF.generated_on', timestamp: I18n.l(Time.zone.now, format: :full))
+    #end
 
-    @docx.hr
+    #@docx.hr
 
     generate_html_styles
   end

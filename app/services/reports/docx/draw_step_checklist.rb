@@ -8,16 +8,16 @@ module Reports::Docx::DrawStepChecklist
     items = checklist.checklist_items
     timestamp = checklist.created_at
     color = @color
-    @docx.p
+    # @docx.p
     @docx.p do
       text SmartAnnotations::TagToText.new(
         user,
         team,
         I18n.t('projects.reports.elements.step_checklist.checklist_name', name: checklist.name)
       ).text, italic: true
-      text ' '
-      text I18n.t('projects.reports.elements.step_checklist.user_time',
-                  timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+      # text ' '
+      # text I18n.t('projects.reports.elements.step_checklist.user_time',
+      #             timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
     end
     if items.any?
       @docx.ul do
