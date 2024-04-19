@@ -2033,7 +2033,7 @@ en:
       error_searching: "Error searching, please try again"
       button_tooltip:
         new: "Create new item"
-        import: "Import"
+        import: "Update inventory"
         filters: "Filters"
         search: "Quick search"
       filters:
@@ -2192,11 +2192,12 @@ en:
     import_records:
       update_inventory: 'Update inventory'
       steps:
-        step0:
-          id: 'step0'
+        step1:
+          id: 'step1'
           icon: 'sn-icon-open'
           label: 'Step 1'
           title: 'Update inventory'
+          subtitle: 'To add or edit items, export the inventory and reimport edited inventory.'
           helpText: 'Help'
           exportTitle: 'Export'
           exportFullInvBtnText: 'Export full inventory'
@@ -2205,6 +2206,59 @@ en:
           importBtnText: 'Import'
           cancelBtnText: 'Cancel'
           dragAndDropSupportingText: '.XLSX, .XLS or .CSV file'
+        step2:
+          id: 'step2'
+          icon: 'sn-icon-open'
+          label: 'Step 2'
+          title: 'Mapping data'
+          subtitle: 'Match your imported columns with the columns in the SciNote inventory.'
+          selectNamePropertyError: 'Select Name attribute field to import your items.'
+          autoMappingText: 'Auto-mapping'
+          updateEmptyCellsText: 'Update empty cells'
+          onlyAddNewItemsText: 'Only add new items'
+          importedFileText: 'Imported file:'
+          cancelBtnText: 'Cancel'
+          confirmBtnText: 'Confirm'
+          importedIgnoredSection:
+            columnsTo: 'columns to'
+            import: 'import.'
+            columns: 'columns'
+            ignored: 'ignored.'
+
+          computedDropdownOptions:
+            name: 'Name'
+            RepositoryTextValue: 'Text'
+            RepositoryNumberValue: 'Number'
+            RepositoryAssetValue: 'File'
+            RepositoryChecklistValue: 'Checklist'
+            RepositoryDateRangeValue: 'Date range'
+            RepositoryDateTimeRangeValue: 'Date-time range'
+            RepositoryDateTimeValue: 'Date-time'
+            RepositoryDateValue: 'Date'
+            RepositoryListValue: 'List'
+            RepositoryStatusValue: 'Status'
+            RepositoryStockValue: 'Stock'
+          table:
+            tableRow:
+              defaultColumnTitle: 'Default column. Mapped as identifier.'
+              userDefinedColumnTitle: 'Column name does not match. Column will be imported as '
+              importedColumnTitle: 'Column will be imported.'
+              doNotImportColumnTitle: 'Column will not import.'
+              systemGeneratedData:
+                itemId: 'Item ID'
+                createdOn: 'Created on'
+                addedBy: 'Added by'
+                addedOn: 'Added on'
+                archivedBy: 'Archived by'
+                archivedOn: 'Archived on'
+                updatedBy: 'Updated by'
+                updatedOn: 'Updated on'
+            columnLabels:
+              number: 'No.'
+              importedColumns: 'Imported columns'
+              scinoteColumns: 'SciNote columns'
+              status: 'Status'
+              exampleData: 'Example data'
       info_sidebar:
         title: 'Guide for updating the inventory'
         elements:

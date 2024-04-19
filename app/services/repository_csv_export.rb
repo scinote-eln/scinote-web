@@ -60,11 +60,12 @@ module RepositoryCsvExport
               cell = row.repository_cells.find_by(repository_column_id: c_id)
 
             csv_row << if cell
-                         if cell.value_type == 'RepositoryAssetValue' && handle_file_name_func
-                           handle_file_name_func.call(cell.value.asset)
-                         else
-                            cell.value.export_formatted
-                         end
+                        if cell.value_type == 'RepositoryAssetValue' && handle_file_name_func
+                          handle_file_name_func.call(cell.value.asset)
+                        else
+                          cell.value.export_formatted
+                        end
+                       end
             end
           end
           csv_row << row.row_consumption(row.stock_consumption) if add_consumption

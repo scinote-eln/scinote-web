@@ -327,13 +327,14 @@ class RepositoriesController < ApplicationController
                                                             .find_by_id(import_params[:id]))
 
     # Access the checkbox values from params
-    can_edit_existing_items = params[:edit_existing_items_checkbox]
-    should_overwrite_with_empty_cells = params[:overwrite_with_empty_cells]
+    can_edit_existing_items = params[:can_edit_existing_items]
+    should_overwrite_with_empty_cells = params[:should_overwrite_with_empty_cells]
+    preview = params[:preview]
 
     # Check if there exist mapping for repository record (it's mandatory)
     if import_params[:mappings].present? && import_params[:mappings].value?('-1')
       import_records = repostiory_import_actions
-      status = import_records.import!(can_edit_existing_items, should_overwrite_with_empty_cells)
+      status = import_records.import!(can_edit_existing_items, should_overwrite_with_empty_cells, preview)
 
       if status[:status] == :ok
         log_activity(:import_inventory_items,
@@ -343,10 +344,12 @@ class RepositoriesController < ApplicationController
                             number_of_rows: status[:nr_of_added],
                             total_nr: status[:total_nr])
 
-        log_activity(:item_added_with_import,
-                      num_of_items: status[:nr_of_added])
+        if preview
+          render json: status, status: :ok
+        else
+          render json: {}, status: :ok
+        end
 
-        render json: {}, status: :ok
       else
         flash[:alert] =
           t('repositories.import_records.partial_success_flash',
@@ -558,7 +561,7 @@ class RepositoriesController < ApplicationController
   end
 
   def import_params
-    params.permit(:id, :file, :file_id, mappings: {}).to_h
+    params.permit(:id, :file, :file_id, :preview, mappings: {}).to_h
   end
 
   def repository_response(message)

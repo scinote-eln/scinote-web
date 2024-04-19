@@ -201,9 +201,9 @@ class Repository < RepositoryBase
     new_repo
   end
 
-  def import_records(sheet, mappings, user, can_edit_existing_items, should_overwrite_with_empty_cells)
+  def import_records(sheet, mappings, user, can_edit_existing_items, should_overwrite_with_empty_cells, preview)
     importer = RepositoryImportParser::Importer.new(sheet, mappings, user, self)
-    importer.run(can_edit_existing_items, should_overwrite_with_empty_cells)
+    importer.run(can_edit_existing_items, should_overwrite_with_empty_cells, preview)
   end
 
   def assigned_rows(my_module)

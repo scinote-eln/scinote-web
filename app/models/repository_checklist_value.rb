@@ -72,7 +72,6 @@ class RepositoryChecklistValue < ApplicationRecord
     end
   end
 
-  # TODO: after ticket for tracking changes on checklist items
   def update_data!(new_data, user, preview: false)
     item_ids = new_data.is_a?(String) ? JSON.parse(new_data) : new_data
 

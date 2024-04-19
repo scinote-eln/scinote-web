@@ -253,7 +253,8 @@ export default {
     value(newValue) {
       this.newValue = newValue;
     },
-    isOpen() {
+    isOpen(newVal) {
+      this.$emit('isOpen', newVal);
       if (this.isOpen) {
         this.$nextTick(() => {
           this.setPosition();
@@ -284,7 +285,7 @@ export default {
     clear() {
       this.newValue = this.multiple ? [] : null;
       this.query = '';
-      this.$emit('change', this.newValue, this.getLabels(this.newValue));
+      this.$emit('change', this.newValue, '');
     },
     close(e) {
       if (e && e.target.closest('.sn-select-dropdown')) return;

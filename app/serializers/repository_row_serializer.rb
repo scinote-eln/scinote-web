@@ -4,9 +4,5 @@ class RepositoryRowSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
   attributes :id, :name, :code
-
-  def urls
-    {
-    }
-  end
+  has_many :repository_cells
 end

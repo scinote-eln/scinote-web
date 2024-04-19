@@ -25,14 +25,11 @@ module RepositoryImportParser
       @repository_columns = @repository.repository_columns
     end
 
-    def run(can_edit_existing_items, should_overwrite_with_empty_cells)
+    def run(can_edit_existing_items, should_overwrite_with_empty_cells, preview)
       fetch_columns
       return check_for_duplicate_columns if check_for_duplicate_columns
 
-      # Used for developing preview changes (will be removed)
-      preview = false
-
-      import_rows!(can_edit_existing_items, should_overwrite_with_empty_cells, preview: preview)
+      import_rows!(can_edit_existing_items, should_overwrite_with_empty_cells, preview)
     end
 
     private
@@ -66,9 +63,11 @@ module RepositoryImportParser
       end
     end
 
-    def import_rows!(can_edit_existing_items, should_overwrite_with_empty_cells, preview: false)
+    def import_rows!(can_edit_existing_items, should_overwrite_with_empty_cells, preview)
       errors = false
       duplicate_ids = SpreadsheetParser.duplicate_ids(@sheet)
+
+      imported_rows = []
 
       @repository.transaction do
         batch_counter = 0
@@ -79,7 +78,7 @@ module RepositoryImportParser
           next if row.blank?
 
           # Skip duplicates
-          next if duplicate_ids.include?(row.first) && !preview
+          next if duplicate_ids.include?(row.first)
 
           unless @header_skipped
             @header_skipped = true
@@ -98,7 +97,7 @@ module RepositoryImportParser
             if index == @name_index
 
               # check if row (inventory) already exists
-              existing_row = RepositoryRow.find_by(id: incoming_row[0].gsub(RepositoryRow::ID_PREFIX, ''))
+              existing_row = RepositoryRow.includes(repository_cells: :value).find_by(id: incoming_row[0].gsub(RepositoryRow::ID_PREFIX, ''))
 
               # if it doesn't exist create it
               unless existing_row
@@ -122,13 +121,13 @@ module RepositoryImportParser
               # otherwise add according to criteria
               else
                 # if it does exist but shouldn't be edited, error out and break
-                if existing_row && can_edit_existing_items == '0'
+                if existing_row && (can_edit_existing_items == false)
                   errors = true
                   break
                 end
 
                 # if it does exist and should be edited, update the existing row
-                if existing_row && can_edit_existing_items == '1'
+                if existing_row && (can_edit_existing_items == true)
                   # update the existing row with incoming row data
                   new_full_row[:repository_row] = existing_row
                 end
@@ -146,13 +145,14 @@ module RepositoryImportParser
 
           next if batch_counter < IMPORT_BATCH_SIZE
 
-          import_batch_to_database(full_row_import_batch, can_edit_existing_items, should_overwrite_with_empty_cells, preview: preview)
+          # import_batch_to_database(full_row_import_batch, can_edit_existing_items, should_overwrite_with_empty_cells, preview: preview)
+          imported_rows += import_batch_to_database(full_row_import_batch, can_edit_existing_items, should_overwrite_with_empty_cells, preview)
           full_row_import_batch = []
           batch_counter = 0
         end
 
         # Import of the remaining rows
-        import_batch_to_database(full_row_import_batch, can_edit_existing_items, should_overwrite_with_empty_cells, preview: preview) if full_row_import_batch.any?
+        imported_rows += import_batch_to_database(full_row_import_batch, can_edit_existing_items, should_overwrite_with_empty_cells, preview) if full_row_import_batch.any?
 
         full_row_import_batch
       end
@@ -162,13 +162,19 @@ module RepositoryImportParser
                  nr_of_added: @new_rows_added,
                  total_nr: @total_new_rows }
       end
-      { status: :ok, nr_of_added: @new_rows_added, total_nr: @total_new_rows }
+      changes = ActiveModelSerializers::SerializableResource.new(
+        imported_rows,
+        each_serializer: RepositoryRowSerializer,
+        include: [:repository_cells]
+      ).as_json[:included]
+
+      { status: :ok, nr_of_added: @new_rows_added, total_nr: @total_new_rows, changes: changes }
     end
 
-    def import_batch_to_database(full_row_import_batch, can_edit_existing_items, should_overwrite_with_empty_cells, preview: false)
+    def import_batch_to_database(full_row_import_batch, can_edit_existing_items, should_overwrite_with_empty_cells, preview)
       skipped_rows = []
 
-      full_row_import_batch.each do |full_row|
+      full_row_import_batch.map do |full_row|
         # skip archived rows and rows that belong to other repositories
         if full_row[:repository_row].archived || full_row[:repository_row].repository_id != @repository.id
           skipped_rows << full_row[:repository_row]
@@ -199,16 +205,16 @@ module RepositoryImportParser
             @user.as_json(root: true, only: :settings).deep_symbolize_keys
           )
 
-          existing_cell = full_row[:repository_row].repository_cells.find_by(repository_column: column)
+          existing_cell = full_row[:repository_row].repository_cells.find { |c| c.repository_column_id == column.id }
 
           next if cell_value.nil? && existing_cell.nil?
 
           if existing_cell
             # existing_cell present && !can_edit_existing_items
-            next if can_edit_existing_items == '0'
+            next if can_edit_existing_items == false
 
             # existing_cell present && can_edit_existing_items
-            if can_edit_existing_items == '1'
+            if can_edit_existing_items == true
               # if incoming cell is not empty
               case cell_value
 
@@ -229,10 +235,10 @@ module RepositoryImportParser
               end
 
               # if incoming cell is empty && should_overwrite_with_empty_cells
-              existing_cell.value.destroy! if cell_value.nil? && should_overwrite_with_empty_cells == '1'
+              existing_cell.value.destroy! if cell_value.nil? && should_overwrite_with_empty_cells == true
 
               # if incoming cell is empty && !should_overwrite_with_empty_cells
-              next if cell_value.nil? && should_overwrite_with_empty_cells == '0'
+              next if cell_value.nil? && should_overwrite_with_empty_cells == false
             end
           else
             # no existing_cell. Create a new one.
@@ -240,6 +246,8 @@ module RepositoryImportParser
             cell_value.save!(validate: false)
           end
         end
+
+        full_row[:repository_row]
       end
     end
 
