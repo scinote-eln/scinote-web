@@ -3,6 +3,7 @@
     <button class="ml-2 btn"
             id="share-button"
             type="button"
+            data-e2e="e2e-BT-tasks-shareTask"
             :class="shareClass"
             :title="shareValue"
             @click="openModal">

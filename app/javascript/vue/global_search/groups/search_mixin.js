@@ -46,11 +46,13 @@ export default {
       }
     },
     query() {
-      this.results = [];
-      this.page = 1;
-      this.total = 0;
-      this.fullDataLoaded = false;
-      this.loadData();
+      if (this.query.length > 1) {
+        this.results = [];
+        this.page = 1;
+        this.total = 0;
+        this.fullDataLoaded = false;
+        this.loadData();
+      }
     }
   },
   mounted() {
@@ -104,6 +106,8 @@ export default {
       this.loadData();
     },
     loadData() {
+      if (this.query.length < 2) return;
+
       if (this.loading && this.page) return;
 
       this.loading = true;

@@ -329,7 +329,7 @@ function initAccessModal() {
 
 function initWrapTables() {
   const viewMode = new URLSearchParams(window.location.search).get('view_mode');
-  if (['archived', 'locked', 'active'].includes(viewMode)) {
+  if (['archived', 'locked'].includes(viewMode)) {
     setTimeout(() => {
       const notesContainerEl = document.getElementById('notes-container');
       window.wrapTables(notesContainerEl);

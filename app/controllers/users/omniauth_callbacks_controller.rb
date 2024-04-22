@@ -8,7 +8,7 @@ module Users
     skip_before_action :verify_authenticity_token
     before_action :sign_up_with_provider_enabled?,
                   only: :linkedin
-    before_action :check_sso_status, only: %i(customazureactivedirectory okta)
+    before_action :check_sso_status, only: %i(customazureactivedirectory okta openid_connect)
 
     # You should configure your model like this:
     # devise :omniauthable, omniauth_providers: [:twitter]
@@ -46,17 +46,7 @@ module Users
 
       if user.blank?
         # Create new user and identity
-        full_name = "#{auth.info.first_name} #{auth.info.last_name}"
-        user = User.new(full_name: full_name,
-                        initials: generate_initials(full_name),
-                        email: email,
-                        password: generate_user_password)
-        User.transaction do
-          user.save!
-          user.user_identities.create!(provider: auth.provider, uid: auth.uid)
-          user.update!(confirmed_at: user.created_at)
-        end
-
+        user = create_user_from_auth(email, auth)
         sign_in_and_redirect(user, event: :authentication)
       elsif provider_conf['auto_link_on_sign_in']
         # Link to existing local account
@@ -147,16 +137,7 @@ module Users
       user = User.find_by(email: auth.info.email.downcase)
 
       if user.blank?
-        # Create new user and identity
-        user = User.new(full_name: auth.info.name,
-                        initials: generate_initials(auth.info.name),
-                        email: auth.info.email,
-                        password: generate_user_password)
-        User.transaction do
-          user.save!
-          user.user_identities.create!(provider: auth.provider, uid: auth.uid)
-          user.update!(confirmed_at: user.created_at)
-        end
+        user = create_user_from_auth(email, auth)
       else
         # Link to existing local account
         user.user_identities.create!(provider: auth.provider, uid: auth.uid)
@@ -174,6 +155,107 @@ module Users
         set_flash_message(:alert, :failure, kind: I18n.t('devise.okta.provider_name'), reason: error_message)
       else
         set_flash_message(:notice, :success, kind: I18n.t('devise.okta.provider_name'))
+      end
+    end
+
+    def openid_connect
+      auth = request.env['omniauth.auth']
+      settings = ApplicationSettings.instance
+      provider_conf = settings.values['openid_connect']
+      raise StandardError, 'No matching OpenID Connect AD provider config found' if provider_conf.blank?
+
+      return redirect_to connected_accounts_path if current_user
+
+      email = auth.info.email
+      email ||= auth.dig(:extra, :raw_info, :id_token_claims, :emails)&.first
+      user = User.from_omniauth(auth)
+
+      # User found in database so just signing in
+      return sign_in_and_redirect(user) if user.present?
+
+      if email.blank?
+        # No email in the token so can not link or create user
+        error_message = I18n.t('devise.openid_connect.errors.no_email')
+        return redirect_to after_omniauth_failure_path_for(resource_name)
+      end
+
+      user = User.find_by(email: email.downcase)
+
+      if user.blank?
+        # Create new user and identity
+        user = create_user_from_auth(email, auth)
+        sign_in_and_redirect(user)
+      elsif provider_conf['auto_link_on_sign_in']
+        # Link to existing local account
+        user.user_identities.create!(provider: auth.provider, uid: auth.uid)
+        user.update!(confirmed_at: user.created_at) if user.confirmed_at.blank?
+        sign_in_and_redirect(user)
+      else
+        # Cannot do anything with it, so just return an error
+        error_message = I18n.t('devise.openid_connect.errors.no_local_user_map')
+        redirect_to after_omniauth_failure_path_for(resource_name)
+      end
+    rescue StandardError => e
+      Rails.logger.error e.message
+      Rails.logger.error e.backtrace.join("\n")
+      error_message = I18n.t('devise.openid_connect.errors.failed_to_save') if e.is_a?(ActiveRecord::RecordInvalid)
+      error_message ||= I18n.t('devise.openid_connect.errors.generic')
+      redirect_to after_omniauth_failure_path_for(resource_name)
+    ensure
+      if error_message
+        set_flash_message(:alert, :failure, kind: I18n.t('devise.openid_connect.provider_name'), reason: error_message)
+      else
+        set_flash_message(:notice, :success, kind: I18n.t('devise.openid_connect.provider_name'))
+      end
+    end
+
+    def saml
+      auth = request.env['omniauth.auth']
+
+      settings = ApplicationSettings.instance
+      provider_conf = settings.values['saml']
+      raise StandardError, 'No matching SAML provider config found' if provider_conf.blank?
+
+      return redirect_to connected_accounts_path if current_user
+
+      email = auth.info.email
+      user = User.from_omniauth(auth)
+
+      # User found in database so just signing in
+      return sign_in_and_redirect(user) if user.present?
+
+      if email.blank?
+        # No email in the token so can not link or create user
+        error_message = I18n.t('devise.saml.errors.no_email')
+        return redirect_to after_omniauth_failure_path_for(resource_name)
+      end
+
+      user = User.find_by(email: email.downcase)
+
+      if user.blank?
+        user = create_user_from_auth(email, auth)
+        sign_in_and_redirect(user)
+      elsif provider_conf['auto_link_on_sign_in']
+        # Link to existing local account
+        user.user_identities.create!(provider: auth.provider, uid: auth.uid)
+        user.update!(confirmed_at: user.created_at) if user.confirmed_at.blank?
+        sign_in_and_redirect(user)
+      else
+        # Cannot do anything with it, so just return an error
+        error_message = I18n.t('devise.saml.errors.no_local_user_map')
+        redirect_to after_omniauth_failure_path_for(resource_name)
+      end
+    rescue StandardError => e
+      Rails.logger.error e.message
+      Rails.logger.error e.backtrace.join("\n")
+      error_message = I18n.t('devise.saml.errors.failed_to_save') if e.is_a?(ActiveRecord::RecordInvalid)
+      error_message ||= I18n.t('devise.saml.errors.generic')
+      redirect_to after_omniauth_failure_path_for(resource_name)
+    ensure
+      if error_message
+        set_flash_message(:alert, :failure, kind: I18n.t('devise.saml.provider_name'), reason: error_message)
+      else
+        set_flash_message(:notice, :success, kind: I18n.t('devise.saml.provider_name'))
       end
     end
 
@@ -212,6 +294,34 @@ module Users
       initials = full_name.titleize.scan(/[A-Z]+/).join
       initials = initials.strip.blank? ? 'PLCH' : initials[0..3]
       initials
+    end
+
+    def create_user_from_auth(email, auth)
+      full_name = "#{auth.info.first_name} #{auth.info.last_name}"
+      user = User.new(full_name: full_name,
+                      initials: generate_initials(full_name),
+                      email: email,
+                      password: generate_user_password)
+      User.transaction do
+        user.save!
+        user.user_identities.create!(provider: auth.provider, uid: auth.uid)
+        user.update!(confirmed_at: user.created_at)
+      end
+      user
+    end
+
+    def create_user_from_auth(email, auth)
+      full_name = "#{auth.info.first_name} #{auth.info.last_name}"
+      user = User.new(full_name: full_name,
+                      initials: generate_initials(full_name),
+                      email: email,
+                      password: generate_user_password)
+      User.transaction do
+        user.save!
+        user.user_identities.create!(provider: auth.provider, uid: auth.uid)
+        user.update!(confirmed_at: user.created_at)
+      end
+      user
     end
   end
 end

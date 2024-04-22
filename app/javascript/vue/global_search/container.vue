@@ -8,7 +8,8 @@
       </div>
     </div>
     <div class="bg-white rounded p-4 flex gap-2.5 items-center mb-4 sticky top-0">
-      <div class="left-icon sci-input-container-v2 w-72 input-sm" :title="i18n.t('nav.search')">
+      <div class="left-icon sci-input-container-v2 w-72 input-sm"
+           :title="i18n.t('nav.search')" :class="{'error': invalidQuery}">
         <input ref="searchField" type="text" class="!pr-9" :value="localQuery" @change="changeQuery" :placeholder="i18n.t('nav.search')"/>
         <i class="sn-icon sn-icon-search"></i>
         <i v-if="localQuery.length > 0" class="sn-icon cursor-pointer sn-icon-close absolute right-0 -top-0.5" @click="localQuery = ''"></i>
@@ -145,6 +146,9 @@ export default {
     };
   },
   computed: {
+    invalidQuery() {
+      return this.localQuery.length < 2;
+    },
     activeFilters() {
       return Object.keys(this.filters).filter((key) => {
         if (key === 'created_at' || key === 'updated_at') {

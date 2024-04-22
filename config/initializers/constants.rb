@@ -437,7 +437,7 @@ class Constants
   ASSET_SYNC_URL = ENV['ASSET_SYNC_URL'].freeze
 
   # Grover timeout in ms
-  GROVER_TIMEOUT_MS = 300000
+  GROVER_TIMEOUT_MS = 450000
 
   # SciNote Edit supported versions
   MIN_SCINOTE_EDIT_VERSION = ENV['MIN_SCINOTE_EDIT_VERSION'].freeze
@@ -447,7 +447,6 @@ class Constants
   QUICK_SEARCH_LIMIT = 5
   QUICK_SEARCH_SEARCHABLE_OBJECTS = %w(project experiment my_module protocol repository_row
                                        report project_folder result label_template).freeze
-  QUICK_SEARCH_SEARCHABLE_BY_NAME = %w(project_folder result label_template).freeze
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\

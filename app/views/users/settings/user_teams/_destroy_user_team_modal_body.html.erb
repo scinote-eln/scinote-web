@@ -1,21 +1,28 @@
-<%= form_with model: user_assignment,
-              url: destroy_user_team_path(user_assignment, format: :json),
-              data: { remote: true, id: 'destroy-user-team-form' },
-              method: :delete do |f| %>
-  <p><%= t("users.settings.user_teams.destroy_uo_message",
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
+  <h4 class="modal-title" id="destroy-user-team-modal-label">
+    <%= t('users.settings.user_teams.destroy_uo_heading',
            user: user_assignment.user.full_name,
-           team: user_assignment.assignable.name) %></p>
-  <% if user_assignment.user.confirmed? %>
-    <div class="alert alert-danger" role="alert">
-      <span class="fas fa-exclamation-triangle"></span>
-      &nbsp;
-      <%= t("users.settings.user_teams.destroy_uo_alert_heading") %>
-      <ul>
-        <li><%= t("users.settings.user_teams.destroy_uo_alert_line_1") %></li>
-        <li><%= t("users.settings.user_teams.destroy_uo_alert_line_2").html_safe %></li>
-        <li><%= t("users.settings.user_teams.destroy_uo_alert_line_3") %></li>
-        <li><%= t("users.settings.user_teams.destroy_uo_alert_line_4") %></li>
-      </ul>
+           team: user_assignment.assignable.name,
+           role: user_assignment.user_role.name.downcase) %>
+  </h4>
+  </div>
+<div class="modal-body">
+  <%= form_with model: user_assignment,
+                url: destroy_user_team_path(user_assignment, format: :json),
+                data: { remote: true, id: 'destroy-user-team-form' },
+                method: :delete do |f| %>
+    <div class='flex flex-col gap-6'>
+      <div><%= t("users.settings.user_teams.destroy_message", role: user_assignment.user_role.name.downcase) %></div>
+      <div><%= t("users.settings.user_teams.message_owner") %></div>
+      <div><%= t("users.settings.user_teams.message_alert") %></div>
     </div>
   <% end %>
-<% end %>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t 'general.cancel' %></button>
+  <button type="button"
+          class="btn btn-danger"
+          data-action="submit"><%=t 'users.settings.user_teams.destroy_uo_confirm' %>
+  </button>
+</div>

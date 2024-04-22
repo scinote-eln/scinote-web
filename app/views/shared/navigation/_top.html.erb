@@ -1,5 +1,5 @@
 <% if user_signed_in? %>
-  <div id="sciNavigationTopMenuContainer" data-turbolinks-permanent data-behaviour="vue">
+  <div id="sciNavigationTopMenuContainer" data-turbolinks-permanent data-behaviour="vue" data-e2e="e2e-CO-topMenu">
     <top-menu-container
       url="<%= top_menu_navigations_path %>"
       notifications-url="<%= user_notifications_path %>"

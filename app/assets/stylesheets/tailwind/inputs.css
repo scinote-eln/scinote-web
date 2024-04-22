@@ -21,7 +21,7 @@
   }
 
   .sci-input-container-v2 input::placeholder {
-    @apply text-sn-sleepy-grey;
+    @apply text-sn-grey;
   }
 
   .sci-input-container-v2 .error {
@@ -83,7 +83,7 @@
   }
 
   .sci-input-container-v2 textarea::placeholder {
-    @apply text-sn-sleepy-grey;
+    @apply text-sn-grey;
   }
 
   .sci-input-container-v2 textarea:focus {

@@ -2,7 +2,7 @@
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <form @submit.prevent="submit">
-        <div class="modal-content">
+        <div class="modal-content !pb-2.5">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <i class="sn-icon sn-icon-close"></i>

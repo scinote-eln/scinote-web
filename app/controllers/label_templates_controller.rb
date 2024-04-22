@@ -5,7 +5,7 @@ class LabelTemplatesController < ApplicationController
   include TeamsHelper
 
   before_action :check_feature_enabled, except: %i(index zpl_preview)
-  before_action :load_label_templates, only: %i(index datatable)
+  before_action :load_label_templates, only: %i(index datatable list)
   before_action :load_label_template, only: %i(show set_default update template_tags)
   before_action :check_view_permissions, except: %i(create duplicate set_default delete update)
   before_action :check_manage_permissions, only: %i(create duplicate set_default delete update)
@@ -27,6 +27,10 @@ class LabelTemplatesController < ApplicationController
         render 'index'
       end
     end
+  end
+
+  def list
+    render json: @label_templates, each_serializer: LabelTemplateSerializer, user: current_user
   end
 
   def show

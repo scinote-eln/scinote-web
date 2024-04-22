@@ -203,14 +203,6 @@ class TinyMceAsset < ApplicationRecord
     image&.blob
   end
 
-  def convert_to_base64
-    encoded_data = Base64.strict_encode64(image.download)
-    "data:#{image.blob.content_type};base64,#{encoded_data}"
-  rescue StandardError => e
-    Rails.logger.error e.message
-    "data:#{image.blob.content_type};base64,"
-  end
-
   def duplicate_file(to_asset)
     return unless image.attached?
 

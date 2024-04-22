@@ -25,7 +25,7 @@
                 @click="$emit('publish')" class="btn btn-primary">
           {{ i18n.t("protocols.header.publish") }}</button>
         <button v-if="protocol.attributes.urls.save_as_draft_url"
-                v-bind:disabled="protocol.attributes.has_draft"
+                :disabled="protocol.attributes.has_draft || creatingDraft"
                 @click="saveAsdraft" class="btn btn-secondary">
           {{ i18n.t("protocols.header.save_as_draft") }}
         </button>
@@ -121,7 +121,8 @@ export default {
   },
   data() {
     return {
-      VersionsModalObject: null
+      VersionsModalObject: null,
+      creatingDraft: false
     };
   },
   computed: {
@@ -141,8 +142,18 @@ export default {
   },
   methods: {
     saveAsdraft() {
+      if (this.creatingDraft) {
+        return;
+      }
+
+      this.creatingDraft = true;
+
       $.post(this.protocol.attributes.urls.save_as_draft_url, (result) => {
+        this.creatingDraft = false;
         window.location.replace(result.url);
+      }).error(() => {
+        this.creatingDraft = false;
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'));
       });
     },
     updateAuthors(authors) {

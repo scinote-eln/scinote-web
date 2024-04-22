@@ -2,17 +2,17 @@ export default {
   template: `
     <div class="w-full grid items-center group gap-2 grid-cols-[auto_1.5rem]"
          :class="{'cursor-pointer': params.enableSorting}"
-         :data-e2e="'e2e-CO-TableHeader-' + params.column.colId "
+         :data-e2e="'e2e-CO-tableHeader-' + params.column.colId "
          @click="onSortRequested((activeSort == 'asc' ? 'desc' : 'asc'), $event)">
       <div v-if="params.html" class="customHeaderLabel truncate" v-html="params.html"></div>
       <div v-else class="customHeaderLabel truncate">{{ params.displayName }}</div>
-      <div v-if="activeSort == 'asc'" class="customSortDownLabel text-sn-black">
+      <div v-if="activeSort == 'asc'" class="customSortDownLabel text-sn-black" data-e2e="e2e-BT-tableHeader-sortedAsc">
         <i class="sn-icon sn-icon-sort-up"></i>
       </div>
-      <div v-if="activeSort == 'desc'" class="customSortUpLabel text-sn-black">
+      <div v-if="activeSort == 'desc'" class="customSortUpLabel text-sn-black" data-e2e="e2e-BT-tableHeader-sortedDesc">
         <i class="sn-icon sn-icon-sort-down"></i>
       </div>
-      <div v-if="activeSort == null && params.enableSorting" class="text-sn-black tw-hidden group-hover:block">
+      <div v-if="activeSort == null && params.enableSorting" class="text-sn-black tw-hidden group-hover:block" data-e2e="e2e-BT-tableHeader-sortUpDown">
         <i class="sn-icon sn-icon-sort"></i>
       </div>
     </div>
