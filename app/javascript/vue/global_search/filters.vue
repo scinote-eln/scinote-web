@@ -1,55 +1,60 @@
 <template>
   <div class="max-w-[600px] py-3.5">
-    <div class="sci-label mb-2">{{ i18n.t('search.filters.by_type') }}</div>
-    <div class="flex items-center gap-2 flex-wrap mb-6">
-      <template v-for="group in searchGroups" :key="group.value">
-        <button class="btn btn-secondary btn-xs"
-                :class="{'active': activeGroup === group.value}"
-                @click="setActiveGroup(group.value)">
-          {{ group.label }}
-        </button>
-      </template>
-    </div>
-    <div class="sci-label mb-2">{{ i18n.t('search.filters.by_created_date') }}</div>
-    <DateFilter
-      :date="createdAt"
-      ref="createdAtComponent"
-      class="mb-6"
-      @change="(v) => {this.createdAt = v}"
-    ></DateFilter>
-    <div class="sci-label mb-2">{{ i18n.t('search.filters.by_updated_date') }}</div>
-    <DateFilter
-      :date="updatedAt"
-      ref="updatedAtComponent"
-      class="mb-6"
-      @change="(v) => {this.updatedAt = v}"
-    ></DateFilter>
-    <div class="sci-label mb-2">{{ i18n.t('search.filters.by_team') }}</div>
-    <SelectDropdown :options="teams"
-                    class="mb-6"
-                    :with-checkboxes="true"
-                    :clearable="true"
-                    :multiple="true"
-                    :value="selectedTeams"
-                    @change="(v) => {selectedTeams = v}" />
-    <div class="sci-label mb-2">{{ i18n.t('search.filters.by_user') }}</div>
-    <SelectDropdown :options="users"
-                    class="mb-6"
-                    :value="selectedUsers"
-                    :optionRenderer="userRenderer"
-                    :labelRenderer="userRenderer"
-                    :clearable="true"
-                    :with-checkboxes="true"
-                    :multiple="true"
-                    @change="(v) => {selectedUsers = v}" />
-    <div class="flex items-center gap-2">
-      <div class="sci-checkbox-container">
-        <input type="checkbox" v-model="includeArchived" class="sci-checkbox" />
-        <span class="sci-checkbox-label"></span>
+    <div class="flex flex-col pb-6 overflow-y-auto max-h-[75vh]">
+      <div class="sci-label mb-2">{{ i18n.t('search.filters.by_type') }}</div>
+      <div class="flex items-center gap-2 flex-wrap mb-6">
+        <template v-for="group in searchGroups" :key="group.value">
+          <button class="btn btn-secondary btn-xs"
+                  :class="{'active': activeGroup === group.value}"
+                  @click="setActiveGroup(group.value)">
+            {{ group.label }}
+          </button>
+        </template>
       </div>
-      {{ i18n.t('search.filters.include_archived') }}
+      <div class="sci-label mb-2">{{ i18n.t('search.filters.by_created_date') }}</div>
+      <DateFilter
+        :date="createdAt"
+        ref="createdAtComponent"
+        class="mb-6"
+        @change="(v) => {this.createdAt = v}"
+      ></DateFilter>
+      <div class="sci-label mb-2">{{ i18n.t('search.filters.by_updated_date') }}</div>
+      <DateFilter
+        :date="updatedAt"
+        ref="updatedAtComponent"
+        class="mb-6"
+        @change="(v) => {this.updatedAt = v}"
+      ></DateFilter>
+      <div class="sci-label mb-2">{{ i18n.t('search.filters.by_team') }}</div>
+      <SelectDropdown :options="teams"
+                      class="mb-6"
+                      :with-checkboxes="true"
+                      :clearable="true"
+                      :multiple="true"
+                      :value="selectedTeams"
+                      @change="(v) => {selectedTeams = v}" />
+      <div class="sci-label mb-2 flex items-center gap-2">
+        {{ i18n.t('search.filters.by_user') }}
+        <i class="sn-icon sn-icon-info" :title="i18n.t('search.filters.by_user_info')"></i>
+      </div>
+      <SelectDropdown :options="users"
+                      class="mb-6"
+                      :value="selectedUsers"
+                      :optionRenderer="userRenderer"
+                      :labelRenderer="userRenderer"
+                      :clearable="true"
+                      :with-checkboxes="true"
+                      :multiple="true"
+                      @change="(v) => {selectedUsers = v}" />
+      <div class="flex items-center gap-2">
+        <div class="sci-checkbox-container">
+          <input type="checkbox" v-model="includeArchived" class="sci-checkbox" />
+          <span class="sci-checkbox-label"></span>
+        </div>
+        {{ i18n.t('search.filters.include_archived') }}
+      </div>
     </div>
-    <hr class="my-6">
+    <hr class="mb-6">
     <div class="flex items-center gap-6">
       <button class="btn btn-light" @click="clearFilters">{{ i18n.t('search.filters.clear') }}</button>
       <button class="btn btn-secondary ml-auto" @click="$emit('cancel')">{{ i18n.t('general.cancel') }}</button>

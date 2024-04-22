@@ -117,14 +117,14 @@ export default {
       newDate: this.date,
       selectedOption: (this.date.mode || 'on'),
       dateOptions: [
-        ['today', 'Today'],
-        ['yesterday', 'Yesterday'],
-        ['last_week', 'Last week'],
-        ['this_month', 'This month'],
-        ['this_year', 'This year'],
-        ['last_year', 'Last year'],
-        ['on', 'On'],
-        ['custom', 'Custom']
+        ['today', this.i18n.t('search.filters.date.today')],
+        ['yesterday', this.i18n.t('search.filters.date.yesterday')],
+        ['last_week', this.i18n.t('search.filters.date.last_week'), { tooltip: this.i18n.t('search.filters.date.last_week_tooltip') }],
+        ['this_month', this.i18n.t('search.filters.date.this_month'), { tooltip: this.i18n.t('search.filters.date.this_month_tooltip') }],
+        ['this_year', this.i18n.t('search.filters.date.this_year'), { tooltip: this.i18n.t('search.filters.date.this_year_tooltip') }],
+        ['last_year', this.i18n.t('search.filters.date.last_year'), { tooltip: this.i18n.t('search.filters.date.last_year_tooltip') }],
+        ['on', this.i18n.t('search.filters.date.on')],
+        ['custom', this.i18n.t('search.filters.date.custom')]
       ]
     };
   },

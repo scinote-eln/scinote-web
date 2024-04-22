@@ -71,6 +71,7 @@
               <div
                 @click.stop="setValue(option[0])"
                 ref="options"
+                :title="option[2]?.tooltip || option[1]"
                 class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0 hover:bg-sn-super-light-grey"
                 :class="[sizeClass, {
                   '!bg-sn-super-light-blue': valueSelected(option[0]) && focusedOption !== i,
