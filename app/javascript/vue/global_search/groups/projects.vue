@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import Link_template from './helpers/link_template.vue';
 import searchMixin from './search_mixin';
 
 export default {

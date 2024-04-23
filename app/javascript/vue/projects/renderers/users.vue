@@ -8,7 +8,7 @@
       +{{ hiddenUsers.length }}
     </div>
     <div v-if="params.data.permissions['manage_users_assignments']"
-        class="flex items-center shrink-0 justify-center w-7 h-7 rounded-full bg-sn-light-grey text-sn-dark-grey">
+        class="flex items-center shrink-0 justify-center w-7 h-7 rounded-full border-dashed bg-sn-white text-sn-sleepy-grey border-sn-sleepy-grey">
       <i class="sn-icon sn-icon-new-task"></i>
     </div>
   </div>

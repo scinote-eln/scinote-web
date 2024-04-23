@@ -33,7 +33,8 @@ export default {
     progress() {
       const { completed_tasks: completedTasks, total_tasks: totalTasks } = this.params.data;
 
-      if (totalTasks === 0) return 0;
+      if (totalTasks === 0) return 3;
+      if (completedTasks === 0) return 3;
 
       return (completedTasks / totalTasks) * 100;
     }
