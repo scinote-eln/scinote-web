@@ -35,6 +35,7 @@
             :createUrl="createUrl"
             :projectTagsUrl="projectTagsUrl"
             :assignedUsersUrl="assignedUsersUrl"
+            :currentUserId="currentUserId"
             @create="updateTable"
             @close="newModalOpen = false" />
   <EditModal v-if="editModalObject"
@@ -84,6 +85,7 @@ export default {
     activePageUrl: { type: String },
     archivedPageUrl: { type: String },
     currentViewMode: { type: String, required: true },
+    currentUserId: { type: String, required: true },
     createUrl: { type: String, required: true },
     userRolesUrl: { type: String, required: true },
     canvasUrl: { type: String, required: true },
@@ -124,7 +126,8 @@ export default {
         field: 'due_date',
         headerName: this.i18n.t('experiments.table.column.due_date_html'),
         sortable: true,
-        cellRenderer: DueDateRenderer
+        cellRenderer: DueDateRenderer,
+        minWidth: 200
       },
       {
         field: 'results',
@@ -141,7 +144,8 @@ export default {
         field: 'status',
         headerName: this.i18n.t('experiments.table.column.status_html'),
         sortable: true,
-        cellRenderer: this.statusRenderer
+        cellRenderer: this.statusRenderer,
+        minWidth: 120
       }
     ];
 
@@ -164,7 +168,8 @@ export default {
       field: 'tags',
       headerName: this.i18n.t('experiments.table.column.tags_html'),
       sortable: true,
-      cellRenderer: TagsRenderer
+      cellRenderer: TagsRenderer,
+      minWidth: 180
     });
     columns.push({
       field: 'comments',
@@ -338,7 +343,7 @@ export default {
         return `
           <span class="flex gap-2 items-center">
             <div title="${this.i18n.t('experiments.duplicate_tasks.duplicating')}"
-                 class="loading-overlay w-6 h-6 !relative" data-toggle="tooltip" data-placement="right"></div>
+                 class="loading-overlay w-6 h-6 !relative shrink-0" data-toggle="tooltip" data-placement="right"></div>
             <span class="truncate">${name}</span>
           </span>`;
       }

@@ -7,7 +7,22 @@
     let myModuleUserSelector = '#my_module_user_ids';
     var myModuleTagsSelector = '#module-tags-selector';
 
+    $('#experiment-canvas').on('submit', '#new-my-module-modal form', (event) => {
+      event.preventDefault();
 
+      $.post({
+        url: $('#new-my-module-modal form').attr('action'),
+        data: {
+          my_module: {
+            name: $('#new-my-module-modal input[name="my_module[name]"]').val(),
+            view_mode: $('#new-my-module-modal input[name="my_module[view_mode]"]').val(),
+            due_date: $('#new-my-module-modal input[name="my_module[due_date]"]').val(),
+            tag_ids: dropdownSelector.getValues(myModuleTagsSelector),
+            user_ids: dropdownSelector.getValues(myModuleUserSelector)
+          }
+        }
+      });
+    });
     // Modal's submit handler function
     $(experimentWrapper)
       .on('ajax:success', newMyModuleModal, function() {

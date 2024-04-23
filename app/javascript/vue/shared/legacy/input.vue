@@ -36,8 +36,8 @@ export default {
     required: { type: Boolean, default: false },
     label: { type: String, required: false },
     error: { type: String, required: false },
-    min: { type: String },
-    max: { type: String },
+    min: { type: [String, Number] },
+    max: { type: [String, Number] },
     blockInvalidInput: { type: Boolean, default: true }
   },
   data() {
@@ -49,6 +49,9 @@ export default {
   watch: {
     value() {
       this.lastValue = this.value;
+    },
+    error() {
+      this.checkInputError();
     }
   },
   computed: {

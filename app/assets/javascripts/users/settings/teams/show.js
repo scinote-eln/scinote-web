@@ -110,10 +110,9 @@
       function(e, data) {
         // Populate the modal heading & body
         var modal = $('#destroy-user-team-modal');
-        var modalHeading = modal.find('.modal-header').find('.modal-title');
-        var modalBody = modal.find('.modal-body');
-        modalHeading.text($('<div>').html(data.heading).text());
-        modalBody.html(data.html);
+        const modalContent = modal.find('.modal-content');
+
+        modalContent.html(data.html);
 
         // Show the modal
         modal.modal('show');
@@ -122,13 +121,14 @@
       'ajax:error',
       "[data-action='destroy-user-team']",
       function() {
-        // TODO
+        HelperModule.flashAlertMsg(I18n.t('users.settings.user_teams.general_error'), 'danger');
       }
     );
 
     // Also, bind the click action on the modal
     $('#destroy-user-team-modal')
       .on('click', "[data-action='submit']", function() {
+        animateSpinner();
         var btn = $(this);
         var form = btn
           .closest('.modal')
@@ -154,14 +154,16 @@
         // Hide the modal
         modal.modal('hide');
 
+        animateSpinner(null, false);
         // Reload the whole table
-        usersDatatable.ajax.reload();
+        location.reload();
       }
     ).on(
       'ajax:error',
       "[data-id='destroy-user-team-form']",
       function() {
-        // TODO
+        animateSpinner(null, false);
+        HelperModule.flashAlertMsg(I18n.t('users.settings.user_teams.general_error'), 'danger');
       }
     );
   }

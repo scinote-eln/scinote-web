@@ -11,6 +11,7 @@
         :with-checkboxes="true"
         :multiple="true"
         :clearable="true"
+        :searchable="true"
         :size="'sm'"
         >
       </select-dropdown>
@@ -93,6 +94,10 @@ export default {
       });
     },
     handleChange(selectedChecklistItemsIds) {
+      if (selectedChecklistItemsIds instanceof Event) {
+        return;
+      }
+
       this.selectedChecklistItemsIds = selectedChecklistItemsIds;
       this.update(selectedChecklistItemsIds);
     }

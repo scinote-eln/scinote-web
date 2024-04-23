@@ -45,18 +45,21 @@
                 :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_tags_placeholder')"
                 :tagsView="true" ></SelectDropdown>
 
-                <label class="sci-label">
-                  {{ i18n.t('experiments.canvas.new_my_module_modal.assigned_users') }}
-                </label>
-                <SelectDropdown
-                  @change="setUsers"
-                  :options="formattedUsers"
-                  :option-renderer="usersRenderer"
-                  :label-renderer="usersRenderer"
-                  :multiple="true"
-                  :searchable="true"
-                  :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')"
-                  :tagsView="true" ></SelectDropdown>
+                <template v-if="this.assignedUsersUrl">
+                  <label class="sci-label">
+                    {{ i18n.t('experiments.canvas.new_my_module_modal.assigned_users') }}
+                  </label>
+                  <SelectDropdown
+                    @change="setUsers"
+                    :options="formattedUsers"
+                    :option-renderer="usersRenderer"
+                    :label-renderer="usersRenderer"
+                    :multiple="true"
+                    :value="users"
+                    :searchable="true"
+                    :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')"
+                    :tagsView="true" ></SelectDropdown>
+                </template>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
@@ -83,7 +86,8 @@ export default {
   props: {
     createUrl: String,
     projectTagsUrl: String,
-    assignedUsersUrl: String
+    assignedUsersUrl: String,
+    currentUserId: { type: String, required: true }
   },
   components: {
     DateTimePicker,
@@ -169,20 +173,23 @@ export default {
       });
     },
     loadUsers() {
+      if (!this.assignedUsersUrl) return;
+
       axios.get(this.assignedUsersUrl).then((response) => {
         this.allUsers = response.data.data;
+        this.users = [this.currentUserId];
       });
     },
     tagsRenderer(tag) {
       return `<div class="flex items-center gap-2">
                 <span class="w-4 h-4 rounded-full" style="background-color: ${tag[2]}"></span>
-                ${tag[1]}
+                <span title="${tag[1]}" class="truncate">${tag[1]}</span>
               </div>`;
     },
     usersRenderer(user) {
-      return `<div class="flex items-center gap-2">
+      return `<div class="flex items-center gap-2 truncate">
                 <img class="w-6 h-6 rounded-full" src="${user[2]}">
-                ${user[1]}
+                <span title="${user[1]}" class="truncate">${user[1]}</span>
               </div>`;
     }
   }

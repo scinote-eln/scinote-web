@@ -34,6 +34,8 @@ en:
         remember_me: "Remember me"
         submit: "Log in"
         azure_ad_submit: "Sign in with Azure AD"
+        openid_connect_submit: "Sign in with OpenID Connect"
+        saml_submit: "Sign in with SAML"
       2fa:
         title: "Two-factor authentication"
         description: "Enter the one-time code found in your authenticator app to log in to SciNote."
@@ -86,9 +88,23 @@ en:
         no_local_user_map: "No local user record found"
         no_email: "Email is missing in auth token"
         failed_to_save: "Failed to create new user"
+    openid_connect:
+      provider_name: "OpenID Connect"
+      errors:
+        generic: "Failed to sign in user"
+        no_local_user_map: "No local user record found"
+        no_email: "Email is missing in auth token"
+        failed_to_save: "Failed to create new user"
     okta:
       provider_name: "Okta"
       sign_in_label: "Sign in with Okta"
+      errors:
+        generic: "Failed to sign in user"
+        no_local_user_map: "No local user record found"
+        failed_to_save: "Failed to create new user"
+    saml:
+      provider_name: "SAML"
+      sign_in_label: "Sign in with SAML"
       errors:
         generic: "Failed to sign in user"
         no_local_user_map: "No local user record found"
@@ -1043,6 +1059,7 @@ en:
         refresh: 'Refresh preview'
         save: 'Save template code'
     default_columns:
+      inventory_name: 'Inventory name'
       item_id: 'Item ID'
       name: 'Name'
       added_on: 'Added On'
@@ -1475,7 +1492,7 @@ en:
       completed_task: "Completed"
       completed_value: "%{completed}/%{all} tasks"
       description: "Description"
-      more: "More"
+      more: "more"
     index:
       edit_option: "Edit"
       clone_option: "Duplicate"
@@ -1545,7 +1562,7 @@ en:
       column:
         id_html: 'ID'
         task_name_html: 'Task name'
-        due_date_html: 'Due'
+        due_date_html: 'Due date'
         archived_html: 'Archived on'
         age_html: 'Age'
         results_html: 'Results'
@@ -2882,13 +2899,13 @@ en:
           not_connected: "You have no Connected accounts"
           unlink_success: "Successfully unlinked"
           azure_ad:
-            title: "Your Azure AD Account"
-            connect_hint: "Allows you to sign in with your Azure AD account."
+            title: "Your Microsoft Entra ID Account"
+            connect_hint: "Allows you to sign in with your Microsoft Entra ID account."
             connected: "Connected"
             unlink_button: "Unlink"
             unlink_modal:
-              title: "Unlink Azure AD account?"
-              description_1: "Are you sure you would like unlink Azure AD and SciNote accounts?"
+              title: "Unlink Microsoft Entra ID account?"
+              description_1: "Are you sure you would like unlink Microsoft Entra ID and SciNote accounts?"
               submit_button: "Submit"
           okta:
             title: "Your Okta Account"
@@ -2898,6 +2915,24 @@ en:
             unlink_modal:
               title: "Unlink Okta account?"
               description_1: "Are you sure you would like unlink Okta and SciNote accounts?"
+              submit_button: "Submit"
+          openid_connect:
+            title: "Your OpenID Connect Account"
+            connect_hint: "Allows you to sign in with your OpenID Connect account."
+            connected: "Connected"
+            unlink_button: "Unlink"
+            unlink_modal:
+              title: "Unlink OpenID Connect account?"
+              description_1: "Are you sure you would like unlink OpenID Connect and SciNote accounts?"
+              submit_button: "Submit"
+          saml:
+            title: "Your SAML Account"
+            connect_hint: "Allows you to sign in with your SAML account."
+            connected: "Connected"
+            unlink_button: "Unlink"
+            unlink_modal:
+              title: "Unlink SAML account?"
+              description_1: "Are you sure you would like unlink SAML and SciNote accounts?"
               submit_button: "Submit"
           errors:
             not_found: "You have no Connected accounts for this provider"
@@ -2972,22 +3007,17 @@ en:
             flash_success: "Team %{team} was successfully deleted."
       user_teams:
         leave_uo_heading: "Leave team %{team}"
-        leave_uo_message: "Are you sure you wish to leave team %{team}? This action is irreversible."
-        leave_uo_alert_heading: "Leaving team has following consequences:"
-        leave_uo_alert_line_1: "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
-        leave_uo_alert_line_2: "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;"
-        leave_uo_alert_line_3: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators;"
-        leave_uo_alert_line_4: "all inventory items in the team added by you will be reassigned onto a new owner from team administrators."
-        leave_uo_confirm: "Leave"
-        destroy_uo_heading: "Remove user %{user} from team %{team}"
-        destroy_uo_message: "Are you sure you wish to remove user %{user} from team %{team}?"
-        destroy_uo_alert_heading: "Removing user from team has following consequences:"
-        destroy_uo_alert_line_1: "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
-        destroy_uo_alert_line_2: "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;"
-        destroy_uo_alert_line_3: "all repository protocols in the team belonging to user will be reassigned onto you;"
-        destroy_uo_alert_line_4: "all inventory items in the team added by user will be reassigned onto you."
+        leave_message: "You will lose access to all content associated with the team, including projects, inventories, and protocol templates."
+        destroy_message: 'Removing a team %{role} will revoke their access to all content associated with the team, including projects, inventories, and protocol templates.'
+        leave_uo_confirm: "Leave team"
+        destroy_uo_heading: "Remove team %{role} %{user} from team %{team}"
+        message_owner: "Other team owner(s) will be able to view and manage access to the content."
+        message_alert: "This action cannot be undone."
+        destroy_uo_alert_line_3: "This action cannot be undone."
         destroy_uo_confirm: "Remove"
-        leave_flash: "Successfully left team %{team}."
+        leave_flash: "You have left %{team}."
+        remove_flash: "%{user} has been successfully removed from the team %{team}"
+        general_error: "Something went wrong"
 
   user_roles:
     predefined:
@@ -3224,6 +3254,7 @@ en:
       import: "Import"
       import_eln: "SciNote file (.eln)"
       import_docx: "MS Word (.docx)"
+      beta: "BETA"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"

@@ -11,7 +11,7 @@
       :class="[sizeClass, {
         '!border-sn-blue': isOpen,
         '!border-sn-light-grey': !isOpen,
-        'bg-sn-sleepy-grey': disabled
+        'bg-sn-super-light-grey': disabled
       }]"
     >
     <template v-if="!tagsView">
@@ -29,8 +29,8 @@
              :placeholder="label || placeholder || this.i18n.t('general.select_dropdown.placeholder')"
              class="w-full border-0 outline-none pl-0 placeholder:text-sn-grey" />
       </template>
-      <div v-else class="flex items-center gap-1 flex-wrap">
-        <div v-for="tag in tags" class="px-2 py-1 rounded-sm bg-sn-super-light-grey flex items-center gap-1">
+      <div v-else class="flex items-center gap-1 flex-wrap max-w-[calc(100%-24px)]">
+        <div v-for="tag in tags" class=" truncate px-2 py-1 rounded-sm bg-sn-super-light-grey flex items-center gap-1">
           <div class="truncate" v-if="labelRenderer" v-html="tag.label"></div>
           <div class="truncate" v-else>{{ tag.label }}</div>
           <i @click="removeTag(tag.value)" class="sn-icon mini ml-auto sn-icon-close cursor-pointer"></i>
@@ -48,7 +48,7 @@
         </div>
       </div>
       <i v-if="canClear" @click="clear" class="sn-icon ml-auto sn-icon-close"></i>
-      <i v-else class="sn-icon ml-auto"
+      <i v-else class="sn-icon ml-auto self-start"
                 :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen, 'text-sn-grey': disabled}"></i>
     </div>
     <template v-if="isOpen">
