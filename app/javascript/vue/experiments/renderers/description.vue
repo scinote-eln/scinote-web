@@ -1,32 +1,32 @@
 <template>
-  <div class="group relative flex items-center group-hover:marker text-xs h-full w-full"
-       :style="{ lineHeight: 'unset' }">
-    <div class="flex gap-2 w-full"
-        :style="{ lineHeight: 'unset' }"
-        :class="{
-                  'items-center text-sm': params.dtComponent.currentViewRender === 'table',
-                  'items-end text-xs': params.dtComponent.currentViewRender === 'cards'
-                }">
-      <span v-if="shouldTruncateText"
-            class="cursor-pointer grow"
-            :class="{
-              'line-clamp-1': params.dtComponent.currentViewRender === 'table',
-              'line-clamp-2': params.dtComponent.currentViewRender === 'cards'
-            }"
+  <template v-if="params.dtComponent.currentViewRender === 'table'">
+  <div class="group relative flex items-center group-hover:marker text-xs h-full w-full leading-[unset]">
+    <div class="flex gap-2 w-full items-center text-sm leading-[unset]">
+      <span class="cursor-pointer line-clamp-1 leading-[unset]"
             @click.stop="showDescriptionModal"
             v-html="params.data.sa_description">
       </span>
-      <span v-else class="grow" v-html="params.data.sa_description"></span>
-      <span v-if="shouldTruncateText" @click.stop="showDescriptionModal" class="text-sn-blue cursor-pointer shrink-0 inline-block"
-            :style="{ lineHeight: 'unset' }"
-            :class="{
-                      'text-xs': params.dtComponent.currentViewRender === 'cards',
-                      'text-sm': params.dtComponent.currentViewRender === 'table'
-                    }">
+      <span @click.stop="showDescriptionModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm">
         {{ i18n.t('experiments.card.more') }}
       </span>
     </div>
   </div>
+  </template>
+  <template v-else>
+    <div class="group relative flex items-center group-hover:marker text-xs h-full w-full">
+      <div class="flex gap-2 w-full items-end text-xs">
+        <span v-if="shouldTruncateText"
+              class="cursor-pointer grow line-clamp-2"
+              @click.stop="showDescriptionModal"
+              v-html="params.data.sa_description">
+        </span>
+        <span v-else class="grow" v-html="params.data.sa_description"></span>
+        <span v-if="shouldTruncateText" @click.stop="showDescriptionModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-xs">
+          {{ i18n.t('experiments.card.more') }}
+        </span>
+      </div>
+    </div>
+  </template>
 </template>
 
 <script>
@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     shouldTruncateText() {
-      return this.params.data.description?.length > 80;
+      return this.params.data.description?.length > 60;
     }
   },
   methods: {
