@@ -14,6 +14,8 @@ amazon:
   bucket: <%= ENV["S3_BUCKET"] %>
   staging_bucket: <%= ENV["S3_STAGING_BUCKET"] %>
   subfolder: <%= ENV["S3_SUBFOLDER"] %>
+  upload:
+    server_side_encryption: <%= ENV["S3_BUCKET_SSE"] %>
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
