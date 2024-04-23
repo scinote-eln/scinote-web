@@ -116,7 +116,7 @@ class ExperimentsController < ApplicationController
 
       render json: { message: t('experiments.update.success_flash', experiment: @experiment.name) }, status: :ok
     else
-      render json: { message: @experiment.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @experiment.errors }, status: :unprocessable_entity
     end
   end
 
