@@ -155,6 +155,7 @@ let inlineEditing = (function() {
       if (inputField(container).attr('disabled')) {
         saveAllEditFields();
         let input = inputField(container);
+        input.val(container.attr('data-original-name'));
         input.attr('disabled', false)
           .removeClass('hidden')
           .focus();
