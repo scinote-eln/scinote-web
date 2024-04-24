@@ -9,6 +9,11 @@
         <h3 class="my-0 text-sn-dark-grey">
           {{ i18n.t('repositories.import_records.steps.step0.importTitle') }}
         </h3>
+        <ExportRepositoryModal
+          v-if="this.showExportRepositoryModal"
+          @close="this.showExportRepositoryModal = false"
+          :rows="[this.exportRepository]" :exportAction="this.action"
+        />
         <div id="export-buttons" class="flex flex-row gap-4">
           <button class="btn btn-secondary btn-sm" @click="exportFullInventory">
             <i class="sn-icon sn-icon-export"></i>
@@ -59,12 +64,15 @@
 <script>
 import axios from '../../../../packs/custom_axios';
 import DragAndDropUpload from '../../../shared/drag_and_drop_upload.vue';
+import ExportRepositoryModal from '../export.vue';
+
 
 export default {
   name: 'FirstStep',
   emits: ['step:next'],
   components: {
-    DragAndDropUpload
+    DragAndDropUpload,
+    ExportRepositoryModal
   },
   data() {
     return {
@@ -72,12 +80,21 @@ export default {
       error: null,
       teamId: null,
       parseSheetUrl: null,
-      exportInventoryMessage: null
+      exportInventoryMessage: null,
+      showExportRepositoryModal: false,
+      action:{
+        path: null,
+        export_limit: 3,
+        num_of_requests_left: 3,
+        export_file_type: 'xlsx'
+      }
     };
   },
   async created() {
     // Fetch repository data and set it to state
-    const repositoryData = await this.fetchSerializedRepositoryData();
+    this.exportRepository = repositoryData
+    this.exportRepository.id = repositoryData.data.id
+    this.exportRepository.team = repositoryData.data.attributes.team_id
     this.teamId = String(repositoryData.data.attributes.team_id);
     this.parseSheetUrl = repositoryData.data.attributes.urls.parse_sheet;
   },
@@ -103,7 +120,10 @@ export default {
       return '';
     },
     async exportFullInventory() {
+      this.action.path = `/teams/${this.teamId}/export_repositories`;
+      this.showExportRepositoryModal = true;
       const exportFullInventoryUrl = `/teams/${this.teamId}/export_repositories`;
+      this.export_path = exportFullInventoryUrl
       const formData = new FormData();
       const repositoryIds = [this.teamId];
       const fileType = 'csv';
