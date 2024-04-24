@@ -31,7 +31,7 @@
     <%- if sso_enabled? && okta_enabled? %>
       <div class="okta-sign-in-actions">
         <%= form_tag user_okta_omniauth_authorize_path, method: :post, id: 'oktaForm' do %>
-          <%= submit_tag t('devise.okta.sign_in_label'), class: 'btn btn-okta' %>
+          <%= submit_tag t('devise.okta.sign_in_label'), class: 'btn btn-primary' %>
         <% end %>
       </div>
     <% end %>
