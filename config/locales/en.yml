@@ -2309,6 +2309,8 @@ en:
       invalid_arguments: "Can't find %{key}"
     my_module_assigned_snapshot_service:
       invalid_arguments: "Can't find %{key}"
+    item_card_errors:
+      item_not_found: "Inventory item you're looking for doesn't exist."
     item_card:
       add_relationship_button_text: "Add"
       repository_item_relationships_modal:

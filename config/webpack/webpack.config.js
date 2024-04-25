@@ -39,6 +39,7 @@ const entryList = {
   vue_navigation_top_menu: './app/javascript/packs/vue/navigation/top_menu.js',
   vue_navigation_navigator: './app/javascript/packs/vue/navigation/navigator.js',
   vue_components_repository_item_sidebar: './app/javascript/packs/vue/repository_item_sidebar.js',
+  vue_components_repository_item_error_sidebar: './app/javascript/packs/vue/repository_item_error_sidebar.js',
   vue_components_action_toolbar: './app/javascript/packs/vue/action_toolbar.js',
   vue_components_open_vector_editor: './app/javascript/packs/vue/open_vector_editor.js',
   vue_navigation_breadcrumbs: './app/javascript/packs/vue/navigation/breadcrumbs.js',
