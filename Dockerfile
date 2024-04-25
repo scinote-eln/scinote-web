@@ -14,7 +14,9 @@ RUN apt-get update -qq && \
   librsvg2-2 \
   libvips42 \
   graphviz  \
-  libreoffice \
+  libreoffice-writer \
+  libreoffice-calc \
+  libreoffice-impress \
   fonts-droid-fallback \
   fonts-noto-mono \
   fonts-wqy-microhei \
