@@ -2905,7 +2905,7 @@ en:
             unlink_button: "Unlink"
             unlink_modal:
               title: "Unlink Microsoft Entra ID account?"
-              description_1: "Are you sure you would like unlink Microsoft Entra ID and SciNote accounts?"
+              description_1: "Are you sure you would like to unlink Microsoft Entra ID and SciNote accounts?"
               submit_button: "Submit"
           okta:
             title: "Your Okta Account"
@@ -2914,7 +2914,7 @@ en:
             unlink_button: "Unlink"
             unlink_modal:
               title: "Unlink Okta account?"
-              description_1: "Are you sure you would like unlink Okta and SciNote accounts?"
+              description_1: "Are you sure you would like to unlink Okta and SciNote accounts?"
               submit_button: "Submit"
           openid_connect:
             title: "Your OpenID Connect Account"
@@ -2923,7 +2923,7 @@ en:
             unlink_button: "Unlink"
             unlink_modal:
               title: "Unlink OpenID Connect account?"
-              description_1: "Are you sure you would like unlink OpenID Connect and SciNote accounts?"
+              description_1: "Are you sure you would like unlink to OpenID Connect and SciNote accounts?"
               submit_button: "Submit"
           saml:
             title: "Your SAML Account"
@@ -2932,7 +2932,7 @@ en:
             unlink_button: "Unlink"
             unlink_modal:
               title: "Unlink SAML account?"
-              description_1: "Are you sure you would like unlink SAML and SciNote accounts?"
+              description_1: "Are you sure you would like to unlink SAML and SciNote accounts?"
               submit_button: "Submit"
           errors:
             not_found: "You have no Connected accounts for this provider"
