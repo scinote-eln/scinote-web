@@ -320,6 +320,7 @@ en:
       task_step_asset_renamed_html: "%{user} renamed file %{old_name} to %{new_name} on protocol’s step <strong>%{step}</strong> on task <strong>%{my_module}</strong>."
       protocol_step_asset_renamed_html: "%{user} renamed file %{old_name} to %{new_name} on protocol’s step <strong>%{step}</strong> in Protocol repository."
       result_asset_renamed_html: "%{user} renamed file %{old_name} to %{new_name} on result <strong>%{result}</strong> on task <strong>%{my_module}</strong>."
+      item_added_with_import_html: "%{user} edited %{num_of_items} inventory item(s) in %{repository}."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -460,6 +461,7 @@ en:
       edit_tag: "Tag edited"
       delete_tag: "Tag deleted"
       import_inventory_items: "Inventory items imported"
+      item_added_with_import: "Item added with import"
       edit_image_on_result: "Image on result edited"
       edit_image_on_step: "Image on task step edited"
       edit_image_on_step_in_repository: "Image on step edited"
