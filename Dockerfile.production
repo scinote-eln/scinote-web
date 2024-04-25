@@ -79,7 +79,7 @@ RUN \
   libfile-mimeinfo-perl \
   yarnpkg && \
   /usr/share/nodejs/yarn/bin/yarn add puppeteer@npm:puppeteer-core && \
-  apt-get install -y libreoffice && \
+  apt-get install -y libreoffice-writer libreoffice-calc libreoffice-impress && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
 
 ARG BUILD_TIMESTAMP=1
