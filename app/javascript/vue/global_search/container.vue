@@ -27,7 +27,7 @@
       </div>
       <button class="btn btn-light btn-sm" @click="filterModalOpened = true">
         <i class="sn-icon sn-icon-search-options"></i>
-        {{ i18n.t('search.index.more_search_options') }}
+        <span class="tw-hidden lg:inline">{{ i18n.t('search.index.more_search_options') }}</span>
         <span
           v-if="activeFilters.length > 0"
           class="absolute -right-1 -top-1 rounded-full bg-sn-science-blue text-white flex items-center justify-center w-4 h-4 text-[9px]"
@@ -39,7 +39,7 @@
         <div class="h-4 w-[1px] bg-sn-grey"></div>
         <button class="btn btn-light btn-sm" @click="resetFilters">
           <i class="sn-icon sn-icon-close"></i>
-          {{ i18n.t('search.index.clear_filters') }}
+          <span class="tw-hidden lg:inline">{{ i18n.t('search.index.clear_filters') }}</span>
         </button>
       </template>
     </div>

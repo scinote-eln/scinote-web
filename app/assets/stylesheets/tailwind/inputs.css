@@ -40,7 +40,8 @@
     width: 100%;
   }
 
-  .sci-input-container-v2 input:focus {
+  .sci-input-container-v2 input:focus,
+  .sci-input-container-v2 input.active {
     @apply border-sn-science-blue shadow-none;
   }
 

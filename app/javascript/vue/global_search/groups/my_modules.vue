@@ -5,7 +5,7 @@
       <h2 class="flex items-center gap-2 mt-0 mb-4">
         <i class="sn-icon sn-icon-task"></i>
         {{ i18n.t('search.index.tasks') }}
-        [{{ total }}]
+        <span class="text-base" >[{{ total }}]</span>
       </h2>
       <SortFlyout v-if="selected" :sort="sort" @changeSort="changeSort"></SortFlyout>
     </div>
@@ -20,12 +20,13 @@
           <CellTemplate :label="i18n.t('search.index.experiment')" :url="row.attributes.experiment.url" :value="labelName(row.attributes.experiment)"/>
         </div>
       </div>
-      <div v-if="viewAll" class="mt-4">
+      <div v-if="viewAll">
+        <hr class="w-full mb-4 mt-0">
         <button class="btn btn-light" @click="$emit('selectGroup', 'MyModulesComponent')">View all</button>
       </div>
     </template>
     <Loader v-if="loading" :loaderRows="loaderRows" />
-    <ListEnd v-if="reachedEnd" />
+    <ListEnd v-if="reachedEnd && preparedResults.length > 0" />
     <NoSearchResult v-else-if="showNoSearchResult"  />
   </div>
 </template>
