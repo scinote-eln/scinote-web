@@ -1,8 +1,9 @@
 <template>
-  <GeneralDropdown ref="container" :canOpen="canOpen" :fieldOnlyOpen="true" @close="filtersOpened = false">
+  <GeneralDropdown ref="container" :canOpen="canOpen" :fieldOnlyOpen="true" @close="filtersOpened = false; flyoutOpened = false" @open="flyoutOpened = true">
     <template v-slot:field>
       <div class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}" :title="i18n.t('nav.search')">
         <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery" @keydown="focusHistoryItem"
+               :class="{'active': flyoutOpened}"
                @focus="openHistory" :placeholder="i18n.t('nav.search')" @keyup.enter="saveQuery"/>
         <i class="sn-icon sn-icon-search"></i>
         <div v-if="this.searchQuery.length > 1" class="flex items-center gap-1 absolute right-2 top-1.5">
@@ -38,7 +39,7 @@
           {{ query }}
         </div>
       </div>
-      <div v-else class="max-w-[600px]">
+      <div v-else class="w-[600px]">
         <div class="flex items-center gap-2">
           <button class="btn btn-secondary btn-xs"
                   :class="{'active': quickFilter === 'experiments'}"
@@ -55,11 +56,6 @@
                   @click="setQuickFilter('results')">
             {{ i18n.t('search.quick_search.results') }}
           </button>
-          <button class="btn btn-secondary btn-xs"
-                  :class="{'active': quickFilter === 'repository_rows'}"
-                  @click="setQuickFilter('repository_rows')">
-            {{ i18n.t('search.quick_search.inventory_items') }}
-          </button>
         </div>
         <hr class="my-2">
         <a v-if="!loading" v-for="(result, i) in results" :key="i"
@@ -75,7 +71,10 @@
               {{ result.attributes.updated_at }}
             </div>
           </div>
-          <div class="text-sn-grey text-xs flex items-center gap-1 pl-8">
+          <div
+            class="text-sn-grey text-xs flex items-center gap-1 pl-8"
+            :class="{'opacity-0': result.type.includes('label_templates')}"
+          >
             <div v-for="(breadcrumb, i) in getBreadcrumb(result.attributes)" :key="i"
                 class="flex items-center gap-1"
             >
@@ -174,7 +173,8 @@ export default {
       results: [],
       loading: false,
       filtersOpened: false,
-      focusedHistoryItem: null
+      focusedHistoryItem: null,
+      flyoutOpened: false
     };
   },
   mounted() {

@@ -3,18 +3,18 @@
     <div class="modal-dialog" role="document">
       <form @submit.prevent="submit">
         <div class="modal-content !pb-2.5">
-          <div class="modal-header">
+          <div class="modal-header flex-wrap">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <i class="sn-icon sn-icon-close"></i>
             </button>
             <h4 class="modal-title truncate !block" id="edit-project-modal-label">
               {{ i18n.t('search.filters.title') }}
             </h4>
-          </div>
-          <div class="modal-body !pb-0">
-            <p class="text-sn-dark-grey">
+            <div class="basis-full">
               {{ i18n.t('search.filters.sub_title') }}
-            </p>
+            </div>
+          </div>
+          <div class="modal-body !pb-0 !pt-2.5">
             <Filters
               :teams-url="teamsUrl"
               :users-url="usersUrl"
