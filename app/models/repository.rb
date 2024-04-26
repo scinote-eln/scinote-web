@@ -78,36 +78,6 @@ class Repository < RepositoryBase
     team.repositories.count < Rails.configuration.x.team_repositories_limit
   end
 
-  def self.search(
-    user,
-    query = nil,
-    page = 1,
-    repository = nil,
-    options = {}
-  )
-    serchable_row_fields = [RepositoryRow::PREFIXED_ID_SQL, 'repository_rows.name', 'users.full_name']
-
-    repositories = repository&.id || Repository.accessible_by_teams(user.teams).pluck(:id)
-
-    readable_rows = RepositoryRow.joins(:repository, :created_by).where(repository_id: repositories)
-
-    repository_rows = readable_rows.where_attributes_like(serchable_row_fields, query, options)
-
-    Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |_data_type, config|
-      custom_cell_matches = readable_rows.joins(config[:includes])
-                                         .where_attributes_like(config[:field], query, options)
-      repository_rows = repository_rows.or(readable_rows.where(id: custom_cell_matches))
-    end
-
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      repository_rows.select('repositories.id AS id, COUNT(DISTINCT repository_rows.id) AS counter')
-                     .group('repositories.id')
-    else
-      repository_rows.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
-  end
-
   def self.filter_by_teams(teams = [])
     teams.blank? ? self : where(team: teams)
   end

@@ -61,23 +61,22 @@ class Step < ApplicationRecord
   def self.search(user,
                   include_archived,
                   query = nil,
-                  page = 1,
-                  _current_team = nil,
+                  current_team = nil,
                   options = {})
-    protocol_ids = Protocol.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+
+    teams = options[:teams] || current_team || user.teams.select(:id)
+    protocol_ids = Protocol.search(user, include_archived, nil, teams,
+                                   options: { in_repository: false })
                            .pluck(:id)
+    my_module_ids = Protocol.search(user, include_archived, nil, teams,
+                                    options: { in_repository: true })
+                            .pluck(:id)
 
-    new_query = Step.distinct
-                    .left_outer_joins(:step_texts)
-                    .where(steps: { protocol_id: protocol_ids })
-                    .where_attributes_like(['steps.name', 'step_texts.text'], query, options)
-
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
+    Step.distinct
+        .left_outer_joins(:step_texts)
+        .where(protocol_id: protocol_ids + my_module_ids)
+        .where(steps: { protocol_id: protocol_ids })
+        .where_attributes_like_boolean(['steps.name', 'step_texts.text'], query, options)
   end
 
   def self.filter_by_teams(teams = [])

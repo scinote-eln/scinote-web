@@ -39,21 +39,14 @@ class ProjectFolder < ApplicationRecord
       .where(team: teams)
   end
 
-  def self.search(user, _include_archived, query = nil, page = 1, current_team = nil, options = {})
-    new_query = if current_team
-                  current_team.project_folders.where_attributes_like(:name, query, options)
-                else
-                  distinct.joins(team: :users)
-                          .where(teams: { user_assignments: { user: user } })
-                          .where_attributes_like('project_folders.name', query, options)
-                end
+  def self.search(user, include_archived, query = nil, current_team = nil, options = {})
+    teams = options[:teams] || current_team || user.teams.select(:id)
 
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
+    new_query = distinct.viewable_by_user(user, teams)
+                        .where_attributes_like_boolean('project_folders.name', query, options)
+    new_query = new_query.active unless include_archived
+
+    new_query
   end
 
   def self.inner_folders(team, project_folder = nil)

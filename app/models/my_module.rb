@@ -3,7 +3,8 @@
 class MyModule < ApplicationRecord
   ID_PREFIX = 'TA'
   include PrefixedIdModel
-  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description', PREFIXED_ID_SQL].freeze
+  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description', PREFIXED_ID_SQL,
+                           'comments.message', 'tags.name', 'users.full_name', 'users.email'].freeze
 
   include ArchivableModel
   include SearchableModel
@@ -108,25 +109,18 @@ class MyModule < ApplicationRecord
     user,
     include_archived,
     query = nil,
-    page = 1,
     current_team = nil,
     options = {}
   )
-    viewable_experiments = Experiment.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT, current_team)
-                                     .pluck(:id)
+    teams = options[:teams] || current_team || user.teams.select(:id)
 
-    new_query = MyModule.with_granted_permissions(user, MyModulePermissions::READ)
-                        .where(experiment: viewable_experiments)
-                        .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
+    new_query = distinct.left_joins(:task_comments, my_module_tags: :tag, user_my_modules: :user)
+                        .with_granted_permissions(user, MyModulePermissions::READ)
+                        .where(user_assignments: { team: teams })
+                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
     new_query = new_query.active unless include_archived
-
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
+    new_query
   end
 
   def self.viewable_by_user(user, teams)
