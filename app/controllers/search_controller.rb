@@ -15,120 +15,87 @@ class SearchController < ApplicationController
         when 'projects'
           @project_search_count = fetch_cached_count(Project)
           search_projects
-          if params[:preview] == 'true'
-            results = @project_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
-          else
-            results = @project_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
-          end
-
-          render json: results.includes(:team, :project_folder),
+          paginate_records
+          render json: @records.includes(:team, :project_folder),
                  each_serializer: GlobalSearch::ProjectSerializer,
                  meta: {
                   total: @search_count,
-                  next_page: (results.next_page if results.respond_to?(:next_page)),
+                  next_page: (@records.next_page if @records.respond_to?(:next_page)),
                 }
         when 'project_folders'
           @project_folder_search_count = fetch_cached_count ProjectFolder
           search_project_folders
-          results = if params[:preview] == 'true'
-                      @project_folder_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
-                    else
-                      @project_folder_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
-                    end
-          render json: results.includes(:team, :parent_folder),
+          paginate_records
+          render json: @records.includes(:team, :parent_folder),
                  each_serializer: GlobalSearch::ProjectFolderSerializer,
                  meta: {
                    total: @search_count,
-                   next_page: results.try(:next_page)
+                   next_page: @records.try(:next_page)
                  }
           return
         when 'reports'
           @report_search_count = fetch_cached_count Report
           search_reports
-          results = if params[:preview] == 'true'
-                      @report_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
-                    else
-                      @report_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
-                    end
-          render json: results.includes(:team, :project, :user),
+          paginate_records
+          render json: @records.includes(:team, :project, :user),
                  each_serializer: GlobalSearch::ReportSerializer,
                  meta: {
                    total: @search_count,
-                   next_page: results.try(:next_page)
+                   next_page: @records.try(:next_page)
                  }
           return
         when 'module_protocols'
           search_module_protocols
-          results = if params[:preview] == 'true'
-                      @module_protocol_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
-                    else
-                      @module_protocol_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
-                    end
-          render json: results.joins({ my_module: :experiment }, :team),
+          paginate_records
+          render json: @records.joins({ my_module: :experiment }, :team),
                  each_serializer: GlobalSearch::MyModuleProtocolSerializer,
                  meta: {
                    total: @search_count,
-                   next_page: results.try(:next_page)
+                   next_page: @records.try(:next_page)
                  }
           return
         when 'experiments'
           @experiment_search_count = fetch_cached_count Experiment
           search_experiments
-          results = if params[:preview] == 'true'
-                      @experiment_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
-                    else
-                      @experiment_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
-                    end
-          render json: results.includes(project: :team),
+          paginate_records
+          render json: @records.includes(project: :team),
                  each_serializer: GlobalSearch::ExperimentSerializer,
                  meta: {
                    total: @search_count,
-                   next_page: results.try(:next_page)
+                   next_page: @records.try(:next_page)
                  }
           return
         when 'tasks'
           @module_search_count = fetch_cached_count MyModule
           search_modules
-          results = if params[:preview] == 'true'
-                      @module_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
-                    else
-                      @module_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
-                    end
-          render json: results.includes(experiment: { project: :team }),
+          paginate_records
+          render json: @records.includes(experiment: { project: :team }),
                  each_serializer: GlobalSearch::MyModuleSerializer,
                  meta: {
                    total: @search_count,
-                   next_page: results.try(:next_page)
+                   next_page: @records.try(:next_page)
                  }
           return
         when 'results'
           @result_search_count = fetch_cached_count(Result)
           search_results
-          results = if params[:preview] == 'true'
-                      @result_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
-                    else
-                      @result_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
-                    end
-          render json: results.includes(my_module: { experiment: { project: :team } }),
+          paginate_records
+          render json: @records.includes(my_module: { experiment: { project: :team } }),
                  each_serializer: GlobalSearch::ResultSerializer,
                  meta: {
                    total: @search_count,
-                   next_page: results.try(:next_page)
+                   next_page: @records.try(:next_page)
                  }
           return
         when 'protocols'
           search_protocols
-          results = if params[:preview] == 'true'
-                      @protocol_results.take(4)
-                    else
-                      @protocol_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
-                    end
+          paginate_records
 
-          render json: results,
+          render json: @records,
                  each_serializer: GlobalSearch::ProtocolSerializer,
                  meta: {
                    total: @search_count,
-                   next_page: (results.next_page if results.respond_to?(:next_page))
+                   next_page: @records.try(:next_page)
                  }
           return
         when 'label_templates'
@@ -136,50 +103,38 @@ class SearchController < ApplicationController
 
           @label_template_search_count = fetch_cached_count(LabelTemplate)
           search_label_templates
-          results = if params[:preview] == 'true'
-                      @label_template_results.take(4)
-                    else
-                      @label_template_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
-                    end
+          paginate_records
 
-          render json: results,
+          render json: @records,
                  each_serializer: GlobalSearch::LabelTemplateSerializer,
                  meta: {
                    total: @search_count,
-                   next_page: (results.next_page if results.respond_to?(:next_page))
+                   next_page: @records.try(:next_page)
                  }
           return
         when 'repository_rows'
           @repository_row_search_count = fetch_cached_count(RepositoryRow)
           search_repository_rows
-          results = if params[:preview] == 'true'
-                      @repository_row_results.take(4)
-                    else
-                      @repository_row_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
-                    end
+          paginate_records
 
-          render json: results,
+          render json: @records,
                  each_serializer: GlobalSearch::RepositoryRowSerializer,
                  meta: {
                    total: @search_count,
-                   next_page: (results.next_page if results.respond_to?(:next_page))
+                   next_page: @records.try(:next_page)
                  }
           return
         when 'assets'
           @asset_search_count = fetch_cached_count(Asset)
           search_assets
           includes = [{ step: { protocol: { my_module: :experiment } } }, { result: { my_module: :experiment } }, :team]
-          results = if params[:preview] == 'true'
-                      @asset_results.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
-                    else
-                      @asset_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
-                    end
+          paginate_records
 
-          render json: results.includes(includes),
+          render json: @records.includes(includes),
                  each_serializer: GlobalSearch::AssetSerializer,
                  meta: {
                    total: @search_count,
-                   next_page: (results.next_page if results.respond_to?(:next_page))
+                   next_page: @records.try(:next_page)
                  }
           return
         end
@@ -220,16 +175,8 @@ class SearchController < ApplicationController
   def load_vars
     query = (params.fetch(:q) { '' }).strip
     @filters = params[:filters]
-    @include_archived = if @filters.present?
-                          @filters[:include_archived] == 'true'
-                        else
-                          true
-                        end
-    @teams = if @filters.present?
-               @filters[:teams]&.values || current_user.teams
-             else
-               current_user.teams
-             end
+    @include_archived = @filters.blank? || @filters[:include_archived] == 'true'
+    @teams = (@filters.present? && @filters[:teams]&.values) || current_user.teams
     @display_query = query
 
     splited_query = query.split
@@ -257,16 +204,16 @@ class SearchController < ApplicationController
   end
 
   def search_by_name(model, options={})
-    records = model.search(current_user,
-                           @include_archived,
-                           @search_query,
-                           nil,
-                           teams: @teams,
-                           users: @users,
-                           options: options)
+    @records = model.search(current_user,
+                            @include_archived,
+                            @search_query,
+                            nil,
+                            teams: @teams,
+                            users: @users,
+                            options: options)
 
-    records = filter_records(records, model) if @filters.present?
-    sort_records(records)
+    filter_records(model) if @filters.present?
+    sort_records
   end
 
   def count_by_name(model, options = {})
@@ -289,121 +236,119 @@ class SearchController < ApplicationController
   end
 
   def search_projects
-    @project_results = Project.none
-    @project_results = search_by_name(Project) if @project_search_count.positive?
+    @records = Project.none
+    search_by_name(Project) if @project_search_count.positive?
     @search_count = @project_search_count
   end
 
   def search_project_folders
-    @project_folder_results = ProjectFolder.none
-    @project_folder_results = search_by_name(ProjectFolder) if @project_folder_search_count.positive?
+    @records = ProjectFolder.none
+    @records = search_by_name(ProjectFolder) if @project_folder_search_count.positive?
     @search_count = @project_folder_search_count
   end
 
   def search_experiments
-    @experiment_results = Experiment.none
-    @experiment_results = search_by_name(Experiment) if @experiment_search_count.positive?
+    @records = Experiment.none
+    @records = search_by_name(Experiment) if @experiment_search_count.positive?
     @search_count = @experiment_search_count
   end
 
   def search_modules
-    @module_results = MyModule.none
-    @module_results = search_by_name(MyModule) if @module_search_count.positive?
+    @records = MyModule.none
+    @records = search_by_name(MyModule) if @module_search_count.positive?
     @search_count = @module_search_count
   end
 
   def search_module_protocols
-    @module_protocol_results = search_by_name(Protocol, { in_repository: false })
-    @search_count = @module_protocol_results.count
+    @records = search_by_name(Protocol, { in_repository: false })
+    @search_count = @records.count
   end
 
   def search_results
-    @result_results = Result.none
-    @result_results = search_by_name(Result) if @result_search_count.positive?
+    @records = Result.none
+    @records = search_by_name(Result) if @result_search_count.positive?
     @search_count = @result_search_count
   end
 
   def search_reports
-    @report_results = Report.none
-    @report_results = search_by_name(Report) if @report_search_count.positive?
+    @records = Report.none
+    @records = search_by_name(Report) if @report_search_count.positive?
     @search_count = @report_search_count
   end
 
   def search_protocols
-    @protocol_results = search_by_name(Protocol, { in_repository: true })
-    @search_count = @protocol_results.count
+    @records = search_by_name(Protocol, { in_repository: true })
+    @search_count = @records.count
   end
 
   def search_label_templates
-    @label_template_results = LabelTemplate.none
-    @label_template_results = search_by_name(LabelTemplate) if @label_template_search_count.positive?
+    @records = LabelTemplate.none
+    @records = search_by_name(LabelTemplate) if @label_template_search_count.positive?
     @search_count = @label_template_search_count
   end
 
   def search_steps
-    @step_results = []
-    @step_results = search_by_name(Step) if @step_search_count.positive?
+    @records = []
+    @records = search_by_name(Step) if @step_search_count.positive?
     @search_count = @step_search_count
   end
 
   def search_repository_rows
-    @repository_row_results = RepositoryRow.none
-    @repository_row_results = search_by_name(RepositoryRow) if @repository_row_search_count.positive?
+    @records = RepositoryRow.none
+    @records = search_by_name(RepositoryRow) if @repository_row_search_count.positive?
     @search_count = @repository_row_search_count
   end
 
   def search_assets
-    @asset_results = Asset.none
-    @asset_results = search_by_name(Asset) if @asset_search_count.positive?
+    @records = Asset.none
+    @records = search_by_name(Asset) if @asset_search_count.positive?
     @search_count = @asset_search_count
   end
 
-  def filter_records(records, model)
-    model_name = model.model_name.collection
-    if @filters[:created_at].present?
-      if @filters[:created_at][:on].present?
-        from_date = Time.zone.parse(@filters[:created_at][:on]).beginning_of_day.utc
-        to_date = Time.zone.parse(@filters[:created_at][:on]).end_of_day.utc
-      else
-        from_date = Time.zone.parse(@filters[:created_at][:from])
-        to_date = Time.zone.parse(@filters[:created_at][:to])
-      end
-
-      records = records.where("#{model_name}.created_at >= ?", from_date)
-      records = records.where("#{model_name}.created_at <= ?", to_date)
-    end
-
-    if @filters[:updated_at].present?
-      if @filters[:updated_at][:on].present?
-        from_date = Time.zone.parse(@filters[:updated_at][:on]).beginning_of_day.utc
-        to_date = Time.zone.parse(@filters[:updated_at][:on]).end_of_day.utc
-      else
-        from_date = Time.zone.parse(@filters[:updated_at][:from])
-        to_date = Time.zone.parse(@filters[:updated_at][:to])
-      end
-
-      records = records.where("#{model_name}.updated_at >= ?", from_date)
-      records = records.where("#{model_name}.updated_at <= ?", to_date)
-    end
-
-    if @filters[:users].present?
-      records = records.joins("INNER JOIN activities ON #{model_name}.id = activities.subject_id
-                              AND activities.subject_type= '#{model.name}'")
-                       .where('activities.owner_id': @filters[:users]&.values)
-    end
-    records
+  def filter_records(model)
+    filter_datetime!(model, :created_at) if @filters[:created_at].present?
+    filter_datetime!(model, :updated_at) if @filters[:updated_at].present?
+    filter_users!(model) if @filters[:users].present?
   end
 
-  def sort_records(records)
-    case params[:sort]
-    when 'atoz'
-      records.order(name: :asc)
-    when 'ztoa'
-      records.order(name: :desc)
-    when 'created_asc'
-      records.order(created_at: :asc)
-    else
-      records.order(created_at: :desc)
+  def sort_records
+    @records = case params[:sort]
+               when 'atoz'
+                 @records.order(name: :asc)
+               when 'ztoa'
+                 @records.order(name: :desc)
+               when 'created_asc'
+                 @records.order(created_at: :asc)
+               else
+                 @records.order(created_at: :desc)
+               end
+  end
+
+  def paginate_records
+    @records = if params[:preview] == 'true'
+                 @records.limit(Constants::GLOBAL_SEARCH_PREVIEW_LIMIT)
+               else
+                 @records.page(params[:page]).per(Constants::SEARCH_LIMIT)
+               end
+  end
+
+  def filter_datetime!(model, attribute)
+    model_name = model.model_name.collection
+    if @filters[attribute][:on].present?
+      from_date = Time.zone.parse(@filters[attribute][:on]).beginning_of_day.utc
+      to_date = Time.zone.parse(@filters[attribute][:on]).end_of_day.utc
+    elsif @filters[attribute][:from].present? && @filters[attribute][:to].present?
+      from_date = Time.zone.parse(@filters[attribute][:from])
+      to_date = Time.zone.parse(@filters[attribute][:to])
     end
+
+    @records = @records.where("#{model_name}.#{attribute} >= ?", from_date) if from_date.present?
+    @records = @records.where("#{model_name}.#{attribute} <= ?", to_date) if to_date.present?
+  end
+
+  def filter_users!(model)
+    @records = @records.joins("INNER JOIN activities ON #{model.model_name.collection}.id = activities.subject_id
+                               AND activities.subject_type= '#{model.name}'")
+                       .where('activities.owner_id': @filters[:users]&.values)
   end
 end

@@ -22,7 +22,7 @@ module Dashboard
     def project_filter
       projects = Project.readable_by_user(current_user)
                         .search(current_user, false, params[:query], current_team)
-                        .page(1)
+                        .page(params[:page] || 1)
                         .per(Constants::SEARCH_LIMIT)
                         .select(:id, :name)
       projects = projects.map { |i| { value: i.id, label: escape_input(i.name) } }
@@ -39,7 +39,7 @@ module Dashboard
         experiments = @project.experiments
                               .managable_by_user(current_user)
                               .search(current_user, false, params[:query], current_team)
-                              .page(1)
+                              .page(params[:page] || 1)
                               .per(Constants::SEARCH_LIMIT)
                               .select(:id, :name)
         experiments = experiments.map { |i| { value: i.id, label: escape_input(i.name) } }

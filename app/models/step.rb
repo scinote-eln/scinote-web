@@ -73,8 +73,8 @@ class Step < ApplicationRecord
                             .pluck(:id)
 
     Step.distinct
-        .where(protocol_id: protocol_ids + my_module_ids)
         .left_outer_joins(:step_texts)
+        .where(protocol_id: protocol_ids + my_module_ids)
         .where(steps: { protocol_id: protocol_ids })
         .where_attributes_like_boolean(['steps.name', 'step_texts.text'], query, options)
   end

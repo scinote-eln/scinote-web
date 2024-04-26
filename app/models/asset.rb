@@ -78,7 +78,7 @@ class Asset < ApplicationRecord
 
     assets_in_inventories = Asset.joins(
       repository_cell: { repository_column: :repository }
-    ).where(repositories: { team_id: teams }).pluck(:id)
+    ).where(repositories: { team: teams }).pluck(:id)
 
     assets =
       Asset.distinct

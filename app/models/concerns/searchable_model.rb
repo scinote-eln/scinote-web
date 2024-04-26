@@ -10,7 +10,7 @@ module SearchableModel
     scope :where_attributes_like, lambda { |attributes, query, options = {}|
       return unless query
 
-      attrs = convert_input(attributes)
+      attrs = normalized_attributes(attributes)
 
       if options[:whole_word].to_s == 'true' ||
          options[:whole_phrase].to_s == 'true' ||
@@ -102,7 +102,7 @@ module SearchableModel
     scope :where_attributes_like_boolean, lambda { |attributes, query, options = {}|
       return unless query
 
-      attrs = convert_input(attributes)
+      attrs = normalized_attributes(attributes)
       where_array = []
       value_array = {}
       current_phrase = ''
@@ -146,7 +146,7 @@ module SearchableModel
       where(where_array.join[0..-5], value_array)
     }
 
-    def self.convert_input(attributes)
+    def self.normalized_attributes(attributes)
       attrs = []
       if attributes.blank?
         # Do nothing in this case
