@@ -7,7 +7,7 @@ module ViewableModel
     has_many :view_states, as: :viewable, dependent: :destroy
   end
 
-  # This module requres that the class which includes it implements these methods:
+  # This module requires that the class which includes it implements these methods:
   # => default_view_state, returning hash with default state representation
   # => validate_view_state(view_state), custom validator for the state hash
 
@@ -20,7 +20,8 @@ module ViewableModel
   end
 
   def current_view_state(user)
-    state = view_states.find_by(user: user)
-    state || view_states.create!(user: user, state: default_view_state)
+    view_states.find_or_create_by(user:) do |new_state|
+      new_state.state = default_view_state
+    end
   end
 end
