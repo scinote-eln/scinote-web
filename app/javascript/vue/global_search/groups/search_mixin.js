@@ -36,6 +36,9 @@ export default {
     };
   },
   watch: {
+    filters() {
+      this.reloadData();
+    },
     selected() {
       if (this.selected) {
         if (!this.fullDataLoaded) {
@@ -46,13 +49,7 @@ export default {
       }
     },
     query() {
-      if (this.query.length > 1) {
-        this.results = [];
-        this.page = 1;
-        this.total = 0;
-        this.fullDataLoaded = false;
-        this.loadData();
-      }
+      this.reloadData();
     }
   },
   mounted() {
@@ -104,6 +101,15 @@ export default {
       this.results = [];
       this.page = 1;
       this.loadData();
+    },
+    reloadData() {
+      if (this.query.length > 1) {
+        this.results = [];
+        this.page = 1;
+        this.total = 0;
+        this.fullDataLoaded = false;
+        this.loadData();
+      }
     },
     loadData() {
       if (this.query.length < 2) return;
