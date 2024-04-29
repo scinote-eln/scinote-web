@@ -21,7 +21,7 @@
               :filters="filters"
               :currentTeam="currentTeam"
               @search="(newFilters) => { this.$emit('search', newFilters); }"
-              @close="close" />
+              @cancel="close" />
           </div>
         </div>
       </form>
