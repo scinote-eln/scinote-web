@@ -1,5 +1,5 @@
 # Building stage
-FROM ruby:3.2.2-bookworm AS builder
+FROM ruby:3.2.4-bookworm AS builder
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN \
@@ -41,7 +41,7 @@ RUN \
   bash -c "rake assets:precompile && rake deface:precompile && rm -rf ./tmp/cache"
 
 # Final stage
-FROM ruby:3.2.2-bookworm AS runner
+FROM ruby:3.2.4-bookworm AS runner
 MAINTAINER SciNote <info@scinote.net>
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
@@ -78,7 +78,7 @@ RUN \
   chromium \
   libfile-mimeinfo-perl \
   yarnpkg && \
-  /usr/share/nodejs/yarn/bin/yarn add puppeteer@npm:puppeteer-core && \
+  /usr/share/nodejs/yarn/bin/yarn add puppeteer-core && \
   apt-get install -y libreoffice-writer libreoffice-calc libreoffice-impress && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
 
@@ -98,7 +98,11 @@ ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
 ENV PATH=$GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
 
-COPY --from=builder $APP_HOME $APP_HOME
+RUN adduser scinote
+RUN chown scinote:scinote $APP_HOME
+USER scinote
+
+COPY --from=builder --chown=scinote:scinote $APP_HOME $APP_HOME
 
 WORKDIR $APP_HOME
 

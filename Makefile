@@ -22,13 +22,13 @@ heroku:
 	@echo "Set environment variables, DATABASE_URL, RAILS_SERVE_STATIC_FILES, RAKE_ENV, RAILS_ENV, SECRET_KEY_BASE"
 
 docker:
-	@docker-compose build
+	@docker-compose --progress plain build
 
 docker-ci:
 	@docker-compose --progress plain build web
 
 docker-production:
-	@docker-compose -f docker-compose.production.yml build --build-arg BUILD_TIMESTAMP=$(BUILD_TIMESTAMP)
+	@docker-compose --progress plain -f docker-compose.production.yml build --build-arg BUILD_TIMESTAMP=$(BUILD_TIMESTAMP)
 
 config-production:
 ifeq (production.env,$(wildcard production.env))

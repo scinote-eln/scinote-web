@@ -3,8 +3,8 @@
 Grover.configure do |config|
   config.options = {
     cache: false,
-    executable_path: './bin/chromium',
-    launch_args: ['--no-sandbox'],
+    executable_path: ENV['CHROMIUM_PATH'] || 'chromium',
+    launch_args: ['--disable-dev-shm-usage'],
     timeout: Constants::GROVER_TIMEOUT_MS
   }
 end
