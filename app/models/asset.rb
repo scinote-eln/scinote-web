@@ -65,25 +65,20 @@ class Asset < ApplicationRecord
 
     teams = options[:teams] || current_team || user.teams.select(:id)
 
-    assets_in_steps = Asset.joins(:step).where(
-      'steps.id IN (?)',
-      Step.search(user, include_archived, nil, teams)
-          .select(:id)
-    ).pluck(:id)
+    assets_in_steps = Asset.joins(:step)
+                           .where(steps: { protocol: Protocol.search(user, include_archived, nil, teams) })
+                           .pluck(:id)
 
-    assets_in_results = Asset.joins(:result).where(
-      'results.id IN (?)',
-      Result.search(user, include_archived, nil, teams).select(:id)
-    ).pluck(:id)
+    assets_in_results = Asset.joins(:result)
+                             .where(results: { id: Result.search(user, include_archived, nil, teams) })
+                             .pluck(:id)
 
     assets_in_inventories = Asset.joins(
       repository_cell: { repository_column: :repository }
     ).where(repositories: { team: teams }).pluck(:id)
 
-    assets =
-      Asset.distinct
-           .where('assets.id IN (?) OR assets.id IN (?) OR assets.id IN (?)',
-                  assets_in_steps, assets_in_results, assets_in_inventories)
+    assets = distinct.where('assets.id IN (?) OR assets.id IN (?) OR assets.id IN (?)',
+                            assets_in_steps, assets_in_results, assets_in_inventories)
 
     Asset.left_outer_joins(:asset_text_datum)
          .joins(file_attachment: :blob)

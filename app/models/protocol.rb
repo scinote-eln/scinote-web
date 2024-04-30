@@ -169,24 +169,32 @@ class Protocol < ApplicationRecord
                   current_team = nil,
                   options = {})
     teams = options[:teams] || current_team || user.teams.select(:id)
-    new_query = if options[:options][:in_repository]
-                  latest_available_versions(teams)
-                    .with_granted_permissions(user, ProtocolPermissions::READ)
-                else
-                  distinct.joins(:my_module)
-                          .joins("INNER JOIN user_assignments my_module_user_assignments " \
-                                 "ON my_module_user_assignments.assignable_type = 'MyModule' " \
-                                 "AND my_module_user_assignments.assignable_id = my_modules.id")
-                          .where(my_module_user_assignments: { user_id: user })
-                          .where(team: teams)
-                end
 
-    new_query = new_query.active unless include_archived
+    protocol_templates = if options[:options]&.dig(:in_repository).present? || options[:options].blank?
+                           templates = latest_available_versions(teams)
+                                       .with_granted_permissions(user, ProtocolPermissions::READ)
+                                       .select(:id)
+                           templates = templates.active unless include_archived
+                           templates
+                         end || []
 
-    new_query.left_outer_joins(steps: [:step_texts, { step_tables: :table },
-                                       { checklists: :checklist_items }, :step_comments])
-             .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
-             .distinct
+    protocol_my_modules = if options[:options]&.dig(:in_repository).blank?
+                            protocols = distinct.joins(:my_module)
+                                                .joins("INNER JOIN user_assignments my_module_user_assignments " \
+                                                       "ON my_module_user_assignments.assignable_type = 'MyModule' " \
+                                                       "AND my_module_user_assignments.assignable_id = my_modules.id")
+                                                .where(my_module_user_assignments: { user_id: user })
+                                                .where(team: teams)
+                            protocols = protocols.active unless include_archived
+                            protocols.pluck(:id)
+                          end || []
+
+    distinct.where('(protocols.protocol_type IN (?) AND protocols.my_module_id IN (?)) OR (protocols.id IN (?))',
+                   [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
+                   protocol_my_modules, protocol_templates)
+            .left_outer_joins(steps: [:step_texts, { step_tables: :table },
+                                      { checklists: :checklist_items }, :step_comments])
+            .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
   end
 
   def self.latest_available_versions(teams)
