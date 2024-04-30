@@ -238,7 +238,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    combine_pdf (1.0.23)
+    combine_pdf (1.0.26)
       matrix
       ruby-rc4 (>= 0.1.5)
     concurrent-ruby (1.2.3)
@@ -348,7 +348,7 @@ GEM
       activesupport (>= 6.1)
     graphviz (1.2.1)
       process-pipeline
-    grover (1.1.5)
+    grover (1.1.7)
       combine_pdf (~> 1.0)
       nokogiri (~> 1.0)
     hashdiff (1.0.1)
@@ -884,7 +884,7 @@ DEPENDENCIES
   zip-zip
 
 RUBY VERSION
-   ruby 3.2.2p53
+   ruby 3.2.4p170
 
 BUNDLED WITH
-   2.4.10
+   2.4.19

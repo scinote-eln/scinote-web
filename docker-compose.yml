@@ -18,6 +18,8 @@ services:
     image: scinote_web_development
     container_name: scinote_web_development
     stdin_open: true
+    cap_add:
+      - SYS_ADMIN
     tty: true
     depends_on:
       - db

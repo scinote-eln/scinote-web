@@ -1,0 +1,146 @@
+# Base image
+FROM amazonlinux:2 AS base
+MAINTAINER SciNote <info@scinote.net>
+
+ENV LANG C.UTF-8
+ENV RUBY_VERSION 3.2.4
+ENV RUBY_DOWNLOAD_URL https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.4.tar.xz
+ENV RUBY_DOWNLOAD_SHA256 e7f1653d653232ec433472489a91afbc7433c9f760cc822defe7437c9d95791b
+
+RUN echo 'exclude=openssl11*' >> /etc/yum.conf
+RUN yum install -y yum-plugin-versionlock && \
+  yum versionlock \
+  openssl-libs-1.0.2k-16.amzn2.0.3 \
+  openssl-1.0.2k-16.amzn2.0.3 \
+  openssl-devel-1.0.2k-16.amzn2.0.3 && \
+  yum downgrade -y openssl-libs
+
+RUN amazon-linux-extras enable \
+  postgresql14 \
+  libreoffice \
+  java-openjdk11 \
+  epel
+
+RUN yum clean metadata && \
+  yum update -q && \
+  yum install -y --disableplugin=priorities \
+  ruby \
+  git \
+  autoconf \
+  gcc \
+  gcc-c++ \
+  rust \
+  tar \
+  gtk3 \
+  xz \
+  which \
+  procps \
+  cargo \
+  bison \
+  gdbm-devel \
+  libyaml-devel \
+  readline-devel \
+  libffi-devel \
+  wget \
+  openssl \
+  openssl-devel \
+  postgresql \
+  libpq-devel \
+  java-11-openjdk \
+  poppler-utils \
+  librsvg2 \
+  graphviz \
+  epel-release
+RUN yum install -y chromium
+
+# Ruby compiling code is based on https://github.com/docker-library/ruby/blob/master/3.2/bookworm/Dockerfile
+############################################################################################################
+
+# skip installing gem documentation
+RUN set -eux; \
+  mkdir -p /usr/local/etc; \
+  { \
+  echo 'install: --no-document'; \
+  echo 'update: --no-document'; \
+  } >> /usr/local/etc/gemrc
+
+RUN set -eux; \
+  wget -O ruby.tar.xz "$RUBY_DOWNLOAD_URL"; \
+  echo "$RUBY_DOWNLOAD_SHA256 *ruby.tar.xz" | sha256sum --check --strict; \
+  mkdir -p /usr/src/ruby; \
+  tar -xJf ruby.tar.xz -C /usr/src/ruby --strip-components=1; \
+  rm ruby.tar.xz; \
+  cd /usr/src/ruby; \
+  autoconf; \
+  ./configure --disable-install-doc --enable-shared --enable-yjit; \
+  make -j "$(nproc)"; \
+  make install; \
+  cd /; \
+  rm -r /usr/src/ruby; \
+  yum remove -y ruby*; \
+  # verify we have no "ruby" packages installed
+  if yum list installed | grep -i ruby; then exit 1; fi; \
+  [ "$(command -v ruby)" = '/usr/local/bin/ruby' ]; \
+  # rough smoke test
+  ruby --version; \
+  gem --version; \
+  bundle --version
+
+############################################################################################################
+
+ENV PS1 '\u@\h:\w\$ '
+ENV APP_HOME /usr/src/app
+ENV RAILS_ENV=production
+ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
+
+RUN adduser -m scinote
+RUN mkdir $APP_HOME && chown scinote:scinote $APP_HOME
+USER scinote
+
+WORKDIR /home/scinote
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+RUN source ~/.bashrc && \
+  nvm install lts/gallium && \
+  npm install yarn
+ENV PATH $GEM_HOME/bin:~/node_modules/.bin:$APP_HOME/bin:$PATH
+
+# Building stage
+FROM base AS builder
+
+ENV BUNDLE_APP_CONFIG=.bundle
+ENV BUNDLE_BUILD__SASSC=--disable-march-tune-native
+
+COPY --chown=scinote:scinote . $APP_HOME
+RUN rm -f $APP_HOME/config/application.yml $APP_HOME/production.env
+
+WORKDIR $APP_HOME
+RUN bundle config set without 'development test' && \
+  bundle config set path '/usr/src/app/tmp/bundle' && \
+  bundle install --jobs `nproc` && \
+  cp -r tmp/bundle/ vendor && \
+  rm -rf vendor/bundle/ruby/3.2.0/cache && \
+  find vendor/bundle/ruby -type d -name '.git' -exec rm -rf {} + && \
+  bundle config --local path vendor/bundle
+
+RUN DATABASE_URL=postgresql://postgres@db/scinote_production \
+  SECRET_KEY_BASE=dummy \
+  DEFACE_ENABLED=true \
+  source ~/.bashrc && \
+  bash -c "rails assets:precompile && rails deface:precompile && rm -rf ./tmp/cache"
+
+# Final stage
+FROM base AS runner
+
+ENV RAILS_ENV=production
+ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
+ENV BUNDLE_APP_CONFIG=.bundle
+
+WORKDIR /home/scinote
+RUN source ~/.bashrc && \
+  npm install puppeteer-core
+
+COPY --from=builder $APP_HOME $APP_HOME
+
+WORKDIR $APP_HOME
+
+CMD rails s -b 0.0.0.0
