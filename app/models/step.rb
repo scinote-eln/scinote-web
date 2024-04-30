@@ -58,27 +58,6 @@ class Step < ApplicationRecord
   scope :in_order, -> { order(position: :asc) }
   scope :desc_order, -> { order(position: :desc) }
 
-  def self.search(user,
-                  include_archived,
-                  query = nil,
-                  current_team = nil,
-                  options = {})
-
-    teams = options[:teams] || current_team || user.teams.select(:id)
-    protocol_ids = Protocol.search(user, include_archived, nil, teams,
-                                   options: { in_repository: false })
-                           .pluck(:id)
-    my_module_ids = Protocol.search(user, include_archived, nil, teams,
-                                    options: { in_repository: true })
-                            .pluck(:id)
-
-    Step.distinct
-        .left_outer_joins(:step_texts)
-        .where(protocol_id: protocol_ids + my_module_ids)
-        .where(steps: { protocol_id: protocol_ids })
-        .where_attributes_like_boolean(['steps.name', 'step_texts.text'], query, options)
-  end
-
   def self.filter_by_teams(teams = [])
     return self if teams.blank?
 
