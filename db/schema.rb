@@ -1294,6 +1294,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_18_094253) do
     t.bigint "viewable_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["user_id", "viewable_id", "viewable_type"], name: "index_view_states_on_user_id_and_viewable_id_and_viewable_type", unique: true
     t.index ["user_id"], name: "index_view_states_on_user_id"
     t.index ["viewable_type", "viewable_id"], name: "index_view_states_on_viewable_type_and_viewable_id"
   end
