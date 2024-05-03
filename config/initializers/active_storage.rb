@@ -16,7 +16,7 @@ Rails.application.config.active_storage.analyzers.append(ActiveStorage::Analyzer
 
 Rails.application.config.active_storage.variable_content_types << 'image/svg+xml'
 
-Rails.application.config.active_storage.variant_processor = :vips if ENV['ACTIVESTORAGE_ENABLE_VIPS'] == 'true'
+Rails.application.config.active_storage.variant_processor = ENV['ACTIVESTORAGE_ENABLE_VIPS'] == 'true' ? :vips : :mini_magick
 
 ActiveStorage::Downloader.class_eval do
   def open(key, checksum: nil, verify: true, name: 'ActiveStorage-', tmpdir: nil)
@@ -31,3 +31,4 @@ ActiveStorage::Downloader.class_eval do
     end
   end
 end
+
