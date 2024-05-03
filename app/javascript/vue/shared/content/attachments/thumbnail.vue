@@ -109,28 +109,23 @@
           :href="attachment.attributes.urls.download" data-turbolinks="false">
           <i class="sn-icon sn-icon-export"></i>
         </a>
-        <template v-if="attachment.attributes.urls.delete">
-          <a class="btn btn-light icon-btn thumbnail-action-btn"
-            :title="i18n.t('attachments.thumbnail.buttons.delete')"
-            @click.prevent.stop="deleteModal = true">
-            <i class="sn-icon sn-icon-delete"></i>
-          </a>
-        </template>
+        <ContextMenu
+          class="!relative !top-0 !left-0"
+          v-show="showOptions"
+          :attachment="attachment"
+          :hideEdit="true"
+          @attachment:viewMode="updateViewMode"
+          @attachment:delete="deleteAttachment"
+          @attachment:moved="attachmentMoved"
+          @attachment:uploaded="reloadAttachments"
+          @attachment:changed="$emit('attachment:changed', $event)"
+          @attachment:update="$emit('attachment:update', $event)"
+          @menu-visibility-changed="handleMenuVisibilityChange"
+          @menu-toggle="toggleMenu"
+          :withBorder="true"
+        />
       </div>
     </div>
-    <ContextMenu
-      v-show="showOptions"
-      :attachment="attachment"
-      @attachment:viewMode="updateViewMode"
-      @attachment:delete="deleteAttachment"
-      @attachment:moved="attachmentMoved"
-      @attachment:uploaded="reloadAttachments"
-      @attachment:changed="$emit('attachment:changed', $event)"
-      @attachment:update="$emit('attachment:update', $event)"
-      @menu-visibility-changed="handleMenuVisibilityChange"
-      @menu-toggle="toggleMenu"
-      :withBorder="true"
-    />
     <Teleport to="body">
       <deleteAttachmentModal
         v-if="deleteModal"
