@@ -50,9 +50,8 @@ RUN yum clean metadata && \
   poppler-utils \
   librsvg2 \
   graphviz \
-  GraphicsMagick \
   epel-release
-RUN yum install -y chromium
+RUN yum install -y GraphicsMagick chromium
 
 # Ruby compiling code is based on https://github.com/docker-library/ruby/blob/master/3.2/bookworm/Dockerfile
 ############################################################################################################
