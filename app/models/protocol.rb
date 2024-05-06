@@ -5,9 +5,9 @@ class Protocol < ApplicationRecord
 
   include ArchivableModel
   include PrefixedIdModel
-  SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description',
+  SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description', PREFIXED_ID_SQL, 'steps.name',
                            'step_texts.name', 'step_texts.text', 'tables.name',
-                           'checklists.name', 'checklist_items.text', PREFIXED_ID_SQL].freeze
+                           'checklists.name', 'checklist_items.text', 'comments.message'].freeze
   REPOSITORY_TYPES = %i(in_repository_published_original in_repository_draft in_repository_published_version).freeze
 
   include SearchableModel
@@ -189,11 +189,11 @@ class Protocol < ApplicationRecord
                             protocols.pluck(:id)
                           end || []
 
-    distinct.where('(protocols.protocol_type IN (?) AND protocols.my_module_id IN (?)) OR (protocols.id IN (?))',
+    distinct.left_joins(steps: [:step_texts, { step_tables: :table },
+                                { checklists: :checklist_items }, :step_comments])
+            .where('(protocols.protocol_type IN (?) AND protocols.my_module_id IN (?)) OR (protocols.id IN (?))',
                    [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
                    protocol_my_modules, protocol_templates)
-            .left_outer_joins(steps: [:step_texts, { step_tables: :table },
-                                      { checklists: :checklist_items }, :step_comments])
             .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
   end
 
