@@ -2923,7 +2923,7 @@ en:
             unlink_button: "Unlink"
             unlink_modal:
               title: "Unlink OpenID Connect account?"
-              description_1: "Are you sure you would like unlink to OpenID Connect and SciNote accounts?"
+              description_1: "Are you sure you would like to unlink OpenID Connect and SciNote accounts?"
               submit_button: "Submit"
           saml:
             title: "Your SAML Account"
