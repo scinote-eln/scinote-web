@@ -137,6 +137,7 @@ export default {
         })
         .finally(() => {
           this.loading = false;
+          this.$emit('updated');
         });
     }
   }

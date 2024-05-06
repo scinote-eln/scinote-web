@@ -7,7 +7,7 @@
         </h1>
       </div>
     </div>
-    <div class="bg-white rounded p-4 flex gap-2.5 items-center mb-4 sticky top-0">
+    <div class="bg-white rounded p-4 flex gap-2.5 z-10 items-center mb-4 sticky top-0">
       <div class="left-icon sci-input-container-v2 w-72 input-sm"
            :title="i18n.t('nav.search')" :class="{'error': invalidQuery}">
         <input ref="searchField" type="text" class="!pr-9" :value="localQuery" @change="changeQuery" :placeholder="i18n.t('nav.search')"/>
@@ -45,6 +45,7 @@
     </div>
     <template v-for="group in searchGroups">
       <component
+        ref="groupComponents"
         :key="group"
         :is="group"
         v-if="activeGroup === group || !activeGroup"
@@ -53,8 +54,12 @@
         :searchUrl="searchUrl"
         :filters="filters"
         @selectGroup="setActiveGroup"
+        @updated="calculateTotalElements"
       />
     </template>
+    <div v-if="totalElements === 0 && !loading" class="bg-white rounded p-4">
+      <NoSearchResult />
+    </div>
     <teleport to='body'>
       <FiltersModal
         v-if="filterModalOpened"
@@ -83,6 +88,7 @@ import LabelTemplatesComponent from './groups/label_templates.vue';
 import ReportsComponent from './groups/reports.vue';
 import FiltersModal from './filters_modal.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
+import NoSearchResult from './groups/helpers/no_search_result.vue';
 
 export default {
   emits: ['search', 'selectGroup'],
@@ -122,7 +128,8 @@ export default {
     LabelTemplatesComponent,
     ReportsComponent,
     FiltersModal,
-    GeneralDropdown
+    GeneralDropdown,
+    NoSearchResult
   },
   data() {
     return {
@@ -130,6 +137,7 @@ export default {
       localQuery: this.query,
       filterModalOpened: false,
       activeGroup: null,
+      totalElements: 0,
       searchGroups: [
         'FoldersComponent',
         'ProjectsComponent',
@@ -191,6 +199,15 @@ export default {
     }
   },
   methods: {
+    calculateTotalElements() {
+      let total = 0;
+      if (this.$refs.groupComponents) {
+        this.$refs.groupComponents.forEach((group) => {
+          total += group.total;
+        });
+      }
+      this.totalElements = total;
+    },
     setActiveGroup(group) {
       if (group === this.activeGroup) {
         this.activeGroup = null;
