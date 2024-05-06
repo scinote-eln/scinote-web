@@ -7,50 +7,18 @@
             <%= t("dashboard.create_task_modal.title") %>
           </h2>
         </div>
-        <div class="modal-body">
-          <div class="description">
-            <%= t("dashboard.create_task_modal.description") %>
+        <div class="modal-body !pb-0">
+          <div id="DashboardNewTask">
+            <dashboard-new-task
+              projects-url="<%= dashboard_quick_start_project_filter_path  %>"
+              experiments-url="<%= dashboard_quick_start_experiment_filter_path %>"
+              create-url="<%= dashboard_quick_start_create_task_path %>"
+              roles-url="<%= user_roles_projects_path %>"
+            ></dashboard-new-task>
           </div>
-          <div class="select-block" data-error-object="Project" data-error="">
-            <label><%= t("dashboard.create_task_modal.project") %></label>
-            <select class="project-filter"
-                    data-ajax-url="<%= dashboard_quick_start_project_filter_path %>"
-                    data-placeholder="<%= t("dashboard.create_task_modal.project_placeholder") %>"></select>
-          </div>
-          <div class="new-projects-visibility" style="display: none;">
-            <div class="project-visibility-container">
-              <div class="project-visibility-title"><%= t("dashboard.create_task_modal.project_visibility_label") %></div>
-              <div class="sci-toggles-group" data-toggle="buttons">
-                <input type="radio" name="projects-visibility-selector" class="sci-toggle-item" value="hidden" checked="checked">
-                <label class="sci-toggle-item-label">
-                  <%= t("dashboard.create_task_modal.project_visibility_members") %>
-                </label>
-                <input type="radio" name="projects-visibility-selector" class="sci-toggle-item" value="visible">
-                <label class="sci-toggle-item-label">
-                  <%= t("dashboard.create_task_modal.project_visibility_all") %>
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="select-block" data-error-object="Experiment" data-error="">
-            <label><%= t("dashboard.create_task_modal.experiment") %></label>
-            <select class="experiment-filter"
-                    data-ajax-url="<%= dashboard_quick_start_experiment_filter_path %>"
-                    data-disable-on-load="true"
-                    data-disable-placeholder="<%= t("dashboard.create_task_modal.experiment_disabled_placeholder") %>"
-                    data-placeholder="<%= t("dashboard.create_task_modal.experiment_placeholder") %>"></select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button"
-                  class="create-task-button btn btn-primary"
-                  data-ajax-url="<%= dashboard_quick_start_create_task_path %>"
-                  data-dismiss="modal"
-                  disabled>
-            <%= t("dashboard.create_task_modal.create_task") %>
-          </button>
         </div>
       </div>
     </div>
-
 </div>
+
+<%= javascript_include_tag 'vue_dashboard_new_task' %>
