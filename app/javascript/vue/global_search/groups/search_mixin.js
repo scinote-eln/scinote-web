@@ -40,12 +40,8 @@ export default {
       this.reloadData();
     },
     selected() {
-      if (this.selected) {
-        if (!this.fullDataLoaded) {
-          this.total = 0;
-          this.results = [];
-          this.loadData();
-        }
+      if (this.selected && !this.fullDataLoaded) {
+        this.reloadData();
       }
     },
     query() {
