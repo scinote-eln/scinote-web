@@ -9,10 +9,31 @@ ENV RUBY_DOWNLOAD_SHA256 e7f1653d653232ec433472489a91afbc7433c9f760cc822defe7437
 RUN echo 'exclude=openssl11*' >> /etc/yum.conf
 RUN yum install -y yum-plugin-versionlock && \
   yum versionlock \
+  dracut-fips-033-535.amzn2.1.3 \
+  dracut-fips-aesni-033-535.amzn2.1.3 \
+  nss-3.36.0-5.amzn2 \
+  nss-sysinit-3.36.0-5.amzn2 \
+  nss-tools-3.36.0-5.amzn2 \
+  nss-softokn-3.36.0-5.amzn2.0.1 \
+  nss-softokn-freebl-3.36.0-5.amzn2.0.1 \
   openssl-libs-1.0.2k-16.amzn2.0.3 \
   openssl-1.0.2k-16.amzn2.0.3 \
-  openssl-devel-1.0.2k-16.amzn2.0.3 && \
-  yum downgrade -y openssl-libs
+  openssl-devel-1.0.2k-16.amzn2.0.3 \
+  libgcrypt-1.5.3-14.amzn2.0.2 \
+  gnutls-3.3.29-9.amzn2 \
+  nettle-2.7.1-8.amzn2.0.2 \
+  gmp-6.0.0-15.amzn2.0.2 && \
+  yum downgrade -y \
+    nss-sysinit \
+    nss-tools \
+    nss-softokn-freebl \
+    nss-softokn \
+    nss \
+    openssl-libs \
+    libgcrypt \
+    gnutls \
+    nettle \
+    gmp
 
 RUN amazon-linux-extras enable \
   postgresql14 \
@@ -41,6 +62,8 @@ RUN yum clean metadata && \
   readline-devel \
   libffi-devel \
   wget \
+  dracut-fips \
+  dracut-fips-aesni \
   openssl \
   openssl-devel \
   postgresql \
