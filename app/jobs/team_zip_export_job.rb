@@ -2,7 +2,6 @@
 
 require 'fileutils'
 require 'csv'
-require 'vips'
 
 # rubocop:disable Metrics/BlockLength
 class TeamZipExportJob < ZipExportJob
