@@ -8,11 +8,12 @@ module ActiveStorage
     STAGING_TAG_KEY = 'State'
     STAGING_TAG_VALUE = 'Staging'
 
-    attr_reader :subfolder, :staging_bucket
+    attr_reader :subfolder, :staging_bucket, :use_sha256_checksums
 
     def initialize(bucket:, upload: {}, public: false, **options)
       @subfolder = options.delete(:subfolder)
       staging_bucket = options.delete(:staging_bucket)
+      @use_sha256_checksums = options.delete(:use_sha256_checksums)
       super
       @staging_bucket = @client.bucket(staging_bucket) if staging_bucket.present?
     end
@@ -43,6 +44,16 @@ module ActiveStorage
 
         generated_url
       end
+    end
+
+    def headers_for_direct_upload(key, content_type:, checksum:, filename: nil, disposition: nil, custom_metadata: {}, **)
+      content_disposition = content_disposition_with(type: disposition, filename: filename) if filename
+      checksum_key = use_sha256_checksums ? 'x-amz-checksum-sha256' : 'Content-MD5'
+
+      { 'Content-Type' => content_type,
+        'Content-Disposition' => content_disposition,
+        checksum_key => checksum,
+        **custom_metadata_headers(custom_metadata) }
     end
 
     def delete_prefixed(prefix)
