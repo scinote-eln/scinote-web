@@ -6,10 +6,10 @@
     </div>
   </template>
   <template v-else>
-    <div class="truncate">
+    <div class="truncate whitespace-pre">
       {{ text.slice(0, endCharacters * -1) }}
     </div>
-    <div class="shrink-0">
+    <div class="shrink-0 whitespace-pre">
       {{ text.slice(text.length - endCharacters) }}
     </div>
   </template>
