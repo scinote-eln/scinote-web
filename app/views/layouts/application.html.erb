@@ -67,6 +67,7 @@
     class="<%= yield :body_class %> <%= 'navigator-collapsed' if !@navigator || session[:navigator_collapsed] %> <%= 'w-[98%]' if params[:controller] == 'label_templates' && params[:action] == 'show'%>"
     <% if user_signed_in? && current_team.present? %>
     data-current-team-id="<%= current_team.id %>"
+    data-current-team-name="<%= current_team.name %>"
     data-atwho-users-url="<%= atwho_users_team_path(current_team) %>"
     data-atwho-task-url="<%= atwho_my_modules_team_path(current_team) %>"
     data-atwho-project-url="<%= atwho_projects_team_path(current_team) %>"
