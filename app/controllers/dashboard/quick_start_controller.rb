@@ -10,6 +10,7 @@ module Dashboard
 
     def create_task
       my_module = CreateMyModuleService.new(current_user, current_team,
+                                            my_module: create_my_module_params,
                                             project: @project || create_project_params,
                                             experiment: @experiment || create_experiment_params).call
       if my_module.errors.blank?
@@ -23,35 +24,39 @@ module Dashboard
       projects = Project.readable_by_user(current_user)
                         .search(current_user, false, params[:query], 1, current_team)
                         .select(:id, :name)
-      projects = projects.map { |i| { value: i.id, label: escape_input(i.name) } }
-      if (projects.map { |i| i[:label] }.exclude? params[:query]) && params[:query].present?
-        projects = [{ value: 0, label: params[:query] }] + projects
+      projects = projects.map { |i| [i.id, escape_input(i.name)] }
+      if (projects.map { |i| i[1] }.exclude? params[:query]) && params[:query].present?
+        projects = [[0, params[:query]]] + projects
       end
-      render json: projects, status: :ok
+      render json: { data: projects }, status: :ok
     end
 
     def experiment_filter
       if create_project_params.present? && params[:query].present?
-        experiments = [{ value: 0, label: params[:query] }]
+        experiments = [[0, params[:query]]]
       elsif @project
         experiments = @project.experiments
                               .managable_by_user(current_user)
                               .search(current_user, false, params[:query], 1, current_team)
                               .select(:id, :name)
-        experiments = experiments.map { |i| { value: i.id, label: escape_input(i.name) } }
-        if (experiments.map { |i| i[:label] }.exclude? params[:query]) &&
+        experiments = experiments.map { |i| [i.id, escape_input(i.name)] }
+        if (experiments.map { |i| i[1] }.exclude? params[:query]) &&
            params[:query].present? &&
            can_create_project_experiments?(@project)
-          experiments = [{ value: 0, label: params[:query] }] + experiments
+          experiments = [[0, params[:query]]] + experiments
         end
       end
-      render json: experiments || [], status: :ok
+      render json: { data: experiments || [] }, status: :ok
     end
 
     private
 
+    def create_my_module_params
+      params.require(:my_module).permit(:name)
+    end
+
     def create_project_params
-      params.require(:project).permit(:name, :visibility)
+      params.require(:project).permit(:name, :visibility, :default_public_user_role_id)
     end
 
     def create_experiment_params

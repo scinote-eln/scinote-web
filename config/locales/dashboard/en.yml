@@ -65,6 +65,8 @@ en:
       title: "Create a new Task"
       description: "Simply type in the fields below to find or create space for your new task to live in"
       project: "Project"
+      task_name: "Task name"
+      task_name_error: "Task name must be at least %{length} characters long."
       project_visibility_label: "Visible to"
       project_visibility_members: "Project members"
       project_visibility_all: "All team members"
@@ -73,7 +75,8 @@ en:
       experiment_placeholder: "Enter experiment name (New or Existing)"
       experiment_disabled_placeholder: "Select Project to enable Experiments"
       filter_create_new: "Create"
-      create_task: "Create Task"
+      cancel: "Cancel"
+      create: "Create"
     recent_work:
       title: "Recent work"
       no_results:
