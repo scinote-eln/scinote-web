@@ -34,6 +34,8 @@ en:
         remember_me: "Remember me"
         submit: "Log in"
         azure_ad_submit: "Sign in with Azure AD"
+        openid_connect_submit: "Sign in with OpenID Connect"
+        saml_submit: "Sign in with SAML"
       2fa:
         title: "Two-factor authentication"
         description: "Enter the one-time code found in your authenticator app to log in to SciNote."
@@ -86,9 +88,23 @@ en:
         no_local_user_map: "No local user record found"
         no_email: "Email is missing in auth token"
         failed_to_save: "Failed to create new user"
+    openid_connect:
+      provider_name: "OpenID Connect"
+      errors:
+        generic: "Failed to sign in user"
+        no_local_user_map: "No local user record found"
+        no_email: "Email is missing in auth token"
+        failed_to_save: "Failed to create new user"
     okta:
       provider_name: "Okta"
       sign_in_label: "Sign in with Okta"
+      errors:
+        generic: "Failed to sign in user"
+        no_local_user_map: "No local user record found"
+        failed_to_save: "Failed to create new user"
+    saml:
+      provider_name: "SAML"
+      sign_in_label: "Sign in with SAML"
       errors:
         generic: "Failed to sign in user"
         no_local_user_map: "No local user record found"
@@ -2883,13 +2899,13 @@ en:
           not_connected: "You have no Connected accounts"
           unlink_success: "Successfully unlinked"
           azure_ad:
-            title: "Your Azure AD Account"
-            connect_hint: "Allows you to sign in with your Azure AD account."
+            title: "Your Microsoft Entra ID Account"
+            connect_hint: "Allows you to sign in with your Microsoft Entra ID account."
             connected: "Connected"
             unlink_button: "Unlink"
             unlink_modal:
-              title: "Unlink Azure AD account?"
-              description_1: "Are you sure you would like unlink Azure AD and SciNote accounts?"
+              title: "Unlink Microsoft Entra ID account?"
+              description_1: "Are you sure you would like to unlink Microsoft Entra ID and SciNote accounts?"
               submit_button: "Submit"
           okta:
             title: "Your Okta Account"
@@ -2898,7 +2914,25 @@ en:
             unlink_button: "Unlink"
             unlink_modal:
               title: "Unlink Okta account?"
-              description_1: "Are you sure you would like unlink Okta and SciNote accounts?"
+              description_1: "Are you sure you would like to unlink Okta and SciNote accounts?"
+              submit_button: "Submit"
+          openid_connect:
+            title: "Your OpenID Connect Account"
+            connect_hint: "Allows you to sign in with your OpenID Connect account."
+            connected: "Connected"
+            unlink_button: "Unlink"
+            unlink_modal:
+              title: "Unlink OpenID Connect account?"
+              description_1: "Are you sure you would like to unlink OpenID Connect and SciNote accounts?"
+              submit_button: "Submit"
+          saml:
+            title: "Your SAML Account"
+            connect_hint: "Allows you to sign in with your SAML account."
+            connected: "Connected"
+            unlink_button: "Unlink"
+            unlink_modal:
+              title: "Unlink SAML account?"
+              description_1: "Are you sure you would like to unlink SAML and SciNote accounts?"
               submit_button: "Submit"
           errors:
             not_found: "You have no Connected accounts for this provider"

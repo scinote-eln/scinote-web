@@ -563,11 +563,11 @@ class RepositoriesController < ApplicationController
 
   def set_breadcrumbs_items
     @breadcrumbs_items = []
-    archived_branch = @repository&.archived? || (!@repository && params[:archived] == 'true')
+    archived_branch = @repository&.archived? || (!@repository && params[:view_mode] == 'archived')
 
     @breadcrumbs_items.push({
                               label: t('breadcrumbs.inventories'),
-                              url: archived_branch ? repositories_path(archived: true) : repositories_path,
+                              url: archived_branch ? repositories_path(view_mode: 'archived') : repositories_path,
                               archived: archived_branch
                             })
 

@@ -19,7 +19,7 @@
           <span class="button-text"><%= t("repositories.add_new_record") %></span>
         </button>
         <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t('repositories.show.button_tooltip.import') %>"
-                class="btn btn-light editImport auto-shrink-button"
+                class="btn btn-light editImport auto-shrink-button" data-e2e="e2e-BT-topToolbar-importInventoryItems"
                 id="importRecordsButton" data-view-mode="active">
           <span class="sn-icon sn-icon-import"></span>
           <span class="button-text"><%= t('repositories.index.options_dropdown.import_items') %></span>
@@ -58,6 +58,7 @@
     <div id='repositoryStateMenu' data-behaviour="vue">
       <repository-state-menu
         view-mode="<%= view_mode %>"
+        disabled="<%= @repository.archived? %>"
         active-url="<%= repository_url(@repository) %>"
         archived-url="<%= repository_url(@repository, params: { archived: true }) %>">
       </repository-state-menu>

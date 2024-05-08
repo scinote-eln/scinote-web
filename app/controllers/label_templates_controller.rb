@@ -4,7 +4,7 @@ class LabelTemplatesController < ApplicationController
   include InputSanitizeHelper
   include TeamsHelper
 
-  before_action :check_feature_enabled, except: %i(index zpl_preview)
+  before_action :check_feature_enabled, except: %i(index zpl_preview list)
   before_action :load_label_templates, only: %i(index datatable list)
   before_action :load_label_template, only: %i(show set_default update template_tags)
   before_action :check_view_permissions, except: %i(create duplicate set_default delete update)
