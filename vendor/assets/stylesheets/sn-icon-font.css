@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:  url('fonts/SN-icon-font.eot?o0xor4');
-  src:  url('fonts/SN-icon-font.eot?o0xor4#iefix') format('embedded-opentype'),
-    url('fonts/SN-icon-font.woff2?o0xor4') format('woff2'),
-    url('fonts/SN-icon-font.ttf?o0xor4') format('truetype'),
-    url('fonts/SN-icon-font.woff?o0xor4') format('woff'),
-    url('fonts/SN-icon-font.svg?o0xor4#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?m1g5fz');
+  src:  url('fonts/SN-icon-font.eot?m1g5fz#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?m1g5fz') format('woff2'),
+    url('fonts/SN-icon-font.ttf?m1g5fz') format('truetype'),
+    url('fonts/SN-icon-font.woff?m1g5fz') format('woff'),
+    url('fonts/SN-icon-font.svg?m1g5fz#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -529,4 +529,7 @@
 }
 .sn-icon-flag:before {
   content: "\e9a7";
+}
+.sn-icon-undo:before {
+  content: "\e9a8";
 }

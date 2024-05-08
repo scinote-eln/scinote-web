@@ -7,7 +7,7 @@
                @focus="openHistory" :placeholder="i18n.t('nav.search')" @keyup.enter="saveQuery"/>
         <i class="sn-icon sn-icon-search"></i>
         <div v-if="this.searchQuery.length > 1" class="flex items-center gap-1 absolute right-2 top-1.5">
-          <div class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''">
+          <div class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''; $refs.searchField.focus()">
             <i class="sn-icon sn-icon-close  m-0"></i>
           </div>
           <div class="btn btn-light icon-btn btn-xs" :title="i18n.t('search.quick_search.search_options')"
@@ -96,7 +96,7 @@
         <div v-if="!loading && results.length === 0" class="p-2 flex items-center gap-6">
           <i class="sn-icon sn-icon-search text-sn-sleepy-grey" style="font-size: 64px !important;"></i>
           <div>
-            <b>{{ i18n.t('search.quick_search.empty_title') }}</b>
+            <b>{{ i18n.t('search.quick_search.empty_title', {team: currentTeamName}) }}</b>
             <div class="text-xs text-sn-dark-grey">
               {{ i18n.t('search.quick_search.empty_description', {query: searchQuery}) }}
             </div>
@@ -147,13 +147,16 @@ export default {
   },
   computed: {
     reversedPreviousQueries() {
-      return this.previousQueries.reverse();
+      return [...this.previousQueries].reverse();
     },
     canOpen() {
       return this.previousQueries.length > 0 || this.searchQuery.length > 1;
     },
     showHistory() {
       return this.searchQuery.length < 2;
+    },
+    currentTeamName() {
+      return document.querySelector('body').dataset.currentTeamName;
     }
   },
   watch: {
@@ -262,11 +265,11 @@ export default {
       });
     },
     saveQuery() {
-      if (this.searchQuery.length > 0) {
+      if (this.searchQuery.length > 1) {
         this.previousQueries.push(this.searchQuery);
 
         if (this.previousQueries.length > 5) {
-          this.previousQueries.shift();
+          this.previousQueries = this.previousQueries.slice(1);
         }
 
         localStorage.setItem('quickSearchHistory', JSON.stringify(this.previousQueries));

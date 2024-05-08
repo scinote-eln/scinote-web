@@ -8,12 +8,36 @@
       </div>
     </div>
     <div class="bg-white rounded p-4 flex gap-2.5 z-10 items-center mb-4 sticky top-0">
-      <div class="left-icon sci-input-container-v2 w-72 input-sm"
-           :title="i18n.t('nav.search')" :class="{'error': invalidQuery}">
-        <input ref="searchField" type="text" class="!pr-9" :value="localQuery" @change="changeQuery" :placeholder="i18n.t('nav.search')"/>
-        <i class="sn-icon sn-icon-search"></i>
-        <i v-if="localQuery.length > 0" class="sn-icon cursor-pointer sn-icon-close absolute right-0 -top-0.5" @click="localQuery = ''"></i>
-      </div>
+      <GeneralDropdown ref="historyContainer" :canOpen="canOpenHistory" :fieldOnlyOpen="true" >
+        <template v-slot:field>
+          <div class="left-icon sci-input-container-v2 w-72 input-sm"
+              :title="i18n.t('nav.search')" :class="{'error': invalidQuery}">
+            <input ref="searchField"
+              type="text"
+              class="!pr-9"
+              :value="localQuery"
+              @change="changeQuery"
+              @keydown.enter="changeQuery"
+              @blur="changeQuery"
+              :placeholder="i18n.t('nav.search')"
+            />
+            <i class="sn-icon sn-icon-search"></i>
+            <i v-if="localQuery.length > 0"
+              class="sn-icon cursor-pointer sn-icon-close absolute right-0 -top-0.5"
+              @click="localQuery = ''; $refs.searchField.focus()"></i>
+          </div>
+        </template>
+        <template v-slot:flyout >
+          <div v-for="(query, i) in reversedPreviousQueries" @click="setQuery(query)" :key="i"
+              ref="historyItems"
+              tabindex="1"
+              @keydown.enter="setQuery(query)"
+              class="flex px-3 h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
+            <i class="sn-icon sn-icon-history-search"></i>
+            {{ query }}
+          </div>
+        </template>
+      </GeneralDropdown>
       <div class="flex items-center gap-2.5">
         <button class="btn btn-secondary btn-sm" :class="{'active': activeGroup == 'ExperimentsComponent'}" @click="setActiveGroup('ExperimentsComponent')">
           {{ i18n.t('search.index.experiments') }}
@@ -42,6 +66,10 @@
           <span class="tw-hidden lg:inline">{{ i18n.t('search.index.clear_filters') }}</span>
         </button>
       </template>
+      <button v-if="activeGroup" class="btn btn-light btn-sm" @click="resetGroup">
+        <i class="sn-icon sn-icon-undo"></i>
+        <span class="tw-hidden lg:inline">{{ i18n.t('search.index.all_results') }}</span>
+      </button>
     </div>
     <template v-for="group in searchGroups">
       <component
@@ -57,7 +85,7 @@
         @updated="calculateTotalElements"
       />
     </template>
-    <div v-if="totalElements === 0 && !loading" class="bg-white rounded p-4">
+    <div v-if="totalElements === 0" class="bg-white rounded p-4">
       <NoSearchResult />
     </div>
     <teleport to='body'>
@@ -136,6 +164,8 @@ export default {
       filters: {},
       localQuery: this.query,
       filterModalOpened: false,
+      previousQueries: [],
+      invalidQuery: false,
       activeGroup: null,
       totalElements: 0,
       searchGroups: [
@@ -154,9 +184,6 @@ export default {
     };
   },
   computed: {
-    invalidQuery() {
-      return this.localQuery.length < 2;
-    },
     activeFilters() {
       return Object.keys(this.filters).filter((key) => {
         if (key === 'created_at' || key === 'updated_at') {
@@ -166,6 +193,12 @@ export default {
         }
         return this.filters[key];
       });
+    },
+    canOpenHistory() {
+      return this.previousQueries.length > 0 && this.localQuery.length === 0;
+    },
+    reversedPreviousQueries() {
+      return [...this.previousQueries].reverse();
     }
   },
   created() {
@@ -197,6 +230,8 @@ export default {
     if (this.filters.group) {
       this.activeGroup = this.filters.group;
     }
+
+    this.previousQueries = JSON.parse(localStorage.getItem('quickSearchHistory') || '[]');
   },
   methods: {
     calculateTotalElements() {
@@ -217,14 +252,48 @@ export default {
 
       this.filters.group = this.activeGroup;
     },
+    setQuery(query) {
+      this.localQuery = query;
+      this.invalidQuery = false;
+      this.$refs.historyContainer.isOpen = false;
+    },
     changeQuery(event) {
+      if (event.target.value === this.localQuery) {
+        return;
+      }
+
       this.localQuery = event.target.value;
+
+      if (event.target.value.length < 2) {
+        this.invalidQuery = true;
+        return;
+      }
+
+      this.invalidQuery = false;
+      this.saveQuery();
+    },
+    saveQuery() {
+      if (this.localQuery.length > 1) {
+        if (this.previousQueries[this.previousQueries.length - 1] === this.localQuery) return;
+
+        this.previousQueries.push(this.localQuery);
+
+        if (this.previousQueries.length > 5) {
+          this.previousQueries.shift();
+        }
+        localStorage.setItem('quickSearchHistory', JSON.stringify(this.previousQueries));
+        this.$refs.historyContainer.isOpen = false;
+      }
     },
     applyFilters(filters) {
       this.filters = filters;
       this.filterModalOpened = false;
 
       this.activeGroup = this.filters.group;
+    },
+    resetGroup() {
+      this.activeGroup = null;
+      this.filters.group = null;
     },
     resetFilters() {
       this.filters = {

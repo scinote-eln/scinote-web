@@ -1,7 +1,13 @@
 <template>
-    <a target="_blank" :href="url" class="h-full py-2 px-4 overflow-hidden font-bold flex gap-1 items-center group-hover:bg-sn-super-light-grey hover:no-underline">
+    <a target="_blank" :href="url"
+       class="h-full py-2 px-4 flex gap-1 items-center font-bold overflow-hidden group-hover:bg-sn-super-light-grey hover:no-underline"
+    >
       <span v-if="icon" :class="icon" class="sn-icon shrink-0"></span>
-      <StringWithEllipsis class="w-full"
+      <StringWithEllipsis
+        :class="{
+          'w-full': !icon,
+          'w-[calc(100%-2rem)]': icon
+        }"
         :text="value">
       </StringWithEllipsis>
     </a>
