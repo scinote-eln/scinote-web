@@ -9,7 +9,7 @@ module GlobalSearch
     def team
       {
         name: object.team.name,
-        url: projects_path(project_folder_id: object.id)
+        url: dashboard_path(team: object.team)
       }
     end
 
@@ -18,17 +18,24 @@ module GlobalSearch
     end
 
     def url
-      project_folder_path(object)
+      project_folder_path(object, team: object.team, view_mode: view_mode(object.archived?))
     end
 
     def parent_folder
       if object.parent_folder_id?
+        archived = object.parent_folder.archived?
         {
           name: object.parent_folder.name,
-          url: project_folder_path(object.parent_folder.id),
-          archived: object.parent_folder.archived?
+          url: project_folder_path(object.parent_folder.id, team: object.team, view_mode: view_mode(archived)),
+          archived: archived
         }
       end
+    end
+
+    private
+
+    def view_mode(archived)
+      archived ? 'archived' : 'active'
     end
   end
 end

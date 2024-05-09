@@ -452,6 +452,9 @@ class ExperimentsController < ApplicationController
     @project = Project.find_by(id: params[:project_id])
 
     render_404 unless @project
+
+    current_team_switch(@project.team) if current_team != @project.team
+
     render_403 unless can_read_project?(@project)
   end
 

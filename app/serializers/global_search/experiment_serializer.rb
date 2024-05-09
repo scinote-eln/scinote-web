@@ -9,16 +9,21 @@ module GlobalSearch
     def team
       {
         name: object.project.team.name,
-        url: projects_path(team_id: object.project.team.id)
+        url: dashboard_path(team: object.team)
       }
     end
 
     def project
+      archived = object.project.archived?
       {
         name: object.project.name,
-        url: project_experiments_path(project_id: object.project.id),
-        archived: object.project.archived?
+        url: project_experiments_path(project_id: object.project.id, view_mode: view_mode(archived)),
+        archived: archived
       }
+    end
+
+    def archived
+      object.archived_branch?
     end
 
     def created_at
@@ -26,7 +31,13 @@ module GlobalSearch
     end
 
     def url
-      my_modules_experiment_path(object.id)
+      my_modules_experiment_path(object.id, view_mode: view_mode(archived))
+    end
+
+    private
+
+    def view_mode(archived)
+      archived ? 'archived' : 'active'
     end
   end
 end

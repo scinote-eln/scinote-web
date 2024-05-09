@@ -9,7 +9,7 @@ module GlobalSearch
     def team
       {
         name: object.team.name,
-        url: label_templates_path(team: object.team)
+        url: dashboard_path(team: object.team)
       }
     end
 

@@ -9,15 +9,16 @@ module GlobalSearch
     def team
       {
         name: object.experiment.project.team.name,
-        url: projects_path(team_id: object.experiment.project.team.id)
+        url: dashboard_path(team: object.team)
       }
     end
 
     def experiment
+      archived = object.experiment.archived_branch?
       {
         name: object.experiment.name,
-        url: my_modules_experiment_path(object.experiment.id),
-        archived: object.experiment.archived?
+        url: my_modules_experiment_path(object.experiment.id, view_mode: view_mode(archived)),
+        archived: archived
       }
     end
 
@@ -29,8 +30,18 @@ module GlobalSearch
       I18n.l(object.updated_at, format: :full_date)
     end
 
+    def archived
+      object.archived_branch?
+    end
+
     def url
-      protocols_my_module_path(object.id)
+      protocols_my_module_path(object.id, view_mode: view_mode(archived))
+    end
+
+    private
+
+    def view_mode(archived)
+      archived ? 'archived' : 'active'
     end
   end
 end
