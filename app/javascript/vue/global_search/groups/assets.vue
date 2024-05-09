@@ -17,7 +17,7 @@
           <CellTemplate :label=" i18n.t('search.index.updated_at')" :value="row.attributes.updated_at"/>
           <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
           <CellTemplate :label="i18n.t(`search.index.${row.attributes.parent.type}`)" :url="row.attributes.parent.url" :value="labelName(row.attributes.parent)"/>
-          <CellTemplate :label="i18n.t(`search.index.${row.attributes.parent.type}`)" :visible="!!row.attributes.experiment.name"
+          <CellTemplate :label="i18n.t('search.index.experiment')" :visible="!!row.attributes.experiment.name"
                         :url="row.attributes.experiment.url" :value="labelName(row.attributes.experiment)"/>
         </div>
       </div>

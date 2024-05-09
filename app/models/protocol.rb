@@ -191,7 +191,7 @@ class Protocol < ApplicationRecord
 
     distinct.left_joins(steps: [:step_texts, { step_tables: :table },
                                 { checklists: :checklist_items }, :step_comments])
-            .where('(protocols.protocol_type IN (?) AND protocols.my_module_id IN (?)) OR (protocols.id IN (?))',
+            .where('(protocols.protocol_type IN (?) AND protocols.id IN (?)) OR (protocols.id IN (?))',
                    [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
                    protocol_my_modules, protocol_templates)
             .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
