@@ -59,14 +59,11 @@ module RepositoryCsvExport
             else
               cell = row.repository_cells.find_by(repository_column_id: c_id)
 
-              csv_row << if cell
-                           if cell.value_type == 'RepositoryAssetValue' && handle_file_name_func
-                             handle_file_name_func.call(cell.value.asset)
-                           else
-                             SmartAnnotations::TagToText.new(
-                               user, repository.team, cell.value.export_formatted
-                             ).text
-                           end
+            csv_row << if cell
+                         if cell.value_type == 'RepositoryAssetValue' && handle_file_name_func
+                           handle_file_name_func.call(cell.value.asset)
+                         else
+                            cell.value.export_formatted
                          end
             end
           end
