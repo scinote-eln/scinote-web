@@ -1,7 +1,7 @@
 <template>
   <div v-if="!params.folder"
-       :class="{ 'bg-sn-light-grey': dtComponent.currentViewMode === 'archived', [cardMinWidth]: true }"
-       class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col" >
+       :class="{ 'bg-sn-grey-100': dtComponent.currentViewMode === 'archived', [cardMinWidth]: true }"
+       class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray-300 flex flex-col" >
     <div class="flex items-center gap-4 mb-2">
       <div class="sci-checkbox-container">
         <input
@@ -17,7 +17,10 @@
     </div>
     <a :href="params.urls.show"
        :title="params.name"
-       :class="{'pointer-events-none text-sn-grey': !params.urls.show}"
+       :class="{
+        'pointer-events-none !text-sn-grey': !params.urls.show,
+        '!text-sn-black': dtComponent.currentViewMode === 'archived',
+      }"
        class="font-bold mb-4 text-sn-blue shrink-0 hover:no-underline line-clamp-3 hover:text-sn-blue h-[60px]">
       {{ params.name }}
     </a>
@@ -40,7 +43,7 @@
   <div v-else
     class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col h-56"
     :class="{
-      'bg-sn-light-grey': dtComponent.currentViewMode === 'archived',
+      'bg-sn-grey-100': dtComponent.currentViewMode === 'archived',
       'bg-sn-super-light-grey': dtComponent.currentViewMode !== 'archived',
       [cardMinWidth]: true
     }"
@@ -58,15 +61,17 @@
       <RowMenuRenderer :params="{data: params, dtComponent: dtComponent}" class="ml-auto"/>
     </div>
     <div
-      class="flex flex-col items-center justify-center"
+      class="flex flex-col items-center justify-center pt-4"
       :class="{
         'text-sn-black hover:text-sn-black': dtComponent.currentViewMode === 'archived',
         'text-sn-blue hover:text-sn-blue': dtComponent.currentViewMode !== 'archived'
       }"
      >
-      <i class="sn-icon sn-icon-folder " style="font-size: 56px !important"></i>
+      <i class="sn-icon sn-icon-folder mb-2" style="font-size: 56px !important"></i>
       <a :href="params.urls.show"
-        class="line-clamp-2 font-bold mb-2 text-inherit text-center hover:no-underline ">
+        class="line-clamp-2 font-bold mb-2 text-inherit text-center hover:no-underline "
+        :class="{'!text-sn-black': dtComponent.currentViewMode === 'archived'}"
+      >
         {{ params.name }}
       </a>
       <div class="flex items-center justify-center text-sn-dark-grey">

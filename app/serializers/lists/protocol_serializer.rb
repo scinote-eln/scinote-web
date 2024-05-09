@@ -6,11 +6,23 @@ module Lists
     include Rails.application.routes.url_helpers
 
     attributes :name, :code, :keywords, :linked_tasks, :nr_of_versions, :assigned_users, :published_by,
-               :published_on, :updated_at, :archived_by, :archived_on, :urls, :default_public_user_role_id,
-               :hidden, :top_level_assignable, :has_draft, :team, :permissions
+               :published_on, :updated_at, :archived_by, :archived_on, :urls,
+               :top_level_assignable, :has_draft, :team, :permissions
+    attribute :hidden
+    attribute :default_public_user_role_id
 
     def code
       object.parent&.code || object.code
+    end
+
+    def hidden
+      return object.parent.hidden? if object.parent.present?
+
+      object.hidden?
+    end
+
+    def default_public_user_role_id
+      object.parent&.default_public_user_role_id || object.default_public_user_role_id
     end
 
     def keywords
@@ -61,12 +73,6 @@ module Lists
 
     def archived_on
       I18n.l(object.archived_on, format: :full) if object.archived_on
-    end
-
-    delegate :default_public_user_role_id, to: :object
-
-    def hidden
-      object.hidden?
     end
 
     def top_level_assignable

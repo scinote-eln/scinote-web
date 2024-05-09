@@ -58,28 +58,6 @@ class Step < ApplicationRecord
   scope :in_order, -> { order(position: :asc) }
   scope :desc_order, -> { order(position: :desc) }
 
-  def self.search(user,
-                  include_archived,
-                  query = nil,
-                  page = 1,
-                  _current_team = nil,
-                  options = {})
-    protocol_ids = Protocol.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-                           .pluck(:id)
-
-    new_query = Step.distinct
-                    .left_outer_joins(:step_texts)
-                    .where(steps: { protocol_id: protocol_ids })
-                    .where_attributes_like(['steps.name', 'step_texts.text'], query, options)
-
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
-  end
-
   def self.filter_by_teams(teams = [])
     return self if teams.blank?
 

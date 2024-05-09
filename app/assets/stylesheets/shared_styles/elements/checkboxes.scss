@@ -35,7 +35,7 @@ input[type="checkbox"].sci-checkbox {
     &::before {
       @include font-awesome;
       animation-timing-function: $timing-function-sharp;
-      background: $color-white;
+      background: transparent;
       border: 1px solid var(--sn-black);
       border-radius: 1px;
       color: $color-white;
