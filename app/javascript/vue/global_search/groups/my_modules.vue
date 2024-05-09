@@ -16,8 +16,8 @@
           <CellTemplate :label="i18n.t('search.index.id')" :value="row.attributes.code"/>
           <CellTemplate :label="i18n.t('search.index.created_at')" :value="row.attributes.created_at"/>
           <CellTemplate :label="i18n.t('search.index.updated_at')" :value="row.attributes.updated_at"/>
-          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
           <CellTemplate :label="i18n.t('search.index.experiment')" :url="row.attributes.experiment.url" :value="labelName(row.attributes.experiment)"/>
+          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
         </div>
       </div>
       <div v-if="viewAll">

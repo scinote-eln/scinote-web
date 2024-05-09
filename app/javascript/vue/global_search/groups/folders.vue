@@ -14,9 +14,9 @@
           <hr class="col-span-4 w-full m-0" v-if="index > 0">
           <LinkTemplate :url="row.attributes.url"  :value="labelName({ name: row.attributes.name, archived: row.attributes.archived})"/>
           <CellTemplate :label="i18n.t('search.index.created_at')" :value="row.attributes.created_at"/>
-          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
           <CellTemplate :label="i18n.t('search.index.folder')" :visible="row.attributes.parent_folder"
                         :url="row.attributes.parent_folder?.url" :value="labelName(row.attributes.parent_folder)"/>
+          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
         </div>
       </div>
       <div v-if="viewAll">

@@ -16,8 +16,8 @@
           <CellTemplate :label="i18n.t('search.index.id')" :value="row.attributes.code"/>
           <CellTemplate :label="i18n.t('search.index.created_at')" :value="row.attributes.created_at"/>
           <CellTemplate :label="i18n.t('search.index.created_by')" :avatar="row.attributes.created_by.avatar_url" :value="row.attributes.created_by.name"/>
-          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
           <CellTemplate :label="i18n.t('search.index.repository')" :url="row.attributes.repository.url" :value="labelName(row.attributes.repository)"/>
+          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
         </div>
       </div>
       <div v-if="viewAll">

@@ -15,9 +15,9 @@
           <LinkTemplate :url="row.attributes.url" :value="labelName({ name: row.attributes.name, archived: row.attributes.archived})"/>
           <CellTemplate :label="i18n.t('search.index.created_at')" :value="row.attributes.created_at"/>
           <CellTemplate :label="i18n.t('search.index.updated_at')" :value="row.attributes.updated_at"/>
-          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
           <CellTemplate :label="i18n.t('search.index.task')" :url="row.attributes.my_module.url" :value="labelName(row.attributes.my_module)"/>
           <CellTemplate :label="i18n.t('search.index.experiment')" :url="row.attributes.experiment.url" :value="labelName(row.attributes.experiment)"/>
+          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
         </div>
       </div>
       <div v-if="viewAll">
