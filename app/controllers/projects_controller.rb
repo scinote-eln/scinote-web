@@ -74,6 +74,7 @@ class ProjectsController < ApplicationController
   end
 
   def update
+    default_public_user_role_name_before_update = @project.default_public_user_role&.name
     @project.assign_attributes(project_update_params)
     return_error = false
     flash_error = t('projects.update.error_flash', name: escape_input(@project.name))
@@ -127,7 +128,7 @@ class ProjectsController < ApplicationController
         log_activity(:project_remove_access_from_all_team_members,
                      @project,
                      { visibility: message_visibility,
-                       role: @project.default_public_user_role.name,
+                       role: default_public_user_role_name_before_update,
                        team: @project.team.id })
       end
 

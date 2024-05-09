@@ -26,11 +26,12 @@
              ref="search"
              v-else
              v-model="query"
+             @keyup="fetchOptions"
              :placeholder="label || placeholder || this.i18n.t('general.select_dropdown.placeholder')"
              class="w-full border-0 outline-none pl-0 placeholder:text-sn-grey" />
       </template>
-      <div v-else class="flex items-center gap-1 flex-wrap">
-        <div v-for="tag in tags" class="px-2 py-1 rounded-sm bg-sn-super-light-grey flex items-center gap-1">
+      <div v-else class="flex items-center gap-1 flex-wrap max-w-[calc(100%-24px)]">
+        <div v-for="tag in tags" class=" truncate px-2 py-1 rounded-sm bg-sn-super-light-grey flex items-center gap-1">
           <div class="truncate" v-if="labelRenderer" v-html="tag.label"></div>
           <div class="truncate" v-else>{{ tag.label }}</div>
           <i @click="removeTag(tag.value)" class="sn-icon mini ml-auto sn-icon-close cursor-pointer"></i>
@@ -48,7 +49,7 @@
         </div>
       </div>
       <i v-if="canClear" @click="clear" class="sn-icon ml-auto sn-icon-close"></i>
-      <i v-else class="sn-icon ml-auto"
+      <i v-else class="sn-icon ml-auto self-start"
                 :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen, 'text-sn-grey': disabled}"></i>
     </div>
     <template v-if="isOpen">
@@ -136,7 +137,8 @@ export default {
       selectAllState: 'unchecked',
       query: '',
       fixedWidth: true,
-      focusedOption: null
+      focusedOption: null,
+      skipQueryCallback: false
     };
   },
   mixins: [FixedFlyoutMixin],
@@ -250,9 +252,6 @@ export default {
           this.$refs.search?.focus();
         });
       }
-    },
-    query() {
-      if (this.optionsUrl) this.fetchOptions();
     }
   },
   methods: {
@@ -277,7 +276,7 @@ export default {
     clear() {
       this.newValue = this.multiple ? [] : null;
       this.query = '';
-      this.$emit('change', this.newValue);
+      this.$emit('change', this.newValue, this.getLabels(this.newValue));
     },
     close(e) {
       if (e && e.target.closest('.sn-select-dropdown')) return;
@@ -287,7 +286,7 @@ export default {
       this.$nextTick(() => {
         this.isOpen = false;
         if (this.valueChanged) {
-          this.$emit('change', this.newValue);
+          this.$emit('change', this.newValue, this.getLabels(this.newValue));
         }
         this.query = '';
       });
@@ -310,7 +309,7 @@ export default {
     },
     removeTag(value) {
       this.newValue = this.newValue.filter((v) => v !== value);
-      this.$emit('change', this.newValue);
+      this.$emit('change', this.newValue, this.getLabels(this.newValue));
     },
     selectAll() {
       if (this.selectAllState === 'checked') {
@@ -318,7 +317,14 @@ export default {
       } else {
         this.newValue = this.rawOptions.map((option) => option[0]);
       }
-      this.$emit('change', this.newValue);
+      this.$emit('change', this.newValue, this.getLabels(this.newValue));
+    },
+    getLabels(value) {
+      if (typeof value === 'string' || typeof value === 'number') {
+        const option = this.rawOptions.find((i) => i[0] === value);
+        return option[1];
+      }
+      return this.rawOptions.filter((option) => value.includes(option[0])).map((option) => option[1]);
     },
     fetchOptions() {
       if (this.optionsUrl) {

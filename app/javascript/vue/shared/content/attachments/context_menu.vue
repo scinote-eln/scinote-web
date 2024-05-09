@@ -119,43 +119,45 @@ export default {
   computed: {
     menu() {
       const menu = [];
-      if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
-        menu.push({
-          text: this.attachment.attributes.wopi_context.button_text,
-          url: this.attachment.attributes.urls.edit_asset,
-          url_target: '_blank'
-        });
-      }
-      if (this.attachment.attributes.asset_type === 'gene_sequence' && this.attachment.attributes.urls.open_vector_editor_edit) {
-        menu.push({
-          text: this.i18n.t('open_vector_editor.edit_sequence'),
-          emit: 'open_ove_editor'
-        });
-      }
-      if (this.attachment.attributes.asset_type === 'marvinjs' && this.attachment.attributes.urls.marvin_js_start_edit) {
-        menu.push({
-          text: this.i18n.t('assets.file_preview.edit_in_marvinjs'),
-          emit: 'open_marvinjs_editor'
-        });
-      }
-      if (this.attachment.attributes.asset_type !== 'marvinjs'
-          && this.attachment.attributes.image_editable
-          && this.attachment.attributes.urls.start_edit_image) {
-        menu.push({
-          text: this.i18n.t('assets.file_preview.edit_in_scinote'),
-          emit: 'open_scinote_editor'
-        });
-      }
-      if (this.canOpenLocally) {
-        const text = this.localAppName
-          ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
-          : this.i18n.t('attachments.open_locally');
+      if (this.displayInDropdown.includes('edit')) {
+        if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
+          menu.push({
+            text: this.attachment.attributes.wopi_context.button_text,
+            url: this.attachment.attributes.urls.edit_asset,
+            url_target: '_blank'
+          });
+        }
+        if (this.attachment.attributes.asset_type === 'gene_sequence' && this.attachment.attributes.urls.open_vector_editor_edit) {
+          menu.push({
+            text: this.i18n.t('open_vector_editor.edit_sequence'),
+            emit: 'open_ove_editor'
+          });
+        }
+        if (this.attachment.attributes.asset_type === 'marvinjs' && this.attachment.attributes.urls.marvin_js_start_edit) {
+          menu.push({
+            text: this.i18n.t('assets.file_preview.edit_in_marvinjs'),
+            emit: 'open_marvinjs_editor'
+          });
+        }
+        if (this.attachment.attributes.asset_type !== 'marvinjs'
+            && this.attachment.attributes.image_editable
+            && this.attachment.attributes.urls.start_edit_image) {
+          menu.push({
+            text: this.i18n.t('assets.file_preview.edit_in_scinote'),
+            emit: 'open_scinote_editor'
+          });
+        }
+        if (this.canOpenLocally) {
+          const text = this.localAppName
+            ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
+            : this.i18n.t('attachments.open_locally');
 
-        menu.push({
-          text,
-          emit: 'open_locally',
-          data_e2e: 'e2e-BT-attachmentOptions-openLocally'
-        });
+          menu.push({
+            text,
+            emit: 'open_locally',
+            data_e2e: 'e2e-BT-attachmentOptions-openLocally'
+          });
+        }
       }
       if (this.displayInDropdown.includes('download')) {
         menu.push({

@@ -583,7 +583,7 @@ en:
         description: "Give your folder a distinct name to recognize it faster."
         modal_title: "Create folder"
         name: "New folder name"
-        name_placeholder: "Name your folder"
+        name_placeholder: "Enter folder name"
         create: "Create folder"
         success_flash: "Project folder <strong>%{name}</strong> successfully created."
       modal_new_project:
@@ -592,7 +592,7 @@ en:
         name: "Project name"
         name_placeholder: "My project"
         team: "Team"
-        visibility_html: "Make this project visible to all team members <br /> <small class='text-muted'>This will assign all team members to the project with the default role you choose</small>"
+        visibility_html: "Grant access to this project to all team members"
         visibility_hidden: "Project members only"
         visibility_visible: "All team members"
       modal_edit_project:
@@ -1475,7 +1475,7 @@ en:
       completed_task: "Completed"
       completed_value: "%{completed}/%{all} tasks"
       description: "Description"
-      more: "More"
+      more: "more"
     index:
       edit_option: "Edit"
       clone_option: "Duplicate"
@@ -1545,7 +1545,7 @@ en:
       column:
         id_html: 'ID'
         task_name_html: 'Task name'
-        due_date_html: 'Due'
+        due_date_html: 'Due date'
         archived_html: 'Archived on'
         age_html: 'Age'
         results_html: 'Results'
@@ -1628,7 +1628,7 @@ en:
       new_my_module_modal:
         title: "Create new task"
         name: "Task name"
-        name_placeholder: "Enter…"
+        name_placeholder: "Enter task name"
         due_date: "Due date (optional)"
         due_date_placeholder: "Add due date"
         assigned_tags_label: "Add tags (optional)"
@@ -1927,8 +1927,8 @@ en:
           one: "You are about to export <strong>1</strong> inventory in %{team_name}'s team."
           other: "You are about to export <strong>%{count}</strong> inventories in %{team_name}'s team."
         description_alert: "This process may take minutes to hours, depending on the file size. Any new data entered afterward won't be included in the export."
-        description_p2: "You will receive an email when the .zip file is ready. A link to your file will also appear in your SciNote notification. For security reasons, this link will expire in 7 days."
-        description_p3_html: "After you confirm this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
+        description_p2: "You will receive an email and a notification when the download file is ready. For security reasons, the link will expire in 7 days."
+        description_p3_html: "After this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
         export: "Export"
       modal_export_limit_exceeded:
         title: "Export denied"
@@ -2134,6 +2134,58 @@ en:
         list_row: "Row %{row}"
         list_error: "%{key}: %{val}"
     import_records:
+      update_inventory: 'Update inventory'
+      steps:
+        step0:
+          id: 'step0'
+          icon: 'sn-icon-open'
+          label: 'Step 1'
+          title: 'Update inventory'
+          helpText: 'Help'
+          exportTitle: 'Export'
+          exportFullInvBtnText: 'Export full inventory'
+          exportEmptyInvBtnText: 'Export empty inventory'
+          importTitle: 'Import'
+          importBtnText: 'Import'
+          cancelBtnText: 'Cancel'
+          dragAndDropSupportingText: '.XLSX, .XLS or .CSV file'
+      info_sidebar:
+        title: 'Guide for updating the inventory'
+        elements:
+          element0:
+            id: 'el0'
+            icon: 'sn-icon-export'
+            label: 'Export inventory'
+            subtext: "Before making edits, we advise you to export the latest inventory information. If you're only adding new items, consider exporting empty inventory."
+          element1:
+            id: 'el1'
+            icon: 'sn-icon-edit'
+            label: 'Edit your data'
+            subtext: 'Make sure to include header names in first row, followed by item data.'
+          element2:
+            id: 'el2'
+            icon: 'sn-icon-import'
+            label: 'Import new or update items'
+            subtext: 'Upload your data using .xlsx, .csv or .txt files.'
+          element3:
+            id: 'el3'
+            icon: 'sn-icon-tables'
+            label: 'Merge your data'
+            subtext: 'Complete the process by merging the columns you want to update.'
+          element4:
+            id: 'el4'
+            icon: 'sn-icon-open'
+            label: 'Learn more'
+            linkTo: 'https://knowledgebase.scinote.net/en/knowledge/how-to-add-items-to-an-inventory'
+      dragAndDropUpload:
+        notSingleFileError: 'Single file import only. Please import one file at a time.'
+        wrongFileTypeError: 'The file has invalid extension (.csv, .xlsx, .txt or .tsv.)'
+        emptyFileError: 'You have uploaded empty file. There is not much to import.'
+        fileTooLargeError: 'File too large. Max file size limit is'
+        importText:
+          firstPart: 'Import'
+          secondPart: 'or drag and drop'
+
       import: 'Import'
       no_header_name: 'No column name'
       success_flash: "%{number_of_rows} of %{total_nr} new item(s) successfully imported."
@@ -2174,26 +2226,26 @@ en:
     modal_assign_items_to_task:
       title: "Assign to task"
       body:
-        description: "Type in the fields below to find the right task."
+        description: "Select the fields below to assign item to task(s)."
         project_select:
           label: "Project"
-          placeholder: "Enter project name"
+          placeholder: "Select or enter Project name"
           no_options_placeholder: "No projects available to select"
         experiment_select:
           label: "Experiment"
-          placeholder: "Enter Experiment name"
+          placeholder: "Select or enter Experiment name"
           disabled_placeholder: "Select Project to enable Experiment"
           no_options_placeholder: "No experiments available to select"
         task_select:
           label: "Task"
           placeholder: "Enter Task name"
-          disabled_placeholder: "Select Experiment to enable Task"
+          disabled_placeholder: "Select or enter Task name"
           no_options_placeholder: "No tasks available to assign items"
       assign:
         text: "Assign to task"
-        flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task."
-        flash_some_assignments_success: "Successfully assigned %{assigned_count} item(s) to the task. %{skipped_count} item(s) were already assigned to the task."
-        flash_assignments_failure: "Failed to assign item(s) to task."
+        flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task(s)."
+        flash_some_assignments_success: "Successfully assigned %{assigned_count} item(s) to the task(s). %{skipped_count} item(s) were already assigned to the task(s)."
+        flash_assignments_failure: "Failed to assign item(s) to task(s)."
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"
@@ -3227,6 +3279,7 @@ en:
       import: "Import"
       import_eln: "SciNote file (.eln)"
       import_docx: "MS Word (.docx)"
+      beta: "BETA"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
@@ -3811,9 +3864,9 @@ en:
     expired_title: 'Looks like your link has expired.'
     expired_description: 'Please export the data again in order to receive a new link.'
     modal_html: "<p>Your export request is being processed.</p><p>When completed we will <strong>send an email to %{email}</strong> inbox with a link to your exported items. Note that the link will expire in 7 days.</p>"
-    repository_header_html: 'You are about to export selected items in inventory %{repository}.'
+    repository_header_html: 'You are about to export selected items in the inventory %{repository}. The export will exclude the files uploaded to items (only filenames will be exported).'
     files_alert: 'Files uploaded to inventory items will not be exported. Only filenames will be exported.'
-    repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
+    repository_footer_html: 'You will receive an <strong>email and a notification</strong> when the download file is ready. For security reasons, the link will expire in 7 days.'
     export_request_success: "Export request received. Your export request is being processed."
     export_error: "Error when creating zip export."
     consumption_modal_label: 'Export consumption'

@@ -183,6 +183,7 @@
                 @step:move_attachment="reloadStep"
                 @step:drag_enter="dragEnter"
                 :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
+                :userSettingsUrl="userSettingsUrl"
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
               />
               <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step" @click="addStep(index + 1)">
@@ -237,7 +238,7 @@ import ReorderableItemsModal from '../shared/reorderable_items_modal.vue';
 import PublishProtocol from './modals/publish_protocol.vue';
 import clipboardPasteModal from '../shared/content/attachments/clipboard_paste_modal.vue';
 import AssetPasteMixin from '../shared/content/attachments/mixins/paste.js';
-
+import axios from '../../packs/custom_axios';
 import UtilsMixin from '../mixins/utils.js';
 import stackableHeadersMixin from '../mixins/stackableHeadersMixin';
 import moduleNameObserver from '../mixins/moduleNameObserver';
@@ -277,10 +278,12 @@ export default {
       reordering: false,
       publishing: false,
       stepToReload: null,
-      activeDragStep: null
+      activeDragStep: null,
+      userSettingsUrl: null
     };
   },
   mounted() {
+    this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     $.get(this.protocolUrl, (result) => {
       this.protocol = result.data;
       this.$nextTick(() => {
@@ -309,9 +312,24 @@ export default {
     },
     collapseSteps() {
       $('.step-container .collapse').collapse('hide');
+      this.updateStepStateSettings(true);
     },
     expandSteps() {
       $('.step-container .collapse').collapse('show');
+      this.updateStepStateSettings(false);
+    },
+    updateStepStateSettings(newState) {
+      const updatedData = this.steps.reduce((acc, currentStep) => {
+        acc[currentStep.id] = newState;
+        return acc;
+      }, {});
+
+      const settings = {
+        key: 'task_step_states',
+        data: updatedData
+      };
+
+      axios.put(this.userSettingsUrl, { settings: [settings] });
     },
     deleteSteps() {
       $.post(this.urls.delete_steps_url, () => {

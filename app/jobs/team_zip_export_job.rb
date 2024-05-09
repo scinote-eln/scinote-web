@@ -4,6 +4,7 @@ require 'fileutils'
 require 'csv'
 require 'vips'
 
+# rubocop:disable Metrics/BlockLength
 class TeamZipExportJob < ZipExportJob
   include StringUtility
 
@@ -51,13 +52,13 @@ class TeamZipExportJob < ZipExportJob
 
       # Include all experiments
       ex_idx = ex_archive_idx = 0
-      project.experiments.each do |experiment|
+      project.experiments.find_each do |experiment|
         idx = experiment.archived ? (ex_archive_idx += 1) : (ex_idx += 1)
         experiment_path = make_model_dir(project_path, experiment, idx)
 
         # Include all modules
         mod_pos = mod_archive_pos = 0
-        experiment.my_modules.order(:workflow_order).each do |my_module|
+        experiment.my_modules.order(:workflow_order).find_each do |my_module|
           pos = my_module.archived ? (mod_archive_pos += 1) : (mod_pos += 1)
           my_module_path = make_model_dir(experiment_path, my_module, pos)
 
@@ -153,19 +154,21 @@ class TeamZipExportJob < ZipExportJob
     directory = create_archived_results_folder(directory) if archived && elements.present?
 
     asset_indexes = {}
-    elements.each_with_index do |element, i|
+    index = 1
+    elements.find_each do |element|
       asset = element.asset
       preview = prepare_preview(asset)
       if type == :step
         name = "#{directory}/" \
-               "#{append_file_suffix(asset.file_name, "_#{i}_Step#{element.step.position_plus_one}")}"
+               "#{append_file_suffix(asset.file_name, "_#{index}_Step#{element.step.position_plus_one}")}"
         if preview
           preview_name = "#{directory}/" \
-                         "#{append_file_suffix(preview[:file_name], "_#{i}_Step#{element.step.position_plus_one}_preview")}"
+                         "#{append_file_suffix(preview[:file_name],
+                                               "_#{index}_Step#{element.step.position_plus_one}_preview")}"
         end
       elsif type == :result
-        name = "#{directory}/#{append_file_suffix(asset.file_name, "_#{i}")}"
-        preview_name = "#{directory}/#{append_file_suffix(preview[:file_name], "_#{i}_preview")}" if preview
+        name = "#{directory}/#{append_file_suffix(asset.file_name, "_#{index}")}"
+        preview_name = "#{directory}/#{append_file_suffix(preview[:file_name], "_#{index}_preview")}" if preview
       end
 
       if asset.file.attached?
@@ -180,6 +183,7 @@ class TeamZipExportJob < ZipExportJob
         file: name,
         preview: preview_name
       }
+      index += 1
     end
     asset_indexes
   end
@@ -218,14 +222,15 @@ class TeamZipExportJob < ZipExportJob
     directory = create_archived_results_folder(directory) if archived && elements.present?
 
     table_indexes = {}
-    elements.each_with_index do |element, i|
+    index = 0
+    elements.find_each do |element|
       table = element.table
       table_name = table.name.presence || 'Table'
-      table_name += i.to_s
+      table_name += index.to_s
 
       if type == :step
         name = "#{directory}/#{to_filesystem_name(table_name)}" \
-               "_#{i}_Step#{element.step.position_plus_one}.csv"
+               "_#{index}_Step#{element.step.position_plus_one}.csv"
       elsif type == :result
         name = "#{directory}/#{to_filesystem_name(table_name)}.csv"
       end
@@ -233,6 +238,7 @@ class TeamZipExportJob < ZipExportJob
       table_indexes[table.id] = {
         file: name
       }
+      index += 1
     end
 
     table_indexes
@@ -253,7 +259,7 @@ class TeamZipExportJob < ZipExportJob
     # Define headers and columns IDs
     col_ids = [-3, -4, -5, -6]
     col_ids << -9 if Repository.repository_row_connections_enabled?
-    col_ids += repo.repository_columns.map(&:id)
+    col_ids += repo.repository_columns.pluck(:id)
 
     # Define callback function for file name
     assets = {}
@@ -290,3 +296,4 @@ class TeamZipExportJob < ZipExportJob
            item: I18n.t('activejob.failure_notifiable_job.items.project'))
   end
 end
+# rubocop:enable Metrics/BlockLength

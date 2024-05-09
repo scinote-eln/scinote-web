@@ -10,7 +10,12 @@ class StepSerializer < ActiveModel::Serializer
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode,
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
              :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
-             :type, :open_vector_editor_context
+             :type, :open_vector_editor_context, :collapsed
+
+  def collapsed
+    step_states = @instance_options[:user].settings.fetch('task_step_states', {})
+    step_states[object.id.to_s] == true
+  end
 
   def marvinjs_enabled
     MarvinJsService.enabled?

@@ -1,6 +1,6 @@
 <div
   class="assign-items-to-task-modal-container"
-  data-assign-url="<%= my_module_repository_path(":module_id") %>"
+  data-assign-url="<%= assign_my_modules_url(id: @repository.id) %>"
   data-projects-url="<%= inventory_assigning_project_filter_projects_path %>"
   data-experiments-url="<%= inventory_assigning_experiment_filter_experiments_path %>"
   data-tasks-url="<%= inventory_assigning_my_module_filter_my_modules_path %>"

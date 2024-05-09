@@ -55,13 +55,15 @@ const entryList = {
   vue_design_system_select: './app/javascript/packs/vue/design_system/select.js',
   vue_protocols_list: './app/javascript/packs/vue/protocols_list.js',
   vue_repositories_table: './app/javascript/packs/vue/repositories_table.js',
+  vue_import_repository_modal: './app/javascript/packs/vue/import_repository_modal.js',
   vue_reports_table: './app/javascript/packs/vue/reports_table.js',
   vue_open_locally_menu: './app/javascript/packs/vue/open_locally_menu.js',
   vue_scinote_edit_download: './app/javascript/packs/vue/scinote_edit_download.js',
   vue_design_system_modals: './app/javascript/packs/vue/design_system/modals.js',
   vue_legacy_tags_modal: './app/javascript/packs/vue/legacy/tags_modal.js',
   vue_legacy_access_modal: './app/javascript/packs/vue/legacy/access_modal.js',
-  vue_legacy_repository_menu_dropdown: './app/javascript/packs/vue/legacy/repository_menu_dropdown.js'
+  vue_legacy_repository_menu_dropdown: './app/javascript/packs/vue/legacy/repository_menu_dropdown.js',
+  vue_dashboard_new_task: './app/javascript/packs/vue/dashboard_new_task.js'
 };
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

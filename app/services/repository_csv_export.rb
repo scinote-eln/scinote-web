@@ -3,7 +3,7 @@
 require 'csv'
 
 module RepositoryCsvExport
-  def self.to_csv(rows, column_ids, user, repository, handle_file_name_func, in_module)
+  def self.to_csv(rows, column_ids, user, repository, handle_file_name_func, in_module, empty_export)
     # Parse column names
     csv_header = []
     add_consumption = in_module && !repository.is_a?(RepositorySnapshot) && repository.has_stock_management?
@@ -34,29 +34,30 @@ module RepositoryCsvExport
 
     CSV.generate do |csv|
       csv << csv_header
-      rows.each do |row|
-        csv_row = []
-        column_ids.each do |c_id|
-          case c_id
-          when -1, -2
-            next
-          when -3
-            csv_row << (repository.is_a?(RepositorySnapshot) ? row.parent_id : row.code)
-          when -4
-            csv_row << row.name
-          when -5
-            csv_row << row.created_by.full_name
-          when -6
-            csv_row << I18n.l(row.created_at, format: :full)
-          when -7
-            csv_row << (row.archived? && row.archived_by.present? ? row.archived_by.full_name : '')
-          when -8
-            csv_row << (row.archived? && row.archived_on.present? ? I18n.l(row.archived_on, format: :full) : '')
-          when -9
-            csv_row << row.parent_repository_rows.map(&:code).join(' | ')
-            csv_row << row.child_repository_rows.map(&:code).join(' | ')
-          else
-            cell = row.repository_cells.find_by(repository_column_id: c_id)
+      unless empty_export
+        rows.each do |row|
+          csv_row = []
+          column_ids.each do |c_id|
+            case c_id
+            when -1, -2
+              next
+            when -3
+              csv_row << (repository.is_a?(RepositorySnapshot) ? row.parent_id : row.code)
+            when -4
+              csv_row << row.name
+            when -5
+              csv_row << row.created_by.full_name
+            when -6
+              csv_row << I18n.l(row.created_at, format: :full)
+            when -7
+              csv_row << (row.archived? && row.archived_by.present? ? row.archived_by.full_name : '')
+            when -8
+              csv_row << (row.archived? && row.archived_on.present? ? I18n.l(row.archived_on, format: :full) : '')
+            when -9
+              csv_row << row.parent_repository_rows.map(&:code).join(' | ')
+              csv_row << row.child_repository_rows.map(&:code).join(' | ')
+            else
+              cell = row.repository_cells.find_by(repository_column_id: c_id)
 
             csv_row << if cell
                          if cell.value_type == 'RepositoryAssetValue' && handle_file_name_func
@@ -64,11 +65,11 @@ module RepositoryCsvExport
                          else
                             cell.value.export_formatted
                          end
-                       end
+            end
           end
+          csv_row << row.row_consumption(row.stock_consumption) if add_consumption
+          csv << csv_row
         end
-        csv_row << row.row_consumption(row.stock_consumption) if add_consumption
-        csv << csv_row
       end
     end.encode('UTF-8', invalid: :replace, undef: :replace)
   end

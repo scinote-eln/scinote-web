@@ -111,6 +111,23 @@ export default {
         this.extension = extension;
         this.imageBlob = imageBlob;
       }
+    },
+    uploadImage() {
+      const newName = this.fileName;
+      const imageBlog = this.imageBlob;
+      // check if the name is set
+      if (newName && newName.length > 0) {
+        const extension = imageBlog.name.slice(
+          (Math.max(0, imageBlog.name.lastIndexOf('.')) || Infinity) + 1
+        );
+        // hack to inject custom name in File object
+        const name = newName + '.' + extension;
+        const blob = imageBlog.slice(0, imageBlog.size, imageBlog.type);
+        // make new blob with the correct name;
+        this.imageBlob = new File([blob], name, { type: imageBlog.type });
+      }
+      $(this.$refs.modal).modal('hide');
+      this.$emit('files', this.imageBlob, this.target);
     }
   }
 };

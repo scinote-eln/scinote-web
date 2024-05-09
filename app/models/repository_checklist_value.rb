@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RepositoryChecklistValue < ApplicationRecord
+  attribute :current_repository_checklist_items
+
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User',
                           inverse_of: :created_repository_checklist_values
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User',
@@ -20,7 +22,7 @@ class RepositoryChecklistValue < ApplicationRecord
   EXTRA_PRELOAD_INCLUDE = :repository_checklist_items
 
   def formatted(separator: ' | ')
-    repository_checklist_items.pluck(:data).join(separator)
+    repository_checklist_items.pluck(:data).join(separator).gsub("\n", "\\n")
   end
 
   def export_formatted
@@ -78,11 +80,18 @@ class RepositoryChecklistValue < ApplicationRecord
 
     self.last_modified_by = user
 
-    self.repository_checklist_items = repository_cell.repository_column
-                                                     .repository_checklist_items
-                                                     .where(id: item_ids)
-
-    preview ? validate : save!
+    if preview
+      self.current_repository_checklist_items = repository_checklist_items
+      clear_current_repository_checklist_items_change
+      self.current_repository_checklist_items =
+        repository_cell.repository_column.repository_checklist_items.where(id: item_ids)
+      validate
+    else
+      self.repository_checklist_items = repository_cell.repository_column
+                                                       .repository_checklist_items
+                                                       .where(id: item_ids)
+      save!
+    end
   end
 
   def snapshot!(cell_snapshot)

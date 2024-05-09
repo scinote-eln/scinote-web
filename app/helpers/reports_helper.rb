@@ -21,7 +21,7 @@ module ReportsHelper
     children_html = ''.html_safe
     # First, recursively render element's children
     if element.children.active.present?
-      element.children.active.each do |child|
+      element.children.active.find_each do |child|
         children_html.safe_concat render_report_element(child, provided_locals)
       end
     end

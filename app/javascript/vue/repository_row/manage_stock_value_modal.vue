@@ -46,6 +46,7 @@
                   :label="i18n.t('repository_stock_values.manage_modal.amount')"
                   :required="true"
                   :min="0"
+                  :negativeNumbersEnabled="this.operation == 'set'"
                   :error="errors.amount"
                 />
               </div>
@@ -252,7 +253,6 @@ export default {
       const newErrors = {};
       if (!this.unit) { newErrors.unit = I18n.t('repository_stock_values.manage_modal.unit_error'); }
       if (!this.amount) { newErrors.amount = I18n.t('repository_stock_values.manage_modal.amount_error'); }
-      if (this.amount && this.amount < 0) { newErrors.amount = I18n.t('repository_stock_values.manage_modal.negative_error'); }
       if (this.reminderEnabled && !this.lowStockTreshold) { newErrors.tresholdAmount = I18n.t('repository_stock_values.manage_modal.amount_error'); }
       if (this.comment && this.comment.length > 255) { newErrors.comment = I18n.t('repository_stock_values.manage_modal.comment_limit'); }
       this.errors = newErrors;
