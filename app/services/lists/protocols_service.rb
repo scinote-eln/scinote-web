@@ -14,7 +14,7 @@ module Lists
       published_versions = @raw_data
                            .in_repository_published_version
                            .order(:parent_id, version_number: :desc)
-                           .select('DISTINCT ON (parent_id) protocols.id')
+                           .select('DISTINCT ON (protocols.parent_id) protocols.id')
       new_drafts = @raw_data
                    .where(protocol_type: Protocol.protocol_types[:in_repository_draft], parent_id: nil)
                    .select('protocols.id')
