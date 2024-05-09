@@ -5,7 +5,7 @@
         <div class="portocol-header-left-part grow">
           <template v-if="headerSticked && moduleName">
             <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
-            <div @click="scrollTop" class="task-section-title w-[calc(100%_-_35rem)] min-w-[5rem] cursor-pointer">
+            <div @click="scrollTop" class="task-section-title w-[calc(100%_-_20rem)] min-w-[5rem] cursor-pointer" :title="moduleName">
               <h2 class="truncate leading-6">{{ moduleName }}</h2>
             </div>
           </template>
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="actions-block">
-        <div class="protocol-buttons-group shrink-0">
+        <div class="protocol-buttons-group shrink-0 bg-sn-white">
           <a v-if="urls.add_step_url"
              class="btn btn-secondary"
              :title="i18n.t('protocols.steps.new_step_title')"
