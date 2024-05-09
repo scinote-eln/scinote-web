@@ -9,23 +9,25 @@ module GlobalSearch
     def team
       {
         name: object.my_module.experiment.project.team.name,
-        url: projects_path(team_id: object.my_module.experiment.project.team.id)
+        url: dashboard_path(team: object.team)
       }
     end
 
     def experiment
+      archived = object.my_module.experiment.archived_branch?
       {
         name: object.my_module.experiment.name,
-        url: my_modules_experiment_path(object.my_module.experiment.id),
-        archived: object.my_module.experiment.archived?
+        url: my_modules_experiment_path(object.my_module.experiment.id, view_mode: view_mode(archived)),
+        archived: archived
       }
     end
 
     def my_module
+      archived = object.my_module.archived_branch?
       {
         name: object.my_module.name,
-        url: protocols_my_module_path(object.my_module.id),
-        archived: object.my_module.archived?
+        url: protocols_my_module_path(object.my_module.id, view_mode: view_mode(archived)),
+        archived: archived
       }
     end
 
@@ -38,7 +40,14 @@ module GlobalSearch
     end
 
     def url
-      my_module_results_path(my_module_id: object.my_module.id)
+      my_module_results_path(my_module_id: object.my_module.id,
+                             view_mode: view_mode(object.archived?))
+    end
+
+    private
+
+    def view_mode(archived)
+      archived ? 'archived' : 'active'
     end
   end
 end

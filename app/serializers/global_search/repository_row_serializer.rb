@@ -9,7 +9,7 @@ module GlobalSearch
     def team
       {
         name: object.team.name,
-        url: repository_path(object.repository)
+        url: dashboard_path(team: object.team)
       }
     end
 
@@ -25,16 +25,22 @@ module GlobalSearch
     end
 
     def repository
+      archived = object.repository.archived
       {
         name: object.repository.name,
-        url: repository_path(object.repository),
-        archived: object.repository.archived
+        url: repository_path(object.repository, view_mode: archived ? 'archived' : 'active'),
+        archived: archived
       }
     end
 
     def url
-      # switch to repository_repository_rows_path when inventory items page is implemented
-      repository_path(object.repository)
+      params = {
+        id: object.repository_id,
+        landing_page: true,
+        row_id: object.id
+      }
+      params[:archived] = true if object.archived
+      repository_path(params)
     end
   end
 end
