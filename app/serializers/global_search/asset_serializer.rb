@@ -4,7 +4,7 @@ module GlobalSearch
   class AssetSerializer < ActiveModel::Serializer
     include Rails.application.routes.url_helpers
     include FileIconsHelper
-    attributes :id, :file_name, :icon, :created_at, :updated_at, :team, :parent, :experiment
+    attributes :id, :file_name, :icon, :created_at, :updated_at, :team, :parent, :experiment, :repository
 
     def file_name
       object.render_file_name
@@ -36,6 +36,20 @@ module GlobalSearch
       {
         name: object.my_module.experiment.name,
         url: my_modules_experiment_path(id: object.my_module.experiment.id, view_mode: view_mode(archived)),
+        archived: archived
+      }
+    end
+
+    def repository
+      parent = object.parent
+
+      return { name: '' } unless parent.is_a?(RepositoryCell)
+
+      archived = parent.repository_row.archived?
+
+      {
+        name: parent.repository_row.repository.name,
+        url: repository_path(id: parent.repository_row.repository_id, archived: archived),
         archived: archived
       }
     end

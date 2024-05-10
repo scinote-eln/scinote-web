@@ -15,10 +15,13 @@
           <LinkTemplate :url="row.attributes.parent.url" :icon="row.attributes.icon" :value="row.attributes.file_name"/>
           <CellTemplate :label="i18n.t('search.index.created_at')" :value="row.attributes.created_at"/>
           <CellTemplate :label=" i18n.t('search.index.updated_at')" :value="row.attributes.updated_at"/>
-          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
           <CellTemplate :label="i18n.t(`search.index.${row.attributes.parent.type}`)" :url="row.attributes.parent.url" :value="labelName(row.attributes.parent)"/>
-          <CellTemplate :label="i18n.t('search.index.experiment')" :visible="!!row.attributes.experiment.name"
+          <CellTemplate v-if="row.attributes.repository.name" :label="i18n.t(`search.index.repository`)"
+                        :url="row.attributes.repository.url" :value="labelName(row.attributes.repository)"/>
+          <CellTemplate v-else-if="row.attributes.experiment.name" :label="i18n.t(`search.index.experiment`)"
                         :url="row.attributes.experiment.url" :value="labelName(row.attributes.experiment)"/>
+          <div v-else></div>
+          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
         </div>
       </div>
       <div v-if="viewAll">
