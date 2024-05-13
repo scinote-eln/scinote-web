@@ -7,9 +7,10 @@ module GlobalSearch
     attributes :id, :name, :code, :created_at, :created_by, :team, :repository, :archived, :url
 
     def team
+      team = object.repository.shared_with?(current_user.current_team) ? current_user.current_team : object.team
       {
-        name: object.team.name,
-        url: dashboard_path(team: object.team)
+        name: team.name,
+        url: dashboard_path(team: team)
       }
     end
 
