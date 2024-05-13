@@ -6,6 +6,7 @@ import ListEnd from './helpers/list_end.vue';
 import NoSearchResult from './helpers/no_search_result.vue';
 import CellTemplate from './helpers/cell_template.vue';
 import LinkTemplate from './helpers/link_template.vue';
+import TableHeader from './helpers/table_header.vue';
 /* global GLOBAL_CONSTANTS I18n */
 
 export default {
@@ -22,7 +23,8 @@ export default {
     NoSearchResult,
     ListEnd,
     CellTemplate,
-    LinkTemplate
+    LinkTemplate,
+    TableHeader
   },
   data() {
     return {

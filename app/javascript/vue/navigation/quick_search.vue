@@ -4,7 +4,7 @@
       <div class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}" :title="i18n.t('nav.search')">
         <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery" @keydown="focusHistoryItem"
                :class="{'active': flyoutOpened}"
-               @focus="openHistory" :placeholder="i18n.t('nav.search')" @keyup.enter="saveQuery"/>
+               @focus="openHistory" :placeholder="i18n.t('nav.search')" @keydown.enter="saveQuery"/>
         <i class="sn-icon sn-icon-search"></i>
         <div v-if="this.searchQuery.length > 1" class="flex items-center gap-1 absolute right-2 top-1.5">
           <div class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''; $refs.searchField.focus()">
