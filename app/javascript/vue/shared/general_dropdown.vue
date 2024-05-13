@@ -1,6 +1,6 @@
 <template>
   <div class="relative" v-click-outside="closeMenu" >
-    <div ref="field" class="cursor-pointer" @click.stop="isOpen = (!isOpen || fieldOnlyOpen)">
+    <div ref="field" class="cursor-pointer" @click.stop="toggleMenu">
       <slot name="field"></slot>
     </div>
     <template v-if="isOpen">
@@ -37,6 +37,7 @@ export default {
     alwaysShow: { type: Boolean, default: false },
     closeDropdown: { type: Boolean, default: false },
     fieldOnlyOpen: { type: Boolean, default: false },
+    canOpen: { type: Boolean, default: true },
     fixedWidth: { type: Boolean, default: false }
   },
   data() {
@@ -61,6 +62,13 @@ export default {
     }
   },
   methods: {
+    toggleMenu() {
+      if (this.canOpen && (!this.isOpen || this.fieldOnlyOpen)) {
+        this.isOpen = true;
+      } else if (this.isOpen && !this.fieldOnlyOpen) {
+        this.isOpen = false;
+      }
+    },
     closeMenu(e) {
       if (e && e.target.closest('.sn-dropdown, .sn-select-dropdown, .sn-menu-dropdown, .dp__instance_calendar')) return;
       this.isOpen = false;

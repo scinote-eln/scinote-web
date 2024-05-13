@@ -50,6 +50,15 @@
   <div class="toolbar-filter-buttons" style="display:none">
   </div>
 
+  <!-- Inventory Item landing page link-->
+  <% if @repository_row && @repository_row_landing_page %>
+    <a id="itemLandingPagelink" href="<%= repository_repository_row_path(@repository, @repository_row) %>" class="hidden record-info-link"></a>
+  <% elsif @repository_row_landing_page %>
+    <div id="repositoryItemErrorSidebar" data-behaviour="vue" class="fixed top-0 right-0 h-full z-[2039]">
+      <repository-item-error-sidebar />
+    </div>
+  <% end %>
+
 
 
   <%= render partial: "repositories/repository_table",
@@ -88,6 +97,7 @@
 <%= javascript_include_tag 'vue_import_repository_modal' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>
 <%= javascript_include_tag "repositories/show" %>
+<%= javascript_include_tag "vue_components_repository_item_error_sidebar" %>
 <%= javascript_include_tag 'inputmask' %>
 <%= javascript_include_tag 'emoji_button' %>
 <%= javascript_include_tag 'pdf_js' %>

@@ -2,7 +2,7 @@
   <div>
     <MenuDropdown
       :listItems="this.formattedList"
-      btnClasses="bg-transparent w-6 h-6 border-0 p-0 flex"
+      btnClasses="btn btn-light icon-btn"
       :position="'right'"
       :alwaysShow="true"
       :btnIcon="'sn-icon sn-icon-more-hori'"
@@ -41,9 +41,8 @@ export default {
         if (item.type === 'link') {
           newItem.url = item.path;
         }
-
+        newItem.data_e2e = `e2e-BT-cardActions-${item.name}`;
         newItem.params = item;
-
         return newItem;
       });
     },

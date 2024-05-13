@@ -21,7 +21,7 @@
   }
 
   .sci-input-container-v2 input::placeholder {
-    @apply text-sn-sleepy-grey;
+    @apply text-sn-grey;
   }
 
   .sci-input-container-v2 .error {
@@ -40,7 +40,8 @@
     width: 100%;
   }
 
-  .sci-input-container-v2 input:focus {
+  .sci-input-container-v2 input:focus,
+  .sci-input-container-v2 input.active {
     @apply border-sn-science-blue shadow-none;
   }
 
@@ -83,7 +84,7 @@
   }
 
   .sci-input-container-v2 textarea::placeholder {
-    @apply text-sn-sleepy-grey;
+    @apply text-sn-grey;
   }
 
   .sci-input-container-v2 textarea:focus {

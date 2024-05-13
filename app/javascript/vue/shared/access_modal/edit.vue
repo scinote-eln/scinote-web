@@ -1,44 +1,44 @@
 <template>
   <div>
-    <div v-if="roles.length > 0 && visible && default_role" class="p-2 flex items-center gap-2 border-solid border-0 border-b border-b-sn-sleepy-grey">
-      <div>
-        <img src="/images/icon/team.png" class="rounded-full w-8 h-8">
-      </div>
-      <div>
-        {{ i18n.t('access_permissions.everyone_else', { team_name: params.object.team }) }}
-      </div>
-      <GeneralDropdown @open="loadUsers" @close="closeFlyout">
-        <template v-slot:field>
-          <i class="sn-icon sn-icon-info"></i>
-        </template>
-        <template v-slot:flyout>
-          <perfect-scrollbar class="flex flex-col max-h-96 max-w-[280px] relative pr-4 gap-y-px">
-            <div v-for="user in this.autoAssignedUsers"
-                :key="user.attributes.user.id"
-                :title="user.attributes.user.name"
-                class="rounded px-3 py-2.5 flex items-center hover:no-underline leading-5 gap-2">
-              <img :src="user.attributes.user.avatar_url" class="w-6 h-6 rounded-full">
-              <span class="truncate">{{ user.attributes.user.name }}</span>
-            </div>
-          </perfect-scrollbar>
-        </template>
-      </GeneralDropdown>
-      <MenuDropdown
-        v-if="params.object.top_level_assignable && params.object.urls.update_access"
-        class="ml-auto"
-        :listItems="rolesFromatted(default_role)"
-        :btnText="this.roles.find((role) => role[0] == default_role)[1]"
-        :position="'right'"
-        :caret="true"
-        @setRole="(...args) => this.changeDefaultRole(...args)"
-        @removeRole="() => this.changeDefaultRole()"
-      ></MenuDropdown>
-      <div class="ml-auto btn btn-light pointer-events-none" v-else>
-        {{ this.roles.find((role) => role[0] == default_role)[1] }}
-        <div class="h-6 w-6"></div>
-      </div>
-    </div>
     <perfect-scrollbar class="h-[50vh] relative">
+      <div v-if="roles.length > 0 && visible && default_role" class="p-2 flex items-center gap-2 border-solid border-0 border-b border-b-sn-sleepy-grey">
+        <div>
+          <img src="/images/icon/team.png" class="rounded-full w-8 h-8">
+        </div>
+        <div>
+          {{ i18n.t('access_permissions.everyone_else', { team_name: params.object.team }) }}
+        </div>
+        <GeneralDropdown @open="loadUsers" @close="closeFlyout">
+          <template v-slot:field>
+            <i class="sn-icon sn-icon-info"></i>
+          </template>
+          <template v-slot:flyout>
+            <perfect-scrollbar class="flex flex-col max-h-96 max-w-[280px] relative pr-4 gap-y-px">
+              <div v-for="user in this.autoAssignedUsers"
+                  :key="user.attributes.user.id"
+                  :title="user.attributes.user.name"
+                  class="rounded px-3 py-2.5 flex items-center hover:no-underline leading-5 gap-2">
+                <img :src="user.attributes.user.avatar_url" class="w-6 h-6 rounded-full">
+                <span class="truncate">{{ user.attributes.user.name }}</span>
+              </div>
+            </perfect-scrollbar>
+          </template>
+        </GeneralDropdown>
+        <MenuDropdown
+          v-if="params.object.top_level_assignable && params.object.urls.update_access"
+          class="ml-auto"
+          :listItems="rolesFromatted(default_role)"
+          :btnText="this.roles.find((role) => role[0] == default_role)[1]"
+          :position="'right'"
+          :caret="true"
+          @setRole="(...args) => this.changeDefaultRole(...args)"
+          @removeRole="() => this.changeDefaultRole()"
+        ></MenuDropdown>
+        <div class="ml-auto btn btn-light pointer-events-none" v-else>
+          {{ this.roles.find((role) => role[0] == default_role)[1] }}
+          <div class="h-6 w-6"></div>
+        </div>
+      </div>
       <div v-for="userAssignment in manuallyAssignedUsers"
             :key="userAssignment.id"
             class="p-2 flex items-center gap-2">

@@ -48,14 +48,9 @@ module Users
         render json: {
           html: render_to_string(
             partial: 'users/settings/user_teams/' \
-                      'destroy_user_team_modal_body',
+                     'destroy_user_team_modal_body',
             locals: { user_assignment: @user_assignment },
             formats: :html
-          ),
-          heading: I18n.t(
-            'users.settings.user_teams.destroy_uo_heading',
-            user: escape_input(@user_assignment.user.full_name),
-            team: escape_input(@user_assignment.assignable.name)
           )
         }
       end
@@ -63,29 +58,12 @@ module Users
       def destroy
         # If user is last administrator of team,
         # he/she cannot be deleted from it.
-        invalid =
-          managing_team_user_roles_collection.include?(@user_assignment.user_role) &&
-          @user_assignment
-          .assignable
-          .user_assignments
-          .where(user_role: managing_team_user_roles_collection)
-          .count <= 1
+        invalid = @user_assignment.last_with_permission?(TeamPermissions::USERS_MANAGE)
 
         unless invalid
           begin
             @user_assignment.transaction do
-              # If user leaves on his/her own accord,
-              # new owner for projects is the first
-              # administrator of team
               if params[:leave]
-                new_owner =
-                  @user_assignment
-                  .assignable
-                  .user_assignments
-                  .where(user_role: managing_team_user_roles_collection)
-                  .where.not(id: @user_assignment.id)
-                  .first
-                  .user
                 Activities::CreateActivityService
                   .call(activity_type: :user_leave_team,
                         owner: current_user,
@@ -95,10 +73,6 @@ module Users
                           team: @user_assignment.assignable.id
                         })
               else
-                # Otherwise, the new owner for projects is
-                # the current user (= an administrator removing
-                # the user from the team)
-                new_owner = current_user
                 Activities::CreateActivityService
                   .call(activity_type: :remove_user_from_team,
                         owner: current_user,
@@ -110,8 +84,7 @@ module Users
                         })
               end
               reset_user_current_team(@user_assignment)
-
-              remove_user_from_team!(@user_assignment, new_owner)
+              @user_assignment.destroy!
             end
           rescue StandardError => e
             Rails.logger.error e.message
@@ -119,21 +92,27 @@ module Users
           end
         end
 
-        if !invalid
-          if params[:leave]
-            flash[:notice] = I18n.t(
-              'users.settings.user_teams.leave_flash',
-              team: @user_assignment.assignable.name
-            )
-            flash.keep(:notice)
-          end
+        if invalid
+          render json: @user_assignment.errors, status: :unprocessable_entity
+        else
+          flash[:success] = if params[:leave]
+                              I18n.t(
+                                'users.settings.user_teams.leave_flash',
+                                team: @user_assignment.assignable.name
+                              )
+                            else
+                              I18n.t(
+                                'users.settings.user_teams.remove_flash',
+                                user: @user_assignment.user.full_name,
+                                team: @user_assignment.assignable.name
+                              )
+                            end
+
           generate_notification(current_user,
                                 @user_assignment.user,
                                 @user_assignment.assignable,
                                 false)
           render json: { status: :ok }
-        else
-          render json: @user_assignment.errors, status: :unprocessable_entity
         end
       end
 
@@ -164,33 +143,6 @@ module Users
         ids -= [user_assignment.assignable.id]
         user_assignment.user.current_team_id = ids.first
         user_assignment.user.save
-      end
-
-      def remove_user_from_team!(user_assignment, new_owner)
-        return user_assignment.destroy! unless new_owner
-
-        # Also, make new owner author of all protocols that belong
-        # to the departing user and belong to this team.
-        p_ids = user_assignment.user.added_protocols.where(team: user_assignment.assignable).pluck(:id)
-        Protocol.where(id: p_ids).find_each do |protocol|
-          protocol.record_timestamps = false
-          protocol.added_by = new_owner
-          protocol.archived_by = new_owner if protocol.archived_by == user_assignment.user
-          protocol.restored_by = new_owner if protocol.restored_by == user_assignment.user
-          protocol.save!(validate: false)
-          protocol.user_assignments.find_by(user: new_owner)&.destroy!
-          protocol.user_assignments.create!(
-            user: new_owner,
-            user_role: UserRole.find_predefined_owner_role,
-            assigned: :manually
-          )
-        end
-
-        # Make new owner author of all inventory items that were added
-        # by departing user and belong to this team.
-        RepositoryRow.change_owner(user_assignment.assignable, user_assignment.user, new_owner)
-
-        user_assignment.destroy!
       end
     end
   end

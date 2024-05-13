@@ -1,7 +1,7 @@
 <template>
   <MenuDropdown
     :listItems="viewModesMenu"
-    :btnClasses="'btn btn-secondary !border-sn-light-grey px-3'"
+    :btnClasses="'btn btn-secondary !border-sn-light-grey px-3 prevent-shrink' + disabled"
     :btnText="btnText"
     :caret="true"
     position='right'>
@@ -20,12 +20,16 @@ export default {
   props: {
     viewMode: { type: String, required: true },
     activeUrl: { type: String, required: true },
-    archivedUrl: { type: String, required: true }
+    archivedUrl: { type: String, required: true },
+    disabled: { type: String, default: 'false' }
   },
   beforeDestroy() {
     delete window.initRepositoryStateMenu;
   },
   computed: {
+    disabled() {
+      return this.disabled === 'true' ? ' disabled' : '';
+    },
     btnText() {
       return I18n.t(`toolbar.${this.viewMode}_state`);
     },

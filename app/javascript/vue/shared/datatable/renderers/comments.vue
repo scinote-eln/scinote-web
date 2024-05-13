@@ -3,7 +3,7 @@
     <span v-if="!params.data.permissions.create_comments && params.data.comments.count === 0">0</span>
     <a v-else
       href="#"
-      class="open-comments-sidebar" tabindex=0 :id="'comment-count-' + params.data.id"
+      class="open-comments-sidebar relative px-1" tabindex=0 :id="'comment-count-' + params.data.id"
       :data-object-type="objectType" :data-object-id="params.data.id">
       <template v-if="params.data.comments.count > 0">
         {{ params.data.comments.count }}
@@ -12,7 +12,9 @@
         +
       </template>
       <span v-if="params.data.comments.count_unseen > 0"
-            class="unseen-comments inline-flex align-super text-xs rounded-[0.875rem] px-1 bg-sn-science-blue text-sn-white h-4 items-center justify-center">
+            class="unseen-comments flex align-super text-xs rounded-lg  bg-sn-science-blue
+                 text-sn-white h-4 min-w-[1rem] items-center justify-center
+                   absolute -top-1.5 left-[100%] px-1">
         {{params.data.comments.count_unseen }}
       </span>
     </a>

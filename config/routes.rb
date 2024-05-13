@@ -53,6 +53,7 @@ Rails.application.routes.draw do
         post :set_default
       end
       collection do
+        get :list
         post :duplicate
         delete :delete
         get :datatable
@@ -214,6 +215,11 @@ Rails.application.routes.draw do
             post 'update'
           end
         end
+      end
+
+      collection do
+        get :visible_users
+        get :visible_teams
       end
 
       member do
@@ -803,6 +809,11 @@ Rails.application.routes.draw do
 
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
+    resource :search, only: [], controller: :search do
+      collection do
+        get :quick
+      end
+    end
 
     # We cannot use 'resources :assets' because assets is a reserved route
     # in Rails (assets pipeline) and causes funky behavior

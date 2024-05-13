@@ -3,14 +3,14 @@
 
 <% if current_team %>
   <% provide(:sidebar_url, sidebar_repositories_path) %>
-  <div class="content-pane flexible <%= params[:archived] ? :archived : :active %> repositories-index">
+  <div class="content-pane flexible <%= params[:view_mode] ? :archived : :active %> repositories-index">
     <div class="content-header">
       <div class="title-row">
         <h1 data-view-mode="active"><%= t('libraries.index.head_title') %></h1>
         <h1 data-view-mode="archived"><span><%= t('labels.archived')%></span>&nbsp;<%= t('libraries.index.head_title_archived') %></h1>
       </div>
     </div>
-    <div class="content-body" data-e2e="e2e-inventories-container">
+    <div class="content-body" data-e2e="e2e-CO-inventories">
       <div id="repositoriesTable" class="fixed-content-body">
         <repositories-table
           actions-url="<%= actions_toolbar_team_repositories_path(current_team) %>"

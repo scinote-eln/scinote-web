@@ -51,7 +51,7 @@ import VersionsRenderer from './renderers/versions.vue';
 import VersionsModal from './modals/versions.vue';
 
 export default {
-  name: 'LabelTemplatesTable',
+  name: 'ProtocolTemplatesTable',
   components: {
     DataTable,
     UsersRenderer,

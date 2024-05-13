@@ -4,6 +4,7 @@ source 'http://rubygems.org'
 
 ruby '3.2.2'
 
+gem 'activerecord-session_store'
 gem 'bootsnap', require: false
 gem 'devise', '~> 4.8.1'
 gem 'devise_invitable'
@@ -24,7 +25,9 @@ gem 'omniauth', '~> 2.1'
 gem 'omniauth-azure-activedirectory-v2'
 gem 'omniauth-linkedin-oauth2'
 gem 'omniauth-okta', git: 'https://github.com/scinote-eln/omniauth-okta', branch: 'org_auth_server_support'
+gem 'omniauth_openid_connect'
 gem 'omniauth-rails_csrf_protection', '~> 1.0'
+gem 'omniauth-saml'
 
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.7'
@@ -92,7 +95,7 @@ gem 'graphviz'
 gem 'cssbundling-rails'
 gem 'jsbundling-rails'
 
-gem 'tailwindcss-rails', '~> 2.0'
+gem 'tailwindcss-rails', '~> 2.4'
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'

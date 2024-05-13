@@ -3,6 +3,7 @@
 module LabelTemplates
   class TagService
     DEFAULT_COLUMNS = [
+      { key: 'inventory_name', tag: '{{INVENTORY_NAME}}' },
       { key: 'item_id', tag: '{{ITEM_ID}}' },
       { key: 'name', tag: '{{NAME}}' },
       { key: 'added_on', tag: '{{ADDED_ON}}' },

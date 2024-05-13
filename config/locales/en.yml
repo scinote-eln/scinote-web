@@ -34,6 +34,8 @@ en:
         remember_me: "Remember me"
         submit: "Log in"
         azure_ad_submit: "Sign in with Azure AD"
+        openid_connect_submit: "Sign in with OpenID Connect"
+        saml_submit: "Sign in with SAML"
       2fa:
         title: "Two-factor authentication"
         description: "Enter the one-time code found in your authenticator app to log in to SciNote."
@@ -86,9 +88,23 @@ en:
         no_local_user_map: "No local user record found"
         no_email: "Email is missing in auth token"
         failed_to_save: "Failed to create new user"
+    openid_connect:
+      provider_name: "OpenID Connect"
+      errors:
+        generic: "Failed to sign in user"
+        no_local_user_map: "No local user record found"
+        no_email: "Email is missing in auth token"
+        failed_to_save: "Failed to create new user"
     okta:
       provider_name: "Okta"
       sign_in_label: "Sign in with Okta"
+      errors:
+        generic: "Failed to sign in user"
+        no_local_user_map: "No local user record found"
+        failed_to_save: "Failed to create new user"
+    saml:
+      provider_name: "SAML"
+      sign_in_label: "Sign in with SAML"
       errors:
         generic: "Failed to sign in user"
         no_local_user_map: "No local user record found"
@@ -426,55 +442,94 @@ en:
       list_html: "List"
 
   search:
+    quick_search:
+      experiments: "Experiments"
+      tasks: "Tasks"
+      results: "Results"
+      inventory_items: "Inventory items"
+      all_results: "All search results for \"%{query}\""
+      empty_title: "No quick search results found in %{team}."
+      empty_description: "Quick search only checks titles. Press enter or click \"All search results for '%{query}'\" to find all available matches."
+      search_options: "Search options"
+      project: "Project"
+      experiment: "Experiment"
+      task: "Task"
+      result: "Result"
+      inventory_item: "Inventory item"
+      protocol: "Protocol"
+      label_template: "Label template"
+      report: "Report"
+      step: "Step"
+      result: "Result"
     whole_word: "Match any whole word"
     whole_phrase: "Match whole phrase"
     match_case: "Match case sensitive"
     object_id: "ID:"
+    filters:
+      title: "More search options"
+      sub_title: "Refine your search by applying the filters below."
+      by_type: "Filter by type"
+      by_created_date: "Filter by created date"
+      by_updated_date: "Filter by updated date"
+      by_team: "Filter by team"
+      by_user: "Filter by user"
+      by_user_info: "The 'Filter by user' option will refine search results based on records where the selected user is the creator, modifier, or is assigned to the entry."
+      include_archived: "Include Archived objects"
+      clear: "Clear filters"
+      date:
+        today: "Today"
+        yesterday: "Yesterday"
+        last_week: "Last week"
+        last_week_tooltip: "The previous calendar week beginning of Monday to end of Sunday."
+        this_month: "This month"
+        this_month_tooltip: "The current calendar month."
+        this_year: "This year"
+        this_year_tooltip: "The current calendar year."
+        last_year: "Last year"
+        last_year_tooltip: "The previous calendar year."
+        custom: "Custom"
+        "on": "On"
     index:
       head_title: "Search"
       page_title: "Search"
-      results_title_html: "Search Results for '<em>%{query}</em>'"
-      public: "Public"
-      private: "Private"
-      archived: "Archived"
-      in_repository: "Protocol templates"
-      created_by: "Created by: "
-      created_at: "Created at: "
-      last_modified_by: "Last modified by: "
-      last_modified_at: "Last modified at: "
-      keywords: "Keywords: "
-      authors: "Authors: "
-      description: "Description: "
-      no_description: "No description"
-      text: "Text"
-      team: "Team: "
-      folder: "Folders: "
-      repository: "Inventory: "
-      repository_row: "Inventory item: "
-      project: "Project: "
-      experiment: "Experiment: "
-      protocol: "Protocol: "
-      modules: "Tasks: "
-      tag_no_modules: "not added to any tasks"
-      module: "Task: "
-      step: "Step: "
-      result: "Result: "
-      report: "Report: "
-      no_name: "(no name)"
-      error:
-        no_results: "No results for %{q}."
-      repositories:
-        repository_row: "Inventory item: "
-        added_on: "Added on: "
-        added_by: "Added by: "
-        custom_column: "%{column}: "
-        no_modules: "not assigned to any task"
-      comments:
-        project: "Project comment"
-        my_module: "Task comment"
-        step: "Step comment"
-        result: "Result comment"
-
+      results_title_html: "Search Results for '%{query}'"
+      experiments: "Experiments"
+      tasks: "Tasks"
+      task_results: "Task results"
+      folders: "Folders"
+      projects: "Projects"
+      task_protocols: "Task protocols"
+      files: "Files"
+      inventory_items: "Inventory items"
+      protocol_templates: "Protocol templates"
+      label_templates: "Label templates"
+      format: "Format"
+      reports: "Reports"
+      repository: "Inventory"
+      more_search_options: "More search options"
+      clear_filters: "Clear filters"
+      all_results: "All results"
+      id: "ID"
+      created_at: "Created on"
+      created_by: "Created by"
+      updated_at: "Updated on"
+      team: "Team"
+      folder: "Folder"
+      task: "Task"
+      untitled_protocol: 'Untitled protocol'
+      project: "Project"
+      experiment: "Experiment"
+      task: "Task"
+      untitled_protocol: 'Untitled protocol'
+      protocol_template: "Protocol template"
+      inventory_item: "Inventory item"
+      created_desc: "Created last"
+      created_asc: "Created first"
+      atoz: "Name A to Z"
+      ztoa: "Name Z to A"
+      reached_end: "You’ve reached the end of the list"
+      no_results_text: "No search results found"
+      adjust_search_text: "Try adjusting your search or filter to find what you are looking for."
   comments:
     save_changes: "Save changes"
     empty_state:
@@ -1043,6 +1098,7 @@ en:
         refresh: 'Refresh preview'
         save: 'Save template code'
     default_columns:
+      inventory_name: 'Inventory name'
       item_id: 'Item ID'
       name: 'Name'
       added_on: 'Added On'
@@ -2309,6 +2365,8 @@ en:
       invalid_arguments: "Can't find %{key}"
     my_module_assigned_snapshot_service:
       invalid_arguments: "Can't find %{key}"
+    item_card_errors:
+      item_not_found: "Inventory item you're looking for doesn't exist."
     item_card:
       add_relationship_button_text: "Add"
       repository_item_relationships_modal:
@@ -2937,13 +2995,13 @@ en:
           not_connected: "You have no Connected accounts"
           unlink_success: "Successfully unlinked"
           azure_ad:
-            title: "Your Azure AD Account"
-            connect_hint: "Allows you to sign in with your Azure AD account."
+            title: "Your Microsoft Entra ID Account"
+            connect_hint: "Allows you to sign in with your Microsoft Entra ID account."
             connected: "Connected"
             unlink_button: "Unlink"
             unlink_modal:
-              title: "Unlink Azure AD account?"
-              description_1: "Are you sure you would like unlink Azure AD and SciNote accounts?"
+              title: "Unlink Microsoft Entra ID account?"
+              description_1: "Are you sure you would like to unlink Microsoft Entra ID and SciNote accounts?"
               submit_button: "Submit"
           okta:
             title: "Your Okta Account"
@@ -2952,7 +3010,25 @@ en:
             unlink_button: "Unlink"
             unlink_modal:
               title: "Unlink Okta account?"
-              description_1: "Are you sure you would like unlink Okta and SciNote accounts?"
+              description_1: "Are you sure you would like to unlink Okta and SciNote accounts?"
+              submit_button: "Submit"
+          openid_connect:
+            title: "Your OpenID Connect Account"
+            connect_hint: "Allows you to sign in with your OpenID Connect account."
+            connected: "Connected"
+            unlink_button: "Unlink"
+            unlink_modal:
+              title: "Unlink OpenID Connect account?"
+              description_1: "Are you sure you would like to unlink OpenID Connect and SciNote accounts?"
+              submit_button: "Submit"
+          saml:
+            title: "Your SAML Account"
+            connect_hint: "Allows you to sign in with your SAML account."
+            connected: "Connected"
+            unlink_button: "Unlink"
+            unlink_modal:
+              title: "Unlink SAML account?"
+              description_1: "Are you sure you would like to unlink SAML and SciNote accounts?"
               submit_button: "Submit"
           errors:
             not_found: "You have no Connected accounts for this provider"
@@ -3027,22 +3103,17 @@ en:
             flash_success: "Team %{team} was successfully deleted."
       user_teams:
         leave_uo_heading: "Leave team %{team}"
-        leave_uo_message: "Are you sure you wish to leave team %{team}? This action is irreversible."
-        leave_uo_alert_heading: "Leaving team has following consequences:"
-        leave_uo_alert_line_1: "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
-        leave_uo_alert_line_2: "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;"
-        leave_uo_alert_line_3: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators;"
-        leave_uo_alert_line_4: "all inventory items in the team added by you will be reassigned onto a new owner from team administrators."
-        leave_uo_confirm: "Leave"
-        destroy_uo_heading: "Remove user %{user} from team %{team}"
-        destroy_uo_message: "Are you sure you wish to remove user %{user} from team %{team}?"
-        destroy_uo_alert_heading: "Removing user from team has following consequences:"
-        destroy_uo_alert_line_1: "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
-        destroy_uo_alert_line_2: "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;"
-        destroy_uo_alert_line_3: "all repository protocols in the team belonging to user will be reassigned onto you;"
-        destroy_uo_alert_line_4: "all inventory items in the team added by user will be reassigned onto you."
+        leave_message: "You will lose access to all content associated with the team, including projects, inventories, and protocol templates."
+        destroy_message: 'Removing a team %{role} will revoke their access to all content associated with the team, including projects, inventories, and protocol templates.'
+        leave_uo_confirm: "Leave team"
+        destroy_uo_heading: "Remove team %{role} %{user} from team %{team}"
+        message_owner: "Other team owner(s) will be able to view and manage access to the content."
+        message_alert: "This action cannot be undone."
+        destroy_uo_alert_line_3: "This action cannot be undone."
         destroy_uo_confirm: "Remove"
-        leave_flash: "Successfully left team %{team}."
+        leave_flash: "You have left %{team}."
+        remove_flash: "%{user} has been successfully removed from the team %{team}"
+        general_error: "Something went wrong"
 
   user_roles:
     predefined:

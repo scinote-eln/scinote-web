@@ -159,17 +159,53 @@ export default {
           });
         }
       }
+      if (this.attachment.attributes.asset_type === 'gene_sequence' && this.attachment.attributes.urls.open_vector_editor_edit) {
+        menu.push({
+          text: this.i18n.t('open_vector_editor.edit_sequence'),
+          emit: 'open_ove_editor',
+          data_e2e: 'e2e-BT-attachmentOptions-openInOve'
+        });
+      }
+      if (this.attachment.attributes.asset_type === 'marvinjs' && this.attachment.attributes.urls.marvin_js_start_edit) {
+        menu.push({
+          text: this.i18n.t('assets.file_preview.edit_in_marvinjs'),
+          emit: 'open_marvinjs_editor',
+          data_e2e: 'e2e-BT-attachmentOptions-openInMarvin'
+        });
+      }
+      if (this.attachment.attributes.asset_type !== 'marvinjs'
+          && this.attachment.attributes.image_editable
+          && this.attachment.attributes.urls.start_edit_image) {
+        menu.push({
+          text: this.i18n.t('assets.file_preview.edit_in_scinote'),
+          emit: 'open_scinote_editor',
+          data_e2e: 'e2e-BT-attachmentOptions-openInImageEditor'
+        });
+      }
+      if (this.canOpenLocally) {
+        const text = this.localAppName
+          ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
+          : this.i18n.t('attachments.open_locally');
+
+        menu.push({
+          text,
+          emit: 'open_locally',
+          data_e2e: 'e2e-BT-attachmentOptions-openLocally'
+        });
+      }
       if (this.displayInDropdown.includes('download')) {
         menu.push({
           text: this.i18n.t('Download'),
           url: this.attachment.attributes.urls.download,
-          url_target: '_blank'
+          url_target: '_blank',
+          data_e2e: 'e2e-BT-attachmentOptions-download'
         });
       }
-      if (this.attachment.attributes.urls.move_targets && this.displayInDropdown.includes('move')) {
+      if (this.attachment.attributes.urls.move_targets) {
         menu.push({
           text: this.i18n.t('assets.context_menu.move'),
-          emit: 'move'
+          emit: 'move',
+          data_e2e: 'e2e-BT-attachmentOptions-move'
         });
       }
       if (this.attachment.attributes.urls.duplicate) {
@@ -187,7 +223,8 @@ export default {
       if (this.attachment.attributes.urls.delete) {
         menu.push({
           text: this.i18n.t('assets.context_menu.delete'),
-          emit: 'delete'
+          emit: 'delete',
+          data_e2e: 'e2e-BT-attachmentOptions-delete'
         });
       }
       if (this.attachment.attributes.urls.toggle_view_mode) {
@@ -197,6 +234,7 @@ export default {
             text: this.i18n.t(`assets.context_menu.${viewMode}_html`),
             emit: 'viewMode',
             params: viewMode,
+            data_e2e: `e2e-BT-attachmentOptions-${viewMode}`,
             dividerBefore: i === 0
           });
         });

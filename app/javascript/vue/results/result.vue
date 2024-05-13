@@ -5,7 +5,7 @@
        @dragenter.prevent="dragEnter($event)"
        @dragover.prevent
        :data-id="result.id"
-       :class="{ 'bg-sn-super-light-blue': dragingFile, 'bg-white': !dragingFile, 'locked': locked }"
+       :class="{ 'bg-sn-super-light-blue': dragingFile, 'bg-white': !dragingFile, 'locked': locked, 'pointer-events-none': addingContent }"
   >
     <div class="text-xl items-center flex flex-col text-sn-blue h-full justify-center left-0 absolute top-0 w-full"
          v-if="dragingFile"
@@ -110,6 +110,7 @@
             :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
             :assignableMyModuleId="result.attributes.my_module_id"
             :isNew="element.isNew"
+            @component:adding-content="($event) => addingContent = $event"
             @component:delete="deleteElement"
             @update="updateElement"
             @reorder="openReorderModal"
@@ -165,6 +166,7 @@ export default {
       elements: [],
       attachments: [],
       attachmentsReady: false,
+      addingContent: false,
       showFileModal: false,
       dragingFile: false,
       wellPlateOptions: [

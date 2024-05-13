@@ -5,7 +5,7 @@
        @dragenter.prevent="dragEnter($event)"
        @dragover.prevent
        :data-id="step.id"
-       :class="{ 'draging-file': dragingFile, 'editing-name': editingName, 'locked': !urls.update_url }"
+       :class="{ 'draging-file': dragingFile, 'editing-name': editingName, 'locked': !urls.update_url, 'pointer-events-none': addingContent }"
   >
     <div class="drop-message" @dragleave.prevent="!showFileModal ? dragingFile = false : null">
       {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
@@ -116,6 +116,7 @@
           :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
           :assignableMyModuleId="assignableMyModuleId"
           :isNew="element.isNew"
+          @component:adding-content="($event) => addingContent = $event"
           @component:delete="deleteElement"
           @update="updateElement"
           @reorder="openReorderModal"
@@ -205,6 +206,7 @@
         attachments: [],
         attachmentsReady: false,
         confirmingDelete: false,
+        addingContent: false,
         showFileModal: false,
         showCommentsSidebar: false,
         dragingFile: false,

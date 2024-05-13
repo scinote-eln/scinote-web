@@ -199,12 +199,21 @@ module ApplicationHelper
     ENV['SSO_ENABLED'] == 'true'
   end
 
-  def okta_configured?
-    ApplicationSettings.instance.values['okta'].present?
+  def okta_enabled?
+    ApplicationSettings.instance.values.dig('okta', 'enabled')
   end
 
-  def azure_ad_configured?
-    ApplicationSettings.instance.values['azure_ad_apps'].present?
+  def azure_ad_enabled?
+    provider_conf = ApplicationSettings.instance.values['azure_ad_apps']
+    provider_conf.present? && provider_conf[0]['enabled']
+  end
+
+  def saml_enabled?
+    ApplicationSettings.instance.values.dig('saml', 'enabled')
+  end
+
+  def openid_connect_enabled?
+    ApplicationSettings.instance.values.dig('openid_connect', 'enabled')
   end
 
   def wopi_enabled?
@@ -213,7 +222,7 @@ module ApplicationHelper
 
   # Check whether the wopi file can be edited and return appropriate response
   def wopi_file_edit_button_status(asset)
-    file_ext = asset.file_name.split('.').last
+    file_ext = asset.file_name.split('.').last&.downcase
     if Constants::WOPI_EDITABLE_FORMATS.include?(file_ext)
       edit_supported = true
       title = ''

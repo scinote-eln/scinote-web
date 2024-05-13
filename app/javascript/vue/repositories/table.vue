@@ -175,7 +175,7 @@ export default {
     },
     toolbarActions() {
       const left = [];
-      if (this.createUrl) {
+      if (this.createUrl && this.currentViewMode !== 'archived') {
         left.push({
           name: 'create',
           icon: 'sn-icon sn-icon-new-task',

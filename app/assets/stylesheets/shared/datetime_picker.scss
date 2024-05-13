@@ -116,6 +116,10 @@
 
   .dp__input {
     line-height: unset;
+
+    &::placeholder {
+      color: var(--sn-grey);
+    }
   }
 }
 
@@ -145,6 +149,13 @@
   &.size-xs {
     .dp__input {
       height: 36px;
+    }
+  }
+
+  &.borderless-input {
+    .dp__input {
+      background-color: transparent;
+      border-color: transparent;
     }
   }
 }
@@ -182,7 +193,7 @@
   &:hover {
     border-color: var(--sn-science-blue);
   }
-  border-color: var(--sn-science-blue);
+  border-color: var(--sn-science-blue) !important;
 }
 
 :root {

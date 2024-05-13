@@ -52,6 +52,8 @@ class Constants
 
   # General limited/unlimited query/display elements for pages
   SEARCH_LIMIT = 20
+  # General global search limit for object groups
+  GLOBAL_SEARCH_PREVIEW_LIMIT = 4
   SEARCH_NO_LIMIT = -1
   # General limited query/display elements for popup modals
   MODAL_SEARCH_LIMIT = 5
@@ -435,11 +437,16 @@ class Constants
   ASSET_SYNC_URL = ENV['ASSET_SYNC_URL'].freeze
 
   # Grover timeout in ms
-  GROVER_TIMEOUT_MS = 300000
+  GROVER_TIMEOUT_MS = 450000
 
   # SciNote Edit supported versions
   MIN_SCINOTE_EDIT_VERSION = ENV['MIN_SCINOTE_EDIT_VERSION'].freeze
   MAX_SCINOTE_EDIT_VERSION = ENV['MAX_SCINOTE_EDIT_VERSION'].freeze
+
+  # quick search
+  QUICK_SEARCH_LIMIT = 5
+  QUICK_SEARCH_SEARCHABLE_OBJECTS = %w(project experiment my_module protocol repository_row
+                                       report project_folder result label_template).freeze
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\

@@ -68,26 +68,15 @@ class Report < ApplicationRecord
 
   def self.search(
     user,
-    include_archived,
+    _include_archived,
     query = nil,
-    page = 1,
-    _current_team = nil,
+    current_team = nil,
     options = {}
-  )
-
-    project_ids = Project.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-                         .pluck(:id)
-
-    new_query = Report.distinct
-                      .where(reports: { project_id: project_ids })
-                      .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
-
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
+  ) 
+    teams = options[:teams] || current_team || user.teams.select(:id)
+    distinct.with_granted_permissions(user, ReportPermissions::READ)
+            .where(team: teams)
+            .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
   end
 
   def self.viewable_by_user(user, teams)

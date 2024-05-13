@@ -5,8 +5,9 @@ class Protocol < ApplicationRecord
 
   include ArchivableModel
   include PrefixedIdModel
-  SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description',
-                           'protocols.authors', 'protocol_keywords.name', PREFIXED_ID_SQL].freeze
+  SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description', PREFIXED_ID_SQL, 'steps.name',
+                           'step_texts.name', 'step_texts.text', 'tables.name',
+                           'checklists.name', 'checklist_items.text', 'comments.message'].freeze
   REPOSITORY_TYPES = %i(in_repository_published_original in_repository_draft in_repository_published_version).freeze
 
   include SearchableModel
@@ -165,34 +166,35 @@ class Protocol < ApplicationRecord
   def self.search(user,
                   include_archived,
                   query = nil,
-                  page = 1,
-                  _current_team = nil,
+                  current_team = nil,
                   options = {})
-    repository_protocols = latest_available_versions(user.teams)
-                           .with_granted_permissions(user, ProtocolPermissions::READ)
-                           .select(:id)
-    repository_protocols = repository_protocols.active unless include_archived
+    teams = options[:teams] || current_team || user.teams.select(:id)
 
-    module_ids = MyModule.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT).pluck(:id)
+    protocol_templates = if options[:options]&.dig(:in_repository).present? || options[:options].blank?
+                           templates = latest_available_versions(teams)
+                                       .with_granted_permissions(user, ProtocolPermissions::READ)
+                                       .select(:id)
+                           templates = templates.active unless include_archived
+                           templates
+                         end || []
 
-    new_query = Protocol
-                .where(
-                  '(protocol_type IN (?) AND my_module_id IN (?)) OR (protocols.id IN (?))',
-                  [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
-                  module_ids,
-                  repository_protocols
-                )
+    protocol_my_modules = if options[:options]&.dig(:in_repository).blank?
+                            protocols = distinct.joins(:my_module)
+                                                .joins("INNER JOIN user_assignments my_module_user_assignments " \
+                                                       "ON my_module_user_assignments.assignable_type = 'MyModule' " \
+                                                       "AND my_module_user_assignments.assignable_id = my_modules.id")
+                                                .where(my_module_user_assignments: { user_id: user })
+                                                .where(team: teams)
+                            protocols = protocols.active unless include_archived
+                            protocols.pluck(:id)
+                          end || []
 
-    new_query = new_query.left_outer_joins(:protocol_keywords)
-                         .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
-                         .distinct
-
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
+    distinct.left_joins(steps: [:step_texts, { step_tables: :table },
+                                { checklists: :checklist_items }, :step_comments])
+            .where('(protocols.protocol_type IN (?) AND protocols.id IN (?)) OR (protocols.id IN (?))',
+                   [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
+                   protocol_my_modules, protocol_templates)
+            .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
   end
 
   def self.latest_available_versions(teams)

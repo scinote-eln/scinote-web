@@ -7,7 +7,7 @@
     let myModuleUserSelector = '#my_module_user_ids';
     var myModuleTagsSelector = '#module-tags-selector';
 
-    $(document).on('submit', '#new-my-module-modal form', (event) => {
+    $('#experiment-canvas').on('submit', '#new-my-module-modal form', (event) => {
       event.preventDefault();
 
       $.post({
@@ -16,13 +16,30 @@
           my_module: {
             name: $('#new-my-module-modal input[name="my_module[name]"]').val(),
             view_mode: $('#new-my-module-modal input[name="my_module[view_mode]"]').val(),
-            due_date: $('#new-my-module-modal input[name="my_module[due-date]"]').val(),
+            due_date: $('#new-my-module-modal input[name="my_module[due_date]"]').val(),
             tag_ids: dropdownSelector.getValues(myModuleTagsSelector),
             user_ids: dropdownSelector.getValues(myModuleUserSelector)
           }
         }
       });
     });
+
+    $('#experiment-canvas').on('shown.bs.modal', () => {
+      // disable the submit button by default
+      $('#new-modal-submit-btn').prop('disabled', true);
+
+      // listen for input event on the my_module_name input field
+      $(`${newMyModuleModal} #my_module_name`).on('input', function () {
+        if ($(this).val().trim() !== '') {
+          // enable the submit button if the input field is populated
+          $('#new-modal-submit-btn').prop('disabled', false);
+        } else {
+          // otherwise, disable it
+          $('#new-modal-submit-btn').prop('disabled', true);
+        }
+      });
+    });
+
     // Modal's submit handler function
     $(experimentWrapper)
       .on('ajax:success', newMyModuleModal, function() {

@@ -108,8 +108,10 @@ let inlineEditing = (function() {
         if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
         } else if (response.status === 422) {
-          HelperModule.flashAlertMsg(response.responseJSON.errors
-            ? Object.values(response.responseJSON.errors).join(', ') : I18n.t('errors.general'), 'danger');
+          const errors = response.responseJSON.errors || response.responseJSON;
+          if (!errors) {
+            HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
+          }
         }
         if (!error) error = response.responseJSON.errors[fieldToUpdate];
         container.addClass('error');
@@ -155,6 +157,7 @@ let inlineEditing = (function() {
       if (inputField(container).attr('disabled')) {
         saveAllEditFields();
         let input = inputField(container);
+        input.val(container.attr('data-original-name'));
         input.attr('disabled', false)
           .removeClass('hidden')
           .focus();
