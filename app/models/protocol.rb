@@ -184,7 +184,14 @@ class Protocol < ApplicationRecord
                                                        "AND my_module_user_assignments.assignable_id = my_modules.id")
                                                 .where(my_module_user_assignments: { user_id: user })
                                                 .where(team: teams)
-                            protocols = protocols.active unless include_archived
+                            unless include_archived
+                              protocols = protocols.joins(my_module: { experiment: :project })
+                                                   .active
+                                                   .where(my_modules: { archived: false },
+                                                          experiments: { archived: false },
+                                                          projects: { archived: false })
+                            end
+
                             protocols.select(:id)
                           end || []
 

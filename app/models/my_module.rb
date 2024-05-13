@@ -119,7 +119,11 @@ class MyModule < ApplicationRecord
                         .where(user_assignments: { team: teams })
                         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
-    new_query = new_query.active unless include_archived
+    unless include_archived
+      new_query = new_query.joins(experiment: :project)
+                           .active
+                           .where(experiments: { archived: false }, projects: { archived: false })
+    end
     new_query
   end
 
