@@ -8,7 +8,7 @@
         <i class="sn-icon sn-icon-search"></i>
         <div v-if="this.searchQuery.length > 1" class="flex items-center gap-1 absolute right-2 top-1.5">
           <div class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''; $refs.searchField.focus()">
-            <i class="sn-icon sn-icon-close  m-0"></i>
+            <i class="sn-icon sn-icon-close  m-0" :title="i18n.t('nav.clear')"></i>
           </div>
           <div class="btn btn-light icon-btn btn-xs" :title="i18n.t('search.quick_search.search_options')"
                :class="{'active': filtersOpened}" @click="filtersOpened = !filtersOpened">
