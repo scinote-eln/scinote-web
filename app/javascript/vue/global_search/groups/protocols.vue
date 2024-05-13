@@ -10,6 +10,13 @@
         <SortFlyout v-if="selected" :sort="sort" @changeSort="changeSort"></SortFlyout>
       </div>
       <div class="grid grid-cols-[auto_110px_auto_auto_auto_auto] items-center">
+        <TableHeader :selected="selected" :columnNames="[
+          i18n.t('search.index.id'),
+          i18n.t('search.index.created_at'),
+          i18n.t('search.index.updated_at'),
+          i18n.t('search.index.created_by'),
+          i18n.t('search.index.team')
+        ]"></TableHeader>
         <div v-for="(row, index) in preparedResults" :key="row.id" class="contents group">
           <hr class="col-span-6 w-full m-0" v-if="index > 0">
           <LinkTemplate :url="row.attributes.url" :value="labelName({ name: row.attributes.name, archived: row.attributes.archived})"/>
