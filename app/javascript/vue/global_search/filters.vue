@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-[600px] py-3.5">
-    <div class="flex flex-col pb-6 overflow-y-auto max-h-[75vh]">
+    <div class="flex flex-col pb-6 overflow-y-auto max-h-[calc(80vh_-_160px)]">
       <div class="sci-label mb-2">{{ i18n.t('search.filters.by_type') }}</div>
       <div class="flex items-center gap-2 flex-wrap mb-6">
         <template v-for="group in searchGroups" :key="group.value">
