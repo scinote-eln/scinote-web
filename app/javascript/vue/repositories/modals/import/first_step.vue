@@ -7,16 +7,16 @@
       <!-- export -->
       <div id="export-section" class="flex flex-col gap-3">
         <h3 class="my-0 text-sn-dark-grey">
-          {{ i18n.t('repositories.import_records.steps.step0.importTitle') }}
+          {{ i18n.t('repositories.import_records.steps.step1.importTitle') }}
         </h3>
         <div id="export-buttons" class="flex flex-row gap-4">
           <button class="btn btn-secondary btn-sm" @click="exportFullInventory">
             <i class="sn-icon sn-icon-export"></i>
-            {{ i18n.t('repositories.import_records.steps.step0.exportFullInvBtnText') }}
+            {{ i18n.t('repositories.import_records.steps.step1.exportFullInvBtnText') }}
           </button>
           <button class="btn btn-secondary btn-sm">
             <i class="sn-icon sn-icon-export"></i>
-            {{ i18n.t('repositories.import_records.steps.step0.exportEmptyInvBtnText') }}
+            {{ i18n.t('repositories.import_records.steps.step1.exportEmptyInvBtnText') }}
           </button>
         </div>
       </div>
@@ -24,13 +24,13 @@
       <!-- import -->
       <div id="import-section" class="flex flex-col gap-3 h-full w-full">
         <h3 class="my-0 text-sn-dark-grey">
-          {{ i18n.t('repositories.import_records.steps.step0.importBtnText') }}
+          {{ i18n.t('repositories.import_records.steps.step1.importBtnText') }}
         </h3>
         <DragAndDropUpload
           @file:dropped="uploadFile"
           @file:error="handleError"
           @file:error:clear="this.error = null"
-          :supportingText="`${i18n.t('repositories.import_records.steps.step0.dragAndDropSupportingText')}`"
+          :supportingText="`${i18n.t('repositories.import_records.steps.step1.dragAndDropSupportingText')}`"
           :supportedFormats="['xlsx', 'csv', 'xls', 'txt', 'tsv']"
         />
       </div>
@@ -50,7 +50,7 @@
         <div class="my-auto">{{ exportInventoryMessage }}</div>
       </div>
       <button class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
-        {{ i18n.t('repositories.import_records.steps.step0.cancelBtnText') }}
+        {{ i18n.t('repositories.import_records.steps.step1.cancelBtnText') }}
       </button>
     </div>
   </div>
@@ -62,9 +62,15 @@ import DragAndDropUpload from '../../../shared/drag_and_drop_upload.vue';
 
 export default {
   name: 'FirstStep',
-  emits: ['step:next'],
+  emits: ['step:next', 'info:hide'],
   components: {
     DragAndDropUpload
+  },
+  props: {
+    stepProps: {
+      type: Object,
+      required: false
+    }
   },
   data() {
     return {
@@ -136,14 +142,23 @@ export default {
       // First, parse the sheet
       const parsedSheetResponse = await this.parseSheet(file);
 
-      // If parsed successfully, go to next step and pass the necessary data
+      // If parsed successfully, go to next step and pass through the necessary data
       if (parsedSheetResponse) {
         const {
           header: columnNames,
           available_fields: availableFields,
           columns: exampleData
         } = parsedSheetResponse.data.import_data;
-        this.$emit('step:next', { columnNames, availableFields, exampleData });
+        const fileName = file.name;
+        const tempFile = parsedSheetResponse.data.temp_file;
+
+        this.$emit('step:next', {
+          columnNames,
+          availableFields,
+          exampleData,
+          fileName,
+          tempFile
+        });
       }
     },
     async parseSheet(file) {
