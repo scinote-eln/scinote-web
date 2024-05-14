@@ -84,7 +84,7 @@
 
       const url = form.find('#result_asset_attributes_file').data('directUploadUrl');
       const file = form.find('#result_asset_attributes_file')[0].files[0];
-      const upload = new ActiveStorage.DirectUpload(file, url);
+      const upload = new CustomActiveStorage.DirectUpload(file, url);
 
       animateSpinner();
 

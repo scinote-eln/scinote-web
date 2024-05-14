@@ -6,6 +6,7 @@
     <title><%=t "head.title", title: (yield :head_title) %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="max-file-size" content="<%= Rails.configuration.x.file_max_size_mb %>">
+    <meta name="s3-sha256-checksums" content="<%= Rails.configuration.x.fips_mode || ENV['S3_SHA256_CHECKSUMS'] == 'true' %>">
     <meta name="tiny-mce-assets-url" content="<%= tiny_mce_assets_path %>">
     <% if user_signed_in? %>
       <meta name="expiration-url" content="<%= users_expire_in_path %>">
@@ -22,6 +23,7 @@
     <%= javascript_include_tag 'application_pack' %>
 
     <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag 'custom_activestorage' %>
     <%= javascript_include_tag 'session_end' %>
     <%= javascript_include_tag 'sidebar_toggle' %>
     <%= stylesheet_link_tag 'application_pack', media: 'all' %>

@@ -13,6 +13,8 @@ class User < ApplicationRecord
          omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
          stretches: Constants::PASSWORD_STRETCH_FACTOR
 
+  devise :encryptable if Rails.configuration.x.fips_mode
+
   has_one_attached :avatar
 
   auto_strip_attributes :full_name, :initials, nullify: false

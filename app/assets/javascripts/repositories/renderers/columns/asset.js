@@ -24,7 +24,7 @@ var AssetColumnHelper = (function() {
       }
 
       $(filesForUpload).each(function(_, $el) {
-        let upload = new ActiveStorage.DirectUpload($el[0].files[0], directUploadUrl);
+        let upload = new CustomActiveStorage.DirectUpload($el[0].files[0], directUploadUrl);
 
         upload.create(function(error, blob) {
           if (error) {

@@ -263,7 +263,7 @@
       let index = 0;
 
       const uploadFile = (file) => {
-        const upload = new ActiveStorage.DirectUpload(file, url);
+        const upload = new CustomActiveStorage.DirectUpload(file, url);
 
         upload.create((error, blob) => {
           if (error) {

@@ -62,6 +62,8 @@ module Scinote
 
     config.x.custom_sanitizer_config = nil
 
+    config.x.fips_mode = ENV['SCINOTE_FIPS_MODE'] == 'true'
+
     # Logging
     config.log_formatter = proc do |severity, datetime, progname, msg|
       "[#{datetime}] #{severity}: #{msg}\n"

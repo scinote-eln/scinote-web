@@ -18,17 +18,23 @@ Rails.application.config.active_storage.variable_content_types << 'image/svg+xml
 
 Rails.application.config.active_storage.variant_processor = ENV['ACTIVESTORAGE_ENABLE_VIPS'] == 'true' ? :vips : :mini_magick
 
-ActiveStorage::Downloader.class_eval do
-  def open(key, checksum: nil, verify: true, name: 'ActiveStorage-', tmpdir: nil)
-    open_tempfile(name, tmpdir) do |file|
-      download key, file
-      if checksum == 'dummy' || checksum.nil?
-        ActiveStorage::Blob.find_by(key: key).update(checksum: Digest::MD5.file(file).base64digest)
-      else
-        verify_integrity_of(file, checksum: checksum) if verify
+if Rails.application.config.active_storage.service == 'amazon' &&
+   (Rails.configuration.x.fips_mode || ENV['S3_SHA256_CHECKSUMS'] == 'true')
+  ActiveSupport::Reloader.to_prepare do
+    ActiveStorage::Blob.redefine_method :compute_checksum_in_chunks do |io|
+      OpenSSL::Digest.new('SHA256').tap do |checksum|
+        while (chunk = io.read(5.megabytes))
+          checksum << chunk
+        end
+
+        io.rewind
+      end.base64digest
+    end
+
+    ActiveStorage::Downloader.redefine_method :verify_integrity_of do |file, checksum:|
+      unless OpenSSL::Digest::SHA256.file(file).base64digest == checksum
+        raise ActiveStorage::IntegrityError
       end
-      yield file
     end
   end
 end
-

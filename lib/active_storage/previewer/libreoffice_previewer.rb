@@ -21,9 +21,12 @@ module ActiveStorage
           Rails.logger.info "Starting preparing document preview for file #{blob.filename.sanitized}..."
 
           begin
-            success = system(
-              libreoffice_path, '--headless', '--invisible', '--convert-to', 'png', '--outdir', work_dir, input.path
-            )
+            success = system(libreoffice_path,
+                             '--headless', '--invisible',
+                             '-env:UserInstallation=file:///tmp/scinote-libreoffice',
+                             '--convert-to', 'png',
+                             '--outdir', work_dir,
+                             input.path)
 
             unless success && File.file?(preview_file)
               raise StandardError, "There was an error generating document preview, blob id: #{blob.id}"
@@ -32,6 +35,10 @@ module ActiveStorage
             yield io: File.open(preview_file), filename: "#{blob.filename.base}.png", content_type: 'image/png'
 
             Rails.logger.info "Finished preparing document preview for file #{blob.filename.sanitized}."
+          rescue StandardError => e
+            Rails.logger.error(e.message)
+            Rails.logger.error(e.backtrace.join("\n"))
+            raise e
           ensure
             File.delete(preview_file) if File.file?(preview_file)
           end

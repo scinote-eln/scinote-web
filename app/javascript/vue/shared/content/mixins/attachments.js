@@ -88,7 +88,7 @@ export default {
             return;
           }
 
-          const upload = new ActiveStorage.DirectUpload(file, this.attachmentsParent.attributes.urls.direct_upload_url, fileObject);
+          const upload = new CustomActiveStorage.DirectUpload(file, this.attachmentsParent.attributes.urls.direct_upload_url, fileObject);
 
           fileObject.isNewUpload = true;
           this.attachments.push(fileObject);
