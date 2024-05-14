@@ -112,8 +112,10 @@ export default {
     loadData() {
       if (this.query.length < 2) return;
 
-      if (this.loading && this.page) return;
+      if (this.loading && this.page && !(this.selected && !this.fullDataLoaded)) return;
 
+      const fullView = this.selected;
+      const currentPage = this.page;
       this.loading = true;
       axios.get(this.searchUrl, {
         params: {
@@ -121,21 +123,26 @@ export default {
           sort: this.sort,
           filters: this.filters,
           group: this.group,
-          preview: !this.selected,
-          page: this.page
+          preview: !fullView,
+          page: currentPage
         }
       })
         .then((response) => {
           if (this.selected) this.fullDataLoaded = true;
-          this.results = this.results.concat(response.data.data);
-          this.total = response.data.meta.total;
-          this.disabled = response.data.meta.disabled;
-          this.loading = false;
-          this.page = response.data.meta.next_page;
+
+          if (this.selected === fullView && this.page === currentPage) {
+            this.results = this.results.concat(response.data.data);
+            this.total = response.data.meta.total;
+            this.disabled = response.data.meta.disabled;
+            this.loading = false;
+            this.page = response.data.meta.next_page;
+          }
         })
         .finally(() => {
-          this.loading = false;
-          this.$emit('updated');
+          if (this.selected === fullView) {
+            this.loading = false;
+            this.$emit('updated');
+          }
         });
     }
   }
