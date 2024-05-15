@@ -232,10 +232,10 @@ class SearchController < ApplicationController
     if @filters[attribute][:on].present?
       from_date = Time.zone.parse(@filters[attribute][:on]).beginning_of_day.utc
       to_date = Time.zone.parse(@filters[attribute][:on]).end_of_day.utc
-    elsif @filters[attribute][:from].present? && @filters[attribute][:to].present?
-      from_date = Time.zone.parse(@filters[attribute][:from])
-      to_date = Time.zone.parse(@filters[attribute][:to])
     end
+
+    from_date = Time.zone.parse(@filters[attribute][:from]) if @filters[attribute][:from].present?
+    to_date = Time.zone.parse(@filters[attribute][:to]) if @filters[attribute][:to].present?
 
     @records = @records.where("#{model_name}.#{attribute} >= ?", from_date) if from_date.present?
     @records = @records.where("#{model_name}.#{attribute} <= ?", to_date) if to_date.present?
