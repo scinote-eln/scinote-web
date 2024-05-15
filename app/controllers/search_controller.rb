@@ -44,7 +44,7 @@ class SearchController < ApplicationController
         when 'module_protocols'
           search_by_name(Protocol, { in_repository: false })
 
-          render json: @records.joins({ my_module: :experiment }, :team),
+          render json: @records.includes({ my_module: :experiment }, :team),
                  each_serializer: GlobalSearch::MyModuleProtocolSerializer,
                  meta: {
                    total: @records.total_count,
