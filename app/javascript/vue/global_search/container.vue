@@ -24,7 +24,7 @@
             <i class="sn-icon sn-icon-search"></i>
             <i v-if="localQuery.length > 0"
               class="sn-icon cursor-pointer sn-icon-close absolute right-0 -top-0.5"
-              @click="localQuery = ''; $refs.searchField.focus()"></i>
+              @click="localQuery = ''; $refs.searchField.focus()" :title="i18n.t('nav.clear')"></i>
           </div>
         </template>
         <template v-slot:flyout >
@@ -103,6 +103,7 @@
 </template>
 
 <script>
+/* global HelperModule */
 import FoldersComponent from './groups/folders.vue';
 import ProjectsComponent from './groups/projects.vue';
 import ExperimentsComponent from './groups/experiments.vue';
@@ -266,6 +267,8 @@ export default {
 
       if (event.target.value.length < 2) {
         this.invalidQuery = true;
+        const minLength = 2;
+        HelperModule.flashAlertMsg(this.i18n.t('general.query.length_too_short', { min_length: minLength }), 'danger');
         return;
       }
 

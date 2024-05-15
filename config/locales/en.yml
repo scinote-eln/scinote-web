@@ -289,6 +289,7 @@ en:
   nav:
     team_switch_title: "Switch team"
     search: "Search"
+    clear: "Clear"
     support: "Support"
     settings: "Settings"
     user_profile: "Profile"
@@ -461,6 +462,7 @@ en:
       report: "Report"
       step: "Step"
       result: "Result"
+      folder: "Folder"
     whole_word: "Match any whole word"
     whole_phrase: "Match whole phrase"
     match_case: "Match case sensitive"
