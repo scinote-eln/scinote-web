@@ -25,14 +25,17 @@
         class="mb-6"
         @change="(v) => {this.updatedAt = v}"
       ></DateFilter>
-      <div class="sci-label mb-2">{{ i18n.t('search.filters.by_team') }}</div>
-      <SelectDropdown :options="teams"
-                      class="mb-6"
-                      :with-checkboxes="true"
-                      :clearable="true"
-                      :multiple="true"
-                      :value="selectedTeams"
-                      @change="(v) => {selectedTeams = v}" />
+      <template v-if="teams.length > 1">
+        <div class="sci-label mb-2">{{ i18n.t('search.filters.by_team') }}</div>
+        <SelectDropdown :options="teams"
+                        class="mb-6"
+                        :with-checkboxes="true"
+                        :clearable="true"
+                        :multiple="true"
+                        :value="selectedTeams"
+                        :placeholder="i18n.t('search.filters.by_team_placeholder')"
+                        @change="(v) => {selectedTeams = v}" />
+      </template>
       <div class="sci-label mb-2 flex items-center gap-2">
         {{ i18n.t('search.filters.by_user') }}
         <i class="sn-icon sn-icon-info" :title="i18n.t('search.filters.by_user_info')"></i>
@@ -45,6 +48,7 @@
                       :clearable="true"
                       :with-checkboxes="true"
                       :multiple="true"
+                      :placeholder="i18n.t('search.filters.by_user_placeholder')"
                       @change="(v) => {selectedUsers = v}" />
       <div class="flex items-center gap-2">
         <div class="sci-checkbox-container">

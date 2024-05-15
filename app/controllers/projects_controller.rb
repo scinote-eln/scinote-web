@@ -40,7 +40,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-
   def inventory_assigning_project_filter
     viewable_experiments = Experiment.viewable_by_user(current_user, current_team)
     assignable_my_modules = MyModule.repository_row_assignable_by_user(current_user)
@@ -259,7 +258,6 @@ class ProjectsController < ApplicationController
   def user_roles
     render json: { data: user_roles_collection(Project.new).map(&:reverse) }
   end
-
 
   def actions_toolbar
     render json: {

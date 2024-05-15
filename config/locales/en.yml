@@ -474,7 +474,9 @@ en:
       by_created_date: "Filter by created date"
       by_updated_date: "Filter by updated date"
       by_team: "Filter by team"
+      by_team_placeholder: "Select team"
       by_user: "Filter by user"
+      by_user_placeholder: "Filter by user"
       by_user_info: "The 'Filter by user' option will refine search results based on records where the selected user is the creator, modifier, or is assigned to the entry."
       include_archived: "Include Archived objects"
       clear: "Clear filters"
@@ -494,7 +496,7 @@ en:
     index:
       head_title: "Search"
       page_title: "Search"
-      results_title_html: "Search Results for '%{query}'"
+      results_title_html: "Search results for '%{query}'"
       experiments: "Experiments"
       tasks: "Tasks"
       task_results: "Task results"
