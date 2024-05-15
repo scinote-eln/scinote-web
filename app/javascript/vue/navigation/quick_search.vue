@@ -305,7 +305,7 @@ export default {
         });
     },
     searchValue() {
-      window.open(`${this.searchUrl}?q=${this.searchQuery}&teams[]=${this.currentTeam}`, '_self');
+      window.open(`${this.searchUrl}?q=${this.searchQuery}&teams[]=${this.currentTeam}&include_archived=true`, '_self');
     },
     focusHistoryItem(event) {
       if (this.focusedHistoryItem === null && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {

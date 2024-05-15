@@ -9,6 +9,7 @@
     </div>
     <QuickSearch
       v-if="user"
+      :key="globalSearchKey"
       :class="{'hidden': hideSearch}"
       :quickSearchUrl="quickSearchUrl"
       :searchUrl="searchUrl"
@@ -109,6 +110,7 @@ export default {
       userMenu: null,
       unseenNotificationsCount: 0,
       hideSearch: false,
+      globalSearchKey: 0
     };
   },
   created() {
@@ -120,6 +122,7 @@ export default {
       this.checkUnseenNotifications();
       this.refreshCurrentTeam();
       this.hideSearch = !!document.getElementById('GlobalSearch');
+      this.globalSearchKey += 1;
     });
 
     // Track name update in user profile settings
