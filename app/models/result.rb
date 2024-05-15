@@ -48,11 +48,14 @@ class Result < ApplicationRecord
                                "ON my_module_user_assignments.assignable_type = 'MyModule' " \
                                "AND my_module_user_assignments.assignable_id = my_modules.id")
                         .where(my_module_user_assignments: { user_id: user, team_id: teams })
-                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
     new_query = new_query.active unless include_archived
 
-    new_query
+    new_query.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: new_query })
+  end
+
+  def self.search_subquery(query, raw_input)
+    raw_input.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
   def duplicate(my_module, user, result_name: nil)

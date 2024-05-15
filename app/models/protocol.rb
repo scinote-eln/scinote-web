@@ -173,9 +173,8 @@ class Protocol < ApplicationRecord
     protocol_templates = if options[:options]&.dig(:in_repository).present? || options[:options].blank?
                            templates = latest_available_versions(teams)
                                        .with_granted_permissions(user, ProtocolPermissions::READ)
-                                       .select(:id)
                            templates = templates.active unless include_archived
-                           templates
+                           templates.select(:id)
                          end || []
 
     protocol_my_modules = if options[:options]&.dig(:in_repository).blank?
@@ -186,15 +185,26 @@ class Protocol < ApplicationRecord
                                                 .where(my_module_user_assignments: { user_id: user })
                                                 .where(team: teams)
                             protocols = protocols.active unless include_archived
-                            protocols.pluck(:id)
+                            protocols.select(:id)
                           end || []
 
-    distinct.left_joins(steps: [:step_texts, { step_tables: :table },
-                                { checklists: :checklist_items }, :step_comments])
-            .where('(protocols.protocol_type IN (?) AND protocols.id IN (?)) OR (protocols.id IN (?))',
-                   [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
-                   protocol_my_modules, protocol_templates)
-            .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+    protocols = Protocol.where('(protocols.protocol_type IN (?) AND protocols.id IN (?)) OR (protocols.id IN (?))',
+                               [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
+                               protocol_my_modules, protocol_templates)
+
+    protocols.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: protocols })
+  end
+
+  def self.search_subquery(query, raw_input)
+    raw_input.where_attributes_like_boolean(['protocols.name', 'protocols.description', PREFIXED_ID_SQL], query)
+             .or(raw_input.where(id: Step.left_joins(:step_texts, { step_tables: :table },
+                                                     { checklists: :checklist_items }, :step_comments)
+                                       .where(protocol: raw_input)
+                                       .where_attributes_like_boolean(['steps.name', 'step_texts.name',
+                                                                       'step_texts.text', 'tables.name',
+                                                                       'comments.message', 'checklists.name',
+                                                                       'checklist_items.text'], query)
+                                       .select(:protocol_id)))
   end
 
   def self.latest_available_versions(teams)
