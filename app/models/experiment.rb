@@ -73,7 +73,7 @@ class Experiment < ApplicationRecord
                         .where(user_assignments: { team: teams })
                         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
-    new_query = new_query.active unless include_archived
+    new_query = new_query.joins(:project).active.where(projects: { archived: false }) unless include_archived
 
     new_query
   end
