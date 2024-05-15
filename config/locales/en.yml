@@ -288,7 +288,7 @@ en:
     notice: "You need to enable JavaScript to run this app."
   nav:
     team_switch_title: "Switch team"
-    search: "Search"
+    search: "Search in SciNote"
     clear: "Clear"
     support: "Support"
     settings: "Settings"
@@ -446,7 +446,7 @@ en:
     quick_search:
       experiments: "Experiments"
       tasks: "Tasks"
-      results: "Results"
+      results: "Task results"
       inventory_items: "Inventory items"
       all_results: "All search results for \"%{query}\""
       empty_title: "No quick search results found in %{team}."
