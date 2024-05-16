@@ -2,7 +2,7 @@
   <div class="content-pane flexible with-grey-background">
     <div class="content-header">
       <div class="title-row">
-        <h1 class="mt-0">
+        <h1 class="mt-0 truncate !inline">
           {{ i18n.t('search.index.results_title_html', { query: localQuery }) }}
         </h1>
       </div>
@@ -103,7 +103,8 @@
 </template>
 
 <script>
-/* global HelperModule */
+/* global HelperModule GLOBAL_CONSTANTS */
+
 import FoldersComponent from './groups/folders.vue';
 import ProjectsComponent from './groups/projects.vue';
 import ExperimentsComponent from './groups/experiments.vue';
@@ -265,10 +266,15 @@ export default {
 
       this.localQuery = event.target.value;
 
-      if (event.target.value.length < 2) {
+      if (event.target.value.length < GLOBAL_CONSTANTS.NAME_MIN_LENGTH) {
         this.invalidQuery = true;
-        const minLength = 2;
-        HelperModule.flashAlertMsg(this.i18n.t('general.query.length_too_short', { min_length: minLength }), 'danger');
+        HelperModule.flashAlertMsg(this.i18n.t('general.query.length_too_short', { min_length: GLOBAL_CONSTANTS.NAME_MIN_LENGTH }), 'danger');
+        return;
+      }
+
+      if (event.target.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
+        this.invalidQuery = true;
+        HelperModule.flashAlertMsg(this.i18n.t('general.query.length_too_long', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH }), 'danger');
         return;
       }
 

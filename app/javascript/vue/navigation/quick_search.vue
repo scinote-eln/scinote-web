@@ -1,7 +1,9 @@
 <template>
   <GeneralDropdown ref="container" :canOpen="canOpen" :fieldOnlyOpen="true" @close="filtersOpened = false; flyoutOpened = false" @open="flyoutOpened = true">
     <template v-slot:field>
-      <div class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}" :title="i18n.t('nav.search')">
+      <div class="sci--navigation--top-menu-search left-icon sci-input-container-v2"
+        :class="{'disabled' : !currentTeam, 'error': invalidQuery}" :title="i18n.t('nav.search')"
+      >
         <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery" @keydown="focusHistoryItem"
                :class="{'active': flyoutOpened}"
                @keydown.escape="closeFlyout"
@@ -9,11 +11,11 @@
         <i class="sn-icon sn-icon-search"></i>
         <div v-if="this.searchQuery.length > 1" class="flex items-center gap-1 absolute right-2 top-1.5">
           <div class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''; $refs.searchField.focus()">
-            <i class="sn-icon sn-icon-close  m-0" :title="i18n.t('nav.clear')"></i>
+            <i class="sn-icon sn-icon-close  !m-0" :title="i18n.t('nav.clear')"></i>
           </div>
           <div class="btn btn-light icon-btn btn-xs" :title="i18n.t('search.quick_search.search_options')"
                :class="{'active': filtersOpened}" @click="filtersOpened = !filtersOpened">
-            <i class="sn-icon sn-icon-search-options m-0"></i>
+            <i class="sn-icon sn-icon-search-options !m-0"></i>
           </div>
         </div>
       </div>
@@ -35,7 +37,7 @@
              tabindex="1"
              @keydown="focusHistoryItem"
              @keydown.enter="setQuery(query)"
-             class="flex px-3 h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
+             class="flex px-3 min-h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
           <i class="sn-icon sn-icon-history-search"></i>
           {{ query }}
         </div>
@@ -104,7 +106,7 @@
           </div>
         </div>
         <hr class="my-2">
-        <div class="btn btn-light" @click="searchValue">
+        <div class="btn btn-light truncate !block leading-10" @click="searchValue">
           {{ i18n.t('search.quick_search.all_results', {query: searchQuery}) }}
         </div>
       </div>
@@ -113,6 +115,8 @@
 </template>
 
 <script>
+/* global HelperModule GLOBAL_CONSTANTS */
+
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import StringWithEllipsis from '../shared/string_with_ellipsis.vue';
 import SearchFilters from '../global_search/filters.vue';
@@ -158,6 +162,9 @@ export default {
     },
     currentTeamName() {
       return document.querySelector('body').dataset.currentTeamName;
+    },
+    invalidQuery() {
+      return this.searchQuery.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH;
     }
   },
   watch: {
@@ -306,6 +313,11 @@ export default {
         });
     },
     searchValue() {
+      if (this.searchQuery.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
+        HelperModule.flashAlertMsg(this.i18n.t('general.query.length_too_long', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH }), 'danger');
+        return;
+      }
+
       window.open(`${this.searchUrl}?q=${this.searchQuery}&teams[]=${this.currentTeam}&include_archived=true`, '_self');
     },
     focusHistoryItem(event) {
