@@ -150,13 +150,16 @@ class SearchController < ApplicationController
 
   def object_quick_search(class_name)
     search_model = class_name.to_s.camelize.constantize
-    search_method = search_model.method(search_model.respond_to?(:code) ? :search_by_name_and_id : :search_by_name)
+    search_object_classes = ["#{class_name.pluralize}.name"]
+    search_object_classes << search_model::PREFIXED_ID_SQL if search_model.respond_to?(:code)
 
-    search_method.call(current_user,
-                       current_team,
-                       params[:query],
-                       limit: Constants::QUICK_SEARCH_LIMIT)
-                 .order(updated_at: :desc)
+    search_model.search_by_search_fields_with_boolean(current_user,
+                                                      current_team,
+                                                      params[:query],
+                                                      search_object_classes,
+                                                      limit: Constants::QUICK_SEARCH_LIMIT,
+                                                      fetch_latest_versions: class_name == 'protocol')
+                .order(updated_at: :desc)
   end
 
   def load_vars
