@@ -1,5 +1,5 @@
 <template>
-  <div class="content-pane flexible with-grey-background">
+  <div class="content-pane flexible with-grey-background" data-e2e="e2e-CO-globalSearch">
     <div class="content-header">
       <div class="title-row">
         <h1 class="mt-0 truncate !inline">
@@ -14,7 +14,7 @@
       <GeneralDropdown ref="historyContainer" :canOpen="canOpenHistory" :fieldOnlyOpen="true" >
         <template v-slot:field>
           <div class="left-icon sci-input-container-v2 w-72 input-sm"
-              :title="i18n.t('nav.search')" :class="{'error': invalidQuery}">
+              :title="i18n.t('nav.search')" :class="{'error': invalidQuery}" :data-e2e="'e2e-IF-globalSearch'">
             <input ref="searchField"
               type="text"
               class="!pr-9"
@@ -28,7 +28,7 @@
             <i class="sn-icon sn-icon-search"></i>
             <i v-if="localQuery.length > 0"
               class="sn-icon cursor-pointer sn-icon-close absolute right-0 -top-0.5"
-              @click="localQuery = ''; $refs.searchField.focus()" :title="i18n.t('nav.clear')"></i>
+              @click="localQuery = ''; $refs.searchField.focus()" :title="i18n.t('nav.clear')" :data-e2e="'e2e-BT-globalSearch-clearInput'"></i>
           </div>
         </template>
         <template v-slot:flyout >
@@ -46,17 +46,17 @@
         </template>
       </GeneralDropdown>
       <div class="flex items-center gap-2.5">
-        <button class="btn btn-secondary btn-sm" :class="{'active': activeGroup == 'ExperimentsComponent'}" @click="setActiveGroup('ExperimentsComponent')">
+        <button class="btn btn-secondary btn-sm" :class="{'active': activeGroup == 'ExperimentsComponent'}" @click="setActiveGroup('ExperimentsComponent')" :data-e2e="'e2e-BT-globalSearch-experiments'">
           {{ i18n.t('search.index.experiments') }}
         </button>
-        <button class="btn btn-secondary btn-sm" :class="{'active': activeGroup == 'MyModulesComponent'}" @click="setActiveGroup('MyModulesComponent')">
+        <button class="btn btn-secondary btn-sm" :class="{'active': activeGroup == 'MyModulesComponent'}" @click="setActiveGroup('MyModulesComponent')" :data-e2e="'e2e-BT-globalSearch-tasks'">
           {{ i18n.t('search.index.tasks') }}
         </button>
-        <button class="btn btn-secondary btn-sm" :class="{'active': activeGroup == 'ResultsComponent'}" @click="setActiveGroup('ResultsComponent')">
+        <button class="btn btn-secondary btn-sm" :class="{'active': activeGroup == 'ResultsComponent'}" @click="setActiveGroup('ResultsComponent')" :data-e2e="'e2e-BT-globalSearch-taskResults'">
           {{ i18n.t('search.index.task_results') }}
         </button>
       </div>
-      <button class="btn btn-light btn-sm" @click="filterModalOpened = true">
+      <button class="btn btn-light btn-sm" @click="filterModalOpened = true" :data-e2e="'e2e-BT-globalSearch-openFilterModal'">
         <i class="sn-icon sn-icon-search-options" :title="i18n.t('search.index.more_search_options')"></i>
         <span class="tw-hidden xl:inline">{{ i18n.t('search.index.more_search_options') }}</span>
         <span
@@ -68,12 +68,12 @@
       </button>
       <template v-if="activeFilters.length > 0">
         <div class="h-4 w-[1px] bg-sn-grey"></div>
-        <button class="btn btn-light btn-sm" @click="resetFilters">
+        <button class="btn btn-light btn-sm" @click="resetFilters" :data-e2e="'e2e-BT-globalSearch-resetFilters'">
           <i class="sn-icon sn-icon-close" :title="i18n.t('search.index.clear_filters')"></i>
           <span class="tw-hidden xl:inline">{{ i18n.t('search.index.clear_filters') }}</span>
         </button>
       </template>
-      <button v-if="activeGroup" class="btn btn-light btn-sm" @click="resetGroup">
+      <button v-if="activeGroup" class="btn btn-light btn-sm" @click="resetGroup" :data-e2e="'e2e-BT-globalSearch-resetGroup'">
         <i class="sn-icon sn-icon-undo" :title="i18n.t('search.index.all_results')"></i>
         <span class="tw-hidden xl:inline">{{ i18n.t('search.index.all_results') }}</span>
       </button>

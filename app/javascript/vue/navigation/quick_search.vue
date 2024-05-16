@@ -3,7 +3,7 @@
     <template v-slot:field>
       <div class="sci--navigation--top-menu-search left-icon sci-input-container-v2"
         :class="{'disabled' : !currentTeam, 'error': invalidQuery}" :title="i18n.t('nav.search')"
-      >
+       :data-e2e="'e2e-IF-topMenu-search'">
         <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery"
                :class="{'active': flyoutOpened}"
                @keydown="focusHistoryItem"
@@ -12,11 +12,11 @@
                @focus="openHistory" :placeholder="i18n.t('nav.search')" @keydown.enter="saveQuery"/>
         <i class="sn-icon sn-icon-search"></i>
         <div v-if="this.searchQuery.length > 1" class="flex items-center gap-1 absolute right-2 top-1.5">
-          <button class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''; $refs.searchField.focus()">
+          <button class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''; $refs.searchField.focus()" :data-e2e="'e2e-BT-topMenu-searchClear'">
             <i class="sn-icon sn-icon-close  !m-0" :title="i18n.t('nav.clear')"></i>
           </button>
           <button class="btn btn-light icon-btn btn-xs" :title="i18n.t('search.quick_search.search_options')"
-               :class="{'active': filtersOpened}" @click="filtersOpened = !filtersOpened">
+               :class="{'active': filtersOpened}" @click="filtersOpened = !filtersOpened" :data-e2e="'e2e-BT-topMenu-searchFilters'">
             <i class="sn-icon sn-icon-search-options !m-0"></i>
           </button>
         </div>
@@ -34,7 +34,7 @@
         :searchQuery="searchQuery"
         @cancel="filtersOpened = false"
       ></SearchFilters>
-      <div v-else-if="showHistory" class="max-w-[600px]">
+      <div v-else-if="showHistory" class="max-w-[600px]" data-e2e="e2e-DD-topMenu-searchHistory">
         <div v-for="(query, i) in reversedPreviousQueries" @click="setQuery(query)" :key="i"
              ref="historyItems"
              tabindex="1"
@@ -45,22 +45,25 @@
           {{ query }}
         </div>
       </div>
-      <div v-else class="w-[600px]">
+      <div v-else class="w-[600px]" data-e2e="e2e-FO-topMenu-quickSearch">
         <div class="flex items-center gap-2">
           <button class="btn btn-secondary btn-xs"
                   ref="experimentGroup"
                   :class="{'active': quickFilter === 'experiments'}"
-                  @click="setQuickFilter('experiments')">
+                  @click="setQuickFilter('experiments')"
+                  :data-e2e="'e2e-BT-topMenu-quickSearch-experiments'">
             {{ i18n.t('search.quick_search.experiments') }}
           </button>
           <button class="btn btn-secondary btn-xs"
                   :class="{'active': quickFilter === 'my_modules'}"
-                  @click="setQuickFilter('my_modules')">
+                  @click="setQuickFilter('my_modules')"
+                  :data-e2e="'e2e-BT-topMenu-quickSearch-tasks'">
             {{ i18n.t('search.quick_search.tasks') }}
           </button>
           <button class="btn btn-secondary btn-xs"
                   :class="{'active': quickFilter === 'results'}"
-                  @click="setQuickFilter('results')">
+                  @click="setQuickFilter('results')"
+                  :data-e2e="'e2e-BT-topMenu-quickSearch-taskResults'">
             {{ i18n.t('search.quick_search.results') }}
           </button>
         </div>
@@ -110,7 +113,7 @@
           </div>
         </div>
         <hr class="my-2">
-        <button class="btn btn-light truncate !block leading-10 max-w-[600px]" @click="searchValue">
+        <button class="btn btn-light truncate !block leading-10 max-w-[600px]" @click="searchValue" :data-e2e="'e2e-BT-topMenu-quickSearch-allSearchResults'">
           {{ i18n.t('search.quick_search.all_results', {query: searchQuery}) }}
         </button>
       </div>

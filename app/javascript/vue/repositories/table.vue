@@ -26,6 +26,11 @@
     confirmClass="btn btn-danger"
     :confirmText="i18n.t('repositories.index.modal_delete.delete')"
     ref="deleteModal"
+    :e2eModalName="deleteModal.e2eModalName"
+    :e2eTitle="deleteModal.e2eTitle"
+    :e2eClose="deleteModal.e2eClose"
+    :e2eCancel="deleteModal.e2eCancel"
+    :e2eConfirm="deleteModal.e2eConfirm"
   ></ConfirmationModal>
   <ConfirmationModal
     :title="exportModal.title"
@@ -111,7 +116,12 @@ export default {
       shareRepository: null,
       deleteModal: {
         title: '',
-        description: ''
+        description: '',
+        e2eModalName: '',
+        e2eTitle: '',
+        e2eClose: '',
+        e2eCancel: '',
+        e2eConfirm: '',
       },
       exportModal: {
         title: '',
@@ -250,10 +260,15 @@ export default {
     },
     async deleteRepository(event, rows) {
       const [repository] = rows;
+      this.deleteModal.e2eModalName = 'e2e-MD-deleteInventory';
+      this.deleteModal.e2eTitle = 'e2e-TX-deleteInventoryModal-title',
+      this.deleteModal.e2eClose = 'e2e-BT-deleteInventoryModal-close',
+      this.deleteModal.e2eCancel = 'e2e-BT-deleteInventoryModal-cancel',
+      this.deleteModal.e2eConfirm = 'e2e-BT-deleteInventoryModal-delete',
       this.deleteModal.title = this.i18n.t('repositories.index.modal_delete.title_html', { name: repository.name });
       this.deleteModal.description = `
-        <p>${this.i18n.t('repositories.index.modal_delete.message_html', { name: repository.name })}</p>
-        <div class="alert alert-danger" role="alert">
+        <p data-e2e="e2e-TX-deleteInventoryModal-info">${this.i18n.t('repositories.index.modal_delete.message_html', { name: repository.name })}</p>
+        <div class="alert alert-danger" role="alert" data-e2e="e2e-TX-deleteInventoryModal-warning">
           <span class="fas fa-exclamation-triangle"></span>
           ${this.i18n.t('repositories.index.modal_delete.alert_heading')}
           <ul>
