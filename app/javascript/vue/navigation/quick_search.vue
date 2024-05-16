@@ -2,25 +2,27 @@
   <GeneralDropdown ref="container" :canOpen="canOpen" :fieldOnlyOpen="true" @close="filtersOpened = false; flyoutOpened = false" @open="flyoutOpened = true">
     <template v-slot:field>
       <div class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}" :title="i18n.t('nav.search')">
-        <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery" @keydown="focusHistoryItem"
-               :class="{'active': flyoutOpened}"
+        <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery"
+               @keydown="focusHistoryItem"
+               @keydown.down="focusQuickSearchResults"
                @keydown.escape="closeFlyout"
                @focus="openHistory" :placeholder="i18n.t('nav.search')" @keydown.enter="saveQuery"/>
         <i class="sn-icon sn-icon-search"></i>
         <div v-if="this.searchQuery.length > 1" class="flex items-center gap-1 absolute right-2 top-1.5">
-          <div class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''; $refs.searchField.focus()">
+          <button class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''; $refs.searchField.focus()">
             <i class="sn-icon sn-icon-close  m-0" :title="i18n.t('nav.clear')"></i>
-          </div>
-          <div class="btn btn-light icon-btn btn-xs" :title="i18n.t('search.quick_search.search_options')"
+          </button>
+          <button class="btn btn-light icon-btn btn-xs" :title="i18n.t('search.quick_search.search_options')"
                :class="{'active': filtersOpened}" @click="filtersOpened = !filtersOpened">
             <i class="sn-icon sn-icon-search-options m-0"></i>
-          </div>
+          </button>
         </div>
       </div>
     </template>
     <template v-slot:flyout >
       <SearchFilters
         class="px-3.5"
+        ref="filters"
         v-if="filtersOpened"
         :teamsUrl="teamsUrl"
         :usersUrl="usersUrl"
@@ -43,6 +45,7 @@
       <div v-else class="w-[600px]">
         <div class="flex items-center gap-2">
           <button class="btn btn-secondary btn-xs"
+                  ref="experimentGroup"
                   :class="{'active': quickFilter === 'experiments'}"
                   @click="setQuickFilter('experiments')">
             {{ i18n.t('search.quick_search.experiments') }}
@@ -61,7 +64,7 @@
         <hr class="my-2">
         <a v-if="!loading" v-for="(result, i) in results" :key="i"
            :href="getUrl(result.attributes)"
-           class="px-3 py-2 hover:bg-sn-super-light-grey cursor-pointer
+           class="px-3 py-2 hover:bg-sn-super-light-grey cursor-pointer focus:no-underline
                   text-sn-black hover:no-underline active:no-underline hover:text-black block"
         >
           <div class="flex items-center gap-2">
@@ -104,9 +107,9 @@
           </div>
         </div>
         <hr class="my-2">
-        <div class="btn btn-light" @click="searchValue">
+        <button class="btn btn-light" @click="searchValue">
           {{ i18n.t('search.quick_search.all_results', {query: searchQuery}) }}
-        </div>
+        </button>
       </div>
     </template>
   </GeneralDropdown>
@@ -167,6 +170,9 @@ export default {
       if (this.searchQuery.length > 1) {
         this.fetchQuickSearchResults();
       }
+    },
+    filtersOpened() {
+      if (this.filtersOpened) this.$nextTick(() => { this.focusFilters() });
     }
   },
   data() {
@@ -311,21 +317,32 @@ export default {
     focusHistoryItem(event) {
       if (this.focusedHistoryItem === null && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
         this.focusedHistoryItem = 0;
-        this.$refs.historyItems[this.focusedHistoryItem].focus();
+        this.$refs.historyItems[this.focusedHistoryItem]?.focus();
       } else if (event.key === 'ArrowDown') {
         event.preventDefault();
         this.focusedHistoryItem += 1;
         if (this.focusedHistoryItem >= this.$refs.historyItems.length) {
           this.focusedHistoryItem = 0;
         }
-        this.$refs.historyItems[this.focusedHistoryItem].focus();
+        this.$refs.historyItems[this.focusedHistoryItem]?.focus();
       } else if (event.key === 'ArrowUp') {
         event.preventDefault();
         this.focusedHistoryItem -= 1;
         if (this.focusedHistoryItem < 0) {
           this.focusedHistoryItem = this.$refs.historyItems.length - 1;
         }
-        this.$refs.historyItems[this.focusedHistoryItem].focus();
+        this.$refs.historyItems[this.focusedHistoryItem]?.focus();
+      }
+    },
+    focusQuickSearchResults(e) {
+      this.$refs.experimentGroup?.focus();
+      e.preventDefault();
+    },
+    focusFilters() {
+      const { filters } = this.$refs;
+
+      if (filters) {
+        filters.$refs.groupButtons[0].focus();
       }
     },
     closeFlyout() {

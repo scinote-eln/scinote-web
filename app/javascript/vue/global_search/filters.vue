@@ -5,6 +5,7 @@
       <div class="flex items-center gap-2 flex-wrap mb-6">
         <template v-for="group in searchGroups" :key="group.value">
           <button class="btn btn-secondary btn-xs"
+                  ref="groupButtons"
                   :class="{'active': activeGroup === group.value}"
                   @click="setActiveGroup(group.value)">
             {{ group.label }}
