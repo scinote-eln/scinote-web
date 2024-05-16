@@ -88,7 +88,7 @@ export default {
     handleScroll() {
       if (this.loading || !this.selected) return;
 
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
         if (this.results.length < this.total) {
           this.loadData();
         }
