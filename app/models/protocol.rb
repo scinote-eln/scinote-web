@@ -178,12 +178,7 @@ class Protocol < ApplicationRecord
                          end || []
 
     protocol_my_modules = if options[:options]&.dig(:in_repository).blank?
-                            protocols = distinct.joins(:my_module)
-                                                .joins("INNER JOIN user_assignments my_module_user_assignments " \
-                                                       "ON my_module_user_assignments.assignable_type = 'MyModule' " \
-                                                       "AND my_module_user_assignments.assignable_id = my_modules.id")
-                                                .where(my_module_user_assignments: { user_id: user })
-                                                .where(team: teams)
+                            protocols = viewable_by_user_my_module_protocols(user, teams)
                             unless include_archived
                               protocols = protocols.joins(my_module: { experiment: :project })
                                                    .active
@@ -233,19 +228,37 @@ class Protocol < ApplicationRecord
     where('protocols.id IN ((?) UNION (?) UNION (?))', original_without_versions, published_versions, new_drafts)
   end
 
-  def self.viewable_by_user(user, teams)
-    # Team owners see all protocol templates in the team
-    owner_role = UserRole.find_predefined_owner_role
-    protocols = Protocol.where(team: teams)
-                        .where(protocol_type: REPOSITORY_TYPES)
-    viewable_as_team_owner = protocols.joins("INNER JOIN user_assignments team_user_assignments " \
-                                             "ON team_user_assignments.assignable_type = 'Team' " \
-                                             "AND team_user_assignments.assignable_id = protocols.team_id")
-                                      .where(team_user_assignments: { user_id: user, user_role_id: owner_role })
-                                      .select(:id)
-    viewable_as_assigned = protocols.with_granted_permissions(user, ProtocolPermissions::READ).select(:id)
+  def self.viewable_by_user(user, teams, options = {})
+    if options[:fetch_latest_versions]
+      protocol_templates = latest_available_versions(teams)
+                           .with_granted_permissions(user, ProtocolPermissions::READ)
+                           .select(:id)
+      protocol_my_modules = viewable_by_user_my_module_protocols(user, teams).select(:id)
 
-    where('protocols.id IN ((?) UNION (?))', viewable_as_team_owner, viewable_as_assigned)
+      where('protocols.id IN ((?) UNION (?))', protocol_templates, protocol_my_modules)
+    else
+      # Team owners see all protocol templates in the team
+      owner_role = UserRole.find_predefined_owner_role
+      protocols = Protocol.where(team: teams)
+                          .where(protocol_type: REPOSITORY_TYPES)
+      viewable_as_team_owner = protocols.joins("INNER JOIN user_assignments team_user_assignments " \
+                                               "ON team_user_assignments.assignable_type = 'Team' " \
+                                               "AND team_user_assignments.assignable_id = protocols.team_id")
+                                        .where(team_user_assignments: { user_id: user, user_role_id: owner_role })
+                                        .select(:id)
+      viewable_as_assigned = protocols.with_granted_permissions(user, ProtocolPermissions::READ).select(:id)
+
+      where('protocols.id IN ((?) UNION (?))', viewable_as_team_owner, viewable_as_assigned)
+    end
+  end
+
+  def self.viewable_by_user_my_module_protocols(user, teams)
+    distinct.joins(:my_module)
+            .joins("INNER JOIN user_assignments my_module_user_assignments " \
+                   "ON my_module_user_assignments.assignable_type = 'MyModule' " \
+                   "AND my_module_user_assignments.assignable_id = my_modules.id")
+            .where(my_module_user_assignments: { user_id: user })
+            .where(team: teams)
   end
 
   def self.filter_by_teams(teams = [])
