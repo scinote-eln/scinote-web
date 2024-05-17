@@ -17,6 +17,7 @@
               class="!pr-9"
               :value="localQuery"
               @change="changeQuery"
+              @keydown="focusHistoryItem"
               @keydown.enter="changeQuery"
               @blur="changeQuery"
               :placeholder="i18n.t('nav.search')"
@@ -30,9 +31,10 @@
         <template v-slot:flyout >
           <div v-for="(query, i) in reversedPreviousQueries" @click="setQuery(query)" :key="i"
               ref="historyItems"
+              @keydown="focusHistoryItem"
               tabindex="1"
               @keydown.enter="setQuery(query)"
-              class="flex px-3 h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
+              class="flex px-3 min-h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
             <i class="sn-icon sn-icon-history-search"></i>
             {{ query }}
           </div>
@@ -169,6 +171,7 @@ export default {
       previousQueries: [],
       invalidQuery: false,
       activeGroup: null,
+      focusedHistoryItem: null,
       totalElements: 0,
       searchGroups: [
         'FoldersComponent',
@@ -303,6 +306,28 @@ export default {
     resetGroup() {
       this.activeGroup = null;
       this.filters.group = null;
+    },
+    focusHistoryItem(event) {
+      if (this.focusedHistoryItem === null && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+        this.focusedHistoryItem = 0;
+        this.$refs.historyItems[this.focusedHistoryItem].focus();
+      } else if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        this.focusedHistoryItem += 1;
+        if (this.focusedHistoryItem >= this.$refs.historyItems.length) {
+          this.focusedHistoryItem = 0;
+        }
+        this.$refs.historyItems[this.focusedHistoryItem].focus();
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        this.focusedHistoryItem -= 1;
+        if (this.focusedHistoryItem < 0) {
+          this.focusedHistoryItem = this.$refs.historyItems.length - 1;
+        }
+        this.$refs.historyItems[this.focusedHistoryItem].focus();
+      } else if (event.key === 'Escape') {
+        this.$refs.historyContainer.isOpen = false;
+      }
     },
     resetFilters() {
       this.filters = {

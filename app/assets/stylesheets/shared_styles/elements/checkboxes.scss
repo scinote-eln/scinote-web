@@ -78,8 +78,12 @@ input[type="checkbox"].sci-checkbox {
   }
 
   &:focus {
-    outline: none;
+    outline: 0;
     outline-offset: 0;
+  }
+
+  &:focus + .sci-checkbox-label {
+    outline: 4px solid var(--sn-science-blue-hover);
   }
 
   &:disabled {
