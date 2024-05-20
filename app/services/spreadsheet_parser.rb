@@ -45,7 +45,7 @@ class SpreadsheetParser
         header = row
       else
         escaped_row = row.map do |cell|
-          cell.gsub("\\n", "\n")
+          cell.to_s.gsub("\\n", "\n")
         end
         columns = escaped_row
       end

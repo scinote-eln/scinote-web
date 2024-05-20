@@ -75,7 +75,7 @@
           <div id="table-rows" ref="tableRowsRef" class="w-full h-[28rem] flex flex-col py-4 overflow-auto gap-1">
             <!-- rows -->
             <div v-for="(item, index) in stepProps.columnNames" :key="item"
-              class="flex flex-col gap-4 min-h-[56px] justify-center px-4 rounded"
+              class="flex flex-col gap-4 min-h-[56px] justify-center px-4 rounded shrink-0"
               :class="{'bg-sn-super-light-blue': this.selectedItemsIndexes.includes(index)}"
               >
               <SecondStepTableRow
@@ -121,7 +121,7 @@
           {{ i18n.t('repositories.import_records.steps.step2.cancelBtnText') }}
         </button>
 
-        <button class="btn btn-primary"  @click="importRecords">
+        <button class="btn btn-primary" :disabled="!rowsIsValid" @click="importRecords">
           {{ i18n.t('repositories.import_records.steps.step2.confirmBtnText') }}
         </button>
       </div>
@@ -233,7 +233,7 @@ export default {
       for (let i = 0; i < this.stepProps.columnNames.length; i++) {
         const foundItem = this.selectedItems.find((item) => item.index === i);
         if (foundItem) {
-          mapping[foundItem.index] = foundItem.key;
+          mapping[foundItem.index] = (foundItem.key === 'new' ? foundItem.value : foundItem.key);
         } else {
           mapping[i] = '';
         }
@@ -293,7 +293,8 @@ export default {
       }
 
       if (this.availableFields) {
-        const options = this.availableFields.map((el) => [String(el.key), `${String(el.value)} (${columnKeyToLabelMapping[el.key]})`]);
+        let options = this.availableFields.map((el) => [String(el.key), `${String(el.value)} (${columnKeyToLabelMapping[el.key]})`]);
+        options = [['new', this.i18n.t('repositories.import_records.steps.step2.table.tableRow.importAsNewColumn')]].concat(options);
         return options;
       }
       return [];
@@ -302,6 +303,15 @@ export default {
       const importedSum = this.selectedItems.length;
       const ignoredSum = this.stepProps.columnNames.length - importedSum;
       return { importedSum, ignoredSum };
+    },
+    rowsIsValid() {
+      let valid = true;
+      this.selectedItems.forEach((v) => {
+        if (v.key === 'new' && (!v.value.type || v.value.name.length < 2)) {
+          valid = false;
+        }
+      });
+      return valid;
     }
   },
   async created() {

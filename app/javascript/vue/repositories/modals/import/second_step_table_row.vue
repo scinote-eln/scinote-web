@@ -2,13 +2,13 @@
   <!-- columns -->
   <div class="flex flex-row justify-between gap-6">
     <!-- number col -->
-    <div class="w-6 my-auto">{{ index + 1 }}</div>
+    <div class="w-6 h-10 flex items-center">{{ index + 1 }}</div>
 
-    <div class="w-40 my-auto truncate" :title="item">{{ item }}</div>
+    <div class="w-40 h-10 flex items-center truncate" :title="item">{{ item }}</div>
 
-    <i class="sn-icon sn-icon-arrow-right w-6 my-auto relative left-5"></i>
+    <i class="sn-icon sn-icon-arrow-right w-6  h-10 flex items-center relative left-5"></i>
 
-    <div class="w-60 my-auto">
+    <div class="w-60  min-h-10 flex items-center flex-col gap-2">
 
       <!-- system generated data -->
       <SelectDropdown v-if="systemGeneratedData.includes(item)"
@@ -26,9 +26,21 @@
         placeholder="Do not import"
         :title="this.selectedColumnType?.value"
       ></SelectDropdown>
+      <template v-if="selectedColumnType?.key == 'new'">
+        <SelectDropdown
+          :options="newColumnTypes"
+          @change="(v) => { newColumn.type = v }"
+          :value="newColumn.type"
+          size="sm"
+          placeholder="Select column type"
+        ></SelectDropdown>
+        <div class="sci-input-container-v2 w-full">
+          <input type="text" v-model="newColumn.name" class="sci-input" placeholder="Name">
+        </div>
+      </template>
     </div>
 
-    <div class="w-14 my-auto flex justify-center">
+    <div class="w-14  h-10 flex items-center flex justify-center">
       <!-- import -->
       <i v-if="this.selectedColumnType?.key && this.selectedColumnType?.value === item && !systemGeneratedData.includes(item)"
         class="sn-icon sn-icon-check" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.importedColumnTitle')">
@@ -54,7 +66,7 @@
       <i v-else class="sn-icon sn-icon-close text-sn-sleepy-grey" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.doNotImportColumnTitle')"></i>
     </div>
 
-    <div class="w-56 truncate my-auto" :title="stepProps.exampleData[index]">{{ stepProps.exampleData[index] }}</div>
+    <div class="w-56 truncate  h-10 flex items-center" :title="stepProps.exampleData[index]">{{ stepProps.exampleData[index] }}</div>
   </div>
 </template>
 
@@ -85,9 +97,23 @@ export default {
       required: true
     }
   },
+  watch: {
+    newColumn() {
+      this.selectedColumnType.value = this.newColumn;
+      this.$emit('selection:changed', this.selectedColumnType);
+    }
+  },
   data() {
     return {
       selectedColumnType: null,
+      newColumn: {
+        type: 'Text',
+        name: ''
+      },
+      newColumnTypes: [
+        ['Text', this.i18n.t('repositories.import_records.steps.step2.table.tableRow.newColumnType.text')],
+        ['List', this.i18n.t('repositories.import_records.steps.step2.table.tableRow.newColumnType.list')]
+      ],
       systemGeneratedData: [
         this.i18n.t('repositories.import_records.steps.step2.table.tableRow.systemGeneratedData.itemId'),
         this.i18n.t('repositories.import_records.steps.step2.table.tableRow.systemGeneratedData.createdOn'),
@@ -101,7 +127,12 @@ export default {
   },
   methods: {
     changeSelected(e) {
-      const value = this.stepProps.availableFields[e];
+      let value;
+      if (e === 'new') {
+        value = this.newColumn;
+      } else {
+        value = this.stepProps.availableFields[e];
+      }
       const selectedColumnType = { index: this.index, key: e, value };
       this.selectedColumnType = selectedColumnType;
       this.$emit('selection:changed', selectedColumnType);
