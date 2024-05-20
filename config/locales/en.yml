@@ -512,7 +512,7 @@ en:
       reports: "Reports"
       repository: "Inventory"
       more_search_options: "More search options"
-      clear_filters: "Clear filters"
+      clear_filters: "Clear"
       all_results: "All results"
       id: "ID"
       created_at: "Created on"
