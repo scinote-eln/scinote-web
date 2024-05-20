@@ -36,7 +36,14 @@ module BreadcrumbsHelper
       url = repository_path(subject)
     when RepositoryRow
       parent = subject.repository
-      url = repository_path(subject.repository, landing_page: true, row_id: subject.id)
+      params = {
+        id: subject.repository_id,
+        landing_page: true,
+        row_id: subject.id
+      }
+      params[:archived] = true if subject.archived
+
+      url = repository_path(params)
     when Report
       parent = subject.team
 
