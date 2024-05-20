@@ -508,6 +508,7 @@ en:
       protocol_templates: "Protocol templates"
       label_templates: "Label templates"
       format: "Format"
+      archived: "Archived"
       reports: "Reports"
       repository: "Inventory"
       more_search_options: "More search options"
