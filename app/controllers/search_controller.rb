@@ -247,6 +247,12 @@ class SearchController < ApplicationController
   def filter_users!(model)
     @records = @records.joins("INNER JOIN activities ON #{model.model_name.collection}.id = activities.subject_id
                                AND activities.subject_type= '#{model.name}'")
-                       .where('activities.owner_id': @filters[:users]&.values)
+
+    user_ids = @filters[:users]&.values
+    @records = if model.name == 'MyModule'
+                 @records.where('activities.owner_id IN (?) OR users.id IN (?)', user_ids, user_ids)
+               else
+                 @records.where('activities.owner_id': user_ids)
+               end
   end
 end
