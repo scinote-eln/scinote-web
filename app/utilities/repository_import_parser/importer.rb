@@ -97,7 +97,7 @@ module RepositoryImportParser
             if index == @name_index
 
               # check if row (inventory) already exists
-              existing_row = RepositoryRow.includes(repository_cells: :value).find_by(id: incoming_row[0].gsub(RepositoryRow::ID_PREFIX, ''))
+              existing_row = RepositoryRow.includes(repository_cells: :value).find_by(id: incoming_row[0].to_s.gsub(RepositoryRow::ID_PREFIX, ''))
 
               # if it doesn't exist create it
               unless existing_row

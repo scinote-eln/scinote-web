@@ -2244,6 +2244,10 @@ en:
               userDefinedColumnTitle: 'Column name does not match. Column will be imported as '
               importedColumnTitle: 'Column will be imported.'
               doNotImportColumnTitle: 'Column will not import.'
+              importAsNewColumn: 'Import as new column'
+              newColumnType:
+                text: 'Text'
+                list: 'Dropdown'
               systemGeneratedData:
                 itemId: 'Item ID'
                 createdOn: 'Created on'
