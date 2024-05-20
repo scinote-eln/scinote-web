@@ -4,7 +4,7 @@
       <div class="sci--navigation--top-menu-search left-icon sci-input-container-v2"
         :class="{'disabled' : !currentTeam, 'error': invalidQuery}" :title="i18n.t('nav.search')"
       >
-        <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery" @keydown="focusHistoryItem"
+        <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery"
                :class="{'active': flyoutOpened}"
                @keydown="focusHistoryItem"
                @keydown.down="focusQuickSearchResults"

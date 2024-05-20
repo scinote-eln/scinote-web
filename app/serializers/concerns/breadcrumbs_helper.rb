@@ -35,8 +35,8 @@ module BreadcrumbsHelper
       parent = subject.team
       url = repository_path(subject)
     when RepositoryRow
-      parent = subject.team
-      url = repository_path(subject.repository)
+      parent = subject.repository
+      url = repository_path(subject.repository, landing_page: true, row_id: subject.id)
     when Report
       parent = subject.team
 

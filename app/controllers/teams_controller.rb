@@ -13,7 +13,7 @@ class TeamsController < ApplicationController
   before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
 
   def visible_teams
-    teams = current_user.teams
+    teams = current_user.teams.order(:name)
     render json: teams, each_serializer: TeamSerializer
   end
 

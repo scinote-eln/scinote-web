@@ -7,7 +7,7 @@ class QuickSearchSerializer < ActiveModel::Serializer
   attributes :updated_at, :archived, :breadcrumbs, :code
 
   def archived
-    @object.archived?
+    @object.respond_to?(:archived_branch?) ? @object.archived_branch? : @object.archived?
   rescue StandardError
     false
   end

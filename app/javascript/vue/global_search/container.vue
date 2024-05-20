@@ -53,7 +53,7 @@
       </div>
       <button class="btn btn-light btn-sm" @click="filterModalOpened = true">
         <i class="sn-icon sn-icon-search-options"></i>
-        <span class="tw-hidden lg:inline">{{ i18n.t('search.index.more_search_options') }}</span>
+        <span class="tw-hidden xl:inline">{{ i18n.t('search.index.more_search_options') }}</span>
         <span
           v-if="activeFilters.length > 0"
           class="absolute -right-1 -top-1 rounded-full bg-sn-science-blue text-white flex items-center justify-center w-4 h-4 text-[9px]"
@@ -65,12 +65,12 @@
         <div class="h-4 w-[1px] bg-sn-grey"></div>
         <button class="btn btn-light btn-sm" @click="resetFilters">
           <i class="sn-icon sn-icon-close"></i>
-          <span class="tw-hidden lg:inline">{{ i18n.t('search.index.clear_filters') }}</span>
+          <span class="tw-hidden xl:inline">{{ i18n.t('search.index.clear_filters') }}</span>
         </button>
       </template>
       <button v-if="activeGroup" class="btn btn-light btn-sm" @click="resetGroup">
         <i class="sn-icon sn-icon-undo"></i>
-        <span class="tw-hidden lg:inline">{{ i18n.t('search.index.all_results') }}</span>
+        <span class="tw-hidden xl:inline">{{ i18n.t('search.index.all_results') }}</span>
       </button>
     </div>
     <template v-for="group in searchGroups">
@@ -87,7 +87,7 @@
         @updated="calculateTotalElements"
       />
     </template>
-    <div v-if="totalElements === 0" class="bg-white rounded p-4">
+    <div v-if="totalElements === 0 && activeGroup === null" class="bg-white rounded p-4">
       <NoSearchResult />
     </div>
     <teleport to='body'>
