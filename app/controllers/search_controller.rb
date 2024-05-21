@@ -13,7 +13,8 @@ class SearchController < ApplicationController
 
         case params[:group]
         when 'projects'
-          search_by_name(Project)
+          @model = Project
+          search_by_name
 
           render json: @records.includes(:team, :project_folder),
                  each_serializer: GlobalSearch::ProjectSerializer,
@@ -22,7 +23,8 @@ class SearchController < ApplicationController
                    next_page: (@records.next_page if @records.respond_to?(:next_page)),
                  }
         when 'project_folders'
-          search_by_name(ProjectFolder)
+          @model = ProjectFolder
+          search_by_name
 
           render json: @records.includes(:team, :parent_folder),
                  each_serializer: GlobalSearch::ProjectFolderSerializer,
@@ -32,7 +34,8 @@ class SearchController < ApplicationController
                  }
           return
         when 'reports'
-          search_by_name(Report)
+          @model = Report
+          search_by_name
 
           render json: @records.includes(:team, :project, :user),
                  each_serializer: GlobalSearch::ReportSerializer,
@@ -42,7 +45,8 @@ class SearchController < ApplicationController
                  }
           return
         when 'module_protocols'
-          search_by_name(Protocol, { in_repository: false })
+          @model = Protocol
+          search_by_name({ in_repository: false })
 
           render json: @records.includes({ my_module: :experiment }, :team),
                  each_serializer: GlobalSearch::MyModuleProtocolSerializer,
@@ -52,7 +56,8 @@ class SearchController < ApplicationController
                  }
           return
         when 'experiments'
-          search_by_name(Experiment)
+          @model = Experiment
+          search_by_name
 
           render json: @records.includes(project: :team),
                  each_serializer: GlobalSearch::ExperimentSerializer,
@@ -62,7 +67,8 @@ class SearchController < ApplicationController
                  }
           return
         when 'tasks'
-          search_by_name(MyModule)
+          @model = MyModule
+          search_by_name
 
           render json: @records.includes(experiment: { project: :team }),
                  each_serializer: GlobalSearch::MyModuleSerializer,
@@ -72,7 +78,8 @@ class SearchController < ApplicationController
                  }
           return
         when 'results'
-          search_by_name(Result)
+          @model = Result
+          search_by_name
 
           render json: @records.includes(my_module: { experiment: { project: :team } }),
                  each_serializer: GlobalSearch::ResultSerializer,
@@ -82,7 +89,8 @@ class SearchController < ApplicationController
                  }
           return
         when 'protocols'
-          search_by_name(Protocol, { in_repository: true })
+          @model = Protocol
+          search_by_name({ in_repository: true })
 
           render json: @records,
                  each_serializer: GlobalSearch::ProtocolSerializer,
@@ -94,7 +102,8 @@ class SearchController < ApplicationController
         when 'label_templates'
           return render json: [], meta: { disabled: true }, status: :ok unless LabelTemplate.enabled?
 
-          search_by_name(LabelTemplate)
+          @model = LabelTemplate
+          search_by_name
 
           render json: @records,
                  each_serializer: GlobalSearch::LabelTemplateSerializer,
@@ -104,6 +113,7 @@ class SearchController < ApplicationController
                  }
           return
         when 'repository_rows'
+          @model = RepositoryRow
           search_by_name(RepositoryRow)
 
           render json: @records,
@@ -114,7 +124,8 @@ class SearchController < ApplicationController
                  }
           return
         when 'assets'
-          search_by_name(Asset)
+          @model = Asset
+          search_by_name
           includes = [{ step: { protocol: { my_module: :experiment } } }, { result: { my_module: :experiment } }, :team]
 
           render json: @records.includes(includes),
@@ -189,32 +200,34 @@ class SearchController < ApplicationController
 
   protected
 
-  def search_by_name(model, options = {})
-    @records = model.search(current_user,
-                            @include_archived,
-                            @search_query,
-                            nil,
-                            teams: @teams,
-                            users: @users,
-                            options: options)
+  def search_by_name(options = {})
+    @records = @model.search(current_user,
+                             @include_archived,
+                             @search_query,
+                             nil,
+                             teams: @teams,
+                             users: @users,
+                             options: options)
 
-    filter_records(model) if @filters.present?
+    filter_records if @filters.present?
     sort_records
     paginate_records
   end
 
-  def filter_records(model)
-    filter_datetime!(model, :created_at) if @filters[:created_at].present?
-    filter_datetime!(model, :updated_at) if @filters[:updated_at].present?
-    filter_users!(model) if @filters[:users].present?
+  def filter_records
+    filter_datetime!(:created_at) if @filters[:created_at].present?
+    filter_datetime!(:updated_at) if @filters[:updated_at].present?
+    filter_users! if @filters[:users].present?
   end
 
   def sort_records
     @records = case params[:sort]
                when 'atoz'
-                 @records.order(name: :asc)
+                 sort_attribute = @model.name == 'Asset' ? 'active_storage_blobs.filename' : 'name'
+                 @records.order(sort_attribute => :asc)
                when 'ztoa'
-                 @records.order(name: :desc)
+                 sort_attribute = @model.name == 'Asset' ? 'active_storage_blobs.filename' : 'name'
+                 @records.order(sort_attribute => :desc)
                when 'created_asc'
                  @records.order(created_at: :asc)
                else
@@ -230,8 +243,8 @@ class SearchController < ApplicationController
                end
   end
 
-  def filter_datetime!(model, attribute)
-    model_name = model.model_name.collection
+  def filter_datetime!(attribute)
+    model_name = @model.model_name.collection
     if @filters[attribute][:on].present?
       from_date = Time.zone.parse(@filters[attribute][:on]).beginning_of_day.utc
       to_date = Time.zone.parse(@filters[attribute][:on]).end_of_day.utc
@@ -244,12 +257,12 @@ class SearchController < ApplicationController
     @records = @records.where("#{model_name}.#{attribute} <= ?", to_date) if to_date.present?
   end
 
-  def filter_users!(model)
-    @records = @records.joins("INNER JOIN activities ON #{model.model_name.collection}.id = activities.subject_id
-                               AND activities.subject_type= '#{model.name}'")
+  def filter_users!
+    @records = @records.joins("INNER JOIN activities ON #{@model.model_name.collection}.id = activities.subject_id
+                               AND activities.subject_type= '#{@model.name}'")
 
     user_ids = @filters[:users]&.values
-    @records = if model.name == 'MyModule'
+    @records = if @model.name == 'MyModule'
                  @records.where('activities.owner_id IN (?) OR users.id IN (?)', user_ids, user_ids)
                else
                  @records.where('activities.owner_id': user_ids)
