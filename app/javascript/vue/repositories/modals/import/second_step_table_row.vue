@@ -23,8 +23,11 @@
         @isOpen="handleIsOpen"
         :clearable="true"
         :size="'sm'"
-        placeholder="Do not import"
+        :placeholder="computeMatchNotFound ?
+        i18n.t('repositories.import_records.steps.step2.table.tableRow.placeholders.matchNotFound') :
+        i18n.t('repositories.import_records.steps.step2.table.tableRow.placeholders.doNotImport')"
         :title="this.selectedColumnType?.value"
+        :value="this.selectedColumnType?.key"
       ></SelectDropdown>
       <template v-if="selectedColumnType?.key == 'new'">
         <SelectDropdown
@@ -60,7 +63,9 @@
       <!-- <i v-else-if=""></i> -->
 
       <!-- match not found -->
-      <!-- <i v-else-if=""></i> -->
+      <i v-else-if="computeMatchNotFound"
+        class="sn-icon sn-icon-close text-sn-alert-brittlebush" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.matchNotFoundColumnTitle')">
+      </i>
 
       <!-- do not import -->
       <i v-else class="sn-icon sn-icon-close text-sn-sleepy-grey" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.doNotImportColumnTitle')"></i>
@@ -95,6 +100,10 @@ export default {
     stepProps: {
       type: Object,
       required: true
+    },
+    autoMapping: {
+      type: Boolean,
+      required: true
     }
   },
   watch: {
@@ -125,7 +134,31 @@ export default {
         this.i18n.t('repositories.import_records.steps.step2.table.tableRow.systemGeneratedData.updatedOn')]
     };
   },
+  watch: {
+    autoMapping(newVal, oldVal) {
+      if (newVal === true) {
+        this.autoMap();
+      } else {
+        this.clearAutoMap();
+      }
+    }
+  },
+  computed: {
+    computeMatchNotFound() {
+      return this.autoMapping && ((this.selectedColumnType && !this.selectedColumnType.key) || !this.selectedColumnType);
+    }
+  },
   methods: {
+    autoMap() {
+      Object.entries(this.stepProps.availableFields).forEach(([key, value]) => {
+        if (this.item === value) {
+          this.changeSelected(key);
+        }
+      });
+    },
+    clearAutoMap() {
+      this.changeSelected(null);
+    },
     changeSelected(e) {
       let value;
       if (e === 'new') {
@@ -142,6 +175,11 @@ export default {
       if (isOpen) {
         tableRows.style.overflow = 'hidden';
       } else tableRows.style.overflow = 'auto';
+    }
+  },
+  mounted() {
+    if (this.autoMapping) {
+      this.autoMap();
     }
   }
 };

@@ -86,6 +86,7 @@
                 :stepProps="stepProps"
                 @selection:changed="handleChange"
                 :availableFields="this.availableFields"
+                :autoMapping="this.autoMapping"
               />
             </div>
           </div>
@@ -153,7 +154,7 @@ export default {
   },
   data() {
     return {
-      autoMapping: false,
+      autoMapping: true,
       updateWithEmptyCells: false,
       onlyAddNewItems: false,
       columnLabels: {

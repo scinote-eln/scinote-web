@@ -2240,7 +2240,11 @@ en:
             RepositoryStockValue: 'Stock'
           table:
             tableRow:
+              placeholders:
+                matchNotFound: 'Match not found'
+                doNotImport: 'Do not import'
               defaultColumnTitle: 'Default column. Mapped as identifier.'
+              matchNotFoundColumnTitle: 'Match not found.'
               userDefinedColumnTitle: 'Column name does not match. Column will be imported as '
               importedColumnTitle: 'Column will be imported.'
               doNotImportColumnTitle: 'Column will not import.'
