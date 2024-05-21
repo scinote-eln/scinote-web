@@ -570,13 +570,20 @@ function handleAnchorClick(event) {
   }
 };
 
-// listen to clicks on links in navigator and leftMenuContainer
-$(document).ready(function() {
-  const navigatorEl = $('.sci--layout-navigation-navigator');
-  const leftMenuContainerEl = $('.sci--layout--left-menu-container');
+$(document).on('turbolinks:before-visit.canvas_edit', (e) => {
+  const alertText = $("#update-canvas").attr("data-unsaved-work-text");
 
-  navigatorEl.on('click', 'a', handleAnchorClick);
-  leftMenuContainerEl.on('click', 'a', handleAnchorClick);
+  if (alertText) {
+    // eslint-disable-next-line no-alert
+    if (confirm(alertText)) {
+      $(document).off('turbolinks:before-visit.canvas_edit');
+      return true;
+    }
+    e.preventDefault();
+    return false;
+  }
+  $(document).off('turbolinks:before-visit.canvas_edit');
+  return true;
 });
 
 function bindEditModeCloseWindow() {
