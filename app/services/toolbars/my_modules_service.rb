@@ -89,7 +89,8 @@ module Toolbars
         name: 'move',
         label: I18n.t('experiments.table.toolbar.move'),
         icon: 'sn-icon sn-icon-move',
-        type: :emit
+        type: :emit,
+        path: move_modules_experiment_path(@my_modules.first.experiment, my_module_ids: @my_modules.pluck(:id))
       }
     end
 
