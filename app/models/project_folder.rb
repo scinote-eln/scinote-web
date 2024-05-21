@@ -3,6 +3,7 @@
 class ProjectFolder < ApplicationRecord
   ID_PREFIX = 'PF'
   include PrefixedIdModel
+  SEARCHABLE_ATTRIBUTES = ['project_folders.name', PREFIXED_ID_SQL].freeze
 
   include ArchivableModel
   include SearchableModel
@@ -43,7 +44,7 @@ class ProjectFolder < ApplicationRecord
     teams = options[:teams] || current_team || user.teams.select(:id)
 
     new_query = distinct.viewable_by_user(user, teams)
-                        .where_attributes_like_boolean('project_folders.name', query, options)
+                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
     new_query = new_query.active unless include_archived
 
     new_query

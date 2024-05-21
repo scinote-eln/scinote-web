@@ -13,7 +13,7 @@ class QuickSearchSerializer < ActiveModel::Serializer
   end
 
   def code
-    @object.respond_to?(:code) ? @object.code : @object.id
+    @object.code if @object.respond_to?(:code)
   end
 
   def updated_at

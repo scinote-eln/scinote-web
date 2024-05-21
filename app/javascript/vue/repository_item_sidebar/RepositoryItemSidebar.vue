@@ -440,6 +440,8 @@ export default {
   },
   created() {
     window.repositoryItemSidebarComponent = this;
+
+    this.handleItemLandingPageLink();
   },
   computed: {
     repositoryRowName() {
@@ -665,6 +667,12 @@ export default {
         );
       } finally {
         this.selectedToUnlink = null;
+      }
+    },
+    handleItemLandingPageLink() {
+      const itemLandingPageLink = document.getElementById('itemLandingPagelink');
+      if (itemLandingPageLink) {
+        this.toggleShowHideSidebar(itemLandingPageLink.getAttribute('href'));
       }
     }
   }
