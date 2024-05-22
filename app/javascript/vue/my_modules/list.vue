@@ -310,6 +310,7 @@ export default {
     duplicate(event, rows) {
       axios.post(event.path, { my_module_ids: rows.map((row) => row.id) }).then(() => {
         this.reloadingTable = true;
+        this.updateNavigator(true);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
