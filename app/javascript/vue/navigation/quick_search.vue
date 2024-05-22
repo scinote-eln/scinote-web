@@ -110,7 +110,7 @@
           </div>
         </div>
         <hr class="my-2">
-        <button class="btn btn-light truncate !block leading-10" @click="searchValue">
+        <button class="btn btn-light truncate !block leading-10 max-w-[600px]" @click="searchValue">
           {{ i18n.t('search.quick_search.all_results', {query: searchQuery}) }}
         </button>
       </div>
@@ -297,7 +297,7 @@ export default {
       this.fetchQuickSearchResults();
     },
     fetchQuickSearchResults() {
-      if (this.loading) return;
+      if (this.loading || this.invalidQuery) return;
 
       this.loading = true;
 

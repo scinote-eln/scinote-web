@@ -3,7 +3,10 @@
     <div class="content-header">
       <div class="title-row">
         <h1 class="mt-0 truncate !inline">
-          {{ i18n.t('search.index.results_title_html', { query: localQuery }) }}
+          <StringWithEllipsis
+            class="w-full"
+            :endCharacters="5"
+            :text="i18n.t('search.index.results_title_html', { query: localQuery })"></StringWithEllipsis>
         </h1>
       </div>
     </div>
@@ -29,14 +32,16 @@
           </div>
         </template>
         <template v-slot:flyout >
-          <div v-for="(query, i) in reversedPreviousQueries" @click="setQuery(query)" :key="i"
-              ref="historyItems"
-              @keydown="focusHistoryItem"
-              tabindex="1"
-              @keydown.enter="setQuery(query)"
-              class="flex px-3 min-h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
-            <i class="sn-icon sn-icon-history-search"></i>
-            {{ query }}
+          <div class="max-w-[600px]">
+            <div v-for="(query, i) in reversedPreviousQueries" @click="setQuery(query)" :key="i"
+                ref="historyItems"
+                @keydown="focusHistoryItem"
+                tabindex="1"
+                @keydown.enter="setQuery(query)"
+                class="flex px-3 min-h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
+              <i class="sn-icon sn-icon-history-search"></i>
+              {{ query }}
+            </div>
           </div>
         </template>
       </GeneralDropdown>
@@ -121,6 +126,7 @@ import ReportsComponent from './groups/reports.vue';
 import FiltersModal from './filters_modal.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import NoSearchResult from './groups/helpers/no_search_result.vue';
+import StringWithEllipsis from '../shared/string_with_ellipsis.vue';
 
 export default {
   emits: ['search', 'selectGroup'],
@@ -161,7 +167,8 @@ export default {
     ReportsComponent,
     FiltersModal,
     GeneralDropdown,
-    NoSearchResult
+    NoSearchResult,
+    StringWithEllipsis
   },
   data() {
     return {
