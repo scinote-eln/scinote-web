@@ -302,8 +302,9 @@ export default {
     edit(_e, rows) {
       [this.editModalObject] = rows;
     },
-    move(_e, rows) {
+    move(event, rows) {
       [this.moveModalObject] = rows;
+      this.moveModalObject.movePath = event.path;
     },
     duplicate(event, rows) {
       axios.post(event.path, { my_module_ids: rows.map((row) => row.id) }).then(() => {
