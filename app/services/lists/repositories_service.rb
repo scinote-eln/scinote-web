@@ -16,6 +16,7 @@ module Lists
                           .select('COUNT(repository_rows.*) AS row_count')
                           .select('MAX(creators.full_name) AS created_by_user')
                           .select('MAX(archivers.full_name) AS archived_by_user')
+                          .select(shared_sql_select)
                           .group('repositories.id')
 
       view_mode = @params[:view_mode] || 'active'
@@ -47,8 +48,49 @@ module Lists
         archived_on: 'repositories.archived_on',
         archived_by: 'archived_by_user',
         nr_of_rows: 'row_count',
-        code: 'repositories.id'
+        code: 'repositories.id',
+        shared_label: 'shared'
       }
+    end
+
+    def shared_sql_select
+      shared_write_value = Repository.permission_levels['shared_write']
+      not_shared_value = Repository.permission_levels['not_shared']
+      team_id = @user.current_team.id
+
+      case_statement = <<-SQL.squish
+        CASE
+          WHEN repositories.team_id = :team_id AND repositories.permission_level NOT IN (:not_shared_value)
+            OR EXISTS (
+            SELECT 1 FROM team_shared_objects
+            WHERE team_shared_objects.shared_object_id = repositories.id
+              AND team_shared_objects.shared_object_type = 'RepositoryBase'
+            ) THEN 1
+          WHEN repositories.team_id != :team_id AND repositories.permission_level NOT IN (:not_shared_value)
+            OR EXISTS (
+            SELECT 1 FROM team_shared_objects
+            WHERE team_shared_objects.shared_object_id = repositories.id
+              AND team_shared_objects.shared_object_type = 'RepositoryBase'
+              AND team_shared_objects.team_id = :team_id
+          ) THEN
+              CASE
+                WHEN repositories.permission_level IN (:shared_write_value)
+                  OR EXISTS (
+                    SELECT 1 FROM team_shared_objects
+                    WHERE team_shared_objects.shared_object_id = repositories.id
+                      AND team_shared_objects.shared_object_type = 'RepositoryBase'
+                      AND team_shared_objects.permission_level = :shared_write_value
+                      AND team_shared_objects.team_id = :team_id
+                  ) THEN 2
+                ELSE 3
+              END
+          ELSE 4
+        END as shared
+      SQL
+
+      ActiveRecord::Base.sanitize_sql_array(
+        [case_statement, { team_id:, not_shared_value:, shared_write_value: }]
+      )
     end
   end
 end

@@ -18,15 +18,14 @@ module Lists
     end
 
     def shared_label
-      if object.i_shared?(current_user.current_team)
+      case object[:shared]
+      when 1
         I18n.t('libraries.index.shared')
-      elsif object.shared_with?(current_user.current_team)
-        if object.shared_with_read?(current_user.current_team)
-          I18n.t('libraries.index.shared_for_viewing')
-        else
-          I18n.t('libraries.index.shared_for_editing')
-        end
-      else
+      when 2
+        I18n.t('libraries.index.shared_for_editing')
+      when 3
+        I18n.t('libraries.index.shared_for_viewing')
+      when 4
         I18n.t('libraries.index.not_shared')
       end
     end
