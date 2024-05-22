@@ -274,6 +274,7 @@ export default {
       this.reloadingTable = true;
       this.editModalObject = null;
       this.moveModalObject = null;
+      this.updateNavigator(true);
     },
     updateNavigator(withExpanedChildren = false) {
       window.navigatorContainer.reloadNavigator(withExpanedChildren);
