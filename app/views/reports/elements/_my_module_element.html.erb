@@ -51,7 +51,7 @@
     <div class="row">
       <div class="col-xs-12">
         <% if my_module.description.present? %>
-          <%= custom_auto_link(my_module.prepare_for_report(:description),
+          <%= custom_auto_link(my_module.prepare_for_report(:description, export_all: export_all),
                                team: current_team,
                                simple_format: false,
                                base64_encoded_imgs: true) %>

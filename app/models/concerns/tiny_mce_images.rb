@@ -14,7 +14,7 @@ module TinyMceImages
     before_save :clean_tiny_mce_image_urls
     after_create :ensure_extracted_image_object_references
 
-    def prepare_for_report(field)
+    def prepare_for_report(field, export_all: false)
       description = self[field]
 
       # Check tinymce for old format
@@ -29,15 +29,17 @@ module TinyMceImages
         )[0]
         next unless tm_asset_to_update
 
-        tm_asset = tm_asset.image.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT).processed
+        unless export_all
+          tm_asset = tm_asset.image.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT).processed
 
-        width_attr = tm_asset_to_update.attributes['width']
-        height_attr = tm_asset_to_update.attributes['height']
+          width_attr = tm_asset_to_update.attributes['width']
+          height_attr = tm_asset_to_update.attributes['height']
 
-        if width_attr && height_attr && (width_attr.value.to_i >= Constants::LARGE_PIC_FORMAT[0] ||
-                                         height_attr.value.to_i >= Constants::LARGE_PIC_FORMAT[1])
-          width_attr.value = tm_asset.image.blob.metadata['width'].to_s
-          height_attr.value = tm_asset.image.blob.metadata['height'].to_s
+          if width_attr && height_attr && (width_attr.value.to_i >= Constants::LARGE_PIC_FORMAT[0] ||
+                                          height_attr.value.to_i >= Constants::LARGE_PIC_FORMAT[1])
+            width_attr.value = tm_asset.image.blob.metadata['width'].to_s
+            height_attr.value = tm_asset.image.blob.metadata['height'].to_s
+          end
         end
 
         tm_asset_to_update.attributes['src'].value = convert_to_base64(tm_asset.image)
