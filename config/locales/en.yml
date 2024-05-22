@@ -2137,6 +2137,8 @@ en:
       row_name: "Name"
       added_on: "Created on"
       added_by: "Added by"
+      updated_on: "Updated on"
+      updated_by: "Updated by"
       archived_on: "Archived on"
       archived_by: "Archived by"
       relationships: "Relationships"
@@ -2486,6 +2488,8 @@ en:
         added_on: "Added on"
         added_at: "Added at"
         added_by: "Added by"
+        updated_on: 'Updated on'
+        updated_by: 'Updated by'
         archived_on: "Archived on"
         archived_by: "Archived by"
       reminders:

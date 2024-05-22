@@ -53,14 +53,20 @@ function prepareRepositoryHeaderForExport(th) {
     case 'added-on':
       val = -6;
       break;
-    case 'archived-by':
+    case 'updated-on':
       val = -7;
       break;
-    case 'archived-on':
+    case 'updated-by':
       val = -8;
       break;
-    case 'relationship':
+    case 'archived-by':
       val = -9;
+      break;
+    case 'archived-on':
+      val = -10;
+      break;
+    case 'relationship':
+      val = -11;
       break;
     default:
       val = th.attr('id');

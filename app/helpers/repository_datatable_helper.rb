@@ -239,8 +239,10 @@ module RepositoryDatatableHelper
       '4': "#{record.parent_connections_count || 0} / #{record.child_connections_count || 0}",
       '5': I18n.l(record.created_at, format: :full),
       '6': escape_input(record.created_by.full_name),
-      '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-      '8': escape_input(record.archived_by&.full_name)
+      '7': (record.updated_at ? I18n.l(record.updated_at, format: :full) : ''),
+      '8': escape_input(record.last_modified_by.full_name),
+      '9': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '10': escape_input(record.archived_by&.full_name)
     }
   end
 
