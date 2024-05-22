@@ -201,23 +201,27 @@ var zebraPrint = (function() {
           });
         }
 
-        updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_SEARCH, PRINTER_STATUS_SEARCH);
-        device = findDevice(printData.printer_name);
+        if (dataZebra?.responseJSON?.labels?.length && printData.number_of_copies > 0) {
+          updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_SEARCH, PRINTER_STATUS_SEARCH);
+          device = findDevice(printData.printer_name);
 
-        getPrinterStatus(device).then((device) => {
-          if (device.status === I18n.t('label_printers.modal_printing_status.printer_status.ready')) {
-            print(
-              device,
-              progressModal,
-              printData.number_of_copies,
-              printData.printer_name,
-              dataZebra.responseJSON.labels,
-              0,
-            );
-          } else {
-            updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
-          }
-        });
+          getPrinterStatus(device).then((device) => {
+            if (device.status === I18n.t('label_printers.modal_printing_status.printer_status.ready')) {
+              print(
+                device,
+                progressModal,
+                printData.number_of_copies,
+                printData.printer_name,
+                dataZebra.responseJSON.labels,
+                0
+              );
+            } else {
+              updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
+            }
+          });
+        } else {
+          updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
+        }
       }).fail(() => {
         HelperModule.flashAlertMsg(I18n.t('repository_row.modal_print_label.general_error'), 'danger');
       });
