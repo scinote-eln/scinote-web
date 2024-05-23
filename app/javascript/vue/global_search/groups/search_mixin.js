@@ -88,11 +88,13 @@ export default {
     handleScroll() {
       if (this.loading || !this.selected) return;
 
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
-        if (this.results.length < this.total) {
-          this.loadData();
+      this.$nextTick(() => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
+          if (this.results.length < this.total) {
+            this.loadData();
+          }
         }
-      }
+      });
     },
     changeSort(sort) {
       this.sort = sort;
@@ -136,6 +138,8 @@ export default {
             this.disabled = response.data.meta.disabled;
             this.loading = false;
             this.page = response.data.meta.next_page;
+
+            this.handleScroll();
           }
         })
         .finally(() => {
