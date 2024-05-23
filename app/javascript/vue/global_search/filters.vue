@@ -36,7 +36,7 @@
                         :multiple="true"
                         :value="selectedTeams"
                         :placeholder="i18n.t('search.filters.by_team_placeholder')"
-                        @change="(v) => {selectedTeams = v}" />
+                        @change="selectTeams" />
       </template>
       <div class="sci-label mb-2 flex items-center gap-2">
         {{ i18n.t('search.filters.by_user') }}
@@ -52,7 +52,7 @@
                       :with-checkboxes="true"
                       :multiple="true"
                       :placeholder="i18n.t('search.filters.by_user_placeholder')"
-                      @change="(v) => {selectedUsers = v}" />
+                      @change="selectUsers" />
       <div class="flex items-center gap-2">
         <div class="sci-checkbox-container">
           <input type="checkbox" v-model="includeArchived" class="sci-checkbox" />
@@ -177,6 +177,16 @@ export default {
         .then((response) => {
           this.users = response.data.data.map((user) => ([parseInt(user.id, 10), user.attributes.name, { avatar_url: user.attributes.avatar_url }]));
         });
+    },
+    selectTeams(teams) {
+      if (Array.isArray(teams)) {
+        this.selectedTeams = teams;
+      }
+    },
+    selectUsers(users) {
+      if (Array.isArray(users)) {
+        this.selectedUsers = users;
+      }
     },
     clearFilters() {
       this.createdAt = {

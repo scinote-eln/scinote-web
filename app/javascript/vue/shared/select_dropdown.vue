@@ -26,7 +26,7 @@
              ref="search"
              v-else
              v-model="query"
-             :placeholder="label || placeholder || this.i18n.t('general.select_dropdown.placeholder')"
+             :placeholder="placeholderRender"
              class="w-full border-0 outline-none pl-0 placeholder:text-sn-grey" />
       </template>
       <div v-else class="flex items-center gap-1 flex-wrap">
@@ -142,6 +142,13 @@ export default {
   },
   mixins: [FixedFlyoutMixin],
   computed: {
+    placeholderRender() {
+      if (this.searchable && this.labelRenderer && this.label) {
+        return '';
+      }
+
+      return this.label || this.placeholder || this.i18n.t('general.select_dropdown.placeholder');
+    },
     sizeClass() {
       switch (this.size) {
         case 'xs':
@@ -301,8 +308,6 @@ export default {
       });
     },
     setValue(value) {
-      this.query = '';
-
       if (this.multiple) {
         if (this.newValue.includes(value)) {
           this.newValue = this.newValue.filter((v) => v !== value);
@@ -310,7 +315,6 @@ export default {
           this.newValue = [...this.newValue, value];
         }
       } else {
-        this.newValue = value;
         this.$nextTick(() => {
           this.close();
         });
