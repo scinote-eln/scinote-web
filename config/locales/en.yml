@@ -479,7 +479,7 @@ en:
       by_user_placeholder: "Filter by user"
       by_user_info: "The 'Filter by user' option will refine search results based on records where the selected user is the creator, modifier, or is assigned to the entry."
       include_archived: "Include Archived objects"
-      clear: "Clear filters"
+      clear: "Clear"
       date:
         today: "Today"
         yesterday: "Yesterday"
