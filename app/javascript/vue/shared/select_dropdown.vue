@@ -27,6 +27,7 @@
              v-else
              v-model="query"
              :placeholder="placeholderRender"
+             @change.stop
              class="w-full border-0 outline-none pl-0 placeholder:text-sn-grey" />
       </template>
       <div v-else class="flex items-center gap-1 flex-wrap">
@@ -42,6 +43,7 @@
                :placeholder="tags.length > 0 ? '' : (placeholder || this.i18n.t('general.select_dropdown.placeholder'))"
                :style="{ width: searchInputSize }"
                :class="{ 'pl-2': tags.length > 0 }"
+               @change.stop
                class="border-0 outline-none pl-0 py-1 placeholder:text-sn-grey" />
         <div v-else-if="tags.length == 0" class="text-sn-grey truncate">
           {{ placeholder || this.i18n.t('general.select_dropdown.placeholder') }}
