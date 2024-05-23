@@ -49,7 +49,7 @@ export default {
       type: Object,
       required: true
     },
-    e2eValue:{
+    e2eValue: {
       type: String,
       default: ''
     }

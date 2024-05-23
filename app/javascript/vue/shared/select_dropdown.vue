@@ -3,7 +3,7 @@
        @focus="open"
        @keydown="keySelectOptions($event)"
        tabindex="0" class="w-full focus:outline-none"
-       :data-e2e="e2eValue ? e2eValue : null"
+       :data-e2e="e2eValue"
   >
     <div
       ref="field"
@@ -128,7 +128,7 @@ export default {
     clearable: { type: Boolean, default: false },
     tagsView: { type: Boolean, default: false },
     urlParams: { type: Object, default: () => ({}) },
-    e2eValue: { type: String }
+    e2eValue: { type: String, default: '' }
   },
   directives: {
     'click-outside': vOnClickOutside

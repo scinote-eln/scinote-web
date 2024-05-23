@@ -15,7 +15,7 @@
             <div class="mb-6">
               <label class="sci-label" data-e2e="e2e-TX-renameInventoryModal-inputLabel">{{ i18n.t("repositories.index.modal_rename.name") }}</label>
               <div class="sci-input-container-v2" :class="{'error': error}" :data-error="error">
-                <input type="text" v-model="name" 
+                <input type="text" v-model="name"
                        class="sci-input-field"
                        autofocus="true" ref="input"
                        data-e2e="e2e-IF-renameInventoryModal-name"
