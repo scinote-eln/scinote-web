@@ -317,6 +317,7 @@ export default {
           this.newValue = [...this.newValue, value];
         }
       } else {
+        this.newValue = value;
         this.$nextTick(() => {
           this.close();
         });

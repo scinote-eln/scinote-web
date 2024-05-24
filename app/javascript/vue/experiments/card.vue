@@ -20,7 +20,7 @@
         'pointer-events-none !text-sn-grey': !params.urls.show,
         '!text-sn-black': dtComponent.currentViewMode === 'archived'
       }"
-       class="font-bold mb-4 shrink-0 text-sn-blue hover:no-underline line-clamp-2 hover:text-sn-blue h-10">
+       class="font-bold mb-4 shrink-0 text-sn-blue hover:no-underline line-clamp-3 hover:text-sn-blue h-16">
       {{ params.name }}
     </a>
     <div class="flex gap-4 mb-2.5">
