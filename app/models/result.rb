@@ -5,6 +5,9 @@ class Result < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include ViewableModel
+  include Discard::Model
+
+  default_scope -> { kept }
 
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
