@@ -1,21 +1,21 @@
-<div class="api-key-container">
-  <h3 class="title"><%= t("users.registrations.edit.api_key.title") %></h3>
-  <div class="description">
+<div class="mb-8">
+  <h3><%= t("users.registrations.edit.api_key.title") %></h3>
+  <p>
     <%= t("users.registrations.edit.api_key.description") %>
-  </div>
+  </p>
   <% if current_user.api_key %>
     <div class="api-key-display">
-      <%= text_field_tag :api_key, current_user.api_key, class: "api-key-field", disabled: "disabled"  %>
+      <%= text_field_tag :api_key, current_user.api_key, class: "p-3 mb-2 w-full", disabled: "disabled"  %>
       <% if current_user.api_key_expires_at < Time.current %>
-        <p class="api-key-error">
+        <p class="">
           <%= t("users.registrations.edit.api_key.expired") %>
         </p>
       <% end %>
     </div>
   <% end %>
-  <div class="api-key-controls">
+  <div class="flex">
     <% if current_user.api_key %>
-      <%= button_to t("users.registrations.edit.api_key.regenerate"), users_api_key_regenerate_path, class: "btn btn-primary" %>
+      <%= button_to t("users.registrations.edit.api_key.regenerate"), users_api_key_regenerate_path, class: "btn btn-primary mr-2" %>
       <%= button_to t("users.registrations.edit.api_key.revoke"), users_api_key_revoke_path, class: "btn btn-danger" %>
     <% else %>
       <%= button_to t("users.registrations.edit.api_key.generate"), users_api_key_regenerate_path, class: "btn btn-primary" %>

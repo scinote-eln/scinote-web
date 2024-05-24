@@ -146,36 +146,3 @@
     }
   }
 }
-
-.api-key-container {
-  border: $border-default;
-  padding: 1em;
-
-  .title {
-    margin-top: 0;
-  }
-
-  .description {
-    margin-bottom: .5em;
-  }
-
-  .api-key-display {
-    margin: 1em 0;
-  }
-
-  .api-key-field {
-    width: 100%;
-  }
-
-  .api-key-controls {
-    display: flex;
-
-    .btn {
-      margin-right: .5em;
-    }
-  }
-
-  .api-key-error {
-    color: $brand-danger;
-  }
-}
