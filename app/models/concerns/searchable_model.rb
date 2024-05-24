@@ -187,8 +187,8 @@ module SearchableModel
           "#{a} IS NOT NULL AND (((#{a})::text) #{like} :t#{i}) OR "
         elsif defined?(model::PREFIXED_ID_SQL) && a == model::PREFIXED_ID_SQL
           "#{a} IS NOT NULL AND (#{a} #{like} :t#{i}) OR "
-        elsif a == 'asset_text_data.data_vector'
-          "asset_text_data.data_vector @@ plainto_tsquery(:t#{i})) OR"
+        elsif ['asset_text_data.data_vector', 'tables.data_vector'].include?(a)
+          "#{a} @@ plainto_tsquery(:t#{i}) OR "
         else
           "#{a} IS NOT NULL AND ((trim_html_tags(#{a})) #{like} :t#{i}) OR "
         end

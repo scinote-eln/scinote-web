@@ -6,7 +6,7 @@ class Protocol < ApplicationRecord
   include ArchivableModel
   include PrefixedIdModel
   SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description', PREFIXED_ID_SQL, 'steps.name',
-                           'step_texts.name', 'step_texts.text', 'tables.name',
+                           'step_texts.name', 'step_texts.text', 'tables.name', 'tables.data_vector',
                            'checklists.name', 'checklist_items.text', 'comments.message'].freeze
   REPOSITORY_TYPES = %i(in_repository_published_original in_repository_draft in_repository_published_version).freeze
 
@@ -204,8 +204,9 @@ class Protocol < ApplicationRecord
                                        .where(protocol: raw_input)
                                        .where_attributes_like_boolean(['steps.name', 'step_texts.name',
                                                                        'step_texts.text', 'tables.name',
-                                                                       'comments.message', 'checklists.name',
-                                                                       'checklist_items.text'], query)
+                                                                       'tables.data_vector', 'comments.message',
+                                                                       'checklists.name', 'checklist_items.text'],
+                                                                      query)
                                        .select(:protocol_id)))
   end
 
