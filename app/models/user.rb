@@ -629,6 +629,10 @@ class User < ApplicationRecord
       %w(id due_date age results status archived assigned tags comments)
   end
 
+  def api_key_enabled?
+    Rails.configuration.x.core_api_key_enabled
+  end
+
   protected
 
   def confirmation_required?

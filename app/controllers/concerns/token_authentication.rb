@@ -21,6 +21,8 @@ module TokenAuthentication
   end
 
   def authenticate_with_api_key
+    return unless Rails.configuration.x.core_api_key_enabled
+
     @api_key = request.headers['Api-Key']
     return unless @api_key
 
