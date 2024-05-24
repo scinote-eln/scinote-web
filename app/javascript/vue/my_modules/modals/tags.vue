@@ -109,6 +109,7 @@
               </GeneralDropdown>
               <input type="text" v-model="newTag.name"
                      ref="newTagNameInput"
+                     @click="setRandomColor"
                      :placeholder="i18n.t('experiments.canvas.modal_manage_tags.new_tag_name')"
                      class="border-0 focus:outline-none bg-transparent" />
               <i v-if="!creatingTag" class="sn-icon sn-icon-edit opacity-0 group-hover:opacity-50 ml-auto"></i>
@@ -323,6 +324,11 @@ export default {
 
       this.creatingTag = false;
       this.newTag = { name: null, color: null };
+    },
+    setRandomColor() {
+      if (!this.newTag.color) {
+        this.newTag.color = this.tagsColors[Math.floor(Math.random() * this.tagsColors.length)];
+      }
     }
   }
 };
