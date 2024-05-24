@@ -57,22 +57,22 @@ export default {
     return {
       resolvePromise: null,
       rejectPromise: null
-    }
+    };
   },
   methods: {
-    show: function() {
+    show() {
       $(this.$refs.modal).modal('show');
       return new Promise((resolve, reject) => {
-        this.resolvePromise = resolve
-        this.rejectPromise = reject
-      })
+        this.resolvePromise = resolve;
+        this.rejectPromise = reject;
+      });
     },
     confirm() {
-      this.resolvePromise(true)
+      this.resolvePromise(true);
       $(this.$refs.modal).modal('hide');
     },
     cancel() {
-      this.resolvePromise(false)
+      this.resolvePromise(false);
       $(this.$refs.modal).modal('hide');
     }
   }
