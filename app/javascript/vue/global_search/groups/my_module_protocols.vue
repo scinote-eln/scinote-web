@@ -48,7 +48,7 @@ export default {
   mixins: [searchMixin],
   data() {
     return {
-      group: 'module_protocols',
+      group: 'module_protocols'
     };
   }
 };

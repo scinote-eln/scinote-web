@@ -119,7 +119,7 @@ export default {
           close: '',
           cancel: '',
           confirm: ''
-        },
+        }
       },
       exportModal: {
         title: '',
@@ -264,7 +264,7 @@ export default {
         close: 'e2e-BT-deleteInventoryModal-close',
         cancel: 'e2e-BT-deleteInventoryModal-cancel',
         confirm: 'e2e-BT-deleteInventoryModal-delete'
-      },
+      };
       this.deleteModal.title = this.i18n.t('repositories.index.modal_delete.title_html', { name: repository.name });
       this.deleteModal.description = `
         <p data-e2e="e2e-TX-deleteInventoryModal-info">${this.i18n.t('repositories.index.modal_delete.message_html', { name: repository.name })}</p>

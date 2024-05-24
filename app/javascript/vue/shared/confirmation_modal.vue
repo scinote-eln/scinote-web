@@ -17,64 +17,64 @@
     </div>
   </div>
 </template>
- <script>
-  export default {
-    name: 'confirmationModal',
-    props: {
-      title: {
-        type: String,
-        required: true
-      },
-      description: {
-        type: String,
-        required: true
-      },
-      cancelText: {
-        type: String
-      },
-      cancelClass: {
-        type: String,
-        default: 'btn btn-secondary'
-      },
-      confirmText: {
-        type: String
-      },
-      confirmClass: {
-        type: String,
-        default: 'btn btn-primary'
-      },
-      e2eAttributes: {
-        type: Object,
-        default: {}
-      }
+<script>
+export default {
+  name: 'confirmationModal',
+  props: {
+    title: {
+      type: String,
+      required: true
     },
-    mounted() {
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
-        this.resolvePromise(false)
+    description: {
+      type: String,
+      required: true
+    },
+    cancelText: {
+      type: String
+    },
+    cancelClass: {
+      type: String,
+      default: 'btn btn-secondary'
+    },
+    confirmText: {
+      type: String
+    },
+    confirmClass: {
+      type: String,
+      default: 'btn btn-primary'
+    },
+    e2eAttributes: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  mounted() {
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
+      this.resolvePromise(false);
+    });
+  },
+  data() {
+    return {
+      resolvePromise: null,
+      rejectPromise: null
+    }
+  },
+  methods: {
+    show: function() {
+      $(this.$refs.modal).modal('show');
+      return new Promise((resolve, reject) => {
+        this.resolvePromise = resolve
+        this.rejectPromise = reject
       })
     },
-    data() {
-      return {
-        resolvePromise: null,
-        rejectPromise: null
-      }
+    confirm() {
+      this.resolvePromise(true)
+      $(this.$refs.modal).modal('hide');
     },
-    methods: {
-      show: function() {
-        $(this.$refs.modal).modal('show');
-        return new Promise((resolve, reject) => {
-          this.resolvePromise = resolve
-          this.rejectPromise = reject
-        })
-      },
-      confirm() {
-        this.resolvePromise(true)
-        $(this.$refs.modal).modal('hide');
-      },
-      cancel() {
-        this.resolvePromise(false)
-        $(this.$refs.modal).modal('hide');
-      }
+    cancel() {
+      this.resolvePromise(false)
+      $(this.$refs.modal).modal('hide');
     }
   }
+};
 </script>

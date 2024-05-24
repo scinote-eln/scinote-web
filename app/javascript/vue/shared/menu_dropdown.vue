@@ -84,7 +84,7 @@ export default {
   },
   data() {
     return {
-      isOpen: false,
+      isOpen: false
     };
   },
   directives: {

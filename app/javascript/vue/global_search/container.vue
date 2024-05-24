@@ -46,13 +46,13 @@
         </template>
       </GeneralDropdown>
       <div class="flex items-center gap-2.5">
-        <button class="btn btn-secondary btn-sm" 
+        <button class="btn btn-secondary btn-sm"
             :class="{'active': activeGroup == 'ExperimentsComponent'}"
             @click="setActiveGroup('ExperimentsComponent')"
             :data-e2e="'e2e-BT-globalSearch-experiments'">
           {{ i18n.t('search.index.experiments') }}
         </button>
-        <button class="btn btn-secondary btn-sm" 
+        <button class="btn btn-secondary btn-sm"
             :class="{'active': activeGroup == 'MyModulesComponent'}"
             @click="setActiveGroup('MyModulesComponent')"
             :data-e2e="'e2e-BT-globalSearch-tasks'">
