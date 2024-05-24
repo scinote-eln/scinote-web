@@ -35,6 +35,10 @@
         </div>
       </div>
       <%= render partial: 'users/registrations/edit_partials/2fa' %>
+
+      <% if current_user.api_key_enabled? %>
+        <%= render partial: 'users/registrations/edit_partials/api_key' %>
+      <% end %>
    </div>
   </div>
 

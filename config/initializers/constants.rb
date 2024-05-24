@@ -247,6 +247,8 @@ class Constants
   TWO_FACTOR_RECOVERY_CODE_COUNT = 6
   TWO_FACTOR_RECOVERY_CODE_LENGTH = 12
 
+  API_KEY_EXPIRES_IN = 1.year
+
   #=============================================================================
   # Protocol importers
   #=============================================================================

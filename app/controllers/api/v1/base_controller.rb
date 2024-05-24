@@ -106,6 +106,14 @@ module Api
         )
       end
 
+      rescue_from Api::V1::ApiKeyError do |e|
+        render_error(
+          e.message,
+          I18n.t('api.core.invalid_api_key_detail'),
+          :unauthorized
+        )
+      end
+
       before_action :check_include_param, only: %i(index show)
 
       def index
