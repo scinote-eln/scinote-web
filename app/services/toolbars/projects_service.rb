@@ -106,11 +106,16 @@ module Toolbars
       num_of_requests_left = @current_user.exports_left - 1
       team = @items.first.team
 
-      message = "<p>#{I18n.t('projects.export_projects.modal_text_p1_html',
-                 num_projects: num_projects,
-                 team: team.name)}</p>
-                 <p>#{I18n.t('projects.export_projects.modal_text_p2_html')}</p>"
-      unless limit.zero?
+      message = if limit.zero? || num_of_requests_left.positive?
+                  "<p>#{I18n.t('projects.export_projects.modal_text_p1_html',
+                               num_projects: num_projects,
+                               team: team.name)}</p>
+                   <p>#{I18n.t('projects.export_projects.modal_text_p2_html')}</p>"
+                else
+                  "<p>#{I18n.t('repositories.index.modal_export_limit_exceeded.error_p1_html', limit: limit)}</p>
+                   <p>#{I18n.t('repositories.index.modal_export_limit_exceeded.error_p2_html', limit: limit)}</p>"
+                end
+      unless limit.zero? || !num_of_requests_left.positive?
         message += "<p><i>#{I18n.t('projects.export_projects.modal_text_p3_html', limit: limit, num: num_of_requests_left)}</i></p>"
       end
 
@@ -120,6 +125,7 @@ module Toolbars
         label: I18n.t('projects.export_projects.export_button'),
         icon: 'sn-icon sn-icon-export',
         message: message,
+        number_of_request_left: limit.zero? ? 1 : num_of_requests_left,
         path: export_projects_team_path(team),
         number_of_projects: num_projects,
         type: :emit

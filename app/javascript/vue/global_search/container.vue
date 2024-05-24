@@ -57,7 +57,7 @@
         </button>
       </div>
       <button class="btn btn-light btn-sm" @click="filterModalOpened = true">
-        <i class="sn-icon sn-icon-search-options"></i>
+        <i class="sn-icon sn-icon-search-options" :title="i18n.t('search.index.more_search_options')"></i>
         <span class="tw-hidden xl:inline">{{ i18n.t('search.index.more_search_options') }}</span>
         <span
           v-if="activeFilters.length > 0"
@@ -69,12 +69,12 @@
       <template v-if="activeFilters.length > 0">
         <div class="h-4 w-[1px] bg-sn-grey"></div>
         <button class="btn btn-light btn-sm" @click="resetFilters">
-          <i class="sn-icon sn-icon-close"></i>
+          <i class="sn-icon sn-icon-close" :title="i18n.t('search.index.clear_filters')"></i>
           <span class="tw-hidden xl:inline">{{ i18n.t('search.index.clear_filters') }}</span>
         </button>
       </template>
       <button v-if="activeGroup" class="btn btn-light btn-sm" @click="resetGroup">
-        <i class="sn-icon sn-icon-undo"></i>
+        <i class="sn-icon sn-icon-undo" :title="i18n.t('search.index.all_results')"></i>
         <span class="tw-hidden xl:inline">{{ i18n.t('search.index.all_results') }}</span>
       </button>
     </div>
@@ -151,6 +151,10 @@ export default {
     currentTeam: {
       type: Number || String,
       required: true
+    },
+    singleTeam: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -227,7 +231,7 @@ export default {
         to: null
       },
       include_archived: urlParams.get('include_archived') === 'true',
-      teams: urlParams.getAll('teams[]').map((team) => parseInt(team, 10)),
+      teams: (this.singleTeam ? [] : urlParams.getAll('teams[]').map((team) => parseInt(team, 10))),
       users: urlParams.getAll('users[]').map((user) => parseInt(user, 10)),
       group: urlParams.get('group')
     };

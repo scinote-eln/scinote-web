@@ -105,7 +105,7 @@ export default {
   },
   computed: {
     validName() {
-      return this.name.length > 0;
+      return this.name.length > 1;
     },
     formattedTags() {
       return this.allTags.map((tag) => (

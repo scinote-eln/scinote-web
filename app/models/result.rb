@@ -13,7 +13,7 @@ class Result < ApplicationRecord
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
 
   SEARCHABLE_ATTRIBUTES = ['results.name', 'result_texts.name', 'result_texts.text',
-                           'tables.name', 'comments.message'].freeze
+                           'tables.name', 'tables.data_vector', 'comments.message'].freeze
 
   enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
