@@ -1198,6 +1198,7 @@ en:
       title: "Protocol"
       options_dropdown:
         title: "Protocol actions"
+        short_title: "Actions"
         load_from_repo: "Load from templates"
         import: "Import protocol"
         export: "Export protocol"

@@ -1,11 +1,11 @@
 <template>
   <div v-if="protocol.id" class="task-protocol">
-    <div ref="header" class="task-section-header ml-[-1rem] w-[calc(100%_+_2rem)] px-4 bg-sn-white sticky top-0 transition" v-if="!inRepository">
-      <div class="flex items-center grow">
-        <div class="portocol-header-left-part grow">
+    <div ref="header" class="task-section-header flex gap-6 w-full pl-4 bg-sn-white sticky top-0 transition" v-if="!inRepository">
+      <div class="flex items-center ml-[-1rem]">
+        <div class="portocol-header-left-part">
           <template v-if="headerSticked && moduleName">
             <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
-            <div @click="scrollTop" class="task-section-title w-[calc(100%_-_20rem)] min-w-[5rem] cursor-pointer" :title="moduleName">
+            <div @click="scrollTop" class="task-section-title w-full min-w-[5rem] ml-2 cursor-pointer" :title="moduleName">
               <h2 class="truncate leading-6">{{ moduleName }}</h2>
             </div>
           </template>
@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-      <div class="actions-block">
+      <div class="actions-block my-auto">
         <div class="protocol-buttons-group shrink-0 bg-sn-white">
           <a v-if="urls.add_step_url"
              class="btn btn-secondary"
@@ -33,14 +33,20 @@
              @click="addStep(steps.length)"
              tabindex="0">
               <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
-              <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+              <span class="new-task-link-text">{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
           <template v-if="steps.length > 0">
-            <button class="btn btn-secondary" @click="collapseSteps" tabindex="0">
-              {{ i18n.t("protocols.steps.collapse_label") }}
+            <button v-if="!collapsed" class="btn btn-secondary" @click="collapseSteps" tabindex="0">
+              <i class="sn-icon sn-icon-collapse-all"></i>
+              <div class="collapse-all-button-text">
+                {{ i18n.t("protocols.steps.collapse_label") }}
+              </div>
             </button>
-            <button class="btn btn-secondary" @click="expandSteps" tabindex="0">
-              {{ i18n.t("protocols.steps.expand_label") }}
+            <button v-else class="btn btn-secondary" @click="expandSteps" tabindex="0">
+              <i class="sn-icon sn-icon-expand-all"></i>
+              <div class="expand-all-button-text">
+                {{ i18n.t("protocols.steps.expand_label") }}
+              </div>
             </button>
           </template>
           <ProtocolOptions
@@ -49,11 +55,11 @@
             @protocol:delete_steps="deleteSteps"
             :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
           />
-          <button class="btn btn-light icon-btn" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+          <button class="btn btn-secondary icon-btn" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
             <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
           </button>
           <a v-if="steps.length > 0 && urls.reorder_steps_url"
-            class="btn btn-light icon-btn"
+            class="btn btn-secondary icon-btn"
             data-toggle="modal"
             @click="startStepReorder"
             @keyup.enter="startStepReorder"
@@ -151,7 +157,7 @@
                 {{ i18n.t("protocols.steps.expand_label") }}
               </button>
               <a v-if="steps.length > 0 && urls.reorder_steps_url"
-                class="btn btn-light icon-btn"
+                class="btn btn-secondary icon-btn"
                 data-toggle="modal"
                 @click="startStepReorder"
                 @keyup.enter="startStepReorder"
@@ -161,7 +167,7 @@
           </a>
           </div>
           </div>
-          <div class="protocol-steps pb-8">
+          <div class="protocol-steps pb-9">
             <div v-for="(step, index) in steps" :key="step.id" class="step-block">
               <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
                 <i class="sn-icon sn-icon-new-task"></i>
@@ -182,6 +188,7 @@
                 @step:attachemnts:loaded="stepToReload = null"
                 @step:move_attachment="reloadStep"
                 @step:drag_enter="dragEnter"
+                @step:toggleCollapsed="updateStepCollapsedState"
                 :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                 :userSettingsUrl="userSettingsUrl"
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
@@ -279,7 +286,8 @@ export default {
       publishing: false,
       stepToReload: null,
       activeDragStep: null,
-      userSettingsUrl: null
+      userSettingsUrl: null,
+      collapsed: false
     };
   },
   mounted() {
@@ -295,6 +303,7 @@ export default {
       });
       $.get(this.urls.steps_url, (result) => {
         this.steps = result.data;
+        this.expandAllStepsOnMount();
       });
     });
   },
@@ -304,6 +313,41 @@ export default {
     }
   },
   methods: {
+    updateStepCollapsedState({ stepId, collapsed }) {
+      this.steps = this.steps.map((step) => {
+        if (step.id === stepId) {
+          return {
+            ...step,
+            attributes: {
+              ...step.attributes,
+              collapsed
+            }
+          };
+        }
+        return step;
+      });
+      this.checkIfAllCollapsedOrExpanded();
+    },
+    checkIfAllCollapsedOrExpanded() {
+      const allCollapsed = this.steps.every((step) => step.attributes.collapsed);
+      const allExpanded = this.steps.every((step) => !step.attributes.collapsed);
+
+      if (allCollapsed) {
+        this.collapsed = true;
+      } if (allExpanded) {
+        this.collapsed = false;
+      }
+    },
+    expandAllStepsOnMount() {
+      this.collapsed = false;
+      this.steps = this.steps.map((step) => ({
+        ...step,
+        attributes: {
+          ...step.attributes,
+          collapsed: false
+        }
+      }));
+    },
     getHeader() {
       return this.$refs.header;
     },
@@ -311,12 +355,28 @@ export default {
       this.stepToReload = step;
     },
     collapseSteps() {
+      this.collapsed = true;
       $('.step-container .collapse').collapse('hide');
       this.updateStepStateSettings(true);
+      this.steps = this.steps.map((step) => ({
+        ...step,
+        attributes: {
+          ...step.attributes,
+          collapsed: true
+        }
+      }));
     },
     expandSteps() {
+      this.collapsed = false;
       $('.step-container .collapse').collapse('show');
       this.updateStepStateSettings(false);
+      this.steps = this.steps.map((step) => ({
+        ...step,
+        attributes: {
+          ...step.attributes,
+          collapsed: false
+        }
+      }));
     },
     updateStepStateSettings(newState) {
       const updatedData = this.steps.reduce((acc, currentStep) => {

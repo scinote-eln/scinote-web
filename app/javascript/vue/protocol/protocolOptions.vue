@@ -10,7 +10,8 @@
         aria-expanded="true"
         tabindex="0"
       >
-        <span>{{ i18n.t("my_modules.protocol.options_dropdown.title") }}</span>
+        <span class="protocol-actions-full-title">{{ i18n.t("my_modules.protocol.options_dropdown.title") }}</span>
+        <span class="protocol-actions-short-title">{{ i18n.t("my_modules.protocol.options_dropdown.short_title") }}</span>
         <span class="sn-icon sn-icon-down"></span>
       </button>
       <ul

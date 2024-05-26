@@ -242,6 +242,11 @@
       this.loadElements();
     },
     watch: {
+      'step.attributes.collapsed': {
+        handler(newValue) {
+          this.isCollapsed = newValue;
+        }
+      },
       stepToReload() {
         if (this.stepToReload == this.step.id) {
           this.loadElements();
@@ -424,6 +429,7 @@
         };
 
         axios.put(this.userSettingsUrl, { settings: [settings] });
+        this.$emit('step:toggleCollapsed', {stepId: this.step.id, collapsed: this.isCollapsed})
       },
       showDeleteModal() {
         this.confirmingDelete = true;
