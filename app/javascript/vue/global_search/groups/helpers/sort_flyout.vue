@@ -6,6 +6,7 @@
       position="right"
       @dtEvent="changeSort"
       btnIcon="sn-icon sn-icon-sort-down"
+      :e2eSortButton="e2eSortButton"
     ></MenuDropdown>
 </template>
 
@@ -18,6 +19,10 @@ export default {
     sort: {
       type: String,
       default: 'created_desc'
+    },
+    e2eSortButton: {
+      type: String,
+      default: ''
     }
   },
   components: {

@@ -1,5 +1,5 @@
 <template>
-  <div ref="content" class="bg-white rounded" :class="{ 'p-4 mb-4': results.length || loading }">
+  <div ref="content" class="bg-white rounded" :class="{ 'p-4 mb-4': results.length || loading }" :data-e2e="'e2e-CO-globalSearch-reports'">
     <template v-if="total && results.length">
       <div class="flex items-center">
         <h2 class="flex items-center gap-2 mt-0 mb-4">
@@ -7,7 +7,7 @@
           {{ i18n.t('search.index.reports') }}
           <span class="text-base" >[{{ total }}]</span>
         </h2>
-        <SortFlyout v-if="selected" :sort="sort" @changeSort="changeSort"></SortFlyout>
+        <SortFlyout v-if="selected" :sort="sort" @changeSort="changeSort" :e2eSortButton="'e2e-BT-globalSearch-reports-sort'"></SortFlyout>
       </div>
       <div class="grid grid-cols-[auto_110px_auto_auto_auto_auto_auto] items-center">
         <TableHeader :selected="selected" :columnNames="[
@@ -31,7 +31,7 @@
       </div>
       <div v-if="viewAll">
         <hr class="w-full mb-4 mt-0">
-        <button class="btn btn-light" @click="$emit('selectGroup', 'ReportsComponent')">View all</button>
+        <button class="btn btn-light" @click="$emit('selectGroup', 'ReportsComponent')" :data-e2e="'e2e-BT-globalSearch-reports-viewAll'">View all</button>
       </div>
     </template>
     <Loader v-if="loading" :loaderRows="loaderRows" />

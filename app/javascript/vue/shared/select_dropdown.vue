@@ -2,7 +2,8 @@
   <div v-click-outside="close"
        @focus="open"
        @keydown="keySelectOptions($event)"
-       tabindex="0" class="w-full focus:outline-none "
+       tabindex="0" class="w-full focus:outline-none"
+       :data-e2e="e2eValue"
   >
     <div
       ref="field"
@@ -126,7 +127,8 @@ export default {
     searchable: { type: Boolean, default: false },
     clearable: { type: Boolean, default: false },
     tagsView: { type: Boolean, default: false },
-    urlParams: { type: Object, default: () => ({}) }
+    urlParams: { type: Object, default: () => ({}) },
+    e2eValue: { type: String, default: '' }
   },
   directives: {
     'click-outside': vOnClickOutside

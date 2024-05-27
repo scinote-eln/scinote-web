@@ -2,15 +2,15 @@
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <form @submit.prevent="submit">
-        <div class="modal-content !pb-2.5">
+        <div class="modal-content !pb-2.5" data-e2e="e2e-MD-globalSearch-filters">
           <div class="modal-header flex-wrap">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-globalSearch-filters-close">
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 class="modal-title truncate !block" id="edit-project-modal-label">
+            <h4 class="modal-title truncate !block" id="edit-project-modal-label" data-e2e="e2e-TX-globalSearch-filters-title">
               {{ i18n.t('search.filters.title') }}
             </h4>
-            <div class="basis-full">
+            <div class="basis-full" data-e2e="e2e-TX-globalSearch-filters-subtitle">
               {{ i18n.t('search.filters.sub_title') }}
             </div>
           </div>

@@ -3,6 +3,7 @@
     <SelectDropdown class="!w-40"
                     :options="dateOptions"
                     :value="selectedOption"
+                    :data-e2e="`e2e-DD-${e2eValue}`"
                     @change="(v) => {selectedOption = v}" />
     <div class="grow">
       <DateTimePicker
@@ -12,7 +13,8 @@
         size="mb"
         placeholder="Enter date"
         :defaultValue="date.on"
-        :clearable="true"/>
+        :clearable="true"
+        :data-e2e="`e2e-DP-${e2eValue}`"/>
       <DateTimePicker
         v-if="selectedOption === 'custom'"
         @change="setFrom"
@@ -21,7 +23,8 @@
         size="mb"
         placeholder="From date"
         :defaultValue="date.from"
-        :clearable="true"/>
+        :clearable="true"
+        :data-e2e="`e2e-DP-${e2eValue}From`"/>
       <DateTimePicker
         v-if="selectedOption === 'custom'"
         @change="setTo"
@@ -29,7 +32,8 @@
         size="mb"
         placeholder="To date"
         :defaultValue="date.to"
-        :clearable="true"/>
+        :clearable="true"
+        :data-e2e="`e2e-DP-${e2eValue}To`"/>
     </div>
   </div>
 </template>
@@ -44,6 +48,10 @@ export default {
     date: {
       type: Object,
       required: true
+    },
+    e2eValue: {
+      type: String,
+      default: ''
     }
   },
   components: {

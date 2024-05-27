@@ -27,6 +27,7 @@
           type="text"
           name="from"
           v-model="from"
+          :data-e2e="`e2e-IF-invInventoryFilterCO-inputFrom${this.filter.column.id}`"
           :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryStockValue.from_placeholder')"
         />
       </div>
@@ -37,6 +38,7 @@
           type="text"
           name="to"
           v-model="to"
+          :data-e2e="`e2e-IF-invInventoryFilterCO-inputTo${this.filter.column.id}`"
           :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryStockValue.to_placeholder')"
         />
       </div>
@@ -48,7 +50,7 @@
         :selectedValue="this.stock_unit"
         :options="this.prepareUnitOptions()"
         :selectorId="`StockUnitSelector${this.filter.id}`"
-        :data-e2e="`e2e-DD-invInventoryFilterCO-input${this.filter.column.id}`"
+        :data-e2e="`e2e-DD-invInventoryFilterCO-unit${this.filter.column.id}`"
         @dropdown:changed="updateStockUnit"
       />
     </div>
