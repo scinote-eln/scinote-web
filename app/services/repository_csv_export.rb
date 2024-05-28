@@ -20,10 +20,14 @@ module RepositoryCsvExport
       when -6
         csv_header << I18n.t('repositories.table.added_on')
       when -7
-        csv_header << I18n.t('repositories.table.archived_by')
+        csv_header << I18n.t('repositories.table.updated_on')
       when -8
-        csv_header << I18n.t('repositories.table.archived_on')
+        csv_header << I18n.t('repositories.table.updated_by')
       when -9
+        csv_header << I18n.t('repositories.table.archived_by')
+      when -10
+        csv_header << I18n.t('repositories.table.archived_on')
+      when -11
         csv_header << I18n.t('repositories.table.parents')
         csv_header << I18n.t('repositories.table.children')
       else
@@ -50,10 +54,14 @@ module RepositoryCsvExport
             when -6
               csv_row << I18n.l(row.created_at, format: :full)
             when -7
-              csv_row << (row.archived? && row.archived_by.present? ? row.archived_by.full_name : '')
+              csv_row << row.updated_at ? I18n.l(row.updated_at, format: :full) : ''
             when -8
-              csv_row << (row.archived? && row.archived_on.present? ? I18n.l(row.archived_on, format: :full) : '')
+              csv_row << row.last_modified_by.full_name
             when -9
+              csv_row << (row.archived? && row.archived_by.present? ? row.archived_by.full_name : '')
+            when -10
+              csv_row << (row.archived? && row.archived_on.present? ? I18n.l(row.archived_on, format: :full) : '')
+            when -11
               csv_row << row.parent_repository_rows.map(&:code).join(' | ')
               csv_row << row.child_repository_rows.map(&:code).join(' | ')
             else

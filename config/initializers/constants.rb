@@ -360,9 +360,9 @@ class Constants
     'order' => [[3, 'asc']], # Default sorting by 'name' column
     'columns' => [],
     'assigned' => 'assigned',
-    'ColReorder' => [*0..8]
+    'ColReorder' => [*0..10]
   }
-  9.times do |i|
+  11.times do |i|
     REPOSITORY_TABLE_DEFAULT_STATE['columns'] << {
       'visible' => (i < 7 && i != 4), # relationship column is hidden by default
       'searchable' => (i >= 1 && i != 4), # Checkboxes and relationship column is not searchable
@@ -386,6 +386,7 @@ class Constants
   }
 
   REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'] = REPOSITORY_TABLE_DEFAULT_STATE['columns'][0..4]
+  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'][4]['visible'] = true
 
   REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE.freeze
 

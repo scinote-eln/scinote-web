@@ -127,7 +127,7 @@ class RepositoryDatatableService
 
     repository_rows = repository_rows.where(id: advanced_search(repository_rows)) if @params[:advanced_search].present?
 
-    repository_rows.left_outer_joins(:created_by, :archived_by)
+    repository_rows.left_outer_joins(:created_by, :archived_by, :last_modified_by)
                    .select('repository_rows.*')
                    .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
                    .group('repository_rows.id')
