@@ -12,7 +12,8 @@ class RepositorySerializer < ActiveModel::Serializer
   def urls
     {
       parse_sheet: parse_sheet_repository_path(object),
-      import_records: import_records_repository_path(object)
+      import_records: import_records_repository_path(object),
+      export_repository: export_repositories_team_path(object.team, file_type: :csv, repository_ids: object.id),
     }
   end
 end

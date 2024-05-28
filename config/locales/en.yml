@@ -2219,12 +2219,7 @@ en:
           importedFileText: 'Imported file:'
           cancelBtnText: 'Cancel'
           confirmBtnText: 'Confirm'
-          importedIgnoredSection:
-            columnsTo: 'columns to'
-            import: 'import.'
-            columns: 'columns'
-            ignored: 'ignored.'
-
+          importedIgnoredSection: '<b>%{imported}</b> columns to <b>import.</b> <b>%{ignored}</b> columns <b>ignored</b>.'
           computedDropdownOptions:
             name: 'Name'
             RepositoryTextValue: 'Text'
