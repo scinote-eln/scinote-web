@@ -20,7 +20,7 @@
           <div class="mb-4">
             <h5>{{ i18n.t("experiments.canvas.modal_manage_tags.project_tags", { project: this.projectName }) }}</h5>
           </div>
-          <div class="max-h-80 overflow-y-auto" v-click-outside="finishEditMode">
+          <div ref="scrollContainer" class="max-h-80 overflow-y-auto" v-click-outside="finishEditMode">
             <template v-for="tag in sortedAllTags" :key="tag.id">
               <div
                   class="flex items-center gap-3 px-3 py-2.5 group"
@@ -109,7 +109,6 @@
               </GeneralDropdown>
               <input type="text" v-model="newTag.name"
                      ref="newTagNameInput"
-                     @click="setRandomColor"
                      :placeholder="i18n.t('experiments.canvas.modal_manage_tags.new_tag_name')"
                      class="border-0 focus:outline-none bg-transparent" />
               <i v-if="!creatingTag" class="sn-icon sn-icon-edit opacity-0 group-hover:opacity-50 ml-auto"></i>
@@ -204,6 +203,8 @@ export default {
     startEditMode(tag) {
       if (!this.canManage) return;
 
+      const scrollPosition = this.$refs.scrollContainer.scrollTop;
+
       this.finishEditMode();
 
       tag.initialName = tag.attributes.name;
@@ -211,6 +212,7 @@ export default {
       this.tagToUpdate = tag;
       this.$nextTick(() => {
         this.$refs.modal.querySelector('input').focus();
+        this.$refs.scrollContainer.scrollTop = scrollPosition;
       });
     },
     finishEditMode(e, tag = null) {
@@ -317,6 +319,7 @@ export default {
       this.creatingTag = true;
       this.$nextTick(() => {
         this.$refs.newTagNameInput.focus();
+        this.setRandomColor();
       });
     },
     cancelCreating(e) {
