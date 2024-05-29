@@ -1,21 +1,28 @@
 <template>
-  <!-- columns -->
-  <div class="flex flex-row justify-between gap-6">
     <!-- number col -->
-    <div class="w-6 h-10 flex items-center">{{ index + 1 }}</div>
+    <div class="py-1 min-h-12 px-2 flex items-center" :class="{
+      'bg-sn-super-light-blue': selected
+    }">{{ index + 1 }}</div>
 
-    <div class="w-40 h-10 flex items-center truncate" :title="item">{{ item }}</div>
+    <div class="py-1 truncate min-h-12 px-2 flex items-center" :title="item" :class="{
+      'bg-sn-super-light-blue': selected
+    }">{{ item }}</div>
 
-    <i class="sn-icon sn-icon-arrow-right w-6  h-10 flex items-center relative left-5"></i>
+    <div class="py-1 min-h-12 flex items-center justify-center text-sn-grey" :class="{
+      'bg-sn-super-light-blue': selected
+    }">
+      <i class="sn-icon sn-icon-arrow-right text-sn-gray"></i>
+    </div>
 
-    <div class="w-60  min-h-10 flex items-center flex-col gap-2">
+    <div class="py-1 min-h-12 flex items-center flex-col gap-2 px-2" :class="{
+      'bg-sn-super-light-blue': selected
+    }">
 
       <!-- system generated data -->
       <SelectDropdown v-if="systemGeneratedData.includes(item)"
         :disabled="true"
         :placeholder="String(item)"
       ></SelectDropdown>
-
       <SelectDropdown
         v-else
         :options="dropdownOptions"
@@ -43,7 +50,9 @@
       </template>
     </div>
 
-    <div class="w-14  h-10 flex items-center flex justify-center">
+    <div class="py-1 min-h-12 px-2 flex items-center" :class="{
+      'bg-sn-super-light-blue': selected
+    }">
       <!-- import -->
       <i v-if="this.selectedColumnType?.key && this.selectedColumnType?.value === item && !systemGeneratedData.includes(item)"
         class="sn-icon sn-icon-check" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.importedColumnTitle')">
@@ -71,8 +80,9 @@
       <i v-else class="sn-icon sn-icon-close text-sn-sleepy-grey" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.doNotImportColumnTitle')"></i>
     </div>
 
-    <div class="w-56 truncate  h-10 flex items-center" :title="stepProps.exampleData[index]">{{ stepProps.exampleData[index] }}</div>
-  </div>
+    <div class="py-1 min-h-12 px-2 flex items-center" :title="params.import_data.columns[index]" :class="{
+      'bg-sn-super-light-blue': selected
+    }">{{ params.import_data.columns[index] }}</div>
 </template>
 
 <script>
@@ -97,19 +107,17 @@ export default {
       type: String,
       required: true
     },
-    stepProps: {
+    params: {
       type: Object,
       required: true
     },
     autoMapping: {
       type: Boolean,
       required: true
-    }
-  },
-  watch: {
-    newColumn() {
-      this.selectedColumnType.value = this.newColumn;
-      this.$emit('selection:changed', this.selectedColumnType);
+    },
+    selected: {
+      type: Boolean,
+      required: false
     }
   },
   data() {
@@ -135,6 +143,10 @@ export default {
     };
   },
   watch: {
+    newColumn() {
+      this.selectedColumnType.value = this.newColumn;
+      this.$emit('selection:changed', this.selectedColumnType);
+    },
     autoMapping(newVal, oldVal) {
       if (newVal === true) {
         this.autoMap();
@@ -150,7 +162,7 @@ export default {
   },
   methods: {
     autoMap() {
-      Object.entries(this.stepProps.availableFields).forEach(([key, value]) => {
+      Object.entries(this.params.import_data.available_fields).forEach(([key, value]) => {
         if (this.item === value) {
           this.changeSelected(key);
         }
@@ -164,17 +176,11 @@ export default {
       if (e === 'new') {
         value = this.newColumn;
       } else {
-        value = this.stepProps.availableFields[e];
+        value = this.params.import_data.available_fields[e];
       }
       const selectedColumnType = { index: this.index, key: e, value };
       this.selectedColumnType = selectedColumnType;
       this.$emit('selection:changed', selectedColumnType);
-    },
-    handleIsOpen(isOpen) {
-      const tableRows = this.$parent.$refs.tableRowsRef;
-      if (isOpen) {
-        tableRows.style.overflow = 'hidden';
-      } else tableRows.style.overflow = 'auto';
     }
   },
   mounted() {

@@ -89,7 +89,7 @@
 <%= render partial: 'save_repository_filter_modal' %>
 
 <div id="importRepositoryModal" data-behaviour="vue">
-  <import-repository-modal repositoryUrl="<%= repository_path(@repository) %>" />
+  <import-repository-modal repository-url="<%= repository_path(@repository) %>" />
 </div>
 
 <%= javascript_include_tag 'vue_components_action_toolbar' %>
