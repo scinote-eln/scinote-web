@@ -31,28 +31,6 @@ class Checklist < ApplicationRecord
 
   scope :asc, -> { order('checklists.created_at ASC') }
 
-  def self.search(user,
-                  include_archived,
-                  query = nil,
-                  page = 1,
-                  _current_team = nil,
-                  options = {})
-    step_ids = Step.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-                   .pluck(:id)
-
-    new_query = Checklist.distinct
-                         .where(checklists: { step_id: step_ids })
-                         .left_outer_joins(:checklist_items)
-                         .where_attributes_like(['checklists.name', 'checklist_items.text'], query, options)
-
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
-  end
-
   def duplicate(step, user, position = nil)
     ActiveRecord::Base.transaction do
       new_checklist = step.checklists.create!(

@@ -2,7 +2,8 @@
   <div v-click-outside="close"
        @focus="open"
        @keydown="keySelectOptions($event)"
-       tabindex="0" class="w-full focus:outline-none "
+       tabindex="0" class="w-full focus:outline-none"
+       :data-e2e="e2eValue"
   >
     <div
       ref="field"
@@ -26,11 +27,12 @@
              ref="search"
              v-else
              v-model="query"
-             :placeholder="label || placeholder || this.i18n.t('general.select_dropdown.placeholder')"
+             :placeholder="placeholderRender"
+             @change.stop
              class="w-full border-0 outline-none pl-0 placeholder:text-sn-grey" />
       </template>
-      <div v-else class="flex items-center gap-1 flex-wrap max-w-[calc(100%-24px)]">
-        <div v-for="tag in tags" class=" truncate px-2 py-1 rounded-sm bg-sn-super-light-grey flex items-center gap-1">
+      <div v-else class="flex items-center gap-1 flex-wrap">
+        <div v-for="tag in tags" class="px-2 py-1 rounded-sm bg-sn-super-light-grey grid grid-cols-[auto_1fr] items-center gap-1">
           <div class="truncate" v-if="labelRenderer" v-html="tag.label"></div>
           <div class="truncate" v-else>{{ tag.label }}</div>
           <i @click="removeTag(tag.value)" class="sn-icon mini ml-auto sn-icon-close cursor-pointer"></i>
@@ -42,13 +44,14 @@
                :placeholder="tags.length > 0 ? '' : (placeholder || this.i18n.t('general.select_dropdown.placeholder'))"
                :style="{ width: searchInputSize }"
                :class="{ 'pl-2': tags.length > 0 }"
+               @change.stop
                class="border-0 outline-none pl-0 py-1 placeholder:text-sn-grey" />
         <div v-else-if="tags.length == 0" class="text-sn-grey truncate">
           {{ placeholder || this.i18n.t('general.select_dropdown.placeholder') }}
         </div>
       </div>
       <i v-if="canClear" @click="clear" class="sn-icon ml-auto sn-icon-close"></i>
-      <i v-else class="sn-icon ml-auto self-start"
+      <i v-else class="sn-icon ml-auto"
                 :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen, 'text-sn-grey': disabled}"></i>
     </div>
     <template v-if="isOpen">
@@ -71,7 +74,8 @@
               <div
                 @click.stop="setValue(option[0])"
                 ref="options"
-                class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0"
+                :title="option[2]?.tooltip || option[1]"
+                class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0 hover:bg-sn-super-light-grey"
                 :class="[sizeClass, {
                   '!bg-sn-super-light-blue': valueSelected(option[0]) && focusedOption !== i,
                   '!bg-sn-super-light-grey': focusedOption === i ,
@@ -123,7 +127,8 @@ export default {
     searchable: { type: Boolean, default: false },
     clearable: { type: Boolean, default: false },
     tagsView: { type: Boolean, default: false },
-    urlParams: { type: Object, default: () => ({}) }
+    urlParams: { type: Object, default: () => ({}) },
+    e2eValue: { type: String, default: '' }
   },
   directives: {
     'click-outside': vOnClickOutside
@@ -141,6 +146,13 @@ export default {
   },
   mixins: [FixedFlyoutMixin],
   computed: {
+    placeholderRender() {
+      if (this.searchable && this.labelRenderer && this.label) {
+        return '';
+      }
+
+      return this.label || this.placeholder || this.i18n.t('general.select_dropdown.placeholder');
+    },
     sizeClass() {
       switch (this.size) {
         case 'xs':
@@ -178,6 +190,13 @@ export default {
     },
     tags() {
       if (!this.newValue) return [];
+
+      this.selectAllState = 'indeterminate';
+      if (this.newValue.length === 0) {
+        this.selectAllState = 'unchecked';
+      } else if (this.newValue.length === this.rawOptions.length) {
+        this.selectAllState = 'checked';
+      }
 
       return this.newValue.map((value) => {
         const option = this.rawOptions.find((i) => i[0] === value);
@@ -293,8 +312,6 @@ export default {
       });
     },
     setValue(value) {
-      this.query = '';
-
       if (this.multiple) {
         if (this.newValue.includes(value)) {
           this.newValue = this.newValue.filter((v) => v !== value);

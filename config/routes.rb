@@ -217,6 +217,11 @@ Rails.application.routes.draw do
         end
       end
 
+      collection do
+        get :visible_users
+        get :visible_teams
+      end
+
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
@@ -803,6 +808,11 @@ Rails.application.routes.draw do
 
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
+    resource :search, only: [], controller: :search do
+      collection do
+        get :quick
+      end
+    end
 
     # We cannot use 'resources :assets' because assets is a reserved route
     # in Rails (assets pipeline) and causes funky behavior

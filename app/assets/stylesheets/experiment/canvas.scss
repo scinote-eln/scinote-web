@@ -12,6 +12,12 @@
 
   .panel-heading {
     padding: 7px 30px 7px 15px;
+
+    .panel-title {
+      align-items: center;
+      display: flex;
+      height: 100%;
+    }
   }
 
   .panel-body {
@@ -95,6 +101,20 @@
     ul {
       display: grid;
       grid-template-columns: 1fr;
+    }
+  }
+
+  .bootstrap-select .dropdown-toggle:focus {
+    outline: none !important;
+  }
+
+  .filter-option-inner {
+    height: 100%;
+
+    .filter-option-inner-inner {
+      align-items: center;
+      display: flex;
+      height: 100%;
     }
   }
 }

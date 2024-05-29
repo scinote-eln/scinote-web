@@ -14,7 +14,7 @@
   </div>
   <div class="report-element-body">
     <% if step_text.text.present? %>
-      <%= custom_auto_link(step_text.prepare_for_report(:text),
+      <%= custom_auto_link(step_text.prepare_for_report(:text, export_all: export_all),
                            team: current_team,
                            simple_format: false,
                            tags: %w(img),

@@ -7,7 +7,7 @@ module PermissionCheckableModel
     include PermissionExtends
 
     scope :with_granted_permissions, lambda { |user, permissions|
-      left_outer_joins(user_assignments: :user_role)
+      joins(user_assignments: :user_role)
         .where(user_assignments: { user: user })
         .where('user_roles.permissions @> ARRAY[?]::varchar[]', permissions)
     }

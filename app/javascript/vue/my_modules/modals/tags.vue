@@ -20,7 +20,7 @@
           <div class="mb-4">
             <h5>{{ i18n.t("experiments.canvas.modal_manage_tags.project_tags", { project: this.projectName }) }}</h5>
           </div>
-          <div class="max-h-80 overflow-y-auto" v-click-outside="finishEditMode">
+          <div ref="scrollContainer" class="max-h-80 overflow-y-auto" v-click-outside="finishEditMode">
             <template v-for="tag in sortedAllTags" :key="tag.id">
               <div
                   class="flex items-center gap-3 px-3 py-2.5 group"
@@ -37,7 +37,7 @@
                   <label class="sci-checkbox-label"></label>
                 </div>
                 <div v-if="!tag.editing" @click="startEditMode(tag)"
-                     class="h-6 px-1.5 flex items-center max-w-80 truncate text-sn-white rounded"
+                     class="h-6 px-1.5 flex items-center max-w-80 truncate text-sn-white cursor-text rounded"
                      :class="{
                        'cursor-pointer': canManage
                      }"
@@ -64,15 +64,12 @@
                     </template>
                   </GeneralDropdown>
                   <input type="text" :value="tag.attributes.name" class="border-0 grow focus:outline-none bg-transparent" @change="updateTagName($event.target.value, tag)"/>
-                  <i @click.stop="finishEditMode($event, tag)" class="sn-icon sn-icon-check cursor-pointer ml-auto"></i>
+                  <i @click.stop="finishEditMode($event, tag)" class="sn-icon sn-icon-check cursor-pointer ml-auto opacity-50 hover:opacity-100" ></i>
                 </template>
-                <i  v-if="canManage" @click.stop="deleteTag(tag)"
-                   class="tw-hidden sn-icon sn-icon-delete cursor-pointer group-hover:block"
-                   :class="{
-                     'ml-auto': !tag.editing,
-                     '!block': tag.editing
-                   }"
-                ></i>
+                <i v-if="canManage && !tag.editing" @click="startEditMode(tag)"
+                   class="sn-icon sn-icon-edit cursor-pointer ml-auto tw-hidden group-hover:block opacity-50 hover:opacity-100" ></i>
+                <i v-if="canManage" @click.stop="deleteTag(tag)"
+                   class="sn-icon sn-icon-delete cursor-pointer tw-hidden group-hover:block opacity-50 hover:opacity-100"></i>
               </div>
             </template>
           </div>
@@ -80,13 +77,20 @@
             <div class="mb-4 mt-4">
               {{ i18n.t('experiments.canvas.modal_manage_tags.create_new') }}
             </div>
-            <div class="flex gap-2">
+            <div @click="startCreating"
+                 v-click-outside="cancelCreating"
+                 class="flex gap-2 cursor-pointer hover:bg-sn-super-light-grey
+                        rounded px-3 py-2.5 group"
+                 :class="{
+                   '!bg-sn-super-light-blue': creatingTag
+                 }"
+            >
               <GeneralDropdown>
                 <template v-slot:field>
                   <div
                     class="h-6 w-6 border border-solid border-transparent rounded relative flex items-center justify-center text-sn-white"
                     :style="{ backgroundColor: newTag.color }"
-                    :class="{'!border-sn-grey !text-sn-grey': !newTag.color}"
+                    :class="{'!border-sn-grey !text-sn-grey bg-sn-white': !newTag.color}"
                   >
                     a
                   </div>
@@ -104,11 +108,13 @@
                 </template>
               </GeneralDropdown>
               <input type="text" v-model="newTag.name"
+                     ref="newTagNameInput"
                      :placeholder="i18n.t('experiments.canvas.modal_manage_tags.new_tag_name')"
                      class="border-0 focus:outline-none bg-transparent" />
+              <i v-if="!creatingTag" class="sn-icon sn-icon-edit opacity-0 group-hover:opacity-50 ml-auto"></i>
               <i v-if="validNewTag" @click.stop="createTag" class="sn-icon sn-icon-check cursor-pointer ml-auto"></i>
-              <i @click.stop="newTag = { name: null, color: null }"
-                   class="tw-hidden sn-icon sn-icon-delete cursor-pointer "
+              <i @click.stop="cancelCreating"
+                   class="tw-hidden sn-icon sn-icon-close cursor-pointer "
                    :class="{
                      'ml-auto': !validNewTag,
                      '!block': newTag.name || newTag.color
@@ -175,6 +181,7 @@ export default {
       },
       loadingTags: false,
       tagToUpdate: null,
+      creatingTag: false,
       query: ''
     };
   },
@@ -196,12 +203,16 @@ export default {
     startEditMode(tag) {
       if (!this.canManage) return;
 
+      const scrollPosition = this.$refs.scrollContainer.scrollTop;
+
       this.finishEditMode();
 
+      tag.initialName = tag.attributes.name;
       tag.editing = true;
       this.tagToUpdate = tag;
       this.$nextTick(() => {
         this.$refs.modal.querySelector('input').focus();
+        this.$refs.scrollContainer.scrollTop = scrollPosition;
       });
     },
     finishEditMode(e, tag = null) {
@@ -210,6 +221,9 @@ export default {
       const tagToFinish = tag || this.allTags.find((t) => t.editing);
 
       if (tagToFinish) {
+        if (this.tagToUpdate.attributes.name.length === 0) {
+          this.tagToUpdate.attributes.name = this.tagToUpdate.initialName;
+        }
         tagToFinish.editing = false;
         this.updateTag(this.tagToUpdate);
       }
@@ -283,6 +297,7 @@ export default {
       }).then(() => {
         this.newTag = { name: null, color: null };
         this.loadAlltags();
+        this.creatingTag = false;
       });
     },
     async deleteTag(tag) {
@@ -298,6 +313,24 @@ export default {
         });
       } else {
         document.body.style.overflow = 'hidden';
+      }
+    },
+    startCreating() {
+      this.creatingTag = true;
+      this.$nextTick(() => {
+        this.$refs.newTagNameInput.focus();
+        this.setRandomColor();
+      });
+    },
+    cancelCreating(e) {
+      if (e && e.target.closest('.sn-dropdown')) return;
+
+      this.creatingTag = false;
+      this.newTag = { name: null, color: null };
+    },
+    setRandomColor() {
+      if (!this.newTag.color) {
+        this.newTag.color = this.tagsColors[Math.floor(Math.random() * this.tagsColors.length)];
       }
     }
   }

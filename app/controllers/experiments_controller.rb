@@ -116,7 +116,7 @@ class ExperimentsController < ApplicationController
 
       render json: { message: t('experiments.update.success_flash', experiment: @experiment.name) }, status: :ok
     else
-      render json: { message: @experiment.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @experiment.errors }, status: :unprocessable_entity
     end
   end
 
@@ -452,6 +452,9 @@ class ExperimentsController < ApplicationController
     @project = Project.find_by(id: params[:project_id])
 
     render_404 unless @project
+
+    current_team_switch(@project.team) if current_team != @project.team
+
     render_403 unless can_read_project?(@project)
   end
 

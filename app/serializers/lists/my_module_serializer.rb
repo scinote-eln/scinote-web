@@ -61,7 +61,6 @@ module Lists
         assigned_tags: assigned_tags_my_module_my_module_tags_path(object),
         users_list: search_my_module_user_my_module_path(object, my_module_id: object.id),
         experiments_to_move: experiments_to_move_experiment_path(object.experiment),
-        move: move_modules_experiment_path(object.experiment),
         update: my_module_path(object),
         show_access: access_permissions_my_module_path(object),
         provisioning_status: provisioning_status_my_module_url(object)

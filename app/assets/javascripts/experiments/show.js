@@ -23,6 +23,23 @@
         }
       });
     });
+
+    $('#experiment-canvas').on('shown.bs.modal', () => {
+      // disable the submit button by default
+      $('#new-modal-submit-btn').prop('disabled', true);
+
+      // listen for input event on the my_module_name input field
+      $(`${newMyModuleModal} #my_module_name`).on('input', function () {
+        if ($(this).val().trim().length > 1) {
+          // enable the submit button if the input field is populated
+          $('#new-modal-submit-btn').prop('disabled', false);
+        } else {
+          // otherwise, disable it
+          $('#new-modal-submit-btn').prop('disabled', true);
+        }
+      });
+    });
+
     // Modal's submit handler function
     $(experimentWrapper)
       .on('ajax:success', newMyModuleModal, function() {

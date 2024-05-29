@@ -1,15 +1,16 @@
 <template>
   <div class="flex items-center gap-1.5 h-9 mt-0.5">
     <template v-if="params.data.tags.length > 0 || params.data.permissions.manage_tags">
-      <div v-if="params.data.tags.length > 0"
-           class="h-6 px-1.5 flex items-center rounded text-white max-w-[150px]"
-           :style="{'background': params.data.tags[0].color}">
-        <div class="truncate">{{ params.data.tags[0].name }}</div>
-      </div>
-      <GeneralDropdown v-if="params.data.tags.length > 1" >
+      <GeneralDropdown v-if="params.data.tags.length > 0">
         <template v-slot:field>
-          <div class="h-6 min-w-[24px] text-sn-dark-grey flex items-center justify-center rounded-full text-[.625rem]
-                    bg-sn-light-grey border !border-sn-sleepy-grey cursor-pointer">
+          <div
+              class="h-6 px-1.5 inline-flex items-center rounded text-white max-w-[150px]"
+              :style="{'background': params.data.tags[0].color}">
+            <div class="truncate">{{ params.data.tags[0].name }}</div>
+          </div>
+          <div v-if="params.data.tags.length > 1"
+               class="h-6 min-w-[24px] text-sn-dark-grey inline-flex items-center justify-center rounded-full text-[.625rem]
+                      ml-1.5 bg-sn-light-grey border !border-sn-sleepy-grey cursor-pointer">
             <span>+{{ params.data.tags.length - 1 }}</span>
           </div>
         </template>

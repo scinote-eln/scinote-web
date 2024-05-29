@@ -64,24 +64,18 @@ class Experiment < ApplicationRecord
     user,
     include_archived,
     query = nil,
-    page = 1,
     current_team = nil,
     options = {}
   )
-    viewable_projects = Project.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT, current_team)
-                               .pluck(:id)
-    new_query = Experiment.with_granted_permissions(user, ExperimentPermissions::READ)
-                          .where(project: viewable_projects)
-                          .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
+    teams = options[:teams] || current_team || user.teams.select(:id)
 
-    new_query = new_query.active unless include_archived
+    new_query = distinct.with_granted_permissions(user, ExperimentPermissions::READ)
+                        .where(user_assignments: { team: teams })
+                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
+    new_query = new_query.joins(:project).active.where(projects: { archived: false }) unless include_archived
+
+    new_query
   end
 
   def self.viewable_by_user(user, teams)

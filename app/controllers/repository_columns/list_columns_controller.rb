@@ -37,7 +37,7 @@ module RepositoryColumns
                           else
                             @repository_column.repository_list_items
                                               .where('data ILIKE ?', "%#{search_params[:query]}%")
-                                              .limit(Constants::SEARCH_LIMIT)
+                                              .order(data: :asc)
                                               .select(:id, :data)
                           end
 

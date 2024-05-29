@@ -1,9 +1,5 @@
 <template>
   <div class="sci--navigation--top-menu-container">
-    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}" :title="i18n.t('nav.search')">
-      <input type="text" :placeholder="i18n.t('nav.search')" @change="searchValue" :data-e2e="'e2e-IF-topMenu-search'"/>
-      <i class="sn-icon sn-icon-search"></i>
-    </div>
     <div v-if="currentTeam" class="w-64" :data-e2e="'e2e-DD-topMenu-teams'">
       <SelectDropdown
         :value="currentTeam"
@@ -11,6 +7,16 @@
         @change="switchTeam"
       ></SelectDropdown>
     </div>
+    <QuickSearch
+      v-if="user"
+      :key="globalSearchKey"
+      :class="{'hidden': hideSearch}"
+      :quickSearchUrl="quickSearchUrl"
+      :searchUrl="searchUrl"
+      :currentTeam="currentTeam"
+      :teamsUrl="teamsUrl"
+      :usersUrl="usersUrl"
+    ></QuickSearch>
     <MenuDropdown
       class="ml-auto"
       v-if="settingsMenu && settingsMenu.length > 0"
@@ -71,6 +77,7 @@ import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
 import SelectDropdown from '../shared/select_dropdown.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
+import QuickSearch from './quick_search.vue';
 
 export default {
   name: 'TopMenuContainer',
@@ -79,12 +86,16 @@ export default {
     NotificationsFlyout,
     SelectDropdown,
     MenuDropdown,
-    GeneralDropdown
+    GeneralDropdown,
+    QuickSearch
   },
   props: {
     url: String,
     notificationsUrl: String,
-    unseenNotificationsUrl: String
+    unseenNotificationsUrl: String,
+    quickSearchUrl: String,
+    teamsUrl: String,
+    usersUrl: String
   },
   data() {
     return {
@@ -97,7 +108,9 @@ export default {
       helpMenu: null,
       settingsMenu: null,
       userMenu: null,
-      unseenNotificationsCount: 0
+      unseenNotificationsCount: 0,
+      hideSearch: false,
+      globalSearchKey: 0
     };
   },
   created() {
@@ -108,10 +121,15 @@ export default {
       this.notificationsOpened = false;
       this.checkUnseenNotifications();
       this.refreshCurrentTeam();
+      this.hideSearch = !!document.getElementById('GlobalSearch');
+      this.globalSearchKey += 1;
     });
 
     // Track name update in user profile settings
     $(document).on('inlineEditing::updated', '.inline-editing-container[data-field-to-update="full_name"]', this.fetchData);
+  },
+  mounted() {
+    this.hideSearch = !!document.getElementById('GlobalSearch');
   },
   beforeUnmount() {
     clearTimeout(this.unseenNotificationsTimeout);

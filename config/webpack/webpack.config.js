@@ -39,6 +39,7 @@ const entryList = {
   vue_navigation_top_menu: './app/javascript/packs/vue/navigation/top_menu.js',
   vue_navigation_navigator: './app/javascript/packs/vue/navigation/navigator.js',
   vue_components_repository_item_sidebar: './app/javascript/packs/vue/repository_item_sidebar.js',
+  vue_components_repository_item_error_sidebar: './app/javascript/packs/vue/repository_item_error_sidebar.js',
   vue_components_action_toolbar: './app/javascript/packs/vue/action_toolbar.js',
   vue_components_open_vector_editor: './app/javascript/packs/vue/open_vector_editor.js',
   vue_navigation_breadcrumbs: './app/javascript/packs/vue/navigation/breadcrumbs.js',
@@ -59,9 +60,10 @@ const entryList = {
   vue_open_locally_menu: './app/javascript/packs/vue/open_locally_menu.js',
   vue_scinote_edit_download: './app/javascript/packs/vue/scinote_edit_download.js',
   vue_design_system_modals: './app/javascript/packs/vue/design_system/modals.js',
+  vue_global_search: './app/javascript/packs/vue/global_search.js',
   vue_legacy_tags_modal: './app/javascript/packs/vue/legacy/tags_modal.js',
   vue_legacy_access_modal: './app/javascript/packs/vue/legacy/access_modal.js',
-  vue_legacy_repository_menu_dropdown: './app/javascript/packs/vue/legacy/repository_menu_dropdown.js'
+  vue_legacy_repository_menu_dropdown: './app/javascript/packs/vue/legacy/repository_menu_dropdown.js',
 };
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

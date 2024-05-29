@@ -3,6 +3,7 @@
 class ProjectFolder < ApplicationRecord
   ID_PREFIX = 'PF'
   include PrefixedIdModel
+  SEARCHABLE_ATTRIBUTES = ['project_folders.name', PREFIXED_ID_SQL].freeze
 
   include ArchivableModel
   include SearchableModel
@@ -33,21 +34,20 @@ class ProjectFolder < ApplicationRecord
 
   scope :top_level, -> { where(parent_folder: nil) }
 
-  def self.search(user, _include_archived, query = nil, page = 1, current_team = nil, options = {})
-    new_query = if current_team
-                  current_team.project_folders.where_attributes_like(:name, query, options)
-                else
-                  distinct.joins(team: :users)
-                          .where(teams: { user_assignments: { user: user } })
-                          .where_attributes_like('project_folders.name', query, options)
-                end
+  def self.viewable_by_user(user, teams)
+    joins(team: :users)
+      .where(teams: { user_assignments: { user: user } })
+      .where(team: teams)
+  end
 
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
+  def self.search(user, include_archived, query = nil, current_team = nil, options = {})
+    teams = options[:teams] || current_team || user.teams.select(:id)
+
+    new_query = distinct.viewable_by_user(user, teams)
+                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+    new_query = new_query.active unless include_archived
+
+    new_query
   end
 
   def self.inner_folders(team, project_folder = nil)

@@ -274,6 +274,7 @@ export default {
       this.reloadingTable = true;
       this.editModalObject = null;
       this.moveModalObject = null;
+      this.updateNavigator(true);
     },
     updateNavigator(withExpanedChildren = false) {
       window.navigatorContainer.reloadNavigator(withExpanedChildren);
@@ -302,12 +303,14 @@ export default {
     edit(_e, rows) {
       [this.editModalObject] = rows;
     },
-    move(_e, rows) {
+    move(event, rows) {
       [this.moveModalObject] = rows;
+      this.moveModalObject.movePath = event.path;
     },
     duplicate(event, rows) {
       axios.post(event.path, { my_module_ids: rows.map((row) => row.id) }).then(() => {
         this.reloadingTable = true;
+        this.updateNavigator(true);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
