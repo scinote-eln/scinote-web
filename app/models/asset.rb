@@ -35,7 +35,7 @@ class Asset < ApplicationRecord
   has_one :result_asset, inverse_of: :asset, dependent: :destroy
   has_one :result, through: :result_asset, touch: true
   has_one :repository_asset_value, inverse_of: :asset, dependent: :destroy
-  has_one :repository_cell, through: :repository_asset_value
+  has_one :repository_cell, through: :repository_asset_value, touch: true
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
   has_many :asset_sync_tokens, dependent: :destroy
