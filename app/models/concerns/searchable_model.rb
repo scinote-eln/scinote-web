@@ -108,8 +108,6 @@ module SearchableModel
 
       extract_phrases(query).each_with_index do |phrase, index|
         if options[:with_subquery]
-          phrase[:query] = "\"#{phrase[:query]}\"" if phrase[:exact_match]
-
           subquery_result = if phrase[:negate]
                               options[:raw_input].where.not(id: search_subquery(phrase[:query], options[:raw_input]))
                             else
@@ -124,8 +122,8 @@ module SearchableModel
                           end
         else
           phrase[:current_operator] = '' if index.zero?
-          create_query_clause(normalized_attrs, index, phrase[:negate], query_clauses, value_hash,
-                              phrase[:query], phrase[:exact_match], phrase[:current_operator])
+          create_query_clause(normalized_attrs, index, phrase[:negate], query_clauses,
+                              value_hash, phrase[:query], phrase[:current_operator])
         end
       end
 
@@ -155,8 +153,7 @@ module SearchableModel
       current_operator = ''
 
       query.scan(/"[^"]+"|\S+/) do |phrase|
-        phrase = Regexp.escape(phrase).gsub('\ ', ' ')
-        phrase = sanitize_sql_like(phrase.strip)
+        phrase = phrase.to_s.strip
 
         case phrase.downcase
         when *%w(and or)
@@ -164,11 +161,8 @@ module SearchableModel
         when 'not'
           negate = true
         else
-          exact_match = phrase =~ /^".*"$/
-          phrase = phrase[1..-2] if exact_match
           extracted_phrases << { query: phrase,
                                  negate: negate,
-                                 exact_match: exact_match,
                                  current_operator: current_operator.presence || 'and' }
           current_operator = ''
           negate = false
@@ -178,9 +172,12 @@ module SearchableModel
       extracted_phrases
     end
 
-    def self.create_query_clause(attrs, index, negate, query_clauses, value_hash, phrase, exact_match, current_operator)
+    def self.create_query_clause(attrs, index, negate, query_clauses, value_hash, phrase, current_operator)
+      phrase = sanitize_sql_like(phrase)
+      phrase = Regexp.escape(phrase)
+      exact_match = phrase =~ /^".*"$/
       like = exact_match ? '~' : 'ILIKE'
-      phrase = exact_match ? "\\m#{phrase}\\M" : "%#{phrase}%"
+      phrase = exact_match ? "(^|\\s)#{phrase[1..-2]}(\\s|$)" : "%#{phrase}%"
 
       where_clause = (attrs.map.with_index do |a, i|
         i = (index * attrs.count) + i
