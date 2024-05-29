@@ -7,7 +7,7 @@ class RepositoryChecklistValue < ApplicationRecord
                           inverse_of: :created_repository_checklist_values
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User',
                                 inverse_of: :modified_repository_checklist_values
-  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value
+  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value, touch: true
   has_many :repository_checklist_items_values, dependent: :destroy
   has_many :repository_checklist_items, -> { order('data ASC') },
            through: :repository_checklist_items_values,
