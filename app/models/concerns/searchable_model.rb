@@ -155,7 +155,7 @@ module SearchableModel
       current_operator = ''
 
       query.scan(/"[^"]+"|\S+/) do |phrase|
-        phrase = Regexp.escape(phrase)
+        phrase = Regexp.escape(phrase).gsub('\ ', ' ')
         phrase = sanitize_sql_like(phrase.strip)
 
         case phrase.downcase
