@@ -852,6 +852,9 @@ Rails.application.routes.draw do
       post 'users/2fa_enable' => 'users/registrations#two_factor_enable'
       post 'users/2fa_disable' => 'users/registrations#two_factor_disable'
       get 'users/2fa_qr_code' => 'users/registrations#two_factor_qr_code'
+
+      post 'users/api_key_regenerate' => 'users/registrations#regenerate_api_key'
+      post 'users/api_key_revoke' => 'users/registrations#revoke_api_key'
     end
 
     namespace :api, defaults: { format: 'json' } do
