@@ -591,15 +591,12 @@ en:
       edit_image_on_inventory_item: "Inventory item image edited"
       edit_wopi_file_on_inventory_item: "Inventory item wopi file edited"
       export_inventory_stock_consumption: "Inventory stock consumptions exported"
-<<<<<<< HEAD
       task_step_asset_renamed: "File attachment on Task step renamed"
       protocol_step_asset_renamed: "File attachment on Protocol step renamed"
       result_asset_renamed: "File attachment on Task result renamed"
-=======
       task_step_file_duplicated: "File attachment on Task step duplicated"
       result_file_duplicated: "File attachment on Task result duplicated"
       protocol_step_file_duplicated: "File attachment on Protocol step duplicated"
->>>>>>> ea4c356e1 (Add file duplicate activities [SCI-10257])
     activity_group:
       projects: "Projects"
       task_results: "Task results"
