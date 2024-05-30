@@ -10,7 +10,8 @@ class RepositoryDatatableService
   include MyModulesHelper
   attr_reader :repository_rows, :all_count, :mappings
 
-  PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned relationships).freeze
+  PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by
+                          assigned relationships updated_on updated_by).freeze
 
   def initialize(repository, params, user, my_module = nil)
     @repository = repository
@@ -160,6 +161,10 @@ class RepositoryDatatableService
       build_added_on_filter_condition(repository_rows, filter_element_params)
     when 'added_by'
       build_added_by_filter_condition(repository_rows, filter_element_params)
+    when 'updated_on'
+      build_updated_on_filter_condition(repository_rows, filter_element_params)
+    when 'updated_by'
+      build_updated_by_filter_condition(repository_rows, filter_element_params)
     when 'archived_by'
       build_archived_by_filter_condition(repository_rows, filter_element_params)
     when 'archived_on'
@@ -356,6 +361,77 @@ class RepositoryDatatableService
     end
   end
 
+  def build_updated_on_filter_condition(repository_rows, filter_element_params)
+    case filter_element_params[:operator]
+    when 'today'
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") >= ? AND " \
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") < ?",
+        Time.zone.now.beginning_of_day,
+        Time.zone.now.end_of_day
+      )
+    when 'yesterday'
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") < ?",
+        Time.zone.now.beginning_of_day - 1.day, Time.zone.now.beginning_of_day
+      )
+    when 'last_week'
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") < ?",
+        Time.zone.now.beginning_of_week - 1.week, Time.zone.now.beginning_of_week
+      )
+    when 'this_month'
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") <= ?",
+        Time.zone.now.beginning_of_month,
+        Time.zone.now.end_of_month
+      )
+    when 'last_year'
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") < ?",
+        Time.zone.now.beginning_of_year - 1.year, Time.zone.now.beginning_of_year
+      )
+    when 'this_year'
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") >= ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") <= ?",
+        Time.zone.now.beginning_of_year,
+        Time.zone.now.end_of_year
+      )
+    when 'equal_to'
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"updated_at\") = ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
+    when 'unequal_to'
+      repository_rows.where.not("date_trunc('minute', \"repository_rows\".\"updated_at\") = ?",
+                                Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
+    when 'greater_than'
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"updated_at\") > ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
+    when 'greater_than_or_equal_to'
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"updated_at\") >= ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
+    when 'less_than'
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"updated_at\") < ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
+    when 'less_than_or_equal_to'
+      repository_rows.where("date_trunc('minute', \"repository_rows\".\"updated_at\") <= ?",
+                            Time.zone.parse(filter_element_params.dig(:parameters, :datetime)))
+    when 'between'
+      repository_rows.where(
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") > ? AND "\
+        "date_trunc('minute', \"repository_rows\".\"updated_at\") < ?",
+        Time.zone.parse(filter_element_params.dig(:parameters, :start_datetime)),
+        Time.zone.parse(filter_element_params.dig(:parameters, :end_datetime))
+      )
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryRow Updated on!'
+    end
+  end
+
   def build_added_by_filter_condition(repository_rows, filter_element_params)
     case filter_element_params[:operator]
     when 'any_of'
@@ -381,6 +457,19 @@ class RepositoryDatatableService
                      .where.not(archived_by: { id: filter_element_params.dig(:parameters, :user_ids) })
     else
       raise ArgumentError, 'Wrong operator for RepositoryRow Archived By!'
+    end
+  end
+
+  def build_updated_by_filter_condition(repository_rows, filter_element_params)
+    case filter_element_params[:operator]
+    when 'any_of'
+      repository_rows.joins(:last_modified_by)
+                     .where(last_modified_by: { id: filter_element_params.dig(:parameters, :user_ids) })
+    when 'none_of'
+      repository_rows.joins(:last_modified_by)
+                     .where.not(last_modified_by: { id: filter_element_params.dig(:parameters, :user_ids) })
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryRow Updated By!'
     end
   end
 
