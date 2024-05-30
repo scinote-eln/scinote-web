@@ -976,7 +976,7 @@ function bindEditTagsAjax(elements) {
   $(elements).find("a.edit-tags-link")
   .on('click', function(){
     $(this).addClass('updated-module-tags');
-    var modal = $(this).closest(".panel-default").find('.tags-modal-component').data('tagsModal').open();
+    var modal = $('#tagsModalComponent');
   });
 }
 

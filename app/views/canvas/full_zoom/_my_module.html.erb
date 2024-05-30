@@ -10,7 +10,8 @@
   data-module-y="<%= my_module.y %>"
   data-module-conns="<%= construct_module_connections(my_module) %>"
   data-module-users-tab-url="<%=  designated_users_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>"
-  data-module-tags-url="<%= my_module_tags_experiment_path(my_module.experiment, format: :json) %>">
+  data-module-tags-url="<%= my_module_tags_experiment_path(my_module.experiment, format: :json) %>"
+  data-module-url="<%= my_module_path(my_module, format: :json) %>">
 
   <div data-view-mode="active">
     <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
@@ -114,7 +115,4 @@
       <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_comments" data-contents="comments"></div>
     </div>
   </div>
-
-  <%= render partial: 'canvas/full_zoom/tags_modal', locals: { my_module: my_module }%>
 </div>
-
