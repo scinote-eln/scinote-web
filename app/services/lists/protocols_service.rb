@@ -10,14 +10,14 @@ module Lists
       original_without_versions = @raw_data
                                   .where.missing(:published_versions)
                                   .in_repository_published_original
-                                  .select(:id)
+                                  .select('protocols.id')
       published_versions = @raw_data
                            .in_repository_published_version
                            .order(:parent_id, version_number: :desc)
-                           .select('DISTINCT ON (parent_id) id')
+                           .select('DISTINCT ON (protocols.parent_id) protocols.id')
       new_drafts = @raw_data
                    .where(protocol_type: Protocol.protocol_types[:in_repository_draft], parent_id: nil)
-                   .select(:id)
+                   .select('protocols.id')
 
       @records = Protocol.where('protocols.id IN (?) OR protocols.id IN (?) OR protocols.id IN (?)',
                                 original_without_versions, published_versions, new_drafts)
