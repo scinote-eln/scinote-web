@@ -1,6 +1,6 @@
 <template>
   <div class="relative" v-if="listItems.length > 0 || alwaysShow" v-click-outside="closeMenu" >
-    <button ref="field" :class="btnClasses" :title="title" @click="isOpen = !isOpen" :data-e2e="e2eSortButton">
+    <button ref="field" :class="btnClasses" :title="title" @click="isOpen = !isOpen" :data-e2e="e2eButton">
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}
       <i v-if="caret && isOpen" class="sn-icon sn-icon-up"></i>
@@ -80,7 +80,7 @@ export default {
     caret: { type: Boolean, default: false },
     alwaysShow: { type: Boolean, default: false },
     title: { type: String, default: '' },
-    e2eSortButton: { type: String, default: '' }
+    e2eButton: { type: String, default: '' }
   },
   data() {
     return {

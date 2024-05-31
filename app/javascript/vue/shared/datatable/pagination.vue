@@ -1,7 +1,7 @@
 <template>
   <div v-if="pages.length > 1" class="flex gap-3 select-none">
     <div class="w-9 h-9">
-      <div class="w-9 h-9 cursor-pointer flex items-center justify-center"
+      <div class="w-9 h-9 cursor-pointer flex items-center justify-center" data-e2e="e2e-BT-tableInfo-left"
            @click="$emit('setPage', currentPage - 1)"
            v-if="currentPage > 1">
         <i class="sn-icon sn-icon-left cursor-pointer"></i>
@@ -11,11 +11,12 @@
          v-for="page in pages"
          :class="{ 'border-solid rounded border-sn-science-blue': page === currentPage }"
          :key="page"
+         :data-e2e="`e2e-BT-tableInfo-page-${page}`"
          @click="$emit('setPage', page)">
       <span >{{ page }}</span>
     </div>
     <div class="w-9 h-9">
-      <div class="w-9 h-9 cursor-pointer flex items-center justify-center"
+      <div class="w-9 h-9 cursor-pointer flex items-center justify-center" data-e2e="e2e-BT-tableInfo-right"
            @click="$emit('setPage', currentPage + 1)"
            v-if="totalPage > currentPage">
         <i class="sn-icon sn-icon-right cursor-pointer"></i>
@@ -30,12 +31,12 @@ export default {
   props: {
     totalPage: {
       type: Number,
-      required: true,
+      required: true
     },
     currentPage: {
       type: Number,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     pages() {
@@ -50,7 +51,7 @@ export default {
         }
       }
       return pages;
-    },
-  },
+    }
+  }
 };
 </script>
