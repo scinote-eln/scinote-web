@@ -154,6 +154,14 @@ class MyModule < ApplicationRecord
     experiment
   end
 
+  def results_count(view_mode = 'active')
+    return results.size if archived_branch?
+
+    return results.archived.size if view_mode == 'archived'
+
+    results.active.size
+  end
+
   def navigable?
     !experiment.archived? && experiment.navigable?
   end

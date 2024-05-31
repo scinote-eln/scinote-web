@@ -124,6 +124,7 @@
                       :attachmentsReady="attachmentsReady"
                       @attachments:openFileModal="showFileModal = true"
                       @attachment:deleted="attachmentDeleted"
+                      @attachment:update="updateAttachment"
                       @attachment:uploaded="loadAttachments"
                       @attachment:moved="moveAttachment"
                       @attachments:order="changeAttachmentsOrder"
@@ -428,6 +429,12 @@ export default {
     attachmentDeleted(id) {
       this.attachments = this.attachments.filter((a) => a.id !== id);
       this.$emit('resultUpdated');
+    },
+    updateAttachment(attachment) {
+      const index = this.attachments.findIndex((a) => a.id === attachment.id);
+      if (index !== -1) {
+        this.attachments[index] = attachment;
+      }
     },
     createElement(elementType, tableDimensions = [5, 5], plateTemplate = false) {
       $.post(this.urls[`create_${elementType}_url`], { tableDimensions, plateTemplate }, (result) => {

@@ -45,6 +45,19 @@ class MarvinJsService
       asset
     end
 
+    def update_file_name(new_name, asset_id, current_user, current_team)
+      asset = current_team.assets.find(asset_id)
+      prepared_name = prepare_name(new_name)
+
+      ActiveRecord::Base.transaction do
+        asset.last_modified_by = current_user
+        asset.rename_file(prepared_name)
+        asset.save!
+      end
+
+      asset
+    end
+
     private
 
     def connect_asset(asset, params, current_user)
