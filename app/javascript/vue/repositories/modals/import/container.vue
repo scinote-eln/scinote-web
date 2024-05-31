@@ -6,20 +6,31 @@
     :uploading="uploading"
     @uploadFile="uploadFile"
     @generatePreview="generatePreview"
+    @changeStep="changeStep"
+    @importRows="importRecords"
   />
   </div>
 </template>
 
 <script>
 /* global HelperModule */
+
 import axios from '../../../../packs/custom_axios';
 import InfoModal from '../../../shared/info_modal.vue';
 import UploadStep from './upload_step.vue';
 import MappingStep from './mapping_step.vue';
+import PreviewStep from './preview_step.vue';
+import SuccessStep from './success_step.vue';
 
 export default {
   name: 'ImportRepositoryModal',
-  components: { InfoModal, UploadStep, MappingStep },
+  components: {
+    InfoModal,
+    UploadStep,
+    MappingStep,
+    PreviewStep,
+    SuccessStep
+  },
   props: {
     repositoryUrl: String,
     required: true
@@ -70,8 +81,10 @@ export default {
       this.params.onlyAddNewItems = onlyAddNewItems;
       this.importRecords(true);
     },
-
-    importRecords(preview = false) {
+    changeStep(step) {
+      this.activeStep = step;
+    },
+    importRecords(preview) {
       const jsonData = {
         file_id: this.params.temp_file.id,
         mappings: this.params.mapping,
@@ -80,7 +93,16 @@ export default {
         should_overwrite_with_empty_cells: this.params.updateWithEmptyCells,
         can_edit_existing_items: !this.params.onlyAddNewItems
       };
-      axios.post(this.params.attributes.urls.import_records, jsonData);
+      axios.post(this.params.attributes.urls.import_records, jsonData)
+        .then((response) => {
+          if (preview) {
+            this.params.preview = response.data.changes;
+            this.params.import_date = response.data.import_date;
+            this.activeStep = 'PreviewStep';
+          } else {
+            this.activeStep = 'SuccessStep';
+          }
+        });
     }
   }
 };

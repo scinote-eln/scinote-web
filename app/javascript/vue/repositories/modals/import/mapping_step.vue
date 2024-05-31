@@ -52,7 +52,6 @@
                 :params="params"
                 :selected="this.selectedItemsIndexes.includes(index)"
                 @selection:changed="handleChange"
-                :availableFields="this.availableFields"
                 :autoMapping="this.autoMapping"
               />
             </template>
@@ -94,7 +93,7 @@ import modalMixin from '../../../shared/modal_mixin';
 
 export default {
   name: 'MappingStep',
-  emits: ['step:next'],
+  emits: ['close', 'generatePreview'],
   mixins: [modalMixin],
   components: {
     SelectDropdown,
@@ -104,7 +103,7 @@ export default {
     params: {
       type: Object,
       required: true
-    },
+    }
   },
   data() {
     return {

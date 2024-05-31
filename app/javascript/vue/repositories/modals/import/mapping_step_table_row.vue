@@ -27,7 +27,6 @@
         v-else
         :options="dropdownOptions"
         @change="changeSelected"
-        @isOpen="handleIsOpen"
         :clearable="true"
         :size="'sm'"
         :placeholder="computeMatchNotFound ?
