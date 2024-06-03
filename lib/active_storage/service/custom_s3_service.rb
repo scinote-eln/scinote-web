@@ -8,11 +8,12 @@ module ActiveStorage
     STAGING_TAG_KEY = 'State'
     STAGING_TAG_VALUE = 'Staging'
 
-    attr_reader :subfolder, :staging_bucket
+    attr_reader :subfolder, :staging_bucket, :use_sha256_checksums
 
     def initialize(bucket:, upload: {}, public: false, **options)
       @subfolder = options.delete(:subfolder)
       staging_bucket = options.delete(:staging_bucket)
+      @use_sha256_checksums = options.delete(:use_sha256_checksums)
       super
       @staging_bucket = @client.bucket(staging_bucket) if staging_bucket.present?
     end
@@ -33,16 +34,32 @@ module ActiveStorage
 
     def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:, custom_metadata: {})
       instrument :url, key: do |payload|
-        generated_url =
-          object_for_upload(key).presigned_url(:put, expires_in: expires_in.to_i,
-                                               content_type:, content_length:, content_md5: checksum,
-                                               metadata: custom_metadata, whitelist_headers: %w(content-length),
-                                               **upload_options)
+        checksum_params =
+          if use_sha256_checksums
+            { checksum_sha256: checksum }
+          else
+            { content_md5: checksum }
+          end
+        generated_url, _headers =
+          object_for_upload(key).presigned_request(:put, expires_in: expires_in.to_i,
+                                                   content_type:, content_length:, **checksum_params,
+                                                   metadata: custom_metadata, whitelist_headers: %w(content-length),
+                                                   **upload_options)
 
         payload[:url] = generated_url
 
         generated_url
       end
+    end
+
+    def headers_for_direct_upload(key, content_type:, checksum:, filename: nil, disposition: nil, custom_metadata: {}, **)
+      content_disposition = content_disposition_with(type: disposition, filename: filename) if filename
+      checksum_key = use_sha256_checksums ? 'x-amz-checksum-sha256' : 'Content-MD5'
+
+      { 'Content-Type' => content_type,
+        'Content-Disposition' => content_disposition,
+        checksum_key => checksum,
+        **custom_metadata_headers(custom_metadata) }
     end
 
     def delete_prefixed(prefix)
@@ -59,8 +76,14 @@ module ActiveStorage
     private
 
     def upload_with_single_part(key, io, checksum: nil, content_type: nil, content_disposition: nil, custom_metadata: {})
+      checksum_params =
+        if use_sha256_checksums
+          { checksum_algorithm: 'SHA256', checksum_sha256: checksum }
+        else
+          { content_md5: checksum }
+        end
       object_for_upload(key)
-        .put(body: io, content_md5: checksum, content_type:,
+        .put(body: io, **checksum_params, content_type:,
              content_disposition:, metadata: custom_metadata, **upload_options)
     rescue Aws::S3::Errors::BadDigest
       raise ActiveStorage::IntegrityError

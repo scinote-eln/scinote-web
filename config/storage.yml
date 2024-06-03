@@ -14,8 +14,7 @@ amazon:
   bucket: <%= ENV["S3_BUCKET"] %>
   staging_bucket: <%= ENV["S3_STAGING_BUCKET"] %>
   subfolder: <%= ENV["S3_SUBFOLDER"] %>
-  upload:
-    server_side_encryption: <%= ENV["S3_BUCKET_SSE"] %>
+  use_sha256_checksums: <%= Rails.configuration.x.fips_mode || ENV["S3_SHA256_CHECKSUMS"] == 'true' %>
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:

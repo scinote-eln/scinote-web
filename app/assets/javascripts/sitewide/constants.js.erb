@@ -18,4 +18,5 @@ const GLOBAL_CONSTANTS = {
   SLOW_STATUS_POLLING_INTERVAL: <%= Constants::SLOW_STATUS_POLLING_INTERVAL %>,
   ASSET_POLLING_INTERVAL: <%= Constants::ASSET_POLLING_INTERVAL %>,
   ASSET_SYNC_URL: '<%= Constants::ASSET_SYNC_URL %>',
+  S3_SHA256_CHECKSUMS: $('meta[name="s3-sha256-checksums"]').attr('content') === 'true'
 };

@@ -122,7 +122,7 @@ export default {
         return;
       }
 
-      const upload = new ActiveStorage.DirectUpload(
+      const upload = new CustomActiveStorage.DirectUpload(
         file,
         this.actions.direct_file_upload_path,
         {

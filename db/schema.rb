@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_18_094253) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_09_071108) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -721,8 +721,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_18_094253) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
-    t.datetime "start_time_dup"
-    t.datetime "end_time_dup"
+    t.datetime "start_time_dup", precision: nil
+    t.datetime "end_time_dup", precision: nil
     t.index "((end_time)::date)", name: "index_repository_date_time_range_values_on_end_time_as_date", where: "((type)::text = 'RepositoryDateRangeValue'::text)"
     t.index "((end_time)::time without time zone)", name: "index_repository_date_time_range_values_on_end_time_as_time", where: "((type)::text = 'RepositoryTimeRangeValue'::text)"
     t.index "((start_time)::date)", name: "index_repository_date_time_range_values_on_start_time_as_date", where: "((type)::text = 'RepositoryDateRangeValue'::text)"
@@ -1276,6 +1276,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_18_094253) do
     t.integer "failed_attempts", default: 0, null: false
     t.datetime "locked_at", precision: nil
     t.string "unlock_token"
+    t.string "password_salt"
     t.index "trim_html_tags((full_name)::text) gin_trgm_ops", name: "index_users_on_full_name", using: :gin
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

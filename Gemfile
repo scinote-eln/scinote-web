@@ -7,6 +7,7 @@ ruby '3.2.4'
 gem 'activerecord-session_store'
 gem 'bootsnap', require: false
 gem 'devise', '~> 4.8.1'
+gem 'devise-encryptable'
 gem 'devise_invitable'
 gem 'pg', '~> 1.5'
 gem 'pg_search' # PostgreSQL full text search
