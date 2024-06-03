@@ -2264,6 +2264,27 @@ en:
               scinoteColumns: 'SciNote columns'
               status: 'Status'
               exampleData: 'Example data'
+        step3:
+          title: 'Import preview'
+          subtitle: 'This is a preview of items you are importing/updating to the %{inventory}. The import can still be canceled.'
+          updated_items: 'Updated<br>items'
+          new_items: 'New<br>items'
+          unchanged_items: 'Unchanged<br>items'
+          duplicated_items: 'Duplicated<br>items'
+          invalid_items: 'Invalid<br>items'
+          invalid_cells: 'Invalid<br>cells'
+          code: 'Code'
+          name: 'Name'
+          status: 'Status'
+          cancel: 'Cancel import'
+          confirm: 'Confirm'
+        step4:
+          title: 'Success report'
+          subtitle: '%{inventory} was successfully updated.'
+          import_date: 'Import date:'
+          imported_file: 'Imported file:'
+          download_report: 'Download success report'
+          close: 'Close'
       info_sidebar:
         title: 'Guide for updating the inventory'
         elements:

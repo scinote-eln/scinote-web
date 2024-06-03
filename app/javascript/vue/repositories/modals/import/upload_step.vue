@@ -91,7 +91,7 @@ import modalMixin from '../../../shared/modal_mixin';
 
 export default {
   name: 'UploadStep',
-  emits: ['step:next', 'info:hide'],
+  emits: ['uploadFile'],
   components: {
     DragAndDropUpload
   },
@@ -123,6 +123,9 @@ export default {
     },
     uploadFile(file) {
       this.$emit('uploadFile', file);
+    },
+    handleError(error) {
+      this.error = error;
     }
   }
 };

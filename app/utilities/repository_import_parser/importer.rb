@@ -166,9 +166,9 @@ module RepositoryImportParser
         imported_rows,
         each_serializer: RepositoryRowSerializer,
         include: [:repository_cells]
-      ).as_json[:included]
+      ).as_json
 
-      { status: :ok, nr_of_added: @new_rows_added, total_nr: @total_new_rows, changes: changes }
+      { status: :ok, nr_of_added: @new_rows_added, total_nr: @total_new_rows, changes: changes, import_date: I18n.l(Date.today, format: :full_date) }
     end
 
     def import_batch_to_database(full_row_import_batch, can_edit_existing_items, should_overwrite_with_empty_cells, preview)

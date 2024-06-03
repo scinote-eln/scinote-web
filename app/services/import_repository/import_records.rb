@@ -10,7 +10,7 @@ module ImportRepository
 
     def import!(can_edit_existing_items, should_overwrite_with_empty_cells, preview)
       status = run_import_actions(can_edit_existing_items, should_overwrite_with_empty_cells, preview)
-      @temp_file.destroy
+      #@temp_file.destroy
       status
     end
 

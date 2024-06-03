@@ -3,7 +3,7 @@
 class RepositorySerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :urls, :id, :team_id, :repository_columns
+  attributes :urls, :id, :team_id, :repository_columns, :name
 
   def repository_columns
     object.repository_columns.pluck(:id, :name, :data_type)
