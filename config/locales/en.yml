@@ -2832,6 +2832,8 @@ en:
           regenerate: "Regenerate"
           revoke: "Revoke"
           expired: "This key has expired!"
+          generated: "API key generated!"
+          revoked: "API key revoked!"
       new:
         head_title: "Sign up"
         team_name_label: "Team name"
