@@ -5,7 +5,7 @@ class RepositoryCell < ApplicationRecord
 
   attr_accessor :importing
 
-  belongs_to :repository_row
+  belongs_to :repository_row, touch: true
   belongs_to :repository_column
   belongs_to :value, polymorphic: true, inverse_of: :repository_cell, dependent: :destroy
 
@@ -45,9 +45,15 @@ class RepositoryCell < ApplicationRecord
             uniqueness: { scope: :repository_column },
             unless: :importing
 
+  after_touch :update_repository_row_last_modified_by
+
   scope :with_active_reminder, lambda { |user|
     reminder_repository_cells_scope(self, user)
   }
+
+  def update_repository_row_last_modified_by
+    repository_row.update!(last_modified_by_id: value.last_modified_by_id)
+  end
 
   def self.create_with_value!(row, column, data, user)
     cell = new(repository_row: row, repository_column: column)

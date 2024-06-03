@@ -12,7 +12,7 @@ class RepositoryAssetValue < ApplicationRecord
   belongs_to :asset,
              inverse_of: :repository_asset_value,
              dependent: :destroy
-  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value
+  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value, touch: true
   accepts_nested_attributes_for :repository_cell
 
   validates :asset, :repository_cell, presence: true
