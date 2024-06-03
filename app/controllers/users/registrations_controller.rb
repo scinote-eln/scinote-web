@@ -210,13 +210,19 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def regenerate_api_key
     current_user.regenerate_api_key!
 
-    redirect_to edit_user_registration_path
+    redirect_to(edit_user_registration_path(anchor: 'api-key'),
+                flash: {
+                  success: t('users.registrations.edit.api_key.generated')
+                })
   end
 
   def revoke_api_key
     current_user.revoke_api_key!
 
-    redirect_to edit_user_registration_path
+    redirect_to(edit_user_registration_path(anchor: 'api-key'),
+                flash: {
+                  success: t('users.registrations.edit.api_key.revoked')
+                })
   end
 
   protected
