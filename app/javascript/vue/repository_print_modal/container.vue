@@ -255,6 +255,7 @@ export default {
       });
     },
     initZebraPrinter() {
+      this.printers = this.printers.filter((printer) => !printer.id.startsWith('zebra'));
       this.zebraPrinters = zebraPrint.init($('#LabelPrinterSelector'), {
         clearSelectorOnFirstDevice: false,
         appendDevice: (device) => {
