@@ -3,42 +3,23 @@
 require 'caxlsx'
 
 module RepositoryXlsxExport
+  def self.to_empty_xlsx(repository, column_ids)
+    package = Axlsx::Package.new
+    workbook = package.workbook
+    workbook.add_worksheet(name: 'Data Export') do |sheet|
+      sheet.add_row prepare_header(repository, column_ids, false)
+    end
+
+    package.to_stream.read
+  end
+
   def self.to_xlsx(rows, column_ids, user, repository, handle_file_name_func, in_module)
     package = Axlsx::Package.new
     workbook = package.workbook
     add_consumption = in_module && !repository.is_a?(RepositorySnapshot) && repository.has_stock_management?
 
     workbook.add_worksheet(name: 'Data Export') do |sheet|
-      header = []
-      column_ids.each do |c_id|
-        case c_id
-        when -1, -2
-          next
-        when -3
-          header << I18n.t('repositories.table.id')
-        when -4
-          header << I18n.t('repositories.table.row_name')
-        when -5
-          header << I18n.t('repositories.table.added_by')
-        when -6
-          header << I18n.t('repositories.table.added_on')
-        when -7
-          csv_header << I18n.t('repositories.table.updated_on')
-        when -8
-          csv_header << I18n.t('repositories.table.updated_by')
-        when -9
-          header << I18n.t('repositories.table.archived_by')
-        when -10
-          header << I18n.t('repositories.table.archived_on')
-        when -11
-          header << I18n.t('repositories.table.parents')
-          header << I18n.t('repositories.table.children')
-        else
-          header << repository.repository_columns.find_by(id: c_id)&.name
-        end
-      end
-      header << I18n.t('repositories.table.row_consumption') if add_consumption
-      sheet.add_row header
+      sheet.add_row prepare_header(repository, column_ids, add_consumption)
 
       rows.each do |row|
         row_data = []
@@ -83,5 +64,41 @@ module RepositoryXlsxExport
     end
 
     package.to_stream.read
+  end
+
+  private
+
+  def self.prepare_header(repository, column_ids, add_consumption)
+    header = []
+    column_ids.each do |c_id|
+      case c_id
+      when -1, -2
+        next
+      when -3
+        header << I18n.t('repositories.table.id')
+      when -4
+        header << I18n.t('repositories.table.row_name')
+      when -5
+        header << I18n.t('repositories.table.added_by')
+      when -6
+        header << I18n.t('repositories.table.added_on')
+      when -7
+        header << I18n.t('repositories.table.updated_on')
+      when -8
+        header << I18n.t('repositories.table.updated_by')
+      when -9
+        header << I18n.t('repositories.table.archived_by')
+      when -10
+        header << I18n.t('repositories.table.archived_on')
+      when -11
+        header << I18n.t('repositories.table.parents')
+        header << I18n.t('repositories.table.children')
+      else
+        header << repository.repository_columns.find_by(id: c_id)&.name
+      end
+    end
+    header << I18n.t('repositories.table.row_consumption') if add_consumption
+
+    header
   end
 end
