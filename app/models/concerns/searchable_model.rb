@@ -203,7 +203,7 @@ module SearchableModel
 
           new_phrase = exact_match ? phrase[1..-2] : phrase
           if DATA_VECTOR_ATTRIBUTES.include?(attribute)
-            new_phrase = Regexp.escape(new_phrase.gsub(/[!()&|:]/, ' ').strip).split(/\s+/)
+            new_phrase = Regexp.escape(new_phrase.gsub(/[!()&|:<]/, ' ').strip).split(/\s+/)
             new_phrase.map! { |t| "#{t}:*" } unless exact_match
             new_phrase = new_phrase.join('&').tr('\'', '"')
           else
