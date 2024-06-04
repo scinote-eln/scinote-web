@@ -1,6 +1,7 @@
 <template>
   <div v-if="modalOpened">
   <component
+    v-if="activeStep !== 'ExportModal'"
     :is="activeStep"
     :params="params"
     :uploading="uploading"
@@ -9,11 +10,17 @@
     @changeStep="changeStep"
     @importRows="importRecords"
   />
+  <ExportModal
+    v-else
+    :rows="[{id: params.id, team: params.attributes.team_name}]"
+    :exportAction="params.attributes.export_actions"
+    @close="activeStep ='UploadStep'"
+    @export="activeStep = 'UploadStep'"
+  />
   </div>
 </template>
 
 <script>
-/* global HelperModule */
 
 import axios from '../../../../packs/custom_axios';
 import InfoModal from '../../../shared/info_modal.vue';
@@ -21,6 +28,7 @@ import UploadStep from './upload_step.vue';
 import MappingStep from './mapping_step.vue';
 import PreviewStep from './preview_step.vue';
 import SuccessStep from './success_step.vue';
+import ExportModal from '../export.vue';
 
 export default {
   name: 'ImportRepositoryModal',
@@ -29,7 +37,8 @@ export default {
     UploadStep,
     MappingStep,
     PreviewStep,
-    SuccessStep
+    SuccessStep,
+    ExportModal
   },
   props: {
     repositoryUrl: String,

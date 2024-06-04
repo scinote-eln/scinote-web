@@ -197,6 +197,7 @@ Rails.application.routes.draw do
           get 'export_modal'
         end
         member do
+          get :export_empty_repository
           get :shareable_teams
         end
         get 'destroy_modal', to: 'repositories#destroy_modal',

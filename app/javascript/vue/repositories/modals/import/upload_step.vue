@@ -44,14 +44,14 @@
             {{ i18n.t('repositories.import_records.steps.step1.exportTitle') }}
           </h3>
           <div class="flex gap-4 mb-6">
-            <button class="btn btn-secondary btn-sm" @click="exportFullInventory">
+            <button class="btn btn-secondary btn-sm" @click="$emit('changeStep', 'ExportModal')">
               <i class="sn-icon sn-icon-export"></i>
               {{ i18n.t('repositories.import_records.steps.step1.exportFullInvBtnText') }}
             </button>
-            <button class="btn btn-secondary btn-sm">
+            <a :href="params.attributes.urls.export_empty_repository" target="_blank" class="btn btn-secondary btn-sm">
               <i class="sn-icon sn-icon-export"></i>
               {{ i18n.t('repositories.import_records.steps.step1.exportEmptyInvBtnText') }}
-            </button>
+            </a>
           </div>
 
           <h3 class="my-0 text-sn-dark-grey mb-3">
@@ -111,16 +111,6 @@ export default {
     };
   },
   methods: {
-    exportFullInventory() {
-      axios.post(this.params.attributes.urls.export_repository)
-        .then((response) => {
-          this.exportInventoryMessage = response.data.message;
-          setTimeout(() => { this.exportInventoryMessage = null; }, 5000);
-        })
-        .catch((error) => {
-          this.error = error;
-        });
-    },
     uploadFile(file) {
       this.$emit('uploadFile', file);
     },

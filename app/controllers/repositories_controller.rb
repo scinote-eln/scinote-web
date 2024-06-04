@@ -368,6 +368,16 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def export_empty_repository
+    col_ids = [-3, -4, -5, -6, -7, -8, -9, -10]
+    col_ids << -11 if Repository.repository_row_connections_enabled?
+    col_ids += @repository.repository_columns.map(&:id)
+
+    xlsx = RepositoryXlsxExport.to_empty_xlsx(@repository, col_ids)
+
+    send_data xlsx, filename: "empty_repository.xlsx", type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  end
+
   def export_repository
     if params[:row_ids] && params[:header_ids]
       RepositoryZipExportJob.perform_later(
