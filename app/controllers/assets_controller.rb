@@ -323,7 +323,7 @@ class AssetsController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
-      old_name = @asset.name
+      old_name = @asset.file_name
       @asset.last_modified_by = current_user
       @asset.rename_file(new_name)
       @asset.save!
