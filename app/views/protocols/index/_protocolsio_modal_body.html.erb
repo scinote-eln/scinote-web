@@ -1,6 +1,12 @@
 <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
-  <h4 class="modal-title" id="publish-results-modal-label">
+  <button type="button"
+    class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      data-e2e="e2e-BT-protocolTemplates-importProtocolsIo-close">
+      <i class="sn-icon sn-icon-close"></i>
+    </button>
+  <h4 class="modal-title" id="publish-results-modal-label" data-e2e="e2e-TX-protocolTemplates-importProtocolsIo-title">
     <%= t('protocols.index.protocolsio.title') %>
   </h4>
 </div>
@@ -20,6 +26,7 @@
                 <input class='sci-input-field'
                       type='text'
                       name='key'
+                      data-e2e='e2e-IF-protocolTemplates-importProtocolsIo-search'
                       placeholder="<%= t('protocols.index.protocolsio.search_bar_placeholder') %>" />
                 <i class='sn-icon sn-icon-search'></i>
               </div>
@@ -27,7 +34,13 @@
 
             <div class='protocol-sort'>
               <div class="dropdown sort-menu" title="<%= t("general.sort.title") %>">
-                <button class="btn btn-light btn-black icon-btn" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button class="btn btn-light btn-black icon-btn" 
+                        type="button" 
+                        id="sortMenu" 
+                        data-toggle="dropdown" 
+                        aria-haspopup="true" 
+                        aria-expanded="true"
+                        data-e2e="e2e-DD-protocolTemplates-importProtocolsIo-sort">
                   <span><i class="sn-icon sn-icon-sort-down"></i></span>
                 </button>
                 <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu dropdown-menu-right" aria-labelledby="sortMenu">
@@ -43,33 +56,39 @@
           </div>
         <% end %>
         <div class='protocol-list-side-panel'>
-          <div class='row empty-text'>
+          <div class='row empty-text' data-e2e="e2e-TX-protocolTemplates-importProtocolsIo-results-empty">
             <%= t('protocols.index.protocolsio.list_panel.empty_text') %>
           </div>
 
-          <div class='list-wrapper perfect-scrollbar'></div>
+          <div class='list-wrapper perfect-scrollbar' data-e2e="e2e-CO-protocolTemplates-importProtocolsIo-results">
+          </div>
         </div>
       </div>
       <div class='protocol-preview-panel'>
         <div class='empty-preview-panel'>
 
           <div class='row'>
-            <div class='text-rows protocol-preview-text'>
+            <div class='text-rows protocol-preview-text'
+              data-e2e="e2e-TX-protocolTemplates-importProtocolsIo-previewEmpty-title">
               <%= t('protocols.index.protocolsio.preview_panel.empty_title') %>
             </div>
           </div>
 
           <div class='row'>
-            <div class='text-separator'> <hr> </div>
+            <div class='text-separator' data-e2e="e2e-EL-protocolTemplates-importProtocolsIo-previewEmpty-separator">
+              <hr>
+            </div>
           </div>
 
           <div class='row'>
-            <div class='text-rows protocol-preview-subtext'>
+            <div class='text-rows protocol-preview-subtext'
+              data-e2e="e2e-TX-protocolTemplates-importProtocolsIo-previewEmpty-subText">
               <%= t('protocols.index.protocolsio.preview_panel.empty_subtext') %>
             </div>
           </div>
           <div class='row-bottom'>
-            <div class='text-rows protocol-preview-subtext'>
+            <div class='text-rows protocol-preview-subtext'
+              data-e2e="e2e-TX-protocolTemplates-importProtocolsIo-previewEmpty-poweredBy">
               <%= t('protocols.index.protocolsio.preview_panel.powered_by') %>
             </div>
           </div>
@@ -77,7 +96,7 @@
 
         <div class='full-preview-panel' style='display: none;'>
           <div class='row preview-banner'>
-            <div class='col-md-6 txt-holder'>
+            <div class='col-md-6 txt-holder' data-e2e="e2e-TX-protocolTemplates-importProtocolsIo-preview-title">
               <span>
                 <b><%= t('protocols.index.protocolsio.preview_panel.banner_text') %></b>
               </span>
@@ -85,7 +104,7 @@
             <div class='col-md-6 btn-holder'>
             </div>
           </div>
-          <div class='preview-holder perfect-scrollbar'>
+          <div class='preview-holder perfect-scrollbar' data-e2e="e2e-CO-protocolTemplates-importProtocolsIo-preview">
             <iframe scrolling="no" class='preview-iframe'></iframe>
           </div>
         </div>
@@ -94,7 +113,17 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" data-dismiss="modal" class="btn btn-secondary"><%=t('general.cancel') %></button>
-  <button type="button" class="btn btn-primary convert-protocol" disabled><%= t('protocols.index.protocolsio.convert') %></button>
+  <button type="button"
+    data-dismiss="modal"
+    class="btn btn-secondary"
+    data-e2e="e2e-BT-protocolTemplates-importProtocolsIo-cancel">
+    <%=t('general.cancel') %>
+  </button>
+  <button type="button"
+    class="btn btn-primary convert-protocol"
+    disabled
+    data-e2e="e2e-BT-protocolTemplates-importProtocolsIo-convert">
+    <%= t('protocols.index.protocolsio.convert') %>
+  </button>
 </div>
 
