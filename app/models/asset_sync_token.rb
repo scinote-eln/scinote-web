@@ -10,7 +10,7 @@ class AssetSyncToken < ApplicationRecord
   validates :token, uniqueness: true, presence: true
 
   def version_token
-    asset.file.checksum
+    OpenSSL::Digest::SHA256.base64digest(asset.file.checksum + asset.file_name)
   end
 
   def token_valid?
