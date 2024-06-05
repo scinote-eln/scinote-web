@@ -323,7 +323,7 @@ class AssetsController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
-      old_name = @asset.name
+      old_name = @asset.file_name
       @asset.last_modified_by = current_user
       @asset.rename_file(new_name)
       @asset.save!
@@ -332,7 +332,7 @@ class AssetsController < ApplicationController
       when Step
         message_items = { old_name:, new_name:, user: current_user.id }
         message_items[:my_module] = @assoc.protocol.my_module.id if @assoc.protocol.in_module?
-
+        @asset.parent.touch
         log_step_activity(
           "#{@assoc.protocol.in_module? ? 'task' : 'protocol'}_step_asset_renamed",
           @assoc,

@@ -2,6 +2,7 @@
 
 module SearchableModel
   extend ActiveSupport::Concern
+  DATA_VECTOR_ATTRIBUTES = ['asset_text_data.data_vector', 'tables.data_vector'].freeze
 
   included do
     # Helper function for relations that
@@ -174,21 +175,19 @@ module SearchableModel
 
     def self.create_query_clause(attrs, index, negate, query_clauses, value_hash, phrase, current_operator)
       phrase = sanitize_sql_like(phrase)
-      phrase = Regexp.escape(phrase)
       exact_match = phrase =~ /^".*"$/
       like = exact_match ? '~' : 'ILIKE'
-      phrase = exact_match ? "(^|\\s)#{phrase[1..-2]}(\\s|$)" : "%#{phrase}%"
 
-      where_clause = (attrs.map.with_index do |a, i|
+      where_clause = (attrs.map.with_index do |attribute, i|
         i = (index * attrs.count) + i
-        if %w(repository_rows.id repository_number_values.data).include?(a)
-          "#{a} IS NOT NULL AND (((#{a})::text) #{like} :t#{i}) OR "
-        elsif defined?(model::PREFIXED_ID_SQL) && a == model::PREFIXED_ID_SQL
-          "#{a} IS NOT NULL AND (#{a} #{like} :t#{i}) OR "
-        elsif ['asset_text_data.data_vector', 'tables.data_vector'].include?(a)
-          "#{a} @@ plainto_tsquery(:t#{i}) OR "
+        if %w(repository_rows.id repository_number_values.data).include?(attribute)
+          "#{attribute} IS NOT NULL AND (((#{attribute})::text) #{like} :t#{i}) OR "
+        elsif defined?(model::PREFIXED_ID_SQL) && attribute == model::PREFIXED_ID_SQL
+          "#{attribute} IS NOT NULL AND (#{attribute} #{like} :t#{i}) OR "
+        elsif DATA_VECTOR_ATTRIBUTES.include?(attribute)
+          "#{attribute} @@ to_tsquery(:t#{i}) OR "
         else
-          "#{a} IS NOT NULL AND ((trim_html_tags(#{a})) #{like} :t#{i}) OR "
+          "#{attribute} IS NOT NULL AND ((trim_html_tags(#{attribute})) #{like} :t#{i}) OR "
         end
       end).join[0..-5]
 
@@ -199,9 +198,20 @@ module SearchableModel
                        end
 
       value_hash.merge!(
-        (attrs.map.with_index do |_, i|
+        (attrs.map.with_index do |attribute, i|
           i = (index * attrs.count) + i
-          ["t#{i}".to_sym, phrase]
+
+          new_phrase = exact_match ? phrase[1..-2] : phrase
+          if DATA_VECTOR_ATTRIBUTES.include?(attribute)
+            new_phrase = Regexp.escape(new_phrase.gsub(/[!()&|:<]/, ' ').strip).split(/\s+/)
+            new_phrase.map! { |t| "#{t}:*" } unless exact_match
+            new_phrase = new_phrase.join('&').tr('\'', '"')
+          else
+            new_phrase = Regexp.escape(new_phrase)
+            new_phrase = exact_match ? "(^|\\s)#{new_phrase}(\\s|$)" : "%#{new_phrase}%"
+          end
+
+          ["t#{i}".to_sym, new_phrase]
         end).to_h
       )
     end

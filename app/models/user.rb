@@ -516,6 +516,7 @@ class User < ApplicationRecord
   def regenerate_api_key!
     update!(
       api_key: SecureRandom.urlsafe_base64(33),
+      api_key_created_at: Time.current,
       api_key_expires_at: Constants::API_KEY_EXPIRES_IN.from_now
     )
   end

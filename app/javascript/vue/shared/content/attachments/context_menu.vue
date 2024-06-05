@@ -44,8 +44,7 @@
     <Teleport to="body">
       <RenameAttachmentModal
         v-if="renameModal"
-        :url_path="attachment.attributes.urls.rename"
-        :fileName="attachment.attributes.file_name"
+        :attachment="attachment"
         @attachment:update="$emit('attachment:update', $event)"
         @close="renameModal = false"
       />
@@ -170,16 +169,16 @@ export default {
           data_e2e: 'e2e-BT-attachmentOptions-move'
         });
       }
-      if (this.attachment.attributes.urls.rename) {
-        menu.push({
-          text: this.i18n.t('assets.context_menu.rename'),
-          emit: 'rename'
-        });
-      }
       if (this.attachment.attributes.urls.duplicate) {
         menu.push({
           text: this.i18n.t('assets.context_menu.duplicate'),
           emit: 'duplicate'
+        });
+      }
+      if (this.attachment.attributes.urls.rename) {
+        menu.push({
+          text: this.i18n.t('assets.context_menu.rename'),
+          emit: 'rename'
         });
       }
       if (this.attachment.attributes.urls.delete) {
