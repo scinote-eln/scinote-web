@@ -18,11 +18,7 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode)
-<<<<<<< HEAD
-  before_action :check_manage_permission, only: %i(edit destroy duplicate toggle_view_mode rename)
-=======
   before_action :check_manage_permission, only: %i(edit destroy duplicate rename toggle_view_mode)
->>>>>>> develop
 
   def file_preview
     render json: { html: render_to_string(
