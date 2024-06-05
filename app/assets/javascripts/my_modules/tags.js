@@ -148,7 +148,8 @@
     $('#experimentTable, .my-modules-protocols-index, #experiment-canvas')
       .on('click', '.edit-tags-link', function() {
         if (window.tagsModal) {
-          window.tagsModal.open($(this).closest('.module-large').data('module-url'));
+          const url = $(this).closest('.module-large').data('module-url') || $(this).attr('href');
+          window.tagsModal.open(url);
         }
       });
   }
