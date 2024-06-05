@@ -12,4 +12,6 @@ Rails.application.configure do
   config.x.core_api_v1_enabled = ENV['CORE_API_V1_ENABLED'] || false
 
   config.x.core_api_v2_enabled = ENV['CORE_API_V2_ENABLED'] || false
+
+  config.x.core_api_key_enabled = ENV['CORE_API_KEY_ENABLED'] == 'true'
 end

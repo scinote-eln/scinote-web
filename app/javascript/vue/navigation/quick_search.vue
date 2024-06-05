@@ -1,25 +1,31 @@
 <template>
   <GeneralDropdown ref="container" :canOpen="canOpen" :fieldOnlyOpen="true" @close="filtersOpened = false; flyoutOpened = false" @open="flyoutOpened = true">
     <template v-slot:field>
-      <div class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}" :title="i18n.t('nav.search')">
-        <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery" @keydown="focusHistoryItem"
+      <div class="sci--navigation--top-menu-search left-icon sci-input-container-v2"
+        :class="{'disabled' : !currentTeam, 'error': invalidQuery}" :title="i18n.t('nav.search')"
+       :data-e2e="'e2e-IF-topMenu-search'">
+        <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery"
                :class="{'active': flyoutOpened}"
-               @focus="openHistory" :placeholder="i18n.t('nav.search')" @keyup.enter="saveQuery"/>
+               @keydown="focusHistoryItem"
+               @keydown.down="focusQuickSearchResults"
+               @keydown.escape="closeFlyout"
+               @focus="openHistory" :placeholder="i18n.t('nav.search')" @keydown.enter="saveQuery"/>
         <i class="sn-icon sn-icon-search"></i>
         <div v-if="this.searchQuery.length > 1" class="flex items-center gap-1 absolute right-2 top-1.5">
-          <div class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''; $refs.searchField.focus()">
-            <i class="sn-icon sn-icon-close  m-0"></i>
-          </div>
-          <div class="btn btn-light icon-btn btn-xs" :title="i18n.t('search.quick_search.search_options')"
-               :class="{'active': filtersOpened}" @click="filtersOpened = !filtersOpened">
-            <i class="sn-icon sn-icon-search-options m-0"></i>
-          </div>
+          <button class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''; $refs.searchField.focus()" :data-e2e="'e2e-BT-topMenu-searchClear'">
+            <i class="sn-icon sn-icon-close  !m-0" :title="i18n.t('nav.clear')"></i>
+          </button>
+          <button class="btn btn-light icon-btn btn-xs" :title="i18n.t('search.quick_search.search_options')"
+               :class="{'active': filtersOpened}" @click="filtersOpened = !filtersOpened" :data-e2e="'e2e-BT-topMenu-searchFilters'">
+            <i class="sn-icon sn-icon-search-options !m-0"></i>
+          </button>
         </div>
       </div>
     </template>
     <template v-slot:flyout >
       <SearchFilters
         class="px-3.5"
+        ref="filters"
         v-if="filtersOpened"
         :teamsUrl="teamsUrl"
         :usersUrl="usersUrl"
@@ -28,39 +34,43 @@
         :searchQuery="searchQuery"
         @cancel="filtersOpened = false"
       ></SearchFilters>
-      <div v-else-if="showHistory" class="max-w-[600px]">
+      <div v-else-if="showHistory" class="max-w-[600px]" data-e2e="e2e-DD-topMenu-searchHistory">
         <div v-for="(query, i) in reversedPreviousQueries" @click="setQuery(query)" :key="i"
              ref="historyItems"
              tabindex="1"
              @keydown="focusHistoryItem"
              @keydown.enter="setQuery(query)"
-             class="flex px-3 h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
+             class="flex px-3 min-h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
           <i class="sn-icon sn-icon-history-search"></i>
           {{ query }}
         </div>
       </div>
-      <div v-else class="w-[600px]">
+      <div v-else class="w-[600px]" data-e2e="e2e-FO-topMenu-quickSearch">
         <div class="flex items-center gap-2">
           <button class="btn btn-secondary btn-xs"
+                  ref="experimentGroup"
                   :class="{'active': quickFilter === 'experiments'}"
-                  @click="setQuickFilter('experiments')">
+                  @click="setQuickFilter('experiments')"
+                  :data-e2e="'e2e-BT-topMenu-quickSearch-experiments'">
             {{ i18n.t('search.quick_search.experiments') }}
           </button>
           <button class="btn btn-secondary btn-xs"
                   :class="{'active': quickFilter === 'my_modules'}"
-                  @click="setQuickFilter('my_modules')">
+                  @click="setQuickFilter('my_modules')"
+                  :data-e2e="'e2e-BT-topMenu-quickSearch-tasks'">
             {{ i18n.t('search.quick_search.tasks') }}
           </button>
           <button class="btn btn-secondary btn-xs"
                   :class="{'active': quickFilter === 'results'}"
-                  @click="setQuickFilter('results')">
+                  @click="setQuickFilter('results')"
+                  :data-e2e="'e2e-BT-topMenu-quickSearch-taskResults'">
             {{ i18n.t('search.quick_search.results') }}
           </button>
         </div>
         <hr class="my-2">
         <a v-if="!loading" v-for="(result, i) in results" :key="i"
            :href="getUrl(result.attributes)"
-           class="px-3 py-2 hover:bg-sn-super-light-grey cursor-pointer
+           class="px-3 py-2 hover:bg-sn-super-light-grey cursor-pointer focus:no-underline
                   text-sn-black hover:no-underline active:no-underline hover:text-black block"
         >
           <div class="flex items-center gap-2">
@@ -103,15 +113,17 @@
           </div>
         </div>
         <hr class="my-2">
-        <div class="btn btn-light" @click="searchValue">
+        <button class="btn btn-light truncate !block leading-10 max-w-[600px]" @click="searchValue" :data-e2e="'e2e-BT-topMenu-quickSearch-allSearchResults'">
           {{ i18n.t('search.quick_search.all_results', {query: searchQuery}) }}
-        </div>
+        </button>
       </div>
     </template>
   </GeneralDropdown>
 </template>
 
 <script>
+/* global HelperModule GLOBAL_CONSTANTS */
+
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import StringWithEllipsis from '../shared/string_with_ellipsis.vue';
 import SearchFilters from '../global_search/filters.vue';
@@ -157,6 +169,9 @@ export default {
     },
     currentTeamName() {
       return document.querySelector('body').dataset.currentTeamName;
+    },
+    invalidQuery() {
+      return this.searchQuery.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH;
     }
   },
   watch: {
@@ -166,6 +181,9 @@ export default {
       if (this.searchQuery.length > 1) {
         this.fetchQuickSearchResults();
       }
+    },
+    filtersOpened() {
+      if (this.filtersOpened) this.$nextTick(() => { this.focusFilters() });
     }
   },
   data() {
@@ -282,7 +300,7 @@ export default {
       this.fetchQuickSearchResults();
     },
     fetchQuickSearchResults() {
-      if (this.loading) return;
+      if (this.loading || this.invalidQuery) return;
 
       this.loading = true;
 
@@ -305,27 +323,46 @@ export default {
         });
     },
     searchValue() {
-      window.open(`${this.searchUrl}?q=${this.searchQuery}&teams[]=${this.currentTeam}`, '_self');
+      if (this.searchQuery.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
+        HelperModule.flashAlertMsg(this.i18n.t('general.query.length_too_long', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH }), 'danger');
+        return;
+      }
+
+      window.open(`${this.searchUrl}?q=${this.searchQuery}&teams[]=${this.currentTeam}&include_archived=true`, '_self');
     },
     focusHistoryItem(event) {
       if (this.focusedHistoryItem === null && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
         this.focusedHistoryItem = 0;
-        this.$refs.historyItems[this.focusedHistoryItem].focus();
+        this.$refs.historyItems[this.focusedHistoryItem]?.focus();
       } else if (event.key === 'ArrowDown') {
         event.preventDefault();
         this.focusedHistoryItem += 1;
         if (this.focusedHistoryItem >= this.$refs.historyItems.length) {
           this.focusedHistoryItem = 0;
         }
-        this.$refs.historyItems[this.focusedHistoryItem].focus();
+        this.$refs.historyItems[this.focusedHistoryItem]?.focus();
       } else if (event.key === 'ArrowUp') {
         event.preventDefault();
         this.focusedHistoryItem -= 1;
         if (this.focusedHistoryItem < 0) {
           this.focusedHistoryItem = this.$refs.historyItems.length - 1;
         }
-        this.$refs.historyItems[this.focusedHistoryItem].focus();
+        this.$refs.historyItems[this.focusedHistoryItem]?.focus();
       }
+    },
+    focusQuickSearchResults(e) {
+      this.$refs.experimentGroup?.focus();
+      e.preventDefault();
+    },
+    focusFilters() {
+      const { filters } = this.$refs;
+
+      if (filters) {
+        filters.$refs.groupButtons[0].focus();
+      }
+    },
+    closeFlyout() {
+      this.$refs.container.isOpen = false;
     }
   }
 };

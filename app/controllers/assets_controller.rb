@@ -18,7 +18,11 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode)
+<<<<<<< HEAD
   before_action :check_manage_permission, only: %i(edit destroy duplicate toggle_view_mode rename)
+=======
+  before_action :check_manage_permission, only: %i(edit destroy duplicate rename toggle_view_mode)
+>>>>>>> develop
 
   def file_preview
     render json: { html: render_to_string(
@@ -311,6 +315,49 @@ class AssetsController < ApplicationController
     end
   end
 
+  def rename
+    new_name = params.require(:asset).permit(:name)[:name]
+
+    if new_name.empty?
+      render json: { error: I18n.t('assets.rename_modal.min_length_error') }, status: :unprocessable_entity
+      return
+    elsif new_name.length > Constants::NAME_MAX_LENGTH
+      render json: { error: I18n.t('assets.rename_modal.max_length_error') }, status: :unprocessable_entity
+      return
+    end
+
+    ActiveRecord::Base.transaction do
+      old_name = @asset.file_name
+      @asset.last_modified_by = current_user
+      @asset.rename_file(new_name)
+      @asset.save!
+
+      case @asset.parent
+      when Step
+        message_items = { old_name:, new_name:, user: current_user.id }
+        message_items[:my_module] = @assoc.protocol.my_module.id if @assoc.protocol.in_module?
+        @asset.parent.touch
+        log_step_activity(
+          "#{@assoc.protocol.in_module? ? 'task' : 'protocol'}_step_asset_renamed",
+          @assoc,
+          @assoc.my_module&.project,
+          message_items
+        )
+      when Result
+        log_result_activity(
+          :result_asset_renamed,
+          @assoc,
+          old_name:,
+          new_name:,
+          user: current_user.id,
+          my_module: @assoc.my_module.id
+        )
+      end
+    end
+
+    render json: @asset, serializer: AssetSerializer, user: current_user
+  end
+
   def duplicate
     ActiveRecord::Base.transaction do
       case @asset.parent
@@ -346,49 +393,6 @@ class AssetsController < ApplicationController
 
       render json: new_asset, serializer: AssetSerializer, user: current_user
     end
-  end
-
-  def rename
-    new_name = params.require(:asset).permit(:name)[:name]
-
-    if new_name.empty?
-      render json: { error: I18n.t('assets.rename_modal.min_length_error') }, status: :unprocessable_entity
-      return
-    elsif new_name.length > Constants::NAME_MAX_LENGTH
-      render json: { error: I18n.t('assets.rename_modal.max_length_error') }, status: :unprocessable_entity
-      return
-    end
-
-    ActiveRecord::Base.transaction do
-      old_name = @asset.name
-      @asset.last_modified_by = current_user
-      @asset.rename_file(new_name)
-      @asset.save!
-
-      case @asset.parent
-      when Step
-        message_items = { old_name: old_name, new_name: new_name, user: current_user.id }
-        message_items[:my_module] = @assoc.protocol.my_module.id if @assoc.protocol.in_module?
-
-        log_step_activity(
-          "#{@assoc.protocol.in_module? ? 'task' : 'protocol'}_step_asset_renamed",
-          @assoc,
-          @assoc.my_module&.project,
-          message_items
-        )
-      when Result
-        log_result_activity(
-          :result_asset_renamed,
-          @assoc,
-          old_name: old_name,
-          new_name: new_name,
-          user: current_user.id,
-          my_module: @assoc.my_module.id
-        )
-      end
-    end
-
-    render json: @asset, serializer: AssetSerializer, user: current_user
   end
 
   def checksum

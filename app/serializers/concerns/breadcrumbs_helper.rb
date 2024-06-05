@@ -26,7 +26,8 @@ module BreadcrumbsHelper
       end
     when Result
       parent = subject.my_module
-      url = my_module_results_path(subject.my_module)
+      view_mode = subject.archived? ? 'archived' : 'active'
+      url = my_module_results_path(subject.my_module, view_mode:)
     when ProjectFolder
       parent = subject.team
       url = project_folder_path(subject)
@@ -34,8 +35,15 @@ module BreadcrumbsHelper
       parent = subject.team
       url = repository_path(subject)
     when RepositoryRow
-      parent = subject.team
-      url = repository_path(subject.repository)
+      parent = subject.repository
+      params = {
+        id: subject.repository_id,
+        landing_page: true,
+        row_id: subject.id
+      }
+      params[:archived] = true if subject.archived
+
+      url = repository_path(params)
     when Report
       parent = subject.team
 
@@ -56,7 +64,7 @@ module BreadcrumbsHelper
       url = projects_path(team: subject.id)
     end
 
-    breadcrumbs << { name: subject.name, url: url } if subject.name.present?
+    breadcrumbs << { name: subject.name, url: } if subject.name.present?
 
     if parent
       generate_breadcrumbs(parent, breadcrumbs)

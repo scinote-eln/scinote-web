@@ -1,39 +1,48 @@
 <template>
   <div class="max-w-[600px] py-3.5">
-    <div class="flex flex-col pb-6 overflow-y-auto max-h-[75vh]">
-      <div class="sci-label mb-2">{{ i18n.t('search.filters.by_type') }}</div>
+    <div class="flex flex-col pb-6 overflow-y-auto w-[calc(100%_+_1rem)] px-2 -ml-2 max-h-[calc(80vh_-_160px)]">
+      <div class="sci-label mb-2" data-e2e="e2e-TX-globalSearch-filters-filterByType">{{ i18n.t('search.filters.by_type') }}</div>
       <div class="flex items-center gap-2 flex-wrap mb-6">
         <template v-for="group in searchGroups" :key="group.value">
           <button class="btn btn-secondary btn-xs"
+                  ref="groupButtons"
                   :class="{'active': activeGroup === group.value}"
-                  @click="setActiveGroup(group.value)">
+                  @click="setActiveGroup(group.value)"
+                  :data-e2e="`e2e-BT-globalSearch-filters-${group.label.toLowerCase().replaceAll(/\s+/g, '')}`">
             {{ group.label }}
           </button>
         </template>
       </div>
-      <div class="sci-label mb-2">{{ i18n.t('search.filters.by_created_date') }}</div>
+      <div class="sci-label mb-2" data-e2e="e2e-TX-globalSearch-filters-filterByCreated">{{ i18n.t('search.filters.by_created_date') }}</div>
       <DateFilter
         :date="createdAt"
         ref="createdAtComponent"
         class="mb-6"
         @change="(v) => {this.createdAt = v}"
+        e2eValue="globalSearch-filters-createdDate"
       ></DateFilter>
-      <div class="sci-label mb-2">{{ i18n.t('search.filters.by_updated_date') }}</div>
+      <div class="sci-label mb-2" data-e2e="e2e-TX-globalSearch-filters-filterByUpdated">{{ i18n.t('search.filters.by_updated_date') }}</div>
       <DateFilter
         :date="updatedAt"
         ref="updatedAtComponent"
         class="mb-6"
         @change="(v) => {this.updatedAt = v}"
+        e2eValue="globalSearch-filters-updatedDate"
       ></DateFilter>
-      <div class="sci-label mb-2">{{ i18n.t('search.filters.by_team') }}</div>
-      <SelectDropdown :options="teams"
-                      class="mb-6"
-                      :with-checkboxes="true"
-                      :clearable="true"
-                      :multiple="true"
-                      :value="selectedTeams"
-                      @change="(v) => {selectedTeams = v}" />
-      <div class="sci-label mb-2 flex items-center gap-2">
+      <template v-if="teams.length > 1">
+        <div class="sci-label mb-2" data-e2e="e2e-TX-globalSearch-filters-filterByTeam">{{ i18n.t('search.filters.by_team') }}</div>
+        <SelectDropdown :options="teams"
+                        class="mb-6"
+                        :with-checkboxes="true"
+                        :clearable="true"
+                        :searchable="true"
+                        :multiple="true"
+                        :value="selectedTeams"
+                        :placeholder="i18n.t('search.filters.by_team_placeholder')"
+                        @change="selectTeams"
+                        e2eValue="e2e-DC-globalSearch-filters-teams" />
+      </template>
+      <div class="sci-label mb-2 flex items-center gap-2" data-e2e="e2e-TX-globalSearch-filters-filterByUser">
         {{ i18n.t('search.filters.by_user') }}
         <i class="sn-icon sn-icon-info" :title="i18n.t('search.filters.by_user_info')"></i>
       </div>
@@ -43,12 +52,15 @@
                       :optionRenderer="userRenderer"
                       :labelRenderer="userRenderer"
                       :clearable="true"
+                      :searchable="true"
                       :with-checkboxes="true"
                       :multiple="true"
-                      @change="(v) => {selectedUsers = v}" />
-      <div class="flex items-center gap-2">
+                      :placeholder="i18n.t('search.filters.by_user_placeholder')"
+                      @change="selectUsers"
+                      e2eValue="e2e-DC-globalSearch-filters-users" />
+      <div class="flex items-center gap-2" data-e2e="e2e-TX-globalSearch-filters-includeArchived">
         <div class="sci-checkbox-container">
-          <input type="checkbox" v-model="includeArchived" class="sci-checkbox" />
+          <input type="checkbox" v-model="includeArchived" class="sci-checkbox" data-e2e="e2e-CB-globalSearch-filters-includeArchived"/>
           <span class="sci-checkbox-label"></span>
         </div>
         {{ i18n.t('search.filters.include_archived') }}
@@ -56,9 +68,9 @@
     </div>
     <hr class="mb-6">
     <div class="flex items-center gap-6">
-      <button class="btn btn-light" @click="clearFilters">{{ i18n.t('search.filters.clear') }}</button>
-      <button class="btn btn-secondary ml-auto" @click="$emit('cancel')">{{ i18n.t('general.cancel') }}</button>
-      <button class="btn btn-primary" @click="search" >{{ i18n.t('general.search') }}</button>
+      <button class="btn btn-light" @click="clearFilters" data-e2e="e2e-BT-globalSearch-filters-clearFilters">{{ i18n.t('search.filters.clear') }}</button>
+      <button class="btn btn-secondary ml-auto" @click="$emit('cancel')" data-e2e="e2e-BT-globalSearch-filters-cancel">{{ i18n.t('general.cancel') }}</button>
+      <button class="btn btn-primary" @click="search" data-e2e="e2e-BT-globalSearch-filters-search">{{ i18n.t('general.search') }}</button>
     </div>
   </div>
 </template>
@@ -170,6 +182,16 @@ export default {
         .then((response) => {
           this.users = response.data.data.map((user) => ([parseInt(user.id, 10), user.attributes.name, { avatar_url: user.attributes.avatar_url }]));
         });
+    },
+    selectTeams(teams) {
+      if (Array.isArray(teams)) {
+        this.selectedTeams = teams;
+      }
+    },
+    selectUsers(users) {
+      if (Array.isArray(users)) {
+        this.selectedUsers = users;
+      }
     },
     clearFilters() {
       this.createdAt = {

@@ -147,10 +147,11 @@
     // initialize my_module tab remote loading
     $('#experimentTable, .my-modules-protocols-index, #experiment-canvas')
       .on('click', '.edit-tags-link', function() {
-        if($('#tagsModalComponent').length) {
-          $('#tagsModalComponent').data('tagsModal').open()
+        if (window.tagsModal) {
+          const url = $(this).closest('.module-large').data('module-url') || $(this).attr('href');
+          window.tagsModal.open(url);
         }
-      })
+      });
   }
 
   bindEditTagsAjax();

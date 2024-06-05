@@ -1,6 +1,6 @@
 <template>
     <a target="_blank" :href="url"
-       class="h-full py-2 px-4 flex gap-1 items-center font-bold overflow-hidden group-hover:bg-sn-super-light-grey hover:no-underline"
+       class="h-full py-2 px-4 flex gap-1 items-center font-bold overflow-hidden group-hover:bg-sn-super-light-grey min-w-40 hover:no-underline"
     >
       <span v-if="icon" :class="icon" class="sn-icon shrink-0"></span>
       <StringWithEllipsis

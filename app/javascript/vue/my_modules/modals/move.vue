@@ -52,9 +52,8 @@ export default {
   },
   methods: {
     submit() {
-      axios.post(this.my_module.urls.move, {
-        to_experiment_id: this.targetExperiment,
-        my_module_ids: [this.my_module.id]
+      axios.post(this.my_module.movePath, {
+        to_experiment_id: this.targetExperiment
       }).then((response) => {
         this.$emit('move');
         HelperModule.flashAlertMsg(response.data.message, 'success');

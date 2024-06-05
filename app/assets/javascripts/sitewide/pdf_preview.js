@@ -115,7 +115,7 @@ var PdfPreview = (function() {
 
 
   function loadPdfDocument(canvas, page = 1) {
-    var loadingPdf = pdfjsLib.getDocument(canvas.dataset.pdfUrl);
+    var loadingPdf = pdfjsLib.getDocument({ url: canvas.dataset.pdfUrl, isEvalSupported: false });
     $(canvas).data('load-attempts', $(canvas).data('load-attempts') + 1);
     loadingPdf.promise
       .then(function(pdfDocument) {

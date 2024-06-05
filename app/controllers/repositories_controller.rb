@@ -73,7 +73,7 @@ class RepositoriesController < ApplicationController
 
   def table_toolbar
     render json: {
-      html: render_to_string(partial: 'repositories/toolbar_buttons')
+      html: render_to_string(partial: 'repositories/toolbar_buttons', locals: { view_mode: params[:view_mode]})
     }
   end
 

@@ -14,7 +14,7 @@
     </div>
     <div class="row module-protocol-description">
       <% if @settings.dig('task', 'protocol', 'description') && protocol.description.present? %>
-        <%= custom_auto_link(protocol.prepare_for_report(:description),
+        <%= custom_auto_link(protocol.prepare_for_report(:description, export_all: export_all),
                              team: current_team,
                              simple_format: false,
                              base64_encoded_imgs: true) %>

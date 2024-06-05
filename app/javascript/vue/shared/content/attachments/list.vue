@@ -1,73 +1,42 @@
 <template>
-  <div class="list-attachment-container asset hover:bg-sn-super-light-grey"
-    :class="[{'menu-dropdown-open': isMenuDropdownOpen}, {'context-menu-open': isContextMenuOpen }]"
-    :data-asset-id="attachment.id">
-      <div id="icon-with-filename" class="h-6 my-auto">
-        <i class="text-sn-grey asset-icon sn-icon mb-1" :class="attachment.attributes.icon"></i>
-        <a :href="attachment.attributes.urls.blob"
-          class="file-preview-link file-name"
-          :id="`modal_link${attachment.id}`"
-          data-no-turbolink="true"
-          :data-id="attachment.id"
-          :data-gallery-view-id="parentId"
-          :data-preview-url="attachment.attributes.urls.preview"
-        >
-          <span class="attachment-name" data-toggle="tooltip"
-              data-placement="bottom">
-            {{ attachment.attributes.file_name }}
-          </span>
-        </a>
-        <div v-if="attachment.attributes.medium_preview !== null" class="attachment-image-tooltip bg-white sn-shadow-menu-sm">
-          <img :src="this.imageLoadError ? attachment.attributes.urls.blob : attachment.attributes.medium_preview" @error="ActiveStoragePreviews.reCheckPreview"
-                @load="ActiveStoragePreviews.showPreview"/>
-        </div>
-      </div>
-
-      <div id="file-metadata" class="file-metadata">
-        <span class="my-auto">
-            {{ attachment.attributes.updated_at_formatted }}
-        </span>
-        <span class="my-auto">
-          {{ attachment.attributes.file_size_formatted }}
-        </span>
-      </div>
-
-      <div class="flex flex-row" id="action-buttons">
-
-        <!-- open -->
-        <OpenMenu
-          :attachment="attachment"
-          :multipleOpenOptions="multipleOpenOptions"
-          @menu-dropdown-toggle="toggleMenuDropdown"
-          >
-        </OpenMenu>
-
-        <!-- move -->
-        <a v-if="attachment.attributes.urls.move"
-          @click.prevent.stop="showMoveModal"
-          class="btn btn-light icon-btn thumbnail-action-btn"
-          :title="i18n.t('attachments.thumbnail.buttons.move')">
-          <i class="sn-icon sn-icon-move"></i>
-        </a>
-
-        <!-- download -->
-        <a class="btn btn-light icon-btn thumbnail-action-btn"
-          :title="i18n.t('attachments.thumbnail.buttons.download')"
-          :href="attachment.attributes.urls.download" data-turbolinks="false">
-          <i class="sn-icon sn-icon-export"></i>
-        </a>
-
-        <!-- more options -->
-        <ContextMenu
-          :attachment="attachment"
-          @attachment:viewMode="updateViewMode"
-          @attachment:delete="deleteAttachment"
-          @attachment:moved="attachmentMoved"
-          @attachment:uploaded="reloadAttachments"
-          @menu-toggle="toggleContextMenu"
-          @attachment:update="$emit('attachment:update', $event)"
-        />
-      </div>
+  <div class="list-attachment-container asset"
+       :data-asset-id="attachment.id"
+  >
+    <i class="text-sn-grey asset-icon sn-icon" :class="attachment.attributes.icon"></i>
+    <a :href="attachment.attributes.urls.blob"
+       class="file-preview-link file-name"
+       :id="`modal_link${attachment.id}`"
+       data-no-turbolink="true"
+       :data-id="attachment.id"
+       :data-gallery-view-id="parentId"
+       :data-preview-url="attachment.attributes.urls.preview"
+    >
+      <span class="attachment-name" data-toggle="tooltip"
+           data-placement="bottom">
+        {{ attachment.attributes.file_name }}
+      </span>
+    </a>
+    <div v-if="attachment.attributes.medium_preview !== null" class="attachment-image-tooltip bg-white sn-shadow-menu-sm">
+      <img :src="this.imageLoadError ? attachment.attributes.urls.blob : attachment.attributes.medium_preview" @error="ActiveStoragePreviews.reCheckPreview"
+            @load="ActiveStoragePreviews.showPreview"/>
+    </div>
+    <div class="file-metadata">
+      <span>
+          {{ i18n.t('assets.placeholder.modified_label') }}
+          {{ attachment.attributes.updated_at_formatted }}
+      </span>
+      <span>
+        {{ i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted}) }}
+      </span>
+    </div>
+    <ContextMenu
+      :attachment="attachment"
+      @attachment:viewMode="updateViewMode"
+      @attachment:delete="deleteAttachment"
+      @attachment:moved="attachmentMoved"
+      @attachment:uploaded="reloadAttachments"
+      @attachment:update="$emit('attachment:update', $event)"
+    />
   </div>
   <Teleport to="body">
     <moveAssetModal

@@ -247,6 +247,8 @@ class Constants
   TWO_FACTOR_RECOVERY_CODE_COUNT = 6
   TWO_FACTOR_RECOVERY_CODE_LENGTH = 12
 
+  API_KEY_EXPIRES_IN = 1.year
+
   #=============================================================================
   # Protocol importers
   #=============================================================================
@@ -425,7 +427,7 @@ class Constants
   # Team name for default admin user
   DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze
 
-  TEMPLATES_PROJECT_NAME = 'Templates'.freeze
+  TEMPLATES_PROJECT_NAME = 'SciNote Examples'.freeze
 
   # Interval time for polling status state
   FAST_STATUS_POLLING_INTERVAL = 5000

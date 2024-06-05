@@ -1,9 +1,12 @@
 <template>
-  <div class="content-pane flexible with-grey-background">
+  <div class="content-pane flexible with-grey-background" data-e2e="e2e-CO-globalSearch">
     <div class="content-header">
       <div class="title-row">
-        <h1 class="mt-0">
-          {{ i18n.t('search.index.results_title_html', { query: localQuery }) }}
+        <h1 class="mt-0 truncate !inline">
+          <StringWithEllipsis
+            class="w-full"
+            :endCharacters="5"
+            :text="i18n.t('search.index.results_title_html', { query: localQuery })"></StringWithEllipsis>
         </h1>
       </div>
     </div>
@@ -11,12 +14,13 @@
       <GeneralDropdown ref="historyContainer" :canOpen="canOpenHistory" :fieldOnlyOpen="true" >
         <template v-slot:field>
           <div class="left-icon sci-input-container-v2 w-72 input-sm"
-              :title="i18n.t('nav.search')" :class="{'error': invalidQuery}">
+              :title="i18n.t('nav.search')" :class="{'error': invalidQuery}" :data-e2e="'e2e-IF-globalSearch'">
             <input ref="searchField"
               type="text"
               class="!pr-9"
               :value="localQuery"
               @change="changeQuery"
+              @keydown="focusHistoryItem"
               @keydown.enter="changeQuery"
               @blur="changeQuery"
               :placeholder="i18n.t('nav.search')"
@@ -24,34 +28,46 @@
             <i class="sn-icon sn-icon-search"></i>
             <i v-if="localQuery.length > 0"
               class="sn-icon cursor-pointer sn-icon-close absolute right-0 -top-0.5"
-              @click="localQuery = ''; $refs.searchField.focus()"></i>
+              @click="localQuery = ''; $refs.searchField.focus()" :title="i18n.t('nav.clear')" :data-e2e="'e2e-BT-globalSearch-clearInput'"></i>
           </div>
         </template>
         <template v-slot:flyout >
-          <div v-for="(query, i) in reversedPreviousQueries" @click="setQuery(query)" :key="i"
-              ref="historyItems"
-              tabindex="1"
-              @keydown.enter="setQuery(query)"
-              class="flex px-3 h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
-            <i class="sn-icon sn-icon-history-search"></i>
-            {{ query }}
+          <div class="max-w-[600px]">
+            <div v-for="(query, i) in reversedPreviousQueries" @click="setQuery(query)" :key="i"
+                ref="historyItems"
+                @keydown="focusHistoryItem"
+                tabindex="1"
+                @keydown.enter="setQuery(query)"
+                class="flex px-3 min-h-11 items-center gap-2 hover:bg-sn-super-light-grey cursor-pointer">
+              <i class="sn-icon sn-icon-history-search"></i>
+              {{ query }}
+            </div>
           </div>
         </template>
       </GeneralDropdown>
       <div class="flex items-center gap-2.5">
-        <button class="btn btn-secondary btn-sm" :class="{'active': activeGroup == 'ExperimentsComponent'}" @click="setActiveGroup('ExperimentsComponent')">
+        <button class="btn btn-secondary btn-sm"
+            :class="{'active': activeGroup == 'ExperimentsComponent'}"
+            @click="setActiveGroup('ExperimentsComponent')"
+            :data-e2e="'e2e-BT-globalSearch-experiments'">
           {{ i18n.t('search.index.experiments') }}
         </button>
-        <button class="btn btn-secondary btn-sm" :class="{'active': activeGroup == 'MyModulesComponent'}" @click="setActiveGroup('MyModulesComponent')">
+        <button class="btn btn-secondary btn-sm"
+            :class="{'active': activeGroup == 'MyModulesComponent'}"
+            @click="setActiveGroup('MyModulesComponent')"
+            :data-e2e="'e2e-BT-globalSearch-tasks'">
           {{ i18n.t('search.index.tasks') }}
         </button>
-        <button class="btn btn-secondary btn-sm" :class="{'active': activeGroup == 'ResultsComponent'}" @click="setActiveGroup('ResultsComponent')">
+        <button class="btn btn-secondary btn-sm"
+            :class="{'active': activeGroup == 'ResultsComponent'}"
+            @click="setActiveGroup('ResultsComponent')"
+            :data-e2e="'e2e-BT-globalSearch-taskResults'">
           {{ i18n.t('search.index.task_results') }}
         </button>
       </div>
-      <button class="btn btn-light btn-sm" @click="filterModalOpened = true">
-        <i class="sn-icon sn-icon-search-options"></i>
-        <span class="tw-hidden lg:inline">{{ i18n.t('search.index.more_search_options') }}</span>
+      <button class="btn btn-light btn-sm" @click="filterModalOpened = true" :data-e2e="'e2e-BT-globalSearch-openFilterModal'">
+        <i class="sn-icon sn-icon-search-options" :title="i18n.t('search.index.more_search_options')"></i>
+        <span class="tw-hidden xl:inline">{{ i18n.t('search.index.more_search_options') }}</span>
         <span
           v-if="activeFilters.length > 0"
           class="absolute -right-1 -top-1 rounded-full bg-sn-science-blue text-white flex items-center justify-center w-4 h-4 text-[9px]"
@@ -61,14 +77,14 @@
       </button>
       <template v-if="activeFilters.length > 0">
         <div class="h-4 w-[1px] bg-sn-grey"></div>
-        <button class="btn btn-light btn-sm" @click="resetFilters">
-          <i class="sn-icon sn-icon-close"></i>
-          <span class="tw-hidden lg:inline">{{ i18n.t('search.index.clear_filters') }}</span>
+        <button class="btn btn-light btn-sm" @click="resetFilters" :data-e2e="'e2e-BT-globalSearch-resetFilters'">
+          <i class="sn-icon sn-icon-close" :title="i18n.t('search.index.clear_filters')"></i>
+          <span class="tw-hidden xl:inline">{{ i18n.t('search.index.clear_filters') }}</span>
         </button>
       </template>
-      <button v-if="activeGroup" class="btn btn-light btn-sm" @click="resetGroup">
-        <i class="sn-icon sn-icon-undo"></i>
-        <span class="tw-hidden lg:inline">{{ i18n.t('search.index.all_results') }}</span>
+      <button v-if="activeGroup" class="btn btn-light btn-sm" @click="resetGroup" :data-e2e="'e2e-BT-globalSearch-resetGroup'">
+        <i class="sn-icon sn-icon-undo" :title="i18n.t('search.index.all_results')"></i>
+        <span class="tw-hidden xl:inline">{{ i18n.t('search.index.all_results') }}</span>
       </button>
     </div>
     <template v-for="group in searchGroups">
@@ -85,7 +101,7 @@
         @updated="calculateTotalElements"
       />
     </template>
-    <div v-if="totalElements === 0" class="bg-white rounded p-4">
+    <div v-if="totalElements === 0 && activeGroup === null" class="bg-white rounded p-4">
       <NoSearchResult />
     </div>
     <teleport to='body'>
@@ -103,6 +119,8 @@
 </template>
 
 <script>
+/* global HelperModule GLOBAL_CONSTANTS */
+
 import FoldersComponent from './groups/folders.vue';
 import ProjectsComponent from './groups/projects.vue';
 import ExperimentsComponent from './groups/experiments.vue';
@@ -117,6 +135,7 @@ import ReportsComponent from './groups/reports.vue';
 import FiltersModal from './filters_modal.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import NoSearchResult from './groups/helpers/no_search_result.vue';
+import StringWithEllipsis from '../shared/string_with_ellipsis.vue';
 
 export default {
   emits: ['search', 'selectGroup'],
@@ -141,6 +160,10 @@ export default {
     currentTeam: {
       type: Number || String,
       required: true
+    },
+    singleTeam: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -157,7 +180,8 @@ export default {
     ReportsComponent,
     FiltersModal,
     GeneralDropdown,
-    NoSearchResult
+    NoSearchResult,
+    StringWithEllipsis
   },
   data() {
     return {
@@ -167,6 +191,7 @@ export default {
       previousQueries: [],
       invalidQuery: false,
       activeGroup: null,
+      focusedHistoryItem: null,
       totalElements: 0,
       searchGroups: [
         'FoldersComponent',
@@ -215,7 +240,7 @@ export default {
         to: null
       },
       include_archived: urlParams.get('include_archived') === 'true',
-      teams: urlParams.getAll('teams[]').map((team) => parseInt(team, 10)),
+      teams: (this.singleTeam ? [] : urlParams.getAll('teams[]').map((team) => parseInt(team, 10))),
       users: urlParams.getAll('users[]').map((user) => parseInt(user, 10)),
       group: urlParams.get('group')
     };
@@ -264,8 +289,15 @@ export default {
 
       this.localQuery = event.target.value;
 
-      if (event.target.value.length < 2) {
+      if (event.target.value.length < GLOBAL_CONSTANTS.NAME_MIN_LENGTH) {
         this.invalidQuery = true;
+        HelperModule.flashAlertMsg(this.i18n.t('general.query.length_too_short', { min_length: GLOBAL_CONSTANTS.NAME_MIN_LENGTH }), 'danger');
+        return;
+      }
+
+      if (event.target.value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
+        this.invalidQuery = true;
+        HelperModule.flashAlertMsg(this.i18n.t('general.query.length_too_long', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH }), 'danger');
         return;
       }
 
@@ -294,6 +326,28 @@ export default {
     resetGroup() {
       this.activeGroup = null;
       this.filters.group = null;
+    },
+    focusHistoryItem(event) {
+      if (this.focusedHistoryItem === null && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+        this.focusedHistoryItem = 0;
+        this.$refs.historyItems[this.focusedHistoryItem].focus();
+      } else if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        this.focusedHistoryItem += 1;
+        if (this.focusedHistoryItem >= this.$refs.historyItems.length) {
+          this.focusedHistoryItem = 0;
+        }
+        this.$refs.historyItems[this.focusedHistoryItem].focus();
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        this.focusedHistoryItem -= 1;
+        if (this.focusedHistoryItem < 0) {
+          this.focusedHistoryItem = this.$refs.historyItems.length - 1;
+        }
+        this.$refs.historyItems[this.focusedHistoryItem].focus();
+      } else if (event.key === 'Escape') {
+        this.$refs.historyContainer.isOpen = false;
+      }
     },
     resetFilters() {
       this.filters = {

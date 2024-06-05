@@ -43,6 +43,7 @@
     :confirmText="i18n.t('projects.export_projects.export_button')"
     ref="exportModal"
   ></ConfirmationModal>
+  <ExportLimitExceededModal v-if="exportLimitExceded" :description="exportDescription" @close="exportLimitExceded = false"/>
   <EditProjectModal v-if="editProject" :userRolesUrl="userRolesUrl"
                     :project="editProject" @close="editProject = null" @update="updateTable(); updateNavigator()" />
   <EditFolderModal v-if="editFolder" :folder="editFolder"
@@ -76,6 +77,7 @@ import NewProjectModal from './modals/new.vue';
 import NewFolderModal from './modals/new_folder.vue';
 import MoveModal from './modals/move.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
+import ExportLimitExceededModal from './modals/export_limit_exceeded_modal.vue';
 
 export default {
   name: 'ProjectsList',
@@ -89,7 +91,8 @@ export default {
     NewProjectModal,
     NewFolderModal,
     MoveModal,
-    AccessModal
+    AccessModal,
+    ExportLimitExceededModal
   },
   props: {
     dataSource: { type: String, required: true },
@@ -114,6 +117,7 @@ export default {
       editFolder: null,
       objectsToMove: null,
       reloadingTable: false,
+      exportLimitExceded: false,
       folderDeleteDescription: '',
       exportDescription: ''
     };
@@ -306,6 +310,7 @@ export default {
       this.newFolder = false;
       this.objectsToMove = null;
       this.reloadingTable = true;
+      this.exportLimitExceded = false;
     },
     updateNavigator(withExpanedChildren = false) {
       window.navigatorContainer.reloadNavigator(withExpanedChildren);
@@ -328,7 +333,7 @@ export default {
     async exportProjects(event, rows) {
       if (event.number_of_projects === 0) {
         HelperModule.flashAlertMsg(this.i18n.t('projects.export_projects.zero_projects_flash'), 'danger');
-      } else {
+      } else if (event.number_of_request_left > 0) {
         this.exportDescription = event.message;
         const ok = await this.$refs.exportModal.show();
         if (ok) {
@@ -342,6 +347,9 @@ export default {
             HelperModule.flashAlertMsg(error.response.data.error, 'danger');
           });
         }
+      } else {
+        this.exportDescription = event.message;
+        this.exportLimitExceded = true;
       }
     },
     move(event, rows) {

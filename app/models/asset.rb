@@ -73,9 +73,10 @@ class Asset < ApplicationRecord
                              .where(results: { id: Result.search(user, include_archived, nil, teams) })
                              .pluck(:id)
 
-    assets_in_inventories = Asset.joins(
-      repository_cell: { repository_column: :repository }
-    ).where(repositories: { team: teams }).pluck(:id)
+    assets_in_inventories = Asset.joins(repository_cell: { repository_column: :repository })
+                                 .where(repositories: { team: teams })
+                                 .where.not(repositories: { type: 'RepositorySnapshot' })
+                                 .pluck(:id)
 
     assets = distinct.where('assets.id IN (?) OR assets.id IN (?) OR assets.id IN (?)',
                             assets_in_steps, assets_in_results, assets_in_inventories)

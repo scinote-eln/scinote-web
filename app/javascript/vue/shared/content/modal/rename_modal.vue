@@ -1,6 +1,6 @@
 <template>
   <div ref="modal" @keydown.esc="close" class="modal" id="renameAttachmentModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-md" role="document">
+    <div class="modal-dialog modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
@@ -9,9 +9,14 @@
           </h4>
         </div>
         <div class="modal-body">
-          <p>{{ i18n.t('assets.from_clipboard.file_name')}}</p>
-          <div class="sci-input-container" :class="{ 'error': error }" :data-error-text="error">
-            <input ref="input" v-model="name" type="text" class="sci-input-field" @keyup.enter="renameAttachment(name)" required="true" />
+          <label class="sci-label">
+            {{ i18n.t('assets.from_clipboard.file_name')}}
+          </label>
+          <div class="flex gap-1 items-center">
+            <div class="sci-input-container" :class="{ 'error': error }" :data-error-text="error">
+              <input ref="input" v-model="name" type="text" class="sci-input-field" @keyup.enter="renameAttachment(name)" required="true" />
+            </div>
+            <div v-if="this.attachment.attributes.file_extension" class="shrink-0">.{{ this.attachment.attributes.file_extension }}</div>
           </div>
         </div>
         <div class="modal-footer">
@@ -31,14 +36,10 @@ export default {
   name: 'RenameAttachmentModal',
   mixins: [modalMixin],
   props: {
-    url_path: {
-      type: String,
+    attachment: {
+      type: Object,
       required: true
     },
-    fileName: {
-      type: String,
-      required: true
-    }
   },
   data() {
     return {
@@ -47,7 +48,7 @@ export default {
     };
   },
   created() {
-    this.name = this.fileName;
+    this.name = this.attachment.attributes.file_name_without_extension;
   },
   watch: {
     name() {
@@ -71,10 +72,17 @@ export default {
         return;
       }
 
-      const payload = { asset: { name: newName } };
+      let fileName = '';
 
+      if (this.attachment.attributes.file_extension) {
+        fileName = `${newName}.${this.attachment.attributes.file_extension}`;
+      } else {
+        fileName = newName;
+      }
+
+      const payload = { asset: { name: fileName } };
       try {
-        const response = await axios.patch(this.url_path, payload);
+        const response = await axios.patch(this.attachment.attributes.urls.rename, payload);
         this.$emit('attachment:update', response.data.data);
         this.close();
       } catch (error) {

@@ -44,8 +44,7 @@
     <Teleport to="body">
       <RenameAttachmentModal
         v-if="renameModal"
-        :url_path="attachment.attributes.urls.rename"
-        :fileName="attachment.attributes.file_name"
+        :attachment="attachment"
         @attachment:update="$emit('attachment:update', $event)"
         @close="renameModal = false"
       />

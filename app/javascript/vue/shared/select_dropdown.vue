@@ -2,7 +2,8 @@
   <div v-click-outside="close"
        @focus="open"
        @keydown="keySelectOptions($event)"
-       tabindex="0" class="w-full focus:outline-none "
+       tabindex="0" class="w-full focus:outline-none"
+       :data-e2e="e2eValue"
   >
     <div
       ref="field"
@@ -26,8 +27,9 @@
              ref="search"
              v-else
              v-model="query"
+             :placeholder="placeholderRender"
              @keyup="fetchOptions"
-             :placeholder="label || placeholder || this.i18n.t('general.select_dropdown.placeholder')"
+             @change.stop
              class="w-full border-0 outline-none pl-0 placeholder:text-sn-grey" />
       </template>
       <div v-else class="flex items-center gap-1 flex-wrap">
@@ -43,6 +45,7 @@
                :placeholder="tags.length > 0 ? '' : (placeholder || this.i18n.t('general.select_dropdown.placeholder'))"
                :style="{ width: searchInputSize }"
                :class="{ 'pl-2': tags.length > 0 }"
+               @change.stop
                class="border-0 outline-none pl-0 py-1 placeholder:text-sn-grey" />
         <div v-else-if="tags.length == 0" class="text-sn-grey truncate">
           {{ placeholder || this.i18n.t('general.select_dropdown.placeholder') }}
@@ -125,7 +128,8 @@ export default {
     searchable: { type: Boolean, default: false },
     clearable: { type: Boolean, default: false },
     tagsView: { type: Boolean, default: false },
-    urlParams: { type: Object, default: () => ({}) }
+    urlParams: { type: Object, default: () => ({}) },
+    e2eValue: { type: String, default: '' }
   },
   directives: {
     'click-outside': vOnClickOutside
@@ -144,6 +148,13 @@ export default {
   },
   mixins: [FixedFlyoutMixin],
   computed: {
+    placeholderRender() {
+      if (this.searchable && this.labelRenderer && this.label) {
+        return '';
+      }
+
+      return this.label || this.placeholder || this.i18n.t('general.select_dropdown.placeholder');
+    },
     sizeClass() {
       switch (this.size) {
         case 'xs':
@@ -301,8 +312,6 @@ export default {
       });
     },
     setValue(value) {
-      this.query = '';
-
       if (this.multiple) {
         if (this.newValue.includes(value)) {
           this.newValue = this.newValue.filter((v) => v !== value);

@@ -6,6 +6,7 @@ import ListEnd from './helpers/list_end.vue';
 import NoSearchResult from './helpers/no_search_result.vue';
 import CellTemplate from './helpers/cell_template.vue';
 import LinkTemplate from './helpers/link_template.vue';
+import TableHeader from './helpers/table_header.vue';
 /* global GLOBAL_CONSTANTS I18n */
 
 export default {
@@ -22,7 +23,8 @@ export default {
     NoSearchResult,
     ListEnd,
     CellTemplate,
-    LinkTemplate
+    LinkTemplate,
+    TableHeader
   },
   data() {
     return {
@@ -86,11 +88,13 @@ export default {
     handleScroll() {
       if (this.loading || !this.selected) return;
 
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        if (this.results.length < this.total) {
-          this.loadData();
+      this.$nextTick(() => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
+          if (this.results.length < this.total) {
+            this.loadData();
+          }
         }
-      }
+      });
     },
     changeSort(sort) {
       this.sort = sort;
@@ -110,8 +114,10 @@ export default {
     loadData() {
       if (this.query.length < 2) return;
 
-      if (this.loading && this.page) return;
+      if (this.loading && this.page && !(this.selected && !this.fullDataLoaded)) return;
 
+      const fullView = this.selected;
+      const currentPage = this.page;
       this.loading = true;
       axios.get(this.searchUrl, {
         params: {
@@ -119,21 +125,28 @@ export default {
           sort: this.sort,
           filters: this.filters,
           group: this.group,
-          preview: !this.selected,
-          page: this.page
+          preview: !fullView,
+          page: currentPage
         }
       })
         .then((response) => {
           if (this.selected) this.fullDataLoaded = true;
-          this.results = this.results.concat(response.data.data);
-          this.total = response.data.meta.total;
-          this.disabled = response.data.meta.disabled;
-          this.loading = false;
-          this.page = response.data.meta.next_page;
+
+          if (this.selected === fullView && this.page === currentPage) {
+            this.results = this.results.concat(response.data.data);
+            this.total = response.data.meta.total;
+            this.disabled = response.data.meta.disabled;
+            this.loading = false;
+            this.page = response.data.meta.next_page;
+
+            this.handleScroll();
+          }
         })
         .finally(() => {
-          this.loading = false;
-          this.$emit('updated');
+          if (this.selected === fullView) {
+            this.loading = false;
+            this.$emit('updated');
+          }
         });
     }
   }

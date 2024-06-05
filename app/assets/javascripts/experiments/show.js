@@ -30,7 +30,7 @@
 
       // listen for input event on the my_module_name input field
       $(`${newMyModuleModal} #my_module_name`).on('input', function () {
-        if ($(this).val().trim() !== '') {
+        if ($(this).val().trim().length > 1) {
           // enable the submit button if the input field is populated
           $('#new-modal-submit-btn').prop('disabled', false);
         } else {

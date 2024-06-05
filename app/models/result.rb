@@ -5,12 +5,15 @@ class Result < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include ViewableModel
+  include Discard::Model
+
+  default_scope -> { kept }
 
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
 
   SEARCHABLE_ATTRIBUTES = ['results.name', 'result_texts.name', 'result_texts.text',
-                           'tables.name', 'comments.message'].freeze
+                           'tables.name', 'tables.data_vector', 'comments.message'].freeze
 
   enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
@@ -48,11 +51,20 @@ class Result < ApplicationRecord
                                "ON my_module_user_assignments.assignable_type = 'MyModule' " \
                                "AND my_module_user_assignments.assignable_id = my_modules.id")
                         .where(my_module_user_assignments: { user_id: user, team_id: teams })
-                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
-    new_query = new_query.active unless include_archived
+    unless include_archived
+      new_query = new_query.joins(my_module: { experiment: :project })
+                           .active
+                           .where(my_modules: { archived: false },
+                                  experiments: { archived: false },
+                                  projects: { archived: false })
+    end
 
-    new_query
+    new_query.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: new_query })
+  end
+
+  def self.search_subquery(query, raw_input)
+    raw_input.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
   def duplicate(my_module, user, result_name: nil)

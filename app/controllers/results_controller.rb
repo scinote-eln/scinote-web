@@ -122,7 +122,7 @@ class ResultsController < ApplicationController
 
   def destroy
     name = @result.name
-    if @result.destroy
+    if @result.discard
       log_activity(:destroy_result, { destroyed_result: name })
       render json: {}, status: :ok
     else
@@ -207,7 +207,7 @@ class ResultsController < ApplicationController
   def set_navigator
     @navigator = {
       url: tree_navigator_my_module_path(@my_module),
-      archived: false,
+      archived: @my_module.archived_branch?,
       id: @my_module.code
     }
   end

@@ -20,7 +20,7 @@
           <div class="mb-4">
             <h5>{{ i18n.t("experiments.canvas.modal_manage_tags.project_tags", { project: this.projectName }) }}</h5>
           </div>
-          <div class="max-h-80 overflow-y-auto" v-click-outside="finishEditMode">
+          <div ref="scrollContainer" class="max-h-80 overflow-y-auto" v-click-outside="finishEditMode">
             <template v-for="tag in sortedAllTags" :key="tag.id">
               <div
                   class="flex items-center gap-3 px-3 py-2.5 group"
@@ -203,6 +203,8 @@ export default {
     startEditMode(tag) {
       if (!this.canManage) return;
 
+      const scrollPosition = this.$refs.scrollContainer.scrollTop;
+
       this.finishEditMode();
 
       tag.initialName = tag.attributes.name;
@@ -210,6 +212,7 @@ export default {
       this.tagToUpdate = tag;
       this.$nextTick(() => {
         this.$refs.modal.querySelector('input').focus();
+        this.$refs.scrollContainer.scrollTop = scrollPosition;
       });
     },
     finishEditMode(e, tag = null) {
@@ -316,6 +319,7 @@ export default {
       this.creatingTag = true;
       this.$nextTick(() => {
         this.$refs.newTagNameInput.focus();
+        this.setRandomColor();
       });
     },
     cancelCreating(e) {
@@ -323,6 +327,11 @@ export default {
 
       this.creatingTag = false;
       this.newTag = { name: null, color: null };
+    },
+    setRandomColor() {
+      if (!this.newTag.color) {
+        this.newTag.color = this.tagsColors[Math.floor(Math.random() * this.tagsColors.length)];
+      }
     }
   }
 };

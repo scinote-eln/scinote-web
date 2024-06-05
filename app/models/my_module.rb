@@ -56,6 +56,7 @@ class MyModule < ApplicationRecord
   belongs_to :changing_from_my_module_status, optional: true, class_name: 'MyModuleStatus'
   delegate :my_module_status_flow, to: :my_module_status, allow_nil: true
   has_many :results, inverse_of: :my_module, dependent: :destroy
+  has_many :results_include_discarded, -> { with_discarded }, class_name: 'Result', inverse_of: :my_module
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
   has_many :tags, through: :my_module_tags, dependent: :destroy
   has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
@@ -119,7 +120,11 @@ class MyModule < ApplicationRecord
                         .where(user_assignments: { team: teams })
                         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
-    new_query = new_query.active unless include_archived
+    unless include_archived
+      new_query = new_query.joins(experiment: :project)
+                           .active
+                           .where(experiments: { archived: false }, projects: { archived: false })
+    end
     new_query
   end
 

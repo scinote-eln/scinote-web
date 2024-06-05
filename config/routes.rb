@@ -835,8 +835,8 @@ Rails.application.routes.draw do
     get 'files/:id/move_targets', to: 'assets#move_targets', as: 'asset_move_tagets'
     post 'files/:id/move', to: 'assets#move', as: 'asset_move'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
-    post 'files/:id/duplicate', to: 'assets#duplicate', as: 'asset_duplicate'
     patch 'files/:id/rename', to: 'assets#rename', as: 'asset_rename'
+    post 'files/:id/duplicate', to: 'assets#duplicate', as: 'asset_duplicate'
     post 'files/create_wopi_file',
          to: 'assets#create_wopi_file',
          as: 'create_wopi_file'
@@ -856,6 +856,9 @@ Rails.application.routes.draw do
       post 'users/2fa_enable' => 'users/registrations#two_factor_enable'
       post 'users/2fa_disable' => 'users/registrations#two_factor_disable'
       get 'users/2fa_qr_code' => 'users/registrations#two_factor_qr_code'
+
+      post 'users/api_key_regenerate' => 'users/registrations#regenerate_api_key'
+      post 'users/api_key_revoke' => 'users/registrations#revoke_api_key'
     end
 
     namespace :api, defaults: { format: 'json' } do

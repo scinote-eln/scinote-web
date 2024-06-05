@@ -30,41 +30,14 @@
           </span>
         </div>
       </div>
-      <div class="inline-attachment-action-buttons">
-        <!-- open -->
-        <OpenMenu
-          :attachment="attachment"
-          :multipleOpenOptions="multipleOpenOptions"
-          @menu-dropdown-toggle="toggleMenuDropdown"
-          >
-        </OpenMenu>
-
-        <!-- move -->
-        <a v-if="attachment.attributes.urls.move"
-          @click.prevent.stop="showMoveModal"
-          class="btn btn-light icon-btn thumbnail-action-btn"
-          :title="i18n.t('attachments.thumbnail.buttons.move')">
-          <i class="sn-icon sn-icon-move"></i>
-        </a>
-
-        <!-- download -->
-        <a class="btn btn-light icon-btn thumbnail-action-btn"
-          :title="i18n.t('attachments.thumbnail.buttons.download')"
-          :href="attachment.attributes.urls.download" data-turbolinks="false">
-          <i class="sn-icon sn-icon-export"></i>
-        </a>
-
-        <!-- more options -->
-        <ContextMenu
-          :attachment="attachment"
-          @attachment:viewMode="updateViewMode"
-          @attachment:delete="deleteAttachment"
-          @attachment:moved="attachmentMoved"
-          @attachment:uploaded="reloadAttachments"
-          @attachment:update="$emit('attachment:update', $event)"
-          @menu-toggle="toggleContextMenu"
-        />
-      </div>
+      <ContextMenu
+        :attachment="attachment"
+        @attachment:viewMode="updateViewMode"
+        @attachment:delete="deleteAttachment"
+        @attachment:moved="attachmentMoved"
+        @attachment:uploaded="reloadAttachments"
+        @attachment:update="$emit('attachment:update', $event)"
+      />
     </div>
     <template v-if="attachment.attributes.wopi">
       <div v-if="showWopi"

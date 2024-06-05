@@ -6,7 +6,7 @@ class Protocol < ApplicationRecord
   include ArchivableModel
   include PrefixedIdModel
   SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description', PREFIXED_ID_SQL, 'steps.name',
-                           'step_texts.name', 'step_texts.text', 'tables.name',
+                           'step_texts.name', 'step_texts.text', 'tables.name', 'tables.data_vector',
                            'checklists.name', 'checklist_items.text', 'comments.message'].freeze
   REPOSITORY_TYPES = %i(in_repository_published_original in_repository_draft in_repository_published_version).freeze
 
@@ -173,28 +173,41 @@ class Protocol < ApplicationRecord
     protocol_templates = if options[:options]&.dig(:in_repository).present? || options[:options].blank?
                            templates = latest_available_versions(teams)
                                        .with_granted_permissions(user, ProtocolPermissions::READ)
-                                       .select(:id)
                            templates = templates.active unless include_archived
-                           templates
+                           templates.select(:id)
                          end || []
 
     protocol_my_modules = if options[:options]&.dig(:in_repository).blank?
-                            protocols = distinct.joins(:my_module)
-                                                .joins("INNER JOIN user_assignments my_module_user_assignments " \
-                                                       "ON my_module_user_assignments.assignable_type = 'MyModule' " \
-                                                       "AND my_module_user_assignments.assignable_id = my_modules.id")
-                                                .where(my_module_user_assignments: { user_id: user })
-                                                .where(team: teams)
-                            protocols = protocols.active unless include_archived
-                            protocols.pluck(:id)
+                            protocols = viewable_by_user_my_module_protocols(user, teams)
+                            unless include_archived
+                              protocols = protocols.joins(my_module: { experiment: :project })
+                                                   .active
+                                                   .where(my_modules: { archived: false },
+                                                          experiments: { archived: false },
+                                                          projects: { archived: false })
+                            end
+
+                            protocols.select(:id)
                           end || []
 
-    distinct.left_joins(steps: [:step_texts, { step_tables: :table },
-                                { checklists: :checklist_items }, :step_comments])
-            .where('(protocols.protocol_type IN (?) AND protocols.id IN (?)) OR (protocols.id IN (?))',
-                   [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
-                   protocol_my_modules, protocol_templates)
-            .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+    protocols = Protocol.where('(protocols.protocol_type IN (?) AND protocols.id IN (?)) OR (protocols.id IN (?))',
+                               [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
+                               protocol_my_modules, protocol_templates)
+
+    protocols.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: protocols })
+  end
+
+  def self.search_subquery(query, raw_input)
+    raw_input.where_attributes_like_boolean(['protocols.name', 'protocols.description', PREFIXED_ID_SQL], query)
+             .or(raw_input.where(id: Step.left_joins(:step_texts, { step_tables: :table },
+                                                     { checklists: :checklist_items }, :step_comments)
+                                       .where(protocol: raw_input)
+                                       .where_attributes_like_boolean(['steps.name', 'step_texts.name',
+                                                                       'step_texts.text', 'tables.name',
+                                                                       'tables.data_vector', 'comments.message',
+                                                                       'checklists.name', 'checklist_items.text'],
+                                                                      query)
+                                       .select(:protocol_id)))
   end
 
   def self.latest_available_versions(teams)
@@ -216,19 +229,37 @@ class Protocol < ApplicationRecord
     where('protocols.id IN ((?) UNION (?) UNION (?))', original_without_versions, published_versions, new_drafts)
   end
 
-  def self.viewable_by_user(user, teams)
-    # Team owners see all protocol templates in the team
-    owner_role = UserRole.find_predefined_owner_role
-    protocols = Protocol.where(team: teams)
-                        .where(protocol_type: REPOSITORY_TYPES)
-    viewable_as_team_owner = protocols.joins("INNER JOIN user_assignments team_user_assignments " \
-                                             "ON team_user_assignments.assignable_type = 'Team' " \
-                                             "AND team_user_assignments.assignable_id = protocols.team_id")
-                                      .where(team_user_assignments: { user_id: user, user_role_id: owner_role })
-                                      .select(:id)
-    viewable_as_assigned = protocols.with_granted_permissions(user, ProtocolPermissions::READ).select(:id)
+  def self.viewable_by_user(user, teams, options = {})
+    if options[:fetch_latest_versions]
+      protocol_templates = latest_available_versions(teams)
+                           .with_granted_permissions(user, ProtocolPermissions::READ)
+                           .select(:id)
+      protocol_my_modules = viewable_by_user_my_module_protocols(user, teams).select(:id)
 
-    where('protocols.id IN ((?) UNION (?))', viewable_as_team_owner, viewable_as_assigned)
+      where('protocols.id IN ((?) UNION (?))', protocol_templates, protocol_my_modules)
+    else
+      # Team owners see all protocol templates in the team
+      owner_role = UserRole.find_predefined_owner_role
+      protocols = Protocol.where(team: teams)
+                          .where(protocol_type: REPOSITORY_TYPES)
+      viewable_as_team_owner = protocols.joins("INNER JOIN user_assignments team_user_assignments " \
+                                               "ON team_user_assignments.assignable_type = 'Team' " \
+                                               "AND team_user_assignments.assignable_id = protocols.team_id")
+                                        .where(team_user_assignments: { user_id: user, user_role_id: owner_role })
+                                        .select(:id)
+      viewable_as_assigned = protocols.with_granted_permissions(user, ProtocolPermissions::READ).select(:id)
+
+      where('protocols.id IN ((?) UNION (?))', viewable_as_team_owner, viewable_as_assigned)
+    end
+  end
+
+  def self.viewable_by_user_my_module_protocols(user, teams)
+    distinct.joins(:my_module)
+            .joins("INNER JOIN user_assignments my_module_user_assignments " \
+                   "ON my_module_user_assignments.assignable_type = 'MyModule' " \
+                   "AND my_module_user_assignments.assignable_id = my_modules.id")
+            .where(my_module_user_assignments: { user_id: user })
+            .where(team: teams)
   end
 
   def self.filter_by_teams(teams = [])
