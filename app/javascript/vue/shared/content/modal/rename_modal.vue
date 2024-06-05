@@ -16,7 +16,7 @@
             <div class="sci-input-container" :class="{ 'error': error }" :data-error-text="error">
               <input ref="input" v-model="name" type="text" class="sci-input-field" @keyup.enter="renameAttachment(name)" required="true" />
             </div>
-            <div class="shrink-0">.{{ this.attachment.attributes.file_extension }}</div>
+            <div v-if="this.attachment.attributes.file_extension" class="shrink-0">.{{ this.attachment.attributes.file_extension }}</div>
           </div>
         </div>
         <div class="modal-footer">
@@ -72,7 +72,15 @@ export default {
         return;
       }
 
-      const payload = { asset: { name: `${newName}.${this.attachment.attributes.file_extension}` } };
+      let fileName = '';
+
+      if (this.attachment.attributes.file_extension) {
+        fileName = `${newName}.${this.attachment.attributes.file_extension}`;
+      } else {
+        fileName = newName;
+      }
+
+      const payload = { asset: { name: fileName } };
       try {
         const response = await axios.patch(this.attachment.attributes.urls.rename, payload);
         this.$emit('attachment:update', response.data.data);
