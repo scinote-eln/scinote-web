@@ -8,8 +8,8 @@ const app = createApp({
   data() {
     return {
       myModuleParams: null,
+      myModuleUrl: null,
       tagsModalOpen: false,
-      tagsUrl: null
     };
   },
   mounted() {
@@ -20,6 +20,7 @@ const app = createApp({
   },
   methods: {
     open(myModuleUrl) {
+      this.myModuleUrl = myModuleUrl;
       $.ajax({
         url: myModuleUrl,
         type: 'GET',
@@ -32,6 +33,7 @@ const app = createApp({
     },
     close() {
       this.myModuleParams = null;
+      this.myModuleUrl = null;
       this.tagsModalOpen = false;
     },
     syncTags(tags) {
@@ -52,15 +54,13 @@ const app = createApp({
       // Canvas
       if ($('#canvas-container').length) {
         $.ajax({
-          url: this.tagsUrl,
+          url: this.myModuleUrl,
           type: 'GET',
           dataType: 'json',
           success(data) {
-            $.each(data.my_modules, (index, myModule) => {
-              $(`div.panel[data-module-id='${myModule.id}']`)
-                .find('.edit-tags-link')
-                .html(myModule.tags_html);
-            });
+            $(`div.panel[data-module-id='${data.data.id}']`)
+              .find('.edit-tags-link')
+              .html(data.data.attributes.tags_html);
           }
         });
       }
