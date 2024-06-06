@@ -27,20 +27,22 @@
       <div class="actions-block">
         <div class="protocol-buttons-group shrink-0 bg-sn-white">
           <a v-if="urls.add_step_url"
-             class="btn btn-secondary"
+             class="btn btn-secondary icon-btn xl:!px-4"
              :title="i18n.t('protocols.steps.new_step_title')"
              @keyup.enter="addStep(steps.length)"
              @click="addStep(steps.length)"
              tabindex="0">
               <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
-              <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+              <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
           <template v-if="steps.length > 0">
-            <button class="btn btn-secondary" @click="collapseSteps" tabindex="0">
-              {{ i18n.t("protocols.steps.collapse_label") }}
+            <button :title="i18n.t('protocols.steps.collapse_label')" v-if="!stepCollapsed" class="btn btn-secondary icon-btn xl:!px-4" @click="collapseSteps" tabindex="0">
+              <i class="sn-icon sn-icon-collapse-all"></i>
+              <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.collapse_label") }}</span>
             </button>
-            <button class="btn btn-secondary" @click="expandSteps" tabindex="0">
-              {{ i18n.t("protocols.steps.expand_label") }}
+            <button v-else  :title="i18n.t('protocols.steps.expand_label')" class="btn btn-secondary icon-btn xl:!px-4" @click="expandSteps" tabindex="0">
+              <i class="sn-icon sn-icon-expand-all"></i>
+              <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.expand_label") }}</span>
             </button>
           </template>
           <ProtocolOptions
@@ -145,9 +147,11 @@
             </a>
             <div v-if="steps.length > 0" class="flex justify-between items-center gap-4">
               <button @click="collapseSteps" class="btn btn-secondary flex px-4" tabindex="0">
+                <i class="sn-icon sn-icon-collapse-all"></i>
                 {{ i18n.t("protocols.steps.collapse_label") }}
               </button>
               <button @click="expandSteps" class="btn btn-secondary flex px-4" tabindex="0">
+                <i class="sn-icon sn-icon-expand-all"></i>
                 {{ i18n.t("protocols.steps.expand_label") }}
               </button>
               <a v-if="steps.length > 0 && urls.reorder_steps_url"
@@ -182,6 +186,7 @@
                 @step:attachemnts:loaded="stepToReload = null"
                 @step:move_attachment="reloadStep"
                 @step:drag_enter="dragEnter"
+                @step:collapsed="checkStepsState"
                 :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                 :userSettingsUrl="userSettingsUrl"
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
@@ -279,7 +284,8 @@ export default {
       publishing: false,
       stepToReload: null,
       activeDragStep: null,
-      userSettingsUrl: null
+      userSettingsUrl: null,
+      stepCollapsed: false
     };
   },
   mounted() {
@@ -310,13 +316,20 @@ export default {
     reloadStep(step) {
       this.stepToReload = step;
     },
+    checkStepsState() {
+      this.stepCollapsed = this.$refs.steps.every((step) => step.isCollapsed);
+    },
     collapseSteps() {
       $('.step-container .collapse').collapse('hide');
       this.updateStepStateSettings(true);
+      this.$refs.steps.forEach((step) => step.isCollapsed = true);
+      this.stepCollapsed = true;
     },
     expandSteps() {
       $('.step-container .collapse').collapse('show');
       this.updateStepStateSettings(false);
+      this.$refs.steps.forEach((step) => step.isCollapsed = false);
+      this.stepCollapsed = false;
     },
     updateStepStateSettings(newState) {
       const updatedData = this.steps.reduce((acc, currentStep) => {
