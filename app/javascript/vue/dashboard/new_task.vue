@@ -49,10 +49,10 @@
     </div>
     <hr class="my-6">
     <div class="flex items-center justify-end gap-4">
-      <button class="btn btn-light" @click="$emit('close')">
+      <button class="btn btn-light" @click="closeModal">
         {{ i18n.t("dashboard.create_task_modal.cancel") }}
       </button>
-      <button class="btn btn-primary" @click="createMyModule" :disabled="!validTaskName || !validExperiment || !validProject">
+      <button class="btn btn-primary" @click="createMyModule" :disabled="!validTaskName || !validExperiment || !validProject || creatingTask">
         {{ i18n.t("dashboard.create_task_modal.create") }}
       </button>
     </div>
@@ -116,11 +116,16 @@ export default {
       userRoles: [],
       taskName: '',
       publicProject: false,
-      defaultRole: null
+      defaultRole: null,
+      creatingTask: false
     };
   },
   methods: {
     createMyModule() {
+      if (this.creatingTask) return;
+
+      this.creatingTask = true;
+
       axios.post(this.createUrl, {
         my_module: {
           name: this.taskName
@@ -137,6 +142,7 @@ export default {
         }
       })
         .then((response) => {
+          this.creatingTask = false;
           window.location.href = response.data.my_module_path;
         });
     },
@@ -150,6 +156,14 @@ export default {
     changeExperiment(value, label) {
       this.selectedExperiment = value;
       this.newExperimentName = label;
+    },
+    closeModal() {
+      $('#create-task-modal').modal('hide');
+      this.taskName = '';
+      this.selectedProject = null;
+      this.newProjectName = '';
+      this.selectedExperiment = null;
+      this.newExperimentName = '';
     },
     fetchUserRoles() {
       axios.get(this.rolesUrl)

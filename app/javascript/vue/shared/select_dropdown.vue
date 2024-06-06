@@ -272,6 +272,9 @@ export default {
           this.$refs.search?.focus();
         });
       }
+    },
+    urlParams() {
+      this.fetchOptions();
     }
   },
   methods: {
