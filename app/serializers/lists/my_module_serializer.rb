@@ -145,7 +145,9 @@ module Lists
 
     def tags_html
       # legacy canvas support
-      ApplicationController.new.render_to_string(
+      return '' unless @instance_options[:controller]
+
+      @instance_options[:controller].render_to_string(
         partial: 'canvas/tags',
         locals: { my_module: object },
         formats: :html
