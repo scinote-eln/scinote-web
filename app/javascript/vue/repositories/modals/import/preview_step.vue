@@ -120,7 +120,7 @@ export default {
       });
 
       columns.push({
-        field: 'status',
+        field: 'import_status',
         headerName: this.i18n.t('repositories.import_records.steps.step3.status'),
         pinned: 'right'
       });
