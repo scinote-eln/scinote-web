@@ -1,6 +1,6 @@
 <template>
   <div class="relative" v-if="listItems.length > 0 || alwaysShow" v-click-outside="closeMenu" >
-    <button ref="field" :class="btnClasses" :title="title" @click="isOpen = !isOpen" :data-e2e="e2eSortButton">
+    <button ref="field" :class="btnClasses" :title="title" @click="isOpen = !isOpen" :data-e2e="dataE2e">
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}
       <i v-if="caret && isOpen" class="sn-icon sn-icon-up"></i>
@@ -35,6 +35,7 @@
                 :class="{ 'bg-sn-super-light-blue': item.active }"
                 class="flex group items-center rounded relative text-sn-blue whitespace-nowrap px-3 py-2.5 hover:no-underline cursor-pointer
                       group-hover:bg-sn-super-light-blue hover:!bg-sn-super-light-grey"
+                :data-e2e="item.data_e2e"
               >
                 {{ item.text }}
                 <i class="sn-icon sn-icon-right ml-auto"></i>
@@ -50,6 +51,7 @@
                   :href="sub_item.url"
                   :traget="sub_item.url_target || '_self'"
                   :class="{ 'bg-sn-super-light-blue': item.active }"
+                  :data-e2e="`${sub_item.data_e2e}`"
                   class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5"
                   @click="handleClick($event, sub_item)"
                 >
@@ -80,7 +82,7 @@ export default {
     caret: { type: Boolean, default: false },
     alwaysShow: { type: Boolean, default: false },
     title: { type: String, default: '' },
-    e2eSortButton: { type: String, default: '' }
+    dataE2e: { type: String, default: '' }
   },
   data() {
     return {

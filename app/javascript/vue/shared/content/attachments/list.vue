@@ -1,6 +1,7 @@
 <template>
   <div class="list-attachment-container asset"
        :data-asset-id="attachment.id"
+       :data-e2e="`e2e-CO-${dataE2e}-attachment${attachment.id}-list`"
   >
     <i class="text-sn-grey asset-icon sn-icon" :class="attachment.attributes.icon"></i>
     <a :href="attachment.attributes.urls.blob"
@@ -57,6 +58,10 @@ export default {
     parentId: {
       type: Number,
       required: true
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {

@@ -1,7 +1,8 @@
 <template>
-  <div class="content__checklist-container pr-8" >
+  <div class="content__checklist-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-checklist${element.id}`">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
-    <div class="checklist-header flex rounded mb-1 items-center relative w-full group/checklist-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
+    <div class="checklist-header flex rounded mb-1 items-center relative w-full group/checklist-header"
+      :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
       <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
         <InlineEdit
           :class="{ 'pointer-events-none': !element.attributes.orderable.urls.update_url }"
@@ -13,6 +14,7 @@
           :autofocus="editingName"
           :smartAnnotation="true"
           :attributeName="`${i18n.t('Checklist')} ${i18n.t('name')}`"
+          :dataE2e="`${dataE2e}-checklist${element.id}`"
           @editingEnabled="editingName = true"
           @editingDisabled="editingName = false"
           @update="updateName"
@@ -24,6 +26,7 @@
         :btnClasses="'btn btn-light icon-btn  btn-sm'"
         :position="'right'"
         :btnIcon="'sn-icon sn-icon-more-hori'"
+        :dataE2e="`e2e-DD-${dataE2e}-checklist${element.id}-options`"
         @edit="editingName = true"
         @duplicate="duplicateElement"
         @move="showMoveModal"
@@ -51,6 +54,7 @@
             :reorderChecklistItemUrl="this.element.attributes.orderable.urls.reorder_url"
             :inRepository="inRepository"
             :draggable="checklistItems.length > 1"
+            :data-e2e="`${dataE2e}-checklistItem${element.id}`"
             @editStart="editingItem = true"
             @editEnd="editingItem = false"
             @update="saveItem"
@@ -63,6 +67,7 @@
       <div v-if="element.attributes.orderable.urls.create_item_url && !addingNewItem"
            class="flex items-center gap-1 text-sn-blue cursor-pointer mb-2 mt-1 "
            tabindex="0"
+           :data-e2e="`e2e-BT-${dataE2e}-checklist${element.id}-addNew`"
            @keyup.enter="addItem(checklistItems[checklistItems.length - 1]?.id)"
            @click="addItem(checklistItems[checklistItems.length - 1]?.id)">
         <i class="sn-icon sn-icon-new-task w-6 text-center inline-block"></i>
@@ -120,6 +125,10 @@ export default {
     assignableMyModuleId: {
       type: Number,
       required: false
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -154,25 +163,29 @@ export default {
       if (this.element.attributes.orderable.urls.update_url) {
         menu.push({
           text: I18n.t('general.edit'),
-          emit: 'edit'
+          emit: 'edit',
+          data_e2e: `e2e-BT-${this.dataE2e}-checklist${this.element.id}-options-edit`
         });
       }
       if (this.element.attributes.orderable.urls.duplicate_url) {
         menu.push({
           text: I18n.t('general.duplicate'),
-          emit: 'duplicate'
+          emit: 'duplicate',
+          data_e2e: `e2e-BT-${this.dataE2e}-checklist${this.element.id}-options-duplicate`
         });
       }
       if (this.element.attributes.orderable.urls.move_targets_url) {
         menu.push({
           text: I18n.t('general.move'),
-          emit: 'move'
+          emit: 'move',
+          data_e2e: `e2e-BT-${this.dataE2e}-checklist${this.element.id}-options-move`
         });
       }
       if (this.element.attributes.orderable.urls.delete_url) {
         menu.push({
           text: I18n.t('general.delete'),
-          emit: 'delete'
+          emit: 'delete',
+          data_e2e: `e2e-BT-${this.dataE2e}-checklist${this.element.id}-options-delete`
         });
       }
       return menu;

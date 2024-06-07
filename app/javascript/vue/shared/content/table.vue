@@ -1,5 +1,6 @@
 <template>
-  <div class="content__table-container pr-8">
+  <div class="content__table-container pr-8"
+    :data-e2e="`e2e-CO-${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}`">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
     <div class="table-header h-9 flex rounded mb-3 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
       <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader"
@@ -12,6 +13,7 @@
           :allowBlank="false"
           :autofocus="editingName"
           :attributeName="`${i18n.t('Table')} ${i18n.t('name')}`"
+          :dataE2e="`${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}`"
           @editingEnabled="enableNameEdit"
           @editingDisabled="disableNameEdit"
           @update="updateName"
@@ -23,6 +25,7 @@
         :btnClasses="'btn btn-light icon-btn btn-sm'"
         :position="'right'"
         :btnIcon="'sn-icon sn-icon-more-hori'"
+        :dataE2e="`e2e-DD-${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}-options`"
         @edit="enableNameEdit"
         @duplicate="duplicateElement"
         @move="showMoveModal"
@@ -32,11 +35,14 @@
     <div class="table-body group/table-body relative border-solid border-transparent"
          :class="{'edit border-sn-light-grey': editingTable, 'view': !editingTable, 'locked': !element.attributes.orderable.urls.update_url}"
          tabindex="0"
+         :data_e2e="`e2e-TB-${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}`"
          @keyup.enter="!editingTable && enableTableEdit()">
       <div ref="hotTable" class="hot-table-container" @click="!editingTable && enableTableEdit()">
       </div>
       <div class="text-xs pt-3 pb-2 text-sn-grey h-1">
-        <span v-if="editingTable">{{ i18n.t('protocols.steps.table.edit_message') }}</span>
+        <span v-if="editingTable" :dataE2e="`e2e-TX-${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}-editMessage`">
+          {{ i18n.t('protocols.steps.table.edit_message') }}
+        </span>
       </div>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
@@ -82,6 +88,10 @@ export default {
     assignableMyModuleId: {
       type: Number,
       required: false
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -104,25 +114,29 @@ export default {
       if (this.element.attributes.orderable.urls.update_url) {
         menu.push({
           text: I18n.t('general.edit'),
-          emit: 'edit'
+          emit: 'edit',
+          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-edit`
         });
       }
       if (this.element.attributes.orderable.urls.duplicate_url) {
         menu.push({
           text: I18n.t('general.duplicate'),
-          emit: 'duplicate'
+          emit: 'duplicate',
+          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-duplicate`
         });
       }
       if (this.element.attributes.orderable.urls.move_targets_url) {
         menu.push({
           text: I18n.t('general.move'),
-          emit: 'move'
+          emit: 'move',
+          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-move`
         });
       }
       if (this.element.attributes.orderable.urls.delete_url) {
         menu.push({
           text: I18n.t('general.delete'),
-          emit: 'delete'
+          emit: 'delete',
+          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-delete`
         });
       }
       return menu;
