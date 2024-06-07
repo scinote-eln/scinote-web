@@ -6,7 +6,7 @@
       position="right"
       @dtEvent="changeSort"
       btnIcon="sn-icon sn-icon-sort-down"
-      :e2eButton="e2eSortButton"
+      :dataE2e="e2eSortButton"
     ></MenuDropdown>
 </template>
 

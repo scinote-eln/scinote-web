@@ -1,5 +1,5 @@
 <template>
-  <div class="content__checklist-item pl-10 ml-[-2.325rem] group/checklist-item-header">
+  <div class="content__checklist-item pl-10 ml-[-2.325rem] group/checklist-item-header" :data-e2e="`e2e-CO-${dataE2e}`">
     <div class="checklist-item-header flex rounded items-center relative w-full" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
       <div v-if="reorderChecklistItemUrl"
         class="absolute h-6 cursor-grab justify-center left-[-2.325rem] top-0.5 px-2 tw-hidden text-sn-grey element-grip step-element-grip--draggable"
@@ -14,7 +14,9 @@
                  type="checkbox"
                  class="sci-checkbox"
                  :disabled="checklistItem.attributes.isNew"
-                 :checked="checklistItem.attributes.checked" @change="toggleChecked($event)" />
+                 :checked="checklistItem.attributes.checked"
+                 :data-e2e="`e2e-CB-${dataE2e}-toggleChecked`"
+                 @change="toggleChecked($event)" />
           <span class="sci-checkbox-label" >
           </span>
         </div>
@@ -37,6 +39,7 @@
             :editOnload="checklistItem.attributes.isNew"
             :smartAnnotation="true"
             :allowNewLine="true"
+            :dataE2e="dataE2e"
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
             @update="updateText"
@@ -46,6 +49,7 @@
           />
           <span v-if="!editingText && (!checklistItem.attributes.urls || deleteUrl)"
                 class="absolute right-0 top-0.5 leading-6 tw-hidden group-hover/checklist-item-header:inline-block !text-sn-blue cursor-pointer"
+                :data-e2e="`e2e-BT-${dataE2e}-delete`"
                 @click="showDeleteModal" tabindex="0">
             <i class="sn-icon sn-icon-delete"></i>
           </span>
@@ -88,6 +92,10 @@ export default {
     reordering: {
       type: Boolean,
       required: true
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {

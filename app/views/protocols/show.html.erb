@@ -6,7 +6,7 @@
 <div class="content-pane protocols-show flexible with-grey-background pb-4" >
   <div class="content-header sticky-header">
     <div class="title-row">
-      <h1>
+      <h1 data-e2e="e2e-TX-protocolTemplates-protocol-title">
         <% if @inline_editable_title_config.present? %>
           <%= render partial: "shared/inline_editing",
                       locals: {
@@ -33,6 +33,7 @@
     data-protocol-url="<%= protocol_path(@protocol) %>"
     data-date-format="<%= datetime_picker_format_date_only %>"
     data-user-utc-offset="<%= ActiveSupport::TimeZone.find_tzinfo(current_user.time_zone).utc_offset %>"
+    data-e2e="e2e-CO-protocolTemplates-protocol"
   >
     <protocol-container
     :protocol-url="protocolUrl"
