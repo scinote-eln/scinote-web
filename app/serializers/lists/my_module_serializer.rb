@@ -19,6 +19,7 @@ module Lists
       status
       designated_users
       tags
+      tags_html
       comments
       due_date_formatted
       permissions
@@ -140,6 +141,17 @@ module Lists
           color: tag.color
         }
       end
+    end
+
+    def tags_html
+      # legacy canvas support
+      return '' unless @instance_options[:controller]
+
+      @instance_options[:controller].render_to_string(
+        partial: 'canvas/tags',
+        locals: { my_module: object },
+        formats: :html
+      )
     end
 
     def comments
