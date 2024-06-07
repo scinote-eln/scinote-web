@@ -41,6 +41,9 @@
 </template>
 
 <script>
+
+/* global GLOBAL_CONSTANTS */
+
 import AttachmentMovedMixin from './mixins/attachment_moved.js';
 import ContextMenuMixin from './mixins/context_menu.js';
 import ContextMenu from './context_menu.vue';
@@ -87,7 +90,7 @@ export default {
           if (this.externalProcessing) {
             setTimeout(() => {
               this.checkProcessing();
-            }, 5000);
+            }, GLOBAL_CONSTANTS.FAST_STATUS_POLLING_INTERVAL);
           }
         });
     }

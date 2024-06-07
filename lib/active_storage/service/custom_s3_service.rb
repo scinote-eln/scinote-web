@@ -20,7 +20,7 @@ module ActiveStorage
     def download(key, &block)
       return super unless staging_bucket
 
-      if file_in_staging_bucket(key)
+      if file_in_staging_bucket?(key)
         raise FileNotReadyError
       end
 
@@ -30,7 +30,7 @@ module ActiveStorage
     end
 
     def ready?(key)
-      if staging_bucket && file_in_staging_bucket(key)
+      if staging_bucket && file_in_staging_bucket?(key)
         return false
       end
 
@@ -64,7 +64,7 @@ module ActiveStorage
 
     private
 
-    def file_in_staging_bucket(key)
+    def file_in_staging_bucket?(key)
       bucket.client
             .get_object_tagging(bucket: bucket.name, key: subfolder.present? ? File.join(subfolder, key) : key)
             .tag_set.find { |tag| tag.key == STAGING_TAG_KEY && tag.value == STAGING_TAG_VALUE }

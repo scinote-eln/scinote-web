@@ -22,7 +22,7 @@
             style='opacity: 0' />
         <div v-else-if="externalProcessing"
              class="w-[186px] h-[186px]  rounded-sm flex items-center justify-center flex-col gap-4">
-          <img src="/images/medium/loading.svg" alt="Loading" />
+          <img src="/images/medium/loading.svg" :alt="i18n.t('general.loading')" />
           {{ i18n.t('attachments.virus_scaning') }}
         </div>
         <div v-else class="w-[186px] h-[186px] bg-sn-super-light-grey rounded-sm"></div>
@@ -180,6 +180,9 @@
 </template>
 
 <script>
+
+/* global GLOBAL_CONSTANTS */
+
 import AttachmentMovedMixin from './mixins/attachment_moved.js';
 import ContextMenuMixin from './mixins/context_menu.js';
 import ContextMenu from './context_menu.vue';
@@ -287,7 +290,7 @@ export default {
           if (this.externalProcessing) {
             setTimeout(() => {
               this.checkProcessing();
-            }, 5000);
+            }, GLOBAL_CONSTANTS.FAST_STATUS_POLLING_INTERVAL);
           }
         });
     },
