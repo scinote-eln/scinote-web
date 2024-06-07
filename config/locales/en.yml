@@ -2341,6 +2341,7 @@ en:
         duplicated_values: "Two or more columns have the same mapping."
         errors_list_title: "Items were not imported because one or more errors were found:"
         no_repository_name: "Item name is required!"
+        mapping_error: "Column mappings are required"
     edit_record: "Edit"
     assign_record: "Assign to task"
     copy_record: "Duplicate"

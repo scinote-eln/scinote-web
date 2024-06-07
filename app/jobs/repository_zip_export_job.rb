@@ -35,15 +35,9 @@ class RepositoryZipExportJob < ZipExportJob
                    params[:header_ids].map(&:to_i),
                    @user,
                    repository,
-                   in_module: params[:my_module_id].present?,
-                   empty_export: @empty_export)
+                   in_module: params[:my_module_id].present?)
     exported_data = service.export!
-
-    if @empty_export
-      File.binwrite("#{dir}/Export_Inventory_Empty_#{Time.now.utc.strftime('%F %H-%M-%S_UTC')}.#{@file_type}", exported_data)
-    else
-      File.binwrite("#{dir}/export.#{@file_type}", exported_data)
-    end
+    File.binwrite("#{dir}/export.#{@file_type}", exported_data)
   end
 
   def failed_notification_title

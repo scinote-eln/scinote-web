@@ -280,7 +280,7 @@ class RepositoriesController < ApplicationController
     render_403 unless can_create_repository_rows?(@repository)
 
     unless import_params[:file]
-      repository_response(t('repositories.parse_sheet.errors.no_file_selected'))
+      unprocessable_entity_repository_response(t('repositories.parse_sheet.errors.no_file_selected'))
       return
     end
     begin
@@ -290,16 +290,12 @@ class RepositoriesController < ApplicationController
         session: session
       )
       if parsed_file.too_large?
-        return render json: { error: t('general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb) }, status: :unprocessable_entity
+        render json: { error: t('general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb) },
+               status: :unprocessable_entity
       elsif parsed_file.has_too_many_rows?
-        return render json: { error: t('repositories.import_records.error_message.items_limit', items_size: Constants::IMPORT_REPOSITORY_ITEMS_LIMIT) }, status: :unprocessable_entity
+        render json: { error: t('repositories.import_records.error_message.items_limit',
+                                items_size: Constants::IMPORT_REPOSITORY_ITEMS_LIMIT) }, status: :unprocessable_entity
       else
-        sheet = SpreadsheetParser.open_spreadsheet(import_params[:file])
-        duplicate_ids = SpreadsheetParser.duplicate_ids(sheet)
-        if duplicate_ids.any?
-          @importing_duplicates_warning = t('repositories.import_records.error_message.importing_duplicates', duplicate_ids: duplicate_ids)
-        end
-
         @import_data = parsed_file.data
 
         if @import_data.header.blank? || @import_data.columns.blank?
@@ -307,64 +303,58 @@ class RepositoriesController < ApplicationController
         end
 
         if (@temp_file = parsed_file.generate_temp_file)
-          render json: {
-            import_data: @import_data,
-            temp_file: @temp_file
-          }
+          render json: { import_data: @import_data, temp_file: @temp_file }
         else
-          return render json: { error: t('repositories.parse_sheet.errors.temp_file_failure') }, status: :unprocessable_entity
+          render json: { error: t('repositories.parse_sheet.errors.temp_file_failure') }, status: :unprocessable_entity
         end
       end
     rescue ArgumentError, CSV::MalformedCSVError
-      return render json: { error: t('repositories.parse_sheet.errors.invalid_file', encoding: ''.encoding) }, status: :unprocessable_entity
+      render json: { error: t('repositories.parse_sheet.errors.invalid_file', encoding: ''.encoding) },
+             status: :unprocessable_entity
     rescue TypeError
-      return render json: { error: t('repositories.parse_sheet.errors.invalid_extension') }, status: :unprocessable_entity
+      render json: { error: t('repositories.parse_sheet.errors.invalid_extension') }, status: :unprocessable_entity
     end
   end
 
   def import_records
     render_403 unless can_create_repository_rows?(Repository.accessible_by_teams(current_team)
-                                                            .find_by_id(import_params[:id]))
-
-    # Access the checkbox values from params
-    can_edit_existing_items = params[:can_edit_existing_items]
-    should_overwrite_with_empty_cells = params[:should_overwrite_with_empty_cells]
-    preview = params[:preview]
-
+                                                            .find_by(id: import_params[:id]))
     # Check if there exist mapping for repository record (it's mandatory)
     if import_params[:mappings].present? && import_params[:mappings].value?('-1')
-      import_records = repostiory_import_actions
-      status = import_records.import!(can_edit_existing_items, should_overwrite_with_empty_cells, preview)
-
+      status = ImportRepository::ImportRecords
+               .new(
+                 temp_file: TempFile.find_by(id: import_params[:file_id]),
+                 repository: Repository.accessible_by_teams(current_team).find_by(id: import_params[:id]),
+                 mappings: import_params[:mappings],
+                 session: session,
+                 user: current_user,
+                 can_edit_existing_items: import_params[:can_edit_existing_items],
+                 should_overwrite_with_empty_cells: import_params[:should_overwrite_with_empty_cells],
+                 preview: import_params[:preview]
+               ).import!
       if status[:status] == :ok
-        log_activity(:import_inventory_items,
-                      num_of_items: status[:nr_of_added])
+        log_activity(:import_inventory_items, num_of_items: status[:nr_of_added])
 
-        flash[:success] = t('repositories.import_records.success_flash',
-                            number_of_rows: status[:nr_of_added],
-                            total_nr: status[:total_nr])
-
-        if preview
-          render json: status, status: :ok
-        else
-          render json: {}, status: :ok
+        unless import_params[:preview]
+          flash[:success] = t('repositories.import_records.success_flash',
+                              number_of_rows: status[:nr_of_added],
+                              total_nr: status[:total_nr])
         end
 
+        render json: import_params[:preview] ? status : {}, status: :ok
+
       else
-        flash[:alert] =
-          t('repositories.import_records.partial_success_flash',
-            nr: status[:nr_of_added], total_nr: status[:total_nr])
+        unless import_params[:preview]
+          flash[:alert] =
+            t('repositories.import_records.partial_success_flash',
+              nr: status[:nr_of_added], total_nr: status[:total_nr])
+        end
+
         render json: {}, status: :unprocessable_entity
       end
     else
-      render json: {
-        html: render_to_string(
-          partial: 'shared/flash_errors',
-          formats: :html,
-          locals: { error_title: t('repositories.import_records.error_message.errors_list_title'),
-                    error: t('repositories.import_records.error_message.no_repository_name') }
-        )
-      }, status: :unprocessable_entity
+      render json: { error: t('repositories.import_records.error_message.mapping_error') },
+             status: :unprocessable_entity
     end
   end
 
@@ -387,8 +377,7 @@ class RepositoriesController < ApplicationController
           row_ids: params[:row_ids],
           header_ids: params[:header_ids]
         },
-        file_type:  params[:empty_export] == '1' ? 'csv' : params[:file_type],
-        empty_export: params[:empty_export] == '1'
+        file_type: params[:file_type]
       )
       update_user_export_file_type if current_user.settings[:repository_export_file_type] != params[:file_type]
       log_activity(:export_inventory_items)
@@ -480,16 +469,6 @@ class RepositoriesController < ApplicationController
 
   private
 
-  def repostiory_import_actions
-    ImportRepository::ImportRecords.new(
-      temp_file: TempFile.find_by_id(import_params[:file_id]),
-      repository: Repository.accessible_by_teams(current_team).find_by_id(import_params[:id]),
-      mappings: import_params[:mappings],
-      session: session,
-      user: current_user
-    )
-  end
-
   def load_repository
     repository_id = params[:id] || params[:repository_id]
     @repository = Repository.accessible_by_teams(current_user.teams).find_by(id: repository_id)
@@ -571,7 +550,8 @@ class RepositoriesController < ApplicationController
   end
 
   def import_params
-    params.permit(:id, :file, :file_id, :preview, mappings: {}).to_h
+    params.permit(:id, :file, :file_id, :preview, :can_edit_existing_items,
+                  :should_overwrite_with_empty_cells, :preview, mappings: {}).to_h
   end
 
   def repository_response(message)
