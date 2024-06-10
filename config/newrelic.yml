@@ -9,6 +9,8 @@
 # https://docs.newrelic.com/docs/agents/ruby-agent/installation-configuration/ruby-agent-configuration
 
 common: &default_settings
+  agent_enabled: <%= ENV["NEW_RELIC_AGENT_ENABLED"] == 'true' %>
+
   # Required license key associated with your New Relic account.
   license_key: <%= ENV["NEW_RELIC_LICENSE_KEY"] %>
 

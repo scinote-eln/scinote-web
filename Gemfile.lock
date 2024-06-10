@@ -285,7 +285,13 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
+    datadog (2.0.0)
+      debase-ruby_core_source (= 3.3.1)
+      libdatadog (~> 9.0.0.1.0)
+      libddwaf (~> 1.14.0.0.0)
+      msgpack
     date (3.3.4)
+    debase-ruby_core_source (3.3.1)
     debug_inspector (1.1.0)
     deface (1.9.0)
       actionview (>= 5.2)
@@ -409,6 +415,14 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    libdatadog (9.0.0.1.0)
+    libdatadog (9.0.0.1.0-x86_64-linux)
+    libddwaf (1.14.0.0.0)
+      ffi (~> 1.0)
+    libddwaf (1.14.0.0.0-arm64-darwin)
+      ffi (~> 1.0)
+    libddwaf (1.14.0.0.0-x86_64-linux)
+      ffi (~> 1.0)
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -890,4 +904,4 @@ RUBY VERSION
    ruby 3.2.4p170
 
 BUNDLED WITH
-   2.4.19
+   2.5.11

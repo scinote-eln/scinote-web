@@ -6,9 +6,8 @@ Rails.application.configure do
     Silencer::Logger,
     config.log_tags,
     silence: [
-      # Silence WickedPDF rendering in logs
-      %r{/projects/[0-9]*/reports/generate.pdf},
-      '/api/health'
+      '/api/health',
+      '/health'
     ]
   )
 end

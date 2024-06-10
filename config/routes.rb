@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   post 'access_tokens/revoke', to: 'doorkeeper/access_tokens#revoke'
 
+  get 'health', to: 'api/api#health'
+
   # Addons
 
   constraints UserSubdomain do
