@@ -6,6 +6,7 @@
        @dragover.prevent
        :data-id="step.id"
        :class="{ 'draging-file': dragingFile, 'editing-name': editingName, 'locked': !urls.update_url, 'pointer-events-none': addingContent }"
+       :data-e2e="`e2e-CO-protocol-step${step.id}`"
   >
     <div class="drop-message" @dragleave.prevent="!showFileModal ? dragingFile = false : null">
       {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
@@ -18,7 +19,8 @@
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
             data-remote="true"
-            @click="toggleCollapsed">
+            @click="toggleCollapsed"
+            :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCollapsed`">
               <span class="sn-icon sn-icon-right "></span>
           </a>
           <div v-if="!inRepository" class="step-complete-container" :class="{ 'step-element--locked': !urls.state_url }">
@@ -27,9 +29,10 @@
                  @keyup.enter="changeState"
                  tabindex="0"
                  :title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
+                 :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCompleted`"
             ></div>
           </div>
-          <div class="step-position  leading-5">
+          <div class="step-position leading-5" :data-e2e="`e2e-TX-protocol-step${step.id}-position`">
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
@@ -48,6 +51,7 @@
             @editingEnabled="editingName = true"
             @editingDisabled="editingName = false"
             :editOnload="step.newStep == true"
+            :dataE2e="`protocol-step${step.id}-title`"
             @update="updateName"
           />
         </div>
@@ -60,6 +64,7 @@
           :btnText="i18n.t('protocols.steps.insert.button')"
           :position="'right'"
           :caret="true"
+          :dataE2e="`e2e-DD-protocol-step${step.id}-insertContent`"
           @create:table="(...args) => this.createElement('table', ...args)"
           @create:checklist="createElement('checklist')"
           @create:text="createElement('text')"
@@ -98,6 +103,7 @@
           :btnClasses="'btn btn-light icon-btn'"
           :position="'right'"
           :btnIcon="'sn-icon sn-icon-more-hori'"
+          :dataE2e="`e2e-DD-protocol-step${step.id}-options`"
           @reorder="openReorderModal"
           @duplicate="duplicateStep"
           @delete="showDeleteModal"
@@ -116,6 +122,7 @@
           :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
           :assignableMyModuleId="assignableMyModuleId"
           :isNew="element.isNew"
+          :dataE2e="`protocol-step${step.id}`"
           @component:adding-content="($event) => addingContent = $event"
           @component:delete="deleteElement"
           @update="updateElement"
@@ -127,8 +134,10 @@
                     :parent="step"
                     :attachments="attachments"
                     :attachmentsReady="attachmentsReady"
+                    :dataE2e="`protocol-step${step.id}`"
                     @attachments:openFileModal="showFileModal = true"
                     @attachment:deleted="attachmentDeleted"
+                    @attachment:update="updateAttachment"
                     @attachment:uploaded="loadAttachments"
                     @attachment:changed="reloadAttachment"
                     @attachments:order="changeAttachmentsOrder"
@@ -141,6 +150,7 @@
     <ReorderableItemsModal v-if="reordering"
       :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
       :items="reorderableElements"
+      :dataE2e="`e2e-BT-protocol-step${step.id}-reorder`"
       @reorder="updateElementOrder"
       @close="closeReorderModal"
     />
@@ -211,13 +221,34 @@
         editingName: false,
         inlineEditError: null,
         wellPlateOptions: [
-          { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table', params: [32, 48] },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.16_x_24'), emit: 'create:table', params: [16, 24] },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.8_x_12'), emit: 'create:table', params: [8, 12] },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_8'), emit: 'create:table', params: [6, 8] },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.4_x_6'), emit: 'create:table', params: [4, 6] },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.3_x_4'), emit: 'create:table', params: [3, 4]},
-          { text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'), emit: 'create:table', params: [2, 3] }
+          { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'),
+            emit: 'create:table',
+            params: [32, 48],
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-32` },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.16_x_24'),
+            emit: 'create:table',
+            params: [16, 24],
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-16` },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.8_x_12'),
+            emit: 'create:table',
+            params: [8, 12],
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-8` },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_8'),
+            emit: 'create:table',
+            params: [6, 8],
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-6` },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.4_x_6'),
+            emit: 'create:table',
+            params: [4, 6],
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-4` },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.3_x_4'),
+            emit: 'create:table',
+            params: [3, 4],
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-3` },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'),
+            emit: 'create:table',
+            params: [2, 3],
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-2` }
         ]
       }
     },
@@ -275,25 +306,29 @@
         if (this.urls.upload_attachment_url) {
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.insert.add_file'),
-            emit: 'create:file'
+            emit: 'create:file',
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertAttachment-file`
           }]);
         }
         if (this.step.attributes.wopi_enabled) {
           menu = menu.concat([{
             text: this.i18n.t('assets.create_wopi_file.button_text'),
-            emit: 'create:wopi_file'
+            emit: 'create:wopi_file',
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertAttachment-wopi`
           }]);
         }
         if (this.step.attributes.open_vector_editor_context.new_sequence_asset_url) {
           menu = menu.concat([{
             text: this.i18n.t('open_vector_editor.new_sequence_file'),
-            emit: 'create:ove_file'
+            emit: 'create:ove_file',
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertAttachment-sequence`
           }]);
         }
         if (this.step.attributes.marvinjs_enabled) {
           menu = menu.concat([{
             text: this.i18n.t('marvinjs.new_button'),
-            emit: 'create:marvinjs_file'
+            emit: 'create:marvinjs_file',
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertAttachment-chemicalDrawing`
           }]);
         }
         return menu;
@@ -303,21 +338,26 @@
         if (this.urls.update_url) {
           menu = menu.concat([{
                     text: this.i18n.t('protocols.steps.insert.text'),
-                    emit: 'create:text'
+                    emit: 'create:text',
+                    data_e2e: `e2e-BT-protocol-step${this.step.id}-insertText`
                   },{
                     text: this.i18n.t('protocols.steps.insert.attachment'),
                     submenu: this.filesMenu,
-                    position: 'left'
+                    position: 'left',
+                    data_e2e: `e2e-BT-protocol-step${this.step.id}-insertAttachment`
                   },{
                     text: this.i18n.t('protocols.steps.insert.table'),
-                    emit: 'create:table'
+                    emit: 'create:table',
+                    data_e2e: `e2e-BT-protocol-step${this.step.id}-insertTable`
                   },{
                     text: this.i18n.t('protocols.steps.insert.well_plate'),
                     submenu: this.wellPlateOptions,
-                    position: 'left'
+                    position: 'left',
+                    data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellplate`
                   },{
                     text: this.i18n.t('protocols.steps.insert.checklist'),
-                    emit: 'create:checklist'
+                    emit: 'create:checklist',
+                    data_e2e: `e2e-BT-protocol-step${this.step.id}-insertChecklist`
                   }]);
         }
 
@@ -328,19 +368,22 @@
         if (this.urls.reorder_elements_url) {
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.rearrange'),
-            emit: 'reorder'
+            emit: 'reorder',
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-rearrange`
           }]);
         }
         if (this.urls.duplicate_step_url) {
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.duplicate'),
-            emit: 'duplicate'
+            emit: 'duplicate',
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-duplicate`
           }]);
         }
         if (this.urls.delete_url) {
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.delete'),
-            emit: 'delete'
+            emit: 'delete',
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-delete`
           }]);
         }
         return menu;
@@ -549,6 +592,12 @@
       attachmentDeleted(id) {
         this.attachments = this.attachments.filter((a) => a.id !== id );
         this.$emit('stepUpdated');
+      },
+      updateAttachment(attachment) {
+        const index = this.attachments.findIndex(a => a.id === attachment.id);
+        if (index !== -1) {
+          this.attachments[index] = attachment;
+        }
       },
       closeCommentsSidebar() {
         this.showCommentsSidebar = false

@@ -2,6 +2,7 @@
 
 module SearchableModel
   extend ActiveSupport::Concern
+  DATA_VECTOR_ATTRIBUTES = ['asset_text_data.data_vector', 'tables.data_vector'].freeze
 
   included do
     # Helper function for relations that
@@ -108,8 +109,6 @@ module SearchableModel
 
       extract_phrases(query).each_with_index do |phrase, index|
         if options[:with_subquery]
-          phrase[:query] = "\"#{phrase[:query]}\"" if phrase[:exact_match]
-
           subquery_result = if phrase[:negate]
                               options[:raw_input].where.not(id: search_subquery(phrase[:query], options[:raw_input]))
                             else
@@ -124,8 +123,8 @@ module SearchableModel
                           end
         else
           phrase[:current_operator] = '' if index.zero?
-          create_query_clause(normalized_attrs, index, phrase[:negate], query_clauses, value_hash,
-                              phrase[:query], phrase[:exact_match], phrase[:current_operator])
+          create_query_clause(normalized_attrs, index, phrase[:negate], query_clauses,
+                              value_hash, phrase[:query], phrase[:current_operator])
         end
       end
 
@@ -155,8 +154,7 @@ module SearchableModel
       current_operator = ''
 
       query.scan(/"[^"]+"|\S+/) do |phrase|
-        phrase = Regexp.escape(phrase).gsub('\ ', ' ')
-        phrase = sanitize_sql_like(phrase.strip)
+        phrase = phrase.to_s.strip
 
         case phrase.downcase
         when *%w(and or)
@@ -164,11 +162,8 @@ module SearchableModel
         when 'not'
           negate = true
         else
-          exact_match = phrase =~ /^".*"$/
-          phrase = phrase[1..-2] if exact_match
           extracted_phrases << { query: phrase,
                                  negate: negate,
-                                 exact_match: exact_match,
                                  current_operator: current_operator.presence || 'and' }
           current_operator = ''
           negate = false
@@ -178,20 +173,21 @@ module SearchableModel
       extracted_phrases
     end
 
-    def self.create_query_clause(attrs, index, negate, query_clauses, value_hash, phrase, exact_match, current_operator)
+    def self.create_query_clause(attrs, index, negate, query_clauses, value_hash, phrase, current_operator)
+      phrase = sanitize_sql_like(phrase)
+      exact_match = phrase =~ /^".*"$/
       like = exact_match ? '~' : 'ILIKE'
-      phrase = exact_match ? "\\m#{phrase}\\M" : "%#{phrase}%"
 
-      where_clause = (attrs.map.with_index do |a, i|
+      where_clause = (attrs.map.with_index do |attribute, i|
         i = (index * attrs.count) + i
-        if %w(repository_rows.id repository_number_values.data).include?(a)
-          "#{a} IS NOT NULL AND (((#{a})::text) #{like} :t#{i}) OR "
-        elsif defined?(model::PREFIXED_ID_SQL) && a == model::PREFIXED_ID_SQL
-          "#{a} IS NOT NULL AND (#{a} #{like} :t#{i}) OR "
-        elsif ['asset_text_data.data_vector', 'tables.data_vector'].include?(a)
-          "#{a} @@ plainto_tsquery(:t#{i}) OR "
+        if %w(repository_rows.id repository_number_values.data).include?(attribute)
+          "#{attribute} IS NOT NULL AND (((#{attribute})::text) #{like} :t#{i}) OR "
+        elsif defined?(model::PREFIXED_ID_SQL) && attribute == model::PREFIXED_ID_SQL
+          "#{attribute} IS NOT NULL AND (#{attribute} #{like} :t#{i}) OR "
+        elsif DATA_VECTOR_ATTRIBUTES.include?(attribute)
+          "#{attribute} @@ to_tsquery(:t#{i}) OR "
         else
-          "#{a} IS NOT NULL AND ((trim_html_tags(#{a})) #{like} :t#{i}) OR "
+          "#{attribute} IS NOT NULL AND ((trim_html_tags(#{attribute})) #{like} :t#{i}) OR "
         end
       end).join[0..-5]
 
@@ -202,9 +198,20 @@ module SearchableModel
                        end
 
       value_hash.merge!(
-        (attrs.map.with_index do |_, i|
+        (attrs.map.with_index do |attribute, i|
           i = (index * attrs.count) + i
-          ["t#{i}".to_sym, phrase]
+
+          new_phrase = exact_match ? phrase[1..-2] : phrase
+          if DATA_VECTOR_ATTRIBUTES.include?(attribute)
+            new_phrase = Regexp.escape(new_phrase.gsub(/[!()&|:<]/, ' ').strip).split(/\s+/)
+            new_phrase.map! { |t| "#{t}:*" } unless exact_match
+            new_phrase = new_phrase.join('&').tr('\'', '"')
+          else
+            new_phrase = Regexp.escape(new_phrase)
+            new_phrase = exact_match ? "(^|\\s)#{new_phrase}(\\s|$)" : "%#{new_phrase}%"
+          end
+
+          ["t#{i}".to_sym, new_phrase]
         end).to_h
       )
     end

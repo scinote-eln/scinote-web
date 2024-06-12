@@ -1,6 +1,7 @@
 <template>
   <div class="inline-attachment-container asset"
        :data-asset-id="attachment.id"
+       :data-e2e="`e2e-CO-${dataE2e}-attachment${attachment.id}-inline`"
   >
     <div class="header">
       <div class="file-info">
@@ -34,6 +35,7 @@
         @attachment:delete="deleteAttachment"
         @attachment:moved="attachmentMoved"
         @attachment:uploaded="reloadAttachments"
+        @attachment:update="$emit('attachment:update', $event)"
       />
     </div>
     <template v-if="attachment.attributes.wopi">
@@ -85,6 +87,10 @@ export default {
     parentId: {
       type: Number,
       required: true
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {

@@ -1,6 +1,6 @@
 <div class="select-container">
   <div class="edit-button-container hidden">
-    <a class="edit-tags-link" data-remote="true" href="<%= my_module_tags_edit_path(@my_module, format: :json) %>">
+    <a class="edit-tags-link" data-remote="true" href="<%=  my_module_path(my_module, format: :json) %>">
         <i class="sn-icon sn-icon-settings"></i>
         <span class="hidden-xs"><%= t("my_modules.details.manage_tags") %></span>
     </a>

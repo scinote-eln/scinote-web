@@ -56,6 +56,7 @@ class MyModule < ApplicationRecord
   belongs_to :changing_from_my_module_status, optional: true, class_name: 'MyModuleStatus'
   delegate :my_module_status_flow, to: :my_module_status, allow_nil: true
   has_many :results, inverse_of: :my_module, dependent: :destroy
+  has_many :results_include_discarded, -> { with_discarded }, class_name: 'Result', inverse_of: :my_module
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
   has_many :tags, through: :my_module_tags, dependent: :destroy
   has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
@@ -151,6 +152,14 @@ class MyModule < ApplicationRecord
 
   def parent
     experiment
+  end
+
+  def results_count(view_mode = 'active')
+    return results.size if archived_branch?
+
+    return results.archived.size if view_mode == 'archived'
+
+    results.active.size
   end
 
   def navigable?

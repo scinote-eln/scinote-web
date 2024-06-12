@@ -2825,6 +2825,15 @@ en:
           validation: "Are you sure you want to remove it?"
           cancel: "Cancel"
           remove: "Remove"
+        api_key:
+          title: "API Key"
+          description: "Generate or revoke an API key for use with the SciNote API. Regenerating the API key will invalidate the old one."
+          generate: "Generate"
+          regenerate: "Regenerate"
+          revoke: "Revoke"
+          expired: "This key has expired!"
+          generated: "API key generated!"
+          revoked: "API key revoked!"
       new:
         head_title: "Sign up"
         team_name_label: "Team name"
@@ -3714,11 +3723,17 @@ en:
       edit_in_marvinjs: "Open in Marvin JS"
     context_menu:
       set_view_size: "SET PREVIEW SIZE"
+      rename: "Rename"
       delete: "Delete"
+      duplicate: "Duplicate"
       move: "Move"
       inline_html: "Large"
       thumbnail_html: "Thumbnail"
       list_html: "List"
+    rename_modal:
+      title: "Rename file"
+      min_length_error: "File name must be at least 1 character long."
+      max_length_error: "File name is too long (maximum number is 255 characters)."
     delete_file_modal:
       title: "Delete file"
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
@@ -4038,6 +4053,8 @@ en:
   api:
     core:
       status_ok: "Ok"
+      invalid_api_key: "API key is invalid or expired"
+      invalid_api_key_detail: "The API key you are using does not exist or has expired."
       expired_token: "Token is expired"
       invalid_token: "Token is invalid"
       missing_token: "Core: No token in the header"

@@ -18,6 +18,7 @@
           :btnIcon="action.icon"
           :caret="true"
           :position="'right'"
+          :data-e2e="`e2e-BT-topToolbar-${action.name}`"
           @dtEvent="handleEvent"
         ></MenuDropdown>
       </template>

@@ -2,31 +2,32 @@
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <form @submit.prevent="submit">
-        <div class="modal-content">
+        <div class="modal-content" data-e2e="e2e-MD-newProtocol">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-newProtocolModal-close">
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 class="modal-title truncate !block" id="edit-project-modal-label">
+            <h4 class="modal-title truncate !block" id="edit-project-modal-label" data-e2e="e2e-TX-newProtocolModal-title">
               {{ i18n.t("protocols.new_protocol_modal.title_new") }}
             </h4>
           </div>
           <div class="modal-body">
             <div class="mb-6">
-              <label class="sci-label">{{ i18n.t("protocols.new_protocol_modal.name_label") }}</label>
+              <label class="sci-label" data-e2e="e2e-TX-newProtocolModal-inputLabel">{{ i18n.t("protocols.new_protocol_modal.name_label") }}</label>
               <div class="sci-input-container-v2" :class="{'error': error}" :data-error="error">
                 <input type="text" v-model="name"
                        class="sci-input-field"
                        autofocus="true" ref="input"
+                       data-e2e="e2e-IF-newProtocolModal-name"
                        :placeholder="i18n.t('protocols.new_protocol_modal.name_placeholder')" />
               </div>
             </div>
             <div class="flex gap-2 text-xs items-center">
               <div class="sci-checkbox-container">
-                <input type="checkbox" class="sci-checkbox" v-model="visible" value="visible"/>
+                <input type="checkbox" class="sci-checkbox" v-model="visible" value="visible" data-e2e="e2e-CB-newProtocolModal-grantAccess"/>
                 <span class="sci-checkbox-label"></span>
               </div>
-              <span v-html="i18n.t('protocols.new_protocol_modal.access_label')"></span>
+              <span v-html="i18n.t('protocols.new_protocol_modal.access_label')" data-e2e="e2e-TX-newProtocolModal-grantAccess"></span>
             </div>
             <div class="mt-6" :class="{'hidden': !visible}">
               <label class="sci-label">{{ i18n.t("protocols.new_protocol_modal.role_label") }}</label>
@@ -34,8 +35,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="visible && !defaultRole">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" data-e2e="e2e-BT-newProtocolModal-cancel">{{ i18n.t('general.cancel') }}</button>
+            <button class="btn btn-primary" type="submit" :disabled="visible && !defaultRole" data-e2e="e2e-BT-newProtocolModal-create">
               {{ i18n.t('protocols.new_protocol_modal.create_new') }}
             </button>
           </div>

@@ -203,7 +203,8 @@ export default {
           menuItems: [
             {
               emit: 'import_file',
-              text: this.i18n.t('protocols.index.import_eln')
+              text: this.i18n.t('protocols.index.import_eln'),
+              data_e2e: 'e2e-BT-topToolbar-importEln'
             }
           ]
         };
@@ -214,13 +215,15 @@ export default {
             text: `<span>${this.i18n.t('protocols.index.import_docx')}</span>
                    <span class="bg-sn-coral text-sn-white text-[8px] absolute leading-none p-1 top-px rounded-[1px] right-px">
                      ${this.i18n.t('protocols.index.beta')}
-                   </span>`
+                   </span>`,
+            data_e2e: 'e2e-BT-topToolbar-importDocx'
           });
         }
 
         importMenu.menuItems.push({
           emit: 'import_protocols_io',
-          text: this.i18n.t('protocols.index.import_protocols_io')
+          text: this.i18n.t('protocols.index.import_protocols_io'),
+          data_e2e: 'e2e-BT-topToolbar-importProtocolsIo'
         });
 
         left.push(importMenu);

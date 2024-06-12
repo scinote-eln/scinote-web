@@ -141,8 +141,10 @@ class Asset < ApplicationRecord
     file&.blob&.content_type
   end
 
-  def duplicate
+  def duplicate(new_name: nil)
     new_asset = dup
+    file.filename = new_name if new_name
+
     return unless new_asset.save
 
     duplicate_file(new_asset)
@@ -155,7 +157,11 @@ class Asset < ApplicationRecord
     raise ArgumentError, 'Destination asset should be persisted first!' unless to_asset.persisted?
 
     file.blob.open do |tmp_file|
-      to_blob = ActiveStorage::Blob.create_and_upload!(io: tmp_file, filename: blob.filename)
+      to_blob = ActiveStorage::Blob.create_and_upload!(
+        io: tmp_file,
+        filename: blob.filename,
+        metadata: blob.metadata
+      )
       to_asset.file.attach(to_blob)
     end
 
@@ -350,6 +356,36 @@ class Asset < ApplicationRecord
 
   def parent
     step || result || repository_cell
+  end
+
+  def rename_file(new_name)
+    if file.attached?
+      asset_type = file.metadata['asset_type']
+      new_filename = case asset_type
+                     when 'marvinjs'
+                       "#{new_name}.jpg"
+                     when 'gene_sequence'
+                       "#{new_name}.json"
+                     else
+                       new_name
+                     end
+
+      updated_metadata = file.blob.metadata.merge('name' => new_name)
+
+      if %w(marvinjs gene_sequence).include?(asset_type)
+        file.blob.update!(
+          filename: new_filename,
+          metadata: updated_metadata
+        )
+      else
+        file.blob.update!(filename: new_filename)
+      end
+
+      if asset_type == 'gene_sequence' && preview_image.attached?
+        new_image_filename = "#{new_name}.png"
+        preview_image.blob.update!(filename: new_image_filename)
+      end
+    end
   end
 
   private

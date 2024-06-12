@@ -8,7 +8,7 @@ class MarvinJsAssetsController < ApplicationController
   before_action :load_create_vars, only: :create
 
   before_action :check_read_permission
-  before_action :check_edit_permission, only: %i(update create start_editing)
+  before_action :check_manage_permission, only: %i(update create start_editing)
 
   def create
     result = MarvinJsService.create_sketch(marvin_params, current_user, current_team)
@@ -87,7 +87,7 @@ class MarvinJsAssetsController < ApplicationController
     end
   end
 
-  def check_edit_permission
+  def check_manage_permission
     if @assoc.class == Step
       return render_403 unless can_manage_step?(@assoc)
     elsif @assoc.class == Result

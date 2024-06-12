@@ -141,7 +141,7 @@ class AssetSyncController < ApplicationController
       project = assoc.protocol.in_module? ? assoc.my_module.project : nil
     when Result
       type_of = :result_file_added
-      message_items = { result: assoc }
+      message_items = { result: assoc.id }
       project = assoc.my_module.project
     end
 

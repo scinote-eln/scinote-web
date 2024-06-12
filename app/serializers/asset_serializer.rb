@@ -9,7 +9,7 @@ class AssetSerializer < ActiveModel::Serializer
   include ApplicationHelper
 
   attributes :file_name, :file_extension, :view_mode, :icon, :urls, :updated_at_formatted,
-             :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
+             :file_size, :medium_preview, :large_preview, :asset_type, :wopi, :file_name_without_extension,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
              :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type,
              :edit_version_range
@@ -21,6 +21,10 @@ class AssetSerializer < ActiveModel::Serializer
 
   def file_name
     object.render_file_name
+  end
+
+  def file_name_without_extension
+    File.basename(object.file_name, '.*')
   end
 
   def file_extension
@@ -144,10 +148,13 @@ class AssetSerializer < ActiveModel::Serializer
         marvin_js_start_edit: start_editing_marvin_js_asset_path(object),
         start_edit_image: start_edit_image_path(object),
         delete: asset_destroy_path(object),
+        duplicate: asset_duplicate_path(object),
         move_targets: asset_move_tagets_path(object),
-        move: asset_move_path(object)
+        move: asset_move_path(object),
+        rename: asset_rename_path(object)
       )
     end
+
     urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)
 
     if can_manage_asset?(user, object) && can_open_asset_locally?(user, object)

@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+module Api
+  module V1
+    class ApiKeyError < StandardError
+    end
+  end
+end
+
 module TokenAuthentication
   extend ActiveSupport::Concern
 
@@ -13,7 +20,23 @@ module TokenAuthentication
     raise JWT::InvalidPayload, I18n.t('api.core.no_azure_user_mapping') unless current_user
   end
 
+  def authenticate_with_api_key
+    return unless Rails.configuration.x.core_api_key_enabled
+
+    @api_key = request.headers['Api-Key']
+    return unless @api_key
+
+    @current_user = User.from_api_key(@api_key)
+
+    raise Api::V1::ApiKeyError, I18n.t('api.core.invalid_api_key') unless @current_user
+
+    @current_user
+  end
+
   def authenticate_request!
+    # API key authentication successful
+    return if authenticate_with_api_key
+
     @token = request.headers['Authorization']&.sub('Bearer ', '')
     raise JWT::VerificationError, I18n.t('api.core.missing_token') unless @token
 

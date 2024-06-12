@@ -3,6 +3,7 @@
 module PermissionExtends
   module TeamPermissions
     %w(
+      NONE
       READ
       MANAGE
       USERS_MANAGE
@@ -17,6 +18,7 @@ module PermissionExtends
 
   module ProtocolPermissions
     %w(
+      NONE
       READ
       READ_ARCHIVED
       MANAGE
@@ -27,6 +29,7 @@ module PermissionExtends
 
   module ReportPermissions
     %w(
+      NONE
       READ
       MANAGE
       USERS_MANAGE
@@ -35,6 +38,7 @@ module PermissionExtends
 
   module ProjectPermissions
     %w(
+      NONE
       READ
       READ_ARCHIVED
       MANAGE
@@ -52,6 +56,7 @@ module PermissionExtends
 
   module ExperimentPermissions
     %w(
+      NONE
       READ
       READ_ARCHIVED
       MANAGE
@@ -65,6 +70,7 @@ module PermissionExtends
 
   module MyModulePermissions
     %w(
+      NONE
       READ
       READ_ARCHIVED
       ACTIVITIES_READ
@@ -106,6 +112,7 @@ module PermissionExtends
 
   module RepositoryPermissions
     %w(
+      NONE
       READ
       READ_ARCHIVED
       MANAGE
@@ -132,7 +139,7 @@ module PermissionExtends
       ExperimentPermissions.constants.map { |const| ExperimentPermissions.const_get(const) } +
       MyModulePermissions.constants.map { |const| MyModulePermissions.const_get(const) } +
       RepositoryPermissions.constants.map { |const| RepositoryPermissions.const_get(const) }
-    )
+    ).reject { |p| p.end_with?("_none") }
 
     NORMAL_USER_PERMISSIONS = [
       TeamPermissions::PROJECTS_CREATE,
