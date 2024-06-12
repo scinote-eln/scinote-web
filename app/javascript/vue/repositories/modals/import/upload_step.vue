@@ -85,13 +85,12 @@
 </template>
 
 <script>
-import axios from '../../../../packs/custom_axios';
 import DragAndDropUpload from '../../../shared/drag_and_drop_upload.vue';
 import modalMixin from '../../../shared/modal_mixin';
 
 export default {
   name: 'UploadStep',
-  emits: ['uploadFile'],
+  emits: ['uploadFile', 'close'],
   components: {
     DragAndDropUpload
   },

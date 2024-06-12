@@ -162,6 +162,7 @@ class Repository < RepositoryBase
   def importable_repository_fields
     fields = {}
     # First and foremost add record name
+    fields['0'] = I18n.t('repositories.id_column')
     fields['-1'] = I18n.t('repositories.default_column')
     # Add all other custom columns
     repository_columns.order(:created_at).each do |rc|

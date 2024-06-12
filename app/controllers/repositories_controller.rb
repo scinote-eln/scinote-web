@@ -334,22 +334,8 @@ class RepositoriesController < ApplicationController
                ).import!
       if status[:status] == :ok
         log_activity(:import_inventory_items, num_of_items: status[:nr_of_added])
-
-        unless import_params[:preview]
-          flash[:success] = t('repositories.import_records.success_flash',
-                              number_of_rows: status[:nr_of_added],
-                              total_nr: status[:total_nr])
-        end
-
         render json: import_params[:preview] ? status : {}, status: :ok
-
       else
-        unless import_params[:preview]
-          flash[:alert] =
-            t('repositories.import_records.partial_success_flash',
-              nr: status[:nr_of_added], total_nr: status[:total_nr])
-        end
-
         render json: {}, status: :unprocessable_entity
       end
     else

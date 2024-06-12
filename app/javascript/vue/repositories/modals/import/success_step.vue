@@ -24,9 +24,6 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" >
-            {{ i18n.t('repositories.import_records.steps.step4.download_report') }}
-          </button>
           <button type="button" class="btn btn-primary" @click="close">
             {{ i18n.t('repositories.import_records.steps.step4.close') }}
           </button>

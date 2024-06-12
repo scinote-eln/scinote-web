@@ -1,22 +1,24 @@
 <template>
   <div v-if="modalOpened">
-  <component
-    v-if="activeStep !== 'ExportModal'"
-    :is="activeStep"
-    :params="params"
-    :uploading="uploading"
-    @uploadFile="uploadFile"
-    @generatePreview="generatePreview"
-    @changeStep="changeStep"
-    @importRows="importRecords"
-  />
-  <ExportModal
-    v-else
-    :rows="[{id: params.id, team: params.attributes.team_name}]"
-    :exportAction="params.attributes.export_actions"
-    @close="activeStep ='UploadStep'"
-    @export="activeStep = 'UploadStep'"
-  />
+    <component
+      v-if="activeStep !== 'ExportModal'"
+      :is="activeStep"
+      :params="params"
+      :key="modalId"
+      :uploading="uploading"
+      @uploadFile="uploadFile"
+      @generatePreview="generatePreview"
+      @changeStep="changeStep"
+      @importRows="importRecords"
+
+    />
+    <ExportModal
+      v-else
+      :rows="[{id: params.id, team: params.attributes.team_name}]"
+      :exportAction="params.attributes.export_actions"
+      @close="activeStep ='UploadStep'"
+      @export="activeStep = 'UploadStep'"
+    />
   </div>
 </template>
 
@@ -49,7 +51,8 @@ export default {
       modalOpened: false,
       activeStep: 'UploadStep',
       uploading: false,
-      params: {}
+      params: {},
+      modalId: null
     };
   },
   created() {
@@ -64,6 +67,7 @@ export default {
       axios.get(this.repositoryUrl)
         .then((response) => {
           this.params = response.data.data;
+          this.modalId = Math.random().toString(36);
           this.modalOpened = true;
         });
     },

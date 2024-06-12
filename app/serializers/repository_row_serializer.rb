@@ -3,7 +3,8 @@
 class RepositoryRowSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :id, :name, :code, :import_status
+  attributes :id, :name, :code
 
-  has_many :repository_cells, serializer: RepositoryCellSerializer
+  has_many :repository_cells, serializer: RepositoryCellImportSerializer
+
 end

@@ -14,6 +14,7 @@ module RepositoryImportParser
     def initialize(sheet, mappings, user, repository, can_edit_existing_items, should_overwrite_with_empty_cells, preview)
       @columns = []
       @name_index = -1
+      @id_index = nil
       @total_new_rows = 0
       @new_rows_added = 0
       @header_skipped = false
@@ -23,8 +24,8 @@ module RepositoryImportParser
       @mappings = mappings
       @user = user
       @repository_columns = @repository.repository_columns
-      @can_edit_existing_items = can_edit_existing_items
-      @should_overwrite_with_empty_cells = should_overwrite_with_empty_cells
+      @can_edit_existing_items = true # can_edit_existing_items
+      @should_overwrite_with_empty_cells = true # should_overwrite_with_empty_cells
       @preview = preview
     end
 
@@ -42,18 +43,12 @@ module RepositoryImportParser
         value = value.to_s unless value.is_a?(Hash)
 
         case value
+        when '0'
+          @columns << nil
+          @id_index = index
         when '-1'
           @columns << nil
           @name_index = index
-        when Hash
-          new_repository_column = if @preview
-                                    @repository.repository_columns.new(created_by: @user, name: value['name'],
-                                                                       data_type: "Repository#{value['type']}Value")
-                                  else
-                                    @repository.repository_columns.create!(created_by: @user, name: value['name'],
-                                                                           data_type: "Repository#{value['type']}Value")
-                                  end
-          @columns << new_repository_column
         else
           @columns << @repository_columns.where(data_type: Extends::REPOSITORY_IMPORTABLE_TYPES)
                                          .preload(Extends::REPOSITORY_IMPORT_COLUMN_PRELOADS)
@@ -91,8 +86,10 @@ module RepositoryImportParser
         end
         @total_new_rows += 1
         incoming_row = SpreadsheetParser.parse_row(row, @sheet, date_format: @user.settings['date_format'])
-        existing_row = RepositoryRow.includes(repository_cells: :value)
-                                    .find_by(id: incoming_row[0].to_s.gsub(RepositoryRow::ID_PREFIX, ''))
+        if @id_index
+          existing_row = RepositoryRow.includes(repository_cells: :value)
+                                      .find_by(id: incoming_row[@id_index].to_s.gsub(RepositoryRow::ID_PREFIX, ''))
+        end
 
         if existing_row.present?
           if !@can_edit_existing_items
@@ -100,7 +97,8 @@ module RepositoryImportParser
           elsif existing_row.archived
             existing_row.import_status = 'archived'
           elsif existing_row.repository_id != @repository.id
-            existing_row.import_status = 'incorrect_inventory'
+            existing_row.import_status = 'invalid'
+            existing_row.import_message = 'Item belongs to another repository'
           elsif duplicate_ids.include?(existing_row.id)
             existing_row.import_status = 'duplicated'
           end
@@ -113,12 +111,14 @@ module RepositoryImportParser
 
         checked_rows << import_row(existing_row, incoming_row)
       end
-
+      p checked_rows
       changes = ActiveModelSerializers::SerializableResource.new(
         checked_rows.compact,
-        each_serializer: RepositoryRowSerializer,
+        each_serializer: RepositoryRowImportSerializer,
         include: [:repository_cells]
       ).as_json
+
+      p changes
 
       { status: :ok, nr_of_added: @new_rows_added, total_nr: @total_new_rows, changes: changes,
         import_date: I18n.l(Date.today, format: :full_date) }
@@ -129,7 +129,6 @@ module RepositoryImportParser
         @errors = []
         @updated = false
         repository_row_name = try_decimal_to_string(import_row[@name_index])
-
         if repository_row.present?
           repository_row.name = repository_row_name
         else
@@ -140,7 +139,12 @@ module RepositoryImportParser
                                              import_status: 'created')
         end
 
-        @preview ? repository_row.validate : repository_row.save!
+        if @preview
+          repository_row.validate
+          repository_row.id ||= SecureRandom.uuid # ID required for preview with serializer
+        else
+          repository_row.save!
+        end
         @errors << repository_row.errors.full_messages.join(',') if repository_row.errors.present?
 
         @updated = repository_row.changed?
@@ -180,7 +184,7 @@ module RepositoryImportParser
           @errors << existing_cell.value.errors.full_messages.join(',') if existing_cell&.value&.errors.present?
         end
         repository_row.import_status = if @errors.present?
-                                         @errors.join(',')
+                                         'invalid'
                                        elsif repository_row.import_status == 'created'
                                          @new_rows_added += 1
                                          'created'
@@ -190,6 +194,7 @@ module RepositoryImportParser
                                        else
                                          'unchanged'
                                        end
+        repository_row.import_message = @errors.join(',') if @errors.present?
         repository_row
       rescue ActiveRecord::RecordInvalid
         raise ActiveRecord::Rollback
