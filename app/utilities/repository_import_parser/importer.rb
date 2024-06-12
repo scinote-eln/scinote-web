@@ -111,7 +111,10 @@ module RepositoryImportParser
 
         checked_rows << import_row(existing_row, incoming_row)
       end
+<<<<<<< HEAD
       p checked_rows
+=======
+>>>>>>> b344c5772 (Fix repository import mapping and preview [SCI-10773])
       changes = ActiveModelSerializers::SerializableResource.new(
         checked_rows.compact,
         each_serializer: RepositoryRowImportSerializer,
