@@ -2272,7 +2272,7 @@ en:
               exampleData: 'Example data'
         step3:
           title: 'Import preview'
-          subtitle: 'This is a preview of items you are importing/updating to the %{inventory}. The import can still be canceled.'
+          subtitle: 'This preview shows changes to the %{inventory} inventory resulting from this import. Values that will be updated are marked in green and any errors in red. Status of import provides further details, and the item import can still be canceled at this stage.'
           updated_items: 'Updated'
           new_items: 'New'
           unchanged_items: 'Unchanged'
@@ -2284,6 +2284,14 @@ en:
           status: 'Status'
           cancel: 'Cancel import'
           confirm: 'Confirm'
+          status_message:
+            created: 'new item'
+            updated: 'updated'
+            unchanged: 'unchanged'
+            not_exist: "item ID IT%{id} doesn't exist in this inventory"
+            archived: 'archived'
+            invalid: 'invalid item'
+            duplicated: 'item ID has duplicates in the imported file'
         step4:
           title: 'Success report'
           subtitle: '%{inventory} was successfully updated.'

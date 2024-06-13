@@ -84,11 +84,26 @@ module RepositoryImportParser
           @header_skipped = true
           next
         end
-        @total_new_rows += 1
+
         incoming_row = SpreadsheetParser.parse_row(row, @sheet, date_format: @user.settings['date_format'])
+        next if incoming_row.compact.blank?
+
+        @total_new_rows += 1
+
         if @id_index
-          existing_row = RepositoryRow.includes(repository_cells: :value)
-                                      .find_by(id: incoming_row[@id_index].to_s.gsub(RepositoryRow::ID_PREFIX, ''))
+          id = incoming_row[@id_index].to_s.gsub(RepositoryRow::ID_PREFIX, '')
+
+          if id.present?
+            existing_row = @repository.repository_rows.includes(repository_cells: :value).find_by(id: id)
+
+            existing_row ||= @repository.repository_rows.new(
+              id: SecureRandom.uuid,
+              created_by: @user,
+              last_modified_by: @user,
+              import_status: 'invalid',
+              import_message: I18n.t('repositories.import_records.steps.step3.status_message.not_exist', id: id.to_i)
+            )
+          end
         end
 
         if existing_row.present?
@@ -96,9 +111,6 @@ module RepositoryImportParser
             existing_row.import_status = 'unchanged'
           elsif existing_row.archived
             existing_row.import_status = 'archived'
-          elsif existing_row.repository_id != @repository.id
-            existing_row.import_status = 'invalid'
-            existing_row.import_message = 'Item belongs to another repository'
           elsif duplicate_ids.include?(existing_row.id)
             existing_row.import_status = 'duplicated'
           end
@@ -111,10 +123,6 @@ module RepositoryImportParser
 
         checked_rows << import_row(existing_row, incoming_row)
       end
-<<<<<<< HEAD
-      p checked_rows
-=======
->>>>>>> b344c5772 (Fix repository import mapping and preview [SCI-10773])
       changes = ActiveModelSerializers::SerializableResource.new(
         checked_rows.compact,
         each_serializer: RepositoryRowImportSerializer,
@@ -144,7 +152,7 @@ module RepositoryImportParser
 
         if @preview
           repository_row.validate
-          repository_row.id ||= SecureRandom.uuid # ID required for preview with serializer
+          repository_row.id = SecureRandom.uuid unless repository_row.id.present?  # ID required for preview with serializer
         else
           repository_row.save!
         end
@@ -197,7 +205,7 @@ module RepositoryImportParser
                                        else
                                          'unchanged'
                                        end
-        repository_row.import_message = @errors.join(',') if @errors.present?
+        repository_row.import_message = @errors.join(',').downcase if @errors.present?
         repository_row
       rescue ActiveRecord::RecordInvalid
         raise ActiveRecord::Rollback
@@ -208,7 +216,7 @@ module RepositoryImportParser
       return unless repository_cell.present? && @should_overwrite_with_empty_cells
 
       if @preview
-        repository_cell = nil
+        repository_cell.to_destroy = true
         @updated = true
       else
         repository_cell.value.destroy!
