@@ -2,7 +2,7 @@
 
 source 'http://rubygems.org'
 
-ruby '3.2.4'
+ruby '~> 3.2.2'
 
 gem 'activerecord-session_store'
 gem 'bootsnap', require: false
@@ -97,6 +97,7 @@ gem 'jsbundling-rails'
 gem 'tailwindcss-rails', '~> 2.4'
 
 gem 'base62' # Used for smart annotations
+gem 'datadog'
 gem 'newrelic_rpm'
 
 # Permission helper Gem
@@ -120,6 +121,7 @@ group :development, :test do
   gem 'rubocop', require: false
   gem 'rubocop-performance'
   gem 'rubocop-rails'
+  gem 'ruby-lsp'
   gem 'timecop'
 end
 

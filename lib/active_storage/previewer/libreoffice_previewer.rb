@@ -21,12 +21,9 @@ module ActiveStorage
           Rails.logger.info "Starting preparing document preview for file #{blob.filename.sanitized}..."
 
           begin
-            success = system(libreoffice_path,
-                             '--headless', '--invisible',
-                             '-env:UserInstallation=file:///tmp/scinote-libreoffice',
-                             '--convert-to', 'png',
-                             '--outdir', work_dir,
-                             input.path)
+            success = system(
+              libreoffice_path, '--headless', '--invisible', '--convert-to', 'png', '--outdir', work_dir, input.path
+            )
 
             unless success && File.file?(preview_file)
               raise StandardError, "There was an error generating document preview, blob id: #{blob.id}"
