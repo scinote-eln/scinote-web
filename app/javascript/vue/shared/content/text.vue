@@ -1,7 +1,9 @@
 <template>
-  <div class="content__text-container pr-8">
+  <div class="content__text-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-stepText${element.id}`">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
-    <div class="text-header h-9 flex rounded mb-1 items-center relative w-full group/text-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
+    <div class="text-header h-9 flex rounded mb-1 items-center relative w-full group/text-header"
+      :class="{ 'editing-name': editingName,
+      'locked': !element.attributes.orderable.urls.update_url }">
       <div v-if="element.attributes.orderable.urls.update_url || element.attributes.orderable.name"
            class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold"
            :class="{'pointer-events-none': !element.attributes.orderable.urls.update_url}"
@@ -13,6 +15,7 @@
           :allowBlank="true"
           :autofocus="editingName"
           :attributeName="`${i18n.t('Text')} ${i18n.t('name')}`"
+          :dataE2e="`${dataE2e}-stepText${element.id}`"
           @editingEnabled="enableNameEdit"
           @editingDisabled="disableNameEdit"
           @update="updateName"
@@ -24,13 +27,18 @@
         :btnClasses="'btn btn-light icon-btn btn-sm'"
         :position="'right'"
         :btnIcon="'sn-icon sn-icon-more-hori'"
+        :dataE2e="`e2e-DD-${dataE2e}-stepText${element.id}-options`"
         @edit="enableNameEdit"
         @duplicate="duplicateElement"
         @move="showMoveModal"
         @delete="showDeleteModal"
       ></MenuDropdown>
     </div>
-    <div class="flex rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
+    <div class="flex rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body"
+      :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }"
+      :data-e2e="`e2e-IF-${dataE2e}-stepText${element.id}`"
+      @keyup.enter="enableEditMode($event)"
+      tabindex="0">
       <Tinymce
         v-if="element.attributes.orderable.urls.update_url"
         :value="element.attributes.orderable.text"
@@ -48,8 +56,8 @@
         @editingDisabled="disableEditMode"
         @editingEnabled="enableEditMode"
       />
-      <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="wrappedTables"></div>
-      <div v-else class="text-sn-grey">
+      <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="wrappedTables" :data-e2e="`e2e-TX-${dataE2e}-stepText${element.id}`"></div>
+      <div v-else class="text-sn-grey" :data-e2e="`e2e-TX-${dataE2e}-stepText${element.id}-empty`">
         {{ i18n.t("protocols.steps.text.empty_text") }}
       </div>
     </div>
@@ -96,6 +104,10 @@ export default {
     assignableMyModuleId: {
       type: Number,
       required: false
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -126,25 +138,29 @@ export default {
       if (this.element.attributes.orderable.urls.update_url) {
         menu.push({
           text: I18n.t('general.edit'),
-          emit: 'edit'
+          emit: 'edit',
+          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-edit`
         });
       }
       if (this.element.attributes.orderable.urls.duplicate_url) {
         menu.push({
           text: I18n.t('general.duplicate'),
-          emit: 'duplicate'
+          emit: 'duplicate',
+          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-duplicate`
         });
       }
       if (this.element.attributes.orderable.urls.move_targets_url) {
         menu.push({
           text: I18n.t('general.move'),
-          emit: 'move'
+          emit: 'move',
+          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-move`
         });
       }
       if (this.element.attributes.orderable.urls.delete_url) {
         menu.push({
           text: I18n.t('general.delete'),
-          emit: 'delete'
+          emit: 'delete',
+          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-delete`
         });
       }
       return menu;

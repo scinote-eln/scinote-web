@@ -99,7 +99,7 @@ class MyModulesController < ApplicationController
         }
       end
       format.json do
-        render json: @my_module, serializer: Lists::MyModuleSerializer, user: current_user
+        render json: @my_module, serializer: Lists::MyModuleSerializer, controller: self, user: current_user
       end
     end
   end

@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown-selector">
+  <div class="dropdown-selector" :data-e2e="`e2e-IF-${dataE2e}`">
     <select :id="this.selectorId"
             :data-select-by-group="groupSelector"
             :data-combine-tags="dataCombineTags"
@@ -111,6 +111,10 @@ export default {
       type: Boolean,
       default: false
     },
+    dataE2e: {
+      type: String,
+      default: ''
+    },
     onChange: Function
 
   },
@@ -127,6 +131,7 @@ export default {
       tagLabel: this.tagLabel,
       labelHTML: this.labelHTML,
       onOpen: this.onOpen,
+      dataE2e: this.dataE2e,
       onChange: () => {
         if (this.onChange) this.onChange();
         this.selectChanged(dropdownSelector.getValues(`#${this.selectorId}`));

@@ -75,17 +75,18 @@
         :params="actionsParams"
         @toolbar:action="emitAction" />
     </div>
-    <div v-if="scrollMode == 'pages'" class="flex items-center py-4" :class="{'opacity-0': initializing }">
-      <div class="flex items-center gap-4">
+    <div v-if="scrollMode == 'pages'" class="flex items-center py-4" :class="{'opacity-0': initializing }" data-e2e="e2e-CO-tableInfo">
+      <div class="flex items-center gap-4" data-e2e="e2e-TX-tableInfo-show">
         {{ i18n.t('datatable.show') }}
         <div class="w-36">
           <SelectDropdown
             :value="perPage"
             :options="perPageOptions"
+            :data-e2e="'e2e-DD-tableInfo-rows'"
             @change="setPerPage"
           ></SelectDropdown>
         </div>
-        <div v-show="!dataLoading">
+        <div v-show="!dataLoading" data-e2e="e2e-TX-tableInfo-entries">
           <span v-if="selectedRows.length">
             {{ i18n.t('datatable.entries.selected', { count: totalEntries, selected: selectedRows.length }) }}
           </span>

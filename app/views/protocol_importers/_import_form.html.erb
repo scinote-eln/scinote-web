@@ -1,29 +1,45 @@
 <%= form_for :protocol, url: team_import_external_protocol_path(team_id: current_team.id),
              method: :post, data: { remote: true }  do |f|%>
-  <div class="general-error has-error">
+  <div class="general-error has-error" data-e2e="e2e-TX-protocolTemplates-previewProtocolsIo-error">
     <span class="has-error help-block"></span>
   </div>
 
   <div class="form-group sci-input-container">
-    <%= f.label :name, t('protocols.import_export.import_modal.name_label') %>
-    <%= f.text_field :name, class: 'form-control sci-input-field', value: protocol.name %>
+    <%= f.label :name,
+        t('protocols.import_export.import_modal.name_label'),
+        :"data-e2e" => "e2e-TX-protocolTemplates-previewProtocolsIo-nameInput" %>
+    <%= f.text_field :name,
+        class: 'form-control sci-input-field',
+        value: protocol.name,
+        :"data-e2e" => "e2e-IF-protocolTemplates-previewProtocolsIo-nameInput" %>
     <span class="help-block"></span>
   </div>
 
   <div class="form-group sci-input-container">
-    <%= f.label :authors, t('protocols.import_export.import_modal.authors_label') %>
-    <%= f.text_field :authors, class: 'form-control sci-input-field', value: protocol.authors %>
+    <%= f.label :authors,
+        t('protocols.import_export.import_modal.authors_label'),
+        :"data-e2e" => "e2e-TX-protocolTemplates-previewProtocolsIo-authorsInput" %>
+    <%= f.text_field :authors,
+        class: 'form-control sci-input-field',
+        value: protocol.authors,
+        :"data-e2e" => "e2e-IF-protocolTemplates-previewProtocolsIo-authorsInput" %>
   </div>
 
-  <div class="import-protocol-preview-description">
+  <div class="import-protocol-preview-description" data-e2e="e2e-TX-protocolTemplates-previewProtocolsIo-description">
     <%= custom_auto_link(protocol.description, simple_format: false, team: current_team) %>
   </div>
 
   <div class="row">
     <div class="col-sm-4">
       <div class="form-group">
-        <%= f.label :published_on_label, t('protocols.import_export.import_modal.published_on_label')%>
-        <%= f.text_field :published_on_label, value: I18n.l(protocol.published_on, format: :full),  class: 'form-control', disabled: true %>
+        <%= f.label :published_on_label,
+            t('protocols.import_export.import_modal.published_on_label'),
+            :"data-e2e" => "e2e-TX-protocolTemplates-previewProtocolsIo-publishedOnLabel" %>
+        <%= f.text_field :published_on_label, 
+            value: I18n.l(protocol.published_on, format: :full),
+            class: 'form-control',
+            disabled: true,
+            :'data-e2e' => "e2e-TX-protocolTemplates-previewProtocolsIo-publishedOn" %>
       </div>
     </div>
   </div>
@@ -39,11 +55,11 @@
 
 <div data-role="steps-container">
   <div class="row">
-    <div class="col-xs-8">
+    <div class="col-xs-8" data-e2e="e2e-TX-protocolTemplates-previewProtocolsIo-protocolSteps">
       <h2><%= t("protocols.steps.subtitle") %></h2>
     </div>
   </div>
-  <div id="steps">
+  <div id="steps" data-e2e="e2e-CO-protocolTemplates-previewProtocolsIo-protocolSteps">
     <% protocol.steps.sort_by{ |s| s.position }.each do |step| %>
       <%= render partial: "steps/step", locals: { step: step, steps_assets: steps_assets, preview: true, import: true } %>
     <% end %>

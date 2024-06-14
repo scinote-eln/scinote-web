@@ -13,7 +13,7 @@
 
   <div class="content-pane flexible protocols-index <%= @type %>">
     <div class="content-header sticky-header">
-      <div class="title-row">
+      <div class="title-row" data-e2e="e2e-TX-protocolTemplates-title">
         <% if templates_view_mode_archived?(type: @type) %>
           <h1>
             <span><%= t('labels.archived')%></span>&nbsp;
@@ -24,7 +24,7 @@
         <% end %>
       </div>
     </div>
-    <div class="protocols-container">
+    <div class="protocols-container" data-e2e="e2e-CO-protocolTemplates">
       <div id="ProtocolsTable" class="fixed-content-body">
         <protocols-table
           ref="table"
