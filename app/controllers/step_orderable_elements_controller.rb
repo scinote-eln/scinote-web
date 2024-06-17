@@ -6,16 +6,23 @@ class StepOrderableElementsController < ApplicationController
 
   def reorder
     @step.with_lock do
+      position_changed = false
       params[:step_orderable_element_positions].each do |id, position|
-        @step.step_orderable_elements.find(id).update_column(:position, position)
+        step_element = @step.step_orderable_elements.find(id)
+        if step_element.position != position
+          position_changed = true
+          step_element.update_column(:position, position)
+        end
       end
 
-      if @protocol.in_module?
-        log_activity(:task_step_content_rearranged, @my_module.experiment.project, my_module: @my_module.id)
-      else
-        log_activity(:protocol_step_content_rearranged, nil, protocol: @protocol.id)
+      if position_changed
+        if @protocol.in_module?
+          log_activity(:task_step_content_rearranged, @my_module.experiment.project, my_module: @my_module.id)
+        else
+          log_activity(:protocol_step_content_rearranged, nil, protocol: @protocol.id)
+        end
+        @step.touch
       end
-      @step.touch
     end
 
     render json: params[:step_orderable_element_positions], status: :ok
