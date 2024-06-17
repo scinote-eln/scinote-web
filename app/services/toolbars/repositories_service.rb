@@ -60,8 +60,6 @@ module Toolbars
         label: I18n.t('libraries.index.buttons.export'),
         icon: 'sn-icon sn-icon-export',
         path: export_repositories_team_path(@current_team),
-        export_limit: TeamZipExport.exports_limit,
-        num_of_requests_left: @current_user.exports_left - 1,
         export_file_type: current_user.settings[:repository_export_file_type] || 'xlsx',
         type: :emit
       }
