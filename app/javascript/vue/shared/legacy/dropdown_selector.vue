@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown-selector" :data-e2e="`e2e-IF-${dataE2e}`">
+  <div class="dropdown-selector" :data-e2e="`${dataE2e}`">
     <select :id="this.selectorId"
             :data-select-by-group="groupSelector"
             :data-combine-tags="dataCombineTags"
