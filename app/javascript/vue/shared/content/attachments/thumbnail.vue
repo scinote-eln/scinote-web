@@ -4,6 +4,7 @@
        @mouseenter="handleMouseEnter"
        @mouseleave="handleMouseLeave"
        v-click-outside="handleClickOutsideThumbnail"
+       :data-e2e="`e2e-CO-${dataE2e}-attachment${attachment.id}-thumbnail`"
   >
     <a  :class="{ hidden: showOptions }"
         :href="attachment.attributes.urls.blob"
@@ -101,7 +102,10 @@
         >
           <i class="sn-icon sn-icon-open"></i>
         </a>
-        <a v-if="attachment.attributes.urls.move" @click.prevent.stop="showMoveModal" class="btn btn-light icon-btn thumbnail-action-btn" :title="i18n.t('attachments.thumbnail.buttons.move')">
+        <a v-if="attachment.attributes.urls.move"
+          @click.prevent.stop="showMoveModal"
+          class="btn btn-light icon-btn thumbnail-action-btn"
+          :title="i18n.t('attachments.thumbnail.buttons.move')">
           <i class="sn-icon sn-icon-move"></i>
         </a>
         <a class="btn btn-light icon-btn thumbnail-action-btn"
@@ -210,6 +214,10 @@ export default {
     parentId: {
       type: Number,
       required: true
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -252,7 +260,7 @@ export default {
         });
       }
       return options;
-    },
+    }
   },
   mounted() {
     $(this.$nextTick(() => {

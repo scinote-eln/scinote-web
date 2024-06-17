@@ -36,9 +36,9 @@ module RepositoryXlsxExport
           when -6
             row_data << I18n.l(row.created_at, format: :full)
           when -7
-            csv_row << row.updated_at ? I18n.l(row.updated_at, format: :full) : ''
+            row_data << row.updated_at ? I18n.l(row.updated_at, format: :full) : ''
           when -8
-            csv_row << row.last_modified_by.full_name
+            row_data << row.last_modified_by.full_name
           when -9
             row_data << (row.archived? && row.archived_by.present? ? row.archived_by.full_name : '')
           when -10

@@ -3,11 +3,7 @@
 class RepositoryCellSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :id, :value, :changes, :repository_column_id, :formatted_value
-
-  def changes
-    object.value.changes
-  end
+  attributes :id, :value, :repository_column_id, :formatted_value
 
   def value
     object.value

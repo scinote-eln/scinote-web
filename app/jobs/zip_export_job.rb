@@ -3,10 +3,9 @@
 class ZipExportJob < ApplicationJob
   include FailedDeliveryNotifiableJob
 
-  def perform(user_id:, params: {}, file_type: :csv, empty_export: false)
+  def perform(user_id:, params: {}, file_type: :csv)
     @user = User.find(user_id)
     @file_type = file_type.to_sym
-    @empty_export = empty_export
     I18n.backend.date_format = @user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
     zip_input_dir = FileUtils.mkdir_p(Rails.root.join("tmp/temp_zip_#{Time.now.to_i}").to_s).first
     zip_dir = FileUtils.mkdir_p(Rails.root.join('tmp/zip-ready').to_s).first

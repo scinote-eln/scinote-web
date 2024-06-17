@@ -2226,9 +2226,10 @@ en:
           importedFileText: 'Imported file:'
           cancelBtnText: 'Cancel'
           confirmBtnText: 'Confirm'
-          importedIgnoredSection: '<b>%{imported}</b> columns to <b>import.</b> <b>%{ignored}</b> columns <b>ignored</b>.'
+          importedIgnoredSection: '<b>%{imported}</b> columns to <b>import.</b> <b>%{ignored}</b> columns <b>ignored.</b>'
           computedDropdownOptions:
             name: 'Name'
+            id: 'ID'
             RepositoryTextValue: 'Text'
             RepositoryNumberValue: 'Number'
             RepositoryAssetValue: 'File'
@@ -2271,18 +2272,26 @@ en:
               exampleData: 'Example data'
         step3:
           title: 'Import preview'
-          subtitle: 'This is a preview of items you are importing/updating to the %{inventory}. The import can still be canceled.'
-          updated_items: 'Updated<br>items'
-          new_items: 'New<br>items'
-          unchanged_items: 'Unchanged<br>items'
-          duplicated_items: 'Duplicated<br>items'
-          invalid_items: 'Invalid<br>items'
-          invalid_cells: 'Invalid<br>cells'
+          subtitle: 'This preview shows changes to the %{inventory} inventory resulting from this import. Values that will be updated are marked in green and any errors in red. Status of import provides further details, and the item import can still be canceled at this stage.'
+          updated_items: 'Updated'
+          new_items: 'New'
+          unchanged_items: 'Unchanged'
+          duplicated_items: 'Duplicated'
+          invalid_items: 'Invalid'
+          archived_items: 'Archived'
           code: 'Code'
           name: 'Name'
           status: 'Status'
           cancel: 'Cancel import'
           confirm: 'Confirm'
+          status_message:
+            created: 'new item'
+            updated: 'updated'
+            unchanged: 'unchanged'
+            not_exist: "item ID IT%{id} doesn't exist in this inventory"
+            archived: 'archived'
+            invalid: 'invalid item'
+            duplicated: 'item ID has duplicates in the imported file'
         step4:
           title: 'Success report'
           subtitle: '%{inventory} was successfully updated.'
@@ -2341,6 +2350,7 @@ en:
         duplicated_values: "Two or more columns have the same mapping."
         errors_list_title: "Items were not imported because one or more errors were found:"
         no_repository_name: "Item name is required!"
+        mapping_error: "Column mappings are required"
     edit_record: "Edit"
     assign_record: "Assign to task"
     copy_record: "Duplicate"
@@ -2424,6 +2434,7 @@ en:
       no_records_selected_flash: "There were no selected items."
       no_deleted_records_flash: "No items were deleted. %{other_records_number} of the selected items were created by other users and were not deleted."
     default_column: 'Name'
+    id_column: 'Item ID'
     copy_records_report: "%{number} item(s) successfully copied."
     archive_inventories:
       success_flash: "Inventories were successfully archived!"

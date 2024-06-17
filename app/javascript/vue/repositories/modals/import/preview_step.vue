@@ -18,32 +18,32 @@
             <div>
               <div v-html="i18n.t('repositories.import_records.steps.step3.updated_items')"></div>
               <hr class="my-1">
-              <h2 class="m-0 text-sn-alert-green">0</h2>
+              <h2 class="m-0 text-sn-alert-green">{{ counters.updated }}</h2>
             </div>
             <div>
               <div v-html="i18n.t('repositories.import_records.steps.step3.new_items')"></div>
               <hr class="my-1">
-              <h2 class="m-0 text-sn-alert-green">0</h2>
+              <h2 class="m-0 text-sn-alert-green">{{ counters.created }}</h2>
             </div>
             <div>
               <div v-html="i18n.t('repositories.import_records.steps.step3.unchanged_items')"></div>
               <hr class="my-1">
-              <h2 class="m-0 ">0</h2>
+              <h2 class="m-0 ">{{ counters.unchanged }}</h2>
             </div>
             <div>
               <div v-html="i18n.t('repositories.import_records.steps.step3.duplicated_items')"></div>
               <hr class="my-1">
-              <h2 class="m-0 ">0</h2>
+              <h2 class="m-0 text-sn-alert-passion">{{ counters.duplicated }}</h2>
             </div>
             <div>
               <div v-html="i18n.t('repositories.import_records.steps.step3.invalid_items')"></div>
               <hr class="my-1">
-              <h2 class="m-0 text-sn-alert-passion">0</h2>
+              <h2 class="m-0 text-sn-alert-passion">{{ counters.invalid }}</h2>
             </div>
             <div>
-              <div v-html="i18n.t('repositories.import_records.steps.step3.invalid_items')"></div>
+              <div v-html="i18n.t('repositories.import_records.steps.step3.archived_items')"></div>
               <hr class="my-1">
-              <h2 class="m-0 text-sn-alert-passion">0</h2>
+              <h2 class="m-0">{{ counters.archived }}</h2>
             </div>
           </div>
           <div class="my-6">
@@ -67,7 +67,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" @click="$emit('changeStep', 'MappingStep')">
-            {{ i18n.t('repositories.import_records.steps.step3.cancel') }}
+            {{ i18n.t('general.back') }}
           </button>
           <button type="button" class="btn btn-primary" @click="$emit('importRows')">
             {{ i18n.t('repositories.import_records.steps.step3.confirm') }}
@@ -100,6 +100,16 @@ export default {
     };
   },
   computed: {
+    counters() {
+      return {
+        updated: this.filterRows('updated').length,
+        created: this.filterRows('created').length,
+        unchanged: this.filterRows('unchanged').length,
+        duplicated: this.filterRows('duplicated').length,
+        invalid: this.filterRows('invalid').length,
+        archived: this.filterRows('archived').length
+      };
+    },
     columnDefs() {
       const columns = [
         {
@@ -120,8 +130,9 @@ export default {
       });
 
       columns.push({
-        field: 'status',
+        field: 'import_status',
         headerName: this.i18n.t('repositories.import_records.steps.step3.status'),
+        cellRenderer: this.statusRenderer,
         pinned: 'right'
       });
 
@@ -142,6 +153,40 @@ export default {
     }
   },
   methods: {
+    filterRows(status) {
+      return this.params.preview.data.filter((r) => r.attributes.import_status === status);
+    },
+    statusRenderer(params) {
+      const { import_status: importStatus, import_message: importMessage } = params.data;
+
+      let message = '';
+      let color = '';
+      let icon = '';
+
+      if (importStatus === 'created' || importStatus === 'updated') {
+        message = this.i18n.t(`repositories.import_records.steps.step3.status_message.${importStatus}`);
+        color = 'text-sn-alert-green';
+        icon = 'check';
+      } else if (importStatus === 'unchanged' || importStatus === 'archived') {
+        message = this.i18n.t(`repositories.import_records.steps.step3.status_message.${importStatus}`);
+        icon = 'hamburger';
+      } else if (importStatus === 'duplicated' || importStatus === 'invalid') {
+        message = this.i18n.t(`repositories.import_records.steps.step3.status_message.${importStatus}`);
+        color = 'text-sn-alert-passion';
+        icon = 'close';
+      }
+
+      if (importMessage) {
+        message = importMessage;
+      }
+
+      return `
+        <div class="flex items-center ${color} gap-2.5">
+          <i class="sn-icon sn-icon-${icon} "></i>
+          <span>${message}</span>
+        </div>
+      `;
+    }
   }
 };
 </script>

@@ -1,5 +1,7 @@
 <template>
-  <div class="content__attachments pr-8" :id='"content__attachments-" + parent.id'>
+  <div class="content__attachments pr-8"
+    :id='"content__attachments-" + parent.id'
+    :data-e2e="`e2e-CO-${dataE2e}-attachments`">
     <div class="sci-divider my-6"></div>
     <div class="content__attachments-actions">
       <div class="title">
@@ -11,6 +13,7 @@
           :btnText="i18n.t('attachments.preview_menu')"
           :position="'right'"
           :caret="true"
+          :data_e2e="`e2e-DD-${dataE2e}-attachments-viewOptions`"
           @attachment:viewMode = "changeAttachmentsViewMode"
         ></MenuDropdown>
         <MenuDropdown
@@ -18,6 +21,7 @@
           :btnIcon="'sn-icon sn-icon-sort-down'"
           :btnClasses="'btn btn-light icon-btn'"
           :position="'right'"
+          :data_e2e="`e2e-DD-${dataE2e}-attachments-orderOptions`"
           @attachment:order = "changeAttachmentsOrder"
         ></MenuDropdown>
       </div>
@@ -29,6 +33,7 @@
         :is="attachment_view_mode(attachmentsOrdered[index])"
         :attachment="attachment"
         :parentId="parseInt(parent.id)"
+        :dataE2e="`${dataE2e}`"
         @attachment:viewMode="updateAttachmentViewMode"
         @attachment:delete="deleteAttachment(attachment.id)"
         @attachment:moved="attachmentMoved"
@@ -64,6 +69,10 @@ export default {
     attachmentsReady: {
       type: Boolean,
       required: true
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -119,7 +128,8 @@ export default {
           active: this.parent.attributes.assets_view_mode == viewMode,
           text: this.i18n.t(`attachments.view_mode.${viewMode}_html`),
           emit: 'attachment:viewMode',
-          params: viewMode
+          params: viewMode,
+          data_e2e: `e2e-BT-${this.dataE2e}-viewOptions-${viewMode}`
         });
       });
       return menu;
@@ -131,7 +141,8 @@ export default {
           text: this.i18n.t(`general.sort_new.${orderOption}`),
           emit: 'attachment:order',
           params: orderOption,
-          active: this.parent.attributes.assets_order === orderOption
+          active: this.parent.attributes.assets_order === orderOption,
+          data_e2e: `e2e-BT-${this.dataE2e}-orderOptions-${orderOption}`
         });
       });
       return menu;

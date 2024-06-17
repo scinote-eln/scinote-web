@@ -5,5 +5,6 @@ class RepositoryRowSerializer < ActiveModel::Serializer
 
   attributes :id, :name, :code
 
-  has_many :repository_cells, serializer: RepositoryCellSerializer
+  has_many :repository_cells, serializer: RepositoryCellImportSerializer
+
 end

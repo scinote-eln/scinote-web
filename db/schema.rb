@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_29_070135) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_18_094253) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -984,12 +984,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_29_070135) do
     t.bigint "restored_by_id"
     t.datetime "restored_on", precision: nil
     t.integer "assets_view_mode", default: 0
-    t.datetime "discarded_at"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_results_on_name", using: :gin
     t.index ["archived"], name: "index_results_on_archived"
     t.index ["archived_by_id"], name: "index_results_on_archived_by_id"
     t.index ["created_at"], name: "index_results_on_created_at"
-    t.index ["discarded_at"], name: "index_results_on_discarded_at"
     t.index ["last_modified_by_id"], name: "index_results_on_last_modified_by_id"
     t.index ["my_module_id"], name: "index_results_on_my_module_id"
     t.index ["restored_by_id"], name: "index_results_on_restored_by_id"

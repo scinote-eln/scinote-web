@@ -117,6 +117,7 @@
           data-protocol-url="<%= protocol_my_module_path(@my_module) %>"
           data-date-format="<%= datetime_picker_format_date_only %>"
           data-user-utc-offset="<%= ActiveSupport::TimeZone.find_tzinfo(current_user.time_zone).utc_offset %>"
+          data-e2e="e2e-CO-task-protocol"
       >
         <protocol-container
           :protocol-url="protocolUrl"
