@@ -10,10 +10,10 @@ class RepositoryCellImportSerializer < ActiveModel::Serializer
   end
 
   def value
-    object.value
+    object.value if !object.to_destroy
   end
 
   def formatted_value
-    object.value.formatted
+    object.value.formatted if !object.to_destroy
   end
 end
