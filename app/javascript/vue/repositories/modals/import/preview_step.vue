@@ -1,6 +1,7 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
+      <Loading v-if="loading" />
       <div class="modal-content grow">
         <div class="modal-header gap-4">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-newInventoryModal-close">
@@ -11,6 +12,7 @@
           </h4>
         </div>
         <div class="modal-body">
+
           <p class="text-sn-dark-grey mb-6">
             {{ i18n.t('repositories.import_records.steps.step3.subtitle', { inventory: params.attributes.name }) }}
           </p>
@@ -81,7 +83,7 @@
 <script>
 import { AgGridVue } from 'ag-grid-vue3';
 import modalMixin from '../../../shared/modal_mixin';
-
+import Loading from '../../../shared/loading.vue';
 
 export default {
   name: 'PreviewStep',
@@ -90,10 +92,15 @@ export default {
     params: {
       type: Object,
       required: true
+    },
+    loading: {
+      type: Boolean,
+      required: true
     }
   },
   components: {
-    AgGridVue
+    AgGridVue,
+    Loading
   },
   data() {
     return {

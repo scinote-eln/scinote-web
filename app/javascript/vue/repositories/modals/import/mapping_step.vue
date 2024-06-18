@@ -1,6 +1,7 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
+      <Loading v-if="loading" />
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-newInventoryModal-close">
@@ -11,6 +12,7 @@
           </h4>
         </div>
         <div class="modal-body">
+
           <p class="text-sn-dark-grey">
             {{ this.i18n.t('repositories.import_records.steps.step2.subtitle') }}
           </p>
@@ -92,6 +94,7 @@ import axios from '../../../../packs/custom_axios';
 import SelectDropdown from '../../../shared/select_dropdown.vue';
 import MappingStepTableRow from './mapping_step_table_row.vue';
 import modalMixin from '../../../shared/modal_mixin';
+import Loading from '../../../shared/loading.vue';
 
 export default {
   name: 'MappingStep',
@@ -99,11 +102,16 @@ export default {
   mixins: [modalMixin],
   components: {
     SelectDropdown,
-    MappingStepTableRow
+    MappingStepTableRow,
+    Loading
   },
   props: {
     params: {
       type: Object,
+      required: true
+    },
+    loading: {
+      type: Boolean,
       required: true
     }
   },

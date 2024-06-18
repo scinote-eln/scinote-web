@@ -1,11 +1,12 @@
 <template>
-  <div v-if="modalOpened">
+  <div v-if="modalOpened" class="relative">
     <component
       v-if="activeStep !== 'ExportModal'"
       :is="activeStep"
       :params="params"
       :key="modalId"
       :uploading="uploading"
+      :loading="loading"
       @uploadFile="uploadFile"
       @generatePreview="generatePreview"
       @changeStep="changeStep"
@@ -23,13 +24,13 @@
 </template>
 
 <script>
+/* global HelperModule */
 
 import axios from '../../../../packs/custom_axios';
 import InfoModal from '../../../shared/info_modal.vue';
 import UploadStep from './upload_step.vue';
 import MappingStep from './mapping_step.vue';
 import PreviewStep from './preview_step.vue';
-import SuccessStep from './success_step.vue';
 import ExportModal from '../export.vue';
 
 export default {
@@ -39,7 +40,6 @@ export default {
     UploadStep,
     MappingStep,
     PreviewStep,
-    SuccessStep,
     ExportModal
   },
   props: {
@@ -52,7 +52,8 @@ export default {
       activeStep: 'UploadStep',
       uploading: false,
       params: {},
-      modalId: null
+      modalId: null,
+      loading: false
     };
   },
   created() {
@@ -98,6 +99,10 @@ export default {
       this.activeStep = step;
     },
     importRecords(preview) {
+      if (this.loading) {
+        return;
+      }
+
       const jsonData = {
         file_id: this.params.temp_file.id,
         mappings: this.params.mapping,
@@ -106,6 +111,9 @@ export default {
         should_overwrite_with_empty_cells: this.params.updateWithEmptyCells,
         can_edit_existing_items: !this.params.onlyAddNewItems
       };
+
+      this.loading = true;
+
       axios.post(this.params.attributes.urls.import_records, jsonData)
         .then((response) => {
           if (preview) {
@@ -113,8 +121,17 @@ export default {
             this.params.import_date = response.data.import_date;
             this.activeStep = 'PreviewStep';
           } else {
-            this.activeStep = 'SuccessStep';
+            HelperModule.flashAlertMsg(response.data.message, 'success');
+            this.modalOpened = false;
+            this.activeStep = null;
+            $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
           }
+
+          this.loading = false;
+        })
+        .catch((error) => {
+          HelperModule.flashAlertMsg(error.response.data.message, 'danger');
+          this.loading = false;
         });
     }
   }

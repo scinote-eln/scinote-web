@@ -332,11 +332,14 @@ class RepositoriesController < ApplicationController
                  should_overwrite_with_empty_cells: import_params[:should_overwrite_with_empty_cells],
                  preview: import_params[:preview]
                ).import!
+      message = t('repositories.import_records.partial_success_flash',
+                  nr: status[:nr_of_added], total_nr: status[:total_nr])
+
       if status[:status] == :ok
         log_activity(:import_inventory_items, num_of_items: status[:nr_of_added])
-        render json: import_params[:preview] ? status : {}, status: :ok
+        render json: import_params[:preview] ? status : { message: message }, status: :ok
       else
-        render json: {}, status: :unprocessable_entity
+        render json: { message: message }, status: :unprocessable_entity
       end
     else
       render json: { error: t('repositories.import_records.error_message.mapping_error') },
