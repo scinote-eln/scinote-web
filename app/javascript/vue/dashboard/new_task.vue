@@ -17,6 +17,7 @@
         :optionsUrl="projectsUrl"
         :searchable="true"
         :value="selectedProject"
+        :optionRenderer="newProjectRenderer"
         @change="changeProject"
       />
     </div>
@@ -44,6 +45,7 @@
         :disabled="!(selectedProject != null && selectedProject >= 0)"
         :searchable="true"
         :value="selectedExperiment"
+        :optionRenderer="newExperimentRenderer"
         @change="changeExperiment"
       />
     </div>
@@ -156,6 +158,18 @@ export default {
     changeExperiment(value, label) {
       this.selectedExperiment = value;
       this.newExperimentName = label;
+    },
+    newProjectRenderer(option) {
+      if (option[0] > 0) {
+        return option[1];
+      }
+      return this.i18n.t('dashboard.create_task_modal.new_project', { name: option[1] });
+    },
+    newExperimentRenderer(option) {
+      if (option[0] > 0) {
+        return option[1];
+      }
+      return this.i18n.t('dashboard.create_task_modal.new_experiment', { name: option[1] });
     },
     closeModal() {
       $('#create-task-modal').modal('hide');

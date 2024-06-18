@@ -77,6 +77,8 @@ en:
       filter_create_new: "Create"
       cancel: "Cancel"
       create: "Create"
+      new_project: "New \"%{name}\" Project"
+      new_experiment: "New \"%{name}\" Experiment"
     recent_work:
       title: "Recent work"
       no_results:
