@@ -2197,30 +2197,31 @@ en:
         list_row: "Row %{row}"
         list_error: "%{key}: %{val}"
     import_records:
-      update_inventory: 'Update inventory'
+      update_inventory: 'Import items'
       steps:
         step1:
           id: 'step1'
           icon: 'sn-icon-open'
           label: 'Step 1'
-          title: 'Update inventory'
-          subtitle: 'To add or edit items, export the inventory and reimport edited inventory.'
+          title: 'Import items'
+          subtitle: 'Inventory import allows for adding new items or updating existing data. Ensure the imported file contains column header names. For easy import, export the full inventory with existing items or only the inventory columns template.'
           helpText: 'Help'
           exportTitle: 'Export'
-          exportFullInvBtnText: 'Export full inventory'
-          exportEmptyInvBtnText: 'Export empty inventory'
+          exportFullInvBtnText: 'Export all items'
+          exportEmptyInvBtnText: 'Download inventory template'
           importTitle: 'Import'
           importBtnText: 'Import'
           cancelBtnText: 'Cancel'
-          dragAndDropSupportingText: '.XLSX, .XLS or .CSV file'
+          dragAndDropSupportingText: '.xlsx, .xls, .csv or .txt file'
         step2:
           id: 'step2'
           icon: 'sn-icon-open'
           label: 'Step 2'
           title: 'Mapping data'
-          subtitle: 'Match your imported columns with the columns in the SciNote inventory.'
+          subtitle: 'Match your imported file columns with the existing columns in the inventory to finalize the item import.'
           selectNamePropertyError: 'Select Name attribute field to import your items.'
           autoMappingText: 'Auto-mapping'
+          autoMappingTooltip: 'When auto-mapping is selected, SciNote automatically connects columns with matching names. When not selected, manual mapping of each column is required.'
           updateEmptyCellsText: 'Update empty cells'
           onlyAddNewItemsText: 'Only add new items'
           importedFileText: 'Imported file:'
@@ -2246,12 +2247,9 @@ en:
               placeholders:
                 matchNotFound: 'Match not found'
                 doNotImport: 'Do not import'
-              defaultColumnTitle: 'Default column. Mapped as identifier.'
-              matchNotFoundColumnTitle: 'Match not found.'
-              userDefinedColumnTitle: 'Column name does not match. Column will be imported as '
+              matchNotFoundColumnTitle: 'Column match not found.'
               importedColumnTitle: 'Column will be imported.'
-              doNotImportColumnTitle: 'Column will not import.'
-              importAsNewColumn: 'Import as new column'
+              doNotImportColumnTitle: 'Column will not be imported.'
               newColumnType:
                 text: 'Text'
                 list: 'Dropdown'
@@ -2279,7 +2277,7 @@ en:
           duplicated_items: 'Duplicated'
           invalid_items: 'Invalid'
           archived_items: 'Archived'
-          code: 'Code'
+          code: 'Item ID'
           name: 'Name'
           status: 'Status'
           cancel: 'Cancel import'
@@ -2300,28 +2298,28 @@ en:
           download_report: 'Download success report'
           close: 'Close'
       info_sidebar:
-        title: 'Guide for updating the inventory'
+        title: 'Item import guide'
         elements:
           element0:
             id: 'el0'
             icon: 'sn-icon-export'
             label: 'Export inventory'
-            subtext: "Before making edits, we advise you to export the latest inventory information. If you're only adding new items, consider exporting empty inventory."
+            subtext: "Before making changes, we advise you to first export the current inventory item information. If you're only adding in new items, exporting the inventory template is recommended."
           element1:
             id: 'el1'
             icon: 'sn-icon-edit'
             label: 'Edit your data'
-            subtext: 'Make sure to include header names in first row, followed by item data.'
+            subtext: 'Structure your import data”. And the text updated to: “Make sure to include header names in the first row of the import file, followed by item data.'
           element2:
             id: 'el2'
             icon: 'sn-icon-import'
-            label: 'Import new or update items'
-            subtext: 'Upload your data using .xlsx, .csv or .txt files.'
+            label: 'Upload your file'
+            subtext: 'Upload your data using .xlsx, .csv, or .txt files to import new items or update existing item data.'
           element3:
             id: 'el3'
             icon: 'sn-icon-tables'
-            label: 'Merge your data'
-            subtext: 'Complete the process by merging the columns you want to update.'
+            label: 'Map and finalize your data'
+            subtext: 'Complete the item import process by mapping uploaded file data with the columns you want to update in the inventory.'
           element4:
             id: 'el4'
             icon: 'sn-icon-open'

@@ -40,7 +40,7 @@
   }
 
   .modal .modal-dialog.modal-lg {
-    @apply w-[900px];
+    @apply max-w-[900px] w-full;
   }
 
   .modal.fade .modal-dialog {

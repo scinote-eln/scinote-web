@@ -17,7 +17,7 @@
             {{ this.i18n.t('repositories.import_records.steps.step2.subtitle') }}
           </p>
           <div class="flex gap-6 items-center my-6">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" :title="i18n.t('repositories.import_records.steps.step2.autoMappingTooltip')">
               <div class="sci-checkbox-container">
                 <input type="checkbox" class="sci-checkbox"  v-model="autoMapping" />
                 <span class="sci-checkbox-label"></span>
@@ -46,7 +46,7 @@
           <hr class="m-0 mt-6">
           <div class="grid grid-cols-[3rem_auto_1.5rem_auto_5rem_auto] px-2">
 
-            <div v-for="(column, key) in columnLabels" class="flex items-center px-2 py-2">{{ column }}</div>
+            <div v-for="(column, key) in columnLabels" class="flex items-center px-2 py-2 font-bold">{{ column }}</div>
 
             <template v-for="(item, index) in params.import_data.header" :key="item">
               <MappingStepTableRow
