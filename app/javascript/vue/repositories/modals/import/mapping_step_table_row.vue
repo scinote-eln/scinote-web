@@ -48,10 +48,12 @@
     <div class="py-1 min-h-12 px-2 flex items-center" :class="{
       'bg-sn-super-light-blue': selected
     }">
-      <i v-if="differentMapingName" class="sn-icon sn-icon-info text-sn-science-blue"></i>
-      <i v-else-if="columnMapped" class="sn-icon sn-icon-check"></i>
-      <i v-else-if="matchNotFound" class="sn-icon sn-icon-close text-sn-alert-brittlebush"></i>
-      <i v-else class="sn-icon sn-icon-close text-sn-sleepy-grey"></i>
+      <i v-if="differentMapingName" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.importedColumnTitle')"
+         class="sn-icon sn-icon-info text-sn-science-blue"></i>
+      <i v-else-if="columnMapped" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.importedColumnTitle')" class="sn-icon sn-icon-check"></i>
+      <i v-else-if="matchNotFound" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.matchNotFoundColumnTitle')"
+         class="sn-icon sn-icon-close text-sn-alert-brittlebush"></i>
+      <i v-else  :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.doNotImportColumnTitle')" class="sn-icon sn-icon-close text-sn-sleepy-grey"></i>
     </div>
 
     <div class="py-1 min-h-12 px-2 flex items-center" :title="params.import_data.columns[index]" :class="{

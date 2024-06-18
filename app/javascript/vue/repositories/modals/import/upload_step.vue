@@ -1,10 +1,10 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog flex" role="document" :class="{'!w-[900px]': showingInfo}">
-      <div v-if="showingInfo" class="w-[300px] h-full bg-sn-super-light-grey p-6 rounded-s text-sn-dark-grey">
+      <div v-if="showingInfo" class="w-[300px] shrink-0 h-full bg-sn-super-light-grey p-6 rounded-s text-sn-dark-grey">
         <h3 class="my-0 mb-4">{{ this.i18n.t('repositories.import_records.info_sidebar.title') }}</h3>
         <div v-for="i in 4" :key="i" class="flex gap-3 mb-4">
-          <span class="btn btn-secondary icon-btn !text-sn-black">
+          <span class="btn btn-secondary icon-btn !text-sn-black !pointer-events-none">
             <i class="sn-icon"
                :class="i18n.t(`repositories.import_records.info_sidebar.elements.element${i - 1}.icon`)"
             ></i>
@@ -15,10 +15,10 @@
           </div>
         </div>
         <div class="flex gap-3 mb-4 items-center">
-          <span class="btn btn-secondary icon-btn !text-sn-black">
+          <span class="btn btn-secondary icon-btn !text-sn-black !pointer-events-none">
             <i class="sn-icon sn-icon-open"></i>
           </span>
-          <a :href="i18n.t('repositories.import_records.info_sidebar.elements.element4.linkTo')" class="font-bold">
+          <a :href="i18n.t('repositories.import_records.info_sidebar.elements.element4.linkTo')" class="font-bold" target="_blank">
             {{ i18n.t('repositories.import_records.info_sidebar.elements.element4.label') }}
           </a>
         </div>
