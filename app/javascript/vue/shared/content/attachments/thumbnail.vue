@@ -16,10 +16,15 @@
         :data-e2e="`e2e-BT-attachment-${attachment.id}`"
     >
       <div class="attachment-preview" :class= "attachment.attributes.asset_type">
-        <img v-if="attachment.attributes.medium_preview !== null"
+        <img v-if="attachment.attributes.medium_preview !== null && !externalProcessing"
             class="rounded-sm"
             :src="attachment.attributes.medium_preview"
             style='opacity: 0' />
+        <div v-else-if="externalProcessing"
+             class="w-[186px] h-[186px]  rounded-sm flex items-center justify-center flex-col gap-4">
+          <img src="/images/medium/loading.svg" :alt="i18n.t('general.loading')" />
+          {{ i18n.t('attachments.virus_scaning') }}
+        </div>
         <div v-else class="w-[186px] h-[186px] bg-sn-super-light-grey rounded-sm"></div>
       </div>
       <div class="attachment-label"
@@ -44,7 +49,7 @@
       <div class="absolute bottom-16 text-sn-grey">
         {{ attachment.attributes.file_size_formatted }}
       </div>
-      <div class="absolute bottom-4 w-[184px] grid grid-cols-[repeat(4,_2.5rem)] justify-between">
+      <div v-if="!externalProcessing" class="absolute bottom-4 w-[184px] grid grid-cols-[repeat(4,_2.5rem)] justify-between">
         <MenuDropdown
             v-if="multipleOpenOptions.length > 1"
             :listItems="multipleOpenOptions"
@@ -119,6 +124,7 @@
       </div>
     </div>
     <ContextMenu
+      v-if="!externalProcessing"
       v-show="showOptions"
       :attachment="attachment"
       @attachment:viewMode="updateViewMode"
@@ -174,6 +180,9 @@
 </template>
 
 <script>
+
+/* global GLOBAL_CONSTANTS */
+
 import AttachmentMovedMixin from './mixins/attachment_moved.js';
 import ContextMenuMixin from './mixins/context_menu.js';
 import ContextMenu from './context_menu.vue';
@@ -183,6 +192,7 @@ import MoveAssetModal from '../modal/move.vue';
 import MoveMixin from './mixins/move.js';
 import OpenLocallyMixin from './mixins/open_locally.js';
 import { vOnClickOutside } from '@vueuse/components';
+import axios from '../../../../packs/custom_axios.js';
 
 export default {
   name: 'thumbnailAttachment',
@@ -205,6 +215,7 @@ export default {
   },
   data() {
     return {
+      externalProcessing: false,
       showOptions: false,
       deleteModal: false,
       isMenuOpen: false
@@ -246,6 +257,8 @@ export default {
     },
   },
   mounted() {
+    this.externalProcessing = this.attachment.attributes.external_processing;
+
     $(this.$nextTick(() => {
       $('.attachment-preview img')
         .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
@@ -253,6 +266,11 @@ export default {
     }));
   },
   watch: {
+    externalProcessing() {
+      if (this.externalProcessing) {
+        this.checkProcessing();
+      }
+    },
     showOptions(newValue) {
       // reload thumbnail on mouse out
       if (newValue) return;
@@ -265,6 +283,17 @@ export default {
     }
   },
   methods: {
+    checkProcessing() {
+      axios.get(this.attachment.attributes.urls.show)
+        .then((response) => {
+          this.externalProcessing = response.data.data.attributes.external_processing;
+          if (this.externalProcessing) {
+            setTimeout(() => {
+              this.checkProcessing();
+            }, GLOBAL_CONSTANTS.FAST_STATUS_POLLING_INTERVAL);
+          }
+        });
+    },
     openOVEditor(url) {
       window.showIFrameModal(url);
     },

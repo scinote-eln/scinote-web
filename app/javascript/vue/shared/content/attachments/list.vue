@@ -30,6 +30,7 @@
       </span>
     </div>
     <ContextMenu
+      v-if="!externalProcessing"
       :attachment="attachment"
       @attachment:viewMode="updateViewMode"
       @attachment:delete="deleteAttachment"
@@ -40,9 +41,13 @@
 </template>
 
 <script>
+
+/* global GLOBAL_CONSTANTS */
+
 import AttachmentMovedMixin from './mixins/attachment_moved.js';
 import ContextMenuMixin from './mixins/context_menu.js';
 import ContextMenu from './context_menu.vue';
+import axios from '../../../../packs/custom_axios.js';
 
 export default {
   name: 'listAttachment',
@@ -58,14 +63,36 @@ export default {
       required: true
     }
   },
+  watch: {
+    externalProcessing() {
+      if (this.externalProcessing) {
+        this.checkProcessing();
+      }
+    }
+  },
   data() {
     return {
+      externalProcessing: false,
       imageLoadError: false
     };
+  },
+  mounted() {
+    this.externalProcessing = this.attachment.attributes.external_processing;
   },
   methods: {
     handleImageError() {
       this.imageLoadError = true;
+    },
+    checkProcessing() {
+      axios.get(this.attachment.attributes.urls.show)
+        .then((response) => {
+          this.externalProcessing = response.data.data.attributes.external_processing;
+          if (this.externalProcessing) {
+            setTimeout(() => {
+              this.checkProcessing();
+            }, GLOBAL_CONSTANTS.FAST_STATUS_POLLING_INTERVAL);
+          }
+        });
     }
   }
 };

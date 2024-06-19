@@ -75,12 +75,17 @@ class TinyMceAsset < ApplicationRecord
       asset_id = tm_asset.attr('data-mce-token')
       new_asset = obj.tiny_mce_assets.find_by(id: Base62.decode(asset_id))
       if new_asset&.image&.attached?
-        tm_asset.attributes['src'].value = if is_shared_object
-                                             new_asset.image.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes)
-                                           else
-                                             Rails.application.routes.url_helpers.url_for(new_asset.image)
-                                           end
-        tm_asset['class'] = 'img-responsive'
+        if !ActiveStorage::Blob.service.ready?(new_asset.image.key)
+          tm_asset.attributes['src'].value = '/images/medium/loading.svg'
+          tm_asset['class'] = 'p-6 border rounded'
+        else
+          tm_asset.attributes['src'].value = if is_shared_object
+                                               new_asset.image.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes)
+                                             else
+                                               Rails.application.routes.url_helpers.url_for(new_asset.image)
+                                             end
+          tm_asset['class'] = 'img-responsive'
+        end
       end
     end
     description.css('body').inner_html.to_s

@@ -12,7 +12,7 @@ class AssetSerializer < ActiveModel::Serializer
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
              :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type,
-             :edit_version_range
+             :edit_version_range, :external_processing
   attribute :checksum, if: :sync_url_present?
 
   def icon
@@ -46,6 +46,10 @@ class AssetSerializer < ActiveModel::Serializer
 
   def file_size_formatted
     number_to_human_size(object.file_size)
+  end
+
+  def external_processing
+    !ActiveStorage::Blob.service.ready?(object.file.key)
   end
 
   def medium_preview
@@ -129,6 +133,7 @@ class AssetSerializer < ActiveModel::Serializer
 
   def urls
     urls = {
+      show: asset_show_path(object),
       preview: asset_file_preview_path(object),
       download: (asset_download_path(object) if attached),
       load_asset: load_asset_path(object),
