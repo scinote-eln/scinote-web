@@ -8,5 +8,9 @@ module ActiveStorage
       ActiveStorage::Current.url_options ||= { host: Rails.application.secrets.mail_server_url }
       ActiveStorage::Current.url_options
     end
+
+    def ready?(_key)
+      true
+    end
   end
 end
