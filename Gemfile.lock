@@ -6,14 +6,6 @@ GIT
       activerecord (>= 3.2.0)
 
 GIT
-  remote: https://github.com/mhfs/devise-async.git
-  revision: 177f6363a002f7ff28f1d289c8cab7ad8d9cb8c5
-  branch: devise-4.x
-  specs:
-    devise-async (0.10.2)
-      devise (>= 4.0)
-
-GIT
   remote: https://github.com/scinote-eln/canaid
   revision: bba1b817d1c9b0c7e0440a83d0f62848aabc0a1b
   specs:

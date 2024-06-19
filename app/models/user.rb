@@ -8,7 +8,7 @@ class User < ApplicationRecord
   include ActiveStorageConcerns
 
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
-         :async, :recoverable, :rememberable, :trackable, :validatable,
+         :recoverable, :rememberable, :trackable, :validatable,
          :timeoutable, :omniauthable, :lockable,
          omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
          stretches: Constants::PASSWORD_STRETCH_FACTOR
@@ -614,6 +614,10 @@ class User < ApplicationRecord
   def my_module_visible_table_columns
     settings['visible_my_module_table_columns'].presence ||
       %w(id due_date age results status archived assigned tags comments)
+  end
+
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
   end
 
   protected
