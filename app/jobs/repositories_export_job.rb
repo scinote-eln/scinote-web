@@ -46,7 +46,7 @@ class RepositoriesExportJob < ApplicationJob
     FileUtils.mkdir_p(attachments_path)
 
     # File creation
-    file_name = FileUtils.touch("#{path}/#{repository_name}.#{@file_type}").first
+    repository_items_file_name = FileUtils.touch("#{path}/#{repository_name}.#{@file_type}").first
 
     # Define headers and columns IDs
     col_ids = [-3, -4, -5, -6, -7, -8, -9, -10]
@@ -69,10 +69,10 @@ class RepositoriesExportJob < ApplicationJob
 
     # Generate CSV / XLSX
     service = RepositoryExportService
-              .new(@file_type, repository.repository_rows, col_ids, @user, repository, in_module: handle_name_func)
+              .new(@file_type, repository.repository_rows, col_ids, @user, repository, handle_name_func)
     exported_data = service.export!
 
-    File.binwrite(file_name, exported_data)
+    File.binwrite(repository_items_file_name, exported_data)
 
     # Save all attachments (it doesn't work directly in callback function
     assets.each do |asset, asset_path|

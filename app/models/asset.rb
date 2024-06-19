@@ -245,7 +245,7 @@ class Asset < ApplicationRecord
 
   def can_perform_action(action)
     if ENV['WOPI_ENABLED'] == 'true'
-      file_ext = file_name.split('.').last
+      file_ext = file_name.split('.').last&.downcase
 
       if file_ext == 'wopitest' &&
          (!ENV['WOPI_TEST_ENABLED'] || ENV['WOPI_TEST_ENABLED'] == 'false')
@@ -297,7 +297,7 @@ class Asset < ApplicationRecord
   end
 
   def favicon_url(action)
-    file_ext = file_name.split('.').last
+    file_ext = file_name.split('.').last&.downcase
     action = get_action(file_ext, action)
     action[:icon] if action[:icon]
   end

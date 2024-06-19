@@ -2,6 +2,7 @@
   <div
     class="inline-attachment-container asset"
     :class="[{'menu-dropdown-open': isMenuDropdownOpen}, {'context-menu-open': isContextMenuOpen }]"
+    :data-e2e="`e2e-CO-${dataE2e}-attachment${attachment.id}-inline`"
     ref="inlineAttachmentContainer"
     :data-asset-id="attachment.id"
   >
@@ -104,6 +105,10 @@ export default {
     parentId: {
       type: Number,
       required: true
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {

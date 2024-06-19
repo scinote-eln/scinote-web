@@ -1,6 +1,7 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
+      <Loading v-if="loading" />
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-newInventoryModal-close">
@@ -11,18 +12,20 @@
           </h4>
         </div>
         <div class="modal-body">
+
           <p class="text-sn-dark-grey">
             {{ this.i18n.t('repositories.import_records.steps.step2.subtitle') }}
           </p>
           <div class="flex gap-6 items-center my-6">
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-2" :title="i18n.t('repositories.import_records.steps.step2.autoMappingTooltip')">
               <div class="sci-checkbox-container">
                 <input type="checkbox" class="sci-checkbox"  v-model="autoMapping" />
                 <span class="sci-checkbox-label"></span>
               </div>
               {{ i18n.t('repositories.import_records.steps.step2.autoMappingText') }}
             </div>
-            <div class="flex items-center gap-1">
+          <!--
+            <div  class="flex items-center gap-1">
               <div class="sci-checkbox-container my-auto">
                 <input type="checkbox" class="sci-checkbox" :checked="updateWithEmptyCells" @change="toggleUpdateWithEmptyCells"/>
                 <span class="sci-checkbox-label"></span>
@@ -36,13 +39,14 @@
               </div>
               {{ i18n.t('repositories.import_records.steps.step2.onlyAddNewItemsText') }}
             </div>
+          -->
           </div>
 
           {{ i18n.t('repositories.import_records.steps.step2.importedFileText') }} {{ params.file_name }}
           <hr class="m-0 mt-6">
           <div class="grid grid-cols-[3rem_auto_1.5rem_auto_5rem_auto] px-2">
 
-            <div v-for="(column, key) in columnLabels" class="flex items-center px-2 py-2">{{ column }}</div>
+            <div v-for="(column, key) in columnLabels" class="flex items-center px-2 py-2 font-bold">{{ column }}</div>
 
             <template v-for="(item, index) in params.import_data.header" :key="item">
               <MappingStepTableRow
@@ -50,7 +54,7 @@
                 :item="item"
                 :dropdownOptions="computedDropdownOptions"
                 :params="params"
-                :selected="this.selectedItemsIndexes.includes(index)"
+                :value="this.selectedItems.find((item) => item.index === index)"
                 @selection:changed="handleChange"
                 :autoMapping="this.autoMapping"
               />
@@ -76,7 +80,7 @@
           <button class="btn btn-secondary ml-auto" @click="close" aria-label="Close">
             {{ i18n.t('repositories.import_records.steps.step2.cancelBtnText') }}
           </button>
-          <button class="btn btn-primary" :disabled="!rowsIsValid" @click="importRecords">
+          <button class="btn btn-primary" @click="importRecords">
             {{ i18n.t('repositories.import_records.steps.step2.confirmBtnText') }}
           </button>
         </div>
@@ -90,6 +94,7 @@ import axios from '../../../../packs/custom_axios';
 import SelectDropdown from '../../../shared/select_dropdown.vue';
 import MappingStepTableRow from './mapping_step_table_row.vue';
 import modalMixin from '../../../shared/modal_mixin';
+import Loading from '../../../shared/loading.vue';
 
 export default {
   name: 'MappingStep',
@@ -97,17 +102,22 @@ export default {
   mixins: [modalMixin],
   components: {
     SelectDropdown,
-    MappingStepTableRow
+    MappingStepTableRow,
+    Loading
   },
   props: {
     params: {
       type: Object,
       required: true
+    },
+    loading: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
     return {
-      autoMapping: true,
+      autoMapping: false,
       updateWithEmptyCells: false,
       onlyAddNewItems: false,
       columnLabels: {
@@ -119,7 +129,6 @@ export default {
         5: this.i18n.t('repositories.import_records.steps.step2.table.columnLabels.exampleData')
       },
       selectedItems: [],
-      selectedItemsIndexes: [],
       importRecordsUrl: null,
       teamId: null,
       repositoryId: null,
@@ -130,131 +139,77 @@ export default {
     };
   },
   methods: {
-    toggleUpdateWithEmptyCells() {
-      this.updateWithEmptyCells = !this.updateWithEmptyCells;
-    },
-    toggleOnlyAddNewItems() {
-      this.onlyAddNewItems = !this.onlyAddNewItems;
-    },
     handleChange(payload) {
       this.error = null;
       const { index, key, value } = payload;
 
-      // checking if the mapping is already selected
-      const foundItem = this.selectedItems.find((item) => item.index === index);
+      const item = this.selectedItems.find((i) => i.index === index);
+      const usedBeforeItem = this.selectedItems.find((i) => i.key === key && i.index !== index);
 
-      // if it's not, add it
-      if (!foundItem && key) {
-        this.selectedItems = [...this.selectedItems, { index, key, value }];
-        this.selectedItemsIndexes.push(index);
-      }
-      // if it is but the key is null then clear it
-      if (foundItem && !key) {
-        const indexToRemoveObj = this.selectedItems.findIndex((item) => item.index === index);
-        const indexToRemoveStr = this.selectedItemsIndexes.indexOf(index);
-        if ((indexToRemoveObj !== -1) && (indexToRemoveStr !== -1)) {
-          this.selectedItems.splice(indexToRemoveObj, 1);
-          this.selectedItemsIndexes.splice(indexToRemoveStr, 1);
-        }
-      }
-      // if it is and the key is not null then update it
-      if (foundItem && key) {
-        const indexToRemoveObj = this.selectedItems.findIndex((item) => item.index === index);
-        this.selectedItems.splice(indexToRemoveObj, 1);
-        this.selectedItems = [...this.selectedItems, { index, key, value }];
+      if (usedBeforeItem) {
+        usedBeforeItem.key = null;
+        usedBeforeItem.value = null;
       }
 
-      this.updateAvailableItemsStatus();
-    },
-    // necessary for tracking which options are already selected
-    updateAvailableItemsStatus() {
-      let updatedAvailableFields = [];
-      const selectedItemsKeys = new Set(this.selectedItems.map((item) => item.key));
-
-      this.alwaysAvailableFields.forEach((field) => {
-        if (selectedItemsKeys.has(field.key)) {
-          const tempObj = { key: field.key, value: field.value, alreadySelected: true };
-          updatedAvailableFields.push(tempObj);
-        } else {
-          updatedAvailableFields.push(field);
-        }
-      });
-
-      this.availableFields = updatedAvailableFields;
-      updatedAvailableFields = [];
+      item.key = key;
+      item.value = value;
     },
     generateMapping() {
-      const mapping = {};
-      for (let i = 0; i < this.params.import_data.header.length; i++) {
-        const foundItem = this.selectedItems.find((item) => item.index === i);
-        if (foundItem) {
-          mapping[foundItem.index] = (foundItem.key === 'new' ? foundItem.value : foundItem.key);
-        } else {
-          mapping[i] = '';
-        }
-      }
-      return mapping;
+      return this.selectedItems.reduce((obj, item) => {
+        obj[item.index] = item.key || '';
+        return obj;
+      }, {});
     },
     importRecords() {
-      const selectedItemsKeys = new Set(this.selectedItems.map((item) => item.key));
-      if (!selectedItemsKeys.has('-1')) {
+      if (!this.selectedItems.find((item) => item.key === '-1')) {
         this.error = this.i18n.t('repositories.import_records.steps.step2.selectNamePropertyError');
         return '';
       }
 
       this.$emit(
         'generatePreview',
-        this.generateMapping(),
-        this.updateWithEmptyCells,
-        this.onlyAddNewItems
+        this.generateMapping()
       );
+      return true;
     }
   },
   computed: {
     computedDropdownOptions() {
-      const columnKeyToLabelMapping = {};
-      columnKeyToLabelMapping[-1] = this.i18n.t('repositories.import_records.steps.step2.computedDropdownOptions.name');
-
-      if (this.repositoryColumns) {
-        this.repositoryColumns.forEach((el) => {
-          const [key, colName, colType] = el;
-          columnKeyToLabelMapping[key] = this.i18n.t(`repositories.import_records.steps.step2.computedDropdownOptions.${colType}`);
-        });
-      }
-
-      if (this.availableFields) {
-        let options = this.availableFields.map((el) => [String(el.key), `${String(el.value)} (${columnKeyToLabelMapping[el.key]})`]);
-        options = [['new', this.i18n.t('repositories.import_records.steps.step2.table.tableRow.importAsNewColumn')]].concat(options);
-        return options;
-      }
-      return [];
+      return this.availableFields
+        .map((el) => [String(el.key), `${String(el.value)} (${el.typeName})`]);
+      // options = [['new', this.i18n.t('repositories.import_records.steps.step2.table.tableRow.importAsNewColumn')]].concat(options);
     },
     computedImportedIgnoredInfo() {
-      const importedSum = this.selectedItems.length;
-      const ignoredSum = this.params.import_data.header.length - importedSum;
+      const importedSum = this.selectedItems.filter((i) => i.key).length;
+      const ignoredSum = this.selectedItems.length - importedSum;
       return { importedSum, ignoredSum };
-    },
-    rowsIsValid() {
-      let valid = true;
-      this.selectedItems.forEach((v) => {
-        if (v.key === 'new' && (!v.value.type || v.value.name.length < 2)) {
-          valid = false;
-        }
-      });
-      return valid;
     }
   },
   created() {
     this.repositoryColumns = this.params.attributes.repository_columns;
-
     // Adding alreadySelected attribute for tracking
-    const tempAvailableFields = [];
+    this.availableFields = [];
+
+    this.selectedItems = this.params.import_data.header.map((item, index) => { return { index, key: null, value: null }; });
+
     Object.entries(this.params.import_data.available_fields).forEach(([key, value]) => {
-      const field = { key, value, alreadySelected: false };
-      tempAvailableFields.push(field);
+      let columnTypeName = '';
+      if (key === '-1') {
+        columnTypeName = this.i18n.t('repositories.import_records.steps.step2.computedDropdownOptions.name');
+      } else if (key === '0') {
+        columnTypeName = this.i18n.t('repositories.import_records.steps.step2.computedDropdownOptions.id');
+      } else {
+        const column = this.repositoryColumns.find((el) => el[0] === parseInt(key, 10));
+        columnTypeName = this.i18n.t(`repositories.import_records.steps.step2.computedDropdownOptions.${column[2]}`);
+      }
+      const field = {
+        key, value, alreadySelected: false, typeName: columnTypeName
+      };
+      this.availableFields.push(field);
     });
-    this.availableFields = tempAvailableFields;
-    this.alwaysAvailableFields = tempAvailableFields;
+  },
+  mounted() {
+    this.autoMapping = true;
   }
 };
 </script>

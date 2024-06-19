@@ -87,9 +87,14 @@
         <div :class="inRepository ? 'protocol-section protocol-information' : ''">
           <div v-if="inRepository" id="protocol-description" class="protocol-section-header">
             <div class="protocol-description-container">
-              <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#protocol-description-container" aria-expanded="false" aria-controls="protocol-description-container">
+              <a class="protocol-section-caret"
+                role="button"
+                data-toggle="collapse"
+                href="#protocol-description-container"
+                aria-expanded="false"
+                aria-controls="protocol-description-container">
                 <i class="sn-icon sn-icon-right"></i>
-                <span id="protocolDescriptionLabel" class="protocol-section-title">
+                <span id="protocolDescriptionLabel" class="protocol-section-title" data-e2e="e2e-TX-protocolTemplates-protocolDescription-title">
                   <h2>
                     {{ i18n.t("protocols.header.protocol_description") }}
                   </h2>
@@ -97,7 +102,10 @@
               </a>
             </div>
           </div>
-          <div id="protocol-description-container" class="text-base" :class=" inRepository ? 'protocol-description collapse in' : ''" >
+          <div id="protocol-description-container"
+            class="text-base"
+            :class=" inRepository ? 'protocol-description collapse in' : ''"
+            data-e2e="e2e-IF-protocolTemplates-protocolDescription-content">
             <div v-if="urls.update_protocol_description_url">
               <Tinymce
                 :value="protocol.attributes.description"
@@ -125,7 +133,7 @@
           <div class="protocol-steps-container">
             <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#protocol-steps-container" aria-expanded="false" aria-controls="protocol-steps-container">
               <i class="sn-icon sn-icon-right"></i>
-              <span id="protocolStepsLabel" class="protocol-section-title">
+              <span id="protocolStepsLabel" class="protocol-section-title" data-e2e="e2e-TX-protocol-templateSteps-title">
                 <h2>
                   {{ i18n.t("protocols.header.protocol_steps") }}
                 </h2>
@@ -139,6 +147,7 @@
             <a
               class="btn btn-secondary"
               :title="i18n.t('protocols.steps.new_step_title')"
+              data-e2e="e2e-BT-protocol-templateSteps-newStepTop"
               @keyup.enter="addStep(steps.length)"
               @click="addStep(steps.length)"
               tabindex="0">
@@ -146,17 +155,18 @@
                 <span>{{ i18n.t("protocols.steps.new_step") }}</span>
             </a>
             <div v-if="steps.length > 0" class="flex justify-between items-center gap-4">
-              <button @click="collapseSteps" class="btn btn-secondary flex px-4" tabindex="0">
+              <button @click="collapseSteps" class="btn btn-secondary flex px-4" tabindex="0" data-e2e="e2e-BT-protocol-templateSteps-collapse">
                 <i class="sn-icon sn-icon-collapse-all"></i>
                 {{ i18n.t("protocols.steps.collapse_label") }}
               </button>
-              <button @click="expandSteps" class="btn btn-secondary flex px-4" tabindex="0">
+              <button @click="expandSteps" class="btn btn-secondary flex px-4" tabindex="0" data-e2e="e2e-BT-protocol-templateSteps-expand">
                 <i class="sn-icon sn-icon-expand-all"></i>
                 {{ i18n.t("protocols.steps.expand_label") }}
               </button>
               <a v-if="steps.length > 0 && urls.reorder_steps_url"
                 class="btn btn-light icon-btn"
                 data-toggle="modal"
+                data-e2e="e2e-BT-protocol-templateSteps-reorder"
                 @click="startStepReorder"
                 @keyup.enter="startStepReorder"
                 :class="{'disabled': steps.length == 1}"
@@ -167,7 +177,7 @@
           </div>
           <div class="protocol-steps pb-8">
             <div v-for="(step, index) in steps" :key="step.id" class="step-block">
-              <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
+              <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
                 <i class="sn-icon sn-icon-new-task"></i>
               </div>
               <Step
@@ -191,7 +201,7 @@
                 :userSettingsUrl="userSettingsUrl"
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
               />
-              <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step" @click="addStep(index + 1)">
+              <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step" @click="addStep(index + 1)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
                 <i class="sn-icon sn-icon-new-task"></i>
               </div>
             </div>
@@ -199,6 +209,7 @@
               <a
                 class="btn btn-secondary"
                 :title="i18n.t('protocols.steps.new_step_title')"
+                data-e2e="e2e-BT-protocol-templateSteps-newStepBottom"
                 @keyup.enter="addStep(steps.length)"
                 @click="addStep(steps.length)"
                 tabindex="0">

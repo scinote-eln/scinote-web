@@ -3,7 +3,7 @@
 class RepositoryCell < ApplicationRecord
   include ReminderRepositoryCellJoinable
 
-  attr_accessor :importing
+  attr_accessor :importing, :to_destroy
 
   belongs_to :repository_row, touch: true
   belongs_to :repository_column

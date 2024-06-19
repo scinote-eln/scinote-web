@@ -1,61 +1,101 @@
-<div id="import-protocol-modal" class="modal fade" role="dialog">
+<div id="import-protocol-modal" class="modal fade" role="dialog" data-e2e="e2e-MD-protocolTemplates-importEln">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" data-role="header-import"><%= t("protocols.import_export.import_modal.title_import") %></h4>
-        <h4 class="modal-title" data-role="header-import-into-protocol"><%= t("protocols.import_export.import_modal.title_import_into_protocol") %></h4>
+        <button type="button" class="close" data-dismiss="modal" data-e2e="e2e-BT-protocolTemplates-importEln-close">
+          &times;
+        </button>
+        <h4 class="modal-title" data-role="header-import" data-e2e="e2e-TX-protocolTemplates-importEln-title">
+          <%= t("protocols.import_export.import_modal.title_import") %>
+        </h4>
+        <h4 class="modal-title" data-role="header-import-into-protocol">
+          <%= t("protocols.import_export.import_modal.title_import_into_protocol") %>
+        </h4>
       </div>
       <div class="modal-body">
         <!-- Warning message -->
-        <div data-role="import-message" style="margin-bottom: 15px;">
+        <div data-role="import-message"
+            style="margin-bottom: 15px;"
+            data-e2e="e2e-TX-protocolTemplates-importEln-warning">
           <b><%= t("protocols.import_export.import_modal.import_into_protocol_message") %></b>
           <br />
         </div>
 
         <!-- General protocol info -->
         <div class="form-group sci-input-container">
-          <label for="import_protocol_name"><%= t("protocols.import_export.import_modal.name_label") %></label>
-          <input type="text" class="form-control sci-input-field" id="import_protocol_name">
+          <label for="import_protocol_name" data-e2e="e2e-TX-protocolTemplates-importEln-nameInput">
+            <%= t("protocols.import_export.import_modal.name_label") %>
+          </label>
+          <input type="text" 
+            class="form-control sci-input-field"
+            id="import_protocol_name"
+            data-e2e="e2e-IF-protocolTemplates-importEln-nameInput">
         </div>
         <div class="form-group sci-input-container">
-          <label for="protocol_authors">
+          <label for="protocol_authors" data-e2e="e2e-TX-protocolTemplates-importEln-authorsInput">
             <span class="sn-icon sn-icon-user-menu"></span>&nbsp;<%= t("protocols.import_export.import_modal.authors_label") %>
           </label>
-          <input type="text" class="form-control sci-input-field" id="protocol_authors">
+          <input type="text" 
+            class="form-control sci-input-field"
+              id="protocol_authors"
+              data-e2e="e2e-IF-protocolTemplates-importEln-authorsInput">
         </div>
         <div class="form-group">
-          <label for="import_protocol_description"><%= t("protocols.import_export.import_modal.description_label") %></label>
-          <div id="import_protocol_description" class="overflow-auto" rows="2"></div>
+          <label for="import_protocol_description" data-e2e="e2e-TX-protocolTemplates-importEln-descriptionLabel">
+            <%= t("protocols.import_export.import_modal.description_label") %>
+          </label>
+          <div id="import_protocol_description"
+            class="overflow-auto"
+            rows="2"
+            data-e2e="e2e-TX-protocolTemplates-importEln-description">
+          </div>
         </div>
         <div class="form-group">
           <div class="row">
             <div class="col-xs-4">
-              <label for="protocol_created_at"><%= t("protocols.import_export.import_modal.created_at_label") %></label>
-              <input type="text" class="form-control" id="protocol_created_at" disabled>
+              <label for="protocol_created_at" data-e2e="e2e-TX-protocolTemplates-importEln-createdAtLabel">
+                <%= t("protocols.import_export.import_modal.created_at_label") %>
+              </label>
+              <input type="text"
+                class="form-control"
+                id="protocol_created_at"
+                disabled
+                data-e2e="e2e-TX-protocolTemplates-importEln-createdAt">
             </div>
             <div class="col-xs-4">
-              <label for="protocol_updated_at"><%= t("protocols.import_export.import_modal.updated_at_label") %></label>
-              <input type="text" class="form-control" id="protocol_updated_at" disabled>
+              <label for="protocol_updated_at" data-e2e="e2e-TX-protocolTemplates-importEln-updatedAtLabel">
+                <%= t("protocols.import_export.import_modal.updated_at_label") %>
+              </label>
+              <input type="text"
+                class="form-control"
+                id="protocol_updated_at"
+                disabled
+                data-e2e="e2e-TX-protocolTemplates-importEln-updatedAt">
             </div>
           </div>
         </div>
 
         <!-- Preview title -->
         <div>
-          <h2 style="display: inline;"><%= t("protocols.import_export.import_modal.preview_title") %></h2>
+          <h2 style="display: inline;" data-e2e="e2e-TX-protocolTemplates-importEln-previewTitle">
+            <%= t("protocols.import_export.import_modal.preview_title") %>
+          </h2>
           <h3 style="display: none;" data-role="title-position"></h3>
         </div>
 
         <!-- Preview scroller -->
         <div>
-          <div class="import-protocols-modal-preview-container" data-role="preview-container">
+          <div class="import-protocols-modal-preview-container"
+            data-role="preview-container"
+            data-e2e="e2e-CO-protocolTemplates-importEln-preview">
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <div data-role="multiple-protocols-buttons">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t("general.cancel") %></button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <%= t("general.cancel") %>
+          </button>
           <div class="btn-group" role="group">
             <a href="#" class="btn btn-secondary" data-action="jump-to-first-protocol"><i class="fas fa-fast-backward"></i></a>
             <a href="#" class="btn btn-secondary" data-action="jump-to-previous-protocol"><i class="fas fa-backward"></i></a>
@@ -64,18 +104,34 @@
           </div>
           <div class="btn-group" role="group">
             <div data-role="import-all">
-              <button type="submit" class="btn btn-success" data-action="import-current"><%= t("protocols.import_export.import_modal.import_current") %></button>
-              <button type="submit" class="btn btn-success" data-action="import-all"><%= t("protocols.import_export.import_modal.import_all") %></button>
+              <button type="submit" class="btn btn-success" data-action="import-current">
+                <%= t("protocols.import_export.import_modal.import_current") %>
+              </button>
+              <button type="submit" class="btn btn-success" data-action="import-all">
+                <%= t("protocols.import_export.import_modal.import_all") %>
+              </button>
             </div>
             <div data-role="import-single">
-              <button type="submit" class="btn btn-success" data-action="import-current"><%= t("protocols.import_export.import_modal.import") %></button>
+              <button type="submit" class="btn btn-success" data-action="import-current">
+                <%= t("protocols.import_export.import_modal.import") %>
+              </button>
             </div>
           </div>
         </div>
         <div data-role="single-protocol-buttons">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t("general.cancel") %></button>
+          <button type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+            data-e2e="e2e-BT-protocolTemplates-importEln-cancel">
+            <%= t("general.cancel") %>
+          </button>
           <div class="btn-group" role="group">
-            <button type="submit" class="btn btn-success" data-action="import-current"><%= t("protocols.import_export.import_modal.import") %></button>
+            <button type="submit"
+              class="btn btn-success"
+              data-action="import-current"
+              data-e2e="e2e-BT-protocolTemplates-importEln-load">
+              <%= t("protocols.import_export.import_modal.import") %>
+            </button>
           </div>
         </div>
       </div>

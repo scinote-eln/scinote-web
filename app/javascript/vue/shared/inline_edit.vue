@@ -12,6 +12,7 @@
           'border-b-sn-science-blue': !error,
         }"
         v-model="newValue"
+        :data-e2e="`e2e-IF-${dataE2e}`"
         @keydown="handleKeypress"
         @blur="handleBlur"
         @keyup.escape="cancelEdit && this.atWhoOpened"
@@ -27,6 +28,7 @@
         }"
         :placeholder="placeholder"
         v-model="newValue"
+        :data-e2e="`e2e-IF-${dataE2e}`"
         @keydown="handleKeypress"
         @blur="handleBlur"
         @keyup.escape="cancelEdit && this.atWhoOpened"
@@ -38,6 +40,7 @@
       ref="view"
       class="grid sci-cursor-edit leading-5 border-0 outline-none border-solid border-y border-transparent"
       :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line py-1': !singleLine }"
+      :data-e2e="`e2e-TX-${dataE2e}`"
       @click="enableEdit($event)"
     >
       <span :class="{'truncate': singleLine }" :title="sa_value || placeholder" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
@@ -48,6 +51,7 @@
       class="mt-2 whitespace-nowrap truncate text-xs font-normal absolute bottom-[-1rem] w-full"
       :title="editing && error ? error : timestamp"
       :class="{'text-sn-delete-red': editing && error}"
+      :data-e2e="`e2e-TX-${dataE2e}-timestampError`"
     >
       {{ editing && error ? error : timestamp }}
     </div>
@@ -76,7 +80,8 @@ export default {
     editOnload: { type: Boolean, default: false },
     defaultValue: { type: String, default: '' },
     singleLine: { type: Boolean, default: true },
-    preventLeavingUntilFilled: { type: Boolean, default: false }
+    preventLeavingUntilFilled: { type: Boolean, default: false },
+    dataE2e: { type: String, default: '' }
   },
   data() {
     return {

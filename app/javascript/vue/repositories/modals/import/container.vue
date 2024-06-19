@@ -1,33 +1,36 @@
 <template>
-  <div v-if="modalOpened">
-  <component
-    v-if="activeStep !== 'ExportModal'"
-    :is="activeStep"
-    :params="params"
-    :uploading="uploading"
-    @uploadFile="uploadFile"
-    @generatePreview="generatePreview"
-    @changeStep="changeStep"
-    @importRows="importRecords"
-  />
-  <ExportModal
-    v-else
-    :rows="[{id: params.id, team: params.attributes.team_name}]"
-    :exportAction="params.attributes.export_actions"
-    @close="activeStep ='UploadStep'"
-    @export="activeStep = 'UploadStep'"
-  />
+  <div v-if="modalOpened" class="relative">
+    <component
+      v-if="activeStep !== 'ExportModal'"
+      :is="activeStep"
+      :params="params"
+      :key="modalId"
+      :uploading="uploading"
+      :loading="loading"
+      @uploadFile="uploadFile"
+      @generatePreview="generatePreview"
+      @changeStep="changeStep"
+      @importRows="importRecords"
+
+    />
+    <ExportModal
+      v-else
+      :rows="[{id: params.id, team: params.attributes.team_name}]"
+      :exportAction="params.attributes.export_actions"
+      @close="activeStep ='UploadStep'"
+      @export="activeStep = 'UploadStep'"
+    />
   </div>
 </template>
 
 <script>
+/* global HelperModule */
 
 import axios from '../../../../packs/custom_axios';
 import InfoModal from '../../../shared/info_modal.vue';
 import UploadStep from './upload_step.vue';
 import MappingStep from './mapping_step.vue';
 import PreviewStep from './preview_step.vue';
-import SuccessStep from './success_step.vue';
 import ExportModal from '../export.vue';
 
 export default {
@@ -37,7 +40,6 @@ export default {
     UploadStep,
     MappingStep,
     PreviewStep,
-    SuccessStep,
     ExportModal
   },
   props: {
@@ -49,7 +51,9 @@ export default {
       modalOpened: false,
       activeStep: 'UploadStep',
       uploading: false,
-      params: {}
+      params: {},
+      modalId: null,
+      loading: false
     };
   },
   created() {
@@ -64,6 +68,7 @@ export default {
       axios.get(this.repositoryUrl)
         .then((response) => {
           this.params = response.data.data;
+          this.modalId = Math.random().toString(36);
           this.modalOpened = true;
         });
     },
@@ -94,6 +99,10 @@ export default {
       this.activeStep = step;
     },
     importRecords(preview) {
+      if (this.loading) {
+        return;
+      }
+
       const jsonData = {
         file_id: this.params.temp_file.id,
         mappings: this.params.mapping,
@@ -102,6 +111,9 @@ export default {
         should_overwrite_with_empty_cells: this.params.updateWithEmptyCells,
         can_edit_existing_items: !this.params.onlyAddNewItems
       };
+
+      this.loading = true;
+
       axios.post(this.params.attributes.urls.import_records, jsonData)
         .then((response) => {
           if (preview) {
@@ -109,8 +121,17 @@ export default {
             this.params.import_date = response.data.import_date;
             this.activeStep = 'PreviewStep';
           } else {
-            this.activeStep = 'SuccessStep';
+            HelperModule.flashAlertMsg(response.data.message, 'success');
+            this.modalOpened = false;
+            this.activeStep = null;
+            $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
           }
+
+          this.loading = false;
+        })
+        .catch((error) => {
+          HelperModule.flashAlertMsg(error.response.data.message, 'danger');
+          this.loading = false;
         });
     }
   }

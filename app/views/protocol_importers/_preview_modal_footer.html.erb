@@ -1,15 +1,15 @@
 <div class="footer">
   <div class="left-section">
     <div class="default-role-container">
-      <div class="sci-checkbox-container">
+      <div class="sci-checkbox-container" data-e2e="e2e-CB-protocolTemplates-previewProtocolsIo-grantAccess">
         <%= check_box_tag "visibility", "visible", false, class: "sci-checkbox" %>
         <span class="sci-checkbox-label"></span>
       </div>
-      <div class="default-role-description">
+      <div class="default-role-description" data-e2e="e2e-TX-protocolTemplates-previewProtocolsIo-grantAccess">
         <%= t("protocols.new_protocol_modal.access_label") %>
       </div>
     </div>
-    <div class="hidden" id="roleSelectWrapper">
+    <div class="hidden" id="roleSelectWrapper" data-e2e="e2e-DD-protocolTemplates-previewProtocolsIo-userRole">
       <div class="sci-input-container">
         <%= label_tag :default_public_user_role_id, t("protocols.new_protocol_modal.role_label") %>
         <% default_role = UserRole.find_by(name: I18n.t('user_roles.predefined.viewer')).id %>
@@ -19,7 +19,13 @@
     </div>
   </div>
   <div class="right-section">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
-    <button type="button" class="btn btn-primary" data-action="import_protocol" data-import_type="in_repository_draft"><%=t "protocols.import_export.import_modal.import_protocols_label" %></button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" 
+            data-e2e="e2e-BT-protocolTemplates-previewProtocolsIo-cancel">
+      <%=t "general.cancel" %>
+    </button>
+    <button type="button" class="btn btn-primary" data-action="import_protocol" 
+            data-import_type="in_repository_draft" data-e2e="e2e-BT-protocolTemplates-previewProtocolsIo-import">
+      <%=t "protocols.import_export.import_modal.import_protocols_label" %>
+    </button>
   </div>
 </div>

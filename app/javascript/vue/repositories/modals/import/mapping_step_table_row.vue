@@ -17,25 +17,21 @@
     <div class="py-1 min-h-12 flex items-center flex-col gap-2 px-2" :class="{
       'bg-sn-super-light-blue': selected
     }">
-
-      <!-- system generated data -->
-      <SelectDropdown v-if="systemGeneratedData.includes(item)"
-        :disabled="true"
-        :placeholder="String(item)"
-      ></SelectDropdown>
       <SelectDropdown
-        v-else
         :options="dropdownOptions"
         @change="changeSelected"
         :clearable="true"
         :size="'sm'"
+        :class="{
+          'outline-sn-alert-brittlebush outline-1 outline rounded': matchNotFound
+        }"
         :placeholder="computeMatchNotFound ?
         i18n.t('repositories.import_records.steps.step2.table.tableRow.placeholders.matchNotFound') :
         i18n.t('repositories.import_records.steps.step2.table.tableRow.placeholders.doNotImport')"
         :title="this.selectedColumnType?.value"
         :value="this.selectedColumnType?.key"
       ></SelectDropdown>
-      <template v-if="selectedColumnType?.key == 'new'">
+      <template v-if="false">
         <SelectDropdown
           :options="newColumnTypes"
           @change="(v) => { newColumn.type = v }"
@@ -52,31 +48,12 @@
     <div class="py-1 min-h-12 px-2 flex items-center" :class="{
       'bg-sn-super-light-blue': selected
     }">
-      <!-- import -->
-      <i v-if="this.selectedColumnType?.key && this.selectedColumnType?.value === item && !systemGeneratedData.includes(item)"
-        class="sn-icon sn-icon-check" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.importedColumnTitle')">
-      </i>
-
-      <!-- default column -->
-      <i v-else-if="systemGeneratedData.includes(item)"
-        class="sn-icon sn-icon-check text-sn-sleepy-grey" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.defaultColumnTitle')">
-      </i>
-
-      <!-- user defined this column -->
-      <i v-else-if="this.selectedColumnType?.key && this.selectedColumnType?.value !== item"
-      class="sn-icon sn-icon-info text-sn-science-blue"
-      :title="`${i18n.t('repositories.import_records.steps.step2.table.tableRow.userDefinedColumnTitle')} ${this.selectedColumnType.value}`"></i>
-
-      <!-- error: can not import -->
-      <!-- <i v-else-if=""></i> -->
-
-      <!-- match not found -->
-      <i v-else-if="computeMatchNotFound"
-        class="sn-icon sn-icon-close text-sn-alert-brittlebush" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.matchNotFoundColumnTitle')">
-      </i>
-
-      <!-- do not import -->
-      <i v-else class="sn-icon sn-icon-close text-sn-sleepy-grey" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.doNotImportColumnTitle')"></i>
+      <i v-if="differentMapingName" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.importedColumnTitle')"
+         class="sn-icon sn-icon-info text-sn-science-blue"></i>
+      <i v-else-if="columnMapped" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.importedColumnTitle')" class="sn-icon sn-icon-check"></i>
+      <i v-else-if="matchNotFound" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.matchNotFoundColumnTitle')"
+         class="sn-icon sn-icon-close text-sn-alert-brittlebush"></i>
+      <i v-else  :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.doNotImportColumnTitle')" class="sn-icon sn-icon-close text-sn-sleepy-grey"></i>
     </div>
 
     <div class="py-1 min-h-12 px-2 flex items-center" :title="params.import_data.columns[index]" :class="{
@@ -114,10 +91,7 @@ export default {
       type: Boolean,
       required: true
     },
-    selected: {
-      type: Boolean,
-      required: false
-    }
+    value: Object
   },
   data() {
     return {
@@ -129,24 +103,16 @@ export default {
       newColumnTypes: [
         ['Text', this.i18n.t('repositories.import_records.steps.step2.table.tableRow.newColumnType.text')],
         ['List', this.i18n.t('repositories.import_records.steps.step2.table.tableRow.newColumnType.list')]
-      ],
-      systemGeneratedData: [
-        this.i18n.t('repositories.import_records.steps.step2.table.tableRow.systemGeneratedData.itemId'),
-        this.i18n.t('repositories.import_records.steps.step2.table.tableRow.systemGeneratedData.createdOn'),
-        this.i18n.t('repositories.import_records.steps.step2.table.tableRow.systemGeneratedData.addedBy'),
-        this.i18n.t('repositories.import_records.steps.step2.table.tableRow.systemGeneratedData.addedOn'),
-        this.i18n.t('repositories.import_records.steps.step2.table.tableRow.systemGeneratedData.archivedBy'),
-        this.i18n.t('repositories.import_records.steps.step2.table.tableRow.systemGeneratedData.archivedOn'),
-        this.i18n.t('repositories.import_records.steps.step2.table.tableRow.systemGeneratedData.updatedBy'),
-        this.i18n.t('repositories.import_records.steps.step2.table.tableRow.systemGeneratedData.updatedOn')]
+      ]
     };
   },
   watch: {
-    newColumn() {
-      this.selectedColumnType.value = this.newColumn;
-      this.$emit('selection:changed', this.selectedColumnType);
+    selected() {
+      if (this.value?.key === null) {
+        this.selectedColumnType = null;
+      }
     },
-    autoMapping(newVal, oldVal) {
+    autoMapping(newVal) {
       if (newVal === true) {
         this.autoMap();
       } else {
@@ -157,6 +123,18 @@ export default {
   computed: {
     computeMatchNotFound() {
       return this.autoMapping && ((this.selectedColumnType && !this.selectedColumnType.key) || !this.selectedColumnType);
+    },
+    selected() {
+      return !!this.value?.key;
+    },
+    differentMapingName() {
+      return this.columnMapped && this.selectedColumnType?.value !== this.item;
+    },
+    matchNotFound() {
+      return this.autoMapping && !this.selectedColumnType?.key;
+    },
+    columnMapped() {
+      return this.selectedColumnType?.key;
     }
   },
   methods: {
@@ -171,15 +149,9 @@ export default {
       this.changeSelected(null);
     },
     changeSelected(e) {
-      let value;
-      if (e === 'new') {
-        value = this.newColumn;
-      } else {
-        value = this.params.import_data.available_fields[e];
-      }
-      const selectedColumnType = { index: this.index, key: e, value };
-      this.selectedColumnType = selectedColumnType;
-      this.$emit('selection:changed', selectedColumnType);
+      const value = this.params.import_data.available_fields[e];
+      this.selectedColumnType = { index: this.index, key: e, value };
+      this.$emit('selection:changed', this.selectedColumnType);
     }
   },
   mounted() {

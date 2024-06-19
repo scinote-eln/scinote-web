@@ -273,8 +273,13 @@ export default {
         });
       }
     },
-    urlParams() {
-      this.fetchOptions();
+    urlParams: {
+      handler(oldVal, newVal) {
+        if (!this.compareObjects(oldVal, newVal)) {
+          this.fetchOptions();
+        }
+      },
+      deep: true
     }
   },
   methods: {
@@ -384,6 +389,11 @@ export default {
       if (this.$refs.options) {
         this.$refs.options[this.focusedOption]?.scrollIntoView({ block: 'nearest' });
       }
+    },
+    compareObjects(o1, o2) {
+      const normalizedObj1 = Object.fromEntries(Object.entries(o1).sort(([k1], [k2]) => k1.localeCompare(k2)));
+      const normalizedObj2 = Object.fromEntries(Object.entries(o2).sort(([k1], [k2]) => k1.localeCompare(k2)));
+      return JSON.stringify(normalizedObj1) === JSON.stringify(normalizedObj2);
     }
   }
 };
