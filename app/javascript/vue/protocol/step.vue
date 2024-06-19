@@ -293,6 +293,7 @@
         } else {
           $(stepId).collapse('show');
         }
+        this.$emit('step:collapsed');
       });
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar);
       $(this.$refs.comments).data('openCallback', this.closeCommentsSidebar);
@@ -465,6 +466,7 @@
           data: { [this.step.id]: this.isCollapsed }
         };
 
+        this.$emit('step:collapsed');
         axios.put(this.userSettingsUrl, { settings: [settings] });
       },
       showDeleteModal() {
