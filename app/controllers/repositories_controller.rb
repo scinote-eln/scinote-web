@@ -216,29 +216,6 @@ class RepositoriesController < ApplicationController
     }
   end
 
-  def export_modal
-    if current_user.has_available_exports?
-      render json: {
-        html: render_to_string(
-          partial: 'export_repositories_modal',
-          locals: { team_name: current_team.name,
-                    counter: params[:counter].to_i,
-                    export_limit: TeamZipExport.exports_limit,
-                    num_of_requests_left: current_user.exports_left - 1 },
-          formats: :html
-        )
-      }
-    else
-      render json: {
-        html: render_to_string(
-          partial: 'export_limit_exceeded_modal',
-          locals: { requests_limit: TeamZipExport.exports_limit },
-          formats: :html
-        )
-      }
-    end
-  end
-
   def copy
     @tmp_repository = Repository.new(
       team: current_team,
@@ -378,8 +355,7 @@ class RepositoriesController < ApplicationController
 
   def export_repositories
     repositories = Repository.viewable_by_user(current_user, current_team).where(id: params[:repository_ids])
-    if repositories.present? && current_user.has_available_exports?
-      current_user.increase_daily_exports_counter!
+    if repositories.present?
       RepositoriesExportJob
         .perform_later(params[:file_type], repositories.pluck(:id), user_id: current_user.id, team_id: current_team.id)
       update_user_export_file_type if current_user.settings[:repository_export_file_type] != params[:file_type]

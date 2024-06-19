@@ -14,9 +14,6 @@
                 count: rows.length})"></p>
             <p class="bg-sn-super-light-blue p-3 mb-6"> {{ this.i18n.t('repositories.index.modal_export.description_alert') }} </p>
             <p class="mb-6"> {{ this.i18n.t('repositories.index.modal_export.description_p2') }} </p>
-            <p v-html="this.i18n.t('repositories.index.modal_export.description_p3_html', {
-                remaining_export_requests: exportAction.num_of_requests_left,
-                requests_limit: exportAction.export_limit})"></p>
             <div class="sci-radio-container mt-3">
               <input type="radio" class="sci-radio" name="file_type" value="xlsx" v-model="selectedOption">
               <span class="sci-radio-label"></span>
