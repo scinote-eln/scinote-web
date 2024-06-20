@@ -8,7 +8,9 @@
   data-label-after='<%= config[:label_after] %>'
   data-placeholder='<%= config[:placeholder] %>'
 >
-  <div class="view-mode" title="<%= initial_value %>" data-placeholder="<%= config[:placeholder] %>" tabindex=0><%= initial_value %></div>
+  <div class="view-mode" data-placeholder="<%= config[:placeholder] %>" tabindex=0>
+    <span title="<%= initial_value %>"><%= initial_value %></span>
+  </div>
   <input placeholder="<%= config[:placeholder] %>" class="hidden input-field" type="text" value="<%= initial_value %>" disabled/>
   <div class="button-container hidden">
     <span class="save-button"><i class="sn-icon sn-icon-check"></i></span>

@@ -5,7 +5,7 @@
       <% if @my_module.archived_branch? %>
         <span class="whitespace-nowrap"><%= t('labels.archived')%></span>&nbsp;
       <% end %>
-      <div class="my_module-name-span" title="<%= @my_module.name %>">
+      <div class="my_module-name-span overflow-hidden grow" title="<%= @my_module.name %>">
       <% if @inline_editable_title_config.present? %>
               <%= render partial: "shared/inline_editing",
                          locals: {
