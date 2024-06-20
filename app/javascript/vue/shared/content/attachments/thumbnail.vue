@@ -130,18 +130,6 @@
         />
       </div>
     </div>
-    <ContextMenu
-      v-show="showOptions"
-      :attachment="attachment"
-      @attachment:viewMode="updateViewMode"
-      @attachment:delete="deleteAttachment"
-      @attachment:moved="attachmentMoved"
-      @attachment:uploaded="reloadAttachments"
-      @attachment:changed="$emit('attachment:changed', $event)"
-      @attachment:update="$emit('attachment:update', $event)"
-      @menu-visibility-changed="handleMenuVisibilityChange"
-      :withBorder="true"
-    />
     <Teleport to="body">
       <deleteAttachmentModal
         v-if="deleteModal"
