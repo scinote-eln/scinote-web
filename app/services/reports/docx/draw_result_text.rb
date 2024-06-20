@@ -7,9 +7,9 @@ module Reports::Docx::DrawResultText
     color = @color
     @docx.p do
       text result_text.name.presence || '', italic: true
-      text ' '
-      text I18n.t('projects.reports.elements.result_text.user_time',
-                  timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+      # text ' '
+      # text I18n.t('projects.reports.elements.result_text.user_time',
+      #             timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
     end
     html = custom_auto_link(result_text.text, team: @report_team)
     Reports::HtmlToWordConverter.new(@docx, { scinote_url: @scinote_url,
