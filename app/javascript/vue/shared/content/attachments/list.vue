@@ -30,23 +30,43 @@
         {{ i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted}) }}
       </span>
     </div>
-    <ContextMenu
-      :attachment="attachment"
-      @attachment:viewMode="updateViewMode"
-      @attachment:delete="deleteAttachment"
-      @attachment:moved="attachmentMoved"
-      @attachment:uploaded="reloadAttachments"
-      @attachment:update="$emit('attachment:update', $event)"
-    />
+    <div class="attachment-actions shrink-0 ml-4">
+      <openMenu
+        :attachment="attachment"
+        :multipleOpenOptions="multipleOpenOptions"
+        @open="toggleMenuDropdown"
+        @close="toggleMenuDropdown"
+        @option:click="$emit($event)"
+      />
+      <a v-if="attachment.attributes.urls.move"
+        @click.prevent.stop="showMoveModal"
+        class="btn btn-light icon-btn thumbnail-action-btn"
+        :title="i18n.t('attachments.thumbnail.buttons.move')">
+        <i class="sn-icon sn-icon-move"></i>
+      </a>
+      <a class="btn btn-light icon-btn thumbnail-action-btn"
+        :title="i18n.t('attachments.thumbnail.buttons.download')"
+        :href="attachment.attributes.urls.download" data-turbolinks="false">
+        <i class="sn-icon sn-icon-export"></i>
+      </a>
+      <ContextMenu
+        :attachment="attachment"
+        @attachment:viewMode="updateViewMode"
+        @attachment:delete="deleteAttachment"
+        @attachment:moved="attachmentMoved"
+        @attachment:uploaded="reloadAttachments"
+        @attachment:update="$emit('attachment:update', $event)"
+      />
+    </div>
+    <Teleport to="body">
+      <moveAssetModal
+        v-if="movingAttachment"
+        :parent_type="attachment.attributes.parent_type"
+        :targets_url="attachment.attributes.urls.move_targets"
+        @confirm="moveAttachment($event)" @cancel="closeMoveModal"
+      />
+    </Teleport>
   </div>
-  <Teleport to="body">
-    <moveAssetModal
-      v-if="movingAttachment"
-      :parent_type="attachment.attributes.parent_type"
-      :targets_url="attachment.attributes.urls.move_targets"
-      @confirm="moveAttachment($event)" @cancel="closeMoveModal"
-    />
-  </Teleport>
 </template>
 
 <script>

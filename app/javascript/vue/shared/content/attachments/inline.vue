@@ -31,14 +31,34 @@
           </span>
         </div>
       </div>
-      <ContextMenu
-        :attachment="attachment"
-        @attachment:viewMode="updateViewMode"
-        @attachment:delete="deleteAttachment"
-        @attachment:moved="attachmentMoved"
-        @attachment:uploaded="reloadAttachments"
-        @attachment:update="$emit('attachment:update', $event)"
-      />
+      <div class="flex items-center ml-auto gap-2">
+        <openMenu
+          :attachment="attachment"
+          :multipleOpenOptions="multipleOpenOptions"
+          @open="toggleMenuDropdown"
+          @close="toggleMenuDropdown"
+          @option:click="$emit($event)"
+        />
+        <a v-if="attachment.attributes.urls.move"
+          @click.prevent.stop="showMoveModal"
+          class="btn btn-light icon-btn thumbnail-action-btn"
+          :title="i18n.t('attachments.thumbnail.buttons.move')">
+          <i class="sn-icon sn-icon-move"></i>
+        </a>
+        <a class="btn btn-light icon-btn thumbnail-action-btn"
+          :title="i18n.t('attachments.thumbnail.buttons.download')"
+          :href="attachment.attributes.urls.download" data-turbolinks="false">
+          <i class="sn-icon sn-icon-export"></i>
+        </a>
+        <ContextMenu
+          :attachment="attachment"
+          @attachment:viewMode="updateViewMode"
+          @attachment:delete="deleteAttachment"
+          @attachment:moved="attachmentMoved"
+          @attachment:uploaded="reloadAttachments"
+          @attachment:update="$emit('attachment:update', $event)"
+        />
+      </div>
     </div>
     <template v-if="attachment.attributes.wopi">
       <div v-if="showWopi"
@@ -67,15 +87,16 @@
         <i class="text-sn-grey sn-icon" :class="attachment.attributes.icon"></i>
       </div>
     </template>
+    <Teleport to="body">
+      <MoveAssetModal
+        v-if="movingAttachment"
+        :parent_type="attachment.attributes.parent_type"
+        :targets_url="attachment.attributes.urls.move_targets"
+        @confirm="moveAttachment($event)" @cancel="closeMoveModal"
+      />
+    </Teleport>
   </div>
-  <Teleport to="body">
-    <MoveAssetModal
-      v-if="movingAttachment"
-      :parent_type="attachment.attributes.parent_type"
-      :targets_url="attachment.attributes.urls.move_targets"
-      @confirm="moveAttachment($event)" @cancel="closeMoveModal"
-    />
-  </Teleport>
+
 </template>
 
 <script>
