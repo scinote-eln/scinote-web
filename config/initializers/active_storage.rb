@@ -8,8 +8,8 @@ require 'active_storage/downloader'
 # Enable PDF previews for files
 Rails.application.config.x.enable_pdf_previews = ENV['ACTIVESTORAGE_ENABLE_PDF_PREVIEWS'] == 'true'
 
-Rails.application.config.active_storage.previewers = [ActiveStorage::Previewer::PopplerPDFPreviewer,
-                                                      ActiveStorage::Previewer::LibreofficePreviewer]
+Rails.application.config.active_storage.previewers << ActiveStorage::Previewer::PopplerPDFPreviewer
+Rails.application.config.active_storage.previewers << ActiveStorage::Previewer::LibreofficePreviewer
 
 Rails.application.config.active_storage.analyzers.prepend(ActiveStorage::Analyzer::ImageAnalyzer::CustomImageMagick)
 Rails.application.config.active_storage.analyzers.append(ActiveStorage::Analyzer::TextExtractionAnalyzer)
@@ -28,6 +28,20 @@ ActiveStorage::Downloader.class_eval do
         verify_integrity_of(file, checksum: checksum) if verify
       end
       yield file
+    end
+  end
+end
+
+Rails.application.config.to_prepare do
+  require 'active_storage/attachment'
+
+  ActiveStorage::Attachment.class_eval do
+    include Discard::Model
+
+    default_scope -> { kept }
+
+    def destroy
+      discard
     end
   end
 end

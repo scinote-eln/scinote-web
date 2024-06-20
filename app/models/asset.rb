@@ -16,7 +16,7 @@ class Asset < ApplicationRecord
   enum view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
   # ActiveStorage configuration
-  has_one_attached :file
+  has_one_attached :file, dependent: :detach
   has_one_attached :file_pdf_preview
   has_one_attached :preview_image
 
@@ -386,6 +386,10 @@ class Asset < ApplicationRecord
         preview_image.blob.update!(filename: new_image_filename)
       end
     end
+  end
+
+  def previous_file_blobs
+    ActiveStorage::Attachment.with_discarded.discarded.where(record: self).map(&:blob)
   end
 
   private
