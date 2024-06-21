@@ -320,14 +320,16 @@ $(document).on('click', '.gene-sequence-edit-button', function() {
 });
 
 function initMarvinJs() {
-  if (typeof (ChemicalizeMarvinJs) === 'undefined') {
+  const isRemote = $('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote';
+
+  if (isRemote && typeof (ChemicalizeMarvinJs) === 'undefined') {
     setTimeout(initMarvinJs, 100);
     return;
   }
 
   MarvinJsEditor = MarvinJsEditorApi();
   if (MarvinJsEditor.enabled()) {
-    if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote') {
+    if (isRemote) {
       ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
         marvin.setDisplaySettings({ toolbars: 'reporting' });
         marvinJsRemoteEditor = marvin;
