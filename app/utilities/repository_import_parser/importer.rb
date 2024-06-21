@@ -129,8 +129,6 @@ module RepositoryImportParser
         include: [:repository_cells]
       ).as_json
 
-      p changes
-
       { status: :ok, nr_of_added: @new_rows_added, total_nr: @total_new_rows, changes: changes,
         import_date: I18n.l(Date.today, format: :full_date) }
     end
@@ -152,7 +150,7 @@ module RepositoryImportParser
 
         if @preview
           repository_row.validate
-          repository_row.id = SecureRandom.uuid unless repository_row.id.present?  # ID required for preview with serializer
+          repository_row.id = SecureRandom.uuid.gsub(/[a-zA-Z-]/, '') unless repository_row.id.present?  # ID required for preview with serializer
         else
           repository_row.save!
         end
@@ -245,7 +243,12 @@ module RepositoryImportParser
         # Create new cell
         cell_value.repository_cell.value = cell_value
         repository_row.repository_cells << cell_value.repository_cell
-        @preview ? cell_value.validate : cell_value.save!
+        if @preview
+          cell_value.validate
+          cell_value.repository_cell.id = SecureRandom.uuid.gsub(/[a-zA-Z-]/, '') unless cell_value.repository_cell.id.present?  # ID required for preview with serializer
+        else
+          cell_value.save!
+        end
         @updated ||= true
         cell_value.repository_cell
       end
