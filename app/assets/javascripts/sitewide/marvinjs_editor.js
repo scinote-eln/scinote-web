@@ -322,13 +322,15 @@ $(document).on('click', '.gene-sequence-edit-button', function() {
 function initMarvinJs() {
   MarvinJsEditor = MarvinJsEditorApi();
 
+  let isRemote = $('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote';
+
   if (MarvinJsEditor.enabled()) {
-    if (typeof (ChemicalizeMarvinJs) === 'undefined') {
+    if (isRemote && typeof (ChemicalizeMarvinJs) === 'undefined') {
       setTimeout(initMarvinJs, 100);
       return;
     }
 
-    if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote') {
+    if (isRemote) {
       ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
         marvin.setDisplaySettings({ toolbars: 'reporting' });
         marvinJsRemoteEditor = marvin;
