@@ -52,8 +52,8 @@
         </div>
       </div>
       <i v-if="canClear" @click="clear" class="sn-icon ml-auto sn-icon-close"></i>
-      <i v-else class="sn-icon ml-auto"
-                :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen, 'text-sn-grey': disabled}"></i>
+      <i v-else class="sn-icon ml-auto" @click="handleClickArrow"
+                :class="{ 'sn-icon-down pointer-events-none': !isOpen, 'sn-icon-up': isOpen, 'text-sn-grey': disabled}"></i>
     </div>
     <template v-if="isOpen">
       <teleport to="body">
@@ -394,6 +394,12 @@ export default {
       const normalizedObj1 = Object.fromEntries(Object.entries(o1).sort(([k1], [k2]) => k1.localeCompare(k2)));
       const normalizedObj2 = Object.fromEntries(Object.entries(o2).sort(([k1], [k2]) => k1.localeCompare(k2)));
       return JSON.stringify(normalizedObj1) === JSON.stringify(normalizedObj2);
+    },
+    handleClickArrow(e) {
+      if (this.isOpen) {
+        e.stopPropagation();
+        this.close();
+      }
     }
   }
 };
