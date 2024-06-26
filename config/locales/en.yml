@@ -2228,6 +2228,15 @@ en:
           cancelBtnText: 'Cancel'
           confirmBtnText: 'Confirm'
           importedIgnoredSection: '<b>%{imported}</b> columns to <b>import.</b> <b>%{ignored}</b> columns <b>ignored.</b>'
+          systemColumns:
+            added_by: 'Added by'
+            created_on: 'Created on'
+            updated_by: 'Updated by'
+            updated_on: 'Updated on'
+            archived_by: 'Archived by'
+            archived_on: 'Archived on'
+            parents: 'Parents'
+            children: 'Children'
           computedDropdownOptions:
             name: 'Name'
             id: 'ID'
