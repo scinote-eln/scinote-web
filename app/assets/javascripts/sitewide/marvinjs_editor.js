@@ -237,7 +237,9 @@ var MarvinJsEditorApi = (function() {
     enabled: function() {
       return ($('#MarvinJsModal').length > 0);
     },
-
+    isRemote: function() {
+      return marvinJsMode === 'remote';
+    },
     open: function(config) {
       if (!MarvinJsEditor.enabled()) {
         $('#MarvinJsPromoModal').modal('show');
@@ -320,22 +322,24 @@ $(document).on('click', '.gene-sequence-edit-button', function() {
 });
 
 function initMarvinJs() {
-  const isRemote = $('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote';
+  MarvinJsEditor = MarvinJsEditorApi();
 
-  if (isRemote && typeof (ChemicalizeMarvinJs) === 'undefined') {
+  // MarvinJS is disabled, nothing to initialize
+  if (!MarvinJsEditor.enabled()) return;
+
+  // wait for remote MarvinJS to initialize
+  if (MarvinJsEditor.isRemote() && typeof (ChemicalizeMarvinJs) === 'undefined') {
     setTimeout(initMarvinJs, 100);
     return;
   }
 
-  MarvinJsEditor = MarvinJsEditorApi();
-  if (MarvinJsEditor.enabled()) {
-    if (isRemote) {
-      ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
-        marvin.setDisplaySettings({ toolbars: 'reporting' });
-        marvinJsRemoteEditor = marvin;
-      });
-    }
+  if (MarvinJsEditor.isRemote()) {
+    ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
+      marvin.setDisplaySettings({ toolbars: 'reporting' });
+      marvinJsRemoteEditor = marvin;
+    });
   }
+
   MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
 }
 
