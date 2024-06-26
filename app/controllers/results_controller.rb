@@ -122,7 +122,7 @@ class ResultsController < ApplicationController
 
   def destroy
     name = @result.name
-    if @result.destroy
+    if @result.discard
       log_activity(:destroy_result, { destroyed_result: name })
       render json: {}, status: :ok
     else
