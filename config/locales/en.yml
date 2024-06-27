@@ -2239,6 +2239,7 @@ en:
             RepositoryDateTimeRangeValue: 'Date-time range'
             RepositoryDateTimeValue: 'Date-time'
             RepositoryDateValue: 'Date'
+            RepositoryTimeValue: 'Time'
             RepositoryListValue: 'List'
             RepositoryStatusValue: 'Status'
             RepositoryStockValue: 'Stock'

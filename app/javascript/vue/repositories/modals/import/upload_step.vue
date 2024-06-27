@@ -23,7 +23,7 @@
           </a>
         </div>
       </div>
-      <div class="modal-content grow" :class="{'!rounded-s-none': showingInfo}">
+      <div class="modal-content grow flex flex-col" :class="{'!rounded-s-none': showingInfo}">
         <div class="modal-header gap-4">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-newInventoryModal-close">
             <i class="sn-icon sn-icon-close"></i>
@@ -36,7 +36,7 @@
             {{ i18n.t('repositories.import_records.steps.step1.title') }}
           </h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body flex flex-col grow">
           <p class="text-sn-dark-grey">
             {{ this.i18n.t('repositories.import_records.steps.step1.subtitle') }}
           </p>

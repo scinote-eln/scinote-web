@@ -22,6 +22,7 @@
         @change="changeSelected"
         :clearable="true"
         :size="'sm'"
+        class="max-w-96"
         :class="{
           'outline-sn-alert-brittlebush outline-1 outline rounded': matchNotFound
         }"
