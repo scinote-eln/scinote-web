@@ -348,6 +348,14 @@ export default {
         return acc;
       }, {});
 
+      this.steps = this.steps.map((step) => ({
+        ...step,
+        attributes: {
+          ...step.attributes,
+          collapsed: newState
+        }
+      }));
+
       const settings = {
         key: 'task_step_states',
         data: updatedData

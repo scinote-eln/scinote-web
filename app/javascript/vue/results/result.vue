@@ -16,7 +16,7 @@
     <div :class="{ 'opacity-0 pointer-events-none': dragingFile }">
       <div class="result-header flex justify-between">
         <div class="result-head-left flex items-start flex-grow gap-4">
-          <a class="result-collapse-link hover:no-underline focus:no-underline py-0.5 border-0 border-y border-transparent border-solid text-sn-black"
+          <a ref="toggleElement" class="result-collapse-link hover:no-underline focus:no-underline py-0.5 border-0 border-y border-transparent border-solid text-sn-black"
               :href="'#resultBody' + result.id"
               data-toggle="collapse"
               data-remote="true"
@@ -205,6 +205,14 @@ export default {
       if (this.activeDragResult !== this.result.id && this.dragingFile) {
         this.dragingFile = false;
       }
+    },
+    result: {
+      handler(newVal) {
+        if (this.isCollapsed !== newVal.attributes.collapsed) {
+          this.toggleCollapsed();
+        }
+      },
+      deep: true
     }
   },
   computed: {
@@ -312,6 +320,7 @@ export default {
   methods: {
     toggleCollapsed() {
       this.isCollapsed = !this.isCollapsed;
+      this.result.attributes.collapsed = this.isCollapsed;
     },
     dragEnter(e) {
       if (!this.urls.upload_attachment_url) return;
@@ -440,6 +449,10 @@ export default {
       $.post(this.urls[`create_${elementType}_url`], { tableDimensions, plateTemplate }, (result) => {
         result.data.isNew = true;
         this.elements.push(result.data);
+
+        if (this.isCollapsed) {
+          this.$refs.toggleElement.click();
+        }
         this.$emit('resultUpdated');
       }).fail(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
