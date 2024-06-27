@@ -199,6 +199,10 @@ module ApplicationHelper
     ENV['SSO_ENABLED'] == 'true'
   end
 
+  def sso_provider_enabled?
+    okta_enabled?.present? || azure_ad_enabled?.present? || saml_enabled?.present? || openid_connect_enabled?.present?
+  end
+
   def okta_enabled?
     ApplicationSettings.instance.values.dig('okta', 'enabled')
   end
