@@ -24,7 +24,7 @@
         :size="'sm'"
         class="max-w-96"
         :class="{
-          'outline-sn-alert-brittlebush outline-1 outline rounded': matchNotFound
+          'outline-sn-alert-brittlebush outline-1 outline rounded': computeMatchNotFound
         }"
         :placeholder="computeMatchNotFound ?
         i18n.t('repositories.import_records.steps.step2.table.tableRow.placeholders.matchNotFound') :
@@ -52,7 +52,7 @@
       <i v-if="differentMapingName" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.importedColumnTitle')"
          class="sn-icon sn-icon-info text-sn-science-blue"></i>
       <i v-else-if="columnMapped" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.importedColumnTitle')" class="sn-icon sn-icon-check"></i>
-      <i v-else-if="matchNotFound" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.matchNotFoundColumnTitle')"
+      <i v-else-if="matchNotFound && !isSystemColumn(item)" :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.matchNotFoundColumnTitle')"
          class="sn-icon sn-icon-close text-sn-alert-brittlebush"></i>
       <i v-else  :title="i18n.t('repositories.import_records.steps.step2.table.tableRow.doNotImportColumnTitle')" class="sn-icon sn-icon-close text-sn-sleepy-grey"></i>
     </div>
@@ -101,6 +101,16 @@ export default {
         type: 'Text',
         name: ''
       },
+      systemColumns: [
+        this.i18n.t('repositories.import_records.steps.step2.systemColumns.added_by'),
+        this.i18n.t('repositories.import_records.steps.step2.systemColumns.created_on'),
+        this.i18n.t('repositories.import_records.steps.step2.systemColumns.updated_by'),
+        this.i18n.t('repositories.import_records.steps.step2.systemColumns.updated_on'),
+        this.i18n.t('repositories.import_records.steps.step2.systemColumns.archived_by'),
+        this.i18n.t('repositories.import_records.steps.step2.systemColumns.archived_on'),
+        this.i18n.t('repositories.import_records.steps.step2.systemColumns.parents'),
+        this.i18n.t('repositories.import_records.steps.step2.systemColumns.children')
+      ],
       newColumnTypes: [
         ['Text', this.i18n.t('repositories.import_records.steps.step2.table.tableRow.newColumnType.text')],
         ['List', this.i18n.t('repositories.import_records.steps.step2.table.tableRow.newColumnType.list')]
@@ -123,7 +133,7 @@ export default {
   },
   computed: {
     computeMatchNotFound() {
-      return this.autoMapping && ((this.selectedColumnType && !this.selectedColumnType.key) || !this.selectedColumnType);
+      return this.autoMapping && !this.isSystemColumn(this.item) && ((this.selectedColumnType && !this.selectedColumnType.key) || !this.selectedColumnType);
     },
     selected() {
       return !!this.value?.key;
@@ -139,6 +149,9 @@ export default {
     }
   },
   methods: {
+    isSystemColumn(column) {
+      return this.systemColumns.includes(column);
+    },
     autoMap() {
       Object.entries(this.params.import_data.available_fields).forEach(([key, value]) => {
         if (this.item === value) {
