@@ -5,7 +5,6 @@
       :is="activeStep"
       :params="params"
       :key="modalId"
-      :uploading="uploading"
       :loading="loading"
       @uploadFile="uploadFile"
       @generatePreview="generatePreview"
@@ -50,7 +49,6 @@ export default {
     return {
       modalOpened: false,
       activeStep: 'UploadStep',
-      uploading: false,
       params: {},
       modalId: null,
       loading: false
@@ -72,21 +70,9 @@ export default {
           this.modalOpened = true;
         });
     },
-    uploadFile(file) {
-      this.uploading = true;
-      const formData = new FormData();
-
-      // required payload
-      formData.append('file', file);
-
-      axios.post(this.params.attributes.urls.parse_sheet, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-        .then((response) => {
-          this.params = { ...this.params, ...response.data, file_name: file.name };
-          this.activeStep = 'MappingStep';
-          this.uploading = false;
-        });
+    uploadFile(params) {
+      this.params = params;
+      this.activeStep = 'MappingStep';
     },
 
     generatePreview(mappings, updateWithEmptyCells, onlyAddNewItems) {

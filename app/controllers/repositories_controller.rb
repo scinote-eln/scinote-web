@@ -272,6 +272,9 @@ class RepositoriesController < ApplicationController
       elsif parsed_file.has_too_many_rows?
         render json: { error: t('repositories.import_records.error_message.items_limit',
                                 items_size: Constants::IMPORT_REPOSITORY_ITEMS_LIMIT) }, status: :unprocessable_entity
+      elsif parsed_file.has_too_little_rows?
+        render json: { error: t('repositories.parse_sheet.errors.items_min_limit') },
+               status: :unprocessable_entity
       else
         @import_data = parsed_file.data
 
