@@ -267,6 +267,16 @@ export default {
 
       this.$emit('update', this.element, false, callback);
     },
+    updateTableData() {
+      if (this.editingTable === false) return;
+      this.updatingTableData = true;
+
+      this.$nextTick(() => {
+        this.update(() => {
+          this.editingCell = false;
+        });
+      });
+    },
     loadTableData() {
       const container = this.$refs.hotTable;
       const data = JSON.parse(this.element.attributes.orderable.contents);
@@ -294,12 +304,13 @@ export default {
           }
         },
         afterChange: () => {
-          if (this.editingTable === false) return;
-          this.updatingTableData = true;
-
-          this.$nextTick(() => {
-            this.update(() => this.editingCell = false);
-          });
+          this.updateTableData();
+        },
+        afterRemoveRow: () => {
+          this.updateTableData();
+        },
+        afterRemoveCol: () => {
+          this.updateTableData();
         },
         beforeKeyDown: (e) => {
           if (e.keyCode === 27) { // esc
