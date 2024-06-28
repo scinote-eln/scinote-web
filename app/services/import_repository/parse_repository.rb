@@ -28,7 +28,11 @@ module ImportRepository
     end
 
     def has_too_many_rows?
-      @sheet.last_row > Constants::IMPORT_REPOSITORY_ITEMS_LIMIT
+      @sheet.last_row.present? && @sheet.last_row > Constants::IMPORT_REPOSITORY_ITEMS_LIMIT
+    end
+
+    def has_too_little_rows?
+      @sheet.last_row.nil? || @sheet.last_row < Constants::IMPORT_REPOSITORY_ITEMS_MIN_LIMIT
     end
 
     def generate_temp_file

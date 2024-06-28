@@ -2192,6 +2192,7 @@ en:
         invalid_extension: "The file has invalid extension."
         empty_file: "You've selected empty file. There's not much to import."
         temp_file_failure: "We couldn't create temporary file. Please contact administrator."
+        items_min_limit: "The imported file content doesn't meet criteria"
         no_file_selected: "You didn't select any file."
         errors_list_title: "Items were not imported because one or more errors were found:"
         list_row: "Row %{row}"
