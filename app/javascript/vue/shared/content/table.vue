@@ -312,6 +312,12 @@ export default {
         afterRemoveCol: () => {
           this.updateTableData();
         },
+        afterCreateCol: () => {
+          this.updateTableData();
+        },
+        afterCreateRow: () => {
+          this.updateTableData();
+        },
         beforeKeyDown: (e) => {
           if (e.keyCode === 27) { // esc
             this.editingCell = false;
