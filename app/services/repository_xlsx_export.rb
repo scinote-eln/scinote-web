@@ -10,6 +10,8 @@ module RepositoryXlsxExport
       sheet.add_row prepare_header(repository, column_ids, false)
     end
 
+    add_instruction(workbook)
+
     package.to_stream.read
   end
 
@@ -63,10 +65,35 @@ module RepositoryXlsxExport
       end
     end
 
+    add_instruction(workbook)
+
     package.to_stream.read
   end
 
   private
+
+  def self.add_instruction(workbook)
+    s = workbook.styles
+    white_border = s.add_style(border: { style: :thin, color: 'FFFFFF' })
+    workbook.add_worksheet(name: 'Instruction') do |sheet|
+      sheet.add_row ['','','', '', ''], style: white_border
+      sheet.add_row ['','We wish to add the page with instructions to the exported inventory items file (Excel) to teach users','', '', ''], style: white_border
+      sheet.add_row ['','how to properly do editing inventory by importing and diminish mistakes and support tickets.','', '', ''], style: white_border
+      sheet.add_row ['','','', '', ''], style: white_border
+      sheet.add_row ['','Research if we can add an "Instructions" page to inventory items export and Inventory template .xslx.','', '', ''], style: white_border
+      sheet.add_row ['','Write the findings to the ticket comments.','', '', ''], style: white_border
+
+      image = File.expand_path('app/assets/images/logo.png')
+
+
+      8.times do
+        sheet.add_row ['','','', '', ''], style: white_border
+      end
+
+      sheet.add_image(image_src: image, start_at: 'B8', end_at: 'C14')
+      sheet.column_widths nil, 80, nil
+    end
+  end
 
   def self.prepare_header(repository, column_ids, add_consumption)
     header = []
