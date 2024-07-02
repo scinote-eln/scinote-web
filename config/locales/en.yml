@@ -2280,7 +2280,7 @@ en:
               exampleData: 'Example data'
         step3:
           title: 'Import preview'
-          subtitle: 'This preview shows changes to the %{inventory} inventory resulting from this import. Values that will be updated are marked in green and any errors in red. Status of import provides further details, and the item import can still be canceled at this stage.'
+          subtitle: 'This preview shows changes to the %{inventory} inventory resulting from this import. Values that will be updated are marked in green. Items with errors in red will not be imported. Status of import provides further details, and the item import can still be canceled at this stage.'
           updated_items: 'Updated'
           new_items: 'New'
           unchanged_items: 'Unchanged'

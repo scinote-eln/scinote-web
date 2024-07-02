@@ -121,18 +121,21 @@ export default {
       const columns = [
         {
           field: 'code',
-          headerName: this.i18n.t('repositories.import_records.steps.step3.code')
+          headerName: this.i18n.t('repositories.import_records.steps.step3.code'),
+          cellRenderer: this.highlightRenderer
         },
         {
           field: 'name',
-          headerName: this.i18n.t('repositories.import_records.steps.step3.name')
+          headerName: this.i18n.t('repositories.import_records.steps.step3.name'),
+          cellRenderer: this.highlightRenderer
         }
       ];
 
       this.params.attributes.repository_columns.forEach((col) => {
         columns.push({
           field: `col_${col[0]}`,
-          headerName: col[1]
+          headerName: col[1],
+          cellRenderer: this.highlightRenderer
         });
       });
 
@@ -162,6 +165,19 @@ export default {
   methods: {
     filterRows(status) {
       return this.params.preview.data.filter((r) => r.attributes.import_status === status);
+    },
+    highlightRenderer(params) {
+      const { import_status: importStatus } = params.data;
+
+      let color = '';
+
+      if (importStatus === 'created' || importStatus === 'updated') {
+        color = 'text-sn-alert-green';
+      } else if (importStatus === 'duplicated' || importStatus === 'invalid') {
+        color = 'text-sn-alert-passion';
+      }
+
+      return `<span class="${color}">${params.value || ''}</span>`;
     },
     statusRenderer(params) {
       const { import_status: importStatus, import_message: importMessage } = params.data;
