@@ -10,6 +10,8 @@ module RepositoryXlsxExport
       sheet.add_row prepare_header(repository, column_ids, false)
     end
 
+    add_instruction(workbook)
+
     package.to_stream.read
   end
 
@@ -63,10 +65,17 @@ module RepositoryXlsxExport
       end
     end
 
+    add_instruction(workbook)
+
     package.to_stream.read
   end
 
-  private
+  def self.add_instruction(workbook)
+    workbook.add_worksheet(name: 'Instruction') do |sheet|
+      image = File.expand_path('app/assets/images/import_instruction.png')
+      sheet.add_image(image_src: image, start_at: 'A1', width: 1260, height: 994)
+    end
+  end
 
   def self.prepare_header(repository, column_ids, add_consumption)
     header = []
