@@ -2318,8 +2318,8 @@ en:
           element1:
             id: 'el1'
             icon: 'sn-icon-edit'
-            label: 'Edit your data'
-            subtext: 'Structure your import data”. And the text updated to: “Make sure to include header names in the first row of the import file, followed by item data.'
+            label: 'Structure your import data'
+            subtext: 'Make sure to include header names in the first row of the import file, followed by item data.'
           element2:
             id: 'el2'
             icon: 'sn-icon-import'
