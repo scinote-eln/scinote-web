@@ -5,7 +5,7 @@
       <div class="sci-input-container-v2" :class="{
         'error': !validTaskName && taskName.length > 0
       }" >
-        <input type="text" class="sci-input" v-model="taskName" />
+        <input type="text" ref="taskName" class="sci-input" v-model="taskName" :placeholder="i18n.t('dashboard.create_task_modal.task_name_placeholder')" />
       </div>
       <span v-if="!validTaskName && taskName.length > 0" class="sci-error-text">
         {{ i18n.t("dashboard.create_task_modal.task_name_error", { length: minLength }) }}
@@ -18,6 +18,7 @@
         :searchable="true"
         :value="selectedProject"
         :optionRenderer="newProjectRenderer"
+        :placeholder="i18n.t('dashboard.create_task_modal.project_placeholder')"
         @change="changeProject"
       />
     </div>
@@ -30,8 +31,13 @@
         <span v-html="i18n.t('projects.index.modal_new_project.visibility_html')"></span>
       </div>
       <div class="mt-4" :class="{'hidden': !publicProject}">
-        <label class="sci-label">{{ i18n.t("user_assignment.select_default_user_role") }}</label>
-        <SelectDropdown :options="userRoles" :value="defaultRole" @change="changeRole" />
+        <label class="sci-label">{{ i18n.t("dashboard.create_task_modal.user_role") }}</label>
+        <SelectDropdown
+          :options="userRoles"
+          :value="defaultRole"
+          @change="changeRole"
+          :placeholder="i18n.t('dashboard.create_task_modal.user_role_placeholder')"
+        />
       </div>
     </div>
     <div class="mt-4">
@@ -45,6 +51,7 @@
         :disabled="!(selectedProject != null && selectedProject >= 0)"
         :searchable="true"
         :value="selectedExperiment"
+        :placeholder="i18n.t('dashboard.create_task_modal.experiment_placeholder')"
         :optionRenderer="newExperimentRenderer"
         @change="changeExperiment"
       />
@@ -88,6 +95,14 @@ export default {
   },
   created() {
     this.fetchUserRoles();
+    $('#create-task-modal').on('hidden.bs.modal', () => {
+      this.$emit('close');
+    });
+
+    $('#create-task-modal').on('shown.bs.modal', this.focusInput);
+  },
+  unmounted() {
+    $('#create-task-modal').off('shown.bs.modal', this.focusInput);
   },
   props: {
     projectsUrl: {
@@ -163,13 +178,23 @@ export default {
       if (option[0] > 0) {
         return option[1];
       }
-      return this.i18n.t('dashboard.create_task_modal.new_project', { name: option[1] });
+      return `
+        <div class="flex items-center gap-2 truncate">
+          <span class="sn-icon sn-icon-new-task"></span>
+          <span class="truncate">${this.i18n.t('dashboard.create_task_modal.new_project', { name: option[1] })}</span
+        </div>
+      `;
     },
     newExperimentRenderer(option) {
       if (option[0] > 0) {
         return option[1];
       }
-      return this.i18n.t('dashboard.create_task_modal.new_experiment', { name: option[1] });
+      return `
+        <div class="flex items-center gap-2 truncate">
+          <span class="sn-icon sn-icon-new-task"></span>
+          <span class="truncate">${this.i18n.t('dashboard.create_task_modal.new_experiment', { name: option[1] })}</span
+        </div>
+      `;
     },
     closeModal() {
       $('#create-task-modal').modal('hide');
@@ -184,6 +209,9 @@ export default {
         .then((response) => {
           this.userRoles = response.data.data;
         });
+    },
+    focusInput() {
+      this.$refs.taskName.focus();
     }
   }
 };

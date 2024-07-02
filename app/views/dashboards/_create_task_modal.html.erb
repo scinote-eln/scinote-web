@@ -10,6 +10,8 @@
         <div class="modal-body !pb-0">
           <div id="DashboardNewTask">
             <dashboard-new-task
+              :key="modalKey"
+              @close="modalKey += 1"
               projects-url="<%= dashboard_quick_start_project_filter_path  %>"
               experiments-url="<%= dashboard_quick_start_experiment_filter_path %>"
               create-url="<%= dashboard_quick_start_create_task_path %>"
