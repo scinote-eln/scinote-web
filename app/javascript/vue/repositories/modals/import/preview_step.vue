@@ -188,9 +188,9 @@ export default {
       }
 
       return `
-        <div class="flex items-center ${color} gap-2.5">
+        <div title="${message}" class="flex items-center ${color} gap-2.5">
           <i class="sn-icon sn-icon-${icon} "></i>
-          <span>${message}</span>
+          <span class="truncate">${message}</span>
         </div>
       `;
     }
