@@ -14,6 +14,9 @@ export default {
   methods: {
     openOVEditor() {
       window.showIFrameModal(this.OVEurl);
+      if (this.isCollapsed) {
+        this.$refs.toggleElement.click();
+      }
     },
     initOVE() {
       $(window.iFrameModal).on('sequenceSaved', () => {

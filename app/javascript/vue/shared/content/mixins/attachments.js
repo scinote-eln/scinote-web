@@ -30,6 +30,7 @@ export default {
     },
     loadFromComputer() {
       this.uploadFiles(this.$refs.fileSelector.files);
+      this.toggleCollapsedSection();
     },
     openMarvinJsModal(button) {
       MarvinJsEditor.initNewButton('.new-marvinjs-upload-button', this.loadAttachments);
@@ -40,10 +41,16 @@ export default {
         if (status === 'success') {
           const attachment = attachmentData.data;
           this.addAttachment(attachment);
+          this.toggleCollapsedSection();
         } else {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         }
       });
+    },
+    toggleCollapsedSection() {
+      if (this.isCollapsed) {
+        this.$refs.toggleElement.click();
+      }
     },
     addAttachment(attachment) {
       this.attachments.push(attachment);
