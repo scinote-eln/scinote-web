@@ -595,21 +595,31 @@ class Extends
     'FluicsLabelTemplate' => 'Fluics'
   }
 
-  EXTERNAL_SCRIPT_SERVICES = %w(
-    https://marvinjs.chemicalize.com/
-    www.recaptcha.net/
-    www.gstatic.com/recaptcha/
-  )
+  EXTERNAL_SCRIPT_SERVICES =
+    if Rails.application.config.x.no_external_csp_exceptions
+      []
+    else
+      %w(
+        https://marvinjs.chemicalize.com/
+        www.recaptcha.net/
+        www.gstatic.com/recaptcha/
+      )
+    end
 
-  EXTERNAL_CONNECT_SERVICES = %w(
-    https://www.protocols.io/
-    http://127.0.0.1:9100/
-    newrelic.com
-    *.newrelic.com
-    *.nr-data.net
-    extras.scinote.net
-    https://www.scinote.net
-  )
+  EXTERNAL_CONNECT_SERVICES =
+    if Rails.application.config.x.no_external_csp_exceptions
+      %w(http://127.0.0.1:9100/)
+    else
+      %w(
+        https://www.protocols.io/
+        http://127.0.0.1:9100/
+        newrelic.com
+        *.newrelic.com
+        *.nr-data.net
+        extras.scinote.net
+        https://www.scinote.net
+      )
+    end
 
   if Constants::ASSET_SYNC_URL && EXTERNAL_CONNECT_SERVICES.exclude?(Constants::ASSET_SYNC_URL)
     asset_sync_url = URI.parse(Constants::ASSET_SYNC_URL)
