@@ -53,6 +53,8 @@ module Scinote
 
     config.action_dispatch.cookies_serializer = :hybrid
 
+    config.action_view.preload_links_header = false if ENV['RAILS_NO_PRELOAD_LINKS_HEADER'] == 'true'
+
     # Max uploaded file size in MB
     config.x.file_max_size_mb = (ENV['FILE_MAX_SIZE_MB'] || 50).to_i
 
@@ -61,6 +63,8 @@ module Scinote
     config.x.connected_devices_enabled = ENV['CONNECTED_DEVICES_ENABLED'] == 'true'
 
     config.x.custom_sanitizer_config = nil
+
+    config.x.no_external_csp_exceptions = ENV['SCINOTE_NO_EXT_CSP_EXCEPTIONS'] == 'true'
 
     # Logging
     config.log_formatter = proc do |severity, datetime, progname, msg|

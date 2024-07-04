@@ -31,7 +31,7 @@
     <%- if sso_enabled? && okta_enabled? %>
       <div class="okta-sign-in-actions">
         <%= form_tag user_okta_omniauth_authorize_path, method: :post, id: 'oktaForm' do %>
-          <%= submit_tag t('devise.okta.sign_in_label'), class: 'btn btn-primary' %>
+          <%= submit_tag t('devise.okta.sign_in_label'), class: 'btn btn-primary btn-okta' %>
         <% end %>
       </div>
     <% end %>
@@ -50,16 +50,16 @@
 
     <%- if sso_enabled? && openid_connect_enabled? %>
       <div class="azure-sign-in-actions">
-        <%= form_tag user_openid_connect_omniauth_authorize_path, method: :post do %>
-          <%= submit_tag t('devise.sessions.new.openid_connect_submit'), class: 'btn btn-primary' %>
+        <%= form_tag user_openid_connect_omniauth_authorize_path, method: :post, id: 'openidConnectForm' do %>
+          <%= submit_tag t('devise.sessions.new.openid_connect_submit'), class: 'btn btn-primary btn-openid-connect' %>
         <% end %>
       </div>
     <% end %>
 
     <% if sso_enabled? && saml_enabled? %>
       <div class="azure-sign-in-actions">
-        <%= form_tag user_saml_omniauth_authorize_path, method: :post do %>
-          <%= submit_tag t('devise.sessions.new.saml_submit'), class: 'btn btn-primary' %>
+        <%= form_tag user_saml_omniauth_authorize_path, method: :post, id: 'samlForm' do %>
+          <%= submit_tag t('devise.sessions.new.saml_submit'), class: 'btn btn-primary btn-saml' %>
         <% end %>
       </div>
     <% end %>
