@@ -385,6 +385,10 @@ class Asset < ApplicationRecord
         new_image_filename = "#{new_name}.png"
         preview_image.blob.update!(filename: new_image_filename)
       end
+
+      # rubocop:disable Rails/SkipsModelValidations
+      touch
+      # rubocop:enable Rails/SkipsModelValidations
     end
   end
 
