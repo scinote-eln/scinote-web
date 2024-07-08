@@ -19,7 +19,7 @@
           <div class="flex gap-6 items-center my-6">
             <div class="flex items-center gap-2" :title="i18n.t('repositories.import_records.steps.step2.autoMappingTooltip')">
               <div class="sci-checkbox-container">
-                <input type="checkbox" class="sci-checkbox"  v-model="autoMapping" />
+                <input type="checkbox" class="sci-checkbox" @change="$emit('update-auto-mapping', $event.target.checked)" :checked="params.autoMapping" />
                 <span class="sci-checkbox-label"></span>
               </div>
               {{ i18n.t('repositories.import_records.steps.step2.autoMappingText') }}
@@ -56,7 +56,7 @@
                 :params="params"
                 :value="this.selectedItems.find((item) => item.index === index)"
                 @selection:changed="handleChange"
-                :autoMapping="this.autoMapping"
+                :autoMapping="params.autoMapping"
               />
             </template>
           </div>
@@ -98,7 +98,7 @@ import Loading from '../../../shared/loading.vue';
 
 export default {
   name: 'MappingStep',
-  emits: ['close', 'generatePreview'],
+  emits: ['close', 'generatePreview', 'updateAutoMapping'],
   mixins: [modalMixin],
   components: {
     SelectDropdown,
@@ -117,7 +117,6 @@ export default {
   },
   data() {
     return {
-      autoMapping: false,
       updateWithEmptyCells: false,
       onlyAddNewItems: false,
       columnLabels: {
@@ -154,11 +153,32 @@ export default {
       item.key = key;
       item.value = value;
     },
-    generateMapping() {
-      return this.selectedItems.reduce((obj, item) => {
-        obj[item.index] = item.key || '';
-        return obj;
-      }, {});
+    loadAvailableFields() {
+      // Adding alreadySelected attribute for tracking
+      this.availableFields = [];
+
+      Object.entries(this.params.import_data.available_fields).forEach(([key, value]) => {
+        let columnTypeName = '';
+        if (key === '-1') {
+          columnTypeName = this.i18n.t('repositories.import_records.steps.step2.computedDropdownOptions.name');
+        } else if (key === '0') {
+          columnTypeName = this.i18n.t('repositories.import_records.steps.step2.computedDropdownOptions.id');
+        } else {
+          const column = this.repositoryColumns.find((el) => el[0] === parseInt(key, 10));
+          columnTypeName = this.i18n.t(`repositories.import_records.steps.step2.computedDropdownOptions.${column[2]}`);
+        }
+        const field = {
+          key, value, alreadySelected: false, typeName: columnTypeName
+        };
+        this.availableFields.push(field);
+      });
+    },
+    loadSelectedItems() {
+      if (this.params.selectedItems) {
+        this.selectedItems = this.params.selectedItems;
+      } else {
+        this.selectedItems = this.params.import_data.header.map((item, index) => ({ index, key: null, value: null }));
+      }
     },
     importRecords() {
       if (!this.selectedItems.find((item) => item.key === '-1')) {
@@ -168,7 +188,7 @@ export default {
 
       this.$emit(
         'generatePreview',
-        this.generateMapping()
+        this.selectedItems
       );
       return true;
     }
@@ -187,29 +207,8 @@ export default {
   },
   created() {
     this.repositoryColumns = this.params.attributes.repository_columns;
-    // Adding alreadySelected attribute for tracking
-    this.availableFields = [];
-
-    this.selectedItems = this.params.import_data.header.map((item, index) => { return { index, key: null, value: null }; });
-
-    Object.entries(this.params.import_data.available_fields).forEach(([key, value]) => {
-      let columnTypeName = '';
-      if (key === '-1') {
-        columnTypeName = this.i18n.t('repositories.import_records.steps.step2.computedDropdownOptions.name');
-      } else if (key === '0') {
-        columnTypeName = this.i18n.t('repositories.import_records.steps.step2.computedDropdownOptions.id');
-      } else {
-        const column = this.repositoryColumns.find((el) => el[0] === parseInt(key, 10));
-        columnTypeName = this.i18n.t(`repositories.import_records.steps.step2.computedDropdownOptions.${column[2]}`);
-      }
-      const field = {
-        key, value, alreadySelected: false, typeName: columnTypeName
-      };
-      this.availableFields.push(field);
-    });
-  },
-  mounted() {
-    this.autoMapping = true;
+    this.loadAvailableFields();
+    this.loadSelectedItems();
   }
 };
 </script>
