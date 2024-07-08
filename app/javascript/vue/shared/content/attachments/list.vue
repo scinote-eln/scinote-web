@@ -30,14 +30,42 @@
         {{ i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted}) }}
       </span>
     </div>
-    <ContextMenu
-      :attachment="attachment"
-      @attachment:viewMode="updateViewMode"
-      @attachment:delete="deleteAttachment"
-      @attachment:moved="attachmentMoved"
-      @attachment:uploaded="reloadAttachments"
-      @attachment:update="$emit('attachment:update', $event)"
-    />
+    <div class="attachment-actions shrink-0 ml-4">
+      <openMenu
+        :attachment="attachment"
+        :multipleOpenOptions="multipleOpenOptions"
+        @open="toggleMenuDropdown"
+        @close="toggleMenuDropdown"
+        @option:click="$emit($event)"
+      />
+      <a v-if="attachment.attributes.urls.move"
+        @click.prevent.stop="showMoveModal"
+        class="btn btn-light icon-btn thumbnail-action-btn"
+        :title="i18n.t('attachments.thumbnail.buttons.move')">
+        <i class="sn-icon sn-icon-move"></i>
+      </a>
+      <a class="btn btn-light icon-btn thumbnail-action-btn"
+        :title="i18n.t('attachments.thumbnail.buttons.download')"
+        :href="attachment.attributes.urls.download" data-turbolinks="false">
+        <i class="sn-icon sn-icon-export"></i>
+      </a>
+      <ContextMenu
+        :attachment="attachment"
+        @attachment:viewMode="updateViewMode"
+        @attachment:delete="deleteAttachment"
+        @attachment:moved="attachmentMoved"
+        @attachment:uploaded="reloadAttachments"
+        @attachment:update="$emit('attachment:update', $event)"
+      />
+    </div>
+    <Teleport to="body">
+      <moveAssetModal
+        v-if="movingAttachment"
+        :parent_type="attachment.attributes.parent_type"
+        :targets_url="attachment.attributes.urls.move_targets"
+        @confirm="moveAttachment($event)" @cancel="closeMoveModal"
+      />
+    </Teleport>
   </div>
 </template>
 
@@ -45,11 +73,18 @@
 import AttachmentMovedMixin from './mixins/attachment_moved.js';
 import ContextMenuMixin from './mixins/context_menu.js';
 import ContextMenu from './context_menu.vue';
+import MoveMixin from './mixins/move.js';
+import MoveAssetModal from '../modal/move.vue';
+import OpenMenu from './open_menu.vue';
 
 export default {
   name: 'listAttachment',
-  mixins: [ContextMenuMixin, AttachmentMovedMixin],
-  components: { ContextMenu },
+  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
+  components: {
+    ContextMenu,
+    MoveAssetModal,
+    OpenMenu
+  },
   props: {
     attachment: {
       type: Object,
@@ -66,12 +101,52 @@ export default {
   },
   data() {
     return {
-      imageLoadError: false
+      imageLoadError: false,
+      isContextMenuOpen: false,
+      isMenuDropdownOpen: false
     };
   },
   methods: {
     handleImageError() {
       this.imageLoadError = true;
+    },
+    toggleContextMenu(isOpen) {
+      this.isContextMenuOpen = isOpen;
+    },
+    toggleMenuDropdown(isOpen) {
+      this.isMenuDropdownOpen = isOpen;
+    }
+  },
+  computed: {
+    multipleOpenOptions() {
+      const options = [];
+      if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
+        options.push({
+          text: this.attachment.attributes.wopi_context.button_text,
+          url: this.attachment.attributes.urls.edit_asset,
+          url_target: '_blank'
+        });
+      }
+      if (this.attachment.attributes.asset_type !== 'marvinjs'
+          && this.attachment.attributes.image_editable
+          && this.attachment.attributes.urls.start_edit_image) {
+        options.push({
+          text: this.i18n.t('assets.file_preview.edit_in_scinote'),
+          emit: 'open_scinote_editor'
+        });
+      }
+      if (this.canOpenLocally) {
+        const text = this.localAppName
+          ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
+          : this.i18n.t('attachments.open_locally');
+
+        options.push({
+          text,
+          emit: 'open_locally',
+          data_e2e: 'e2e-BT-attachmentOptions-openLocally'
+        });
+      }
+      return options;
     }
   }
 };

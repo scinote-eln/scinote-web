@@ -9,7 +9,7 @@ class RepositoryStockValue < ApplicationRecord
   belongs_to :repository_stock_unit_item, optional: true
   belongs_to :created_by, class_name: 'User', optional: true, inverse_of: :created_repository_stock_values
   belongs_to :last_modified_by, class_name: 'User', optional: true, inverse_of: :modified_repository_stock_values
-  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value
+  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value, touch: true
   has_one :repository_row, through: :repository_cell
   has_many :repository_ledger_records, dependent: :destroy
   accepts_nested_attributes_for :repository_cell
@@ -108,7 +108,7 @@ class RepositoryStockValue < ApplicationRecord
       (new_data[:unit_item_id].present? && new_data[:unit_item_id] != repository_stock_unit_item.id)
   end
 
-  def update_data!(new_data, user)
+  def update_data!(new_data, user, preview: false)
     self.low_stock_threshold = new_data[:low_stock_threshold].presence if new_data[:low_stock_threshold]
     self.repository_stock_unit_item = repository_cell
                                       .repository_column
@@ -127,7 +127,7 @@ class RepositoryStockValue < ApplicationRecord
       unit: repository_stock_unit_item&.data
     )
     self.amount = new_amount
-    save!
+    preview ? validate : save!
   end
 
   def snapshot!(cell_snapshot)

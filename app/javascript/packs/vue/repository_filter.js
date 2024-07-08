@@ -64,6 +64,26 @@ const DEFAULT_FILTERS = [
     },
     data: { operator: 'any_of' },
     isBlank: true
+  },
+  {
+    id: 7,
+    column: {
+      data_type: 'RepositoryDateTimeValue',
+      id: 'updated_on',
+      name: I18n.t('repositories.table.updated_on')
+    },
+    data: { operator: 'equal_to' },
+    isBlank: true
+  },
+  {
+    id: 8,
+    column: {
+      data_type: 'RepositoryUserValue',
+      id: 'updated_by',
+      name: I18n.t('repositories.table.updated_by')
+    },
+    data: { operator: 'any_of' },
+    isBlank: true
   }
 ];
 
@@ -76,6 +96,8 @@ window.initRepositoryFilter = () => {
     { id: 'relationships', name: I18n.t('repositories.table.relationships'), data_type: 'RepositoryRelationshipValue' },
     { id: 'added_on', name: I18n.t('repositories.table.added_on'), data_type: 'RepositoryDateTimeValue' },
     { id: 'added_by', name: I18n.t('repositories.table.added_by'), data_type: 'RepositoryUserValue' },
+    { id: 'updated_on', name: I18n.t('repositories.table.updated_on'), data_type: 'RepositoryDateTimeValue' },
+    { id: 'updated_by', name: I18n.t('repositories.table.updated_by'), data_type: 'RepositoryUserValue' },
     { id: 'archived_by', name: I18n.t('repositories.table.archived_by'), data_type: 'RepositoryUserValue' },
     { id: 'archived_on', name: I18n.t('repositories.table.archived_on'), data_type: 'RepositoryDateTimeValue' }
   ];

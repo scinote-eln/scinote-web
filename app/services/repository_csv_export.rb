@@ -2,8 +2,8 @@
 
 require 'csv'
 
-module RepositoryZipExport
-  def self.to_csv(rows, column_ids, user, repository, handle_file_name_func = nil, in_module = false)
+module RepositoryCsvExport
+  def self.to_csv(rows, column_ids, user, repository, handle_file_name_func, in_module)
     # Parse column names
     csv_header = []
     add_consumption = in_module && !repository.is_a?(RepositorySnapshot) && repository.has_stock_management?
@@ -20,10 +20,14 @@ module RepositoryZipExport
       when -6
         csv_header << I18n.t('repositories.table.added_on')
       when -7
-        csv_header << I18n.t('repositories.table.archived_by')
+        csv_header << I18n.t('repositories.table.updated_on')
       when -8
-        csv_header << I18n.t('repositories.table.archived_on')
+        csv_header << I18n.t('repositories.table.updated_by')
       when -9
+        csv_header << I18n.t('repositories.table.archived_by')
+      when -10
+        csv_header << I18n.t('repositories.table.archived_on')
+      when -11
         csv_header << I18n.t('repositories.table.parents')
         csv_header << I18n.t('repositories.table.children')
       else
@@ -41,7 +45,7 @@ module RepositoryZipExport
           when -1, -2
             next
           when -3
-            csv_row << (repository.is_a?(RepositorySnapshot) ? row.parent_id : row.id)
+            csv_row << (repository.is_a?(RepositorySnapshot) ? row.parent_id : row.code)
           when -4
             csv_row << row.name
           when -5
@@ -49,10 +53,14 @@ module RepositoryZipExport
           when -6
             csv_row << I18n.l(row.created_at, format: :full)
           when -7
-            csv_row << (row.archived? && row.archived_by.present? ? row.archived_by.full_name : '')
+            csv_row << row.updated_at ? I18n.l(row.updated_at, format: :full) : ''
           when -8
-            csv_row << (row.archived? && row.archived_on.present? ? I18n.l(row.archived_on, format: :full) : '')
+            csv_row << row.last_modified_by.full_name
           when -9
+            csv_row << (row.archived? && row.archived_by.present? ? row.archived_by.full_name : '')
+          when -10
+            csv_row << (row.archived? && row.archived_on.present? ? I18n.l(row.archived_on, format: :full) : '')
+          when -11
             csv_row << row.parent_repository_rows.map(&:code).join(' | ')
             csv_row << row.child_repository_rows.map(&:code).join(' | ')
           else
@@ -62,9 +70,7 @@ module RepositoryZipExport
                          if cell.value_type == 'RepositoryAssetValue' && handle_file_name_func
                            handle_file_name_func.call(cell.value.asset)
                          else
-                           SmartAnnotations::TagToText.new(
-                             user, repository.team, cell.value.export_formatted
-                           ).text
+                           cell.value.export_formatted
                          end
                        end
           end
@@ -72,6 +78,6 @@ module RepositoryZipExport
         csv_row << row.row_consumption(row.stock_consumption) if add_consumption
         csv << csv_row
       end
-    end
+    end.encode('UTF-8', invalid: :replace, undef: :replace)
   end
 end

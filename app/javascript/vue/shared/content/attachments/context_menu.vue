@@ -27,7 +27,7 @@
     <MenuDropdown
       class="ml-auto"
       :listItems="this.menu"
-      :btnClasses="`btn btn-sm icon-btn !bg-sn-white ${ withBorder ? 'btn-secondary' : 'btn-light'}`"
+      :btnClasses="`btn icon-btn bg-sn-white ${ withBorder ? 'btn-secondary' : 'btn-light'}`"
       :position="'right'"
       :btnIcon="'sn-icon sn-icon-more-hori'"
       @open_ove_editor="openOVEditor(attachment.attributes.urls.open_vector_editor_edit)"
@@ -39,7 +39,7 @@
       @duplicate="duplicate"
       @viewMode="changeViewMode"
       @move="showMoveModal"
-      @menu-visibility-changed="$emit('menu-visibility-changed', $event)"
+      @menu-toggle="$emit('menu-toggle', $event)"
     ></MenuDropdown>
     <Teleport to="body">
       <RenameAttachmentModal
@@ -54,7 +54,7 @@
         @confirm="deleteAttachment"
         @cancel="deleteModal = false"
       />
-      <moveAssetModal
+      <MoveAssetModal
         v-if="movingAttachment"
         :parent_type="attachment.attributes.parent_type"
         :targets_url="attachment.attributes.urls.move_targets"
@@ -82,7 +82,7 @@
 <script>
 import RenameAttachmentModal from '../modal/rename_modal.vue';
 import deleteAttachmentModal from './delete_modal.vue';
-import moveAssetModal from '../modal/move.vue';
+import MoveAssetModal from '../modal/move.vue';
 import MoveMixin from './mixins/move.js';
 import OpenLocallyMixin from './mixins/open_locally.js';
 import MenuDropdown from '../../menu_dropdown.vue';
@@ -93,7 +93,7 @@ export default {
   components: {
     RenameAttachmentModal,
     deleteAttachmentModal,
-    moveAssetModal,
+    MoveAssetModal,
     MenuDropdown
   },
   mixins: [MoveMixin, OpenLocallyMixin],
@@ -102,7 +102,11 @@ export default {
       type: Object,
       required: true
     },
-    withBorder: { default: false, type: Boolean }
+    withBorder: { default: false, type: Boolean },
+    displayInDropdown: {
+      type: Array,
+      default: []
+    }
   },
   data() {
     return {
@@ -114,13 +118,45 @@ export default {
   computed: {
     menu() {
       const menu = [];
-      if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
-        menu.push({
-          text: this.attachment.attributes.wopi_context.button_text,
-          url: this.attachment.attributes.urls.edit_asset,
-          url_target: '_blank',
-          data_e2e: 'e2e-BT-attachmentOptions-openInWopi'
-        });
+      if (this.displayInDropdown.includes('edit')) {
+        if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
+          menu.push({
+            text: this.attachment.attributes.wopi_context.button_text,
+            url: this.attachment.attributes.urls.edit_asset,
+            url_target: '_blank'
+          });
+        }
+        if (this.attachment.attributes.asset_type === 'gene_sequence' && this.attachment.attributes.urls.open_vector_editor_edit) {
+          menu.push({
+            text: this.i18n.t('open_vector_editor.edit_sequence'),
+            emit: 'open_ove_editor'
+          });
+        }
+        if (this.attachment.attributes.asset_type === 'marvinjs' && this.attachment.attributes.urls.marvin_js_start_edit) {
+          menu.push({
+            text: this.i18n.t('assets.file_preview.edit_in_marvinjs'),
+            emit: 'open_marvinjs_editor'
+          });
+        }
+        if (this.attachment.attributes.asset_type !== 'marvinjs'
+            && this.attachment.attributes.image_editable
+            && this.attachment.attributes.urls.start_edit_image) {
+          menu.push({
+            text: this.i18n.t('assets.file_preview.edit_in_scinote'),
+            emit: 'open_scinote_editor'
+          });
+        }
+        if (this.canOpenLocally) {
+          const text = this.localAppName
+            ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
+            : this.i18n.t('attachments.open_locally');
+
+          menu.push({
+            text,
+            emit: 'open_locally',
+            data_e2e: 'e2e-BT-attachmentOptions-openLocally'
+          });
+        }
       }
       if (this.attachment.attributes.asset_type === 'gene_sequence' && this.attachment.attributes.urls.open_vector_editor_edit) {
         menu.push({
@@ -156,12 +192,14 @@ export default {
           data_e2e: 'e2e-BT-attachmentOptions-openLocally'
         });
       }
-      menu.push({
-        text: this.i18n.t('Download'),
-        url: this.attachment.attributes.urls.download,
-        url_target: '_blank',
-        data_e2e: 'e2e-BT-attachmentOptions-download'
-      });
+      if (this.displayInDropdown.includes('download')) {
+        menu.push({
+          text: this.i18n.t('Download'),
+          url: this.attachment.attributes.urls.download,
+          url_target: '_blank',
+          data_e2e: 'e2e-BT-attachmentOptions-download'
+        });
+      }
       if (this.attachment.attributes.urls.move_targets) {
         menu.push({
           text: this.i18n.t('assets.context_menu.move'),

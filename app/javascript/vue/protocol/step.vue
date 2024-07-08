@@ -15,7 +15,7 @@
     <div class="step-header">
       <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
         <div class="flex items-center gap-4 py-0.5 border-0 border-y border-transparent border-solid">
-          <a class="step-collapse-link hover:no-underline focus:no-underline"
+          <a ref="toggleElement" class="step-collapse-link hover:no-underline focus:no-underline"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
             data-remote="true"
@@ -194,6 +194,9 @@
       reorderStepUrl: {
         required: false
       },
+      userSettingsUrl: {
+        required: false
+      },
       assignableMyModuleId: {
         type: Number,
         required: false
@@ -279,9 +282,27 @@
         if (this.activeDragStep != this.step.id && this.dragingFile) {
           this.dragingFile = false;
         }
+      },
+      step: {
+        handler(newVal) {
+          if (this.isCollapsed !== newVal.attributes.collapsed) {
+            this.toggleCollapsed();
+          }
+        },
+        deep: true
       }
     },
     mounted() {
+      this.$nextTick(() => {
+        const stepId = `#stepBody${this.step.id}`;
+        this.isCollapsed = this.step.attributes.collapsed;
+        if (this.isCollapsed) {
+          $(stepId).collapse('hide');
+        } else {
+          $(stepId).collapse('show');
+        }
+        this.$emit('step:collapsed');
+      });
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar);
       $(this.$refs.comments).data('openCallback', this.closeCommentsSidebar);
       $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
@@ -447,6 +468,16 @@
       },
       toggleCollapsed() {
         this.isCollapsed = !this.isCollapsed;
+
+        this.step.attributes.collapsed = this.isCollapsed;
+
+        const settings = {
+          key: 'task_step_states',
+          data: { [this.step.id]: this.isCollapsed }
+        };
+
+        this.$emit('step:collapsed');
+        axios.put(this.userSettingsUrl, { settings: [settings] });
       },
       showDeleteModal() {
         this.confirmingDelete = true;
@@ -569,6 +600,10 @@
         $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate }, (result) => {
           result.data.isNew = true;
           this.elements.push(result.data)
+
+          if (this.isCollapsed) {
+            this.$refs.toggleElement.click();
+          }
           this.$emit('stepUpdated')
         }).fail(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');

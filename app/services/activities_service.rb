@@ -55,9 +55,19 @@ class ActivitiesService
         child_model = parent_model.reflect_on_association(child).class_name.to_sym
         next if subjects[child_model]
 
-        subjects[child_model] = parent_model.where(id: subjects[subject_name])
-                                            .joins(child)
-                                            .pluck("#{child.to_s.pluralize}.id")
+        if subject_name == 'Result'
+          parent_model = parent_model.with_discarded
+        end
+
+        if child == :results
+          subjects[child_model] = parent_model.where(id: subjects[subject_name])
+                                              .joins(:results_include_discarded)
+                                              .pluck('results.id')
+        else
+          subjects[child_model] = parent_model.where(id: subjects[subject_name])
+                                              .joins(child)
+                                              .pluck("#{child.to_s.pluralize}.id")
+        end
       end
     end
 

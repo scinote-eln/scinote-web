@@ -7,7 +7,7 @@ class RepositoryDateTimeValueBase < ApplicationRecord
              inverse_of: :created_repository_date_time_values
   belongs_to :last_modified_by, foreign_key: :last_modified_by_id, class_name: 'User', optional: true,
              inverse_of: :modified_repository_date_time_values
-  has_one :repository_cell, as: :value, dependent: :destroy
+  has_one :repository_cell, as: :value, dependent: :destroy, touch: true
   accepts_nested_attributes_for :repository_cell
   before_save :reset_notification_sent, if: -> { data_changed? }
 
@@ -19,10 +19,15 @@ class RepositoryDateTimeValueBase < ApplicationRecord
     I18n.l(data, format: format)
   end
 
-  def update_data!(new_data, user)
-    self.data = Time.zone.parse(new_data)
+  def update_data!(new_data, user, preview: false)
+    self.data = if new_data.is_a?(String)
+                  Time.zone.parse(new_data)
+                else
+                  new_data
+                end
+
     self.last_modified_by = user
-    save!
+    preview ? validate : save!
   end
 
   def snapshot!(cell_snapshot)

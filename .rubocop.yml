@@ -99,7 +99,7 @@ Style/GuardClause:
   MinBodyLength: 1
 
 Style/HashSyntax:
-  EnforcedStyle: ruby19
+  EnforcedShorthandSyntax: never
 
 Style/IfUnlessModifier:
   Enabled: true

@@ -3,7 +3,7 @@
 
 :root {
   --attachment-column-width: 13.625rem;
-  --attachment-row-height: 2.5rem;
+  --attachment-row-height: 3rem;
 }
 
 
@@ -85,6 +85,14 @@
 
   #wopi_file_edit_button {
     margin-left: -8px;
+  }
+}
+
+.attachments:has(> .list-attachment-container) {
+  grid-row-gap: 10px;
+
+  @media (max-width: 640px) {
+    grid-row-gap: 30px;
   }
 }
 

@@ -38,7 +38,8 @@ export default {
     error: { type: String, required: false },
     min: { type: [String, Number] },
     max: { type: [String, Number] },
-    blockInvalidInput: { type: Boolean, default: true }
+    blockInvalidInput: { type: Boolean, default: true },
+    negativeNumbersEnabled: {type: Boolean, required: false }
   },
   data() {
     return {
@@ -56,6 +57,13 @@ export default {
   },
   computed: {
     pattern() {
+      if (this.negativeNumbersEnabled) {
+        if (this.type === 'number' && this.decimals) {
+          return `-?[0-9]+([\\.]-?[0-9]{0,${this.decimals}})?`;
+        } else if (this.type === 'number') {
+          return '-?[0-9]+';
+        }
+      }
       if (this.type === 'number' && this.decimals) {
         return `[0-9]+([\\.][0-9]{0,${this.decimals}})?`;
       } else if (this.type === 'number') {

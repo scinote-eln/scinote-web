@@ -209,14 +209,25 @@
       grid-template-columns: max-content max-content;
     }
 
-    .asset-context-menu {
-      margin-left: auto;
+    .inline-attachment-action-buttons {
+      display: none;
     }
   }
 
   .empty-office-file {
     padding: 5em 1em 1em;
     text-align: center;
+  }
+
+  &:hover,
+  &.context-menu-open,
+  &.menu-dropdown-open {
+    .header {
+      .inline-attachment-action-buttons {
+        display: flex;
+        flex-direction: row;
+      }
+    }
   }
 }
 
@@ -225,7 +236,7 @@
   align-items: center;
   display: flex;
   grid-column: 1/-1;
-  height: 3em;
+  height: 40px;
   padding: .5em;
 
   .file-icon {
@@ -267,7 +278,96 @@
   }
 
   .asset-context-menu {
-    margin-left: 1rem;
+    background: transparent;
+  }
+
+  .icon-btn {
+    height: 36px;
+    width: 36px;
+  }
+
+  // normal screen
+  @media (min-width: 640px) {
+
+    &:hover {
+      justify-content: space-between;
+
+      #action-buttons {
+        display: flex;
+
+        .icon-btn {
+          &:hover {
+            background-color: var(--sn-light-grey);
+          }
+        }
+      }
+
+      #file-metadata {
+        display: none;
+      }
+    }
+
+    // context menu dropdown is open
+    &.context-menu-open,
+    &.menu-dropdown-open {
+      display: flex;
+      justify-content: space-between;
+
+      #action-buttons {
+        display: flex;
+      }
+
+      #file-metadata {
+        display: none;
+      }
+    }
+
+    // context menu dropdown is closed
+    #action-buttons {
+      display: none;
+    }
+  }
+
+
+  // small screens
+  @media (max-width: 640px) {
+    display: grid;
+    height: 60px;
+
+    #file-metadata {
+      margin-left: 2rem;
+    }
+
+    &:hover {
+      #action-buttons {
+        display: block;
+        margin-bottom: 20px;
+        position: absolute;
+        right: 144px;
+
+        .icon-btn {
+          &:hover {
+            background-color: var(--sn-light-grey);
+          }
+        }
+      }
+    }
+
+    // context menu dropdown is open
+    &.context-menu-open {
+
+      #action-buttons {
+        display: block;
+        margin-bottom: 20px;
+        position: absolute;
+        right: 144px;
+      }
+    }
+
+    // context menu dropdown is closed
+    #action-buttons {
+      display: none;
+    }
   }
 }
 

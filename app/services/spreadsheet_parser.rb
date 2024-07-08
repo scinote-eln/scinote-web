@@ -44,7 +44,10 @@ class SpreadsheetParser
       if row && i.zero?
         header = row
       else
-        columns = row
+        escaped_row = row.map do |cell|
+          cell.to_s.gsub("\\n", "\n")
+        end
+        columns = escaped_row
       end
     end
 
@@ -65,5 +68,13 @@ class SpreadsheetParser
     else
       row.map(&:to_s)
     end
+  end
+
+  def self.duplicate_ids(sheet)
+    # Extracting IDs from sheet and removing header row
+    ids = sheet.drop(1).map(&:first)
+
+    # Selecting duplicate IDs
+    ids.group_by { |id| id }.select { |_, group| group.size > 1 }.keys
   end
 end
