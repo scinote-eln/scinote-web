@@ -45,7 +45,7 @@ module RepositoryCsvExport
           when -1, -2
             next
           when -3
-            csv_row << (repository.is_a?(RepositorySnapshot) ? row.parent_id : row.code)
+            csv_row << (repository.is_a?(RepositorySnapshot) ? row.parent.code : row.code)
           when -4
             csv_row << row.name
           when -5
@@ -53,7 +53,7 @@ module RepositoryCsvExport
           when -6
             csv_row << I18n.l(row.created_at, format: :full)
           when -7
-            csv_row << row.updated_at ? I18n.l(row.updated_at, format: :full) : ''
+            csv_row << (row.updated_at ? I18n.l(row.updated_at, format: :full) : '')
           when -8
             csv_row << row.last_modified_by.full_name
           when -9

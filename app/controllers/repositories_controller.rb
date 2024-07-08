@@ -334,7 +334,11 @@ class RepositoriesController < ApplicationController
 
     xlsx = RepositoryXlsxExport.to_empty_xlsx(@repository, col_ids)
 
-    send_data xlsx, filename: "empty_repository.xlsx", type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    send_data(
+      xlsx,
+      filename: "#{@repository.name.gsub(/\s/, '_')}_template_#{Date.current}.xlsx",
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
   end
 
   def export_repository
