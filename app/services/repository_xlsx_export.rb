@@ -54,7 +54,7 @@ module RepositoryXlsxExport
             row_data << if cell
                           if cell.value_type == 'RepositoryAssetValue' && handle_file_name_func
                             handle_file_name_func.call(cell.value.asset)
-                          elsif cell.value_type == 'RepositoryDateTimeValueBase'
+                          elsif cell.value.is_a?(RepositoryDateTimeValue) || cell.value.is_a?(RepositoryDateValue)
                             cell.value.data
                           else
                             cell.value.export_formatted
