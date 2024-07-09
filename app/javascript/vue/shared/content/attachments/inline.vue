@@ -32,31 +32,18 @@
         </div>
       </div>
       <div class="flex items-center ml-auto gap-2">
-        <openMenu
+        <AttachmentActions
           :attachment="attachment"
-          :multipleOpenOptions="multipleOpenOptions"
-          @open="toggleMenuDropdown"
-          @close="toggleMenuDropdown"
-          @option:click="$emit($event)"
-        />
-        <a v-if="attachment.attributes.urls.move"
-          @click.prevent.stop="showMoveModal"
-          class="btn btn-light icon-btn thumbnail-action-btn"
-          :title="i18n.t('attachments.thumbnail.buttons.move')">
-          <i class="sn-icon sn-icon-move"></i>
-        </a>
-        <a class="btn btn-light icon-btn thumbnail-action-btn"
-          :title="i18n.t('attachments.thumbnail.buttons.download')"
-          :href="attachment.attributes.urls.download" data-turbolinks="false">
-          <i class="sn-icon sn-icon-export"></i>
-        </a>
-        <ContextMenu
-          :attachment="attachment"
+          :showOptions="showOptions"
           @attachment:viewMode="updateViewMode"
           @attachment:delete="deleteAttachment"
           @attachment:moved="attachmentMoved"
           @attachment:uploaded="reloadAttachments"
+          @attachment:changed="$emit('attachment:changed', $event)"
           @attachment:update="$emit('attachment:update', $event)"
+          @attachment:toggle_menu="toggleMenuDropdown"
+          @attachment:move_modal="showMoveModal"
+          @attachment:open="$emit($event)"
         />
       </div>
     </div>
@@ -107,6 +94,7 @@ import PdfViewer from '../../pdf_viewer.vue';
 import MoveAssetModal from '../modal/move.vue';
 import MoveMixin from './mixins/move.js';
 import OpenLocallyMixin from './mixins/open_locally.js';
+import AttachmentActions from './attachment_actions.vue';
 import OpenMenu from './open_menu.vue';
 
 export default {
@@ -116,7 +104,8 @@ export default {
     ContextMenu,
     PdfViewer,
     MoveAssetModal,
-    OpenMenu
+    OpenMenu,
+    AttachmentActions
   },
   props: {
     attachment: {

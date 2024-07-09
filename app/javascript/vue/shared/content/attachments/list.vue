@@ -21,42 +21,29 @@
       <img :src="this.imageLoadError ? attachment.attributes.urls.blob : attachment.attributes.medium_preview" @error="ActiveStoragePreviews.reCheckPreview"
             @load="ActiveStoragePreviews.showPreview"/>
     </div>
-    <div class="file-metadata">
-      <span>
+    <div class="flex items-center gap-2 text-xs text-sn-grey overflow-hidden ml-auto">
+      <span class="truncate" :title="i18n.t('assets.placeholder.modified_label') + ' ' + attachment.attributes.updated_at_formatted">
           {{ i18n.t('assets.placeholder.modified_label') }}
           {{ attachment.attributes.updated_at_formatted }}
       </span>
-      <span>
+      <span class="truncate" :title="i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted})">
         {{ i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted}) }}
       </span>
     </div>
-    <div class="attachment-actions shrink-0 ml-4">
-      <openMenu
-        :attachment="attachment"
-        :multipleOpenOptions="multipleOpenOptions"
-        @open="toggleMenuDropdown"
-        @close="toggleMenuDropdown"
-        @option:click="$emit($event)"
-      />
-      <a v-if="attachment.attributes.urls.move"
-        @click.prevent.stop="showMoveModal"
-        class="btn btn-light icon-btn thumbnail-action-btn"
-        :title="i18n.t('attachments.thumbnail.buttons.move')">
-        <i class="sn-icon sn-icon-move"></i>
-      </a>
-      <a class="btn btn-light icon-btn thumbnail-action-btn"
-        :title="i18n.t('attachments.thumbnail.buttons.download')"
-        :href="attachment.attributes.urls.download" data-turbolinks="false">
-        <i class="sn-icon sn-icon-export"></i>
-      </a>
-      <ContextMenu
-        :attachment="attachment"
-        @attachment:viewMode="updateViewMode"
-        @attachment:delete="deleteAttachment"
-        @attachment:moved="attachmentMoved"
-        @attachment:uploaded="reloadAttachments"
-        @attachment:update="$emit('attachment:update', $event)"
-      />
+    <div class="attachment-actions shrink-0 ml-auto">
+      <AttachmentActions
+          :attachment="attachment"
+          :showOptions="showOptions"
+          @attachment:viewMode="updateViewMode"
+          @attachment:delete="deleteAttachment"
+          @attachment:moved="attachmentMoved"
+          @attachment:uploaded="reloadAttachments"
+          @attachment:changed="$emit('attachment:changed', $event)"
+          @attachment:update="$emit('attachment:update', $event)"
+          @attachment:toggle_menu="toggleMenuDropdown"
+          @attachment:move_modal="showMoveModal"
+          @attachment:open="$emit($event)"
+        />
     </div>
     <Teleport to="body">
       <moveAssetModal
@@ -75,6 +62,7 @@ import ContextMenuMixin from './mixins/context_menu.js';
 import ContextMenu from './context_menu.vue';
 import MoveMixin from './mixins/move.js';
 import MoveAssetModal from '../modal/move.vue';
+import AttachmentActions from './attachment_actions.vue';
 import OpenMenu from './open_menu.vue';
 
 export default {
@@ -83,7 +71,8 @@ export default {
   components: {
     ContextMenu,
     MoveAssetModal,
-    OpenMenu
+    OpenMenu,
+    AttachmentActions
   },
   props: {
     attachment: {
