@@ -171,6 +171,8 @@ export default {
   mounted() {
     if (this.autoMapping) {
       this.autoMap();
+    } else {
+      this.selectedColumnType = this.value;
     }
   }
 };

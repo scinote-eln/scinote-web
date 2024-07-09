@@ -10,7 +10,7 @@
       @generatePreview="generatePreview"
       @changeStep="changeStep"
       @importRows="importRecords"
-
+      @updateAutoMapping="updateAutoMapping"
     />
     <ExportModal
       v-else
@@ -49,7 +49,7 @@ export default {
     return {
       modalOpened: false,
       activeStep: 'UploadStep',
-      params: {},
+      params: { autoMapping: true },
       modalId: null,
       loading: false
     };
@@ -65,24 +65,32 @@ export default {
     fetchRepository() {
       axios.get(this.repositoryUrl)
         .then((response) => {
-          this.params = response.data.data;
+          this.params = { ...this.params, ...response.data.data };
           this.modalId = Math.random().toString(36);
           this.modalOpened = true;
         });
     },
     uploadFile(params) {
-      this.params = params;
+      this.params = { ...this.params, ...params };
       this.activeStep = 'MappingStep';
     },
-
-    generatePreview(mappings, updateWithEmptyCells, onlyAddNewItems) {
-      this.params.mapping = mappings;
+    updateAutoMapping(value) {
+      this.params.autoMapping = value;
+    },
+    generatePreview(selectedItems, updateWithEmptyCells, onlyAddNewItems) {
+      this.params.selectedItems = selectedItems;
       this.params.updateWithEmptyCells = updateWithEmptyCells;
       this.params.onlyAddNewItems = onlyAddNewItems;
       this.importRecords(true);
     },
     changeStep(step) {
       this.activeStep = step;
+    },
+    generateMapping() {
+      return this.params.selectedItems.reduce((obj, item) => {
+        obj[item.index] = item.key || '';
+        return obj;
+      }, {});
     },
     importRecords(preview) {
       if (this.loading) {
@@ -91,7 +99,7 @@ export default {
 
       const jsonData = {
         file_id: this.params.temp_file.id,
-        mappings: this.params.mapping,
+        mappings: this.generateMapping(),
         id: this.params.id,
         preview: preview,
         should_overwrite_with_empty_cells: this.params.updateWithEmptyCells,
