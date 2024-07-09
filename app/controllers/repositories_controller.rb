@@ -264,6 +264,7 @@ class RepositoriesController < ApplicationController
       parsed_file = ImportRepository::ParseRepository.new(
         file: import_params[:file],
         repository: @repository,
+        date_format: current_user.settings['date_format'],
         session: session
       )
       if parsed_file.too_large?
