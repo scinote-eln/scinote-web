@@ -45,7 +45,7 @@ module RepositoryXlsxExport
           when -9
             row_data << (row.archived? && row.archived_by.present? ? row.archived_by.full_name : '')
           when -10
-            row_data << (row.archived? && row.archived_on)
+            row_data << row.archived_on
           when -11
             row_data << row.parent_repository_rows.map(&:code).join(' | ')
             row_data << row.child_repository_rows.map(&:code).join(' | ')
