@@ -1190,6 +1190,7 @@ en:
     shareable_links:
       share: "Share"
       shared: "Shared"
+      disabled: "Sharing is disabled for your team.\nAsk your team admin to enable sharing in the team settings."
     notes:
       title: "Notes"
       no_description: "No task description"
