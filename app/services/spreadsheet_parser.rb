@@ -60,7 +60,9 @@ class SpreadsheetParser
         if cell.is_a?(Roo::Excelx::Cell::Number) && cell.format == 'General'
           cell&.value&.to_d
         elsif date_format && cell&.value.is_a?(Date)
-          cell&.value&.strftime(date_format)
+          cell&.value&.strftime(
+            "#{date_format} #{' %H:%M' if cell.value.is_a?(DateTime)}"
+          )
         else
           cell&.formatted_value
         end
