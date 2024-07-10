@@ -72,7 +72,7 @@
             {{ i18n.t('general.back') }}
           </button>
           <button type="button" class="btn btn-primary" @click="$emit('importRows')">
-            {{ i18n.t('repositories.import_records.steps.step3.confirm') }}
+            {{ i18n.t('repositories.import_records.steps.step3.import') }}
           </button>
         </div>
       </div>

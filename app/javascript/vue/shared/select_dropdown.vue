@@ -30,7 +30,7 @@
              :placeholder="placeholderRender"
              @keyup="fetchOptions"
              @change.stop
-             class="w-full border-0 outline-none pl-0 placeholder:text-sn-grey" />
+             class="w-full bg-transparent border-0 outline-none pl-0 placeholder:text-sn-grey" />
       </template>
       <div v-else class="flex items-center gap-1 flex-wrap">
         <div v-for="tag in tags" class="px-2 py-1 rounded-sm bg-sn-super-light-grey grid grid-cols-[auto_1fr] items-center gap-1">

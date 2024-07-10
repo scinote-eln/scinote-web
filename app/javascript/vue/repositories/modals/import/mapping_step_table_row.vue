@@ -23,6 +23,7 @@
         :clearable="true"
         :size="'sm'"
         class="max-w-96"
+        :searchable="true"
         :class="{
           'outline-sn-alert-brittlebush outline-1 outline rounded': computeMatchNotFound
         }"

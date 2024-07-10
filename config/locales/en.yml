@@ -2038,7 +2038,7 @@ en:
       error_searching: "Error searching, please try again"
       button_tooltip:
         new: "Create new item"
-        import: "Update inventory"
+        import: "Import items"
         filters: "Filters"
         search: "Quick search"
       filters:
@@ -2213,7 +2213,7 @@ en:
           importTitle: 'Import'
           importBtnText: 'Import'
           cancelBtnText: 'Cancel'
-          dragAndDropSupportingText: '.xlsx, .xls, .csv or .txt file'
+          dragAndDropSupportingText: '.csv, .xlsx, .txt or .tsv file'
         step2:
           id: 'step2'
           icon: 'sn-icon-open'
@@ -2250,7 +2250,7 @@ en:
             RepositoryDateTimeValue: 'Date-time'
             RepositoryDateValue: 'Date'
             RepositoryTimeValue: 'Time'
-            RepositoryListValue: 'List'
+            RepositoryListValue: 'Dropdown'
             RepositoryStatusValue: 'Status'
             RepositoryStockValue: 'Stock'
           table:
@@ -2292,7 +2292,7 @@ en:
           name: 'Name'
           status: 'Status'
           cancel: 'Cancel import'
-          confirm: 'Confirm'
+          import: 'Import'
           status_message:
             created: 'new item'
             updated: 'updated'
@@ -2325,7 +2325,7 @@ en:
             id: 'el2'
             icon: 'sn-icon-import'
             label: 'Upload your file'
-            subtext: 'Upload your data using .xlsx, .csv, or .txt files to import new items or update existing item data.'
+            subtext: 'Upload your data using .csv, .xlsx, .txt or .tsv files to import new items or update existing item data.'
           element3:
             id: 'el3'
             icon: 'sn-icon-tables'
