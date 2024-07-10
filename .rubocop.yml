@@ -299,9 +299,6 @@ Naming/VariableName:
 Naming/VariableNumber:
   EnforcedStyle: normalcase
 
-Naming/BlockForwarding:
-  EnforcedStyle: explicit
-
 Style/WordArray:
   EnforcedStyle: percent
   MinSize: 0
