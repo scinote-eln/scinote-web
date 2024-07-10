@@ -22,7 +22,8 @@ class RepositoryChecklistValue < ApplicationRecord
   EXTRA_PRELOAD_INCLUDE = :repository_checklist_items
 
   def formatted(separator: ' | ')
-    repository_checklist_items.pluck(:data).join(separator)
+    checklist_items = current_repository_checklist_items || repository_checklist_items
+    checklist_items.pluck(:data).join(separator)
   end
 
   def export_formatted
