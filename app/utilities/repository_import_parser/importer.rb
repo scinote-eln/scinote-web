@@ -241,12 +241,15 @@ module RepositoryImportParser
         repository_cell
       else
         # Create new cell
-        cell_value.repository_cell.value = cell_value
-        repository_row.repository_cells << cell_value.repository_cell
+
         if @preview
-          cell_value.validate
-          cell_value.repository_cell.id = SecureRandom.uuid.gsub(/[a-zA-Z-]/, '') unless cell_value.repository_cell.id.present?  # ID required for preview with serializer
+          repository_cell = repository_row.repository_cells.build(value: cell_value, repository_column: cell_value.repository_cell.repository_column)
+          repository_cell.validate
+          repository_cell.id = SecureRandom.uuid.gsub(/[a-zA-Z-]/, '') unless cell_value.repository_cell.id.present?  # ID required for preview with serializer
+          return repository_cell
         else
+          cell_value.repository_cell.value = cell_value
+          repository_row.repository_cells << cell_value.repository_cell
           cell_value.save!
         end
         @updated ||= true
