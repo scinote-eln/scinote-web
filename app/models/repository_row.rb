@@ -98,6 +98,8 @@ class RepositoryRow < ApplicationRecord
            class_name: 'RepositoryRow',
            source: :parent,
            dependent: :destroy
+  has_many :storage_location_repository_rows, inverse_of: :repository_row, dependent: :destroy
+  has_many :storage_locations, through: :storage_location_repository_rows
 
   auto_strip_attributes :name, nullify: false
   validates :name,

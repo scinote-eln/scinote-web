@@ -259,6 +259,9 @@ en:
           attributes:
             text: Text is too long
             position: "Position has already been taken by another item in the checklist"
+        storage_location:
+          missing_position: 'Missing position metadata'
+          not_uniq_position: 'Position already taken'
   storage:
     limit_reached: "Storage limit has been reached."
   helpers:
