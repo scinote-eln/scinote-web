@@ -80,7 +80,7 @@
           <button class="btn btn-secondary ml-auto" @click="close" aria-label="Close">
             {{ i18n.t('repositories.import_records.steps.step2.cancelBtnText') }}
           </button>
-          <button class="btn btn-primary" @click="importRecords">
+          <button class="btn btn-primary" :disabled="!canSubmit" @click="importRecords">
             {{ i18n.t('repositories.import_records.steps.step2.confirmBtnText') }}
           </button>
         </div>
@@ -203,6 +203,9 @@ export default {
       const importedSum = this.selectedItems.filter((i) => i.key).length;
       const ignoredSum = this.selectedItems.length - importedSum;
       return { importedSum, ignoredSum };
+    },
+    canSubmit() {
+      return this.selectedItems.filter((i) => i.key).length > 0;
     }
   },
   created() {
