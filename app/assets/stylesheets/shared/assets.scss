@@ -125,12 +125,6 @@
       z-index: 2;
     }
   }
-
-  .asset-context-menu {
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-  }
 }
 
 .inline-attachment-container {
@@ -290,7 +284,7 @@
   @media (min-width: 640px) {
 
     &:hover {
-      justify-content: space-between;
+
 
       #action-buttons {
         display: flex;

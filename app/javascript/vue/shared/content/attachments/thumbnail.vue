@@ -33,7 +33,7 @@
     <div :class="{ hidden: !showOptions }" class="hovered-thumbnail h-full">
       <a
         :href="attachment.attributes.urls.blob"
-        class="file-preview-link file-name"
+        class="file-preview-link file-name max-h-36 overflow-auto"
         :id="`modal_link${attachment.id}`"
         data-no-turbolink="true"
         :data-id="attachment.id"
@@ -45,38 +45,20 @@
       <div class="absolute bottom-16 text-sn-grey">
         {{ attachment.attributes.file_size_formatted }}
       </div>
-      <div class="absolute bottom-4 w-[184px] grid grid-cols-[repeat(4,_2.5rem)] justify-between">
-        <openMenu
+      <div class="absolute bottom-4">
+        <AttachmentActions
+          :withBorder="true"
           :attachment="attachment"
-          :multipleOpenOptions="multipleOpenOptions"
-          @open="toggleMenu"
-          @close="toggleMenu"
-          @option:click="$emit($event)"
-        />
-        <a v-if="attachment.attributes.urls.move"
-          @click.prevent.stop="showMoveModal"
-          class="btn btn-light icon-btn thumbnail-action-btn"
-          :title="i18n.t('attachments.thumbnail.buttons.move')">
-          <i class="sn-icon sn-icon-move"></i>
-        </a>
-        <a class="btn btn-light icon-btn thumbnail-action-btn"
-          :title="i18n.t('attachments.thumbnail.buttons.download')"
-          :href="attachment.attributes.urls.download" data-turbolinks="false">
-          <i class="sn-icon sn-icon-export"></i>
-        </a>
-        <ContextMenu
-          class="!relative !top-0 !left-0"
-          v-show="showOptions"
-          :attachment="attachment"
-          :hideEdit="true"
+          :showOptions="showOptions"
           @attachment:viewMode="updateViewMode"
           @attachment:delete="deleteAttachment"
           @attachment:moved="attachmentMoved"
           @attachment:uploaded="reloadAttachments"
           @attachment:changed="$emit('attachment:changed', $event)"
           @attachment:update="$emit('attachment:update', $event)"
-          @menu-toggle="toggleMenu"
-          :withBorder="true"
+          @attachment:toggle_menu="toggleMenu"
+          @attachment:move_modal="showMoveModal"
+          @attachment:open="$emit($event)"
         />
       </div>
     </div>
@@ -134,6 +116,7 @@ import MoveAssetModal from '../modal/move.vue';
 import MoveMixin from './mixins/move.js';
 import OpenLocallyMixin from './mixins/open_locally.js';
 import OpenMenu from './open_menu.vue';
+import AttachmentActions from './attachment_actions.vue';
 import { vOnClickOutside } from '@vueuse/components';
 
 export default {
@@ -144,7 +127,8 @@ export default {
     deleteAttachmentModal,
     MoveAssetModal,
     MenuDropdown,
-    OpenMenu
+    OpenMenu,
+    AttachmentActions
   },
   props: {
     attachment: {
