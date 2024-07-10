@@ -1,6 +1,6 @@
 ruby:
   config_file: .rubocop.yml
-  version: 1.65.0
+  version: 1.22.1
 
 eslint:
   enabled: true
