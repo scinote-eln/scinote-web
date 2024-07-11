@@ -807,6 +807,10 @@ Rails.application.routes.draw do
 
     resources :connected_devices, controller: 'users/connected_devices', only: %i(destroy)
 
+    resources :storage_locations, only: %i(index create destroy update) do
+      resources :storage_location_repository_rows, only: %i(index create destroy update)
+    end
+
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
     resource :search, only: [], controller: :search do

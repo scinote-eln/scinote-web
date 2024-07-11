@@ -29,7 +29,7 @@ module Lists
     end
 
     def paginate_records
-      @records = @records.page(@params[:page]).per(@params[:per_page])
+      @records = @records.page(@params[:page]).per(@params[:per_page]) if @params[:page].present?
     end
 
     def sort_direction(order_params)
