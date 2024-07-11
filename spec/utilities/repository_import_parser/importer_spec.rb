@@ -43,7 +43,7 @@ describe RepositoryImportParser::Importer do
     end
 
     it 'return a message of imported records' do
-      expect(subject.run).to eq({ status: :ok, nr_of_added: 5, total_nr: 5 })
+      expect(subject.run).to eq({ status: :ok, created_rows_count: 5, updated_rows_count: 0 })
     end
 
     it 'generate 5 new repository rows' do

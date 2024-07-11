@@ -316,7 +316,7 @@ class Extends
     user_leave_team: 104,
     copy_inventory: 105,
     export_protocol_from_task: 106,
-    import_inventory_items: 107,
+    import_inventory_items_legacy: 107,
     create_tag: 108,
     delete_tag: 109,
     edit_image_on_result: 110,
@@ -495,7 +495,7 @@ class Extends
     task_step_asset_renamed: 305,
     result_asset_renamed: 306,
     protocol_step_asset_renamed: 307,
-    item_added_with_import: 308
+    inventory_items_added_or_updated_with_import: 308
   }
 
   ACTIVITY_GROUPS = {
