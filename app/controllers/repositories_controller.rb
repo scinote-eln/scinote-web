@@ -318,7 +318,7 @@ class RepositoriesController < ApplicationController
                   total_rows_count: status[:total_rows_count])
 
       if status[:status] == :ok
-        unless import_params[:preview] && (status[:created_rows_count] + status[:updated_rows_count]).positive?
+        unless import_params[:preview] || (status[:created_rows_count] + status[:updated_rows_count]).zero?
           log_activity(
             :inventory_items_added_or_updated_with_import,
             created_rows_count: status[:created_rows_count],
