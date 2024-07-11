@@ -234,6 +234,8 @@ en:
         repository_row_connection:
           self_connection: 'A repository_row cannot have a connection with itself'
           reciprocal_connection: 'Reciprocal connections are not allowed'
+        repository_cell:
+          incorrect_format: 'Incorrect data format'
         webhook:
           attributes:
             configuration:

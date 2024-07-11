@@ -64,15 +64,6 @@ module RepositoryImportParser
       end
     end
 
-    def handle_invalid_cell_value(value, cell_value)
-      if value.present? && cell_value.nil?
-        @errors << 'Incorrect data format'
-        true
-      else
-        false
-      end
-    end
-
     def import_rows!
       checked_rows = []
       duplicate_ids = SpreadsheetParser.duplicate_ids(@sheet)
@@ -179,7 +170,13 @@ module RepositoryImportParser
                            @user.as_json(root: true, only: :settings).deep_symbolize_keys
                          )
                        end
-          next if handle_invalid_cell_value(value, cell_value)
+
+          if value.present? && cell_value.nil?
+            raise ActiveRecord::Rollback unless @preview
+
+            @errors << I18n.t('activerecord.errors.models.repository_cell.incorrect_format')
+            next
+          end
 
           existing_cell = repository_row.repository_cells.find { |c| c.repository_column_id == column.id }
 
