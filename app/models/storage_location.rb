@@ -19,7 +19,7 @@ class StorageLocation < ApplicationRecord
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
 
   after_discard do
-    StorageLocation.where(parent_id: id).each(&:discard)
+    StorageLocation.where(parent_id: id).find_each(&:discard)
     storage_location_repository_rows.each(&:discard)
   end
 end

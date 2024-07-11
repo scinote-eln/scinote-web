@@ -20,7 +20,9 @@ class StorageLocationRepositoryRowsController < ApplicationController
     @storage_location_repository_row.update(storage_location_repository_row_params)
 
     if @storage_location_repository_row.save
-      render json: {}
+      render json: @storage_location_repository_row,
+             serializer: Lists::StorageLocationRepositoryRowSerializer,
+             include: :repository_row
     else
       render json: @storage_location_repository_row.errors, status: :unprocessable_entity
     end
@@ -30,12 +32,14 @@ class StorageLocationRepositoryRowsController < ApplicationController
     @storage_location_repository_row = StorageLocationRepositoryRow.new(
       repository_row: @repository_row,
       storage_location: @storage_location,
-      metadata: storage_location_repository_row_params[:metadata],
+      metadata: storage_location_repository_row_params[:metadata] || {},
       created_by: current_user
     )
 
     if @storage_location_repository_row.save
-      render json: {}
+      render json: @storage_location_repository_row,
+             serializer: Lists::StorageLocationRepositoryRowSerializer,
+             include: :repository_row
     else
       render json: @storage_location_repository_row.errors, status: :unprocessable_entity
     end
@@ -53,7 +57,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
 
   def load_storage_location_repository_row
     @storage_location_repository_row = StorageLocationRepositoryRow.find(
-      storage_location_repository_row_params[:storage_location_id]
+      storage_location_repository_row_params[:id]
     )
     render_404 unless @storage_location_repository_row
   end

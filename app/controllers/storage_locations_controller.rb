@@ -15,7 +15,7 @@ class StorageLocationsController < ApplicationController
     @storage_location.update(storage_location_params)
 
     if @storage_location.save
-      render json: {}
+      render json: @storage_location, serializer: Lists::StorageLocationSerializer
     else
       render json: @storage_location.errors, status: :unprocessable_entity
     end
@@ -29,7 +29,7 @@ class StorageLocationsController < ApplicationController
     @storage_location.image.attach(storage_location_params[:signed_blob_id]) if storage_location_params[:signed_blob_id]
 
     if @storage_location.save
-      render json: {}
+      render json: @storage_location, serializer: Lists::StorageLocationSerializer
     else
       render json: @storage_location.errors, status: :unprocessable_entity
     end

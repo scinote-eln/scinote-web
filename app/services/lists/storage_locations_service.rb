@@ -12,7 +12,6 @@ module Lists
       @records = StorageLocation.where(team: @team, parent_id: @parent_id)
     end
 
-    def filter_records
-    end
+    def filter_records; end
   end
 end

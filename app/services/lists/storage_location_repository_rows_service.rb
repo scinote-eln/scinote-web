@@ -12,7 +12,6 @@ module Lists
       @records = StorageLocationRepositoryRow.includes(:repository_row).where(storage_location_id: @storage_location_id)
     end
 
-    def filter_records
-    end
+    def filter_records; end
   end
 end
