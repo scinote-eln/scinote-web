@@ -42,7 +42,7 @@ module Toolbars
     private
 
     def restore_action
-      return unless can_manage_repository_rows?(@repository)
+      return unless can_manage_repository_rows?(@repository) && !@repository.is_a?(SoftLockedRepository)
 
       return unless @repository_rows.all?(&:archived?)
 
@@ -57,7 +57,7 @@ module Toolbars
     end
 
     def edit_action
-      return unless can_manage_repository_rows?(@repository)
+      return unless can_manage_repository_rows?(@repository) && !@repository.is_a?(SoftLockedRepository)
 
       return unless @repository_rows.all?(&:active?)
 
@@ -87,7 +87,7 @@ module Toolbars
     end
 
     def duplicate_action
-      return unless can_create_repository_rows?(@repository)
+      return unless can_create_repository_rows?(@repository) && !@repository.is_a?(SoftLockedRepository)
 
       return unless @repository_rows.all?(&:active?)
 
@@ -151,7 +151,7 @@ module Toolbars
     end
 
     def archive_action
-      return unless can_manage_repository_rows?(@repository)
+      return unless can_manage_repository_rows?(@repository) && !@repository.is_a?(SoftLockedRepository)
 
       return unless @repository_rows.all?(&:active?)
 
