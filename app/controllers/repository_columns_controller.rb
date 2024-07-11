@@ -29,6 +29,11 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def describe_all
+    additional_columns = [
+      %w(updated_on RepositoryDateTimeValue),
+      %w(updated_by RepositoryUserValue)
+    ]
+
     response_json = @repository.repository_columns
                                .where(data_type: Extends::REPOSITORY_ADVANCED_SEARCHABLE_COLUMNS)
                                .map do |column|
@@ -38,6 +43,12 @@ class RepositoryColumnsController < ApplicationController
         data_type: column.data_type,
         items: column.items&.map { |item| { value: item.id, label: escape_input(item.data) } }
       }
+    end
+
+    additional_columns.each do |column, column_type|
+      response_json << { id: column,
+                         name: I18n.t("repositories.table.#{column}"),
+                         data_type: column_type }
     end
     render json: { response: response_json }
   end
