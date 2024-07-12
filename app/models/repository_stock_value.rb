@@ -167,7 +167,7 @@ class RepositoryStockValue < ApplicationRecord
   end
 
   def self.import_from_text(text, attributes, _options = {})
-    digit, unit = text.match(/(^\d*\.?\d*)(\D*)/).captures
+    digit, unit = text.match(/(^-?\d*\.?\d*)(\D*)/).captures
     digit.strip!
     unit.strip!
     return nil if digit.blank?
