@@ -3412,6 +3412,7 @@ en:
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       new_step: "New step"
+      add_step: "Add step"
       new_step_title: "Create new step"
       subtitle: "Protocol Steps"
       no_steps: "Protocol has no steps."

@@ -175,6 +175,7 @@
             <div v-for="(step, index) in steps" :key="step.id" class="step-block">
               <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
                 <i class="sn-icon sn-icon-new-task"></i>
+                <span>{{ i18n.t("protocols.steps.add_step") }}</span>
               </div>
               <Step
                 ref="steps"
@@ -197,6 +198,7 @@
               />
               <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step" @click="addStep(index + 1)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
                 <i class="sn-icon sn-icon-new-task"></i>
+                <span>{{ i18n.t("protocols.steps.add_step") }}</span>
               </div>
             </div>
             <div v-if="steps.length > 0 && urls.add_step_url && inRepository" class="py-5">
