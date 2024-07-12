@@ -9,7 +9,7 @@
     <template v-if="isOpen">
       <teleport to="body">
         <div ref="flyout"
-            class="fixed z-[3000] sn-menu-dropdown bg-sn-white rounded p-2.5 overflow-auto sn-shadow-menu-sm flex flex-col gap-[1px]"
+            class="fixed z-[3000] sn-menu-dropdown bg-sn-white rounded p-2.5 sn-shadow-menu-sm flex flex-col gap-[1px]"
             :class="{
                 'right-0': position === 'right',
                 'left-0': position === 'left',
