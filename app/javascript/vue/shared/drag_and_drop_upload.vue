@@ -5,7 +5,8 @@
     @dragenter.prevent="dragEnter($event)"
     @dragleave.prevent="dragLeave($event)"
     @dragover.prevent
-    class="flex h-full w-full p-6 rounded border border-sn-light-grey bg-sn-super-light-blue"
+    @click="handleImportClick"
+    class="flex h-full w-full p-6 rounded border border-sn-light-grey bg-sn-super-light-blue cursor-pointer"
   >
   <div id="centered-content" class="flex flex-col gap-4 items-center h-fit w-fit m-auto">
     <!-- icon -->
@@ -14,7 +15,7 @@
     <!-- text section -->
     <div class="flex flex-col gap-1">
       <div class="text-sn-dark-grey">
-        <span class="text-sn-science-blue hover:cursor-pointer" @click="handleImportClick">
+        <span class="text-sn-science-blue hover:cursor-pointer" >
           {{ i18n.t('repositories.import_records.dragAndDropUpload.importText.firstPart') }}
         </span> {{ i18n.t('repositories.import_records.dragAndDropUpload.importText.secondPart') }}
       </div>
