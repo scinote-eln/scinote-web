@@ -141,9 +141,20 @@ export default {
     },
     expandAll() {
       $('.result-wrapper .collapse').collapse('show');
+      this.toggleCollapsed(false);
     },
     collapseAll() {
       $('.result-wrapper .collapse').collapse('hide');
+      this.toggleCollapsed(true);
+    },
+    toggleCollapsed(newState) {
+      this.results = this.results.map((result) => ({
+        ...result,
+        attributes: {
+          ...result.attributes,
+          collapsed: newState
+        }
+      }));
     },
     removeResult(result_id) {
       this.results = this.results.filter((r) => r.id != result_id);

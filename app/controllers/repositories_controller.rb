@@ -264,6 +264,7 @@ class RepositoriesController < ApplicationController
       parsed_file = ImportRepository::ParseRepository.new(
         file: import_params[:file],
         repository: @repository,
+        date_format: current_user.settings['date_format'],
         session: session
       )
       if parsed_file.too_large?
@@ -272,6 +273,9 @@ class RepositoriesController < ApplicationController
       elsif parsed_file.has_too_many_rows?
         render json: { error: t('repositories.import_records.error_message.items_limit',
                                 items_size: Constants::IMPORT_REPOSITORY_ITEMS_LIMIT) }, status: :unprocessable_entity
+      elsif parsed_file.has_too_little_rows?
+        render json: { error: t('repositories.parse_sheet.errors.items_min_limit') },
+               status: :unprocessable_entity
       else
         @import_data = parsed_file.data
 
@@ -310,10 +314,18 @@ class RepositoriesController < ApplicationController
                  preview: import_params[:preview]
                ).import!
       message = t('repositories.import_records.partial_success_flash',
-                  nr: status[:nr_of_added], total_nr: status[:total_nr])
+                  successful_rows_count: (status[:created_rows_count] + status[:updated_rows_count]),
+                  total_rows_count: status[:total_rows_count])
 
       if status[:status] == :ok
-        log_activity(:import_inventory_items, num_of_items: status[:nr_of_added])
+        unless import_params[:preview] || (status[:created_rows_count] + status[:updated_rows_count]).zero?
+          log_activity(
+            :inventory_items_added_or_updated_with_import,
+            created_rows_count: status[:created_rows_count],
+            updated_rows_count: status[:updated_rows_count]
+          )
+        end
+
         render json: import_params[:preview] ? status : { message: message }, status: :ok
       else
         render json: { message: message }, status: :unprocessable_entity
@@ -331,7 +343,11 @@ class RepositoriesController < ApplicationController
 
     xlsx = RepositoryXlsxExport.to_empty_xlsx(@repository, col_ids)
 
-    send_data xlsx, filename: "empty_repository.xlsx", type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    send_data(
+      xlsx,
+      filename: "#{@repository.name.gsub(/\s/, '_')}_template_#{Date.current}.xlsx",
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
   end
 
   def export_repository

@@ -44,10 +44,7 @@ class SpreadsheetParser
       if row && i.zero?
         header = row
       else
-        escaped_row = row.map do |cell|
-          cell.to_s.gsub("\\n", "\n")
-        end
-        columns = escaped_row
+        columns = row
       end
     end
 
@@ -60,7 +57,9 @@ class SpreadsheetParser
         if cell.is_a?(Roo::Excelx::Cell::Number) && cell.format == 'General'
           cell&.value&.to_d
         elsif date_format && cell&.value.is_a?(Date)
-          cell&.value&.strftime(date_format)
+          cell&.value&.strftime(
+            "#{date_format} #{' %H:%M' if cell.value.is_a?(DateTime)}"
+          )
         else
           cell&.formatted_value
         end

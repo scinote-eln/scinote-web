@@ -10,7 +10,7 @@
         @dropdown:changed="updateOperator"
       />
     </div>
-    <div v-if="users" class="users-filter-dropdown">
+    <div v-if="users" class="users-filter-dropdown max-w-[360px]">
       <DropdownSelector
         :optionClass="'checkbox-icon'"
         :dataCombineTags="true"

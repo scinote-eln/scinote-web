@@ -87,6 +87,7 @@
 <script>
 import DragAndDropUpload from '../../../shared/drag_and_drop_upload.vue';
 import modalMixin from '../../../shared/modal_mixin';
+import axios from '../../../../packs/custom_axios';
 
 export default {
   name: 'UploadStep',
@@ -110,11 +111,23 @@ export default {
     };
   },
   methods: {
-    uploadFile(file) {
-      this.$emit('uploadFile', file);
-    },
     handleError(error) {
       this.error = error;
+    },
+    uploadFile(file) {
+      const formData = new FormData();
+
+      // required payload
+      formData.append('file', file);
+
+      axios.post(this.params.attributes.urls.parse_sheet, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+        .then((response) => {
+          this.$emit('uploadFile', { ...this.params, ...response.data, file_name: file.name });
+        }).catch((error) => {
+          this.handleError(error.response.data.error);
+        });
     }
   }
 };

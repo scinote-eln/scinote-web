@@ -72,7 +72,7 @@
             {{ i18n.t('general.back') }}
           </button>
           <button type="button" class="btn btn-primary" @click="$emit('importRows')">
-            {{ i18n.t('repositories.import_records.steps.step3.confirm') }}
+            {{ i18n.t('repositories.import_records.steps.step3.import') }}
           </button>
         </div>
       </div>
@@ -121,18 +121,21 @@ export default {
       const columns = [
         {
           field: 'code',
-          headerName: this.i18n.t('repositories.import_records.steps.step3.code')
+          headerName: this.i18n.t('repositories.import_records.steps.step3.code'),
+          cellRenderer: this.highlightRenderer
         },
         {
           field: 'name',
-          headerName: this.i18n.t('repositories.import_records.steps.step3.name')
+          headerName: this.i18n.t('repositories.import_records.steps.step3.name'),
+          cellRenderer: this.highlightRenderer
         }
       ];
 
       this.params.attributes.repository_columns.forEach((col) => {
         columns.push({
           field: `col_${col[0]}`,
-          headerName: col[1]
+          headerName: col[1],
+          cellRenderer: this.highlightRenderer
         });
       });
 
@@ -163,6 +166,19 @@ export default {
     filterRows(status) {
       return this.params.preview.data.filter((r) => r.attributes.import_status === status);
     },
+    highlightRenderer(params) {
+      const { import_status: importStatus } = params.data;
+
+      let color = '';
+
+      if (importStatus === 'created' || importStatus === 'updated') {
+        color = 'text-sn-alert-green';
+      } else if (importStatus === 'duplicated' || importStatus === 'invalid') {
+        color = 'text-sn-alert-passion';
+      }
+
+      return `<span class="${color}">${params.value || ''}</span>`;
+    },
     statusRenderer(params) {
       const { import_status: importStatus, import_message: importMessage } = params.data;
 
@@ -188,9 +204,9 @@ export default {
       }
 
       return `
-        <div class="flex items-center ${color} gap-2.5">
+        <div title="${message}" class="flex items-center ${color} gap-2.5">
           <i class="sn-icon sn-icon-${icon} "></i>
-          <span>${message}</span>
+          <span class="truncate">${message}</span>
         </div>
       `;
     }

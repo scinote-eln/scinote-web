@@ -316,7 +316,7 @@ class Extends
     user_leave_team: 104,
     copy_inventory: 105,
     export_protocol_from_task: 106,
-    import_inventory_items: 107,
+    import_inventory_items_legacy: 107,
     create_tag: 108,
     delete_tag: 109,
     edit_image_on_result: 110,
@@ -495,7 +495,7 @@ class Extends
     task_step_asset_renamed: 305,
     result_asset_renamed: 306,
     protocol_step_asset_renamed: 307,
-    item_added_with_import: 308
+    inventory_items_added_or_updated_with_import: 308
   }
 
   ACTIVITY_GROUPS = {
@@ -596,21 +596,31 @@ class Extends
     'FluicsLabelTemplate' => 'Fluics'
   }
 
-  EXTERNAL_SCRIPT_SERVICES = %w(
-    https://marvinjs.chemicalize.com/
-    www.recaptcha.net/
-    www.gstatic.com/recaptcha/
-  )
+  EXTERNAL_SCRIPT_SERVICES =
+    if Rails.application.config.x.no_external_csp_exceptions
+      []
+    else
+      %w(
+        https://marvinjs.chemicalize.com/
+        www.recaptcha.net/
+        www.gstatic.com/recaptcha/
+      )
+    end
 
-  EXTERNAL_CONNECT_SERVICES = %w(
-    https://www.protocols.io/
-    http://127.0.0.1:9100/
-    newrelic.com
-    *.newrelic.com
-    *.nr-data.net
-    extras.scinote.net
-    https://www.scinote.net
-  )
+  EXTERNAL_CONNECT_SERVICES =
+    if Rails.application.config.x.no_external_csp_exceptions
+      %w(http://127.0.0.1:9100/)
+    else
+      %w(
+        https://www.protocols.io/
+        http://127.0.0.1:9100/
+        newrelic.com
+        *.newrelic.com
+        *.nr-data.net
+        extras.scinote.net
+        https://www.scinote.net
+      )
+    end
 
   if Constants::ASSET_SYNC_URL && EXTERNAL_CONNECT_SERVICES.exclude?(Constants::ASSET_SYNC_URL)
     asset_sync_url = URI.parse(Constants::ASSET_SYNC_URL)

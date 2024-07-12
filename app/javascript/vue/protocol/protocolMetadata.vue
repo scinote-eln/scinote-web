@@ -92,7 +92,7 @@
               :noEmptyOption="false"
               :selectAppearance="'tag'"
               :viewMode="protocol.attributes.urls.update_protocol_keywords_url == null"
-              :dataE2e="'protocolTemplates-protocolDetails-keywords'"
+              :dataE2e="'e2e-IF-protocolTemplates-protocolDetails-keywords'"
               @dropdown:changed="updateKeywords"
             />
           </span>
