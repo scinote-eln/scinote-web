@@ -44,7 +44,7 @@
 
           {{ i18n.t('repositories.import_records.steps.step2.importedFileText') }} {{ params.file_name }}
           <hr class="m-0 mt-6">
-          <div class="grid grid-cols-[3rem_auto_1.5rem_auto_5rem_auto] px-2">
+          <div class="grid grid-cols-[3rem_14.5rem_1.5rem_14.5rem_5rem_14.5rem] px-2">
 
             <div v-for="(column, key) in columnLabels" class="flex items-center px-2 py-2 font-bold">{{ column }}</div>
 

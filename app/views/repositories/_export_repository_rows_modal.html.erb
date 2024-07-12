@@ -14,7 +14,6 @@
          </div>
          <div class="modal-body">
            <div class="mb-6"><%=t('zip_export.repository_header_html', repository: repository.name) %></div>
-           <div class="mb-6 custom-alert-info"><%=t 'zip_export.files_alert' %></div>
            <div class="mb-6"><%=t 'zip_export.repository_footer_html' %></div>
 
           <div class="sci-radio-container">
@@ -27,7 +26,7 @@
                 ) %>
             <span class="sci-radio-label"></span>
           </div>
-          <%= f.label :file_type, ".xlsx", value: "xlsx", class: "mr-6 ml-3" %>
+          <%= f.label :file_type, ".xlsx", value: "xlsx", class: "mr-6 ml-3 font-normal" %>
 
           <div class="sci-radio-container">
             <%= f.radio_button(
@@ -39,7 +38,7 @@
                 ) %>
             <span class="sci-radio-label"></span>
           </div>
-          <%= f.label :file_type, ".csv", value: "csv", class: "mr-6 ml-3" %>
+          <%= f.label :file_type, ".csv", value: "csv", class: "mr-6 ml-3 font-normal" %>
          </div>
          <div class="modal-footer">
            <button type='button' data-e2e='e2e-BT-exportMD-cancel' class='btn btn-secondary' data-dismiss='modal' id='close-modal-export-repository-rows'><%= t('general.cancel')%></button>
