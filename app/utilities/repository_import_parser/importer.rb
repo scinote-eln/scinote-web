@@ -98,7 +98,7 @@ module RepositoryImportParser
             existing_row.import_status = 'unchanged'
           elsif existing_row.archived
             existing_row.import_status = 'archived'
-          elsif duplicate_ids.include?(existing_row.id)
+          elsif duplicate_ids.include?(existing_row.code)
             existing_row.import_status = 'duplicated'
           end
 
