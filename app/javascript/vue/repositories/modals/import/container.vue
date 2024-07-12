@@ -60,6 +60,8 @@ export default {
   methods: {
     open() {
       this.activeStep = 'UploadStep';
+      this.params.selectedItems = null;
+      this.params.autoMapping = true;
       this.fetchRepository();
     },
     fetchRepository() {
