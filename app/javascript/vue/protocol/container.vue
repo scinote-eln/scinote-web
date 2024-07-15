@@ -1,26 +1,24 @@
 <template>
   <div v-if="protocol.id" class="task-protocol">
     <div ref="header" class="task-section-header ml-[-1rem] w-[calc(100%_+_2rem)] px-4 bg-sn-white sticky top-0 transition" v-if="!inRepository">
-      <div class="flex items-center grow overflow-hidden">
-        <div class="portocol-header-left-part grow overflow-hidden">
-          <template v-if="headerSticked && moduleName">
-            <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
-            <div @click="scrollTop" class="task-section-title  min-w-[5rem] cursor-pointer" :title="moduleName">
-              <h2 class="truncate leading-6">{{ moduleName }}</h2>
+      <div class="portocol-header-left-part grow" :class="{'overflow-hidden': headerSticked && moduleName}">
+        <template v-if="headerSticked && moduleName">
+          <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
+          <div @click="scrollTop" class="task-section-title  min-w-[5rem] cursor-pointer" :title="moduleName">
+            <h2 class="truncate leading-6">{{ moduleName }}</h2>
+          </div>
+        </template>
+        <template v-else>
+          <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
+            <i class="sn-icon sn-icon-right"></i>
+            <div class="task-section-title truncate">
+              <h2>{{ i18n.t('Protocol') }}</h2>
             </div>
-          </template>
-          <template v-else>
-            <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
-              <i class="sn-icon sn-icon-right"></i>
-              <div class="task-section-title truncate">
-                <h2>{{ i18n.t('Protocol') }}</h2>
-              </div>
-            </a>
-          </template>
-          <div :class="{'hidden': headerSticked}">
-            <div class="my-module-protocol-status">
-              <!-- protocol status dropdown gets mounted here -->
-            </div>
+          </a>
+        </template>
+        <div :class="{'hidden': headerSticked}">
+          <div class="my-module-protocol-status">
+            <!-- protocol status dropdown gets mounted here -->
           </div>
         </div>
       </div>
