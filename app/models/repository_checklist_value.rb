@@ -23,7 +23,7 @@ class RepositoryChecklistValue < ApplicationRecord
 
   def formatted(separator: ' | ')
     checklist_items = current_repository_checklist_items || repository_checklist_items
-    checklist_items.pluck(:data).join(separator)
+    checklist_items.map(&:data).join(separator)
   end
 
   def export_formatted
