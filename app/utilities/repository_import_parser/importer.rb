@@ -49,6 +49,8 @@ module RepositoryImportParser
         when '-1'
           @columns << nil
           @name_index = index
+        when 'do_not_import'
+          @columns << nil
         else
           @columns << @repository_columns.where(data_type: Extends::REPOSITORY_IMPORTABLE_TYPES)
                                          .preload(Extends::REPOSITORY_IMPORT_COLUMN_PRELOADS)
