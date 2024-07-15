@@ -188,7 +188,7 @@ export default {
 
       this.$emit(
         'generatePreview',
-        this.selectedItems.filter((item) => item.key !== 'do_not_import')
+        this.selectedItems
       );
       return true;
     }
