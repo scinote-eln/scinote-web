@@ -20,7 +20,7 @@ module RepositoryImportParser
       @header_skipped = false
       @repository = repository
       @sheet = sheet
-      @rows = SpreadsheetParser.spreadsheet_enumerator(@sheet).compact_blank
+      @rows = SpreadsheetParser.spreadsheet_enumerator(@sheet).reject { |r| r.all?(&:blank?) }
       @mappings = mappings
       @user = user
       @repository_columns = @repository.repository_columns
@@ -186,9 +186,10 @@ module RepositoryImportParser
                             handle_existing_cell_value(existing_cell, cell_value, repository_row)
                           end
 
-          @updated ||= existing_cell&.value&.changed?
+          @updated ||= @preview ? existing_cell&.value&.changed? : existing_cell&.value&.saved_changes?
           @errors << existing_cell.value.errors.full_messages.join(',') if existing_cell&.value&.errors.present?
         end
+
         repository_row.import_status = if @errors.present?
                                          'invalid'
                                        elsif repository_row.import_status == 'created'

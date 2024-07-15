@@ -118,14 +118,18 @@ class RepositoryStockValue < ApplicationRecord
     new_amount = new_data[:amount].to_d
     delta = new_amount - amount.to_d
     self.comment = new_data[:comment].presence
-    repository_ledger_records.create!(
-      user: last_modified_by,
-      amount: delta,
-      balance: new_amount,
-      reference: repository_cell.repository_column.repository,
-      comment: comment,
-      unit: repository_stock_unit_item&.data
-    )
+
+    unless preview
+      repository_ledger_records.create!(
+        user: last_modified_by,
+        amount: delta,
+        balance: new_amount,
+        reference: repository_cell.repository_column.repository,
+        comment: comment,
+        unit: repository_stock_unit_item&.data
+      )
+    end
+
     self.amount = new_amount
     preview ? validate : save!
   end
