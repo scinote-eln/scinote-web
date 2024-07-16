@@ -4,10 +4,17 @@ class StorageLocationsController < ApplicationController
   before_action :load_storage_location, only: %i(update destroy)
   before_action :check_read_permissions, only: :index
   before_action :check_manage_permissions, except: :index
+  before_action :set_breadcrumbs_items, only: :index
 
   def index
-    storage_locations = Lists::StorageLocationsService.new(current_team, storage_location_params).call
-    render json: storage_locations, each_serializer: Lists::StorageLocationSerializer
+    respond_to do |format|
+      format.html
+      format.json do
+        storage_locations = Lists::StorageLocationsService.new(current_team, params).call
+        render json: storage_locations, each_serializer: Lists::StorageLocationSerializer,
+               user: current_user, meta: pagination_dict(storage_locations)
+      end
+    end
   end
 
   def update
@@ -43,6 +50,12 @@ class StorageLocationsController < ApplicationController
     end
   end
 
+  def actions_toolbar
+    render json: {
+      actions: [] # TODO: Add actions
+    }
+  end
+
   private
 
   def storage_location_params
@@ -61,5 +74,38 @@ class StorageLocationsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless true
+  end
+
+  def set_breadcrumbs_items
+    @breadcrumbs_items = []
+
+    @breadcrumbs_items.push({
+                              label: t('breadcrumbs.inventories')
+                            })
+
+    @breadcrumbs_items.push({
+                              label: t('breadcrumbs.locations'),
+                              url: storage_locations_path
+                            })
+
+    storage_locations = []
+    if params[:parent_id]
+      location = StorageLocation.where(team: current_team).find_by(id: params[:parent_id])
+      if location
+        storage_locations.unshift(breadcrumbs_item(location))
+        while location.parent
+          location = location.parent
+          storage_locations.unshift(breadcrumbs_item(location))
+        end
+      end
+    end
+    @breadcrumbs_items += storage_locations
+  end
+
+  def breadcrumbs_item(location)
+    {
+      label: location.name,
+      url: storage_locations_path(parent_id: location.id)
+    }
   end
 end
