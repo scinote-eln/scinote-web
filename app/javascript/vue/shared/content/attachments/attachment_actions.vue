@@ -5,6 +5,7 @@
       :multipleOpenOptions="multipleOpenOptions"
       @open="$emit('attachment:toggle_menu', $event)"
       @close="$emit('attachment:toggle_menu', $event)"
+      @menu-dropdown-toggle="$emit('attachment:toggle_menu', $event)"
       @option:click="$emit('attachment:open', $event)"
     />
     <a v-if="attachment.attributes.urls.move"
@@ -47,6 +48,9 @@ export default {
   components: {
     OpenMenu,
     ContextMenu
+  },
+  mounted() {
+    this.fetchLocalAppInfo();
   },
   computed: {
     multipleOpenOptions() {
