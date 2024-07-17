@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span @mouseenter="fetchLocalAppInfo()">
     <!-- multiple options -->
     <MenuDropdown
       v-if="multipleOpenOptions.length > 1"
@@ -87,6 +87,23 @@
       :data-image-mime-type="attachment.attributes.image_context.type"
       :data-image-start-edit-url="attachment.attributes.urls.start_edit_image"
     ></a>
+    <Teleport to="body">
+      <NoPredefinedAppModal
+        v-if="showNoPredefinedAppModal"
+        :fileName="attachment.attributes.file_name"
+        @close="showNoPredefinedAppModal = false"
+      />
+      <UpdateVersionModal
+        v-if="showUpdateVersionModal"
+        @close="showUpdateVersionModal = false"
+      />
+      <editLaunchingApplicationModal
+        v-if="editAppModal"
+        :fileName="attachment.attributes.file_name"
+        :application="this.localAppName"
+        @close="editAppModal = false"
+      />
+    </Teleport>
   </span>
 </template>
 
@@ -102,13 +119,41 @@ export default {
     MenuDropdown
   },
   props: {
-    multipleOpenOptions: {
-      type: Array,
-      required: true
-    },
     attachment: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    multipleOpenOptions() {
+      const options = [];
+      if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
+        options.push({
+          text: this.attachment.attributes.wopi_context.button_text,
+          url: this.attachment.attributes.urls.edit_asset,
+          url_target: '_blank'
+        });
+      }
+      if (this.attachment.attributes.asset_type !== 'marvinjs'
+          && this.attachment.attributes.image_editable
+          && this.attachment.attributes.urls.start_edit_image) {
+        options.push({
+          text: this.i18n.t('assets.file_preview.edit_in_scinote'),
+          emit: 'open_scinote_editor'
+        });
+      }
+      if (this.canOpenLocally) {
+        const text = this.localAppName
+          ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
+          : this.i18n.t('attachments.open_locally');
+
+        options.push({
+          text,
+          emit: 'open_locally',
+          data_e2e: 'e2e-BT-attachmentOptions-openLocally'
+        });
+      }
+      return options;
     }
   },
   methods: {

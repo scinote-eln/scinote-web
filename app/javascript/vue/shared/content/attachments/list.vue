@@ -33,7 +33,6 @@
     <div class="attachment-actions shrink-0 ml-auto">
       <AttachmentActions
           :attachment="attachment"
-          :showOptions="showOptions"
           @attachment:viewMode="updateViewMode"
           @attachment:delete="deleteAttachment"
           @attachment:moved="attachmentMoved"
@@ -106,37 +105,5 @@ export default {
       this.isMenuDropdownOpen = isOpen;
     }
   },
-  computed: {
-    multipleOpenOptions() {
-      const options = [];
-      if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
-        options.push({
-          text: this.attachment.attributes.wopi_context.button_text,
-          url: this.attachment.attributes.urls.edit_asset,
-          url_target: '_blank'
-        });
-      }
-      if (this.attachment.attributes.asset_type !== 'marvinjs'
-          && this.attachment.attributes.image_editable
-          && this.attachment.attributes.urls.start_edit_image) {
-        options.push({
-          text: this.i18n.t('assets.file_preview.edit_in_scinote'),
-          emit: 'open_scinote_editor'
-        });
-      }
-      if (this.canOpenLocally) {
-        const text = this.localAppName
-          ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
-          : this.i18n.t('attachments.open_locally');
-
-        options.push({
-          text,
-          emit: 'open_locally',
-          data_e2e: 'e2e-BT-attachmentOptions-openLocally'
-        });
-      }
-      return options;
-    }
-  }
 };
 </script>
