@@ -19,7 +19,7 @@
           <% end %>
           <div class="name-readonly-placeholder">
             <% if @protocol.in_repository_draft? %>
-              <span title="<%= t('protocols.draft_name', name: @protocol.name ) %>"><%= t('protocols.draft_name', name: @protocol.name ) %></div>
+              <span title="<%= t('protocols.draft_name', name: @protocol.name ) %>"><%= t('protocols.draft_name', name: @protocol.name ) %></span>
             <% else %>
               <span title="<%= @protocol.name %>"><%= @protocol.name %></span>
             <% end %>
