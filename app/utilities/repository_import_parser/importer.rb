@@ -245,6 +245,7 @@ module RepositoryImportParser
         if @preview
           repository_cell = repository_row.repository_cells.build(value: cell_value, repository_column: cell_value.repository_cell.repository_column)
           repository_cell.validate
+          repository_cell.value.validate
           repository_cell.id = SecureRandom.uuid.gsub(/[a-zA-Z-]/, '') unless cell_value.repository_cell.id.present?  # ID required for preview with serializer
           return repository_cell
         else
