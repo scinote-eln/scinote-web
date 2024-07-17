@@ -43,6 +43,10 @@ Canaid::Permissions.register_for(Team) do
     within_limits && team.permission_granted?(user, TeamPermissions::INVENTORIES_CREATE)
   end
 
+  can :create_storage_locations do |user, team|
+    true # TODO: Add permission check
+  end
+
   can :create_reports do |user, team|
     team.permission_granted?(user, TeamPermissions::REPORTS_CREATE)
   end

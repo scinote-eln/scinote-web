@@ -2,7 +2,9 @@
 
 module Lists
   class StorageLocationSerializer < ActiveModel::Serializer
-    attributes :id, :code, :name, :container, :description, :owned_by, :created_by, :created_on
+    include Rails.application.routes.url_helpers
+
+    attributes :id, :code, :name, :container, :description, :owned_by, :created_by, :created_on, :urls
 
     def owned_by
       object.team.name
@@ -14,6 +16,12 @@ module Lists
 
     def created_on
       I18n.l(object.created_at, format: :full)
+    end
+
+    def urls
+      {
+        show: storage_locations_path(parent_id: object.id),
+      }
     end
   end
 end

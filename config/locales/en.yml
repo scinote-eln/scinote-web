@@ -343,6 +343,8 @@ en:
     templates: "Templates"
     protocol: "Protocol"
     label: "Label"
+    items: "Items"
+    locations: "Locations"
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
@@ -2663,6 +2665,21 @@ en:
   repository_ledger_records:
     errors:
       my_module_references_missing: 'Task references are not set'
+  storage_locations:
+    index:
+      head_title: "Locations"
+      new_location: "New location"
+      new_box: "New box"
+      table:
+        name: "Location name"
+        id: "ID"
+        sub_locations: "Sub-locations"
+        items: "Items"
+        free_spaces: "Free spaces"
+        shared: "Shared"
+        owned_by: "Owned by"
+        created_on: "Created on"
+        description: "Description"
   libraries:
     manange_modal_column_index:
       title: "Manage columns"
@@ -4302,6 +4319,7 @@ en:
     labels: "Label"
     teams: "All Teams"
     addons: "Add-ons"
+    locations: "Locations"
     label_printer: "Label printer"
     fluics_printer: "Fluics printer"
 

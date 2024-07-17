@@ -65,7 +65,8 @@ const entryList = {
   vue_legacy_tags_modal: './app/javascript/packs/vue/legacy/tags_modal.js',
   vue_legacy_access_modal: './app/javascript/packs/vue/legacy/access_modal.js',
   vue_legacy_repository_menu_dropdown: './app/javascript/packs/vue/legacy/repository_menu_dropdown.js',
-  vue_dashboard_new_task: './app/javascript/packs/vue/dashboard_new_task.js'
+  vue_dashboard_new_task: './app/javascript/packs/vue/dashboard_new_task.js',
+  vue_storage_locations_table: './app/javascript/packs/vue/storage_locations_table.js'
 };
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949
