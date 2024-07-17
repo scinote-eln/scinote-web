@@ -6,14 +6,18 @@ class RepositoryChecklistItemsValue < ApplicationRecord
 
   validates :repository_checklist_item, :repository_checklist_value, presence: true
 
-  after_create :touch_repository_checklist_value
-  before_destroy :touch_repository_checklist_value
+  after_commit :touch_repository_checklist_value
 
   private
 
   # rubocop:disable Rails/SkipsModelValidations
   def touch_repository_checklist_value
-    repository_checklist_value.touch
+    # check if value was deleted, if so, touch repositroy_row directly
+    if RepositoryChecklistValue.exists?(repository_checklist_value.id)
+      repository_checklist_value.touch
+    elsif RepositoryRow.exists?(repository_checklist_value.repository_cell.repository_row.id)
+      repository_checklist_value.repository_cell.repository_row.touch
+    end
   end
   # rubocop:enable Rails/SkipsModelValidations
 end
