@@ -1,5 +1,5 @@
 <template>
-  <span @mouseenter="fetchLocalAppInfo()">
+  <span>
     <!-- multiple options -->
     <MenuDropdown
       v-if="multipleOpenOptions.length > 1"
@@ -123,6 +123,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  mounted() {
+    this.fetchLocalAppInfo();
   },
   computed: {
     multipleOpenOptions() {
