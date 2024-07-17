@@ -75,21 +75,6 @@
         :targets_url="attachment.attributes.urls.move_targets"
         @confirm="moveAttachment($event)" @cancel="closeMoveModal"
       />
-      <NoPredefinedAppModal
-        v-if="showNoPredefinedAppModal"
-        :fileName="attachment.attributes.file_name"
-        @close="showNoPredefinedAppModal = false"
-      />
-      <UpdateVersionModal
-        v-if="showUpdateVersionModal"
-        @close="showUpdateVersionModal = false"
-      />
-      <editLaunchingApplicationModal
-        v-if="editAppModal"
-        :fileName="attachment.attributes.file_name"
-        :application="this.localAppName"
-        @close="editAppModal = false"
-      />
     </Teleport>
     <a  class="image-edit-button hidden"
       v-if="attachment.attributes.asset_type != 'marvinjs'
@@ -114,14 +99,13 @@ import deleteAttachmentModal from './delete_modal.vue';
 import MenuDropdown from '../../../shared/menu_dropdown.vue';
 import MoveAssetModal from '../modal/move.vue';
 import MoveMixin from './mixins/move.js';
-import OpenLocallyMixin from './mixins/open_locally.js';
 import OpenMenu from './open_menu.vue';
 import AttachmentActions from './attachment_actions.vue';
 import { vOnClickOutside } from '@vueuse/components';
 
 export default {
   name: 'thumbnailAttachment',
-  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin, OpenLocallyMixin],
+  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
   components: {
     ContextMenu,
     deleteAttachmentModal,
@@ -153,38 +137,6 @@ export default {
   },
   directives: {
     'click-outside': vOnClickOutside
-  },
-  computed: {
-    multipleOpenOptions() {
-      const options = [];
-      if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
-        options.push({
-          text: this.attachment.attributes.wopi_context.button_text,
-          url: this.attachment.attributes.urls.edit_asset,
-          url_target: '_blank'
-        });
-      }
-      if (this.attachment.attributes.asset_type !== 'marvinjs'
-          && this.attachment.attributes.image_editable
-          && this.attachment.attributes.urls.start_edit_image) {
-        options.push({
-          text: this.i18n.t('assets.file_preview.edit_in_scinote'),
-          emit: 'open_scinote_editor'
-        });
-      }
-      if (this.canOpenLocally) {
-        const text = this.localAppName
-          ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
-          : this.i18n.t('attachments.open_locally');
-
-        options.push({
-          text,
-          emit: 'open_locally',
-          data_e2e: 'e2e-BT-attachmentOptions-openLocally'
-        });
-      }
-      return options;
-    }
   },
   mounted() {
     $(this.$nextTick(() => {
@@ -218,7 +170,6 @@ export default {
       }
     },
     async handleMouseEnter() {
-      await this.fetchLocalAppInfo();
       this.showOptions = true;
     },
     toggleMenu(isMenuOpen) {
