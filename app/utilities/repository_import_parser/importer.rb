@@ -227,7 +227,14 @@ module RepositoryImportParser
       if repository_cell.present?
         case cell_value
         when RepositoryStockValue
-          repository_cell.value.update_data!(cell_value, @user, preview: @preview)
+          repository_cell.value.update_data!(
+            {
+              amount: cell_value.amount,
+              unit_item_id: cell_value.repository_stock_unit_item_id
+            },
+            @user,
+            preview: @preview
+          )
         when RepositoryListValue
           repository_list_item_id = cell_value[:repository_list_item_id]
           repository_cell.value.update_data!(repository_list_item_id, @user, preview: @preview)
