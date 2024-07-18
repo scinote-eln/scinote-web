@@ -28,8 +28,6 @@ class RepositoryTableStateService
     saved_state = load_state
     state['order'] = @repository.default_table_state['order'] if state.dig('order', 0, 0).to_i < 1
 
-    return if saved_state.state.except('time') == state.except('time')
-
     saved_state.update(state: state)
   end
 

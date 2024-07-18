@@ -44,7 +44,7 @@
 
           {{ i18n.t('repositories.import_records.steps.step2.importedFileText') }} {{ params.file_name }}
           <hr class="m-0 mt-6">
-          <div class="grid grid-cols-[3rem_auto_1.5rem_auto_5rem_auto] px-2">
+          <div class="grid grid-cols-[3rem_14.5rem_1.5rem_14.5rem_5rem_14.5rem] px-2">
 
             <div v-for="(column, key) in columnLabels" class="flex items-center px-2 py-2 font-bold">{{ column }}</div>
 
@@ -145,7 +145,7 @@ export default {
       const item = this.selectedItems.find((i) => i.index === index);
       const usedBeforeItem = this.selectedItems.find((i) => i.key === key && i.index !== index);
 
-      if (usedBeforeItem) {
+      if (usedBeforeItem && usedBeforeItem.key !== 'do_not_import') {
         usedBeforeItem.key = null;
         usedBeforeItem.value = null;
       }
@@ -195,17 +195,20 @@ export default {
   },
   computed: {
     computedDropdownOptions() {
-      return this.availableFields
-        .map((el) => [String(el.key), `${String(el.value)} (${el.typeName})`]);
+      let options = this.availableFields.map((el) => [String(el.key), `${String(el.value)} (${el.typeName})`]);
+      options = [
+        ['do_not_import', this.i18n.t('repositories.import_records.steps.step2.table.tableRow.placeholders.doNotImport')]
+      ].concat(options);
       // options = [['new', this.i18n.t('repositories.import_records.steps.step2.table.tableRow.importAsNewColumn')]].concat(options);
+      return options;
     },
     computedImportedIgnoredInfo() {
-      const importedSum = this.selectedItems.filter((i) => i.key).length;
+      const importedSum = this.selectedItems.filter((i) => i.key && i.key !== 'do_not_import').length;
       const ignoredSum = this.selectedItems.length - importedSum;
       return { importedSum, ignoredSum };
     },
     canSubmit() {
-      return this.selectedItems.filter((i) => i.key).length > 0;
+      return this.selectedItems.filter((i) => i.key && i.key !== 'do_not_import').length > 0;
     }
   },
   created() {

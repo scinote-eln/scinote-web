@@ -20,16 +20,13 @@
       <SelectDropdown
         :options="dropdownOptions"
         @change="changeSelected"
-        :clearable="true"
         :size="'sm'"
         class="max-w-96"
         :searchable="true"
         :class="{
           'outline-sn-alert-brittlebush outline-1 outline rounded': computeMatchNotFound
         }"
-        :placeholder="computeMatchNotFound ?
-        i18n.t('repositories.import_records.steps.step2.table.tableRow.placeholders.matchNotFound') :
-        i18n.t('repositories.import_records.steps.step2.table.tableRow.placeholders.doNotImport')"
+        :placeholder="i18n.t('repositories.import_records.steps.step2.table.tableRow.placeholders.matchNotFound')"
         :title="this.selectedColumnType?.value"
         :value="this.selectedColumnType?.key"
       ></SelectDropdown>
@@ -137,16 +134,16 @@ export default {
       return this.autoMapping && !this.isSystemColumn(this.item) && ((this.selectedColumnType && !this.selectedColumnType.key) || !this.selectedColumnType);
     },
     selected() {
-      return !!this.value?.key;
+      return this.columnMapped;
     },
     differentMapingName() {
-      return this.columnMapped && this.selectedColumnType?.value !== this.item;
+      return this.columnMapped && this.selectedColumnType?.value !== this.item && this.value?.key !== 'do_not_import';
     },
     matchNotFound() {
-      return this.autoMapping && !this.selectedColumnType?.key;
+      return this.autoMapping && this.columnMapped;
     },
     columnMapped() {
-      return this.selectedColumnType?.key;
+      return this.selectedColumnType?.key && this.selectedColumnType?.key !== 'do_not_import';
     }
   },
   methods: {
@@ -154,6 +151,7 @@ export default {
       return this.systemColumns.includes(column);
     },
     autoMap() {
+      this.changeSelected(null);
       Object.entries(this.params.import_data.available_fields).forEach(([key, value]) => {
         if (this.item === value) {
           this.changeSelected(key);
@@ -161,7 +159,7 @@ export default {
       });
     },
     clearAutoMap() {
-      this.changeSelected(null);
+      this.changeSelected('do_not_import');
     },
     changeSelected(e) {
       const value = this.params.import_data.available_fields[e];

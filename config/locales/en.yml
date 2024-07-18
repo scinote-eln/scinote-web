@@ -234,6 +234,8 @@ en:
         repository_row_connection:
           self_connection: 'A repository_row cannot have a connection with itself'
           reciprocal_connection: 'Reciprocal connections are not allowed'
+        repository_cell:
+          incorrect_format: 'Incorrect data format'
         webhook:
           attributes:
             configuration:
@@ -2352,8 +2354,8 @@ en:
 
       import: 'Import'
       no_header_name: 'No column name'
-      success_flash: "%{number_of_rows} of %{total_nr} new item(s) successfully imported."
-      partial_success_flash: "%{nr} of %{total_nr} items successfully imported."
+      success_flash: "%{successful_rows_count} of %{total_rows_count} new item(s) successfully imported."
+      partial_success_flash: "%{successful_rows_count} of %{total_rows_count} items successfully imported."
       error_message:
         items_limit: "The imported file contains too many rows. Max %{items_size} items allowed to upload at once."
         importing_duplicates: "Items with duplicates detected: %{duplicate_ids}. These will be ignored on import."

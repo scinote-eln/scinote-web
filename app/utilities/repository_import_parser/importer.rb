@@ -15,12 +15,12 @@ module RepositoryImportParser
       @columns = []
       @name_index = -1
       @id_index = nil
-      @total_new_rows = 0
-      @new_rows_added = 0
+      @created_rows_count = 0
+      @updated_rows_count = 0
       @header_skipped = false
       @repository = repository
       @sheet = sheet
-      @rows = SpreadsheetParser.spreadsheet_enumerator(@sheet)
+      @rows = SpreadsheetParser.spreadsheet_enumerator(@sheet).reject { |r| r.all?(&:blank?) }
       @mappings = mappings
       @user = user
       @repository_columns = @repository.repository_columns
@@ -49,6 +49,8 @@ module RepositoryImportParser
         when '-1'
           @columns << nil
           @name_index = index
+        when 'do_not_import'
+          @columns << nil
         else
           @columns << @repository_columns.where(data_type: Extends::REPOSITORY_IMPORTABLE_TYPES)
                                          .preload(Extends::REPOSITORY_IMPORT_COLUMN_PRELOADS)
@@ -60,16 +62,7 @@ module RepositoryImportParser
     def check_for_duplicate_columns
       col_compact = @columns.compact
       if col_compact.map(&:id).uniq.length != col_compact.length
-        { status: :error, nr_of_added: @new_rows_added, total_nr: @total_new_rows }
-      end
-    end
-
-    def handle_invalid_cell_value(value, cell_value)
-      if value.present? && cell_value.nil?
-        @errors << 'Incorrect data format'
-        true
-      else
-        false
+        { status: :error, total_rows_count: total_rows_count, updated_rows_count: @updated_rows_count, created_rows_count: @created_rows_count }
       end
     end
 
@@ -78,8 +71,6 @@ module RepositoryImportParser
       duplicate_ids = SpreadsheetParser.duplicate_ids(@sheet)
 
       @rows.each do |row|
-        next if row.blank?
-
         unless @header_skipped
           @header_skipped = true
           next
@@ -87,8 +78,6 @@ module RepositoryImportParser
 
         incoming_row = SpreadsheetParser.parse_row(row, @sheet, date_format: @user.settings['date_format'])
         next if incoming_row.compact.blank?
-
-        @total_new_rows += 1
 
         if @id_index
           id = incoming_row[@id_index].to_s.gsub(RepositoryRow::ID_PREFIX, '')
@@ -111,7 +100,7 @@ module RepositoryImportParser
             existing_row.import_status = 'unchanged'
           elsif existing_row.archived
             existing_row.import_status = 'archived'
-          elsif duplicate_ids.include?(existing_row.id)
+          elsif duplicate_ids.include?(existing_row.code)
             existing_row.import_status = 'duplicated'
           end
 
@@ -129,8 +118,12 @@ module RepositoryImportParser
         include: [:repository_cells]
       ).as_json
 
-      { status: :ok, nr_of_added: @new_rows_added, total_nr: @total_new_rows, changes: changes,
-        import_date: I18n.l(Date.today, format: :full_date) }
+      { status: :ok,
+        total_rows_count: total_rows_count,
+        created_rows_count: @created_rows_count,
+        updated_rows_count: @updated_rows_count,
+        changes: changes,
+        import_date: I18n.l(Time.zone.today, format: :full_date) }
     end
 
     def import_row(repository_row, import_row)
@@ -179,7 +172,13 @@ module RepositoryImportParser
                            @user.as_json(root: true, only: :settings).deep_symbolize_keys
                          )
                        end
-          next if handle_invalid_cell_value(value, cell_value)
+
+          if value.present? && cell_value.nil?
+            raise ActiveRecord::Rollback unless @preview
+
+            @errors << I18n.t('activerecord.errors.models.repository_cell.incorrect_format')
+            next
+          end
 
           existing_cell = repository_row.repository_cells.find { |c| c.repository_column_id == column.id }
 
@@ -189,16 +188,17 @@ module RepositoryImportParser
                             handle_existing_cell_value(existing_cell, cell_value, repository_row)
                           end
 
-          @updated ||= existing_cell&.value&.changed?
+          @updated ||= @preview ? existing_cell&.value&.changed? : existing_cell&.value&.saved_changes?
           @errors << existing_cell.value.errors.full_messages.join(',') if existing_cell&.value&.errors.present?
         end
+
         repository_row.import_status = if @errors.present?
                                          'invalid'
                                        elsif repository_row.import_status == 'created'
-                                         @new_rows_added += 1
+                                         @created_rows_count += 1
                                          'created'
                                        elsif @updated
-                                         @new_rows_added += 1
+                                         @updated_rows_count += 1
                                          'updated'
                                        else
                                          'unchanged'
@@ -227,7 +227,14 @@ module RepositoryImportParser
       if repository_cell.present?
         case cell_value
         when RepositoryStockValue
-          repository_cell.value.update_data!(cell_value, @user, preview: @preview)
+          repository_cell.value.update_data!(
+            {
+              amount: cell_value.amount,
+              unit_item_id: cell_value.repository_stock_unit_item_id
+            },
+            @user,
+            preview: @preview
+          )
         when RepositoryListValue
           repository_list_item_id = cell_value[:repository_list_item_id]
           repository_cell.value.update_data!(repository_list_item_id, @user, preview: @preview)
@@ -245,6 +252,7 @@ module RepositoryImportParser
         if @preview
           repository_cell = repository_row.repository_cells.build(value: cell_value, repository_column: cell_value.repository_cell.repository_column)
           repository_cell.validate
+          repository_cell.value.validate
           repository_cell.id = SecureRandom.uuid.gsub(/[a-zA-Z-]/, '') unless cell_value.repository_cell.id.present?  # ID required for preview with serializer
           return repository_cell
         else
@@ -282,6 +290,11 @@ module RepositoryImportParser
       else
         value
       end
+    end
+
+    def total_rows_count
+      # all rows minus header
+      @rows.count - 1
     end
   end
 end

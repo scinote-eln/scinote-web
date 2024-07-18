@@ -1,7 +1,6 @@
 <template>
   <div class="asset-context-menu"
        ref="menu"
-       @mouseenter="fetchLocalAppInfo"
   >
     <a  class="marvinjs-edit-button hidden"
         v-if="attachment.attributes.asset_type == 'marvinjs' && attachment.attributes.urls.marvin_js_start_edit"
@@ -30,10 +29,6 @@
       :btnClasses="`btn icon-btn bg-sn-white ${ withBorder ? 'btn-secondary' : 'btn-light'}`"
       :position="'right'"
       :btnIcon="'sn-icon sn-icon-more-hori'"
-      @open_ove_editor="openOVEditor(attachment.attributes.urls.open_vector_editor_edit)"
-      @open_marvinjs_editor="openMarvinJsEditor"
-      @open_scinote_editor="openScinoteEditor"
-      @open_locally="openLocally"
       @delete="deleteModal = true"
       @rename="renameModal = true"
       @duplicate="duplicate"
@@ -60,21 +55,6 @@
         :targets_url="attachment.attributes.urls.move_targets"
         @confirm="moveAttachment($event)" @cancel="closeMoveModal"
       />
-      <NoPredefinedAppModal
-        v-if="showNoPredefinedAppModal"
-        :fileName="attachment.attributes.file_name"
-        @close="showNoPredefinedAppModal = false"
-      />
-      <UpdateVersionModal
-        v-if="showUpdateVersionModal"
-        @close="showUpdateVersionModal = false"
-      />
-      <editLaunchingApplicationModal
-        v-if="editAppModal"
-        :fileName="attachment.attributes.file_name"
-        :application="this.localAppName"
-        @close="editAppModal = false"
-      />
     </Teleport>
   </div>
 </template>
@@ -84,7 +64,6 @@ import RenameAttachmentModal from '../modal/rename_modal.vue';
 import deleteAttachmentModal from './delete_modal.vue';
 import MoveAssetModal from '../modal/move.vue';
 import MoveMixin from './mixins/move.js';
-import OpenLocallyMixin from './mixins/open_locally.js';
 import MenuDropdown from '../../menu_dropdown.vue';
 import axios from '../../../../packs/custom_axios.js';
 
@@ -96,7 +75,7 @@ export default {
     MoveAssetModal,
     MenuDropdown
   },
-  mixins: [MoveMixin, OpenLocallyMixin],
+  mixins: [MoveMixin],
   props: {
     attachment: {
       type: Object,
@@ -186,16 +165,6 @@ export default {
     },
     reloadAttachments() {
       this.$emit('attachment:uploaded');
-    },
-    openMarvinJsEditor() {
-      MarvinJsEditor.initNewButton(
-        this.$refs.marvinjsEditButton,
-        this.reloadAttachments
-      );
-      $(this.$refs.marvinjsEditButton).trigger('click');
-    },
-    openScinoteEditor() {
-      $(this.$refs.imageEditButton).trigger('click');
     }
   }
 };
