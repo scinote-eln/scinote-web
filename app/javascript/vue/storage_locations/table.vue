@@ -62,8 +62,9 @@ export default {
         sortable: true
       },
       {
-        field: 'sub_locations',
+        field: 'sub_location_count',
         headerName: this.i18n.t('storage_locations.index.table.sub_locations'),
+        width: 250,
         sortable: true
       },
       {
