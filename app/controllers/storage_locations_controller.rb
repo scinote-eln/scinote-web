@@ -52,7 +52,11 @@ class StorageLocationsController < ApplicationController
 
   def actions_toolbar
     render json: {
-      actions: [] # TODO: Add actions
+      actions:
+        Toolbars::StorageLocationsService.new(
+          current_user,
+          storage_location_ids: JSON.parse(params[:items]).map { |i| i['id'] }
+        ).actions
     }
   end
 

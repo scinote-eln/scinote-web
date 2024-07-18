@@ -2672,6 +2672,11 @@ en:
       head_title: "Locations"
       new_location: "New location"
       new_box: "New box"
+      toolbar:
+        edit: 'Edit'
+        move: 'Move'
+        duplicate: 'Duplicate'
+        delete: 'Delete'
       table:
         name: "Location name"
         id: "ID"
