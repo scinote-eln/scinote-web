@@ -241,6 +241,12 @@ module RepositoryImportParser
         when RepositoryStatusValue
           repository_status_item_id = cell_value[:repository_status_item_id]
           repository_cell.value.update_data!(repository_status_item_id, @user, preview: @preview)
+        when RepositoryTimeValue
+          repository_cell.value.update_data!(
+            repository_cell.value.data.change(hour: cell_value.data.hour, min: cell_value.data.min),
+            @user,
+            preview: @preview
+          )
         else
           sanitized_cell_value_data = sanitize_cell_value_data(cell_value.data)
           repository_cell.value.update_data!(sanitized_cell_value_data, @user, preview: @preview)
