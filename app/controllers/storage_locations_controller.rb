@@ -18,13 +18,14 @@ class StorageLocationsController < ApplicationController
   end
 
   def update
-    @storage_location.image.attach(storage_location_params[:signed_blob_id]) if storage_location_params[:signed_blob_id]
+    @storage_location.image.purge if params[:file_name].blank?
+    @storage_location.image.attach(params[:signed_blob_id]) if params[:signed_blob_id]
     @storage_location.update(storage_location_params)
 
     if @storage_location.save
       render json: @storage_location, serializer: Lists::StorageLocationSerializer
     else
-      render json: @storage_location.errors, status: :unprocessable_entity
+      render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -33,12 +34,12 @@ class StorageLocationsController < ApplicationController
       storage_location_params.merge({ team: current_team, created_by: current_user })
     )
 
-    @storage_location.image.attach(storage_location_params[:signed_blob_id]) if storage_location_params[:signed_blob_id]
+    @storage_location.image.attach(params[:signed_blob_id]) if params[:signed_blob_id]
 
     if @storage_location.save
       render json: @storage_location, serializer: Lists::StorageLocationSerializer
     else
-      render json: @storage_location.errors, status: :unprocessable_entity
+      render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -63,8 +64,8 @@ class StorageLocationsController < ApplicationController
   private
 
   def storage_location_params
-    params.permit(:id, :parent_id, :name, :container, :signed_blob_id, :description,
-                  metadata: { dimensions: [], parent_coordinations: [], display_type: :string })
+    params.permit(:id, :parent_id, :name, :container, :description,
+                  metadata: [:display_type, dimensions: [], parent_coordinations: []])
   end
 
   def load_storage_location

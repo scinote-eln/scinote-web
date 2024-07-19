@@ -6,16 +6,21 @@
                :reloadingTable="reloadingTable"
                :toolbarActions="toolbarActions"
                :actionsUrl="actionsUrl"
-               @archive="archive"
-               @restore="restore"
-               @delete="deleteRepository"
-               @update="update"
-               @duplicate="duplicate"
-               @export="exportRepositories"
-               @share="share"
-               @create="newRepository = true"
+               @create_location="openCreateLocationModal"
+               @create_box="openCreateBoxModal"
+               @edit="edit"
                @tableReloaded="reloadingTable = false"
     />
+    <Teleport to="body">
+      <EditModal v-if="openEditModal"
+                 @close="openEditModal = false"
+                 @tableReloaded="reloadingTable = true"
+                 :createUrl="createUrl"
+                 :editModalMode="editModalMode"
+                 :directUploadUrl="directUploadUrl"
+                 :editStorageLocation="editStorageLocation"
+      />
+    </Teleport>
   </div>
 </template>
 
@@ -23,11 +28,13 @@
 /* global */
 
 import DataTable from '../shared/datatable/table.vue';
+import EditModal from './modals/new_edit.vue';
 
 export default {
   name: 'RepositoriesTable',
   components: {
-    DataTable
+    DataTable,
+    EditModal
   },
   props: {
     dataSource: {
@@ -40,11 +47,17 @@ export default {
     },
     createUrl: {
       type: String
+    },
+    directUploadUrl: {
+      type: String
     }
   },
   data() {
     return {
-      reloadingTable: false
+      reloadingTable: false,
+      openEditModal: false,
+      editModalMode: null,
+      editStorageLocation: null
     };
   },
   computed: {
@@ -126,14 +139,34 @@ export default {
     }
   },
   methods: {
+    openCreateLocationModal() {
+      this.openEditModal = true;
+      this.editModalMode = 'location';
+      this.editStorageLocation = null;
+    },
+    openCreateBoxModal() {
+      this.openEditModal = true;
+      this.editModalMode = 'box';
+      this.editStorageLocation = null;
+    },
+    edit(action, params) {
+      this.openEditModal = true;
+      this.editModalMode = params[0].container ? 'box' : 'location';
+      [this.editStorageLocation] = params;
+    },
     // Renderers
     nameRenderer(params) {
       const {
         name,
         urls
       } = params.data;
+      let boxIcon = '';
+      if (params.data.container) {
+        boxIcon = '<i class="sn-icon sn-icon-item"></i>';
+      }
       return `<a class="hover:no-underline flex items-center gap-1"
                  title="${name}" href="${urls.show}">
+                 ${boxIcon}
                  <span class="truncate">${name}</span>
               </a>`;
     }
