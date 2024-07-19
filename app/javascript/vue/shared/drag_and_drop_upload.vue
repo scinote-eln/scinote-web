@@ -19,7 +19,7 @@
           {{ i18n.t('repositories.import_records.dragAndDropUpload.importText.firstPart') }}
         </span> {{ i18n.t('repositories.import_records.dragAndDropUpload.importText.secondPart') }}
       </div>
-      <div class="text-sn-grey">
+      <div class="text-sn-grey text-center">
         {{ supportingText }}
       </div>
     </div>
