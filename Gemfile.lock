@@ -617,8 +617,8 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rexml (3.2.8)
-      strscan (>= 3.0.9)
+    rexml (3.3.2)
+      strscan
     rgl (0.6.3)
       pairing_heap (>= 0.3.0)
       rexml (~> 3.2, >= 3.2.4)
