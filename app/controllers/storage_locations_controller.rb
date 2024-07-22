@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StorageLocationsController < ApplicationController
-  before_action :load_storage_location, only: %i(update destroy)
+  before_action :load_storage_location, only: %i(update destroy duplicate)
   before_action :check_read_permissions, only: :index
   before_action :check_manage_permissions, except: :index
   before_action :set_breadcrumbs_items, only: :index
@@ -48,6 +48,15 @@ class StorageLocationsController < ApplicationController
       render json: {}
     else
       render json: { errors: @storage_location.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def duplicate
+    new_storage_location = @storage_location.duplicate!
+    if new_storage_location
+      render json: new_storage_location, serializer: Lists::StorageLocationSerializer
+    else
+      render json: { errors: :failed }, status: :unprocessable_entity
     end
   end
 

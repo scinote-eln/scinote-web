@@ -64,7 +64,7 @@ module Toolbars
         name: 'duplicate',
         label: I18n.t('storage_locations.index.toolbar.duplicate'),
         icon: 'sn-icon sn-icon-duplicate',
-        path: copy_storage_location_path(@storage_locations.first),
+        path: duplicate_storage_location_path(@storage_locations.first),
         type: :emit
       }
     end

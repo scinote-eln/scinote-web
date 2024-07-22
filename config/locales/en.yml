@@ -2672,6 +2672,8 @@ en:
       head_title: "Locations"
       new_location: "New location"
       new_box: "New box"
+      duplicate:
+        success_message: "Location was successfully duplicated."
       toolbar:
         edit: 'Edit'
         move: 'Move'
