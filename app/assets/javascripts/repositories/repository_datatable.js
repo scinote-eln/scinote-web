@@ -641,7 +641,8 @@ var RepositoryDatatable = (function(global) {
         visible: true,
         render: function(data, type, row) {
           return "<a href='" + row.recordInfoUrl + "'"
-                 + "class='record-info-link' data-e2e='e2e-TL-invInventoryTR-Item-" + row.DT_RowId + "'>" + data + '</a>';
+                + " class='record-info-link' data-e2e='e2e-TL-invInventoryTR-Item-" + row.DT_RowId + "'"
+                + " title='" + data + "'>" + data + '</a>';
         }
       }, {
         targets: 4,
@@ -660,6 +661,14 @@ var RepositoryDatatable = (function(global) {
         // Added by column
         targets: 6,
         class: 'added-by',
+        visible: true
+      }, {
+        targets: 7,
+        class: 'updated-on',
+        visible: true
+      }, {
+        targets: 8,
+        class: 'updated-by',
         visible: true
       }, {
         targets: '_all',
@@ -751,8 +760,8 @@ var RepositoryDatatable = (function(global) {
             var state = localStorage.getItem(`datatables_repositories_state/${repositoryId}/${viewType}`);
 
             json.state.start = state !== null ? JSON.parse(state).start : 0;
-            if (json.state.columns[7]) json.state.columns[7].visible = archived;
-            if (json.state.columns[8]) json.state.columns[8].visible = archived;
+            if (json.state.columns[9]) json.state.columns[9].visible = archived;
+            if (json.state.columns[10]) json.state.columns[10].visible = archived;
             if (json.state.search) delete json.state.search;
 
             if (json.state.ColSizes && json.state.ColSizes.length > 0) {

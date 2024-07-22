@@ -234,6 +234,8 @@ en:
         repository_row_connection:
           self_connection: 'A repository_row cannot have a connection with itself'
           reciprocal_connection: 'Reciprocal connections are not allowed'
+        repository_cell:
+          incorrect_format: 'Incorrect data format'
         webhook:
           attributes:
             configuration:
@@ -643,7 +645,7 @@ en:
         description: "Give your folder a distinct name to recognize it faster."
         modal_title: "Create folder"
         name: "New folder name"
-        name_placeholder: "Name your folder"
+        name_placeholder: "Enter folder name"
         create: "Create folder"
         success_flash: "Project folder <strong>%{name}</strong> successfully created."
       modal_new_project:
@@ -652,7 +654,7 @@ en:
         name: "Project name"
         name_placeholder: "My project"
         team: "Team"
-        visibility_html: "Make this project visible to all team members <br /> <small class='text-muted'>This will assign all team members to the project with the default role you choose</small>"
+        visibility_html: "Grant access to this project to all team members"
         visibility_hidden: "Project members only"
         visibility_visible: "All team members"
       modal_edit_project:
@@ -1690,7 +1692,7 @@ en:
       new_my_module_modal:
         title: "Create new task"
         name: "Task name"
-        name_placeholder: "Enter…"
+        name_placeholder: "Enter task name"
         due_date: "Due date (optional)"
         due_date_placeholder: "Add due date"
         assigned_tags_label: "Add tags (optional)"
@@ -1989,8 +1991,8 @@ en:
           one: "You are about to export <strong>1</strong> inventory in %{team_name}'s team."
           other: "You are about to export <strong>%{count}</strong> inventories in %{team_name}'s team."
         description_alert: "This process may take minutes to hours, depending on the file size. Any new data entered afterward won't be included in the export."
-        description_p2: "You will receive an email when the .zip file is ready. A link to your file will also appear in your SciNote notification. For security reasons, this link will expire in 7 days."
-        description_p3_html: "After you confirm this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
+        description_p2: "You will receive an email and a notification when the download file is ready. For security reasons, the link will expire in 7 days."
+        description_p3_html: "After this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
         export: "Export"
       modal_export_limit_exceeded:
         title: "Export denied"
@@ -2039,7 +2041,7 @@ en:
       error_searching: "Error searching, please try again"
       button_tooltip:
         new: "Create new item"
-        import: "Import"
+        import: "Import items"
         filters: "Filters"
         search: "Quick search"
       filters:
@@ -2143,6 +2145,8 @@ en:
       row_name: "Name"
       added_on: "Created on"
       added_by: "Added by"
+      updated_on: "Updated on"
+      updated_by: "Updated by"
       archived_on: "Archived on"
       archived_by: "Archived by"
       relationships: "Relationships"
@@ -2184,22 +2188,173 @@ en:
       file_columns: "Imported columns:"
       example_value: "Imported file content:"
       do_not_include_column: "Do not include this column"
+      edit_existing_items_checkbox: "Edit existing items"
+      overwrite_with_empty_cells: "Overwrite with empty cells"
       errors:
         invalid_file: "The file you provided is invalid. Make sure the file is encoded using %{encoding}."
         invalid_extension: "The file has invalid extension."
         empty_file: "You've selected empty file. There's not much to import."
         temp_file_failure: "We couldn't create temporary file. Please contact administrator."
+        items_min_limit: "The imported file content doesn't meet criteria"
         no_file_selected: "You didn't select any file."
         errors_list_title: "Items were not imported because one or more errors were found:"
         list_row: "Row %{row}"
         list_error: "%{key}: %{val}"
     import_records:
+      update_inventory: 'Import items'
+      steps:
+        step1:
+          id: 'step1'
+          icon: 'sn-icon-open'
+          label: 'Step 1'
+          title: 'Import items'
+          subtitle: 'Inventory import allows for adding new items or updating existing data. Ensure the imported file contains column header names. For easy import, export the full inventory with existing items or only the inventory columns template.'
+          helpText: 'Help'
+          exportTitle: 'Export'
+          exportFullInvBtnText: 'Export all items'
+          exportEmptyInvBtnText: 'Download inventory template'
+          importTitle: 'Import'
+          importBtnText: 'Import'
+          cancelBtnText: 'Cancel'
+          dragAndDropSupportingText: '.csv, .xlsx, .txt or .tsv file'
+        step2:
+          id: 'step2'
+          icon: 'sn-icon-open'
+          label: 'Step 2'
+          title: 'Mapping data'
+          subtitle: 'Match your imported file columns with the existing columns in the inventory to finalize the item import.'
+          selectNamePropertyError: 'Select Name attribute field to import your items.'
+          autoMappingText: 'Auto-mapping'
+          autoMappingTooltip: 'When auto-mapping is selected, SciNote automatically connects columns with matching names. When not selected, manual mapping of each column is required.'
+          updateEmptyCellsText: 'Update empty cells'
+          onlyAddNewItemsText: 'Only add new items'
+          importedFileText: 'Imported file:'
+          cancelBtnText: 'Cancel'
+          confirmBtnText: 'Confirm'
+          importedIgnoredSection: '<b>%{imported}</b> columns to <b>import.</b> <b>%{ignored}</b> columns <b>ignored.</b>'
+          systemColumns:
+            added_by: 'Added by'
+            created_on: 'Created on'
+            updated_by: 'Updated by'
+            updated_on: 'Updated on'
+            archived_by: 'Archived by'
+            archived_on: 'Archived on'
+            parents: 'Parents'
+            children: 'Children'
+          computedDropdownOptions:
+            name: 'Name'
+            id: 'ID'
+            RepositoryTextValue: 'Text'
+            RepositoryNumberValue: 'Number'
+            RepositoryAssetValue: 'File'
+            RepositoryChecklistValue: 'Checklist'
+            RepositoryDateRangeValue: 'Date range'
+            RepositoryDateTimeRangeValue: 'Date-time range'
+            RepositoryDateTimeValue: 'Date-time'
+            RepositoryDateValue: 'Date'
+            RepositoryTimeValue: 'Time'
+            RepositoryListValue: 'Dropdown'
+            RepositoryStatusValue: 'Status'
+            RepositoryStockValue: 'Stock'
+          table:
+            tableRow:
+              placeholders:
+                matchNotFound: 'Match not found'
+                doNotImport: 'Do not import'
+              matchNotFoundColumnTitle: 'Column match not found.'
+              importedColumnTitle: 'Column will be imported.'
+              doNotImportColumnTitle: 'Column will not be imported.'
+              newColumnType:
+                text: 'Text'
+                list: 'Dropdown'
+              systemGeneratedData:
+                itemId: 'Item ID'
+                createdOn: 'Created on'
+                addedBy: 'Added by'
+                addedOn: 'Added on'
+                archivedBy: 'Archived by'
+                archivedOn: 'Archived on'
+                updatedBy: 'Updated by'
+                updatedOn: 'Updated on'
+            columnLabels:
+              number: 'No.'
+              importedColumns: 'Imported columns'
+              scinoteColumns: 'SciNote columns'
+              status: 'Status'
+              exampleData: 'Example data'
+        step3:
+          title: 'Import preview'
+          subtitle: 'This preview shows changes to the %{inventory} inventory resulting from this import. Values that will be updated are marked in green. Items with errors in red will not be imported. Status of import provides further details, and the item import can still be canceled at this stage.'
+          updated_items: 'Updated'
+          new_items: 'New'
+          unchanged_items: 'Unchanged'
+          duplicated_items: 'Duplicated'
+          invalid_items: 'Invalid'
+          archived_items: 'Archived'
+          code: 'Item ID'
+          name: 'Name'
+          status: 'Status'
+          cancel: 'Cancel import'
+          import: 'Import'
+          status_message:
+            created: 'new item'
+            updated: 'updated'
+            unchanged: 'unchanged'
+            not_exist: "item ID IT%{id} doesn't exist in this inventory"
+            archived: 'archived'
+            invalid: 'invalid item'
+            duplicated: 'item ID has duplicates in the imported file'
+        step4:
+          title: 'Success report'
+          subtitle: '%{inventory} was successfully updated.'
+          import_date: 'Import date:'
+          imported_file: 'Imported file:'
+          download_report: 'Download success report'
+          close: 'Close'
+      info_sidebar:
+        title: 'Item import guide'
+        elements:
+          element0:
+            id: 'el0'
+            icon: 'sn-icon-export'
+            label: 'Export inventory'
+            subtext: "Before making changes, we advise you to first export the current inventory item information. If you're only adding in new items, exporting the inventory template is recommended."
+          element1:
+            id: 'el1'
+            icon: 'sn-icon-edit'
+            label: 'Structure your import data'
+            subtext: 'Make sure to include header names in the first row of the import file, followed by item data.'
+          element2:
+            id: 'el2'
+            icon: 'sn-icon-import'
+            label: 'Upload your file'
+            subtext: 'Upload your data using .csv, .xlsx, .txt or .tsv files to import new items or update existing item data.'
+          element3:
+            id: 'el3'
+            icon: 'sn-icon-tables'
+            label: 'Map and finalize your data'
+            subtext: 'Complete the item import process by mapping uploaded file data with the columns you want to update in the inventory.'
+          element4:
+            id: 'el4'
+            icon: 'sn-icon-open'
+            label: 'Learn more'
+            linkTo: 'https://knowledgebase.scinote.net/en/knowledge/how-to-add-items-to-an-inventory'
+      dragAndDropUpload:
+        notSingleFileError: 'Single file import only. Please import one file at a time.'
+        wrongFileTypeError: 'The file has invalid extension (.csv, .xlsx, .txt or .tsv.)'
+        emptyFileError: 'You have uploaded empty file. There is not much to import.'
+        fileTooLargeError: 'File too large. Max file size limit is'
+        importText:
+          firstPart: 'Import'
+          secondPart: 'or drag and drop'
+
       import: 'Import'
       no_header_name: 'No column name'
-      success_flash: "%{number_of_rows} of %{total_nr} new item(s) successfully imported."
-      partial_success_flash: "%{nr} of %{total_nr} successfully imported. Other rows contained errors."
+      success_flash: "%{successful_rows_count} of %{total_rows_count} new item(s) successfully imported."
+      partial_success_flash: "%{successful_rows_count} of %{total_rows_count} items successfully imported."
       error_message:
         items_limit: "The imported file contains too many rows. Max %{items_size} items allowed to upload at once."
+        importing_duplicates: "Items with duplicates detected: %{duplicate_ids}. These will be ignored on import."
         temp_file_not_found: "This file could not be found. Your session might expire."
         session_expired: "Your session expired. Please try again."
         no_data_to_parse: "There's nothing to be parsed."
@@ -2207,6 +2362,7 @@ en:
         duplicated_values: "Two or more columns have the same mapping."
         errors_list_title: "Items were not imported because one or more errors were found:"
         no_repository_name: "Item name is required!"
+        mapping_error: "Column mappings are required"
     edit_record: "Edit"
     assign_record: "Assign to task"
     copy_record: "Duplicate"
@@ -2233,26 +2389,26 @@ en:
     modal_assign_items_to_task:
       title: "Assign to task"
       body:
-        description: "Type in the fields below to find the right task."
+        description: "Select the fields below to assign item to task(s)."
         project_select:
           label: "Project"
-          placeholder: "Enter project name"
+          placeholder: "Select or enter Project name"
           no_options_placeholder: "No projects available to select"
         experiment_select:
           label: "Experiment"
-          placeholder: "Enter Experiment name"
+          placeholder: "Select or enter Experiment name"
           disabled_placeholder: "Select Project to enable Experiment"
           no_options_placeholder: "No experiments available to select"
         task_select:
           label: "Task"
           placeholder: "Enter Task name"
-          disabled_placeholder: "Select Experiment to enable Task"
+          disabled_placeholder: "Select or enter Task name"
           no_options_placeholder: "No tasks available to assign items"
       assign:
         text: "Assign to task"
-        flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task."
-        flash_some_assignments_success: "Successfully assigned %{assigned_count} item(s) to the task. %{skipped_count} item(s) were already assigned to the task."
-        flash_assignments_failure: "Failed to assign item(s) to task."
+        flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task(s)."
+        flash_some_assignments_success: "Successfully assigned %{assigned_count} item(s) to the task(s). %{skipped_count} item(s) were already assigned to the task(s)."
+        flash_assignments_failure: "Failed to assign item(s) to task(s)."
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"
@@ -2290,6 +2446,7 @@ en:
       no_records_selected_flash: "There were no selected items."
       no_deleted_records_flash: "No items were deleted. %{other_records_number} of the selected items were created by other users and were not deleted."
     default_column: 'Name'
+    id_column: 'Item ID'
     copy_records_report: "%{number} item(s) successfully copied."
     archive_inventories:
       success_flash: "Inventories were successfully archived!"
@@ -2375,6 +2532,8 @@ en:
         added_on: "Added on"
         added_at: "Added at"
         added_by: "Added by"
+        updated_on: 'Updated on'
+        updated_by: 'Updated by'
         archived_on: "Archived on"
         archived_by: "Archived by"
       reminders:
@@ -3896,9 +4055,9 @@ en:
     expired_title: 'Looks like your link has expired.'
     expired_description: 'Please export the data again in order to receive a new link.'
     modal_html: "<p>Your export request is being processed.</p><p>When completed we will <strong>send an email to %{email}</strong> inbox with a link to your exported items. Note that the link will expire in 7 days.</p>"
-    repository_header_html: 'You are about to export selected items in inventory %{repository}.'
+    repository_header_html: 'You are about to export selected items in the inventory %{repository}. The export will exclude the files uploaded to items (only filenames will be exported).'
     files_alert: 'Files uploaded to inventory items will not be exported. Only filenames will be exported.'
-    repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
+    repository_footer_html: 'You will receive an <strong>email and a notification</strong> when the download file is ready. For security reasons, the link will expire in 7 days.'
     export_request_success: "Export request received. Your export request is being processed."
     export_error: "Error when creating zip export."
     consumption_modal_label: 'Export consumption'

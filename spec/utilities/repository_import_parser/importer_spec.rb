@@ -39,11 +39,22 @@ describe RepositoryImportParser::Importer do
 
   describe '#run/0' do
     let(:subject) do
-      RepositoryImportParser::Importer.new(sheet, mappings, user, repository)
+      RepositoryImportParser::Importer.new(sheet, mappings, user, repository, true, true, false)
     end
 
     it 'return a message of imported records' do
-      expect(subject.run).to eq({ status: :ok, nr_of_added: 5, total_nr: 5 })
+      response = subject.run
+      expect(response.keys).to include(:status, :total_rows_count, :created_rows_count,
+                                       :updated_rows_count, :changes, :import_date)
+
+      expect(response).to include(
+        total_rows_count: 5,
+        created_rows_count: 5,
+        updated_rows_count: 0,
+        status: :ok
+      )
+
+      expect(response[:changes][:data].count).to eq 5
     end
 
     it 'generate 5 new repository rows' do

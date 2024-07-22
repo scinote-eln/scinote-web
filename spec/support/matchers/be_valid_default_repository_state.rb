@@ -7,8 +7,8 @@ RSpec::Matchers.define :be_valid_default_repository_table_state do |nr_of_cols|
 
     state = subject.state
 
-    cols_length = 9 + nr_of_cols
-    cols_array = [*0..(8 + nr_of_cols)]
+    cols_length = 11 + nr_of_cols
+    cols_array = [*0..(10 + nr_of_cols)]
 
     expect(state).to be_an_instance_of Hash
     expect(state).to include(
@@ -25,7 +25,7 @@ RSpec::Matchers.define :be_valid_default_repository_table_state do |nr_of_cols|
     expect(state['columns'].length).to eq(cols_length)
     state['columns'].each_with_index do |val, i|
       expect(val).to include(
-        'visible' => !([4, 7, 8].include? i),
+        'visible' => !([4, 7, 8, 9, 10].include? i),
         'searchable' => (![0, 4].include?(i)),
         'search' => {
           'search' => '', 'smart' => true, 'regex' => false, 'caseInsensitive' => true

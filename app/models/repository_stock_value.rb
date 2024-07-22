@@ -9,7 +9,7 @@ class RepositoryStockValue < ApplicationRecord
   belongs_to :repository_stock_unit_item, optional: true
   belongs_to :created_by, class_name: 'User', optional: true, inverse_of: :created_repository_stock_values
   belongs_to :last_modified_by, class_name: 'User', optional: true, inverse_of: :modified_repository_stock_values
-  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value
+  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value, touch: true
   has_one :repository_row, through: :repository_cell
   has_many :repository_ledger_records, dependent: :destroy
   accepts_nested_attributes_for :repository_cell
@@ -108,7 +108,7 @@ class RepositoryStockValue < ApplicationRecord
       (new_data[:unit_item_id].present? && new_data[:unit_item_id] != repository_stock_unit_item.id)
   end
 
-  def update_data!(new_data, user)
+  def update_data!(new_data, user, preview: false)
     self.low_stock_threshold = new_data[:low_stock_threshold].presence if new_data[:low_stock_threshold]
     self.repository_stock_unit_item = repository_cell
                                       .repository_column
@@ -118,16 +118,20 @@ class RepositoryStockValue < ApplicationRecord
     new_amount = new_data[:amount].to_d
     delta = new_amount - amount.to_d
     self.comment = new_data[:comment].presence
-    repository_ledger_records.create!(
-      user: last_modified_by,
-      amount: delta,
-      balance: new_amount,
-      reference: repository_cell.repository_column.repository,
-      comment: comment,
-      unit: repository_stock_unit_item&.data
-    )
+
+    unless preview
+      repository_ledger_records.create!(
+        user: last_modified_by,
+        amount: delta,
+        balance: new_amount,
+        reference: repository_cell.repository_column.repository,
+        comment: comment,
+        unit: repository_stock_unit_item&.data
+      )
+    end
+
     self.amount = new_amount
-    save!
+    preview ? validate : save!
   end
 
   def snapshot!(cell_snapshot)
@@ -167,7 +171,7 @@ class RepositoryStockValue < ApplicationRecord
   end
 
   def self.import_from_text(text, attributes, _options = {})
-    digit, unit = text.match(/(^\d*\.?\d*)(\D*)/).captures
+    digit, unit = text.match(/(^-?\d*\.?\d*)(\D*)/).captures
     digit.strip!
     unit.strip!
     return nil if digit.blank?

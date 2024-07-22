@@ -28,13 +28,13 @@
     ref="deleteModal"
     :e2eAttributes="deleteModal.e2eAttributes"
   ></ConfirmationModal>
-  <ConfirmationModal
-    :title="exportModal.title"
-    :description="exportModal.description"
-    confirmClass="btn btn-primary"
-    :confirmText="i18n.t('repositories.index.modal_export.export')"
-    ref="exportModal"
-  ></ConfirmationModal>
+  <ExportRepositoryModal
+    v-if="exportRepository"
+    :rows="exportRepository"
+    :exportAction="exportAction"
+    @close="exportRepository = null; exportAction = null"
+    @export="updateTable"
+  ></ExportRepositoryModal>
   <NewRepositoryModal
     v-if="newRepository"
     :createUrl="createUrl"
@@ -62,6 +62,7 @@
 
 import axios from '../../packs/custom_axios.js';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
+import ExportRepositoryModal from './modals/export.vue';
 import NewRepositoryModal from './modals/new.vue';
 import EditRepositoryModal from './modals/edit.vue';
 import DuplicateRepositoryModal from './modals/duplicate.vue';
@@ -73,6 +74,7 @@ export default {
   components: {
     DataTable,
     ConfirmationModal,
+    ExportRepositoryModal,
     NewRepositoryModal,
     EditRepositoryModal,
     DuplicateRepositoryModal,
@@ -106,10 +108,12 @@ export default {
   data() {
     return {
       reloadingTable: false,
+      exportRepository: null,
       newRepository: false,
       editRepository: null,
       duplicateRepository: null,
       shareRepository: null,
+      exportAction: null,
       deleteModal: {
         title: '',
         description: '',
@@ -148,7 +152,8 @@ export default {
       },
       {
         field: 'shared_label',
-        headerName: this.i18n.t('libraries.index.table.shared')
+        headerName: this.i18n.t('libraries.index.table.shared'),
+        sortable: true
       },
       {
         field: 'team',
@@ -206,6 +211,8 @@ export default {
       this.editRepository = null;
       this.duplicateRepository = null;
       this.shareRepository = null;
+      this.exportRepository = null;
+      this.exportAction = null;
     },
     archive(event, rows) {
       axios.post(event.path, { repository_ids: rows.map((row) => row.id) }).then((response) => {
@@ -222,39 +229,6 @@ export default {
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
-    },
-    async exportRepositories(event, rows) {
-      this.exportModal.title = this.i18n.t('repositories.index.modal_export.title');
-      this.exportModal.description = `
-        <p class="description-p1">
-          ${this.i18n.t('repositories.index.modal_export.description_p1_html', {
-    team_name: rows[0].team,
-    count: rows.length
-  })}
-        </p>
-        <p class="bg-sn-super-light-blue p-3">
-          ${this.i18n.t('repositories.index.modal_export.description_alert')}
-        </p>
-        <p class="mt-3">
-          ${this.i18n.t('repositories.index.modal_export.description_p2')}
-        </p>
-        <p>
-          ${this.i18n.t('repositories.index.modal_export.description_p3_html', {
-    remaining_export_requests: event.num_of_requests_left,
-    requests_limit: event.export_limit
-  })}
-        </p>
-      `;
-
-      const ok = await this.$refs.exportModal.show();
-
-      if (ok) {
-        axios.post(event.path, { repository_ids: rows.map((row) => row.id) }).then((response) => {
-          HelperModule.flashAlertMsg(response.data.message, 'success');
-        }).catch((error) => {
-          HelperModule.flashAlertMsg(error.response.data.error, 'danger');
-        });
-      }
     },
     async deleteRepository(event, rows) {
       const [repository] = rows;
@@ -287,6 +261,10 @@ export default {
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
         });
       }
+    },
+    exportRepositories(action, rows) {
+      this.exportRepository = rows;
+      this.exportAction = action;
     },
     update(_event, rows) {
       const [repository] = rows;

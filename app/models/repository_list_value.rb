@@ -8,7 +8,7 @@ class RepositoryListValue < ApplicationRecord
   belongs_to :last_modified_by,
              foreign_key: :last_modified_by_id,
              class_name: 'User'
-  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value
+  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value, touch: true
   accepts_nested_attributes_for :repository_cell
 
   validates :repository_cell, presence: true
@@ -57,10 +57,10 @@ class RepositoryListValue < ApplicationRecord
     new_data.to_i != repository_list_item_id
   end
 
-  def update_data!(new_data, user)
+  def update_data!(new_data, user, preview: false)
     self.repository_list_item_id = new_data.to_i
     self.last_modified_by = user
-    save!
+    preview ? validate : save!
   end
 
   def snapshot!(cell_snapshot)

@@ -35,7 +35,7 @@ class Asset < ApplicationRecord
   has_one :result_asset, inverse_of: :asset, dependent: :destroy
   has_one :result, through: :result_asset, touch: true
   has_one :repository_asset_value, inverse_of: :asset, dependent: :destroy
-  has_one :repository_cell, through: :repository_asset_value
+  has_one :repository_cell, through: :repository_asset_value, touch: true
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
   has_many :asset_sync_tokens, dependent: :destroy
@@ -245,7 +245,7 @@ class Asset < ApplicationRecord
 
   def can_perform_action(action)
     if ENV['WOPI_ENABLED'] == 'true'
-      file_ext = file_name.split('.').last
+      file_ext = file_name.split('.').last&.downcase
 
       if file_ext == 'wopitest' &&
          (!ENV['WOPI_TEST_ENABLED'] || ENV['WOPI_TEST_ENABLED'] == 'false')
@@ -297,7 +297,7 @@ class Asset < ApplicationRecord
   end
 
   def favicon_url(action)
-    file_ext = file_name.split('.').last
+    file_ext = file_name.split('.').last&.downcase
     action = get_action(file_ext, action)
     action[:icon] if action[:icon]
   end
@@ -385,6 +385,10 @@ class Asset < ApplicationRecord
         new_image_filename = "#{new_name}.png"
         preview_image.blob.update!(filename: new_image_filename)
       end
+
+      # rubocop:disable Rails/SkipsModelValidations
+      touch
+      # rubocop:enable Rails/SkipsModelValidations
     end
   end
 

@@ -3,12 +3,13 @@
 class MyModuleRepositoriesController < ApplicationController
   include ApplicationHelper
 
-  before_action :load_my_module
+  before_action :load_my_module, except: :assign_my_modules
   before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html create)
-  before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption)
+  before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption assign_my_modules)
   before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list repositories_list_html create)
   before_action :check_repository_row_consumption_permissions, only: %i(consume_modal update_consumption)
   before_action :check_assign_repository_records_permissions, only: %i(update create)
+  before_action :load_my_modules, only: :assign_my_modules
 
   def index_dt
     @draw = params[:draw].to_i
@@ -39,6 +40,31 @@ class MyModuleRepositoriesController < ApplicationController
     @repository_rows = repository_rows.page(page).per(per_page)
 
     render rows_view
+  end
+
+  def assign_my_modules
+    assigned_count = 0
+    skipped_count = 0
+    status = :ok
+
+    ActiveRecord::Base.transaction do
+      @my_modules.find_each do |my_module|
+        service = RepositoryRows::MyModuleAssignUnassignService.call(
+          my_module:,
+          repository: @repository,
+          user: current_user,
+          params:
+        )
+        unless service.succeed?
+          status = :unprocessable_entity
+          raise ActiveRecord::Rollback 
+        end
+        assigned_count += service.assigned_rows_count
+        skipped_count += (params[:rows_to_assign].length - service.assigned_rows_count)
+      end
+    end
+
+    render json: { assigned_count:, skipped_count: }, status:
   end
 
   def create
@@ -213,6 +239,12 @@ class MyModuleRepositoriesController < ApplicationController
   def load_repository
     @repository = Repository.find_by(id: params[:id])
     render_404 unless @repository
+  end
+
+  def load_my_modules
+    @my_modules = MyModule.where(id: params[:my_module_ids])
+
+    render_403 unless @my_modules.all? { |my_module| can_assign_my_module_repository_rows?(my_module) }
   end
 
   def check_my_module_view_permissions

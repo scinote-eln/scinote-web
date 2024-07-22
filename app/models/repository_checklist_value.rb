@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class RepositoryChecklistValue < ApplicationRecord
+  attribute :current_repository_checklist_items
+
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User',
                           inverse_of: :created_repository_checklist_values
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User',
                                 inverse_of: :modified_repository_checklist_values
-  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value
+  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value, touch: true
   has_many :repository_checklist_items_values, dependent: :destroy
   has_many :repository_checklist_items, -> { order('data ASC') },
            through: :repository_checklist_items_values,
@@ -20,7 +22,8 @@ class RepositoryChecklistValue < ApplicationRecord
   EXTRA_PRELOAD_INCLUDE = :repository_checklist_items
 
   def formatted(separator: ' | ')
-    repository_checklist_items.pluck(:data).join(separator)
+    checklist_items = current_repository_checklist_items || repository_checklist_items
+    checklist_items.map(&:data).join(separator)
   end
 
   def export_formatted
@@ -70,17 +73,25 @@ class RepositoryChecklistValue < ApplicationRecord
     end
   end
 
-  def update_data!(new_data, user)
+  def update_data!(new_data, user, preview: false)
     item_ids = new_data.is_a?(String) ? JSON.parse(new_data) : new_data
+
     return destroy! if item_ids.blank?
 
-    # update!(repository_checklist_items: repository_cell.repository_column.repository_checklist_items.where(id: item_ids), last_modified_by: user)
-
-    self.repository_checklist_items = repository_cell.repository_column
-                                                     .repository_checklist_items
-                                                     .where(id: item_ids)
     self.last_modified_by = user
-    save!
+
+    if preview
+      self.current_repository_checklist_items = repository_checklist_items
+      clear_current_repository_checklist_items_change
+      self.current_repository_checklist_items =
+        repository_cell.repository_column.repository_checklist_items.where(id: item_ids)
+      validate
+    else
+      self.repository_checklist_items = repository_cell.repository_column
+                                                       .repository_checklist_items
+                                                       .where(id: item_ids)
+      save!
+    end
   end
 
   def snapshot!(cell_snapshot)

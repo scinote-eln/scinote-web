@@ -5,15 +5,18 @@ class ResultOrderableElementsController < ApplicationController
   before_action :check_manage_permissions
 
   def reorder
+    position_changed = false
     ActiveRecord::Base.transaction do
       params[:result_orderable_element_positions].each do |id, position|
         result_element = @result.result_orderable_elements.find(id)
-        result_element.insert_at(position)
+        position_changed ||= result_element.insert_at(position)
       end
     end
 
-    log_activity(:result_content_rearranged, @my_module.experiment.project, my_module: @my_module.id)
-    @result.touch
+    if position_changed
+      log_activity(:result_content_rearranged, @my_module.experiment.project, my_module: @my_module.id)
+      @result.touch
+    end
 
     render json: params[:result_orderable_element_positions], status: :ok
   rescue ActiveRecord::RecordInvalid

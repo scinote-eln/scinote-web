@@ -49,7 +49,8 @@ module Lists
         designated: 'designated',
         results: 'results',
         tags: 'tags',
-        signatures: 'signatures'
+        signatures: 'signatures',
+        comments: 'comments'
       }
     end
 
@@ -83,6 +84,14 @@ module Lists
         @records = @records.order(:my_module_status_id)
       when 'status_DESC'
         @records = @records.order(my_module_status_id: :desc)
+      when  'comments_ASC'
+        @records = @records.left_joins(:task_comments)
+                           .group('my_modules.id')
+                           .order(Arel.sql('COUNT(DISTINCT comments.id) ASC'))
+      when  'comments_DESC'
+        @records = @records.left_joins(:task_comments)
+                           .group('my_modules.id')
+                           .order(Arel.sql('COUNT(DISTINCT comments.id) DESC'))
       when 'designated_ASC'
         @records = @records.left_joins(:user_my_modules)
                            .group('my_modules.id')

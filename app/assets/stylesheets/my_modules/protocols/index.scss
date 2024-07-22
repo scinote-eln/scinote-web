@@ -115,7 +115,9 @@
 
   .task-section-header {
     align-items: center;
-    display: flex;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: auto auto;
     min-height: 4rem;
 
     .actions-block {

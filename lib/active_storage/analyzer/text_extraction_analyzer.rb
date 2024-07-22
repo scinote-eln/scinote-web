@@ -58,6 +58,8 @@ module ActiveStorage
         asset.update_estimated_size
 
         Rails.logger.info "Asset #{asset.id}: file text successfully extracted"
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.error "Asset #{asset.id}: file text unsuccessfully extracted with error #{e.message}"
       end
 
       { text_extracted: true }

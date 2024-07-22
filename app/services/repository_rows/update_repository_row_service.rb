@@ -26,6 +26,7 @@ module RepositoryRows
           @cell = @repository_row.repository_cells.find_by(repository_column_id: @column.id)
 
           if @cell.present? && value.blank?
+            @repository_row.last_modified_by = @user
             @cell.destroy!
             @cell = nil
             @record_updated = true

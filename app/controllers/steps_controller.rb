@@ -241,16 +241,23 @@ class StepsController < ApplicationController
 
   def reorder
     @protocol.with_lock do
+      position_changed = false
       params[:step_positions].each do |id, position|
-        @protocol.steps.find(id).update_column(:position, position)
+        step = @protocol.steps.find(id)
+        if position != step.position
+          position_changed = true
+          step.update_column(:position, position)
+        end
       end
 
-      if @protocol.in_module?
-        log_activity(:task_steps_rearranged, @my_module.experiment.project, my_module: @my_module.id)
-      else
-        log_activity(:protocol_steps_rearranged, nil, protocol: @protocol.id)
+      if position_changed
+        if @protocol.in_module?
+          log_activity(:task_steps_rearranged, @my_module.experiment.project, my_module: @my_module.id)
+        else
+          log_activity(:protocol_steps_rearranged, nil, protocol: @protocol.id)
+        end
+        @protocol.touch
       end
-      @protocol.touch
     end
 
     render json: {

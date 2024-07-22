@@ -46,7 +46,7 @@
           :listItems="this.sortMenu"
           :btnClasses="'btn btn-light icon-btn'"
           :position="'right'"
-          :btnIcon="'sn-icon sn-icon-sort'"
+          :btnIcon="'sn-icon sn-icon-sort-down'"
           @sort="setSort"
         ></MenuDropdown>
     </div>
@@ -123,10 +123,10 @@ export default {
       this.$emit('setFilters', filters);
     },
     collapseResults() {
-      $('.result-wrapper .collapse').collapse('hide');
+      this.$emit('collapseAll');
     },
     expandResults() {
-      $('.result-wrapper .collapse').collapse('show');
+      this.$emit('expandAll');
     },
     scrollTop() {
       window.scrollTo(0, 0);

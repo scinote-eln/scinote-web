@@ -67,7 +67,7 @@ module UsersGenerator
 
   def generate_user_password
     require 'securerandom'
-    SecureRandom.hex(5)
+    SecureRandom.alphanumeric(Devise.password_length.max)
   end
 
   def get_user_initials(full_name)

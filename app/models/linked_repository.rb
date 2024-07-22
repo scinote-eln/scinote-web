@@ -20,8 +20,11 @@ class LinkedRepository < Repository
       'assigned',
       'repository_rows.id',
       'repository_rows.name',
+      'relationships',
       'repository_rows.created_at',
       'users.full_name',
+      'repository_rows.updated_at',
+      'last_modified_bies_repository_rows.full_name',
       'repository_rows.archived_on',
       'archived_bies_repository_rows.full_name',
       'repository_rows.external_id'

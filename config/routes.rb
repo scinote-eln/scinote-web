@@ -194,9 +194,9 @@ Rails.application.routes.draw do
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
           get 'actions_toolbar'
-          get 'export_modal'
         end
         member do
+          get :export_empty_repository
           get :shareable_teams
         end
         get 'destroy_modal', to: 'repositories#destroy_modal',
@@ -559,6 +559,7 @@ Rails.application.routes.draw do
         end
       end
     end
+    post 'repository/:id/assign_my_modules', to: 'my_module_repositories#assign_my_modules', as: :assign_my_modules
 
     resources :steps, only: %i(index update destroy show) do
       resources :step_orderable_elements do

@@ -29,13 +29,15 @@ class RepositoryZipExportJob < ZipExportJob
                                 .index_by(&:id)
       rows = ordered_row_ids.collect { |id| id_row_map[id.to_i] }
     end
-    data = RepositoryZipExport.to_csv(rows,
-                                      params[:header_ids].map(&:to_i),
-                                      @user,
-                                      repository,
-                                      nil,
-                                      params[:my_module_id].present?)
-    File.binwrite("#{dir}/export.csv", data.encode('UTF-8', invalid: :replace, undef: :replace))
+    service = RepositoryExportService
+              .new(@file_type,
+                   rows,
+                   params[:header_ids].map(&:to_i),
+                   @user,
+                   repository,
+                   in_module: params[:my_module_id].present?)
+    exported_data = service.export!
+    File.binwrite("#{dir}/export.#{@file_type}", exported_data)
   end
 
   def failed_notification_title

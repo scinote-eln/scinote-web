@@ -7,7 +7,7 @@ class RepositoryTextValue < ApplicationRecord
   belongs_to :last_modified_by, foreign_key: :last_modified_by_id,
                                 class_name: 'User',
                                 inverse_of: :modified_repository_text_values
-  has_one :repository_cell, as: :value, dependent: :destroy
+  has_one :repository_cell, as: :value, dependent: :destroy, touch: true
   accepts_nested_attributes_for :repository_cell
 
   validates :repository_cell, presence: true
@@ -36,10 +36,10 @@ class RepositoryTextValue < ApplicationRecord
     new_data != data
   end
 
-  def update_data!(new_data, user)
+  def update_data!(new_data, user, preview: false)
     self.data = new_data
     self.last_modified_by = user
-    save!
+    preview ? validate : save!
   end
 
   def snapshot!(cell_snapshot)
@@ -61,7 +61,7 @@ class RepositoryTextValue < ApplicationRecord
   def self.import_from_text(text, attributes, _options = {})
     return nil if text.blank?
 
-    new(attributes.merge(data: text.truncate(Constants::TEXT_MAX_LENGTH)))
+    new(attributes.merge(data: text))
   end
 
   alias export_formatted formatted

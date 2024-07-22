@@ -57,7 +57,9 @@ class SpreadsheetParser
         if cell.is_a?(Roo::Excelx::Cell::Number) && cell.format == 'General'
           cell&.value&.to_d
         elsif date_format && cell&.value.is_a?(Date)
-          cell&.value&.strftime(date_format)
+          cell&.value&.strftime(
+            "#{date_format} #{' %H:%M' if cell.value.is_a?(DateTime)}"
+          )
         else
           cell&.formatted_value
         end
@@ -65,5 +67,13 @@ class SpreadsheetParser
     else
       row.map(&:to_s)
     end
+  end
+
+  def self.duplicate_ids(sheet)
+    # Extracting IDs from sheet and removing header row
+    ids = sheet.drop(1).map(&:first)
+
+    # Selecting duplicate IDs
+    ids.group_by { |id| id }.select { |_, group| group.size > 1 }.keys
   end
 end
