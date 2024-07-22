@@ -208,6 +208,8 @@ GEM
       debug_inspector (>= 0.0.1)
     bootsnap (1.16.0)
       msgpack (~> 1.2)
+    brakeman (6.1.2)
+      racc
     builder (3.2.4)
     bullet (7.0.7)
       activesupport (>= 3.0.0)
@@ -797,6 +799,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootsnap
+  brakeman
   bullet
   byebug
   canaid!
