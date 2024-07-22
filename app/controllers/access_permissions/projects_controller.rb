@@ -103,8 +103,6 @@ module AccessPermissions
         destroy: true
       )
 
-      user_assignment.destroy!
-
       log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
                                                   role: user_assignment.user_role.name })
 
