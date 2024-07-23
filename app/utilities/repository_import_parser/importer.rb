@@ -217,7 +217,7 @@ module RepositoryImportParser
         repository_cell.to_destroy = true
         @updated = true
       else
-        repository_cell.value.destroy!
+        erase_cell!(repository_cell)
       end
 
       repository_cell
@@ -301,6 +301,21 @@ module RepositoryImportParser
     def total_rows_count
       # all rows minus header
       @rows.count - 1
+    end
+
+    def erase_cell!(repository_cell)
+      case repository_cell.value
+      when RepositoryStockValue
+        repository_cell.value.update_data!(
+          {
+            amount: 0,
+            unit_item_id: repository_cell.value.repository_stock_unit_item_id
+          },
+          @user
+        )
+      else
+        repository_cell.value.destroy!
+      end
     end
   end
 end
