@@ -78,10 +78,8 @@ class StorageLocationsController < ApplicationController
   end
 
   def tree
-    records = StorageLocation.inner_storage_locations(current_team)
-                             .order(:name)
-                             .select(:id, :name, :parent_id, :container)
-    render json: storage_locations_recursive_builder(nil, records)
+    records = current_team.storage_locations.where(parent: nil, container: false)
+    render json: storage_locations_recursive_builder(records)
   end
 
   def actions_toolbar
@@ -151,11 +149,11 @@ class StorageLocationsController < ApplicationController
     }
   end
 
-  def storage_locations_recursive_builder(parent_storage_location, records)
-    records.where(parent: parent_storage_location, container: false).map do |storage_location|
+  def storage_locations_recursive_builder(storage_locations)
+    storage_locations.map do |storage_location|
       {
         storage_location: storage_location,
-        children: storage_locations_recursive_builder(storage_location, records)
+        children: storage_locations_recursive_builder(storage_location.storage_locations.where(container: false))
       }
     end
   end
