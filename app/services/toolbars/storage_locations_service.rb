@@ -47,7 +47,7 @@ module Toolbars
       return unless can_manage_storage_locations?(current_user.current_team)
 
       {
-        name: 'set_as_default',
+        name: 'move',
         label: I18n.t("storage_locations.index.toolbar.move"),
         icon: 'sn-icon sn-icon-move',
         path: move_storage_location_path(@storage_locations.first),

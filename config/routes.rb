@@ -810,6 +810,7 @@ Rails.application.routes.draw do
     resources :storage_locations, only: %i(index create destroy update) do
       collection do
         get :actions_toolbar
+        get :tree
       end
       member do
         post :move
