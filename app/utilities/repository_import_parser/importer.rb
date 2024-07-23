@@ -213,12 +213,7 @@ module RepositoryImportParser
     def handle_nil_cell_value(repository_cell)
       return unless repository_cell.present? && @should_overwrite_with_empty_cells
 
-      if @preview
-        repository_cell.to_destroy = true
-        @updated = true
-      else
-        erase_cell!(repository_cell)
-      end
+      @updated = erase_cell!(repository_cell, preview: @preview)
 
       repository_cell
     end
@@ -303,19 +298,24 @@ module RepositoryImportParser
       @rows.count - 1
     end
 
-    def erase_cell!(repository_cell)
+    def erase_cell!(repository_cell, preview: false)
       case repository_cell.value
       when RepositoryStockValue
+        return false if repository_cell.value.amount.zero?
+
         repository_cell.value.update_data!(
           {
             amount: 0,
             unit_item_id: repository_cell.value.repository_stock_unit_item_id
           },
-          @user
+          @user,
+          preview: preview
         )
       else
-        repository_cell.value.destroy!
+        preview ? repository_cell.to_destroy = true : repository_cell.value.destroy!
       end
+
+      true
     end
   end
 end
