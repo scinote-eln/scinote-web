@@ -264,6 +264,9 @@ en:
         storage_location:
           missing_position: 'Missing position metadata'
           not_uniq_position: 'Position already taken'
+          attributes:
+            parent_storage_location: "Storage location cannot be parent to itself"
+            parent_storage_location_child: "Storage location cannot be moved to it's child"
   storage:
     limit_reached: "Storage limit has been reached."
   helpers:
@@ -2713,6 +2716,14 @@ en:
           edit_box: "Box %{name} was successfully updated."
         errors:
           max_length: "is too long (maximum is %{max_length} characters)"
+      move_modal:
+        title: 'Move %{name}'
+        description: 'Select where you want to move %{name}.'
+        search_header: 'Locations'
+        success_flash: "You have successfully moved the selected location/box to another location."
+        error_flash: "An error occurred. The selected location/box has not been moved."
+        placeholder:
+          find_storage_locations: 'Find location'
 
   libraries:
     manange_modal_column_index:

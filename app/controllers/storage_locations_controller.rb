@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StorageLocationsController < ApplicationController
-  before_action :load_storage_location, only: %i(update destroy)
+  before_action :load_storage_location, only: %i(update destroy move)
   before_action :check_read_permissions, only: :index
   before_action :check_manage_permissions, except: :index
   before_action :set_breadcrumbs_items, only: :index
@@ -51,6 +51,30 @@ class StorageLocationsController < ApplicationController
     end
   end
 
+  def move
+    storage_location_destination =
+      if move_params[:destination_storage_location_id] == 'root_storage_location'
+        nil
+      else
+        current_team.storage_locations.find(move_params[:destination_storage_location_id])
+      end
+
+    @storage_location.update!(parent: storage_location_destination)
+
+    render json: { message: I18n.t('storage_locations.index.move_modal.success_flash') }
+  rescue StandardError => e
+    Rails.logger.error e.message
+    Rails.logger.error e.backtrace.join("\n")
+    render json: { error: I18n.t('storage_locations.index.move_modal.error_flash') }, status: :bad_request
+  end
+
+  def tree
+    records = StorageLocation.inner_storage_locations(current_team)
+                             .order(:name)
+                             .select(:id, :name, :parent_id, :container)
+    render json: storage_locations_recursive_builder(nil, records)
+  end
+
   def actions_toolbar
     render json: {
       actions:
@@ -68,8 +92,12 @@ class StorageLocationsController < ApplicationController
                   metadata: [:display_type, dimensions: [], parent_coordinations: []])
   end
 
+  def move_params
+    params.permit(:id, :destination_storage_location_id)
+  end
+
   def load_storage_location
-    @storage_location = StorageLocation.where(team: current_team).find(storage_location_params[:id])
+    @storage_location = current_team.storage_locations.find_by(id: storage_location_params[:id])
     render_404 unless @storage_location
   end
 
@@ -95,7 +123,7 @@ class StorageLocationsController < ApplicationController
 
     storage_locations = []
     if params[:parent_id]
-      location = StorageLocation.where(team: current_team).find_by(id: params[:parent_id])
+      location = current_team.storage_locations.find_by(id: params[:parent_id])
       if location
         storage_locations.unshift(breadcrumbs_item(location))
         while location.parent
@@ -112,5 +140,20 @@ class StorageLocationsController < ApplicationController
       label: location.name,
       url: storage_locations_path(parent_id: location.id)
     }
+  end
+
+  def storage_locations_recursive_builder(storage_location, records)
+    children = records.select do |i|
+      defined?(i.parent_id) && i.parent_id == storage_location&.id
+    end
+
+    children.filter_map do |i|
+      next if i.container
+
+      {
+        storage_location: i,
+        children: storage_locations_recursive_builder(i, records)
+      }
+    end
   end
 end
