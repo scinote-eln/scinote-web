@@ -52,7 +52,16 @@ class RepositoryCell < ApplicationRecord
   }
 
   def update_repository_row_last_modified_by
-    repository_row.update!(last_modified_by_id: value.last_modified_by_id)
+    # RepositoryStockConsumptionValue currently don't store last_modified_by
+    # so this would fail. Should probably be refactored to unify the behaviour (23.7.2024)
+    if value.last_modified_by_id
+      repository_row.update!(last_modified_by_id: value.last_modified_by_id)
+    else
+      Rails.logger.warn(
+        "Missing last_modified_by_id for #{value.class} with id #{value.id}, " \
+        "skipping update of last_modified_by on RepositoryRow with id #{repository_row_id}."
+      )
+    end
   end
 
   def self.create_with_value!(row, column, data, user)
