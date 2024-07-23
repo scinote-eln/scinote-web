@@ -142,17 +142,11 @@ class StorageLocationsController < ApplicationController
     }
   end
 
-  def storage_locations_recursive_builder(storage_location, records)
-    children = records.select do |i|
-      defined?(i.parent_id) && i.parent_id == storage_location&.id
-    end
-
-    children.filter_map do |i|
-      next if i.container
-
+  def storage_locations_recursive_builder(parent_storage_location, records)
+    records.where(parent: parent_storage_location, container: false).map do |storage_location|
       {
-        storage_location: i,
-        children: storage_locations_recursive_builder(i, records)
+        storage_location: storage_location,
+        children: storage_locations_recursive_builder(storage_location, records)
       }
     end
   end
