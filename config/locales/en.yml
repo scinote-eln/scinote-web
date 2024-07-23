@@ -2671,6 +2671,8 @@ en:
     errors:
       my_module_references_missing: 'Task references are not set'
   storage_locations:
+    box: 'box'
+    location: 'location'
     show:
       table:
         position: "Position"
@@ -2733,6 +2735,11 @@ en:
         error_flash: "An error occurred. The selected location/box has not been moved."
         placeholder:
           find_storage_locations: 'Find location'
+      delete_modal:
+        title: 'Delete a %{type}'
+        description_1_html: "You're about to delete <b>%{name}</b>. This action will delete the %{type}. <b>%{num_of_items}</b> items inside will lose their assigned positions."
+        description_2_html: '<b>Are you sure you want to delete it?</b>'
+        success_message: "%{type} %{name} successfully deleted."
 
   libraries:
     manange_modal_column_index:

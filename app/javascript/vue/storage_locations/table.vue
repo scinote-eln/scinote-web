@@ -12,6 +12,7 @@
                @duplicate="duplicate"
                @tableReloaded="reloadingTable = false"
                @move="move"
+               @delete="deleteStorageLocation"
     />
     <Teleport to="body">
       <EditModal v-if="openEditModal"
@@ -25,6 +26,13 @@
       <MoveModal v-if="objectToMove" :moveToUrl="moveToUrl"
              :selectedObject="objectToMove" :storageLocationTreeUrl="storageLocationTreeUrl"
              @close="objectToMove = null" @move="updateTable()" />
+      <ConfirmationModal
+        :title="storageLocationDeleteTitle"
+        :description="storageLocationDeleteDescription"
+        confirmClass="btn btn-danger"
+        :confirmText="i18n.t('general.delete')"
+        ref="deleteStorageLocationModal"
+      ></ConfirmationModal>
     </Teleport>
   </div>
 </template>
@@ -36,13 +44,15 @@ import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
 import EditModal from './modals/new_edit.vue';
 import MoveModal from './modals/move.vue';
+import ConfirmationModal from '../shared/confirmation_modal.vue';
 
 export default {
   name: 'RepositoriesTable',
   components: {
     DataTable,
     EditModal,
-    MoveModal
+    MoveModal,
+    ConfirmationModal
   },
   props: {
     dataSource: {
@@ -70,7 +80,9 @@ export default {
       editModalMode: null,
       editStorageLocation: null,
       objectToMove: null,
-      moveToUrl: null
+      moveToUrl: null,
+      storageLocationDeleteTitle: '',
+      storageLocationDeleteDescription: ''
     };
   },
   computed: {
@@ -200,6 +212,29 @@ export default {
     move(event, rows) {
       [this.objectToMove] = rows;
       this.moveToUrl = event.path;
+    },
+    async deleteStorageLocation(event, rows) {
+      const storageLocationType = rows[0].container ? this.i18n.t('storage_locations.box') : this.i18n.t('storage_locations.location');
+      const description = `
+        <p>${this.i18n.t('storage_locations.index.delete_modal.description_1_html',
+    { name: rows[0].name, type: storageLocationType, num_of_items: event.number_of_items })}</p>
+        <p>${this.i18n.t('storage_locations.index.delete_modal.description_2_html')}</p>`;
+
+      this.storageLocationDeleteDescription = description;
+      this.storageLocationDeleteTitle = this.i18n.t('storage_locations.index.delete_modal.title', { type: storageLocationType });
+      const ok = await this.$refs.deleteStorageLocationModal.show();
+      if (ok) {
+        axios.delete(event.path).then((_) => {
+          this.reloadingTable = true;
+          HelperModule.flashAlertMsg(this.i18n.t('storage_locations.index.delete_modal.success_message',
+            {
+              type: storageLocationType[0].toUpperCase() + storageLocationType.slice(1),
+              name: rows[0].name
+            }), 'success');
+        }).catch((error) => {
+          HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+        });
+      }
     }
   }
 };

@@ -49,7 +49,7 @@ class StorageLocationsController < ApplicationController
     if @storage_location.discard
       render json: {}
     else
-      render json: { errors: @storage_location.errors.full_messages }, status: :unprocessable_entity
+      render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
