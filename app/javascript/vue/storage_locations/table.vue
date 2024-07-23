@@ -11,6 +11,7 @@
                @edit="edit"
                @duplicate="duplicate"
                @tableReloaded="reloadingTable = false"
+               @move="move"
     />
     <Teleport to="body">
       <EditModal v-if="openEditModal"
@@ -21,6 +22,9 @@
                  :directUploadUrl="directUploadUrl"
                  :editStorageLocation="editStorageLocation"
       />
+      <MoveModal v-if="objectToMove" :moveToUrl="moveToUrl"
+             :selectedObject="objectToMove" :storageLocationTreeUrl="storageLocationTreeUrl"
+             @close="objectToMove = null" @move="updateTable()" />
     </Teleport>
   </div>
 </template>
@@ -31,12 +35,14 @@
 import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
 import EditModal from './modals/new_edit.vue';
+import MoveModal from './modals/move.vue';
 
 export default {
   name: 'RepositoriesTable',
   components: {
     DataTable,
-    EditModal
+    EditModal,
+    MoveModal
   },
   props: {
     dataSource: {
@@ -52,6 +58,9 @@ export default {
     },
     directUploadUrl: {
       type: String
+    },
+    storageLocationTreeUrl: {
+      type: String
     }
   },
   data() {
@@ -59,7 +68,9 @@ export default {
       reloadingTable: false,
       openEditModal: false,
       editModalMode: null,
-      editStorageLocation: null
+      editStorageLocation: null,
+      objectToMove: null,
+      moveToUrl: null
     };
   },
   computed: {
@@ -181,6 +192,14 @@ export default {
                  ${boxIcon}
                  <span class="truncate">${name}</span>
               </a>`;
+    },
+    updateTable() {
+      this.reloadingTable = true;
+      this.objectToMove = null;
+    },
+    move(event, rows) {
+      [this.objectToMove] = rows;
+      this.moveToUrl = event.path;
     }
   }
 };
