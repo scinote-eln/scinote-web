@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StorageLocationsController < ApplicationController
-  before_action :load_storage_location, only: %i(update destroy move)
+  before_action :load_storage_location, only: %i(update destroy duplicate move)
   before_action :check_read_permissions, only: :index
   before_action :check_manage_permissions, except: :index
   before_action :set_breadcrumbs_items, only: :index
@@ -51,6 +51,15 @@ class StorageLocationsController < ApplicationController
     end
   end
 
+  def duplicate
+    new_storage_location = @storage_location.duplicate!
+    if new_storage_location
+      render json: new_storage_location, serializer: Lists::StorageLocationSerializer
+    else
+      render json: { errors: :failed }, status: :unprocessable_entity
+    end
+  end
+  
   def move
     storage_location_destination =
       if move_params[:destination_storage_location_id] == 'root_storage_location'

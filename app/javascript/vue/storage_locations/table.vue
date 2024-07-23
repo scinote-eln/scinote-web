@@ -9,6 +9,7 @@
                @create_location="openCreateLocationModal"
                @create_box="openCreateBoxModal"
                @edit="edit"
+               @duplicate="duplicate"
                @tableReloaded="reloadingTable = false"
                @move="move"
     />
@@ -29,8 +30,9 @@
 </template>
 
 <script>
-/* global */
+/* global HelperModule */
 
+import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
 import EditModal from './modals/new_edit.vue';
 import MoveModal from './modals/move.vue';
@@ -164,6 +166,16 @@ export default {
       this.openEditModal = true;
       this.editModalMode = params[0].container ? 'box' : 'location';
       [this.editStorageLocation] = params;
+    },
+    duplicate(action) {
+      axios.post(action.path)
+        .then(() => {
+          this.reloadingTable = true;
+          HelperModule.flashAlertMsg(this.i18n.t('storage_locations.index.duplicate.success_message'), 'success');
+        })
+        .catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        });
     },
     // Renderers
     nameRenderer(params) {

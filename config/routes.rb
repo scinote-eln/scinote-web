@@ -814,7 +814,7 @@ Rails.application.routes.draw do
       end
       member do
         post :move
-        post :copy
+        post :duplicate
       end
       resources :storage_location_repository_rows, only: %i(index create destroy update)
     end
