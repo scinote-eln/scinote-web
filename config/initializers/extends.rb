@@ -636,6 +636,8 @@ class Extends
     preferences/index
     addons/index
     search/index
+    storage_locations/index
+    storage_locations/show
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {

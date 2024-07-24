@@ -807,7 +807,7 @@ Rails.application.routes.draw do
 
     resources :connected_devices, controller: 'users/connected_devices', only: %i(destroy)
 
-    resources :storage_locations, only: %i(index create destroy update) do
+    resources :storage_locations, only: %i(index create destroy update show) do
       collection do
         get :actions_toolbar
         get :tree
@@ -816,7 +816,11 @@ Rails.application.routes.draw do
         post :move
         post :duplicate
       end
-      resources :storage_location_repository_rows, only: %i(index create destroy update)
+      resources :storage_location_repository_rows, only: %i(index create destroy update) do
+        collection do
+          get :actions_toolbar
+        end
+      end
     end
 
     get 'search' => 'search#index'
