@@ -39,6 +39,14 @@ class StorageLocation < ApplicationRecord
     end
   end
 
+  def with_grid?
+    metadata['display_type'] == 'grid'
+  end
+
+  def grid_size
+    metadata['dimensions'] if with_grid?
+  end
+
   private
 
   def recursive_duplicate(old_parent_id = nil, new_parent_id = nil)
@@ -62,8 +70,9 @@ class StorageLocation < ApplicationRecord
         metadata: old_blob.metadata
       )
       new_storage_location.image.attach(to_blob)
+    end
   end
-    
+
   def self.inner_storage_locations(team, storage_location = nil)
     entry_point_condition = storage_location ? 'parent_id = ?' : 'parent_id IS NULL'
 

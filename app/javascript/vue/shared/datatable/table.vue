@@ -364,7 +364,7 @@ export default {
       }
     },
     handleScroll() {
-      if (this.scrollMode === 'pages') return;
+      if (this.scrollMode === 'pages' || this.scrollMode === 'none') return;
 
       let target = null;
       if (this.currentViewRender === 'cards') {
@@ -506,15 +506,18 @@ export default {
             this.rowData = [];
           }
 
-          if (this.scrollMode === 'pages') {
+          if (this.scrollMode === 'pages' || this.scrollMode === 'none') {
             if (this.gridApi) this.gridApi.setRowData(this.formatData(response.data.data));
             this.rowData = this.formatData(response.data.data);
           } else {
             this.handleInfiniteScroll(response);
           }
-          this.totalPage = response.data.meta.total_pages;
-          this.totalEntries = response.data.meta.total_count;
-          this.$emit('tableReloaded');
+
+          if (this.scrollMode !== 'none') {
+            this.totalPage = response.data.meta.total_pages;
+            this.totalEntries = response.data.meta.total_count;
+          }
+          this.$emit('tableReloaded', this.rowData);
           this.dataLoading = false;
           this.restoreSelection();
 

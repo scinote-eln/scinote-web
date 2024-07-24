@@ -2671,6 +2671,13 @@ en:
     errors:
       my_module_references_missing: 'Task references are not set'
   storage_locations:
+    show:
+      table:
+        position: "Position"
+        reminders: "Reminders"
+        row_id: "Item ID"
+        row_name: "Name"
+        stock: "Stock"
     index:
       head_title: "Locations"
       new_location: "New location"

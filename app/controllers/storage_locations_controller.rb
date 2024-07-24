@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class StorageLocationsController < ApplicationController
-  before_action :load_storage_location, only: %i(update destroy duplicate move)
+  before_action :load_storage_location, only: %i(update destroy duplicate move show)
   before_action :check_read_permissions, only: :index
   before_action :check_manage_permissions, except: :index
-  before_action :set_breadcrumbs_items, only: :index
+  before_action :set_breadcrumbs_items, only: %i(index show)
 
   def index
     respond_to do |format|
@@ -16,6 +16,8 @@ class StorageLocationsController < ApplicationController
       end
     end
   end
+
+  def show; end
 
   def update
     @storage_location.image.purge if params[:file_name].blank?
@@ -59,7 +61,7 @@ class StorageLocationsController < ApplicationController
       render json: { errors: :failed }, status: :unprocessable_entity
     end
   end
-  
+
   def move
     storage_location_destination =
       if move_params[:destination_storage_location_id] == 'root_storage_location'
@@ -129,8 +131,8 @@ class StorageLocationsController < ApplicationController
                             })
 
     storage_locations = []
-    if params[:parent_id]
-      location = current_team.storage_locations.find_by(id: params[:parent_id])
+    if params[:parent_id] || @storage_location
+      location = (current_team.storage_locations.find_by(id: params[:parent_id]) || @storage_location)
       if location
         storage_locations.unshift(breadcrumbs_item(location))
         while location.parent

@@ -3,17 +3,18 @@
 class StorageLocationRepositoryRowsController < ApplicationController
   before_action :load_storage_location_repository_row, only: %i(update destroy)
   before_action :load_storage_location
-  before_action :load_repository_row
+  before_action :load_repository_row, only: %i(update destroy)
   before_action :check_read_permissions, only: :index
   before_action :check_manage_permissions, except: :index
 
   def index
     storage_location_repository_row = Lists::StorageLocationRepositoryRowsService.new(
-      current_team, storage_location_repository_row_params
+      current_team, params
     ).call
     render json: storage_location_repository_row,
            each_serializer: Lists::StorageLocationRepositoryRowSerializer,
-           include: %i(repository_row)
+           include: %i(repository_row),
+           meta: (pagination_dict(storage_location_repository_row) unless @storage_location.with_grid?)
   end
 
   def update
@@ -51,6 +52,12 @@ class StorageLocationRepositoryRowsController < ApplicationController
     else
       render json: { errors: @storage_location_repository_row.errors.full_messages }, status: :unprocessable_entity
     end
+  end
+
+  def actions_toolbar
+    render json: {
+      actions: []
+    }
   end
 
   private
