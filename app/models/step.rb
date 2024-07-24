@@ -25,7 +25,7 @@ class Step < ApplicationRecord
   after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust }
 
   # conditional touch excluding step completion updates
-  after_destroy :touch_protocol
+  after_destroy :touch_protocol, :remove_from_user_settings
   after_save :touch_protocol
   after_touch :touch_protocol
 
@@ -166,6 +166,10 @@ class Step < ApplicationRecord
   end
 
   private
+
+  def remove_from_user_settings
+    CleanupUserSettingsJob.perform_later('task_step_states', id)
+  end
 
   def touch_protocol
     # if only step completion attributes were changed, do not touch protocol

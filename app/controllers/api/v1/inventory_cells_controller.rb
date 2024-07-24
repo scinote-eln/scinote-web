@@ -47,6 +47,7 @@ module Api
       end
 
       def destroy
+        @inventory_item.update!(last_modified_by: current_user)
         @inventory_cell.destroy!
         render body: nil
       end

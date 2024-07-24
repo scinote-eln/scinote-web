@@ -202,10 +202,14 @@ var MarvinJsEditorApi = (function() {
         }
         $(marvinJsModal).modal('hide');
 
-        config.editor.focus();
+        if (config.editor) config.editor.focus();
+
         config.button.dataset.inProgress = false;
 
-        if (MarvinJsEditor.saveCallback) MarvinJsEditor.saveCallback();
+        if (MarvinJsEditor.saveCallback) {
+          MarvinJsEditor.saveCallback();
+          delete MarvinJsEditor.saveCallback;
+        }
       },
       error: function(response) {
         if (response.status === 403) {
@@ -264,8 +268,8 @@ var MarvinJsEditorApi = (function() {
           MarvinJsEditor.save(config);
         } else if (config.mode === 'edit') {
           config.objectType = 'Asset';
+          MarvinJsEditor.saveCallback = (() => window.location.reload());
           MarvinJsEditor.update(config);
-          location.reload();
         } else if (config.mode === 'new-tinymce') {
           config.objectType = 'TinyMceAsset';
           MarvinJsEditor.save(config);

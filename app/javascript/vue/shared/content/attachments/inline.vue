@@ -1,9 +1,12 @@
 <template>
-  <div class="inline-attachment-container asset"
-       :data-asset-id="attachment.id"
-       :data-e2e="`e2e-CO-${dataE2e}-attachment${attachment.id}-inline`"
+  <div
+    class="inline-attachment-container asset"
+    :class="[{'menu-dropdown-open': isMenuDropdownOpen}, {'context-menu-open': isContextMenuOpen }]"
+    :data-e2e="`e2e-CO-${dataE2e}-attachment${attachment.id}-inline`"
+    ref="inlineAttachmentContainer"
+    :data-asset-id="attachment.id"
   >
-    <div class="header">
+    <div class="header justify-between">
       <div class="file-info">
         <a :href="attachment.attributes.urls.blob"
           class="file-preview-link file-name"
@@ -21,22 +24,27 @@
         </a>
         <div class="file-metadata">
           <span>
-            {{ i18n.t('assets.placeholder.modified_label') }}
             {{ attachment.attributes.updated_at_formatted }}
           </span>
           <span>
-            {{ i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted}) }}
+            {{ attachment.attributes.file_size_formatted }}
           </span>
         </div>
       </div>
-      <ContextMenu
-        :attachment="attachment"
-        @attachment:viewMode="updateViewMode"
-        @attachment:delete="deleteAttachment"
-        @attachment:moved="attachmentMoved"
-        @attachment:uploaded="reloadAttachments"
-        @attachment:update="$emit('attachment:update', $event)"
-      />
+      <div class="flex items-center ml-auto gap-2">
+        <AttachmentActions
+          :attachment="attachment"
+          @attachment:viewMode="updateViewMode"
+          @attachment:delete="deleteAttachment"
+          @attachment:moved="attachmentMoved"
+          @attachment:uploaded="reloadAttachments"
+          @attachment:changed="$emit('attachment:changed', $event)"
+          @attachment:update="$emit('attachment:update', $event)"
+          @attachment:toggle_menu="toggleMenuDropdown"
+          @attachment:move_modal="showMoveModal"
+          @attachment:open="$emit($event)"
+        />
+      </div>
     </div>
     <template v-if="attachment.attributes.wopi">
       <div v-if="showWopi"
@@ -65,6 +73,14 @@
         <i class="text-sn-grey sn-icon" :class="attachment.attributes.icon"></i>
       </div>
     </template>
+    <Teleport to="body">
+      <MoveAssetModal
+        v-if="movingAttachment"
+        :parent_type="attachment.attributes.parent_type"
+        :targets_url="attachment.attributes.urls.move_targets"
+        @confirm="moveAttachment($event)" @cancel="closeMoveModal"
+      />
+    </Teleport>
   </div>
 
 </template>
@@ -74,11 +90,22 @@ import AttachmentMovedMixin from './mixins/attachment_moved.js';
 import ContextMenuMixin from './mixins/context_menu.js';
 import ContextMenu from './context_menu.vue';
 import PdfViewer from '../../pdf_viewer.vue';
+import MoveAssetModal from '../modal/move.vue';
+import MoveMixin from './mixins/move.js';
+import OpenLocallyMixin from './mixins/open_locally.js';
+import AttachmentActions from './attachment_actions.vue';
+import OpenMenu from './open_menu.vue';
 
 export default {
   name: 'inlineAttachment',
-  mixins: [ContextMenuMixin, AttachmentMovedMixin],
-  components: { ContextMenu, PdfViewer },
+  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin, OpenLocallyMixin],
+  components: {
+    ContextMenu,
+    PdfViewer,
+    MoveAssetModal,
+    OpenMenu,
+    AttachmentActions
+  },
   props: {
     attachment: {
       type: Object,
@@ -95,7 +122,9 @@ export default {
   },
   data() {
     return {
-      showWopi: false
+      showWopi: false,
+      isMenuDropdownOpen: false,
+      isContextMenuOpen: false
     };
   },
   mounted() {
@@ -120,7 +149,13 @@ export default {
           }
         }
       });
+    },
+    toggleContextMenu(isOpen) {
+      this.isContextMenuOpen = isOpen;
+    },
+    toggleMenuDropdown(isOpen) {
+      this.isMenuDropdownOpen = isOpen;
     }
-  }
+  },
 };
 </script>

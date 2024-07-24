@@ -3,9 +3,9 @@
 class RepositoryCell < ApplicationRecord
   include ReminderRepositoryCellJoinable
 
-  attr_accessor :importing
+  attr_accessor :importing, :to_destroy
 
-  belongs_to :repository_row
+  belongs_to :repository_row, touch: true
   belongs_to :repository_column
   belongs_to :value, polymorphic: true, inverse_of: :repository_cell, dependent: :destroy
 
@@ -45,9 +45,24 @@ class RepositoryCell < ApplicationRecord
             uniqueness: { scope: :repository_column },
             unless: :importing
 
+  after_touch :update_repository_row_last_modified_by
+
   scope :with_active_reminder, lambda { |user|
     reminder_repository_cells_scope(self, user)
   }
+
+  def update_repository_row_last_modified_by
+    # RepositoryStockConsumptionValue currently don't store last_modified_by
+    # so this would fail. Should probably be refactored to unify the behaviour (23.7.2024)
+    if value.last_modified_by_id
+      repository_row.update!(last_modified_by_id: value.last_modified_by_id)
+    else
+      Rails.logger.warn(
+        "Missing last_modified_by_id for #{value.class} with id #{value.id}, " \
+        "skipping update of last_modified_by on RepositoryRow with id #{repository_row_id}."
+      )
+    end
+  end
 
   def self.create_with_value!(row, column, data, user)
     cell = new(repository_row: row, repository_column: column)

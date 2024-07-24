@@ -29,17 +29,15 @@ module TinyMceImages
         )[0]
         next unless tm_asset_to_update
 
-        unless export_all
-          tm_asset = tm_asset.image.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT).processed
+        tm_asset = tm_asset.image.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT).processed
 
-          width_attr = tm_asset_to_update.attributes['width']
-          height_attr = tm_asset_to_update.attributes['height']
+        width_attr = tm_asset_to_update.attributes['width']
+        height_attr = tm_asset_to_update.attributes['height']
 
-          if width_attr && height_attr && (width_attr.value.to_i >= Constants::LARGE_PIC_FORMAT[0] ||
-                                          height_attr.value.to_i >= Constants::LARGE_PIC_FORMAT[1])
-            width_attr.value = tm_asset.image.blob.metadata['width'].to_s
-            height_attr.value = tm_asset.image.blob.metadata['height'].to_s
-          end
+        if width_attr && height_attr && (width_attr.value.to_i >= Constants::LARGE_PIC_FORMAT[0] ||
+                                        height_attr.value.to_i >= Constants::LARGE_PIC_FORMAT[1])
+          width_attr.value = tm_asset.image.blob.metadata['width'].to_s
+          height_attr.value = tm_asset.image.blob.metadata['height'].to_s
         end
 
         tm_asset_to_update.attributes['src'].value = convert_to_base64(tm_asset.image)

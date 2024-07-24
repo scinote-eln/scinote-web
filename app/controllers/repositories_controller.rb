@@ -27,6 +27,7 @@ class RepositoriesController < ApplicationController
   before_action :set_inline_name_editing, only: %i(show)
   before_action :load_repository_row, only: %i(show)
   before_action :set_breadcrumbs_items, only: %i(index show)
+  before_action :validate_file_type, only: %i(export_repository export_repositories)
 
   layout 'fluid'
 
@@ -36,7 +37,7 @@ class RepositoriesController < ApplicationController
         render 'index'
       end
       format.json do
-        repositories = Lists::RepositoriesService.new(@repositories, params).call
+        repositories = Lists::RepositoriesService.new(@repositories, params, user: current_user).call
         render json: repositories, each_serializer: Lists::RepositorySerializer, user: current_user,
                meta: pagination_dict(repositories)
       end
@@ -53,13 +54,21 @@ class RepositoriesController < ApplicationController
   end
 
   def show
-    current_team_switch(@repository.team) unless @repository.shared_with?(current_team)
-    @display_edit_button = can_create_repository_rows?(@repository)
-    @display_delete_button = can_delete_repository_rows?(@repository)
-    @display_duplicate_button = can_create_repository_rows?(@repository)
-    @snapshot_provisioning = @repository.repository_snapshots.provisioning.any?
+    respond_to do |format|
+      format.html do
+        current_team_switch(@repository.team) unless @repository.shared_with?(current_team)
+        @display_edit_button = can_create_repository_rows?(@repository)
+        @display_delete_button = can_delete_repository_rows?(@repository)
+        @display_duplicate_button = can_create_repository_rows?(@repository)
+        @snapshot_provisioning = @repository.repository_snapshots.provisioning.any?
 
-    @busy_printer = LabelPrinter.where.not(current_print_job_ids: []).first
+        @busy_printer = LabelPrinter.where.not(current_print_job_ids: []).first
+      end
+      format.json do
+        # render serialized repository json
+        render json: @repository, serializer: RepositorySerializer
+      end
+    end
   end
 
   def table_toolbar
@@ -207,29 +216,6 @@ class RepositoriesController < ApplicationController
     }
   end
 
-  def export_modal
-    if current_user.has_available_exports?
-      render json: {
-        html: render_to_string(
-          partial: 'export_repositories_modal',
-          locals: { team_name: current_team.name,
-                    counter: params[:counter].to_i,
-                    export_limit: TeamZipExport.exports_limit,
-                    num_of_requests_left: current_user.exports_left - 1 },
-          formats: :html
-        )
-      }
-    else
-      render json: {
-        html: render_to_string(
-          partial: 'export_limit_exceeded_modal',
-          locals: { requests_limit: TeamZipExport.exports_limit },
-          formats: :html
-        )
-      }
-    end
-  end
-
   def copy
     @tmp_repository = Repository.new(
       team: current_team,
@@ -271,79 +257,97 @@ class RepositoriesController < ApplicationController
     render_403 unless can_create_repository_rows?(@repository)
 
     unless import_params[:file]
-      repository_response(t('repositories.parse_sheet.errors.no_file_selected'))
+      unprocessable_entity_repository_response(t('repositories.parse_sheet.errors.no_file_selected'))
       return
     end
     begin
       parsed_file = ImportRepository::ParseRepository.new(
         file: import_params[:file],
         repository: @repository,
+        date_format: current_user.settings['date_format'],
         session: session
       )
       if parsed_file.too_large?
-        repository_response(t('general.file.size_exceeded',
-                              file_size: Rails.configuration.x.file_max_size_mb))
+        render json: { error: t('general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb) },
+               status: :unprocessable_entity
       elsif parsed_file.has_too_many_rows?
-        repository_response(
-          t('repositories.import_records.error_message.items_limit',
-            items_size: Constants::IMPORT_REPOSITORY_ITEMS_LIMIT)
-        )
+        render json: { error: t('repositories.import_records.error_message.items_limit',
+                                items_size: Constants::IMPORT_REPOSITORY_ITEMS_LIMIT) }, status: :unprocessable_entity
+      elsif parsed_file.has_too_little_rows?
+        render json: { error: t('repositories.parse_sheet.errors.items_min_limit') },
+               status: :unprocessable_entity
       else
         @import_data = parsed_file.data
 
         if @import_data.header.blank? || @import_data.columns.blank?
-          return repository_response(t('repositories.parse_sheet.errors.empty_file'))
+          return render json: { error: t('repositories.parse_sheet.errors.empty_file') }, status: :unprocessable_entity
         end
 
         if (@temp_file = parsed_file.generate_temp_file)
-          render json: {
-            html: render_to_string(partial: 'repositories/parse_records_modal', formats: :html)
-          }
+          render json: { import_data: @import_data, temp_file: @temp_file }
         else
-          repository_response(t('repositories.parse_sheet.errors.temp_file_failure'))
+          render json: { error: t('repositories.parse_sheet.errors.temp_file_failure') }, status: :unprocessable_entity
         end
       end
     rescue ArgumentError, CSV::MalformedCSVError
-      repository_response(t('repositories.parse_sheet.errors.invalid_file',
-                            encoding: ''.encoding))
+      render json: { error: t('repositories.parse_sheet.errors.invalid_file', encoding: ''.encoding) },
+             status: :unprocessable_entity
     rescue TypeError
-      repository_response(t('repositories.parse_sheet.errors.invalid_extension'))
+      render json: { error: t('repositories.parse_sheet.errors.invalid_extension') }, status: :unprocessable_entity
     end
   end
 
   def import_records
     render_403 unless can_create_repository_rows?(Repository.accessible_by_teams(current_team)
-                                                            .find_by_id(import_params[:id]))
-
+                                                            .find_by(id: import_params[:id]))
     # Check if there exist mapping for repository record (it's mandatory)
-    if import_params[:mappings].value?('-1')
-      import_records = repostiory_import_actions
-      status = import_records.import!
+    if import_params[:mappings].present? && import_params[:mappings].value?('-1')
+      status = ImportRepository::ImportRecords
+               .new(
+                 temp_file: TempFile.find_by(id: import_params[:file_id]),
+                 repository: Repository.accessible_by_teams(current_team).find_by(id: import_params[:id]),
+                 mappings: import_params[:mappings],
+                 session: session,
+                 user: current_user,
+                 can_edit_existing_items: import_params[:can_edit_existing_items],
+                 should_overwrite_with_empty_cells: import_params[:should_overwrite_with_empty_cells],
+                 preview: import_params[:preview]
+               ).import!
+      message = t('repositories.import_records.partial_success_flash',
+                  successful_rows_count: (status[:created_rows_count] + status[:updated_rows_count]),
+                  total_rows_count: status[:total_rows_count])
 
       if status[:status] == :ok
-        log_activity(:import_inventory_items,
-                      num_of_items: status[:nr_of_added])
+        unless import_params[:preview] || (status[:created_rows_count] + status[:updated_rows_count]).zero?
+          log_activity(
+            :inventory_items_added_or_updated_with_import,
+            created_rows_count: status[:created_rows_count],
+            updated_rows_count: status[:updated_rows_count]
+          )
+        end
 
-        flash[:success] = t('repositories.import_records.success_flash',
-                            number_of_rows: status[:nr_of_added],
-                            total_nr: status[:total_nr])
-        render json: {}, status: :ok
+        render json: import_params[:preview] ? status : { message: message }, status: :ok
       else
-        flash[:alert] =
-          t('repositories.import_records.partial_success_flash',
-            nr: status[:nr_of_added], total_nr: status[:total_nr])
-        render json: {}, status: :unprocessable_entity
+        render json: { message: message }, status: :unprocessable_entity
       end
     else
-      render json: {
-        html: render_to_string(
-          partial: 'shared/flash_errors',
-          formats: :html,
-          locals: { error_title: t('repositories.import_records.error_message.errors_list_title'),
-                    error: t('repositories.import_records.error_message.no_repository_name') }
-        )
-      }, status: :unprocessable_entity
+      render json: { error: t('repositories.import_records.error_message.mapping_error') },
+             status: :unprocessable_entity
     end
+  end
+
+  def export_empty_repository
+    col_ids = [-3, -4, -5, -6, -7, -8, -9, -10]
+    col_ids << -11 if Repository.repository_row_connections_enabled?
+    col_ids += @repository.repository_columns.map(&:id)
+
+    xlsx = RepositoryXlsxExport.to_empty_xlsx(@repository, col_ids)
+
+    send_data(
+      xlsx,
+      filename: "#{@repository.name.gsub(/\s/, '_')}_template_#{Date.current}.xlsx",
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
   end
 
   def export_repository
@@ -354,8 +358,10 @@ class RepositoriesController < ApplicationController
           repository_id: @repository.id,
           row_ids: params[:row_ids],
           header_ids: params[:header_ids]
-        }
+        },
+        file_type: params[:file_type]
       )
+      update_user_export_file_type if current_user.settings[:repository_export_file_type] != params[:file_type]
       log_activity(:export_inventory_items)
       render json: { message: t('zip_export.export_request_success') }
     else
@@ -365,9 +371,10 @@ class RepositoriesController < ApplicationController
 
   def export_repositories
     repositories = Repository.viewable_by_user(current_user, current_team).where(id: params[:repository_ids])
-    if repositories.present? && current_user.has_available_exports?
-      current_user.increase_daily_exports_counter!
-      RepositoriesExportJob.perform_later(repositories.pluck(:id), user_id: current_user.id, team_id: current_team.id)
+    if repositories.present?
+      RepositoriesExportJob
+        .perform_later(params[:file_type], repositories.pluck(:id), user_id: current_user.id, team_id: current_team.id)
+      update_user_export_file_type if current_user.settings[:repository_export_file_type] != params[:file_type]
       log_activity(:export_inventories, inventories: repositories.pluck(:name).join(', '))
       render json: { message: t('zip_export.export_request_success') }
     else
@@ -442,16 +449,6 @@ class RepositoriesController < ApplicationController
   end
 
   private
-
-  def repostiory_import_actions
-    ImportRepository::ImportRecords.new(
-      temp_file: TempFile.find_by_id(import_params[:file_id]),
-      repository: Repository.accessible_by_teams(current_team).find_by_id(import_params[:id]),
-      mappings: import_params[:mappings],
-      session: session,
-      user: current_user
-    )
-  end
 
   def load_repository
     repository_id = params[:id] || params[:repository_id]
@@ -534,7 +531,8 @@ class RepositoriesController < ApplicationController
   end
 
   def import_params
-    params.permit(:id, :file, :file_id, mappings: {}).to_h
+    params.permit(:id, :file, :file_id, :preview, :can_edit_existing_items,
+                  :should_overwrite_with_empty_cells, :preview, mappings: {}).to_h
   end
 
   def repository_response(message)
@@ -591,5 +589,13 @@ class RepositoriesController < ApplicationController
     @breadcrumbs_items.each do |item|
       item[:label] = "(A) #{item[:label]}" if item[:archived]
     end
+  end
+
+  def validate_file_type
+    render json: { message: 'Invalid file type' }, status: :bad_request unless %w(csv xlsx).include?(params[:file_type])
+  end
+
+  def update_user_export_file_type
+    current_user.update_simple_setting(key: 'repository_export_file_type', value: params[:file_type])
   end
 end

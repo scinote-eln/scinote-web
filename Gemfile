@@ -49,6 +49,7 @@ gem 'bcrypt', '~> 3.1.10'
 # gem 'caracal'
 gem 'caracal',
     git: 'https://github.com/scinote-eln/caracal.git', branch: 'rubyzip2' # Build docx report
+gem 'caxlsx' # Build XLSX files
 gem 'deface', '~> 1.9'
 gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
@@ -106,6 +107,7 @@ group :development, :test do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'brakeman', require: false
   gem 'bullet'
   gem 'byebug'
   gem 'factory_bot_rails'

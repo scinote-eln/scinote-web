@@ -98,25 +98,50 @@ describe RepositoriesController, type: :controller do
              repository_row: repository_row,
              repository_column: repository_column
     end
-    let(:params) do
+    let(:params_csv) do
       {
         id: repository.id,
         header_ids: [repository_column.id],
-        row_ids: [repository_row.id]
+        row_ids: [repository_row.id],
+        file_type: :csv
       }
     end
-    let(:action) { post :export_repository, params: params, format: :json }
 
-    it 'calls create activity for exporting inventory items' do
+    let(:params_xlsx) do
+      {
+        id: repository.id,
+        header_ids: [repository_column.id],
+        row_ids: [repository_row.id],
+        file_type: :xlsx
+      }
+    end
+
+    let(:action_csv) { post :export_repository, params: params_csv, format: :json }
+    let(:action_xlsx) { post :export_repository, params: params_xlsx, format: :json }
+
+    it 'calls create activity for exporting inventory items csv' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
               .with(hash_including(activity_type: :export_inventory_items)))
 
-      action
+      action_csv
     end
 
-    it 'adds activity in DB' do
-      expect { action }
+    it 'adds activity in DB for exporting csv' do
+      expect { action_csv }
+        .to(change { Activity.count })
+    end
+
+    it 'calls create activity for exporting inventory items xlsx' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type: :export_inventory_items)))
+
+      action_xlsx
+    end
+
+    it 'adds activity in DB for exporting xlsx' do
+      expect { action_xlsx }
         .to(change { Activity.count })
     end
   end
@@ -136,17 +161,18 @@ describe RepositoriesController, type: :controller do
 
     it 'calls create activity for importing inventory items' do
       allow_any_instance_of(ImportRepository::ImportRecords)
-        .to receive(:import!).and_return(status: :ok)
+        .to receive(:import!).and_return({ status: :ok, created_rows_count: 1, updated_rows_count: 1 })
 
       expect(Activities::CreateActivityService)
         .to(receive(:call)
-              .with(hash_including(activity_type: :import_inventory_items)))
+              .with(hash_including(activity_type: :inventory_items_added_or_updated_with_import)))
 
       action
     end
 
     it 'adds activity in DB' do
-      allow_any_instance_of(ImportRepository::ImportRecords).to receive(:import!).and_return(status: :ok)
+      allow_any_instance_of(ImportRepository::ImportRecords).to receive(:import!)
+        .and_return({ status: :ok, created_rows_count: 1, updated_rows_count: 1 })
 
       expect { action }
         .to(change { Activity.count })

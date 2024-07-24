@@ -102,6 +102,8 @@ class Repository < RepositoryBase
       'relationships',
       'repository_rows.created_at',
       'users.full_name',
+      'repository_rows.updated_at',
+      'last_modified_bies_repository_rows.full_name',
       'repository_rows.archived_on',
       'archived_bies_repository_rows.full_name'
     ]
@@ -160,6 +162,7 @@ class Repository < RepositoryBase
   def importable_repository_fields
     fields = {}
     # First and foremost add record name
+    fields['0'] = I18n.t('repositories.id_column')
     fields['-1'] = I18n.t('repositories.default_column')
     # Add all other custom columns
     repository_columns.order(:created_at).each do |rc|
@@ -199,11 +202,6 @@ class Repository < RepositoryBase
             message_items: { repository_new: new_repo.id, repository_original: id })
 
     new_repo
-  end
-
-  def import_records(sheet, mappings, user)
-    importer = RepositoryImportParser::Importer.new(sheet, mappings, user, self)
-    importer.run
   end
 
   def assigned_rows(my_module)

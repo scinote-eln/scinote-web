@@ -21,23 +21,37 @@
       <img :src="this.imageLoadError ? attachment.attributes.urls.blob : attachment.attributes.medium_preview" @error="ActiveStoragePreviews.reCheckPreview"
             @load="ActiveStoragePreviews.showPreview"/>
     </div>
-    <div class="file-metadata">
-      <span>
+    <div class="flex items-center gap-2 text-xs text-sn-grey overflow-hidden ml-auto">
+      <span class="truncate" :title="i18n.t('assets.placeholder.modified_label') + ' ' + attachment.attributes.updated_at_formatted">
           {{ i18n.t('assets.placeholder.modified_label') }}
           {{ attachment.attributes.updated_at_formatted }}
       </span>
-      <span>
+      <span class="truncate" :title="i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted})">
         {{ i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted}) }}
       </span>
     </div>
-    <ContextMenu
-      :attachment="attachment"
-      @attachment:viewMode="updateViewMode"
-      @attachment:delete="deleteAttachment"
-      @attachment:moved="attachmentMoved"
-      @attachment:uploaded="reloadAttachments"
-      @attachment:update="$emit('attachment:update', $event)"
-    />
+    <div class="attachment-actions shrink-0 ml-auto">
+      <AttachmentActions
+          :attachment="attachment"
+          @attachment:viewMode="updateViewMode"
+          @attachment:delete="deleteAttachment"
+          @attachment:moved="attachmentMoved"
+          @attachment:uploaded="reloadAttachments"
+          @attachment:changed="$emit('attachment:changed', $event)"
+          @attachment:update="$emit('attachment:update', $event)"
+          @attachment:toggle_menu="toggleMenuDropdown"
+          @attachment:move_modal="showMoveModal"
+          @attachment:open="$emit($event)"
+        />
+    </div>
+    <Teleport to="body">
+      <moveAssetModal
+        v-if="movingAttachment"
+        :parent_type="attachment.attributes.parent_type"
+        :targets_url="attachment.attributes.urls.move_targets"
+        @confirm="moveAttachment($event)" @cancel="closeMoveModal"
+      />
+    </Teleport>
   </div>
 </template>
 
@@ -45,11 +59,20 @@
 import AttachmentMovedMixin from './mixins/attachment_moved.js';
 import ContextMenuMixin from './mixins/context_menu.js';
 import ContextMenu from './context_menu.vue';
+import MoveMixin from './mixins/move.js';
+import MoveAssetModal from '../modal/move.vue';
+import AttachmentActions from './attachment_actions.vue';
+import OpenMenu from './open_menu.vue';
 
 export default {
   name: 'listAttachment',
-  mixins: [ContextMenuMixin, AttachmentMovedMixin],
-  components: { ContextMenu },
+  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
+  components: {
+    ContextMenu,
+    MoveAssetModal,
+    OpenMenu,
+    AttachmentActions
+  },
   props: {
     attachment: {
       type: Object,
@@ -66,13 +89,21 @@ export default {
   },
   data() {
     return {
-      imageLoadError: false
+      imageLoadError: false,
+      isContextMenuOpen: false,
+      isMenuDropdownOpen: false
     };
   },
   methods: {
     handleImageError() {
       this.imageLoadError = true;
+    },
+    toggleContextMenu(isOpen) {
+      this.isContextMenuOpen = isOpen;
+    },
+    toggleMenuDropdown(isOpen) {
+      this.isMenuDropdownOpen = isOpen;
     }
-  }
+  },
 };
 </script>

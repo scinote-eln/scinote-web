@@ -103,4 +103,8 @@
     @apply absolute -bottom-5 text-sn-alert-passion text-xs;
     content: attr(data-error);
   }
+
+  .sci-error-text {
+    @apply text-xs text-sn-alert-passion;
+  }
 }

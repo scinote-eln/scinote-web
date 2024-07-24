@@ -11,7 +11,7 @@
     <div class="tab-pane" role="tabpanel" id="prj-tab-<%= at_who_key %>" data-object-type="PROJECT"></div>
     <div class="tab-pane" role="tabpanel" id="exp-tab-<%= at_who_key %>" data-object-type="EXPERIMENT"></div>
     <div class="tab-pane" role="tabpanel" id="tsk-tab-<%= at_who_key %>" data-object-type="TASK"></div>
-    <div class="tab-pane rep-tab" role="tabpanel" id="rep-tab-<%= at_who_key %>" data-object-type="REPOSITORY"><% if repositories.length > 1 %>
+    <div class="tab-pane rep-tab overflow-y-auto max-h-[100px]" role="tabpanel" id="rep-tab-<%= at_who_key %>" data-object-type="REPOSITORY"><% if repositories.length > 1 %>
       <div class="sci-btn-group flex-wrap">
       <% repositories.each do |repository| %>
         <button class="btn btn-light repository-object" data-object-id="<%= repository.id %>">

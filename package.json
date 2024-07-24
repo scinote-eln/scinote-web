@@ -72,7 +72,7 @@
     "node-gyp": "9.3.1",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "pdfjs-dist": "^2.5.207",
-    "postcss": "8.4.31",
+    "postcss": "8.4.32",
     "postcss-loader": "5.3.0",
     "puppeteer": "npm:puppeteer-core",
     "puppeteer-core": "^21.3.8",

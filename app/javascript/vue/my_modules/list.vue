@@ -174,7 +174,7 @@ export default {
     columns.push({
       field: 'comments',
       headerName: this.i18n.t('experiments.table.column.comments_html'),
-      sortable: false,
+      sortable: true,
       cellRenderer: CommentsRenderer,
       notSelectable: true
     });

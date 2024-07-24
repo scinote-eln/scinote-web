@@ -71,6 +71,7 @@ class MyModuleRepositoryRow < ApplicationRecord
         team_id: my_module.experiment.project.team.id
       }
     )
+    stock_value.last_modified_by_id = last_modified_by_id
     stock_value.save!
     save!
   end

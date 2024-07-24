@@ -97,6 +97,26 @@
                       </span>
                     </div>
 
+                    <!-- UPDATED ON-->
+                    <div class="flex flex-col ">
+                      <span class="inline-block font-semibold pb-[6px]">{{
+                        i18n.t('repositories.item_card.default_columns.updated_on')
+                      }}</span>
+                      <span class="inline-block text-sn-dark-grey line-clamp-3" :title="defaultColumns?.updated_on" data-e2e="e2e-TX-itemCard-updatedOn">
+                        {{ defaultColumns?.updated_on }}
+                      </span>
+                    </div>
+
+                    <!-- UPDATED BY -->
+                    <div class="flex flex-col ">
+                      <span class="inline-block font-semibold pb-[6px]">{{
+                        i18n.t('repositories.item_card.default_columns.updated_by')
+                      }}</span>
+                      <span class="inline-block text-sn-dark-grey line-clamp-3" :title="defaultColumns?.updated_by" data-e2e="e2e-TX-itemCard-updatedBy">
+                        {{ defaultColumns?.updated_by }}
+                      </span>
+                    </div>
+
                     <!-- ARCHIVED ON -->
                     <div v-if="defaultColumns.archived_on" class="flex flex-col ">
                       <div class="sci-divider pb-4"></div>

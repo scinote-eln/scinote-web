@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ImportRepository
   class ImportRecords
     def initialize(options)
@@ -6,57 +8,25 @@ module ImportRepository
       @mappings = options.fetch(:mappings)
       @session = options.fetch(:session)
       @user = options.fetch(:user)
+      @can_edit_existing_items = options.fetch(:can_edit_existing_items)
+      @should_overwrite_with_empty_cells = options.fetch(:should_overwrite_with_empty_cells)
+      @preview = options.fetch(:preview)
     end
 
     def import!
-      status = run_import_actions
-      @temp_file.destroy
+      status = @temp_file.file.open do |temp_file|
+        importer = RepositoryImportParser::Importer.new(SpreadsheetParser.open_spreadsheet(temp_file),
+                                                        @mappings,
+                                                        @user,
+                                                        @repository,
+                                                        @can_edit_existing_items,
+                                                        @should_overwrite_with_empty_cells,
+                                                        @preview)
+        importer.run
+      end
+
+      @temp_file.destroy unless @preview
       status
-    end
-
-    private
-
-    def run_import_actions
-      @temp_file.file.open do |temp_file|
-        @repository.import_records(
-          SpreadsheetParser.open_spreadsheet(temp_file),
-          @mappings,
-          @user
-        )
-      end
-    end
-
-    def run_checks
-      unless @mappings
-        return {
-          status: :error,
-          errors:
-            I18n.t('repositories.import_records.error_message.no_data_to_parse')
-        }
-      end
-      unless @mappings.value?('-1')
-        return {
-          status: :error,
-          errors:
-            I18n.t('repositories.import_records.error_message.no_column_name')
-        }
-      end
-      unless @temp_file
-        return {
-          status: :error,
-          errors:
-            I18n.t(
-              'repositories.import_records.error_message.temp_file_not_found'
-            )
-        }
-      end
-      unless @temp_file.session_id == session.id
-        return {
-          status: :error,
-          errors:
-            I18n.t('repositories.import_records.error_message.session_expired')
-        }
-      end
     end
   end
 end

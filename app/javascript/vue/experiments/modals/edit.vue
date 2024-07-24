@@ -64,6 +64,7 @@ export default {
   },
   mounted() {
     SmartAnnotation.init($(this.$refs.description), false);
+    $(this.$refs.modal).on('hidden.bs.modal', this.handleAtWhoModalClose);
   },
   mixins: [modalMixin],
   methods: {
@@ -80,6 +81,9 @@ export default {
         HelperModule.flashAlertMsg(error.response.data.message, 'danger');
       });
     },
+    handleAtWhoModalClose() {
+      $('.atwho-view.old').css('display', 'none');
+    }
   },
 };
 </script>

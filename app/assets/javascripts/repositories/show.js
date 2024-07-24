@@ -33,6 +33,15 @@
       $('#parse-records-modal').modal('show');
       repositoryRecordsImporter();
     });
+
+    // Handling cancel click in #parse-records-modal
+    $('#parse-records-modal').on('click', '#parse-records-cancel-btn', () => {
+      $('#parse-records-modal').modal('hide');
+      // remove previous modal (necessary to get the new relevant data instead of old data)
+      setTimeout(() => {
+        $('#parse-records-modal').remove();
+      }, 200);
+    });
   }
 
   function initTable() {
@@ -56,7 +65,7 @@
                                          data.responseJSON.message + '</span>');
     });
 
-    submitBtn.on('click', function(event) {
+    submitBtn.one('click', (event) => {
       var data = new FormData();
       submitBtn.attr('disabled', true);
       $('#parse-sheet-loader').removeClass('hidden');
@@ -78,8 +87,12 @@
 
   function initImportRecordsModal() {
     $('.repository-show').on('click', '#importRecordsButton', function() {
-      $('#modal-import-records').modal('show');
-      initParseRecordsModal();
+      window.importRepositoryModalComponent.open();
+    });
+
+    // Handling cancel click in #modal-import-records
+    $('#modal-import-records').on('click', '#import-records-cancel-btn', () => {
+      $('#modal-import-records').modal('hide');
     });
   }
 
