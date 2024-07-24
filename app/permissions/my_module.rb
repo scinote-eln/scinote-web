@@ -45,7 +45,7 @@ Canaid::Permissions.register_for(MyModule) do
   end
 
   can :share_my_module do |user, my_module|
-    my_module.permission_granted?(user, MyModulePermissions::SHARE)
+    my_module.team.shareable_links_enabled? && my_module.permission_granted?(user, MyModulePermissions::SHARE)
   end
 
   can :restore_my_module do |user, my_module|
