@@ -74,11 +74,19 @@ module Toolbars
 
       return unless can_manage_storage_locations?(current_user.current_team)
 
+      storage_location = @storage_locations.first
+
+      number_of_items = storage_location.storage_location_repository_rows.count +
+                        StorageLocation.inner_storage_locations(current_user.current_team, storage_location)
+                                       .where(container: true)
+                                       .joins(:storage_location_repository_rows)
+                                       .count
       {
         name: 'delete',
         label: I18n.t('storage_locations.index.toolbar.delete'),
         icon: 'sn-icon sn-icon-delete',
-        path: storage_location_path(@storage_locations.first),
+        number_of_items: number_of_items,
+        path: storage_location_path(storage_location),
         type: :emit
       }
     end
