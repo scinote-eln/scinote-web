@@ -56,7 +56,10 @@ class StorageLocationRepositoryRowsController < ApplicationController
 
   def actions_toolbar
     render json: {
-      actions: []
+      actions: Toolbars::StorageLocationRepositoryRowsService.new(
+        current_user,
+        items_ids: JSON.parse(params[:items]).map { |i| i['id'] }
+      ).actions
     }
   end
 
