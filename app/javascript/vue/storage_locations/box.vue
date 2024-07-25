@@ -3,7 +3,10 @@
     <div v-if="withGrid">
       <div class="py-4">
         <div class="h-11">
-
+          <button class="btn btn-primary">
+            <i class="sn-icon sn-icon-new-task"></i>
+            {{ i18n.t('storage_locations.show.toolbar.assign') }}
+          </button>
         </div>
       </div>
       <Grid :gridSize="gridSize" :assignedItems="assignedItems" />
@@ -99,6 +102,17 @@ export default {
     },
     toolbarActions() {
       const left = [];
+
+      if (!this.withGrid) {
+        left.push({
+          name: 'assign',
+          icon: 'sn-icon sn-icon-new-task',
+          label: this.i18n.t('storage_locations.show.toolbar.assign'),
+          type: 'emit',
+          buttonStyle: 'btn btn-primary'
+        });
+      }
+
       return {
         left,
         right: []

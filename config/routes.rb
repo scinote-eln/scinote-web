@@ -819,6 +819,10 @@ Rails.application.routes.draw do
       resources :storage_location_repository_rows, only: %i(index create destroy update) do
         collection do
           get :actions_toolbar
+          post :unassign
+        end
+        member do
+          post :move
         end
       end
     end

@@ -2680,6 +2680,10 @@ en:
         row_id: "Item ID"
         row_name: "Name"
         stock: "Stock"
+      toolbar:
+        assign: 'Assign item'
+        unassign: 'Unassign'
+        move: 'Move'
     index:
       head_title: "Locations"
       new_location: "New location"
