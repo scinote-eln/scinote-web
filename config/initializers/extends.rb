@@ -591,6 +591,24 @@ class Extends
       HEREDOC
   }
 
+  DEFAULT_LABEL_TEMPLATE_203DPI = {
+    zpl:
+      <<~HEREDOC
+        ^XA
+        ^MTT
+        ^MUD,200,200
+        ^PR2
+        ^MD30
+        ^LH0,8
+        ^PW180
+        ^CF0,15
+        ^FO0,3^FD{{ITEM_ID}}^FS
+        ^FO0,11^BQN,2,3^FDMA,{{ITEM_ID}}^FS
+        ^FO70,25^FB120,2,0,L^FD{{NAME}}^FS^FS
+        ^XZ
+      HEREDOC
+  }
+
   LABEL_TEMPLATE_FORMAT_MAP = {
     'ZebraLabelTemplate' => 'ZPL',
     'FluicsLabelTemplate' => 'Fluics'
