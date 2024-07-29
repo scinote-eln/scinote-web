@@ -2671,7 +2671,7 @@ en:
     errors:
       my_module_references_missing: 'Task references are not set'
   storage_locations:
-    box: 'box'
+    container: 'box'
     location: 'location'
     show:
       table:
@@ -2687,7 +2687,7 @@ en:
     index:
       head_title: "Locations"
       new_location: "New location"
-      new_box: "New box"
+      new_container: "New box"
       duplicate:
         success_message: "Location was successfully duplicated."
       toolbar:
@@ -2707,15 +2707,15 @@ en:
         description: "Description"
       edit_modal:
         title_create_location: "Create new location"
-        title_create_box: "Create new box"
+        title_create_container: "Create new box"
         title_edit_location: "Edit location"
-        title_edit_box: "Edit box"
+        title_edit_container: "Edit box"
         description_create_location: "Fill in the fields and create a new location."
-        description_create_box: "Fill in the fields to create a new box. Defining the box dimensions allows you to control the number of available spaces for placing inventory items."
+        description_create_container: "Fill in the fields to create a new box. Defining the box dimensions allows you to control the number of available spaces for placing inventory items."
         name_label_location: "Location name"
         image_label_location: "Image of location"
-        name_label_box: "Box name"
-        image_label_box: "Image of box"
+        name_label_container: "Box name"
+        image_label_container: "Image of box"
         drag_and_drop_supporting_text: ".png or .jpg file"
         description_label: "Description"
         name_placeholder: "Big freezer"
@@ -2726,9 +2726,9 @@ en:
         no_grid_tooltip: "You can assign unlimited items to the “No-grid” box but they do not have assigned position."
         success_message:
           create_location: "Location %{name} was successfully created."
-          create_box: "Box %{name} was successfully created."
+          create_container: "Box %{name} was successfully created."
           edit_location: "Location %{name} was successfully updated."
-          edit_box: "Box %{name} was successfully updated."
+          edit_container: "Box %{name} was successfully updated."
         errors:
           max_length: "is too long (maximum is %{max_length} characters)"
       move_modal:

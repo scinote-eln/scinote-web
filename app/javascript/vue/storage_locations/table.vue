@@ -7,7 +7,7 @@
                :toolbarActions="toolbarActions"
                :actionsUrl="actionsUrl"
                @create_location="openCreateLocationModal"
-               @create_box="openCreateBoxModal"
+               @create_container="openCreateContainerModal"
                @edit="edit"
                @duplicate="duplicate"
                @tableReloaded="reloadingTable = false"
@@ -149,9 +149,9 @@ export default {
           buttonStyle: 'btn btn-primary'
         });
         left.push({
-          name: 'create_box',
+          name: 'create_container',
           icon: 'sn-icon sn-icon-item',
-          label: this.i18n.t('storage_locations.index.new_box'),
+          label: this.i18n.t('storage_locations.index.new_container'),
           type: 'emit',
           path: this.createUrl,
           buttonStyle: 'btn btn-secondary'
@@ -169,14 +169,14 @@ export default {
       this.editModalMode = 'location';
       this.editStorageLocation = null;
     },
-    openCreateBoxModal() {
+    openCreateContainerModal() {
       this.openEditModal = true;
-      this.editModalMode = 'box';
+      this.editModalMode = 'container';
       this.editStorageLocation = null;
     },
     edit(action, params) {
       this.openEditModal = true;
-      this.editModalMode = params[0].container ? 'box' : 'location';
+      this.editModalMode = params[0].container ? 'container' : 'location';
       [this.editStorageLocation] = params;
     },
     duplicate(action) {
@@ -195,13 +195,13 @@ export default {
         name,
         urls
       } = params.data;
-      let boxIcon = '';
+      let containerIcon = '';
       if (params.data.container) {
-        boxIcon = '<i class="sn-icon sn-icon-item"></i>';
+        containerIcon = '<i class="sn-icon sn-icon-item"></i>';
       }
       return `<a class="hover:no-underline flex items-center gap-1"
                  title="${name}" href="${urls.show}">
-                 ${boxIcon}
+                 ${containerIcon}
                  <span class="truncate">${name}</span>
               </a>`;
     },
@@ -214,7 +214,7 @@ export default {
       this.moveToUrl = event.path;
     },
     async deleteStorageLocation(event, rows) {
-      const storageLocationType = rows[0].container ? this.i18n.t('storage_locations.box') : this.i18n.t('storage_locations.location');
+      const storageLocationType = rows[0].container ? this.i18n.t('storage_locations.container') : this.i18n.t('storage_locations.location');
       const description = `
         <p>${this.i18n.t('storage_locations.index.delete_modal.description_1_html',
     { name: rows[0].name, type: storageLocationType, num_of_items: event.number_of_items })}</p>

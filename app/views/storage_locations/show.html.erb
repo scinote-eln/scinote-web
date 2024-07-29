@@ -8,9 +8,9 @@
         <h1><%= @storage_location.name %></h1>
       </div>
     </div>
-    <div class="content-body" data-e2e="e2e-CO-storage_locations_box">
-      <div id="storageLocationsBox" class="fixed-content-body">
-        <storage-locations-box
+    <div class="content-body" data-e2e="e2e-CO-storage_locations_container">
+      <div id="StorageLocationsContainer" class="fixed-content-body">
+        <storage-locations-container
           actions-url="<%= actions_toolbar_storage_location_storage_location_repository_rows_path(@storage_location) %>"
           data-source="<%= storage_location_storage_location_repository_rows_path(@storage_location)  %>"
           :with-grid="<%= @storage_location.with_grid? %>"
@@ -20,5 +20,5 @@
     </div>
   </div>
 
-  <%= javascript_include_tag 'vue_storage_locations_box' %>
+  <%= javascript_include_tag 'vue_storage_locations_container' %>
 <% end %>
