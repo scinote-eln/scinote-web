@@ -9,7 +9,7 @@ module Lists
     end
 
     def fetch_records
-      @records = StorageLocation.where(team: @team, parent_id: @parent_id)
+      @records = @team.storage_locations.where(parent_id: @parent_id)
     end
 
     def filter_records; end

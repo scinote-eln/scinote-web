@@ -3,9 +3,9 @@
 class StorageLocationRepositoryRowsController < ApplicationController
   before_action :load_storage_location_repository_row, only: %i(update destroy)
   before_action :load_storage_location
-  before_action :load_repository_row, only: %i(update destroy)
-  before_action :check_read_permissions, only: :index
-  before_action :check_manage_permissions, except: :index
+  before_action :load_repository_row, only: %i(create update destroy)
+  before_action :check_read_permissions, except: %i(create actions_toolbar)
+  before_action :check_manage_permissions, only: %i(create update destroy)
 
   def index
     storage_location_repository_row = Lists::StorageLocationRepositoryRowsService.new(
@@ -90,10 +90,12 @@ class StorageLocationRepositoryRowsController < ApplicationController
   end
 
   def check_read_permissions
-    render_403 unless true
+    render_403 unless can_read_storage_location_containers?(current_team)
   end
 
   def check_manage_permissions
-    render_403 unless true
+    unless can_manage_storage_location_containers?(current_team) && can_read_repository?(@repository_row.repository)
+      render_403
+    end
   end
 end

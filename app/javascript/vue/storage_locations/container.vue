@@ -13,7 +13,7 @@
     </div>
     <div class="h-full bg-white p-4">
       <DataTable :columnDefs="columnDefs"
-                tableId="StorageLocationsBox"
+                tableId="StorageLocationsContainer"
                 :dataUrl="dataSource"
                 ref="table"
                 :reloadingTable="reloadingTable"
@@ -34,7 +34,7 @@ import DataTable from '../shared/datatable/table.vue';
 import Grid from './grid.vue';
 
 export default {
-  name: 'StorageLocationsBox',
+  name: 'StorageLocationsContainer',
   components: {
     DataTable,
     Grid

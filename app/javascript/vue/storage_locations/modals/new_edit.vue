@@ -26,7 +26,7 @@
               </div>
               <span v-if="this.errors.name" class="text-sn-coral text-xs">{{ this.errors.name }}</span>
             </div>
-            <div v-if="editModalMode == 'box'" class="mb-6">
+            <div v-if="editModalMode == 'container'" class="mb-6">
               <label class="sci-label">
                 {{ i18n.t(`storage_locations.index.edit_modal.dimensions_label`) }}
               </label>
@@ -163,7 +163,7 @@ export default {
     SmartAnnotation.init($(this.$refs.description), false);
     $(this.$refs.modal).on('hidden.bs.modal', this.handleAtWhoModalClose);
 
-    this.object.container = this.editModalMode === 'box';
+    this.object.container = this.editModalMode === 'container';
   },
   methods: {
     submit() {

@@ -67,7 +67,7 @@ const entryList = {
   vue_legacy_repository_menu_dropdown: './app/javascript/packs/vue/legacy/repository_menu_dropdown.js',
   vue_dashboard_new_task: './app/javascript/packs/vue/dashboard_new_task.js',
   vue_storage_locations_table: './app/javascript/packs/vue/storage_locations_table.js',
-  vue_storage_locations_box: './app/javascript/packs/vue/storage_locations_box.js'
+  vue_storage_locations_container: './app/javascript/packs/vue/storage_locations_container.js'
 };
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

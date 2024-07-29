@@ -2,8 +2,9 @@
 
 class StorageLocationsController < ApplicationController
   before_action :load_storage_location, only: %i(update destroy duplicate move show)
-  before_action :check_read_permissions, only: :index
-  before_action :check_manage_permissions, except: :index
+  before_action :check_read_permissions, except: %i(index create tree actions_toolbar)
+  before_action :check_create_permissions, only: :create
+  before_action :check_manage_permissions, only: %i(update destroy duplicate move)
   before_action :set_breadcrumbs_items, only: %i(index show)
 
   def index
@@ -111,11 +112,27 @@ class StorageLocationsController < ApplicationController
   end
 
   def check_read_permissions
-    render_403 unless true
+    if @storage_location.container
+      render_403 unless can_read_storage_location_containers?(current_team)
+    else
+      render_403 unless can_read_storage_locations?(current_team)
+    end
+  end
+
+  def check_create_permissions
+    if storage_location_params[:container]
+      render_403 unless can_create_storage_location_containers?(current_team)
+    else
+      render_403 unless can_create_storage_locations?(current_team)
+    end
   end
 
   def check_manage_permissions
-    render_403 unless true
+    if @storage_location.container
+      render_403 unless can_manage_storage_location_containers?(current_team)
+    else
+      render_403 unless can_manage_storage_locations?(current_team)
+    end
   end
 
   def set_breadcrumbs_items

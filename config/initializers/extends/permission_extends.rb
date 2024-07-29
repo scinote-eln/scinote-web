@@ -13,7 +13,13 @@ module PermissionExtends
       REPORTS_CREATE
       LABEL_TEMPLATES_READ
       LABEL_TEMPLATES_MANAGE
-    ).each { |permission| const_set(permission, "team_#{permission.underscore}") }
+      STORAGE_LOCATIONS_CREATE
+      STORAGE_LOCATIONS_MANAGE
+      STORAGE_LOCATIONS_READ
+      STORAGE_LOCATION_CONTAINERS_CREATE
+      STORAGE_LOCATION_CONTAINERS_MANAGE
+      STORAGE_LOCATION_CONTAINERS_READ
+    ).each { |permission| const_set(permission, "team_#{permission.parameterize}") }
   end
 
   module ProtocolPermissions
@@ -24,7 +30,7 @@ module PermissionExtends
       MANAGE
       USERS_MANAGE
       MANAGE_DRAFT
-    ).each { |permission| const_set(permission, "protocol_#{permission.underscore}") }
+    ).each { |permission| const_set(permission, "protocol_#{permission.parameterize}") }
   end
 
   module ReportPermissions
@@ -33,7 +39,7 @@ module PermissionExtends
       READ
       MANAGE
       USERS_MANAGE
-    ).each { |permission| const_set(permission, "report_#{permission.underscore}") }
+    ).each { |permission| const_set(permission, "report_#{permission.parameterize}") }
   end
 
   module ProjectPermissions
@@ -51,7 +57,7 @@ module PermissionExtends
       COMMENTS_MANAGE_OWN
       TAGS_MANAGE
       EXPERIMENTS_CREATE
-    ).each { |permission| const_set(permission, "project_#{permission.underscore}") }
+    ).each { |permission| const_set(permission, "project_#{permission.parameterize}") }
   end
 
   module ExperimentPermissions
@@ -65,7 +71,7 @@ module PermissionExtends
       USERS_MANAGE
       READ_CANVAS
       ACTIVITIES_READ
-    ).each { |permission| const_set(permission, "experiment_#{permission.underscore}") }
+    ).each { |permission| const_set(permission, "experiment_#{permission.parameterize}") }
   end
 
   module MyModulePermissions
@@ -107,7 +113,7 @@ module PermissionExtends
       USERS_MANAGE
       DESIGNATED_USERS_MANAGE
       STOCK_CONSUMPTION_UPDATE
-    ).each { |permission| const_set(permission, "task_#{permission.underscore}") }
+    ).each { |permission| const_set(permission, "task_#{permission.parameterize}") }
   end
 
   module RepositoryPermissions
@@ -127,7 +133,7 @@ module PermissionExtends
       COLUMNS_DELETE
       USERS_MANAGE
       FILTERS_MANAGE
-    ).each { |permission| const_set(permission, "inventory_#{permission.underscore}") }
+    ).each { |permission| const_set(permission, "inventory_#{permission.parameterize}") }
   end
 
   module PredefinedRoles
@@ -147,6 +153,12 @@ module PermissionExtends
       TeamPermissions::REPORTS_CREATE,
       TeamPermissions::LABEL_TEMPLATES_READ,
       TeamPermissions::LABEL_TEMPLATES_MANAGE,
+      TeamPermissions::STORAGE_LOCATIONS_READ,
+      TeamPermissions::STORAGE_LOCATIONS_CREATE,
+      TeamPermissions::STORAGE_LOCATIONS_MANAGE,
+      TeamPermissions::STORAGE_LOCATION_CONTAINERS_READ,
+      TeamPermissions::STORAGE_LOCATION_CONTAINERS_CREATE,
+      TeamPermissions::STORAGE_LOCATION_CONTAINERS_MANAGE,
       ProtocolPermissions::READ,
       ProtocolPermissions::READ_ARCHIVED,
       ProtocolPermissions::MANAGE_DRAFT,
@@ -241,6 +253,8 @@ module PermissionExtends
 
     VIEWER_PERMISSIONS = [
       TeamPermissions::LABEL_TEMPLATES_READ,
+      TeamPermissions::STORAGE_LOCATIONS_READ,
+      TeamPermissions::STORAGE_LOCATION_CONTAINERS_READ,
       ProtocolPermissions::READ,
       ProtocolPermissions::READ_ARCHIVED,
       ReportPermissions::READ,
