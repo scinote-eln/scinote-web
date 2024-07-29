@@ -132,7 +132,7 @@ class ProtocolsImporter
         )
 
         # Decode the file bytes
-        asset.file.attach(io: StringIO.new(Base64.decode64(asset_json['bytes'])),
+        asset.attach_file_version(io: StringIO.new(Base64.decode64(asset_json['bytes'])),
                           filename: asset_json['fileName'],
                           content_type: asset_json['fileType'],
                           metadata: JSON.parse(asset_json['fileMetadata'] || '{}'))

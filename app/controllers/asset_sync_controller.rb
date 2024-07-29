@@ -45,7 +45,7 @@ class AssetSyncController < ApplicationController
       if wopi_file?(@asset)
         @asset.update_contents(request.body)
       else
-        @asset.file.attach(io: request.body, filename: @asset.file.filename)
+        @asset.attach_file_version(io: request.body, filename: @asset.file.filename)
         @asset.touch
       end
 
@@ -94,7 +94,7 @@ class AssetSyncController < ApplicationController
         metadata: @asset.blob.metadata
       )
 
-      new_asset.file.attach(blob)
+      new_asset.attach_file_version(blob)
 
       case @asset.parent
       when Step
