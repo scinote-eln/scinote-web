@@ -194,6 +194,8 @@ Rails.application.routes.draw do
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
           get 'actions_toolbar'
+          get :list
+          get :rows_list
         end
         member do
           get :export_empty_repository
@@ -815,11 +817,12 @@ Rails.application.routes.draw do
       member do
         post :move
         post :duplicate
+        post :unassign_rows
+        get :available_positions
       end
       resources :storage_location_repository_rows, only: %i(index create destroy update) do
         collection do
           get :actions_toolbar
-          post :unassign
         end
         member do
           post :move

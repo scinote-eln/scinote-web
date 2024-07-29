@@ -3,13 +3,13 @@
     <div v-if="withGrid">
       <div class="py-4">
         <div class="h-11">
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" @click="assignRow">
             <i class="sn-icon sn-icon-new-task"></i>
             {{ i18n.t('storage_locations.show.toolbar.assign') }}
           </button>
         </div>
       </div>
-      <Grid :gridSize="gridSize" :assignedItems="assignedItems" />
+      <Grid :gridSize="gridSize" :assignedItems="assignedItems" @assign="assignRowToPosition"/>
     </div>
     <div class="h-full bg-white p-4">
       <DataTable :columnDefs="columnDefs"
@@ -20,9 +20,31 @@
                 :toolbarActions="toolbarActions"
                 :actionsUrl="actionsUrl"
                 :scrollMode="paginationMode"
+                @assign="assignRow"
+                @move="moveRow"
+                @unassign="unassignRows"
                 @tableReloaded="handleTableReload"
       />
     </div>
+    <Teleport to="body">
+      <AssignModal
+        v-if="openAssignModal"
+        :assignMode="assignMode"
+        :selectedContainer="assignToContainer"
+        :selectedPosition="assignToPosition"
+        :selectedRow="rowIdToMove"
+        :cellId="cellIdToUnassign"
+        :withGrid="withGrid"
+        @close="openAssignModal = false; this.reloadingTable = true"
+      ></AssignModal>
+      <ConfirmationModal
+        :title="i18n.t('storage_locations.show.unassign_modal.title')"
+        :description="storageLocationUnassignDescription"
+        confirmClass="btn btn-danger"
+        :confirmText="i18n.t('storage_locations.show.unassign_modal.button')"
+        ref="unassignStorageLocationModal"
+      ></ConfirmationModal>
+    </Teleport>
   </div>
 </template>
 
@@ -32,12 +54,16 @@
 import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
 import Grid from './grid.vue';
+import AssignModal from './modals/assign.vue';
+import ConfirmationModal from '../shared/confirmation_modal.vue';
 
 export default {
   name: 'StorageLocationsContainer',
   components: {
     DataTable,
-    Grid
+    Grid,
+    AssignModal,
+    ConfirmationModal
   },
   props: {
     dataSource: {
@@ -52,6 +78,10 @@ export default {
       type: Boolean,
       default: false
     },
+    containerId: {
+      type: Number,
+      default: null
+    },
     gridSize: Array
   },
   data() {
@@ -62,7 +92,14 @@ export default {
       editStorageLocation: null,
       objectToMove: null,
       moveToUrl: null,
-      assignedItems: []
+      assignedItems: [],
+      openAssignModal: false,
+      assignToPosition: null,
+      assignToContainer: null,
+      rowIdToMove: null,
+      cellIdToUnassign: null,
+      assignMode: 'assign',
+      storageLocationUnassignDescription: ''
     };
   },
   computed: {
@@ -123,6 +160,44 @@ export default {
     handleTableReload(items) {
       this.reloadingTable = false;
       this.assignedItems = items;
+    },
+    assignRow() {
+      this.openAssignModal = true;
+      this.rowIdToMove = null;
+      this.assignToContainer = this.containerId;
+      this.assignToPosition = null;
+      this.cellIdToUnassign = null;
+      this.assignMode = 'assign';
+    },
+    assignRowToPosition(position) {
+      this.openAssignModal = true;
+      this.rowIdToMove = null;
+      this.assignToContainer = this.containerId;
+      this.assignToPosition = position;
+      this.cellIdToUnassign = null;
+      this.assignMode = 'assign';
+    },
+    moveRow(_event, data) {
+      this.openAssignModal = true;
+      this.rowIdToMove = data[0].row_id;
+      this.assignToContainer = null;
+      this.assignToPosition = null;
+      this.cellIdToUnassign = data[0].id;
+      this.assignMode = 'move';
+    },
+    async unassignRows(event, rows) {
+      this.storageLocationUnassignDescription = this.i18n.t(
+        'storage_locations.show.unassign_modal.description',
+        { items: rows.length }
+      );
+      const ok = await this.$refs.unassignStorageLocationModal.show();
+      if (ok) {
+        axios.post(event.path).then(() => {
+          this.reloadingTable = true;
+        }).catch((error) => {
+          HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+        });
+      }
     }
   }
 };

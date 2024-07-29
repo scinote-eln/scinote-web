@@ -5,3 +5,5 @@ require File.expand_path('../config/application', __FILE__)
 
 Rails.application.load_tasks
 Doorkeeper::Rake.load_tasks
+# Update js-routes file before javascript build
+task 'javascript:build' => 'js:routes:typescript'

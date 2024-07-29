@@ -28,12 +28,10 @@ module Toolbars
 
     def unassign_action
       {
-        name: 'edit',
+        name: 'unassign',
         label: I18n.t('storage_locations.show.toolbar.unassign'),
         icon: 'sn-icon sn-icon-close',
-        path: unassign_storage_location_storage_location_repository_rows_path(
-          @storage_location, ids: @assigned_rows.pluck(:id)
-        ),
+        path: unassign_rows_storage_location_path(@storage_location, ids: @assigned_rows.pluck(:id)),
         type: :emit
       }
     end

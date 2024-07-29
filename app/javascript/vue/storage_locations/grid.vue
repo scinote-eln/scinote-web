@@ -25,9 +25,10 @@
           >
             <div
               class="h-full w-full rounded-full items-center flex justify-center"
+              @click="assignRow(cell.row, cell.column)"
               :class="{
                 'bg-sn-background-green': cellIsOccupied(cell.row, cell.column),
-                'bg-white': !cellIsOccupied(cell.row, cell.column)
+                'bg-white cursor-pointer': !cellIsOccupied(cell.row, cell.column)
               }"
             >
               {{ rowsList[cell.row] }}{{ columnsList[cell.column] }}
@@ -80,6 +81,12 @@ export default {
   methods: {
     cellIsOccupied(row, column) {
       return this.assignedItems.some((item) => item.position[0] === row + 1 && item.position[1] === column + 1);
+    },
+    assignRow(row, column) {
+      if (this.cellIsOccupied(row, column)) {
+        return;
+      }
+      this.$emit('assign', [row + 1, column + 1]);
     },
     handleScroll() {
       this.$refs.columnsContainer.scrollLeft = this.$refs.cellsContainer.scrollLeft;

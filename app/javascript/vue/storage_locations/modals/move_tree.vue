@@ -12,7 +12,7 @@
            class="cursor-pointer flex items-center pl-1 flex-1 gap-2
                 text-sn-blue hover:bg-sn-super-light-grey"
           :class="{'!bg-sn-super-light-blue': storageLocationTree.storage_location.id == value}">
-        <i class="sn-icon sn-icon-folder"></i>
+        <i v-if="storageLocationTree.storage_location.container" class="sn-icon sn-icon-item"></i>
         <div class="flex-1 truncate p-2 pl-0" :title="storageLocationTree.storage_location.name">
           {{ storageLocationTree.storage_location.name }}
         </div>
