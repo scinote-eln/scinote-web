@@ -166,7 +166,7 @@ module Toolbars
     end
 
     def delete_action
-      return unless can_delete_repository_rows?(@repository)
+      return unless can_delete_repository_rows?(@repository) && !@repository.is_a?(SoftLockedRepository)
 
       return unless @repository_rows.all?(&:archived?)
 
