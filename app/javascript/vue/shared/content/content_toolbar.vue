@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 py-2 bg-sn-super-light-blue flex gap-4 mt-10 mb-4">
+  <div class="px-4 py-2 bg-sn-super-light-blue flex gap-4 mt-10 mb-4 rounded">
     <span class="font-bold shrink-0 leading-10">
       {{ i18n.t('protocols.steps.insert.button') }}:
     </span>
