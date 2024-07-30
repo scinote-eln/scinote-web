@@ -17,8 +17,8 @@ module Users
           next unless Extends::WHITELISTED_USER_SETTINGS.include?(key.to_s)
 
           case key.to_s
-          when 'task_step_states'
-            update_task_step_states(data)
+          when 'task_step_states', 'result_states'
+            update_object_states(data, key.to_s)
           else
             current_user.settings[key] = data
           end
@@ -34,18 +34,18 @@ module Users
 
       private
 
-      def update_task_step_states(task_step_states_data)
-        current_states = current_user.settings.fetch('task_step_states', {})
+      def update_object_states(object_states_data, object_state_key)
+        current_states = current_user.settings.fetch(object_state_key, {})
 
-        task_step_states_data.each do |step_id, collapsed|
+        object_states_data.each do |object_id, collapsed|
           if collapsed
-            current_states[step_id] = true
+            current_states[object_id] = true
           else
-            current_states.delete(step_id)
+            current_states.delete(object_id)
           end
         end
 
-        current_user.settings['task_step_states'] = current_states
+        current_user.settings[object_state_key] = current_states
       end
     end
   end
