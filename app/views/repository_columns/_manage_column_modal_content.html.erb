@@ -98,6 +98,14 @@
                     selected>
               <%= t('libraries.manange_modal_column.select.repository_stock_value') %>
             </option>
+          <% elsif !RepositoryBase.stock_management_enabled? %>
+            <option value="RepositoryStockValue" class="disabled-option"
+                    data-params="<%= {
+                      optionClass: 'disabled-option',
+                      data_e2e: 'e2e-LB-invItems-manageColumnsModal-stock-dec_clm-disabled'
+                    }.to_json %>">
+              <%= t('libraries.manange_modal_column.select.repository_stock_value') %>
+            </option>
           <% end %>
           <option data-delimiter=true></option>
 

@@ -185,7 +185,7 @@ var RepositoryColumns = (function() {
             disableSearch: true,
             labelHTML: true,
             optionLabel: function(option) {
-              return `<div class="column-type-option" data-disabled="${option.params.disabled}">
+              return `<div class="column-type-option" data-e2e="${option.params.data_e2e || ''}" data-disabled="${option.params.disabled}">
                         <span>${option.label}</span>
                         <span class="text-description">${option.params.text_description || ''}</span>
                       </div>`
