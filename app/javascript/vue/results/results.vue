@@ -22,6 +22,7 @@
         :result="result"
         :resultToReload="resultToReload"
         :activeDragResult="activeDragResult"
+        :userSettingsUrl="userSettingsUrl"
         @result:elements:loaded="resultToReload = null"
         @result:move_element="reloadResult"
         @result:attachments:loaded="resultToReload = null"
@@ -64,7 +65,8 @@ export default {
     canCreate: { type: String, required: true },
     archived: { type: String, required: true },
     active_url: { type: String, required: true },
-    archived_url: { type: String, required: true }
+    archived_url: { type: String, required: true },
+    userSettingsUrl: { type: String, required: false }
   },
   data() {
     return {
@@ -74,10 +76,12 @@ export default {
       resultToReload: null,
       nextPageUrl: null,
       loadingPage: false,
-      activeDragResult: null
+      activeDragResult: null,
+      userSettingsUrl: null
     };
   },
   mounted() {
+    this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     window.addEventListener('scroll', this.loadResults, false);
     window.addEventListener('scroll', this.initStackableHeaders, false);
     this.nextPageUrl = this.url;

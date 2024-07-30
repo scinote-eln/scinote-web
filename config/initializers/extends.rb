@@ -675,6 +675,7 @@ class Extends
     repository_export_file_type
     navigator_collapsed
     navigator_width
+    result_states
   ).freeze
 end
 

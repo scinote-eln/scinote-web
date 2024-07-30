@@ -4,7 +4,9 @@ class CleanupUserSettingsJob < ApplicationJob
   queue_as :default
 
   def perform(record_type, record_id)
-    raise ArgumentError, 'Invalid record_type' unless %w(task_step_states results_order).include?(record_type)
+    unless %w(task_step_states results_order result_states).include?(record_type)
+      raise ArgumentError, 'Invalid record_type'
+    end
 
     sanitized_record_id = record_id.to_i.to_s
     raise ArgumentError, 'Invalid record_id' unless sanitized_record_id == record_id.to_s
