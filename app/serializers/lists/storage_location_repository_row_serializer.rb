@@ -2,18 +2,20 @@
 
 module Lists
   class StorageLocationRepositoryRowSerializer < ActiveModel::Serializer
-    attributes :created_by, :created_on, :position, :row_id, :row_name
+    include Canaid::Helpers::PermissionsHelper
+
+    attributes :created_by, :created_on, :position, :row_id, :row_name, :hidden
 
     def row_id
-      object.repository_row.id
+      object.repository_row.id unless hidden
     end
 
     def row_name
-      object.repository_row.name
+      object.repository_row.name unless hidden
     end
 
     def created_by
-      object.created_by.full_name
+      object.created_by.full_name unless hidden
     end
 
     def created_on
@@ -22,6 +24,10 @@ module Lists
 
     def position
       object.metadata['position']
+    end
+
+    def hidden
+      !can_read_repository?(object.repository_row.repository)
     end
   end
 end

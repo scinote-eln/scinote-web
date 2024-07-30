@@ -9,7 +9,13 @@
           </button>
         </div>
       </div>
-      <Grid :gridSize="gridSize" :assignedItems="assignedItems" @assign="assignRowToPosition"/>
+      <Grid
+        :gridSize="gridSize"
+        :assignedItems="assignedItems"
+        :selectedItems="selectedItems"
+        @assign="assignRowToPosition"
+        @select="selectRow"
+      />
     </div>
     <div class="h-full bg-white p-4">
       <DataTable :columnDefs="columnDefs"
@@ -24,6 +30,7 @@
                 @move="moveRow"
                 @unassign="unassignRows"
                 @tableReloaded="handleTableReload"
+                @selectionChanged="selectedItems = $event"
       />
     </div>
     <Teleport to="body">
@@ -93,6 +100,7 @@ export default {
       objectToMove: null,
       moveToUrl: null,
       assignedItems: [],
+      selectedItems: [],
       openAssignModal: false,
       assignToPosition: null,
       assignToContainer: null,
@@ -106,6 +114,7 @@ export default {
     paginationMode() {
       return this.withGrid ? 'none' : 'pages';
     },
+
     columnDefs() {
       const columns = [{
         field: 'position',
@@ -160,6 +169,14 @@ export default {
     handleTableReload(items) {
       this.reloadingTable = false;
       this.assignedItems = items;
+    },
+    selectRow(row) {
+      if (this.$refs.table.selectedRows.includes(row)) {
+        this.$refs.table.selectedRows = this.$refs.table.selectedRows.filter((r) => r !== row);
+      } else {
+        this.$refs.table.selectedRows.push(row);
+      }
+      this.$refs.table.restoreSelection();
     },
     assignRow() {
       this.openAssignModal = true;

@@ -580,8 +580,11 @@ export default {
         this.gridApi.forEachNode((node) => {
           if (this.selectedRows.find((row) => row.id === node.data.id)) {
             node.setSelected(true);
+          } else {
+            node.setSelected(false);
           }
         });
+        this.$emit('selectionChanged', this.selectedRows);
       }
     },
     setSelectedRows(e) {
@@ -594,6 +597,7 @@ export default {
       } else {
         this.selectedRows = this.selectedRows.filter((row) => row.id !== e.data.id);
       }
+      this.$emit('selectionChanged', this.selectedRows);
     },
     emitAction(action) {
       this.$emit(action.name, action, this.selectedRows);
@@ -605,6 +609,7 @@ export default {
     clickCell(e) {
       if (e.column.colId !== 'rowMenu' && e.column.userProvidedColDef.notSelectable !== true) {
         e.node.setSelected(true);
+        this.$emit('selectionChanged', this.selectedRows);
       }
     },
     applyFilters(filters) {
