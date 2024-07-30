@@ -15,7 +15,7 @@
           :allowBlank="true"
           :autofocus="editingName"
           :attributeName="`${i18n.t('Text')} ${i18n.t('name')}`"
-          :dataE2e="`${dataE2e}-stepText${element.id}`"
+          :dataE2e="`${dataE2e}-stepText${element.id}-title`"
           @editingEnabled="enableNameEdit"
           @editingDisabled="disableNameEdit"
           @update="updateName"
@@ -36,7 +36,7 @@
     </div>
     <div class="flex rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body"
       :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }"
-      :data-e2e="`e2e-IF-${dataE2e}-stepText${element.id}`"
+      :data-e2e="`e2e-IF-${dataE2e}-stepText${element.id}-content`"
       @keyup.enter="enableEditMode($event)"
       tabindex="0">
       <Tinymce
