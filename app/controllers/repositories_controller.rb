@@ -480,7 +480,7 @@ class RepositoriesController < ApplicationController
   end
 
   def set_inline_name_editing
-    return unless can_manage_repository?(@repository)
+    return unless can_manage_repository?(@repository) && !@repository.is_a?(SoftLockedRepository)
 
     @inline_editable_title_config = {
       name: 'title',

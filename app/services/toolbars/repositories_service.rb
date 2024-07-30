@@ -31,7 +31,7 @@ module Toolbars
     private
 
     def rename_action
-      return unless @single && can_manage_repository?(@repository)
+      return unless @single && can_manage_repository?(@repository) && !@repository.is_a?(SoftLockedRepository)
 
       {
         name: :update,
@@ -67,7 +67,9 @@ module Toolbars
     end
 
     def archive_action
-      return unless @repositories.all? { |repository| can_archive_repository?(repository) }
+      return unless @repositories.all? do |repository|
+        can_archive_repository?(repository) && !@repository.is_a?(SoftLockedRepository)
+      end
 
       {
         name: :archive,
@@ -90,7 +92,9 @@ module Toolbars
     end
 
     def restore_action
-      return unless @repositories.all? { |repository| can_archive_repository?(repository) }
+      return unless @repositories.all? do |repository|
+        can_archive_repository?(repository) && !repository.is_a?(SoftLockedRepository)
+      end
 
       {
         name: :restore,
@@ -102,7 +106,7 @@ module Toolbars
     end
 
     def delete_action
-      return unless @single && can_delete_repository?(@repository)
+      return unless @single && can_delete_repository?(@repository) && !@repository.is_a?(SoftLockedRepository)
 
       {
         name: :delete,
