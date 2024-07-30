@@ -146,7 +146,7 @@
                     @attachment:viewMode="updateAttachmentViewMode"/>
       </div>
       <ContentToolbar
-        v-if="orderedElements.length > 3"
+        v-if="orderedElements.length > 2"
         :insertMenu="insertMenu"
         @create:table="(...args) => this.createElement('table', ...args)"
         @create:checklist="createElement('checklist')"
