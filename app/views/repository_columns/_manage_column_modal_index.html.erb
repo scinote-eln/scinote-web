@@ -12,7 +12,7 @@
 </div>
 
 <div class="modal-footer">
-  <% if can_create_repository_columns?(@repository)%>
+  <% if can_create_repository_columns?(@repository) && !@repository.is_a?(SoftLockedRepository) %>
     <button id="new-repo-column-modal"
             data-view-mode="active"
             class="btn btn-secondary manage-repo-column"
