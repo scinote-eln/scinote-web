@@ -70,12 +70,10 @@ class Protocol < ApplicationRecord
   with_options if: :in_repository_published_version? do
     validates :parent, presence: true
     validate :parent_type_constraint
-    validate :versions_same_name_constraint
   end
   with_options if: :in_repository_draft? do
     # Only one draft can exist for each protocol
     validate :ensure_single_draft
-    validate :versions_same_name_constraint
   end
   with_options if: -> { in_repository? && !parent && !archived_changed?(from: false) } do |protocol|
     # Active protocol must have unique name inside its team
@@ -794,12 +792,6 @@ class Protocol < ApplicationRecord
   def parent_type_constraint
     unless parent.in_repository_published_original?
       errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_type'))
-    end
-  end
-
-  def versions_same_name_constraint
-    if parent.present? && !parent.name.eql?(name)
-      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_version_name'))
     end
   end
 
