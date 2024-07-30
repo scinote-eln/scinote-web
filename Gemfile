@@ -94,6 +94,7 @@ gem 'graphviz'
 
 gem 'cssbundling-rails'
 gem 'jsbundling-rails'
+gem 'js-routes'
 
 gem 'tailwindcss-rails', '~> 2.4'
 

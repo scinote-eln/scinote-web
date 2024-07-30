@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StorageLocationsController < ApplicationController
-  before_action :load_storage_location, only: %i(update destroy duplicate move show)
+  before_action :load_storage_location, only: %i(update destroy duplicate move show available_positions unassign_rows)
   before_action :check_read_permissions, except: %i(index create tree actions_toolbar)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: %i(update destroy duplicate move)
@@ -81,8 +81,18 @@ class StorageLocationsController < ApplicationController
   end
 
   def tree
-    records = current_team.storage_locations.where(parent: nil, container: false)
+    records = current_team.storage_locations.where(parent: nil, container: [false, params[:container] == 'true'])
     render json: storage_locations_recursive_builder(records)
+  end
+
+  def available_positions
+    render json: { positions: @storage_location.available_positions }
+  end
+
+  def unassign_rows
+    @storage_location.storage_location_repository_rows.where(id: params[:ids]).discard_all
+
+    render json: { status: :ok }
   end
 
   def actions_toolbar
@@ -172,7 +182,9 @@ class StorageLocationsController < ApplicationController
     storage_locations.map do |storage_location|
       {
         storage_location: storage_location,
-        children: storage_locations_recursive_builder(storage_location.storage_locations.where(container: false))
+        children: storage_locations_recursive_builder(
+          storage_location.storage_locations.where(container: [false, params[:container] == 'true'])
+        )
       }
     end
   end

@@ -24,7 +24,7 @@
                  :editStorageLocation="editStorageLocation"
       />
       <MoveModal v-if="objectToMove" :moveToUrl="moveToUrl"
-             :selectedObject="objectToMove" :storageLocationTreeUrl="storageLocationTreeUrl"
+             :selectedObject="objectToMove"
              @close="objectToMove = null" @move="updateTable()" />
       <ConfirmationModal
         :title="storageLocationDeleteTitle"
@@ -67,9 +67,6 @@ export default {
       type: String
     },
     directUploadUrl: {
-      type: String
-    },
-    storageLocationTreeUrl: {
       type: String
     }
   },

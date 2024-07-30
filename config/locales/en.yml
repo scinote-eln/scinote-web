@@ -2684,6 +2684,21 @@ en:
         assign: 'Assign item'
         unassign: 'Unassign'
         move: 'Move'
+      unassign_modal:
+        title: 'Unassign location'
+        description: 'Are you sure you want to remove %{items} item(s) from their current storage location?'
+        button: 'Unassign'
+      assign_modal:
+        assign_title: 'Assign position'
+        move_title: 'Move item'
+        assign_description: 'Select an item to assign it to a location.'
+        move_description: 'Select a new location for your item.'
+        assign_action: 'Assign'
+        move_action: 'Move'
+        row: 'Row'
+        column: 'Column'
+        inventory: 'Inventory'
+        item: 'Item'
     index:
       head_title: "Locations"
       new_location: "New location"

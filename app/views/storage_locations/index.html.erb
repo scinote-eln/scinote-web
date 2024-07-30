@@ -15,7 +15,6 @@
           data-source="<%= storage_locations_path(format: :json, parent_id: params[:parent_id]) %>"
           direct-upload-url="<%= rails_direct_uploads_url %>"
           create-url="<%= storage_locations_path(parent_id: params[:parent_id]) if can_create_storage_locations?(current_team) %>"
-          storage-location-tree-url="<%= tree_storage_locations_path %>"
         />
       </div>
     </div>

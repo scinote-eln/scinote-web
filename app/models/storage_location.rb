@@ -47,6 +47,24 @@ class StorageLocation < ApplicationRecord
     metadata['dimensions'] if with_grid?
   end
 
+  def available_positions
+    return unless with_grid?
+
+    occupied_positions = storage_location_repository_rows.pluck(:metadata).map { |metadata| metadata['position'] }
+
+    rows = {}
+
+    grid_size[0].times do |row|
+      rows_cells = []
+      grid_size[1].times.filter_map do |col|
+        rows_cells.push(col + 1) if occupied_positions.exclude?([row + 1, col + 1])
+      end
+      rows[row + 1] = rows_cells unless rows_cells.empty?
+    end
+
+    rows
+  end
+
   private
 
   def recursive_duplicate(old_parent_id = nil, new_parent_id = nil)
