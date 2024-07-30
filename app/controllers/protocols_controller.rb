@@ -909,7 +909,6 @@ class ProtocolsController < ApplicationController
   end
 
   def set_inline_name_editing
-    return unless @protocol.initial_draft?
     return unless can_manage_protocol_draft_in_repository?(@protocol)
 
     @inline_editable_title_config = {
