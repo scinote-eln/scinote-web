@@ -1,14 +1,13 @@
  <div class="task-sharing-and-flows flex items-center gap-2 pl-3">
     <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
     <%= javascript_include_tag("my_modules/status_flow") %>
-    <% if current_team.shareable_links_enabled? %>
       <div id="share-task-container" data-behaviour="vue">
         <share-task-container
           shareable-link-url="<%= my_module_shareable_link_path(@my_module) %>"
+          :enabled="<%= current_team.shareable_links_enabled? %>"
           :shared="<%= @my_module.shared? %>"
           :can-share="<%= can_share_my_module?(@my_module) %>" />
       </div>
 
       <%= javascript_include_tag 'vue_share_task_container' %>
-    <% end %>
   </div>

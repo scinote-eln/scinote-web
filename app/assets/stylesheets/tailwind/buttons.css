@@ -114,7 +114,7 @@
   }
 
   .btn.btn-light {
-    @apply bg-transparent text-sn-blue border-transparent;
+    @apply bg-transparent text-sn-blue border-transparent bg-sn-white;
   }
 
   .btn.btn-light.btn-black {

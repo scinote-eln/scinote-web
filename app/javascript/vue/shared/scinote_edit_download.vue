@@ -2,11 +2,13 @@
   <div class="buttons">
     <template v-if="isWindows">
       <a :href="getWindowsHref"
-         class="btn btn-primary new-project-btn"
+         class="w-full btn btn-primary new-project-btn"
          :title="i18n.t('users.settings.account.addons.desktop_app.windows_button')"
          role="button"
          target="_blank">
-        <span class="hidden-xs">{{ i18n.t('users.settings.account.addons.desktop_app.windows_button') }}</span>
+        <span :class="{'hidden-xs' : !isCompact }">
+          {{ this.isCompact ? i18n.t('general.download') : i18n.t('users.settings.account.addons.desktop_app.windows_button') }}
+        </span>
       </a>
       <div v-if="showButtonLabel" class="text-xs pt-2 pb-6" style="color: var(--sn-sleepy-grey);">
         {{ i18n.t('users.settings.account.addons.desktop_app.version', { version: this.responseData[0]['version']}) }}
@@ -15,18 +17,20 @@
 
     <template v-else-if="isMac">
       <a :href="getMacHref"
-         class="btn btn-primary new-project-btn"
+         class="w-full btn btn-primary new-project-btn"
          :title="i18n.t('users.settings.account.addons.desktop_app.macos_button')"
          role="button"
          target="_blank">
-        <span class="hidden-xs">{{ i18n.t('users.settings.account.addons.desktop_app.macos_button') }}</span>
+        <span :class="{'hidden-xs' : !isCompact }">
+          {{ this.isCompact ? i18n.t('general.download') : i18n.t('users.settings.account.addons.desktop_app.macos_button') }}
+        </span>
       </a>
       <div v-if="showButtonLabel" class="text-xs pt-2 pb-6" style="color: var(--sn-sleepy-grey);">
         {{ i18n.t('users.settings.account.addons.desktop_app.version', { version: this.responseData[1]['version']}) }}
       </div>
     </template>
 
-    <template v-else>
+    <template v-else-if="!isCompact">
       <div class="flex">
         <div>
           <a :href="getWindowsHref"
@@ -60,7 +64,7 @@
       </div>
     </template>
 
-    <a v-if="!isUpdateVersionModal" :href="'https://knowledgebase.scinote.net/en/knowledge/how-to-use-scinote-edit'"
+    <a v-if="!isUpdateVersionModal && !isCompact" :href="'https://knowledgebase.scinote.net/en/knowledge/how-to-use-scinote-edit'"
         :title="i18n.t('users.settings.account.addons.more_info')"
         class="text-sn-blue"
         target="_blank">
@@ -75,7 +79,8 @@ export default {
   name: 'ScinoteEditDownload',
   props: {
     data: { type: String, required: true },
-    isUpdateVersionModal: { type: Boolean, required: false }
+    isUpdateVersionModal: { type: Boolean, required: false },
+    isCompact: { type: Boolean, required: false, default: false }
   },
   data() {
     return {
@@ -91,7 +96,7 @@ export default {
       return /Mac OS/.test(this.userAgent);
     },
     showButtonLabel() {
-      return this.responseData && this.responseData.length > 0 && !this.isUpdateVersionModal;
+      return this.responseData && this.responseData.length > 0 && !this.isUpdateVersionModal && !this.isCompact;
     },
     getWindowsHref() {
       return this.responseData && this.responseData.length > 0 ? this.responseData[0].url : '#';

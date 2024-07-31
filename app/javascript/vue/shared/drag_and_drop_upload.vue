@@ -7,6 +7,7 @@
     @dragover.prevent
     @click="handleImportClick"
     class="flex h-full w-full p-6 rounded border border-sn-light-grey bg-sn-super-light-blue cursor-pointer"
+    :data-e2e="`e2e-CO-${dataE2e}`"
   >
   <div id="centered-content" class="flex flex-col gap-4 items-center h-fit w-fit m-auto">
     <!-- icon -->
@@ -43,6 +44,10 @@ export default {
       type: Array,
       required: true,
       default: () => []
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   emits: ['file:dropped', 'file:error'],
