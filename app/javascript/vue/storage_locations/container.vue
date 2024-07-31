@@ -117,7 +117,7 @@ export default {
 
     columnDefs() {
       const columns = [{
-        field: 'position',
+        field: 'position_formatted',
         headerName: this.i18n.t('storage_locations.show.table.position'),
         sortable: true,
         notSelectable: true,
