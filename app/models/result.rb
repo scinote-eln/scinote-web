@@ -42,12 +42,12 @@ class Result < ApplicationRecord
                   options = {})
     teams = options[:teams] || current_team || user.teams.select(:id)
 
-    new_query = distinct.left_joins(:result_comments, :result_texts, result_tables: :table)
-                        .joins(:my_module)
-                        .joins("INNER JOIN user_assignments my_module_user_assignments " \
-                               "ON my_module_user_assignments.assignable_type = 'MyModule' " \
-                               "AND my_module_user_assignments.assignable_id = my_modules.id")
-                        .where(my_module_user_assignments: { user_id: user, team_id: teams })
+    new_query = left_joins(:result_comments, :result_texts, result_tables: :table)
+                .joins(:my_module)
+                .joins("INNER JOIN user_assignments my_module_user_assignments " \
+                       "ON my_module_user_assignments.assignable_type = 'MyModule' " \
+                       "AND my_module_user_assignments.assignable_id = my_modules.id")
+                .where(my_module_user_assignments: { user_id: user, team_id: teams })
 
     unless include_archived
       new_query = new_query.joins(my_module: { experiment: :project })
@@ -57,7 +57,9 @@ class Result < ApplicationRecord
                                   projects: { archived: false })
     end
 
-    new_query.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: new_query })
+    new_query.where_attributes_like_boolean(
+      SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: new_query }
+    ).distinct
   end
 
   def self.search_subquery(query, raw_input)
