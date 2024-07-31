@@ -25,13 +25,21 @@
           >
             <div
               class="h-full w-full rounded-full items-center flex justify-center"
-              @click="assignRow(cell.row, cell.column)"
+              @click="assignRow(cell)"
               :class="{
-                'bg-sn-background-green': cellIsOccupied(cell.row, cell.column),
-                'bg-white cursor-pointer': !cellIsOccupied(cell.row, cell.column)
+                'bg-sn-background-green': cellIsOccupied(cell),
+                'bg-sn-grey-100': cellIsHidden(cell),
+                'bg-white': cellIsAvailable(cell),
+                'bg-white border-sn-science-blue border-solid border-[1px]': cellIsSelected(cell),
+                'cursor-pointer': !cellIsHidden(cell)
               }"
             >
-              {{ rowsList[cell.row] }}{{ columnsList[cell.column] }}
+              <template v-if="cellIsHidden(cell)">
+                <i class="sn-icon sn-icon-locked-task"></i>
+              </template>
+              <template v-else>
+                {{ rowsList[cell.row] }}{{ columnsList[cell.column] }}
+              </template>
             </div>
           </div>
         </div>
@@ -49,6 +57,10 @@ export default {
       required: true
     },
     assignedItems: {
+      type: Array,
+      default: () => []
+    },
+    selectedItems: {
       type: Array,
       default: () => []
     }
@@ -79,14 +91,32 @@ export default {
     }
   },
   methods: {
-    cellIsOccupied(row, column) {
-      return this.assignedItems.some((item) => item.position[0] === row + 1 && item.position[1] === column + 1);
+    cellObject(cell) {
+      return this.assignedItems.find((item) => item.position[0] === cell.row + 1 && item.position[1] === cell.column + 1);
     },
-    assignRow(row, column) {
-      if (this.cellIsOccupied(row, column)) {
+    cellIsOccupied(cell) {
+      return this.cellObject(cell) && !this.cellObject(cell)?.hidden;
+    },
+    cellIsHidden(cell) {
+      return this.cellObject(cell)?.hidden;
+    },
+    cellIsSelected(cell) {
+      return this.selectedItems.some((item) => item.position[0] === cell.row + 1 && item.position[1] === cell.column + 1);
+    },
+    cellIsAvailable(cell) {
+      return !this.cellIsOccupied(cell) && !this.cellIsHidden(cell);
+    },
+    assignRow(cell) {
+      if (this.cellIsOccupied(cell)) {
+        this.$emit('select', this.cellObject(cell));
         return;
       }
-      this.$emit('assign', [row + 1, column + 1]);
+
+      if (this.cellIsHidden(cell)) {
+        return;
+      }
+
+      this.$emit('assign', [cell.row + 1, cell.column + 1]);
     },
     handleScroll() {
       this.$refs.columnsContainer.scrollLeft = this.$refs.cellsContainer.scrollLeft;
