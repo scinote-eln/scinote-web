@@ -7,6 +7,7 @@ class Asset < ApplicationRecord
   include WopiUtil
   include ActiveStorageFileUtil
   include ActiveStorageConcerns
+  include VersionedAttachments
 
   require 'tempfile'
   # Lock duration set to 30 minutes
@@ -16,7 +17,7 @@ class Asset < ApplicationRecord
   enum view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
   # ActiveStorage configuration
-  has_one_attached :file
+  has_one_versioned_attached :file
   has_one_attached :file_pdf_preview
   has_one_attached :preview_image
 
@@ -162,7 +163,7 @@ class Asset < ApplicationRecord
         filename: blob.filename,
         metadata: blob.metadata
       )
-      to_asset.file.attach(to_blob)
+      to_asset.attach_file_version(to_blob)
     end
 
     if preview_image.attached?

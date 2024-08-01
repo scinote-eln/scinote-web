@@ -90,7 +90,7 @@ class ResultsController < ApplicationController
         team: @my_module.team,
         view_mode: @result.assets_view_mode
       )
-      @asset.file.attach(params[:signed_blob_id])
+      @asset.attach_file_version(params[:signed_blob_id])
       @asset.post_process_file
     end
 

@@ -125,7 +125,7 @@ class ResultAssetsController < ApplicationController
     ActiveRecord::Base.transaction do
       params[:results_files].each do |index, file|
         asset = Asset.create!(created_by: current_user, last_modified_by: current_user, team: current_team)
-        asset.file.attach(file[:signed_blob_id])
+        asset.attach_file_version(file[:signed_blob_id])
         result = Result.create!(user: current_user,
                                 my_module: @my_module,
                                 name: params[:results_names][index],

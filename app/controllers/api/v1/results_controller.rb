@@ -124,7 +124,7 @@ module Api
         Result.transaction do
           old_checksum = asset.file.blob.checksum
           if @form_multipart_upload
-            asset.file.attach(result_file_params[:file])
+            asset.attach_file_version(result_file_params[:file])
           else
             blob = create_blob_from_params
             asset.update!(file: blob)

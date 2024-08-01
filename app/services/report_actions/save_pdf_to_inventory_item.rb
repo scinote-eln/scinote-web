@@ -44,7 +44,7 @@ module ReportActions
 
     def create_new_asset
       asset = Asset.create(created_by: @user, last_modified_by: @user, team: @team)
-      asset.file.attach(@report.pdf_file.blob)
+      asset.attach_file_version(@report.pdf_file.blob)
       asset
     end
 
