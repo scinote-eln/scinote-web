@@ -410,7 +410,7 @@ class MyModulesController < ApplicationController
       actions:
         Toolbars::MyModulesService.new(
           current_user,
-          my_module_ids: JSON.parse(params[:items]).map { |i| i['id'] }
+          my_module_ids: params[:items].present? ? JSON.parse(params[:items]).map { |i| i['id'] } : params[:items]
         ).actions
     }
   end

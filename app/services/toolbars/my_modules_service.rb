@@ -41,6 +41,7 @@ module Toolbars
         name: 'restore',
         label: I18n.t('experiments.table.toolbar.restore'),
         icon: 'sn-icon sn-icon-restore',
+        button_id: 'restoreTask',
         path: restore_my_modules_experiment_path(experiment),
         type: :emit
       }
@@ -68,16 +69,12 @@ module Toolbars
 
       return unless can_read_my_module?(my_module)
 
-      path = if can_manage_my_module_users?(my_module)
-               edit_access_permissions_my_module_path(my_module)
-             else
-               access_permissions_my_module_path(my_module)
-             end
-
       {
         name: 'access',
         label: I18n.t('experiments.table.my_module_actions.access'),
         icon: 'sn-icon sn-icon-project-member-access',
+        path: my_module_path(my_module, format: :json),
+        button_id: 'openAccessModal',
         type: :emit
       }
     end
@@ -89,6 +86,7 @@ module Toolbars
         name: 'move',
         label: I18n.t('experiments.table.toolbar.move'),
         icon: 'sn-icon sn-icon-move',
+        button_id: 'moveTask',
         type: :emit,
         path: move_modules_experiment_path(@my_modules.first.experiment, my_module_ids: @my_modules.pluck(:id))
       }
