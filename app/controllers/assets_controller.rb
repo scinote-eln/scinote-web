@@ -21,11 +21,13 @@ class AssetsController < ApplicationController
   before_action :check_manage_permission, only: %i(edit destroy duplicate rename toggle_view_mode)
 
   def file_preview
+    editable = can_manage_asset?(@asset) && (@asset.repository_asset_value.blank? ||
+                !@asset.repository_cell.repository_row.repository.is_a?(SoftLockedRepository))
     render json: { html: render_to_string(
       partial: 'shared/file_preview/content',
       locals: {
         asset: @asset,
-        can_edit: can_manage_asset?(@asset),
+        can_edit: editable,
         gallery: params[:gallery],
         preview: params[:preview]
       },

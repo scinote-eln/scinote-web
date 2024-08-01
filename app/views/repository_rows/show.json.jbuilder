@@ -12,8 +12,8 @@ json.update_path update_cell_repository_repository_row_path(@repository, @reposi
 
 json.permissions do
   json.can_export_repository_stock can_export_repository_stock?(@repository)
-  json.can_manage can_manage_repository_rows?(@repository) if @repository.is_a?(Repository)
-  json.can_connect_rows can_connect_repository_rows?(@repository) if @repository.is_a?(Repository)
+  json.can_manage can_manage_repository_rows?(@repository) if @repository.is_a?(Repository) && !@repository.is_a?(SoftLockedRepository)
+  json.can_connect_rows can_connect_repository_rows?(@repository) if @repository.is_a?(Repository) && !@repository.is_a?(SoftLockedRepository)
 end
 
 json.actions do
