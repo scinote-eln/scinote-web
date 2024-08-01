@@ -2616,7 +2616,12 @@ en:
       custom_columns_label: 'Custom columns'
       relationships_label: 'Relationships'
       assigned_label: 'Assigned'
+      locations_label: 'Locations'
       QR_label: 'QR'
+    locations:
+      title: 'Locations (%{count})'
+      container: 'Box'
+      assign: 'Assign new location'
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
