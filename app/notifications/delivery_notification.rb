@@ -16,7 +16,7 @@ class DeliveryNotification < BaseNotification
   def subject
     return unless params[:subject_id] && params[:subject_class]
 
-    params[:subject_class].constantize.find(params[:subject_id])
+    subject_class.find(params[:subject_id])
   rescue ActiveRecord::RecordNotFound
     NonExistantRecord.new(params[:subject_name])
   end
