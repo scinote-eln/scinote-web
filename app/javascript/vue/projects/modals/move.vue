@@ -98,20 +98,19 @@ export default {
       if (this.query === '') {
         return this.foldersTree;
       }
-      return this.foldersTree.map((folder) => (
-        {
-          folder: folder.folder,
-          children: folder.children.filter((child) => (
-            child.folder.name.toLowerCase().includes(this.query.toLowerCase())
-          )),
-        }
-      )).filter((folder) => (
-        folder.folder.name.toLowerCase().includes(this.query.toLowerCase())
-        || folder.children.length > 0
-      ));
+      return this.filteredFoldersTreeHelper(this.foldersTree);
     },
   },
   methods: {
+    filteredFoldersTreeHelper(foldersTree) {
+      return foldersTree.map(({ folder, children }) => {
+        if (folder.name.toLowerCase().includes(this.query.toLowerCase())) {
+          return { folder, children };
+        }
+        const filteredChildren = this.filteredFoldersTreeHelper(children);
+        return filteredChildren.length ? { folder, children: filteredChildren } : null;
+      }).filter(Boolean);
+    },
     selectFolder(folderId) {
       this.selectedFolderId = folderId;
     },
