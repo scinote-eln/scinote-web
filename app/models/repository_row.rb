@@ -175,6 +175,16 @@ class RepositoryRow < ApplicationRecord
     self[:archived]
   end
 
+  def grouped_storage_locations
+    storage_location_repository_rows.joins(:storage_location).group(:storage_location_id).select(
+      "storage_location_id as id,
+       MAX(storage_locations.name) as name,
+       jsonb_agg(jsonb_build_object(
+         'id', storage_location_repository_rows.id, 'metadata',
+         storage_location_repository_rows.metadata)
+       ) as positions").as_json
+  end
+
   def archived
     row_archived? || repository&.archived?
   end
