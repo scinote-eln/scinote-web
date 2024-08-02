@@ -6,6 +6,7 @@
                :reloadingTable="reloadingTable"
                :toolbarActions="toolbarActions"
                :actionsUrl="actionsUrl"
+               :filters="filters"
                @create_location="openCreateLocationModal"
                @create_container="openCreateContainerModal"
                @edit="edit"
@@ -158,6 +159,21 @@ export default {
         left,
         right: []
       };
+    },
+    filters() {
+      const filters = [
+        {
+          key: 'query',
+          type: 'Text'
+        },
+        {
+          key: 'search_tree',
+          type: 'Checkbox',
+          label: this.i18n.t('storage_locations.index.filters_modal.search_tree')
+        }
+      ];
+
+      return filters;
     }
   },
   methods: {

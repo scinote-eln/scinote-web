@@ -5,13 +5,26 @@ module Lists
     def initialize(team, params)
       @team = team
       @parent_id = params[:parent_id]
+      @filters = params[:filters] || {}
       @params = params
     end
 
     def fetch_records
-      @records = @team.storage_locations.where(parent_id: @parent_id)
+      @records = @team.storage_locations
     end
 
-    def filter_records; end
+    def filter_records
+      if @filters[:search_tree].present?
+        if @parent_id.present?
+          storage_location = @records.find_by(id: @parent_id)
+          @records = @records.where(id: StorageLocation.inner_storage_locations(@team, storage_location))
+        end
+      else
+        @records = @records.where(parent_id: @parent_id)
+      end
+
+      @records = @records.where('LOWER(name) ILIKE ?', "%#{@filters[:query].downcase}%") if @filters[:query].present?
+      @records = @records.where('LOWER(name) ILIKE ?', "%#{@params[:search].downcase}%") if @params[:search].present?
+    end
   end
 end

@@ -2726,6 +2726,8 @@ en:
         owned_by: "Owned by"
         created_on: "Created on"
         description: "Description"
+      filters_modal:
+        search_tree: "Look inside locations"
       edit_modal:
         title_create_location: "Create new location"
         title_create_container: "Create new box"
