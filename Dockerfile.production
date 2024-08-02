@@ -69,18 +69,18 @@ RUN \
   groff-base \
   postgresql-client \
   nodejs \
+  yarnpkg \
   awscli \
   netcat-openbsd \
   poppler-utils \
   librsvg2-2 \
   libvips42 \
   graphviz \
-  chromium \
-  libfile-mimeinfo-perl \
-  yarnpkg && \
+  chromium && \
   /usr/share/nodejs/yarn/bin/yarn add puppeteer@npm:puppeteer-core && \
   apt-get install -y libreoffice && \
-  ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
+  ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
+  apt-get purge -y 'linux-*' '*-dev'
 
 ARG BUILD_TIMESTAMP=1
 RUN \
@@ -90,6 +90,7 @@ RUN \
   DEBIAN_FRONTEND=noninteractive \
   apt-get update -qq && \
   apt-get upgrade -y && \
+  apt-get -y autoremove && \
   rm -rf /var/lib/apt/lists/*
 
 ENV APP_HOME /usr/src/app
