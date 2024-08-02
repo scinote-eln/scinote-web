@@ -112,6 +112,14 @@
     `"
     :confirmClass="'btn btn-danger'"
     :confirmText="i18n.t('protocols.delete_draft_modal.confirm')"
+    :e2eAttributes="{
+          modalName: 'e2e-MD-deleteProtocolDraft',
+          title: 'e2e-TX-deleteProtocolDraftModal-title',
+          content: 'e2e-TX-deleteProtocolDraftModal-content',
+          close: 'e2e-BT-deleteProtocolDraftModal-close',
+          cancel: 'e2e-BT-deleteProtocolDraftModal-cancel',
+          confirm: 'e2e-BT-deleteProtocolDraftModal-delete'
+    }"
     ref="destroyModal"
   ></ConfirmationModal>
 </template>
