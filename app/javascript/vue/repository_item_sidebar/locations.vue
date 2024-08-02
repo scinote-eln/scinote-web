@@ -1,12 +1,12 @@
 <template>
   <div v-if="repositoryRow">
     <div class="flex items-center gap-4">
-      <h4>{{ i18n.t('repositories.locations.title', { count: repositoryRow.locations.length }) }}</h4>
-      <button class="btn btn-light">
+      <h4>{{ i18n.t('repositories.locations.title', { count: repositoryRow.storage_locations.locations.length }) }}</h4>
+      <button v-if="repositoryRow.permissions.can_manage && repositoryRow.storage_locations.enabled" class="btn btn-light">
         {{ i18n.t('repositories.locations.assign') }}
       </button>
     </div>
-    <template v-for="(location, index) in repositoryRow.locations" :key="location.id">
+    <template v-for="(location, index) in repositoryRow.storage_locations.locations" :key="location.id">
       <div>
         <div class="sci-divider my-4" v-if="index > 0"></div>
         <div class="flex items-center gap-2 mb-3">
@@ -17,7 +17,7 @@
           <div v-for="(position) in location.positions" :key="position.id">
             <div v-if="position.metadata.position" class="flex items-center font-sm gap-1 uppercase bg-sn-grey-300 rounded pl-1.5 pr-2">
               {{ formatPosition(position.metadata.position) }}
-              <i class="sn-icon sn-icon-unlink-italic-s cursor-pointer"></i>
+              <i v-if="repositoryRow.permissions.can_manage" class="sn-icon sn-icon-unlink-italic-s cursor-pointer"></i>
             </div>
           </div>
         </div>

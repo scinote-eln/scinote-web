@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class StorageLocationsController < ApplicationController
+  before_action :check_storage_locations_enabled, except: :unassign_rows
   before_action :load_storage_location, only: %i(update destroy duplicate move show available_positions unassign_rows)
   before_action :check_read_permissions, except: %i(index create tree actions_toolbar)
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permissions, only: %i(update destroy duplicate move)
+  before_action :check_manage_permissions, only: %i(update destroy duplicate move unassign_rows)
   before_action :set_breadcrumbs_items, only: %i(index show)
 
   def index
@@ -106,6 +107,10 @@ class StorageLocationsController < ApplicationController
   end
 
   private
+
+  def check_storage_locations_enabled
+    render_403 unless StorageLocation.storage_locations_enabled?
+  end
 
   def storage_location_params
     params.permit(:id, :parent_id, :name, :container, :description,
