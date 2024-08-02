@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class StorageLocationRepositoryRowsController < ApplicationController
+  before_action :check_storage_locations_enabled, except: :destroy
   before_action :load_storage_location_repository_row, only: %i(update destroy move)
   before_action :load_storage_location
   before_action :load_repository_row, only: %i(create update destroy move)
@@ -79,6 +80,10 @@ class StorageLocationRepositoryRowsController < ApplicationController
   end
 
   private
+
+  def check_storage_locations_enabled
+    render_403 unless StorageLocation.storage_locations_enabled?
+  end
 
   def load_storage_location_repository_row
     @storage_location_repository_row = StorageLocationRepositoryRow.find(

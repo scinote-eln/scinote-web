@@ -65,6 +65,10 @@ class StorageLocation < ApplicationRecord
     rows
   end
 
+  def self.storage_locations_enabled?
+    ApplicationSettings.instance.values['storage_locations_enabled']
+  end
+
   private
 
   def recursive_duplicate(old_parent_id = nil, new_parent_id = nil)
