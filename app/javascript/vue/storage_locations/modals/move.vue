@@ -31,7 +31,7 @@
                 <i class="sn-icon sn-icon-projects"></i>
                 {{ i18n.t('storage_locations.index.move_modal.search_header') }}
               </div>
-              <MoveTree :storageLocationTrees="filteredStorageLocationTree" :value="selectedStorageLocationId" @selectStorageLocation="selectStorageLocation" />
+              <MoveTree :storageLocationsTree="filteredStorageLocationsTree" :value="selectedStorageLocationId" @selectStorageLocation="selectStorageLocation" />
             </div>
           </div>
           <div class="modal-footer">
@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       selectedStorageLocationId: null,
-      storageLocationTree: [],
+      storageLocationsTree: [],
       query: ''
     };
   },

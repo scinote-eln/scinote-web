@@ -1,5 +1,5 @@
 <template>
-  <div class="pl-6" v-if="storageLocationTrees.length" v-for="storageLocationTree in storageLocationTrees"
+  <div class="pl-6" v-if="storageLocationsTree.length" v-for="storageLocationTree in storageLocationsTree"
        :key="storageLocationTree.storage_location.id">
     <div class="flex items-center">
       <i v-if="storageLocationTree.children.length > 0"
@@ -19,7 +19,7 @@
       </div>
     </div>
     <MoveTree v-if="opendedStorageLocations[storageLocationTree.storage_location.id]"
-              :storageLocationTrees="storageLocationTree.children"
+              :storageLocationsTree="storageLocationTree.children"
               :value="value"
               @selectStorageLocation="$emit('selectStorageLocation', $event)" />
   </div>
@@ -30,7 +30,7 @@ export default {
   name: 'MoveTree',
   emits: ['selectStorageLocation'],
   props: {
-    storageLocationTrees: Array,
+    storageLocationsTree: Array,
     value: Number
   },
   components: {

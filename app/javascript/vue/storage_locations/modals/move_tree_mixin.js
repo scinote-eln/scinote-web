@@ -6,43 +6,43 @@ import {
 
 export default {
   mounted() {
-    axios.get(this.storageLocationTreeUrl).then((response) => {
-      this.storageLocationTree = response.data;
+    axios.get(this.storageLocationsTreeUrl).then((response) => {
+      this.storageLocationsTree = response.data;
     });
   },
   data() {
     return {
       selectedStorageLocationId: null,
-      storageLocationTree: [],
+      storageLocationsTree: [],
       query: ''
     };
   },
   computed: {
-    storageLocationTreeUrl() {
+    storageLocationsTreeUrl() {
       return tree_storage_locations_path({ format: 'json', container: this.container });
     },
-    filteredStorageLocationTree() {
+    filteredStorageLocationsTree() {
       if (this.query === '') {
-        return this.storageLocationTree;
+        return this.storageLocationsTree;
       }
 
-      return this.storageLocationTree.map((storageLocation) => (
-        {
-          storage_location: storageLocation.storage_location,
-          children: storageLocation.children.filter((child) => (
-            child.storage_location.name.toLowerCase().includes(this.query.toLowerCase())
-          ))
-        }
-      )).filter((storageLocation) => (
-        storageLocation.storage_location.name.toLowerCase().includes(this.query.toLowerCase())
-        || storageLocation.children.length > 0
-      ));
+      return this.filteredStorageLocationsTreeHelper(this.storageLocationsTree);
     }
   },
   components: {
     MoveTree
   },
   methods: {
+    filteredStorageLocationsTreeHelper(storageLocationsTree) {
+      return storageLocationsTree.map(({ storage_location, children }) => {
+        if (storage_location.name.toLowerCase().includes(this.query.toLowerCase())) {
+          return { storage_location, children };
+        }
+
+        const filteredChildren = this.filteredStorageLocationsTreeHelper(children);
+        return filteredChildren.length ? { storage_location, children: filteredChildren } : null;
+      }).filter(Boolean);
+    },
     selectStorageLocation(storageLocationId) {
       this.selectedStorageLocationId = storageLocationId;
     }
