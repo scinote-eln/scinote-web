@@ -121,7 +121,6 @@ export default {
         headerName: this.i18n.t('storage_locations.show.table.position'),
         sortable: true,
         notSelectable: true,
-        cellRenderer: this.nameRenderer
       },
       {
         field: 'reminders',
@@ -136,7 +135,8 @@ export default {
       {
         field: 'row_name',
         headerName: this.i18n.t('storage_locations.show.table.row_name'),
-        sortable: true
+        sortable: true,
+        cellRenderer: this.rowNameRenderer
       },
       {
         field: 'stock',
@@ -166,6 +166,17 @@ export default {
     }
   },
   methods: {
+    rowNameRenderer(params) {
+      const { row_name: rowName, hidden } = params.data;
+      if (hidden) {
+        return `
+          <span class="text-sn-grey-700">
+            <i class="sn-icon sn-icon-locked-task"></i> ${this.i18n.t('storage_locations.show.hidden')}
+          </span>
+        `;
+      }
+      return rowName;
+    },
     handleTableReload(items) {
       this.reloadingTable = false;
       this.assignedItems = items;
