@@ -18,7 +18,7 @@
             <RowSelector v-if="!selectedRow" @change="this.rowId = $event" class="mb-4"></RowSelector>
             <ContainerSelector v-if="!selectedContainer" @change="this.containerId = $event"></ContainerSelector>
             <PositionSelector
-              v-if="containerId && !selectedPosition && withGrid"
+              v-if="containerId && !selectedPosition"
               :key="containerId"
               :selectedContainerId="containerId"
               @change="this.position = $event"></PositionSelector>
@@ -56,7 +56,6 @@ export default {
     selectedContainer: Number,
     cellId: Number,
     selectedPosition: Array,
-    withGrid: Boolean,
     assignMode: String
   },
   mixins: [modalMixin],

@@ -41,7 +41,6 @@
         :selectedPosition="assignToPosition"
         :selectedRow="rowIdToMove"
         :cellId="cellIdToUnassign"
-        :withGrid="withGrid"
         @close="openAssignModal = false; this.reloadingTable = true"
       ></AssignModal>
       <ConfirmationModal
