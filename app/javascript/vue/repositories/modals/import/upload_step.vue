@@ -1,17 +1,23 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog flex" role="document" :class="{'!w-[900px]': showingInfo}">
+    <div class="modal-dialog flex" role="document" :class="{'!w-[900px]': showingInfo}"  data-e2e="e2e-MD-invInventoryImport-upload">
       <div v-if="showingInfo" class="w-[300px] shrink-0 h-full bg-sn-super-light-grey p-6 rounded-s text-sn-dark-grey">
-        <h3 class="my-0 mb-4">{{ this.i18n.t('repositories.import_records.info_sidebar.title') }}</h3>
+        <h3 class="my-0 mb-4" data-e2e="e2e-TX-invInventoryImport-uploadModal-help-title">{{ this.i18n.t('repositories.import_records.info_sidebar.title') }}</h3>
         <div v-for="i in 4" :key="i" class="flex gap-3 mb-4">
           <span class="btn btn-secondary icon-btn !text-sn-black !pointer-events-none">
             <i class="sn-icon"
                :class="i18n.t(`repositories.import_records.info_sidebar.elements.element${i - 1}.icon`)"
+               :data-e2e="`e2e-IC-invInventoryImport-uploadModal-help-icon${i}`"
             ></i>
           </span>
           <div>
-            <div class="font-bold mb-2">{{ i18n.t(`repositories.import_records.info_sidebar.elements.element${i - 1}.label`) }}</div>
-            <div>{{ i18n.t(`repositories.import_records.info_sidebar.elements.element${i - 1}.subtext`) }}</div>
+            <div
+              class="font-bold mb-2"
+              :data-e2e="`e2e-TX-invInventoryImport-uploadModal-help-title${i}`"
+            >{{ i18n.t(`repositories.import_records.info_sidebar.elements.element${i - 1}.label`) }}</div>
+            <div
+              :data-e2e="`e2e-TX-invInventoryImport-uploadModal-help-text${i}`"
+            >{{ i18n.t(`repositories.import_records.info_sidebar.elements.element${i - 1}.subtext`) }}</div>
           </div>
         </div>
         <div class="flex gap-3 mb-4 items-center">
@@ -25,36 +31,41 @@
       </div>
       <div class="modal-content grow flex flex-col" :class="{'!rounded-s-none': showingInfo}">
         <div class="modal-header gap-4">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-newInventoryModal-close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-invInventoryImport-uploadModal-close">
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <button class="btn btn-light btn-sm mr-auto" @click="showingInfo = !showingInfo">
+          <button class="btn btn-light btn-sm mr-auto" @click="showingInfo = !showingInfo" data-e2e="e2e-BT-invInventoryImport-uploadModal-help">
             <i class="sn-icon sn-icon-help-s"></i>
             {{ i18n.t('repositories.import_records.steps.step1.helpText') }}
           </button>
-          <h4 class="modal-title truncate !block !mr-0" id="edit-project-modal-label" data-e2e="e2e-TX-newInventoryModal-title">
+          <h4 class="modal-title truncate !block !mr-0" id="edit-project-modal-label" data-e2e="e2e-TX-invInventoryImport-uploadModal-title">
             {{ i18n.t('repositories.import_records.steps.step1.title') }}
           </h4>
         </div>
         <div class="modal-body flex flex-col grow">
-          <p class="text-sn-dark-grey">
+          <p class="text-sn-dark-grey" data-e2e="e2e-TX-invInventoryImport-uploadModal-description">
             {{ this.i18n.t('repositories.import_records.steps.step1.subtitle') }}
           </p>
-          <h3 class="my-0 text-sn-dark-grey mb-3">
+          <h3 class="my-0 text-sn-dark-grey mb-3" data-e2e="e2e-TX-invInventoryImport-uploadModal-exportSubtitle">
             {{ i18n.t('repositories.import_records.steps.step1.exportTitle') }}
           </h3>
           <div class="flex gap-4 mb-6">
-            <button class="btn btn-secondary btn-sm" @click="$emit('changeStep', 'ExportModal')">
+            <button class="btn btn-secondary btn-sm" @click="$emit('changeStep', 'ExportModal')" data-e2e="e2e-BT-invInventoryImport-uploadModal-exportAll">
               <i class="sn-icon sn-icon-export"></i>
               {{ i18n.t('repositories.import_records.steps.step1.exportFullInvBtnText') }}
             </button>
-            <a :href="params.attributes.urls.export_empty_repository" target="_blank" class="btn btn-secondary btn-sm">
+            <a
+              :href="params.attributes.urls.export_empty_repository"
+              target="_blank"
+              class="btn btn-secondary btn-sm"
+              data-e2e="e2e-BT-invInventoryImport-uploadModal-downloadTemplate"
+            >
               <i class="sn-icon sn-icon-export"></i>
               {{ i18n.t('repositories.import_records.steps.step1.exportEmptyInvBtnText') }}
             </a>
           </div>
 
-          <h3 class="my-0 text-sn-dark-grey mb-3">
+          <h3 class="my-0 text-sn-dark-grey mb-3" data-e2e="e2e-TX-invInventoryImport-uploadModal-importSubtitle">
             {{ i18n.t('repositories.import_records.steps.step1.importTitle') }}
           </h3>
           <DragAndDropUpload
@@ -64,6 +75,7 @@
             @file:error:clear="this.error = null"
             :supportingText="`${i18n.t('repositories.import_records.steps.step1.dragAndDropSupportingText')}`"
             :supportedFormats="['xlsx', 'csv', 'xls', 'txt', 'tsv']"
+            :dataE2e="'invInventoryImport-uploadModal-dragDrop'"
           />
         </div>
         <div class="modal-footer">
@@ -75,7 +87,7 @@
             <i class="sn-icon sn-icon-check"></i>
             <div class="my-auto">{{ exportInventoryMessage }}</div>
           </div>
-          <button class="btn btn-secondary" @click="close" aria-label="Close">
+          <button class="btn btn-secondary" @click="close" aria-label="Close" data-e2e="e2e-BT-invInventoryImport-uploadModal-cancel">
             {{ i18n.t('repositories.import_records.steps.step1.cancelBtnText') }}
           </button>
         </div>

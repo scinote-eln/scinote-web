@@ -105,4 +105,8 @@ Rails.application.configure do
     config.x.new_team_on_signup = false
   end
   config.hosts << "dev.scinote.test"
+
+  # Automatically update js-routes file
+  # when routes.rb is changed
+  config.middleware.use(JsRoutes::Middleware)
 end

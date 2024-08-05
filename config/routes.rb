@@ -194,6 +194,8 @@ Rails.application.routes.draw do
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
           get 'actions_toolbar'
+          get :list
+          get :rows_list
         end
         member do
           get :export_empty_repository
@@ -807,11 +809,25 @@ Rails.application.routes.draw do
 
     resources :connected_devices, controller: 'users/connected_devices', only: %i(destroy)
 
-    resources :storage_locations, only: %i(index create destroy update) do
+    resources :storage_locations, only: %i(index create destroy update show) do
       collection do
         get :actions_toolbar
+        get :tree
       end
-      resources :storage_location_repository_rows, only: %i(index create destroy update)
+      member do
+        post :move
+        post :duplicate
+        post :unassign_rows
+        get :available_positions
+      end
+      resources :storage_location_repository_rows, only: %i(index create destroy update) do
+        collection do
+          get :actions_toolbar
+        end
+        member do
+          post :move
+        end
+      end
     end
 
     get 'search' => 'search#index'

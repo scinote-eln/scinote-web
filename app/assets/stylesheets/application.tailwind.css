@@ -2,6 +2,7 @@
 @import "tailwind/buttons";
 @import "tailwind/modals";
 @import "tailwind/flyouts";
+@import "tailwind/radio";
 @import "tailwind/loader.css";
 
 @tailwind base;
@@ -69,6 +70,6 @@ html {
 
 @keyframes shine-lines {
   0% { background-position: -150px }
-  
+
   40%, 100% { background-position: 320px }
 }

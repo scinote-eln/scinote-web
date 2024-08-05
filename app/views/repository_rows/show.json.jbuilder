@@ -37,6 +37,11 @@ json.actions do
   end
 end
 
+json.storage_locations do
+  json.locations @repository_row.grouped_storage_locations
+  json.enabled StorageLocation.storage_locations_enabled?
+end
+
 json.default_columns do
   json.name @repository_row.name
   json.code @repository_row.code

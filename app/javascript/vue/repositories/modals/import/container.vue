@@ -11,6 +11,7 @@
       @changeStep="changeStep"
       @importRows="importRecords"
       @updateAutoMapping="updateAutoMapping"
+      @updateAutoClearing="updateAutoClearing"
     />
     <ExportModal
       v-else
@@ -49,7 +50,7 @@ export default {
     return {
       modalOpened: false,
       activeStep: 'UploadStep',
-      params: { autoMapping: true },
+      params: { autoMapping: true, autoClearing: false },
       modalId: null,
       loading: false
     };
@@ -62,6 +63,7 @@ export default {
       this.activeStep = 'UploadStep';
       this.params.selectedItems = null;
       this.params.autoMapping = true;
+      this.params.autoClearing = false;
       this.fetchRepository();
     },
     fetchRepository() {
@@ -78,6 +80,11 @@ export default {
     },
     updateAutoMapping(value) {
       this.params.autoMapping = value;
+      this.params.autoClearing = false;
+    },
+    updateAutoClearing() {
+      this.params.autoMapping = false;
+      this.params.autoClearing = true;
     },
     generatePreview(selectedItems, updateWithEmptyCells, onlyAddNewItems) {
       this.params.selectedItems = selectedItems;

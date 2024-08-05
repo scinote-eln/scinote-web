@@ -19,7 +19,7 @@
           <div class="flex gap-6 items-center my-6">
             <div class="flex items-center gap-2" :title="i18n.t('repositories.import_records.steps.step2.autoMappingTooltip')">
               <div class="sci-checkbox-container">
-                <input type="checkbox" class="sci-checkbox" @change="$emit('update-auto-mapping', $event.target.checked)" :checked="params.autoMapping" />
+                <input type="checkbox" class="sci-checkbox" @change="toggleAutoMapping" :checked="params.autoMapping" />
                 <span class="sci-checkbox-label"></span>
               </div>
               {{ i18n.t('repositories.import_records.steps.step2.autoMappingText') }}
@@ -57,6 +57,7 @@
                 :value="this.selectedItems.find((item) => item.index === index)"
                 @selection:changed="handleChange"
                 :autoMapping="params.autoMapping"
+                :autoClearing="params.autoClearing"
               />
             </template>
           </div>
@@ -140,7 +141,12 @@ export default {
   methods: {
     handleChange(payload) {
       this.error = null;
-      const { index, key, value } = payload;
+      const {
+        index,
+        key,
+        value,
+        autoMap
+      } = payload;
 
       const item = this.selectedItems.find((i) => i.index === index);
       const usedBeforeItem = this.selectedItems.find((i) => i.key === key && i.index !== index);
@@ -152,6 +158,15 @@ export default {
 
       item.key = key;
       item.value = value;
+
+      this.$emit('updateAutoMapping', autoMap);
+    },
+    toggleAutoMapping(event) {
+      if (event.target.checked) {
+        this.$emit('updateAutoMapping', true);
+      } else {
+        this.$emit('updateAutoClearing');
+      }
     },
     loadAvailableFields() {
       // Adding alreadySelected attribute for tracking

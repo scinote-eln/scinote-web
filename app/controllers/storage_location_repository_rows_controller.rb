@@ -1,19 +1,20 @@
 # frozen_string_literal: true
 
 class StorageLocationRepositoryRowsController < ApplicationController
-  before_action :load_storage_location_repository_row, only: %i(update destroy)
+  before_action :check_storage_locations_enabled, except: :destroy
+  before_action :load_storage_location_repository_row, only: %i(update destroy move)
   before_action :load_storage_location
-  before_action :load_repository_row
-  before_action :check_read_permissions, only: :index
-  before_action :check_manage_permissions, except: :index
+  before_action :load_repository_row, only: %i(create update destroy move)
+  before_action :check_read_permissions, except: %i(create actions_toolbar)
+  before_action :check_manage_permissions, only: %i(create update destroy)
 
   def index
     storage_location_repository_row = Lists::StorageLocationRepositoryRowsService.new(
-      current_team, storage_location_repository_row_params
+      current_team, params
     ).call
     render json: storage_location_repository_row,
            each_serializer: Lists::StorageLocationRepositoryRowSerializer,
-           include: %i(repository_row)
+           meta: (pagination_dict(storage_location_repository_row) unless @storage_location.with_grid?)
   end
 
   def update
@@ -21,8 +22,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
 
     if @storage_location_repository_row.save
       render json: @storage_location_repository_row,
-             serializer: Lists::StorageLocationRepositoryRowSerializer,
-             include: :repository_row
+             serializer: Lists::StorageLocationRepositoryRowSerializer
     else
       render json: @storage_location_repository_row.errors, status: :unprocessable_entity
     end
@@ -38,10 +38,27 @@ class StorageLocationRepositoryRowsController < ApplicationController
 
     if @storage_location_repository_row.save
       render json: @storage_location_repository_row,
-             serializer: Lists::StorageLocationRepositoryRowSerializer,
-             include: :repository_row
+             serializer: Lists::StorageLocationRepositoryRowSerializer
     else
       render json: @storage_location_repository_row.errors, status: :unprocessable_entity
+    end
+  end
+
+  def move
+    ActiveRecord::Base.transaction do
+      @storage_location_repository_row.discard
+      @storage_location_repository_row = StorageLocationRepositoryRow.create!(
+        repository_row: @repository_row,
+        storage_location: @storage_location,
+        metadata: storage_location_repository_row_params[:metadata] || {},
+        created_by: current_user
+      )
+
+      render json: @storage_location_repository_row,
+             serializer: Lists::StorageLocationRepositoryRowSerializer
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
     end
   end
 
@@ -53,7 +70,20 @@ class StorageLocationRepositoryRowsController < ApplicationController
     end
   end
 
+  def actions_toolbar
+    render json: {
+      actions: Toolbars::StorageLocationRepositoryRowsService.new(
+        current_user,
+        items_ids: JSON.parse(params[:items]).map { |i| i['id'] }
+      ).actions
+    }
+  end
+
   private
+
+  def check_storage_locations_enabled
+    render_403 unless StorageLocation.storage_locations_enabled?
+  end
 
   def load_storage_location_repository_row
     @storage_location_repository_row = StorageLocationRepositoryRow.find(
@@ -80,10 +110,12 @@ class StorageLocationRepositoryRowsController < ApplicationController
   end
 
   def check_read_permissions
-    render_403 unless true
+    render_403 unless can_read_storage_location_containers?(current_team)
   end
 
   def check_manage_permissions
-    render_403 unless true
+    unless can_manage_storage_location_containers?(current_team) && can_read_repository?(@repository_row.repository)
+      render_403
+    end
   end
 end

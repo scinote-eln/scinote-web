@@ -1,0 +1,25 @@
+<% provide(:head_title, @storage_location.name) %>
+<% provide(:container_class, "no-second-nav-container") %>
+
+<% if current_team %>
+  <div class="content-pane flexible with-grey-background">
+    <div class="content-header">
+      <div class="title-row">
+        <h1><%= @storage_location.name %></h1>
+      </div>
+    </div>
+    <div class="content-body" data-e2e="e2e-CO-storage_locations_container">
+      <div id="StorageLocationsContainer" class="fixed-content-body">
+        <storage-locations-container
+          actions-url="<%= actions_toolbar_storage_location_storage_location_repository_rows_path(@storage_location) %>"
+          data-source="<%= storage_location_storage_location_repository_rows_path(@storage_location)  %>"
+          :with-grid="<%= @storage_location.with_grid? %>"
+          :grid-size="<%= @storage_location.grid_size.to_json %>"
+          :container-id="<%= @storage_location.id %>"
+        />
+      </div>
+    </div>
+  </div>
+
+  <%= javascript_include_tag 'vue_storage_locations_container' %>
+<% end %>

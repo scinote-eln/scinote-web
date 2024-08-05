@@ -37,6 +37,9 @@ class Result < ApplicationRecord
   accepts_nested_attributes_for :tables
 
   before_save :ensure_default_name
+  after_discard do
+    CleanupUserSettingsJob.perform_later('result_states', id)
+  end
 
   def self.search(user,
                   include_archived,

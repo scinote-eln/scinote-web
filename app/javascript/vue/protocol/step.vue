@@ -145,7 +145,19 @@
                     @attachments:viewMode="changeAttachmentsViewMode"
                     @attachment:viewMode="updateAttachmentViewMode"/>
       </div>
+      <ContentToolbar
+        v-if="orderedElements.length > 2"
+        :insertMenu="insertMenu"
+        @create:table="(...args) => this.createElement('table', ...args)"
+        @create:checklist="createElement('checklist')"
+        @create:text="createElement('text')"
+        @create:file="openLoadFromComputer"
+        @create:wopi_file="openWopiFileModal"
+        @create:ove_file="openOVEditor"
+        @create:marvinjs_file="openMarvinJsModal($refs.marvinJsButton)"
+      ></ContentToolbar>
     </div>
+
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
     <ReorderableItemsModal v-if="reordering"
       :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
@@ -172,6 +184,7 @@
   import Attachments from '../shared/content/attachments.vue'
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
   import MenuDropdown from '../shared/menu_dropdown.vue'
+  import ContentToolbar from '../shared/content/content_toolbar.vue'
 
   import UtilsMixin from '../mixins/utils.js'
   import AttachmentsMixin from '../shared/content/mixins/attachments.js'
@@ -265,7 +278,8 @@
       Attachments,
       StorageUsage,
       ReorderableItemsModal,
-      MenuDropdown
+      MenuDropdown,
+      ContentToolbar
     },
     created() {
       this.loadAttachments();
@@ -359,25 +373,30 @@
         if (this.urls.update_url) {
           menu = menu.concat([{
                     text: this.i18n.t('protocols.steps.insert.text'),
+                    icon: 'sn-icon sn-icon-result-text',
                     emit: 'create:text',
                     data_e2e: `e2e-BT-protocol-step${this.step.id}-insertText`
                   },{
                     text: this.i18n.t('protocols.steps.insert.attachment'),
                     submenu: this.filesMenu,
                     position: 'left',
+                    icon: 'sn-icon sn-icon-file',
                     data_e2e: `e2e-BT-protocol-step${this.step.id}-insertAttachment`
                   },{
                     text: this.i18n.t('protocols.steps.insert.table'),
+                    icon: 'sn-icon sn-icon-tables',
                     emit: 'create:table',
                     data_e2e: `e2e-BT-protocol-step${this.step.id}-insertTable`
                   },{
                     text: this.i18n.t('protocols.steps.insert.well_plate'),
                     submenu: this.wellPlateOptions,
+                    icon: 'sn-icon sn-icon-tables',
                     position: 'left',
                     data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellplate`
                   },{
                     text: this.i18n.t('protocols.steps.insert.checklist'),
                     emit: 'create:checklist',
+                    icon: 'sn-icon sn-icon-checkllist',
                     data_e2e: `e2e-BT-protocol-step${this.step.id}-insertChecklist`
                   }]);
         }

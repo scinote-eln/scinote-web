@@ -37,7 +37,8 @@
         <th id="assigned" data-unmanageable="true"><%= t("repositories.table.assigned") %></th>
         <th id="row-id"><%= t("repositories.table.id") %></th>
         <th id="row-name"><%= t("repositories.table.row_name") %></th>
-        <th id="relationship" title="<%= t("repositories.table.relationships") %>"><%= t("repositories.table.relationships") %></th>
+        <th id="relationship" data-disabled="<%= !Repository.repository_row_connections_enabled? %>"
+            title="<%= t("repositories.table.relationships") %>"><%= t("repositories.table.relationships") %></th>
         <th id="added-on" ><%= t("repositories.table.added_on") %></th>
         <th id="added-by" ><%= t("repositories.table.added_by") %></th>
         <th id="updated-on" ><%= t("repositories.table.updated_on") %></th>

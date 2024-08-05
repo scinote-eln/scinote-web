@@ -185,7 +185,7 @@ var RepositoryColumns = (function() {
             disableSearch: true,
             labelHTML: true,
             optionLabel: function(option) {
-              return `<div class="column-type-option" data-disabled="${option.params.disabled}">
+              return `<div class="column-type-option" data-e2e="${option.params.data_e2e || ''}" data-disabled="${option.params.disabled}">
                         <span>${option.label}</span>
                         <span class="text-description">${option.params.text_description || ''}</span>
                       </div>`
@@ -284,6 +284,7 @@ var RepositoryColumns = (function() {
         let editableRow = ($(el).attr('data-editable-row') === 'true') ? 'has-permissions' : '';
         let editUrl = $(el).attr('data-edit-column-url');
         let destroyUrl = $(el).attr('data-destroy-column-url');
+        const isDisabled = $(el).attr('data-disabled') === 'true';
         let thederName;
         
         if ($(el).find('.modal-tooltiptext').length > 0) {
@@ -315,7 +316,9 @@ var RepositoryColumns = (function() {
           <span class="vis-controls">
             <span class="vis sn-icon ${visClass}" title="${visText}"  data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-visibility"></span>
           </span>
-          <div class="text truncate" title="${thederName}"  data-e2e="e2e-TX-invItems-manageColumnsModal-${e2eName}-columnName">${thederName}</div>
+          <div class="text truncate" title="${thederName}"  data-e2e="e2e-TX-invItems-manageColumnsModal-${e2eName}-columnName">
+            ${thederName} ${isDisabled ? `<span data-e2e="e2e-LB-invItems-manageColumnsModal-${e2eName}-disabled"></span>` : ''}
+          </div>
           <span class="column-type pull-right shrink-0">${
             getColumnTypeText(el, colId) || `<i class="sn-icon sn-icon-locked-task"  data-e2e="e2e-IC-invItems-manageColumnsModal-${e2eName}-locked"></i>`
           }</span>

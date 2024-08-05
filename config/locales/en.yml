@@ -264,6 +264,9 @@ en:
         storage_location:
           missing_position: 'Missing position metadata'
           not_uniq_position: 'Position already taken'
+          attributes:
+            parent_storage_location: "Storage location cannot be parent to itself"
+            parent_storage_location_child: "Storage location cannot be moved to it's child"
   storage:
     limit_reached: "Storage limit has been reached."
   helpers:
@@ -1197,6 +1200,7 @@ en:
     shareable_links:
       share: "Share"
       shared: "Shared"
+      disabled: "Sharing is disabled for your team.\nAsk your team admin to enable sharing in the team settings."
     notes:
       title: "Notes"
       no_description: "No task description"
@@ -2612,7 +2616,12 @@ en:
       custom_columns_label: 'Custom columns'
       relationships_label: 'Relationships'
       assigned_label: 'Assigned'
+      locations_label: 'Locations'
       QR_label: 'QR'
+    locations:
+      title: 'Locations (%{count})'
+      container: 'Box'
+      assign: 'Assign new location'
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
@@ -2668,10 +2677,45 @@ en:
     errors:
       my_module_references_missing: 'Task references are not set'
   storage_locations:
+    container: 'box'
+    location: 'location'
+    show:
+      table:
+        position: "Position"
+        reminders: "Reminders"
+        row_id: "Item ID"
+        row_name: "Name"
+        stock: "Stock"
+      toolbar:
+        assign: 'Assign item'
+        unassign: 'Unassign'
+        move: 'Move'
+      unassign_modal:
+        title: 'Unassign location'
+        description: 'Are you sure you want to remove %{items} item(s) from their current storage location?'
+        button: 'Unassign'
+      assign_modal:
+        assign_title: 'Assign position'
+        move_title: 'Move item'
+        assign_description: 'Select an item to assign it to a location.'
+        move_description: 'Select a new location for your item.'
+        assign_action: 'Assign'
+        move_action: 'Move'
+        row: 'Row'
+        column: 'Column'
+        inventory: 'Inventory'
+        item: 'Item'
     index:
       head_title: "Locations"
       new_location: "New location"
-      new_box: "New box"
+      new_container: "New box"
+      duplicate:
+        success_message: "Location was successfully duplicated."
+      toolbar:
+        edit: 'Edit'
+        move: 'Move'
+        duplicate: 'Duplicate'
+        delete: 'Delete'
       table:
         name: "Location name"
         id: "ID"
@@ -2682,6 +2726,48 @@ en:
         owned_by: "Owned by"
         created_on: "Created on"
         description: "Description"
+      filters_modal:
+        search_tree: "Look inside locations"
+      edit_modal:
+        title_create_location: "Create new location"
+        title_create_container: "Create new box"
+        title_edit_location: "Edit location"
+        title_edit_container: "Edit box"
+        description_create_location: "Fill in the fields and create a new location."
+        description_create_container: "Fill in the fields to create a new box. Defining the box dimensions allows you to control the number of available spaces for placing inventory items."
+        name_label_location: "Location name"
+        image_label_location: "Image of location"
+        name_label_container: "Box name"
+        image_label_container: "Image of box"
+        drag_and_drop_supporting_text: ".png or .jpg file"
+        description_label: "Description"
+        name_placeholder: "Big freezer"
+        description_placeholder: "Keep everyone on the same page. You can also use smart annotations."
+        dimensions_label: "Dimensions (rows x columns)"
+        no_grid: "No grid"
+        grid: "Grid"
+        no_grid_tooltip: "You can assign unlimited items to the “No-grid” box but they do not have assigned position."
+        success_message:
+          create_location: "Location %{name} was successfully created."
+          create_container: "Box %{name} was successfully created."
+          edit_location: "Location %{name} was successfully updated."
+          edit_container: "Box %{name} was successfully updated."
+        errors:
+          max_length: "is too long (maximum is %{max_length} characters)"
+      move_modal:
+        title: 'Move %{name}'
+        description: 'Select where you want to move %{name}.'
+        search_header: 'Locations'
+        success_flash: "You have successfully moved the selected location/box to another location."
+        error_flash: "An error occurred. The selected location/box has not been moved."
+        placeholder:
+          find_storage_locations: 'Find location'
+      delete_modal:
+        title: 'Delete a %{type}'
+        description_1_html: "You're about to delete <b>%{name}</b>. This action will delete the %{type}. <b>%{num_of_items}</b> items inside will lose their assigned positions."
+        description_2_html: '<b>Are you sure you want to delete it?</b>'
+        success_message: "%{type} %{name} successfully deleted."
+
   libraries:
     manange_modal_column_index:
       title: "Manage columns"
@@ -3590,6 +3676,7 @@ en:
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       new_step: "New step"
+      add_step: "Add step"
       new_step_title: "Create new step"
       subtitle: "Protocol Steps"
       no_steps: "Protocol has no steps."

@@ -213,12 +213,7 @@ module RepositoryImportParser
     def handle_nil_cell_value(repository_cell)
       return unless repository_cell.present? && @should_overwrite_with_empty_cells
 
-      if @preview
-        repository_cell.to_destroy = true
-        @updated = true
-      else
-        repository_cell.value.destroy!
-      end
+      @updated = erase_cell!(repository_cell, preview: @preview)
 
       repository_cell
     end
@@ -241,6 +236,12 @@ module RepositoryImportParser
         when RepositoryStatusValue
           repository_status_item_id = cell_value[:repository_status_item_id]
           repository_cell.value.update_data!(repository_status_item_id, @user, preview: @preview)
+        when RepositoryTimeValue
+          repository_cell.value.update_data!(
+            repository_cell.value.data.change(hour: cell_value.data.hour, min: cell_value.data.min),
+            @user,
+            preview: @preview
+          )
         else
           sanitized_cell_value_data = sanitize_cell_value_data(cell_value.data)
           repository_cell.value.update_data!(sanitized_cell_value_data, @user, preview: @preview)
@@ -295,6 +296,26 @@ module RepositoryImportParser
     def total_rows_count
       # all rows minus header
       @rows.count - 1
+    end
+
+    def erase_cell!(repository_cell, preview: false)
+      case repository_cell.value
+      when RepositoryStockValue
+        return false if repository_cell.value.amount.zero?
+
+        repository_cell.value.update_data!(
+          {
+            amount: 0,
+            unit_item_id: repository_cell.value.repository_stock_unit_item_id
+          },
+          @user,
+          preview: preview
+        )
+      else
+        preview ? repository_cell.to_destroy = true : repository_cell.value.destroy!
+      end
+
+      true
     end
   end
 end

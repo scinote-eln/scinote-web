@@ -6,28 +6,54 @@
                :reloadingTable="reloadingTable"
                :toolbarActions="toolbarActions"
                :actionsUrl="actionsUrl"
-               @archive="archive"
-               @restore="restore"
-               @delete="deleteRepository"
-               @update="update"
+               :filters="filters"
+               @create_location="openCreateLocationModal"
+               @create_container="openCreateContainerModal"
+               @edit="edit"
                @duplicate="duplicate"
-               @export="exportRepositories"
-               @share="share"
-               @create="newRepository = true"
                @tableReloaded="reloadingTable = false"
+               @move="move"
+               @delete="deleteStorageLocation"
     />
+    <Teleport to="body">
+      <EditModal v-if="openEditModal"
+                 @close="openEditModal = false"
+                 @tableReloaded="reloadingTable = true"
+                 :createUrl="createUrl"
+                 :editModalMode="editModalMode"
+                 :directUploadUrl="directUploadUrl"
+                 :editStorageLocation="editStorageLocation"
+      />
+      <MoveModal v-if="objectToMove" :moveToUrl="moveToUrl"
+             :selectedObject="objectToMove"
+             @close="objectToMove = null" @move="updateTable()" />
+      <ConfirmationModal
+        :title="storageLocationDeleteTitle"
+        :description="storageLocationDeleteDescription"
+        confirmClass="btn btn-danger"
+        :confirmText="i18n.t('general.delete')"
+        ref="deleteStorageLocationModal"
+      ></ConfirmationModal>
+    </Teleport>
   </div>
 </template>
 
 <script>
-/* global */
+/* global HelperModule */
 
+import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
+import EditModal from './modals/new_edit.vue';
+import MoveModal from './modals/move.vue';
+import ConfirmationModal from '../shared/confirmation_modal.vue';
 
 export default {
   name: 'RepositoriesTable',
   components: {
-    DataTable
+    DataTable,
+    EditModal,
+    MoveModal,
+    ConfirmationModal
   },
   props: {
     dataSource: {
@@ -38,13 +64,26 @@ export default {
       type: String,
       required: true
     },
-    createUrl: {
+    createLocationUrl: {
+      type: String
+    },
+    createLocationInstanceUrl: {
+      type: String
+    },
+    directUploadUrl: {
       type: String
     }
   },
   data() {
     return {
-      reloadingTable: false
+      reloadingTable: false,
+      openEditModal: false,
+      editModalMode: null,
+      editStorageLocation: null,
+      objectToMove: null,
+      moveToUrl: null,
+      storageLocationDeleteTitle: '',
+      storageLocationDeleteDescription: ''
     };
   },
   computed: {
@@ -102,21 +141,24 @@ export default {
     },
     toolbarActions() {
       const left = [];
-      if (this.createUrl) {
+      if (this.createLocationUrl) {
         left.push({
           name: 'create_location',
           icon: 'sn-icon sn-icon-new-task',
           label: this.i18n.t('storage_locations.index.new_location'),
           type: 'emit',
-          path: this.createUrl,
+          path: this.createLocationUrl,
           buttonStyle: 'btn btn-primary'
         });
+      }
+
+      if (this.createLocationInstanceUrl) {
         left.push({
-          name: 'create_box',
+          name: 'create_container',
           icon: 'sn-icon sn-icon-item',
-          label: this.i18n.t('storage_locations.index.new_box'),
+          label: this.i18n.t('storage_locations.index.new_container'),
           type: 'emit',
-          path: this.createUrl,
+          path: this.createLocationInstanceUrl,
           buttonStyle: 'btn btn-secondary'
         });
       }
@@ -124,19 +166,98 @@ export default {
         left,
         right: []
       };
+    },
+    filters() {
+      const filters = [
+        {
+          key: 'query',
+          type: 'Text'
+        },
+        {
+          key: 'search_tree',
+          type: 'Checkbox',
+          label: this.i18n.t('storage_locations.index.filters_modal.search_tree')
+        }
+      ];
+
+      return filters;
+    },
+    createUrl() {
+      return this.editModalMode === 'location' ? this.createLocationUrl : this.createLocationInstanceUrl;
     }
   },
   methods: {
+    openCreateLocationModal() {
+      this.openEditModal = true;
+      this.editModalMode = 'location';
+      this.editStorageLocation = null;
+    },
+    openCreateContainerModal() {
+      this.openEditModal = true;
+      this.editModalMode = 'container';
+      this.editStorageLocation = null;
+    },
+    edit(action, params) {
+      this.openEditModal = true;
+      this.editModalMode = params[0].container ? 'container' : 'location';
+      [this.editStorageLocation] = params;
+    },
+    duplicate(action) {
+      axios.post(action.path)
+        .then(() => {
+          this.reloadingTable = true;
+          HelperModule.flashAlertMsg(this.i18n.t('storage_locations.index.duplicate.success_message'), 'success');
+        })
+        .catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        });
+    },
     // Renderers
     nameRenderer(params) {
       const {
         name,
         urls
       } = params.data;
+      let containerIcon = '';
+      if (params.data.container) {
+        containerIcon = '<i class="sn-icon sn-icon-item"></i>';
+      }
       return `<a class="hover:no-underline flex items-center gap-1"
                  title="${name}" href="${urls.show}">
+                 ${containerIcon}
                  <span class="truncate">${name}</span>
               </a>`;
+    },
+    updateTable() {
+      this.reloadingTable = true;
+      this.objectToMove = null;
+    },
+    move(event, rows) {
+      [this.objectToMove] = rows;
+      this.moveToUrl = event.path;
+    },
+    async deleteStorageLocation(event, rows) {
+      const storageLocationType = rows[0].container ? this.i18n.t('storage_locations.container') : this.i18n.t('storage_locations.location');
+      const description = `
+        <p>${this.i18n.t('storage_locations.index.delete_modal.description_1_html',
+    { name: rows[0].name, type: storageLocationType, num_of_items: event.number_of_items })}</p>
+        <p>${this.i18n.t('storage_locations.index.delete_modal.description_2_html')}</p>`;
+
+      this.storageLocationDeleteDescription = description;
+      this.storageLocationDeleteTitle = this.i18n.t('storage_locations.index.delete_modal.title', { type: storageLocationType });
+      const ok = await this.$refs.deleteStorageLocationModal.show();
+      if (ok) {
+        axios.delete(event.path).then((_) => {
+          this.reloadingTable = true;
+          HelperModule.flashAlertMsg(this.i18n.t('storage_locations.index.delete_modal.success_message',
+            {
+              type: storageLocationType[0].toUpperCase() + storageLocationType.slice(1),
+              name: rows[0].name
+            }), 'success');
+        }).catch((error) => {
+          HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+        });
+      }
     }
   }
 };

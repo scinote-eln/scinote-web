@@ -636,6 +636,8 @@ class Extends
     preferences/index
     addons/index
     search/index
+    storage_locations/index
+    storage_locations/show
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
@@ -673,6 +675,7 @@ class Extends
     repository_export_file_type
     navigator_collapsed
     navigator_width
+    result_states
   ).freeze
 end
 
