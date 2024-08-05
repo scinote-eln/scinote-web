@@ -2,7 +2,7 @@
 
 source 'http://rubygems.org'
 
-ruby '3.2.2'
+ruby '~> 3.2.2'
 
 gem 'activerecord-session_store'
 gem 'bootsnap', require: false

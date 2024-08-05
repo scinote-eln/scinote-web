@@ -1,5 +1,5 @@
 # Building stage
-FROM ruby:3.2.2-bookworm AS builder
+FROM ruby:3.2-bookworm AS builder
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN \
@@ -41,7 +41,7 @@ RUN \
   bash -c "rake assets:precompile && rake deface:precompile"
 
 # Final stage
-FROM ruby:3.2.2-bookworm AS runner
+FROM ruby:3.2-bookworm AS runner
 MAINTAINER SciNote <info@scinote.net>
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
