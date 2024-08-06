@@ -1,19 +1,19 @@
 <template>
   <div class="grid grid-cols-[1.5rem_auto] grid-rows-[1.5rem_auto] overflow-hidden">
     <div class="z-10 bg-sn-super-light-grey"></div>
-    <div ref="columnsContainer" class="overflow-x-hidden overflow-y-scroll">
+    <div ref="columnsContainer" class="overflow-x-hidden">
       <div :style="{'width': `${columnsList.length * 54}px`}">
         <div v-for="column in columnsList" :key="column" class="uppercase float-left flex items-center justify-center w-[54px] ">
           <span>{{ column }}</span>
         </div>
       </div>
     </div>
-    <div ref="rowContainer" class="overflow-y-hidden overflow-x-scroll max-h-[70vh]">
+    <div ref="rowContainer" class="overflow-y-hidden max-h-[70vh]">
       <div v-for="row in rowsList" :key="row" class="uppercase flex items-center justify-center h-[54px]">
         <span>{{ row }}</span>
       </div>
     </div>
-    <div ref="cellsContainer" class="overflow-scroll max-h-[70vh]">
+    <div ref="cellsContainer" class="overflow-hidden max-h-[70vh] relative">
       <div class="grid" :style="{
         'grid-template-columns': `repeat(${columnsList.length}, 1fr)`,
         'width': `${columnsList.length * 54}px`
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+/* global PerfectScrollbar */
 export default {
   name: 'StorageLocationsGrid',
   props: {
@@ -65,9 +66,15 @@ export default {
       default: () => []
     }
   },
+  data() {
+    return {
+      scrollBar: null
+    };
+  },
   mounted() {
     this.$refs.cellsContainer.addEventListener('scroll', this.handleScroll);
     window.addEventListener('resize', this.handleScroll);
+    this.scrollBar = new PerfectScrollbar(this.$refs.cellsContainer, { wheelSpeed: 0.5, minScrollbarLength: 20 });
   },
   beforeUnmount() {
     this.$refs.cellsContainer.removeEventListener('scroll', this.handleScroll);
@@ -121,6 +128,10 @@ export default {
     handleScroll() {
       this.$refs.columnsContainer.scrollLeft = this.$refs.cellsContainer.scrollLeft;
       this.$refs.rowContainer.scrollTop = this.$refs.cellsContainer.scrollTop;
+
+      if (this.$refs.cellsContainer.scrollLeft > this.$refs.columnsContainer.scrollLeft) {
+        this.$refs.cellsContainer.scrollLeft = this.$refs.columnsContainer.scrollLeft;
+      }
 
       if (this.$refs.rowContainer.scrollTop > 0) {
         this.$refs.columnsContainer.style.boxShadow = '0px 0px 20px 0px rgba(16, 24, 40, 0.20)';

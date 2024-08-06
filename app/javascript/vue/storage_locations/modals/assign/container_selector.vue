@@ -18,7 +18,11 @@
         <i class="sn-icon sn-icon-projects"></i>
         {{ i18n.t('storage_locations.index.move_modal.search_header') }}
       </div>
-      <MoveTree :storageLocationsTree="filteredStorageLocationsTree" :value="selectedStorageLocationId" @selectStorageLocation="selectStorageLocation" />
+      <MoveTree
+        :storageLocationsTree="filteredStorageLocationsTree"
+        :moveMode="moveMode"
+        :value="selectedStorageLocationId"
+        @selectStorageLocation="selectStorageLocation" />
     </div>
   </div>
 </template>
@@ -31,7 +35,8 @@ export default {
   mixins: [MoveTreeMixin],
   data() {
     return {
-      container: true
+      container: true,
+      moveMode: 'containers'
     };
   },
   watch: {

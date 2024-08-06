@@ -1,14 +1,6 @@
 <template>
-  <div class="grid w-full h-full gap-6" :class="{ 'grid-cols-2': withGrid }">
-    <div v-if="withGrid">
-      <div class="py-4">
-        <div class="h-11">
-          <button class="btn btn-primary" @click="assignRow">
-            <i class="sn-icon sn-icon-new-task"></i>
-            {{ i18n.t('storage_locations.show.toolbar.assign') }}
-          </button>
-        </div>
-      </div>
+  <div class="grid w-full h-full gap-6" :class="{ 'grid-cols-[auto_1fr]': withGrid }">
+    <div v-if="withGrid" class="max-w-[40vw]">
       <Grid
         :gridSize="gridSize"
         :assignedItems="assignedItems"
@@ -17,7 +9,7 @@
         @select="selectRow"
       />
     </div>
-    <div class="h-full bg-white p-4">
+    <div class="h-full bg-white px-4">
       <DataTable :columnDefs="columnDefs"
                 tableId="StorageLocationsContainer"
                 :dataUrl="dataSource"
@@ -148,15 +140,13 @@ export default {
     toolbarActions() {
       const left = [];
 
-      if (!this.withGrid) {
-        left.push({
-          name: 'assign',
-          icon: 'sn-icon sn-icon-new-task',
-          label: this.i18n.t('storage_locations.show.toolbar.assign'),
-          type: 'emit',
-          buttonStyle: 'btn btn-primary'
-        });
-      }
+      left.push({
+        name: 'assign',
+        icon: 'sn-icon sn-icon-new-task',
+        label: this.i18n.t('storage_locations.show.toolbar.assign'),
+        type: 'emit',
+        buttonStyle: 'btn btn-primary'
+      });
 
       return {
         left,
