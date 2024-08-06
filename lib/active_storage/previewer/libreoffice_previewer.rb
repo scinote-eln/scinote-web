@@ -22,12 +22,7 @@ module ActiveStorage
 
           begin
             success = system(
-              'timeout',
-              Constants::PREVIEW_TIMEOUT_SECONDS.to_s,
-              libreoffice_path,
-              '--headless', '--invisible', '--convert-to', 'png', '--outdir',
-              work_dir,
-              input.path
+              libreoffice_path, '--headless', '--invisible', '--convert-to', 'png', '--outdir', work_dir, input.path
             )
 
             unless success && File.file?(preview_file)

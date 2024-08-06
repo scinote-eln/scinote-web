@@ -328,9 +328,6 @@ class Constants
 
   PREVIEWABLE_FILE_TYPES = TEXT_EXTRACT_FILE_TYPES
 
-  # default preview timeout to 15 minutes
-  PREVIEW_TIMEOUT_SECONDS = ENV['PREVIEW_TIMEOUT_SECONDS'] ? ENV['PREVIEW_TIMEOUT_SECONDS'].to_i : 900
-
   WHITELISTED_IMAGE_TYPES = [
     'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff', 'jpg'
   ].freeze
