@@ -3,7 +3,7 @@
     <div v-if="withGrid">
       <div class="py-4">
         <div class="h-11">
-          <button class="btn btn-primary" @click="assignRow">
+          <button class="btn btn-primary" @click="assignRow" data-e2e="e2e-BT-topToolbar-locations-assignItem">
             <i class="sn-icon sn-icon-new-task"></i>
             {{ i18n.t('storage_locations.show.toolbar.assign') }}
           </button>

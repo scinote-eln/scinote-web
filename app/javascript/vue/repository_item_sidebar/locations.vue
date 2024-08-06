@@ -1,8 +1,8 @@
 <template>
   <div v-if="repositoryRow">
     <div class="flex items-center gap-4">
-      <h4>{{ i18n.t('repositories.locations.title', { count: repositoryRow.locations.length }) }}</h4>
-      <button class="btn btn-light">
+      <h4 data-e2e="e2e-TX-itemCard-locations-title">{{ i18n.t('repositories.locations.title', { count: repositoryRow.locations.length }) }}</h4>
+      <button class="btn btn-light" data-e2e="e2e-BT-itemCard-assignLocation">
         {{ i18n.t('repositories.locations.assign') }}
       </button>
     </div>
