@@ -178,10 +178,11 @@ class RepositoryRow < ApplicationRecord
   def grouped_storage_locations
     storage_location_repository_rows.joins(:storage_location).group(:storage_location_id).select(
       "storage_location_id as id,
+       (ARRAY_AGG(storage_locations.metadata))[1] as metadata,
        MAX(storage_locations.name) as name,
        jsonb_agg(jsonb_build_object(
-         'id', storage_location_repository_rows.id, 'metadata',
-         storage_location_repository_rows.metadata)
+         'id', storage_location_repository_rows.id,
+         'metadata', storage_location_repository_rows.metadata)
        ) as positions").as_json
   end
 

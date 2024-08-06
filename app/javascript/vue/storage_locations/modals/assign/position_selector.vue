@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-2 gap-4 mb-4">
+  <div v-if="availablePositions" class="grid grid-cols-2 gap-4 mb-4">
     <div class="">
       <div class="sci-label">{{ i18n.t(`storage_locations.show.assign_modal.row`) }}</div>
       <SelectDropdown
@@ -39,12 +39,14 @@ export default {
     axios.get(this.positionsUrl)
       .then((response) => {
         this.availablePositions = response.data.positions;
-        this.$nextTick(() => {
-          [[this.selectedRow]] = this.availableRows;
+        if (this.availablePositions) {
           this.$nextTick(() => {
-            [[this.selectedColumn]] = this.availableColumns;
+            [[this.selectedRow]] = this.availableRows;
+            this.$nextTick(() => {
+              [[this.selectedColumn]] = this.availableColumns;
+            });
           });
-        });
+        }
       });
   },
   watch: {

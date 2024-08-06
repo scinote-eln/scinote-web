@@ -64,7 +64,10 @@ export default {
       type: String,
       required: true
     },
-    createUrl: {
+    createLocationUrl: {
+      type: String
+    },
+    createLocationInstanceUrl: {
       type: String
     },
     directUploadUrl: {
@@ -98,8 +101,9 @@ export default {
         sortable: true
       },
       {
-        field: 'sub_locations',
+        field: 'sub_location_count',
         headerName: this.i18n.t('storage_locations.index.table.sub_locations'),
+        width: 250,
         sortable: true
       },
       {
@@ -137,21 +141,24 @@ export default {
     },
     toolbarActions() {
       const left = [];
-      if (this.createUrl) {
+      if (this.createLocationUrl) {
         left.push({
           name: 'create_location',
           icon: 'sn-icon sn-icon-new-task',
           label: this.i18n.t('storage_locations.index.new_location'),
           type: 'emit',
-          path: this.createUrl,
+          path: this.createLocationUrl,
           buttonStyle: 'btn btn-primary'
         });
+      }
+
+      if (this.createLocationInstanceUrl) {
         left.push({
           name: 'create_container',
           icon: 'sn-icon sn-icon-item',
           label: this.i18n.t('storage_locations.index.new_container'),
           type: 'emit',
-          path: this.createUrl,
+          path: this.createLocationInstanceUrl,
           buttonStyle: 'btn btn-secondary'
         });
       }
@@ -174,6 +181,9 @@ export default {
       ];
 
       return filters;
+    },
+    createUrl() {
+      return this.editModalMode === 'location' ? this.createLocationUrl : this.createLocationInstanceUrl;
     }
   },
   methods: {
