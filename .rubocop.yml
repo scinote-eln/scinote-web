@@ -384,7 +384,7 @@ Layout/DefEndAlignment:
   EnforcedStyleAlignWith: start_of_line
 
 Layout/LineLength:
-  Max: 120
+  Max: 180
   AllowHeredoc: true
   AllowURI: true
   URISchemes:

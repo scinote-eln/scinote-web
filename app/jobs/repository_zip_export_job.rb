@@ -22,20 +22,14 @@ class RepositoryZipExportJob < ZipExportJob
                      'my_module_repository_rows.stock_consumption'
                    )
       end
+      service = RepositoryExportService.new(@file_type, rows, params[:header_ids].map(&:to_i),
+                                            repository, in_module: true)
     else
-      ordered_row_ids = params[:row_ids]
-      id_row_map = RepositoryRow.where(id: ordered_row_ids,
-                                       repository: repository)
-                                .index_by(&:id)
-      rows = ordered_row_ids.collect { |id| id_row_map[id.to_i] }
+      ordered_row_ids = params[:row_ids].map(&:to_i)
+      rows = repository.repository_rows.where(id: ordered_row_ids)
+      service = RepositoryExportService.new(@file_type, rows, params[:header_ids].map(&:to_i),
+                                            repository, in_module: false, ordered_row_ids: ordered_row_ids)
     end
-    service = RepositoryExportService
-              .new(@file_type,
-                   rows,
-                   params[:header_ids].map(&:to_i),
-                   @user,
-                   repository,
-                   in_module: params[:my_module_id].present?)
     exported_data = service.export!
     File.binwrite("#{dir}/export.#{@file_type}", exported_data)
   end
