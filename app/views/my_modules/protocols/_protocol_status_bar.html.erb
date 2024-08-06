@@ -8,10 +8,10 @@
       [<%= t("my_modules.protocols.protocol_status_bar.unlinked") %>]
     </span>
   <% end %>
-  <a href="#" id="my-module-protocol-info-button" class="status-info dropdown-toggle data-e2e="e2e-BT-task-protocolInfo-openInfo"
+  <a href="#" id="my-module-protocol-info-button" class="status-info dropdown-toggle 
     <%= 'parent-newer' if @protocol.parent_newer? %>
     <%= 'protocol-newer' if @protocol.newer_than_parent? %>
-    " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-e2e="e2e-BT-task-protocolInfo-openInfo">
     <i class="sn-icon sn-icon-info"></i>
   </a>
   <div class="dropdown-menu status-info-dropdown" aria-labelledby="my-module-protocol-info-button" data-e2e="e2e-CO-task-protocolInfo">
