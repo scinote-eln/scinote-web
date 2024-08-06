@@ -314,7 +314,7 @@
 
                 <div v-if="!repository?.is_snapshot" id="divider" class="bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
                 <!-- Locations -->
-                <section v-if="!repository?.is_snapshot" id="locations-section" ref="locationsSectionRef">
+                <section v-if="!repository?.is_snapshot" id="locations-section" ref="locationsSectionRef" data-e2e="e2e-CO-itemCard-locations">
                   <Locations :repositoryRow="repositoryRow" :repository="repository" @reloadRow="reload" />
                 </section>
                 <div v-if="!repository?.is_snapshot" id="divider" class="bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
