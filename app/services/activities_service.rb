@@ -6,14 +6,26 @@ class ActivitiesService
     visible_teams = user.teams.where(id: teams)
     visible_projects = Project.viewable_by_user(user, visible_teams)
     visible_by_teams = Activity.where(project: nil, team_id: visible_teams.select(:id))
+                               .where.not(subject_type: %w(RepositoryBase RepositoryRow))
                                .order(created_at: :desc)
+
+    visible_by_repositories = Activity.where(
+      project: nil,
+      subject_type: %w(RepositoryBase RepositoryRow),
+      team_id: Team.with_granted_permissions(user, [RepositoryPermissions::READ]).where(id: teams).select(:id)
+    ).order(created_at: :desc)
+
     visible_by_projects = Activity.where(project_id: visible_projects.select(:id))
                                   .order(created_at: :desc)
 
-    query = Activity.from("((#{visible_by_teams.to_sql}) UNION ALL (#{visible_by_projects.to_sql})) AS activities")
+    query = Activity.from(
+      "((#{visible_by_teams.to_sql}) UNION ALL "\
+      "(#{visible_by_repositories.to_sql}) UNION ALL "\
+      "(#{visible_by_projects.to_sql})) AS activities"
+    )
 
     if filters[:subjects].present?
-      subjects_with_children = load_subjects_children(filters[:subjects])
+      subjects_with_children = load_subjects_children(user, filters[:subjects])
       where_condition = subjects_with_children.to_h.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR ')
       where_arguments = subjects_with_children.to_h.flatten
       if subjects_with_children[:my_module]
@@ -45,7 +57,7 @@ class ActivitiesService
               .without_count
   end
 
-  def self.load_subjects_children(subjects = {})
+  def self.load_subjects_children(user, subjects = {})
     Extends::ACTIVITY_SUBJECT_CHILDREN.each do |subject_name, children|
       subject_name = subject_name.to_s.camelize
       next unless children && subjects[subject_name]
@@ -59,15 +71,21 @@ class ActivitiesService
           parent_model = parent_model.with_discarded
         end
 
-        if child == :results
-          subjects[child_model] = parent_model.where(id: subjects[subject_name])
-                                              .joins(:results_include_discarded)
-                                              .pluck('results.id')
-        else
-          subjects[child_model] = parent_model.where(id: subjects[subject_name])
-                                              .joins(child)
-                                              .pluck("#{child.to_s.pluralize}.id")
-        end
+        subjects[child_model] =
+          case child
+          when :results
+            parent_model.where(id: subjects[subject_name])
+                        .joins(:results_include_discarded)
+                        .pluck('results.id')
+          when :repositories
+            parent_model.accessible_by_teams(user.teams, user)
+                        .where(id: subjects[subject_name])
+                        .pluck('repositories.id')
+          else
+            parent_model.where(id: subjects[subject_name])
+                        .joins(child)
+                        .pluck("#{child.to_s.pluralize}.id")
+          end
       end
     end
 
