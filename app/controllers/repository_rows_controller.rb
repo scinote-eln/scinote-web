@@ -358,14 +358,14 @@ class RepositoryRowsController < ApplicationController
   AvailableRepositoryRow = Struct.new(:id, :name, :has_file_attached)
 
   def load_repository
-    @repository = Repository.accessible_by_teams(current_team)
+    @repository = Repository.accessible_by_teams(current_team, current_user)
                             .eager_load(:repository_columns)
                             .find_by(id: params[:repository_id])
     render_404 unless @repository
   end
 
   def load_repository_or_snapshot
-    @repository = Repository.accessible_by_teams(current_team).find_by(id: params[:repository_id]) ||
+    @repository = Repository.accessible_by_teams(current_team, current_user).find_by(id: params[:repository_id]) ||
                   RepositorySnapshot.find_by(id: params[:repository_id])
     return render_404 unless @repository
   end

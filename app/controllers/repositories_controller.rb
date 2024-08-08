@@ -305,7 +305,7 @@ class RepositoriesController < ApplicationController
       status = ImportRepository::ImportRecords
                .new(
                  temp_file: TempFile.find_by(id: import_params[:file_id]),
-                 repository: Repository.accessible_by_teams(current_team).find_by(id: import_params[:id]),
+                 repository: Repository.accessible_by_teams(current_team, current_user).find_by(id: import_params[:id]),
                  mappings: import_params[:mappings],
                  session: session,
                  user: current_user,
@@ -452,12 +452,12 @@ class RepositoriesController < ApplicationController
 
   def load_repository
     repository_id = params[:id] || params[:repository_id]
-    @repository = Repository.accessible_by_teams(current_user.teams).find_by(id: repository_id)
+    @repository = Repository.accessible_by_teams(current_user.teams, current_user).find_by(id: repository_id)
     render_404 unless @repository
   end
 
   def load_repositories
-    @repositories = Repository.accessible_by_teams(current_team)
+    @repositories = Repository.accessible_by_teams(current_team, current_user)
   end
 
   def load_repositories_for_archiving

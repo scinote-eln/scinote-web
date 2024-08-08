@@ -56,7 +56,7 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def repositories
-    repositories = Repository.accessible_by_teams(current_team)
+    repositories = Repository.accessible_by_teams(current_team, current_user)
                              .search_by_name_and_id(current_user, current_user.teams, params[:query])
                              .order(name: :asc)
                              .page(params[:page] || 1)

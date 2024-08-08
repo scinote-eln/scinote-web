@@ -20,7 +20,7 @@ module Api
       end
 
       def create
-        inventory_item_to_link = RepositoryRow.where(repository: Repository.accessible_by_teams(@team))
+        inventory_item_to_link = RepositoryRow.where(repository: Repository.accessible_by_teams(@team, current_user))
                                               .find(connection_params[:parent_id])
         parent_connection = @inventory_item.parent_connections.create!(
           parent: inventory_item_to_link,

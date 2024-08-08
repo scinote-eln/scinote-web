@@ -48,12 +48,15 @@ class Repository < RepositoryBase
   scope :archived, -> { where(archived: true) }
   scope :globally_shared, -> { where(permission_level: %i(shared_read shared_write)) }
 
-  scope :accessible_by_teams, lambda { |teams|
+  scope :accessible_by_teams, lambda { |teams, user|
+    accessible_teams =
+      Team.where(id: [teams].flatten.map(&:id)).with_granted_permissions(user, [RepositoryPermissions::READ])
+
     accessible_repositories = left_outer_joins(:team_shared_objects)
     accessible_repositories =
       accessible_repositories
-      .where(team: teams)
-      .or(accessible_repositories.where(team_shared_objects: { team: teams }))
+      .where(team: accessible_teams)
+      .or(accessible_repositories.where(team_shared_objects: { team: accessible_teams }))
       .or(accessible_repositories
             .where(permission_level: [Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
                                       Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]]))

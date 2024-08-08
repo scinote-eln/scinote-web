@@ -128,7 +128,10 @@ class RepositoryRow < ApplicationRecord
                   _current_team = nil,
                   options = {})
 
-    teams = options[:teams] || current_team || user.teams.select(:id)
+    teams = (options[:teams] || [current_team] || user.teams.select(:id)).filter do |team|
+      team.permission_granted?(user, RepositoryPermissions::READ)
+    end.pluck(:id)
+
     searchable_row_fields = [RepositoryRow::PREFIXED_ID_SQL, 'repository_rows.name', 'users.full_name']
 
     readable_rows = distinct.joins(:repository, :created_by)
