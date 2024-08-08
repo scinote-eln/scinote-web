@@ -184,7 +184,9 @@ class MyModule < ApplicationRecord
               .group(:id)
   end
 
-  def live_and_snapshot_repositories_list
+  def live_and_snapshot_repositories_list(user)
+    return [] if !team.permission_granted?(user, RepositoryPermissions::READ)
+
     snapshots = repository_snapshots.left_outer_joins(:original_repository)
 
     selected_snapshots = snapshots.where(selected: true)

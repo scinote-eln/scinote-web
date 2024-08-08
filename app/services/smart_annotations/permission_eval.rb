@@ -25,7 +25,7 @@ module SmartAnnotations
 
       def validate_rep_item_permissions(user, team, object)
         if object.repository
-          return Repository.accessible_by_teams(team).find_by(id: object.repository_id).present? &&
+          return Repository.accessible_by_teams(team, user).find_by(id: object.repository_id).present? &&
                  can_read_repository?(user, object.repository)
         end
 

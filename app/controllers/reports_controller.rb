@@ -348,7 +348,7 @@ class ReportsController < ApplicationController
   def load_available_repositories
     @available_repositories = []
     repositories = Repository.active
-                             .accessible_by_teams(current_team)
+                             .accessible_by_teams(current_team, current_user)
                              .name_like(search_params[:query])
                              .limit(Constants::SEARCH_LIMIT)
     repositories.each do |repository|

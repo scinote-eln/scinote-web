@@ -108,7 +108,7 @@ module ReportsHelper
   end
 
   def assigned_to_report_repository_items(report, repository_name)
-    repository = Repository.accessible_by_teams(report.team).where(name: repository_name).take
+    repository = Repository.accessible_by_teams(report.team, current_user).where(name: repository_name).take
     return RepositoryRow.none if repository.blank?
 
     my_modules = MyModule.joins(:experiment)
