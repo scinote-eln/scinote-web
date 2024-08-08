@@ -130,17 +130,17 @@
                       @attachments:order="changeAttachmentsOrder"
                       @attachments:viewMode="changeAttachmentsViewMode"
                       @attachment:viewMode="updateAttachmentViewMode"/>
+        <ContentToolbar
+          v-if="orderedElements.length > 2"
+          :insertMenu="insertMenu"
+          @create:table="(...args) => this.createElement('table', ...args)"
+          @create:text="createElement('text')"
+          @create:file="openLoadFromComputer"
+          @create:wopi_file="openWopiFileModal"
+          @create:ove_file="openOVEditor"
+          @create:marvinjs_file="openMarvinJsModal($refs.marvinJsButton)"
+        ></ContentToolbar>
       </div>
-      <ContentToolbar
-        v-if="orderedElements.length > 2"
-        :insertMenu="insertMenu"
-        @create:table="(...args) => this.createElement('table', ...args)"
-        @create:text="createElement('text')"
-        @create:file="openLoadFromComputer"
-        @create:wopi_file="openWopiFileModal"
-        @create:ove_file="openOVEditor"
-        @create:marvinjs_file="openMarvinJsModal($refs.marvinJsButton)"
-      ></ContentToolbar>
     </div>
   </div>
 </template>
