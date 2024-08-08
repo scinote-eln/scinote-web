@@ -3,8 +3,10 @@
 module Lists
   class StorageLocationRepositoryRowSerializer < ActiveModel::Serializer
     include Canaid::Helpers::PermissionsHelper
+    include Rails.application.routes.url_helpers
 
-    attributes :created_by, :created_on, :position, :row_id, :row_name, :hidden, :position_formatted, :stock
+    attributes :created_by, :created_on, :position, :row_id, :row_name, :hidden, :position_formatted, :stock,
+               :have_reminders, :reminders_url
 
     def row_id
       object.repository_row.id unless hidden
@@ -38,6 +40,15 @@ module Lists
 
     def hidden
       !can_read_repository?(object.repository_row.repository)
+    end
+
+    def have_reminders
+      object.repository_row.has_reminders?(scope)
+    end
+
+    def reminders_url
+      row = object.repository_row
+      active_reminder_repository_cells_repository_repository_row_url(row.repository, row)
     end
   end
 end
