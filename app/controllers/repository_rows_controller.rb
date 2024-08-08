@@ -328,7 +328,7 @@ class RepositoryRowsController < ApplicationController
   def active_reminder_repository_cells
     reminder_cells = @repository_row.repository_cells.with_active_reminder(current_user).distinct
     render json: {
-      html: render_to_string(partial: 'shared/repository_row_reminder', locals: {
+      html: render_to_string(partial: 'shared/repository_row_reminder', formats: :html, locals: {
                                reminders: reminder_cells
                              })
     }

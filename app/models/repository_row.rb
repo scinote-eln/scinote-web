@@ -186,6 +186,14 @@ class RepositoryRow < ApplicationRecord
        ) as positions").as_json
   end
 
+  def has_reminders?(user)
+    stock_reminders = RepositoryCell.stock_reminder_repository_cells_scope(
+      repository_cells.joins(:repository_column), user)
+    date_reminders = RepositoryCell.date_time_reminder_repository_cells_scope(
+      repository_cells.joins(:repository_column), user)
+    stock_reminders.any? || date_reminders.any?
+  end
+
   def archived
     row_archived? || repository&.archived?
   end

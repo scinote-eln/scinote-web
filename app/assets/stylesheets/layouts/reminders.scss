@@ -26,5 +26,11 @@
     border-width: 0;
     height: 1px;
     margin: 0 16px 10px;
-    }
   }
+}
+
+.reminders-view-mode {
+  .row-reminders-footer {
+    display: none;
+  }
+}

@@ -54,6 +54,7 @@ import DataTable from '../shared/datatable/table.vue';
 import Grid from './grid.vue';
 import AssignModal from './modals/assign.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
+import RemindersRender from './renderers/reminders.vue';
 
 export default {
   name: 'StorageLocationsContainer',
@@ -61,7 +62,8 @@ export default {
     DataTable,
     Grid,
     AssignModal,
-    ConfirmationModal
+    ConfirmationModal,
+    RemindersRender
   },
   props: {
     dataSource: {
@@ -116,7 +118,8 @@ export default {
       {
         field: 'reminders',
         headerName: this.i18n.t('storage_locations.show.table.reminders'),
-        sortable: true
+        sortable: true,
+        cellRenderer: RemindersRender
       },
       {
         field: 'row_id',
