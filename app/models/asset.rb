@@ -63,7 +63,7 @@ class Asset < ApplicationRecord
     options = {}
   )
 
-    teams = options[:teams] || current_team || user.teams.select(:id)
+    teams = options[:teams] || [current_team] || user.teams
 
     assets_in_steps = Asset.joins(:step)
                            .where(steps: { protocol: Protocol.search(user, include_archived, nil, teams) })
@@ -74,7 +74,7 @@ class Asset < ApplicationRecord
                              .pluck(:id)
 
     assets_in_inventories = Asset.joins(repository_cell: { repository_column: :repository })
-                                 .where(repositories: { team: teams })
+                                 .where(repositories: { team: teams.filter { |t| t.permission_granted?(user, RepositoryPermissions::READ) } })
                                  .where.not(repositories: { type: 'RepositorySnapshot' })
                                  .pluck(:id)
 
