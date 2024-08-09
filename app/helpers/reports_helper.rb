@@ -47,7 +47,7 @@ module ReportsHelper
       return my_module.repository_snapshots.find_by(parent_id: repository.parent_id, selected: true)
     end
 
-    return nil unless my_module.assigned_repositories.exists?(id: repository.id)
+    return nil unless my_module.assigned_repositories.viewable_by_user(current_user).exists?(id: repository.id)
 
     selected_snapshot = repository.repository_snapshots.find_by(my_module: my_module, selected: true)
     selected_snapshot || repository
@@ -105,15 +105,5 @@ module ReportsHelper
     report.report_elements.experiment.map do |experiment_element|
       experiment_element.experiment.description
     end
-  end
-
-  def assigned_to_report_repository_items(report, repository_name)
-    repository = Repository.accessible_by_teams(report.team).where(name: repository_name).take
-    return RepositoryRow.none if repository.blank?
-
-    my_modules = MyModule.joins(:experiment)
-                         .where(experiment: { project: report.project })
-                         .where(id: report.report_elements.my_module.select(:my_module_id))
-    repository.repository_rows.joins(:my_modules).where(my_modules: my_modules)
   end
 end

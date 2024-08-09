@@ -6,7 +6,7 @@ Canaid::Permissions.register_for(RepositoryBase) do
     if repository.is_a?(RepositorySnapshot)
       can_read_my_module?(user, repository.my_module)
     else
-      user.teams.include?(repository.team) || repository.shared_with?(user.current_team)
+      repository.permission_granted?(user, RepositoryPermissions::READ)
     end
   end
 

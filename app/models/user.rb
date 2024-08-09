@@ -374,7 +374,7 @@ class User < ApplicationRecord
   end
 
   def current_team
-    Team.find_by_id(self.current_team_id)
+    @current_team ||= teams.find_by(id: current_team_id)
   end
 
   def permission_team=(team)

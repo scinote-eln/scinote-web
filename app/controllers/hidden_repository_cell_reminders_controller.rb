@@ -15,7 +15,7 @@ class HiddenRepositoryCellRemindersController < ApplicationController
   private
 
   def load_repository
-    @repository = Repository.accessible_by_teams(current_team).find_by(id: params[:repository_id])
+    @repository = Repository.viewable_by_user(current_user).find_by(id: params[:repository_id])
     render_404 unless @repository
   end
 

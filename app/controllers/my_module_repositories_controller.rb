@@ -145,7 +145,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def repositories_list_html
-    @assigned_repositories = @my_module.live_and_snapshot_repositories_list
+    @assigned_repositories = @my_module.readable_live_and_snapshot_repositories_list(current_user)
     render json: {
       html: render_to_string(partial: 'my_modules/repositories/repositories_list'),
       assigned_rows_count: @assigned_repositories.map(&:assigned_rows_count).sum
@@ -162,7 +162,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def repositories_dropdown_list
-    @repositories = Repository.accessible_by_teams(current_team).joins("
+    @repositories = Repository.viewable_by_user(current_user).joins("
                                 LEFT OUTER JOIN repository_rows ON
                                   repository_rows.repository_id = repositories.id
                                 LEFT OUTER JOIN my_module_repository_rows ON
