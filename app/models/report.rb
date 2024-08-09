@@ -103,7 +103,7 @@ class Report < ApplicationRecord
   def self.generate_whole_project_report(project, current_user, current_team)
     content = {
       'experiments' => [],
-      'repositories' => project.assigned_repositories_and_snapshots.pluck(:id)
+      'repositories' => project.assigned_readable_repositories_and_snapshots(current_user).pluck(:id)
     }
     project.experiments.includes(:my_modules).find_each do |experiment|
       content['experiments'].push(
