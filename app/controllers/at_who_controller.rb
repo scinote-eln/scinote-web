@@ -27,7 +27,7 @@ class AtWhoController < ApplicationController
       if params[:repository_id].present?
         Repository.find_by(id: params[:repository_id])
       else
-        Repository.active.accessible_by_teams(@team).first
+        Repository.active.viewable_by_user(current_user, @team).first
       end
 
     items = []
@@ -54,8 +54,8 @@ class AtWhoController < ApplicationController
   end
 
   def menu
-    repositories = Repository.active.accessible_by_teams(@team)
-    render json: { 
+    repositories = Repository.active.viewable_by_user(current_user, @team)
+    render json: {
       html: render_to_string(partial: 'shared/smart_annotation/menu',
                              locals: { repositories: repositories },
                              formats: :html)

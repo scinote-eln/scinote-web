@@ -177,14 +177,12 @@ class MyModule < ApplicationRecord
   end
 
   def assigned_repositories
-    team = experiment.project.team
-    Repository.accessible_by_teams(team)
-              .joins(repository_rows: :my_module_repository_rows)
+    Repository.joins(repository_rows: :my_module_repository_rows)
               .where(my_module_repository_rows: { my_module_id: id })
               .group(:id)
   end
 
-  def live_and_snapshot_repositories_list
+  def readable_live_and_snapshot_repositories_list(user, team = user.current_team)
     snapshots = repository_snapshots.left_outer_joins(:original_repository)
 
     selected_snapshots = snapshots.where(selected: true)
@@ -197,6 +195,7 @@ class MyModule < ApplicationRecord
                                   .order(:parent_id, updated_at: :desc)
 
     live_repositories = assigned_repositories
+                        .viewable_by_user(user, team)
                         .select('repositories.*, COUNT(DISTINCT repository_rows.id) AS assigned_rows_count')
                         .where.not(id: repository_snapshots.where(selected: true).select(:parent_id))
 
