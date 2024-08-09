@@ -1036,6 +1036,7 @@ function reportHandsonTableConverter() {
 
     // Settings
     reportData.report.settings.template = dropdownSelector.getValues('#templateSelector');
+    reportData.report.settings.docx_template = dropdownSelector.getValues('#docxTemplateSelector');
     reportData.report.settings.all_tasks = $('.project-contents-container .select-all-my-modules-checkbox')
       .prop('checked');
     $.each($('.task-contents-container .content-element .protocol-setting'), function(i, e) {
@@ -1254,7 +1255,8 @@ function reportHandsonTableConverter() {
 
   function reCheckContinueButton() {
     if (dropdownSelector.getValues('#projectSelector').length > 0
-          && dropdownSelector.getValues('#templateSelector').length > 0) {
+          && dropdownSelector.getValues('#templateSelector').length > 0
+          && dropdownSelector.getValues('#docxTemplateSelector').length > 0) {
       $('.continue-button').attr('disabled', false);
     } else {
       $('.continue-button').attr('disabled', true);
@@ -1276,9 +1278,12 @@ function reportHandsonTableConverter() {
         }
         if (dropdownSelector.getValues('#projectSelector').length > 0) {
           dropdownSelector.enableSelector('#templateSelector');
+          dropdownSelector.enableSelector('#docxTemplateSelector');
         } else {
           dropdownSelector.selectValues('#templateSelector', '');
           dropdownSelector.disableSelector('#templateSelector');
+          dropdownSelector.selectValues('#docxTemplateSelector', '');
+          dropdownSelector.disableSelector('#docxTemplateSelector');
         }
         reCheckContinueButton();
       }
@@ -1292,12 +1297,12 @@ function reportHandsonTableConverter() {
       disableSearch: true,
       onSelect: function() {
         if (dropdownSelector.getValues('#templateSelector').length === 0) {
-          $('.report-template-values-container').html('').addClass('hidden');
+          $('.report-template-values-container.pdf').html('').addClass('hidden');
           reCheckContinueButton();
           return;
         }
 
-        let filledFieldsCount = $('.report-template-values-container')
+        let filledFieldsCount = $('.report-template-values-container.pdf')
           .find('input.sci-input-field, textarea.sci-input-field').filter(function() {
             return !!this.value;
           }).length;
@@ -1311,8 +1316,38 @@ function reportHandsonTableConverter() {
       }
     });
 
+    dropdownSelector.init('#docxTemplateSelector', {
+      singleSelect: true,
+      closeOnSelect: true,
+      noEmptyOption: true,
+      selectAppearance: 'simple',
+      disableSearch: true,
+      onSelect: function() {
+        if (dropdownSelector.getValues('#docxTemplateSelector').length === 0) {
+          $('.report-template-values-container.docx').html('').addClass('hidden');
+          reCheckContinueButton();
+          return;
+        }
+
+        let filledFieldsCount = $('.report-template-values-container.docx')
+          .find('input.sci-input-field, textarea.sci-input-field').filter(function() {
+            return !!this.value;
+          }).length;
+
+        if (filledFieldsCount === 0) {
+          loadDocxTemplate();
+        } else {
+          $('#templateReportWarningModal').modal('show');
+        }
+        reCheckContinueButton();
+      }
+    });
+
     if (dropdownSelector.getValues('#templateSelector').length > 0) {
       loadTemplate();
+    }
+    if (dropdownSelector.getValues('#docxTemplateSelector').length > 0) {
+      loadDocxTemplate();
     }
   }
 
@@ -1325,8 +1360,38 @@ function reportHandsonTableConverter() {
 
     $('#templateSelector').data('selected-template', template);
     $.get($('#templateSelector').data('valuesEditorPath'), params, function(result) {
-      $('.report-template-values-container').removeClass('hidden');
-      $('.report-template-values-container').html(result.html);
+      $('.report-template-values-container.pdf').removeClass('hidden');
+      $('.report-template-values-container.pdf').html(result.html);
+
+      $('.section').each(function() {
+        var section = $(this);
+        var collapseButton = section.find('.sn-icon-down');
+        var valuesContainer = section.find('.values-container');
+
+        if (valuesContainer.children().length === 0) {
+          collapseButton.hide();
+        }
+      });
+
+      $('.report-template-value-dropdown').each(function() {
+        dropdownSelector.init($(this), {
+          noEmptyOption: true
+        });
+      });
+    });
+  }
+
+  function loadDocxTemplate() {
+    let template = $('#docxTemplateSelector').val();
+    let params = {
+      project_id: dropdownSelector.getValues('#projectSelector'),
+      template: template
+    };
+
+    $('#docxTemplateSelector').data('selected-template', template);
+    $.get($('#docxTemplateSelector').data('valuesEditorPath'), params, function(result) {
+      $('.report-template-values-container.docx').removeClass('hidden');
+      $('.report-template-values-container.docx').html(result.html);
 
       $('.section').each(function() {
         var section = $(this);
@@ -1448,7 +1513,9 @@ function reportHandsonTableConverter() {
     .on('hide.bs.modal', function() {
       if (!$('#templateReportWarningModal').hasClass('skip-hide-event')) {
         let previousTemplate = $('#templateSelector').data('selected-template');
+        let previousDocxTemplate = $('#docxTemplateSelector').data('selected-template');
         dropdownSelector.selectValues('#templateSelector', previousTemplate);
+        dropdownSelector.selectValues('#docxTemplateSelector', previousDocxTemplate);
       }
       $('#templateReportWarningModal').removeClass('skip-hide-event');
     });
@@ -1461,7 +1528,7 @@ function reportHandsonTableConverter() {
 
   $('#reportWizardEditWarning').modal('show');
   $('.experiment-contents').sortable();
-  
+
   initNameContainerFocus();
   initGenerateButton();
   initReportWizard();

@@ -47,8 +47,8 @@ gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
 # gem 'caracal'
-gem 'caracal',
-    git: 'https://github.com/scinote-eln/caracal.git', branch: 'rubyzip2' # Build docx report
+# gem 'caracal', git: 'https://github.com/scinote-eln/caracal.git', branch: 'rubyzip2' # Build docx report
+gem 'caracal_the_curve', '~> 1.4', '>= 1.4.6'
 gem 'caxlsx' # Build XLSX files
 gem 'deface', '~> 1.9'
 gem 'down', '~> 5.0'

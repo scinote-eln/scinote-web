@@ -2,6 +2,10 @@
 
 # rubocop:disable  Style/ClassAndModuleChildren
 
+Dir[Rails.root.join('app/views/reports/docx_templates/**/docx.rb')].each do |file|
+  require file
+end
+
 class Reports::Docx
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
@@ -26,15 +30,23 @@ class Reports::Docx
     @link_style = {}
     @color = {}
     @scinote_url = options[:scinote_url][0..-2]
+    @template = @settings[:docx_template] || 'scinote_template'
+
+    extend "#{@template.camelize}Docx".constantize
   end
 
   def draw
     initial_document_load
 
-    @report.root_elements.each do |subject|
-      public_send("draw_#{subject.type_of}", subject)
-    end
+    prepare_docx
+
     @docx
+  end
+
+  private
+
+  def get_template_value(name)
+    @report.report_template_values.find_by(name: name)&.value
   end
 end
 # rubocop:enable  Style/ClassAndModuleChildren

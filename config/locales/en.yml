@@ -798,7 +798,8 @@ en:
           select_project_title: "Select project and report template"
           select_project_description: "You are about to create a new report. Please select a project for which you would like to create a report, and choose the report design template. Only projects with at least 1 task are displayed."
           select_project: "Select a project"
-          select_template: "Select your template"
+          select_template: "Select your PDF template"
+          select_docx_template: "Select your DOCX template"
           report_description: "Report description (optional)"
           report_description_placeholder: "In this report you can see..."
           values_editor:
@@ -807,6 +808,7 @@ en:
             header: "Header"
             cover: "Title page"
             footer: "Footer"
+            toc: "Table of contents"
             no_values_title: "No additional data required"
             no_values_description: "SciNote template doesn’t need any additional input for it to be successfully generated."
         second_step:
