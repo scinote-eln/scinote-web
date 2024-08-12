@@ -298,14 +298,14 @@ class RepositoriesController < ApplicationController
   end
 
   def import_records
-    render_403 unless can_create_repository_rows?(Repository.accessible_by_teams(current_team)
+    render_403 unless can_create_repository_rows?(Repository.viewable_by_user(current_user)
                                                             .find_by(id: import_params[:id]))
     # Check if there exist mapping for repository record (it's mandatory)
     if import_params[:mappings].present? && import_params[:mappings].value?('-1')
       status = ImportRepository::ImportRecords
                .new(
                  temp_file: TempFile.find_by(id: import_params[:file_id]),
-                 repository: Repository.accessible_by_teams(current_team).find_by(id: import_params[:id]),
+                 repository: Repository.viewable_by_user(current_user).find_by(id: import_params[:id]),
                  mappings: import_params[:mappings],
                  session: session,
                  user: current_user,
@@ -452,12 +452,12 @@ class RepositoriesController < ApplicationController
 
   def load_repository
     repository_id = params[:id] || params[:repository_id]
-    @repository = Repository.accessible_by_teams(current_user.teams).find_by(id: repository_id)
+    @repository = Repository.viewable_by_user(current_user).find_by(id: repository_id)
     render_404 unless @repository
   end
 
   def load_repositories
-    @repositories = Repository.accessible_by_teams(current_team)
+    @repositories = Repository.viewable_by_user(current_user)
   end
 
   def load_repositories_for_archiving
