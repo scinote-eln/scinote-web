@@ -8,9 +8,11 @@
         </em>
       <% end %>
     </div>
-    <div class="user-time">
-      <%= t("projects.reports.elements.step_text.user_time", timestamp: l(timestamp, format: :full)) %>
-    </div>
+    <% unless @settings.dig('exclude_metadata') %>
+      <div class="user-time">
+        <%= t("projects.reports.elements.step_text.user_time", timestamp: l(timestamp, format: :full)) %>
+      </div>
+    <% end %>
   </div>
   <div class="report-element-body">
     <% if step_text.text.present? %>

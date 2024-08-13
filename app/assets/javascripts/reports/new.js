@@ -1052,6 +1052,8 @@ function reportHandsonTableConverter() {
 
     reportData.report.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');
 
+    reportData.report.settings.exclude_metada = $('.exclude-metadata-setting')[0].checked;
+
     return reportData;
   }
 

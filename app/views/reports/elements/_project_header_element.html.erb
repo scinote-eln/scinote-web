@@ -7,9 +7,11 @@
         <span class="label label-warning"><%= t('search.index.archived') %></span>
       <% end %>
     </h2>
-    <div class="user-time">
-      <%= t('projects.reports.elements.project_header.user_time', code: project.code, timestamp: l(project.created_at, format: :full)) %>
-    </div>
+    <% unless @settings.dig('exclude_metadata') %>
+      <div class="user-time">
+        <%= t('projects.reports.elements.project_header.user_time', code: project.code, timestamp: l(project.created_at, format: :full)) %>
+      </div>
+    <% end %>
   </div>
   <% if defined?(children) %>
     <div class="report-element-children">

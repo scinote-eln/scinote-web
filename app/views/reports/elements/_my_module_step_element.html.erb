@@ -10,9 +10,11 @@
       <b><%= t('projects.reports.elements.step.step_pos', pos: (step.position_plus_one)) %></b>&nbsp;<%= step.name %>
       <%= step_status_label(step) %>
     </h5>
-    <div class="user-time">
-      <%= t("projects.reports.elements.step.#{step_type_str}.user_time", user: user.full_name , timestamp: l(timestamp, format: :full)) %>
-    </div>
+    <% unless @settings.dig('exclude_metadata') %>
+      <div class="user-time">
+        <%= t("projects.reports.elements.step.#{step_type_str}.user_time", user: user.full_name , timestamp: l(timestamp, format: :full)) %>
+      </div>
+    <% end %>
   </div>
   <div class="report-element-children">
     <% step.step_orderable_elements.order(:position).each do |e| %>
