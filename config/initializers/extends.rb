@@ -542,6 +542,7 @@ class Extends
   ]
 
   REPORT_TEMPLATES = {}
+  DOCX_REPORT_TEMPLATES = {}
 
   NOTIFIABLE_ACTIVITIES = %w(
     assign_user_to_project

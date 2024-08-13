@@ -7,7 +7,7 @@ module Reports::Docx::DrawStep
     user = (step.completed? && step.last_modified_by) || step.user
     timestamp = step.completed ? step.completed_on : step.created_at
     @docx.p
-    @docx.h5(
+    @docx.h4(
       "#{I18n.t('projects.reports.elements.step.step_pos', pos: step.position_plus_one)} #{step.name}"
     )
     @docx.p do

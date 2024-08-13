@@ -1,5 +1,7 @@
 <div class="project-selector-container">
   <%= render partial: 'reports/wizard/project_template_selector', locals: {report: report} %>
 </div>
-<div class="report-template-values-container <%= 'hidden' if report.settings["template"].blank? %>">
+<div class="report-template-values-container pdf <%= 'hidden' if report.settings["template"].blank? %>">
+</div>
+<div class="report-template-values-container docx  <%= 'hidden' if report.settings["docx_template"].blank? %>">
 </div>

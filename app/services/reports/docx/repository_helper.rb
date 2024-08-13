@@ -4,7 +4,7 @@ module Reports::Docx::RepositoryHelper
   include InputSanitizeHelper
   include ActionView::Helpers::NumberHelper
 
-  def prepare_row_columns(repository_data, my_module, repository)
+  def prepare_row_columns(repository_data, my_module = nil, repository = nil)
     result = [repository_data[:headers]]
     repository_data[:rows].each do |record|
       row = []
@@ -16,7 +16,7 @@ module Reports::Docx::RepositoryHelper
       cell_values = {}
       custom_cells = record.repository_cells
       custom_cells.each do |cell|
-        if cell.value.instance_of? RepositoryStockValue
+        if cell.value.instance_of?(RepositoryStockValue) && my_module
           if repository.is_a?(RepositorySnapshot)
             consumed_stock = record.repository_stock_consumption_cell&.value&.formatted || 0
             cell_values[cell.repository_column_id] = consumed_stock

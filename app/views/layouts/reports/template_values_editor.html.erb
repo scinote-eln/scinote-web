@@ -17,32 +17,57 @@
   <%= t('projects.reports.wizard.first_step.values_editor.description') %>
 </div>
 
-<div class="section">
-  <h1>
-    <i class="sn-icon sn-icon-down " data-toggle="collapse" href="#headerContainer" aria-expanded="false"></i>
-    <%= t('projects.reports.wizard.first_step.values_editor.header') %>
-  </h1>
-  <div class="values-container collapse in" id="headerContainer">
-    <%= yield :header %>
-  </div>
-</div>
+<%
+  toc = yield :toc
+  header = yield :header
+  cover = yield :cover
+  footer = yield :footer
+%>
 
-<div class="section">
-  <h1>
-    <i class="sn-icon sn-icon-down " data-toggle="collapse" href="#coverContainer" aria-expanded="false"></i>
-    <%= t('projects.reports.wizard.first_step.values_editor.cover') %>
-  </h1>
-  <div class="values-container collapse in" id="coverContainer">
-    <%= yield :cover %>
+<% if toc.present? %>
+  <div class="section">
+    <h1>
+      <i class="sn-icon sn-icon-down " data-toggle="collapse" href="#tocContainer" aria-expanded="false"></i>
+      <%= t('projects.reports.wizard.first_step.values_editor.toc') %>
+    </h1>
+    <div class="values-container collapse in" id="tocContainer">
+      <%= toc %>
+    </div>
   </div>
-</div>
+<% end %>
 
-<div class="section">
-  <h1>
-    <i class="sn-icon sn-icon-down " data-toggle="collapse" href="#footerContainer" aria-expanded="false"></i>
-    <%= t('projects.reports.wizard.first_step.values_editor.footer') %>
-  </h1>
-  <div class="values-container collapse in" id="footerContainer">
-    <%= yield :footer %>
+<% if header.present? %>
+  <div class="section">
+    <h1>
+      <i class="sn-icon sn-icon-down " data-toggle="collapse" href="#headerContainer" aria-expanded="false"></i>
+      <%= t('projects.reports.wizard.first_step.values_editor.header') %>
+    </h1>
+    <div class="values-container collapse in" id="headerContainer">
+      <%= yield header %>
+    </div>
   </div>
-</div>
+<% end %>
+
+<% if cover.present? %>
+  <div class="section">
+    <h1>
+      <i class="sn-icon sn-icon-down " data-toggle="collapse" href="#coverContainer" aria-expanded="false"></i>
+      <%= t('projects.reports.wizard.first_step.values_editor.cover') %>
+    </h1>
+    <div class="values-container collapse in" id="coverContainer">
+      <%= cover %>
+    </div>
+  </div>
+<% end %>
+
+<% if footer.present? %>
+  <div class="section">
+    <h1>
+      <i class="sn-icon sn-icon-down " data-toggle="collapse" href="#footerContainer" aria-expanded="false"></i>
+      <%= t('projects.reports.wizard.first_step.values_editor.footer') %>
+    </h1>
+    <div class="values-container collapse in" id="footerContainer">
+      <%= footer %>
+    </div>
+  </div>
+<% end %>
