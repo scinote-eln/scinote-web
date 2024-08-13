@@ -131,7 +131,7 @@
                       @attachments:viewMode="changeAttachmentsViewMode"
                       @attachment:viewMode="updateAttachmentViewMode"/>
         <ContentToolbar
-          v-if="orderedElements.length > 2"
+          v-if="orderedElements.length > 2 && insertMenu.length > 0"
           :insertMenu="insertMenu"
           @create:table="(...args) => this.createElement('table', ...args)"
           @create:text="createElement('text')"
