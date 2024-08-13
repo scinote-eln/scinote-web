@@ -78,7 +78,7 @@ RUN \
   chromium \
   libfile-mimeinfo-perl \
   yarnpkg && \
-  /usr/share/nodejs/yarn/bin/yarn add puppeteer@npm:puppeteer-core && \
+  /usr/share/nodejs/yarn/bin/yarn add puppeteer@npm:puppeteer-core@^22.15.0 && \
   apt-get install -y libreoffice && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
 
