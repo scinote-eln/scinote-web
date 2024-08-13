@@ -89,6 +89,8 @@ export default {
   },
   methods: {
     enableEditing() {
+      if (!this.values.stock_url) return;
+
       this.isEditing = true;
       const $this = this;
       // disable edit

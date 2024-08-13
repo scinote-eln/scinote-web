@@ -24,7 +24,7 @@ json.actions do
     end
   end
   json.direct_file_upload_path rails_direct_uploads_url
-  if @repository_row.has_stock?
+  if @repository_row.has_stock? && @repository.has_stock_management?
     json.stock_value_url edit_repository_stock_repository_repository_row_url(@repository, @repository_row)
   elsif @repository.has_stock_management?
     json.stock_value_url new_repository_stock_repository_repository_row_url(@repository, @repository_row)
