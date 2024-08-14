@@ -9,7 +9,8 @@ module RepositoryDatatableHelper
     reminders_enabled = Repository.reminders_enabled?
     repository_rows = reminders_enabled ? with_reminders_status(repository_rows, repository) : repository_rows
     stock_managable = has_stock_management && !options[:disable_stock_management] &&
-                      can_manage_repository_stock?(repository)
+                      can_manage_repository_stock?(repository) &&
+                      !repository.is_a?(SoftLockedRepository)
     stock_consumption_permitted = has_stock_management && options[:include_stock_consumption] && options[:my_module] &&
                                   stock_consumption_permitted?(repository, options[:my_module])
 
@@ -36,7 +37,7 @@ module RepositoryDatatableHelper
         row['hasActiveReminders'] = record.has_active_stock_reminders || record.has_active_datetime_reminders
       end
 
-      unless options[:view_mode]
+      unless options[:view_mode] || repository.is_a?(SoftLockedRepository)
         row['recordUpdateUrl'] =
           Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
         row['recordEditable'] = record.editable?
@@ -243,6 +244,19 @@ module RepositoryDatatableHelper
       '8': escape_input(record.last_modified_by.full_name),
       '9': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
       '10': escape_input(record.archived_by&.full_name)
+    }
+  end
+
+  def soft_locked_repository_default_columns(record)
+    {
+      '1': assigned_row(record),
+      '2': record.code,
+      '3': escape_input(record.name),
+      '4': "#{record.parent_connections_count || 0} / #{record.child_connections_count || 0}",
+      '5': I18n.l(record.created_at, format: :full),
+      '6': escape_input(record.created_by.full_name),
+      '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '8': escape_input(record.archived_by&.full_name)
     }
   end
 

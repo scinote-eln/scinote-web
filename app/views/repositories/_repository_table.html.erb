@@ -37,7 +37,8 @@
         <th id="assigned" data-unmanageable="true"><%= t("repositories.table.assigned") %></th>
         <th id="row-id"><%= t("repositories.table.id") %></th>
         <th id="row-name"><%= t("repositories.table.row_name") %></th>
-        <th id="relationship" title="<%= t("repositories.table.relationships") %>"><%= t("repositories.table.relationships") %></th>
+        <th id="relationship" data-disabled="<%= !Repository.repository_row_connections_enabled? %>"
+            title="<%= t("repositories.table.relationships") %>"><%= t("repositories.table.relationships") %></th>
         <th id="added-on" ><%= t("repositories.table.added_on") %></th>
         <th id="added-by" ><%= t("repositories.table.added_by") %></th>
         <th id="updated-on" ><%= t("repositories.table.updated_on") %></th>
@@ -54,7 +55,7 @@
             data-type="<%= column.data_type %>"
             data-edit-column-url="<%= edit_repository_repository_column_path(repository, column) %>"
             data-destroy-column-url="<%= repository_columns_destroy_html_path(repository, column) %>"
-            data-editable-row="<%= can_manage_repository_column?(column) %>"
+            data-editable-row="<%= can_manage_repository_column?(column) && !repository.is_a?(SoftLockedRepository) %>"
             <% column.metadata.each do |k, v| %>
               <%= "data-metadata-#{k}=#{v}" %>
             <% end %>

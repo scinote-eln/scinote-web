@@ -90,6 +90,10 @@ export default {
       type: Boolean,
       required: true
     },
+    autoClearing: {
+      type: Boolean,
+      required: false
+    },
     value: Object
   },
   data() {
@@ -122,11 +126,10 @@ export default {
       }
     },
     autoMapping(newVal) {
-      if (newVal === true) {
-        this.autoMap();
-      } else {
-        this.clearAutoMap();
-      }
+      if (newVal) this.autoMap();
+    },
+    autoClearing(newVal) {
+      if (newVal) this.clearAutoMap();
     }
   },
   computed: {
@@ -151,19 +154,31 @@ export default {
       return this.systemColumns.includes(column);
     },
     autoMap() {
-      this.changeSelected(null);
+      this.changeAutoSelected(null);
       Object.entries(this.params.import_data.available_fields).forEach(([key, value]) => {
         if (this.item === value) {
-          this.changeSelected(key);
+          this.changeAutoSelected(key);
         }
       });
     },
     clearAutoMap() {
       this.changeSelected('do_not_import');
     },
-    changeSelected(e) {
+    updateSelectedColumnType(e, autoMap) {
       const value = this.params.import_data.available_fields[e];
-      this.selectedColumnType = { index: this.index, key: e, value };
+      this.selectedColumnType = {
+        index: this.index,
+        key: e,
+        value,
+        autoMap
+      };
+    },
+    changeAutoSelected(e) {
+      this.updateSelectedColumnType(e, true);
+      this.$emit('selection:changed', this.selectedColumnType);
+    },
+    changeSelected(e) {
+      this.updateSelectedColumnType(e, false);
       this.$emit('selection:changed', this.selectedColumnType);
     }
   },
