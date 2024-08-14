@@ -18,7 +18,7 @@
         <% end %>
       <% end %>
     </div>
-    <% unless @settings.dig('exclude_metadata') %>
+    <% unless @settings['exclude_metadata'] %>
       <div class="user-time">
         <%= t("projects.reports.elements.#{table_type}.user_time", timestamp: l(timestamp, format: :full)) %>
       </div>

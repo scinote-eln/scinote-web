@@ -35,7 +35,6 @@ development:
 
   # The password associated with the postgres role (username).
   # password: mysecretpassword
-
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
   # domain sockets, so uncomment these lines.

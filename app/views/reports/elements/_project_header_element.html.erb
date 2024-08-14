@@ -7,7 +7,7 @@
         <span class="label label-warning"><%= t('search.index.archived') %></span>
       <% end %>
     </h2>
-    <% unless @settings.dig('exclude_metadata') %>
+    <% unless @settings['exclude_metadata'] %>
       <div class="user-time">
         <%= t('projects.reports.elements.project_header.user_time', code: project.code, timestamp: l(project.created_at, format: :full)) %>
       </div>

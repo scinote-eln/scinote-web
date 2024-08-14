@@ -9,7 +9,7 @@
         <span class="label label-warning"><%= t('search.index.archived') %></span>
       <% end %>
     </h4>
-    <% unless @settings.dig('exclude_metadata') %>
+    <% unless @settings['exclude_metadata'] %>
       <div class="user-time">
         <%= t('projects.reports.elements.module.user_time', code: my_module.code, timestamp: l(timestamp, format: :full)) %>
       </div>
@@ -24,21 +24,23 @@
         <%= t('projects.reports.elements.module.due_date', due_date: l(my_module.due_date, format: :full)) %>
       <% end %>
     </p>
-    <p class="module-status">
-      <% status = my_module.my_module_status %>
-      <%= t('projects.reports.elements.module.status') %>
-      <span class="status-block" style="background: <%= status.color %>;
-        <%= 'color: #000000; border: 1px solid #D0D5DD;' if status.light_color? %>">
-        <%= status.name %>
-      </span>
-      <% if my_module.completed? %>
-        <span style="margin-left: 10px;">
-          <%= t('my_modules.states.completed') %>
-          <%= l(my_module.completed_on, format: :full) %>
+    <% unless @settings['exclude_metadata'] %>
+      <p class="module-status">
+        <% status = my_module.my_module_status %>
+        <%= t('projects.reports.elements.module.status') %>
+        <span class="status-block" style="background: <%= status.color %>;
+          <%= 'color: #000000; border: 1px solid #D0D5DD;' if status.light_color? %>">
+          <%= status.name %>
         </span>
-      <% end %>
-    </p>
-    <% unless @settings.dig('exclude_metadata') %>
+        <% if my_module.completed? %>
+          <span style="margin-left: 10px;">
+            <%= t('my_modules.states.completed') %>
+            <%= l(my_module.completed_on, format: :full) %>
+          </span>
+        <% end %>
+      </p>
+    <% end %>
+    <% unless @settings['exclude_metadata'] %>
       <div class="row module-tags">
         <div class="pull-left">
           <%= t('projects.reports.elements.module.tags_header') %>
