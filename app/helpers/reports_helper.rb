@@ -47,7 +47,7 @@ module ReportsHelper
       return my_module.repository_snapshots.find_by(parent_id: repository.parent_id, selected: true)
     end
 
-    return nil unless my_module.assigned_repositories.viewable_by_user(current_user).exists?(id: repository.id)
+    return nil unless my_module.assigned_repositories.exists?(id: repository.id)
 
     selected_snapshot = repository.repository_snapshots.find_by(my_module: my_module, selected: true)
     selected_snapshot || repository

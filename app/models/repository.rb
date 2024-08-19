@@ -51,15 +51,13 @@ class Repository < RepositoryBase
   scope :viewable_by_user, lambda { |user, teams = user.current_team|
     readable_repositories = joins(user_assignments: :user_role)
                             .left_outer_joins(:team_shared_objects)
+                            .where(team: teams)
     readable_repositories =
       readable_repositories
       .where(user_assignments: { user: user })
       .where('? = ANY(user_roles.permissions)', RepositoryPermissions::READ)
-      .where(team: teams)
-      .or(readable_repositories.where(team_shared_objects: { team: teams }))
       .or(readable_repositories
-            .where(permission_level: [Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
-                                      Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]]))
+            .where(permission_level: [Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read], Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]]))
     readable_repositories.distinct
   }
 
