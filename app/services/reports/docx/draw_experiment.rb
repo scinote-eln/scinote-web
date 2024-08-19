@@ -4,6 +4,7 @@ module Reports::Docx::DrawExperiment
   def draw_experiment(subject)
     color = @color
     link_style = @link_style
+    settings = @settings
     scinote_url = @scinote_url
     experiment = subject.experiment
     return unless can_read_experiment?(@user, experiment)
@@ -15,8 +16,10 @@ module Reports::Docx::DrawExperiment
     end
 
     @docx.p do
-      text I18n.t('projects.reports.elements.experiment.user_time',
-                  code: experiment.code, timestamp: I18n.l(experiment.created_at, format: :full)), color: color[:gray]
+      unless settings['exclude_metadata']
+        text I18n.t('projects.reports.elements.experiment.user_time',
+                    code: experiment.code, timestamp: I18n.l(experiment.created_at, format: :full)), color: color[:gray]
+      end
       if experiment.archived?
         text ' | '
         text I18n.t('search.index.archived'), color: color[:gray]

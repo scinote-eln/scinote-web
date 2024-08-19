@@ -5,6 +5,7 @@ module Reports::Docx::DrawStepAsset
     timestamp = asset.created_at
     asset_url = Rails.application.routes.url_helpers.asset_download_url(asset)
     color = @color
+    settings = @settings
     @docx.p
 
     begin
@@ -23,8 +24,10 @@ module Reports::Docx::DrawStepAsset
         italic true
       end
       text ' '
-      text I18n.t('projects.reports.elements.step_asset.user_time',
-                  timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+      unless settings['exclude_metadata']
+        text I18n.t('projects.reports.elements.step_asset.user_time',
+                    timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+      end
     end
   end
 end

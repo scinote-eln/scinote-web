@@ -4,6 +4,7 @@ module Reports::Docx::DrawMyModule
   def draw_my_module(subject, without_results: false, without_repositories: false)
     color = @color
     link_style = @link_style
+    settings = @settings
     scinote_url = @scinote_url
     my_module = subject.my_module
     tags = my_module.tags.order(:id)
@@ -16,8 +17,10 @@ module Reports::Docx::DrawMyModule
     end
 
     @docx.p do
-      text I18n.t('projects.reports.elements.module.user_time', code: my_module.code,
-                  timestamp: I18n.l(my_module.created_at, format: :full)), color: color[:gray]
+      unless settings['exclude_metadata']
+        text I18n.t('projects.reports.elements.module.user_time', code: my_module.code,
+                    timestamp: I18n.l(my_module.created_at, format: :full)), color: color[:gray]
+      end
       if my_module.archived?
         text ' | '
         text I18n.t('search.index.archived'), color: color[:gray]
@@ -38,22 +41,24 @@ module Reports::Docx::DrawMyModule
       end
     end
 
-    status = my_module.my_module_status
-    @docx.p do
-      text I18n.t('projects.reports.elements.module.status')
-      text ' '
-      text "[#{status.name}]", color: (status.light_color? ? '000000' : status.color.delete('#'))
-      if my_module.completed?
-        text " #{I18n.t('my_modules.states.completed')} #{I18n.l(my_module.completed_on, format: :full)}"
-      end
-    end
-
-    if tags.present?
+    unless settings['exclude_metadata']
+      status = my_module.my_module_status
       @docx.p do
-        text I18n.t('projects.reports.elements.module.tags_header')
-        tags.each do |tag|
-          text ' '
-          text "[#{tag.name}]", color: tag.color.delete('#')
+        text I18n.t('projects.reports.elements.module.status')
+        text ' '
+        text "[#{status.name}]", color: (status.light_color? ? '000000' : status.color.delete('#'))
+        if my_module.completed?
+          text " #{I18n.t('my_modules.states.completed')} #{I18n.l(my_module.completed_on, format: :full)}"
+        end
+      end
+
+      if tags.present?
+        @docx.p do
+          text I18n.t('projects.reports.elements.module.tags_header')
+          tags.each do |tag|
+            text ' '
+            text "[#{tag.name}]", color: tag.color.delete('#')
+          end
         end
       end
     end

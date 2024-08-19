@@ -6,6 +6,7 @@ module Reports::Docx::DrawStep
     step_type_str = step.completed ? 'completed' : 'uncompleted'
     user = (step.completed? && step.last_modified_by) || step.user
     timestamp = step.completed ? step.completed_on : step.created_at
+    settings = @settings
     @docx.p
     @docx.h4(
       "#{I18n.t('projects.reports.elements.step.step_pos', pos: step.position_plus_one)} #{step.name}"
@@ -17,11 +18,13 @@ module Reports::Docx::DrawStep
         text I18n.t('protocols.steps.uncompleted'), color: color[:gray], bold: true
       end
       text ' | '
-      text I18n.t(
-        "projects.reports.elements.step.#{step_type_str}.user_time",
-        user: user.full_name,
-        timestamp: I18n.l(timestamp, format: :full)
-      ), color: color[:gray]
+      unless settings['exclude_metadata']
+        text I18n.t(
+          "projects.reports.elements.step.#{step_type_str}.user_time",
+          user: user.full_name,
+          timestamp: I18n.l(timestamp, format: :full)
+        ), color: color[:gray]
+      end
     end
 
     step.step_orderable_elements.order(:position).each do |element|

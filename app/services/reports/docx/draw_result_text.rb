@@ -4,12 +4,15 @@ module Reports::Docx::DrawResultText
   def draw_result_text(element)
     result_text = element.orderable
     timestamp = element.created_at
+    settings = @settings
     color = @color
     @docx.p do
       text result_text.name.presence || '', italic: true
       text ' '
-      text I18n.t('projects.reports.elements.result_text.user_time',
-                  timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+      unless settings['exclude_metadata']
+        text I18n.t('projects.reports.elements.result_text.user_time',
+                    timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+      end
     end
     html = custom_auto_link(result_text.text, team: @report_team)
     Reports::HtmlToWordConverter.new(@docx, { scinote_url: @scinote_url,

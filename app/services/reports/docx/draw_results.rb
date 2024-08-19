@@ -3,6 +3,7 @@
 module Reports::Docx::DrawResults
   def draw_results(my_module)
     color = @color
+    settings = @settings
     return unless can_read_my_module?(@user, my_module)
 
     if my_module.results.any? && (%w(file_results table_results text_results).any? { |k| @settings.dig('task', k) })
@@ -11,9 +12,11 @@ module Reports::Docx::DrawResults
         @docx.p do
           text result.name.presence || I18n.t('projects.reports.unnamed'), italic: true
           text "  #{I18n.t('search.index.archived')} ", bold: true if result.archived?
-          text I18n.t('projects.reports.elements.result.user_time',
-                      timestamp: I18n.l(result.created_at, format: :full),
-                      user: result.user.full_name), color: color[:gray]
+          unless settings['exclude_metadata']
+            text I18n.t('projects.reports.elements.result.user_time',
+                        timestamp: I18n.l(result.created_at, format: :full),
+                        user: result.user.full_name), color: color[:gray]
+          end
         end
         draw_result_asset(result, @settings) if @settings.dig('task', 'file_results')
         result.result_orderable_elements.each do |element|

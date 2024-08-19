@@ -5,6 +5,7 @@ module Reports::Docx::DrawResultTable
     result = element.result
     table = element.orderable.table
     timestamp = table.created_at
+    settings = @settings
     color = @color
     obj = self
     table_data = JSON.parse(table.contents_utf_8)['data']
@@ -40,8 +41,10 @@ module Reports::Docx::DrawResultTable
     @docx.p do
       text I18n.t 'projects.reports.elements.result_table.table_name', name: table.name
       text ' '
-      text I18n.t('projects.reports.elements.result_table.user_time',
-                  timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: color[:gray]
+      unless settings['exclude_metadata']
+        text I18n.t('projects.reports.elements.result_table.user_time',
+                    timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: color[:gray]
+      end
     end
   end
 end

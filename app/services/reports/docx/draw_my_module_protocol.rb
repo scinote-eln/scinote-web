@@ -12,8 +12,10 @@ module Reports::Docx::DrawMyModuleProtocol
     end
 
     if @settings.dig('task', 'protocol', 'description') && protocol.description.present?
-      @docx.p I18n.t('projects.reports.elements.module.protocol.user_time', code: protocol.original_code,
-                     timestamp: I18n.l(protocol.created_at, format: :full)), color: @color[:gray]
+      unless @settings['exclude_metadata']
+        @docx.p I18n.t('projects.reports.elements.module.protocol.user_time', code: protocol.original_code,
+                      timestamp: I18n.l(protocol.created_at, format: :full)), color: @color[:gray]
+      end
       html = custom_auto_link(protocol.description, team: @report_team)
       Reports::HtmlToWordConverter.new(@docx, { scinote_url: @scinote_url,
                                                 link_style: @link_style }).html_to_word_converter(html)
