@@ -5,12 +5,12 @@ class ActivitiesService
     # Create condition for view permissions checking first
     visible_teams = user.teams.where(id: teams)
     visible_projects = Project.viewable_by_user(user, visible_teams)
-    visible_repositories = Repository.viewable_by_user(user, visible_teams)
+    # Temporary solution until handling of deleted subjects is fully implemented
+    visible_repository_teams = visible_teams.with_user_permission(user, RepositoryPermissions::READ)
     visible_by_teams = Activity.where(project: nil, team_id: visible_teams.select(:id))
                                .where.not(subject_type: %w(RepositoryBase RepositoryRow))
                                .order(created_at: :desc)
-    visible_by_repositories = Activity.where(subject_type: %w(RepositoryBase RepositoryRow),
-                                             subject_id: visible_repositories.select(:id))
+    visible_by_repositories = Activity.where(subject_type: %w(RepositoryBase RepositoryRow), team_id: visible_repository_teams.select(:id))
                                       .order(created_at: :desc)
     visible_by_projects = Activity.where(project_id: visible_projects.select(:id))
                                   .order(created_at: :desc)
@@ -26,7 +26,7 @@ class ActivitiesService
       where_condition = subjects_with_children.to_h.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR ')
       where_arguments = subjects_with_children.to_h.flatten
       if subjects_with_children[:my_module]
-        where_condition = where_condition.concat(' OR (my_module_id IN(?))')
+        where_condition.concat(' OR (my_module_id IN(?))')
         where_arguments << subjects_with_children[:my_module]
       end
       query = query.where(where_condition, *where_arguments)
