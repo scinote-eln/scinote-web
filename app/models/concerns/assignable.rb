@@ -15,21 +15,33 @@ module Assignable
              inverse_of: :assignable
 
     scope :readable_by_user, lambda { |user|
-      joins(user_assignments: :user_role)
-        .where(user_assignments: { user: user })
-        .where('? = ANY(user_roles.permissions)', "::#{self.class.to_s.split('::').first}Permissions".constantize::READ)
+      joins("INNER JOIN user_assignments reading_user_assignments " \
+            "ON reading_user_assignments.assignable_type = '#{base_class.name}' " \
+            "AND reading_user_assignments.assignable_id = #{table_name}.id " \
+            "INNER JOIN user_roles reading_user_roles " \
+            "ON reading_user_assignments.user_role_id = reading_user_roles.id")
+        .where(reading_user_assignments: { user_id: user.id })
+        .where('? = ANY(reading_user_roles.permissions)', "::#{self.class.to_s.split('::').first}Permissions".constantize::READ)
     }
 
     scope :managable_by_user, lambda { |user|
-      joins(user_assignments: :user_role)
-        .where(user_assignments: { user: user })
-        .where('? = ANY(user_roles.permissions)', "::#{self.class.to_s.split('::').first}Permissions".constantize::MANAGE)
+      joins("INNER JOIN user_assignments managing_user_assignments " \
+            "ON managing_user_assignments.assignable_type = '#{base_class.name}' " \
+            "AND managing_user_assignments.assignable_id = #{table_name}.id " \
+            "INNER JOIN user_roles managing_user_roles " \
+            "ON managing_user_assignments.user_role_id = managing_user_roles.id")
+        .where(managing_user_assignments: { user_id: user.id })
+        .where('? = ANY(managing_user_roles.permissions)', "::#{self.class.to_s.split('::').first}Permissions".constantize::MANAGE)
     }
 
     scope :with_user_permission, lambda { |user, permission|
-      joins(user_assignments: :user_role)
-        .where(user_assignments: { user: user })
-        .where('? = ANY(user_roles.permissions)', permission)
+      joins("INNER JOIN user_assignments permission_checking_user_assignments " \
+            "ON permission_checking_user_assignments.assignable_type = '#{base_class.name}' " \
+            "AND permission_checking_user_assignments.assignable_id = #{table_name}.id " \
+            "INNER JOIN user_roles permission_checking_user_roles " \
+            "ON permission_checking_user_assignments.user_role_id = permission_checking_user_roles.id")
+        .where(permission_checking_user_assignments: { user_id: user.id })
+        .where('? = ANY(permission_checking_user_roles.permissions)', permission)
     }
 
     after_create :create_users_assignments
