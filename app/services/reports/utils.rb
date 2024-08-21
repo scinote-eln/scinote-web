@@ -11,9 +11,9 @@ module Reports
     def self.image_prepare(asset)
       if asset.class == Asset
         if asset.inline?
-          asset.preview_attachment.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT, format: :png)
+          asset.medium_preview
         else
-          asset.preview_attachment.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT, format: :png)
+          asset.large_preview
         end
       elsif asset.class == TinyMceAsset
         asset.image.representation(format: :png)
