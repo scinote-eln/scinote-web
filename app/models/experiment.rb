@@ -84,6 +84,8 @@ class Experiment < ApplicationRecord
   end
 
   def self.with_children_viewable_by_user(user)
+    # the NONE permission at the end also allows for experiments with hidden tasks (virtually empty)
+    # to show up on the list
     joins("
       LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id
       LEFT OUTER JOIN user_assignments my_module_user_assignments
@@ -94,8 +96,8 @@ class Experiment < ApplicationRecord
     ")
       .where('
         (my_module_user_assignments.user_id = ? AND my_module_user_roles.permissions @> ARRAY[?]::varchar[]
-          OR my_modules.id IS NULL)
-      ', user.id, MyModulePermissions::READ)
+          OR my_modules.id IS NULL OR my_module_user_roles.permissions @> ARRAY[?]::varchar[])
+      ', user.id, MyModulePermissions::READ, MyModulePermissions::NONE)
   end
 
   def self.filter_by_teams(teams = [])
