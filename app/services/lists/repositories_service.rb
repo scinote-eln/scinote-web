@@ -13,7 +13,7 @@ module Lists
                           .joins(:team)
                           .select('repositories.*')
                           .select('MAX(teams.name) AS team_name')
-                          .select('COUNT(repository_rows.*) AS row_count')
+                          .select('COUNT(DISTINCT(repository_rows.*)) AS row_count')
                           .select('MAX(creators.full_name) AS created_by_user')
                           .select('MAX(archivers.full_name) AS archived_by_user')
                           .select(shared_sql_select)

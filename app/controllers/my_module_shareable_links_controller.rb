@@ -153,7 +153,7 @@ class MyModuleShareableLinksController < ApplicationController
   end
 
   def load_repository
-    @repository = @my_module.assigned_repositories.find_by(id: params[:id])
+    @repository = @my_module.assigned_repositories.viewable_by_user(current_user).find_by(id: params[:id])
     render_404 unless @repository
   end
 
