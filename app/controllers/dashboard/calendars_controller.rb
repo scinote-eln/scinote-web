@@ -9,7 +9,7 @@ module Dashboard
       date = params[:date].in_time_zone(current_user.time_zone)
       start_date = date.at_beginning_of_month.utc - 8.days
       end_date = date.at_end_of_month.utc + 15.days
-      due_dates = current_user.my_modules.active.uncomplete
+      due_dates = current_user.my_modules.readable_by_user(current_user).active.uncomplete
                               .joins(experiment: :project)
                               .where(experiments: { archived: false })
                               .where(projects: { archived: false })
@@ -23,7 +23,7 @@ module Dashboard
       date = params[:date].in_time_zone(current_user.time_zone)
       start_date = date.utc
       end_date = date.end_of_day.utc
-      my_modules = current_user.my_modules.active.uncomplete
+      my_modules = current_user.my_modules.readable_by_user(current_user).active.uncomplete
                                .joins(experiment: :project)
                                .where(experiments: { archived: false })
                                .where(projects: { archived: false })
