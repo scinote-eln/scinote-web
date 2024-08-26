@@ -5,6 +5,7 @@ class StorageLocation < ApplicationRecord
   include Discard::Model
   ID_PREFIX = 'SL'
   include PrefixedIdModel
+  include Shareable
 
   default_scope -> { kept }
 

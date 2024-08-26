@@ -101,7 +101,7 @@ class StorageLocationsController < ApplicationController
       actions:
         Toolbars::StorageLocationsService.new(
           current_user,
-          storage_location_ids: JSON.parse(params[:items]).map { |i| i['id'] }
+          storage_location_ids: JSON.parse(params[:items]).pluck('id')
         ).actions
     }
   end
@@ -114,7 +114,7 @@ class StorageLocationsController < ApplicationController
 
   def storage_location_params
     params.permit(:id, :parent_id, :name, :container, :description,
-                  metadata: [:display_type, dimensions: [], parent_coordinations: []])
+                  metadata: [:display_type, { dimensions: [], parent_coordinations: [] }])
   end
 
   def move_params
@@ -127,11 +127,7 @@ class StorageLocationsController < ApplicationController
   end
 
   def check_read_permissions
-    if @storage_location.container
-      render_403 unless can_read_storage_location_containers?(current_team)
-    else
-      render_403 unless can_read_storage_locations?(current_team)
-    end
+    render_403 unless can_read_storage_location?(@storage_location)
   end
 
   def check_create_permissions
@@ -143,11 +139,7 @@ class StorageLocationsController < ApplicationController
   end
 
   def check_manage_permissions
-    if @storage_location.container
-      render_403 unless can_manage_storage_location_containers?(current_team)
-    else
-      render_403 unless can_manage_storage_locations?(current_team)
-    end
+    render_403 unless can_manage_storage_location?(@storage_location)
   end
 
   def set_breadcrumbs_items

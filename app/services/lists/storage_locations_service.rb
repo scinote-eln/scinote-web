@@ -14,7 +14,7 @@ module Lists
         StorageLocation.joins('LEFT JOIN storage_locations AS sub_locations ' \
                               'ON storage_locations.id = sub_locations.parent_id')
                        .select('storage_locations.*, COUNT(sub_locations.id) AS sub_location_count')
-                       .where(team: @team)
+                       .accessible_by_teams(@team)
                        .group(:id)
     end
 

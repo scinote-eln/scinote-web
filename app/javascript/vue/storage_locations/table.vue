@@ -14,6 +14,7 @@
                @tableReloaded="reloadingTable = false"
                @move="move"
                @delete="deleteStorageLocation"
+               @share="share"
     />
     <Teleport to="body">
       <EditModal v-if="openEditModal"
@@ -34,6 +35,11 @@
         :confirmText="i18n.t('general.delete')"
         ref="deleteStorageLocationModal"
       ></ConfirmationModal>
+      <ShareObjectModal
+        v-if="shareStorageLocation"
+        :object="shareStorageLocation"
+        @close="shareStorageLocation = null"
+        @share="updateTable" />
     </Teleport>
   </div>
 </template>
@@ -46,6 +52,7 @@ import DataTable from '../shared/datatable/table.vue';
 import EditModal from './modals/new_edit.vue';
 import MoveModal from './modals/move.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
+import ShareObjectModal from '../shared/share_modal.vue';
 
 export default {
   name: 'RepositoriesTable',
@@ -53,7 +60,8 @@ export default {
     DataTable,
     EditModal,
     MoveModal,
-    ConfirmationModal
+    ConfirmationModal,
+    ShareObjectModal
   },
   props: {
     dataSource: {
@@ -82,6 +90,7 @@ export default {
       editStorageLocation: null,
       objectToMove: null,
       moveToUrl: null,
+      shareStorageLocation: null,
       storageLocationDeleteTitle: '',
       storageLocationDeleteDescription: ''
     };
@@ -216,21 +225,28 @@ export default {
     nameRenderer(params) {
       const {
         name,
-        urls
+        urls,
+        shared,
+        ishared
       } = params.data;
       let containerIcon = '';
       if (params.data.container) {
         containerIcon = '<i class="sn-icon sn-icon-item"></i>';
       }
+      let sharedIcon = '';
+      if (shared || ishared) {
+        sharedIcon = '<i class="fas fa-users"></i>';
+      }
       return `<a class="hover:no-underline flex items-center gap-1"
                  title="${name}" href="${urls.show}">
-                 ${containerIcon}
+                 ${sharedIcon}${containerIcon}
                  <span class="truncate">${name}</span>
               </a>`;
     },
     updateTable() {
       this.reloadingTable = true;
       this.objectToMove = null;
+      this.shareStorageLocation = null;
     },
     move(event, rows) {
       [this.objectToMove] = rows;
@@ -258,6 +274,10 @@ export default {
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
         });
       }
+    },
+    share(_event, rows) {
+      const [storageLocation] = rows;
+      this.shareStorageLocation = storageLocation;
     }
   }
 };

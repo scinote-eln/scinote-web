@@ -2012,14 +2012,6 @@ en:
         name_placeholder: "My inventory"
         submit: "Create"
         success_flash_html: "Inventory <strong>%{name}</strong> successfully created."
-      modal_share:
-        title: "Share Inventory"
-        submit: "Save sharing options"
-        share_with_team: "Share with Team"
-        can_edit: "Can Edit"
-        all_teams: "All teams (current & new)"
-        all_teams_tooltip: "This will disable individual team settings"
-        success_message: "Selected sharing options for the Inventory %{inventory_name} have been saved."
       export:
         notification:
           error:
@@ -2768,6 +2760,7 @@ en:
         description_1_html: "You're about to delete <b>%{name}</b>. This action will delete the %{type}. <b>%{num_of_items}</b> items inside will lose their assigned positions."
         description_2_html: '<b>Are you sure you want to delete it?</b>'
         success_message: "%{type} %{name} successfully deleted."
+      share: "Share"
 
   libraries:
     manange_modal_column_index:
@@ -4520,6 +4513,15 @@ en:
     canvas_view: "Canvas view"
     active_state: "Active state"
     archived_state: "Archived state"
+
+  modal_share:
+    title: "Share %{object_name}"
+    submit: "Save sharing options"
+    share_with_team: "Share with Team"
+    can_edit: "Can Edit"
+    all_teams: "All teams (current & new)"
+    all_teams_tooltip: "This will disable individual team settings"
+    success_message: "Selected sharing options for the %{object_name} have been saved."
 
   errors:
     general: "Something went wrong."

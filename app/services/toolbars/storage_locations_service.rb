@@ -21,7 +21,8 @@ module Toolbars
         edit_action,
         move_action,
         duplicate_action,
-        delete_action
+        delete_action,
+        share_action
       ].compact
     end
 
@@ -87,6 +88,17 @@ module Toolbars
         icon: 'sn-icon sn-icon-delete',
         number_of_items: number_of_items,
         path: storage_location_path(storage_location),
+        type: :emit
+      }
+    end
+
+    def share_action
+      return unless @single && can_share_storage_location?(@storage_locations.first)
+
+      {
+        name: :share,
+        label: I18n.t('storage_locations.index.share'),
+        icon: 'sn-icon sn-icon-shared',
         type: :emit
       }
     end
