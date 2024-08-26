@@ -12,7 +12,7 @@ class ActivitiesService
     # Temporary solution until handling of deleted subjects is fully implemented
     visible_repository_teams = visible_teams.with_user_permission(user, RepositoryPermissions::READ)
     visible_by_teams = Activity.where(project: nil, team_id: visible_teams.select(:id))
-                               .where.not(subject_type: %w(RepositoryBase RepositoryRow))
+                               .where.not(subject_type: %w(RepositoryBase RepositoryRow Protocol))
                                .order(created_at: :desc)
     visible_by_repositories = Activity.where(subject_type: %w(RepositoryBase RepositoryRow), team_id: visible_repository_teams.select(:id))
                                       .order(created_at: :desc)
@@ -28,9 +28,16 @@ class ActivitiesService
                                            Protocol.where(my_module: visible_my_modules).select(:id))
                                     .order(created_at: :asc)
 
+    visible_by_protocol_templates =
+      Activity.where(
+        subject_type: Protocol,
+        subject_id: Protocol.where(team_id: visible_teams.select(:id)).viewable_by_user(user, teams)
+      ).order(created_at: :desc)
+
     query = Activity.from(
       "((#{visible_by_teams.to_sql}) UNION ALL " \
       "(#{visible_by_repositories.to_sql}) UNION ALL " \
+      "(#{visible_by_protocol_templates.to_sql}) UNION ALL " \
       "(#{visible_by_my_modules.to_sql}) UNION ALL " \
       "(#{visible_by_projects.to_sql})) AS activities"
     )
