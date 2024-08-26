@@ -326,9 +326,6 @@ window.TinyMCE = (() => {
             // Remove transition class
             $('.tox-editor-header').removeClass('tox-editor-dock-fadeout');
 
-            // Fixes the overflowing vertical controls bar for inserted text
-            $('.tox-editor-header').css('display', 'contents');
-
             // Init image toolbar
             initCssOverrides(editor);
 

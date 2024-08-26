@@ -39,7 +39,7 @@ class TeamZipExportJob < ZipExportJob
       inventories = "#{project_path}/Inventories"
       FileUtils.mkdir_p(inventories)
 
-      repositories = project.assigned_repositories_and_snapshots
+      repositories = project.assigned_readable_repositories_and_snapshots(@user)
 
       # Iterate through every inventory repo and save it to CSV
       repositories.each_with_index do |repo, repo_idx|
@@ -276,7 +276,7 @@ class TeamZipExportJob < ZipExportJob
     end
 
     # Generate CSV
-    csv_data = RepositoryCsvExport.to_csv(repo.repository_rows, col_ids, @user, repo, handle_name_func, false)
+    csv_data = RepositoryCsvExport.to_csv(repo.repository_rows, col_ids, repo, handle_name_func, false)
     File.binwrite(csv_file_path, csv_data.encode('UTF-8', invalid: :replace, undef: :replace))
 
     # Save all attachments (it doesn't work directly in callback function

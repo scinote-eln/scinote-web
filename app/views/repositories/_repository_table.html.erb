@@ -55,7 +55,7 @@
             data-type="<%= column.data_type %>"
             data-edit-column-url="<%= edit_repository_repository_column_path(repository, column) %>"
             data-destroy-column-url="<%= repository_columns_destroy_html_path(repository, column) %>"
-            data-editable-row="<%= can_manage_repository_column?(column) %>"
+            data-editable-row="<%= can_manage_repository_column?(column) && !repository.is_a?(SoftLockedRepository) %>"
             <% column.metadata.each do |k, v| %>
               <%= "data-metadata-#{k}=#{v}" %>
             <% end %>

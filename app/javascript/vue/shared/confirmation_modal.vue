@@ -8,7 +8,7 @@
             {{ title }}
           </h4>
         </div>
-        <div class="modal-body" v-html="description"></div>
+        <div class="modal-body" v-html="description" :data-e2e="e2eAttributes.content"></div>
         <div class="modal-footer">
           <button :class="cancelClass" @click="cancel" :data-e2e="e2eAttributes.cancel">{{ cancelText || i18n.t('general.cancel') }}</button>
           <button :class="confirmClass" @click="confirm" :data-e2e="e2eAttributes.confirm">{{ confirmText || i18n.t('general.confirm') }}</button>

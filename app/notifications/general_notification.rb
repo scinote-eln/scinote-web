@@ -14,7 +14,6 @@ class GeneralNotification < BaseNotification
   end
 
   def subject
-    subject_class = params[:subject_class].constantize
     subject_class.find(params[:subject_id])
   rescue NameError, ActiveRecord::RecordNotFound
     NonExistantRecord.new(params[:subject_name])

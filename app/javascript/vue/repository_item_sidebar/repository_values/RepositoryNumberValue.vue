@@ -35,7 +35,7 @@
             'max-h-[4rem]': collapsed,
             'max-h-[40rem]': !collapsed
           }">
-      {{ colval }}
+      {{ colVal }}
     </div>
     <div v-else
           class="text-sn-dark-grey font-inter text-sm font-normal leading-5">

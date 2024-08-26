@@ -74,7 +74,10 @@ class Asset < ApplicationRecord
                              .pluck(:id)
 
     assets_in_inventories = Asset.joins(repository_cell: { repository_column: :repository })
-                                 .where(repositories: { team: teams })
+                                 .where(repositories: {
+                                          id: Repository.with_granted_permissions(user, RepositoryPermissions::READ).select(:id),
+                                          team_id: teams
+                                        })
                                  .where.not(repositories: { type: 'RepositorySnapshot' })
                                  .pluck(:id)
 

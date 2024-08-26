@@ -8,44 +8,46 @@
       [<%= t("my_modules.protocols.protocol_status_bar.unlinked") %>]
     </span>
   <% end %>
-  <a href="#" id="my-module-protocol-info-button" class="status-info dropdown-toggle
+  <a href="#" id="my-module-protocol-info-button" class="status-info dropdown-toggle 
     <%= 'parent-newer' if @protocol.parent_newer? %>
     <%= 'protocol-newer' if @protocol.newer_than_parent? %>
-    " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-e2e="e2e-BT-task-protocolInfo-openInfo">
     <i class="sn-icon sn-icon-info"></i>
   </a>
-  <div class="dropdown-menu status-info-dropdown" aria-labelledby="my-module-protocol-info-button">
+  <div class="dropdown-menu status-info-dropdown" aria-labelledby="my-module-protocol-info-button" data-e2e="e2e-CO-task-protocolInfo">
     <div class="dropdown-content">
         <div class="dropdown-header">
-          <h2 class="protocol-name">
+          <h2 class="protocol-name" data-e2e="e2e-TX-task-protocolInfo-title">
             <%= @protocol.name_with_label %>
           </h2>
           <% if @protocol.linked? %>
             <div class="protocol-header-info">
-              <span><%= t('my_modules.protocols.protocol_status_bar.protocol_id_label') %> <%= @protocol.original_code %></span>
-              <span><%= t('my_modules.protocols.protocol_status_bar.protocol_version_label') %> <%= @protocol.parent&.version_number %></span>
+              <span data-e2e="e2e-TX-task-protocolInfo-id"><%= t('my_modules.protocols.protocol_status_bar.protocol_id_label') %> <%= @protocol.original_code %></span>
+              <span data-e2e="e2e-TX-task-protocolInfo-version">
+                <%= t('my_modules.protocols.protocol_status_bar.protocol_version_label') %> <%= @protocol.parent&.version_number %>
+              </span>
             </div>
           <% end %>
         </div>
         <div class="dropdown-body">
           <% if @protocol.unlinked? %>
             <div class="info-line">
-              <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_created") %></div>
-              <div class="value"><%= I18n.l(@protocol.created_at, format: :full) %></div>
+              <div class="description" data-e2e="e2e-TX-task-protocolInfo-createdLabel"><%= t("my_modules.protocols.protocol_status_bar.protocol_created") %></div>
+              <div class="value" data-e2e="e2e-TX-task-protocolInfo-created"><%= I18n.l(@protocol.created_at, format: :full) %></div>
             </div>
           <% end %>
           <div class="info-line">
-            <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_updated") %></div>
-            <div class="value"><%= I18n.l(@protocol.updated_at, format: :full) %></div>
+            <div class="description" data-e2e="e2e-TX-task-protocolInfo-modifiedLabel"><%= t("my_modules.protocols.protocol_status_bar.protocol_updated") %></div>
+            <div class="value" data-e2e="e2e-TX-task-protocolInfo-modified"><%= I18n.l(@protocol.updated_at, format: :full) %></div>
           </div>
           <% if @protocol.linked?%>
             <div class="info-line">
-              <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_loaded") %></div>
-              <div class="value"><%= @protocol.linked_at ? I18n.l(@protocol.linked_at, format: :full) : '' %></div>
+              <div class="description" data-e2e="e2e-TX-task-protocolInfo-loadedLabel"><%= t("my_modules.protocols.protocol_status_bar.protocol_loaded") %></div>
+              <div class="value" data-e2e="e2e-TX-task-protocolInfo-loaded"><%= @protocol.linked_at ? I18n.l(@protocol.linked_at, format: :full) : '' %></div>
             </div>
             <div class="info-line">
-              <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_published") %></div>
-              <div class="value"><%= I18n.l(@protocol&.parent&.published_on, format: :full) %></div>
+              <div class="description" data-e2e="e2e-TX-task-protocolInfo-publishedLabel"><%= t("my_modules.protocols.protocol_status_bar.protocol_published") %></div>
+              <div class="value" data-e2e="e2e-TX-task-protocolInfo-published"><%= I18n.l(@protocol&.parent&.published_on, format: :full) %></div>
             </div>
           <% end %>
         </div>
@@ -53,14 +55,18 @@
           <% if @protocol.linked? %>
             <% if @protocol.parent_newer? %>
               <div class="notification-line new-parent-version">
-                <i class="sn-icon sn-icon-info"></i>
-                <div class="description"><%= t("my_modules.protocols.protocol_status_bar.messages.template_updated_html") %></div>
+                <i class="sn-icon sn-icon-info" data-e2e="e2e-IC-task-protocolInfo-newVersion"></i>
+                <div class="description" data-e2e="e2e-TX-task-protocolInfo-newVersion">
+                  <%= t("my_modules.protocols.protocol_status_bar.messages.template_updated_html") %>
+                </div>
               </div>
             <% end %>
             <% if @protocol.newer_than_parent? %>
               <div class="notification-line new-protocol-version">
-                <i class="sn-icon sn-icon-info"></i>
-                <div class="description"><%= t("my_modules.protocols.protocol_status_bar.messages.protocol_updated") %></div>
+                <i class="sn-icon sn-icon-info" data-e2e="e2e-IC-task-protocolInfo-protocolModified"></i>
+                <div class="description" data-e2e="e2e-TX-task-protocolInfo-protocolModified">
+                  <%= t("my_modules.protocols.protocol_status_bar.messages.protocol_updated") %>
+                </div>
               </div>
             <% end %>
           <% end %>

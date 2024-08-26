@@ -57,7 +57,7 @@
       </div>
     </div>
     <!-- Assigned items -->
-    <% assigned_repositories = @my_module.live_and_snapshot_repositories_list %>
+    <% assigned_repositories = @my_module.readable_live_and_snapshot_repositories_list(current_user) %>
     <div class="task-section">
       <div class="task-section-header">
         <a class="task-section-caret" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="true" aria-controls="assigned-items-container">

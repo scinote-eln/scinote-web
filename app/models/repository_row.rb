@@ -127,18 +127,17 @@ class RepositoryRow < ApplicationRecord
   def self.search(user,
                   include_archived,
                   query = nil,
-                  _current_team = nil,
+                  current_team = nil,
                   options = {})
 
     teams = options[:teams] || current_team || user.teams.select(:id)
     searchable_row_fields = [RepositoryRow::PREFIXED_ID_SQL, 'repository_rows.name', 'users.full_name']
 
-    readable_rows = distinct.joins(:repository, :created_by)
-                            .joins("INNER JOIN user_assignments repository_user_assignments " \
-                                   "ON repository_user_assignments.assignable_type = 'RepositoryBase' " \
-                                   "AND repository_user_assignments.assignable_id = repositories.id")
-                            .where(repository_user_assignments: { user_id: user, team_id: teams })
-
+    readable_rows =
+      distinct
+      .joins(:repository, :created_by)
+      .where(repositories: { id: Repository.with_granted_permissions(user, RepositoryPermissions::READ).select(:id),
+                             team_id: teams })
     readable_rows = readable_rows.active unless include_archived
     repository_rows = readable_rows.where_attributes_like_boolean(searchable_row_fields, query, options)
 
