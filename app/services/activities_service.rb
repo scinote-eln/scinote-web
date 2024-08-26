@@ -5,9 +5,7 @@ class ActivitiesService
     # Create condition for view permissions checking first
     visible_teams = user.teams.where(id: teams)
     visible_projects = Project.viewable_by_user(user, visible_teams)
-    visible_my_modules = MyModule.joins(:experiment)
-                                 .where(experiments: { project_id: visible_projects.select(:id) })
-                                 .viewable_by_user(user, teams)
+    visible_my_modules = MyModule.viewable_by_user(user, teams)
 
     # Temporary solution until handling of deleted subjects is fully implemented
     visible_repository_teams = visible_teams.with_user_permission(user, RepositoryPermissions::READ)
@@ -31,7 +29,7 @@ class ActivitiesService
     visible_by_protocol_templates =
       Activity.where(
         subject_type: Protocol,
-        subject_id: Protocol.where(team_id: visible_teams.select(:id)).viewable_by_user(user, teams)
+        subject_id: Protocol.viewable_by_user(user, teams).select(:id)
       ).order(created_at: :desc)
 
     query = Activity.from(
