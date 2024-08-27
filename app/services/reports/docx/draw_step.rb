@@ -17,8 +17,8 @@ module Reports::Docx::DrawStep
       else
         text I18n.t('protocols.steps.uncompleted'), color: color[:gray], bold: true
       end
-      text ' | '
       unless settings['exclude_metadata']
+        text ' | '
         text I18n.t(
           "projects.reports.elements.step.#{step_type_str}.user_time",
           user: user.full_name,
