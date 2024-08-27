@@ -37,6 +37,10 @@ class RepositorySnapshot < RepositoryBase
       .where(my_module: { experiments: { project: project } })
   }
 
+  scope :readable_by_user, lambda { |user|
+    where(my_module_id: MyModule.readable_by_user(user).select(:id))
+  }
+
   def self.create_preliminary!(repository, my_module, created_by = nil)
     created_by ||= repository.created_by
     create!(

@@ -52,13 +52,13 @@ class TeamZipExportJob < ZipExportJob
 
       # Include all experiments
       ex_idx = ex_archive_idx = 0
-      project.experiments.find_each do |experiment|
+      project.experiments.readable_by_user(@user).find_each do |experiment|
         idx = experiment.archived ? (ex_archive_idx += 1) : (ex_idx += 1)
         experiment_path = make_model_dir(project_path, experiment, idx)
 
         # Include all modules
         mod_pos = mod_archive_pos = 0
-        experiment.my_modules.order(:workflow_order).find_each do |my_module|
+        experiment.my_modules.readable_by_user(@user).order(:workflow_order).find_each do |my_module|
           pos = my_module.archived ? (mod_archive_pos += 1) : (mod_pos += 1)
           my_module_path = make_model_dir(experiment_path, my_module, pos)
 
