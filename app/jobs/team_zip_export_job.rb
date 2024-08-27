@@ -39,7 +39,7 @@ class TeamZipExportJob < ZipExportJob
       inventories = "#{project_path}/Inventories"
       FileUtils.mkdir_p(inventories)
 
-      repositories = project.assigned_repositories_and_snapshots
+      repositories = project.assigned_readable_repositories_and_snapshots(@user)
 
       # Iterate through every inventory repo and save it to CSV
       repositories.each_with_index do |repo, repo_idx|
