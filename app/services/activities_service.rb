@@ -15,14 +15,18 @@ class ActivitiesService
     visible_by_repositories = Activity.where(subject_type: %w(RepositoryBase RepositoryRow), team_id: visible_repository_teams.select(:id))
                                       .order(created_at: :desc)
     visible_by_projects = Activity.where(project_id: visible_projects.select(:id))
-                                  .where.not(subject_type: %w(MyModule Result Protocol))
+                                  .where.not(subject_type: %w(Experiment MyModule Result Protocol))
                                   .order(created_at: :desc)
+
+    visible_by_experiments = Activity.where(subject_type: 'Experiment')
+                                     .where(subject_id: Experiment.viewable_by_user(user, visible_teams))
+                                     .order(created_at: :desc)
 
     visible_by_my_modules = Activity.where("subject_id IN (?) AND subject_type = 'MyModule' OR " \
                                            "subject_id IN (?) AND subject_type = 'Result' OR " \
                                            "subject_id IN (?) AND subject_type = 'Protocol'",
                                            visible_my_modules.select(:id),
-                                           Result.where(my_module: visible_my_modules).select(:id),
+                                           Result.with_discarded.where(my_module: visible_my_modules).select(:id),
                                            Protocol.where(my_module: visible_my_modules).select(:id))
                                     .order(created_at: :asc)
 
@@ -36,6 +40,7 @@ class ActivitiesService
       "((#{visible_by_teams.to_sql}) UNION ALL " \
       "(#{visible_by_repositories.to_sql}) UNION ALL " \
       "(#{visible_by_protocol_templates.to_sql}) UNION ALL " \
+      "(#{visible_by_experiments.to_sql}) UNION ALL " \
       "(#{visible_by_my_modules.to_sql}) UNION ALL " \
       "(#{visible_by_projects.to_sql})) AS activities"
     )
