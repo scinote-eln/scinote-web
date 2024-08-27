@@ -48,21 +48,19 @@ class Repository < RepositoryBase
   scope :archived, -> { where(archived: true) }
   scope :globally_shared, -> { where(permission_level: %i(shared_read shared_write)) }
 
-  scope :accessible_by_teams, lambda { |teams|
-    accessible_repositories = left_outer_joins(:team_shared_objects)
-    accessible_repositories =
-      accessible_repositories
+  scope :viewable_by_user, lambda { |user, teams = user.current_team|
+    readable_repositories = readable_by_user(user).left_outer_joins(:team_shared_objects)
+    readable_repositories
       .where(team: teams)
-      .or(accessible_repositories.where(team_shared_objects: { team: teams }))
-      .or(accessible_repositories
-            .where(permission_level: [Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
-                                      Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]]))
-    accessible_repositories.distinct
+      .or(readable_repositories.where(team_shared_objects: { team: teams }))
+      .or(readable_repositories
+          .where(permission_level: [Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read], Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]])
+          .where.not(team: teams))
+      .distinct
   }
 
   scope :assigned_to_project, lambda { |project|
-    accessible_by_teams(project.team)
-      .joins(repository_rows: { my_module_repository_rows: { my_module: { experiment: :project } } })
+    joins(repository_rows: { my_module_repository_rows: { my_module: { experiment: :project } } })
       .where(repository_rows: { my_module_repository_rows: { my_module: { experiments: { project: project } } } })
   }
 
@@ -149,10 +147,6 @@ class Repository < RepositoryBase
 
   def private_shared_with_write?(team)
     team_shared_objects.where(team: team, permission_level: :shared_write).any?
-  end
-
-  def self.viewable_by_user(_user, teams)
-    accessible_by_teams(teams)
   end
 
   def self.name_like(query)

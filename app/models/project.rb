@@ -201,9 +201,9 @@ class Project < ApplicationRecord
     st
   end
 
-  def assigned_repositories_and_snapshots
-    live_repositories = Repository.assigned_to_project(self)
-    snapshots = RepositorySnapshot.assigned_to_project(self)
+  def assigned_readable_repositories_and_snapshots(user)
+    live_repositories = Repository.assigned_to_project(self).readable_by_user(user)
+    snapshots = RepositorySnapshot.assigned_to_project(self).readable_by_user(user)
     (live_repositories + snapshots).sort_by { |r| r.name.downcase }
   end
 

@@ -10,7 +10,11 @@ class ResultSerializer < ActiveModel::Serializer
   attributes :name, :id, :urls, :updated_at, :created_at_formatted, :updated_at_formatted, :user,
              :my_module_id, :attachments_manageble, :marvinjs_enabled, :marvinjs_context, :type,
              :wopi_enabled, :wopi_context, :created_at, :created_by, :archived, :assets_order,
-             :open_vector_editor_context, :comments_count, :assets_view_mode, :storage_limit
+             :open_vector_editor_context, :comments_count, :assets_view_mode, :storage_limit, :collapsed
+
+  def collapsed
+    false
+  end
 
   def marvinjs_enabled
     MarvinJsService.enabled?
