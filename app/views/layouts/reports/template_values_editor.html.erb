@@ -1,6 +1,10 @@
 <div class="template-editor-header">
   <h1 class="title">
-    <%= t('projects.reports.wizard.first_step.values_editor.title') %>
+    <% if @type == :pdf %>
+      <%= t('projects.reports.wizard.first_step.values_editor.title_pdf', template: @template_name) %>
+    <% else %>
+      <%= t('projects.reports.wizard.first_step.values_editor.title_docx', template: @template_name) %>
+    <% end %>
   </h1>
   <div class="collapse-buttons sci-btn-group pull-right">
      <button class="btn btn-light collapse-all">

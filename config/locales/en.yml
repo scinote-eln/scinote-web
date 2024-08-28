@@ -803,13 +803,15 @@ en:
           report_description: "Report description (optional)"
           report_description_placeholder: "In this report you can see..."
           values_editor:
-            title: "Enter template data"
+            title_pdf: "PDF %{template}"
+            title_docx: "DOCX %{template}"
             description: "This template requires you to fill out additional information about this project. This is the only place you will be able to do so."
             header: "Header"
             cover: "Title page"
             footer: "Footer"
             toc: "Table of contents"
-            no_values_title: "No additional data required"
+            no_values_title_pdf: "PDF %{template}:  No additional data required"
+            no_values_title_docx: "DOCX %{template}: No additional data required"
             no_values_description: "SciNote template doesn’t need any additional input for it to be successfully generated."
         second_step:
           select_project_content: "Select and reorder experiments and tasks"

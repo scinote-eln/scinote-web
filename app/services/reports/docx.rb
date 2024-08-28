@@ -30,7 +30,7 @@ class Reports::Docx
     @link_style = {}
     @color = {}
     @scinote_url = options[:scinote_url][0..-2]
-    @template = @settings[:docx_template] || 'scinote_template'
+    @template = @settings[:docx_template].presence || 'scinote_template'
 
     extend "#{@template.camelize}Docx".constantize
   end

@@ -1258,7 +1258,8 @@ function reportHandsonTableConverter() {
   function reCheckContinueButton() {
     if (dropdownSelector.getValues('#projectSelector').length > 0
           && dropdownSelector.getValues('#templateSelector').length > 0
-          && dropdownSelector.getValues('#docxTemplateSelector').length > 0) {
+          && (dropdownSelector.getValues('#docxTemplateSelector').length > 0
+          || $('#docxTemplateSelector').closest('.hidden').length > 0)) {
       $('.continue-button').attr('disabled', false);
     } else {
       $('.continue-button').attr('disabled', true);
@@ -1281,6 +1282,12 @@ function reportHandsonTableConverter() {
         if (dropdownSelector.getValues('#projectSelector').length > 0) {
           dropdownSelector.enableSelector('#templateSelector');
           dropdownSelector.enableSelector('#docxTemplateSelector');
+          if ($('#templateSelector').data('defaultTemplate')) {
+            dropdownSelector.selectValues('#templateSelector', $('#templateSelector').data('defaultTemplate'));
+          }
+          if ($('#docxTemplateSelector').data('defaultTemplate')) {
+            dropdownSelector.selectValues('#docxTemplateSelector', $('#docxTemplateSelector').data('defaultTemplate'));
+          }
         } else {
           dropdownSelector.selectValues('#templateSelector', '');
           dropdownSelector.disableSelector('#templateSelector');
@@ -1354,7 +1361,7 @@ function reportHandsonTableConverter() {
   }
 
   function loadTemplate() {
-    let template = $('#templateSelector').val();
+    const template = dropdownSelector.getValues('#templateSelector');
     let params = {
       project_id: dropdownSelector.getValues('#projectSelector'),
       template: template
@@ -1384,7 +1391,7 @@ function reportHandsonTableConverter() {
   }
 
   function loadDocxTemplate() {
-    let template = $('#docxTemplateSelector').val();
+    const template = dropdownSelector.getValues('#docxTemplateSelector');
     let params = {
       project_id: dropdownSelector.getValues('#projectSelector'),
       template: template
