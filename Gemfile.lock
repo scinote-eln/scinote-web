@@ -23,6 +23,16 @@ GIT
       rails (>= 4)
 
 GIT
+  remote: https://github.com/scinote-eln/caracal.git
+  revision: f8e4c279adfee7801eb1024e1d6a18bb06c9c76a
+  branch: custom-docx-reports
+  specs:
+    caracal (1.4.1)
+      nokogiri (~> 1.6)
+      rubyzip (>= 2.3)
+      tilt (>= 1.4)
+
+GIT
   remote: https://github.com/scinote-eln/img2zpl
   revision: 23d61cfc3e90ac4caa62dd08546fa0d7590a5140
   specs:
@@ -217,10 +227,6 @@ GEM
     capybara-email (3.0.2)
       capybara (>= 2.4, < 4.0)
       mail
-    caracal_the_curve (1.4.6)
-      nokogiri (~> 1.6)
-      rubyzip (>= 1.1.0, < 3.0)
-      tilt (>= 1.4)
     case_transform (0.2)
       activesupport
     caxlsx (4.0.0)
@@ -799,7 +805,7 @@ DEPENDENCIES
   canaid!
   capybara
   capybara-email
-  caracal_the_curve (~> 1.4, >= 1.4.6)
+  caracal!
   caxlsx
   cssbundling-rails
   cucumber-rails
