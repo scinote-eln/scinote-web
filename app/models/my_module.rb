@@ -202,6 +202,25 @@ class MyModule < ApplicationRecord
     (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
   end
 
+  def live_and_snapshot_repositories_list
+    snapshots = repository_snapshots.left_outer_joins(:original_repository)
+
+    selected_snapshots = snapshots.where(selected: true)
+                                  .or(snapshots.where(original_repositories_repositories: { id: nil }))
+                                  .or(snapshots.where.not(parent_id: assigned_repositories.select(:id)))
+                                  .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+                                  .select('COUNT(repository_rows.id) AS assigned_rows_count')
+                                  .joins(:repository_rows)
+                                  .group(:parent_id, :id)
+                                  .order(:parent_id, updated_at: :desc)
+
+    live_repositories = assigned_repositories
+                        .select('repositories.*, COUNT(DISTINCT repository_rows.id) AS assigned_rows_count')
+                        .where.not(id: repository_snapshots.where(selected: true).select(:parent_id))
+
+    (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
+  end
+
   def update_report_repository_references(repository)
     ids = if repository.is_a?(Repository)
             RepositorySnapshot.where(parent_id: repository.id).pluck(:id)
