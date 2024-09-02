@@ -24,10 +24,10 @@ GIT
 
 GIT
   remote: https://github.com/scinote-eln/caracal.git
-  revision: f8e4c279adfee7801eb1024e1d6a18bb06c9c76a
+  revision: f30bd2d26229c8118cc392c3a18409cb9a12ae02
   branch: custom-docx-reports
   specs:
-    caracal (1.4.1)
+    caracal (1.4.2)
       nokogiri (~> 1.6)
       rubyzip (>= 2.3)
       tilt (>= 1.4)
