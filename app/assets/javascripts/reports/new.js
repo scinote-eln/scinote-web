@@ -982,7 +982,7 @@ function reportHandsonTableConverter() {
 
     // Template values
     reportData.template_values = {};
-    $.each($('.report-template-values-container').find('.sci-input-field'), function(i, field) {
+    $.each($('.report-template-values-container').find('.sci-input-field').not('.report-template-value-dropdown'), (_, field) => {
       if (field.value.length === 0) return;
 
       reportData.template_values[field.name] = {
