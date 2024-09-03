@@ -17,14 +17,40 @@ class StorageLocation < ApplicationRecord
 
   has_many :storage_location_repository_rows, inverse_of: :storage_location, dependent: :destroy
   has_many :storage_locations, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
-  has_many :repository_rows, through: :storage_location_repository_row
+  has_many :repository_rows, through: :storage_location_repository_rows
 
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
   validate :parent_validation, if: -> { parent.present? }
 
+  scope :readable_by_user, (lambda do |user, team = user.current_team|
+    next StorageLocation.none unless team.permission_granted?(user, TeamPermissions::STORAGE_LOCATIONS_READ)
+
+    where(team: team)
+  end)
+
   after_discard do
     StorageLocation.where(parent_id: id).find_each(&:discard)
     storage_location_repository_rows.each(&:discard)
+  end
+
+  def shared_with?(team)
+    return false if self.team == team
+
+    (root? ? self : root_storage_location).private_shared_with?(team)
+  end
+
+  def root?
+    parent_id.nil?
+  end
+
+  def root_storage_location
+    return self if root?
+
+    storage_location = self
+
+    storage_location = storage_location.parent while storage_location.parent_id
+
+    storage_location
   end
 
   def duplicate!

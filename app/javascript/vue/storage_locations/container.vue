@@ -66,6 +66,10 @@ export default {
     RemindersRender
   },
   props: {
+    canManage: {
+      type: String,
+      required: true
+    },
     dataSource: {
       type: String,
       required: true
@@ -143,13 +147,15 @@ export default {
     toolbarActions() {
       const left = [];
 
-      left.push({
-        name: 'assign',
-        icon: 'sn-icon sn-icon-new-task',
-        label: this.i18n.t('storage_locations.show.toolbar.assign'),
-        type: 'emit',
-        buttonStyle: 'btn btn-primary'
-      });
+      if (this.canManage) {
+        left.push({
+          name: 'assign',
+          icon: 'sn-icon sn-icon-new-task',
+          label: this.i18n.t('storage_locations.show.toolbar.assign'),
+          type: 'emit',
+          buttonStyle: 'btn btn-primary'
+        });
+      }
 
       return {
         left,

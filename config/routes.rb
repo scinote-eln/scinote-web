@@ -1082,7 +1082,4 @@ Rails.application.routes.draw do
       end
     end
   end
-
-  post "/rest-v1/license/grant", to: "application#grant"
-  post "/marvin4js-license", to: "application#grant", format: :cxl
 end

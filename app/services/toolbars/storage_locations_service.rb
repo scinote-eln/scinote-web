@@ -29,9 +29,7 @@ module Toolbars
     private
 
     def edit_action
-      return unless @single
-
-      return unless can_manage_storage_locations?(current_user.current_team)
+      return unless @single && can_manage_storage_location?(@storage_locations.first)
 
       {
         name: 'edit',
@@ -43,13 +41,11 @@ module Toolbars
     end
 
     def move_action
-      return unless @single
-
-      return unless can_manage_storage_locations?(current_user.current_team)
+      return unless @single && can_manage_storage_location?(@storage_locations.first)
 
       {
         name: 'move',
-        label: I18n.t("storage_locations.index.toolbar.move"),
+        label: I18n.t('storage_locations.index.toolbar.move'),
         icon: 'sn-icon sn-icon-move',
         path: move_storage_location_path(@storage_locations.first),
         type: :emit
@@ -57,9 +53,7 @@ module Toolbars
     end
 
     def duplicate_action
-      return unless @single
-
-      return unless can_manage_storage_locations?(current_user.current_team)
+      return unless @single && can_manage_storage_location?(@storage_locations.first)
 
       {
         name: 'duplicate',
@@ -71,9 +65,7 @@ module Toolbars
     end
 
     def delete_action
-      return unless @single
-
-      return unless can_manage_storage_locations?(current_user.current_team)
+      return unless @single && can_manage_storage_location?(@storage_locations.first)
 
       storage_location = @storage_locations.first
 

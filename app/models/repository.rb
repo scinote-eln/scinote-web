@@ -93,10 +93,6 @@ class Repository < RepositoryBase
     ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL, 'users.full_name']
   end
 
-  def self.viewable_by_user(_user, teams)
-    accessible_by_teams(teams)
-  end
-
   def self.name_like(query)
     where('repositories.name ILIKE ?', "%#{query}%")
   end

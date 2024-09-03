@@ -12,7 +12,8 @@
         <div class="sci-divider my-4" v-if="index > 0"></div>
         <div class="flex items-center gap-2 mb-3">
           {{ i18n.t('repositories.locations.container') }}:
-          <a :href="containerUrl(location.id)">{{ location.name }}</a>
+          <a v-if="location.readable" :href="containerUrl(location.id)">{{ location.name }}</a>
+          <span v-else>{{ location.name }}</span>
           <span v-if="location.metadata.display_type !== 'grid'">
             ({{ location.positions.length }})
           </span>

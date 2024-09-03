@@ -9,7 +9,7 @@ module Lists
                :have_reminders, :reminders_url
 
     def row_id
-      object.repository_row.id unless hidden
+      object.repository_row.code
     end
 
     def row_name

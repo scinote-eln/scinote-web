@@ -12,7 +12,7 @@ class StorageLocationsController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        storage_locations = Lists::StorageLocationsService.new(current_team, params).call
+        storage_locations = Lists::StorageLocationsService.new(current_user, current_team, params).call
         render json: storage_locations, each_serializer: Lists::StorageLocationSerializer,
                user: current_user, meta: pagination_dict(storage_locations)
       end
@@ -35,8 +35,10 @@ class StorageLocationsController < ApplicationController
 
   def create
     @storage_location = StorageLocation.new(
-      storage_location_params.merge({ team: current_team, created_by: current_user })
+      storage_location_params.merge({ created_by: current_user })
     )
+
+    @storage_location.team = @storage_location.root_storage_location.team
 
     @storage_location.image.attach(params[:signed_blob_id]) if params[:signed_blob_id]
 
@@ -122,7 +124,7 @@ class StorageLocationsController < ApplicationController
   end
 
   def load_storage_location
-    @storage_location = current_team.storage_locations.find_by(id: storage_location_params[:id])
+    @storage_location = StorageLocation.viewable_by_user(current_user).find_by(id: storage_location_params[:id])
     render_404 unless @storage_location
   end
 

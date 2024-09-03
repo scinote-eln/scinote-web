@@ -93,7 +93,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
   end
 
   def load_storage_location
-    @storage_location = StorageLocation.where(team: current_team).find(
+    @storage_location = StorageLocation.viewable_by_user(current_user).find(
       storage_location_repository_row_params[:storage_location_id]
     )
     render_404 unless @storage_location
@@ -110,12 +110,10 @@ class StorageLocationRepositoryRowsController < ApplicationController
   end
 
   def check_read_permissions
-    render_403 unless can_read_storage_location_containers?(current_team)
+    render_403 unless can_read_storage_location?(@storage_location)
   end
 
   def check_manage_permissions
-    unless can_manage_storage_location_containers?(current_team) && can_read_repository?(@repository_row.repository)
-      render_403
-    end
+    render_403 unless can_manage_storage_location?(@storage_location)
   end
 end

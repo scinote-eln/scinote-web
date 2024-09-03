@@ -32,8 +32,18 @@ module Shareable
         .where(team: teams)
         .or(readable.where(team_shared_objects: { team: teams }))
         .or(readable
-            .where(permission_level: [Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read], Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]])
-            .where.not(team: teams))
+            .where(
+              if column_names.include?('permission_level')
+                {
+                  permission_level: [
+                    Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
+                    Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]
+                  ]
+                }
+              else
+                {}
+              end
+            ).where.not(team: teams))
         .distinct
     }
   end

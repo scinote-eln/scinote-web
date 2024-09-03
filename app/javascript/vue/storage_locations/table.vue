@@ -121,11 +121,6 @@ export default {
         sortable: true
       },
       {
-        field: 'free_spaces',
-        headerName: this.i18n.t('storage_locations.index.table.free_spaces'),
-        sortable: true
-      },
-      {
         field: 'shared',
         headerName: this.i18n.t('storage_locations.index.table.shared'),
         sortable: true
