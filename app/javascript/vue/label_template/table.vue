@@ -30,28 +30,34 @@ import axios from '../../packs/custom_axios.js';
 
 import DataTable from '../shared/datatable/table.vue';
 import DeleteModal from '../shared/confirmation_modal.vue';
+import NameRenderer from './renderers/name.vue';
+import DefaultRenderer from './renderers/default.vue';
+import FormatRenderer from './renderers/format.vue';
 
 export default {
   name: 'LabelTemplatesTable',
   components: {
     DataTable,
     DeleteModal,
+    NameRenderer,
+    DefaultRenderer,
+    FormatRenderer
   },
   props: {
     dataSource: {
       type: String,
-      required: true,
+      required: true
     },
     actionsUrl: {
       type: String,
-      required: true,
+      required: true
     },
     createUrl: {
-      type: String,
+      type: String
     },
     syncFluicsUrl: {
-      type: String,
-    },
+      type: String
+    }
   },
   data() {
     return {
@@ -60,40 +66,40 @@ export default {
         {
           field: 'default',
           headerName: this.i18n.t('label_templates.index.default_label'),
-          cellRenderer: this.defaultRenderer,
-          sortable: true,
+          cellRenderer: 'DefaultRenderer',
+          sortable: true
         }, {
           field: 'name',
           headerName: this.i18n.t('label_templates.index.thead_name'),
-          cellRenderer: this.labelNameRenderer,
-          sortable: true,
+          cellRenderer: 'NameRenderer',
+          sortable: true
         }, {
           field: 'format',
           headerName: this.i18n.t('label_templates.index.format'),
           sortable: true,
-          cellRenderer: ({ data: { format, icon_url: iconUrl } }) => `<span>${iconUrl}</span> <span>${format}</span>`
+          cellRenderer: 'FormatRenderer'
         }, {
           field: 'description',
           headerName: this.i18n.t('label_templates.index.description'),
-          sortable: true,
+          sortable: true
         }, {
           field: 'modified_by',
           headerName: this.i18n.t('label_templates.index.updated_by'),
-          sortable: true,
+          sortable: true
         }, {
           field: 'updated_at',
           headerName: this.i18n.t('label_templates.index.updated_at'),
-          sortable: true,
+          sortable: true
         }, {
           field: 'created_by',
           headerName: this.i18n.t('label_templates.index.created_by'),
-          sortable: true,
+          sortable: true
         }, {
           field: 'created_at',
           headerName: this.i18n.t('label_templates.index.created_at'),
-          sortable: true,
-        },
-      ],
+          sortable: true
+        }
+      ]
     };
   },
   computed: {
@@ -106,7 +112,7 @@ export default {
           label: this.i18n.t('label_templates.index.toolbar.new'),
           type: 'emit',
           path: this.createUrl,
-          buttonStyle: 'btn btn-primary',
+          buttonStyle: 'btn btn-primary'
         });
       }
       if (this.syncFluicsUrl) {
@@ -121,21 +127,11 @@ export default {
       }
       return {
         left,
-        right: [],
+        right: []
       };
-    },
+    }
   },
   methods: {
-    labelNameRenderer(params) {
-      const editUrl = params.data.urls.show;
-      return `<a href="${editUrl}" title="${params.data.name}">
-                ${params.data.name}
-              </a>`;
-    },
-    defaultRenderer(params) {
-      const defaultSelected = params.data.default;
-      return defaultSelected ? '<i class="sn-icon sn-icon-approval"></i>' : '';
-    },
     setDefault(action) {
       axios.post(action.path).then((response) => {
         this.reloadingTable = true;
@@ -175,8 +171,8 @@ export default {
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
         });
       }
-    },
-  },
+    }
+  }
 };
 
 </script>
