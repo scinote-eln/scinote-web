@@ -68,6 +68,7 @@ import axios from '../../packs/custom_axios.js';
 
 import DataTable from '../shared/datatable/table.vue';
 import UsersRenderer from './renderers/users.vue';
+import NameRenderer from './renderers/name.vue';
 import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
 import ProjectCard from './card.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
@@ -84,6 +85,7 @@ export default {
   components: {
     DataTable,
     UsersRenderer,
+    NameRenderer,
     ProjectCard,
     ConfirmationModal,
     EditProjectModal,
@@ -129,7 +131,7 @@ export default {
         flex: 1,
         headerName: this.i18n.t('projects.index.card.name'),
         sortable: true,
-        cellRenderer: this.nameRenderer
+        cellRenderer: 'NameRenderer'
       },
       {
         field: 'code',
@@ -251,16 +253,6 @@ export default {
                 <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
                 <span title="${option[1]}" class="truncate">${option[1]}</span>
               </div>`;
-    },
-    nameRenderer(params) {
-      const showUrl = params.data.urls.show;
-      return `<a href="${showUrl}"
-                 class="flex items-center gap-1 hover:no-underline
-                        ${!showUrl ? 'pointer-events-none text-sn-grey' : ''}"
-                 title="${params.data.name}">
-                ${params.data.folder ? '<i class="sn-icon mini sn-icon-mini-folder-left"></i>' : ''}
-                <span class="truncate">${params.data.name} </span>
-              </a>`;
     },
     openComments(_params, rows) {
       $(this.$refs.commentButton).data('objectId', rows[0].id);

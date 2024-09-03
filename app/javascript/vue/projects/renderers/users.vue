@@ -19,8 +19,8 @@ export default {
   name: 'UsersRenderer',
   props: {
     params: {
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     users() {
