@@ -38,9 +38,9 @@ module Lists
         update: team_repository_path(current_user.current_team, id: object, format: :json),
         duplicate: team_repository_copy_path(current_user.current_team, repository_id: object, format: :json),
         shareable_teams: shareable_teams_team_shared_objects_path(
-          current_user.current_team, object_id: object.id, object_type: object.class.name
+          current_user.current_team, object_id: object.id, object_type: 'Repository'
         ),
-        share: team_shared_objects_path(current_user.current_team, object_id: object.id, object_type: object.class.name)
+        share: team_shared_objects_path(current_user.current_team, object_id: object.id, object_type: 'Repository')
       }
     end
   end

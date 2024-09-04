@@ -59,7 +59,8 @@ class TeamSharedObjectsController < ApplicationController
   end
 
   def check_sharing_permissions
-    render_403 unless public_send("can_share_#{@model.model_name.param_key}?", @model)
+    object_name = @model.is_a?(RepositoryBase) ? 'repository' : @model.model_name.param_key
+    render_403 unless public_send("can_share_#{object_name}?", @model)
     render_403 if !@model.shareable_write? && update_params[:write_permissions].present?
   end
 
