@@ -250,6 +250,16 @@
     }
   }
 
+  // scss-lint:disable ImportantRule
+  .dropdown-selector-container {
+    .dropdown-container {
+      left: auto !important;
+      margin: auto !important;
+      position: absolute !important;
+    }
+  }
+  // scss-lint:enable ImportantRule
+
   .project-selector-container {
     background: $color-white;
     box-shadow: $modal-shadow;
