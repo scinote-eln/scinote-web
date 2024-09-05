@@ -5,7 +5,7 @@ require 'active_storage/service/s3_service'
 
 template_zip_url_string = ENV.fetch('REPORT_TEMPLATES_ZIP_URL', nil)
 
-return unless template_zip_url_string
+return unless template_zip_url_string.present?
 
 template_zip_url = URI.parse(template_zip_url_string)
 contents = case template_zip_url.scheme
