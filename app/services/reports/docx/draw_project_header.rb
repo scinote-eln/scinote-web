@@ -15,7 +15,7 @@ module Reports::Docx::DrawProjectHeader
            link_style
     end
 
-    unless @settings['exclude_metadata']
+    unless @settings['exclude_timestamps']
       @docx.p do
         text I18n.t('projects.reports.elements.project_header.user_time', code: project.code,
                     timestamp: I18n.l(project.created_at, format: :full)), color: color[:gray]

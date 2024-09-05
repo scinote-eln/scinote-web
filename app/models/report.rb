@@ -43,6 +43,8 @@ class Report < ApplicationRecord
 
   DEFAULT_SETTINGS = {
     all_tasks: true,
+    exclude_task_metadata: false,
+    exclude_timestamps: false,
     task: {
       protocol: {
         description: true,

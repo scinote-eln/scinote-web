@@ -8,9 +8,11 @@
   <div class="report-element-body">
     <h5 class="step-name">
       <b><%= t('projects.reports.elements.step.step_pos', pos: (step.position_plus_one)) %></b>&nbsp;<%= step.name %>
-      <%= step_status_label(step) %>
+      <% unless @settings['exclude_task_metadata'] %>
+        <%= step_status_label(step) %>
+      <% end %>
     </h5>
-    <% unless @settings['exclude_metadata'] %>
+    <% unless @settings['exclude_timestamps'] %>
       <div class="user-time">
         <%= t("projects.reports.elements.step.#{step_type_str}.user_time", user: user.full_name , timestamp: l(timestamp, format: :full)) %>
       </div>

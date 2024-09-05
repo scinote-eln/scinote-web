@@ -853,7 +853,8 @@ en:
           results_comments: "Result comments"
           additional_content: "Additional content"
           task_activity: "Include task activity"
-          exclude_metadata: "Exclude metadata"
+          exclude_task_metadata: "Exclude task metadata"
+          exclude_timestamps: "Exclude timestamps"
           archived: "[archived]"
           deleted: "[deleted]"
 

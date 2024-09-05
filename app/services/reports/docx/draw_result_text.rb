@@ -9,7 +9,7 @@ module Reports::Docx::DrawResultText
     @docx.p do
       text result_text.name.presence || '', italic: true
       text ' '
-      unless settings['exclude_metadata']
+      unless settings['exclude_timestamps']
         text I18n.t('projects.reports.elements.result_text.user_time',
                     timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
       end

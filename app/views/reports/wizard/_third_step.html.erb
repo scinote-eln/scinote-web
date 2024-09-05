@@ -184,7 +184,7 @@
         <%= t("projects.reports.wizard.third_step.additional_content") %>
       </span>
       <ul class="additional-contents collapse in" id="additionalContents">
-        <li>
+        <li class="additional-content-task-activity">
           <div class="select-all-container">
             <span class="sci-checkbox-container">
               <input type="checkbox" class="sci-checkbox task-setting" value="activities" <%= 'checked' if report.settings.dig(:task, :activities) %>/>
@@ -197,10 +197,20 @@
         <li>
           <div class="select-all-container">
             <span class="sci-checkbox-container">
-              <input type="checkbox" class="sci-checkbox exclude-metadata-setting" value="exclude_metadata" <%= 'checked' if report.settings.dig(:exclude_metadata) %>/>
+              <input type="checkbox" class="sci-checkbox exclude-task-metadata-setting" value="exclude_task_metadata" <%= 'checked' if report.settings.dig(:exclude_task_metadata) %>/>
               <span class="sci-checkbox-label"></span>
             </span>
-            <%= t("projects.reports.wizard.third_step.exclude_metadata") %>
+            <%= t("projects.reports.wizard.third_step.exclude_task_metadata") %>
+            <div class="divider"></div>
+          </div>
+        </li>
+        <li>
+          <div class="select-all-container">
+            <span class="sci-checkbox-container">
+              <input type="checkbox" class="sci-checkbox exclude-timestamps-setting" value="exclude_timestamps" <%= 'checked' if report.settings.dig(:exclude_timestamps) %>/>
+              <span class="sci-checkbox-label"></span>
+            </span>
+            <%= t("projects.reports.wizard.third_step.exclude_timestamps") %>
             <div class="divider"></div>
           </div>
         </li>
