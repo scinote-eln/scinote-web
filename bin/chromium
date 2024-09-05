@@ -1,2 +1,0 @@
-#!/bin/bash
-env -i /usr/bin/chromium $@
