@@ -8,6 +8,7 @@
   </template>
   <template v-else>
     <a :href="params.data.urls.show" :title="params.data.name" >
+      <i v-if="params.data.locked" class="sn-icon sn-icon-locked-task"></i>
       <span class="truncate">{{ params.data.name }}</span>
     </a>
   </template>
