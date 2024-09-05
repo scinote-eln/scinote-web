@@ -12,7 +12,7 @@ module Reports::Docx::DrawMyModuleProtocol
     end
 
     if @settings.dig('task', 'protocol', 'description') && protocol.description.present?
-      unless @settings['exclude_metadata']
+      unless @settings['exclude_timestamps']
         @docx.p I18n.t('projects.reports.elements.module.protocol.user_time', code: protocol.original_code,
                       timestamp: I18n.l(protocol.created_at, format: :full)), color: @color[:gray]
       end

@@ -40,7 +40,7 @@ module Reports::Docx::DrawStepTable
     @docx.p do
       text I18n.t("projects.reports.elements.#{table_type}.table_name", name: table.name), italic: true
       text ' '
-      unless settings['exclude_metadata']
+      unless settings['exclude_timestamps']
         text I18n.t("projects.reports.elements.#{table_type}.user_time",
                     timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
       end

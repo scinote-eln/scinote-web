@@ -21,7 +21,7 @@
       <% end %>
     <% end %>
    </div>
-    <% unless @settings['exclude_metadata'] %>
+    <% unless @settings['exclude_timestamps'] %>
       <div class="user-time">
         <%= t('projects.reports.elements.result_table.user_time', timestamp: l(timestamp, format: :full)) %>
       </div>

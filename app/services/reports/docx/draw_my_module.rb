@@ -17,7 +17,7 @@ module Reports::Docx::DrawMyModule
     end
 
     @docx.p do
-      unless settings['exclude_metadata']
+      unless settings['exclude_timestamps']
         text I18n.t('projects.reports.elements.module.user_time', code: my_module.code,
                     timestamp: I18n.l(my_module.created_at, format: :full)), color: color[:gray]
       end
@@ -27,21 +27,21 @@ module Reports::Docx::DrawMyModule
       end
     end
 
-    if my_module.started_on.present?
-      @docx.p do
-        text I18n.t('projects.reports.elements.module.started_on',
-                    started_on: I18n.l(my_module.started_on, format: :full))
+    unless settings['exclude_task_metadata']
+      if my_module.started_on.present?
+        @docx.p do
+          text I18n.t('projects.reports.elements.module.started_on',
+                      started_on: I18n.l(my_module.started_on, format: :full))
+        end
       end
-    end
 
-    if my_module.due_date.present?
-      @docx.p do
-        text I18n.t('projects.reports.elements.module.due_date',
-                    due_date: I18n.l(my_module.due_date, format: :full))
+      if my_module.due_date.present?
+        @docx.p do
+          text I18n.t('projects.reports.elements.module.due_date',
+                      due_date: I18n.l(my_module.due_date, format: :full))
+        end
       end
-    end
 
-    unless settings['exclude_metadata']
       status = my_module.my_module_status
       @docx.p do
         text I18n.t('projects.reports.elements.module.status')

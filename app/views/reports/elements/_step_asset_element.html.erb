@@ -18,7 +18,7 @@
         </em>
       <% end %>
     </span>
-    <% unless @settings['exclude_metadata'] %>
+    <% unless @settings['exclude_timestamps'] %>
       <div class="user-time">
         &nbsp;<%= t('projects.reports.elements.step_asset.user_time', timestamp: l(timestamp, format: :full)) %>
       </div>

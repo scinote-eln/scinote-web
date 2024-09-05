@@ -41,7 +41,7 @@ module Reports::Docx::DrawResultTable
     @docx.p do
       text I18n.t 'projects.reports.elements.result_table.table_name', name: table.name
       text ' '
-      unless settings['exclude_metadata']
+      unless settings['exclude_timestamps']
         text I18n.t('projects.reports.elements.result_table.user_time',
                     timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: color[:gray]
       end

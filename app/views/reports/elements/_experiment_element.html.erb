@@ -9,7 +9,7 @@
         <span class="label label-warning"><%= t('search.index.archived') %></span>
       <% end %>
     </h3>
-    <% unless @settings['exclude_metadata'] %>
+    <% unless @settings['exclude_timestamps'] %>
       <div class="user-time">
         <%= t('projects.reports.elements.experiment.user_time', code: experiment.code, timestamp: l(timestamp, format: :full)) %>
       </div>

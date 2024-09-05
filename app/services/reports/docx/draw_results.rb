@@ -12,7 +12,7 @@ module Reports::Docx::DrawResults
         @docx.p do
           text result.name.presence || I18n.t('projects.reports.unnamed'), italic: true
           text "  #{I18n.t('search.index.archived')} ", bold: true if result.archived?
-          unless settings['exclude_metadata']
+          unless settings['exclude_timestamps']
             text I18n.t('projects.reports.elements.result.user_time',
                         timestamp: I18n.l(result.created_at, format: :full),
                         user: result.user.full_name), color: color[:gray]

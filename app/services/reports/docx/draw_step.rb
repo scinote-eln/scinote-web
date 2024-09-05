@@ -12,13 +12,15 @@ module Reports::Docx::DrawStep
       "#{I18n.t('projects.reports.elements.step.step_pos', pos: step.position_plus_one)} #{step.name}"
     )
     @docx.p do
-      if step.completed
-        text I18n.t('protocols.steps.completed'), color: color[:green], bold: true
-      else
-        text I18n.t('protocols.steps.uncompleted'), color: color[:gray], bold: true
+      unless settings['exclude_task_metadata']
+        if step.completed
+          text I18n.t('protocols.steps.completed'), color: color[:green], bold: true
+        else
+          text I18n.t('protocols.steps.uncompleted'), color: color[:gray], bold: true
+        end
       end
-      unless settings['exclude_metadata']
-        text ' | '
+      unless settings['exclude_timestamps']
+        text ' | ' unless settings['exclude_task_metadata']
         text I18n.t(
           "projects.reports.elements.step.#{step_type_str}.user_time",
           user: user.full_name,

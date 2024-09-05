@@ -9,22 +9,22 @@
         <span class="label label-warning"><%= t('search.index.archived') %></span>
       <% end %>
     </h4>
-    <% unless @settings['exclude_metadata'] %>
+    <% unless @settings['exclude_timestamps'] %>
       <div class="user-time">
         <%= t('projects.reports.elements.module.user_time', code: my_module.code, timestamp: l(timestamp, format: :full)) %>
       </div>
     <% end %>
-    <p class="module-start-date">
-      <% if my_module.started_on.present? %>
-        <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
-      <% end %>
-    </p>
-    <p class="module-due-date">
-      <% if my_module.due_date.present? %>
-        <%= t('projects.reports.elements.module.due_date', due_date: l(my_module.due_date, format: :full)) %>
-      <% end %>
-    </p>
-    <% unless @settings['exclude_metadata'] %>
+    <% unless @settings['exclude_task_metadata'] %>
+      <p class="module-start-date">
+        <% if my_module.started_on.present? %>
+          <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
+        <% end %>
+      </p>
+      <p class="module-due-date">
+        <% if my_module.due_date.present? %>
+          <%= t('projects.reports.elements.module.due_date', due_date: l(my_module.due_date, format: :full)) %>
+        <% end %>
+      </p>
       <p class="module-status">
         <% status = my_module.my_module_status %>
         <%= t('projects.reports.elements.module.status') %>
@@ -39,8 +39,6 @@
           </span>
         <% end %>
       </p>
-    <% end %>
-    <% unless @settings['exclude_metadata'] %>
       <div class="row module-tags">
         <div class="pull-left">
           <%= t('projects.reports.elements.module.tags_header') %>

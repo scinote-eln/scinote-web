@@ -9,7 +9,7 @@
                            team: current_team,
                            base64_encoded_imgs: export_all) %>
     </div>
-    <% unless @settings['exclude_metadata'] %>
+    <% unless @settings['exclude_timestamps'] %>
       <div class="user-time">
         <%= t('projects.reports.elements.step_checklist.user_time', timestamp: l(timestamp, format: :full)) %>
       </div>

@@ -16,7 +16,7 @@ module Reports::Docx::DrawExperiment
     end
 
     @docx.p do
-      unless settings['exclude_metadata']
+      unless settings['exclude_timestamps']
         text I18n.t('projects.reports.elements.experiment.user_time',
                     code: experiment.code, timestamp: I18n.l(experiment.created_at, format: :full)), color: color[:gray]
       end
