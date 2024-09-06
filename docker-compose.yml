@@ -19,6 +19,7 @@ services:
     container_name: scinote_web_development
     stdin_open: true
     tty: true
+    user: scinote
     depends_on:
       - db
     ports:
@@ -43,6 +44,7 @@ services:
     container_name: scinote_webpack_development
     stdin_open: true
     tty: true
+    user: scinote
     command: >
       bash -c "yarn install && yarn build --watch"
     environment:
@@ -60,6 +62,7 @@ services:
     container_name: scinote_css_bundling_development
     stdin_open: true
     tty: true
+    user: scinote
     command: >
       bash -c "yarn build:css --watch"
     environment:
@@ -77,6 +80,7 @@ services:
     container_name: scinote_tailwind_development
     stdin_open: true
     tty: true
+    user: scinote
     command: >
       bash -c "rails tailwindcss:watch"
     environment:
