@@ -24,7 +24,7 @@
             <%= link_to t('projects.reports.elements.download'), asset_download_url(asset, disposition: 'attachment'), class: 'download-link', target: :_blank %>
           </em>
         <% end %>
-      </div>
+      </div>  
       <div class="user-time">
         <% unless @settings['exclude_timestamps'] %>
           <%= t("projects.reports.elements.result_asset.user_time", user: result.user.full_name, timestamp: l(timestamp, format: :full)) %>

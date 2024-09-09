@@ -94,9 +94,11 @@
 
         <% if @settings.dig('task', 'file_results')  %>
           <%= render partial: 'reports/elements/my_module_result_asset_element', locals: { result: result, report: report, export_all: export_all } %>
-          <div class="user-time">
-            <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
-          </div>
+          <% unless @settings['exclude_timestamps'] %>
+            <div class="user-time">
+              <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
+            </div>
+          <% end %>
         <% end %>
 
         <div class="report-element-children">
