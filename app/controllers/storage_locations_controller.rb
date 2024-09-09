@@ -38,7 +38,7 @@ class StorageLocationsController < ApplicationController
       storage_location_params.merge({ created_by: current_user })
     )
 
-    @storage_location.team = @storage_location.root_storage_location.team
+    @storage_location.team = @storage_location.root_storage_location.team || current_team
 
     @storage_location.image.attach(params[:signed_blob_id]) if params[:signed_blob_id]
 
