@@ -100,7 +100,6 @@ ENV PATH=$GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
 
 RUN adduser --uid 1000 scinote
-RUN chown scinote:scinote $APP_HOME
 USER scinote
 
 COPY --from=builder --chown=scinote:scinote $APP_HOME $APP_HOME
