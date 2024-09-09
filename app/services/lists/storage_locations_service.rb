@@ -2,7 +2,8 @@
 
 module Lists
   class StorageLocationsService < BaseService
-    def initialize(team, params)
+    def initialize(user, team, params)
+      @user = user
       @team = team
       @parent_id = params[:parent_id]
       @filters = params[:filters] || {}
@@ -13,8 +14,8 @@ module Lists
       @records =
         StorageLocation.joins('LEFT JOIN storage_locations AS sub_locations ' \
                               'ON storage_locations.id = sub_locations.parent_id')
+                       .viewable_by_user(@user, @team)
                        .select('storage_locations.*, COUNT(sub_locations.id) AS sub_location_count')
-                       .where(team: @team)
                        .group(:id)
     end
 

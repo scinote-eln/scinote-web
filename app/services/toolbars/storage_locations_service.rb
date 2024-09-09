@@ -21,16 +21,15 @@ module Toolbars
         edit_action,
         move_action,
         duplicate_action,
-        delete_action
+        delete_action,
+        share_action
       ].compact
     end
 
     private
 
     def edit_action
-      return unless @single
-
-      return unless can_manage_storage_locations?(current_user.current_team)
+      return unless @single && can_manage_storage_location?(@storage_locations.first)
 
       {
         name: 'edit',
@@ -42,13 +41,11 @@ module Toolbars
     end
 
     def move_action
-      return unless @single
-
-      return unless can_manage_storage_locations?(current_user.current_team)
+      return unless @single && can_manage_storage_location?(@storage_locations.first)
 
       {
         name: 'move',
-        label: I18n.t("storage_locations.index.toolbar.move"),
+        label: I18n.t('storage_locations.index.toolbar.move'),
         icon: 'sn-icon sn-icon-move',
         path: move_storage_location_path(@storage_locations.first),
         type: :emit
@@ -56,9 +53,7 @@ module Toolbars
     end
 
     def duplicate_action
-      return unless @single
-
-      return unless can_manage_storage_locations?(current_user.current_team)
+      return unless @single && can_manage_storage_location?(@storage_locations.first)
 
       {
         name: 'duplicate',
@@ -70,9 +65,7 @@ module Toolbars
     end
 
     def delete_action
-      return unless @single
-
-      return unless can_manage_storage_locations?(current_user.current_team)
+      return unless @single && can_manage_storage_location?(@storage_locations.first)
 
       storage_location = @storage_locations.first
 
@@ -87,6 +80,17 @@ module Toolbars
         icon: 'sn-icon sn-icon-delete',
         number_of_items: number_of_items,
         path: storage_location_path(storage_location),
+        type: :emit
+      }
+    end
+
+    def share_action
+      return unless @single && can_share_storage_location?(@storage_locations.first)
+
+      {
+        name: :share,
+        label: I18n.t('storage_locations.index.share'),
+        icon: 'sn-icon sn-icon-shared',
         type: :emit
       }
     end

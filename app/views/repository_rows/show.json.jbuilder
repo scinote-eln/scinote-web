@@ -38,7 +38,19 @@ json.actions do
 end
 
 json.storage_locations do
-  json.locations @repository_row.grouped_storage_locations
+  json.locations(
+    @repository_row.storage_locations.distinct.map do |storage_location|
+      readable = can_read_storage_location?(storage_location)
+
+      {
+        id: storage_location.id,
+        readable: readable,
+        name: readable ? storage_location.name : storage_location.code,
+        metadata: storage_location.metadata,
+        positions: readable ? storage_location.storage_location_repository_rows.where(repository_row: @repository_row) : []
+      }
+    end
+  )
   json.enabled StorageLocation.storage_locations_enabled?
 end
 

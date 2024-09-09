@@ -13,6 +13,7 @@
         <storage-locations-container
           actions-url="<%= actions_toolbar_storage_location_storage_location_repository_rows_path(@storage_location) %>"
           data-source="<%= storage_location_storage_location_repository_rows_path(@storage_location)  %>"
+          :can-manage="<%= can_manage_storage_location?(@storage_location) %>"
           :with-grid="<%= @storage_location.with_grid? %>"
           :grid-size="<%= @storage_location.grid_size.to_json %>"
           :container-id="<%= @storage_location.id %>"

@@ -166,6 +166,7 @@ Rails.application.routes.draw do
 
     resources :user_notifications, only: :index do
       collection do
+        get :filter_groups
         get :unseen_counter
       end
     end
@@ -253,6 +254,13 @@ Rails.application.routes.draw do
       match '*path',
             to: 'teams#routing_error',
             via: [:get, :post, :put, :patch]
+    end
+
+    resources :team_shared_objects, only: [] do
+      collection do
+        post 'update'
+        get 'shareable_teams'
+      end
     end
 
     resources :reports, only: [:index, :new, :create, :update] do
@@ -819,6 +827,7 @@ Rails.application.routes.draw do
         post :duplicate
         post :unassign_rows
         get :available_positions
+        get :shareable_teams
       end
       resources :storage_location_repository_rows, only: %i(index create destroy update) do
         collection do

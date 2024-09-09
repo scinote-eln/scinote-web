@@ -12,7 +12,7 @@ class StorageLocationsController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        storage_locations = Lists::StorageLocationsService.new(current_team, params).call
+        storage_locations = Lists::StorageLocationsService.new(current_user, current_team, params).call
         render json: storage_locations, each_serializer: Lists::StorageLocationSerializer,
                user: current_user, meta: pagination_dict(storage_locations)
       end
@@ -35,8 +35,10 @@ class StorageLocationsController < ApplicationController
 
   def create
     @storage_location = StorageLocation.new(
-      storage_location_params.merge({ team: current_team, created_by: current_user })
+      storage_location_params.merge({ created_by: current_user })
     )
+
+    @storage_location.team = @storage_location.root_storage_location.team
 
     @storage_location.image.attach(params[:signed_blob_id]) if params[:signed_blob_id]
 
@@ -101,7 +103,7 @@ class StorageLocationsController < ApplicationController
       actions:
         Toolbars::StorageLocationsService.new(
           current_user,
-          storage_location_ids: JSON.parse(params[:items]).map { |i| i['id'] }
+          storage_location_ids: JSON.parse(params[:items]).pluck('id')
         ).actions
     }
   end
@@ -114,7 +116,7 @@ class StorageLocationsController < ApplicationController
 
   def storage_location_params
     params.permit(:id, :parent_id, :name, :container, :description,
-                  metadata: [:display_type, dimensions: [], parent_coordinations: []])
+                  metadata: [:display_type, { dimensions: [], parent_coordinations: [] }])
   end
 
   def move_params
@@ -122,16 +124,12 @@ class StorageLocationsController < ApplicationController
   end
 
   def load_storage_location
-    @storage_location = current_team.storage_locations.find_by(id: storage_location_params[:id])
+    @storage_location = StorageLocation.viewable_by_user(current_user).find_by(id: storage_location_params[:id])
     render_404 unless @storage_location
   end
 
   def check_read_permissions
-    if @storage_location.container
-      render_403 unless can_read_storage_location_containers?(current_team)
-    else
-      render_403 unless can_read_storage_locations?(current_team)
-    end
+    render_403 unless can_read_storage_location?(@storage_location)
   end
 
   def check_create_permissions
@@ -143,11 +141,7 @@ class StorageLocationsController < ApplicationController
   end
 
   def check_manage_permissions
-    if @storage_location.container
-      render_403 unless can_manage_storage_location_containers?(current_team)
-    else
-      render_403 unless can_manage_storage_locations?(current_team)
-    end
+    render_403 unless can_manage_storage_location?(@storage_location)
   end
 
   def set_breadcrumbs_items

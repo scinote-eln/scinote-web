@@ -3,6 +3,7 @@
 module Lists
   class StorageLocationSerializer < ActiveModel::Serializer
     include Rails.application.routes.url_helpers
+    include ShareableSerializer
 
     attributes :id, :code, :name, :container, :description, :owned_by, :created_by,
                :created_on, :urls, :metadata, :file_name, :sub_location_count
@@ -46,7 +47,11 @@ module Lists
                  end
       {
         show: show_url,
-        update: storage_location_path(@object)
+        update: storage_location_path(@object),
+        shareable_teams: shareable_teams_team_shared_objects_path(
+          current_user.current_team, object_id: object.id, object_type: object.class.name
+        ),
+        share: team_shared_objects_path(current_user.current_team, object_id: object.id, object_type: object.class.name)
       }
     end
   end

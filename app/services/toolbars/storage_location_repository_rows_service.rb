@@ -27,6 +27,8 @@ module Toolbars
     private
 
     def unassign_action
+      return unless can_manage_storage_location?(@storage_location)
+
       {
         name: 'unassign',
         label: I18n.t('storage_locations.show.toolbar.unassign'),
@@ -37,7 +39,7 @@ module Toolbars
     end
 
     def move_action
-      return unless @single
+      return unless @single && can_manage_storage_location?(@storage_location)
 
       {
         name: 'move',
