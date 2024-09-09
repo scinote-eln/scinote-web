@@ -46,6 +46,12 @@ module Shareable
             ).where.not(team: teams))
         .distinct
     }
+  rescue ActiveRecord::NoDatabaseError,
+         ActiveRecord::ConnectionNotEstablished,
+         ActiveRecord::StatementInvalid,
+         PG::ConnectionBad
+
+    Rails.logger.info('Not connected to database, skipping sharable model initialization.')
   end
 
   def shareable_write?
