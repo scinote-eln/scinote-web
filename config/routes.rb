@@ -828,6 +828,8 @@ Rails.application.routes.draw do
         post :unassign_rows
         get :available_positions
         get :shareable_teams
+        get :export_container
+        post :import_container
       end
       resources :storage_location_repository_rows, only: %i(index create destroy update) do
         collection do
