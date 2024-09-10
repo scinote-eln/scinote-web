@@ -98,6 +98,11 @@ class RepositoryRow < ApplicationRecord
            class_name: 'RepositoryRow',
            source: :parent,
            dependent: :destroy
+  has_many :discarded_storage_location_repository_rows,
+           -> { discarded },
+           class_name: 'StorageLocationRepositoryRow',
+           inverse_of: :repository_row,
+           dependent: :destroy
   has_many :storage_location_repository_rows, inverse_of: :repository_row, dependent: :destroy
   has_many :storage_locations, through: :storage_location_repository_rows
 
