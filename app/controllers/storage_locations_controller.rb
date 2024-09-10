@@ -2,10 +2,10 @@
 
 class StorageLocationsController < ApplicationController
   before_action :check_storage_locations_enabled, except: :unassign_rows
-  before_action :load_storage_location, only: %i(update destroy duplicate move show available_positions unassign_rows)
+  before_action :load_storage_location, only: %i(update destroy duplicate move show available_positions unassign_rows export_container import_container)
   before_action :check_read_permissions, except: %i(index create tree actions_toolbar)
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permissions, only: %i(update destroy duplicate move unassign_rows)
+  before_action :check_manage_permissions, only: %i(update destroy duplicate move unassign_rows import_container)
   before_action :set_breadcrumbs_items, only: %i(index show)
 
   def index
@@ -96,6 +96,25 @@ class StorageLocationsController < ApplicationController
     @storage_location.storage_location_repository_rows.where(id: params[:ids]).discard_all
 
     render json: { status: :ok }
+  end
+
+  def export_container
+    xlsx = StorageLocations::ExportService.new(@storage_location, current_user).to_xlsx
+
+    send_data(
+      xlsx,
+      filename: "#{@storage_location.name.gsub(/\s/, '_')}_export_#{Date.current}.xlsx",
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+  end
+
+  def import_container
+    result = StorageLocations::ImportService.new(@storage_location, params[:file], current_user).import_items
+    if result[:status] == :ok
+      render json: result
+    else
+      render json: result, status: :unprocessable_entity
+    end
   end
 
   def actions_toolbar

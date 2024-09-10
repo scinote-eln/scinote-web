@@ -20,6 +20,7 @@
                 :scrollMode="paginationMode"
                 @assign="assignRow"
                 @move="moveRow"
+                @import="openImportModal = true"
                 @unassign="unassignRows"
                 @tableReloaded="handleTableReload"
                 @selectionChanged="selectedItems = $event"
@@ -35,6 +36,12 @@
         :cellId="cellIdToUnassign"
         @close="openAssignModal = false; this.reloadingTable = true"
       ></AssignModal>
+      <ImportModal
+        v-if="openImportModal"
+        :containerId="containerId"
+        @close="openImportModal = false"
+        @reloadTable="reloadingTable = true"
+      ></ImportModal>
       <ConfirmationModal
         :title="i18n.t('storage_locations.show.unassign_modal.title')"
         :description="storageLocationUnassignDescription"
@@ -53,6 +60,7 @@ import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
 import Grid from './grid.vue';
 import AssignModal from './modals/assign.vue';
+import ImportModal from './modals/import.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import RemindersRender from './renderers/reminders.vue';
 
@@ -63,7 +71,8 @@ export default {
     Grid,
     AssignModal,
     ConfirmationModal,
-    RemindersRender
+    RemindersRender,
+    ImportModal
   },
   props: {
     canManage: {
@@ -92,6 +101,7 @@ export default {
     return {
       reloadingTable: false,
       openEditModal: false,
+      openImportModal: false,
       editModalMode: null,
       editStorageLocation: null,
       objectToMove: null,
@@ -117,7 +127,7 @@ export default {
         field: 'position_formatted',
         headerName: this.i18n.t('storage_locations.show.table.position'),
         sortable: true,
-        notSelectable: true,
+        notSelectable: true
       },
       {
         field: 'reminders',
@@ -156,6 +166,14 @@ export default {
           buttonStyle: 'btn btn-primary'
         });
       }
+
+      left.push({
+        name: 'import',
+        icon: 'sn-icon sn-icon-import',
+        label: this.i18n.t('storage_locations.show.import_modal.import_button'),
+        type: 'emit',
+        buttonStyle: 'btn btn-light'
+      });
 
       return {
         left,

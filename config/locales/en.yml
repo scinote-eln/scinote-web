@@ -2341,7 +2341,7 @@ en:
             linkTo: 'https://knowledgebase.scinote.net/en/knowledge/how-to-add-items-to-an-inventory'
       dragAndDropUpload:
         notSingleFileError: 'Single file import only. Please import one file at a time.'
-        wrongFileTypeError: 'The file has invalid extension (.csv, .xlsx, .txt or .tsv.)'
+        wrongFileTypeError: 'The file has invalid extension (%{extensions}).'
         emptyFileError: 'You have uploaded empty file. There is not much to import.'
         fileTooLargeError: 'File too large. Max file size limit is'
         importText:
@@ -2698,6 +2698,18 @@ en:
         column: 'Column'
         inventory: 'Inventory'
         item: 'Item'
+      import_modal:
+        import_button: 'Import items'
+        title: "Import items to a box"
+        description: "Import items to a box allows for assigning items to a box and updating positions within a grid box. First, export the current box data to download a file listing the items already in the box. Then, edit the exported file to add or update the items you want to place in the box. When importing the file, ensure it includes the ‘Position’ and ‘Item ID’ columns for a successful import."
+        export: "Export"
+        export_button: "Export current box"
+        import: "Import"
+        drag_n_drop: ".xlsx file"
+        errors:
+          invalid_structure: "The imported file content doesn't meet criteria."
+          invalid_position: "Positions in the file must match with the box."
+          invalid_item: "Item ID %{row_id} doesn't exist."
     index:
       head_title: "Locations"
       new_location: "New location"
