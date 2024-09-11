@@ -2745,6 +2745,7 @@ en:
         name_label_container: "Box name"
         image_label_container: "Image of box"
         drag_and_drop_supporting_text: ".png or .jpg file"
+        warning_box_not_empty: "Box dimensions can be updated only when the box is empty."
         description_label: "Description"
         name_placeholder: "Big freezer"
         description_placeholder: "Keep everyone on the same page. You can also use smart annotations."

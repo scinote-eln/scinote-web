@@ -93,7 +93,7 @@ module ModelExporters
       element_json = element.as_json
       case element.orderable_type
       when 'ResultText'
-        element_json['step_text'] = element.orderable.as_json
+        element_json['result_text'] = element.orderable.as_json
       when 'ResultTable'
         element_json['table'] = table(element.orderable.table)
       end

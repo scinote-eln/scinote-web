@@ -6,10 +6,14 @@ module Lists
     include ShareableSerializer
 
     attributes :id, :code, :name, :container, :description, :owned_by, :created_by,
-               :created_on, :urls, :metadata, :file_name, :sub_location_count
+               :created_on, :urls, :metadata, :file_name, :sub_location_count, :is_empty
 
     def owned_by
       object.team.name
+    end
+
+    def is_empty
+      object.empty?
     end
 
     def metadata
