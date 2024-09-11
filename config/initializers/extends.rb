@@ -188,7 +188,7 @@ class Extends
 
   ACTIVITY_SUBJECT_TYPES = %w(
     Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
-    ProjectFolder Asset Step LabelTemplate
+    ProjectFolder Asset Step LabelTemplate StorageLocation StorageLocationRepositoryRow
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -205,7 +205,8 @@ class Extends
     my_module: %i(results protocols),
     result: [:assets],
     protocol: [:steps],
-    step: [:assets]
+    step: [:assets],
+    storage_location: [:storage_location_repository_rows]
   }
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
@@ -495,7 +496,24 @@ class Extends
     task_step_asset_renamed: 305,
     result_asset_renamed: 306,
     protocol_step_asset_renamed: 307,
-    inventory_items_added_or_updated_with_import: 308
+    inventory_items_added_or_updated_with_import: 308,
+    storage_location_created: 309,
+    storage_location_deleted: 310,
+    storage_location_edited: 311,
+    storage_location_moved: 312,
+    storage_location_shared: 313,
+    storage_location_unshared: 314,
+    storage_location_sharing_updated: 315,
+    container_storage_location_created: 316,
+    container_storage_location_deleted: 317,
+    container_storage_location_edited: 318,
+    container_storage_location_moved: 319,
+    container_storage_location_shared: 320,
+    container_storage_location_unshared: 321,
+    container_storage_location_sharing_updated: 322,
+    storage_location_repository_row_created: 323,
+    storage_location_repository_row_deleted: 324,
+    storage_location_repository_row_moved: 325
   }
 
   ACTIVITY_GROUPS = {
@@ -515,7 +533,10 @@ class Extends
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
                           *237..240, *253..256, *279..283, 300, 304, 307],
     team: [92, 94, 93, 97, 104, 244, 245],
-    label_templates: [*216..219]
+    label_templates: [*216..219],
+    storage_locations: [*309..315],
+    container_storage_location: [*316..322],
+    storage_location_repository_rows: [*323..325]
   }
 
   TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository).freeze

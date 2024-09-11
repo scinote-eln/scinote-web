@@ -61,7 +61,11 @@ module Activities
           end
 
           if id
-            obj = const.find id
+            obj = if const.respond_to?(:with_discarded)
+                    const.with_discarded.find id
+                  else
+                    const.find id
+                  end
             @activity.message_items[k] = { type: const.to_s, value: obj.public_send(getter_method).to_s, id: id }
             @activity.message_items[k][:value_for] = getter_method
             @activity.message_items[k][:value_type] = value_type unless value_type.nil?

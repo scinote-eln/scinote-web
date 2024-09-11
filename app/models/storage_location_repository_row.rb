@@ -14,10 +14,17 @@ class StorageLocationRepositoryRow < ApplicationRecord
     validate :ensure_uniq_position
   end
 
+  def human_readable_position
+    return unless metadata['position']
+
+    column_letter = ('A'..'Z').to_a[metadata['position'][0] - 1]
+    row_number = metadata['position'][1]
+
+    "#{column_letter}#{row_number}"
+  end
+
   def position_must_be_present
-    if metadata['position'].blank?
-      errors.add(:base, I18n.t('activerecord.errors.models.storage_location.missing_position'))
-    end
+    errors.add(:base, I18n.t('activerecord.errors.models.storage_location.missing_position')) if metadata['position'].blank?
   end
 
   def ensure_uniq_position

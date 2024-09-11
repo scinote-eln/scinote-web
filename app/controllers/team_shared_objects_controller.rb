@@ -71,7 +71,7 @@ class TeamSharedObjectsController < ApplicationController
     }
   end
 
-  def log_activity(type_of, team_shared_object)
+  def log_activity(type_of)
     # log activity logic
   end
 end
