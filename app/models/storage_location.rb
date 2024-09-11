@@ -53,6 +53,10 @@ class StorageLocation < ApplicationRecord
     storage_location
   end
 
+  def empty?
+    storage_location_repository_rows.count.zero?
+  end
+
   def duplicate!
     ActiveRecord::Base.transaction do
       new_storage_location = dup

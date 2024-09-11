@@ -26,13 +26,13 @@
               </div>
               <span v-if="this.errors.name" class="text-sn-coral text-xs">{{ this.errors.name }}</span>
             </div>
-            <div v-if="editModalMode == 'container'" class="mb-6">
+            <div v-if="editModalMode == 'container'" :title="warningBoxNotEmpty" class="mb-6">
               <label class="sci-label">
                 {{ i18n.t(`storage_locations.index.edit_modal.dimensions_label`) }}
               </label>
               <div class="flex items-center gap-2 mb-4">
                 <div class="sci-radio-container">
-                  <input type="radio" class="sci-radio" :disabled="object.code" v-model="object.metadata.display_type" name="display_type" value="no_grid" >
+                  <input type="radio" class="sci-radio" :disabled="!canChangeGrid" v-model="object.metadata.display_type" name="display_type" value="no_grid" >
                   <span class="sci-radio-label"></span>
                 </div>
                 <span>{{ i18n.t('storage_locations.index.edit_modal.no_grid') }}</span>
@@ -40,16 +40,16 @@
               </div>
               <div class="flex items-center gap-2 mb-4">
                 <div class="sci-radio-container">
-                  <input type="radio" class="sci-radio" :disabled="object.code"  v-model="object.metadata.display_type" name="display_type" value="grid" >
+                  <input type="radio" class="sci-radio" :disabled="!canChangeGrid"  v-model="object.metadata.display_type" name="display_type" value="grid" >
                   <span class="sci-radio-label"></span>
                 </div>
                 <span>{{ i18n.t('storage_locations.index.edit_modal.grid') }}</span>
                 <div class="sci-input-container-v2 !w-28">
-                  <input type="number" :disabled="object.code"  v-model="object.metadata.dimensions[0]" min="1" max="24">
+                  <input type="number" :disabled="!canChangeGrid"  v-model="object.metadata.dimensions[0]" min="1" max="24">
                 </div>
                 <i class="sn-icon sn-icon-close-small"></i>
                 <div class="sci-input-container-v2 !w-28">
-                  <input type="number" :disabled="object.code"  v-model="object.metadata.dimensions[1]" min="1" max="24">
+                  <input type="number" :disabled="!canChangeGrid"  v-model="object.metadata.dimensions[1]" min="1" max="24">
                 </div>
               </div>
             </div>
@@ -133,6 +133,15 @@ export default {
   computed: {
     mode() {
       return this.editStorageLocation ? 'edit' : 'create';
+    },
+    canChangeGrid() {
+      return !this.object.code || this.object.is_empty;
+    },
+    warningBoxNotEmpty() {
+      if (this.canChangeGrid) {
+        return '';
+      }
+      return this.i18n.t('storage_locations.index.edit_modal.warning_box_not_empty');
     },
     validObject() {
       this.errors = {};
