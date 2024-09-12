@@ -21,7 +21,7 @@
                 <input
                   type="text"
                   v-model="object.name"
-                  :placeholder="i18n.t(`storage_locations.index.edit_modal.name_placeholder`)"
+                  :placeholder="i18n.t(`storage_locations.index.edit_modal.name_placeholder_${editModalMode}`)"
                 >
               </div>
               <span v-if="this.errors.name" class="text-sn-coral text-xs">{{ this.errors.name }}</span>

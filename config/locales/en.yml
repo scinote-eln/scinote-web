@@ -2730,6 +2730,7 @@ en:
         shared: "Shared"
         owned_by: "Owned by"
         created_on: "Created on"
+        created_by: "Created by"
         description: "Description"
       filters_modal:
         search_tree: "Look inside locations"
@@ -2747,7 +2748,8 @@ en:
         drag_and_drop_supporting_text: ".png or .jpg file"
         warning_box_not_empty: "Box dimensions can be updated only when the box is empty."
         description_label: "Description"
-        name_placeholder: "Big freezer"
+        name_placeholder_location: "Big freezer"
+        name_placeholder_container: "Box 1"
         description_placeholder: "Keep everyone on the same page. You can also use smart annotations."
         dimensions_label: "Dimensions (rows x columns)"
         no_grid: "No grid"

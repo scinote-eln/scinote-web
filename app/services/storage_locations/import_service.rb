@@ -85,7 +85,7 @@ module StorageLocations
       column_letter = position[0]
       row_number = position[1]
 
-      [column_letter.ord - 64, row_number]
+      [column_letter.ord - 64, row_number.to_i]
     end
 
     def convert_position_number_to_letter(item)
