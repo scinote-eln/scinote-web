@@ -50,9 +50,10 @@
     :repository="duplicateRepository"
     @close="duplicateRepository = null"
     @duplicate="updateTable" />
-  <ShareRepositoryModal
+  <ShareObjectModal
     v-if="shareRepository"
-    :repository="shareRepository"
+    :object="shareRepository"
+    :globalShareEnabled="true"
     @close="shareRepository = null"
     @share="updateTable" />
 </template>
@@ -66,7 +67,7 @@ import ExportRepositoryModal from './modals/export.vue';
 import NewRepositoryModal from './modals/new.vue';
 import EditRepositoryModal from './modals/edit.vue';
 import DuplicateRepositoryModal from './modals/duplicate.vue';
-import ShareRepositoryModal from './modals/share.vue';
+import ShareObjectModal from '../shared/share_modal.vue';
 import DataTable from '../shared/datatable/table.vue';
 import NameRenderer from './renderers/name.vue';
 
@@ -79,8 +80,8 @@ export default {
     NewRepositoryModal,
     EditRepositoryModal,
     DuplicateRepositoryModal,
-    ShareRepositoryModal,
-    NameRenderer
+    NameRenderer,
+    ShareObjectModal
   },
   props: {
     dataSource: {

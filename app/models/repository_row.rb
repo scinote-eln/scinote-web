@@ -98,6 +98,13 @@ class RepositoryRow < ApplicationRecord
            class_name: 'RepositoryRow',
            source: :parent,
            dependent: :destroy
+  has_many :discarded_storage_location_repository_rows,
+           -> { discarded },
+           class_name: 'StorageLocationRepositoryRow',
+           inverse_of: :repository_row,
+           dependent: :destroy
+  has_many :storage_location_repository_rows, inverse_of: :repository_row, dependent: :destroy
+  has_many :storage_locations, through: :storage_location_repository_rows
 
   auto_strip_attributes :name, nullify: false
   validates :name,
@@ -170,6 +177,14 @@ class RepositoryRow < ApplicationRecord
 
   def row_archived?
     self[:archived]
+  end
+
+  def has_reminders?(user)
+    stock_reminders = RepositoryCell.stock_reminder_repository_cells_scope(
+      repository_cells.joins(:repository_column), user)
+    date_reminders = RepositoryCell.date_time_reminder_repository_cells_scope(
+      repository_cells.joins(:repository_column), user)
+    stock_reminders.any? || date_reminders.any?
   end
 
   def archived

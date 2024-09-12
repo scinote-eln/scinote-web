@@ -6,16 +6,16 @@ class ShareableTeamSerializer < ActiveModel::Serializer
   attributes :id, :name, :private_shared_with, :private_shared_with_write
 
   def private_shared_with
-    repository.private_shared_with?(object)
+    model.private_shared_with?(object)
   end
 
   def private_shared_with_write
-    repository.private_shared_with_write?(object)
+    model.private_shared_with_write?(object)
   end
 
   private
 
-  def repository
-    scope[:repository] || @instance_options[:repository]
+  def model
+    scope[:model] || @instance_options[:model]
   end
 end

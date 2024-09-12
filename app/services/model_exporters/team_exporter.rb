@@ -47,10 +47,6 @@ module ModelExporters
         user_assignments: team.user_assignments.map do |ua|
           user_assignment(ua)
         end,
-        notifications: Notification
-          .includes(:user_notifications)
-          .where('user_notifications.user_id': team.users)
-          .map { |n| notification(n) },
         repositories: team.repositories.map { |r| repository(r) },
         tiny_mce_assets: team.tiny_mce_assets.map { |tma| tiny_mce_asset_data(tma) },
         protocols: team.protocols.where(my_module: nil).map do |pr|
@@ -66,15 +62,6 @@ module ModelExporters
         activities: team.activities.where(project_id: nil),
         label_templates: label_templates(team.label_templates)
       }
-    end
-
-    def notification(notification)
-      notification_json = notification.as_json
-      notification_json['type_of'] = Extends::NOTIFICATIONS_TYPES
-                                     .key(notification
-                                          .read_attribute('type_of'))
-                                     .to_s
-      notification_json
     end
 
     def label_templates(templates)
@@ -97,7 +84,6 @@ module ModelExporters
       copy_files([user], :avatar, File.join(@dir_to_export, 'avatars'))
       {
         user: user_json,
-        user_notifications: user.user_notifications,
         user_identities: user.user_identities,
         repository_table_states:
           user.repository_table_states.where(repository: @team.repositories)

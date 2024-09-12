@@ -13,7 +13,8 @@ class ResultSerializer < ActiveModel::Serializer
              :open_vector_editor_context, :comments_count, :assets_view_mode, :storage_limit, :collapsed
 
   def collapsed
-    false
+    result_states = current_user.settings.fetch('result_states', {})
+    result_states[object.id.to_s] == true
   end
 
   def marvinjs_enabled

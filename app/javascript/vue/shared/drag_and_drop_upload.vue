@@ -20,7 +20,7 @@
           {{ i18n.t('repositories.import_records.dragAndDropUpload.importText.firstPart') }}
         </span> {{ i18n.t('repositories.import_records.dragAndDropUpload.importText.secondPart') }}
       </div>
-      <div class="text-sn-grey">
+      <div class="text-sn-grey text-center">
         {{ supportingText }}
       </div>
     </div>
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+/* global GLOBAL_CONSTANTS I18n */
 
 export default {
   name: 'DragAndDropUpload',
@@ -69,7 +70,9 @@ export default {
       // check if it's a correct file type
       const fileExtension = file.name.split('.')[1];
       if (!this.supportedFormats.includes(fileExtension)) {
-        const error = I18n.t('repositories.import_records.dragAndDropUpload.wrongFileTypeError');
+        const error = I18n.t('repositories.import_records.dragAndDropUpload.wrongFileTypeError', {
+          extensions: this.supportedFormats.join(', ')
+        });
         this.$emit('file:error', error);
         return false;
       }

@@ -1,5 +1,5 @@
 # Building stage
-FROM ruby:3.2.2-bookworm AS builder
+FROM ruby:3.2.5-bookworm AS builder
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN \
@@ -23,7 +23,7 @@ COPY . $APP_HOME
 RUN rm -f $APP_HOME/config/application.yml $APP_HOME/production.env
 WORKDIR $APP_HOME
 RUN \
-  --mount=target=$APP_HOME/tmp/bundle,type=cache \
+  --mount=target=/usr/src/app/tmp/bundle,type=cache \
   bundle config set without 'development test' && \
   bundle config set path '/usr/src/app/tmp/bundle' && \
   bundle install --jobs `nproc` && \
@@ -34,14 +34,14 @@ RUN \
 
 RUN \
   --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
-  --mount=type=cache,target=$APP_HOME/node_modules,sharing=locked \
+  --mount=type=cache,target=/usr/src/app/node_modules,sharing=locked \
   DATABASE_URL=postgresql://postgres@db/scinote_production \
   SECRET_KEY_BASE=dummy \
   DEFACE_ENABLED=true \
-  bash -c "rake assets:precompile && rake deface:precompile"
+  bash -c "rake assets:precompile && rake deface:precompile && rm -rf ./tmp/cache"
 
 # Final stage
-FROM ruby:3.2.2-bookworm AS runner
+FROM ruby:3.2.5-bookworm AS runner
 MAINTAINER SciNote <info@scinote.net>
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
@@ -76,6 +76,7 @@ RUN \
   libvips42 \
   graphviz \
   chromium \
+  chromium-sandbox \
   libfile-mimeinfo-perl \
   yarnpkg && \
   /usr/share/nodejs/yarn/bin/yarn add puppeteer@npm:puppeteer-core@^22.15.0 && \
@@ -98,8 +99,12 @@ ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
 ENV PATH=$GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
 
-COPY --from=builder $APP_HOME $APP_HOME
+RUN adduser --uid 1000 scinote
+USER scinote
 
+COPY --from=builder --chown=scinote:scinote $APP_HOME $APP_HOME
+
+ENV CHROMIUM_PATH /usr/bin/chromium
 WORKDIR $APP_HOME
 
 CMD rails s -b 0.0.0.0
