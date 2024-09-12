@@ -127,7 +127,7 @@ export default {
         field: 'position_formatted',
         headerName: this.i18n.t('storage_locations.show.table.position'),
         sortable: true,
-        notSelectable: true
+        cellClass: 'text-sn-blue cursor-pointer'
       },
       {
         field: 'reminders',

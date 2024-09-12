@@ -116,12 +116,7 @@ export default {
         sortable: true
       },
       {
-        field: 'items',
-        headerName: this.i18n.t('storage_locations.index.table.items'),
-        sortable: true
-      },
-      {
-        field: 'shared',
+        field: 'shared_label',
         headerName: this.i18n.t('storage_locations.index.table.shared'),
         sortable: true
       },
@@ -133,6 +128,11 @@ export default {
       {
         field: 'created_on',
         headerName: this.i18n.t('storage_locations.index.table.created_on'),
+        sortable: true
+      },
+      {
+        field: 'created_by',
+        headerName: this.i18n.t('storage_locations.index.table.created_by'),
         sortable: true
       },
       {

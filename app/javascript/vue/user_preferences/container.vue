@@ -41,16 +41,14 @@
       </div>
       <table v-if="notificationsSettings">
         <template v-for="(_subGroups, group) in notificationsGroups" :key="group">
-          <div class="contents">
-            <tr>
-              <td colspan=3 class="pt-6"><h3>{{ i18n.t(`notifications.groups.${group}`) }}</h3></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td class="p-2.5 text-base w-32">{{ i18n.t('notifications.in_app') }}</td>
-              <td class="p-2.5 text-base w-32">{{ i18n.t('notifications.email') }}</td>
-            </tr>
-          </div>
+          <tr>
+            <td colspan=3 class="pt-6"><h3>{{ i18n.t(`notifications.groups.${group}`) }}</h3></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="p-2.5 text-base w-32">{{ i18n.t('notifications.in_app') }}</td>
+            <td class="p-2.5 text-base w-32">{{ i18n.t('notifications.email') }}</td>
+          </tr>
           <template v-for="(_notifications, subGroup, i) in notificationsGroups[group]" :key="subGroup">
             <tr v-if="subGroup !== 'always_on'"
                 class="text-base border-transparent border-b-sn-super-light-grey border-solid"

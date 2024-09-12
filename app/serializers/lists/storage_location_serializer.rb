@@ -36,6 +36,8 @@ module Lists
     end
 
     def sub_location_count
+      return '/' if @object.container
+
       if object.respond_to?(:sub_location_count)
         object.sub_location_count
       else
