@@ -17,30 +17,36 @@ class StorageLocationRepositoryRowsController < ApplicationController
            meta: (pagination_dict(storage_location_repository_row) unless @storage_location.with_grid?)
   end
 
-  def update
-    @storage_location_repository_row.update(storage_location_repository_row_params)
+  def create
+    ActiveRecord::Base.transaction do
+      @storage_location_repository_row = StorageLocationRepositoryRow.new(
+        repository_row: @repository_row,
+        storage_location: @storage_location,
+        metadata: storage_location_repository_row_params[:metadata] || {},
+        created_by: current_user
+      )
 
-    if @storage_location_repository_row.save
-      render json: @storage_location_repository_row,
-             serializer: Lists::StorageLocationRepositoryRowSerializer
-    else
-      render json: @storage_location_repository_row.errors, status: :unprocessable_entity
+      if @storage_location_repository_row.save
+        log_activity(:storage_location_repository_row_created)
+        render json: @storage_location_repository_row,
+               serializer: Lists::StorageLocationRepositoryRowSerializer
+      else
+        render json: @storage_location_repository_row.errors, status: :unprocessable_entity
+      end
     end
   end
 
-  def create
-    @storage_location_repository_row = StorageLocationRepositoryRow.new(
-      repository_row: @repository_row,
-      storage_location: @storage_location,
-      metadata: storage_location_repository_row_params[:metadata] || {},
-      created_by: current_user
-    )
+  def update
+    ActiveRecord::Base.transaction do
+      @storage_location_repository_row.update(storage_location_repository_row_params)
 
-    if @storage_location_repository_row.save
-      render json: @storage_location_repository_row,
-             serializer: Lists::StorageLocationRepositoryRowSerializer
-    else
-      render json: @storage_location_repository_row.errors, status: :unprocessable_entity
+      if @storage_location_repository_row.save
+        log_activity(:storage_location_repository_row_moved)
+        render json: @storage_location_repository_row,
+               serializer: Lists::StorageLocationRepositoryRowSerializer
+      else
+        render json: @storage_location_repository_row.errors, status: :unprocessable_entity
+      end
     end
   end
 
@@ -53,7 +59,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
         metadata: storage_location_repository_row_params[:metadata] || {},
         created_by: current_user
       )
-
+      log_activity(:storage_location_repository_row_moved)
       render json: @storage_location_repository_row,
              serializer: Lists::StorageLocationRepositoryRowSerializer
     rescue ActiveRecord::RecordInvalid => e
@@ -63,10 +69,13 @@ class StorageLocationRepositoryRowsController < ApplicationController
   end
 
   def destroy
-    if @storage_location_repository_row.discard
-      render json: {}
-    else
-      render json: { errors: @storage_location_repository_row.errors.full_messages }, status: :unprocessable_entity
+    ActiveRecord::Base.transaction do
+      if @storage_location_repository_row.discard
+        log_activity(:storage_location_repository_row_deleted)
+        render json: {}
+      else
+        render json: { errors: @storage_location_repository_row.errors.full_messages }, status: :unprocessable_entity
+      end
     end
   end
 
@@ -74,7 +83,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
     render json: {
       actions: Toolbars::StorageLocationRepositoryRowsService.new(
         current_user,
-        items_ids: JSON.parse(params[:items]).map { |i| i['id'] }
+        items_ids: JSON.parse(params[:items]).pluck('id')
       ).actions
     }
   end
@@ -115,5 +124,19 @@ class StorageLocationRepositoryRowsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_storage_location?(@storage_location)
+  end
+
+  def log_activity(type_of, message_items = {})
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: @storage_location.team,
+            subject: @storage_location_repository_row.repository_row,
+            message_items: {
+              storage_location: @storage_location_repository_row.storage_location_id,
+              repository_row: @storage_location_repository_row.repository_row_id,
+              position: @storage_location_repository_row.human_readable_position,
+              user: current_user.id
+            }.merge(message_items))
   end
 end

@@ -21,60 +21,78 @@ class StorageLocationsController < ApplicationController
 
   def show; end
 
-  def update
-    @storage_location.image.purge if params[:file_name].blank?
-    @storage_location.image.attach(params[:signed_blob_id]) if params[:signed_blob_id]
-    @storage_location.update(storage_location_params)
+  def create
+    ActiveRecord::Base.transaction do
+      @storage_location = StorageLocation.new(
+        storage_location_params.merge({ created_by: current_user })
+      )
 
-    if @storage_location.save
-      render json: @storage_location, serializer: Lists::StorageLocationSerializer
-    else
-      render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
+      @storage_location.team = @storage_location.root_storage_location.team || current_team
+
+      @storage_location.image.attach(params[:signed_blob_id]) if params[:signed_blob_id]
+
+      if @storage_location.save
+        log_activity('storage_location_created')
+        render json: @storage_location, serializer: Lists::StorageLocationSerializer
+      else
+        render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
+      end
     end
   end
 
-  def create
-    @storage_location = StorageLocation.new(
-      storage_location_params.merge({ created_by: current_user })
-    )
+  def update
+    ActiveRecord::Base.transaction do
+      @storage_location.image.purge if params[:file_name].blank?
+      @storage_location.image.attach(params[:signed_blob_id]) if params[:signed_blob_id]
+      @storage_location.update(storage_location_params)
 
-    @storage_location.team = @storage_location.root_storage_location.team || current_team
-
-    @storage_location.image.attach(params[:signed_blob_id]) if params[:signed_blob_id]
-
-    if @storage_location.save
-      render json: @storage_location, serializer: Lists::StorageLocationSerializer
-    else
-      render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
+      if @storage_location.save
+        log_activity('storage_location_edited')
+        render json: @storage_location, serializer: Lists::StorageLocationSerializer
+      else
+        render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
+      end
     end
   end
 
   def destroy
-    if @storage_location.discard
-      render json: {}
-    else
-      render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
+    ActiveRecord::Base.transaction do
+      if @storage_location.discard
+        log_activity('storage_location_deleted')
+        render json: {}
+      else
+        render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
+      end
     end
   end
 
   def duplicate
-    new_storage_location = @storage_location.duplicate!
-    if new_storage_location
-      render json: new_storage_location, serializer: Lists::StorageLocationSerializer
-    else
-      render json: { errors: :failed }, status: :unprocessable_entity
+    ActiveRecord::Base.transaction do
+      new_storage_location = @storage_location.duplicate!
+      if new_storage_location
+        @storage_location = new_storage_location
+        log_activity('storage_location_created')
+        render json: @storage_location, serializer: Lists::StorageLocationSerializer
+      else
+        render json: { errors: :failed }, status: :unprocessable_entity
+      end
     end
   end
 
   def move
-    storage_location_destination =
-      if move_params[:destination_storage_location_id] == 'root_storage_location'
-        nil
-      else
-        current_team.storage_locations.find(move_params[:destination_storage_location_id])
-      end
+    ActiveRecord::Base.transaction do
+      original_storage_location = @storage_location.parent
+      destination_storage_location =
+        if move_params[:destination_storage_location_id] == 'root_storage_location'
+          nil
+        else
+          current_team.storage_locations.find(move_params[:destination_storage_location_id])
+        end
 
-    @storage_location.update!(parent: storage_location_destination)
+      @storage_location.update!(parent: destination_storage_location)
+
+      log_activity('storage_location_moved', { storage_location_original: original_storage_location.id, storage_location_destination: destination_storage_location.id })
+    end
 
     render json: { message: I18n.t('storage_locations.index.move_modal.success_flash') }
   rescue StandardError => e
@@ -93,7 +111,11 @@ class StorageLocationsController < ApplicationController
   end
 
   def unassign_rows
-    @storage_location.storage_location_repository_rows.where(id: params[:ids]).discard_all
+    ActiveRecord::Base.transaction do
+      @storage_location_repository_rows = @storage_location.storage_location_repository_rows.where(id: params[:ids])
+      @storage_location_repository_rows.each(&:discard)
+      log_unassign_activities
+    end
 
     render json: { status: :ok }
   end
@@ -204,6 +226,34 @@ class StorageLocationsController < ApplicationController
           storage_location.storage_locations.where(container: [false, params[:container] == 'true'])
         )
       }
+    end
+  end
+
+  def log_activity(type_of, message_items = {})
+    Activities::CreateActivityService
+      .call(activity_type: "#{'container_' if @storage_location.container}#{type_of}",
+            owner: current_user,
+            team: @storage_location.team,
+            subject: @storage_location,
+            message_items: {
+              storage_location: @storage_location.id,
+              user: current_user.id
+            }.merge(message_items))
+  end
+
+  def log_unassign_activities
+    @storage_location_repository_rows.each do |storage_location_repository_row|
+      Activities::CreateActivityService
+        .call(activity_type: :storage_location_repository_row_deleted,
+              owner: current_user,
+              team: @storage_location.team,
+              subject: storage_location_repository_row.repository_row,
+              message_items: {
+                storage_location: storage_location_repository_row.storage_location_id,
+                repository_row: storage_location_repository_row.repository_row_id,
+                position: storage_location_repository_row.human_readable_position,
+                user: current_user.id
+              })
     end
   end
 end

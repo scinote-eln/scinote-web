@@ -108,6 +108,8 @@ module GlobalActivitiesHelper
              else
                project_folder_path(obj, team: obj.team.id)
              end
+    when StorageLocation
+      path = storage_location_path(obj)
     else
       return current_value
     end
