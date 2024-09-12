@@ -30,19 +30,17 @@ module Shareable
       readable = readable_by_user(user).left_outer_joins(:team_shared_objects)
       readable
         .where(team: teams)
-        .or(readable.where(team_shared_objects: { team: teams }))
-        .or(readable
-            .where(
-              if column_names.include?('permission_level')
-                {
-                  permission_level: [
-                    Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
-                    Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]
-                  ]
-                }
-              else
-                {}
-              end
+        .or(where(team_shared_objects: { team: teams }))
+        .or(where(if column_names.include?('permission_level')
+                    {
+                      permission_level: [
+                        Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
+                        Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]
+                      ]
+                    }
+                  else
+                    {}
+                  end
             ).where.not(team: teams))
         .distinct
     }
