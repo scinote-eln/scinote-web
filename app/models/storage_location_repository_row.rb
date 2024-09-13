@@ -28,9 +28,9 @@ class StorageLocationRepositoryRow < ApplicationRecord
   end
 
   def ensure_uniq_position
-    if StorageLocationRepositoryRow.where(storage_location: storage_location)
-                                   .where('metadata @> ?', { position: metadata['position'] }.to_json)
-                                   .where.not(id: id).exists?
+    if storage_location.storage_location_repository_rows
+                       .where("metadata->>'position' = ?", metadata['position'].to_json.gsub(',', ', '))
+                       .where.not(id: id).exists?
       errors.add(:base, I18n.t('activerecord.errors.models.storage_location.not_uniq_position'))
     end
   end
