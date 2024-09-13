@@ -9,7 +9,7 @@ class StorageLocationRepositoryRow < ApplicationRecord
   belongs_to :repository_row, inverse_of: :storage_location_repository_rows
   belongs_to :created_by, class_name: 'User'
 
-  with_options if: -> { storage_location.container && storage_location.metadata['type'] == 'grid' } do
+  with_options if: -> { storage_location.container && storage_location.metadata['display_type'] == 'grid' } do
     validate :position_must_be_present
     validate :ensure_uniq_position
   end
