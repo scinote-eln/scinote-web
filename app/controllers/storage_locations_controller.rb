@@ -133,7 +133,7 @@ class StorageLocationsController < ApplicationController
   def import_container
     result = StorageLocations::ImportService.new(@storage_location, params[:file], current_user).import_items
     if result[:status] == :ok
-      if (result[:assigned_count] + result[:unassigned_count] + result[:updated_count]).positive?
+      if (result[:assigned_count] + result[:unassigned_count]).positive?
         log_activity(
           :storage_location_imported,
           {
