@@ -132,7 +132,7 @@ export default {
       {
         field: 'reminders',
         headerName: this.i18n.t('storage_locations.show.table.reminders'),
-        sortable: true,
+        sortable: false,
         cellRenderer: RemindersRender
       },
       {
@@ -149,7 +149,7 @@ export default {
       {
         field: 'stock',
         headerName: this.i18n.t('storage_locations.show.table.stock'),
-        sortable: true
+        sortable: false
       }];
 
       return columns;
