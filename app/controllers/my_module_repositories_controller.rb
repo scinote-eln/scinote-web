@@ -34,6 +34,8 @@ class MyModuleRepositoriesController < ApplicationController
       repository_rows = datatable_service.repository_rows
                                          .preload(:repository_columns,
                                                   :created_by,
+                                                  :archived_by,
+                                                  :last_modified_by,
                                                   repository_cells: { value: @repository.cell_preload_includes })
       rows_view = 'repository_rows/index'
     end

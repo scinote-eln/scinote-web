@@ -63,6 +63,8 @@ class Extends
 
   REPOSITORY_IMPORT_COLUMN_PRELOADS = %i(repository_list_items repository_status_items repository_checklist_items)
 
+  REPOSITORY_EXTRA_VALUE_SERIALIZERS = {}
+
   # Extra attributes used for search in repositories, 'filed_name' => include_hash
   REPOSITORY_EXTRA_SEARCH_ATTR = {
     RepositoryTextValue: {
