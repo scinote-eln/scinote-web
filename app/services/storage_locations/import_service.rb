@@ -8,7 +8,6 @@ module StorageLocations
       @storage_location = storage_location
       @assigned_count = 0
       @unassigned_count = 0
-      @updated_count = 0
       @sheet = SpreadsheetParser.open_spreadsheet(file)
       @user = user
     end
@@ -73,12 +72,10 @@ module StorageLocations
                            metadata: { position: row[:position] }
                          )
 
-      @assigned_count += 1 if storage_location_repository_row.new_record?
-
-      storage_location_repository_row.update!(
-        repository_row_id: row[:repository_row_id],
-        created_by: storage_location_repository_row.created_by || @user
-      )
+      if storage_location_repository_row.new_record?
+        @assigned_count += 1
+        storage_location_repository_row.update!(created_by: @user)
+      end
     end
 
     def unassign_repository_rows!
