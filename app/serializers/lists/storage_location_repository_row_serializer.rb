@@ -6,7 +6,7 @@ module Lists
     include Rails.application.routes.url_helpers
 
     attributes :created_by, :created_on, :position, :row_id, :row_name, :hidden, :position_formatted, :stock,
-               :have_reminders, :reminders_url
+               :have_reminders, :reminders_url, :row_url
 
     def row_id
       object.repository_row.code
@@ -36,6 +36,10 @@ module Lists
       if object.repository_row.repository.has_stock_management? && !hidden
         object.repository_row.repository_cells.find_by(value_type: 'RepositoryStockValue')&.value&.formatted
       end
+    end
+
+    def row_url
+      repository_repository_row_path(object.repository_row.repository, object.repository_row)
     end
 
     def hidden

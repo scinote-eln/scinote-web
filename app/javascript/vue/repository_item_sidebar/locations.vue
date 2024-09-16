@@ -22,7 +22,9 @@
           <div v-for="(position) in location.positions" :key="position.id">
             <div v-if="position.metadata.position" class="flex items-center font-sm gap-1 uppercase bg-sn-grey-300 rounded pl-1.5 pr-2">
               {{ formatPosition(position.metadata.position) }}
-              <i v-if="repositoryRow.permissions.can_manage" class="sn-icon sn-icon-unlink-italic-s cursor-pointer"></i>
+              <i v-if="repositoryRow.permissions.can_manage"
+                 @click="unassignRow(location.id, position.id)"
+                 class="sn-icon sn-icon-unlink-italic-s cursor-pointer"></i>
             </div>
           </div>
         </div>
@@ -41,8 +43,11 @@
 
 <script>
 import AssignModal from '../storage_locations/modals/assign.vue';
+import axios from '../../packs/custom_axios.js';
+
 import {
-  storage_location_path
+  storage_location_path,
+  unassign_rows_storage_location_path
 } from '../../routes.js';
 
 export default {
@@ -71,6 +76,15 @@ export default {
     },
     numberToLetter(number) {
       return String.fromCharCode(96 + number);
+    },
+    unassignRow(locationId, rowId) {
+      axios.post(unassign_rows_storage_location_path({ id: locationId }), { ids: [rowId] })
+        .then(() => {
+          this.$emit('reloadRow');
+          if (window.StorageLocationsContainer) {
+            window.StorageLocationsContainer.$refs.container.reloadingTable = true;
+          }
+        });
     }
   }
 };

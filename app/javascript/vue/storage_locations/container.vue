@@ -63,6 +63,7 @@ import AssignModal from './modals/assign.vue';
 import ImportModal from './modals/import.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import RemindersRender from './renderers/reminders.vue';
+import ItemNameRenderer from './renderers/item_name_renderer.vue';
 
 export default {
   name: 'StorageLocationsContainer',
@@ -72,7 +73,8 @@ export default {
     AssignModal,
     ConfirmationModal,
     RemindersRender,
-    ImportModal
+    ImportModal,
+    ItemNameRenderer
   },
   props: {
     canManage: {
@@ -144,7 +146,7 @@ export default {
         field: 'row_name',
         headerName: this.i18n.t('storage_locations.show.table.row_name'),
         sortable: true,
-        cellRenderer: this.rowNameRenderer
+        cellRenderer: ItemNameRenderer
       },
       {
         field: 'stock',
@@ -182,16 +184,8 @@ export default {
     }
   },
   methods: {
-    rowNameRenderer(params) {
-      const { row_name: rowName, hidden } = params.data;
-      if (hidden) {
-        return `
-          <span class="text-sn-grey-700">
-            <i class="sn-icon sn-icon-locked-task"></i> ${this.i18n.t('storage_locations.show.hidden')}
-          </span>
-        `;
-      }
-      return rowName;
+    updateTable() {
+      this.reloadingTable = true;
     },
     handleTableReload(items) {
       this.reloadingTable = false;
