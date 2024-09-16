@@ -934,7 +934,7 @@ class TeamImporter
       user_id || find_user(asset.last_modified_by_id)
     asset.team = team
     asset.save!
-    asset.file.attach(io: file, filename: File.basename(file))
+    asset.attach_file_version(io: file, filename: File.basename(file))
     asset.post_process_file
     @asset_mappings[orig_asset_id] = asset.id
     @asset_counter += 1
