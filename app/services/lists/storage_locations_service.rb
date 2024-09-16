@@ -36,6 +36,10 @@ module Lists
 
     private
 
+    def sort_records
+      return
+    end
+
     def shared_sql_select
       shared_write_value = TeamSharedObject.permission_levels['shared_write']
       team_id = @user.current_team.id
