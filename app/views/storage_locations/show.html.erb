@@ -11,6 +11,7 @@
     <div class="content-body" data-e2e="e2e-CO-storageLocations-box">
       <div id="StorageLocationsContainer" class="fixed-content-body">
         <storage-locations-container
+          ref="container"
           actions-url="<%= actions_toolbar_storage_location_storage_location_repository_rows_path(@storage_location) %>"
           data-source="<%= storage_location_storage_location_repository_rows_path(@storage_location)  %>"
           :can-manage="<%= can_manage_storage_location?(@storage_location) %>"
