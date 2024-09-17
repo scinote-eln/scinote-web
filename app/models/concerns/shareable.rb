@@ -30,18 +30,17 @@ module Shareable
       readable = readable_by_user(user).left_outer_joins(:team_shared_objects)
       readable
         .where(team: teams)
-        .or(where(team_shared_objects: { team: teams }))
-        .or(where(if column_names.include?('permission_level')
-                    {
-                      permission_level: [
-                        Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
-                        Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]
-                      ]
-                    }
-                  else
-                    {}
-                  end
-            ).where.not(team: teams))
+        .or(model.where(team_shared_objects: { team: teams }))
+        .or(model.where(if column_names.include?('permission_level')
+                          {
+                            permission_level: [
+                              Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
+                              Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]
+                            ]
+                          }
+                        else
+                          {}
+                        end).where.not(team: teams))
         .distinct
     }
   rescue ActiveRecord::NoDatabaseError,

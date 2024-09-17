@@ -8,10 +8,22 @@ module VersionedAttachments
       has_one_attached name, dependent: :detach
       has_many_attached "previous_#{name.to_s.pluralize}", dependent: :detach
 
-      define_method "attach_#{name}_version" do |*args, **options|
+      define_method :"attach_#{name}_version" do |*args, **options|
         ActiveRecord::Base.transaction(requires_new: true) do
-          __send__("previous_#{name.to_s.pluralize}").attach(__send__(name).blob) if __send__(name).attached?
+          __send__(:"previous_#{name.to_s.pluralize}").attach(__send__(name).blob) if __send__(name).attached?
           __send__(name).attach(*args, **options)
+
+          new_blob = __send__(name).blob
+          new_blob.metadata['created_by_id'] = last_modified_by_id
+          new_blob.save!
+
+          # set version of current latest file if previous versions exist
+          next unless __send__(:"previous_#{name.to_s.pluralize}").any?
+
+          new_version =
+            (__send__(:"previous_#{name.to_s.pluralize}").last.blob.metadata['version'] || 1) + 1
+          new_blob.metadata['version'] = new_version
+          new_blob.save!
         end
       end
     end

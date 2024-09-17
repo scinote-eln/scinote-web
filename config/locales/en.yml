@@ -4005,6 +4005,13 @@ en:
       inline_html: "Large"
       thumbnail_html: "Thumbnail"
       list_html: "List"
+      versions: "Versions"
+    file_versions_modal:
+      title: "Version history"
+      download: "Download"
+      restore: "Restore"
+      size: "Size"
+      restored_from_version: "restored from v%{version}"
     rename_modal:
       title: "Rename file"
       min_length_error: "File name must be at least 1 character long."
