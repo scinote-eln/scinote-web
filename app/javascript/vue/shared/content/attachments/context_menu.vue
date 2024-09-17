@@ -58,8 +58,10 @@
       />
       <FileVersionsModal
         v-if="fileVersionsModal"
-        :url="attachment.attributes.urls.versions"
+        :versionsUrl="attachment.attributes.urls.versions"
+        :restoreVersionUrl="attachment.attributes.urls.restore_version"
         @close="fileVersionsModal = false"
+        @fileVersionRestored="$emit('attachment:versionRestored', $event)"
       />
     </Teleport>
   </div>
