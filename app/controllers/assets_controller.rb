@@ -197,7 +197,7 @@ class AssetsController < ApplicationController
     return render_403 unless can_read_team?(@asset.team)
 
     @asset.last_modified_by = current_user
-    @asset.file.attach(io: params.require(:image), filename: orig_file_name)
+    @asset.attach_file_version(io: params.require(:image), filename: orig_file_name, current_user: current_user)
     @asset.save!
     create_edit_image_activity(@asset, current_user, :finish_editing)
     # release previous image space
@@ -242,9 +242,10 @@ class AssetsController < ApplicationController
 
     # Asset validation
     asset = Asset.new(created_by: current_user, team: current_team)
-    asset.file.attach(io: StringIO.new,
-                      filename: "#{params[:file_name]}.#{params[:file_type]}",
-                      content_type: wopi_content_type(params[:file_type]))
+    asset.attach_file_version(io: StringIO.new,
+                              filename: "#{params[:file_name]}.#{params[:file_type]}",
+                              content_type: wopi_content_type(params[:file_type]),
+                              current_user: current_user)
 
     unless asset.valid?(:wopi_file_creation)
       render json: {
@@ -395,6 +396,13 @@ class AssetsController < ApplicationController
 
   def checksum
     render json: { checksum: @asset.file.blob.checksum }
+  end
+
+  def versions
+    render(
+      json: [@asset.file.blob] +
+            @asset.previous_files.map(&:blob).sort_by { |b| -1 * b.metadata['version'].to_i }
+    )
   end
 
   private
