@@ -9,7 +9,7 @@ module Lists
                :created_on, :urls, :metadata, :file_name, :sub_location_count, :is_empty
 
     def owned_by
-      object.team.name
+      object['team_name']
     end
 
     def is_empty
@@ -28,7 +28,7 @@ module Lists
     end
 
     def created_by
-      object.created_by.full_name
+      object['created_by_full_name']
     end
 
     def created_on
