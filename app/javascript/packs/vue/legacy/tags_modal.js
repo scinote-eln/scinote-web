@@ -10,6 +10,7 @@ const app = createApp({
       myModuleParams: null,
       myModuleUrl: null,
       tagsModalOpen: false,
+      tagDeleted: false
     };
   },
   mounted() {
@@ -35,6 +36,10 @@ const app = createApp({
       this.myModuleParams = null;
       this.myModuleUrl = null;
       this.tagsModalOpen = false;
+
+      if ($('#canvas-container').length && this.tagDeleted) {
+        window.location.reload();
+      }
     },
     syncTags(tags) {
       // My module page
