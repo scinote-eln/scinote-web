@@ -517,7 +517,7 @@ export default {
             this.totalPage = response.data.meta.total_pages;
             this.totalEntries = response.data.meta.total_count;
           }
-          this.$emit('tableReloaded', this.rowData);
+          this.$emit('tableReloaded', this.rowData, { filtered: this.searchValue.length > 0 });
           this.dataLoading = false;
           this.restoreSelection();
 
