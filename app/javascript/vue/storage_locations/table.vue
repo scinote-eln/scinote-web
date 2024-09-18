@@ -112,8 +112,8 @@ export default {
       {
         field: 'sub_location_count',
         headerName: this.i18n.t('storage_locations.index.table.sub_locations'),
-        width: 250,
-        sortable: true
+        sortable: true,
+        cellRenderer: (params) => params.data.sub_location_count
       },
       {
         field: 'shared_label',
@@ -138,7 +138,7 @@ export default {
       {
         field: 'description',
         headerName: this.i18n.t('storage_locations.index.table.description'),
-        sortable: true
+        sortable: false
       }];
 
       return columns;

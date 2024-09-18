@@ -31,6 +31,7 @@ class RepositoryRowsController < ApplicationController
                                         .preload(:repository_columns,
                                                  :created_by,
                                                  :archived_by,
+                                                 :last_modified_by,
                                                  repository_cells: { value: @repository.cell_preload_includes })
                                         .page(page)
                                         .per(per_page)

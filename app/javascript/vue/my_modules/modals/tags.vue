@@ -147,7 +147,7 @@ import ConfirmationModal from '../../shared/confirmation_modal.vue';
 
 export default {
   name: 'TagsModal',
-  emits: ['close', 'tagsLoaded'],
+  emits: ['close', 'tagsLoaded', 'tagDeleted'],
   props: {
     params: {
       required: true
@@ -288,6 +288,8 @@ export default {
           color: tag.attributes.color
         },
         my_module_id: this.params.id
+      }).then(() => {
+        this.$emit('tagsLoaded', this.allTags);
       });
     },
     createTag() {
@@ -309,6 +311,7 @@ export default {
           }
         }).then(() => {
           this.loadAlltags();
+          this.$emit('tagDeleted', tag);
           document.body.style.overflow = 'hidden';
         });
       } else {

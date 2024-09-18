@@ -14,9 +14,15 @@ module Lists
       @records =
         StorageLocation.joins('LEFT JOIN storage_locations AS sub_locations ' \
                               'ON storage_locations.id = sub_locations.parent_id')
+                       .left_joins(:team, :created_by)
                        .viewable_by_user(@user, @team)
                        .select(shared_sql_select)
-                       .select('storage_locations.*, COUNT(sub_locations.id) AS sub_location_count')
+                       .select(
+                         'storage_locations.*,
+                        MAX(teams.name) as team_name,
+                        MAX(users.full_name) as created_by_full_name,
+                        CASE WHEN storage_locations.container THEN -1 ELSE COUNT(sub_locations.id) END AS sub_location_count'
+                       )
                        .group(:id)
     end
 
@@ -35,6 +41,43 @@ module Lists
     end
 
     private
+
+    def sort_records
+      return unless @params[:order]
+
+      sort = "#{order_params[:column]}_#{sort_direction(order_params)}"
+
+      case sort
+      when 'code_ASC'
+        @records = @records.order(id: :asc)
+      when 'code_DESC'
+        @records = @records.order(id: :desc)
+      when 'name_ASC'
+        @records = @records.order(name: :asc)
+      when 'name_DESC'
+        @records = @records.order(name: :desc)
+      when 'sub_location_count_ASC'
+        @records = @records.order(sub_location_count: :asc)
+      when 'sub_location_count_DESC'
+        @records = @records.order(sub_location_count: :desc)
+      when 'owned_by_ASC'
+        @records = @records.order('team_name ASC')
+      when 'owned_by_DESC'
+        @records = @records.order('team_name DESC')
+      when 'shared_label_ASC'
+        @records = @records.order('shared ASC')
+      when 'shared_label_DESC'
+        @records = @records.order('shared DESC')
+      when 'created_on_ASC'
+        @records = @records.order(created_at: :asc)
+      when 'created_on_DESC'
+        @records = @records.order(created_at: :desc)
+      when 'created_by_ASC'
+        @records = @records.order('created_by_full_name ASC')
+      when 'created_by_DESC'
+        @records = @records.order('created_by_full_name DESC')
+      end
+    end
 
     def shared_sql_select
       shared_write_value = TeamSharedObject.permission_levels['shared_write']
@@ -68,7 +111,7 @@ module Lists
       SQL
 
       ActiveRecord::Base.sanitize_sql_array(
-        [case_statement, { team_id: team_id , shared_write_value: shared_write_value }]
+        [case_statement, { team_id: team_id, shared_write_value: shared_write_value }]
       )
     end
   end

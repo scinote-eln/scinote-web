@@ -7,4 +7,4 @@ const app = createApp();
 app.component('StorageLocationsContainer', StorageLocationsContainer);
 app.config.globalProperties.i18n = window.I18n;
 app.use(PerfectScrollbar);
-mountWithTurbolinks(app, '#StorageLocationsContainer');
+window.StorageLocationsContainer = mountWithTurbolinks(app, '#StorageLocationsContainer');
