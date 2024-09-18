@@ -208,7 +208,7 @@ module Reports
 
       if style
         style_keys.each do |key|
-          style_el = style.value.split(';').select { |i| (i.include? key) }[0]
+          style_el = style.value.split(';').find { |i| i.strip.start_with?(key) }
           next unless style_el
 
           value = style_el.split(':')[1].strip if style_el
@@ -259,6 +259,29 @@ module Reports
       }
     end
 
+    def table_cell_styling(elem)
+      style = elem.attributes['style']
+      result = {}
+      style_keys = %w(background-color vertical-align)
+
+      if style
+        style_keys.each do |key|
+          style_el = style.value.split(';').find { |i| (i.include? key) }
+          next unless style_el
+
+          value = style_el.split(':')[1].strip if style_el
+
+          case key
+          when 'background-color'
+            result[:background] = normalized_hex_color(value)
+          when 'vertical-align'
+            result[:vertical_align] = value.to_sym
+          end
+        end
+      end
+      result
+    end
+
     def tiny_mce_table_element(table_element)
       # array of elements
       rows = table_element.css('tbody').first.children.map do |row|
@@ -267,11 +290,13 @@ module Reports
         cells = row.children.map do |cell|
           next unless cell.name == 'td'
 
+          style = table_cell_styling(cell)
           # Parse cell content
           formated_cell = recursive_children(cell.children, [], true)
 
           # Combine text elements to single paragraph
           formated_cell = combine_docx_elements(formated_cell)
+          formated_cell.each { |element| element[:style] = style } if style.present?
           formated_cell
         end.reject(&:blank?)
         { type: 'tr', data: cells }
