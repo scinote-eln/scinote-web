@@ -12,7 +12,9 @@ module Lists
       @records = StorageLocationRepositoryRow.includes(:repository_row).where(storage_location_id: @storage_location_id)
     end
 
-    def filter_records; end
+    def filter_records
+      @records = @records.joins(:repository_row).where('LOWER(repository_rows.name) ILIKE ?', "%#{@params[:search].downcase}%") if @params[:search].present?
+    end
 
     def sort_records
       return unless @params[:order]
