@@ -4009,9 +4009,12 @@ en:
     file_versions_modal:
       title: "Version history"
       download: "Download"
-      restore: "Restore"
+      restore: "Restore this version"
       size: "Size"
       restored_from_version: "restored from v%{version}"
+      original_file: "Original file"
+      enable_button: "Enable"
+      disabled_disclaimer: "This feature is currently disabled"
     rename_modal:
       title: "Rename file"
       min_length_error: "File name must be at least 1 character long."
