@@ -7,29 +7,29 @@
             <i class="sn-icon sn-icon-close"></i>
           </button>
           <h4 class="modal-title truncate !block">
-            {{ i18n.t('repositories.index.modal_share.title', {name: repository.name }) }}
+            {{ i18n.t('modal_share.title', {object_name: object.name }) }}
           </h4>
         </div>
         <div class="modal-body">
           <div class="grid grid-cols-3 gap-2">
             <div class="col-span-2">
-              {{ i18n.t("repositories.index.modal_share.share_with_team") }}
+              {{ i18n.t("modal_share.share_with_team") }}
             </div>
             <div class="text-center">
-              {{ i18n.t("repositories.index.modal_share.can_edit") }}
+              {{ i18n.t("modal_share.can_edit") }}
             </div>
-            <div class="col-span-2 flex items-center h-9 gap-1">
+            <div v-if="globalShareEnabled" class="col-span-2 flex items-center h-9 gap-1">
               <span class="sci-checkbox-container">
                 <input type="checkbox" class="sci-checkbox" v-model="sharedWithAllRead" />
                 <span class="sci-checkbox-label"></span>
               </span>
-              {{ i18n.t("repositories.index.modal_share.all_teams") }}
+              {{ i18n.t("modal_share.all_teams") }}
             </div>
-            <div class="flex justify-center items-center">
+            <div v-if="globalShareEnabled" class="flex justify-center items-center">
               <span v-if="sharedWithAllRead" class="sci-toggle-checkbox-container">
                 <input type="checkbox"
                        class="sci-toggle-checkbox"
-                       :disabled="!repository.shareable_write"
+                       :disabled="!object.shareable_write"
                        v-model="sharedWithAllWrite" />
                 <span class="sci-toggle-checkbox-label"></span>
               </span>
@@ -48,8 +48,7 @@
                       class="sci-toggle-checkbox-container">
                   <input type="checkbox"
                         class="sci-toggle-checkbox"
-                        @change="permission_changes[team.id] = true"
-                        :disabled="!repository.shareable_write"
+                        :disabled="!object.shareable_write"
                         v-model="team.attributes.private_shared_with_write" />
                   <span class="sci-toggle-checkbox-label"></span>
                 </span>
@@ -60,7 +59,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
           <button class="btn btn-primary" @click="submit" type="submit">
-            {{ i18n.t('repositories.index.modal_share.submit') }}
+            {{ i18n.t('modal_share.submit') }}
           </button>
         </div>
       </div>
@@ -71,19 +70,20 @@
 <script>
 /* global HelperModule */
 
-import axios from '../../../packs/custom_axios.js';
-import modalMixin from '../../shared/modal_mixin';
+import axios from '../../packs/custom_axios.js';
+import modalMixin from './modal_mixin';
 
 export default {
-  name: 'ShareRepositoryModal',
+  name: 'ShareObjectModal',
   props: {
-    repository: Object
+    object: Object,
+    globalShareEnabled: { type: Boolean, default: false }
   },
   mixins: [modalMixin],
   data() {
     return {
-      sharedWithAllRead: this.repository.shared_read || this.repository.shared_write,
-      sharedWithAllWrite: this.repository.shared_write,
+      sharedWithAllRead: this.object.shared_read || this.object.shared_write,
+      sharedWithAllWrite: this.object.shared_write,
       shareableTeams: [],
       permission_changes: {}
     };
@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     getTeams() {
-      axios.get(this.repository.urls.shareable_teams).then((response) => {
+      axios.get(this.object.urls.shareable_teams).then((response) => {
         this.shareableTeams = response.data.data;
       });
     },
@@ -101,14 +101,12 @@ export default {
       const data = {
         select_all_teams: this.sharedWithAllRead,
         select_all_write_permission: this.sharedWithAllWrite,
-        share_team_ids: this.shareableTeams.filter((team) => team.attributes.private_shared_with).map((team) => team.id),
-        write_permissions: this.shareableTeams.filter((team) => team.attributes.private_shared_with_write).map((team) => team.id),
-        permission_changes: this.permission_changes
+        team_share_params: this.shareableTeams.map((team) => { return { id: team.id, ...team.attributes } })
       };
-      axios.post(this.repository.urls.share, data).then(() => {
+      axios.post(this.object.urls.share, data).then(() => {
         HelperModule.flashAlertMsg(this.i18n.t(
-          'repositories.index.modal_share.success_message',
-          { inventory_name: this.repository.name }
+          'modal_share.success_message',
+          { object_name: this.object.name }
         ), 'success');
         this.$emit('share');
       });

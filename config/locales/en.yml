@@ -261,6 +261,12 @@ en:
           attributes:
             text: Text is too long
             position: "Position has already been taken by another item in the checklist"
+        storage_location:
+          missing_position: 'Missing position metadata'
+          not_uniq_position: 'Position already taken'
+          attributes:
+            parent_storage_location: "Storage location cannot be parent to itself"
+            parent_storage_location_child: "Storage location cannot be moved to it's child"
   storage:
     limit_reached: "Storage limit has been reached."
   helpers:
@@ -342,6 +348,8 @@ en:
     templates: "Templates"
     protocol: "Protocol"
     label: "Label"
+    items: "Items"
+    locations: "Locations"
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
@@ -2010,14 +2018,6 @@ en:
         name_placeholder: "My inventory"
         submit: "Create"
         success_flash_html: "Inventory <strong>%{name}</strong> successfully created."
-      modal_share:
-        title: "Share Inventory"
-        submit: "Save sharing options"
-        share_with_team: "Share with Team"
-        can_edit: "Can Edit"
-        all_teams: "All teams (current & new)"
-        all_teams_tooltip: "This will disable individual team settings"
-        success_message: "Selected sharing options for the Inventory %{inventory_name} have been saved."
       export:
         notification:
           error:
@@ -2347,7 +2347,7 @@ en:
             linkTo: 'https://knowledgebase.scinote.net/en/knowledge/how-to-add-items-to-an-inventory'
       dragAndDropUpload:
         notSingleFileError: 'Single file import only. Please import one file at a time.'
-        wrongFileTypeError: 'The file has invalid extension (.csv, .xlsx, .txt or .tsv.)'
+        wrongFileTypeError: 'The file has invalid extension (%{extensions}).'
         emptyFileError: 'You have uploaded empty file. There is not much to import.'
         fileTooLargeError: 'File too large. Max file size limit is'
         importText:
@@ -2614,7 +2614,12 @@ en:
       custom_columns_label: 'Custom columns'
       relationships_label: 'Relationships'
       assigned_label: 'Assigned'
+      locations_label: 'Locations'
       QR_label: 'QR'
+    locations:
+      title: 'Locations (%{count})'
+      container: 'Box'
+      assign: 'Assign new location'
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
@@ -2669,6 +2674,115 @@ en:
   repository_ledger_records:
     errors:
       my_module_references_missing: 'Task references are not set'
+  storage_locations:
+    container: 'box'
+    location: 'location'
+    show:
+      hidden: "Private item"
+      table:
+        position: "Position"
+        reminders: "Reminders"
+        row_id: "Item ID"
+        row_name: "Name"
+        stock: "Stock"
+      toolbar:
+        assign: 'Assign item'
+        unassign: 'Unassign'
+        move: 'Move'
+      unassign_modal:
+        title: 'Unassign location'
+        description: 'Are you sure you want to remove %{items} item(s) from their current storage location?'
+        button: 'Unassign'
+      assign_modal:
+        assign_title: 'Assign position'
+        move_title: 'Move item'
+        assign_description: 'Select an item to assign it to a location.'
+        move_description: 'Select a new location for your item.'
+        assign_action: 'Assign'
+        move_action: 'Move'
+        row: 'Row'
+        column: 'Column'
+        inventory: 'Inventory'
+        item: 'Item'
+      import_modal:
+        import_button: 'Import items'
+        title: "Import items to a box"
+        description: "Import items to a box allows for assigning items to a box and updating positions within a grid box. First, export the current box data to download a file listing the items already in the box. Then, edit the exported file to add or update the items you want to place in the box. When importing the file, ensure it includes the ‘Position’ and ‘Item ID’ columns for a successful import."
+        export: "Export"
+        export_button: "Export current box"
+        import: "Import"
+        drag_n_drop: ".xlsx file"
+        errors:
+          invalid_structure: "The imported file content doesn't meet criteria."
+          invalid_position: "Positions in the file must match with the box."
+          invalid_item: "Item ID %{row_id} doesn't exist."
+    index:
+      head_title: "Locations"
+      new_location: "New location"
+      new_container: "New box"
+      duplicate:
+        success_message: "Location was successfully duplicated."
+      toolbar:
+        edit: 'Edit'
+        move: 'Move'
+        duplicate: 'Duplicate'
+        delete: 'Delete'
+      table:
+        name: "Location name"
+        id: "ID"
+        sub_locations: "Sub-locations"
+        items: "Items"
+        free_spaces: "Free spaces"
+        shared: "Shared"
+        owned_by: "Owned by"
+        created_on: "Created on"
+        created_by: "Created by"
+        description: "Description"
+      filters_modal:
+        search_tree: "Look inside locations"
+      edit_modal:
+        title_create_location: "Create new location"
+        title_create_container: "Create new box"
+        title_edit_location: "Edit location"
+        title_edit_container: "Edit box"
+        description_create_location: "Fill in the fields and create a new location."
+        description_create_container: "Fill in the fields to create a new box. Defining the box dimensions allows you to control the number of available spaces for placing inventory items."
+        name_label_location: "Location name"
+        image_label_location: "Image of location"
+        name_label_container: "Box name"
+        image_label_container: "Image of box"
+        drag_and_drop_supporting_text: ".png or .jpg file"
+        warning_box_not_empty: "Box dimensions can be updated only when the box is empty."
+        description_label: "Description"
+        name_placeholder_location: "Big freezer"
+        name_placeholder_container: "Box 1"
+        description_placeholder: "Keep everyone on the same page. You can also use smart annotations."
+        dimensions_label: "Dimensions (rows x columns)"
+        no_grid: "No grid"
+        grid: "Grid"
+        no_grid_tooltip: "You can assign unlimited items to the “No-grid” box but they do not have assigned position."
+        success_message:
+          create_location: "Location %{name} was successfully created."
+          create_container: "Box %{name} was successfully created."
+          edit_location: "Location %{name} was successfully updated."
+          edit_container: "Box %{name} was successfully updated."
+        errors:
+          max_length: "is too long (maximum is %{max_length} characters)"
+      move_modal:
+        title: 'Move %{name}'
+        description: 'Select where you want to move %{name}.'
+        search_header: 'Locations'
+        success_flash: "You have successfully moved the selected location/box to another location."
+        error_flash: "An error occurred. The selected location/box has not been moved."
+        placeholder:
+          find_storage_locations: 'Find location'
+      delete_modal:
+        title: 'Delete a %{type}'
+        description_1_html: "You're about to delete <b>%{name}</b>. This action will delete the %{type}. <b>%{num_of_items}</b> items inside will lose their assigned positions."
+        description_2_html: '<b>Are you sure you want to delete it?</b>'
+        success_message: "%{type} %{name} successfully deleted."
+      share: "Share"
+
   libraries:
     manange_modal_column_index:
       title: "Manage columns"
@@ -3913,6 +4027,10 @@ en:
       body_text_html: "The specified application for accessing the <b>%{file_name}</b> is not preconfigured. To successfully open this file, please set up the appropriate application in your local environment beforehand.</p>"
       understand_button: "I understand"
       set_up_app: "Set up an application to open this file"
+    restricted_extension_modal:
+      title: "Open file - Security warning"
+      body: "This file type appears to be executable and can potentially harm your computer. It cannot be opened with SciNote Edit. To open the file please download it manually."
+      action: "I understand"
     update_version_modal:
       title: "Update required"
       body_text_html: "The current version of the SciNote Edit application is no longer supported. To ensure a seamless and secure user experience, we recommend updating to the latest version."
@@ -4309,6 +4427,7 @@ en:
     labels: "Label"
     teams: "All Teams"
     addons: "Add-ons"
+    locations: "Locations"
     label_printer: "Label printer"
     fluics_printer: "Fluics printer"
 
@@ -4419,6 +4538,15 @@ en:
     canvas_view: "Canvas view"
     active_state: "Active state"
     archived_state: "Archived state"
+
+  modal_share:
+    title: "Share %{object_name}"
+    submit: "Save sharing options"
+    share_with_team: "Share with Team"
+    can_edit: "Can Edit"
+    all_teams: "All teams (current & new)"
+    all_teams_tooltip: "This will disable individual team settings"
+    success_message: "Selected sharing options for the %{object_name} have been saved."
 
   errors:
     general: "Something went wrong."

@@ -10,18 +10,17 @@ class RepositoriesController < ApplicationController
   include MyModulesHelper
 
   before_action :load_repository, except: %i(index create create_modal sidebar archive restore actions_toolbar
-                                             export_modal export_repositories)
-  before_action :load_repositories, only: :index
+                                             export_modal export_repositories list)
+  before_action :load_repositories, only: %i(index list)
   before_action :load_repositories_for_archiving, only: :archive
   before_action :load_repositories_for_restoring, only: :restore
-  before_action :check_view_all_permissions, only: %i(index sidebar)
+  before_action :check_view_all_permissions, only: %i(index sidebar list)
   before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet
                                                     import_records sidebar archive restore actions_toolbar
-                                                    export_modal export_repositories)
+                                                    export_modal export_repositories list)
   before_action :check_manage_permissions, only: %i(rename_modal update)
   before_action :check_delete_permissions, only: %i(destroy destroy_modal)
   before_action :check_archive_permissions, only: %i(archive restore)
-  before_action :check_share_permissions, only: :share_modal
   before_action :check_create_permissions, only: %i(create_modal create)
   before_action :check_copy_permissions, only: %i(copy_modal copy)
   before_action :set_inline_name_editing, only: %i(show)
@@ -42,6 +41,16 @@ class RepositoriesController < ApplicationController
                meta: pagination_dict(repositories)
       end
     end
+  end
+
+  def list
+    results = @repositories
+    results = results.name_like(params[:query]) if params[:query].present?
+    render json: { data: results.map { |r| [r.id, r.name] } }
+  end
+
+  def rows_list
+    render json: { data: @repository.repository_rows.map { |r| [r.id, r.name] } }
   end
 
   def sidebar
@@ -99,15 +108,6 @@ class RepositoriesController < ApplicationController
     render json: {
       html: render_to_string(partial: 'create_repository_modal', formats: :html)
     }
-  end
-
-  def share_modal
-    render json: { html: render_to_string(partial: 'share_repository_modal', formats: :html) }
-  end
-
-  def shareable_teams
-    teams = current_user.teams.order(:name) - [@repository.team]
-    render json: teams, each_serializer: ShareableTeamSerializer, repository: @repository
   end
 
   def hide_reminders
@@ -520,10 +520,6 @@ class RepositoriesController < ApplicationController
 
   def check_delete_permissions
     render_403 unless can_delete_repository?(@repository)
-  end
-
-  def check_share_permissions
-    render_403 unless can_share_repository?(@repository)
   end
 
   def repository_params

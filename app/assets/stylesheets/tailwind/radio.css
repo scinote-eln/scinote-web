@@ -1,0 +1,42 @@
+@layer components {
+
+  .sci-radio-container {
+    @apply inline-block h-4 w-4 relative;
+  }
+
+  input[type="radio"].sci-radio {
+    @apply cursor-pointer shrink-0 h-4 w-4 m-0 opacity-0 relative z-[2];
+  }
+
+  input[type="radio"].sci-radio + .sci-radio-label {
+    @apply inline-block shrink-0 h-4 w-4 absolute left-0;
+  }
+
+  input[type="radio"].sci-radio + .sci-radio-label::before {
+    @apply border-[1px] border-solid border-sn-black rounded-full text-white text-center transition-all
+           h-4 w-4 left-0 absolute;
+    content: "";
+  }
+
+  input[type="radio"].sci-radio + .sci-radio-label::after{
+    @apply bg-white rounded-full text-white text-center transition-all
+            absolute w-2.5 h-2.5 top-[3px] left-[3px] ;
+    content: "";
+  }
+
+  input[type="radio"].sci-radio:checked + .sci-radio-label::before {
+    @apply !border-sn-blue;
+  }
+
+  input[type="radio"].sci-radio:checked + .sci-radio-label::after {
+    @apply !bg-sn-science-blue;
+  }
+
+  input[type="radio"].sci-radio:disabled + .sci-radio-label::before {
+    @apply !border-sn-sleepy-grey;
+  }
+
+  input[type="radio"].sci-radio:checked:disabled + .sci-radio-label::after {
+    @apply !bg-sn-sleepy-grey;
+  }
+}

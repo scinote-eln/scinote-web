@@ -50,9 +50,10 @@
     :repository="duplicateRepository"
     @close="duplicateRepository = null"
     @duplicate="updateTable" />
-  <ShareRepositoryModal
+  <ShareObjectModal
     v-if="shareRepository"
-    :repository="shareRepository"
+    :object="shareRepository"
+    :globalShareEnabled="true"
     @close="shareRepository = null"
     @share="updateTable" />
 </template>
@@ -66,8 +67,9 @@ import ExportRepositoryModal from './modals/export.vue';
 import NewRepositoryModal from './modals/new.vue';
 import EditRepositoryModal from './modals/edit.vue';
 import DuplicateRepositoryModal from './modals/duplicate.vue';
-import ShareRepositoryModal from './modals/share.vue';
+import ShareObjectModal from '../shared/share_modal.vue';
 import DataTable from '../shared/datatable/table.vue';
+import NameRenderer from './renderers/name.vue';
 
 export default {
   name: 'RepositoriesTable',
@@ -78,7 +80,8 @@ export default {
     NewRepositoryModal,
     EditRepositoryModal,
     DuplicateRepositoryModal,
-    ShareRepositoryModal
+    NameRenderer,
+    ShareObjectModal
   },
   props: {
     dataSource: {
@@ -138,7 +141,7 @@ export default {
         headerName: this.i18n.t('libraries.index.table.name'),
         sortable: true,
         notSelectable: true,
-        cellRenderer: this.nameRenderer
+        cellRenderer: 'NameRenderer'
       },
       {
         field: 'code',
@@ -277,23 +280,6 @@ export default {
     share(_event, rows) {
       const [repository] = rows;
       this.shareRepository = repository;
-    },
-    // Renderers
-    nameRenderer(params) {
-      const {
-        name,
-        urls,
-        shared,
-        ishared
-      } = params.data;
-      let sharedIcon = '';
-      if (shared || ishared) {
-        sharedIcon = '<i class="fas fa-users"></i>';
-      }
-      return `<a class="hover:no-underline flex items-center gap-1"
-                 title="${name}" href="${urls.show}">
-                 <span class="truncate">${sharedIcon}${name}</span>
-              </a>`;
     }
   }
 };

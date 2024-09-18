@@ -6,6 +6,8 @@ module RepositoryDatatableHelper
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
     has_stock_management = repository.has_stock_management?
+    stock_management_column_exists = repository.repository_columns.stock_type.exists?
+    repository_row_connections_enabled = Repository.repository_row_connections_enabled?
     reminders_enabled = Repository.reminders_enabled?
     repository_rows = reminders_enabled ? with_reminders_status(repository_rows, repository) : repository_rows
     stock_managable = has_stock_management && !options[:disable_stock_management] &&
@@ -53,11 +55,6 @@ module RepositoryDatatableHelper
           serialize_repository_cell_value(cell, team, repository, reminders_enabled: reminders_enabled)
       end
 
-      if repository.repository_columns.stock_type.exists?
-        stock_cell = record.repository_cells.find { |cell| cell.value_type == 'RepositoryStockValue' }
-        row['stock'] = serialize_repository_cell_value(record.repository_stock_cell, team, repository) if stock_cell.present?
-      end
-
       if has_stock_management
         stock_cell = record.repository_cells.find { |cell| cell.value_type == 'RepositoryStockValue' }
 
@@ -98,6 +95,9 @@ module RepositoryDatatableHelper
             }
           }
         end
+      elsif stock_management_column_exists
+        stock_cell = record.repository_cells.find { |cell| cell.value_type == 'RepositoryStockValue' }
+        row['stock'] = serialize_repository_cell_value(record.repository_stock_cell, team, repository) if stock_cell.present?
       end
 
       row
@@ -274,7 +274,27 @@ module RepositoryDatatableHelper
   end
 
   def serialize_repository_cell_value(cell, team, repository, options = {})
-    serializer_class = "RepositoryDatatable::#{cell.repository_column.data_type}Serializer".constantize
+    # case/when is used because it is much faster then .constantize
+    serializer_class =
+      case cell.repository_column.data_type
+      when 'RepositoryTextValue' then RepositoryDatatable::RepositoryTextValueSerializer
+      when 'RepositoryNumberValue' then RepositoryDatatable::RepositoryNumberValueSerializer
+      when 'RepositoryListValue' then RepositoryDatatable::RepositoryListValueSerializer
+      when 'RepositoryChecklistValue' then RepositoryDatatable::RepositoryChecklistValueSerializer
+      when 'RepositoryStatusValue' then RepositoryDatatable::RepositoryStatusValueSerializer
+      when 'RepositoryTimeValue' then RepositoryDatatable::RepositoryTimeValueSerializer
+      when 'RepositoryDateValue' then RepositoryDatatable::RepositoryDateValueSerializer
+      when 'RepositoryDateTimeValue' then RepositoryDatatable::RepositoryDateTimeValueSerializer
+      when 'RepositoryDateRangeValue' then RepositoryDatatable::RepositoryDateRangeValueSerializer
+      when 'RepositoryTimeRangeValue' then RepositoryDatatable::RepositoryTimeRangeValueSerializer
+      when 'RepositoryDateTimeRangeValue' then RepositoryDatatable::RepositoryDateTimeRangeValueSerializer
+      when 'RepositoryAssetValue' then RepositoryDatatable::RepositoryAssetValueSerializer
+      when 'RepositoryStockValue' then RepositoryDatatable::RepositoryStockValueSerializer
+      when 'RepositoryStockConsumptionValue' then RepositoryDatatable::RepositoryStockConsumptionValueSerializer
+      else
+        Extends::REPOSITORY_EXTRA_VALUE_SERIALIZERS[cell.value_type]
+      end
+
     serializer_class.new(
       cell.value,
       scope: {
@@ -337,9 +357,5 @@ module RepositoryDatatableHelper
 
   def display_stock_warnings?(repository)
     !repository.is_a?(RepositorySnapshot)
-  end
-
-  def repository_row_connections_enabled
-    Repository.repository_row_connections_enabled?
   end
 end

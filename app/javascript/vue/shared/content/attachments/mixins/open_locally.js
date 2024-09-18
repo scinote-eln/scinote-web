@@ -1,7 +1,10 @@
+/* global GLOBAL_CONSTANTS */
+
 import axios from '../../../../../packs/custom_axios.js';
 import { satisfies } from 'compare-versions';
 import editLaunchingApplicationModal from '../../modal/edit_launching_application_modal.vue';
 import NoPredefinedAppModal from '../../modal/no_predefined_app_modal.vue';
+import RestrictedExtensionModal from '../../modal/restricted_extension_modal.vue';
 import UpdateVersionModal from '../../modal/update_version_modal.vue';
 
 export default {
@@ -10,15 +13,17 @@ export default {
       localAppName: null,
       scinoteEditRunning: null,
       showNoPredefinedAppModal: false,
+      showRestrictedExtensionModal: false,
       showUpdateVersionModal: false,
       editAppModal: false,
-      pollingInterval: null,
+      pollingInterval: null
     };
   },
   components: {
     editLaunchingApplicationModal,
     NoPredefinedAppModal,
-    UpdateVersionModal
+    UpdateVersionModal,
+    RestrictedExtensionModal
   },
   computed: {
     attributes() {
@@ -93,8 +98,15 @@ export default {
       }
     },
     async openLocally() {
+      const restrictedExtension = GLOBAL_CONSTANTS.SCINOTE_EDIT_RESTRICTED_EXTENSIONS.includes(
+        this.attributes.file_extension.toUpperCase()
+      );
+
       if (this.isWrongVersion(window.scinoteEditVersion)) {
         this.showUpdateVersionModal = true;
+        return;
+      } else if (restrictedExtension) {
+        this.showRestrictedExtensionModal = true;
         return;
       } else if (this.localAppName === null) {
         this.showNoPredefinedAppModal = true;

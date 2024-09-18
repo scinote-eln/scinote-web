@@ -187,6 +187,9 @@ class Activity < ApplicationRecord
     when Asset
       breadcrumbs[:asset] = subject.blob.filename.to_s
       generate_breadcrumb(subject.result || subject.step || subject.repository_cell.repository_row.repository)
+    when StorageLocation
+      breadcrumbs[:storage_location] = subject.name
+      generate_breadcrumb(subject.team)
     end
   end
 

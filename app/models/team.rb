@@ -72,6 +72,7 @@ class Team < ApplicationRecord
            source_type: 'RepositoryBase',
            dependent: :destroy
   has_many :shareable_links, inverse_of: :team, dependent: :destroy
+  has_many :storage_locations, dependent: :destroy
 
   attr_accessor :without_templates
 

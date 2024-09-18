@@ -33,6 +33,10 @@
         :fileName="attachment.attributes.file_name"
         @close="showNoPredefinedAppModal = false"
       />
+      <RestrictedExtensionModal
+        v-if="showRestrictedExtensionModal"
+        @close="showRestrictedExtensionModal = false"
+      />
       <editLaunchingApplicationModal
         v-if="editAppModal"
         :fileName="attachment.attributes.file_name"

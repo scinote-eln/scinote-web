@@ -1,0 +1,25 @@
+<% provide(:head_title, t("storage_locations.index.head_title")) %>
+<% provide(:container_class, "no-second-nav-container") %>
+
+<% if current_team %>
+  <div class="content-pane with-grey-background flexible">
+    <div class="content-header">
+      <div class="title-row">
+        <h1><%= t('storage_locations.index.head_title') %></h1>
+      </div>
+    </div>
+    <div class="content-body " data-e2e="e2e-CO-storageLocations">
+      <div id="storageLocationsTable" class="fixed-content-body">
+        <storage-locations
+          actions-url="<%= actions_toolbar_storage_locations_path(current_team) %>"
+          data-source="<%= storage_locations_path(format: :json, parent_id: params[:parent_id]) %>"
+          direct-upload-url="<%= rails_direct_uploads_url %>"
+          create-location-url="<%= storage_locations_path(parent_id: params[:parent_id]) if can_create_storage_locations?(current_team) %>"
+          create-location-instance-url="<%= storage_locations_path(parent_id: params[:parent_id]) if can_create_storage_location_containers?(current_team) %>"
+        />
+      </div>
+    </div>
+  </div>
+
+  <%= javascript_include_tag 'vue_storage_locations_table' %>
+<% end %>
