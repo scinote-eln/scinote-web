@@ -399,13 +399,23 @@ class AssetsController < ApplicationController
   end
 
   def versions
+    blobs =
+      [@asset.file.blob] +
+      @asset.previous_files.map(&:blob).sort_by { |b| -1 * b.metadata['version'].to_i }[0..(VersionedAttachments.enabled? ? -1 : 1)]
     render(
-      json: [@asset.file.blob] +
-            @asset.previous_files.map(&:blob).sort_by { |b| -1 * b.metadata['version'].to_i }
+      json: ActiveModel::SerializableResource.new(
+        blobs,
+        each_serializer: ActiveStorage::BlobSerializer
+      ).as_json.merge(
+        enabled: VersionedAttachments.enabled?,
+        enable_url: ENV.fetch('SCINOTE_FILE_VERSIONING_ENABLE_URL', nil)
+      )
     )
   end
 
   def restore_version
+    render_403 unless VersionedAttachments.enabled?
+
     @asset.restore_file_version(params[:version].to_i)
     render json: @asset.file.blob
   end

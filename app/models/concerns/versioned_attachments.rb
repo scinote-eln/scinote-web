@@ -46,4 +46,10 @@ module VersionedAttachments
       end
     end
   end
+
+  module_function
+
+  def enabled?
+    ApplicationSettings.instance.values['storage_locations_enabled']
+  end
 end

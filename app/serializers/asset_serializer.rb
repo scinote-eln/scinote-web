@@ -152,11 +152,11 @@ class AssetSerializer < ActiveModel::Serializer
         duplicate: asset_duplicate_path(object),
         move_targets: asset_move_tagets_path(object),
         move: asset_move_path(object),
-        rename: asset_rename_path(object),
-        restore_version: asset_restore_version_path(object)
+        rename: asset_rename_path(object)
       )
     end
 
+    urls[:restore_version] = asset_restore_version_path(object) if VersionedAttachments.enabled?
     urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)
 
     if can_manage_asset?(user, object) && can_open_asset_locally?(user, object)
