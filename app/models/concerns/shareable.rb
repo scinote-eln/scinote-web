@@ -27,21 +27,23 @@ module Shareable
     end
 
     scope :viewable_by_user, lambda { |user, teams = user.current_team|
-      readable = readable_by_user(user).left_outer_joins(:team_shared_objects)
-      readable
-        .where(team: teams)
-        .or(model.where(team_shared_objects: { team: teams }))
-        .or(model.where(if column_names.include?('permission_level')
-                          {
-                            permission_level: [
-                              Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
-                              Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]
-                            ]
-                          }
-                        else
-                          {}
-                        end).where.not(team: teams))
-        .distinct
+      readable_ids = readable_by_user(user).pluck(:id)
+      shared_with_team_ids = joins(:team_shared_objects, :team).where(team_shared_objects: { team: teams }).pluck(:id)
+      globally_shared_ids =
+        if column_names.include?('permission_level')
+          joins(:team).where(
+            {
+              permission_level: [
+                Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
+                Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]
+              ]
+            }
+          ).pluck(:id)
+        else
+          none.pluck(:id)
+        end
+
+      where(id: (readable_ids + shared_with_team_ids + globally_shared_ids).uniq)
     }
   rescue ActiveRecord::NoDatabaseError,
          ActiveRecord::ConnectionNotEstablished,
