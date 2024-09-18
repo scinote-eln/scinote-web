@@ -54,7 +54,7 @@
             <div v-if="!enabled" class="absolute bottom-0 w-full h-[150px] bg-gradient-to-t from-white to-transparent"></div>
           </div>
           <div v-else class="sci-loader"></div>
-          <div v-if="!enabled" class="bg-sn-super-light-blue p-4 rounded flex items-start">
+          <div v-if="fileVersions && !enabled" class="bg-sn-super-light-blue p-4 rounded flex items-start">
             <div class="mr-2">
               <i class="sn-icon sn-icon-upgrade"></i>
             </div>
@@ -68,7 +68,7 @@
           <button type='button' class='btn btn-secondary' @click="close">
             {{ i18n.t('general.cancel') }}
           </button>
-          <a v-if="!enabled" :href="enableUrl" class='btn btn-primary' target="_blank">
+          <a v-if="fileVersions && !enabled" :href="enableUrl" class='btn btn-primary' target="_blank">
             {{ i18n.t('assets.file_versions_modal.enable_button') }}
           </a>
         </div>
