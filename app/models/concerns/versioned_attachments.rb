@@ -26,6 +26,24 @@ module VersionedAttachments
           new_blob.save!
         end
       end
+
+      define_method :"restore_#{name}_version" do |version|
+        ActiveRecord::Base.transaction(requires_new: true) do
+          blob = __send__(:"previous_#{name.to_s.pluralize}").map(&:blob).find do |b|
+            (b.metadata['version'] || 1) == version
+          end
+
+          blob.open do |tmp_file|
+            new_blob = ActiveStorage::Blob.create_and_upload!(
+              io: tmp_file,
+              filename: blob.filename,
+              metadata: blob.metadata.merge({ 'restored_from_version' => version })
+            )
+
+            __send__(:"attach_#{name}_version", new_blob)
+          end
+        end
+      end
     end
   end
 end

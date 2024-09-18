@@ -28,7 +28,7 @@
 
               <div class="basis-1/4 flex justify-end">
                 <a class="btn btn-icon p-0" :href="fileVersion.attributes.url" target="_blank"><i class="sn-icon sn-icon-export"></i></a>
-                <a class="btn btn-icon p-0 mx-3"><i class="sn-icon sn-icon-restore"></i></a>
+                <a v-if="restoreVersionUrl" @click="restoreVersion(fileVersion.attributes.version)" class="btn btn-icon p-0 mx-3"><i class="sn-icon sn-icon-restore"></i></a>
               </div>
             </div>
           </div>
@@ -46,7 +46,11 @@ import axios from '../../packs/custom_axios';
 export default {
   name: 'FileVersionsModal',
   props: {
-    url: {
+    versionsUrl: {
+      type: String,
+      required: true
+    },
+    restoreVersionUrl: {
       type: String,
       required: true
     }
@@ -58,9 +62,20 @@ export default {
     };
   },
   created() {
-    axios.get(this.url).then((response) => {
-      this.fileVersions = response.data.data;
-    });
+    this.loadVersions();
+  },
+  methods: {
+    loadVersions() {
+      axios.get(this.versionsUrl).then((response) => {
+        this.fileVersions = response.data.data;
+      });
+    },
+    restoreVersion(version) {
+      axios.post(this.restoreVersionUrl, { version: version }).then(() => {
+        this.loadVersions();
+        this.$emit('fileVersionRestored');
+      });
+    }
   }
 };
 </script>

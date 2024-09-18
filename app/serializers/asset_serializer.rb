@@ -152,7 +152,8 @@ class AssetSerializer < ActiveModel::Serializer
         duplicate: asset_duplicate_path(object),
         move_targets: asset_move_tagets_path(object),
         move: asset_move_path(object),
-        rename: asset_rename_path(object)
+        rename: asset_rename_path(object),
+        restore_version: asset_restore_version_path(object)
       )
     end
 

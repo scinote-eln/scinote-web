@@ -18,7 +18,7 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode)
-  before_action :check_manage_permission, only: %i(edit destroy duplicate rename toggle_view_mode)
+  before_action :check_manage_permission, only: %i(edit destroy duplicate rename toggle_view_mode restore_version)
 
   def file_preview
     editable = can_manage_asset?(@asset) && (@asset.repository_asset_value.blank? ||
@@ -197,7 +197,7 @@ class AssetsController < ApplicationController
     return render_403 unless can_read_team?(@asset.team)
 
     @asset.last_modified_by = current_user
-    @asset.attach_file_version(io: params.require(:image), filename: orig_file_name, current_user: current_user)
+    @asset.attach_file_version(io: params.require(:image), filename: orig_file_name)
     @asset.save!
     create_edit_image_activity(@asset, current_user, :finish_editing)
     # release previous image space
@@ -403,6 +403,11 @@ class AssetsController < ApplicationController
       json: [@asset.file.blob] +
             @asset.previous_files.map(&:blob).sort_by { |b| -1 * b.metadata['version'].to_i }
     )
+  end
+
+  def restore_version
+    @asset.restore_file_version(params[:version].to_i)
+    render json: @asset.file.blob
   end
 
   private
