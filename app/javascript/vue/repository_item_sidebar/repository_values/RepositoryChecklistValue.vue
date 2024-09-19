@@ -16,14 +16,14 @@
         >
       </select-dropdown>
     </div>
-    <div v-else-if="computedArrOfItemObjects && computedArrOfItemObjects.length > 0"
+    <div v-else-if="colVal && colVal.length > 0"
          class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-[370px] overflow-x-auto flex flex-wrap gap-1">
-      <span v-for="(checklistItem, index) in computedArrOfItemObjects"
+      <span v-for="(checklistItem, index) in colVal"
             :key="index"
             :id="`checklist-item-${index}`"
             class="flex w-fit break-words">
         {{
-          index + 1 === computedArrOfItemObjects.length
+          index + 1 === colVal.length
             ? checklistItem?.label
             : `${checklistItem?.label} |`
         }}
@@ -64,18 +64,6 @@ export default {
     this.fetchChecklistItems();
     if (this.colVal && Array.isArray(this.colVal)) {
       this.selectedChecklistItemsIds = this.colVal.map((item) => String(item.value));
-    }
-  },
-  computed: {
-    computedArrOfItemObjects() {
-      const arrOfItemObjects = this.selectedChecklistItemsIds.map((id) => {
-        const matchingItem = this.availableChecklistItems.find((item) => item[0] === id);
-        return {
-          id: matchingItem ? matchingItem[0] : null,
-          label: matchingItem ? matchingItem[1] : null
-        };
-      });
-      return arrOfItemObjects;
     }
   },
   methods: {
