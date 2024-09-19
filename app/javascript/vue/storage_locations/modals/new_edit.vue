@@ -183,6 +183,9 @@ export default {
       }
     },
     saveLocation() {
+      // Smart annotation fix
+      this.object.description = $(this.$refs.description).val();
+
       if (this.object.code) {
         axios.put(this.object.urls.update, this.object)
           .then(() => {

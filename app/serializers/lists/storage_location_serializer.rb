@@ -4,9 +4,11 @@ module Lists
   class StorageLocationSerializer < ActiveModel::Serializer
     include Rails.application.routes.url_helpers
     include ShareableSerializer
+    include ApplicationHelper
+    include ActionView::Helpers::TextHelper
 
     attributes :id, :code, :name, :container, :description, :owned_by, :created_by,
-               :created_on, :urls, :metadata, :file_name, :sub_location_count, :is_empty
+               :created_on, :urls, :metadata, :file_name, :sub_location_count, :is_empty, :sa_description
 
     def owned_by
       object['team_name']
@@ -14,6 +16,14 @@ module Lists
 
     def is_empty
       object.empty?
+    end
+
+    def sa_description
+      @user = scope[:user] || @instance_options[:user]
+      custom_auto_link(object.description,
+                       simple_format: false,
+                       tags: %w(img),
+                       team: object.team)
     end
 
     def metadata
