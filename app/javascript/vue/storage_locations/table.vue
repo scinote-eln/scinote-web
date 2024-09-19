@@ -53,6 +53,7 @@ import EditModal from './modals/new_edit.vue';
 import MoveModal from './modals/move.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import ShareObjectModal from '../shared/share_modal.vue';
+import DescriptionRenderer from './renderers/description.vue';
 
 export default {
   name: 'RepositoriesTable',
@@ -61,7 +62,8 @@ export default {
     EditModal,
     MoveModal,
     ConfirmationModal,
-    ShareObjectModal
+    ShareObjectModal,
+    DescriptionRenderer
   },
   props: {
     dataSource: {
@@ -136,9 +138,11 @@ export default {
         sortable: true
       },
       {
-        field: 'description',
+        field: 'sa_description',
         headerName: this.i18n.t('storage_locations.index.table.description'),
-        sortable: false
+        sortable: false,
+        notSelectable: true,
+        cellRenderer: 'DescriptionRenderer'
       }];
 
       return columns;
