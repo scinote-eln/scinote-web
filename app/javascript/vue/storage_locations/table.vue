@@ -54,6 +54,7 @@ import MoveModal from './modals/move.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import ShareObjectModal from '../shared/share_modal.vue';
 import DescriptionRenderer from './renderers/description.vue';
+import NameRenderer from './renderers/storage_name_renderer.vue';
 
 export default {
   name: 'RepositoriesTable',
@@ -63,7 +64,8 @@ export default {
     MoveModal,
     ConfirmationModal,
     ShareObjectModal,
-    DescriptionRenderer
+    DescriptionRenderer,
+    NameRenderer
   },
   props: {
     dataSource: {
@@ -104,7 +106,7 @@ export default {
         headerName: this.i18n.t('storage_locations.index.table.name'),
         sortable: true,
         notSelectable: true,
-        cellRenderer: this.nameRenderer
+        cellRenderer: 'NameRenderer'
       },
       {
         field: 'code',
@@ -219,28 +221,6 @@ export default {
         .catch(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
-    },
-    // Renderers
-    nameRenderer(params) {
-      const {
-        name,
-        urls,
-        shared,
-        ishared
-      } = params.data;
-      let containerIcon = '';
-      if (params.data.container) {
-        containerIcon = '<i class="sn-icon sn-icon-item"></i>';
-      }
-      let sharedIcon = '';
-      if (shared || ishared) {
-        sharedIcon = '<i class="fas fa-users"></i>';
-      }
-      return `<a class="hover:no-underline flex items-center gap-1"
-                 title="${name}" href="${urls.show}">
-                 ${sharedIcon}${containerIcon}
-                 <span class="truncate">${name}</span>
-              </a>`;
     },
     updateTable() {
       this.reloadingTable = true;

@@ -10,7 +10,10 @@ class StorageLocationsController < ApplicationController
 
   def index
     respond_to do |format|
-      format.html
+      format.html do
+        @parent_location = StorageLocation.viewable_by_user(current_user)
+                                          .find_by(id: storage_location_params[:parent_id]) if storage_location_params[:parent_id]
+      end
       format.json do
         storage_locations = Lists::StorageLocationsService.new(current_user, current_team, params).call
         render json: storage_locations, each_serializer: Lists::StorageLocationSerializer,
