@@ -11,8 +11,10 @@ class StorageLocationsController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        @parent_location = StorageLocation.viewable_by_user(current_user)
-                                          .find_by(id: storage_location_params[:parent_id]) if storage_location_params[:parent_id]
+        if storage_location_params[:parent_id]
+          @parent_location = StorageLocation.viewable_by_user(current_user)
+                                            .find_by(id: storage_location_params[:parent_id])
+        end
       end
       format.json do
         storage_locations = Lists::StorageLocationsService.new(current_user, current_team, params).call
@@ -94,7 +96,10 @@ class StorageLocationsController < ApplicationController
 
       @storage_location.update!(parent: destination_storage_location)
 
-      log_activity('storage_location_moved', { storage_location_original: original_storage_location.id, storage_location_destination: destination_storage_location.id })
+      log_activity('storage_location_moved', {
+                     storage_location_original: original_storage_location&.id, # nil if moved from root
+                     storage_location_destination: destination_storage_location&.id # nil if moved to root
+                   })
     end
 
     render json: { message: I18n.t('storage_locations.index.move_modal.success_flash') }
