@@ -34,13 +34,13 @@
         :selectedPosition="assignToPosition"
         :selectedRow="rowIdToMove"
         :cellId="cellIdToUnassign"
-        @close="openAssignModal = false; this.reloadingTable = true"
+        @close="openAssignModal = false; resetTableSearch(); this.reloadingTable = true"
       ></AssignModal>
       <ImportModal
         v-if="openImportModal"
         :containerId="containerId"
         @close="openImportModal = false"
-        @reloadTable="reloadingTable = true"
+        @reloadTable="resetTableSearch(); reloadingTable = true"
       ></ImportModal>
       <ConfirmationModal
         :title="i18n.t('storage_locations.show.unassign_modal.title')"
@@ -187,9 +187,14 @@ export default {
     updateTable() {
       this.reloadingTable = true;
     },
-    handleTableReload(items) {
+    handleTableReload(items, params) {
       this.reloadingTable = false;
-      this.assignedItems = items;
+      if (!params.filtered) {
+        this.assignedItems = items;
+      }
+    },
+    resetTableSearch() {
+      this.$refs.table.searchValue = '';
     },
     selectRow(row) {
       if (this.$refs.table.selectedRows.includes(row)) {
@@ -231,7 +236,9 @@ export default {
       const ok = await this.$refs.unassignStorageLocationModal.show();
       if (ok) {
         axios.post(event.path).then(() => {
+          this.resetTableSearch();
           this.reloadingTable = true;
+
         }).catch((error) => {
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
         });
