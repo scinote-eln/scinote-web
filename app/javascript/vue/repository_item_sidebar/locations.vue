@@ -10,13 +10,13 @@
     <template v-for="(location, index) in repositoryRow.storage_locations.locations" :key="location.id">
       <div>
         <div class="sci-divider my-4" v-if="index > 0"></div>
-        <div class="flex items-center gap-2 mb-3">
-          {{ i18n.t('repositories.locations.container') }}:
+        <div class="flex gap-2 mb-3">
+          <span class="shrink-0">{{ i18n.t('repositories.locations.container') }}:</span>
           <a v-if="location.readable" :href="containerUrl(location.id)">{{ location.name }}</a>
           <span v-else>{{ location.name }}</span>
-          <span v-if="location.metadata.display_type !== 'grid'">
-            ({{ location.positions.length }})
-          </span>
+          <i v-if="repositoryRow.permissions.can_manage && location.metadata.display_type !== 'grid'"
+                 @click="unassignRow(location.id, location.positions[0].id)"
+                 class="sn-icon sn-icon-unlink-italic-s cursor-pointer ml-auto"></i>
         </div>
         <div v-if="location.metadata.display_type === 'grid'" class="flex items-center gap-2 flex-wrap">
           <div v-for="(position) in location.positions" :key="position.id">
@@ -37,12 +37,20 @@
         :selectedRow="repositoryRow.id"
         @close="openAssignModal = false; $emit('reloadRow')"
       ></AssignModal>
+      <ConfirmationModal
+        :title="i18n.t('storage_locations.show.unassign_modal.title')"
+        :description="i18n.t('storage_locations.show.unassign_modal.description_single')"
+        confirmClass="btn btn-danger"
+        :confirmText="i18n.t('storage_locations.show.unassign_modal.button')"
+        ref="unassignStorageLocationModal"
+      ></ConfirmationModal>
     </Teleport>
   </div>
 </template>
 
 <script>
 import AssignModal from '../storage_locations/modals/assign.vue';
+import ConfirmationModal from '../shared/confirmation_modal.vue';
 import axios from '../../packs/custom_axios.js';
 
 import {
@@ -57,7 +65,8 @@ export default {
     repository: Object
   },
   components: {
-    AssignModal
+    AssignModal,
+    ConfirmationModal
   },
   data() {
     return {
@@ -77,14 +86,17 @@ export default {
     numberToLetter(number) {
       return String.fromCharCode(96 + number);
     },
-    unassignRow(locationId, rowId) {
-      axios.post(unassign_rows_storage_location_path({ id: locationId }), { ids: [rowId] })
-        .then(() => {
-          this.$emit('reloadRow');
-          if (window.StorageLocationsContainer) {
-            window.StorageLocationsContainer.$refs.container.reloadingTable = true;
-          }
-        });
+    async unassignRow(locationId, rowId) {
+      const ok = await this.$refs.unassignStorageLocationModal.show();
+      if (ok) {
+        axios.post(unassign_rows_storage_location_path({ id: locationId }), { ids: [rowId] })
+          .then(() => {
+            this.$emit('reloadRow');
+            if (window.StorageLocationsContainer) {
+              window.StorageLocationsContainer.$refs.container.reloadingTable = true;
+            }
+          });
+      }
     }
   }
 };
