@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     repositoriesUrl() {
-      return list_team_repositories_path(this.teamId);
+      return list_team_repositories_path(this.teamId, { non_empty: true });
     },
     rowsUrl() {
       if (!this.selectedRepository) {

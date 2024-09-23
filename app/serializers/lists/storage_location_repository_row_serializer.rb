@@ -6,9 +6,13 @@ module Lists
     include Rails.application.routes.url_helpers
 
     attributes :created_by, :created_on, :position, :row_id, :row_name, :hidden, :position_formatted, :stock,
-               :have_reminders, :reminders_url, :row_url
+               :have_reminders, :reminders_url, :row_url, :row_code
 
     def row_id
+      object.repository_row.id
+    end
+
+    def row_code
       object.repository_row.code
     end
 
