@@ -26,8 +26,13 @@ module StorageLocations
         return { status: :error, message: I18n.t('storage_locations.show.import_modal.errors.invalid_position') }
       end
 
+      # Check if duplicate repository rows are present in the file
+      if !@storage_location.with_grid? && @rows.pluck(:repository_row_id).uniq.length != @rows.length
+        return { status: :error, message: I18n.t('storage_locations.show.import_modal.errors.duplicate_items') }
+      end
+
       ActiveRecord::Base.transaction do
-        unassign_repository_rows!
+        unassign_repository_rows! if @storage_location.with_grid?
 
         @rows.each do |row|
           if @storage_location.with_grid? && !position_valid?(row[:position])
@@ -59,18 +64,22 @@ module StorageLocations
         row = SpreadsheetParser.parse_row(r, @sheet)
         {
           position: convert_position_letter_to_number(row[0]),
-          repository_row_id: row[1].gsub('IT', '').to_i
+          repository_row_id: row[1].to_s.gsub('IT', '').to_i
         }
       end
     end
 
     def import_row!(row)
-      storage_location_repository_row =
-        @storage_location.storage_location_repository_rows
-                         .find_or_initialize_by(
-                           repository_row_id: row[:repository_row_id],
-                           metadata: { position: row[:position] }
-                         )
+      storage_location_repository_row = if @storage_location.with_grid?
+                                          @storage_location.storage_location_repository_rows
+                                                           .find_or_initialize_by(
+                                                             repository_row_id: row[:repository_row_id],
+                                                             metadata: { position: row[:position] }
+                                                           )
+                                        else
+                                          @storage_location.storage_location_repository_rows
+                                                           .find_or_initialize_by(repository_row_id: row[:repository_row_id])
+                                        end
 
       if storage_location_repository_row.new_record?
         @assigned_count += 1

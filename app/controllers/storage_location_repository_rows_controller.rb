@@ -31,7 +31,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
         render json: @storage_location_repository_row,
                serializer: Lists::StorageLocationRepositoryRowSerializer
       else
-        render json: @storage_location_repository_row.errors, status: :unprocessable_entity
+        render json: { errors: @storage_location_repository_row.errors.full_messages }, status: :unprocessable_entity
       end
     end
   end
@@ -45,7 +45,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
         render json: @storage_location_repository_row,
                serializer: Lists::StorageLocationRepositoryRowSerializer
       else
-        render json: @storage_location_repository_row.errors, status: :unprocessable_entity
+        render json: { errors: @storage_location_repository_row.errors.full_messages }, status: :unprocessable_entity
       end
     end
   end

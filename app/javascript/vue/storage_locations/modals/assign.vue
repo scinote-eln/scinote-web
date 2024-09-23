@@ -91,6 +91,8 @@ export default {
         metadata: { position: this.position?.map((pos) => parseInt(pos, 10)) }
       }).then(() => {
         this.$emit('close');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.errors.join(', '), 'danger');
       });
     }
   }

@@ -14,6 +14,10 @@ class StorageLocationRepositoryRow < ApplicationRecord
     validate :ensure_uniq_position
   end
 
+  with_options if: -> { storage_location.container && storage_location.metadata['display_type'] != 'grid' } do
+    validate :unique_repository_row
+  end
+
   def human_readable_position
     return unless metadata['position']
 
@@ -32,6 +36,14 @@ class StorageLocationRepositoryRow < ApplicationRecord
                        .where("metadata->'position' = ?", metadata['position'].to_json)
                        .where.not(id: id).exists?
       errors.add(:base, I18n.t('activerecord.errors.models.storage_location.not_uniq_position'))
+    end
+  end
+
+  def unique_repository_row
+    if storage_location.storage_location_repository_rows
+                       .where(repository_row_id: repository_row_id)
+                       .where.not(id: id).exists?
+      errors.add(:base, I18n.t('activerecord.errors.models.storage_location.not_uniq_repository_row'))
     end
   end
 end

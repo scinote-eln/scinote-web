@@ -264,6 +264,7 @@ en:
         storage_location:
           missing_position: 'Missing position metadata'
           not_uniq_position: 'Position already taken'
+          not_uniq_repository_row: 'Inventory item already exists'
           attributes:
             parent_storage_location: "Storage location cannot be parent to itself"
             parent_storage_location_child: "Storage location cannot be moved to it's child"
@@ -2709,6 +2710,7 @@ en:
         errors:
           invalid_structure: "The imported file content doesn't meet criteria."
           invalid_position: "Positions in the file must match with the box."
+          duplicate_items: "Item ID has duplicates in the imported file"
           invalid_item: "Item ID %{row_id} doesn't exist."
     index:
       head_title: "Locations"
