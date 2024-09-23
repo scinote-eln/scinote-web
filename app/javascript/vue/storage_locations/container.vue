@@ -125,34 +125,43 @@ export default {
     },
 
     columnDefs() {
-      const columns = [{
-        field: 'position_formatted',
-        headerName: this.i18n.t('storage_locations.show.table.position'),
-        sortable: true,
-        cellClass: 'text-sn-blue cursor-pointer'
-      },
-      {
-        field: 'reminders',
-        headerName: this.i18n.t('storage_locations.show.table.reminders'),
-        sortable: false,
-        cellRenderer: RemindersRender
-      },
-      {
-        field: 'row_id',
-        headerName: this.i18n.t('storage_locations.show.table.row_id'),
-        sortable: true
-      },
-      {
-        field: 'row_name',
-        headerName: this.i18n.t('storage_locations.show.table.row_name'),
-        sortable: true,
-        cellRenderer: ItemNameRenderer
-      },
-      {
-        field: 'stock',
-        headerName: this.i18n.t('storage_locations.show.table.stock'),
-        sortable: false
-      }];
+      let columns = [];
+
+      if (this.withGrid) {
+        columns.push({
+          field: 'position_formatted',
+          headerName: this.i18n.t('storage_locations.show.table.position'),
+          sortable: true,
+          cellClass: 'text-sn-blue cursor-pointer'
+        });
+      }
+
+      columns = columns.concat(
+        [
+          {
+            field: 'reminders',
+            headerName: this.i18n.t('storage_locations.show.table.reminders'),
+            sortable: false,
+            cellRenderer: RemindersRender
+          },
+          {
+            field: 'row_code',
+            headerName: this.i18n.t('storage_locations.show.table.row_id'),
+            sortable: true
+          },
+          {
+            field: 'row_name',
+            headerName: this.i18n.t('storage_locations.show.table.row_name'),
+            sortable: true,
+            cellRenderer: ItemNameRenderer
+          },
+          {
+            field: 'stock',
+            headerName: this.i18n.t('storage_locations.show.table.stock'),
+            sortable: false
+          }
+        ]
+      );
 
       return columns;
     },

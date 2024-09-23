@@ -46,6 +46,8 @@ class RepositoriesController < ApplicationController
   def list
     results = @repositories
     results = results.name_like(params[:query]) if params[:query].present?
+    results = results.joins(:repository_rows).distinct if params[:non_empty].present?
+
     render json: { data: results.map { |r| [r.id, r.name] } }
   end
 
