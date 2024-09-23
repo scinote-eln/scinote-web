@@ -68,7 +68,7 @@ export default {
       }
 
       // check if it's a correct file type
-      const fileExtension = file.name.split('.')[1];
+      const fileExtension = file.name.split('.')[file.name.split('.').length - 1];
       if (!this.supportedFormats.includes(fileExtension)) {
         const error = I18n.t('repositories.import_records.dragAndDropUpload.wrongFileTypeError', {
           extensions: this.supportedFormats.join(', ')
