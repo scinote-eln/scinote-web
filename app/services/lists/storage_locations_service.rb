@@ -89,6 +89,7 @@ module Lists
             SELECT 1 FROM team_shared_objects
             WHERE team_shared_objects.shared_object_id = storage_locations.id
               AND team_shared_objects.shared_object_type = 'StorageLocation'
+              AND storage_locations.team_id = :team_id
             ) THEN 1
           WHEN EXISTS (
             SELECT 1 FROM team_shared_objects
