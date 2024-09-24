@@ -102,10 +102,10 @@ class StorageLocationRepositoryRowsController < ApplicationController
   end
 
   def load_storage_location
-    @storage_location = StorageLocation.viewable_by_user(current_user).find(
+    @storage_location = StorageLocation.find(
       storage_location_repository_row_params[:storage_location_id]
     )
-    render_404 unless @storage_location
+    render_404 unless can_read_storage_location?(@storage_location)
   end
 
   def load_repository_row
