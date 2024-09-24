@@ -2,6 +2,8 @@
 
 module Lists
   class StorageLocationsService < BaseService
+    include Canaid::Helpers::PermissionsHelper
+
     def initialize(user, team, params)
       @user = user
       @team = team
@@ -11,11 +13,15 @@ module Lists
     end
 
     def fetch_records
+      if @parent_id && !can_read_storage_location?(@user, StorageLocation.find(@parent_id))
+        @records = StorageLocation.none
+        return
+      end
+
       @records =
         StorageLocation.joins('LEFT JOIN storage_locations AS sub_locations ' \
                               'ON storage_locations.id = sub_locations.parent_id')
                        .left_joins(:team, :created_by)
-                       .viewable_by_user(@user, @team)
                        .select(shared_sql_select)
                        .select(
                          'storage_locations.*,
@@ -24,6 +30,8 @@ module Lists
                         CASE WHEN storage_locations.container THEN -1 ELSE COUNT(sub_locations.id) END AS sub_location_count'
                        )
                        .group(:id)
+
+      @records = @records.viewable_by_user(@user, @team) unless @parent_id
     end
 
     def filter_records

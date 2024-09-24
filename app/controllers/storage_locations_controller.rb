@@ -9,13 +9,12 @@ class StorageLocationsController < ApplicationController
   before_action :set_breadcrumbs_items, only: %i(index show)
 
   def index
+    @parent_location = StorageLocation.find(storage_location_params[:parent_id]) if storage_location_params[:parent_id]
+
+    render_403 if @parent_location && !can_read_storage_location?(@parent_location)
+
     respond_to do |format|
-      format.html do
-        if storage_location_params[:parent_id]
-          @parent_location = StorageLocation.viewable_by_user(current_user)
-                                            .find_by(id: storage_location_params[:parent_id])
-        end
-      end
+      format.html
       format.json do
         storage_locations = Lists::StorageLocationsService.new(current_user, current_team, params).call
         render json: storage_locations, each_serializer: Lists::StorageLocationSerializer,
@@ -183,8 +182,8 @@ class StorageLocationsController < ApplicationController
   end
 
   def load_storage_location
-    @storage_location = StorageLocation.viewable_by_user(current_user).find_by(id: storage_location_params[:id])
-    render_404 unless @storage_location
+    @storage_location = StorageLocation.find(storage_location_params[:id])
+    render_404 unless can_read_storage_location?(@storage_location)
   end
 
   def check_read_permissions
