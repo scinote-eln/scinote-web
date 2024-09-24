@@ -339,6 +339,7 @@ en:
       storage_location_repository_row_created_html: "%{user} assigned %{repository_row} to box %{storage_location} %{position}."
       storage_location_repository_row_deleted_html: "%{user} unassigned %{repository_row} from box %{storage_location} %{position}."
       storage_location_repository_row_moved_html: "%{user} moved item %{repository_row} from box %{storage_location_original} %{positions} to box %{storage_location_destination} %{positions}."
+      container_storage_location_imported_html: "%{user} assigned %{assigned_count} item(s) and unassigned %{unassigned_count} item(s) by import to %{storage_location}."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -635,6 +636,7 @@ en:
       storage_location_repository_row_created: "Inventory item location assigned"
       storage_location_repository_row_deleted: "Inventory item location unassigned"
       storage_location_repository_row_moved: "Inventory item location moved"
+      container_storage_location_imported: "Box import"
     activity_group:
       projects: "Projects"
       task_results: "Task results"
