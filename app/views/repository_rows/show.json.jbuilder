@@ -52,6 +52,7 @@ json.storage_locations do
     end
   )
   json.enabled StorageLocation.storage_locations_enabled?
+  json.placeholder storage_locations_placeholder
 end
 
 json.default_columns do

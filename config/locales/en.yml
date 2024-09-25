@@ -2670,6 +2670,7 @@ en:
     errors:
       my_module_references_missing: 'Task references are not set'
   storage_locations:
+    storage_locations_disabled: "<b>Storage locations are disabled</b>"
     container: 'box'
     location: 'location'
     show:
