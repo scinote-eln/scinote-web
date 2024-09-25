@@ -3931,6 +3931,8 @@ en:
       deliver_error: 'Exportable content'
     experiment_annotation_title: "%{user} mentioned you in experiment %{experiment}."
     experiment_annotation_message_html: "Project: %{project} | Experiment: %{experiment}"
+    storage_location_annotation_title: "%{user} mentioned you in storage location %{storage_location}."
+    storage_location_annotation_message_html: "Storage location: %{storage_location}"
     project_comment_annotation_title: "%{user} mentioned you in a comment on project %{project}."
     project_annotation_message_html: "Project: %{project}"
     my_module_description_annotation_title: "%{user} mentioned you in notes on task %{my_module}."

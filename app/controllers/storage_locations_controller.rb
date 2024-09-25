@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class StorageLocationsController < ApplicationController
+  include ActionView::Helpers::TextHelper
+  include ApplicationHelper
+  include Rails.application.routes.url_helpers
+
   before_action :check_storage_locations_enabled, except: :unassign_rows
   before_action :load_storage_location, only: %i(update destroy duplicate move show available_positions unassign_rows export_container import_container)
   before_action :check_read_permissions, except: %i(index create tree actions_toolbar)
@@ -38,6 +42,7 @@ class StorageLocationsController < ApplicationController
 
       if @storage_location.save
         log_activity('storage_location_created')
+        storage_location_annotation_notification
         render json: @storage_location, serializer: Lists::StorageLocationSerializer
       else
         render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
@@ -49,10 +54,12 @@ class StorageLocationsController < ApplicationController
     ActiveRecord::Base.transaction do
       @storage_location.image.purge if params[:file_name].blank?
       @storage_location.image.attach(params[:signed_blob_id]) if params[:signed_blob_id]
+      old_description = @storage_location.description
       @storage_location.update(storage_location_params)
 
       if @storage_location.save
         log_activity('storage_location_edited')
+        storage_location_annotation_notification(old_description) if old_description != @storage_location.description
         render json: @storage_location, serializer: Lists::StorageLocationSerializer
       else
         render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
@@ -257,6 +264,25 @@ class StorageLocationsController < ApplicationController
               storage_location: @storage_location.id,
               user: current_user.id
             }.merge(message_items))
+  end
+
+  def storage_location_annotation_notification(old_text = nil)
+    url = if @storage_location.container
+            storage_location_path(@storage_location.id)
+          else
+            storage_locations_path(parent_id: @storage_location.id)
+          end
+
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: @storage_location.description,
+      subject: @storage_location,
+      title: t('notifications.storage_location_annotation_title',
+               storage_location: @storage_location.name,
+               user: current_user.full_name),
+      message: t('notifications.storage_location_annotation_message_html',
+                 storage_location: link_to(@storage_location.name, url))
+    )
   end
 
   def log_unassign_activities
