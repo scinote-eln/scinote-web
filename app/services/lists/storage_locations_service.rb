@@ -20,7 +20,7 @@ module Lists
 
       @records =
         StorageLocation.joins('LEFT JOIN storage_locations AS sub_locations ' \
-                              'ON storage_locations.id = sub_locations.parent_id')
+                              'ON storage_locations.id = sub_locations.parent_id AND sub_locations.discarded_at IS NULL')
                        .left_joins(:team, :created_by)
                        .select(shared_sql_select)
                        .select(
