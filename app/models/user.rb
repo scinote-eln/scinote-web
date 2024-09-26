@@ -519,6 +519,7 @@ class User < ApplicationRecord
       api_key_created_at: Time.current,
       api_key_expires_at: Constants::API_KEY_EXPIRES_IN.from_now
     )
+    api_key
   end
 
   def revoke_api_key!

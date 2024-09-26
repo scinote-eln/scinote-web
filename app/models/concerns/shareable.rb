@@ -27,7 +27,7 @@ module Shareable
     end
 
     scope :viewable_by_user, lambda { |user, teams = user.current_team|
-      readable_ids = readable_by_user(user).pluck(:id)
+      readable_ids = readable_by_user(user).where(team: teams).pluck(:id)
       shared_with_team_ids = joins(:team_shared_objects, :team).where(team_shared_objects: { team: teams }).pluck(:id)
       globally_shared_ids =
         if column_names.include?('permission_level')

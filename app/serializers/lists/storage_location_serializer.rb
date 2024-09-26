@@ -8,10 +8,17 @@ module Lists
     include ActionView::Helpers::TextHelper
 
     attributes :id, :code, :name, :container, :description, :owned_by, :created_by,
-               :created_on, :urls, :metadata, :file_name, :sub_location_count, :is_empty, :sa_description
+               :created_on, :urls, :metadata, :file_name, :sub_location_count, :is_empty,
+               :img_url, :sa_description
 
     def owned_by
       object['team_name']
+    end
+
+    def img_url
+      return unless object.image.attached?
+
+      Rails.application.routes.url_helpers.url_for(object.image)
     end
 
     def is_empty

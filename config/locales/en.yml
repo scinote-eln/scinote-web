@@ -264,6 +264,7 @@ en:
         storage_location:
           missing_position: 'Missing position metadata'
           not_uniq_position: 'Position already taken'
+          not_uniq_repository_row: 'Inventory item already exists'
           attributes:
             parent_storage_location: "Storage location cannot be parent to itself"
             parent_storage_location_child: "Storage location cannot be moved to it's child"
@@ -2675,6 +2676,7 @@ en:
     errors:
       my_module_references_missing: 'Task references are not set'
   storage_locations:
+    storage_locations_disabled: "<b>Storage locations are disabled</b>"
     container: 'box'
     location: 'location'
     show:
@@ -2692,6 +2694,7 @@ en:
       unassign_modal:
         title: 'Unassign location'
         description: 'Are you sure you want to remove %{items} item(s) from their current storage location?'
+        description_single: 'Are you sure you want to remove item from this location?'
         button: 'Unassign'
       assign_modal:
         assign_title: 'Assign position'
@@ -2715,9 +2718,11 @@ en:
         errors:
           invalid_structure: "The imported file content doesn't meet criteria."
           invalid_position: "Positions in the file must match with the box."
+          duplicate_items: "Item ID has duplicates in the imported file"
           invalid_item: "Item ID %{row_id} doesn't exist."
     index:
       head_title: "Locations"
+      breadcrumbs_root: "Locations"
       new_location: "New location"
       new_container: "New box"
       duplicate:
@@ -3933,6 +3938,8 @@ en:
       deliver_error: 'Exportable content'
     experiment_annotation_title: "%{user} mentioned you in experiment %{experiment}."
     experiment_annotation_message_html: "Project: %{project} | Experiment: %{experiment}"
+    storage_location_annotation_title: "%{user} mentioned you in storage location %{storage_location}."
+    storage_location_annotation_message_html: "Storage location: %{storage_location}"
     project_comment_annotation_title: "%{user} mentioned you in a comment on project %{project}."
     project_annotation_message_html: "Project: %{project}"
     my_module_description_annotation_title: "%{user} mentioned you in notes on task %{my_module}."

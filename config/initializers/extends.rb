@@ -515,7 +515,8 @@ class Extends
     container_storage_location_sharing_updated: 322,
     storage_location_repository_row_created: 323,
     storage_location_repository_row_deleted: 324,
-    storage_location_repository_row_moved: 325
+    storage_location_repository_row_moved: 325,
+    container_storage_location_imported: 326
   }
 
   ACTIVITY_GROUPS = {
@@ -537,7 +538,7 @@ class Extends
     team: [92, 94, 93, 97, 104, 244, 245],
     label_templates: [*216..219],
     storage_locations: [*309..315],
-    container_storage_location: [*316..322],
+    container_storage_location: [*316..322, 326],
     storage_location_repository_rows: [*323..325]
   }
 

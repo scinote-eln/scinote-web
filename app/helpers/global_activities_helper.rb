@@ -109,7 +109,11 @@ module GlobalActivitiesHelper
                project_folder_path(obj, team: obj.team.id)
              end
     when StorageLocation
-      path = storage_location_path(obj)
+      path = if obj.new_record?
+               storage_locations_path(team: activity.team.id)
+             else
+               storage_location_path(obj)
+             end
     else
       return current_value
     end
@@ -124,6 +128,8 @@ module GlobalActivitiesHelper
           end
 
     return I18n.t('projects.index.breadcrumbs_root') if obj.is_a?(ProjectFolder) && obj.new_record?
+
+    return I18n.t('storage_locations.index.breadcrumbs_root') if obj.is_a?(StorageLocation) && obj.new_record?
 
     return message_item['value'] unless obj
 

@@ -465,7 +465,7 @@ GEM
     net-smtp (0.4.0.1)
       net-protocol
     newrelic_rpm (9.2.2)
-    nio4r (2.7.0)
+    nio4r (2.7.3)
     nokogiri (1.16.5)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -547,7 +547,7 @@ GEM
       pry (>= 0.10.4)
     psych (3.3.4)
     public_suffix (5.0.1)
-    puma (6.4.2)
+    puma (6.4.3)
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.8.1)

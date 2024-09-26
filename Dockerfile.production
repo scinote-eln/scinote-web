@@ -104,7 +104,6 @@ USER scinote
 
 COPY --from=builder --chown=scinote:scinote $APP_HOME $APP_HOME
 
-ENV CHROMIUM_PATH /usr/bin/chromium
 WORKDIR $APP_HOME
 
 CMD rails s -b 0.0.0.0
