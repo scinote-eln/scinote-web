@@ -7,7 +7,10 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 class="modal-title truncate !block">
+            <h4 v-if="selectedPosition" class="modal-title truncate !block">
+              {{ i18n.t(`storage_locations.show.assign_modal.selected_position_title`, { position: formattedPosition }) }}
+            </h4>
+            <h4 v-else class="modal-title truncate !block">
               {{ i18n.t(`storage_locations.show.assign_modal.${assignMode}_title`) }}
             </h4>
           </div>
@@ -64,6 +67,12 @@ export default {
       return storage_location_storage_location_repository_rows_path({
         storage_location_id: this.containerId
       });
+    },
+    formattedPosition() {
+      if (this.selectedPosition) {
+        return String.fromCharCode(96 + parseInt(this.selectedPosition[0], 10)).toUpperCase() + this.selectedPosition[1];
+      }
+      return '';
     },
     moveUrl() {
       return move_storage_location_storage_location_repository_row_path(this.containerId, this.cellId);
