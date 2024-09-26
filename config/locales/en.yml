@@ -2691,6 +2691,7 @@ en:
         description_single: 'Are you sure you want to remove item from this location?'
         button: 'Unassign'
       assign_modal:
+        selected_position_title: 'Assign to position %{position}'
         assign_title: 'Assign position'
         move_title: 'Move item'
         assign_description: 'Select an item to assign it to a location.'
