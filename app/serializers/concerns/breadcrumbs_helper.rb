@@ -62,9 +62,9 @@ module BreadcrumbsHelper
     when StorageLocation
       parent = subject.team
       url = if subject.container
-              storage_location_path(subject)
+              storage_location_path(subject, team: subject.team_id)
             else
-              storage_locations_path(parent_id: subject.id)
+              storage_locations_path(parent_id: subject.id, team: subject.team_id)
             end
     when Team
       parent = nil
