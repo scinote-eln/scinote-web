@@ -33,7 +33,6 @@ class Repository < RepositoryBase
   before_destroy :refresh_report_references_on_destroy, prepend: true
   after_save :assign_globally_shared_inventories, if: -> { saved_change_to_permission_level? && globally_shared? }
   after_save :unassign_globally_shared_inventories, if: -> { saved_change_to_permission_level? && !globally_shared? }
-  after_save :unassign_unshared_items, if: :saved_change_to_permission_level
   after_save :unlink_unshared_items, if: -> { saved_change_to_permission_level? && !globally_shared? }
 
   validates :name,
@@ -144,17 +143,6 @@ class Repository < RepositoryBase
 
   def assigned_rows(my_module)
     repository_rows.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: my_module.id })
-  end
-
-  def unassign_unshared_items
-    return if shared_read? || shared_write?
-
-    MyModuleRepositoryRow.joins(my_module: { experiment: { project: :team } })
-                         .joins(repository_row: :repository)
-                         .where(repository_rows: { repository: self })
-                         .where.not(my_module: { experiment: { projects: { team: team } } })
-                         .where.not(my_module: { experiment: { projects: { team: teams_shared_with } } })
-                         .destroy_all
   end
 
   def unlink_unshared_items
