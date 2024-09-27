@@ -225,7 +225,7 @@ class StorageLocationsController < ApplicationController
 
     storage_locations = []
     if params[:parent_id] || @storage_location
-      location = (current_team.storage_locations.find_by(id: params[:parent_id]) || @storage_location)
+      location = StorageLocation.find_by(id: params[:parent_id]) || @storage_location
       if location
         storage_locations.unshift(breadcrumbs_item(location))
         while location.parent
