@@ -8,11 +8,11 @@ module ShareableSerializer
   end
 
   def shared
-    object.shared_with?(current_user.current_team)
+    shared_object.shared_with?(current_user.current_team)
   end
 
   def shared_label
-    case object[:shared]
+    case shared_object[:shared]
     when 1
       I18n.t('libraries.index.shared')
     when 2
@@ -25,18 +25,24 @@ module ShareableSerializer
   end
 
   def ishared
-    object.i_shared?(current_user.current_team)
+    shared_object.i_shared?(current_user.current_team)
   end
 
   def shared_read
-    object.shared_read?
+    shared_object.shared_read?
   end
 
   def shared_write
-    object.shared_write?
+    shared_object.shared_write?
   end
 
   def shareable_write
-    object.shareable_write?
+    shared_object.shareable_write?
+  end
+
+  private
+
+  def shared_object
+    instance_options[:shared_object] || object
   end
 end
