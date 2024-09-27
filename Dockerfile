@@ -1,4 +1,4 @@
-FROM ruby:3.2.5-bookworm
+FROM ruby:3.2-bookworm
 MAINTAINER SciNote <info@scinote.net>
 
 # additional dependecies
