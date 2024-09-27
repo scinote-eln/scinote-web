@@ -23,8 +23,13 @@ class StorageLocationsController < ApplicationController
       format.html
       format.json do
         storage_locations = Lists::StorageLocationsService.new(current_user, current_team, params).call
-        render json: storage_locations, each_serializer: Lists::StorageLocationSerializer,
-               user: current_user, meta: pagination_dict(storage_locations)
+        render json: storage_locations,
+               each_serializer: Lists::StorageLocationSerializer,
+               user: current_user,
+               meta: pagination_dict(storage_locations),
+               shared_object:
+                @parent_location &&
+                StorageLocation.select('*').select(StorageLocation.shared_sql_select(current_user)).find(@parent_location.root_storage_location.id)
       end
     end
   end
