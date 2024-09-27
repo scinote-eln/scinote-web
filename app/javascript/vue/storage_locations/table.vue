@@ -110,7 +110,7 @@ export default {
   computed: {
     columnDefs() {
       const columns = [{
-        field: 'name',
+        field: 'name_hash',
         headerName: this.i18n.t('storage_locations.index.table.name'),
         sortable: true,
         notSelectable: true,
