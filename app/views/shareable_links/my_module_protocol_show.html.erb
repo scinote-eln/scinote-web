@@ -57,7 +57,7 @@
       </div>
     </div>
     <!-- Assigned items -->
-    <% assigned_repositories = @my_module.live_and_snapshot_repositories_list %>
+    <% assigned_repositories = @my_module.live_and_snapshot_repositories_list.select { |r| r.team == @my_module.team || r.shared_with?(@my_module.team) } %>
     <div class="task-section">
       <div class="task-section-header">
         <a class="task-section-caret" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="true" aria-controls="assigned-items-container">

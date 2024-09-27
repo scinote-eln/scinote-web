@@ -304,7 +304,7 @@ class MyModulesController < ApplicationController
 
   def protocols
     @protocol = @my_module.protocol
-    @assigned_repositories = @my_module.readable_live_and_snapshot_repositories_list(current_user)
+    @assigned_repositories = @my_module.live_and_snapshot_repositories_list
   end
 
   def protocol
