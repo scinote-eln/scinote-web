@@ -53,7 +53,12 @@ class RepositoriesController < ApplicationController
 
   def rows_list
     results = @repository.repository_rows
-    results = results.name_like(params[:query]) if params[:query].present?
+    if params[:query].present?
+      results = results.where_attributes_like(
+        ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL],
+        params[:query]
+      )
+    end
     render json: { data: results.map { |r| [r.id, r.name] } }
   end
 
