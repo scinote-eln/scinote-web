@@ -268,6 +268,8 @@ en:
           attributes:
             parent_storage_location: "Storage location cannot be parent to itself"
             parent_storage_location_child: "Storage location cannot be moved to it's child"
+            metadata:
+              invalid: 'Invalid metadata'
   storage:
     limit_reached: "Storage limit has been reached."
   helpers:
