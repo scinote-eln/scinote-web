@@ -248,7 +248,7 @@ export default {
         cellRendererParams: {
           dtComponent: this
         },
-        pinned: (column.field === 'name' ? 'left' : null),
+        pinned: (column.field === 'name' || column.field === 'name_hash' ? 'left' : null),
         comparator: () => null
       }));
 
