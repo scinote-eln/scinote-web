@@ -40,7 +40,7 @@ module StorageLocations
             raise ActiveRecord::RecordInvalid
           end
 
-          unless RepositoryRow.exists?(row[:repository_row_id])
+          unless RepositoryRow.exists?(id: row[:repository_row_id], parent_id: nil)
             @error_message = I18n.t('storage_locations.show.import_modal.errors.invalid_item', row_id: row[:repository_row_id])
             raise ActiveRecord::RecordNotFound
           end
