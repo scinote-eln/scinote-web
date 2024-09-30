@@ -123,7 +123,7 @@ class StorageLocationsController < ApplicationController
   end
 
   def tree
-    records = current_team.storage_locations.where(parent: nil, container: [false, params[:container] == 'true'])
+    records = StorageLocation.viewable_by_user(current_user, current_team).where(parent: nil, container: [false, params[:container] == 'true'])
     render json: storage_locations_recursive_builder(records)
   end
 
@@ -253,6 +253,7 @@ class StorageLocationsController < ApplicationController
     storage_locations.map do |storage_location|
       {
         storage_location: storage_location,
+        can_manage: (can_manage_storage_location?(storage_location) unless storage_location.parent_id),
         children: storage_locations_recursive_builder(
           storage_location.storage_locations.where(container: [false, params[:container] == 'true'])
         )

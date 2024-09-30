@@ -13,7 +13,7 @@
            :class="{
              '!bg-sn-super-light-blue': storageLocationTree.storage_location.id == value,
              'text-sn-blue cursor-pointer hover:bg-sn-super-light-grey': (
-               moveMode === 'locations' || storageLocationTree.storage_location.container
+               (moveMode === 'locations' || storageLocationTree.storage_location.container) && managePermission(storageLocationTree)
              )
           }">
         <i v-if="storageLocationTree.storage_location.container" class="sn-icon sn-icon-item"></i>
@@ -25,6 +25,7 @@
     <MoveTree v-if="opendedStorageLocations[storageLocationTree.storage_location.id]"
               :storageLocationsTree="storageLocationTree.children"
               :value="value"
+              :canManage="managePermission(storageLocationTree)"
               :moveMode="moveMode"
               @selectStorageLocation="$emit('selectStorageLocation', $event)" />
   </div>
@@ -37,7 +38,8 @@ export default {
   props: {
     storageLocationsTree: Array,
     value: Number,
-    moveMode: String
+    moveMode: String,
+    canManage: Boolean
   },
   components: {
     MoveTree: () => import('./move_tree.vue')
@@ -49,9 +51,14 @@ export default {
   },
   methods: {
     selectStorageLocation(storageLocationTree) {
+      if (!this.managePermission(storageLocationTree)) return;
+
       if (this.moveMode === 'locations' || storageLocationTree.storage_location.container) {
         this.$emit('selectStorageLocation', storageLocationTree.storage_location.id);
       }
+    },
+    managePermission(loc) {
+      return loc.storage_location.parent_id ? this.canManage : loc.can_manage;
     }
   }
 };
