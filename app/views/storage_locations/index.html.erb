@@ -5,7 +5,7 @@
   <div class="content-pane with-grey-background flexible">
     <div class="content-header">
       <div class="title-row">
-        <h1><%= t('storage_locations.index.head_title') %></h1>
+        <h1><%= @parent_location ? @parent_location.name : t('storage_locations.index.head_title') %></h1>
       </div>
     </div>
     <div class="content-body " data-e2e="e2e-CO-storageLocations">

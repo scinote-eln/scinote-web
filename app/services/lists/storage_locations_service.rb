@@ -2,6 +2,8 @@
 
 module Lists
   class StorageLocationsService < BaseService
+    include Canaid::Helpers::PermissionsHelper
+
     def initialize(user, team, params)
       @user = user
       @team = team
@@ -11,12 +13,16 @@ module Lists
     end
 
     def fetch_records
+      if @parent_id && !can_read_storage_location?(@user, StorageLocation.find(@parent_id))
+        @records = StorageLocation.none
+        return
+      end
+
       @records =
         StorageLocation.joins('LEFT JOIN storage_locations AS sub_locations ' \
-                              'ON storage_locations.id = sub_locations.parent_id')
+                              'ON storage_locations.id = sub_locations.parent_id AND sub_locations.discarded_at IS NULL')
                        .left_joins(:team, :created_by)
-                       .viewable_by_user(@user, @team)
-                       .select(shared_sql_select)
+                       .select(StorageLocation.shared_sql_select(@user))
                        .select(
                          'storage_locations.*,
                         MAX(teams.name) as team_name,
@@ -24,6 +30,8 @@ module Lists
                         CASE WHEN storage_locations.container THEN -1 ELSE COUNT(sub_locations.id) END AS sub_location_count'
                        )
                        .group(:id)
+
+      @records = @records.viewable_by_user(@user, @team) unless @parent_id
     end
 
     def filter_records
@@ -36,8 +44,8 @@ module Lists
         @records = @records.where(parent_id: @parent_id)
       end
 
-      @records = @records.where('LOWER(name) ILIKE ?', "%#{@filters[:query].downcase}%") if @filters[:query].present?
-      @records = @records.where('LOWER(name) ILIKE ?', "%#{@params[:search].downcase}%") if @params[:search].present?
+      @records = @records.where('LOWER(storage_locations.name) ILIKE ?', "%#{@filters[:query].downcase}%") if @filters[:query].present?
+      @records = @records.where('LOWER(storage_locations.name) ILIKE ?', "%#{@params[:search].downcase}%") if @params[:search].present?
     end
 
     private
@@ -77,42 +85,6 @@ module Lists
       when 'created_by_DESC'
         @records = @records.order('created_by_full_name DESC')
       end
-    end
-
-    def shared_sql_select
-      shared_write_value = TeamSharedObject.permission_levels['shared_write']
-      team_id = @user.current_team.id
-
-      case_statement = <<-SQL.squish
-        CASE
-          WHEN EXISTS (
-            SELECT 1 FROM team_shared_objects
-            WHERE team_shared_objects.shared_object_id = storage_locations.id
-              AND team_shared_objects.shared_object_type = 'StorageLocation'
-            ) THEN 1
-          WHEN EXISTS (
-            SELECT 1 FROM team_shared_objects
-            WHERE team_shared_objects.shared_object_id = storage_locations.id
-              AND team_shared_objects.shared_object_type = 'StorageLocation'
-              AND team_shared_objects.team_id = :team_id
-          ) THEN
-              CASE
-                WHEN EXISTS (
-                    SELECT 1 FROM team_shared_objects
-                    WHERE team_shared_objects.shared_object_id = storage_locations.id
-                      AND team_shared_objects.shared_object_type = 'StorageLocation'
-                      AND team_shared_objects.permission_level = :shared_write_value
-                      AND team_shared_objects.team_id = :team_id
-                  ) THEN 2
-                ELSE 3
-              END
-          ELSE 4
-        END as shared
-      SQL
-
-      ActiveRecord::Base.sanitize_sql_array(
-        [case_statement, { team_id: team_id, shared_write_value: shared_write_value }]
-      )
     end
   end
 end

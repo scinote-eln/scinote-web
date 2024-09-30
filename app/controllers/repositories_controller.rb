@@ -46,11 +46,15 @@ class RepositoriesController < ApplicationController
   def list
     results = @repositories
     results = results.name_like(params[:query]) if params[:query].present?
+    results = results.joins(:repository_rows).distinct if params[:non_empty].present?
+
     render json: { data: results.map { |r| [r.id, r.name] } }
   end
 
   def rows_list
-    render json: { data: @repository.repository_rows.map { |r| [r.id, r.name] } }
+    results = @repository.repository_rows
+    results = results.name_like(params[:query]) if params[:query].present?
+    render json: { data: results.map { |r| [r.id, r.name] } }
   end
 
   def sidebar

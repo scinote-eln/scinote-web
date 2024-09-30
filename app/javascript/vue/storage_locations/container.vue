@@ -34,13 +34,13 @@
         :selectedPosition="assignToPosition"
         :selectedRow="rowIdToMove"
         :cellId="cellIdToUnassign"
-        @close="openAssignModal = false; this.reloadingTable = true"
+        @close="openAssignModal = false; resetTableSearch(); this.reloadingTable = true"
       ></AssignModal>
       <ImportModal
         v-if="openImportModal"
         :containerId="containerId"
         @close="openImportModal = false"
-        @reloadTable="reloadingTable = true"
+        @reloadTable="resetTableSearch(); reloadingTable = true"
       ></ImportModal>
       <ConfirmationModal
         :title="i18n.t('storage_locations.show.unassign_modal.title')"
@@ -125,34 +125,43 @@ export default {
     },
 
     columnDefs() {
-      const columns = [{
-        field: 'position_formatted',
-        headerName: this.i18n.t('storage_locations.show.table.position'),
-        sortable: true,
-        cellClass: 'text-sn-blue cursor-pointer'
-      },
-      {
-        field: 'reminders',
-        headerName: this.i18n.t('storage_locations.show.table.reminders'),
-        sortable: false,
-        cellRenderer: RemindersRender
-      },
-      {
-        field: 'row_id',
-        headerName: this.i18n.t('storage_locations.show.table.row_id'),
-        sortable: true
-      },
-      {
-        field: 'row_name',
-        headerName: this.i18n.t('storage_locations.show.table.row_name'),
-        sortable: true,
-        cellRenderer: ItemNameRenderer
-      },
-      {
-        field: 'stock',
-        headerName: this.i18n.t('storage_locations.show.table.stock'),
-        sortable: false
-      }];
+      let columns = [];
+
+      if (this.withGrid) {
+        columns.push({
+          field: 'position_formatted',
+          headerName: this.i18n.t('storage_locations.show.table.position'),
+          sortable: true,
+          cellClass: 'text-sn-blue cursor-pointer'
+        });
+      }
+
+      columns = columns.concat(
+        [
+          {
+            field: 'reminders',
+            headerName: this.i18n.t('storage_locations.show.table.reminders'),
+            sortable: false,
+            cellRenderer: RemindersRender
+          },
+          {
+            field: 'row_code',
+            headerName: this.i18n.t('storage_locations.show.table.row_id'),
+            sortable: true
+          },
+          {
+            field: 'row_name',
+            headerName: this.i18n.t('storage_locations.show.table.row_name'),
+            sortable: true,
+            cellRenderer: ItemNameRenderer
+          },
+          {
+            field: 'stock',
+            headerName: this.i18n.t('storage_locations.show.table.stock'),
+            sortable: false
+          }
+        ]
+      );
 
       return columns;
     },
@@ -187,9 +196,14 @@ export default {
     updateTable() {
       this.reloadingTable = true;
     },
-    handleTableReload(items) {
+    handleTableReload(items, params) {
       this.reloadingTable = false;
-      this.assignedItems = items;
+      if (!params.filtered) {
+        this.assignedItems = items;
+      }
+    },
+    resetTableSearch() {
+      this.$refs.table.searchValue = '';
     },
     selectRow(row) {
       if (this.$refs.table.selectedRows.includes(row)) {
@@ -231,7 +245,9 @@ export default {
       const ok = await this.$refs.unassignStorageLocationModal.show();
       if (ok) {
         axios.post(event.path).then(() => {
+          this.resetTableSearch();
           this.reloadingTable = true;
+
         }).catch((error) => {
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
         });

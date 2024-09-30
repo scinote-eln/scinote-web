@@ -33,6 +33,8 @@ class TeamSharedObjectsController < ApplicationController
 
       # Share to specific teams
       params[:team_share_params].each do |t|
+        next unless t['private_shared_with']
+
         @model.update!(permission_level: :not_shared) if @model.globally_shareable?
 
         team_shared_object = @model.team_shared_objects.find_or_initialize_by(team_id: t['id'])

@@ -59,6 +59,13 @@ module BreadcrumbsHelper
     when LabelTemplate
       parent = subject.team
       url = label_template_path(subject)
+    when StorageLocation
+      parent = subject.team
+      url = if subject.container
+              storage_location_path(subject, team: subject.team_id)
+            else
+              storage_locations_path(parent_id: subject.id, team: subject.team_id)
+            end
     when Team
       parent = nil
       url = projects_path(team: subject.id)

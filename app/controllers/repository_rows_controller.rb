@@ -4,6 +4,7 @@ class RepositoryRowsController < ApplicationController
   include ApplicationHelper
   include MyModulesHelper
   include RepositoryDatatableHelper
+  include StorageLocationsHelper
 
   before_action :load_repository, except: %i(show print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(show print rows_to_print print_zpl

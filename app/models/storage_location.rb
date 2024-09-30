@@ -96,6 +96,43 @@ class StorageLocation < ApplicationRecord
     rows
   end
 
+  def self.shared_sql_select(user)
+    shared_write_value = TeamSharedObject.permission_levels['shared_write']
+    team_id = user.current_team.id
+
+    case_statement = <<-SQL.squish
+      CASE
+        WHEN EXISTS (
+          SELECT 1 FROM team_shared_objects
+          WHERE team_shared_objects.shared_object_id = storage_locations.id
+            AND team_shared_objects.shared_object_type = 'StorageLocation'
+            AND storage_locations.team_id = :team_id
+          ) THEN 1
+        WHEN EXISTS (
+          SELECT 1 FROM team_shared_objects
+          WHERE team_shared_objects.shared_object_id = storage_locations.id
+            AND team_shared_objects.shared_object_type = 'StorageLocation'
+            AND team_shared_objects.team_id = :team_id
+        ) THEN
+            CASE
+              WHEN EXISTS (
+                  SELECT 1 FROM team_shared_objects
+                  WHERE team_shared_objects.shared_object_id = storage_locations.id
+                    AND team_shared_objects.shared_object_type = 'StorageLocation'
+                    AND team_shared_objects.permission_level = :shared_write_value
+                    AND team_shared_objects.team_id = :team_id
+                ) THEN 2
+              ELSE 3
+            END
+        ELSE 4
+      END as shared
+    SQL
+
+    ActiveRecord::Base.sanitize_sql_array(
+      [case_statement, { team_id: team_id, shared_write_value: shared_write_value }]
+    )
+  end
+
   def self.storage_locations_enabled?
     ApplicationSettings.instance.values['storage_locations_enabled']
   end

@@ -13,6 +13,7 @@
                @duplicate="duplicate"
                @tableReloaded="reloadingTable = false"
                @move="move"
+               @showDescription="showDescription"
                @delete="deleteStorageLocation"
                @share="share"
     />
@@ -25,6 +26,10 @@
                  :directUploadUrl="directUploadUrl"
                  :editStorageLocation="editStorageLocation"
       />
+      <DescriptionModal
+        v-if="descriptionModalObject"
+        :experiment="descriptionModalObject"
+        @close="descriptionModalObject = null"/>
       <MoveModal v-if="objectToMove" :moveToUrl="moveToUrl"
              :selectedObject="objectToMove"
              @close="objectToMove = null" @move="updateTable()" />
@@ -52,7 +57,10 @@ import DataTable from '../shared/datatable/table.vue';
 import EditModal from './modals/new_edit.vue';
 import MoveModal from './modals/move.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
+import DescriptionModal from './modals/description.vue';
 import ShareObjectModal from '../shared/share_modal.vue';
+import DescriptionRenderer from './renderers/description.vue';
+import NameRenderer from './renderers/storage_name_renderer.vue';
 
 export default {
   name: 'RepositoriesTable',
@@ -61,7 +69,10 @@ export default {
     EditModal,
     MoveModal,
     ConfirmationModal,
-    ShareObjectModal
+    ShareObjectModal,
+    DescriptionRenderer,
+    NameRenderer,
+    DescriptionModal
   },
   props: {
     dataSource: {
@@ -92,7 +103,8 @@ export default {
       moveToUrl: null,
       shareStorageLocation: null,
       storageLocationDeleteTitle: '',
-      storageLocationDeleteDescription: ''
+      storageLocationDeleteDescription: '',
+      descriptionModalObject: null
     };
   },
   computed: {
@@ -102,7 +114,7 @@ export default {
         headerName: this.i18n.t('storage_locations.index.table.name'),
         sortable: true,
         notSelectable: true,
-        cellRenderer: this.nameRenderer
+        cellRenderer: 'NameRenderer'
       },
       {
         field: 'code',
@@ -136,9 +148,13 @@ export default {
         sortable: true
       },
       {
-        field: 'description',
+        field: 'sa_description',
         headerName: this.i18n.t('storage_locations.index.table.description'),
-        sortable: false
+        sortable: false,
+        cellStyle: { 'white-space': 'normal' },
+        cellRenderer: DescriptionRenderer,
+        autoHeight: true,
+        minWidth: 110
       }];
 
       return columns;
@@ -216,28 +232,6 @@ export default {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
     },
-    // Renderers
-    nameRenderer(params) {
-      const {
-        name,
-        urls,
-        shared,
-        ishared
-      } = params.data;
-      let containerIcon = '';
-      if (params.data.container) {
-        containerIcon = '<i class="sn-icon sn-icon-item"></i>';
-      }
-      let sharedIcon = '';
-      if (shared || ishared) {
-        sharedIcon = '<i class="fas fa-users"></i>';
-      }
-      return `<a class="hover:no-underline flex items-center gap-1"
-                 title="${name}" href="${urls.show}">
-                 ${sharedIcon}${containerIcon}
-                 <span class="truncate">${name}</span>
-              </a>`;
-    },
     updateTable() {
       this.reloadingTable = true;
       this.objectToMove = null;
@@ -269,6 +263,9 @@ export default {
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
         });
       }
+    },
+    showDescription(_e, storageLocation) {
+      [this.descriptionModalObject] = storageLocation;
     },
     share(_event, rows) {
       const [storageLocation] = rows;

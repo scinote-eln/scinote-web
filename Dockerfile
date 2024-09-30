@@ -1,4 +1,4 @@
-FROM ruby:3.2.5-bookworm
+FROM ruby:3.2-bookworm
 MAINTAINER SciNote <info@scinote.net>
 
 # additional dependecies
@@ -28,7 +28,7 @@ RUN apt-get update -qq && \
 
 ENV PATH=/usr/share/nodejs/yarn/bin:$PATH
 
-RUN yarn add puppeteer@npm:puppeteer-core 
+RUN yarn add puppeteer@npm:puppeteer-core@^22.15.0
 
 ENV BUNDLE_PATH /usr/local/bundle/
 
@@ -39,7 +39,7 @@ RUN mkdir $APP_HOME
 RUN adduser --uid 1000 scinote
 RUN chown scinote:scinote $APP_HOME
 USER scinote
-ENV CHROMIUM_PATH /usr/bin/chromium
+ENV CHROMIUM_PATH=$APP_HOME/bin/chromium
 WORKDIR $APP_HOME
 
 CMD rails s -b 0.0.0.0

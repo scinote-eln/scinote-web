@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class StorageLocationsController < ApplicationController
+  include ActionView::Helpers::TextHelper
+  include ApplicationHelper
+  include TeamsHelper
+  include Rails.application.routes.url_helpers
+
+  before_action :switch_team_with_param, only: %i(index show)
   before_action :check_storage_locations_enabled, except: :unassign_rows
   before_action :load_storage_location, only: %i(update destroy duplicate move show available_positions unassign_rows export_container import_container)
   before_action :check_read_permissions, except: %i(index create tree actions_toolbar)
@@ -9,12 +15,21 @@ class StorageLocationsController < ApplicationController
   before_action :set_breadcrumbs_items, only: %i(index show)
 
   def index
+    @parent_location = StorageLocation.find(storage_location_params[:parent_id]) if storage_location_params[:parent_id]
+
+    render_403 if @parent_location && !can_read_storage_location?(@parent_location)
+
     respond_to do |format|
       format.html
       format.json do
         storage_locations = Lists::StorageLocationsService.new(current_user, current_team, params).call
-        render json: storage_locations, each_serializer: Lists::StorageLocationSerializer,
-               user: current_user, meta: pagination_dict(storage_locations)
+        render json: storage_locations,
+               each_serializer: Lists::StorageLocationSerializer,
+               user: current_user,
+               meta: pagination_dict(storage_locations),
+               shared_object:
+                @parent_location &&
+                StorageLocation.select('*').select(StorageLocation.shared_sql_select(current_user)).find(@parent_location.root_storage_location.id)
       end
     end
   end
@@ -33,6 +48,7 @@ class StorageLocationsController < ApplicationController
 
       if @storage_location.save
         log_activity('storage_location_created')
+        storage_location_annotation_notification
         render json: @storage_location, serializer: Lists::StorageLocationSerializer
       else
         render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
@@ -44,10 +60,12 @@ class StorageLocationsController < ApplicationController
     ActiveRecord::Base.transaction do
       @storage_location.image.purge if params[:file_name].blank?
       @storage_location.image.attach(params[:signed_blob_id]) if params[:signed_blob_id]
+      old_description = @storage_location.description
       @storage_location.update(storage_location_params)
 
       if @storage_location.save
         log_activity('storage_location_edited')
+        storage_location_annotation_notification(old_description) if old_description != @storage_location.description
         render json: @storage_location, serializer: Lists::StorageLocationSerializer
       else
         render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
@@ -91,7 +109,10 @@ class StorageLocationsController < ApplicationController
 
       @storage_location.update!(parent: destination_storage_location)
 
-      log_activity('storage_location_moved', { storage_location_original: original_storage_location.id, storage_location_destination: destination_storage_location.id })
+      log_activity('storage_location_moved', {
+                     storage_location_original: original_storage_location&.id, # nil if moved from root
+                     storage_location_destination: destination_storage_location&.id # nil if moved to root
+                   })
     end
 
     render json: { message: I18n.t('storage_locations.index.move_modal.success_flash') }
@@ -175,8 +196,8 @@ class StorageLocationsController < ApplicationController
   end
 
   def load_storage_location
-    @storage_location = StorageLocation.viewable_by_user(current_user).find_by(id: storage_location_params[:id])
-    render_404 unless @storage_location
+    @storage_location = StorageLocation.find(storage_location_params[:id])
+    render_404 unless can_read_storage_location?(@storage_location)
   end
 
   def check_read_permissions
@@ -209,7 +230,7 @@ class StorageLocationsController < ApplicationController
 
     storage_locations = []
     if params[:parent_id] || @storage_location
-      location = (current_team.storage_locations.find_by(id: params[:parent_id]) || @storage_location)
+      location = StorageLocation.find_by(id: params[:parent_id]) || @storage_location
       if location
         storage_locations.unshift(breadcrumbs_item(location))
         while location.parent
@@ -249,6 +270,25 @@ class StorageLocationsController < ApplicationController
               storage_location: @storage_location.id,
               user: current_user.id
             }.merge(message_items))
+  end
+
+  def storage_location_annotation_notification(old_text = nil)
+    url = if @storage_location.container
+            storage_location_path(@storage_location.id)
+          else
+            storage_locations_path(parent_id: @storage_location.id)
+          end
+
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: @storage_location.description,
+      subject: @storage_location,
+      title: t('notifications.storage_location_annotation_title',
+               storage_location: @storage_location.name,
+               user: current_user.full_name),
+      message: t('notifications.storage_location_annotation_message_html',
+                 storage_location: link_to(@storage_location.name, url))
+    )
   end
 
   def log_unassign_activities

@@ -62,7 +62,7 @@ export default {
       return available_positions_storage_location_path(this.selectedContainerId);
     },
     availableRows() {
-      return Object.keys(this.availablePositions).map((row) => [row, row]);
+      return Object.keys(this.availablePositions).map((row) => [row, this.convertNumberToLetter(row)]);
     },
     availableColumns() {
       return (this.availablePositions[this.selectedRow] || []).map((col) => [col, col]);
@@ -74,6 +74,12 @@ export default {
       selectedRow: null,
       selectedColumn: null
     };
+  },
+  methods: {
+    convertNumberToLetter(number) {
+      const charCode = 96 + parseInt(number, 10);
+      return String.fromCharCode(charCode).toUpperCase();
+    }
   }
 };
 </script>

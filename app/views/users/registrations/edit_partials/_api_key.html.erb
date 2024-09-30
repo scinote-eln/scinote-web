@@ -5,15 +5,13 @@
   </p>
   <% if current_user.api_key %>
     <div class="api-key-display">
-      <div class="form-group sci-input-container right-icon !w-1/2">
-        <%= password_field_tag :api_key,
-                               current_user.api_key,
-                               name: 'api_key',
-                               class: 'form-control sci-input-field !text-sn-black !font-mono !cursor-text',
-                               disabled: 'disabled'
-        %>
-        <i class="sn-icon sn-icon-visibility-show show-password" style="cursor: pointer; z-index: 10"></i>
-      </div>
+      <p>
+        <% if flash[:token] %>
+          <%= flash[:token] %>
+        <% else %>
+          <%= '*' * (current_user.api_key.length - 4) + current_user.api_key.last(4) %>
+        <% end %>
+      </p>
       <% if current_user.api_key_expires_at < Time.current %>
         <p class="">
           <%= t("users.registrations.edit.api_key.expired") %>
