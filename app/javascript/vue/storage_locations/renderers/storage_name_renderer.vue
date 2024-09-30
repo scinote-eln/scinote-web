@@ -1,6 +1,6 @@
 <template>
-  <div @mouseenter="openPreview" @mouseleave="hidePreview">
-    <a class="hover:no-underline flex items-center gap-1"
+  <div class="flex gap-4">
+    <a @mouseenter="openPreview" @mouseleave="hidePreview" class="hover:no-underline cursor-pointer flex items-center gap-1"
        :title="params.data.name"
        :href="params.data.urls.show">
       <i v-if="params.data.shared || params.data.ishared" class="fas fa-users"></i>

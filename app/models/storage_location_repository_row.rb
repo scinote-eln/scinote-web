@@ -2,6 +2,7 @@
 
 class StorageLocationRepositoryRow < ApplicationRecord
   include Discard::Model
+  include SearchableModel
 
   default_scope -> { kept }
 
