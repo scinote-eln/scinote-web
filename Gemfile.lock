@@ -24,7 +24,7 @@ GIT
 
 GIT
   remote: https://github.com/scinote-eln/caracal.git
-  revision: f30bd2d26229c8118cc392c3a18409cb9a12ae02
+  revision: 7f5a653b23af51f38c9ecaf855fdffa6bc5427b2
   branch: custom-docx-reports
   specs:
     caracal (1.4.2)
