@@ -186,8 +186,23 @@ export default {
       // Smart annotation fix
       this.object.description = $(this.$refs.description).val();
 
+      const params = {
+        name: this.object.name,
+        description: this.object.description,
+        signed_blob_id: this.object.signed_blob_id,
+        container: this.object.container
+      };
+
+      if (this.object.container) {
+        params.metadata = this.object.metadata;
+
+        if (params.metadata.display_type === 'no_grid') {
+          delete params.metadata.dimensions;
+        }
+      }
+
       if (this.object.code) {
-        axios.put(this.object.urls.update, this.object)
+        axios.put(this.object.urls.update, params)
           .then(() => {
             this.$emit('tableReloaded');
             HelperModule.flashAlertMsg(this.i18n.t(`storage_locations.index.edit_modal.success_message.edit_${this.editModalMode}`, { name: this.object.name }), 'success');
@@ -196,7 +211,7 @@ export default {
             HelperModule.flashAlertMsg(error.response.data.error, 'danger');
           });
       } else {
-        axios.post(this.createUrl, this.object)
+        axios.post(this.createUrl, params)
           .then(() => {
             this.$emit('tableReloaded');
             HelperModule.flashAlertMsg(this.i18n.t(`storage_locations.index.edit_modal.success_message.create_${this.editModalMode}`, { name: this.object.name }), 'success');
