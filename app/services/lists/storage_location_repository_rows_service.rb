@@ -13,7 +13,13 @@ module Lists
     end
 
     def filter_records
-      @records = @records.joins(:repository_row).where('LOWER(repository_rows.name) ILIKE ?', "%#{@params[:search].downcase}%") if @params[:search].present?
+      if @params[:search].present?
+        @records = @records.joins(:repository_row)
+                           .where_attributes_like(
+                             ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL],
+                             @params[:search]
+                           )
+      end
     end
 
     def sort_records
