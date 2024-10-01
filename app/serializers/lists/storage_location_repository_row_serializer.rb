@@ -51,7 +51,7 @@ module Lists
     end
 
     def have_reminders
-      object.repository_row.has_reminders?(scope)
+      object.repository_row.has_reminders?(scope) unless hidden
     end
 
     def reminders_url
