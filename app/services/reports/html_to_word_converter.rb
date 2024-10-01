@@ -262,7 +262,7 @@ module Reports
     def table_cell_styling(elem)
       style = elem.attributes['style']
       result = {}
-      style_keys = %w(background-color vertical-align)
+      style_keys = %w(background-color vertical-align background)
 
       if style
         style_keys.each do |key|
@@ -272,7 +272,7 @@ module Reports
           value = style_el.split(':')[1].strip if style_el
 
           case key
-          when 'background-color'
+          when 'background-color', 'background'
             result[:background] = normalized_hex_color(value)
           when 'vertical-align'
             result[:vertical_align] = value.to_sym
