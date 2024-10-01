@@ -31,6 +31,10 @@ Canaid::Permissions.register_for(StorageLocation) do
     )
   end
 
+  can :create_storage_location_repository_rows do |user, storage_location|
+    can_read_storage_location?(user, storage_location)
+  end
+
   can :share_storage_location do |user, storage_location|
     user.current_team == storage_location.team &&
       storage_location.root? &&

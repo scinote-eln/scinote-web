@@ -58,7 +58,7 @@ export default {
       }
     },
     managePermission(loc) {
-      return loc.storage_location.parent_id ? this.canManage : loc.can_manage;
+      return (loc.storage_location.parent_id ? this.canManage : loc.can_manage) || loc.storage_location.container;
     }
   }
 };
