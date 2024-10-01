@@ -5,6 +5,7 @@ module Lists
     def initialize(team, params)
       @team = team
       @storage_location_id = params[:storage_location_id]
+      @storage_location = StorageLocation.find(@storage_location_id)
       @params = params
     end
 
@@ -20,6 +21,10 @@ module Lists
                              @params[:search]
                            )
       end
+    end
+
+    def paginate_records
+      @records = @records.page(@params[:page]).per(@params[:per_page]) if @params[:page].present? && !@storage_location.with_grid?
     end
 
     def sort_records
