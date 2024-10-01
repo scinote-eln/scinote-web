@@ -12,10 +12,14 @@
       <div id="storageLocationsTable" class="fixed-content-body">
         <storage-locations
           actions-url="<%= actions_toolbar_storage_locations_path(current_team) %>"
+          :can-create-location="<%= can_create_storage_locations?(current_team) %>"
+          :can-create-container="<%= can_create_storage_location_containers?(current_team) %>"
+          :can-manage-parent="<%= can_manage_storage_location?(@parent_location) if @parent_location %>"
+          :has-parent="<%= @parent_location.present? %>"
           data-source="<%= storage_locations_path(format: :json, parent_id: params[:parent_id]) %>"
           direct-upload-url="<%= rails_direct_uploads_url %>"
-          create-location-url="<%= storage_locations_path(parent_id: params[:parent_id]) if can_create_storage_locations?(current_team) %>"
-          create-location-instance-url="<%= storage_locations_path(parent_id: params[:parent_id]) if can_create_storage_location_containers?(current_team) %>"
+          create-location-url="<%= storage_locations_path(parent_id: params[:parent_id]) %>"
+          create-location-instance-url="<%= storage_locations_path(parent_id: params[:parent_id]) %>"
         />
       </div>
     </div>

@@ -197,6 +197,7 @@ class StorageLocationsController < ApplicationController
 
   def load_storage_location
     @storage_location = StorageLocation.find(storage_location_params[:id])
+    @parent_location = @storage_location.parent
     render_404 unless can_read_storage_location?(@storage_location)
   end
 
@@ -205,6 +206,8 @@ class StorageLocationsController < ApplicationController
   end
 
   def check_create_permissions
+    render_403 if @parent_location && !can_manage_storage_location?(@parent_location.team)
+
     if storage_location_params[:container]
       render_403 unless can_create_storage_location_containers?(current_team)
     else
