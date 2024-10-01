@@ -844,6 +844,7 @@ en:
           step_comments: "Step comments"
           assigned_items: "Assigned items"
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
+          assigned_items_repository_items_description_html: "You can customize inventory columns <strong>only for the docx report.</strong> The stock management column by default reflects item consumption."
           include_all_assigned_iitems: "Include all assigned items from the following inventories"
           results: "Results"
           all_results: "Include all results elements"
@@ -866,6 +867,10 @@ en:
           exclude_timestamps: "Exclude timestamps"
           archived: "[archived]"
           deleted: "[deleted]"
+          repository_column:
+            placeholder: 'Select columns'
+            all_selected: 'All columns selected'
+            selected: 'columns selected'
 
       new:
         report_name_placeholder: "Name your report"

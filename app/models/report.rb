@@ -64,7 +64,8 @@ class Report < ApplicationRecord
       result_comments: true,
       result_order: 'new',
       activities: true,
-      repositories: []
+      repositories: [],
+      excluded_repository_columns: {}
     }
   }.freeze
 
@@ -125,5 +126,14 @@ class Report < ApplicationRecord
     report.settings[:task][:repositories] = content['repositories']
     ReportActions::ReportContent.new(report, content, {}, current_user).save_with_content
     report
+  end
+
+  def self.default_repository_columns
+    {
+      '-1': I18n.t('repositories.table.id'),
+      '-2': I18n.t('repositories.table.row_name'),
+      '-3': I18n.t('repositories.table.added_on'),
+      '-4': I18n.t('repositories.table.added_by')
+    }
   end
 end
