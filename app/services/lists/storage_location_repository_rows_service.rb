@@ -10,7 +10,12 @@ module Lists
     end
 
     def fetch_records
-      @records = StorageLocationRepositoryRow.includes(:repository_row).where(storage_location_id: @storage_location_id)
+      @records = StorageLocationRepositoryRow.includes(
+        :created_by,
+        repository_row: {
+          repository: { user_assignments: :user_role }
+        }
+      ).where(storage_location_id: @storage_location_id)
     end
 
     def filter_records
