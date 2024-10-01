@@ -260,6 +260,15 @@
   }
   // scss-lint:enable ImportantRule
 
+  .repositories-contents {
+    .dropdown-selector-container {
+      display: inline-flex;
+      flex-shrink: 0;
+      margin-left: auto;
+      width: 200px;
+    }
+  }
+
   .project-selector-container {
     background: $color-white;
     box-shadow: $modal-shadow;

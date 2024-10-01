@@ -6,12 +6,16 @@ module Reports::Docx::RepositoryHelper
 
   def prepare_row_columns(repository_data, my_module = nil, repository = nil)
     result = [repository_data[:headers]]
+    excluded_columns = repository_data[:excluded_columns]
+
     repository_data[:rows].each do |record|
       row = []
-      row.push(record.code)
-      row.push(escape_input(record.archived ? "#{record.name} [#{I18n.t('general.archived')}]" : record.name))
-      row.push(I18n.l(record.created_at, format: :full))
-      row.push(escape_input(record.created_by.full_name))
+      row.push(record.code) unless excluded_columns.include?(-1)
+      unless excluded_columns.include?(-2)
+        row.push(escape_input(record.archived ? "#{record.name} [#{I18n.t('general.archived')}]" : record.name))
+      end
+      row.push(I18n.l(record.created_at, format: :full)) unless excluded_columns.include?(-3)
+      row.push(escape_input(record.created_by.full_name)) unless excluded_columns.include?(-4)
 
       cell_values = {}
       custom_cells = record.repository_cells
@@ -38,6 +42,8 @@ module Reports::Docx::RepositoryHelper
       end
 
       repository_data[:custom_columns].each do |column_id|
+        next if excluded_columns.include?(column_id)
+
         value = cell_values[column_id]
         row.push(value)
       end

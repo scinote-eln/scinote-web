@@ -968,6 +968,16 @@ function reportHandsonTableConverter() {
 }
 
 (function() {
+  function getSelectedRepositoryColumnValues(element, selectedAll = false) {
+    const values = [];
+    $(element).find('option').each((_, option) => {
+      if ($(option).attr('selected-value') || selectedAll) {
+        values.push(option.value);
+      }
+    });
+    return values;
+  }
+
   function getReportData() {
     var reportData = {};
 
@@ -1046,8 +1056,17 @@ function reportHandsonTableConverter() {
       reportData.report.settings.task[e.value] = e.checked;
     });
     reportData.report.settings.task.repositories = [];
-    $.each($('.task-contents-container .repositories-contents .repositories-setting:checked'), function(i, e) {
-      reportData.report.settings.task.repositories.push(parseInt(e.value, 10));
+    reportData.report.settings.task.excluded_repository_columns = {};
+
+    $.each($('.task-contents-container .repositories-contents .repositories-setting:checked'), (_, e) => {
+      const value = parseInt(e.value, 10);
+      const $repositoryColumn = $(e).parent().siblings('.repository-columns')[0];
+      const selectedValues = dropdownSelector.getValues($repositoryColumn);
+      const excludedValues = getSelectedRepositoryColumnValues($repositoryColumn, true)
+        .filter((item) => !selectedValues.includes(item))
+        .map((el) => parseInt(el, 10));
+      reportData.report.settings.task.repositories.push(value);
+      reportData.report.settings.task.excluded_repository_columns[value] = excludedValues;
     });
 
     reportData.report.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');
@@ -1359,6 +1378,20 @@ function reportHandsonTableConverter() {
     if (dropdownSelector.getValues('#docxTemplateSelector').length > 0) {
       loadDocxTemplate();
     }
+
+    $('.repository-columns').each((_, element) => {
+      const elementId = `#${$(element).attr('id')}`;
+      const elements = getSelectedRepositoryColumnValues(elementId);
+
+      dropdownSelector.init(elementId, {
+        selectAppearance: 'simple',
+        optionClass: 'checkbox-icon'
+      });
+
+      if (elements.length) {
+        dropdownSelector.selectValues(elementId, elements);
+      }
+    });
   }
 
   function loadTemplate() {
