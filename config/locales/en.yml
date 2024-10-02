@@ -4013,7 +4013,7 @@ en:
       inline_html: "Large"
       thumbnail_html: "Thumbnail"
       list_html: "List"
-      versions: "Versions"
+      versions: "Version history"
     file_versions_modal:
       title: "Version history"
       download: "Download"
