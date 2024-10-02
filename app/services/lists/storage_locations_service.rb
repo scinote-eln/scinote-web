@@ -44,8 +44,25 @@ module Lists
         @records = @records.where(parent_id: @parent_id)
       end
 
-      @records = @records.where('LOWER(storage_locations.name) ILIKE ?', "%#{@filters[:query].downcase}%") if @filters[:query].present?
-      @records = @records.where('LOWER(storage_locations.name) ILIKE ?', "%#{@params[:search].downcase}%") if @params[:search].present?
+      if @filters[:query].present?
+        @records = @records.where_attributes_like(
+          [
+            'storage_locations.name',
+            'storage_locations.description',
+            StorageLocation::PREFIXED_ID_SQL
+          ], @filters[:query]
+        )
+      end
+
+      if @params[:search].present?
+        @records = @records.where_attributes_like(
+          [
+            'storage_locations.name',
+            'storage_locations.description',
+            StorageLocation::PREFIXED_ID_SQL
+          ], @params[:search]
+        )
+      end
     end
 
     private
