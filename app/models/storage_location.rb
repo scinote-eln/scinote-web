@@ -6,6 +6,7 @@ class StorageLocation < ApplicationRecord
   ID_PREFIX = 'SL'
   include PrefixedIdModel
   include Shareable
+  include SearchableModel
 
   default_scope -> { kept }
 
