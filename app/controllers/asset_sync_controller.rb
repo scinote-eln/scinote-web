@@ -16,7 +16,8 @@ class AssetSyncController < ApplicationController
     asset_sync_token = current_user.asset_sync_tokens.find_or_create_by(asset_id: params[:asset_id])
 
     unless asset_sync_token.token_valid?
-      asset_sync_token = current_user.asset_sync_tokens.create(asset_id: params[:asset_id])
+      asset_sync_token =
+        current_user.asset_sync_tokens.create(asset_id: params[:asset_id])
     end
 
     render json: AssetSyncTokenSerializer.new(asset_sync_token).as_json
@@ -27,18 +28,7 @@ class AssetSyncController < ApplicationController
   end
 
   def update
-    if @asset_sync_token.conflicts?(request.headers['VersionToken'])
-      ActiveRecord::Base.transaction do
-        conflict_response = AssetSyncTokenSerializer.new(conflicting_asset_copy_token).as_json
-        error_message = { message: I18n.t('assets.conflict_error', filename: @asset.file.filename) }
-        log_activity(:create)
-        render json: conflict_response.merge(error_message), status: :conflict
-      end
-
-      return
-    end
-
-    orig_file_size = @asset.file_size
+    asset_conflicts = @asset_sync_token.conflicts?(request.headers['VersionToken'])
 
     ActiveRecord::Base.transaction do
       @asset.update(last_modified_by: current_user)
@@ -49,10 +39,19 @@ class AssetSyncController < ApplicationController
         @asset.touch
       end
 
-      @asset.team.release_space(orig_file_size)
       @asset.post_process_file
 
       log_activity(:edit)
+    end
+
+    if asset_conflicts
+      ActiveRecord::Base.transaction do
+        conflict_response = AssetSyncTokenSerializer.new(@asset_sync_token).as_json
+        error_message = { message: I18n.t('assets.conflict_error', filename: @asset.file.filename) }
+        render json: conflict_response.merge(error_message), status: :conflict
+      end
+
+      return
     end
 
     render json: AssetSyncTokenSerializer.new(@asset_sync_token).as_json
