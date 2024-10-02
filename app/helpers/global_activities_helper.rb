@@ -112,7 +112,7 @@ module GlobalActivitiesHelper
       path = if obj.new_record?
                storage_locations_path(team: activity.team.id)
              else
-               storage_location_path(obj)
+               storage_location_path(obj, team: activity.team.id)
              end
     else
       return current_value

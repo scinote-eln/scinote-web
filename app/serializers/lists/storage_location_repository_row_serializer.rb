@@ -37,7 +37,7 @@ module Lists
     end
 
     def stock
-      if object.repository_row.repository.has_stock_management? && !hidden
+      if !hidden && object.repository_row.repository.has_stock_management?
         object.repository_row.repository_cells.find_by(value_type: 'RepositoryStockValue')&.value&.formatted
       end
     end
@@ -47,11 +47,13 @@ module Lists
     end
 
     def hidden
-      !can_read_repository?(object.repository_row.repository)
+      return @hidden unless @hidden.nil?
+
+      @hidden = !can_read_repository?(object.repository_row.repository)
     end
 
     def have_reminders
-      object.repository_row.has_reminders?(scope)
+      object.repository_row.has_reminders?(scope) unless hidden
     end
 
     def reminders_url

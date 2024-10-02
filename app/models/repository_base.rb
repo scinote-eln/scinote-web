@@ -40,7 +40,7 @@ class RepositoryBase < ApplicationRecord
   end
 
   def has_stock_management?
-    self.class.stock_management_enabled? && repository_columns.stock_type.exists?
+    @has_stock_management ||= self.class.stock_management_enabled? && repository_columns.stock_type.exists?
   end
 
   def has_stock_consumption?

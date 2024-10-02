@@ -91,7 +91,11 @@ export default {
     },
     directUploadUrl: {
       type: String
-    }
+    },
+    canCreateLocation: Boolean,
+    canCreateContainer: Boolean,
+    canManageParent: Boolean,
+    hasParent: Boolean
   },
   data() {
     return {
@@ -110,7 +114,7 @@ export default {
   computed: {
     columnDefs() {
       const columns = [{
-        field: 'name',
+        field: 'name_hash',
         headerName: this.i18n.t('storage_locations.index.table.name'),
         sortable: true,
         notSelectable: true,
@@ -161,7 +165,7 @@ export default {
     },
     toolbarActions() {
       const left = [];
-      if (this.createLocationUrl) {
+      if (this.canCreateLocation && (this.canManageParent || !this.hasParent)) {
         left.push({
           name: 'create_location',
           icon: 'sn-icon sn-icon-new-task',
@@ -172,7 +176,7 @@ export default {
         });
       }
 
-      if (this.createLocationInstanceUrl) {
+      if (this.canCreateContainer && (this.canManageParent || !this.hasParent)) {
         left.push({
           name: 'create_container',
           icon: 'sn-icon sn-icon-item',

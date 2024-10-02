@@ -123,7 +123,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_storage_location?(@storage_location)
+    render_403 unless can_create_storage_location_repository_rows?(@storage_location)
   end
 
   def log_activity(type_of, message_items = {})

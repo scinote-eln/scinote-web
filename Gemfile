@@ -81,9 +81,6 @@ gem 'aws-sdk-lambda'
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
 gem 'delayed_job_active_record'
-gem 'devise-async',
-    git: 'https://github.com/mhfs/devise-async.git',
-    branch: 'devise-4.x'
 gem 'image_processing'
 gem 'img2zpl', git: 'https://github.com/scinote-eln/img2zpl'
 gem 'rufus-scheduler'

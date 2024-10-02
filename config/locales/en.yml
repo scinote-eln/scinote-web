@@ -86,14 +86,12 @@ en:
       errors:
         generic: "Failed to sign in user"
         no_local_user_map: "No local user record found"
-        no_email: "Email is missing in auth token"
         failed_to_save: "Failed to create new user"
     openid_connect:
       provider_name: "OpenID Connect"
       errors:
         generic: "Failed to sign in user"
         no_local_user_map: "No local user record found"
-        no_email: "Email is missing in auth token"
         failed_to_save: "Failed to create new user"
     okta:
       provider_name: "Okta"
@@ -268,6 +266,8 @@ en:
           attributes:
             parent_storage_location: "Storage location cannot be parent to itself"
             parent_storage_location_child: "Storage location cannot be moved to it's child"
+            metadata:
+              invalid: 'Invalid metadata'
   storage:
     limit_reached: "Storage limit has been reached."
   helpers:

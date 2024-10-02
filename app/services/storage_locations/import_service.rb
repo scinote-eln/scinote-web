@@ -35,12 +35,14 @@ module StorageLocations
         unassign_repository_rows! if @storage_location.with_grid?
 
         @rows.each do |row|
+          next if row[:repository_row_id].blank?
+
           if @storage_location.with_grid? && !position_valid?(row[:position])
             @error_message = I18n.t('storage_locations.show.import_modal.errors.invalid_position')
             raise ActiveRecord::RecordInvalid
           end
 
-          unless RepositoryRow.exists?(row[:repository_row_id])
+          unless RepositoryRow.exists?(id: row[:repository_row_id], parent_id: nil)
             @error_message = I18n.t('storage_locations.show.import_modal.errors.invalid_item', row_id: row[:repository_row_id])
             raise ActiveRecord::RecordNotFound
           end
@@ -64,7 +66,7 @@ module StorageLocations
         row = SpreadsheetParser.parse_row(r, @sheet)
         {
           position: convert_position_letter_to_number(row[0]),
-          repository_row_id: row[1].to_s.gsub('IT', '').to_i
+          repository_row_id: (row[1].to_s.gsub('IT', '') if row[1].present?)
         }
       end
     end
@@ -104,7 +106,7 @@ module StorageLocations
       return unless position
 
       column_letter = position[0]
-      row_number = position[1]
+      row_number = position[1..]
 
       [column_letter.ord - 64, row_number.to_i]
     end

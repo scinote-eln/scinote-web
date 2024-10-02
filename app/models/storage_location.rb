@@ -21,6 +21,8 @@ class StorageLocation < ApplicationRecord
 
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
   validate :parent_validation, if: -> { parent.present? }
+  validate :no_grid_options, if: -> { !container }
+  validate :no_dimensions, if: -> { !with_grid? }
 
   scope :readable_by_user, (lambda do |user, team = user.current_team|
     next StorageLocation.none unless team.permission_granted?(user, TeamPermissions::STORAGE_LOCATIONS_READ)
@@ -192,5 +194,13 @@ class StorageLocation < ApplicationRecord
     elsif StorageLocation.inner_storage_locations(team, self).exists?(id: parent_id)
       errors.add(:parent, I18n.t('activerecord.errors.models.project_folder.attributes.parent_storage_location_child'))
     end
+  end
+
+  def no_grid_options
+    errors.add(:metadata, I18n.t('activerecord.errors.models.storage_location.attributes.metadata.invalid')) if metadata['display_type'] || metadata['dimensions']
+  end
+
+  def no_dimensions
+    errors.add(:metadata, I18n.t('activerecord.errors.models.storage_location.attributes.metadata.invalid')) if !with_grid? && metadata['dimensions']
   end
 end

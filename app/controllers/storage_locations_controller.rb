@@ -123,7 +123,7 @@ class StorageLocationsController < ApplicationController
   end
 
   def tree
-    records = current_team.storage_locations.where(parent: nil, container: [false, params[:container] == 'true'])
+    records = StorageLocation.viewable_by_user(current_user, current_team).where(parent: nil, container: [false, params[:container] == 'true'])
     render json: storage_locations_recursive_builder(records)
   end
 
@@ -197,6 +197,7 @@ class StorageLocationsController < ApplicationController
 
   def load_storage_location
     @storage_location = StorageLocation.find(storage_location_params[:id])
+    @parent_location = @storage_location.parent
     render_404 unless can_read_storage_location?(@storage_location)
   end
 
@@ -205,6 +206,8 @@ class StorageLocationsController < ApplicationController
   end
 
   def check_create_permissions
+    render_403 if @parent_location && !can_manage_storage_location?(@parent_location.team)
+
     if storage_location_params[:container]
       render_403 unless can_create_storage_location_containers?(current_team)
     else
@@ -253,6 +256,7 @@ class StorageLocationsController < ApplicationController
     storage_locations.map do |storage_location|
       {
         storage_location: storage_location,
+        can_manage: (can_manage_storage_location?(storage_location) unless storage_location.parent_id),
         children: storage_locations_recursive_builder(
           storage_location.storage_locations.where(container: [false, params[:container] == 'true'])
         )

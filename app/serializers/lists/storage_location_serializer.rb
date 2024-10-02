@@ -9,7 +9,7 @@ module Lists
 
     attributes :id, :code, :name, :container, :description, :owned_by, :created_by,
                :created_on, :urls, :metadata, :file_name, :sub_location_count, :is_empty,
-               :img_url, :sa_description
+               :img_url, :sa_description, :name_hash
 
     def owned_by
       object['team_name']
@@ -23,6 +23,10 @@ module Lists
 
     def is_empty
       object.empty?
+    end
+
+    def name_hash
+      (object.name.to_s + img_url.to_s).hash
     end
 
     def sa_description

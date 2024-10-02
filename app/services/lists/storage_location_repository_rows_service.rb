@@ -5,15 +5,31 @@ module Lists
     def initialize(team, params)
       @team = team
       @storage_location_id = params[:storage_location_id]
+      @storage_location = StorageLocation.find(@storage_location_id)
       @params = params
     end
 
     def fetch_records
-      @records = StorageLocationRepositoryRow.includes(:repository_row).where(storage_location_id: @storage_location_id)
+      @records = StorageLocationRepositoryRow.includes(
+        :created_by,
+        repository_row: {
+          repository: { user_assignments: :user_role }
+        }
+      ).where(storage_location_id: @storage_location_id)
     end
 
     def filter_records
-      @records = @records.joins(:repository_row).where('LOWER(repository_rows.name) ILIKE ?', "%#{@params[:search].downcase}%") if @params[:search].present?
+      if @params[:search].present?
+        @records = @records.joins(:repository_row)
+                           .where_attributes_like(
+                             ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL],
+                             @params[:search]
+                           )
+      end
+    end
+
+    def paginate_records
+      @records = @records.page(@params[:page]).per(@params[:per_page]) if @params[:page].present? && !@storage_location.with_grid?
     end
 
     def sort_records
