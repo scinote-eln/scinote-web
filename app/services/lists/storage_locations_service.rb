@@ -60,9 +60,9 @@ module Lists
         @records = @records.order(id: :asc)
       when 'code_DESC'
         @records = @records.order(id: :desc)
-      when 'name_ASC'
+      when 'name_hash_ASC'
         @records = @records.order(name: :asc)
-      when 'name_DESC'
+      when 'name_hash_DESC'
         @records = @records.order(name: :desc)
       when 'sub_location_count_ASC'
         @records = @records.order(sub_location_count: :asc)
