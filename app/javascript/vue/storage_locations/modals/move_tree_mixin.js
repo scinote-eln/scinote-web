@@ -34,13 +34,13 @@ export default {
   },
   methods: {
     filteredStorageLocationsTreeHelper(storageLocationsTree) {
-      return storageLocationsTree.map(({ storage_location, children }) => {
+      return storageLocationsTree.map(({ storage_location, children, can_manage }) => {
         if (storage_location.name.toLowerCase().includes(this.query.toLowerCase())) {
-          return { storage_location, children };
+          return { storage_location, children, can_manage };
         }
 
         const filteredChildren = this.filteredStorageLocationsTreeHelper(children);
-        return filteredChildren.length ? { storage_location, children: filteredChildren } : null;
+        return filteredChildren.length ? { storage_location, can_manage, children: filteredChildren } : null;
       }).filter(Boolean);
     },
     selectStorageLocation(storageLocationId) {
