@@ -2692,10 +2692,12 @@ en:
         button: 'Unassign'
       assign_modal:
         selected_position_title: 'Assign to position %{position}'
+        selected_row_title: 'Assign new location'
         assign_title: 'Assign position'
         move_title: 'Move item'
         assign_description: 'Select an item to assign it to a location.'
         move_description: 'Select a new location for your item.'
+        selected_row_description: "Select a location for the item %{name}."
         assign_action: 'Assign'
         move_action: 'Move'
         row: 'Row'
@@ -2772,6 +2774,7 @@ en:
         title: 'Move %{name}'
         description: 'Select where you want to move %{name}.'
         search_header: 'Locations'
+        no_results: "You haven't created any storage locations and boxes yet.<br> Go to <b>Inventories > Locations</b> and create your location structure first to assign items to locations."
         success_flash: "You have successfully moved the selected location/box to another location."
         error_flash: "An error occurred. The selected location/box has not been moved."
         placeholder:

@@ -7,7 +7,10 @@
         {{ i18n.t('repositories.locations.assign') }}
       </button>
     </div>
-    <template v-if="repositoryRow.storage_locations.enabled" v-for="(location, index) in repositoryRow.storage_locations.locations" :key="location.id">
+    <div class="mb-4">
+      <div v-html="repositoryRow.storage_locations.placeholder"></div>
+    </div>
+    <template v-for="(location, index) in repositoryRow.storage_locations.locations" :key="location.id">
       <div>
         <div class="sci-divider my-4" v-if="index > 0"></div>
         <div class="flex gap-2 mb-3">
@@ -30,14 +33,12 @@
         </div>
       </div>
     </template>
-    <div v-else>
-      <div v-html="repositoryRow.storage_locations.placeholder"></div>
-    </div>
     <Teleport to="body">
       <AssignModal
         v-if="openAssignModal"
         assignMode="assign"
         :selectedRow="repositoryRow.id"
+        :selectedRowName="repositoryRow.default_columns.name"
         @close="openAssignModal = false; $emit('reloadRow'); reloadStorageLocations()"
       ></AssignModal>
       <ConfirmationModal
