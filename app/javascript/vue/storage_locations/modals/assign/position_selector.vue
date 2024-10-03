@@ -52,6 +52,7 @@ export default {
   watch: {
     selectedRow() {
       [[this.selectedColumn]] = this.availableColumns;
+      this.$emit('change', [this.selectedRow, this.selectedColumn]);
     },
     selectedColumn() {
       this.$emit('change', [this.selectedRow, this.selectedColumn]);
