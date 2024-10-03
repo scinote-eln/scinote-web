@@ -10,7 +10,7 @@ class RepositoryRow < ApplicationRecord
   ID_PREFIX = 'IT'
   include PrefixedIdModel
 
-  belongs_to :repository, class_name: 'RepositoryBase'
+  belongs_to :repository, class_name: 'RepositoryBase', counter_cache: :repository_rows_count
   delegate :team, to: :repository
   belongs_to :parent, class_name: 'RepositoryRow', optional: true
   belongs_to :created_by, class_name: 'User'
