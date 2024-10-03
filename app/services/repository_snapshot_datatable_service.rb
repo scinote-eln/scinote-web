@@ -44,8 +44,9 @@ class RepositorySnapshotDatatableService < RepositoryDatatableService
       repository_rows = results
     end
 
-    repository_rows.left_outer_joins(:created_by)
+    repository_rows.joins('LEFT OUTER JOIN "users" "created_by" ON "created_by"."id" = "repository_rows"."created_by_id"')
                    .select('repository_rows.*')
+                   .select('MAX("created_by"."full_name") AS created_by_full_name')
                    .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
                    .group('repository_rows.id')
   end

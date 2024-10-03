@@ -128,8 +128,13 @@ class RepositoryDatatableService
 
     repository_rows = repository_rows.where(id: advanced_search(repository_rows)) if @params[:advanced_search].present?
 
-    repository_rows.left_outer_joins(:created_by, :archived_by, :last_modified_by)
+    repository_rows.joins('LEFT OUTER JOIN "users" "created_by" ON "created_by"."id" = "repository_rows"."created_by_id"')
+                   .joins('LEFT OUTER JOIN "users" "last_modified_by" ON "last_modified_by"."id" = "repository_rows"."last_modified_by_id"')
+                   .joins('LEFT OUTER JOIN "users" "archived_by" ON "archived_by"."id" = "repository_rows"."archived_by_id"')
                    .select('repository_rows.*')
+                   .select('MAX("created_by"."full_name") AS created_by_full_name')
+                   .select('MAX("last_modified_by"."full_name") AS last_modified_by_full_name')
+                   .select('MAX("archived_by"."full_name") AS archived_by_full_name')
                    .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
                    .group('repository_rows.id')
   end

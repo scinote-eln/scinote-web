@@ -29,11 +29,7 @@ class RepositoryRowsController < ApplicationController
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
     @repository_rows = datatable_service.repository_rows
-                                        .preload(:repository_columns,
-                                                 :created_by,
-                                                 :archived_by,
-                                                 :last_modified_by,
-                                                 repository_cells: { value: @repository.cell_preload_includes })
+                                        .preload(:repository_columns, repository_cells: { value: @repository.cell_preload_includes })
                                         .page(page)
                                         .per(per_page)
 
