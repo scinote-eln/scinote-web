@@ -48,14 +48,14 @@ export default {
   },
   computed: {
     repositoriesUrl() {
-      return list_team_repositories_path(this.teamId, { non_empty: true });
+      return list_team_repositories_path(this.teamId, { non_empty: true, active: true });
     },
     rowsUrl() {
       if (!this.selectedRepository) {
         return null;
       }
 
-      return rows_list_team_repositories_path(this.teamId);
+      return rows_list_team_repositories_path(this.teamId, { active: true });
     }
   },
   data() {
