@@ -10,12 +10,18 @@
             <h4 v-if="selectedPosition" class="modal-title truncate !block">
               {{ i18n.t(`storage_locations.show.assign_modal.selected_position_title`, { position: formattedPosition }) }}
             </h4>
+            <h4 v-else-if="selectedRow && selectedRowName" class="modal-title truncate !block">
+              {{ i18n.t(`storage_locations.show.assign_modal.selected_row_title`) }}
+            </h4>
             <h4 v-else class="modal-title truncate !block">
               {{ i18n.t(`storage_locations.show.assign_modal.${assignMode}_title`) }}
             </h4>
           </div>
           <div class="modal-body">
-            <p class="mb-4">
+            <p v-if="selectedRow && selectedRowName" class="mb-4">
+              {{ i18n.t(`storage_locations.show.assign_modal.selected_row_description`, { name: selectedRowName }) }}
+            </p>
+            <p v-else class="mb-4">
               {{ i18n.t(`storage_locations.show.assign_modal.${assignMode}_description`) }}
             </p>
             <RowSelector v-if="!selectedRow" @change="this.rowId = $event" class="mb-4"></RowSelector>
@@ -56,6 +62,7 @@ export default {
   name: 'NewProjectModal',
   props: {
     selectedRow: Number,
+    selectedRowName: String,
     selectedContainer: Number,
     cellId: Number,
     selectedPosition: Array,

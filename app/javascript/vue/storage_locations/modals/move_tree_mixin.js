@@ -8,13 +8,15 @@ export default {
   mounted() {
     axios.get(this.storageLocationsTreeUrl).then((response) => {
       this.storageLocationsTree = response.data;
+      this.dataLoaded = true;
     });
   },
   data() {
     return {
       selectedStorageLocationId: null,
       storageLocationsTree: [],
-      query: ''
+      query: '',
+      dataLoaded: false
     };
   },
   computed: {
