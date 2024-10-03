@@ -86,7 +86,7 @@ class StorageLocationsController < ApplicationController
 
   def duplicate
     ActiveRecord::Base.transaction do
-      new_storage_location = @storage_location.duplicate!
+      new_storage_location = @storage_location.duplicate!(current_user)
       if new_storage_location
         @storage_location = new_storage_location
         log_activity('storage_location_created')
