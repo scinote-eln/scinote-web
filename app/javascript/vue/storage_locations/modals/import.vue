@@ -49,6 +49,10 @@
             {{ i18n.t('general.cancel') }}
           </button>
         </div>
+        <div v-if="loading" class="flex absolute top-0 left-0 items-center justify-center w-full flex-grow h-full z-10">
+          <div class="absolute top-0 left-0 w-full h-full bg-black opacity-20"></div>
+          <img src="/images/medium/loading.svg" alt="Loading" class="p-4 rounded-xl bg-sn-white relative z-10" />
+        </div>
       </div>
     </div>
   </div>
@@ -78,7 +82,8 @@ export default {
   },
   data() {
     return {
-      error: null
+      error: null,
+      loading: false
     };
   },
   computed: {
@@ -99,7 +104,7 @@ export default {
     },
     uploadFile(file) {
       const formData = new FormData();
-
+      this.loading = true;
       // required payload
       formData.append('file', file);
 
@@ -108,9 +113,11 @@ export default {
       })
         .then(() => {
           this.$emit('reloadTable');
+          this.loading = false;
           this.close();
         }).catch((error) => {
           this.handleError(error.response.data.message);
+          this.loading = false;
         });
     }
   }
