@@ -11,7 +11,7 @@
     </div>
     <div class="h-full bg-white px-4">
       <DataTable :columnDefs="columnDefs"
-                tableId="StorageLocationsContainer"
+                :tableId="tableId"
                 :dataUrl="dataSource"
                 ref="table"
                 :reloadingTable="reloadingTable"
@@ -123,7 +123,9 @@ export default {
     paginationMode() {
       return this.withGrid ? 'none' : 'pages';
     },
-
+    tableId() {
+      return this.withGrid ? 'StorageLocationsContainerGrid' : 'StorageLocationsContainer';
+    },
     columnDefs() {
       let columns = [];
 
