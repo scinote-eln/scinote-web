@@ -253,7 +253,7 @@ class StorageLocationsController < ApplicationController
   end
 
   def storage_locations_recursive_builder(storage_locations)
-    storage_locations.map do |storage_location|
+    storage_locations.order('LOWER(storage_locations.name) ASC').map do |storage_location|
       {
         storage_location: storage_location,
         can_manage: (can_manage_storage_location?(storage_location) unless storage_location.parent_id),
