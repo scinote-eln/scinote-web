@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_05_122903) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_02_122340) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -936,6 +936,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_05_122903) do
     t.datetime "updated_at", precision: nil
     t.bigint "created_by_id", null: false
     t.bigint "last_modified_by_id", null: false
+    t.boolean "has_smart_annotation", default: false, null: false
     t.index "trim_html_tags((data)::text) gin_trgm_ops", name: "index_repository_text_values_on_data", using: :gin
   end
 
@@ -1550,7 +1551,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_05_122903) do
   add_foreign_key "tags", "projects"
   add_foreign_key "tags", "users", column: "created_by_id"
   add_foreign_key "tags", "users", column: "last_modified_by_id"
-  add_foreign_key "team_shared_objects", "repositories", column: "shared_object_id"
   add_foreign_key "team_shared_objects", "teams"
   add_foreign_key "teams", "users", column: "created_by_id"
   add_foreign_key "teams", "users", column: "last_modified_by_id"

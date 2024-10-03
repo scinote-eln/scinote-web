@@ -15,29 +15,20 @@ module RepositoryDatatableHelper
                       !repository.is_a?(SoftLockedRepository)
     stock_consumption_permitted = has_stock_management && options[:include_stock_consumption] && options[:my_module] &&
                                   stock_consumption_permitted?(repository, options[:my_module])
+    default_columns_method_name = "#{repository.class.name.underscore}_default_columns"
 
     repository_rows.map do |record|
-      row = public_send("#{repository.class.name.underscore}_default_columns", record)
-      row.merge!(
-        DT_RowId: record.id,
-        DT_RowAttr: { 'data-state': row_style(record), 'data-e2e': "e2e-TR-invInventory-bodyRow-#{record.id}" },
-        recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(repository, record),
-        rowRemindersUrl:
-          Rails.application.routes.url_helpers
-               .active_reminder_repository_cells_repository_repository_row_url(
-                 repository,
-                 record
-               ),
-        relationshipsUrl:
-          Rails.application.routes.url_helpers
-               .relationships_repository_repository_row_url(record.repository_id, record.id),
-        relationships_enabled: repository_row_connections_enabled,
-        code: record.code
-      )
-
-      if reminders_enabled
-        row['hasActiveReminders'] = record.has_active_stock_reminders || record.has_active_datetime_reminders
-      end
+      row = public_send(default_columns_method_name, record)
+      row['code'] = record.code
+      row['DT_RowId'] = record.id
+      row['DT_RowAttr'] = { 'data-state': row_style(record), 'data-e2e': "e2e-TR-invInventory-bodyRow-#{record.id}" }
+      row['recordInfoUrl'] = Rails.application.routes.url_helpers.repository_repository_row_path(repository.id, record.id)
+      row['rowRemindersUrl'] = Rails.application.routes.url_helpers
+                                    .active_reminder_repository_cells_repository_repository_row_url(repository.id, record.id)
+      row['relationshipsUrl'] = Rails.application.routes.url_helpers
+                                     .relationships_repository_repository_row_url(record.repository_id, record.id)
+      row['relationships_enabled'] = repository_row_connections_enabled
+      row['hasActiveReminders'] = record.has_active_stock_reminders || record.has_active_datetime_reminders if reminders_enabled
 
       unless options[:view_mode] || repository.is_a?(SoftLockedRepository)
         row['recordUpdateUrl'] =
@@ -51,8 +42,7 @@ module RepositoryDatatableHelper
       custom_cells = record.repository_cells.filter { |cell| cell.value_type != 'RepositoryStockValue' }
 
       custom_cells.each do |cell|
-        row[columns_mappings[cell.repository_column.id]] =
-          serialize_repository_cell_value(cell, team, repository, reminders_enabled: reminders_enabled)
+        row[columns_mappings[cell.repository_column_id]] = serialize_repository_cell_value(cell, team, repository, reminders_enabled: reminders_enabled)
       end
 
       if has_stock_management
@@ -193,15 +183,14 @@ module RepositoryDatatableHelper
         '1': record.code,
         '2': escape_input(record.name),
         '3': I18n.l(record.created_at, format: :full),
-        '4': escape_input(record.created_by.full_name),
+        '4': escape_input(record.created_by_full_name),
         'recordInfoUrl': Rails.application.routes.url_helpers
                               .repository_repository_row_path(repository_snapshot, record)
       }
 
       # Add custom columns
       record.repository_cells.each do |cell|
-        row[columns_mappings[cell.repository_column.id]] =
-          serialize_repository_cell_value(cell, team, repository_snapshot)
+        row[columns_mappings[cell.repository_column_id]] = serialize_repository_cell_value(cell, team, repository_snapshot)
       end
 
       if has_stock_management
@@ -239,11 +228,11 @@ module RepositoryDatatableHelper
       '3': escape_input(record.name),
       '4': "#{record.parent_connections_count || 0} / #{record.child_connections_count || 0}",
       '5': I18n.l(record.created_at, format: :full),
-      '6': escape_input(record.created_by.full_name),
+      '6': escape_input(record.created_by_full_name),
       '7': (record.updated_at ? I18n.l(record.updated_at, format: :full) : ''),
-      '8': escape_input(record.last_modified_by.full_name),
+      '8': escape_input(record.last_modified_by_full_name),
       '9': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-      '10': escape_input(record.archived_by&.full_name)
+      '10': escape_input(record.archived_by_full_name)
     }
   end
 
@@ -254,9 +243,9 @@ module RepositoryDatatableHelper
       '3': escape_input(record.name),
       '4': "#{record.parent_connections_count || 0} / #{record.child_connections_count || 0}",
       '5': I18n.l(record.created_at, format: :full),
-      '6': escape_input(record.created_by.full_name),
+      '6': escape_input(record.created_by_full_name),
       '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-      '8': escape_input(record.archived_by&.full_name)
+      '8': escape_input(record.archived_by_full_name)
     }
   end
 
@@ -266,9 +255,9 @@ module RepositoryDatatableHelper
       '2': record.code,
       '3': escape_input(record.name),
       '4': I18n.l(record.created_at, format: :full),
-      '5': escape_input(record.created_by.full_name),
+      '5': escape_input(record.created_by_full_name),
       '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-      '7': escape_input(record.archived_by&.full_name),
+      '7': escape_input(record.archived_by_full_name),
       '8': escape_input(record.external_id)
     }
   end

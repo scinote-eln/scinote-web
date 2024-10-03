@@ -46,9 +46,8 @@ module InputSanitizeHelper
     sanitizer_config = Constants::INPUT_SANITIZE_CONFIG.deep_dup
     text = sanitize_input(text, tags, sanitizer_config: sanitizer_config)
 
-    if text =~ SmartAnnotations::TagToHtml::USER_REGEX || text =~ SmartAnnotations::TagToHtml::REGEX
-      text = smart_annotation_parser(text, team, base64_encoded_imgs, preview_repository)
-    end
+    text = smart_annotation_parser(text, team, base64_encoded_imgs, preview_repository) if text.match?(SmartAnnotations::TagToHtml::ALL_REGEX)
+
     auto_link(
       text,
       html: { target: '_blank' },
