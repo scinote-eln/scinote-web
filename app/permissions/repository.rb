@@ -104,6 +104,10 @@ Canaid::Permissions.register_for(Repository) do
       repository.permission_granted?(user, RepositoryPermissions::COLUMNS_CREATE)
   end
 
+  can :manage_repository_columns do |user, repository|
+    repository.repository_snapshots.provisioning.none? && can_create_repository_columns?(user, repository)
+  end
+
   # repository: create/update/delete filters
   can :manage_repository_filters do |user, repository|
     repository.permission_granted?(user, RepositoryPermissions::FILTERS_MANAGE)
@@ -111,5 +115,13 @@ Canaid::Permissions.register_for(Repository) do
 
   can :manage_repository_stock do |user, repository|
     RepositoryBase.stock_management_enabled? && can_manage_repository_rows?(user, repository)
+  end
+end
+
+Canaid::Permissions.register_for(RepositoryColumn) do
+  # repository: update/delete field
+  # Tested in scope of RepositoryPermissions spec
+  can :manage_repository_column do |user, repository_column|
+    repository_column.repository.repository_snapshots.provisioning.none? && can_create_repository_columns?(user, repository_column.repository)
   end
 end
