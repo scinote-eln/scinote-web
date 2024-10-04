@@ -33,7 +33,9 @@ module RepositoryDatatableHelper
       unless options[:view_mode] || repository.is_a?(SoftLockedRepository)
         row['recordUpdateUrl'] =
           Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
-        row['recordEditable'] = record.editable?
+
+        # if the editable? property will be checked in a separate request, we can default it to true
+        row['recordEditable'] = options[:omit_editable] ? true : record.editable?
       end
 
       row['0'] = record[:row_assigned] if options[:my_module]
