@@ -317,9 +317,7 @@ var RepositoryDatatable = (function(global) {
 
       checkAvailableColumns();
 
-      RepositoryDatatableRowEditor.switchRowToEditMode(row);
-
-      changeToEditMode();
+      RepositoryDatatableRowEditor.switchRowToEditMode(row, changeToEditMode);
     });
   }
 
@@ -692,6 +690,7 @@ var RepositoryDatatable = (function(global) {
       },
       rowCallback: function(row, data) {
         $(row).attr('data-editable', data.recordEditable);
+        $(row).attr('data-info-url', data.recordInfoUrl);
         $(row).attr('data-manage-stock-url', data.manageStockUrl);
         // Get row ID
         let rowId = data.DT_RowId;
@@ -1003,10 +1002,8 @@ var RepositoryDatatable = (function(global) {
       $(TABLE_ID).find('.repository-row-edit-icon').remove();
 
       rowsSelected.forEach(function(rowNumber) {
-        RepositoryDatatableRowEditor.switchRowToEditMode(TABLE.row('#' + rowNumber));
+        RepositoryDatatableRowEditor.switchRowToEditMode(TABLE.row('#' + rowNumber), changeToEditMode);
       });
-
-      changeToEditMode();
     })
     .on('click', '#assignRepositoryRecords', function(e) {
       e.preventDefault();

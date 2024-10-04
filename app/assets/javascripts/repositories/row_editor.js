@@ -173,11 +173,17 @@ var RepositoryDatatableRowEditor = (function() {
     TABLE.columns.adjust();
   }
 
-  function switchRowToEditMode(row) {
+  function enableEditMode(row, isEditable) {
+    if (!isEditable) {
+      HelperModule.flashAlertMsg(I18n.t('repositories.table.row_locked'), 'danger');
+      return false;
+    }
+
     let $row = $(row.node());
     let itemId = row.id();
     let formId = `repositoryRowForm${itemId}`;
     let requestUrl = $(TABLE.table().node()).data('current-uri');
+
     let rowForm = $(`
       <form id="${formId}"
             class="${EDIT_FORM_CLASS_NAME} ${GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME}"
@@ -213,6 +219,26 @@ var RepositoryDatatableRowEditor = (function() {
     initAssetCellActions($row);
 
     TABLE.columns.adjust();
+
+    return true;
+  }
+
+  function switchRowToEditMode(row, editEnabledCallback) {
+    // Editable property was already preloaded
+    if (row.data().editable !== undefined) {
+      if (enableEditMode(row, row.data().editable)) editEnabledCallback();
+      return;
+    }
+
+    // Need to fetch editable property
+    $.ajax({
+      url: row.data().recordInfoUrl,
+      type: 'GET',
+      dataType: 'json',
+      success: (data) => {
+        if (enableEditMode(row, data.editable)) editEnabledCallback();
+      }
+    });
   }
 
   return Object.freeze({
