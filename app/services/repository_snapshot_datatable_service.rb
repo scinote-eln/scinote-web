@@ -18,6 +18,8 @@ class RepositorySnapshotDatatableService < RepositoryDatatableService
     order_by_column = { column: order_params[:column].to_i, dir: order_params[:dir] }
 
     repository_rows = fetch_rows(search_value).preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
+    repository_rows = repository_rows.preload(:repository_columns, repository_cells: { value: @repository.cell_preload_includes }) if @preload_cells
+    repository_rows = repository_rows.preload(:repository_stock_cell, :repository_stock_value) if @repository.has_stock_management?
 
     sort_rows(order_by_column, repository_rows)
   end

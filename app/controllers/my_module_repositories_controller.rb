@@ -15,7 +15,14 @@ class MyModuleRepositoriesController < ApplicationController
     @draw = params[:draw].to_i
     per_page = params[:length].to_i < 1 ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
     page = (params[:start].to_i / per_page) + 1
-    datatable_service = RepositoryDatatableService.new(@repository, params, current_user, @my_module)
+    if params[:simple_view]
+      rows_view = 'repository_rows/simple_view_index'
+      preload_cells = false
+    else
+      rows_view = 'repository_rows/index'
+      preload_cells = true
+    end
+    datatable_service = RepositoryDatatableService.new(@repository, params, current_user, @my_module, preload_cells: preload_cells)
 
     @datatable_params = {
       view_mode: params[:view_mode],
@@ -26,21 +33,9 @@ class MyModuleRepositoriesController < ApplicationController
 
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
-
-    if params[:simple_view]
-      repository_rows = datatable_service.repository_rows
-      rows_view = 'repository_rows/simple_view_index'
-    else
-      repository_rows = datatable_service.repository_rows
-                                         .preload(:repository_columns,
-                                                  :created_by,
-                                                  :archived_by,
-                                                  :last_modified_by,
-                                                  repository_cells: { value: @repository.cell_preload_includes })
-      rows_view = 'repository_rows/index'
-    end
+    repository_rows = datatable_service.repository_rows
     @repository_rows = repository_rows.page(page).per(per_page)
-
+    @filtered_rows_count = @repository_rows.load.take&.filtered_count || 0
     render rows_view
   end
 

@@ -5,11 +5,12 @@ module RepositoryDatatableHelper
   include Rails.application.routes.url_helpers
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
+    # repository_rows collection is already preloaded in controllers, do not modify scopes or query params
+    # otherwise it will result in duplicated SQL queries
     has_stock_management = repository.has_stock_management?
     stock_management_column_exists = repository.repository_columns.stock_type.exists?
     repository_row_connections_enabled = Repository.repository_row_connections_enabled?
     reminders_enabled = Repository.reminders_enabled?
-    repository_rows = reminders_enabled ? with_reminders_status(repository_rows, repository) : repository_rows
     stock_managable = has_stock_management && !options[:disable_stock_management] &&
                       can_manage_repository_stock?(repository) &&
                       !repository.is_a?(SoftLockedRepository)
@@ -97,9 +98,10 @@ module RepositoryDatatableHelper
   end
 
   def prepare_simple_view_row_columns(repository_rows, repository, my_module, options = {})
+    # repository_rows collection is already preloaded in controllers, do not modify scopes or query params
+    # otherwise it will result in duplicated SQL queries
     has_stock_management = repository.has_stock_management?
     reminders_enabled = !options[:disable_reminders] && Repository.reminders_enabled?
-    repository_rows = reminders_enabled ? with_reminders_status(repository_rows, repository) : repository_rows
     # Always disabled in a simple view
     stock_managable = false
     stock_consumption_permitted = has_stock_management && stock_consumption_permitted?(repository, my_module)
@@ -302,35 +304,6 @@ module RepositoryDatatableHelper
     return I18n.t('general.archived') if row.archived
 
     ''
-  end
-
-  def with_reminders_status(repository_rows, repository)
-    # don't load reminders for archived repositories or snapshots
-    if repository.archived? || repository.is_a?(RepositorySnapshot)
-      return repository_rows.select('FALSE AS has_active_stock_reminders')
-                            .select('FALSE AS has_active_datetime_reminders')
-    end
-
-    repository_cells = RepositoryCell.joins(
-      "INNER JOIN repository_columns ON repository_columns.id = repository_cells.repository_column_id " \
-      "AND repository_columns.repository_id = #{repository.id}"
-    )
-
-    repository_rows
-      .joins(
-        "LEFT OUTER JOIN (#{RepositoryCell.stock_reminder_repository_cells_scope(repository_cells, current_user)
-                                          .select(:id, :repository_row_id).to_sql}) " \
-        "AS repository_cells_with_active_stock_reminders " \
-        "ON repository_cells_with_active_stock_reminders.repository_row_id = repository_rows.id"
-      )
-      .joins(
-        "LEFT OUTER JOIN (#{RepositoryCell.date_time_reminder_repository_cells_scope(repository_cells, current_user)
-                                          .select(:id, :repository_row_id).to_sql}) " \
-        "AS repository_cells_with_active_datetime_reminders " \
-        "ON repository_cells_with_active_datetime_reminders.repository_row_id = repository_rows.id"
-      )
-      .select('COUNT(repository_cells_with_active_stock_reminders.id) > 0 AS has_active_stock_reminders')
-      .select('COUNT(repository_cells_with_active_datetime_reminders.id) > 0 AS has_active_datetime_reminders')
   end
 
   def stock_consumption_permitted?(repository, my_module)

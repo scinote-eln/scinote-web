@@ -6,5 +6,5 @@ json.data do
     @repository_rows, @repository, @my_module, @datatable_params || {}
   )
 end
-json.recordsFiltered @repository_rows.first ? @repository_rows.first.filtered_count : 0
+json.recordsFiltered @filtered_rows_count
 json.recordsTotal @all_rows_count

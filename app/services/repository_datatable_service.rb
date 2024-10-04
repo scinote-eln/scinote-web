@@ -13,10 +13,11 @@ class RepositoryDatatableService
   PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by
                           assigned relationships updated_on updated_by).freeze
 
-  def initialize(repository, params, user, my_module = nil)
+  def initialize(repository, params, user, my_module = nil, preload_cells: true)
     @repository = repository
     @user = user
     @my_module = my_module
+    @preload_cells = preload_cells
     @params = params
     @assigned_view =  @params[:assigned].in?(%w(assigned assigned_simple))
     @sortable_columns = build_sortable_columns
@@ -77,6 +78,8 @@ class RepositoryDatatableService
                           .group('current_my_module_repository_rows.id')
       end
     end
+
+    repository_rows = RepositoryRow.with_reminders_status(repository_rows, @repository, @user) if Repository.reminders_enabled?
     repository_rows = repository_rows
                       .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
                       .select('COUNT(DISTINCT all_my_module_repository_rows.id) AS "assigned_my_modules_count"')
@@ -85,6 +88,8 @@ class RepositoryDatatableService
                       .select('COALESCE(parent_connections_count, 0) + COALESCE(child_connections_count, 0)
                                AS "relationships_count"')
     repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
+    repository_rows = repository_rows.preload(:repository_columns, repository_cells: { value: @repository.cell_preload_includes }) if @preload_cells
+    repository_rows = repository_rows.preload(:repository_stock_cell, :repository_stock_value) if @repository.has_stock_management?
 
     sort_rows(order_by_column, repository_rows)
   end
@@ -101,7 +106,7 @@ class RepositoryDatatableService
                        .where(my_module_repository_rows: { my_module_id: @my_module })
                        .count
       else
-        repository_rows.count
+        @repository.repository_rows_count
       end
 
     repository_rows = repository_rows.where(external_id: @params[:external_ids]) if @params[:external_ids]
@@ -621,7 +626,7 @@ class RepositoryDatatableService
              .group('values.value')
              .order("values.value #{dir}")
     when 'users.full_name'
-      records.group('users.full_name').order("users.full_name #{dir}")
+      records.group('created_by.full_name').order("created_by.full_name #{dir}")
     when 'consumed_stock'
       records.order("#{@sortable_columns[column_id - 1]} #{dir}")
     when 'relationships'
