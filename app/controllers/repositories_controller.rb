@@ -62,7 +62,13 @@ class RepositoriesController < ApplicationController
     end
     results = results.active if params[:active].present?
 
-    render json: { data: results.order('LOWER(repository_rows.name) asc').map { |r| [r.id, r.name] } }
+    results = results.order('LOWER(repository_rows.name) asc').page(params[:page])
+
+    render json: {
+      paginated: true,
+      next_page: results.next_page,
+      data: results.map { |r| [r.id, r.name] }
+    }
   end
 
   def sidebar
