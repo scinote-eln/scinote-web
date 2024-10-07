@@ -92,7 +92,8 @@ export default {
     return {
       rowId: this.selectedRow,
       containerId: this.selectedContainer,
-      position: this.selectedPosition
+      position: this.selectedPosition,
+      saving: false
     };
   },
   components: {
@@ -102,13 +103,21 @@ export default {
   },
   methods: {
     submit() {
+      if (this.saving) {
+        return;
+      }
+
+      this.saving = true;
+
       axios.post(this.actionUrl, {
         repository_row_id: this.rowId,
         metadata: { position: this.position?.map((pos) => parseInt(pos, 10)) }
       }).then(() => {
         this.$emit('close');
+        this.saving = false;
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.errors.join(', '), 'danger');
+        this.saving = false;
       });
     }
   }
