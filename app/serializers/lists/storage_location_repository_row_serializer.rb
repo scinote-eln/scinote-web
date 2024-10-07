@@ -6,7 +6,7 @@ module Lists
     include Rails.application.routes.url_helpers
 
     attributes :created_by, :created_on, :position, :row_id, :row_name, :hidden, :position_formatted, :stock,
-               :have_reminders, :reminders_url, :row_url, :row_code
+               :has_reminder, :reminders_url, :row_url, :row_code
 
     def row_id
       object.repository_row.id
@@ -52,8 +52,8 @@ module Lists
       @hidden = !can_read_repository?(object.repository_row.repository)
     end
 
-    def have_reminders
-      object.repository_row.has_reminders?(scope) unless hidden
+    def has_reminder
+      object.repository_row.repository_cells.with_active_reminder(scope).any? unless hidden
     end
 
     def reminders_url

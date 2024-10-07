@@ -5,7 +5,6 @@ class RepositoryRow < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include ArchivableModel
-  include ReminderRepositoryCellJoinable
 
   ID_PREFIX = 'IT'
   include PrefixedIdModel
@@ -118,7 +117,7 @@ class RepositoryRow < ApplicationRecord
   scope :archived, -> { where(archived: true) }
 
   scope :with_active_reminders, lambda { |user|
-    reminder_repository_cells_scope(joins(:repository_cells), user)
+    left_outer_joins_active_reminders(user).where.not(repository_cells_with_active_reminders: { id: nil })
   }
 
   def code
@@ -171,33 +170,12 @@ class RepositoryRow < ApplicationRecord
       .update_all(created_by_id: new_owner.id)
   end
 
-  def self.with_reminders_status(repository_rows, repository, user)
-    # don't load reminders for archived repositories or snapshots
-    if repository.archived? || repository.is_a?(RepositorySnapshot)
-      return repository_rows.select('FALSE AS has_active_stock_reminders')
-                            .select('FALSE AS has_active_datetime_reminders')
-    end
-
-    repository_cells = RepositoryCell.joins(
-      "INNER JOIN repository_columns ON repository_columns.id = repository_cells.repository_column_id " \
-      "AND repository_columns.repository_id = #{repository.id}"
+  def self.left_outer_joins_active_reminders(user)
+    joins(
+      "LEFT OUTER JOIN (#{RepositoryCell.with_active_reminder(user).select(:id, :repository_row_id).to_sql}) " \
+      "AS repository_cells_with_active_reminders " \
+      "ON repository_cells_with_active_reminders.repository_row_id = repository_rows.id"
     )
-
-    repository_rows
-      .joins(
-        "LEFT OUTER JOIN (#{RepositoryCell.stock_reminder_repository_cells_scope(repository_cells, user)
-                                          .select(:id, :repository_row_id).to_sql}) " \
-        "AS repository_cells_with_active_stock_reminders " \
-        "ON repository_cells_with_active_stock_reminders.repository_row_id = repository_rows.id"
-      )
-      .joins(
-        "LEFT OUTER JOIN (#{RepositoryCell.date_time_reminder_repository_cells_scope(repository_cells, user)
-                                          .select(:id, :repository_row_id).to_sql}) " \
-        "AS repository_cells_with_active_datetime_reminders " \
-        "ON repository_cells_with_active_datetime_reminders.repository_row_id = repository_rows.id"
-      )
-      .select('COUNT(repository_cells_with_active_stock_reminders.id) > 0 AS has_active_stock_reminders')
-      .select('COUNT(repository_cells_with_active_datetime_reminders.id) > 0 AS has_active_datetime_reminders')
   end
 
   def editable?
@@ -206,14 +184,6 @@ class RepositoryRow < ApplicationRecord
 
   def row_archived?
     self[:archived]
-  end
-
-  def has_reminders?(user)
-    stock_reminders = RepositoryCell.stock_reminder_repository_cells_scope(
-      repository_cells.joins(:repository_column), user)
-    date_reminders = RepositoryCell.date_time_reminder_repository_cells_scope(
-      repository_cells.joins(:repository_column), user)
-    stock_reminders.any? || date_reminders.any?
   end
 
   def archived

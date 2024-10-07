@@ -29,7 +29,7 @@ module RepositoryDatatableHelper
       row['relationshipsUrl'] = Rails.application.routes.url_helpers
                                      .relationships_repository_repository_row_url(record.repository_id, record.id)
       row['relationships_enabled'] = repository_row_connections_enabled
-      row['hasActiveReminders'] = record.has_active_stock_reminders || record.has_active_datetime_reminders if reminders_enabled
+      row['hasActiveReminders'] = record.has_active_reminders if reminders_enabled
 
       unless options[:view_mode] || repository.is_a?(SoftLockedRepository)
         row['recordUpdateUrl'] =
@@ -120,9 +120,7 @@ module RepositoryDatatableHelper
                )
       }
 
-      if reminders_enabled
-        row['hasActiveReminders'] = record.has_active_stock_reminders || record.has_active_datetime_reminders
-      end
+      row['hasActiveReminders'] = record.has_active_reminders if reminders_enabled
 
       if has_stock_management
         stock_present = record.repository_stock_cell.present?
