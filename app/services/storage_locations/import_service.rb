@@ -4,6 +4,8 @@ require 'caxlsx'
 
 module StorageLocations
   class ImportService
+    class PositionNotValid < StandardError; end
+
     def initialize(storage_location, file, user)
       @storage_location = storage_location
       @assigned_count = 0
@@ -54,6 +56,8 @@ module StorageLocations
       { status: :ok, assigned_count: @assigned_count, unassigned_count: @unassigned_count, updated_count: @updated_count }
     rescue ActiveRecord::RecordNotFound, ActiveRecord::RecordInvalid
       { status: :error, message: @error_message }
+    rescue PositionNotValid
+      { status: :error, message: I18n.t('storage_locations.show.import_modal.errors.invalid_position') }
     end
 
     private
@@ -104,6 +108,8 @@ module StorageLocations
 
     def convert_position_letter_to_number(position)
       return unless position
+
+      raise PositionNotValid unless position.to_s.match?(/^[A-Z]\d+$/)
 
       column_letter = position[0]
       row_number = position[1..]
