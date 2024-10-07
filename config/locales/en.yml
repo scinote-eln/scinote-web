@@ -2180,6 +2180,7 @@ en:
         errors:
           too_long: "Item name is too long (maximum is %{max_length} characters)"
           is_empty: "Item name should be filled"
+      row_locked: The item is locked, snapshot creation is in progress. Please try later.
     pagination_edit_overlay_html: "Please <a class=\"repository-save-changes-link\">save your changes</a> before you go to another page"
     toolbar_edit_overlay_html: "Please <a class=\"repository-save-changes-link\">save your changes</a> first to use filters"
     add_new_record: "New item"

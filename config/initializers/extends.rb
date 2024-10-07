@@ -538,7 +538,7 @@ class Extends
     team: [92, 94, 93, 97, 104, 244, 245],
     label_templates: [*216..219],
     storage_locations: [*309..315],
-    container_storage_location: [*316..322, 326],
+    container_storage_locations: [*316..322, 326],
     storage_location_repository_rows: [*323..325]
   }
 

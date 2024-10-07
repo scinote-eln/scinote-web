@@ -650,8 +650,9 @@ en:
       team: "Team"
       exports: "Exports"
       label_templates: "Label templates"
-      storage_locations: "Locations"
-      container_storage_locations: "Boxes"
+      storage_locations: "Inventory locations"
+      container_storage_locations: "Inventory location boxes"
+      storage_location_repository_rows: "Item assignments to location"
     subject_name:
       repository: "Inventory"
       project: "Project"
