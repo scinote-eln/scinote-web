@@ -9,9 +9,9 @@ class StorageLocationsController < ApplicationController
   before_action :switch_team_with_param, only: %i(index show)
   before_action :check_storage_locations_enabled, except: :unassign_rows
   before_action :load_storage_location, only: %i(update destroy duplicate move show available_positions unassign_rows export_container import_container)
-  before_action :check_read_permissions, except: %i(index create tree actions_toolbar)
+  before_action :check_read_permissions, except: %i(index create tree actions_toolbar import_container unassign_rows)
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permissions, only: %i(update destroy duplicate move unassign_rows import_container)
+  before_action :check_manage_permissions, only: %i(update destroy duplicate move)
   before_action :set_breadcrumbs_items, only: %i(index show)
 
   def index
