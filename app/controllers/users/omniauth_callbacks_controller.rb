@@ -163,9 +163,8 @@ module Users
       error_message ||= I18n.t('devise.okta.errors.generic')
       redirect_to after_omniauth_failure_path_for(resource_name)
     ensure
-      if user&.errors.present? || missing_attribute.present?
-        missing_attribute ||= user.errors.first.attribute.capitalize
-        set_flash_message(:alert, :missing_attribute, attribute: missing_attribute)
+      if user&.errors.present?
+        set_flash_message(:alert, :missing_attribute, attribute: user.errors.first.attribute.capitalize)
       elsif error_message
         set_flash_message(:alert, :failure, kind: I18n.t('devise.okta.provider_name'), reason: error_message)
       else
