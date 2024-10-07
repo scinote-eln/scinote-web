@@ -79,7 +79,17 @@ class RepositoryDatatableService
       end
     end
 
-    repository_rows = RepositoryRow.with_reminders_status(repository_rows, @repository, @user) if Repository.reminders_enabled?
+    if Repository.reminders_enabled?
+      repository_rows =
+        if @repository.archived? || @repository.is_a?(RepositorySnapshot)
+          # don't load reminders for archived repositories or snapshots
+          repository_rows.select('FALSE AS has_active_stock_reminders, FALSE AS has_active_datetime_reminders')
+        else
+          repository_rows.left_outer_joins_active_reminders(@user)
+                         .select('COUNT(repository_cells_with_active_reminders.id) > 0 AS has_active_reminders')
+        end
+    end
+
     repository_rows = repository_rows
                       .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
                       .select('COUNT(DISTINCT all_my_module_repository_rows.id) AS "assigned_my_modules_count"')
