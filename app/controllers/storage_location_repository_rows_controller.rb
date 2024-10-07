@@ -26,12 +26,14 @@ class StorageLocationRepositoryRowsController < ApplicationController
         created_by: current_user
       )
 
-      if @storage_location_repository_row.save
-        log_activity(:storage_location_repository_row_created)
-        render json: @storage_location_repository_row,
-               serializer: Lists::StorageLocationRepositoryRowSerializer
-      else
-        render json: { errors: @storage_location_repository_row.errors.full_messages }, status: :unprocessable_entity
+      @storage_location_repository_row.with_lock do
+        if @storage_location_repository_row.save
+          log_activity(:storage_location_repository_row_created)
+          render json: @storage_location_repository_row,
+                 serializer: Lists::StorageLocationRepositoryRowSerializer
+        else
+          render json: { errors: @storage_location_repository_row.errors.full_messages }, status: :unprocessable_entity
+        end
       end
     end
   end
