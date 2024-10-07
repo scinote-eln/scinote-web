@@ -131,7 +131,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             team: @storage_location.team,
-            subject: @storage_location_repository_row.repository_row,
+            subject: @storage_location_repository_row.storage_location,
             message_items: {
               storage_location: @storage_location_repository_row.storage_location_id,
               repository_row: @storage_location_repository_row.repository_row_id,

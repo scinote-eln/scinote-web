@@ -3,6 +3,7 @@
 module GlobalActivitiesHelper
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::UrlHelper
+  include Canaid::Helpers::PermissionsHelper
   include InputSanitizeHelper
 
   def generate_activity_content(activity, no_links: false, no_custom_links: false)
@@ -60,6 +61,9 @@ module GlobalActivitiesHelper
     when Repository
       path = repository_path(obj, team: obj.team.id)
     when RepositoryRow
+      # Handle private repository rows
+      return I18n.t('storage_locations.show.hidden') unless can_read_repository?(obj.repository)
+
       return current_value unless obj.repository
 
       path = repository_path(obj.repository, team: obj.repository.team.id)
@@ -126,6 +130,8 @@ module GlobalActivitiesHelper
           else
             message_item['type'].constantize.new
           end
+
+    return I18n.t('storage_locations.show.hidden') if obj.is_a?(RepositoryRow) && !can_read_repository?(obj.repository)
 
     return I18n.t('projects.index.breadcrumbs_root') if obj.is_a?(ProjectFolder) && obj.new_record?
 
