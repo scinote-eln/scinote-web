@@ -16,8 +16,8 @@ module Reports::Docx::DrawStepChecklist
         team,
         I18n.t('projects.reports.elements.step_checklist.checklist_name', name: checklist.name)
       ).text, italic: true
-      text ' '
       unless settings['exclude_timestamps']
+        text ' '
         text I18n.t('projects.reports.elements.step_checklist.user_time',
                     timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
       end

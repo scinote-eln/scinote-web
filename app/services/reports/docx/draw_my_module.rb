@@ -16,14 +16,15 @@ module Reports::Docx::DrawMyModule
             link_style
     end
 
-    @docx.p do
-      unless settings['exclude_timestamps']
-        text I18n.t('projects.reports.elements.module.user_time', code: my_module.code,
-                    timestamp: I18n.l(my_module.created_at, format: :full)), color: color[:gray]
-      end
-      if my_module.archived?
-        text ' | '
-        text I18n.t('search.index.archived'), color: color[:gray]
+    if my_module.archived? || !settings['exclude_timestamps']
+      @docx.p do
+        unless settings['exclude_timestamps']
+          text I18n.t('projects.reports.elements.module.user_time', code: my_module.code,
+                      timestamp: I18n.l(my_module.created_at, format: :full)), color: color[:gray]
+          text ' | ' if my_module.archived?
+        end
+
+        text I18n.t('search.index.archived'), color: color[:gray] if my_module.archived?
       end
     end
 
@@ -74,10 +75,13 @@ module Reports::Docx::DrawMyModule
     filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step|
       draw_step(step)
     end
-
-    draw_results(my_module) unless without_results
-
     @docx.p
+
+    unless without_results
+      draw_results(my_module)
+      @docx.p
+    end
+
     subject.children.active.each do |child|
       next if without_repositories && child.type_of == 'my_module_repository'
 

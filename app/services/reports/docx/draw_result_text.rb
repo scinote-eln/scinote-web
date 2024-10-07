@@ -6,12 +6,15 @@ module Reports::Docx::DrawResultText
     timestamp = element.created_at
     settings = @settings
     color = @color
-    @docx.p do
-      text result_text.name.presence || '', italic: true
-      text ' '
-      unless settings['exclude_timestamps']
-        text I18n.t('projects.reports.elements.result_text.user_time',
-                    timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+    if result_text.name.present? || !settings['exclude_timestamps']
+      @docx.p do
+        text result_text.name.to_s, italic: true
+        text ' ' if result_text.name.present?
+
+        unless settings['exclude_timestamps']
+          text I18n.t('projects.reports.elements.result_text.user_time',
+                      timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+        end
       end
     end
     html = custom_auto_link(result_text.text, team: @report_team)
