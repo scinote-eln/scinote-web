@@ -265,6 +265,7 @@ en:
           not_uniq_repository_row: 'Inventory item already exists'
           attributes:
             parent_storage_location: "Storage location cannot be parent to itself"
+            parent_storage_location_team: "Parent storage location and storage location should belongs to the same team"
             parent_storage_location_child: "Storage location cannot be moved to it's child"
             metadata:
               invalid: 'Invalid metadata'

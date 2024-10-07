@@ -6,14 +6,19 @@ import {
 
 export default {
   mounted() {
-    axios.get(this.storageLocationsTreeUrl).then((response) => {
-      this.storageLocationsTree = response.data;
+    axios.get(this.storageLocationsTreeUrl, { params: { team_id: this.teamId } }).then((response) => {
+      this.storageLocationsTree = response.data.locations;
+      this.movableToRoot = response.data.movable_to_root;
+      if (!this.movableToRoot) {
+        this.selectedStorageLocationId = -1;
+      }
       this.dataLoaded = true;
     });
   },
   data() {
     return {
       selectedStorageLocationId: null,
+      movableToRoot: false,
       storageLocationsTree: [],
       query: '',
       dataLoaded: false
@@ -46,6 +51,10 @@ export default {
       }).filter(Boolean);
     },
     selectStorageLocation(storageLocationId) {
+      if (!this.movableToRoot && storageLocationId === null) {
+        return;
+      }
+
       this.selectedStorageLocationId = storageLocationId;
     }
   }

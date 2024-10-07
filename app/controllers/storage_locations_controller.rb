@@ -123,8 +123,17 @@ class StorageLocationsController < ApplicationController
   end
 
   def tree
-    records = StorageLocation.viewable_by_user(current_user, current_team).where(parent: nil, container: [false, params[:container] == 'true'])
-    render json: storage_locations_recursive_builder(records)
+    records = StorageLocation.viewable_by_user(current_user, current_team)
+                             .where(
+                               parent: nil,
+                               container: [false, params[:container] == 'true']
+                             )
+    records = records.where(team_id: params[:team_id]) if params[:team_id]
+
+    render json: {
+      locations: storage_locations_recursive_builder(records),
+      movable_to_root: params[:team_id] && current_team.id == params[:team_id].to_i
+    }
   end
 
   def available_positions
