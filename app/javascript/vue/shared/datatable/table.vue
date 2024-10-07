@@ -72,6 +72,7 @@
       <ActionToolbar
         v-if="selectedRows.length > 0 && actionsUrl"
         :actionsUrl="actionsUrl"
+        :actionsMethod="actionsMethod"
         :params="actionsParams"
         @toolbar:action="emitAction" />
     </div>
@@ -143,6 +144,9 @@ export default {
       required: true
     },
     actionsUrl: {
+      type: String
+    },
+    actionsMethod: {
       type: String
     },
     toolbarActions: {

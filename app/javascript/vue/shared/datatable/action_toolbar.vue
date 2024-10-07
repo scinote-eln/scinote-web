@@ -24,10 +24,13 @@
 </template>
 
 <script>
+import axios from '../../../packs/custom_axios.js';
+
 export default {
   name: 'ActionToolbar',
   props: {
     actionsUrl: { type: String, required: true },
+    actionsMethod: { type: String, default: 'get' },
     params: { type: Object },
   },
   data() {
@@ -51,8 +54,14 @@ export default {
     loadActions() {
       this.loading = true;
       this.loaded = false;
-      $.get(`${this.actionsUrl}?${new URLSearchParams(this.params).toString()}`, (data) => {
-        this.actions = data.actions;
+
+      axios.request({
+        method: this.actionsMethod,
+        url: this.actionsUrl,
+        params: this.actionsMethod === 'get' && this.params,
+        data: this.actionsMethod !== 'get' && this.params
+      }).then((response) => {
+        this.actions = response.data.actions;
         this.loading = false;
         this.loaded = true;
       });

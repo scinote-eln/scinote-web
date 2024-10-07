@@ -17,6 +17,7 @@
                 :reloadingTable="reloadingTable"
                 :toolbarActions="toolbarActions"
                 :actionsUrl="actionsUrl"
+                :actionsMethod="'post'"
                 :scrollMode="paginationMode"
                 @assign="assignRow"
                 @move="moveRow"
