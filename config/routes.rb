@@ -833,7 +833,7 @@ Rails.application.routes.draw do
       end
       resources :storage_location_repository_rows, only: %i(index create destroy update) do
         collection do
-          get :actions_toolbar
+          post :actions_toolbar
         end
         member do
           post :move
