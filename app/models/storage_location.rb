@@ -21,6 +21,7 @@ class StorageLocation < ApplicationRecord
   has_many :repository_rows, through: :storage_location_repository_rows
 
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
+  validate :parent_same_team, if: -> { parent.present? }
   validate :parent_validation, if: -> { parent.present? }
   validate :no_grid_options, if: -> { !container }
   validate :no_dimensions, if: -> { !with_grid? }
@@ -201,6 +202,10 @@ class StorageLocation < ApplicationRecord
 
   def no_grid_options
     errors.add(:metadata, I18n.t('activerecord.errors.models.storage_location.attributes.metadata.invalid')) if metadata['display_type'] || metadata['dimensions']
+  end
+
+  def parent_same_team
+    errors.add(:parent, I18n.t('activerecord.errors.models.storage_location.attributes.parent_storage_location_team')) if parent.team != team
   end
 
   def no_dimensions

@@ -9,7 +9,7 @@ module Lists
 
     attributes :id, :code, :name, :container, :description, :owned_by, :created_by,
                :created_on, :urls, :metadata, :file_name, :sub_location_count, :is_empty,
-               :img_url, :sa_description, :name_hash
+               :img_url, :sa_description, :name_hash, :team_id
 
     def owned_by
       object['team_name']
