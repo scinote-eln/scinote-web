@@ -342,7 +342,7 @@ class Asset < ApplicationRecord
   end
 
   def update_contents(new_file)
-    file.attach(io: new_file, filename: file_name)
+    file.attach_file_version(io: new_file, filename: file_name)
     self.version = version.nil? ? 1 : version + 1
     save
   end
