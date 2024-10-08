@@ -20,7 +20,6 @@ module Reports::Docx::DrawMyModuleProtocol
       Reports::HtmlToWordConverter.new(@docx, { scinote_url: @scinote_url,
                                                 link_style: @link_style }).html_to_word_converter(html)
       @docx.p
-      @docx.p
     end
   end
 end

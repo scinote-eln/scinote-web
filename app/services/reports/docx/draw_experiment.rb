@@ -15,14 +15,15 @@ module Reports::Docx::DrawExperiment
             link_style
     end
 
-    @docx.p do
-      unless settings['exclude_timestamps']
-        text I18n.t('projects.reports.elements.experiment.user_time',
-                    code: experiment.code, timestamp: I18n.l(experiment.created_at, format: :full)), color: color[:gray]
-      end
-      if experiment.archived?
-        text ' | '
-        text I18n.t('search.index.archived'), color: color[:gray]
+    if !settings['exclude_timestamps'] || experiment.archived?
+      @docx.p do
+        unless settings['exclude_timestamps']
+          text I18n.t('projects.reports.elements.experiment.user_time',
+                      code: experiment.code,
+                      timestamp: I18n.l(experiment.created_at, format: :full)), color: color[:gray]
+          text ' | ' if experiment.archived?
+        end
+        text I18n.t('search.index.archived'), color: color[:gray] if experiment.archived?
       end
     end
     html = custom_auto_link(experiment.description, team: @report_team)

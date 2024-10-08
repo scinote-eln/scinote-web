@@ -23,8 +23,8 @@ module Reports::Docx::DrawStepAsset
       link I18n.t('projects.reports.elements.download'), asset_url do
         italic true
       end
-      text ' '
       unless settings['exclude_timestamps']
+        text ' '
         text I18n.t('projects.reports.elements.step_asset.user_time',
                     timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
       end
