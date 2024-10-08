@@ -433,10 +433,10 @@ var MyModuleRepositories = (function() {
   }
 
   function initSimpleTable() {
-    $('#assigned-items-container').on('shown.bs.collapse', '.assigned-repository-container.readable-repository', function() {
+    $('#assigned-items-container').on('shown.bs.collapse', '.assigned-repository-container', function() {
       var repositoryContainer = $(this);
-      var repositoryTable = repositoryContainer.find('.repository-table');
-      var initializedTable = repositoryContainer.find('.dataTables_wrapper .repository-table');
+      var repositoryTable = repositoryContainer.find('.table');
+      var initializedTable = repositoryContainer.find('.dataTables_wrapper table');
 
       // do not try to re-initialized already initialized table
       if (initializedTable.length) {
