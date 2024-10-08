@@ -32,6 +32,22 @@
         @delete="showDeleteModal"
       ></MenuDropdown>
     </div>
+    <Spreadsheet
+      ref="spreadsheet"
+      :license="license"
+      :tabs="true"
+      :toolbar="true"
+      :allowExport="true"
+      :onchange="update"
+      :oninsertrow="update"
+      :oninsertcolumn="update"
+      :ondeletecolumn="update"
+      :ondeleterow="update"
+      :onmoverow="update"
+      :onmovecolumn="update"
+    >
+      <Worksheet :data="tableData" :tableOverflow="true" tableWidth="600" resize="both" />
+    </Spreadsheet>
     <div class="table-body group/table-body relative border-solid border-transparent"
          :class="{'edit border-sn-light-grey': editingTable, 'view': !editingTable, 'locked': !element.attributes.orderable.urls.update_url}"
          tabindex="0"
@@ -63,11 +79,18 @@ import InlineEdit from '../inline_edit.vue';
 import TableNameModal from './modal/table_name.vue';
 import moveElementModal from './modal/move.vue';
 import MenuDropdown from '../menu_dropdown.vue';
+import { Spreadsheet, Worksheet } from "@jspreadsheet/vue";
 
 export default {
   name: 'ContentTable',
   components: {
-    deleteElementModal, InlineEdit, TableNameModal, moveElementModal, MenuDropdown
+    deleteElementModal,
+    InlineEdit,
+    TableNameModal,
+    moveElementModal,
+    MenuDropdown,
+    Spreadsheet,
+    Worksheet
   },
   mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
   props: {
@@ -96,13 +119,14 @@ export default {
   },
   data() {
     return {
+      tableData: [],
       editingName: false,
       editingTable: false,
       editingCell: false,
       tableObject: null,
       nameModalOpen: false,
       reloadHeader: 0,
-      updatingTableData: false
+      updatingTableData: false,
     };
   },
   computed: {
@@ -143,6 +167,8 @@ export default {
     }
   },
   created() {
+    this.license = document.querySelector('meta[name="jspreadsheet-key"]').getAttribute('content');
+    this.tableData = JSON.parse(this.element.attributes.orderable.contents).data;
     window.addEventListener('beforeunload', this.showSaveWarning);
   },
   beforeUnmount() {
@@ -152,7 +178,7 @@ export default {
     if (!this.updatingTableData) this.loadTableData();
   },
   beforeUpdate() {
-    if (!this.updatingTableData) this.tableObject.destroy();
+    //if (!this.updatingTableData) this.tableObject.destroy();
   },
   mounted() {
     this.loadTableData();
@@ -227,6 +253,14 @@ export default {
       });
     },
     update(callback = () => {}) {
+      if (this.$refs.spreadsheet?.current) {
+        const newTableData = this.$refs.spreadsheet.current[0].getData();
+
+        this.element.attributes.orderable.contents = JSON.stringify({ data: newTableData });
+        this.$emit('update', this.element, false, callback);
+      }
+
+      /*
       this.element.attributes.orderable.contents = JSON.stringify({ data: this.tableObject.getData() });
       const metadata = this.element.attributes.orderable.metadata || {};
       if (metadata.plateTemplate) {
@@ -265,7 +299,8 @@ export default {
         });
       }
 
-      this.$emit('update', this.element, false, callback);
+
+      */
     },
     updateTableData() {
       if (this.editingTable === false) return;
@@ -278,6 +313,7 @@ export default {
       });
     },
     loadTableData() {
+      return
       const container = this.$refs.hotTable;
       const data = JSON.parse(this.element.attributes.orderable.contents);
       const metadata = this.element.attributes.orderable.metadata || {};

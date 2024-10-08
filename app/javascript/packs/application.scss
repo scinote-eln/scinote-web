@@ -1,3 +1,11 @@
 @import "bootstrap-select/sass/bootstrap-select";
 @import "ag-grid-community/styles/ag-grid.css";
 @import "ag-grid-community/styles/ag-theme-alpine.css";
+
+
+/// Must be relplaced with our icons
+@import '~material-icons-font/sass/variables'; // mandatory and at first place
+@import '~material-icons-font/sass/mixins'; // mandatory and after variables
+$MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we change font path to point into package fonts folder
+@import '~material-icons-font/sass/main'; // mandatory main material font definition
+@import '~material-icons-font/sass/Regular'; // mandatory @font-face definition

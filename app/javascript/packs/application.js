@@ -12,6 +12,8 @@ import 'bootstrap';
 require('bootstrap-select/js/bootstrap-select');
 import '@vuepic/vue-datepicker/dist/main.css';
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
+import "jsuites/dist/jsuites.css";
+import "jspreadsheet/dist/jspreadsheet.css";
 
 window.bwipjs = require('bwip-js');
 window.Decimal = require('decimal.js');
