@@ -9,7 +9,7 @@ module Lists
     attributes :name, :code, :nr_of_rows, :team, :created_at, :created_by, :archived_on, :archived_by, :urls
 
     def nr_of_rows
-      object[:row_count]
+      object[:repository_rows_count]
     end
 
     def team

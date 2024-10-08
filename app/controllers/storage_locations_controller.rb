@@ -9,9 +9,9 @@ class StorageLocationsController < ApplicationController
   before_action :switch_team_with_param, only: %i(index show)
   before_action :check_storage_locations_enabled, except: :unassign_rows
   before_action :load_storage_location, only: %i(update destroy duplicate move show available_positions unassign_rows export_container import_container)
-  before_action :check_read_permissions, except: %i(index create tree actions_toolbar)
+  before_action :check_read_permissions, except: %i(index create tree actions_toolbar import_container unassign_rows)
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permissions, only: %i(update destroy duplicate move unassign_rows import_container)
+  before_action :check_manage_permissions, only: %i(update destroy duplicate move)
   before_action :set_breadcrumbs_items, only: %i(index show)
 
   def index
@@ -86,7 +86,7 @@ class StorageLocationsController < ApplicationController
 
   def duplicate
     ActiveRecord::Base.transaction do
-      new_storage_location = @storage_location.duplicate!
+      new_storage_location = @storage_location.duplicate!(current_user)
       if new_storage_location
         @storage_location = new_storage_location
         log_activity('storage_location_created')
@@ -123,8 +123,17 @@ class StorageLocationsController < ApplicationController
   end
 
   def tree
-    records = StorageLocation.viewable_by_user(current_user, current_team).where(parent: nil, container: [false, params[:container] == 'true'])
-    render json: storage_locations_recursive_builder(records)
+    records = StorageLocation.viewable_by_user(current_user, current_team)
+                             .where(
+                               parent: nil,
+                               container: [false, params[:container] == 'true']
+                             )
+    records = records.where(team_id: params[:team_id]) if params[:team_id]
+
+    render json: {
+      locations: storage_locations_recursive_builder(records),
+      movable_to_root: params[:team_id] && current_team.id == params[:team_id].to_i
+    }
   end
 
   def available_positions
@@ -253,7 +262,7 @@ class StorageLocationsController < ApplicationController
   end
 
   def storage_locations_recursive_builder(storage_locations)
-    storage_locations.map do |storage_location|
+    storage_locations.order('LOWER(storage_locations.name) ASC').map do |storage_location|
       {
         storage_location: storage_location,
         can_manage: (can_manage_storage_location?(storage_location) unless storage_location.parent_id),

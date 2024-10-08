@@ -1,5 +1,5 @@
 <template>
-  <div v-if="params.data.have_reminders">
+  <div v-if="params.data.has_reminder">
     <GeneralDropdown ref="dropdown" position="right" @open="getReminders">
       <template v-slot:field>
         <i class="sn-icon sn-icon-notifications "></i>

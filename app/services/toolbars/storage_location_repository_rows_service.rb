@@ -27,7 +27,7 @@ module Toolbars
     private
 
     def unassign_action
-      return unless can_manage_storage_location?(@storage_location)
+      return unless can_read_storage_location?(@storage_location)
 
       {
         name: 'unassign',
@@ -39,7 +39,7 @@ module Toolbars
     end
 
     def move_action
-      return unless @single && can_manage_storage_location?(@storage_location)
+      return unless @single && can_read_storage_location?(@storage_location)
 
       {
         name: 'move',

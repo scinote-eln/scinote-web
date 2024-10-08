@@ -5,6 +5,7 @@ class TeamSharedObject < ApplicationRecord
 
   after_create :assign_shared_inventories, if: -> { shared_object.is_a?(Repository) }
   before_destroy :unlink_unshared_items, if: -> { shared_object.is_a?(Repository) }
+  before_destroy :unassign_unshared_items, if: -> { shared_object.is_a?(Repository) }
   before_destroy :unassign_unshared_inventories, if: -> { shared_object.is_a?(Repository) }
 
   belongs_to :team
@@ -40,6 +41,16 @@ class TeamSharedObject < ApplicationRecord
         team: team
       )
     end
+  end
+
+  def unassign_unshared_items
+    return if shared_object.shared_read? || shared_object.shared_write?
+
+    MyModuleRepositoryRow.joins(my_module: { experiment: { project: :team } })
+                         .joins(repository_row: :repository)
+                         .where(my_module: { experiment: { projects: { team: team } } })
+                         .where(repository_rows: { repository: shared_object })
+                         .destroy_all
   end
 
   def unassign_unshared_inventories

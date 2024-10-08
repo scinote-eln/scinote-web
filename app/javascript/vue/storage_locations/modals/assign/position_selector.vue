@@ -52,6 +52,7 @@ export default {
   watch: {
     selectedRow() {
       [[this.selectedColumn]] = this.availableColumns;
+      this.$emit('change', [this.selectedRow, this.selectedColumn]);
     },
     selectedColumn() {
       this.$emit('change', [this.selectedRow, this.selectedColumn]);
@@ -62,15 +63,23 @@ export default {
       return available_positions_storage_location_path(this.selectedContainerId);
     },
     availableRows() {
+      if (!this.availablePositions) {
+        return [];
+      }
+
       return Object.keys(this.availablePositions).map((row) => [row, this.convertNumberToLetter(row)]);
     },
     availableColumns() {
+      if (!this.availablePositions) {
+        return [];
+      }
+
       return (this.availablePositions[this.selectedRow] || []).map((col) => [col, col]);
     }
   },
   data() {
     return {
-      availablePositions: {},
+      availablePositions: null,
       selectedRow: null,
       selectedColumn: null
     };

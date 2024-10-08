@@ -13,10 +13,11 @@ class RepositoryDatatableService
   PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by
                           assigned relationships updated_on updated_by).freeze
 
-  def initialize(repository, params, user, my_module = nil)
+  def initialize(repository, params, user, my_module = nil, preload_cells: true)
     @repository = repository
     @user = user
     @my_module = my_module
+    @preload_cells = preload_cells
     @params = params
     @assigned_view =  @params[:assigned].in?(%w(assigned assigned_simple))
     @sortable_columns = build_sortable_columns
@@ -46,7 +47,7 @@ class RepositoryDatatableService
     repository_rows = fetch_rows(search_value)
 
     # filter only rows with reminders if filter param is present
-    repository_rows = repository_rows.with_active_reminders(@user) if @params[:only_reminders]
+    repository_rows = repository_rows.with_active_reminders(@repository, @user) if @params[:only_reminders]
 
     # Aliased my_module_repository_rows join for consistent assigned counts
     repository_rows =
@@ -77,6 +78,18 @@ class RepositoryDatatableService
                           .group('current_my_module_repository_rows.id')
       end
     end
+
+    if Repository.reminders_enabled?
+      repository_rows =
+        if @repository.archived? || @repository.is_a?(RepositorySnapshot)
+          # don't load reminders for archived repositories or snapshots
+          repository_rows.select('FALSE AS has_active_stock_reminders, FALSE AS has_active_datetime_reminders')
+        else
+          repository_rows.left_outer_joins_active_reminders(@repository, @user)
+                         .select('COUNT(repository_cells_with_active_reminders.id) > 0 AS has_active_reminders')
+        end
+    end
+
     repository_rows = repository_rows
                       .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
                       .select('COUNT(DISTINCT all_my_module_repository_rows.id) AS "assigned_my_modules_count"')
@@ -85,6 +98,8 @@ class RepositoryDatatableService
                       .select('COALESCE(parent_connections_count, 0) + COALESCE(child_connections_count, 0)
                                AS "relationships_count"')
     repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
+    repository_rows = repository_rows.preload(:repository_columns, repository_cells: { value: @repository.cell_preload_includes }) if @preload_cells
+    repository_rows = repository_rows.preload(:repository_stock_cell, :repository_stock_value) if @repository.has_stock_management?
 
     sort_rows(order_by_column, repository_rows)
   end
@@ -101,7 +116,7 @@ class RepositoryDatatableService
                        .where(my_module_repository_rows: { my_module_id: @my_module })
                        .count
       else
-        repository_rows.count
+        @repository.repository_rows_count
       end
 
     repository_rows = repository_rows.where(external_id: @params[:external_ids]) if @params[:external_ids]
@@ -128,8 +143,13 @@ class RepositoryDatatableService
 
     repository_rows = repository_rows.where(id: advanced_search(repository_rows)) if @params[:advanced_search].present?
 
-    repository_rows.left_outer_joins(:created_by, :archived_by, :last_modified_by)
+    repository_rows.joins('LEFT OUTER JOIN "users" "created_by" ON "created_by"."id" = "repository_rows"."created_by_id"')
+                   .joins('LEFT OUTER JOIN "users" "last_modified_by" ON "last_modified_by"."id" = "repository_rows"."last_modified_by_id"')
+                   .joins('LEFT OUTER JOIN "users" "archived_by" ON "archived_by"."id" = "repository_rows"."archived_by_id"')
                    .select('repository_rows.*')
+                   .select('MAX("created_by"."full_name") AS created_by_full_name')
+                   .select('MAX("last_modified_by"."full_name") AS last_modified_by_full_name')
+                   .select('MAX("archived_by"."full_name") AS archived_by_full_name')
                    .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
                    .group('repository_rows.id')
   end
@@ -616,7 +636,7 @@ class RepositoryDatatableService
              .group('values.value')
              .order("values.value #{dir}")
     when 'users.full_name'
-      records.group('users.full_name').order("users.full_name #{dir}")
+      records.group('created_by.full_name').order("created_by.full_name #{dir}")
     when 'consumed_stock'
       records.order("#{@sortable_columns[column_id - 1]} #{dir}")
     when 'relationships'
