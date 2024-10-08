@@ -244,8 +244,7 @@ class AssetsController < ApplicationController
     asset = Asset.new(created_by: current_user, team: current_team)
     asset.attach_file_version(io: StringIO.new,
                               filename: "#{params[:file_name]}.#{params[:file_type]}",
-                              content_type: wopi_content_type(params[:file_type]),
-                              current_user: current_user)
+                              content_type: wopi_content_type(params[:file_type]))
 
     unless asset.valid?(:wopi_file_creation)
       render json: {
