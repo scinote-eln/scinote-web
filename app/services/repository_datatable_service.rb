@@ -47,7 +47,7 @@ class RepositoryDatatableService
     repository_rows = fetch_rows(search_value)
 
     # filter only rows with reminders if filter param is present
-    repository_rows = repository_rows.with_active_reminders(@user) if @params[:only_reminders]
+    repository_rows = repository_rows.with_active_reminders(@repository, @user) if @params[:only_reminders]
 
     # Aliased my_module_repository_rows join for consistent assigned counts
     repository_rows =
@@ -85,7 +85,7 @@ class RepositoryDatatableService
           # don't load reminders for archived repositories or snapshots
           repository_rows.select('FALSE AS has_active_stock_reminders, FALSE AS has_active_datetime_reminders')
         else
-          repository_rows.left_outer_joins_active_reminders(@user)
+          repository_rows.left_outer_joins_active_reminders(@repository, @user)
                          .select('COUNT(repository_cells_with_active_reminders.id) > 0 AS has_active_reminders')
         end
     end
