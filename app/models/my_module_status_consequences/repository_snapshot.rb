@@ -8,9 +8,6 @@ module MyModuleStatusConsequences
 
     def forward(my_module)
       my_module.assigned_repositories.each do |repository|
-        # skip repositories that are currently not visible to the task team
-        next if repository.team != my_module.team && !repository.shared_with?(my_module.team)
-
         repository_snapshot = ::RepositorySnapshot.create_preliminary!(repository, my_module)
         service = Repositories::SnapshotProvisioningService.call(repository_snapshot: repository_snapshot)
 

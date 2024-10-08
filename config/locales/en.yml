@@ -1435,7 +1435,6 @@ en:
       more_activities: "More activities"
     repository:
       export: 'Export'
-      private_repository: 'Private inventory'
       full_view:
         modal_live_header: ': Live version'
         modal_snapshot_header: ': Snapshot of %{snapshot_date}'
