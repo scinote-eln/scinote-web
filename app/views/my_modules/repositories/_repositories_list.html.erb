@@ -1,5 +1,4 @@
 <% @assigned_repositories.each do |repository| %>
-  <% readable = @my_module.readable_live_and_snapshot_repositories_list(current_user, current_team).include?(repository) %>
   <div class="assigned-repository panel" data-repository-id="<%= repository.id %>">
     <a class="assigned-repository-caret collapsed"
        role="button"
@@ -9,57 +8,40 @@
     >
       <i class="sn-icon sn-icon-right"></i>
       <span class="assigned-repository-title" data-rows-count="<%= repository.assigned_rows_count %>">
-        <%= readable && repository.name || t('my_modules.repository.private_repository', code: repository.code) %>
+        <%= repository.name %>
       </span>
       <% if repository.is_a?(RepositorySnapshot) %>
         <span class="snapshot-tag">
           <%= t('my_modules.repository.snapshots.simple_view.snapshot_tag') %>
         </span>
       <% end %>
-      <% if readable %>
-        <div class="action-buttons">
-          <button class="btn btn-light icon-btn full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %><%= '?include_stock_consumption=true' if repository.has_stock_consumption? %>">
-            <i class="sn-icon sn-icon-expand"></i>
-          </button>
-        </div>
-      <% end %>
+      <div class="action-buttons">
+        <button class="btn btn-light icon-btn full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %><%= '?include_stock_consumption=true' if repository.has_stock_consumption? %>">
+          <i class="sn-icon sn-icon-expand"></i>
+        </button>
+      </div>
     </a>
-    <% if readable %>
-      <div class="collapse assigned-repository-container readable-repository"
-          id="assigned-repository-items-container-<%= repository.id %>"
-          data-repository-url="<%= assigned_repository_simple_view_index_path(@my_module, repository) %>"
-          data-footer-label="<%= assigned_repository_simple_view_footer_label(repository) %>"
-          data-name-column-id="<%=  assigned_repository_simple_view_name_column_id(repository) %>"
-      >
-        <table class="table hidden repository-table repository-dataTable"
-              data-stock-management="<%= repository.has_stock_management? && repository.has_stock_consumption? %>"
-              data-stock-consumption-editable="<%= can_update_my_module_stock_consumption?(@my_module) && repository.has_stock_consumption? %>">
-          <thead>
-            <tr>
-              <th class="row-name"><%= t("repositories.table.row_name") %></th>
-              <% if repository.has_stock_management? && repository.has_stock_consumption? %>
-                <th class="row-stock" data-columns-visible="false"><%= repository.repository_stock_column.name %></th>
-                <th class="row-consumption" data-columns-visible="false"><%= t("repositories.table.row_consumption") %></th>
-              <% end %>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    <% else %>
-      <div class="collapse assigned-repository-container" id="assigned-repository-items-container-<%= repository.id %>">
-        <table class="table border-solid border-0 border-b border-b-sn-light-grey">
+    <div class="collapse assigned-repository-container"
+         id="assigned-repository-items-container-<%= repository.id %>"
+         data-repository-url="<%= assigned_repository_simple_view_index_path(@my_module, repository) %>"
+         data-footer-label="<%= assigned_repository_simple_view_footer_label(repository) %>"
+         data-name-column-id="<%=  assigned_repository_simple_view_name_column_id(repository) %>"
+    >
+      <table class="table hidden repository-table repository-dataTable"
+             data-stock-management="<%= repository.has_stock_management? && repository.has_stock_consumption? %>"
+             data-stock-consumption-editable="<%= can_update_my_module_stock_consumption?(@my_module) && repository.has_stock_consumption? %>">
+        <thead>
           <tr>
-            <th class="bg-sn-light-grey"><%= t('repositories.table.id') %></th>
+            <th class="row-name"><%= t("repositories.table.row_name") %></th>
+            <% if repository.has_stock_management? && repository.has_stock_consumption? %>
+              <th class="row-stock" data-columns-visible="false"><%= repository.repository_stock_column.name %></th>
+              <th class="row-consumption" data-columns-visible="false"><%= t("repositories.table.row_consumption") %></th>
+            <% end %>
           </tr>
-          <% @my_module.repository_rows.where(repository: repository).select(:parent_id, :id).map(&:code).each do |code|  %>
-            <tr>
-              <td class="!border-t-sn-light-grey"><%= code %></td>
-            <tr>
-          <% end %>
-        </table>
-      </div>
-    <% end %>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
     <%= render 'shared/dialog',
                id: "snapshot-error-#{repository.id}",
                type: "error",
