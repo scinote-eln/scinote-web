@@ -61,14 +61,15 @@ class StorageLocation < ApplicationRecord
     storage_location_repository_rows.count.zero?
   end
 
-  def duplicate!(user)
+  def duplicate!(user, team)
     ActiveRecord::Base.transaction do
       new_storage_location = dup
       new_storage_location.name = next_clone_name
+      new_storage_location.team = team unless parent_id
       new_storage_location.created_by = user
       new_storage_location.save!
       copy_image(self, new_storage_location)
-      recursive_duplicate(id, new_storage_location.id, user)
+      recursive_duplicate(id, new_storage_location.id, user, new_storage_location.team)
       new_storage_location
     rescue ActiveRecord::RecordInvalid
       false
@@ -144,14 +145,15 @@ class StorageLocation < ApplicationRecord
 
   private
 
-  def recursive_duplicate(old_parent_id = nil, new_parent_id = nil, user = nil)
+  def recursive_duplicate(old_parent_id = nil, new_parent_id = nil, user = nil, team = nil)
     StorageLocation.where(parent_id: old_parent_id).find_each do |child|
       new_child = child.dup
       new_child.parent_id = new_parent_id
+      new_child.team = team
       new_child.created_by = user
       new_child.save!
       copy_image(child, new_child)
-      recursive_duplicate(child.id, new_child.id, user)
+      recursive_duplicate(child.id, new_child.id, user, team)
     end
   end
 
