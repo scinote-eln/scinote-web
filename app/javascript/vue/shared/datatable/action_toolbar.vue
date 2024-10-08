@@ -11,6 +11,8 @@
         <a :class="`rounded flex gap-2 items-center py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
                   bg-sn-white color-sn-blue hover:no-underline focus:no-underline ${action.button_class}`"
           :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
+          :data-target="action.target"
+          :data-toggle="action.type === 'modal' && 'modal'"
           :id="action.button_id"
           :title="action.label"
           :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
@@ -72,6 +74,9 @@ export default {
           event.preventDefault();
           this.$emit('toolbar:action', action);
           // do nothing, this is handled by legacy code based on the button class
+          break;
+        case 'modal':
+          // do nothihg, boostrap modal handled by data-toggle="modal" and data-target
           break;
         case 'link':
           // do nothing, already handled by href
