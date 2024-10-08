@@ -2709,7 +2709,7 @@ en:
       import_modal:
         import_button: 'Import items'
         title: "Import items to a box"
-        description: "Import items to a box allows for assigning items to a box and updating positions within a grid box. First, export the current box data to download a file listing the items already in the box. Then, edit the exported file to add or update the items you want to place in the box. When importing the file, ensure it includes the ‘Position’ and ‘Item ID’ columns for a successful import."
+        description: "Import items to a box allows for assigning items to a box and updating positions within a grid box. First, export the current box data to download a file listing the items already in the box. Then, edit the exported file to add or update the items you want to place in the box. When importing the file, ensure it includes the ‘Box position’ and ‘Item ID’ columns for a successful import."
         export: "Export"
         export_button: "Export current box"
         import: "Import"
