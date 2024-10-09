@@ -27,14 +27,14 @@
             <RowSelector v-if="!selectedRow" @change="this.rowId = $event" class="mb-4"></RowSelector>
             <ContainerSelector v-if="!selectedContainer" @change="this.containerId = $event"></ContainerSelector>
             <PositionSelector
-              v-if="containerId && !selectedPosition"
+              v-if="containerId && containerId > 0 && !selectedPosition"
               :key="containerId"
               :selectedContainerId="containerId"
               @change="this.position = $event"></PositionSelector>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit">
+            <button class="btn btn-primary" type="submit" :disabled="!validObject">
               {{ i18n.t(`storage_locations.show.assign_modal.${assignMode}_action`) }}
             </button>
           </div>
@@ -70,6 +70,9 @@ export default {
   },
   mixins: [modalMixin],
   computed: {
+    validObject() {
+      return this.rowId && this.containerId && this.containerId > 0 && this.position;
+    },
     createUrl() {
       return storage_location_storage_location_repository_rows_path({
         storage_location_id: this.containerId

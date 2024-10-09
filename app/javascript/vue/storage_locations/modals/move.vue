@@ -43,7 +43,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit">
+            <button class="btn btn-primary" :disabled="!validContainer" type="submit">
               {{ i18n.t('general.move') }}
             </button>
           </div>
@@ -68,6 +68,11 @@ export default {
   },
   created() {
     this.teamId = this.selectedObject.team_id;
+  },
+  computed: {
+    validContainer() {
+      return (this.selectedStorageLocationId && this.selectedStorageLocationId > 0) || this.selectedStorageLocationId === null;
+    }
   },
   mixins: [modalMixin, MoveTreeMixin],
   data() {
