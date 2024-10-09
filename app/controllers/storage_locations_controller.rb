@@ -104,8 +104,10 @@ class StorageLocationsController < ApplicationController
         if move_params[:destination_storage_location_id] == 'root_storage_location'
           nil
         else
-          current_team.storage_locations.find(move_params[:destination_storage_location_id])
+          StorageLocation.find(move_params[:destination_storage_location_id])
         end
+
+      render_403 and return unless can_manage_storage_location?(destination_storage_location)
 
       @storage_location.update!(parent: destination_storage_location)
 
