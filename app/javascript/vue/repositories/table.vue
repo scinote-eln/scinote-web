@@ -54,8 +54,27 @@
     v-if="shareRepository"
     :object="shareRepository"
     :globalShareEnabled="true"
+    :confirmationModal="$refs.shareConfirmationModal"
     @close="shareRepository = null"
     @share="updateTable" />
+  <ConfirmationModal
+    ref="shareConfirmationModal"
+    :title="i18n.t('repositories.index.modal_confirm_sharing.title')"
+    :description="`
+      <p>${i18n.t('repositories.index.modal_confirm_sharing.description_1')}</p>
+      <p><b>${i18n.t('repositories.index.modal_confirm_sharing.description_2')}</b></p>
+    `"
+    :confirmClass="'btn btn-danger'"
+    :confirmText="i18n.t('repositories.index.modal_confirm_sharing.confirm')"
+    :e2eAttributes="{
+          modalName: 'e2e-MD-confirmSharingChanges',
+          title: 'e2e-TX-confirmSharingChangesModal-title',
+          content: 'e2e-TX-confirmSharingChangesModal-content',
+          close: 'e2e-BT-confirmSharingChangesModal-close',
+          cancel: 'e2e-BT-confirmSharingChangesModal-cancel',
+          confirm: 'e2e-BT-confirmSharingChangesModal-delete'
+    }"
+  ></ConfirmationModal>
 </template>
 
 <script>
