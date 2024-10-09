@@ -34,6 +34,7 @@
         :selectedContainer="assignToContainer"
         :selectedPosition="assignToPosition"
         :selectedRow="rowIdToMove"
+        :selectedRowName="rowNameToMove"
         :cellId="cellIdToUnassign"
         @close="openAssignModal = false; resetTableSearch(); this.reloadingTable = true"
       ></AssignModal>
@@ -115,6 +116,7 @@ export default {
       assignToPosition: null,
       assignToContainer: null,
       rowIdToMove: null,
+      rowNameToMove: null,
       cellIdToUnassign: null,
       assignMode: 'assign',
       storageLocationUnassignDescription: ''
@@ -219,6 +221,7 @@ export default {
     assignRow() {
       this.openAssignModal = true;
       this.rowIdToMove = null;
+      this.rowNameToMove = null;
       this.assignToContainer = this.containerId;
       this.assignToPosition = null;
       this.cellIdToUnassign = null;
@@ -227,6 +230,7 @@ export default {
     assignRowToPosition(position) {
       this.openAssignModal = true;
       this.rowIdToMove = null;
+      this.rowNameToMove = null;
       this.assignToContainer = this.containerId;
       this.assignToPosition = position;
       this.cellIdToUnassign = null;
@@ -235,6 +239,7 @@ export default {
     moveRow(_event, data) {
       this.openAssignModal = true;
       this.rowIdToMove = data[0].row_id;
+      this.rowNameToMove = data[0].row_name || this.i18n.t('storage_locations.show.hidden');
       this.assignToContainer = null;
       this.assignToPosition = null;
       this.cellIdToUnassign = data[0].id;
