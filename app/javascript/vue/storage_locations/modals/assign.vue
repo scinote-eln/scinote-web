@@ -77,7 +77,7 @@ export default {
   mixins: [modalMixin],
   computed: {
     validObject() {
-      return this.rowId && this.containerId && this.containerId > 0 && this.position;
+      return this.rowId && this.containerId && this.containerId > 0;
     },
     createUrl() {
       return storage_location_storage_location_repository_rows_path({
