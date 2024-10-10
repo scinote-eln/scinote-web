@@ -107,7 +107,7 @@ class StorageLocationsController < ApplicationController
           StorageLocation.find(move_params[:destination_storage_location_id])
         end
 
-      render_403 and return unless can_manage_storage_location?(destination_storage_location)
+      render_403 and return if destination_storage_location && !can_manage_storage_location?(destination_storage_location)
 
       @storage_location.update!(parent: destination_storage_location)
 
