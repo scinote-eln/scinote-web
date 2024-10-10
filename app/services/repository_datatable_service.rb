@@ -83,7 +83,7 @@ class RepositoryDatatableService
       repository_rows =
         if @repository.archived? || @repository.is_a?(RepositorySnapshot)
           # don't load reminders for archived repositories or snapshots
-          repository_rows.select('FALSE AS has_active_stock_reminders, FALSE AS has_active_datetime_reminders')
+          repository_rows.select('FALSE AS has_active_reminders')
         else
           repository_rows.left_outer_joins_active_reminders(@repository, @user)
                          .select('COUNT(repository_cells_with_active_reminders.id) > 0 AS has_active_reminders')

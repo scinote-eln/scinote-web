@@ -2014,6 +2014,11 @@ en:
         name_placeholder: "My inventory"
         submit: "Create"
         success_flash_html: "Inventory <strong>%{name}</strong> successfully created."
+      modal_confirm_sharing:
+        title: "Inventory sharing changes"
+        description_1: "You will no longer share this inventory with some of the teams. All unshared inventory items assigned to tasks will be automatically removed and this action is irreversible. Any item relationship links (if they exist) will also be deleted."
+        description_2: "Are you sure you want to apply the changes you made?"
+        confirm: "Apply"
       export:
         notification:
           error:
@@ -2696,9 +2701,9 @@ en:
         selected_position_title: 'Assign to position %{position}'
         selected_row_title: 'Assign new location'
         assign_title: 'Assign position'
-        move_title: 'Move item'
+        move_title: 'Move %{name}'
         assign_description: 'Select an item to assign it to a location.'
-        move_description: 'Select a new location for your item.'
+        move_description: 'Select where you want to move %{name}.'
         selected_row_description: "Select a location for the item %{name}."
         assign_action: 'Assign'
         move_action: 'Move'

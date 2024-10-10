@@ -54,6 +54,9 @@ class StorageLocationRepositoryRowsController < ApplicationController
 
   def move
     ActiveRecord::Base.transaction do
+      @original_storage_location = @storage_location_repository_row.storage_location
+      @original_position = @storage_location_repository_row.human_readable_position
+
       @storage_location_repository_row.discard
       @storage_location_repository_row = StorageLocationRepositoryRow.create!(
         repository_row: @repository_row,
@@ -61,7 +64,13 @@ class StorageLocationRepositoryRowsController < ApplicationController
         metadata: storage_location_repository_row_params[:metadata] || {},
         created_by: current_user
       )
-      log_activity(:storage_location_repository_row_moved)
+      log_activity(
+        :storage_location_repository_row_moved,
+        {
+          storage_location_original: @original_storage_location.id,
+          position_original: @original_position
+        }
+      )
       render json: @storage_location_repository_row,
              serializer: Lists::StorageLocationRepositoryRowSerializer
     rescue ActiveRecord::RecordInvalid => e
