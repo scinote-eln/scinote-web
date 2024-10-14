@@ -6,7 +6,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
   before_action :load_storage_location
   before_action :load_repository_row, only: %i(create update destroy move)
   before_action :check_read_permissions, except: %i(create actions_toolbar)
-  before_action :check_manage_permissions, only: %i(create update destroy)
+  before_action :check_manage_permissions, only: %i(create update destroy move)
 
   def index
     storage_location_repository_row = Lists::StorageLocationRepositoryRowsService.new(
@@ -134,7 +134,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_create_storage_location_repository_rows?(@storage_location)
+    render_403 unless can_manage_storage_location_repository_rows?(@storage_location)
   end
 
   def log_activity(type_of, message_items = {})

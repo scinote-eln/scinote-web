@@ -10,6 +10,7 @@ class StorageLocationsController < ApplicationController
   before_action :check_storage_locations_enabled, except: :unassign_rows
   before_action :load_storage_location, only: %i(update destroy duplicate move show available_positions unassign_rows export_container import_container)
   before_action :check_read_permissions, except: %i(index create tree actions_toolbar import_container unassign_rows)
+  before_action :check_manage_repository_rows_permissions, only: %i(import_container unassign_rows)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: %i(update destroy duplicate move)
   before_action :set_breadcrumbs_items, only: %i(index show)
@@ -228,6 +229,10 @@ class StorageLocationsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_storage_location?(@storage_location)
+  end
+
+  def check_manage_repository_rows_permissions
+    render_403 unless can_manage_storage_location_repository_rows?(@storage_location)
   end
 
   def set_breadcrumbs_items

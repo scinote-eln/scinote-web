@@ -181,15 +181,15 @@ export default {
           type: 'emit',
           buttonStyle: 'btn btn-primary'
         });
-      }
 
-      left.push({
-        name: 'import',
-        icon: 'sn-icon sn-icon-import',
-        label: this.i18n.t('storage_locations.show.import_modal.import_button'),
-        type: 'emit',
-        buttonStyle: 'btn btn-light'
-      });
+        left.push({
+          name: 'import',
+          icon: 'sn-icon sn-icon-import',
+          label: this.i18n.t('storage_locations.show.import_modal.import_button'),
+          type: 'emit',
+          buttonStyle: 'btn btn-light'
+        });
+      }
 
       return {
         left,
