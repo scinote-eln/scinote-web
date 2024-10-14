@@ -8,26 +8,24 @@ class TeamSharedObjectsController < ApplicationController
     ActiveRecord::Base.transaction do
       @activities_to_log = []
 
+      global_permission_level =
+        if params[:select_all_teams]
+          params[:select_all_write_permission] ? :shared_write : :shared_read
+        else
+          :not_shared
+        end
+
       # Global share
       if @model.globally_shareable?
-        permission_level =
-          if params[:select_all_teams]
-            params[:select_all_write_permission] ? :shared_write : :shared_read
-          else
-            :not_shared
-          end
-
-        @model.permission_level = permission_level
+        @model.permission_level = global_permission_level
 
         if @model.permission_level_changed?
           @model.save!
-          @model.team_shared_objects.each(&:destroy!) unless permission_level == :not_shared
+          @model.team_shared_objects.each(&:destroy!) unless global_permission_level == :not_shared
           case @model
           when Repository
             setup_repository_global_share_activity
           end
-
-          log_activities and next
         end
       end
 
@@ -35,11 +33,10 @@ class TeamSharedObjectsController < ApplicationController
       params[:team_share_params].each do |t|
         next unless t['private_shared_with']
 
-        @model.update!(permission_level: :not_shared) if @model.globally_shareable?
-
         team_shared_object = @model.team_shared_objects.find_or_initialize_by(team_id: t['id'])
 
         new_record = team_shared_object.new_record?
+
         team_shared_object.update!(
           permission_level: t['private_shared_with_write'] ? :shared_write : :shared_read
         )

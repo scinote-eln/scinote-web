@@ -126,7 +126,7 @@ export default {
       const data = {
         select_all_teams: this.sharedWithAllRead,
         select_all_write_permission: this.sharedWithAllWrite,
-        team_share_params: this.shareableTeams.map((team) => { return { id: team.id, ...team.attributes } })
+        team_share_params: this.sharedWithAllRead ? [] : this.shareableTeams.map((team) => { return { id: team.id, ...team.attributes } })
       };
       axios.post(this.object.urls.share, data).then(() => {
         HelperModule.flashAlertMsg(this.i18n.t(
