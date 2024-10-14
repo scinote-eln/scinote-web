@@ -416,6 +416,33 @@ class AssetsController < ApplicationController
     render_403 unless VersionedAttachments.enabled?
 
     @asset.restore_file_version(params[:version].to_i)
+
+    message_items = {
+      version: params[:version].to_i,
+      file: @asset.file_name
+    }
+
+    case @asset.parent
+    when Step
+      if @asset.parent.protocol.in_module?
+        message_items.merge!({ my_module: @assoc.protocol.my_module.id, step: @asset.parent.id })
+        log_restore_activity(:task_step_restore_asset_version, @assoc.protocol,
+                             @assoc.protocol.team, @assoc.my_module&.project, message_items)
+      else
+        message_items.merge!({ protocol: @assoc.protocol.id, step: @asset.parent.id })
+        log_restore_activity(:protocol_step_restore_asset_version, @assoc.protocol,
+                             @assoc.protocol.team, nil, message_items)
+      end
+    when Result
+      message_items.merge!({ result: @assoc.id, my_module: @assoc.my_module.id })
+      log_restore_activity(:task_result_restore_asset_version, @assoc,
+                           @assoc.my_module.team, @assoc.my_module.project, message_items)
+    when RepositoryCell
+      message_items.merge!({ repository_column: @assoc.repository_column.id, repository: @repository.id })
+      log_restore_activity(:repository_column_restore_asset_version, @repository,
+                           @repository.team, nil, message_items)
+    end
+
     render json: @asset.file.blob
   end
 
@@ -493,5 +520,15 @@ class AssetsController < ApplicationController
             message_items: {
               result: result.id
             }.merge(message_items))
+  end
+
+  def log_restore_activity(type_of, subject, team, project = nil, message_items = {})
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: subject,
+            team: team,
+            project: project,
+            message_items: message_items)
   end
 end
