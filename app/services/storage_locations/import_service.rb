@@ -15,7 +15,7 @@ module StorageLocations
     end
 
     def import_items
-      @rows = SpreadsheetParser.spreadsheet_enumerator(@sheet).reject { |r| r.all?(&:blank?) }
+      @rows = SpreadsheetParser.spreadsheet_enumerator(@sheet).to_a
 
       # Check if the file has proper headers
       header = SpreadsheetParser.parse_row(@rows[0], @sheet)
@@ -73,6 +73,8 @@ module StorageLocations
           repository_row_id: (row[1].to_s.gsub('IT', '') if row[1].present?)
         }
       end
+
+      @rows.reject! { |r| r[:repository_row_id].blank? && r[:position].blank? }
     end
 
     def import_row!(row)

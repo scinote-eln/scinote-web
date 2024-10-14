@@ -97,6 +97,7 @@
       <ReorderableItemsModal v-if="reordering"
         :title="i18n.t('my_modules.modals.reorder_results.title')"
         :items="reorderableElements"
+        :dataE2e="`task-result${result.id}-reorder`"
         @reorder="updateElementOrder"
         @close="closeReorderModal"
       />

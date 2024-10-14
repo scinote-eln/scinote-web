@@ -10,31 +10,37 @@
             <h4 v-if="selectedPosition" class="modal-title truncate !block">
               {{ i18n.t(`storage_locations.show.assign_modal.selected_position_title`, { position: formattedPosition }) }}
             </h4>
-            <h4 v-else-if="selectedRow && selectedRowName" class="modal-title truncate !block">
+            <h4 v-else-if="assignMode === 'assign' && selectedRow && selectedRowName" class="modal-title truncate !block">
               {{ i18n.t(`storage_locations.show.assign_modal.selected_row_title`) }}
             </h4>
+            <h4 v-else-if="assignMode === 'move'" class="modal-title truncate !block">
+              {{ i18n.t(`storage_locations.show.assign_modal.move_title`, { name: selectedRowName }) }}
+            </h4>
             <h4 v-else class="modal-title truncate !block">
-              {{ i18n.t(`storage_locations.show.assign_modal.${assignMode}_title`) }}
+              {{ i18n.t(`storage_locations.show.assign_modal.assign_title`) }}
             </h4>
           </div>
           <div class="modal-body">
             <p v-if="selectedRow && selectedRowName" class="mb-4">
               {{ i18n.t(`storage_locations.show.assign_modal.selected_row_description`, { name: selectedRowName }) }}
             </p>
+            <h4 v-else-if="assignMode === 'move'" class="modal-title truncate !block">
+              {{ i18n.t(`storage_locations.show.assign_modal.move_description`, { name: selectedRowName }) }}
+            </h4>
             <p v-else class="mb-4">
-              {{ i18n.t(`storage_locations.show.assign_modal.${assignMode}_description`) }}
+              {{ i18n.t(`storage_locations.show.assign_modal.assign_description`) }}
             </p>
             <RowSelector v-if="!selectedRow" @change="this.rowId = $event" class="mb-4"></RowSelector>
             <ContainerSelector v-if="!selectedContainer" @change="this.containerId = $event"></ContainerSelector>
             <PositionSelector
-              v-if="containerId && !selectedPosition"
+              v-if="containerId && containerId > 0 && !selectedPosition"
               :key="containerId"
               :selectedContainerId="containerId"
               @change="this.position = $event"></PositionSelector>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit">
+            <button class="btn btn-primary" type="submit" :disabled="!validObject">
               {{ i18n.t(`storage_locations.show.assign_modal.${assignMode}_action`) }}
             </button>
           </div>
@@ -70,6 +76,9 @@ export default {
   },
   mixins: [modalMixin],
   computed: {
+    validObject() {
+      return this.rowId && this.containerId && this.containerId > 0;
+    },
     createUrl() {
       return storage_location_storage_location_repository_rows_path({
         storage_location_id: this.containerId
