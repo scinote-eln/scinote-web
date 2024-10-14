@@ -37,14 +37,14 @@
             <template v-for="team in shareableTeams">
               <div class="col-span-2 flex items-center h-9 gap-1">
                 <span class="sci-checkbox-container" :class="{'opacity-0 pointer-events-none': sharedWithAllRead}">
-                  <input type="checkbox" class="sci-checkbox" v-model="team.attributes.private_shared_with" />
+                  <input :disabled="!team.attributes.readable" type="checkbox" class="sci-checkbox" v-model="team.attributes.private_shared_with" />
                   <span class="sci-checkbox-label"></span>
                 </span>
-                {{ team.attributes.name }}
+                {{ team.attributes.name || `(${i18n.t('teams.private_team')})` }}
               </div>
               <div class="flex justify-center items-center">
                 <span v-if="team.attributes.private_shared_with"
-                      :class="{'opacity-0 pointer-events-none': sharedWithAllRead}"
+                      :class="{'opacity-0 pointer-events-none': sharedWithAllRead || !team.attributes.readable}"
                       class="sci-toggle-checkbox-container">
                   <input type="checkbox"
                         class="sci-toggle-checkbox"
