@@ -4,7 +4,7 @@ class NotificationSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   include BreadcrumbsHelper
 
-  attributes :id, :title, :message, :created_at, :read_at, :type, :breadcrumbs, :checked, :today
+  attributes :id, :title, :message, :created_at, :read_at, :type, :breadcrumbs, :checked, :today, :toggle_read_url
 
   def title
     object.to_notification.title
@@ -31,4 +31,7 @@ class NotificationSerializer < ActiveModel::Serializer
     object.read_at.present?
   end
 
+  def toggle_read_url
+    toggle_read_user_notification_path(object)
+  end
 end

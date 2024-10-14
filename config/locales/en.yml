@@ -310,6 +310,9 @@ en:
     academy_tooltip: "SciNote Academy"
     notifications:
       title: "Notifications"
+      read: "Read"
+      unread: "Unread"
+      read_all: "Read all"
       all: "All"
       message: "Messages"
       system: "System"
