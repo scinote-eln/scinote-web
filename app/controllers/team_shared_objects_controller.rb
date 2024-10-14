@@ -57,7 +57,7 @@ class TeamSharedObjectsController < ApplicationController
   end
 
   def shareable_teams
-    teams = current_user.teams.order(:name) - [@model.team]
+    teams = Team.order(:name).all - [@model.team]
     render json: teams, each_serializer: ShareableTeamSerializer, model: @model
   end
 
