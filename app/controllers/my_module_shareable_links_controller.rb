@@ -62,7 +62,7 @@ class MyModuleShareableLinksController < ApplicationController
     @draw = params[:draw].to_i
     per_page = params[:length].to_i < 1 ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
     page = (params[:start].to_i / per_page) + 1
-    datatable_service = RepositoryDatatableService.new(@repository, params, nil, @my_module, preload_cells: false)
+    datatable_service = RepositoryDatatableService.new(@repository, params, nil, @my_module, preload_cells: false, disable_reminders: true)
 
     @datatable_params = {
       view_mode: params[:view_mode],
