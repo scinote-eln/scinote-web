@@ -156,7 +156,7 @@ class AssetSerializer < ActiveModel::Serializer
       )
     end
 
-    urls[:restore_version] = asset_restore_version_path(object) if VersionedAttachments.enabled?
+    urls[:restore_version] = asset_restore_version_path(object) if can_restore_asset?(user, object)
     urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)
 
     if can_manage_asset?(user, object) && can_open_asset_locally?(user, object)
