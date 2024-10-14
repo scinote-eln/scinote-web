@@ -13,11 +13,12 @@ class RepositoryDatatableService
   PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by
                           assigned relationships updated_on updated_by).freeze
 
-  def initialize(repository, params, user, my_module = nil, preload_cells: true)
+  def initialize(repository, params, user, my_module = nil, preload_cells: true, disable_reminders: false)
     @repository = repository
     @user = user
     @my_module = my_module
     @preload_cells = preload_cells
+    @disable_reminders = disable_reminders
     @params = params
     @assigned_view =  @params[:assigned].in?(%w(assigned assigned_simple))
     @sortable_columns = build_sortable_columns
@@ -79,7 +80,7 @@ class RepositoryDatatableService
       end
     end
 
-    if Repository.reminders_enabled?
+    if Repository.reminders_enabled? && !@disable_reminders
       repository_rows =
         if @repository.archived? || @repository.is_a?(RepositorySnapshot)
           # don't load reminders for archived repositories or snapshots
