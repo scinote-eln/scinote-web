@@ -72,7 +72,6 @@ class GeneSequenceAssetsController < ApplicationController
 
       ensure_asset!
 
-      @asset.file.purge
       @asset.preview_image.purge
 
       @asset.attach_file_version(
