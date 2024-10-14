@@ -33,7 +33,7 @@ Canaid::Permissions.register_for(StorageLocation) do
     root_storage_location.shared_with_write?(user.current_team)
   end
 
-  can :create_storage_location_repository_rows do |user, storage_location|
+  can :manage_storage_location_repository_rows do |user, storage_location|
     can_read_storage_location?(user, storage_location) &&
       user.current_team.permission_granted?(user, TeamPermissions::STORAGE_LOCATION_CONTAINERS_MANAGE)
   end
