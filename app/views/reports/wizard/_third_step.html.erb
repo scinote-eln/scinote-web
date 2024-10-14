@@ -78,7 +78,8 @@
                           value="<%= repository.is_a?(RepositorySnapshot) ? repository.parent_id : repository.id %>"
                           <%= 'checked' if report.new_record? ||
                                             @project_contents[:repositories].include?(repository.id) ||
-                                            (repository.is_a?(Repository) && repository.repository_snapshots.exists?(id: @project_contents[:repositories])) %> />
+                                            (repository.is_a?(Repository) && repository.repository_snapshots.exists?(id: @project_contents[:repositories])) ||
+                                            (repository.is_a?(RepositorySnapshot) && @project_contents[:repositories].include?(repository.parent_id)) %> />
                     <span class="sci-checkbox-label"></span>
                   </span>
                   <%= repository.name %>
@@ -101,14 +102,20 @@
                   >
                    <% Report.default_repository_columns.each do |key, value| %>
                       <option value="<%= key %>"
-                              selected-value="<%= report.settings.dig(:task, :excluded_repository_columns, repository.id.to_s)&.include?(key.to_s.to_i) ? '' : 'selected' %>"
+                              selected-value="<%= report.settings.dig(:task, 
+                                                                      :excluded_repository_columns,
+                                                                      (repository.is_a?(RepositorySnapshot) ? repository.parent_id : repository.id).to_s)
+                                                                 &.include?(key.to_s.to_i) ? '' : 'selected' %>"
                       >
                         <%= value %>
                       </option>
                     <% end %>
                     <% repository.repository_columns.find_each do |repository_column| %>
                       <option value="<%= repository_column.id %>"
-                              selected-value="<%= report.settings.dig(:task, :excluded_repository_columns, repository.id.to_s)&.include?(repository_column.id.to_i) ? '' : 'selected' %>"
+                              selected-value="<%= report.settings.dig(:task,
+                                                                      :excluded_repository_columns,
+                                                                      (repository.is_a?(RepositorySnapshot) ? repository.parent_id : repository.id).to_s)
+                                                                 &.include?(repository_column.id.to_i) ? '' : 'selected' %>"
                       >
                         <%= repository_column.name %>
                       </option>
