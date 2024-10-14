@@ -18,7 +18,8 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode)
-  before_action :check_manage_permission, only: %i(edit destroy duplicate rename toggle_view_mode restore_version)
+  before_action :check_manage_permission, only: %i(edit destroy duplicate rename toggle_view_mode)
+  before_action :check_restore_permission, only: :restore_version
 
   def file_preview
     editable = can_manage_asset?(@asset) && (@asset.repository_asset_value.blank? ||
@@ -473,6 +474,10 @@ class AssetsController < ApplicationController
 
   def check_manage_permission
     render_403 and return unless can_manage_asset?(@asset)
+  end
+
+  def check_restore_permission
+    render_403 and return unless can_restore_asset?(@asset)
   end
 
   def append_wd_params(url)
