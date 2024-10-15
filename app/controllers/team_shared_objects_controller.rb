@@ -57,7 +57,7 @@ class TeamSharedObjectsController < ApplicationController
   end
 
   def shareable_teams
-    teams = Team.order(:name).all - [@model.team]
+    teams = (Team.order(:name).all - [@model.team]).filter { |t| can_read_team?(t) || @model.private_shared_with?(t) }
     render json: teams, each_serializer: ShareableTeamSerializer, model: @model
   end
 

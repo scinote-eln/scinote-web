@@ -35,7 +35,7 @@
               </span>
             </div>
             <template v-for="team in shareableTeams">
-              <div class="col-span-2 flex items-center h-9 gap-1" :class="{ 'hidden': !team.attributes.readable && !team.attributes.private_shared_with }">
+              <div class="col-span-2 flex items-center h-9 gap-1">
                 <span class="sci-checkbox-container" :class="{'opacity-0 pointer-events-none': sharedWithAllRead}">
                   <input :disabled="!team.attributes.readable" type="checkbox" class="sci-checkbox" v-model="team.attributes.private_shared_with" />
                   <span class="sci-checkbox-label"></span>
