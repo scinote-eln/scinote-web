@@ -8,7 +8,7 @@ class UserNotificationsController < ApplicationController
     notifications = load_notifications
 
     case params[:tab]
-    when 'all'
+    when 'read'
       notifications = notifications.where.not(read_at: nil)
     when 'unread'
       notifications = notifications.where(read_at: nil)
