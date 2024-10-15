@@ -33,6 +33,10 @@
       <%= javascript_include_tag 'https://marvinjs.chemicalize.com/v1/client.js', nonce: true, async: true %>
     <% end %>
 
+    <% if ENV['JSPREADSHEET_KEY'].present? %>
+      <meta name="jspreadsheet-key" content="<%= ENV['JSPREADSHEET_KEY'] %>">
+    <% end %>
+
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-57x57.png", type: "image/png", size: "57x57" %>
     <%= favicon_link_tag "favicon-72x72.png", type: "image/png", size: "72x72" %>
