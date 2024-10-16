@@ -192,12 +192,13 @@ export default {
       }
 
       this.savingLocaiton = true;
-      
+
       const params = {
         name: this.object.name,
         description: this.object.description,
         signed_blob_id: this.object.signed_blob_id,
-        container: this.object.container
+        container: this.object.container,
+        file_name: this.object.file_name || this.attachedImage?.name
       };
 
       if (this.object.container) {
