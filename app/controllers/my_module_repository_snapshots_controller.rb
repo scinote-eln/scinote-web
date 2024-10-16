@@ -16,20 +16,16 @@ class MyModuleRepositorySnapshotsController < ApplicationController
 
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
+    repository_rows = datatable_service.repository_rows
+
     if params[:simple_view]
-      repository_rows = datatable_service.repository_rows
       @repository = @repository_snapshot
       rows_view = 'repository_rows/simple_view_index'
     else
-      repository_rows =
-        datatable_service.repository_rows
-                         .preload(:repository_columns,
-                                  :created_by,
-                                  repository_cells: { value: @repository_snapshot.cell_preload_includes })
       rows_view = 'repository_rows/snapshot_index'
     end
     @repository_rows = repository_rows.page(page).per(per_page)
-
+    @filtered_rows_count = @repository_rows.load.take&.filtered_count || 0
     render rows_view
   end
 

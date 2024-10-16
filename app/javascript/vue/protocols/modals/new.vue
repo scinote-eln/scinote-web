@@ -31,7 +31,12 @@
             </div>
             <div class="mt-6" :class="{'hidden': !visible}">
               <label class="sci-label">{{ i18n.t("protocols.new_protocol_modal.role_label") }}</label>
-              <SelectDropdown :options="userRoles" :value="defaultRole" @change="changeRole" />
+              <SelectDropdown
+                :options="userRoles"
+                :value="defaultRole"
+                :data-e2e="`e2e-DD-newProtocolModal-defaultUserRole`"
+                @change="changeRole"
+              />
             </div>
           </div>
           <div class="modal-footer">

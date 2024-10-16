@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_26_113515) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_02_122340) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -721,8 +721,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_26_113515) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
-    t.datetime "start_time_dup"
-    t.datetime "end_time_dup"
+    t.datetime "start_time_dup", precision: nil
+    t.datetime "end_time_dup", precision: nil
     t.index "((end_time)::date)", name: "index_repository_date_time_range_values_on_end_time_as_date", where: "((type)::text = 'RepositoryDateRangeValue'::text)"
     t.index "((end_time)::time without time zone)", name: "index_repository_date_time_range_values_on_end_time_as_time", where: "((type)::text = 'RepositoryTimeRangeValue'::text)"
     t.index "((start_time)::date)", name: "index_repository_date_time_range_values_on_start_time_as_date", where: "((type)::text = 'RepositoryDateRangeValue'::text)"
@@ -936,6 +936,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_26_113515) do
     t.datetime "updated_at", precision: nil
     t.bigint "created_by_id", null: false
     t.bigint "last_modified_by_id", null: false
+    t.boolean "has_smart_annotation", default: false, null: false
     t.index "trim_html_tags((data)::text) gin_trgm_ops", name: "index_repository_text_values_on_data", using: :gin
   end
 
@@ -1081,6 +1082,40 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_26_113515) do
     t.index ["position"], name: "index_steps_on_position"
     t.index ["protocol_id"], name: "index_steps_on_protocol_id"
     t.index ["user_id"], name: "index_steps_on_user_id"
+  end
+
+  create_table "storage_location_repository_rows", force: :cascade do |t|
+    t.bigint "repository_row_id"
+    t.bigint "storage_location_id"
+    t.bigint "created_by_id"
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_storage_location_repository_rows_on_created_by_id"
+    t.index ["discarded_at"], name: "index_storage_location_repository_rows_on_discarded_at"
+    t.index ["repository_row_id"], name: "index_storage_location_repository_rows_on_repository_row_id"
+    t.index ["storage_location_id"], name: "index_storage_location_repository_rows_on_storage_location_id"
+  end
+
+  create_table "storage_locations", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.bigint "parent_id"
+    t.bigint "team_id"
+    t.bigint "created_by_id"
+    t.boolean "container", default: false, null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "trim_html_tags((description)::text) gin_trgm_ops", name: "index_storage_locations_on_description", using: :gin
+    t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_storage_locations_on_name", using: :gin
+    t.index ["container"], name: "index_storage_locations_on_container"
+    t.index ["created_by_id"], name: "index_storage_locations_on_created_by_id"
+    t.index ["discarded_at"], name: "index_storage_locations_on_discarded_at"
+    t.index ["parent_id"], name: "index_storage_locations_on_parent_id"
+    t.index ["team_id"], name: "index_storage_locations_on_team_id"
   end
 
   create_table "tables", force: :cascade do |t|
@@ -1278,6 +1313,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_26_113515) do
     t.integer "failed_attempts", default: 0, null: false
     t.datetime "locked_at", precision: nil
     t.string "unlock_token"
+    t.string "api_key"
+    t.datetime "api_key_expires_at", precision: nil
+    t.datetime "api_key_created_at", precision: nil
     t.index "trim_html_tags((full_name)::text) gin_trgm_ops", name: "index_users_on_full_name", using: :gin
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
@@ -1502,12 +1540,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_26_113515) do
   add_foreign_key "steps", "protocols"
   add_foreign_key "steps", "users"
   add_foreign_key "steps", "users", column: "last_modified_by_id"
+  add_foreign_key "storage_location_repository_rows", "repository_rows"
+  add_foreign_key "storage_location_repository_rows", "storage_locations"
+  add_foreign_key "storage_location_repository_rows", "users", column: "created_by_id"
+  add_foreign_key "storage_locations", "storage_locations", column: "parent_id"
+  add_foreign_key "storage_locations", "teams"
+  add_foreign_key "storage_locations", "users", column: "created_by_id"
   add_foreign_key "tables", "users", column: "created_by_id"
   add_foreign_key "tables", "users", column: "last_modified_by_id"
   add_foreign_key "tags", "projects"
   add_foreign_key "tags", "users", column: "created_by_id"
   add_foreign_key "tags", "users", column: "last_modified_by_id"
-  add_foreign_key "team_shared_objects", "repositories", column: "shared_object_id"
   add_foreign_key "team_shared_objects", "teams"
   add_foreign_key "teams", "users", column: "created_by_id"
   add_foreign_key "teams", "users", column: "last_modified_by_id"

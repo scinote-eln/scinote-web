@@ -92,7 +92,19 @@ module Reports
         end
 
         if elem.name == 'img'
-          elements.push(img_element(elem))
+          begin
+            elements.push(img_element(elem))
+          rescue StandardError => e
+            Rails.logger.error e.message
+            Rails.logger.error(e.backtrace.join("\n"))
+
+            elements.push(
+              type: 'text',
+              value: I18n.t('projects.reports.index.generation.file_preview_generation_error'),
+              style: { italic: true }
+            )
+          end
+
           next
         end
 

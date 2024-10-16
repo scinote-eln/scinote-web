@@ -40,7 +40,13 @@ class RepositoryBase < ApplicationRecord
   end
 
   def has_stock_management?
-    self.class.stock_management_enabled? && repository_columns.stock_type.exists?
+    @has_stock_management ||= self.class.stock_management_enabled? && repository_columns.stock_type.exists?
+  end
+
+  def has_reminders?
+    @has_reminders ||=
+      self.class.reminders_enabled? &&
+      (repository_columns.stock_type.exists? || repository_columns.where('"repository_columns"."metadata" ->> \'reminder_value\' <> \'\'').exists?)
   end
 
   def has_stock_consumption?
