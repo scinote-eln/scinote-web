@@ -1028,7 +1028,8 @@ en:
         guest: "Guest"
         normal_user: "Normal user"
         admin: "Administrator"
-
+  teams:
+    private_team: "Private team"
   user_projects:
     view_users:
       modal_title: "Members of %{name}"
