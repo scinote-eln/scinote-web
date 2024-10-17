@@ -37,7 +37,7 @@
         </button>
       </span>
     <% end %>
-    <% if @repository.repository_rows.with_active_reminders(current_user).any? %>
+    <% if @repository.has_reminders? && @repository.repository_rows.with_active_reminders(@repository, current_user).any? %>
       <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t("repositories.hide_reminders") %>"
               class="btn btn-light auto-shrink-button"
               id="hideRepositoryReminders"

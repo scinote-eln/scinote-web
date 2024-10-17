@@ -7,7 +7,10 @@
         {{ i18n.t('repositories.locations.assign') }}
       </button>
     </div>
-    <template v-if="repositoryRow.storage_locations.enabled" v-for="(location, index) in repositoryRow.storage_locations.locations" :key="location.id">
+    <div class="mb-4">
+      <div v-html="repositoryRow.storage_locations.placeholder"></div>
+    </div>
+    <template v-for="(location, index) in repositoryRow.storage_locations.locations" :key="location.id">
       <div>
         <div class="sci-divider my-4" v-if="index > 0"></div>
         <div class="flex gap-2 mb-3">
@@ -30,15 +33,13 @@
         </div>
       </div>
     </template>
-    <div v-else>
-      <div v-html="repositoryRow.storage_locations.placeholder"></div>
-    </div>
     <Teleport to="body">
       <AssignModal
         v-if="openAssignModal"
         assignMode="assign"
         :selectedRow="repositoryRow.id"
-        @close="openAssignModal = false; $emit('reloadRow')"
+        :selectedRowName="repositoryRow.default_columns.name"
+        @close="openAssignModal = false; $emit('reloadRow'); reloadStorageLocations()"
       ></AssignModal>
       <ConfirmationModal
         :title="i18n.t('storage_locations.show.unassign_modal.title')"
@@ -86,6 +87,11 @@ export default {
       }
       return '';
     },
+    reloadStorageLocations() {
+      if (window.StorageLocationsContainer) {
+        window.StorageLocationsContainer.$refs.container.reloadingTable = true;
+      }
+    },
     numberToLetter(number) {
       return String.fromCharCode(96 + number);
     },
@@ -95,9 +101,7 @@ export default {
         axios.post(unassign_rows_storage_location_path({ id: locationId }), { ids: [rowId] })
           .then(() => {
             this.$emit('reloadRow');
-            if (window.StorageLocationsContainer) {
-              window.StorageLocationsContainer.$refs.container.reloadingTable = true;
-            }
+            this.reloadStorageLocations();
           });
       }
     }

@@ -516,29 +516,33 @@ class Extends
     storage_location_repository_row_created: 323,
     storage_location_repository_row_deleted: 324,
     storage_location_repository_row_moved: 325,
-    container_storage_location_imported: 326
+    container_storage_location_imported: 326,
+    task_step_restore_asset_version: 327,
+    task_result_restore_asset_version: 328,
+    repository_column_restore_asset_version: 329,
+    protocol_step_restore_asset_version: 330
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243],
-    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, *246..248, *257..273, *284..291, 301, 303, 306],
+    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, *246..248, *257..273, *284..291, 301, 303, 306, 328],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            148, 166],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
-                    184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305],
+                    184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327],
     task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
-                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308],
+                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
-                          *237..240, *253..256, *279..283, 300, 304, 307],
+                          *237..240, *253..256, *279..283, 300, 304, 307, 330],
     team: [92, 94, 93, 97, 104, 244, 245],
     label_templates: [*216..219],
     storage_locations: [*309..315],
-    container_storage_location: [*316..322, 326],
+    container_storage_locations: [*316..322, 326],
     storage_location_repository_rows: [*323..325]
   }
 
@@ -697,6 +701,7 @@ class Extends
     Repositories_archived_state
     StorageLocationsTable_active_state
     StorageLocationsContainer_active_state
+    StorageLocationsContainerGrid_active_state
     task_step_states
     results_order
     repository_export_file_type

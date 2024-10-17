@@ -4,7 +4,7 @@ module Reports::Docx::RepositoryHelper
   include InputSanitizeHelper
   include ActionView::Helpers::NumberHelper
 
-  def prepare_row_columns(repository_data, my_module = nil, repository = nil)
+  def prepare_row_columns_for_docx(repository_data, my_module = nil, repository = nil)
     result = [repository_data[:headers]]
     excluded_columns = repository_data[:excluded_columns]
 

@@ -37,14 +37,14 @@
             <template v-for="team in shareableTeams">
               <div class="col-span-2 flex items-center h-9 gap-1">
                 <span class="sci-checkbox-container" :class="{'opacity-0 pointer-events-none': sharedWithAllRead}">
-                  <input type="checkbox" class="sci-checkbox" v-model="team.attributes.private_shared_with" />
+                  <input :disabled="!team.attributes.readable" type="checkbox" class="sci-checkbox" v-model="team.attributes.private_shared_with" />
                   <span class="sci-checkbox-label"></span>
                 </span>
-                {{ team.attributes.name }}
+                {{ team.attributes.name || `(${i18n.t('teams.private_team')})` }}
               </div>
               <div class="flex justify-center items-center">
                 <span v-if="team.attributes.private_shared_with"
-                      :class="{'opacity-0 pointer-events-none': sharedWithAllRead}"
+                      :class="{'opacity-0 pointer-events-none': sharedWithAllRead || !team.attributes.readable}"
                       class="sci-toggle-checkbox-container">
                   <input type="checkbox"
                         class="sci-toggle-checkbox"
@@ -77,31 +77,56 @@ export default {
   name: 'ShareObjectModal',
   props: {
     object: Object,
-    globalShareEnabled: { type: Boolean, default: false }
+    globalShareEnabled: { type: Boolean, default: false },
+    confirmationModal: { type: Object }
   },
   mixins: [modalMixin],
   data() {
     return {
       sharedWithAllRead: this.object.shared_read || this.object.shared_write,
       sharedWithAllWrite: this.object.shared_write,
-      shareableTeams: [],
-      permission_changes: {}
+      initialState: {},
+      shareableTeams: []
     };
   },
   mounted() {
-    this.getTeams();
+    this.initTeams();
+  },
+  computed: {
+    willUnshare() {
+      if (this.globalShareEnabled && !this.sharedWithAllRead && this.initialState.sharedWithAllRead) return true;
+
+      // true if any team would switch from shared to unshared, based on initial state
+      return this.shareableTeams.some((t) => {
+        return this.initialState.shareableTeams.find((it) => t.id === it.id).attributes.private_shared_with && !t.attributes.private_shared_with;
+      });
+    }
   },
   methods: {
-    getTeams() {
+    initTeams() {
       axios.get(this.object.urls.shareable_teams).then((response) => {
+        this.initialState = {
+          shareableTeams: JSON.parse(JSON.stringify(response.data.data)), // object needs to be deep cloned to get rid of references
+          sharedWithAllRead: this.sharedWithAllRead,
+          sharedWithAllWrite: this.sharedWithAllWrite
+        };
         this.shareableTeams = response.data.data;
       });
     },
-    submit() {
+    async submit() {
+      $(this.$refs.modal).hide();
+
+      if (this.confirmationModal ? !this.willUnshare || await this.confirmationModal.show() : true) {
+        this.doRequest();
+      } else {
+        $(this.$refs.modal).show();
+      }
+    },
+    doRequest() {
       const data = {
         select_all_teams: this.sharedWithAllRead,
         select_all_write_permission: this.sharedWithAllWrite,
-        team_share_params: this.shareableTeams.map((team) => { return { id: team.id, ...team.attributes } })
+        team_share_params: this.sharedWithAllRead ? [] : this.shareableTeams.map((team) => { return { id: team.id, ...team.attributes } })
       };
       axios.post(this.object.urls.share, data).then(() => {
         HelperModule.flashAlertMsg(this.i18n.t(

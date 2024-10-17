@@ -1,13 +1,14 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content" data-e2e="e2e-MD-manageAccess">
         <div class="modal-header">
           <button type="button"
                   class="close"
                   data-dismiss="modal"
-                  aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
-          <h4 class="modal-title truncate !block">
+                  aria-label="Close"
+                  data-e2e="e2e-BT-manageAccess-close"><i class="sn-icon sn-icon-close"></i></button>
+          <h4 class="modal-title truncate !block" data-e2e="e2e-TX-manageAccessModal-title">
             {{ i18n.t(`access_permissions.${params.object.type}.modals.edit_modal.title`, {
               resource_name: params.object.name
             }) }}
@@ -20,12 +21,13 @@
             :visible="visible"
             :default_role="default_role"
             :reloadUsers="reloadUnAssignedUsers"
+            :dataE2e="`manageAccessModal-flyout`"
             @modified="modified = true; reloadUsers = true"
             @assigningNewUsers="(v) => { assigningNewUsers = v }"
             @usersReloaded="reloadUnAssignedUsers = false"
             @changeVisibility="changeVisibility"
           />
-          <h5 class="py-2.5">
+          <h5 class="py-2.5" data-e2e="e2e-TX-manageAccessModal-peopleWithAccess">
             {{ i18n.t('access_permissions.partials.new_assignments_form.people_with_access') }}
           </h5>
           <editView
@@ -34,6 +36,7 @@
             :visible="visible"
             :default_role="default_role"
             :reloadUsers="reloadUsers"
+            :dataE2e="`manageAccessModal-usersWithAccess`"
             @modified="modified = true; reloadUnAssignedUsers = true"
             @usersReloaded="reloadUsers = false"
             @changeVisibility="changeVisibility"

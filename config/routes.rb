@@ -168,6 +168,10 @@ Rails.application.routes.draw do
       collection do
         get :filter_groups
         get :unseen_counter
+        post :mark_all_read
+      end
+      member do
+        post :toggle_read
       end
     end
 
@@ -834,7 +838,7 @@ Rails.application.routes.draw do
       end
       resources :storage_location_repository_rows, only: %i(index create destroy update) do
         collection do
-          get :actions_toolbar
+          post :actions_toolbar
         end
         member do
           post :move
@@ -862,6 +866,8 @@ Rails.application.routes.draw do
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     get 'files/:id/checksum', to: 'assets#checksum', as: 'asset_checksum'
     get 'files/:id/show', to: 'assets#show', as: 'asset_show'
+    get 'files/:id/versions', to: 'assets#versions', as: 'asset_versions'
+    post 'files/:id/restore_version', to: 'assets#restore_version', as: 'asset_restore_version'
     patch 'files/:id/toggle_view_mode', to: 'assets#toggle_view_mode', as: 'toggle_view_mode'
     get 'files/:id/load_asset', to: 'assets#load_asset', as: 'load_asset'
     post 'files/:id/update_image', to: 'assets#update_image',

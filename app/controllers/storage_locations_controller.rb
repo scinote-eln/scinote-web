@@ -3,13 +3,16 @@
 class StorageLocationsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
+  include TeamsHelper
   include Rails.application.routes.url_helpers
 
+  before_action :switch_team_with_param, only: %i(index show)
   before_action :check_storage_locations_enabled, except: :unassign_rows
   before_action :load_storage_location, only: %i(update destroy duplicate move show available_positions unassign_rows export_container import_container)
-  before_action :check_read_permissions, except: %i(index create tree actions_toolbar)
+  before_action :check_read_permissions, except: %i(index create tree actions_toolbar import_container unassign_rows)
+  before_action :check_manage_repository_rows_permissions, only: %i(import_container unassign_rows)
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permissions, only: %i(update destroy duplicate move unassign_rows import_container)
+  before_action :check_manage_permissions, only: %i(update destroy duplicate move)
   before_action :set_breadcrumbs_items, only: %i(index show)
 
   def index
@@ -21,8 +24,13 @@ class StorageLocationsController < ApplicationController
       format.html
       format.json do
         storage_locations = Lists::StorageLocationsService.new(current_user, current_team, params).call
-        render json: storage_locations, each_serializer: Lists::StorageLocationSerializer,
-               user: current_user, meta: pagination_dict(storage_locations)
+        render json: storage_locations,
+               each_serializer: Lists::StorageLocationSerializer,
+               user: current_user,
+               meta: pagination_dict(storage_locations),
+               shared_object:
+                @parent_location &&
+                StorageLocation.select('*').select(StorageLocation.shared_sql_select(current_user)).find(@parent_location.root_storage_location.id)
       end
     end
   end
@@ -79,7 +87,7 @@ class StorageLocationsController < ApplicationController
 
   def duplicate
     ActiveRecord::Base.transaction do
-      new_storage_location = @storage_location.duplicate!
+      new_storage_location = @storage_location.duplicate!(current_user, current_team)
       if new_storage_location
         @storage_location = new_storage_location
         log_activity('storage_location_created')
@@ -97,8 +105,10 @@ class StorageLocationsController < ApplicationController
         if move_params[:destination_storage_location_id] == 'root_storage_location'
           nil
         else
-          current_team.storage_locations.find(move_params[:destination_storage_location_id])
+          StorageLocation.find(move_params[:destination_storage_location_id])
         end
+
+      render_403 and return if destination_storage_location && !can_manage_storage_location?(destination_storage_location)
 
       @storage_location.update!(parent: destination_storage_location)
 
@@ -116,8 +126,17 @@ class StorageLocationsController < ApplicationController
   end
 
   def tree
-    records = current_team.storage_locations.where(parent: nil, container: [false, params[:container] == 'true'])
-    render json: storage_locations_recursive_builder(records)
+    records = StorageLocation.viewable_by_user(current_user, current_team)
+                             .where(
+                               parent: nil,
+                               container: [false, params[:container] == 'true']
+                             )
+    records = records.where(team_id: params[:team_id]) if params[:team_id]
+
+    render json: {
+      locations: storage_locations_recursive_builder(records),
+      movable_to_root: params[:team_id] && current_team.id == params[:team_id].to_i
+    }
   end
 
   def available_positions
@@ -190,6 +209,7 @@ class StorageLocationsController < ApplicationController
 
   def load_storage_location
     @storage_location = StorageLocation.find(storage_location_params[:id])
+    @parent_location = @storage_location.parent
     render_404 unless can_read_storage_location?(@storage_location)
   end
 
@@ -198,6 +218,8 @@ class StorageLocationsController < ApplicationController
   end
 
   def check_create_permissions
+    render_403 if @parent_location && !can_manage_storage_location?(@parent_location.team)
+
     if storage_location_params[:container]
       render_403 unless can_create_storage_location_containers?(current_team)
     else
@@ -207,6 +229,10 @@ class StorageLocationsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_storage_location?(@storage_location)
+  end
+
+  def check_manage_repository_rows_permissions
+    render_403 unless can_manage_storage_location_repository_rows?(@storage_location)
   end
 
   def set_breadcrumbs_items
@@ -223,7 +249,7 @@ class StorageLocationsController < ApplicationController
 
     storage_locations = []
     if params[:parent_id] || @storage_location
-      location = (current_team.storage_locations.find_by(id: params[:parent_id]) || @storage_location)
+      location = StorageLocation.find_by(id: params[:parent_id]) || @storage_location
       if location
         storage_locations.unshift(breadcrumbs_item(location))
         while location.parent
@@ -243,9 +269,10 @@ class StorageLocationsController < ApplicationController
   end
 
   def storage_locations_recursive_builder(storage_locations)
-    storage_locations.map do |storage_location|
+    storage_locations.order('LOWER(storage_locations.name) ASC').map do |storage_location|
       {
         storage_location: storage_location,
+        can_manage: (can_manage_storage_location?(storage_location) unless storage_location.parent_id),
         children: storage_locations_recursive_builder(
           storage_location.storage_locations.where(container: [false, params[:container] == 'true'])
         )

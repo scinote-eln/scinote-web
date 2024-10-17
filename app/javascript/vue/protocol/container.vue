@@ -225,6 +225,7 @@
       :title="i18n.t('protocols.reorder_steps.modal.title')"
       :items="steps"
       :includeNumbers="true"
+      dataE2e="protocol-templateSteps-reorder"
       @reorder="updateStepOrder"
       @close="closeStepReorderModal"
     />

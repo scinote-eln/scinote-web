@@ -6,6 +6,7 @@ class StorageLocation < ApplicationRecord
   ID_PREFIX = 'SL'
   include PrefixedIdModel
   include Shareable
+  include SearchableModel
 
   default_scope -> { kept }
 
@@ -20,7 +21,10 @@ class StorageLocation < ApplicationRecord
   has_many :repository_rows, through: :storage_location_repository_rows
 
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
+  validate :parent_same_team, if: -> { parent.present? }
   validate :parent_validation, if: -> { parent.present? }
+  validate :no_grid_options, if: -> { !container }
+  validate :no_dimensions, if: -> { !with_grid? }
 
   scope :readable_by_user, (lambda do |user, team = user.current_team|
     next StorageLocation.none unless team.permission_granted?(user, TeamPermissions::STORAGE_LOCATIONS_READ)
@@ -57,13 +61,15 @@ class StorageLocation < ApplicationRecord
     storage_location_repository_rows.count.zero?
   end
 
-  def duplicate!
+  def duplicate!(user, team)
     ActiveRecord::Base.transaction do
       new_storage_location = dup
       new_storage_location.name = next_clone_name
+      new_storage_location.team = team unless parent_id
+      new_storage_location.created_by = user
       new_storage_location.save!
       copy_image(self, new_storage_location)
-      recursive_duplicate(id, new_storage_location.id)
+      recursive_duplicate(id, new_storage_location.id, user, new_storage_location.team)
       new_storage_location
     rescue ActiveRecord::RecordInvalid
       false
@@ -96,19 +102,58 @@ class StorageLocation < ApplicationRecord
     rows
   end
 
+  def self.shared_sql_select(user)
+    shared_write_value = TeamSharedObject.permission_levels['shared_write']
+    team_id = user.current_team.id
+
+    case_statement = <<-SQL.squish
+      CASE
+        WHEN EXISTS (
+          SELECT 1 FROM team_shared_objects
+          WHERE team_shared_objects.shared_object_id = storage_locations.id
+            AND team_shared_objects.shared_object_type = 'StorageLocation'
+            AND storage_locations.team_id = :team_id
+          ) THEN 1
+        WHEN EXISTS (
+          SELECT 1 FROM team_shared_objects
+          WHERE team_shared_objects.shared_object_id = storage_locations.id
+            AND team_shared_objects.shared_object_type = 'StorageLocation'
+            AND team_shared_objects.team_id = :team_id
+        ) THEN
+            CASE
+              WHEN EXISTS (
+                  SELECT 1 FROM team_shared_objects
+                  WHERE team_shared_objects.shared_object_id = storage_locations.id
+                    AND team_shared_objects.shared_object_type = 'StorageLocation'
+                    AND team_shared_objects.permission_level = :shared_write_value
+                    AND team_shared_objects.team_id = :team_id
+                ) THEN 2
+              ELSE 3
+            END
+        ELSE 4
+      END as shared
+    SQL
+
+    ActiveRecord::Base.sanitize_sql_array(
+      [case_statement, { team_id: team_id, shared_write_value: shared_write_value }]
+    )
+  end
+
   def self.storage_locations_enabled?
     ApplicationSettings.instance.values['storage_locations_enabled']
   end
 
   private
 
-  def recursive_duplicate(old_parent_id = nil, new_parent_id = nil)
+  def recursive_duplicate(old_parent_id = nil, new_parent_id = nil, user = nil, team = nil)
     StorageLocation.where(parent_id: old_parent_id).find_each do |child|
       new_child = child.dup
       new_child.parent_id = new_parent_id
+      new_child.team = team
+      new_child.created_by = user
       new_child.save!
       copy_image(child, new_child)
-      recursive_duplicate(child.id, new_child.id)
+      recursive_duplicate(child.id, new_child.id, user, team)
     end
   end
 
@@ -155,5 +200,17 @@ class StorageLocation < ApplicationRecord
     elsif StorageLocation.inner_storage_locations(team, self).exists?(id: parent_id)
       errors.add(:parent, I18n.t('activerecord.errors.models.project_folder.attributes.parent_storage_location_child'))
     end
+  end
+
+  def no_grid_options
+    errors.add(:metadata, I18n.t('activerecord.errors.models.storage_location.attributes.metadata.invalid')) if metadata['display_type'] || metadata['dimensions']
+  end
+
+  def parent_same_team
+    errors.add(:parent, I18n.t('activerecord.errors.models.storage_location.attributes.parent_storage_location_team')) if parent.team != team
+  end
+
+  def no_dimensions
+    errors.add(:metadata, I18n.t('activerecord.errors.models.storage_location.attributes.metadata.invalid')) if !with_grid? && metadata['dimensions']
   end
 end

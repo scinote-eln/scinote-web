@@ -2,6 +2,9 @@
 
 module SmartAnnotations
   class TagToText
+    USER_REGEX = /\[@(.*?)~([0-9a-zA-Z]+)\]/
+    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item)~([0-9a-zA-Z]+)\]/
+
     attr_reader :text
 
     def initialize(user, team, text, is_shared_object: false)
@@ -11,8 +14,6 @@ module SmartAnnotations
 
     private
 
-    USER_REGEX = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
-    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item)~([0-9a-zA-Z]+)\]/
     OBJECT_MAPPINGS = { prj: Project,
                         exp: Experiment,
                         tsk: MyModule,

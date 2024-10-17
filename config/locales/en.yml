@@ -86,14 +86,12 @@ en:
       errors:
         generic: "Failed to sign in user"
         no_local_user_map: "No local user record found"
-        no_email: "Email is missing in auth token"
         failed_to_save: "Failed to create new user"
     openid_connect:
       provider_name: "OpenID Connect"
       errors:
         generic: "Failed to sign in user"
         no_local_user_map: "No local user record found"
-        no_email: "Email is missing in auth token"
         failed_to_save: "Failed to create new user"
     okta:
       provider_name: "Okta"
@@ -267,7 +265,10 @@ en:
           not_uniq_repository_row: 'Inventory item already exists'
           attributes:
             parent_storage_location: "Storage location cannot be parent to itself"
+            parent_storage_location_team: "Parent storage location and storage location should belongs to the same team"
             parent_storage_location_child: "Storage location cannot be moved to it's child"
+            metadata:
+              invalid: 'Invalid metadata'
   storage:
     limit_reached: "Storage limit has been reached."
   helpers:
@@ -309,6 +310,9 @@ en:
     academy_tooltip: "SciNote Academy"
     notifications:
       title: "Notifications"
+      read: "Read"
+      unread: "Unread"
+      read_all: "Read all"
       all: "All"
       message: "Messages"
       system: "System"
@@ -1035,7 +1039,8 @@ en:
         guest: "Guest"
         normal_user: "Normal user"
         admin: "Administrator"
-
+  teams:
+    private_team: "Private team"
   user_projects:
     view_users:
       modal_title: "Members of %{name}"
@@ -2024,6 +2029,11 @@ en:
         name_placeholder: "My inventory"
         submit: "Create"
         success_flash_html: "Inventory <strong>%{name}</strong> successfully created."
+      modal_confirm_sharing:
+        title: "Inventory sharing changes"
+        description_1: "You will no longer share this inventory with some of the teams. All unshared inventory items assigned to tasks will be automatically removed and this action is irreversible. Any item relationship links (if they exist) will also be deleted."
+        description_2: "Are you sure you want to apply the changes you made?"
+        confirm: "Apply"
       export:
         notification:
           error:
@@ -2191,6 +2201,7 @@ en:
         errors:
           too_long: "Item name is too long (maximum is %{max_length} characters)"
           is_empty: "Item name should be filled"
+      row_locked: The item is locked, snapshot creation is in progress. Please try later.
     pagination_edit_overlay_html: "Please <a class=\"repository-save-changes-link\">save your changes</a> before you go to another page"
     toolbar_edit_overlay_html: "Please <a class=\"repository-save-changes-link\">save your changes</a> first to use filters"
     add_new_record: "New item"
@@ -2702,10 +2713,13 @@ en:
         description_single: 'Are you sure you want to remove item from this location?'
         button: 'Unassign'
       assign_modal:
+        selected_position_title: 'Assign to position %{position}'
+        selected_row_title: 'Assign new location'
         assign_title: 'Assign position'
-        move_title: 'Move item'
+        move_title: 'Move %{name}'
         assign_description: 'Select an item to assign it to a location.'
-        move_description: 'Select a new location for your item.'
+        move_description: 'Select where you want to move %{name}.'
+        selected_row_description: "Select a location for the item %{name}."
         assign_action: 'Assign'
         move_action: 'Move'
         row: 'Row'
@@ -2715,7 +2729,7 @@ en:
       import_modal:
         import_button: 'Import items'
         title: "Import items to a box"
-        description: "Import items to a box allows for assigning items to a box and updating positions within a grid box. First, export the current box data to download a file listing the items already in the box. Then, edit the exported file to add or update the items you want to place in the box. When importing the file, ensure it includes the ‘Position’ and ‘Item ID’ columns for a successful import."
+        description: "Import items to a box allows for assigning items to a box and updating positions within a grid box. First, export the current box data to download a file listing the items already in the box. Then, edit the exported file to add or update the items you want to place in the box. When importing the file, ensure it includes the ‘Box position’ and ‘Item ID’ columns for a successful import."
         export: "Export"
         export_button: "Export current box"
         import: "Import"
@@ -2782,6 +2796,7 @@ en:
         title: 'Move %{name}'
         description: 'Select where you want to move %{name}.'
         search_header: 'Locations'
+        no_results: "You haven't created any storage locations and boxes yet.<br> Go to <b>Inventories > Locations</b> and create your location structure first to assign items to locations."
         success_flash: "You have successfully moved the selected location/box to another location."
         error_flash: "An error occurred. The selected location/box has not been moved."
         placeholder:
@@ -4023,6 +4038,16 @@ en:
       inline_html: "Large"
       thumbnail_html: "Thumbnail"
       list_html: "List"
+      versions: "Version history"
+    file_versions_modal:
+      title: "Version history"
+      download: "Download"
+      restore: "Restore this version"
+      size: "Size"
+      restored_from_version: "restored from v%{version}"
+      original_file: "Original file"
+      enable_button: "Enable"
+      disabled_disclaimer: "This feature is currently disabled"
     rename_modal:
       title: "Rename file"
       min_length_error: "File name must be at least 1 character long."
@@ -4049,7 +4074,7 @@ en:
     edit_launching_application_modal:
       title: "Launching application"
       description: "%{file_name} will now open in %{application}. Saved changes in %{application} will automatically be synced in SciNote."
-    conflict_error: "A newer version of the file was already present in the SciNote web app and your file was saved as “%{filename}”. Close this window and re-open file to get the latest changes."
+    conflict_error: "The file got updated in the SciNote web app while you were editing. Your version will be stored as the latest version, and the previous one is kept in version history."
     default_error: "An error occurred while saving to SciNote. Please save changes to your open document using “Save As…” to avoid losing any working changes."
     default_error_with_filename: "An error occurred while saving “%{filename}” to SciNote. Please save changes to your open document using “Save As…” to avoid losing any working changes."
 

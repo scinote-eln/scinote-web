@@ -44,15 +44,31 @@ class RepositoriesController < ApplicationController
   end
 
   def list
-    results = @repositories
+    results = @repositories.select(:id, :name, 'LOWER(repositories.name)')
     results = results.name_like(params[:query]) if params[:query].present?
     results = results.joins(:repository_rows).distinct if params[:non_empty].present?
+    results = results.active if params[:active].present?
 
-    render json: { data: results.map { |r| [r.id, r.name] } }
+    render json: { data: results.order('LOWER(repositories.name) asc').map { |r| [r.id, r.name] } }
   end
 
   def rows_list
-    render json: { data: @repository.repository_rows.map { |r| [r.id, r.name] } }
+    results = @repository.repository_rows
+    if params[:query].present?
+      results = results.where_attributes_like(
+        ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL],
+        params[:query]
+      )
+    end
+    results = results.active if params[:active].present?
+
+    results = results.order('LOWER(repository_rows.name) asc').page(params[:page])
+
+    render json: {
+      paginated: true,
+      next_page: results.next_page,
+      data: results.map { |r| [r.id, r.name] }
+    }
   end
 
   def sidebar

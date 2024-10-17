@@ -20,9 +20,9 @@ module Lists
 
       @records =
         StorageLocation.joins('LEFT JOIN storage_locations AS sub_locations ' \
-                              'ON storage_locations.id = sub_locations.parent_id')
+                              'ON storage_locations.id = sub_locations.parent_id AND sub_locations.discarded_at IS NULL')
                        .left_joins(:team, :created_by)
-                       .select(shared_sql_select)
+                       .select(StorageLocation.shared_sql_select(@user))
                        .select(
                          'storage_locations.*,
                         MAX(teams.name) as team_name,
@@ -44,8 +44,25 @@ module Lists
         @records = @records.where(parent_id: @parent_id)
       end
 
-      @records = @records.where('LOWER(storage_locations.name) ILIKE ?', "%#{@filters[:query].downcase}%") if @filters[:query].present?
-      @records = @records.where('LOWER(storage_locations.name) ILIKE ?', "%#{@params[:search].downcase}%") if @params[:search].present?
+      if @filters[:query].present?
+        @records = @records.where_attributes_like(
+          [
+            'storage_locations.name',
+            'storage_locations.description',
+            StorageLocation::PREFIXED_ID_SQL
+          ], @filters[:query]
+        )
+      end
+
+      if @params[:search].present?
+        @records = @records.where_attributes_like(
+          [
+            'storage_locations.name',
+            'storage_locations.description',
+            StorageLocation::PREFIXED_ID_SQL
+          ], @params[:search]
+        )
+      end
     end
 
     private
@@ -60,9 +77,9 @@ module Lists
         @records = @records.order(id: :asc)
       when 'code_DESC'
         @records = @records.order(id: :desc)
-      when 'name_ASC'
+      when 'name_hash_ASC'
         @records = @records.order(name: :asc)
-      when 'name_DESC'
+      when 'name_hash_DESC'
         @records = @records.order(name: :desc)
       when 'sub_location_count_ASC'
         @records = @records.order(sub_location_count: :asc)
@@ -85,43 +102,6 @@ module Lists
       when 'created_by_DESC'
         @records = @records.order('created_by_full_name DESC')
       end
-    end
-
-    def shared_sql_select
-      shared_write_value = TeamSharedObject.permission_levels['shared_write']
-      team_id = @user.current_team.id
-
-      case_statement = <<-SQL.squish
-        CASE
-          WHEN EXISTS (
-            SELECT 1 FROM team_shared_objects
-            WHERE team_shared_objects.shared_object_id = storage_locations.id
-              AND team_shared_objects.shared_object_type = 'StorageLocation'
-              AND storage_locations.team_id = :team_id
-            ) THEN 1
-          WHEN EXISTS (
-            SELECT 1 FROM team_shared_objects
-            WHERE team_shared_objects.shared_object_id = storage_locations.id
-              AND team_shared_objects.shared_object_type = 'StorageLocation'
-              AND team_shared_objects.team_id = :team_id
-          ) THEN
-              CASE
-                WHEN EXISTS (
-                    SELECT 1 FROM team_shared_objects
-                    WHERE team_shared_objects.shared_object_id = storage_locations.id
-                      AND team_shared_objects.shared_object_type = 'StorageLocation'
-                      AND team_shared_objects.permission_level = :shared_write_value
-                      AND team_shared_objects.team_id = :team_id
-                  ) THEN 2
-                ELSE 3
-              END
-          ELSE 4
-        END as shared
-      SQL
-
-      ActiveRecord::Base.sanitize_sql_array(
-        [case_statement, { team_id: team_id, shared_write_value: shared_write_value }]
-      )
     end
   end
 end

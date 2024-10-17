@@ -6,15 +6,22 @@ import {
 
 export default {
   mounted() {
-    axios.get(this.storageLocationsTreeUrl).then((response) => {
-      this.storageLocationsTree = response.data;
+    axios.get(this.storageLocationsTreeUrl, { params: { team_id: this.teamId } }).then((response) => {
+      this.storageLocationsTree = response.data.locations;
+      this.movableToRoot = response.data.movable_to_root;
+      if (!this.movableToRoot) {
+        this.selectedStorageLocationId = -1;
+      }
+      this.dataLoaded = true;
     });
   },
   data() {
     return {
       selectedStorageLocationId: null,
+      movableToRoot: false,
       storageLocationsTree: [],
-      query: ''
+      query: '',
+      dataLoaded: false
     };
   },
   computed: {
@@ -34,16 +41,20 @@ export default {
   },
   methods: {
     filteredStorageLocationsTreeHelper(storageLocationsTree) {
-      return storageLocationsTree.map(({ storage_location, children }) => {
+      return storageLocationsTree.map(({ storage_location, children, can_manage }) => {
         if (storage_location.name.toLowerCase().includes(this.query.toLowerCase())) {
-          return { storage_location, children };
+          return { storage_location, children, can_manage };
         }
 
         const filteredChildren = this.filteredStorageLocationsTreeHelper(children);
-        return filteredChildren.length ? { storage_location, children: filteredChildren } : null;
+        return filteredChildren.length ? { storage_location, can_manage, children: filteredChildren } : null;
       }).filter(Boolean);
     },
     selectStorageLocation(storageLocationId) {
+      if (!this.movableToRoot && storageLocationId === null) {
+        return;
+      }
+
       this.selectedStorageLocationId = storageLocationId;
     }
   }

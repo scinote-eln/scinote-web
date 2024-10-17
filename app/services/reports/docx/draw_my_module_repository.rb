@@ -14,7 +14,7 @@ module Reports::Docx::DrawMyModuleRepository
 
     return false unless repository_data[:rows].any? && can_read_repository?(@user, repository)
 
-    table = prepare_row_columns(repository_data, my_module, repository)
+    table = prepare_row_columns_for_docx(repository_data, my_module, repository)
 
     @docx.p
     @docx.p I18n.t('projects.reports.elements.module_repository.name',

@@ -28,16 +28,10 @@ class RepositoryRowsController < ApplicationController
 
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
-    @repository_rows = datatable_service.repository_rows
-                                        .preload(:repository_columns,
-                                                 :created_by,
-                                                 :archived_by,
-                                                 :last_modified_by,
-                                                 repository_cells: { value: @repository.cell_preload_includes })
-                                        .page(page)
-                                        .per(per_page)
-
-    @repository_rows = @repository_rows.where(archived: params[:archived]) unless @repository.archived?
+    repository_rows = datatable_service.repository_rows
+    repository_rows = repository_rows.where(archived: params[:archived]) unless @repository.archived?
+    @repository_rows = repository_rows.page(page).per(per_page)
+    @filtered_rows_count = @repository_rows.load.take&.filtered_count || 0
   rescue RepositoryFilters::ColumnNotFoundException
     render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }
   rescue RepositoryFilters::ValueNotFoundException

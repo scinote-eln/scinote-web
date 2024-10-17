@@ -25,9 +25,12 @@
               </div>
             </div>
             <div class="max-h-80 overflow-y-auto">
-              <div class="p-2 flex items-center gap-2 cursor-pointer text-sn-blue hover:bg-sn-super-light-grey"
-                    @click="selectStorageLocation(null)"
-                   :class="{'!bg-sn-super-light-blue': selectedStorageLocationId == null}">
+              <div class="p-2 flex items-center gap-2 "
+                   @click="selectStorageLocation(null)"
+                   :class="{
+                     '!bg-sn-super-light-blue': selectedStorageLocationId == null,
+                     'cursor-pointer text-sn-blue hover:bg-sn-super-light-grey': movableToRoot
+                   }">
                 <i class="sn-icon sn-icon-projects"></i>
                 {{ i18n.t('storage_locations.index.move_modal.search_header') }}
               </div>
@@ -40,7 +43,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit">
+            <button class="btn btn-primary" :disabled="!validContainer" type="submit">
               {{ i18n.t('general.move') }}
             </button>
           </div>
@@ -63,11 +66,20 @@ export default {
     selectedObject: Array,
     moveToUrl: String
   },
+  created() {
+    this.teamId = this.selectedObject.team_id;
+  },
+  computed: {
+    validContainer() {
+      return (this.selectedStorageLocationId && this.selectedStorageLocationId > 0) || this.selectedStorageLocationId === null;
+    }
+  },
   mixins: [modalMixin, MoveTreeMixin],
   data() {
     return {
       selectedStorageLocationId: null,
       storageLocationsTree: [],
+      teamId: null,
       query: '',
       moveMode: 'locations'
     };

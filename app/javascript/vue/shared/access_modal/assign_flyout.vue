@@ -1,22 +1,27 @@
 <template>
   <div class="mb-6">
-    <div class="sci-label mb-2">
+    <div class="sci-label mb-2" :data-e2e="`e2e-TX-${dataE2e}-grantAccessLabel`">
       {{ i18n.t('access_permissions.partials.new_assignments_form.grant_access') }}
     </div>
     <GeneralDropdown ref="dropdown" @open="$emit('assigningNewUsers', true)" @close="$emit('assigningNewUsers', false)" :fieldOnlyOpen="true" :fixed-width="true">
       <template v-slot:field>
         <div class="sci-input-container-v2 left-icon">
-          <input type="text" v-model="query" class="sci-input-field"
-                  :placeholder="i18n.t('access_permissions.partials.new_assignments_form.find_people_html')" />
-          <i class="sn-icon sn-icon-search"></i>
+          <input
+            type="text"
+            v-model="query"
+            class="sci-input-field"
+            :placeholder="i18n.t('access_permissions.partials.new_assignments_form.find_people_html')"
+            :data-e2e="`e2e-IF-${dataE2e}-searchUsers`"
+          />
+          <i class="sn-icon sn-icon-search" :data-e2e="`e2e-IC-${dataE2e}-searchUsers`"></i>
         </div>
       </template>
       <template v-slot:flyout>
         <div v-if="!visible && roles.length > 0" class="py-2 flex border-solid border-0 border-b border-b-sn-sleepy-grey items-center gap-2">
           <div>
-            <img src="/images/icon/team.png" class="rounded-full w-8 h-8">
+            <img src="/images/icon/team.png" class="rounded-full w-8 h-8" :data-e2e="`e2e-IC-${dataE2e}-grantAccessTeam`">
           </div>
-          <div>
+          <div :data-e2e="`e2e-TX-${dataE2e}-grantAccessTeam`">
             {{ i18n.t('user_assignment.assign_all_team_members') }}
           </div>
           <MenuDropdown
@@ -25,16 +30,23 @@
             btnText="Assign"
             :position="'right'"
             :caret="true"
+            :data-e2e="`e2e-DD-${dataE2e}-grantAccessTeam`"
             @setRole="(...args) => this.assignRole('all', ...args)"
           ></MenuDropdown>
         </div>
         <perfect-scrollbar class="max-h-80 relative">
           <div v-for="user in filteredUsers" :key="user.id" class="py-2 flex items-center w-full">
             <div>
-              <img :src="user.attributes.avatar_url" class="rounded-full w-8 h-8">
+              <img :src="user.attributes.avatar_url" class="rounded-full w-8 h-8" :data-e2e="`e2e-IC-${dataE2e}-${user.attributes.name.replace(/\W/g, '')}-grantAccess`">
             </div>
-            <div class="truncate ml-2" :title="user.attributes.name">{{ user.attributes.name }}</div>
-            <div v-if="user.attributes.current_user" class="text-nowrap ml-1">
+            <div
+              class="truncate ml-2"
+              :title="user.attributes.name"
+              :data-e2e="`e2e-TX-${dataE2e}-${user.attributes.name.replace(/\W/g, '')}-grantAccess-name`"
+            >
+              {{ user.attributes.name }}
+            </div>
+            <div v-if="user.attributes.current_user" class="text-nowrap ml-1" :data-e2e="`e2e-TX-${dataE2e}-${user.attributes.name.replace(/\W/g, '')}-grantAccess-permission`">
               {{ `(${i18n.t('access_permissions.you')})` }}
             </div>
             <MenuDropdown
@@ -43,10 +55,11 @@
               btnText="Assign"
               :position="'right'"
               :caret="true"
+              :data-e2e="`e2e-DD-${dataE2e}-${user.attributes.name.replace(/\W/g, '')}-grantAccess`"
               @setRole="(...args) => this.assignRole(user.id, ...args)"
             ></MenuDropdown>
           </div>
-          <div v-if="filteredUsers.length === 0" class="p-2 flex items-center w-full">
+          <div v-if="filteredUsers.length === 0" class="p-2 flex items-center w-full" :data-e2e="`e2e-TX-${dataE2e.replace(/\W/g, '')}-grantAccess-noResults`">
             {{ i18n.t('access_permissions.no_results') }}
           </div>
         </perfect-scrollbar>
@@ -76,6 +89,10 @@ export default {
     },
     reloadUsers: {
       type: Boolean
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   mounted() {

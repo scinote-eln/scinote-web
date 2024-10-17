@@ -11,12 +11,13 @@
     </div>
     <div class="h-full bg-white px-4">
       <DataTable :columnDefs="columnDefs"
-                tableId="StorageLocationsContainer"
+                :tableId="tableId"
                 :dataUrl="dataSource"
                 ref="table"
                 :reloadingTable="reloadingTable"
                 :toolbarActions="toolbarActions"
                 :actionsUrl="actionsUrl"
+                :actionsMethod="'post'"
                 :scrollMode="paginationMode"
                 @assign="assignRow"
                 @move="moveRow"
@@ -33,6 +34,7 @@
         :selectedContainer="assignToContainer"
         :selectedPosition="assignToPosition"
         :selectedRow="rowIdToMove"
+        :selectedRowName="rowNameToMove"
         :cellId="cellIdToUnassign"
         @close="openAssignModal = false; resetTableSearch(); this.reloadingTable = true"
       ></AssignModal>
@@ -114,6 +116,7 @@ export default {
       assignToPosition: null,
       assignToContainer: null,
       rowIdToMove: null,
+      rowNameToMove: null,
       cellIdToUnassign: null,
       assignMode: 'assign',
       storageLocationUnassignDescription: ''
@@ -123,7 +126,9 @@ export default {
     paginationMode() {
       return this.withGrid ? 'none' : 'pages';
     },
-
+    tableId() {
+      return this.withGrid ? 'StorageLocationsContainerGrid' : 'StorageLocationsContainer';
+    },
     columnDefs() {
       let columns = [];
 
@@ -176,15 +181,15 @@ export default {
           type: 'emit',
           buttonStyle: 'btn btn-primary'
         });
-      }
 
-      left.push({
-        name: 'import',
-        icon: 'sn-icon sn-icon-import',
-        label: this.i18n.t('storage_locations.show.import_modal.import_button'),
-        type: 'emit',
-        buttonStyle: 'btn btn-light'
-      });
+        left.push({
+          name: 'import',
+          icon: 'sn-icon sn-icon-import',
+          label: this.i18n.t('storage_locations.show.import_modal.import_button'),
+          type: 'emit',
+          buttonStyle: 'btn btn-light'
+        });
+      }
 
       return {
         left,
@@ -216,6 +221,7 @@ export default {
     assignRow() {
       this.openAssignModal = true;
       this.rowIdToMove = null;
+      this.rowNameToMove = null;
       this.assignToContainer = this.containerId;
       this.assignToPosition = null;
       this.cellIdToUnassign = null;
@@ -224,6 +230,7 @@ export default {
     assignRowToPosition(position) {
       this.openAssignModal = true;
       this.rowIdToMove = null;
+      this.rowNameToMove = null;
       this.assignToContainer = this.containerId;
       this.assignToPosition = position;
       this.cellIdToUnassign = null;
@@ -232,6 +239,7 @@ export default {
     moveRow(_event, data) {
       this.openAssignModal = true;
       this.rowIdToMove = data[0].row_id;
+      this.rowNameToMove = data[0].row_name || this.i18n.t('storage_locations.show.hidden');
       this.assignToContainer = null;
       this.assignToPosition = null;
       this.cellIdToUnassign = data[0].id;

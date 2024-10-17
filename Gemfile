@@ -61,6 +61,7 @@ gem 'logging', '~> 2.0.0'
 gem 'nested_form_fields'
 gem 'nokogiri', '~> 1.16.5' # HTML/XML parser
 gem 'noticed'
+gem 'oj'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.10.0' # Spreadsheet parser
@@ -80,9 +81,6 @@ gem 'aws-sdk-lambda'
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
 gem 'delayed_job_active_record'
-gem 'devise-async',
-    git: 'https://github.com/mhfs/devise-async.git',
-    branch: 'devise-4.x'
 gem 'image_processing'
 gem 'img2zpl', git: 'https://github.com/scinote-eln/img2zpl'
 gem 'rufus-scheduler'

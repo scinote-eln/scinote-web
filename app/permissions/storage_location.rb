@@ -19,9 +19,7 @@ Canaid::Permissions.register_for(StorageLocation) do
   can :manage_storage_location do |user, storage_location|
     root_storage_location = storage_location.root_storage_location
 
-    next true if root_storage_location.shared_with_write?(user.current_team)
-
-    user.current_team == root_storage_location.team && root_storage_location.team.permission_granted?(
+    next false unless user.current_team.permission_granted?(
       user,
       if root_storage_location.container?
         TeamPermissions::STORAGE_LOCATION_CONTAINERS_MANAGE
@@ -29,6 +27,15 @@ Canaid::Permissions.register_for(StorageLocation) do
         TeamPermissions::STORAGE_LOCATIONS_MANAGE
       end
     )
+
+    next true if user.current_team == root_storage_location.team
+
+    root_storage_location.shared_with_write?(user.current_team)
+  end
+
+  can :manage_storage_location_repository_rows do |user, storage_location|
+    can_read_storage_location?(user, storage_location) &&
+      user.current_team.permission_granted?(user, TeamPermissions::STORAGE_LOCATION_CONTAINERS_MANAGE)
   end
 
   can :share_storage_location do |user, storage_location|

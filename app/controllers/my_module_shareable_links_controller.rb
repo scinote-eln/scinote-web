@@ -62,7 +62,7 @@ class MyModuleShareableLinksController < ApplicationController
     @draw = params[:draw].to_i
     per_page = params[:length].to_i < 1 ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
     page = (params[:start].to_i / per_page) + 1
-    datatable_service = RepositoryDatatableService.new(@repository, params, nil, @my_module)
+    datatable_service = RepositoryDatatableService.new(@repository, params, nil, @my_module, preload_cells: false, disable_reminders: true)
 
     @datatable_params = {
       view_mode: params[:view_mode],
@@ -76,6 +76,7 @@ class MyModuleShareableLinksController < ApplicationController
     @columns_mappings = datatable_service.mappings
 
     @repository_rows = datatable_service.repository_rows.page(page).per(per_page)
+    @filtered_rows_count = @repository_rows.load.take&.filtered_count || 0
 
     render 'repository_rows/simple_view_index'
   end
@@ -84,13 +85,14 @@ class MyModuleShareableLinksController < ApplicationController
     @draw = params[:draw].to_i
     per_page = params[:length].to_i < 1 ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
     page = (params[:start].to_i / per_page) + 1
-    datatable_service = RepositorySnapshotDatatableService.new(@repository_snapshot, params, nil, @my_module)
+    datatable_service = RepositorySnapshotDatatableService.new(@repository_snapshot, params, nil, @my_module, preload_cells: false)
 
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
 
     @repository = @repository_snapshot
     @repository_rows = datatable_service.repository_rows.page(page).per(per_page)
+    @filtered_rows_count = @repository_rows.load.take&.filtered_count || 0
 
     render 'repository_rows/simple_view_index'
   end
