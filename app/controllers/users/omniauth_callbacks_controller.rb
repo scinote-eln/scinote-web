@@ -8,7 +8,7 @@ module Users
     skip_before_action :verify_authenticity_token
     before_action :sign_up_with_provider_enabled?,
                   only: :linkedin
-    before_action :check_sso_status, only: %i(customazureactivedirectory okta openid_connect)
+    before_action :check_sso_status, only: %i(customazureactivedirectory okta openid_connect saml)
 
     # You should configure your model like this:
     # devise :omniauthable, omniauth_providers: [:twitter]
@@ -38,7 +38,7 @@ module Users
 
       if email.blank?
         # No email in the token so can not link or create user
-        error_message = I18n.t('devise.azure.errors.no_email')
+        missing_attribute = 'Email'
         return redirect_to after_omniauth_failure_path_for(resource_name)
       end
 
@@ -47,7 +47,11 @@ module Users
       if user.blank?
         # Create new user and identity
         user = create_user_from_auth(email, auth)
-        sign_in_and_redirect(user, event: :authentication)
+        if user.errors.present?
+          redirect_to after_omniauth_failure_path_for(resource_name)
+        else
+          sign_in_and_redirect(user, event: :authentication)
+        end
       elsif provider_conf['auto_link_on_sign_in']
         # Link to existing local account
         user.user_identities.create!(provider: auth.provider, uid: auth.uid)
@@ -65,7 +69,10 @@ module Users
       error_message ||= I18n.t('devise.azure.errors.generic')
       redirect_to after_omniauth_failure_path_for(resource_name)
     ensure
-      if error_message
+      if user&.errors.present? || missing_attribute.present?
+        missing_attribute ||= user.errors.first.attribute.capitalize
+        set_flash_message(:alert, :missing_attribute, attribute: missing_attribute)
+      elsif error_message
         set_flash_message(:alert, :failure, kind: I18n.t('devise.azure.provider_name'), reason: error_message)
       else
         set_flash_message(:notice, :success, kind: I18n.t('devise.azure.provider_name'))
@@ -137,13 +144,18 @@ module Users
       user = User.find_by(email: auth.info.email.downcase)
 
       if user.blank?
-        user = create_user_from_auth(email, auth)
+        user = create_user_from_auth(auth.info.email.downcase, auth)
+        if user.errors.present?
+          redirect_to after_omniauth_failure_path_for(resource_name)
+        else
+          sign_in_and_redirect(user, event: :authentication)
+        end
       else
         # Link to existing local account
         user.user_identities.create!(provider: auth.provider, uid: auth.uid)
         user.update!(confirmed_at: user.created_at) if user.confirmed_at.blank?
+        sign_in_and_redirect(user, event: :authentication)
       end
-      sign_in_and_redirect(user, event: :authentication)
     rescue StandardError => e
       Rails.logger.error e.message
       Rails.logger.error e.backtrace.join("\n")
@@ -151,7 +163,9 @@ module Users
       error_message ||= I18n.t('devise.okta.errors.generic')
       redirect_to after_omniauth_failure_path_for(resource_name)
     ensure
-      if error_message
+      if user&.errors.present?
+        set_flash_message(:alert, :missing_attribute, attribute: user.errors.first.attribute.capitalize)
+      elsif error_message
         set_flash_message(:alert, :failure, kind: I18n.t('devise.okta.provider_name'), reason: error_message)
       else
         set_flash_message(:notice, :success, kind: I18n.t('devise.okta.provider_name'))
@@ -175,7 +189,7 @@ module Users
 
       if email.blank?
         # No email in the token so can not link or create user
-        error_message = I18n.t('devise.openid_connect.errors.no_email')
+        missing_attribute = 'Email'
         return redirect_to after_omniauth_failure_path_for(resource_name)
       end
 
@@ -184,7 +198,11 @@ module Users
       if user.blank?
         # Create new user and identity
         user = create_user_from_auth(email, auth)
-        sign_in_and_redirect(user)
+        if user.errors.present?
+          redirect_to after_omniauth_failure_path_for(resource_name)
+        else
+          sign_in_and_redirect(user)
+        end
       elsif provider_conf['auto_link_on_sign_in']
         # Link to existing local account
         user.user_identities.create!(provider: auth.provider, uid: auth.uid)
@@ -202,7 +220,10 @@ module Users
       error_message ||= I18n.t('devise.openid_connect.errors.generic')
       redirect_to after_omniauth_failure_path_for(resource_name)
     ensure
-      if error_message
+      if user&.errors.present? || missing_attribute.present?
+        missing_attribute ||= user.errors.first.attribute.capitalize
+        set_flash_message(:alert, :missing_attribute, attribute: missing_attribute)
+      elsif error_message
         set_flash_message(:alert, :failure, kind: I18n.t('devise.openid_connect.provider_name'), reason: error_message)
       else
         set_flash_message(:notice, :success, kind: I18n.t('devise.openid_connect.provider_name'))
@@ -226,7 +247,7 @@ module Users
 
       if email.blank?
         # No email in the token so can not link or create user
-        error_message = I18n.t('devise.saml.errors.no_email')
+        missing_attribute = 'Email'
         return redirect_to after_omniauth_failure_path_for(resource_name)
       end
 
@@ -234,7 +255,11 @@ module Users
 
       if user.blank?
         user = create_user_from_auth(email, auth)
-        sign_in_and_redirect(user)
+        if user.errors.present?
+          redirect_to after_omniauth_failure_path_for(resource_name)
+        else
+          sign_in_and_redirect(user)
+        end
       elsif provider_conf['auto_link_on_sign_in']
         # Link to existing local account
         user.user_identities.create!(provider: auth.provider, uid: auth.uid)
@@ -252,7 +277,10 @@ module Users
       error_message ||= I18n.t('devise.saml.errors.generic')
       redirect_to after_omniauth_failure_path_for(resource_name)
     ensure
-      if error_message
+      if user&.errors.present? || missing_attribute.present?
+        missing_attribute ||= user.errors.first.attribute.to_s.capitalize
+        set_flash_message(:alert, :missing_attribute, attribute: missing_attribute)
+      elsif error_message
         set_flash_message(:alert, :failure, kind: I18n.t('devise.saml.provider_name'), reason: error_message)
       else
         set_flash_message(:notice, :success, kind: I18n.t('devise.saml.provider_name'))
@@ -306,20 +334,10 @@ module Users
         user.save!
         user.user_identities.create!(provider: auth.provider, uid: auth.uid)
         user.update!(confirmed_at: user.created_at)
-      end
-      user
-    end
-
-    def create_user_from_auth(email, auth)
-      full_name = "#{auth.info.first_name} #{auth.info.last_name}"
-      user = User.new(full_name: full_name,
-                      initials: generate_initials(full_name),
-                      email: email,
-                      password: generate_user_password)
-      User.transaction do
-        user.save!
-        user.user_identities.create!(provider: auth.provider, uid: auth.uid)
-        user.update!(confirmed_at: user.created_at)
+      rescue StandardError => e
+        Rails.logger.error e.message
+        Rails.logger.error e.backtrace.join("\n")
+        raise ActiveRecord::Rollback
       end
       user
     end

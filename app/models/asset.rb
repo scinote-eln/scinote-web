@@ -7,6 +7,8 @@ class Asset < ApplicationRecord
   include WopiUtil
   include ActiveStorageFileUtil
   include ActiveStorageConcerns
+  include ActiveStorageHelper
+  include VersionedAttachments
 
   require 'tempfile'
   # Lock duration set to 30 minutes
@@ -16,7 +18,7 @@ class Asset < ApplicationRecord
   enum view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
   # ActiveStorage configuration
-  has_one_attached :file
+  has_one_versioned_attached :file
   has_one_attached :file_pdf_preview
   has_one_attached :preview_image
 
@@ -74,7 +76,10 @@ class Asset < ApplicationRecord
                              .pluck(:id)
 
     assets_in_inventories = Asset.joins(repository_cell: { repository_column: :repository })
-                                 .where(repositories: { team: teams })
+                                 .where(repositories: {
+                                          id: Repository.with_granted_permissions(user, RepositoryPermissions::READ).select(:id),
+                                          team_id: teams
+                                        })
                                  .where.not(repositories: { type: 'RepositorySnapshot' })
                                  .pluck(:id)
 
@@ -102,11 +107,11 @@ class Asset < ApplicationRecord
   end
 
   def medium_preview
-    preview_attachment.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT)
+    preview_attachment.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT, format: image_preview_format(blob))
   end
 
   def large_preview
-    preview_attachment.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT)
+    preview_attachment.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT, format: image_preview_format(blob))
   end
 
   def file_name
@@ -162,7 +167,7 @@ class Asset < ApplicationRecord
         filename: blob.filename,
         metadata: blob.metadata
       )
-      to_asset.file.attach(to_blob)
+      to_asset.attach_file_version(to_blob)
     end
 
     if preview_image.attached?
@@ -337,7 +342,7 @@ class Asset < ApplicationRecord
   end
 
   def update_contents(new_file)
-    file.attach(io: new_file, filename: file_name)
+    attach_file_version(io: new_file, filename: file_name)
     self.version = version.nil? ? 1 : version + 1
     save
   end

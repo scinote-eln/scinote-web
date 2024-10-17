@@ -16,6 +16,7 @@
     :hiddenDataMessage="i18n.t('experiments.empty_state.no_active_modules_archived_branch')"
     scrollMode="infinite"
     @tableReloaded="reloadingTable = false"
+    @reloadTable="reloadingTable = true"
     @create="newModalOpen = true"
     @edit="edit"
     @move="move"
@@ -56,6 +57,9 @@
 import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
+import NameRenderer from './renderers/name.vue';
+import ResultsRenderer from './renderers/results.vue';
+import StatusRenderer from './renderers/status.vue';
 import DueDateRenderer from './renderers/due_date.vue';
 import DesignatedUsers from './renderers/designated_users.vue';
 import TagsModal from './modals/tags.vue';
@@ -77,7 +81,10 @@ export default {
     NewModal,
     EditModal,
     MoveModal,
-    AccessModal
+    AccessModal,
+    NameRenderer,
+    ResultsRenderer,
+    StatusRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -115,7 +122,7 @@ export default {
         field: 'name',
         headerName: this.i18n.t('experiments.table.column.task_name_html'),
         sortable: true,
-        cellRenderer: this.nameRenderer
+        cellRenderer: NameRenderer
       },
       {
         field: 'code',
@@ -133,7 +140,7 @@ export default {
         field: 'results',
         headerName: this.i18n.t('experiments.table.column.results_html'),
         sortable: true,
-        cellRenderer: this.resultsRenderer
+        cellRenderer: ResultsRenderer
       },
       {
         field: 'age',
@@ -144,7 +151,7 @@ export default {
         field: 'status',
         headerName: this.i18n.t('experiments.table.column.status_html'),
         sortable: true,
-        cellRenderer: this.statusRenderer,
+        cellRenderer: StatusRenderer,
         minWidth: 120
       }
     ];
@@ -320,53 +327,6 @@ export default {
         object: rows[0],
         roles_path: this.userRolesUrl
       };
-    },
-    checkProvisioning(params) {
-      if (params.data.provisioning_status === 'done') return;
-
-      axios.get(params.data.urls.provisioning_status).then((response) => {
-        const provisioningStatus = response.data.provisioning_status;
-        if (provisioningStatus === 'done') {
-          this.reloadingTable = true;
-        } else {
-          setTimeout(() => {
-            this.checkProvisioning(params);
-          }, 5000);
-        }
-      });
-    },
-    // Renderers
-    nameRenderer(params) {
-      const { name, urls } = params.data;
-      const provisioningStatus = params.data.provisioning_status;
-      if (provisioningStatus === 'in_progress') {
-        setTimeout(() => {
-          this.checkProvisioning(params);
-        }, 5000);
-        return `
-          <span class="flex gap-2 items-center">
-            <div title="${this.i18n.t('experiments.duplicate_tasks.duplicating')}"
-                 class="loading-overlay w-6 h-6 !relative shrink-0" data-toggle="tooltip" data-placement="right"></div>
-            <span class="truncate">${name}</span>
-          </span>`;
-      }
-
-      return `<a href="${urls.show}" title="${name}" ><span class="truncate">${name}</span></a>`;
-    },
-    statusRenderer(params) {
-      const { status } = params.data;
-
-      return `<span
-                class="px-2 py-1 border border-solid rounded truncate ${!status.light_color ? 'text-sn-white' : ''}"
-                style="background-color: ${status.color};"
-              >
-                ${status.name}
-              </span>`;
-    },
-    resultsRenderer(params) {
-      const { results, urls } = params.data;
-
-      return `<a href="${urls.results}" >${results}</a>`;
     },
     usersFilterRenderer(option) {
       return `<div class="flex items-center gap-2">

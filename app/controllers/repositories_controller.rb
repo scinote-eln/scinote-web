@@ -10,18 +10,17 @@ class RepositoriesController < ApplicationController
   include MyModulesHelper
 
   before_action :load_repository, except: %i(index create create_modal sidebar archive restore actions_toolbar
-                                             export_modal export_repositories)
-  before_action :load_repositories, only: :index
+                                             export_modal export_repositories list)
+  before_action :load_repositories, only: %i(index list)
   before_action :load_repositories_for_archiving, only: :archive
   before_action :load_repositories_for_restoring, only: :restore
-  before_action :check_view_all_permissions, only: %i(index sidebar)
+  before_action :check_view_all_permissions, only: %i(index sidebar list)
   before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet
                                                     import_records sidebar archive restore actions_toolbar
-                                                    export_modal export_repositories)
+                                                    export_modal export_repositories list)
   before_action :check_manage_permissions, only: %i(rename_modal update)
   before_action :check_delete_permissions, only: %i(destroy destroy_modal)
   before_action :check_archive_permissions, only: %i(archive restore)
-  before_action :check_share_permissions, only: :share_modal
   before_action :check_create_permissions, only: %i(create_modal create)
   before_action :check_copy_permissions, only: %i(copy_modal copy)
   before_action :set_inline_name_editing, only: %i(show)
@@ -42,6 +41,34 @@ class RepositoriesController < ApplicationController
                meta: pagination_dict(repositories)
       end
     end
+  end
+
+  def list
+    results = @repositories.select(:id, :name, 'LOWER(repositories.name)')
+    results = results.name_like(params[:query]) if params[:query].present?
+    results = results.joins(:repository_rows).distinct if params[:non_empty].present?
+    results = results.active if params[:active].present?
+
+    render json: { data: results.order('LOWER(repositories.name) asc').map { |r| [r.id, r.name] } }
+  end
+
+  def rows_list
+    results = @repository.repository_rows
+    if params[:query].present?
+      results = results.where_attributes_like(
+        ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL],
+        params[:query]
+      )
+    end
+    results = results.active if params[:active].present?
+
+    results = results.order('LOWER(repository_rows.name) asc').page(params[:page])
+
+    render json: {
+      paginated: true,
+      next_page: results.next_page,
+      data: results.map { |r| [r.id, r.name] }
+    }
   end
 
   def sidebar
@@ -99,15 +126,6 @@ class RepositoriesController < ApplicationController
     render json: {
       html: render_to_string(partial: 'create_repository_modal', formats: :html)
     }
-  end
-
-  def share_modal
-    render json: { html: render_to_string(partial: 'share_repository_modal', formats: :html) }
-  end
-
-  def shareable_teams
-    teams = current_user.teams.order(:name) - [@repository.team]
-    render json: teams, each_serializer: ShareableTeamSerializer, repository: @repository
   end
 
   def hide_reminders
@@ -298,14 +316,14 @@ class RepositoriesController < ApplicationController
   end
 
   def import_records
-    render_403 unless can_create_repository_rows?(Repository.accessible_by_teams(current_team)
+    render_403 unless can_create_repository_rows?(Repository.viewable_by_user(current_user)
                                                             .find_by(id: import_params[:id]))
     # Check if there exist mapping for repository record (it's mandatory)
     if import_params[:mappings].present? && import_params[:mappings].value?('-1')
       status = ImportRepository::ImportRecords
                .new(
                  temp_file: TempFile.find_by(id: import_params[:file_id]),
-                 repository: Repository.accessible_by_teams(current_team).find_by(id: import_params[:id]),
+                 repository: Repository.viewable_by_user(current_user).find_by(id: import_params[:id]),
                  mappings: import_params[:mappings],
                  session: session,
                  user: current_user,
@@ -452,12 +470,12 @@ class RepositoriesController < ApplicationController
 
   def load_repository
     repository_id = params[:id] || params[:repository_id]
-    @repository = Repository.accessible_by_teams(current_user.teams).find_by(id: repository_id)
+    @repository = Repository.viewable_by_user(current_user).find_by(id: repository_id)
     render_404 unless @repository
   end
 
   def load_repositories
-    @repositories = Repository.accessible_by_teams(current_team)
+    @repositories = Repository.viewable_by_user(current_user)
   end
 
   def load_repositories_for_archiving
@@ -477,7 +495,7 @@ class RepositoriesController < ApplicationController
   end
 
   def set_inline_name_editing
-    return unless can_manage_repository?(@repository)
+    return unless can_manage_repository?(@repository) && !@repository.is_a?(SoftLockedRepository)
 
     @inline_editable_title_config = {
       name: 'title',
@@ -520,10 +538,6 @@ class RepositoriesController < ApplicationController
 
   def check_delete_permissions
     render_403 unless can_delete_repository?(@repository)
-  end
-
-  def check_share_permissions
-    render_403 unless can_share_repository?(@repository)
   end
 
   def repository_params

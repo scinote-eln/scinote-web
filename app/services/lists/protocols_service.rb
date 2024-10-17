@@ -25,14 +25,21 @@ module Lists
       @records = @records.preload(:parent, :latest_published_version, :draft,
                                   :protocol_keywords, user_assignments: %i(user user_role))
                          .joins("LEFT OUTER JOIN protocols protocol_versions " \
-                                "ON protocol_versions.protocol_type = #{Protocol.protocol_types[:in_repository_published_version]} " \
+                                "ON protocol_versions.protocol_type =
+                                  #{Protocol.connection.quote(
+                                    Protocol.protocol_types[:in_repository_published_version]
+                                  )} " \
                                 "AND protocol_versions.parent_id = protocols.parent_id")
                          .joins("LEFT OUTER JOIN protocols protocol_originals " \
-                                "ON protocol_originals.protocol_type = #{Protocol.protocol_types[:in_repository_published_original]} " \
+                                "ON protocol_originals.protocol_type =
+                                  #{Protocol.connection.quote(
+                                    Protocol.protocol_types[:in_repository_published_original]
+                                  )} " \
                                 "AND protocol_originals.id = protocols.parent_id OR " \
                                 "(protocols.id = protocol_originals.id AND protocols.parent_id IS NULL)")
                          .joins("LEFT OUTER JOIN protocols linked_task_protocols " \
-                                "ON linked_task_protocols.protocol_type = #{Protocol.protocol_types[:linked]} " \
+                                "ON linked_task_protocols.protocol_type =
+                                  #{Protocol.connection.quote(Protocol.protocol_types[:linked])} " \
                                 "AND (linked_task_protocols.parent_id = protocol_versions.id OR " \
                                 "linked_task_protocols.parent_id = protocol_originals.id)")
                          .joins('LEFT OUTER JOIN "protocol_protocol_keywords" ' \
@@ -49,7 +56,8 @@ module Lists
                            '"protocols".*',
                            'COALESCE("protocols"."parent_id", "protocols"."id") AS adjusted_parent_id',
                            'STRING_AGG(DISTINCT("protocol_keywords"."name"), \', \') AS "protocol_keywords_str"',
-                           "CASE WHEN protocols.protocol_type = #{Protocol.protocol_types[:in_repository_draft]} " \
+                           "CASE WHEN protocols.protocol_type =
+                            #{Protocol.connection.quote(Protocol.protocol_types[:in_repository_draft])} " \
                            "THEN 0 ELSE COUNT(DISTINCT(\"protocol_versions\".\"id\")) + 1 " \
                            "END AS nr_of_versions",
                            'COUNT(DISTINCT("linked_task_protocols"."id")) AS nr_of_linked_tasks',

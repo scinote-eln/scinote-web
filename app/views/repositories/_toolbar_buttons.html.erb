@@ -11,7 +11,7 @@
           <span class="button-text"><%= t('repositories.index.snapshot_provisioning_in_progress') %></span>
         </div>
       <% end %>
-      <% if can_create_repository_rows?(@repository) %>
+      <% if can_create_repository_rows?(@repository) && !@repository.is_a?(SoftLockedRepository) %>
         <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t('repositories.show.button_tooltip.new') %>"
                 class="btn btn-primary editAdd auto-shrink-button"
                 id="addRepositoryRecord" data-view-mode="active">
@@ -37,7 +37,7 @@
         </button>
       </span>
     <% end %>
-    <% if @repository.repository_rows.with_active_reminders(current_user).any? %>
+    <% if @repository.has_reminders? && @repository.repository_rows.with_active_reminders(@repository, current_user).any? %>
       <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t("repositories.hide_reminders") %>"
               class="btn btn-light auto-shrink-button"
               id="hideRepositoryReminders"

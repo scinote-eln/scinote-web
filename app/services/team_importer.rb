@@ -71,7 +71,6 @@ class TeamImporter
       # Find new id of the first admin in the team
       @admin_id = @user_mappings[team_json['default_admin_id']]
 
-      create_notifications(team_json['notifications'])
       create_protocol_keywords(team_json['protocol_keywords'], team)
       create_protocols(team_json['protocols'], nil, team)
       create_project_folders(team_json['project_folders'], team)
@@ -83,17 +82,6 @@ class TeamImporter
       # Second run, we needed it because of some models should be created
 
       team_json['users'].each do |user_json|
-        user_json['user_notifications'].each do |user_notification_json|
-          user_notification = UserNotification.new(user_notification_json)
-          user_notification.id = nil
-          user_notification.user_id = find_user(user_notification.user_id)
-          user_notification.notification_id =
-            @notification_mappings[user_notification.notification_id]
-          next if user_notification.notification_id.blank?
-
-          user_notification.save!
-        end
-
         user_json['repository_table_states'].each do |rep_tbl_state_json|
           rep_tbl_state = RepositoryTableState.new(rep_tbl_state_json)
           rep_tbl_state.id = nil
@@ -423,21 +411,6 @@ class TeamImporter
     end
   end
 
-  def create_notifications(notifications_json)
-    puts 'Creating notifications...'
-    notifications_json.each do |notification_json|
-      notification = Notification.new(notification_json)
-      next if notification.type_of.blank?
-
-      orig_notification_id = notification.id
-      notification.id = nil
-      notification.generator_user_id = find_user(notification.generator_user_id)
-      notification.save!
-      @notification_mappings[orig_notification_id] = notification.id
-      @notification_counter += 1
-    end
-  end
-
   def create_repositories(repositories_json, team, snapshots = false)
     puts 'Creating repositories...'
     repositories_json.each do |repository_json|
@@ -756,7 +729,7 @@ class TeamImporter
   def create_protocols(protocols_json, my_module = nil, team = nil,
                        user_id = nil)
 
-    sorted_protocols = protocols_json.sort_by { |p| p['id'] }
+    sorted_protocols = protocols_json.sort_by { |p| p['protocol']['id'] }
 
     puts 'Creating protocols...'
     sorted_protocols.each do |protocol_json|
@@ -961,7 +934,7 @@ class TeamImporter
       user_id || find_user(asset.last_modified_by_id)
     asset.team = team
     asset.save!
-    asset.file.attach(io: file, filename: File.basename(file))
+    asset.attach_file_version(io: file, filename: File.basename(file))
     asset.post_process_file
     @asset_mappings[orig_asset_id] = asset.id
     @asset_counter += 1

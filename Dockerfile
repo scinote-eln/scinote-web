@@ -1,4 +1,4 @@
-FROM ruby:3.2.2-bookworm
+FROM ruby:3.2-bookworm
 MAINTAINER SciNote <info@scinote.net>
 
 # additional dependecies
@@ -20,14 +20,15 @@ RUN apt-get update -qq && \
   fonts-wqy-microhei \
   fonts-wqy-zenhei \
   libfile-mimeinfo-perl \
-  chromium-driver \
+  chromium \
+  chromium-sandbox \
   yarnpkg && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
   rm -rf /var/lib/apt/lists/*
 
 ENV PATH=/usr/share/nodejs/yarn/bin:$PATH
 
-RUN yarn add puppeteer@npm:puppeteer-core 
+RUN yarn add puppeteer@npm:puppeteer-core@^22.15.0
 
 ENV BUNDLE_PATH /usr/local/bundle/
 
@@ -35,6 +36,10 @@ ENV BUNDLE_PATH /usr/local/bundle/
 ENV APP_HOME /usr/src/app
 ENV PATH $APP_HOME/bin:$PATH
 RUN mkdir $APP_HOME
+RUN adduser --uid 1000 scinote
+RUN chown scinote:scinote $APP_HOME
+USER scinote
+ENV CHROMIUM_PATH=$APP_HOME/bin/chromium
 WORKDIR $APP_HOME
 
 CMD rails s -b 0.0.0.0

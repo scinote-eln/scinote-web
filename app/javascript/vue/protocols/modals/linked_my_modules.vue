@@ -1,12 +1,12 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content ">
+      <div class="modal-content " data-e2e="e2e-MD-linkedTasks">
         <div class="modal-header">
-          <button type="button" class="close self-start" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close self-start" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-linkedTasksModal-close">
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <h4 class="modal-title line-clamp-3" style="display: -webkit-box;">
+          <h4 class="modal-title line-clamp-3" style="display: -webkit-box;" data-e2e="e2e-TX-linkedTasksModal-title">
             {{ i18n.t('protocols.index.linked_children.title', { protocol: protocol.name }) }}
           </h4>
         </div>
@@ -18,6 +18,7 @@
                 :options="versionsList"
                 :value="selectedVersion"
                 @change="changeSelectedVersion"
+                e2eValue="e2e-DD-linkedTasksModal-version"
               ></SelectDropdown>
             </div>
           </div>
@@ -25,7 +26,11 @@
           <perfect-scrollbar
             class="max-h-96 relative flex flex-col gap-6 pr-8"
             @ps-scroll-y="onScroll" ref="linkedMyModules">
-            <div v-for="(myModule, idx) in linkedMyModules" class="flex items-center gap-1 flex-wrap w-full">
+            <div
+              v-for="(myModule, idx) in linkedMyModules"
+              class="flex items-center gap-1 flex-wrap w-full"
+              :data-e2e="`e2e-BC-linkedTasksModal-${myModule.my_module_name.replaceAll(/\W/g, '')}`"
+            >
               <div v-if="myModule.project_folder_name" class="flex items-center ">
                 <a :href="myModule.project_folder_url"
                     :title="myModule.project_folder_name"
@@ -67,7 +72,7 @@
           </perfect-scrollbar>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" data-e2e="e2e-BT-linkedTasksModal-cancel">{{ i18n.t('general.cancel') }}</button>
         </div>
       </div>
     </div>

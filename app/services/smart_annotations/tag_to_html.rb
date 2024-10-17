@@ -2,8 +2,9 @@
 
 module SmartAnnotations
   class TagToHtml
-    REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item)~([0-9a-zA-Z]+)\]/.freeze
-    USER_REGEX = /\[@(.*?)~([0-9a-zA-Z]+)\]/.freeze
+    ALL_REGEX = /\[(@(.*?)|\#(.*?)~(prj|exp|tsk|rep_item))~([0-9a-zA-Z]+)\]/
+    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item)~([0-9a-zA-Z]+)\]/
+    USER_REGEX = /\[@(.*?)~([0-9a-zA-Z]+)\]/
     attr_reader :html
 
     def initialize(user, team, text, preview_repository = false)
@@ -18,7 +19,7 @@ module SmartAnnotations
                         rep_item: RepositoryRow }.freeze
 
     def parse(user, team, text, preview_repository = false)
-      @html = text.gsub(REGEX) do |el|
+      @html = text.gsub(ITEMS_REGEX) do |el|
         value = extract_values(el)
         type = value[:object_type]
         begin
@@ -49,7 +50,7 @@ module SmartAnnotations
     end
 
     def extract_values(element)
-      match = element.match(REGEX)
+      match = element.match(ITEMS_REGEX)
       {
         name: match[1],
         object_type: match[2],

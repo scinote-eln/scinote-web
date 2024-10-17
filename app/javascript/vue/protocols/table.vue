@@ -42,6 +42,7 @@ import axios from '../../packs/custom_axios.js';
 
 import DataTable from '../shared/datatable/table.vue';
 import UsersRenderer from '../projects/renderers/users.vue';
+import NameRenderer from './renderers/name.vue';
 import NewProtocolModal from './modals/new.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
 import KeywordsRenderer from './renderers/keywords.vue';
@@ -55,6 +56,7 @@ export default {
   components: {
     DataTable,
     UsersRenderer,
+    NameRenderer,
     NewProtocolModal,
     AccessModal,
     KeywordsRenderer,
@@ -116,7 +118,7 @@ export default {
         headerName: this.i18n.t('protocols.index.thead.name'),
         sortable: true,
         notSelectable: true,
-        cellRenderer: this.nameRenderer
+        cellRenderer: 'NameRenderer'
       },
       {
         field: 'code',
@@ -336,14 +338,6 @@ export default {
     },
     linkedMyModules(_event, rows) {
       [this.linkedMyModulesModalObject] = rows;
-    },
-    // renderers
-    nameRenderer(params) {
-      const { urls, name } = params.data;
-      if (urls.show) {
-        return `<a href="${urls.show}" title="${name}">${name}</a>`;
-      }
-      return `<span class="text-sn-grey" title="${name}">${name}</span>`;
     },
     usersFilterRenderer(option) {
       return `<div class="flex items-center gap-2">

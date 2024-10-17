@@ -28,7 +28,7 @@
              v-else
              v-model="query"
              :placeholder="placeholderRender"
-             @keyup="fetchOptions"
+             @keyup="reloadItems"
              @change.stop
              class="w-full bg-transparent border-0 outline-none pl-0 placeholder:text-sn-grey" />
       </template>
@@ -70,7 +70,7 @@
               {{ i18n.t('general.select_all') }}
             </div>
           </div>
-          <perfect-scrollbar class="p-2.5 flex flex-col max-h-80 relative" :class="{ 'pt-0': withCheckboxes }">
+          <perfect-scrollbar ref="scrollContainer" class="p-2.5 flex flex-col max-h-80 relative" :class="{ 'pt-0': withCheckboxes }">
             <template v-for="(option, i) in filteredOptions" :key="option[0]">
               <div
                 @click.stop="setValue(option[0])"
@@ -143,7 +143,8 @@ export default {
       query: '',
       fixedWidth: true,
       focusedOption: null,
-      skipQueryCallback: false
+      skipQueryCallback: false,
+      nextPage: 1
     };
   },
   mixins: [FixedFlyoutMixin],
@@ -270,19 +271,31 @@ export default {
         this.$nextTick(() => {
           this.setPosition();
           this.$refs.search?.focus();
+          this.$refs.scrollContainer.$el.addEventListener('scroll', this.loadNextPage);
         });
       }
     },
     urlParams: {
       handler(oldVal, newVal) {
         if (!this.compareObjects(oldVal, newVal)) {
-          this.fetchOptions();
+          this.reloadItems();
         }
       },
       deep: true
     }
   },
   methods: {
+    reloadItems() {
+      this.fetchedOptions = [];
+      this.nextPage = 1;
+      this.fetchOptions();
+    },
+    loadNextPage() {
+      const container = this.$refs.scrollContainer.$el;
+      if (this.nextPage && container.scrollTop + container.clientHeight >= container.scrollHeight) {
+        this.fetchOptions();
+      }
+    },
     renderLabel(option) {
       if (!option) return false;
 
@@ -354,10 +367,15 @@ export default {
     },
     fetchOptions() {
       if (this.optionsUrl) {
-        const params = { query: this.query, ...this.urlParams };
+        const params = { query: this.query, page: this.nextPage, ...this.urlParams };
         axios.get(this.optionsUrl, { params })
           .then((response) => {
-            this.fetchedOptions = response.data.data;
+            if (response.data.paginated) {
+              this.fetchedOptions = [...this.fetchedOptions, ...response.data.data];
+              this.nextPage = response.data.next_page;
+            } else {
+              this.fetchedOptions = response.data.data;
+            }
             this.$nextTick(() => {
               this.setPosition();
             });

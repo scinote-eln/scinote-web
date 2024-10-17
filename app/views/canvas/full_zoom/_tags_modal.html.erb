@@ -8,6 +8,7 @@
       project-tags-url="<%= project_tags_path(@project) %>"
       @close="close"
       @tags-loaded="syncTags"
+      @tag-deleted="tagDeleted = true"
     />
   </teleport>
 </div>

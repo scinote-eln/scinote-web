@@ -146,7 +146,7 @@
                     @attachment:viewMode="updateAttachmentViewMode"/>
       </div>
       <ContentToolbar
-        v-if="orderedElements.length > 3"
+        v-if="orderedElements.length > 2 && insertMenu.length > 0"
         :insertMenu="insertMenu"
         @create:table="(...args) => this.createElement('table', ...args)"
         @create:checklist="createElement('checklist')"
@@ -162,7 +162,7 @@
     <ReorderableItemsModal v-if="reordering"
       :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
       :items="reorderableElements"
-      :dataE2e="`e2e-BT-protocol-step${step.id}-reorder`"
+      :dataE2e="`protocol-step${step.id}-reorder`"
       @reorder="updateElementOrder"
       @close="closeReorderModal"
     />

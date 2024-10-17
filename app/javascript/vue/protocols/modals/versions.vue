@@ -1,12 +1,12 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content" data-e2e="e2e-MD-protocolVersions">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-protocolVersionsModal-close">
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <h4 class="modal-title truncate !block">
+          <h4 class="modal-title truncate !block" data-e2e="e2e-TX-protocolVersionsModal-title">
             {{ i18n.t('protocols.index.versions.title', { protocol: protocol.name }) }}
           </h4>
         </div>
@@ -15,9 +15,9 @@
             <img src="/images/medium/loading.svg" alt="Loading" class="p-4 rounded-xl bg-sn-white" />
           </div>
           <div class="max-h-[400px] overflow-y-auto">
-            <div v-if="draft">
+            <div v-if="draft" data-e2e="e2e-CO-protocolVersionsModal-draft">
               <div class="flex items-center gap-4">
-                <a :href="draft.urls.show" class="hover:no-underline cursor-pointer shrink-0">
+                <a :href="draft.urls.show" class="hover:no-underline cursor-pointer shrink-0" data-e2e="e2e-TL-protocolVersionsModal-draft-draftLink">
                   <span v-if="draft.previous_number"
                         v-html="i18n.t('protocols.index.versions.draft_html', {
                           parent_version: draft.previous_number
@@ -25,7 +25,7 @@
                   ></span>
                   <span v-else v-html="i18n.t('protocols.index.versions.first_draft_html')"></span>
                 </a>
-                <span class="text-xs" v-if="draft.modified_by">
+                <span class="text-xs" v-if="draft.modified_by" data-e2e="e2e-TX-protocolVersionsModal-draft-timestamp">
                   {{
                       i18n.t('protocols.index.versions.draft_full_modification_info', {
                         modified_on: draft.modified_on,
@@ -33,7 +33,7 @@
                       })
                   }}
                 </span>
-                <span class="text-xs" v-else>
+                <span class="text-xs" v-else data-e2e="e2e-TX-protocolVersionsModal-draft-timestamp">
                   {{
                       i18n.t('protocols.index.versions.draft_update_modification_info', {
                         modified_on: draft.modified_on
@@ -41,11 +41,17 @@
                   }}
                 </span>
                 <div class="flex items-center gap-2 ml-auto">
-                  <button v-if="draft.urls.publish" class="btn btn-light" :disabled="updating" @click="publishDraft">
+                  <button v-if="draft.urls.publish" class="btn btn-light" :disabled="updating" @click="publishDraft" data-e2e="e2e-BT-protocolVersionsModal-draft-publish">
                     <i class="sn-icon sn-icon-Publish"></i>
                     {{ i18n.t('protocols.index.versions.publish') }}
                   </button>
-                  <button v-if="draft.urls.destroy" @click="destroyDraft" :disabled="updating" class="btn btn-light icon-btn">
+                  <button
+                    v-if="draft.urls.destroy"
+                    @click="destroyDraft"
+                    :disabled="updating"
+                    class="btn btn-light icon-btn"
+                    data-e2e="e2e-BT-protocolVersionsModal-draft-deleteDraft"
+                  >
                     <i class="sn-icon sn-icon-delete"></i>
                   </button>
                 </div>
@@ -60,16 +66,17 @@
                   :singleLine="false"
                   :attributeName="`${i18n.t('Draft')} ${i18n.t('comment')}`"
                   @update="updateComment"
+                  :dataE2e="'protocolVersionsModal-draft-revisionNotes'"
                 />
             </div>
-            <div v-for="version in publishedVersions" :key="version.number">
+            <div v-for="version in publishedVersions" :key="version.number" :data-e2e="`e2e-CO-protocolVersionsModal-version${version.number}`">
               <div class="flex items-center gap-4 group min-h-[40px]">
-                <a :href="version.urls.show" class="hover:no-underline cursor-pointer shrink-0">
+                <a :href="version.urls.show" class="hover:no-underline cursor-pointer shrink-0" :data-e2e="`e2e-TL-protocolVersionsModal-version${version.number}-versionLink`">
                   <b>
                     {{ i18n.t('protocols.index.versions.revision', { version: version.number }) }}
                   </b>
                 </a>
-                <span class="text-xs">
+                <span class="text-xs" :data-e2e="`e2e-TX-protocolVersionsModal-version${version.number}-timestamp`">
                   {{
                       i18n.t('protocols.index.versions.revision_publishing_info', {
                         published_on: version.published_on,
@@ -83,11 +90,12 @@
                   :title="i18n.t('protocols.index.versions.save_as_draft')"
                   @click="saveAsDraft(version.urls.save_as_draft)"
                   :disabled="draft || updating"
+                  :data-e2e="`e2e-BT-protocolVersionsModal-version${version.number}-saveAsDraft`"
                 >
                   <i class="sn-icon sn-icon-duplicate"></i>
                 </button>
               </div>
-              <div class="mb-4">
+              <div class="mb-4" :data-e2e="`e2e-TX-protocolVersionsModal-version${version.number}-revisionNotes`">
                 {{  version.comment }}
               </div>
             </div>
@@ -104,6 +112,14 @@
     `"
     :confirmClass="'btn btn-danger'"
     :confirmText="i18n.t('protocols.delete_draft_modal.confirm')"
+    :e2eAttributes="{
+          modalName: 'e2e-MD-deleteProtocolDraft',
+          title: 'e2e-TX-deleteProtocolDraftModal-title',
+          content: 'e2e-TX-deleteProtocolDraftModal-content',
+          close: 'e2e-BT-deleteProtocolDraftModal-close',
+          cancel: 'e2e-BT-deleteProtocolDraftModal-cancel',
+          confirm: 'e2e-BT-deleteProtocolDraftModal-delete'
+    }"
     ref="destroyModal"
   ></ConfirmationModal>
 </template>

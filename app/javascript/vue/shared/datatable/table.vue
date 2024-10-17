@@ -72,6 +72,7 @@
       <ActionToolbar
         v-if="selectedRows.length > 0 && actionsUrl"
         :actionsUrl="actionsUrl"
+        :actionsMethod="actionsMethod"
         :params="actionsParams"
         @toolbar:action="emitAction" />
     </div>
@@ -143,6 +144,9 @@ export default {
       required: true
     },
     actionsUrl: {
+      type: String
+    },
+    actionsMethod: {
       type: String
     },
     toolbarActions: {
@@ -248,7 +252,7 @@ export default {
         cellRendererParams: {
           dtComponent: this
         },
-        pinned: (column.field === 'name' ? 'left' : null),
+        pinned: (column.field === 'name' || column.field === 'name_hash' ? 'left' : null),
         comparator: () => null
       }));
 
@@ -364,7 +368,7 @@ export default {
       }
     },
     handleScroll() {
-      if (this.scrollMode === 'pages') return;
+      if (this.scrollMode === 'pages' || this.scrollMode === 'none') return;
 
       let target = null;
       if (this.currentViewRender === 'cards') {
@@ -506,15 +510,18 @@ export default {
             this.rowData = [];
           }
 
-          if (this.scrollMode === 'pages') {
+          if (this.scrollMode === 'pages' || this.scrollMode === 'none') {
             if (this.gridApi) this.gridApi.setRowData(this.formatData(response.data.data));
             this.rowData = this.formatData(response.data.data);
           } else {
             this.handleInfiniteScroll(response);
           }
-          this.totalPage = response.data.meta.total_pages;
-          this.totalEntries = response.data.meta.total_count;
-          this.$emit('tableReloaded');
+
+          if (this.scrollMode !== 'none') {
+            this.totalPage = response.data.meta.total_pages;
+            this.totalEntries = response.data.meta.total_count;
+          }
+          this.$emit('tableReloaded', this.rowData, { filtered: this.searchValue.length > 0 });
           this.dataLoading = false;
           this.restoreSelection();
 
@@ -577,8 +584,11 @@ export default {
         this.gridApi.forEachNode((node) => {
           if (this.selectedRows.find((row) => row.id === node.data.id)) {
             node.setSelected(true);
+          } else {
+            node.setSelected(false);
           }
         });
+        this.$emit('selectionChanged', this.selectedRows);
       }
     },
     setSelectedRows(e) {
@@ -591,6 +601,7 @@ export default {
       } else {
         this.selectedRows = this.selectedRows.filter((row) => row.id !== e.data.id);
       }
+      this.$emit('selectionChanged', this.selectedRows);
     },
     emitAction(action) {
       this.$emit(action.name, action, this.selectedRows);
@@ -602,6 +613,7 @@ export default {
     clickCell(e) {
       if (e.column.colId !== 'rowMenu' && e.column.userProvidedColDef.notSelectable !== true) {
         e.node.setSelected(true);
+        this.$emit('selectionChanged', this.selectedRows);
       }
     },
     applyFilters(filters) {

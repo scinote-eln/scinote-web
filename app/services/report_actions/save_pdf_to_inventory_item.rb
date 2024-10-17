@@ -33,7 +33,7 @@ module ReportActions
     include Canaid::Helpers::PermissionsHelper
 
     def load_repository_collaborators
-      @repository = Repository.active.accessible_by_teams(@team).find_by(id: @params[:repository_id])
+      @repository = Repository.active.viewable_by_user(@user, @team).find_by(id: @params[:repository_id])
       unless can_create_repository_rows?(@user, @repository)
         raise ReportActions::RepositoryPermissionError, I18n.t('projects.reports.new.no_permissions')
       end
@@ -44,7 +44,7 @@ module ReportActions
 
     def create_new_asset
       asset = Asset.create(created_by: @user, last_modified_by: @user, team: @team)
-      asset.file.attach(@report.pdf_file.blob)
+      asset.attach_file_version(@report.pdf_file.blob)
       asset
     end
 

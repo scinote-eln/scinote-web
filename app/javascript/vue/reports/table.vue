@@ -43,6 +43,7 @@ import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
 import DocxRenderer from './renderers/docx.vue';
 import PdfRenderer from './renderers/pdf.vue';
+import NameRenderer from './renderers/name.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import SaveToInventoryModal from './modals/save_to_inventory.vue';
 import UpdateReportModal from './modals/update.vue';
@@ -60,6 +61,7 @@ export default {
     DataTable,
     DocxRenderer,
     PdfRenderer,
+    NameRenderer,
     ConfirmationModal,
     SaveToInventoryModal,
     UpdateReportModal
@@ -108,7 +110,7 @@ export default {
           field: 'name',
           headerName: this.i18n.t('projects.reports.index.thead_name'),
           sortable: true,
-          cellRenderer: ({ data: { name } }) => `<span title="${name}">${name}</span>`
+          cellRenderer: 'NameRenderer'
         }, {
           field: 'code',
           headerName: this.i18n.t('projects.reports.index.thead_id'),

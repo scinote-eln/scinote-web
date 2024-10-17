@@ -94,10 +94,18 @@ SAML_SETUP_PROC = lambda do |env|
   provider_conf = settings.values['saml']
   raise StandardError, 'No SAML config available for sign in' if provider_conf.blank?
 
+  name_format = 'urn:oasis:names:tc:SAML:2.0:attrname-format:basic'
+
   env['omniauth.strategy'].options[:idp_sso_service_url] = provider_conf['idp_sso_service_url']
   env['omniauth.strategy'].options[:idp_cert] = provider_conf['idp_cert']
   env['omniauth.strategy'].options[:sp_entity_id] = provider_conf['sp_entity_id']
   env['omniauth.strategy'].options[:uid_attribute] = 'uid'
+  env['omniauth.strategy'].options[:request_attributes] = [
+    { name: 'email', name_format: name_format, friendly_name: 'Email address', is_required: true },
+    { name: 'first_name', name_format: name_format, friendly_name: 'First name', is_required: true },
+    { name: 'last_name', name_format: name_format, friendly_name: 'Last name', is_required: true },
+    { name: 'uid', name_format: name_format, friendly_name: 'Unique identifier', is_required: true }
+  ]
 end
 
 Rails.application.config.middleware.use OmniAuth::Builder do

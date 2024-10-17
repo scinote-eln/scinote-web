@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :title="shareTitle">
+    <div :title="shareTitle" :data-html="true" data-toggle="tooltip" data-placement="left">
       <button class="btn"
               id="share-button"
               type="button"
@@ -73,6 +73,7 @@ export default {
   mounted() {
     // move modal to body to avoid z-index issues
     $('body').append($(this.$refs.modal));
+    $('[data-toggle="tooltip"]').tooltip();
   },
   methods: {
     enableShare() {

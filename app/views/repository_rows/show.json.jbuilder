@@ -6,14 +6,15 @@ json.repository do
   json.name @repository.name
   json.is_snapshot @repository.is_a?(RepositorySnapshot)
 end
+json.editable @repository_row.editable?
 json.notification @notification
 
 json.update_path update_cell_repository_repository_row_path(@repository, @repository_row)
 
 json.permissions do
   json.can_export_repository_stock can_export_repository_stock?(@repository)
-  json.can_manage can_manage_repository_rows?(@repository) if @repository.is_a?(Repository)
-  json.can_connect_rows can_connect_repository_rows?(@repository) if @repository.is_a?(Repository)
+  json.can_manage can_manage_repository_rows?(@repository) if @repository.is_a?(Repository) && !@repository.is_a?(SoftLockedRepository)
+  json.can_connect_rows can_connect_repository_rows?(@repository) if @repository.is_a?(Repository) && !@repository.is_a?(SoftLockedRepository)
 end
 
 json.actions do
@@ -24,7 +25,7 @@ json.actions do
     end
   end
   json.direct_file_upload_path rails_direct_uploads_url
-  if @repository_row.has_stock?
+  if @repository_row.has_stock? && @repository.has_stock_management?
     json.stock_value_url edit_repository_stock_repository_repository_row_url(@repository, @repository_row)
   elsif @repository.has_stock_management?
     json.stock_value_url new_repository_stock_repository_repository_row_url(@repository, @repository_row)
@@ -35,6 +36,24 @@ json.actions do
                                                                                                        @repository_row)
     json.create_url repository_repository_row_repository_row_connections_url(@repository, @repository_row)
   end
+end
+
+json.storage_locations do
+  json.locations(
+    @repository_row.storage_locations.distinct.map do |storage_location|
+      readable = can_read_storage_location?(storage_location)
+
+      {
+        id: storage_location.id,
+        readable: readable,
+        name: readable ? storage_location.name : storage_location.code,
+        metadata: storage_location.metadata,
+        positions: readable ? storage_location.storage_location_repository_rows.where(repository_row: @repository_row) : []
+      }
+    end
+  )
+  json.enabled StorageLocation.storage_locations_enabled?
+  json.placeholder storage_locations_placeholder
 end
 
 json.default_columns do

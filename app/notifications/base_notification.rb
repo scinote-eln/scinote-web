@@ -34,6 +34,10 @@ class BaseNotification < Noticed::Base
 
   private
 
+  def subject_class
+    ApplicationRecord.descendants.find { |klass| klass.name == params[:subject_class] }
+  end
+
   def database_notification?
     # always save all notifications,
     # but flag if they should display in app or not

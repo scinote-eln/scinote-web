@@ -37,7 +37,8 @@
         <th id="assigned" data-unmanageable="true"><%= t("repositories.table.assigned") %></th>
         <th id="row-id"><%= t("repositories.table.id") %></th>
         <th id="row-name"><%= t("repositories.table.row_name") %></th>
-        <th id="relationship" title="<%= t("repositories.table.relationships") %>"><%= t("repositories.table.relationships") %></th>
+        <th id="relationship" data-disabled="<%= !Repository.repository_row_connections_enabled? %>"
+            title="<%= t("repositories.table.relationships") %>"><%= t("repositories.table.relationships") %></th>
         <th id="added-on" ><%= t("repositories.table.added_on") %></th>
         <th id="added-by" ><%= t("repositories.table.added_by") %></th>
         <th id="updated-on" ><%= t("repositories.table.updated_on") %></th>
@@ -47,6 +48,7 @@
         <% if @repository.is_a?(LinkedRepository) %>
           <th id="row-external-id"><%= t('repositories.table.external_id') %></th>
         <% end %>
+        <% columns_editable = can_manage_repository_columns?(@repository) && !repository.is_a?(SoftLockedRepository) %>
         <% repository.repository_columns.order(:id).each do |column| %>
           <th
             class="repository-column <%= 'row-stock item-stock' if column.data_type == 'RepositoryStockValue' %>"
@@ -54,7 +56,7 @@
             data-type="<%= column.data_type %>"
             data-edit-column-url="<%= edit_repository_repository_column_path(repository, column) %>"
             data-destroy-column-url="<%= repository_columns_destroy_html_path(repository, column) %>"
-            data-editable-row="<%= can_manage_repository_column?(column) %>"
+            data-editable-row="<%= columns_editable %>"
             <% column.metadata.each do |k, v| %>
               <%= "data-metadata-#{k}=#{v}" %>
             <% end %>

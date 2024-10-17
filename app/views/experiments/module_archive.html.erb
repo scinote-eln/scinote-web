@@ -31,6 +31,17 @@
   <div id="actionToolbar" data-behaviour="vue">
     <action-toolbar actions-url="<%= actions_toolbar_my_modules_url %>" />
   </div>
+
+  <div id="accessModalContainer" class="vue-access-modal"
+       data-roles-url="<%= user_roles_projects_path %>">
+    <div ref="accessModal" id="accessModalComponent"></div>
+    <teleport to="body">
+      <access-modal
+        v-if="accessModalOpen"
+        :params="params"
+        @close="accessModalOpen = false" />
+    </teleport>
+  </div>
 </div>
 <% unless  @my_modules.present? %>
   <div class="pt-10">
@@ -38,5 +49,6 @@
   </div>
 <% end %>
 <%= javascript_include_tag('vue_components_action_toolbar') %>
+<%= javascript_include_tag 'vue_legacy_access_modal' %>
 <%= javascript_include_tag('projects/canvas') %>
 <%= javascript_include_tag('my_modules/archived') %>

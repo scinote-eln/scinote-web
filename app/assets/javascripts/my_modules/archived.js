@@ -7,14 +7,15 @@
     let taskId = $(this).closest('.task-selector-container').data('task-id');
     let index = $.inArray(taskId, selectedTasks);
 
-    window.actionToolbarComponent.fetchActions({ my_module_ids: selectedTasks });
-
     // If checkbox is checked and row ID is not in list of selected folder IDs
     if (this.checked && index === -1) {
       selectedTasks.push(taskId);
     } else if (!this.checked && index !== -1) {
       selectedTasks.splice(index, 1);
     }
+
+    const items = selectedTasks.length ? JSON.stringify(selectedTasks.map((item) => ({ id: item }))) : [];
+    window.actionToolbarComponent.fetchActions({ items });
   });
 
   function restoreMyModules(url, ids) {
@@ -63,7 +64,32 @@
     });
   }
 
+  function initAccessModal() {
+    $('#module-archive').on('click', '#openAccessModal', (e) => {
+      e.preventDefault();
+      const container = document.getElementById('accessModalContainer');
+      const target = e.currentTarget;
+
+      $.get(target.dataset.url, (data) => {
+        const object = {
+          ...data.data.attributes,
+          id: data.data.id,
+          type: data.data.type
+        };
+        const { rolesUrl } = container.dataset;
+        const params = {
+          object,
+          roles_path: rolesUrl
+        };
+        const modal = $('#accessModalComponent').data('accessModal');
+        modal.params = params;
+        modal.open();
+      });
+    });
+  }
+
   window.initActionToolbar();
   initRestoreMyModules();
   initMoveButton();
+  initAccessModal();
 }());

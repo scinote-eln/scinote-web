@@ -4,6 +4,7 @@ class RepositoryRowsController < ApplicationController
   include ApplicationHelper
   include MyModulesHelper
   include RepositoryDatatableHelper
+  include StorageLocationsHelper
 
   before_action :load_repository, except: %i(show print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(show print rows_to_print print_zpl
@@ -27,15 +28,10 @@ class RepositoryRowsController < ApplicationController
 
     @all_rows_count = datatable_service.all_count
     @columns_mappings = datatable_service.mappings
-    @repository_rows = datatable_service.repository_rows
-                                        .preload(:repository_columns,
-                                                 :created_by,
-                                                 :archived_by,
-                                                 repository_cells: { value: @repository.cell_preload_includes })
-                                        .page(page)
-                                        .per(per_page)
-
-    @repository_rows = @repository_rows.where(archived: params[:archived]) unless @repository.archived?
+    repository_rows = datatable_service.repository_rows
+    repository_rows = repository_rows.where(archived: params[:archived]) unless @repository.archived?
+    @repository_rows = repository_rows.page(page).per(per_page)
+    @filtered_rows_count = @repository_rows.load.take&.filtered_count || 0
   rescue RepositoryFilters::ColumnNotFoundException
     render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }
   rescue RepositoryFilters::ValueNotFoundException
@@ -328,7 +324,7 @@ class RepositoryRowsController < ApplicationController
   def active_reminder_repository_cells
     reminder_cells = @repository_row.repository_cells.with_active_reminder(current_user).distinct
     render json: {
-      html: render_to_string(partial: 'shared/repository_row_reminder', locals: {
+      html: render_to_string(partial: 'shared/repository_row_reminder', formats: :html, locals: {
                                reminders: reminder_cells
                              })
     }
@@ -358,14 +354,14 @@ class RepositoryRowsController < ApplicationController
   AvailableRepositoryRow = Struct.new(:id, :name, :has_file_attached)
 
   def load_repository
-    @repository = Repository.accessible_by_teams(current_team)
+    @repository = Repository.viewable_by_user(current_user)
                             .eager_load(:repository_columns)
                             .find_by(id: params[:repository_id])
     render_404 unless @repository
   end
 
   def load_repository_or_snapshot
-    @repository = Repository.accessible_by_teams(current_team).find_by(id: params[:repository_id]) ||
+    @repository = Repository.viewable_by_user(current_user).find_by(id: params[:repository_id]) ||
                   RepositorySnapshot.find_by(id: params[:repository_id])
     return render_404 unless @repository
   end

@@ -304,7 +304,7 @@ class MyModulesController < ApplicationController
 
   def protocols
     @protocol = @my_module.protocol
-    @assigned_repositories = @my_module.live_and_snapshot_repositories_list
+    @assigned_repositories = @my_module.readable_live_and_snapshot_repositories_list(current_user)
   end
 
   def protocol
@@ -410,7 +410,7 @@ class MyModulesController < ApplicationController
       actions:
         Toolbars::MyModulesService.new(
           current_user,
-          my_module_ids: JSON.parse(params[:items]).map { |i| i['id'] }
+          my_module_ids: params[:items].present? ? JSON.parse(params[:items]).map { |i| i['id'] } : params[:items]
         ).actions
     }
   end
@@ -651,7 +651,7 @@ class MyModulesController < ApplicationController
 
     @navigator = {
       url: tree_navigator_my_module_path(@my_module),
-      archived: params[:view_mode] == 'archived',
+      archived: @my_module.archived_branch? || params[:view_mode] == 'archived',
       id: @my_module.code
     }
   end
