@@ -117,7 +117,7 @@ module Protocols
     def create_step_asset_element!(step, step_element_json)
       asset = @team.assets.new(created_by: @user, last_modified_by: @user)
       # Decode the file bytes
-      asset.file.attach(io: StringIO.new(Base64.decode64(step_element_json['contents'])), filename: 'file.blob')
+      asset.attach_file_version(io: StringIO.new(Base64.decode64(step_element_json['contents'])), filename: 'file.blob')
       asset.save!
       step.step_assets.create!(asset: asset)
       asset.post_process_file

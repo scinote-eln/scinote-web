@@ -32,6 +32,10 @@ Canaid::Permissions.register_for(Asset) do
     end
   end
 
+  can :restore_asset do |user, asset|
+    VersionedAttachments.enabled? && can_manage_asset?(user, asset)
+  end
+
   can :open_asset_locally do |_user, asset|
     ENV['ASSET_SYNC_URL'].present?
   end

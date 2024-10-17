@@ -22,7 +22,7 @@ class MarvinJsService
       asset = Asset.new(created_by: current_user,
                           last_modified_by: current_user,
                           team_id: current_team.id)
-      attach_file(asset.file, file, params)
+      attach_file_version(asset, file, params)
       asset.save!
       asset.post_process_file
       connect_asset(asset, params, current_user)
@@ -40,21 +40,14 @@ class MarvinJsService
 
       file = generate_image(params)
       asset.update(last_modified_by: current_user) if asset.is_a?(Asset)
-      attach_file(attachment, file, params)
-      asset.post_process_file if asset.instance_of?(Asset)
-      asset
-    end
 
-    def update_file_name(new_name, asset_id, current_user, current_team)
-      asset = current_team.assets.find(asset_id)
-      prepared_name = prepare_name(new_name)
-
-      ActiveRecord::Base.transaction do
-        asset.last_modified_by = current_user
-        asset.rename_file(prepared_name)
-        asset.save!
+      if params[:object_type] == 'TinyMceAsset'
+        attach_file(attachment, file, params)
+      else
+        attach_file_version(asset, file, params)
       end
 
+      asset.post_process_file if asset.instance_of?(Asset)
       asset
     end
 
@@ -79,6 +72,19 @@ class MarvinJsService
 
     def attach_file(asset, file, params)
       asset.attach(
+        io: file,
+        filename: "#{prepare_name(params[:name])}.jpg",
+        content_type: 'image/jpeg',
+        metadata: {
+          name: prepare_name(params[:name]),
+          description: params[:description],
+          asset_type: 'marvinjs'
+        }
+      )
+    end
+
+    def attach_file_version(asset, file, params)
+      asset.attach_file_version(
         io: file,
         filename: "#{prepare_name(params[:name])}.jpg",
         content_type: 'image/jpeg',

@@ -19,6 +19,7 @@ class AssetsController < ApplicationController
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode)
   before_action :check_manage_permission, only: %i(edit destroy duplicate rename toggle_view_mode)
+  before_action :check_restore_permission, only: :restore_version
 
   def file_preview
     editable = can_manage_asset?(@asset) && (@asset.repository_asset_value.blank? ||
@@ -197,7 +198,7 @@ class AssetsController < ApplicationController
     return render_403 unless can_read_team?(@asset.team)
 
     @asset.last_modified_by = current_user
-    @asset.file.attach(io: params.require(:image), filename: orig_file_name)
+    @asset.attach_file_version(io: params.require(:image), filename: orig_file_name)
     @asset.save!
     create_edit_image_activity(@asset, current_user, :finish_editing)
     # release previous image space
@@ -242,9 +243,9 @@ class AssetsController < ApplicationController
 
     # Asset validation
     asset = Asset.new(created_by: current_user, team: current_team)
-    asset.file.attach(io: StringIO.new,
-                      filename: "#{params[:file_name]}.#{params[:file_type]}",
-                      content_type: wopi_content_type(params[:file_type]))
+    asset.attach_file_version(io: StringIO.new,
+                              filename: "#{params[:file_name]}.#{params[:file_type]}",
+                              content_type: wopi_content_type(params[:file_type]))
 
     unless asset.valid?(:wopi_file_creation)
       render json: {
@@ -397,6 +398,55 @@ class AssetsController < ApplicationController
     render json: { checksum: @asset.file.blob.checksum }
   end
 
+  def versions
+    blobs =
+      [@asset.file.blob] +
+      @asset.previous_files.map(&:blob).sort_by { |b| -1 * b.metadata['version'].to_i }[0..(VersionedAttachments.enabled? ? -1 : 1)]
+    render(
+      json: ActiveModel::SerializableResource.new(
+        blobs,
+        each_serializer: ActiveStorage::BlobSerializer
+      ).as_json.merge(
+        enabled: VersionedAttachments.enabled?,
+        enable_url: ENV.fetch('SCINOTE_FILE_VERSIONING_ENABLE_URL', nil)
+      )
+    )
+  end
+
+  def restore_version
+    render_403 unless VersionedAttachments.enabled?
+
+    @asset.restore_file_version(params[:version].to_i)
+
+    message_items = {
+      version: params[:version].to_i,
+      file: @asset.file_name
+    }
+
+    case @asset.parent
+    when Step
+      if @asset.parent.protocol.in_module?
+        message_items.merge!({ my_module: @assoc.protocol.my_module.id, step: @asset.parent.id })
+        log_restore_activity(:task_step_restore_asset_version, @assoc.protocol,
+                             @assoc.protocol.team, @assoc.my_module&.project, message_items)
+      else
+        message_items.merge!({ protocol: @assoc.protocol.id, step: @asset.parent.id })
+        log_restore_activity(:protocol_step_restore_asset_version, @assoc.protocol,
+                             @assoc.protocol.team, nil, message_items)
+      end
+    when Result
+      message_items.merge!({ result: @assoc.id, my_module: @assoc.my_module.id })
+      log_restore_activity(:task_result_restore_asset_version, @assoc,
+                           @assoc.my_module.team, @assoc.my_module.project, message_items)
+    when RepositoryCell
+      message_items.merge!({ repository_column: @assoc.repository_column.id, repository: @repository.id })
+      log_restore_activity(:repository_column_restore_asset_version, @repository,
+                           @repository.team, nil, message_items)
+    end
+
+    render json: @asset.file.blob
+  end
+
   private
 
   def load_vars
@@ -424,6 +474,10 @@ class AssetsController < ApplicationController
 
   def check_manage_permission
     render_403 and return unless can_manage_asset?(@asset)
+  end
+
+  def check_restore_permission
+    render_403 and return unless can_restore_asset?(@asset)
   end
 
   def append_wd_params(url)
@@ -471,5 +525,15 @@ class AssetsController < ApplicationController
             message_items: {
               result: result.id
             }.merge(message_items))
+  end
+
+  def log_restore_activity(type_of, subject, team, project = nil, message_items = {})
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: subject,
+            team: team,
+            project: project,
+            message_items: message_items)
   end
 end

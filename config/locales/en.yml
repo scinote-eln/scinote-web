@@ -310,6 +310,9 @@ en:
     academy_tooltip: "SciNote Academy"
     notifications:
       title: "Notifications"
+      read: "Read"
+      unread: "Unread"
+      read_all: "Read all"
       all: "All"
       message: "Messages"
       system: "System"
@@ -4024,6 +4027,16 @@ en:
       inline_html: "Large"
       thumbnail_html: "Thumbnail"
       list_html: "List"
+      versions: "Version history"
+    file_versions_modal:
+      title: "Version history"
+      download: "Download"
+      restore: "Restore this version"
+      size: "Size"
+      restored_from_version: "restored from v%{version}"
+      original_file: "Original file"
+      enable_button: "Enable"
+      disabled_disclaimer: "This feature is currently disabled"
     rename_modal:
       title: "Rename file"
       min_length_error: "File name must be at least 1 character long."
@@ -4050,7 +4063,7 @@ en:
     edit_launching_application_modal:
       title: "Launching application"
       description: "%{file_name} will now open in %{application}. Saved changes in %{application} will automatically be synced in SciNote."
-    conflict_error: "A newer version of the file was already present in the SciNote web app and your file was saved as “%{filename}”. Close this window and re-open file to get the latest changes."
+    conflict_error: "The file got updated in the SciNote web app while you were editing. Your version will be stored as the latest version, and the previous one is kept in version history."
     default_error: "An error occurred while saving to SciNote. Please save changes to your open document using “Save As…” to avoid losing any working changes."
     default_error_with_filename: "An error occurred while saving “%{filename}” to SciNote. Please save changes to your open document using “Save As…” to avoid losing any working changes."
 

@@ -34,6 +34,7 @@
       @duplicate="duplicate"
       @viewMode="changeViewMode"
       @move="showMoveModal"
+      @fileVersionsModal="fileVersionsModal = true"
       @menu-toggle="$emit('menu-toggle', $event)"
     ></MenuDropdown>
     <Teleport to="body">
@@ -55,6 +56,13 @@
         :targets_url="attachment.attributes.urls.move_targets"
         @confirm="moveAttachment($event)" @cancel="closeMoveModal"
       />
+      <FileVersionsModal
+        v-if="fileVersionsModal"
+        :versionsUrl="attachment.attributes.urls.versions"
+        :restoreVersionUrl="attachment.attributes.urls.restore_version"
+        @close="fileVersionsModal = false"
+        @fileVersionRestored="$emit('attachment:versionRestored', $event)"
+      />
     </Teleport>
   </div>
 </template>
@@ -65,6 +73,7 @@ import deleteAttachmentModal from './delete_modal.vue';
 import MoveAssetModal from '../modal/move.vue';
 import MoveMixin from './mixins/move.js';
 import MenuDropdown from '../../menu_dropdown.vue';
+import FileVersionsModal from '../../file_versions_modal.vue';
 import axios from '../../../../packs/custom_axios.js';
 
 export default {
@@ -73,6 +82,7 @@ export default {
     RenameAttachmentModal,
     deleteAttachmentModal,
     MoveAssetModal,
+    FileVersionsModal,
     MenuDropdown
   },
   mixins: [MoveMixin],
@@ -91,7 +101,8 @@ export default {
     return {
       viewModeOptions: ['inline', 'thumbnail', 'list'],
       deleteModal: false,
-      renameModal: false
+      renameModal: false,
+      fileVersionsModal: false
     };
   },
   computed: {
@@ -134,6 +145,12 @@ export default {
             data_e2e: `e2e-BT-attachmentOptions-${viewMode}`,
             dividerBefore: i === 0
           });
+        });
+      }
+      if (this.attachment.attributes.urls.versions) {
+        menu.push({
+          text: this.i18n.t('assets.context_menu.versions'),
+          emit: 'fileVersionsModal'
         });
       }
       return menu;
