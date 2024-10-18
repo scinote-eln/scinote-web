@@ -12,8 +12,8 @@ contents = case template_zip_url.scheme
            when 'https'
              HTTParty.get(template_zip_url).body
            when 's3'
-             system("AWS_PAGER=\"\" aws s3api get-object --bucket #{template_zip_url.host} --key #{template_zip_url.path[1..]} ./report_templates.zip")
-             File.read('./report_templates.zip')
+             system("AWS_PAGER=\"\" aws s3api get-object --bucket #{template_zip_url.host} --key #{template_zip_url.path[1..]} #{ENV.fetch('APP_HOME', '.')}/app/views/reports/report_templates.zip")
+             File.read("#{ENV.fetch('APP_HOME', '.')}/app/views/reports/report_templates.zip")
            end
 
 puts "Loaded report templates zip from #{template_zip_url_string}"
