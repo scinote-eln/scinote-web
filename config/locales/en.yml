@@ -2425,6 +2425,10 @@ en:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"
       delete: "Delete"
+    modal_delete_asset_value:
+      title: "Confirm file deletion?"
+      notice_html: "<p>Deleting this file will remove the entire column history.<br><br></p><p>This action is irreversible.<br><br></p><p>To retain version history, replace the file with a new one instead.</p>"
+      delete: "Delete"
     modal_delete_column:
       title: "Delete a column"
       message: "Are you sure you wish to permanently delete selected column %{column}? This action is irreversible."

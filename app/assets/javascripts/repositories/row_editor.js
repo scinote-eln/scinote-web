@@ -80,25 +80,17 @@ var RepositoryDatatableRowEditor = (function() {
       $fileBtn.removeClass('error');
     });
 
-
     deleteButtons.on('click', function() {
+      const $deleteRepositoryAssetValueModal = $('#deleteRepositoryAssetValueModal');
       let $fileBtn = $(this).parent();
       let $input = $fileBtn.prev('input[type=file]');
       let $label = $fileBtn.find('label');
 
-      $fileBtn.addClass('new-file');
-      $label.text('');
-      $input.val('');
-      $fileBtn.removeClass('error');
+      $deleteRepositoryAssetValueModal.data('cellFileBtn', $fileBtn);
+      $deleteRepositoryAssetValueModal.data('cellInput', $input);
+      $deleteRepositoryAssetValueModal.data('cellLabel', $label);
 
-      if (!$input.data('is-empty')) { // set hidden field for deletion only if original value has been set on rendering
-        $input
-          .prev('.file-hidden-field-container')
-          .html(`<input type="hidden"
-                     form="${$input.attr('form')}"
-                     name="repository_cells[${$input.data('col-id')}]"
-                     value=""/>`);
-      }
+      $('#deleteRepositoryAssetValueModal').modal('show');
     });
   }
 
