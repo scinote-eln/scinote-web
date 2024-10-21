@@ -1,0 +1,19 @@
+<div class="modal fade" id="deleteRepositoryAssetValueModal" tabindex="-1" role="dialog" aria-labelledby="deleteRepositoryAssetValueModalLabel">
+  <div class="modal-dialog" role="document" data-e2e="e2e-MD-invInventoryDeleteAssetAT">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" data-e2e="e2e-BT-invInventoryDeleteAssetMD-close" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
+        <h4 class="modal-title"><%= t("repositories.modal_delete_asset_value.title") %></h4>
+      </div>
+      <div class="modal-body">
+        <%= t("repositories.modal_delete_asset_value.notice_html") %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" data-e2e="e2e-BT-invInventoryDeleteAssetMD-cancel" class="btn btn-secondary" data-dismiss="modal"><%= t("general.cancel")%></button>
+        <button id="confirmAssetValueDelete" type="button" data-e2e="e2e-BT-invInventoryDeleteAssetMD-delete" class="btn btn-danger delete-asset-value-modal-button" data-dismiss="modal">
+          <%= t("repositories.modal_delete_asset_value.delete") %>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
