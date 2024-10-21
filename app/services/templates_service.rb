@@ -49,6 +49,7 @@ class TemplatesService
   end
 
   def update_all_templates
+    NewRelic::Agent.ignore_transaction
     processed_counter = 0
     updated_counter = 0
     Team.find_each do |team|
