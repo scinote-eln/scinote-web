@@ -12,18 +12,16 @@ class AddSearchQueryIndexes < ActiveRecord::Migration[4.2]
 
     # Add GIST trigram indexes onto columns that check for
     # ILIKE %pattern% during search
-    if db_adapter_is? "PostgreSQL" then
-      add_gist_index :projects, :name
-      add_gist_index :my_modules, :name
-      add_gist_index :my_module_groups, :name
-      add_gist_index :tags, :name
-      add_gist_index :steps, :name
-      add_gist_index :results, :name
+    add_gist_index :projects, :name
+    add_gist_index :my_modules, :name
+    add_gist_index :my_module_groups, :name
+    add_gist_index :tags, :name
+    add_gist_index :steps, :name
+    add_gist_index :results, :name
 
       # There's already semi-useless BTree index on samples
-      remove_index :samples, :name
-      add_gist_index :samples, :name
-    end
+    remove_index :samples, :name
+    add_gist_index :samples, :name
   end
 
   def down
@@ -34,17 +32,15 @@ class AddSearchQueryIndexes < ActiveRecord::Migration[4.2]
     remove_index :user_projects, :project_id
     remove_index :tags, :project_id
 
-    if db_adapter_is? "PostgreSQL" then
-      remove_index :projects, :name
-      remove_index :my_modules, :name
-      remove_index :my_module_groups, :name
-      remove_index :tags, :name
-      remove_index :steps, :name
-      remove_index :results, :name
+    remove_index :projects, :name
+    remove_index :my_modules, :name
+    remove_index :my_module_groups, :name
+    remove_index :tags, :name
+    remove_index :steps, :name
+    remove_index :results, :name
 
       # Re-add semi-useless BTree index on samples
-      remove_index :samples, :name
-      add_index :samples, :name
-    end
+    remove_index :samples, :name
+    add_index :samples, :name
   end
 end
