@@ -28,7 +28,8 @@ Canaid::Permissions.register_for(Repository) do
      create_repository_columns)
     .each do |perm|
     can perm do |_, repository|
-      repository.active? && repository.repository_snapshots.provisioning.none?
+      repository.active? && repository.repository_snapshots.provisioning.none? &&
+        (!repository.is_a?(SoftLockedRepository) || repository.unlocked?)
     end
   end
 
