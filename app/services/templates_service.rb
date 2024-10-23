@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'newrelic_rpm'
+
 class TemplatesService
   def initialize(base_dir = nil)
     @base_dir = base_dir ? base_dir : "#{Rails.root}/app/assets/templates"

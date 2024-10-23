@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class RepositoryItemDateReminderJob < ApplicationJob
-  newrelic_ignore
-
   queue_as :default
 
   def perform
+    NewRelic::Agent.ignore_transaction
     process_repository_values(RepositoryDateTimeValue, DateTime.current)
     process_repository_values(RepositoryDateValue, Date.current)
   end
