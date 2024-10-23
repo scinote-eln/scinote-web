@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RepositoryItemDateReminderJob < ApplicationJob
+  newrelic_ignore
+
   queue_as :default
 
   def perform

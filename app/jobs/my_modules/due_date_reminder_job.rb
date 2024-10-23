@@ -2,6 +2,8 @@
 
 module MyModules
   class DueDateReminderJob < ApplicationJob
+    newrelic_ignore
+
     def perform
       my_modules = MyModule.uncomplete.approaching_due_dates
 
