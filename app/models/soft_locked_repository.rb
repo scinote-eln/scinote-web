@@ -8,4 +8,12 @@ class SoftLockedRepository < Repository
   def shareable_write?
     false
   end
+
+  def unlocked?
+    @unlocked == true
+  end
+
+  def unlock!
+    @unlocked = true
+  end
 end

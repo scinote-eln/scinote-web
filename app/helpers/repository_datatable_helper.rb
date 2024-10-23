@@ -12,8 +12,7 @@ module RepositoryDatatableHelper
     repository_row_connections_enabled = Repository.repository_row_connections_enabled?
     reminders_enabled = Repository.reminders_enabled?
     stock_managable = has_stock_management && !options[:disable_stock_management] &&
-                      can_manage_repository_stock?(repository) &&
-                      !repository.is_a?(SoftLockedRepository)
+                      can_manage_repository_stock?(repository)
     stock_consumption_permitted = has_stock_management && options[:include_stock_consumption] && options[:my_module] &&
                                   stock_consumption_permitted?(repository, options[:my_module])
     default_columns_method_name = "#{repository.class.name.underscore}_default_columns"
@@ -31,7 +30,7 @@ module RepositoryDatatableHelper
       row['relationships_enabled'] = repository_row_connections_enabled
       row['hasActiveReminders'] = record.has_active_reminders if reminders_enabled
 
-      unless options[:view_mode] || repository.is_a?(SoftLockedRepository)
+      unless options[:view_mode]
         row['recordUpdateUrl'] =
           Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
 
