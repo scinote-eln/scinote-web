@@ -255,8 +255,7 @@ class Protocol < ApplicationRecord
 
   def self.viewable_by_user_my_module_protocols(user, teams)
     distinct.joins(:my_module)
-            .where(my_modules: MyModule.with_granted_permissions(user, MyModulePermissions::READ)
-                                       .where(user_assignments: { team: teams }))
+            .where(my_modules: MyModule.viewable_by_user(user, teams))
   end
 
   def self.filter_by_teams(teams = [])
