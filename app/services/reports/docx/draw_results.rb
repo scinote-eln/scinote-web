@@ -1,12 +1,21 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawResults
-  def draw_results(my_module)
+  def draw_results(my_module, with_my_module_name: false)
     color = @color
     settings = @settings
+    scinote_url = @scinote_url
+    link_style = @link_style
     return unless can_read_my_module?(@user, my_module)
 
     if my_module.results.any? && (%w(file_results table_results text_results).any? { |k| @settings.dig('task', k) })
+      if with_my_module_name
+        @docx.h3 do
+          link  my_module.name,
+                scinote_url + Rails.application.routes.url_helpers.protocols_my_module_path(my_module),
+                link_style
+        end
+      end
       @docx.h4 I18n.t('Results')
       order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result|
         @docx.p do
