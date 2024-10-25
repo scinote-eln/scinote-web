@@ -152,20 +152,28 @@ class Asset < ApplicationRecord
 
     return unless new_asset.save
 
-    duplicate_file(new_asset)
+    duplicate_file(new_asset, new_name: new_name)
     new_asset
   end
 
-  def duplicate_file(to_asset)
+  def duplicate_file(to_asset, new_name: nil)
     return unless file.attached?
 
     raise ArgumentError, 'Destination asset should be persisted first!' unless to_asset.persisted?
 
     file.blob.open do |tmp_file|
+      metadata = blob.metadata.dup
+
+      # set new name in metadata for OVE and MarvinJS files
+      if new_name && file.blob.metadata['asset_type'].in?(%w(gene_sequence marvinjs))
+        new_metadata_name = File.basename(new_name, File.extname(new_name))
+        metadata['name'] = new_metadata_name
+      end
+
       to_blob = ActiveStorage::Blob.create_and_upload!(
         io: tmp_file,
         filename: blob.filename,
-        metadata: blob.metadata
+        metadata: metadata
       )
       to_asset.attach_file_version(to_blob)
     end
