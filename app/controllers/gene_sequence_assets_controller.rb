@@ -72,14 +72,12 @@ class GeneSequenceAssetsController < ApplicationController
 
       ensure_asset!
 
-      @asset.preview_image.purge
-
       @asset.attach_file_version(
         io: StringIO.new(params[:sequence_data].to_json),
         filename: "#{params[:sequence_name]}.json"
       )
 
-      @asset.preview_image.attach(
+      @asset.attach_preview_image_version(
         io: StringIO.new(Base64.decode64(params[:base64_image].split(',').last)),
         filename: "#{params[:sequence_name]}.png"
       )
