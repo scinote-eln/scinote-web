@@ -5,6 +5,8 @@ module Reports::Docx::RepositoryHelper
   include ActionView::Helpers::NumberHelper
 
   def prepare_row_columns_for_docx(repository_data, my_module = nil, repository = nil)
+    return if repository_data[:headers].blank?
+
     result = [repository_data[:headers]]
     excluded_columns = repository_data[:excluded_columns]
 

@@ -978,6 +978,7 @@ en:
           name: "%{repository} of task %{my_module}"
           table_name: "%{name}"
           no_items: "No items"
+          no_columns: "No columns selected"
         result:
           user_time: "Added on %{timestamp} by %{user}."
         result_asset:

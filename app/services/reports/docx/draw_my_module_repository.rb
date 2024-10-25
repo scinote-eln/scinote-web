@@ -20,7 +20,12 @@ module Reports::Docx::DrawMyModuleRepository
     @docx.p I18n.t('projects.reports.elements.module_repository.name',
                    repository: repository.name,
                    my_module: my_module.name), bold: true, size: Constants::REPORT_DOCX_STEP_ELEMENTS_TITLE_SIZE
-    @docx.table table, border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
+
+    if table.present?
+      @docx.table table, border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE
+    else
+      @docx.p I18n.t('projects.reports.elements.module_repository.no_columns'), italic: true
+    end
 
     @docx.p
     @docx.p
