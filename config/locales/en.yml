@@ -872,6 +872,7 @@ en:
           archived: "[archived]"
           deleted: "[deleted]"
           repository_column:
+            select_deselect_all: 'Select/deselect all'
             placeholder: 'Select columns'
             all_selected: 'All columns selected'
             selected: 'columns selected'
