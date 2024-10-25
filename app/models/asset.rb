@@ -19,8 +19,8 @@ class Asset < ApplicationRecord
 
   # ActiveStorage configuration
   has_one_versioned_attached :file
+  has_one_versioned_attached :preview_image
   has_one_attached :file_pdf_preview
-  has_one_attached :preview_image
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -185,7 +185,7 @@ class Asset < ApplicationRecord
           filename: blob.filename,
           metadata: blob.metadata
         )
-        to_asset.preview_image.attach(to_blob)
+        to_asset.attach_preview_image_version(to_blob)
       end
     end
 

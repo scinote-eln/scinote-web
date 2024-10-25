@@ -417,6 +417,7 @@ class AssetsController < ApplicationController
     render_403 unless VersionedAttachments.enabled?
 
     @asset.restore_file_version(params[:version].to_i)
+    @asset.restore_preview_image_version(params[:version].to_i) if @asset.preview_image.attached?
 
     message_items = {
       version: params[:version].to_i,
