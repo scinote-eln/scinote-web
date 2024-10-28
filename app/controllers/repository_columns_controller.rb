@@ -5,7 +5,8 @@ class RepositoryColumnsController < ApplicationController
   before_action :load_repository
   before_action :load_column, only: %i(edit update destroy_html destroy items)
   before_action :check_create_permissions, only: %i(new create)
-  before_action :check_manage_permissions, only: %i(edit update destroy_html destroy)
+  before_action :check_manage_permissions, only: %i(edit update)
+  before_action :check_delete_permissions, only: %i(destroy_html destroy)
   before_action :load_asset_type_columns, only: :available_asset_type_columns
 
   def index
@@ -128,6 +129,10 @@ class RepositoryColumnsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_repository_column?(@repository_column)
+  end
+
+  def check_delete_permissions
+    render_403 unless can_delete_repository_column?(@repository_column)
   end
 
   def search_params
