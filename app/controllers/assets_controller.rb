@@ -22,8 +22,7 @@ class AssetsController < ApplicationController
   before_action :check_restore_permission, only: :restore_version
 
   def file_preview
-    editable = can_manage_asset?(@asset) && (@asset.repository_asset_value.blank? ||
-                !@asset.repository_cell.repository_row.repository.is_a?(SoftLockedRepository))
+    editable = can_manage_asset?(@asset) && @asset.repository_asset_value.blank?
     render json: { html: render_to_string(
       partial: 'shared/file_preview/content',
       locals: {
