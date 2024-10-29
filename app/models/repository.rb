@@ -99,11 +99,11 @@ class Repository < RepositoryBase
       'repository_rows.name',
       'relationships',
       'repository_rows.created_at',
-      'users.full_name',
+      'created_by.full_name',
       'repository_rows.updated_at',
-      'last_modified_bies_repository_rows.full_name',
+      'last_modified_by.full_name',
       'repository_rows.archived_on',
-      'archived_bies_repository_rows.full_name'
+      'archived_by.full_name'
     ]
   end
 

@@ -5,12 +5,11 @@ class RepositoryRow < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include ArchivableModel
-  include ReminderRepositoryCellJoinable
 
   ID_PREFIX = 'IT'
   include PrefixedIdModel
 
-  belongs_to :repository, class_name: 'RepositoryBase'
+  belongs_to :repository, class_name: 'RepositoryBase', counter_cache: :repository_rows_count
   delegate :team, to: :repository
   belongs_to :parent, class_name: 'RepositoryRow', optional: true
   belongs_to :created_by, class_name: 'User'
@@ -110,8 +109,8 @@ class RepositoryRow < ApplicationRecord
   scope :active, -> { where(archived: false) }
   scope :archived, -> { where(archived: true) }
 
-  scope :with_active_reminders, lambda { |user|
-    reminder_repository_cells_scope(joins(:repository_cells), user)
+  scope :with_active_reminders, lambda { |repository, user|
+    left_outer_joins_active_reminders(repository, user).where.not(repository_cells_with_active_reminders: { id: nil })
   }
 
   def code
@@ -162,6 +161,16 @@ class RepositoryRow < ApplicationRecord
     joins(:repository)
       .where('repositories.team_id = ? and repository_rows.created_by_id = ?', team, user)
       .update_all(created_by_id: new_owner.id)
+  end
+
+  def self.left_outer_joins_active_reminders(repository, user)
+    repository_cells = RepositoryCell.joins("INNER JOIN repository_columns ON repository_columns.id = repository_cells.repository_column_id AND " \
+                                            "repository_columns.repository_id = #{repository.id}")
+    joins(
+      "LEFT OUTER JOIN (#{repository_cells.with_active_reminder(user).select(:id, :repository_row_id).to_sql}) " \
+      "AS repository_cells_with_active_reminders " \
+      "ON repository_cells_with_active_reminders.repository_row_id = repository_rows.id"
+    )
   end
 
   def editable?

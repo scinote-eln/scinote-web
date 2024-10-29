@@ -6,6 +6,7 @@ json.repository do
   json.name @repository.name
   json.is_snapshot @repository.is_a?(RepositorySnapshot)
 end
+json.editable @repository_row.editable?
 json.notification @notification
 
 json.update_path update_cell_repository_repository_row_path(@repository, @repository_row)

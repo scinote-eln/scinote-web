@@ -4,7 +4,7 @@ module Reports::Docx::RepositoryHelper
   include InputSanitizeHelper
   include ActionView::Helpers::NumberHelper
 
-  def prepare_row_columns(repository_data, my_module, repository)
+  def prepare_row_columns_for_docx(repository_data, my_module, repository)
     result = [repository_data[:headers]]
     repository_data[:rows].each do |record|
       row = []
