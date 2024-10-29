@@ -26,9 +26,9 @@
               data-id="true" data-status="asset-present" :data-preview-url=this?.preview_url :href=this?.url>
               {{ file_name }}
             </a>
-            <tooltip-preview v-if="tooltipShowing && medium_preview_url" :id="id" :url="url" :file_name="file_name"
+            <TooltipPreview v-if="tooltipShowing && medium_preview_url" :id="id" :url="url" :file_name="file_name"
               :preview_url="preview_url" :icon_html="icon_html" :medium_preview_url="medium_preview_url">
-            </tooltip-preview>
+            </TooltipPreview>
           </div>
         </div>
       </div>
@@ -44,17 +44,26 @@
       {{ error }}
     </div>
     <input type="file" ref="fileInput" @change="handleFileChange" style="display: none" />
+
+    <Teleport to="body">
+      <ConfirmationModal
+        :title="i18n.t('repositories.modal_delete_asset_value.title')"
+        :description="i18n.t('repositories.modal_delete_asset_value.notice_html')"
+        confirmClass="btn btn-danger"
+        :confirmText="i18n.t('repositories.modal_delete_asset_value.delete')"
+        ref="deleteRepositoryAssetValueModal"
+      ></ConfirmationModal>
+    </Teleport>
   </div>
 </template>
 
 <script>
 import TooltipPreview from './TooltipPreview.vue';
+import ConfirmationModal from '../../shared/confirmation_modal.vue';
 
 export default {
   name: 'RepositoryAssetvalue',
-  components: {
-    'tooltip-preview': TooltipPreview
-  },
+  components: { TooltipPreview, ConfirmationModal },
   data() {
     return {
       tooltipShowing: false,
@@ -103,10 +112,12 @@ export default {
         this.uploadFiles(event.target.files[0]);
       }
     },
-    clearFile() {
-      this.$refs.fileInput.value = '';
-      this.error = '';
-      this.updateCell(null);
+    async clearFile() {
+      if (await this.$refs.deleteRepositoryAssetValueModal.show()) {
+        this.$refs.fileInput.value = '';
+        this.error = '';
+        this.updateCell(null);
+      }
     },
     uploadFiles(file) {
       this.uploading = true;
