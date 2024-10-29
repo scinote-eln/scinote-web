@@ -23,7 +23,9 @@ module ActiveStorage
     end
 
     def created_at
-      object.created_at.strftime('%B %d, %Y at %H:%M')
+      return object.created_at unless @instance_options[:user]
+
+      object.created_at.strftime("#{@instance_options[:user].date_format}, %H:%M")
     end
 
     def created_by
