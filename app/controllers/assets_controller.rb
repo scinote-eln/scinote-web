@@ -404,7 +404,8 @@ class AssetsController < ApplicationController
     render(
       json: ActiveModel::SerializableResource.new(
         blobs,
-        each_serializer: ActiveStorage::BlobSerializer
+        each_serializer: ActiveStorage::BlobSerializer,
+        user: current_user
       ).as_json.merge(
         enabled: VersionedAttachments.enabled?,
         enable_url: ENV.fetch('SCINOTE_FILE_VERSIONING_ENABLE_URL', nil)
