@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:  url('fonts/SN-icon-font.eot?9ywu8k');
-  src:  url('fonts/SN-icon-font.eot?9ywu8k#iefix') format('embedded-opentype'),
-    url('fonts/SN-icon-font.woff2?9ywu8k') format('woff2'),
-    url('fonts/SN-icon-font.ttf?9ywu8k') format('truetype'),
-    url('fonts/SN-icon-font.woff?9ywu8k') format('woff'),
-    url('fonts/SN-icon-font.svg?9ywu8k#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?phgjny');
+  src:  url('fonts/SN-icon-font.eot?phgjny#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?phgjny') format('woff2'),
+    url('fonts/SN-icon-font.ttf?phgjny') format('truetype'),
+    url('fonts/SN-icon-font.woff?phgjny') format('woff'),
+    url('fonts/SN-icon-font.svg?phgjny#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -544,4 +544,85 @@
 }
 .sn-icon-outbound:before {
   content: "\e9ac";
+}
+.sn-icon-center:before {
+  content: "\e9ad";
+}
+.sn-icon-justify:before {
+  content: "\e9ae";
+}
+.sn-icon-left1:before {
+  content: "\e9af";
+}
+.sn-icon-right1:before {
+  content: "\e9b0";
+}
+.sn-icon-bottom:before {
+  content: "\e9b1";
+}
+.sn-icon-center1:before {
+  content: "\e9b2";
+}
+.sn-icon-top:before {
+  content: "\e9b3";
+}
+.sn-icon-all:before {
+  content: "\e9b4";
+}
+.sn-icon-clear:before {
+  content: "\e9b5";
+}
+.sn-icon-horizontal:before {
+  content: "\e9b6";
+}
+.sn-icon-inner:before {
+  content: "\e9b7";
+}
+.sn-icon-left2:before {
+  content: "\e9b8";
+}
+.sn-icon-outer:before {
+  content: "\e9b9";
+}
+.sn-icon-palette:before {
+  content: "\e9ba";
+}
+.sn-icon-right2:before {
+  content: "\e9bb";
+}
+.sn-icon-top1:before {
+  content: "\e9bc";
+}
+.sn-icon-vertical:before {
+  content: "\e9bd";
+}
+.sn-icon-borderbottom:before {
+  content: "\e9be";
+}
+.sn-icon-color-fill:before {
+  content: "\e9bf";
+}
+.sn-icon-enter:before {
+  content: "\e9c0";
+}
+.sn-icon-exit:before {
+  content: "\e9c1";
+}
+.sn-icon-header-row:before {
+  content: "\e9c2";
+}
+.sn-icon-add:before {
+  content: "\e9c3";
+}
+.sn-icon-bold:before {
+  content: "\e9c4";
+}
+.sn-icon-fields:before {
+  content: "\e9c5";
+}
+.sn-icon-Format:before {
+  content: "\e9c6";
+}
+.sn-icon-redo:before {
+  content: "\e9c7";
 }
