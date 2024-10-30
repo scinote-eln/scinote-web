@@ -75,21 +75,6 @@ class Protocol < ApplicationRecord
     # Only one draft can exist for each protocol
     validate :ensure_single_draft
   end
-  with_options if: -> { in_repository? && !parent && !archived_changed?(from: false) } do |protocol|
-    # Active protocol must have unique name inside its team
-    protocol
-      .validates_uniqueness_of :name, case_sensitive: false,
-                               scope: :team,
-                               conditions: lambda {
-                                 where(
-                                   protocol_type: [
-                                     Protocol.protocol_types[:in_repository_published_original],
-                                     Protocol.protocol_types[:in_repository_draft]
-                                   ],
-                                   parent_id: nil
-                                 )
-                               }
-  end
   with_options if: -> { in_repository? && archived? && !previous_version } do |protocol|
     protocol.validates :archived_by, presence: true
     protocol.validates :archived_on, presence: true
