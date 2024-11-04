@@ -453,7 +453,8 @@ class AssetsController < ApplicationController
     @asset = Asset.find_by(id: params[:id])
     return render_404 unless @asset
 
-    current_user.permission_team = @asset.team
+    # don't overwrite permission team if asset is in a repositoy, since then sharing rules may apply and depend on user's current team
+    current_user.permission_team = @asset.team unless @asset.repository_cell
 
     @assoc ||= @asset.step
     @assoc ||= @asset.result
