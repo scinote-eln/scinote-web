@@ -66,6 +66,7 @@ const entryList = {
   vue_legacy_tags_modal: './app/javascript/packs/vue/legacy/tags_modal.js',
   vue_legacy_access_modal: './app/javascript/packs/vue/legacy/access_modal.js',
   vue_legacy_repository_menu_dropdown: './app/javascript/packs/vue/legacy/repository_menu_dropdown.js',
+  vue_legacy_report_table: './app/javascript/packs/vue/legacy/report_table.js',
   vue_dashboard_new_task: './app/javascript/packs/vue/dashboard_new_task.js',
   vue_storage_locations_table: './app/javascript/packs/vue/storage_locations_table.js',
   vue_storage_locations_container: './app/javascript/packs/vue/storage_locations_container.js'
