@@ -23,10 +23,13 @@
     </div>
   </div>
   <div class="report-element-body">
-    <input type="hidden" class="hot-table-contents" value="<%= table.contents_utf_8.gsub(/\</, '&lt;').gsub(/\>/, '&gt;') %>" />
-    <input type="hidden" class="hot-table-metadata" value="<%= table.metadata.to_json.gsub(/\</, '&lt;').gsub(/\>/, '&gt;') %>" />
-    <div class="hot-table-container"></div>
-    <table class="report-common-table-format"></table>
+    <div class="report-native-table report-common-table-format" id="native-table-<%= table.id %>">
+      <native-table-renderer
+        :contents="<%= table.contents %>"
+        :metadata="<%= table.metadata.to_json %>"
+      >
+      </native-table-renderer>
+    </div>
   </div>
   <% if defined?(children) %>
     <div class="report-element-children">

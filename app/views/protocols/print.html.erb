@@ -56,10 +56,12 @@
                                 html: { target: '_blank' }) %>
           </strong>
           <div class="page-break"></div>
-          <div data-role="hot-table" class="hot-table">
-            <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
-            <%= hidden_field(table, :metadata, value: table.metadata.to_json, class: "hot-metadata" ) %>
-            <div data-role="step-hot-table" class="step-result-hot-table"></div>
+          <div class="report-native-table" id="native-table-<%= table.id %>">
+            <native-table-renderer
+              :contents="<%= table.contents %>"
+              :metadata="<%= table.metadata.to_json %>"
+            >
+            </native-table-renderer>
           </div>
         </div>
       <% when 'Checklist' %>
@@ -141,3 +143,4 @@
   <hr>
   <div class="page-break"></div>
 <% end %>
+<%= javascript_include_tag('vue_legacy_report_table') %>
