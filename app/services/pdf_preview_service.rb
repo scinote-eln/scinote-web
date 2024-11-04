@@ -31,7 +31,7 @@ class PdfPreviewService
         end
 
         ActiveRecord::Base.no_touching do
-          attached.attach(io: File.open(preview_file), filename: "#{@blob.filename.base}.pdf")
+          @attached.attach(io: File.open(preview_file), filename: "#{@blob.filename.base}.pdf")
         end
         Rails.logger.info("Finished preparing PDF preview for file #{@blob.filename.sanitized}.")
       end
