@@ -180,6 +180,9 @@ module Api
 
       def load_inventory(key = :inventory_id)
         @inventory = @team.repositories.find(params.require(key))
+
+        @inventory.unlock! if @inventory.is_a?(SoftLockedRepository)
+
         raise PermissionError.new(Repository, :read) unless can_read_repository?(@inventory)
       end
 

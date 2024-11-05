@@ -135,6 +135,12 @@ export default {
           data_e2e: 'e2e-BT-attachmentOptions-delete'
         });
       }
+      if (this.attachment.attributes.urls.versions) {
+        menu.push({
+          text: this.i18n.t('assets.context_menu.versions'),
+          emit: 'fileVersionsModal'
+        });
+      }
       if (this.attachment.attributes.urls.toggle_view_mode) {
         this.viewModeOptions.forEach((viewMode, i) => {
           menu.push({
@@ -145,12 +151,6 @@ export default {
             data_e2e: `e2e-BT-attachmentOptions-${viewMode}`,
             dividerBefore: i === 0
           });
-        });
-      }
-      if (this.attachment.attributes.urls.versions) {
-        menu.push({
-          text: this.i18n.t('assets.context_menu.versions'),
-          emit: 'fileVersionsModal'
         });
       }
       return menu;

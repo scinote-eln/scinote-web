@@ -456,7 +456,7 @@ GEM
       timeout
     net-smtp (0.5.0)
       net-protocol
-    newrelic_rpm (9.2.2)
+    newrelic_rpm (9.14.0)
     nio4r (2.7.3)
     nokogiri (1.16.7-arm64-darwin)
       racc (~> 1.4)
@@ -613,7 +613,7 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rexml (3.3.7)
+    rexml (3.3.9)
     rgl (0.6.3)
       pairing_heap (>= 0.3.0)
       rexml (~> 3.2, >= 3.2.4)

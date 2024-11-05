@@ -3,6 +3,10 @@ Rails.application.routes.draw do
     skip_controllers :applications, :authorized_applications, :token_info
   end
 
+  # Global healthcheck endpoints
+  get 'api/health', to: 'api/api#health', as: 'api_health'
+  get 'api/status', to: 'api/api#status', as: 'api_status'
+
   post 'access_tokens/revoke', to: 'doorkeeper/access_tokens#revoke'
 
   # Addons
@@ -907,8 +911,6 @@ Rails.application.routes.draw do
     end
 
     namespace :api, defaults: { format: 'json' } do
-      get 'health', to: 'api#health'
-      get 'status', to: 'api#status'
       namespace :service do
         post 'projects_json_export', to: 'projects_json_export#projects_json_export'
         resources :teams, only: [] do

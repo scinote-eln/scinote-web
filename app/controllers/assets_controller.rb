@@ -22,13 +22,11 @@ class AssetsController < ApplicationController
   before_action :check_restore_permission, only: :restore_version
 
   def file_preview
-    editable = can_manage_asset?(@asset) && (@asset.repository_asset_value.blank? ||
-                !@asset.repository_cell.repository_row.repository.is_a?(SoftLockedRepository))
     render json: { html: render_to_string(
       partial: 'shared/file_preview/content',
       locals: {
         asset: @asset,
-        can_edit: editable,
+        can_edit: can_manage_asset?(@asset),
         gallery: params[:gallery],
         preview: params[:preview]
       },
@@ -405,7 +403,8 @@ class AssetsController < ApplicationController
     render(
       json: ActiveModel::SerializableResource.new(
         blobs,
-        each_serializer: ActiveStorage::BlobSerializer
+        each_serializer: ActiveStorage::BlobSerializer,
+        user: current_user
       ).as_json.merge(
         enabled: VersionedAttachments.enabled?,
         enable_url: ENV.fetch('SCINOTE_FILE_VERSIONING_ENABLE_URL', nil)
@@ -417,6 +416,7 @@ class AssetsController < ApplicationController
     render_403 unless VersionedAttachments.enabled?
 
     @asset.restore_file_version(params[:version].to_i)
+    @asset.restore_preview_image_version(params[:version].to_i) if @asset.preview_image.attached?
 
     message_items = {
       version: params[:version].to_i,
@@ -453,7 +453,8 @@ class AssetsController < ApplicationController
     @asset = Asset.find_by(id: params[:id])
     return render_404 unless @asset
 
-    current_user.permission_team = @asset.team
+    # don't overwrite permission team if asset is in a repositoy, since then sharing rules may apply and depend on user's current team
+    current_user.permission_team = @asset.team unless @asset.repository_cell
 
     @assoc ||= @asset.step
     @assoc ||= @asset.result

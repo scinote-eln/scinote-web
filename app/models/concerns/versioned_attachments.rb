@@ -15,10 +15,9 @@ module VersionedAttachments
 
           new_blob = __send__(name).blob
           new_blob.metadata['created_by_id'] = last_modified_by_id
-          new_blob.save!
 
           # set version of current latest file if previous versions exist
-          next unless __send__(:"previous_#{name.to_s.pluralize}").any?
+          new_blob.save! and next unless __send__(:"previous_#{name.to_s.pluralize}").any?
 
           new_version =
             (__send__(:"previous_#{name.to_s.pluralize}").last.blob.metadata['version'] || 1) + 1
@@ -50,6 +49,6 @@ module VersionedAttachments
   module_function
 
   def enabled?
-    ApplicationSettings.instance.values['storage_locations_enabled']
+    ApplicationSettings.instance.values['versioned_attachments_enabled']
   end
 end

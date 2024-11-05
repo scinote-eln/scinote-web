@@ -3,6 +3,7 @@
 module MyModules
   class DueDateReminderJob < ApplicationJob
     def perform
+      NewRelic::Agent.ignore_transaction
       my_modules = MyModule.uncomplete.approaching_due_dates
 
       my_modules.each do |task|

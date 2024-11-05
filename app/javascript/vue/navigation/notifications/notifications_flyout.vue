@@ -28,7 +28,7 @@
       >
       {{ i18n.t('nav.notifications.read') }}
       </div>
-      <div class="py-4 ml-auto cursor-pointer" @click="markAllNotificationsAsRead">
+      <div v-if="activeTab !== 'read'" class="py-2 ml-auto cursor-pointer" @click="markAllNotificationsAsRead">
         {{ i18n.t('nav.notifications.read_all') }}
       </div>
     </div>
@@ -39,12 +39,14 @@
       </div>
       <NotificationItem v-for="notification in todayNotifications" :key="notification.type_of + '-' + notification.id"
         @updateNotification="updateNotification"
+        @close="$emit('close')"
         :notification="notification" />
       <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="olderNotifications.length">
         {{ i18n.t('nav.notifications.older') }}
       </div>
       <NotificationItem v-for="notification in olderNotifications" :key="notification.type_of + '-' + notification.id"
         @updateNotification="updateNotification"
+        @close="$emit('close')"
         :notification="notification" />
       <div class="next-page-loader">
         <img src="/images/medium/loading.svg" v-if="loadingPage" />

@@ -9,7 +9,7 @@
   <% if subject.in_repository? %>
     <div class="ga-breadcrumb">
       <span class="sn-icon sn-icon-protocols-templates"></span>
-        <%= route_to_other_team protocols_path(team: subject.team),
+        <%= route_to_other_team protocol_path(subject),
                                 team,
                                 subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
                                 title: subject.name %>
