@@ -1,0 +1,15 @@
+<div class="print-table">
+  <strong>
+    <%= auto_link(simple_format(table.name),
+                        link: :urls,
+                        html: { target: '_blank' }) %>
+  </strong>
+  <div class="page-break"></div>
+  <div class="report-native-table" id="native-table-<%= table.id %>">
+    <native-table-renderer
+      :contents="<%= table.contents %>"
+      :metadata="<%= table.metadata.to_json %>"
+    >
+    </native-table-renderer>
+  </div>
+</div>
