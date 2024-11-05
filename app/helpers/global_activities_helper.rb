@@ -91,7 +91,7 @@ module GlobalActivitiesHelper
              end
     when Protocol
       if obj.my_module.nil?
-        path = protocols_path(team: obj.team.id)
+        path = protocol_path(obj)
       elsif obj.my_module.navigable?
         path = protocols_my_module_path(obj.my_module)
       else
