@@ -7,6 +7,8 @@ class MyModuleStatusConsequence < ApplicationRecord
 
   def backward(my_module); end
 
+  def before_forward_call(my_module); end
+
   def runs_in_background?
     false
   end

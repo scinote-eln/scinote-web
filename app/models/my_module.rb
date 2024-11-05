@@ -565,6 +565,12 @@ class MyModule < ApplicationRecord
 
     yield
 
+    if status_changing_direction == :forward
+      my_module_status.my_module_status_consequences.each do |consequence|
+        consequence.before_forward_call(self)
+      end
+    end
+
     if my_module_status.my_module_status_consequences.any?(&:runs_in_background?)
       MyModuleStatusConsequencesJob
         .perform_later(self, my_module_status.my_module_status_consequences.to_a, status_changing_direction)
