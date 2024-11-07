@@ -44,11 +44,11 @@
                   <span class="sci-radio-label"></span>
                 </div>
                 <span>{{ i18n.t('storage_locations.index.edit_modal.grid') }}</span>
-                <div class="sci-input-container-v2 !w-28">
+                <div class="sci-input-container-v2 !w-28" v-if="object.metadata.dimensions">
                   <input type="number" :disabled="!canChangeGrid"  v-model="object.metadata.dimensions[0]" min="1" max="24">
                 </div>
                 <i class="sn-icon sn-icon-close-small"></i>
-                <div class="sci-input-container-v2 !w-28">
+                <div class="sci-input-container-v2 !w-28" v-if="object.metadata.dimensions">
                   <input type="number" :disabled="!canChangeGrid"  v-model="object.metadata.dimensions[1]" min="1" max="24">
                 </div>
               </div>
