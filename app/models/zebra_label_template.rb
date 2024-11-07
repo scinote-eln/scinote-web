@@ -11,4 +11,15 @@ class ZebraLabelTemplate < LabelTemplate
       density: 12
     )
   end
+
+  def self.default_203dpi
+    ZebraLabelTemplate.new(
+      name: I18n.t('label_templates.default_zebra_name_203dpi'),
+      width_mm: 25.4,
+      height_mm: 12.7,
+      content: Extends::DEFAULT_LABEL_TEMPLATE_203DPI[:zpl],
+      unit: 0,
+      density: 12
+    )
+  end
 end
