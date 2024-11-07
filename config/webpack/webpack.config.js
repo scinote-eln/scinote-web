@@ -95,9 +95,9 @@ enginePaths.forEach((path) => {
   }
 
   if (extraYarnPackages.length > 0) {
-    extraYarnPackages.forEach((package) => {
-      console.log(`Adding ${package}`);
-      execSync(`yarn add ${package}`);
+    extraYarnPackages.forEach((extraPackage) => {
+      console.log(`Adding ${extraPackage}`);
+      execSync(`yarn add ${extraPackage}`);
     });
   } else {
     console.log(`No extra yarn packages in ${path}.`);
