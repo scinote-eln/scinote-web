@@ -1045,7 +1045,8 @@ en:
     types:
       fluics_label_template: 'Fluics'
       zebra_label_template: 'ZPL'
-    default_zebra_name: 'SciNote Item (ZPL)'
+    default_zebra_name: 'SciNote Item (ZPL, 300dpi)'
+    default_zebra_name_203dpi: 'SciNote Item (ZPL, 203dpi)'
     default_fluics_name: 'SciNote Item (Fluics)'
     new_label_template: 'New label'
     fluics:
