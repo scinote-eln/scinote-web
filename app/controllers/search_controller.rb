@@ -1,6 +1,7 @@
 class SearchController < ApplicationController
   include IconsHelper
   include ProjectFoldersHelper
+  include InputSanitizeHelper
   before_action :load_vars, only: :index
 
   def index
@@ -145,7 +146,7 @@ class SearchController < ApplicationController
 
   def quick
     results = if params[:filter].present?
-                object_quick_search(params[:filter].singularize)
+                object_quick_search(sanitize_input(params[:filter]).singularize)
               else
                 Constants::QUICK_SEARCH_SEARCHABLE_OBJECTS.filter_map do |object|
                   next if object == 'label_template' && !LabelTemplate.enabled?
