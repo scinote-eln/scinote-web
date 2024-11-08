@@ -489,11 +489,10 @@ window.TinyMCE = (() => {
     },
     wrapTables: (container) => {
       container.find('table').toArray().forEach((table) => {
-        if ($(table).parent().hasClass('table-wrapper')) return;
-
-        $(table).css('float', 'none').wrapAll(`
-          <div class="table-wrapper" style="overflow: auto; width: ${container.width()}px"></div>
-        `);
+        if ($(table).parents('table').length === 0) {
+          $(table).css('float', 'none')
+            .wrapAll('<div class="table-wrapper w-full" style="overflow: auto"></div>');
+        }
       });
     }
   };
