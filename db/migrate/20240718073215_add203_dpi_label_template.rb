@@ -8,7 +8,7 @@ class Add203DpiLabelTemplate < ActiveRecord::Migration[7.0]
         type: 'ZebraLabelTemplate',
         name: I18n.t('label_templates.default_zebra_name_203dpi'),
         default: false,
-        content: Extends::DEFAULT_LABEL_TEMPLATE_203DPI,
+        content: Extends::DEFAULT_LABEL_TEMPLATE_203DPI[:zpl],
         width_mm: 25.4,
         height_mm: 12.7,
         unit: 'in',
