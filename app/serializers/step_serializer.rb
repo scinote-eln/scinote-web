@@ -109,7 +109,7 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def created_at
-    object.created_at.strftime('%B %d, %Y at %H:%M')
+    I18n.l(object.created_at, format: :full)
   end
 
   def created_by
