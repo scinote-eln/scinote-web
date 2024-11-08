@@ -51,4 +51,11 @@ module VersionedAttachments
   def enabled?
     ApplicationSettings.instance.values['versioned_attachments_enabled']
   end
+
+  def disabled_disclaimer
+    {
+      text: I18n.t('assets.file_versions_modal.disabled_disclaimer'),
+      button: I18n.t('assets.file_versions_modal.enable_button')
+    }
+  end
 end
