@@ -67,7 +67,7 @@
             </div>
             <div>
               <h3 class="mt-1 mb-2">{{ i18n.t('assets.file_versions_modal.title') }}</h3>
-              {{ i18n.t('assets.file_versions_modal.disabled_disclaimer') }}
+              {{ disabledDisclaimer.text }}
             </div>
           </div>
         </div>
@@ -76,7 +76,7 @@
             {{ i18n.t('general.cancel') }}
           </button>
           <a v-if="fileVersions && !enabled" :href="enableUrl" class='btn btn-primary' target="_blank">
-            {{ i18n.t('assets.file_versions_modal.enable_button') }}
+            {{ disabledDisclaimer.button }}
           </a>
         </div>
       </div>
@@ -96,8 +96,7 @@ export default {
       required: true
     },
     restoreVersionUrl: {
-      type: String,
-      required: true
+      type: String
     }
   },
   mixins: [modalMixin],
@@ -105,7 +104,8 @@ export default {
     return {
       fileVersions: null,
       enabled: null,
-      enableUrl: null
+      enableUrl: null,
+      disabledDisclaimer: null
     };
   },
   created() {
@@ -122,6 +122,7 @@ export default {
         this.fileVersions = response.data.data;
         this.enabled = response.data.enabled;
         this.enableUrl = response.data.enable_url;
+        this.disabledDisclaimer = response.data.disabled_disclaimer;
         this.$nextTick(() => {
           document.querySelectorAll('[data-render-tooltip]').forEach((e) => {
             window.initTooltip(e);

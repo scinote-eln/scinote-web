@@ -407,7 +407,8 @@ class AssetsController < ApplicationController
         user: current_user
       ).as_json.merge(
         enabled: VersionedAttachments.enabled?,
-        enable_url: ENV.fetch('SCINOTE_FILE_VERSIONING_ENABLE_URL', nil)
+        enable_url: ENV.fetch('SCINOTE_FILE_VERSIONING_ENABLE_URL', nil),
+        disabled_disclaimer: VersionedAttachments.disabled_disclaimer
       )
     )
   end
