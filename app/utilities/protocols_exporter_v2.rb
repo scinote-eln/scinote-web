@@ -132,7 +132,7 @@ module ProtocolsExporterV2
       "<asset id=\"#{asset.id}\" guid=\"#{asset_guid}\" fileRef=\"#{asset_file_name}\">\n" \
       "<fileName>#{asset.file_name}</fileName>\n" \
       "<fileType>#{asset.content_type}</fileType>\n" \
-      "<fileMetadata><!--[CDATA[  #{asset.file.metadata.to_json}  ]]--></fileMetadata>\n" \
+      "<fileMetadata><!--[CDATA[  #{asset.file.metadata.except('version', 'restored_from_version').to_json}  ]]--></fileMetadata>\n" \
       "</asset>\n"
   end
 end
