@@ -2,11 +2,7 @@
   <span class="file-name"><%= asset.file.metadata[:name] || asset.file_name %></span>
   <div class="sci-btn-group">
     <% if can_edit && !preview %>
-      <% if wopi_enabled? && wopi_file?(asset) %>
-        <div id="openLocallyMenu" data-behaviour="vue">
-          <open-locally-menu :attachment="<%= { attributes: AssetSerializer.new(asset, scope: { user: current_user }).as_json }.to_json %>" />
-        </div>
-      <% elsif asset.file.metadata[:asset_type] == 'marvinjs' %>
+      <% if asset.file.metadata[:asset_type] == 'marvinjs' %>
         <button class="btn btn-light marvinjs-edit-button"
           data-sketch-id="<%= asset.id %>"
           data-update-url="<%= marvin_js_asset_path(asset) %>"
