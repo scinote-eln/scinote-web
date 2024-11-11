@@ -3,7 +3,6 @@
 class Asset < ApplicationRecord
   include SearchableModel
   include DatabaseHelper
-  include Encryptor
   include WopiUtil
   include ActiveStorageFileUtil
   include ActiveStorageConcerns
