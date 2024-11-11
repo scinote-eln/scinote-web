@@ -135,7 +135,7 @@ export default {
 
       if (!imageElement) return;
 
-      window.ActiveStoragePreviews.reCheckPreview({ target: imageElement });
+      $('#filePreviewModal').modal('hide');
     }
   }
 };
