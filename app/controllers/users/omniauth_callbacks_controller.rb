@@ -107,10 +107,7 @@ module Users
           email: auth_hash['info']['email'],
           password: generate_user_password
         )
-        if auth_hash['info']['picture_url']
-          avatar = URI.open(auth_hash['info']['picture_url'])
-          @user.avatar.attach(io: avatar, filename: 'linkedin_avatar.jpg')
-        end
+        @user.avatar.attach(io: URI(auth_hash['info']['picture_url']).open, filename: 'linkedin_avatar.jpg') if auth_hash['info']['picture_url']
         user_identity = UserIdentity.new(user: @user,
                                          provider: auth_hash['provider'],
                                          uid: auth_hash['uid'])
