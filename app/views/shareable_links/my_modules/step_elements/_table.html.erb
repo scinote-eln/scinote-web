@@ -8,8 +8,12 @@
     <% end %>
   </div>
   <div class="table-body group/table-body relative border-solid border-transparent view locked" tabindex="0">
-    <input type="hidden" class="hot-table-contents" value="<%= element.contents_utf_8 %>" />
-    <input type="hidden" class="hot-table-metadata" value="<%= element.metadata.to_json %>" />
-    <div class="hot-table-container"></div>
+    <div class="report-native-table common-table-format" id="native-table-<%= element.id %>">
+      <native-table-renderer
+        :contents="<%= element.contents %>"
+        :metadata="<%= element.metadata.to_json %>"
+      >
+      </native-table-renderer>
+    </div>
   </div>
 </div>
