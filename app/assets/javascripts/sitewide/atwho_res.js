@@ -148,6 +148,8 @@ var SmartAnnotation = (function() {
       if ($(this).data('atwho-initialized')) return;
 
       $(field).on('shown.atwho', function() {
+        if ($(field).data('smart-annotation')) return;
+
         var $currentAtWho = $('.atwho-view[style]:not(.old)');
         var atWhoId = $currentAtWho.find('.atwho-header-res').data('at-who-key');
         $currentAtWho.addClass('old').attr('data-at-who-id', atWhoId);
