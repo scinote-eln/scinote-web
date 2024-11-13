@@ -134,11 +134,11 @@ export default {
       document.getElementById('editImageButton').click();
     },
     refreshPreview() {
-      const imageElement = document.querySelector('.file-preview-container .asset-image');
+      const filePreview = document.querySelector('.file-preview-container');
 
-      if (!imageElement) return;
+      if (!filePreview) return;
 
-      $('#filePreviewModal').modal('hide');
+      window.location.reload();
     }
   }
 };

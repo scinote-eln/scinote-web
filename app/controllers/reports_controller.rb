@@ -361,7 +361,7 @@ class ReportsController < ApplicationController
 
   def report_params
     params.require(:report)
-          .permit(:name, :description, :grouped_by, :report_contents, settings: {})
+          .permit(:name, :description, :grouped_by, :report_contents, settings: permit_report_settings_structure(Report::DEFAULT_SETTINGS))
   end
 
   def search_params
