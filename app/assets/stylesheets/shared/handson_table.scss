@@ -15,3 +15,49 @@
     border-color: var(--sn-light-grey) !important;
   }
 }
+
+.common-table-format {
+  page-break-inside: avoid;
+  width: 100%;
+
+  tr {
+    text-align: left;
+    vertical-align: top;
+
+    td,
+    th {
+      border: 1px solid $color-silver;
+      padding: 5px;
+
+      span {
+        display: inline-block;
+        min-height: 19px;
+      }
+
+      &.htCenter {
+        text-align: center;
+      }
+
+      &.htRight {
+        text-align: right;
+      }
+
+      &.htJustify {
+        text-align: justify;
+      }
+
+      &.htMiddle {
+        vertical-align: middle;
+      }
+
+      &.htBottom {
+        vertical-align: bottom;
+      }
+
+    }
+
+    th {
+      background: $color-concrete;
+    }
+  }
+}
