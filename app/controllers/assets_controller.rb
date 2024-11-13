@@ -279,31 +279,27 @@ class AssetsController < ApplicationController
 
   def destroy
     if @asset.destroy
+      message_items = if  (@asset.file.metadata[:asset_type] == 'gene_sequence' && !@assoc.is_a?(Result)) || @asset.file.metadata[:asset_type] == 'marvinjs'
+                        { asset_name: @asset.file_name }
+                      else
+                        { file: @asset.file_name }
+                      end
+
+      activity_type = type_of_delete_activity
+
       case @assoc
       when Step
-        if @assoc.protocol.in_module?
-          log_step_activity(
-            :task_step_file_deleted,
-            @assoc,
-            @assoc.my_module.project,
-            my_module: @assoc.my_module.id,
-            file: @asset.file_name
-          )
-        else
-          log_step_activity(
-            :protocol_step_file_deleted,
-            @assoc,
-            nil,
-            protocol: @assoc.protocol.id,
-            file: @asset.file_name
-          )
-        end
-      when Result
-        log_result_activity(
-          @asset.file.metadata[:asset_type] == 'gene_sequence' ? :sequence_on_result_deleted : :result_file_deleted,
+        module_or_protocol = @assoc.protocol.in_module? ? { my_module: @assoc.my_module.id } : { protocol: @assoc.protocol.id }
+        message_items.merge!(module_or_protocol)
+
+        log_step_activity(
+          activity_type,
           @assoc,
-          file: @asset.file_name
+          @assoc.protocol.in_module? ? @assoc.my_module.project : nil,
+          message_items
         )
+      when Result
+        log_result_activity(activity_type, @assoc, message_items)
       end
 
       render json: { flash: I18n.t('assets.file_deleted', file_name: escape_input(@asset.file_name)) }
@@ -536,5 +532,28 @@ class AssetsController < ApplicationController
             team: team,
             project: project,
             message_items: message_items)
+  end
+
+  def type_of_delete_activity
+    case @assoc
+    when Step
+      case @asset.file.metadata[:asset_type]
+      when 'gene_sequence'
+        @assoc.protocol.in_module? ? :task_sequence_asset_deleted : :protocol_sequence_asset_deleted
+      when 'marvinjs'
+        @assoc.protocol.in_module? ? :delete_chemical_structure_on_step : :delete_chemical_structure_on_step_in_repository
+      else
+        @assoc.protocol.in_module? ? :task_step_file_deleted : :protocol_step_file_deleted
+      end
+    when Result
+      case @asset.file.metadata[:asset_type]
+      when 'gene_sequence'
+        :sequence_on_result_deleted
+      when 'marvinjs'
+        :delete_chemical_structure_on_result
+      else
+        :result_file_deleted
+      end
+    end
   end
 end
