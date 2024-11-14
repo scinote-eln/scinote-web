@@ -6,22 +6,30 @@ module Reports::Docx::DrawStep
     step_type_str = step.completed ? 'completed' : 'uncompleted'
     user = (step.completed? && step.last_modified_by) || step.user
     timestamp = step.completed ? step.completed_on : step.created_at
+    settings = @settings
     @docx.p
     @docx.h4(
       "#{I18n.t('projects.reports.elements.step.step_pos', pos: step.position_plus_one)} #{step.name}"
     )
-    @docx.p do
-      if step.completed
-        text I18n.t('protocols.steps.completed'), color: color[:green], bold: true
-      else
-        text I18n.t('protocols.steps.uncompleted'), color: color[:gray], bold: true
+
+    unless settings['exclude_task_metadata'] || settings['exclude_timestamps']
+      @docx.p do
+        unless settings['exclude_task_metadata']
+          if step.completed
+            text I18n.t('protocols.steps.completed'), color: color[:green], bold: true
+          else
+            text I18n.t('protocols.steps.uncompleted'), color: color[:gray], bold: true
+          end
+        end
+        unless settings['exclude_timestamps']
+          text ' | ' unless settings['exclude_task_metadata']
+          text I18n.t(
+            "projects.reports.elements.step.#{step_type_str}.user_time",
+            user: user.full_name,
+            timestamp: I18n.l(timestamp, format: :full)
+          ), color: color[:gray]
+        end
       end
-      text ' | '
-      text I18n.t(
-        "projects.reports.elements.step.#{step_type_str}.user_time",
-        user: user.full_name,
-        timestamp: I18n.l(timestamp, format: :full)
-      ), color: color[:gray]
     end
 
     step.step_orderable_elements.order(:position).each do |element|
@@ -41,9 +49,6 @@ module Reports::Docx::DrawStep
     end
 
     draw_step_comments(step) if @settings.dig('task', 'protocol', 'step_comments')
-
-    @docx.p
-    @docx.p
   end
 
   def handle_step_table(table)

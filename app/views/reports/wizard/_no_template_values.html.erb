@@ -1,5 +1,9 @@
 <h1>
-  <%= t('projects.reports.wizard.first_step.values_editor.no_values_title') %>
+  <% if type == :pdf %>
+    <%= t('projects.reports.wizard.first_step.values_editor.no_values_title_pdf', template: ) %>
+  <% else %>
+    <%= t('projects.reports.wizard.first_step.values_editor.no_values_title_docx', template: ) %>
+  <% end %>
 </h1>
 <h3>
   <%= t('projects.reports.wizard.first_step.values_editor.no_values_description') %>

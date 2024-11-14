@@ -968,6 +968,16 @@ function reportHandsonTableConverter() {
 }
 
 (function() {
+  function getSelectedRepositoryColumnValues(element, selectedAll = false) {
+    const values = [];
+    $(element).find('option').each((_, option) => {
+      if ($(option).attr('selected-value') || selectedAll) {
+        values.push(option.value);
+      }
+    });
+    return values;
+  }
+
   function getReportData() {
     var reportData = {};
 
@@ -982,7 +992,7 @@ function reportHandsonTableConverter() {
 
     // Template values
     reportData.template_values = {};
-    $.each($('.report-template-values-container').find('.sci-input-field'), function(i, field) {
+    $.each($('.report-template-values-container').find('.sci-input-field').not('.report-template-value-dropdown'), (_, field) => {
       if (field.value.length === 0) return;
 
       reportData.template_values[field.name] = {
@@ -1046,11 +1056,23 @@ function reportHandsonTableConverter() {
       reportData.report.settings.task[e.value] = e.checked;
     });
     reportData.report.settings.task.repositories = [];
-    $.each($('.task-contents-container .repositories-contents .repositories-setting:checked'), function(i, e) {
-      reportData.report.settings.task.repositories.push(parseInt(e.value, 10));
+    reportData.report.settings.task.excluded_repository_columns = {};
+
+    $.each($('.task-contents-container .repositories-contents .repositories-setting:checked'), (_, e) => {
+      const value = parseInt(e.value, 10);
+      const $repositoryColumn = $(e).parent().siblings('.repository-columns')[0];
+      const selectedValues = dropdownSelector.getValues($repositoryColumn);
+      const excludedValues = getSelectedRepositoryColumnValues($repositoryColumn, true)
+        .filter((item) => !selectedValues.includes(item))
+        .map((el) => parseInt(el, 10));
+      reportData.report.settings.task.repositories.push(value);
+      reportData.report.settings.task.excluded_repository_columns[value] = excludedValues;
     });
 
     reportData.report.settings.task.result_order = dropdownSelector.getValues('#taskResultsOrder');
+
+    reportData.report.settings.exclude_task_metadata = $('.exclude-task-metadata-setting')[0].checked;
+    reportData.report.settings.exclude_timestamps = $('.exclude-timestamps-setting')[0].checked;
 
     return reportData;
   }
@@ -1256,7 +1278,8 @@ function reportHandsonTableConverter() {
   function reCheckContinueButton() {
     if (dropdownSelector.getValues('#projectSelector').length > 0
           && dropdownSelector.getValues('#templateSelector').length > 0
-          && dropdownSelector.getValues('#docxTemplateSelector').length > 0) {
+          && (dropdownSelector.getValues('#docxTemplateSelector').length > 0
+          || $('#docxTemplateSelector').closest('.hidden').length > 0)) {
       $('.continue-button').attr('disabled', false);
     } else {
       $('.continue-button').attr('disabled', true);
@@ -1279,6 +1302,12 @@ function reportHandsonTableConverter() {
         if (dropdownSelector.getValues('#projectSelector').length > 0) {
           dropdownSelector.enableSelector('#templateSelector');
           dropdownSelector.enableSelector('#docxTemplateSelector');
+          if ($('#templateSelector').data('defaultTemplate')) {
+            dropdownSelector.selectValues('#templateSelector', $('#templateSelector').data('defaultTemplate'));
+          }
+          if ($('#docxTemplateSelector').data('defaultTemplate')) {
+            dropdownSelector.selectValues('#docxTemplateSelector', $('#docxTemplateSelector').data('defaultTemplate'));
+          }
         } else {
           dropdownSelector.selectValues('#templateSelector', '');
           dropdownSelector.disableSelector('#templateSelector');
@@ -1349,10 +1378,24 @@ function reportHandsonTableConverter() {
     if (dropdownSelector.getValues('#docxTemplateSelector').length > 0) {
       loadDocxTemplate();
     }
+
+    $('.repository-columns').each((_, element) => {
+      const elementId = `#${$(element).attr('id')}`;
+      const elements = getSelectedRepositoryColumnValues(elementId);
+
+      dropdownSelector.init(elementId, {
+        selectAppearance: 'simple',
+        optionClass: 'checkbox-icon'
+      });
+
+      if (elements.length) {
+        dropdownSelector.selectValues(elementId, elements);
+      }
+    });
   }
 
   function loadTemplate() {
-    let template = $('#templateSelector').val();
+    const template = dropdownSelector.getValues('#templateSelector');
     let params = {
       project_id: dropdownSelector.getValues('#projectSelector'),
       template: template
@@ -1382,7 +1425,7 @@ function reportHandsonTableConverter() {
   }
 
   function loadDocxTemplate() {
-    let template = $('#docxTemplateSelector').val();
+    const template = dropdownSelector.getValues('#docxTemplateSelector');
     let params = {
       project_id: dropdownSelector.getValues('#projectSelector'),
       template: template

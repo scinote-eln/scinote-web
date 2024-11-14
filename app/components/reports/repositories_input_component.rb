@@ -2,10 +2,9 @@
 
 module Reports
   class RepositoriesInputComponent < TemplateValueComponent
-    def initialize(report:, name:, label:, placeholder: nil, editing: true, displayed_field: :name)
+    def initialize(report:, name:, label:, placeholder: nil, editing: true, displayed_field: :name, user: nil)
       super(report: report, name: name, label: label, placeholder: placeholder, editing: editing)
-
-      live_repositories = Repository.accessible_by_teams(report.team).sort_by { |r| r.name.downcase }
+      live_repositories = Repository.viewable_by_user(user, report.team).sort_by { |r| r.name.downcase }
       snapshots_of_deleted = RepositorySnapshot.left_outer_joins(:original_repository)
                                                .where(team: report.team)
                                                .where.not(original_repository: live_repositories)

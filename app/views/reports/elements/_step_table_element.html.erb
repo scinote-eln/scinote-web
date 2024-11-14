@@ -18,9 +18,11 @@
         <% end %>
       <% end %>
     </div>
-    <div class="user-time">
-      <%= t("projects.reports.elements.#{table_type}.user_time", timestamp: l(timestamp, format: :full)) %>
-    </div>
+    <% unless @settings['exclude_timestamps'] %>
+      <div class="user-time">
+        <%= t("projects.reports.elements.#{table_type}.user_time", timestamp: l(timestamp, format: :full)) %>
+      </div>
+    <% end %>
   </div>
   <div class="report-element-body">
     <input type="hidden" class="hot-table-contents" value="<%= table.contents_utf_8.gsub(/\</, '&lt;').gsub(/\>/, '&gt;') %>" />

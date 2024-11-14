@@ -18,7 +18,8 @@ class ReportsController < ApplicationController
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit update generate_pdf generate_docx)
   before_action :switch_team_with_param, only: :index
-  after_action :generate_pdf_report, only: %i(create update generate_pdf)
+  after_action :generate_pdf_report, only: %i(generate_pdf)
+  after_action :generate_report, only: %i(create update)
 
   # Index showing all reports of a single project
   def index
@@ -44,6 +45,8 @@ class ReportsController < ApplicationController
   def new_template_values
     if Extends::REPORT_TEMPLATES.key?(params[:template]&.to_sym)
       template = params[:template]
+      @type = :pdf
+      @template_name = Extends::REPORT_TEMPLATES[params[:template].to_sym]
     else
       return render_404
     end
@@ -69,6 +72,7 @@ class ReportsController < ApplicationController
     else
       render json: {
         html: render_to_string(partial: 'reports/wizard/no_template_values',
+                               locals: { type: @type, template: @template_name },
                                formats: :html)
       }
     end
@@ -77,6 +81,8 @@ class ReportsController < ApplicationController
   def new_docx_template_values
     if Extends::DOCX_REPORT_TEMPLATES.key?(params[:template]&.to_sym)
       template = params[:template]
+      @type = :docx
+      @template_name = Extends::DOCX_REPORT_TEMPLATES[params[:template].to_sym]
     else
       return render_404
     end
@@ -102,6 +108,7 @@ class ReportsController < ApplicationController
     else
       render json: {
         html: render_to_string(partial: 'reports/wizard/no_template_values',
+                               locals: { type: @type, template: @template_name },
                                formats: :html)
       }
     end
@@ -363,6 +370,9 @@ class ReportsController < ApplicationController
                                     .merge(MyModule.active)
                                     .group(:id)
                                     .select(:id, :name)
+    @default_template = Extends::REPORT_TEMPLATES.keys.first.to_s if Extends::REPORT_TEMPLATES.one?
+
+    @default_docx_template = Extends::DOCX_REPORT_TEMPLATES.keys.first.to_s if Extends::DOCX_REPORT_TEMPLATES.one? && custom_templates(Extends::DOCX_REPORT_TEMPLATES)
   end
 
   def check_project_read_permissions
@@ -428,6 +438,26 @@ class ReportsController < ApplicationController
     Reports::PdfJob.perform_later(@report.id, user_id: current_user.id)
   rescue ActiveRecord::ActiveRecordError => e
     Rails.logger.error e.message
+  end
+
+  def generate_docx_report
+    return unless @report.persisted?
+
+    @report.docx_processing!
+    log_activity(:generate_docx_report)
+
+    ensure_report_template!
+    Reports::DocxJob.perform_later(@report.id, user_id: current_user.id, root_url: root_url)
+  rescue ActiveRecord::ActiveRecordError => e
+    Rails.logger.error e.message
+  end
+
+  def generate_report
+    return unless @report.persisted?
+
+    generate_pdf_report
+
+    generate_docx_report if @report.settings['docx_template'].present? && custom_templates(Extends::DOCX_REPORT_TEMPLATES)
   end
 
   def ensure_report_template!
