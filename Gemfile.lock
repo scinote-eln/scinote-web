@@ -50,7 +50,7 @@ GIT
       mime-types (>= 1.23)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     actioncable (7.0.8.5)
       actionpack (= 7.0.8.5)
@@ -608,7 +608,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rdoc (6.3.4.1)
-    recaptcha (5.14.0)
+    recaptcha (5.17.0)
     regexp_parser (2.8.1)
     responders (3.1.1)
       actionpack (>= 5.2)
