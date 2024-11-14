@@ -175,7 +175,7 @@ module CustomTemplateDocx
 
       next unless repository_data[:rows].any? && can_read_repository?(@user, repository)
 
-      table = prepare_row_columns(repository_data, nil, repository)
+      table = prepare_row_columns_for_docx(repository_data, nil, repository)
 
       @docx.p
       @docx.p repository.name, bold: true, size: Constants::REPORT_DOCX_STEP_ELEMENTS_TITLE_SIZE

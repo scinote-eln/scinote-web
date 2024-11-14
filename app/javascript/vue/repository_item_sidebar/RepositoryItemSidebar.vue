@@ -313,6 +313,11 @@
                 </section>
 
                 <div v-if="!repository?.is_snapshot" id="divider" class="bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
+                <!-- Locations -->
+                <section v-if="!repository?.is_snapshot" id="locations-section" ref="locationsSectionRef" data-e2e="e2e-CO-itemCard-locations">
+                  <Locations :repositoryRow="repositoryRow" :repository="repository" @reloadRow="reload" />
+                </section>
+                <div v-if="!repository?.is_snapshot" id="divider" class="bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
 
                 <!-- QR -->
                 <section id="qr-section" ref="QR-label">
@@ -367,6 +372,7 @@ import ScrollSpy from './repository_values/ScrollSpy.vue';
 import CustomColumns from './customColumns.vue';
 import RepositoryItemSidebarTitle from './Title.vue';
 import UnlinkModal from './unlink_modal.vue';
+import Locations from './locations.vue';
 import axios from '../../packs/custom_axios.js';
 
 const items = [
@@ -405,6 +411,14 @@ const items = [
   {
     id: 'highlight-item-5',
     textId: 'text-item-5',
+    labelAlias: 'locations_label',
+    label: 'locations-label',
+    sectionId: 'locations-section',
+    showInSnapshot: false
+  },
+  {
+    id: 'highlight-item-6',
+    textId: 'text-item-6',
     labelAlias: 'QR_label',
     label: 'QR-label',
     sectionId: 'qr-section',
@@ -416,6 +430,7 @@ export default {
   name: 'RepositoryItemSidebar',
   components: {
     CustomColumns,
+    Locations,
     'repository-item-sidebar-title': RepositoryItemSidebarTitle,
     'inline-edit': InlineEdit,
     'scroll-spy': ScrollSpy,
@@ -433,6 +448,7 @@ export default {
       repository: null,
       defaultColumns: null,
       customColumns: null,
+      repositoryRow: null,
       parentsCount: 0,
       childrenCount: 0,
       parents: null,
@@ -591,6 +607,7 @@ export default {
         { params: { my_module_id: this.myModuleId } }
       ).then((response) => {
         const result = response.data;
+        this.repositoryRow = result;
         this.repositoryRowId = result.id;
         this.repository = result.repository;
         this.optionsPath = result.options_path;

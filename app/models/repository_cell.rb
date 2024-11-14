@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class RepositoryCell < ApplicationRecord
-  include ReminderRepositoryCellJoinable
-
   attr_accessor :importing, :to_destroy
 
   belongs_to :repository_row, touch: true
@@ -48,7 +46,47 @@ class RepositoryCell < ApplicationRecord
   after_touch :update_repository_row_last_modified_by
 
   scope :with_active_reminder, lambda { |user|
-    reminder_repository_cells_scope(self, user)
+    from(
+      "((#{with_active_stock_reminder(user).to_sql}) UNION ALL " \
+      "(#{with_active_datetime_reminder(user).to_sql})) AS repository_cells"
+    )
+  }
+
+  scope :with_active_stock_reminder, lambda { |user|
+    joins( # stock reminders
+      'LEFT OUTER JOIN "repository_stock_values" ON ' \
+      '"repository_cells"."value_type" = \'RepositoryStockValue\' AND ' \
+      '"repository_stock_values"."id" = "repository_cells"."value_id" AND ' \
+      '(repository_stock_values.amount <= repository_stock_values.low_stock_threshold OR ' \
+      'repository_stock_values.amount <= 0)'
+    ).joins(
+      'LEFT OUTER JOIN "hidden_repository_cell_reminders" ON ' \
+      '"repository_cells"."id" = "hidden_repository_cell_reminders"."repository_cell_id" AND ' \
+      '"hidden_repository_cell_reminders"."user_id" = ' + user.id.to_s
+    ).where(
+      'hidden_repository_cell_reminders.id IS NULL AND repository_stock_values.id IS NOT NULL'
+    )
+  }
+
+  scope :with_active_datetime_reminder, lambda { |user|
+    joins(
+      'INNER JOIN repository_columns repository_reminder_columns ON ' \
+      'repository_reminder_columns.id = repository_cells.repository_column_id'
+    ).joins( # datetime reminders
+      'LEFT OUTER JOIN "repository_date_time_values" ON ' \
+      '"repository_date_time_values"."id" = "repository_cells"."value_id" AND ' \
+      '"repository_cells"."value_type" = \'RepositoryDateTimeValueBase\' ' \
+      'AND repository_reminder_columns.metadata ->> \'reminder_value\' <> \'\' AND ' \
+      'repository_date_time_values.data <= ' \
+      '(NOW() AT TIME ZONE \'UTC\') + (repository_reminder_columns.metadata ->> \'reminder_value\')::int * ' \
+      '(repository_reminder_columns.metadata ->> \'reminder_unit\')::int * \'1 SECOND\'::interval'
+    ).joins(
+      'LEFT OUTER JOIN "hidden_repository_cell_reminders" ON ' \
+      '"repository_cells"."id" = "hidden_repository_cell_reminders"."repository_cell_id" AND ' \
+      '"hidden_repository_cell_reminders"."user_id" = ' + user.id.to_s
+    ).where(
+      'hidden_repository_cell_reminders.id IS NULL AND repository_date_time_values.id IS NOT NULL'
+    )
   }
 
   def update_repository_row_last_modified_by

@@ -1362,6 +1362,10 @@ th.custom-field .modal-tooltiptext {
   cursor: pointer;
 }
 
+.tooltip {
+  z-index: 9999;
+}
+
 .tooltip-open {
   background-color: $color-concrete;
   color: $color-black;

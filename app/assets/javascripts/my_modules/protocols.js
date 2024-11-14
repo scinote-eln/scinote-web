@@ -29,7 +29,8 @@ function initEditMyModuleDescription() {
   });
 
   setTimeout(function() {
-    TinyMCE.wrapTables(viewObject);
+    const notesContainerEl = document.getElementById('notes-container');
+    window.wrapTables(notesContainerEl);
   }, 100);
 }
 
@@ -327,16 +328,6 @@ function initAccessModal() {
   });
 }
 
-function initWrapTables() {
-  const viewMode = new URLSearchParams(window.location.search).get('view_mode');
-  if (['archived', 'locked'].includes(viewMode)) {
-    setTimeout(() => {
-      const notesContainerEl = document.getElementById('notes-container');
-      window.wrapTables(notesContainerEl);
-    }, 100);
-  }
-}
-
 /**
  * Initializes page
  */
@@ -348,7 +339,6 @@ function init() {
   initProtocolSectionOpenEvent();
   initDetailsDropdown();
   initAccessModal();
-  initWrapTables();
 }
 
 init();

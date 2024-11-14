@@ -93,6 +93,10 @@
         :fileName="attachment.attributes.file_name"
         @close="showNoPredefinedAppModal = false"
       />
+      <RestrictedExtensionModal
+        v-if="showRestrictedExtensionModal"
+        @close="showRestrictedExtensionModal = false"
+      />
       <UpdateVersionModal
         v-if="showUpdateVersionModal"
         @close="showUpdateVersionModal = false"

@@ -19,8 +19,16 @@ module LeftMenuBarHelper
         url: repositories_path,
         name: t('left_menu_bar.repositories'),
         icon: 'sn-icon-inventory',
-        active: repositories_are_selected?,
-        submenu: []
+        active: repositories_are_selected? || storage_locations_are_selected?,
+        submenu: [{
+          url: repositories_path,
+          name: t('left_menu_bar.items'),
+          active: repositories_are_selected?
+        }, {
+          url: storage_locations_path,
+          name: t('left_menu_bar.locations'),
+          active: storage_locations_are_selected?
+        }]
       }, {
         url: "#",
         name: t('left_menu_bar.templates'),
@@ -61,6 +69,10 @@ module LeftMenuBarHelper
 
   def repositories_are_selected?
     controller_name == 'repositories'
+  end
+
+  def storage_locations_are_selected?
+    controller_name == 'storage_locations'
   end
 
   def protocols_are_selected?

@@ -317,9 +317,7 @@ var RepositoryDatatable = (function(global) {
 
       checkAvailableColumns();
 
-      RepositoryDatatableRowEditor.switchRowToEditMode(row);
-
-      changeToEditMode();
+      RepositoryDatatableRowEditor.switchRowToEditMode(row, changeToEditMode);
     });
   }
 
@@ -327,6 +325,40 @@ var RepositoryDatatable = (function(global) {
     $(TABLE_WRAPPER_ID).on('click', '#saveRecord', function() {
       var $table = $(TABLE_ID);
       RepositoryDatatableRowEditor.validateAndSubmit($table, $('#saveRecord'));
+    });
+  }
+
+  function initDeleteAssetValueConfirmModal() {
+    $('#deleteRepositoryAssetValueModal').on('shown.bs.modal', function() {
+      let $fileBtn = $(this).data('cellFileBtn');
+      let $input = $(this).data('cellInput');
+      let $label = $(this).data('cellLabel');
+
+      $('#confirmAssetValueDelete').one('click', function() {
+        $fileBtn.addClass('new-file');
+        $label.text('');
+        $input.val('');
+        $fileBtn.removeClass('error');
+
+        if (!$input.data('is-empty')) { // set hidden field for deletion only if original value has been set on rendering
+          $input
+            .prev('.file-hidden-field-container')
+            .html(`<input type="hidden"
+                       form="${$input.attr('form')}"
+                       name="repository_cells[${$input.data('col-id')}]"
+                       value=""/>`);
+        }
+
+        $('#deleteRepositoryAssetValueModal').modal('hide');
+      });
+    });
+
+    $('#deleteRepositoryAssetValueModal').on('hidden.bs.modal', function() {
+      const $deleteRepositoryAssetValueModal = $('#deleteRepositoryAssetValueModal');
+
+      $deleteRepositoryAssetValueModal.data('cellFileBtn', null);
+      $deleteRepositoryAssetValueModal.data('cellInput', null);
+      $deleteRepositoryAssetValueModal.data('cellLabel', null);
     });
   }
 
@@ -692,6 +724,7 @@ var RepositoryDatatable = (function(global) {
       },
       rowCallback: function(row, data) {
         $(row).attr('data-editable', data.recordEditable);
+        $(row).attr('data-info-url', data.recordInfoUrl);
         $(row).attr('data-manage-stock-url', data.manageStockUrl);
         // Get row ID
         let rowId = data.DT_RowId;
@@ -805,6 +838,7 @@ var RepositoryDatatable = (function(global) {
         initSaveButton();
         initCancelButton();
         initBSTooltips();
+        initDeleteAssetValueConfirmModal();
         window.initRepositoryStateMenu();
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 
@@ -1003,10 +1037,8 @@ var RepositoryDatatable = (function(global) {
       $(TABLE_ID).find('.repository-row-edit-icon').remove();
 
       rowsSelected.forEach(function(rowNumber) {
-        RepositoryDatatableRowEditor.switchRowToEditMode(TABLE.row('#' + rowNumber));
+        RepositoryDatatableRowEditor.switchRowToEditMode(TABLE.row('#' + rowNumber), changeToEditMode);
       });
-
-      changeToEditMode();
     })
     .on('click', '#assignRepositoryRecords', function(e) {
       e.preventDefault();

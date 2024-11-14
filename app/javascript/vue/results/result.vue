@@ -97,6 +97,7 @@
       <ReorderableItemsModal v-if="reordering"
         :title="i18n.t('my_modules.modals.reorder_results.title')"
         :items="reorderableElements"
+        :dataE2e="`task-result${result.id}-reorder`"
         @reorder="updateElementOrder"
         @close="closeReorderModal"
       />
@@ -133,7 +134,7 @@
         <ContentToolbar
           v-if="orderedElements.length > 2 && insertMenu.length > 0"
           :insertMenu="insertMenu"
-          @create:table="(...args) => this.createElement('table', ...args)"
+          @create:table="(args) => args ? this.createElement('table', ...args) : this.createElement('table')"
           @create:text="createElement('text')"
           @create:file="openLoadFromComputer"
           @create:wopi_file="openWopiFileModal"
@@ -168,6 +169,9 @@ export default {
     result: { type: Object, required: true },
     resultToReload: { type: Number, required: false },
     activeDragResult: {
+      required: false
+    },
+    userSettingsUrl: {
       required: false
     }
   },
@@ -226,6 +230,17 @@ export default {
       },
       deep: true
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      const resultId = `#resultBody${this.result.id}`;
+      this.isCollapsed = this.result.attributes.collapsed;
+      if (this.isCollapsed) {
+        $(resultId).collapse('hide');
+      } else {
+        $(resultId).collapse('show');
+      }
+    });
   },
   computed: {
     reorderableElements() {
@@ -337,6 +352,13 @@ export default {
     toggleCollapsed() {
       this.isCollapsed = !this.isCollapsed;
       this.result.attributes.collapsed = this.isCollapsed;
+
+      const settings = {
+        key: 'result_states',
+        data: { [this.result.id]: this.isCollapsed }
+      };
+
+      axios.put(this.userSettingsUrl, { settings: [settings] });
     },
     dragEnter(e) {
       if (!this.urls.upload_attachment_url) return;

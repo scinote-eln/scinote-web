@@ -107,13 +107,16 @@ module ReportsHelper
     end
   end
 
-  def assigned_to_report_repository_items(report, repository_name)
-    repository = Repository.accessible_by_teams(report.team).where(name: repository_name).take
-    return RepositoryRow.none if repository.blank?
-
-    my_modules = MyModule.joins(:experiment)
-                         .where(experiment: { project: report.project })
-                         .where(id: report.report_elements.my_module.select(:my_module_id))
-    repository.repository_rows.joins(:my_modules).where(my_modules: my_modules)
+  def permit_report_settings_structure(settings_definition)
+    settings_definition.each_with_object([]) do |(key, value), permitted|
+      permitted << case value
+                   when Hash
+                     { key => permit_report_settings_structure(value) }
+                   when Array
+                     { key => [] }
+                   else
+                     key
+                   end
+    end
   end
 end

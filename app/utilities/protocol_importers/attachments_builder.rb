@@ -7,7 +7,7 @@ module ProtocolImporters
 
       step_json[:attachments].map do |f|
         asset = Asset.new(created_by: user, last_modified_by: user, team: team)
-        asset.file.attach(io: URI.open(f[:url]), filename: f[:name])
+        asset.attach_file_version(io: URI(f[:url]).open, filename: f[:name])
         asset
       end
     end

@@ -8,7 +8,7 @@ class User < ApplicationRecord
   include ActiveStorageConcerns
 
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
-         :async, :recoverable, :rememberable, :trackable, :validatable,
+         :recoverable, :rememberable, :trackable, :validatable,
          :timeoutable, :omniauthable, :lockable,
          omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
          stretches: Constants::PASSWORD_STRETCH_FACTOR
@@ -374,7 +374,7 @@ class User < ApplicationRecord
   end
 
   def current_team
-    Team.find_by_id(self.current_team_id)
+    @current_team ||= teams.find_by(id: current_team_id)
   end
 
   def permission_team=(team)
@@ -519,6 +519,7 @@ class User < ApplicationRecord
       api_key_created_at: Time.current,
       api_key_expires_at: Constants::API_KEY_EXPIRES_IN.from_now
     )
+    api_key
   end
 
   def revoke_api_key!
@@ -632,6 +633,10 @@ class User < ApplicationRecord
 
   def api_key_enabled?
     Rails.configuration.x.core_api_key_enabled
+  end
+
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
   end
 
   protected

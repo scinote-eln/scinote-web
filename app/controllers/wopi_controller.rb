@@ -200,7 +200,6 @@ class WopiController < ActionController::Base
         if @asset.lock == lock
           logger.warn 'WOPI: replacing file'
 
-          @team.release_space(@asset.estimated_size)
           @asset.last_modified_by = @user
           @asset.update_contents(request.body)
           @asset.save
@@ -220,7 +219,6 @@ class WopiController < ActionController::Base
       elsif !@asset.file_size.nil? && @asset.file_size.zero?
         logger.warn 'WOPI: initializing empty file'
 
-        @team.release_space(@asset.estimated_size)
         @asset.update_contents(request.body)
         @asset.last_modified_by = @user
         @asset.save

@@ -8,6 +8,8 @@ module Api
 
     before_action :authenticate_request!, except: %i(status health)
 
+    newrelic_ignore only: %i(health status)
+
     rescue_from StandardError do |e|
       logger.error e.message
       logger.error e.backtrace.join("\n")

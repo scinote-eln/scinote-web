@@ -28,6 +28,8 @@ module ActiveStorage
         check_tinymce_asset_read_permissions(attachment.record)
       when 'Experiment'
         can_read_experiment?(attachment.record)
+      when 'StorageLocation'
+        can_read_storage_location?(attachment.record)
       when 'Report'
         can_read_project?(attachment.record.project)
       when 'User'

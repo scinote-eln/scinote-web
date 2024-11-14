@@ -1,10 +1,12 @@
 <template>
-  <div ref="modal" @keydown.esc="close" class="modal sci-reorderable-items" tabindex="-1" role="dialog">
+  <div ref="modal" @keydown.esc="close" class="modal sci-reorderable-items" tabindex="-1" role="dialog" :data-e2e="`e2e-MD-${dataE2e}`">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button @click="close" type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
-          <h4 class="modal-title">
+          <button @click="close" type="button" class="close" data-dismiss="modal" aria-label="Close" :data-e2e="`e2e-BT-${dataE2e}-close`">
+            <i class="sn-icon sn-icon-close"></i>
+          </button>
+          <h4 class="modal-title" :data-e2e="`e2e-TX-${dataE2e}-title`">
             {{ title }}
           </h4>
         </div>
@@ -20,13 +22,23 @@
             <template #item="{element, index}">
               <div class="step-element-header flex items-center">
                 <div class="step-element-grip step-element-grip--draggable">
-                  <i class="sn-icon sn-icon-drag"></i>
+                  <i class="sn-icon sn-icon-drag" :data-e2e="`e2e-BT-${dataE2e}-element${index + 1}-drag`"></i>
                 </div>
                 <div class="step-element-name text-center flex items-center gap-2">
-                  <strong v-if="includeNumbers" class="step-element-number">{{ index + 1 }}</strong>
-                  <i v-if="element.attributes.icon" class="fas" :class="element.attributes.icon"></i>
-                  <span :title="nameWithFallbacks(element)" v-if="nameWithFallbacks(element)">{{ nameWithFallbacks(element) }}</span>
-                  <span :title="element.attributes.placeholder" v-else class="step-element-name-placeholder">{{ element.attributes.placeholder }}</span>
+                  <strong v-if="includeNumbers" class="step-element-number" :data-e2e="`e2e-TX-${dataE2e}-element${index + 1}-position`">
+                    {{ index + 1 }}
+                  </strong>
+                  <i v-if="element.attributes.icon" class="fas" :class="element.attributes.icon" :data-e2e="`e2e-IC-${dataE2e}-element${index + 1}`"></i>
+                  <span
+                    :title="nameWithFallbacks(element)"
+                    v-if="nameWithFallbacks(element)"
+                    :data-e2e="`e2e-TX-${dataE2e}-element${index + 1}-name`"
+                  >
+                    {{ nameWithFallbacks(element) }}
+                  </span>
+                  <span :title="element.attributes.placeholder" v-else class="step-element-name-placeholder" :data-e2e="`e2e-TX-${dataE2e}-element${index + 1}-name`">
+                    {{ element.attributes.placeholder }}
+                  </span>
                 </div>
               </div>
             </template>
@@ -56,6 +68,10 @@ export default {
     includeNumbers: {
       type: Boolean,
       default: false
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {

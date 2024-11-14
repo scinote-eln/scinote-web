@@ -177,11 +177,29 @@ class MyModule < ApplicationRecord
   end
 
   def assigned_repositories
-    team = experiment.project.team
-    Repository.accessible_by_teams(team)
-              .joins(repository_rows: :my_module_repository_rows)
+    Repository.joins(repository_rows: :my_module_repository_rows)
               .where(my_module_repository_rows: { my_module_id: id })
               .group(:id)
+  end
+
+  def readable_live_and_snapshot_repositories_list(user, team = user.current_team)
+    snapshots = repository_snapshots.left_outer_joins(:original_repository)
+
+    selected_snapshots = snapshots.where(selected: true)
+                                  .or(snapshots.where(original_repositories_repositories: { id: nil }))
+                                  .or(snapshots.where.not(parent_id: assigned_repositories.select(:id)))
+                                  .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+                                  .select('COUNT(repository_rows.id) AS assigned_rows_count')
+                                  .joins(:repository_rows)
+                                  .group(:parent_id, :id)
+                                  .order(:parent_id, updated_at: :desc)
+
+    live_repositories = assigned_repositories
+                        .viewable_by_user(user, team)
+                        .select('repositories.*, COUNT(DISTINCT repository_rows.id) AS assigned_rows_count')
+                        .where.not(id: repository_snapshots.where(selected: true).select(:parent_id))
+
+    (live_repositories + selected_snapshots).sort_by { |r| r.name.downcase }
   end
 
   def live_and_snapshot_repositories_list
@@ -546,6 +564,12 @@ class MyModule < ApplicationRecord
     status_changing_direction = my_module_status.previous_status_id == my_module_status_id_was ? :forward : :backward
 
     yield
+
+    if status_changing_direction == :forward
+      my_module_status.my_module_status_consequences.each do |consequence|
+        consequence.before_forward_call(self)
+      end
+    end
 
     if my_module_status.my_module_status_consequences.any?(&:runs_in_background?)
       MyModuleStatusConsequencesJob

@@ -70,27 +70,10 @@ class Protocol < ApplicationRecord
   with_options if: :in_repository_published_version? do
     validates :parent, presence: true
     validate :parent_type_constraint
-    validate :versions_same_name_constraint
   end
   with_options if: :in_repository_draft? do
     # Only one draft can exist for each protocol
     validate :ensure_single_draft
-    validate :versions_same_name_constraint
-  end
-  with_options if: -> { in_repository? && !parent && !archived_changed?(from: false) } do |protocol|
-    # Active protocol must have unique name inside its team
-    protocol
-      .validates_uniqueness_of :name, case_sensitive: false,
-                               scope: :team,
-                               conditions: lambda {
-                                 where(
-                                   protocol_type: [
-                                     Protocol.protocol_types[:in_repository_published_original],
-                                     Protocol.protocol_types[:in_repository_draft]
-                                   ],
-                                   parent_id: nil
-                                 )
-                               }
   end
   with_options if: -> { in_repository? && archived? && !previous_version } do |protocol|
     protocol.validates :archived_by, presence: true
@@ -255,11 +238,8 @@ class Protocol < ApplicationRecord
 
   def self.viewable_by_user_my_module_protocols(user, teams)
     distinct.joins(:my_module)
-            .joins("INNER JOIN user_assignments my_module_user_assignments " \
-                   "ON my_module_user_assignments.assignable_type = 'MyModule' " \
-                   "AND my_module_user_assignments.assignable_id = my_modules.id")
-            .where(my_module_user_assignments: { user_id: user })
-            .where(team: teams)
+            .where(my_modules: MyModule.with_granted_permissions(user, MyModulePermissions::READ)
+                                       .where(user_assignments: { team: teams }))
   end
 
   def self.filter_by_teams(teams = [])
@@ -354,7 +334,9 @@ class Protocol < ApplicationRecord
   end
 
   # Deep-clone given array of assets
-  def self.deep_clone_assets(assets_to_clone)
+  # There is an issue with Delayed Job delayed methods, ruby 3, and keyword arguments (https://github.com/collectiveidea/delayed_job/issues/1134)
+  # so we're forced to use a normal argument with default value.
+  def self.deep_clone_assets(assets_to_clone, include_file_versions = false)
     ActiveRecord::Base.no_touching do
       assets_to_clone.each do |src_id, dest_id|
         src = Asset.find_by(id: src_id)
@@ -363,12 +345,12 @@ class Protocol < ApplicationRecord
         next unless src.present? && dest.present?
 
         # Clone file
-        src.duplicate_file(dest)
+        src.duplicate_file(dest, include_file_versions: include_file_versions)
       end
     end
   end
 
-  def self.clone_contents(src, dest, current_user, clone_keywords, only_contents = false)
+  def self.clone_contents(src, dest, current_user, clone_keywords, only_contents: false, include_file_versions: false)
     dest.update(description: src.description, name: src.name) unless only_contents
 
     src.clone_tinymce_assets(dest, dest.team)
@@ -385,7 +367,7 @@ class Protocol < ApplicationRecord
 
     # Copy steps
     src.steps.each do |step|
-      step.duplicate(dest, current_user, step_position: step.position)
+      step.duplicate(dest, current_user, step_position: step.position, include_file_versions: include_file_versions)
     end
   end
 
@@ -618,7 +600,7 @@ class Protocol < ApplicationRecord
     return draft if draft.invalid?
 
     ActiveRecord::Base.no_touching do
-      draft = deep_clone(draft, current_user)
+      draft = deep_clone(draft, current_user, include_file_versions: true)
     end
 
     parent_protocol.user_assignments.each do |parent_user_assignment|
@@ -763,7 +745,7 @@ class Protocol < ApplicationRecord
     end
   end
 
-  def deep_clone(clone, current_user)
+  def deep_clone(clone, current_user, include_file_versions: false)
     # Save cloned protocol first
     success = clone.save
 
@@ -775,7 +757,7 @@ class Protocol < ApplicationRecord
 
     raise ActiveRecord::RecordNotSaved unless success
 
-    Protocol.clone_contents(self, clone, current_user, true, true)
+    Protocol.clone_contents(self, clone, current_user, true, only_contents: true, include_file_versions: include_file_versions)
 
     clone.reload
     clone
@@ -794,12 +776,6 @@ class Protocol < ApplicationRecord
   def parent_type_constraint
     unless parent.in_repository_published_original?
       errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_type'))
-    end
-  end
-
-  def versions_same_name_constraint
-    if parent.present? && !parent.name.eql?(name)
-      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_version_name'))
     end
   end
 

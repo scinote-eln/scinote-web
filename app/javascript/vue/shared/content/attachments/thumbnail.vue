@@ -54,6 +54,7 @@
           @attachment:delete="deleteAttachment"
           @attachment:moved="attachmentMoved"
           @attachment:uploaded="reloadAttachments"
+          @attachment:versionRestored="reloadAttachments"
           @attachment:changed="$emit('attachment:changed', $event)"
           @attachment:update="$emit('attachment:update', $event)"
           @attachment:toggle_menu="toggleMenu"

@@ -9,11 +9,9 @@ module Lists
                                  'ON repositories.created_by_id = creators.id')
                           .joins('LEFT OUTER JOIN users AS archivers ' \
                                  'ON repositories.archived_by_id = archivers.id')
-                          .left_outer_joins(:repository_rows)
                           .joins(:team)
                           .select('repositories.*')
                           .select('MAX(teams.name) AS team_name')
-                          .select('COUNT(repository_rows.*) AS row_count')
                           .select('MAX(creators.full_name) AS created_by_user')
                           .select('MAX(archivers.full_name) AS archived_by_user')
                           .select(shared_sql_select)
@@ -47,7 +45,7 @@ module Lists
         created_at: 'repositories.created_at',
         archived_on: 'repositories.archived_on',
         archived_by: 'archived_by_user',
-        nr_of_rows: 'row_count',
+        nr_of_rows: 'repository_rows_count',
         code: 'repositories.id',
         shared_label: 'shared'
       }

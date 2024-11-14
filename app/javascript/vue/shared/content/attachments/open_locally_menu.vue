@@ -1,8 +1,8 @@
 <template>
-  <div class="sn-open-locally-menu" @mouseenter="fetchLocalAppInfo">
-    <div v-if="(!canOpenLocally || disableLocalOpen) && (attachment.attributes.wopi && attachment.attributes.urls.edit_asset)">
+  <div class="sn-open-locally-menu flex" @mouseenter="fetchLocalAppInfo">
+    <div v-if="(!canOpenLocally) && (attachment.attributes.wopi && attachment.attributes.urls.edit_asset)">
       <a :href="editWopiSupported ? attachment.attributes.urls.edit_asset : null" target="_blank"
-         class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey"
+         class="btn btn-light"
          :class="{ 'disabled': !editWopiSupported }"
          :title="editWopiSupported ? null : attachment.attributes.wopi_context.title"
          style="pointer-events: all"
@@ -26,12 +26,17 @@
           {{ menu[0].text }}
         </a>
     </div>
+    <a @click="fileVersionsModal = true" class="btn btn-light"><i class="sn-icon sn-icon-history-search"></i>{{ i18n.t('assets.context_menu.versions') }}</a>
 
     <Teleport to="body">
       <NoPredefinedAppModal
         v-if="showNoPredefinedAppModal"
         :fileName="attachment.attributes.file_name"
         @close="showNoPredefinedAppModal = false"
+      />
+      <RestrictedExtensionModal
+        v-if="showRestrictedExtensionModal"
+        @close="showRestrictedExtensionModal = false"
       />
       <editLaunchingApplicationModal
         v-if="editAppModal"
@@ -43,6 +48,13 @@
         v-if="showUpdateVersionModal"
         @close="showUpdateVersionModal = false"
       />
+       <FileVersionsModal
+        v-if="fileVersionsModal"
+        :versionsUrl="attachment.attributes.urls.versions"
+        :restoreVersionUrl="attachment.attributes.urls.restore_version"
+        @close="fileVersionsModal = false"
+        @fileVersionRestored="refreshPreview"
+      />
     </Teleport>
   </div>
 </template>
@@ -51,14 +63,19 @@
 import OpenLocallyMixin from './mixins/open_locally.js';
 import MenuDropdown from '../../menu_dropdown.vue';
 import UpdateVersionModal from '../modal/update_version_modal.vue';
+import FileVersionsModal from '../../file_versions_modal.vue';
 
 export default {
   name: 'OpenLocallyMenu',
   mixins: [OpenLocallyMixin],
-  components: { MenuDropdown, UpdateVersionModal },
+  components: { MenuDropdown, UpdateVersionModal, FileVersionsModal },
   props: {
-    attachment: { type: Object, required: true },
-    disableLocalOpen: { type: Boolean, default: false }
+    attachment: { type: Object, required: true }
+  },
+  data() {
+    return {
+      fileVersionsModal: false
+    };
   },
   created() {
     this.fetchLocalAppInfo();
@@ -88,7 +105,7 @@ export default {
         });
       }
 
-      if (this.canOpenLocally && !this.disableLocalOpen) {
+      if (this.canOpenLocally) {
         const text = this.localAppName
           ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
           : this.i18n.t('attachments.open_locally');
@@ -112,6 +129,13 @@ export default {
   methods: {
     openImageEditor() {
       document.getElementById('editImageButton').click();
+    },
+    refreshPreview() {
+      const imageElement = document.querySelector('.file-preview-container .asset-image');
+
+      if (!imageElement) return;
+
+      $('#filePreviewModal').modal('hide');
     }
   }
 };

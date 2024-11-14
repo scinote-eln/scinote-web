@@ -2,6 +2,8 @@
 
 # Provides asynchronous generation of image previews for ActiveStorage::Blob records.
 class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
+  include ActiveStorageHelper
+
   queue_as :assets
 
   discard_on StandardError do |job, error|
@@ -18,11 +20,11 @@ class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
 
   def perform(blob_id)
     blob = ActiveStorage::Blob.find(blob_id)
-    preview = blob.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).processed
+    preview = blob.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT, format: image_preview_format(blob)).processed
     Rails.logger.info "Preview for the Blod with id: #{blob.id} - successfully generated.\n" \
                       "Transformations applied: #{preview.variation.transformations}"
 
-    preview = blob.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT).processed
+    preview = blob.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT, format: image_preview_format(blob)).processed
     Rails.logger.info "Preview for the Blod with id: #{blob.id} - successfully generated.\n" \
                       "Transformations applied: #{preview.variation.transformations}"
 

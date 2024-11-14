@@ -11,7 +11,7 @@ describe RepositoriesController, type: :controller do
 
   describe 'index' do
     let(:repository) { create :repository, team: team, created_by: user }
-    let(:action) { get :index, format: :json }
+    let(:action) { get :index, format: :json, params: { page: 1, per_page: 20 } }
 
     it 'correct JSON format' do
       repository

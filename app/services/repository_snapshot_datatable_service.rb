@@ -18,6 +18,10 @@ class RepositorySnapshotDatatableService < RepositoryDatatableService
     order_by_column = { column: order_params[:column].to_i, dir: order_params[:dir] }
 
     repository_rows = fetch_rows(search_value).preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
+    repository_rows = repository_rows.preload(:repository_columns, repository_cells: { value: @repository.cell_preload_includes }) if @preload_cells
+    repository_rows = repository_rows.preload(:repository_stock_cell, :repository_stock_value) if @repository.has_stock_management?
+    # don't load reminders for snapshots
+    repository_rows = repository_rows.select('FALSE AS has_active_reminders') if Repository.reminders_enabled?
 
     sort_rows(order_by_column, repository_rows)
   end
@@ -44,8 +48,9 @@ class RepositorySnapshotDatatableService < RepositoryDatatableService
       repository_rows = results
     end
 
-    repository_rows.left_outer_joins(:created_by)
+    repository_rows.joins('LEFT OUTER JOIN "users" "created_by" ON "created_by"."id" = "repository_rows"."created_by_id"')
                    .select('repository_rows.*')
+                   .select('MAX("created_by"."full_name") AS created_by_full_name')
                    .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
                    .group('repository_rows.id')
   end

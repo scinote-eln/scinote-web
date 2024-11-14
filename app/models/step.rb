@@ -117,7 +117,7 @@ class Step < ApplicationRecord
     step_texts.order(created_at: :asc).first
   end
 
-  def duplicate(protocol, user, step_position: nil, step_name: nil)
+  def duplicate(protocol, user, step_position: nil, step_name: nil, include_file_versions: false)
     ActiveRecord::Base.transaction do
       assets_to_clone = []
 
@@ -153,7 +153,7 @@ class Step < ApplicationRecord
       end
 
       # Call clone helper
-      Protocol.delay(queue: :assets).deep_clone_assets(assets_to_clone)
+      Protocol.delay(queue: :assets).deep_clone_assets(assets_to_clone, include_file_versions)
 
       new_step
     end

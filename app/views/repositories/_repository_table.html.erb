@@ -48,6 +48,7 @@
         <% if @repository.is_a?(LinkedRepository) %>
           <th id="row-external-id"><%= t('repositories.table.external_id') %></th>
         <% end %>
+        <% columns_editable = can_manage_repository_columns?(@repository) %>
         <% repository.repository_columns.order(:id).each do |column| %>
           <th
             class="repository-column <%= 'row-stock item-stock' if column.data_type == 'RepositoryStockValue' %>"
@@ -55,7 +56,7 @@
             data-type="<%= column.data_type %>"
             data-edit-column-url="<%= edit_repository_repository_column_path(repository, column) %>"
             data-destroy-column-url="<%= repository_columns_destroy_html_path(repository, column) %>"
-            data-editable-row="<%= can_manage_repository_column?(column) && !repository.is_a?(SoftLockedRepository) %>"
+            data-editable-row="<%= columns_editable %>"
             <% column.metadata.each do |k, v| %>
               <%= "data-metadata-#{k}=#{v}" %>
             <% end %>

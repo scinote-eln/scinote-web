@@ -45,8 +45,9 @@
         <NotificationsFlyout
           :preferencesUrl="user.preferences_url"
           :notificationsUrl="notificationsUrl"
+          :markAllNotificationsUrl="markAllNotificationsUrl"
           :unseenNotificationsCount="unseenNotificationsCount"
-          @update:unseenNotificationsCount="checkUnseenNotifications()"
+          @update:unseenNotificationsCount="checkUnseenNotifications(false)"
           @close="$refs.notificationDropdown.$refs.field.click();"/>
       </template>
     </GeneralDropdown>
@@ -92,6 +93,7 @@ export default {
   props: {
     url: String,
     notificationsUrl: String,
+    markAllNotificationsUrl: String,
     unseenNotificationsUrl: String,
     quickSearchUrl: String,
     teamsUrl: String,
@@ -119,7 +121,7 @@ export default {
 
     $(document).on('turbolinks:load', () => {
       this.notificationsOpened = false;
-      this.checkUnseenNotifications();
+      this.checkUnseenNotifications(false);
       this.refreshCurrentTeam();
       this.hideSearch = !!document.getElementById('GlobalSearch');
       this.globalSearchKey += 1;
@@ -177,11 +179,13 @@ export default {
     searchValue(e) {
       window.open(`${this.searchUrl}?q=${e.target.value}`, '_self');
     },
-    checkUnseenNotifications() {
+    checkUnseenNotifications(repeat = true) {
       clearTimeout(this.unseenNotificationsTimeout);
       $.get(this.unseenNotificationsUrl, (result) => {
         this.unseenNotificationsCount = result.unseen;
-        this.unseenNotificationsTimeout = setTimeout(this.checkUnseenNotifications, 30000);
+        if (repeat) {
+          this.unseenNotificationsTimeout = setTimeout(this.checkUnseenNotifications, 30000);
+        }
       });
     },
     refreshCurrentTeam() {

@@ -348,7 +348,7 @@ class ReportsController < ApplicationController
   def load_wizard_vars
     @templates = Extends::REPORT_TEMPLATES
     @docx_templates = Extends::DOCX_REPORT_TEMPLATES
-    live_repositories = Repository.accessible_by_teams(current_team).sort_by { |r| r.name.downcase }
+    live_repositories = Repository.viewable_by_user(current_user).sort_by { |r| r.name.downcase }
     snapshots_of_deleted = RepositorySnapshot.left_outer_joins(:original_repository)
                                              .where(team: current_team)
                                              .where.not(original_repository: live_repositories)
@@ -384,7 +384,7 @@ class ReportsController < ApplicationController
   def load_available_repositories
     @available_repositories = []
     repositories = Repository.active
-                             .accessible_by_teams(current_team)
+                             .viewable_by_user(current_user)
                              .name_like(search_params[:query])
                              .limit(Constants::SEARCH_LIMIT)
     repositories.each do |repository|
@@ -397,7 +397,7 @@ class ReportsController < ApplicationController
 
   def report_params
     params.require(:report)
-          .permit(:name, :description, :grouped_by, :report_contents, settings: {})
+          .permit(:name, :description, :grouped_by, :report_contents, settings: permit_report_settings_structure(Report::DEFAULT_SETTINGS))
   end
 
   def search_params

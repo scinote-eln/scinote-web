@@ -7,11 +7,10 @@ class Repository < RepositoryBase
   include PermissionCheckableModel
   include RepositoryImportParser
   include ArchivableModel
+  include Shareable
 
   ID_PREFIX = 'IN'
   include PrefixedIdModel
-
-  enum permission_level: Extends::SHARED_OBJECTS_PERMISSION_LEVELS
 
   belongs_to :archived_by,
              foreign_key: :archived_by_id,
@@ -23,8 +22,6 @@ class Repository < RepositoryBase
              class_name: 'User',
              inverse_of: :restored_repositories,
              optional: true
-  has_many :team_shared_objects, as: :shared_object, dependent: :destroy
-  has_many :teams_shared_with, through: :team_shared_objects, source: :team, dependent: :destroy
   has_many :repository_snapshots,
            class_name: 'RepositorySnapshot',
            foreign_key: :parent_id,
@@ -48,21 +45,8 @@ class Repository < RepositoryBase
   scope :archived, -> { where(archived: true) }
   scope :globally_shared, -> { where(permission_level: %i(shared_read shared_write)) }
 
-  scope :accessible_by_teams, lambda { |teams|
-    accessible_repositories = left_outer_joins(:team_shared_objects)
-    accessible_repositories =
-      accessible_repositories
-      .where(team: teams)
-      .or(accessible_repositories.where(team_shared_objects: { team: teams }))
-      .or(accessible_repositories
-            .where(permission_level: [Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
-                                      Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]]))
-    accessible_repositories.distinct
-  }
-
   scope :assigned_to_project, lambda { |project|
-    accessible_by_teams(project.team)
-      .joins(repository_rows: { my_module_repository_rows: { my_module: { experiment: :project } } })
+    joins(repository_rows: { my_module_repository_rows: { my_module: { experiment: :project } } })
       .where(repository_rows: { my_module_repository_rows: { my_module: { experiments: { project: project } } } })
   }
 
@@ -82,10 +66,6 @@ class Repository < RepositoryBase
     teams.blank? ? self : where(team: teams)
   end
 
-  def shareable_write?
-    true
-  end
-
   def permission_parent
     team
   end
@@ -103,56 +83,14 @@ class Repository < RepositoryBase
       'repository_rows.created_at',
       'users.full_name',
       'repository_rows.updated_at',
-      'last_modified_bies_repository_rows.full_name',
+      'last_modified_by.full_name',
       'repository_rows.archived_on',
-      'archived_bies_repository_rows.full_name'
+      'archived_by.full_name'
     ]
   end
 
   def default_search_fileds
     ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL, 'users.full_name']
-  end
-
-  def i_shared?(team)
-    shared_with_anybody? && self.team == team
-  end
-
-  def globally_shared?
-    shared_read? || shared_write?
-  end
-
-  def shared_with_anybody?
-    (!not_shared? || team_shared_objects.any?)
-  end
-
-  def shared_with?(team)
-    return false if self.team == team
-
-    !not_shared? || private_shared_with?(team)
-  end
-
-  def shared_with_write?(team)
-    return false if self.team == team
-
-    shared_write? || private_shared_with_write?(team)
-  end
-
-  def shared_with_read?(team)
-    return false if self.team == team
-
-    shared_read? || team_shared_objects.where(team: team, permission_level: :shared_read).any?
-  end
-
-  def private_shared_with?(team)
-    team_shared_objects.where(team: team).any?
-  end
-
-  def private_shared_with_write?(team)
-    team_shared_objects.where(team: team, permission_level: :shared_write).any?
-  end
-
-  def self.viewable_by_user(_user, teams)
-    accessible_by_teams(teams)
   end
 
   def self.name_like(query)

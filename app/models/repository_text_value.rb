@@ -10,6 +10,8 @@ class RepositoryTextValue < ApplicationRecord
   has_one :repository_cell, as: :value, dependent: :destroy, touch: true
   accepts_nested_attributes_for :repository_cell
 
+  before_save -> { self.has_smart_annotation = data.match?(SmartAnnotations::TagToHtml::ALL_REGEX) }, if: -> { data_changed? }
+
   validates :repository_cell, presence: true
   validates :data, presence: true, length: { maximum: Constants::TEXT_MAX_LENGTH }
 

@@ -328,6 +328,9 @@ class Constants
 
   PREVIEWABLE_FILE_TYPES = TEXT_EXTRACT_FILE_TYPES
 
+  # default preview timeout to 15 minutes
+  PREVIEW_TIMEOUT_SECONDS = ENV['PREVIEW_TIMEOUT_SECONDS'] ? ENV['PREVIEW_TIMEOUT_SECONDS'].to_i : 900
+
   WHITELISTED_IMAGE_TYPES = [
     'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff', 'jpg'
   ].freeze
@@ -446,6 +449,12 @@ class Constants
   # SciNote Edit supported versions
   MIN_SCINOTE_EDIT_VERSION = ENV['MIN_SCINOTE_EDIT_VERSION'].freeze
   MAX_SCINOTE_EDIT_VERSION = ENV['MAX_SCINOTE_EDIT_VERSION'].freeze
+
+  # SciNote Edit unsupported extensions
+  SCINOTE_EDIT_RESTRICTED_EXTENSIONS = %w(
+    ACTION APP BIN COMMAND CSH OSX WORKFLOW DMG BAT BIN CAB CMD COM CPL EX_ EXE GADGET INF1 INS INX ISU JOB
+    JSE LNK MSC MSI MSP MST PAF PIF PS1 REG RGS SCR SCT SHB SHS U3P VB VBE VBS VBSCRIPT WS WSF WSH
+  ).freeze
 
   # quick search
   QUICK_SEARCH_LIMIT = 5

@@ -60,9 +60,9 @@ class RepositoryAssetValue < ApplicationRecord
 
   def update_data!(new_data, user)
     if new_data.is_a?(String) # assume it's a signed_id_token
-      asset.file.attach(new_data)
+      asset.attach_file_version(new_data)
     elsif new_data[:file_data]
-      asset.file.attach(io: StringIO.new(Base64.decode64(new_data[:file_data])), filename: new_data[:file_name])
+      asset.attach_file_version(io: StringIO.new(Base64.decode64(new_data[:file_data])), filename: new_data[:file_name])
     end
 
     asset.file_pdf_preview.purge if asset.file_pdf_preview.attached?
@@ -99,9 +99,9 @@ class RepositoryAssetValue < ApplicationRecord
     value.asset = Asset.create!(created_by: value.created_by, last_modified_by: value.created_by, team: team)
 
     if payload.is_a?(String) # assume it's a signed_id_token
-      value.asset.file.attach(payload)
+      value.asset.attach_file_version(payload)
     elsif payload[:file_data]
-      value.asset.file.attach(io: StringIO.new(Base64.decode64(payload[:file_data])), filename: payload[:file_name])
+      value.asset.attach_file_version(io: StringIO.new(Base64.decode64(payload[:file_data])), filename: payload[:file_name])
     end
 
     value.asset.post_process_file

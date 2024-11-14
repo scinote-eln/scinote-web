@@ -27,6 +27,7 @@
       @attachment:changed="$emit('attachment:changed', $event)"
       @attachment:update="$emit('attachment:update', $event)"
       @menu-toggle="$emit('attachment:toggle_menu', $event)"
+      @attachment:versionRestored="$emit('attachment:versionRestored', $event)"
       :withBorder="withBorder"
     />
   </div>

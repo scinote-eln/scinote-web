@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'newrelic_rpm'
+
 class TemplatesService
   def initialize(base_dir = nil)
     @base_dir = base_dir ? base_dir : "#{Rails.root}/app/assets/templates"
@@ -49,6 +51,7 @@ class TemplatesService
   end
 
   def update_all_templates
+    NewRelic::Agent.ignore_transaction
     processed_counter = 0
     updated_counter = 0
     Team.find_each do |team|
