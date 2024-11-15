@@ -16,16 +16,6 @@ module Reports::Docx::PrivateMethods
       bottom  Constants::REPORT_DOCX_MARGIN_BOTTOM
     end
 
-    @docx.page_numbers true, align: :right
-
-    insert_logo
-
-    @docx.p do
-      text I18n.t('projects.reports.new.generate_PDF.generated_on', timestamp: I18n.l(Time.zone.now, format: :full))
-    end
-
-    @docx.hr
-
     generate_html_styles
   end
 

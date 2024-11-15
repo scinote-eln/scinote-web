@@ -284,6 +284,7 @@ Rails.application.routes.draw do
     end
     get 'reports/datatable', to: 'reports#datatable'
     get 'reports/new_template_values', to: 'reports#new_template_values', defaults: { format: 'json' }
+    get 'reports/new_docx_template_values', to: 'reports#new_docx_template_values', defaults: { format: 'json' }
     get 'reports/available_repositories', to: 'reports#available_repositories',
                                            defaults: { format: 'json' }
     get 'available_asset_type_columns',

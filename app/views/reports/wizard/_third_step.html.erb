@@ -55,7 +55,10 @@
       </span><br>
       <span class="repositories-items-description">
         <i class="sn-icon sn-icon-info"></i>
-        <span><%= t("projects.reports.wizard.third_step.assigned_items_description") %></span>
+        <div class="flex-col font-normal">
+          <p><%= t("projects.reports.wizard.third_step.assigned_items_description") %></p>
+          <p><%= t("projects.reports.wizard.third_step.assigned_items_repository_items_description_html") %></p>
+        </div>
       </span>
       <ul class="collapse in" id="repositoriesContents">
         <li>
@@ -68,25 +71,58 @@
           <ul class="repositories-contents">
             <% @repositories.each do |repository| %>
               <li>
-                <span class="sci-checkbox-container">
-                  <input type="checkbox"
-                         class="sci-checkbox repositories-setting"
-                         value="<%= repository.is_a?(RepositorySnapshot) ? repository.parent_id : repository.id %>"
-                         <%= 'checked' if report.new_record? ||
-                                          @project_contents[:repositories].include?(repository.id) ||
-                                          (repository.is_a?(Repository) && repository.repository_snapshots.exists?(id: @project_contents[:repositories])) %> />
-                  <span class="sci-checkbox-label"></span>
-                </span>
-                <%= repository.name %>
-                <% if repository.archived? %>
-                  <span class="archived">
-                    <%= t("projects.reports.wizard.third_step.archived") %>
+                 <div class="flex items-center">
+                  <span class="sci-checkbox-container">
+                    <input type="checkbox"
+                          class="sci-checkbox repositories-setting"
+                          value="<%= repository.is_a?(RepositorySnapshot) ? repository.parent_id : repository.id %>"
+                          <%= 'checked' if report.new_record? ||
+                                            @project_contents[:repositories].include?(repository.id) ||
+                                            (repository.is_a?(Repository) && repository.repository_snapshots.exists?(id: @project_contents[:repositories])) ||
+                                            (repository.is_a?(RepositorySnapshot) && @project_contents[:repositories].include?(repository.parent_id)) %> />
+                    <span class="sci-checkbox-label"></span>
                   </span>
-                <% elsif repository.is_a?(RepositorySnapshot) %>
-                  <span class="deleted">
-                    <%= t("projects.reports.wizard.third_step.deleted") %>
-                  </span>
-                <% end %>
+                  <%= repository.name %>
+                  <% if repository.archived? %>
+                    <span class="archived">
+                      <%= t("projects.reports.wizard.third_step.archived") %>
+                    </span>
+                  <% elsif repository.is_a?(RepositorySnapshot) %>
+                    <span class="deleted">
+                      <%= t("projects.reports.wizard.third_step.deleted") %>
+                    </span>
+                  <% end %>
+                  <select class="repository-columns"
+                          id=<%= "repository-#{repository.id}" %>
+                          data-combine-tags="true"
+                          data-placeholder="<%= t("projects.reports.wizard.third_step.repository_column.placeholder") %>"
+                          data-select-multiple-all-selected="<%= t("projects.reports.wizard.third_step.repository_column.all_selected") %>"
+                          data-select-multiple-name="<%= t("projects.reports.wizard.third_step.repository_column.selected") %>"
+                          data-select-all-button="<%= t("projects.reports.wizard.third_step.repository_column.select_deselect_all") %>"
+                          multiple
+                  >
+                   <% Report.default_repository_columns.each do |key, value| %>
+                      <option value="<%= key %>"
+                              selected-value="<%= report.settings.dig(:task, 
+                                                                      :excluded_repository_columns,
+                                                                      (repository.is_a?(RepositorySnapshot) ? repository.parent_id : repository.id).to_s)
+                                                                 &.include?(key.to_s.to_i) ? '' : 'selected' %>"
+                      >
+                        <%= value %>
+                      </option>
+                    <% end %>
+                    <% repository.repository_columns.find_each do |repository_column| %>
+                      <option value="<%= repository_column.id %>"
+                              selected-value="<%= report.settings.dig(:task,
+                                                                      :excluded_repository_columns,
+                                                                      (repository.is_a?(RepositorySnapshot) ? repository.parent_id : repository.id).to_s)
+                                                                 &.include?(repository_column.id.to_i) ? '' : 'selected' %>"
+                      >
+                        <%= repository_column.name %>
+                      </option>
+                    <% end %>
+                  </select>
+                </div>
                 <div class="divider"></div>
               </li>
             <% end %>
@@ -184,13 +220,33 @@
         <%= t("projects.reports.wizard.third_step.additional_content") %>
       </span>
       <ul class="additional-contents collapse in" id="additionalContents">
-        <li>
+        <li class="additional-content-task-activity">
           <div class="select-all-container">
             <span class="sci-checkbox-container">
               <input type="checkbox" class="sci-checkbox task-setting" value="activities" <%= 'checked' if report.settings.dig(:task, :activities) %>/>
               <span class="sci-checkbox-label"></span>
             </span>
             <%= t("projects.reports.wizard.third_step.task_activity") %>
+            <div class="divider"></div>
+          </div>
+        </li>
+        <li>
+          <div class="select-all-container">
+            <span class="sci-checkbox-container">
+              <input type="checkbox" class="sci-checkbox exclude-task-metadata-setting" value="exclude_task_metadata" <%= 'checked' if report.settings.dig(:exclude_task_metadata) %>/>
+              <span class="sci-checkbox-label"></span>
+            </span>
+            <%= t("projects.reports.wizard.third_step.exclude_task_metadata") %>
+            <div class="divider"></div>
+          </div>
+        </li>
+        <li>
+          <div class="select-all-container">
+            <span class="sci-checkbox-container">
+              <input type="checkbox" class="sci-checkbox exclude-timestamps-setting" value="exclude_timestamps" <%= 'checked' if report.settings.dig(:exclude_timestamps) %>/>
+              <span class="sci-checkbox-label"></span>
+            </span>
+            <%= t("projects.reports.wizard.third_step.exclude_timestamps") %>
             <div class="divider"></div>
           </div>
         </li>

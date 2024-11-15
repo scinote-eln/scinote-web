@@ -40,11 +40,12 @@ module InputSanitizeHelper
     preview_repository = options.fetch(:preview_repository, false)
     format_opt = wrapper_tag.merge(sanitize: false)
     base64_encoded_imgs = options.fetch(:base64_encoded_imgs, false)
-    text = simple_format(text, {}, format_opt) if simple_f
 
     # allow base64 images when sanitizing if base64_encoded_imgs is true
     sanitizer_config = Constants::INPUT_SANITIZE_CONFIG.deep_dup
+
     text = sanitize_input(text, tags, sanitizer_config: sanitizer_config)
+    text = simple_format(text, {}, format_opt) if simple_f
 
     text = smart_annotation_parser(text, team, base64_encoded_imgs, preview_repository) if text.match?(SmartAnnotations::TagToHtml::ALL_REGEX)
 
