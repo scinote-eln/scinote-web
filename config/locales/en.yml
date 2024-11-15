@@ -810,16 +810,20 @@ en:
           select_project_title: "Select project and report template"
           select_project_description: "You are about to create a new report. Please select a project for which you would like to create a report, and choose the report design template. Only projects with at least 1 task are displayed."
           select_project: "Select a project"
-          select_template: "Select your template"
+          select_template: "Select your PDF template"
+          select_docx_template: "Select your DOCX template"
           report_description: "Report description (optional)"
           report_description_placeholder: "In this report you can see..."
           values_editor:
-            title: "Enter template data"
+            title_pdf: "PDF %{template}"
+            title_docx: "DOCX %{template}"
             description: "This template requires you to fill out additional information about this project. This is the only place you will be able to do so."
             header: "Header"
             cover: "Title page"
             footer: "Footer"
-            no_values_title: "No additional data required"
+            toc: "Table of contents"
+            no_values_title_pdf: "PDF %{template}:  No additional data required"
+            no_values_title_docx: "DOCX %{template}: No additional data required"
             no_values_description: "SciNote template doesn’t need any additional input for it to be successfully generated."
         second_step:
           select_project_content: "Select and reorder experiments and tasks"
@@ -843,6 +847,7 @@ en:
           step_comments: "Step comments"
           assigned_items: "Assigned items"
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
+          assigned_items_repository_items_description_html: "You can customize inventory columns <strong>only for the docx report.</strong> The stock management column by default reflects item consumption."
           include_all_assigned_iitems: "Include all assigned items from the following inventories"
           results: "Results"
           all_results: "Include all results elements"
@@ -861,8 +866,15 @@ en:
           results_comments: "Result comments"
           additional_content: "Additional content"
           task_activity: "Include task activity"
+          exclude_task_metadata: "Exclude task metadata"
+          exclude_timestamps: "Exclude timestamps"
           archived: "[archived]"
           deleted: "[deleted]"
+          repository_column:
+            select_deselect_all: 'Select/deselect all'
+            placeholder: 'Select columns'
+            all_selected: 'All columns selected'
+            selected: 'columns selected'
 
       new:
         report_name_placeholder: "Name your report"
@@ -965,6 +977,7 @@ en:
           name: "%{repository} of task %{my_module}"
           table_name: "%{name}"
           no_items: "No items"
+          no_columns: "No columns selected"
         result:
           user_time: "Added on %{timestamp} by %{user}."
         result_asset:
@@ -4305,6 +4318,7 @@ en:
     comment_placeholder: "Your Message"
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
+    invalid_params: "Invalid params"
     sort:
       title: "Sorting"
       new_html: "Started last"

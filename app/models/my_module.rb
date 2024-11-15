@@ -391,17 +391,17 @@ class MyModule < ApplicationRecord
     { data: data, headers: headers }
   end
 
-  def repository_docx_json(repository)
-    headers = [
-      I18n.t('repositories.table.id'),
-      I18n.t('repositories.table.row_name'),
-      I18n.t('repositories.table.added_on'),
-      I18n.t('repositories.table.added_by')
-    ]
+  def repository_docx_json(repository, excluded_columns)
+    headers = Report.default_repository_columns.filter_map do |key, value|
+      value unless excluded_columns.include?(key.to_s.to_i)
+    end
+
     custom_columns = []
     return false unless repository
 
     repository.repository_columns.order(:id).each do |column|
+      next if excluded_columns.include?(column.id)
+
       if column.data_type == 'RepositoryStockValue'
         if repository.has_stock_consumption?
           headers.push(I18n.t('repositories.table.row_consumption'))
@@ -416,7 +416,7 @@ class MyModule < ApplicationRecord
 
     records = repository.assigned_rows(self)
                         .select(:id, :name, :created_at, :created_by_id, :repository_id, :parent_id, :archived)
-    { headers: headers, rows: records, custom_columns: custom_columns }
+    { headers: headers, rows: records, custom_columns: custom_columns, excluded_columns: excluded_columns }
   end
 
   def deep_clone(current_user)

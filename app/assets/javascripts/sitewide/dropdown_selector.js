@@ -353,7 +353,7 @@ var dropdownSelector = (function() {
 
     // If we setup Select All we draw it and add correspond logic
     if (selectElement.data('select-all-button')) {
-      $(`<div class="dropdown-select-all btn">${selectElement.data('select-all-button')}</div>`)
+      $(`<div class="dropdown-select-all">${selectElement.data('select-all-button')}</div>`)
         .appendTo(dropdownContainer.find('.dropdown-container'))
         .click(() => {
           // For AJAX dropdown we will use only "Deselect All"

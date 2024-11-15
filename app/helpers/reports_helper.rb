@@ -106,4 +106,21 @@ module ReportsHelper
       experiment_element.experiment.description
     end
   end
+
+  def permit_report_settings_structure(settings_definition)
+    settings_definition.each_with_object([]) do |(key, value), permitted|
+      permitted << case value
+                   when Hash
+                     { key => permit_report_settings_structure(value) }
+                   when Array
+                     { key => [] }
+                   else
+                     key
+                   end
+    end
+  end
+
+  def custom_templates(templates)
+    templates.any? { |template, _| template != :scinote_template }
+  end
 end

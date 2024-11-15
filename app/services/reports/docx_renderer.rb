@@ -130,6 +130,13 @@ module Reports
         row[:data].each do |cell|
           docx_cell = Caracal::Core::Models::TableCellModel.new do |c|
             cell.each do |content|
+              c.background content[:style][:background] if content.dig(:style, :background).present?
+              if content.dig(:style, :vertical_align).present? && content[:style][:vertical_align] != :middle
+                c.vertical_align content[:style][:vertical_align]
+              else
+                c.vertical_align :center
+              end
+
               if content[:type] == 'p'
                 Reports::DocxRenderer.render_p_element(c, content, options.merge({ skip_br: true }))
               elsif content[:type] == 'table'

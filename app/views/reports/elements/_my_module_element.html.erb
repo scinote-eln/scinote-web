@@ -9,45 +9,49 @@
         <span class="label label-warning"><%= t('search.index.archived') %></span>
       <% end %>
     </h4>
-    <div class="user-time">
-      <%= t('projects.reports.elements.module.user_time', code: my_module.code, timestamp: l(timestamp, format: :full)) %>
-    </div>
-    <p class="module-start-date">
-      <% if my_module.started_on.present? %>
-        <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
-      <% end %>
-    </p>
-    <p class="module-due-date">
-      <% if my_module.due_date.present? %>
-        <%= t('projects.reports.elements.module.due_date', due_date: l(my_module.due_date, format: :full)) %>
-      <% end %>
-    </p>
-    <p class="module-status">
-      <% status = my_module.my_module_status %>
-      <%= t('projects.reports.elements.module.status') %>
-      <span class="status-block" style="background: <%= status.color %>;
-        <%= 'color: #000000; border: 1px solid #D0D5DD;' if status.light_color? %>">
-        <%= status.name %>
-      </span>
-      <% if my_module.completed? %>
-        <span style="margin-left: 10px;">
-          <%= t('my_modules.states.completed') %>
-          <%= l(my_module.completed_on, format: :full) %>
-        </span>
-      <% end %>
-    </p>
-    <div class="row module-tags">
-      <div class="pull-left">
-        <%= t('projects.reports.elements.module.tags_header') %>
+    <% unless @settings['exclude_timestamps'] %>
+      <div class="user-time">
+        <%= t('projects.reports.elements.module.user_time', code: my_module.code, timestamp: l(timestamp, format: :full)) %>
       </div>
-      <% if (tags = my_module.tags.order(:id)).present? %>
-        <% tags.each do |tag| %>
-          <div class="pull-left module-tag" style="background-color: <%= tag.color %>;">
-            <%= tag.name %>
-          </div>
+    <% end %>
+    <% unless @settings['exclude_task_metadata'] %>
+      <p class="module-start-date">
+        <% if my_module.started_on.present? %>
+          <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
         <% end %>
-      <% end %>
-    </div>
+      </p>
+      <p class="module-due-date">
+        <% if my_module.due_date.present? %>
+          <%= t('projects.reports.elements.module.due_date', due_date: l(my_module.due_date, format: :full)) %>
+        <% end %>
+      </p>
+      <p class="module-status">
+        <% status = my_module.my_module_status %>
+        <%= t('projects.reports.elements.module.status') %>
+        <span class="status-block" style="background: <%= status.color %>;
+          <%= 'color: #000000; border: 1px solid #D0D5DD;' if status.light_color? %>">
+          <%= status.name %>
+        </span>
+        <% if my_module.completed? %>
+          <span style="margin-left: 10px;">
+            <%= t('my_modules.states.completed') %>
+            <%= l(my_module.completed_on, format: :full) %>
+          </span>
+        <% end %>
+      </p>
+      <div class="row module-tags">
+        <div class="pull-left">
+          <%= t('projects.reports.elements.module.tags_header') %>
+        </div>
+        <% if (tags = my_module.tags.order(:id)).present? %>
+          <% tags.each do |tag| %>
+            <div class="pull-left module-tag" style="background-color: <%= tag.color %>;">
+              <%= tag.name %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
     <div class="row">
       <div class="col-xs-12">
         <% if my_module.description.present? %>
@@ -90,9 +94,11 @@
 
         <% if @settings.dig('task', 'file_results')  %>
           <%= render partial: 'reports/elements/my_module_result_asset_element', locals: { result: result, report: report, export_all: export_all } %>
-          <div class="user-time">
-            <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
-          </div>
+          <% unless @settings['exclude_timestamps'] %>
+            <div class="user-time">
+              <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
+            </div>
+          <% end %>
         <% end %>
 
         <div class="report-element-children">

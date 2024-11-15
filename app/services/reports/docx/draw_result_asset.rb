@@ -25,11 +25,9 @@ module Reports::Docx::DrawResultAsset
         end
         text "  #{I18n.t('search.index.archived')} ", bold: true if result.archived?
         text ' ' + I18n.t('projects.reports.elements.result_asset.file_name', file: asset.file_name)
-        text ' ' + I18n.t('projects.reports.elements.result_asset.user_time',
-                          user: result.user.full_name, timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
-
-        if settings.dig(:task, :file_results_previews) && ActiveStorageFileUtil.previewable_document?(asset&.file&.blob)
-          text " #{I18n.t('projects.reports.elements.result_asset.full_preview_attached')}", color: color[:gray]
+        unless settings['exclude_timestamps']
+          text ' ' + I18n.t('projects.reports.elements.result_asset.user_time',
+                            user: result.user.full_name, timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
         end
       end
 

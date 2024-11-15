@@ -1,31 +1,33 @@
 <template>
   <div class="sn-open-locally-menu flex" @mouseenter="fetchLocalAppInfo">
-    <div v-if="(!canOpenLocally) && (attachment.attributes.wopi && attachment.attributes.urls.edit_asset)">
-      <a :href="editWopiSupported ? attachment.attributes.urls.edit_asset : null" target="_blank"
-         class="btn btn-light"
-         :class="{ 'disabled': !editWopiSupported }"
-         :title="editWopiSupported ? null : attachment.attributes.wopi_context.title"
-         style="pointer-events: all"
-      >
-          {{ attachment.attributes.wopi_context.button_text }}
-      </a>
-    </div>
-    <div v-else-if="!usesWebIntegration">
-        <MenuDropdown
-          v-if="this.menu.length > 1"
-          class="ml-auto"
-          :listItems="this.menu"
-          :btnClasses="`btn btn-light icon-btn`"
-          :position="'right'"
-          :btnText="i18n.t('attachments.open_in')"
-          :caret="true"
-          @open-locally="openLocally"
-          @open-image-editor="openImageEditor"
-        ></MenuDropdown>
-        <a v-else-if="menu.length === 1" class="btn btn-light" :href="menu[0].url" :target="menu[0].url_target" @click="this[this.menu[0].emit]()">
-          {{ menu[0].text }}
+    <template v-if="canEdit">
+      <div v-if="(!canOpenLocally) && (attachment.attributes.wopi && attachment.attributes.urls.edit_asset)">
+        <a :href="editWopiSupported ? attachment.attributes.urls.edit_asset : null" target="_blank"
+          class="btn btn-light"
+          :class="{ 'disabled': !editWopiSupported }"
+          :title="editWopiSupported ? null : attachment.attributes.wopi_context.title"
+          style="pointer-events: all"
+        >
+            {{ attachment.attributes.wopi_context.button_text }}
         </a>
-    </div>
+      </div>
+      <div v-else-if="!usesWebIntegration">
+          <MenuDropdown
+            v-if="this.menu.length > 1"
+            class="ml-auto"
+            :listItems="this.menu"
+            :btnClasses="`btn btn-light icon-btn`"
+            :position="'right'"
+            :btnText="i18n.t('attachments.open_in')"
+            :caret="true"
+            @open-locally="openLocally"
+            @open-image-editor="openImageEditor"
+          ></MenuDropdown>
+          <a v-else-if="menu.length === 1" class="btn btn-light" :href="menu[0].url" :target="menu[0].url_target" @click="this[this.menu[0].emit]()">
+            {{ menu[0].text }}
+          </a>
+      </div>
+    </template>
     <a @click="fileVersionsModal = true" class="btn btn-light"><i class="sn-icon sn-icon-history-search"></i>{{ i18n.t('assets.context_menu.versions') }}</a>
 
     <Teleport to="body">
@@ -70,7 +72,8 @@ export default {
   mixins: [OpenLocallyMixin],
   components: { MenuDropdown, UpdateVersionModal, FileVersionsModal },
   props: {
-    attachment: { type: Object, required: true }
+    attachment: { type: Object, required: true },
+    canEdit: { type: Boolean, default: true }
   },
   data() {
     return {
@@ -131,11 +134,11 @@ export default {
       document.getElementById('editImageButton').click();
     },
     refreshPreview() {
-      const imageElement = document.querySelector('.file-preview-container .asset-image');
+      const filePreview = document.querySelector('.file-preview-container');
 
-      if (!imageElement) return;
+      if (!filePreview) return;
 
-      $('#filePreviewModal').modal('hide');
+      window.location.reload();
     }
   }
 };
