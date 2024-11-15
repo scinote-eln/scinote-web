@@ -643,16 +643,9 @@ class Extends
     'FluicsLabelTemplate' => 'Fluics'
   }
 
-  EXTERNAL_SCRIPT_SERVICES =
-    if Rails.application.config.x.no_external_csp_exceptions
-      []
-    else
-      %w(
-        https://marvinjs.chemicalize.com/
-        www.recaptcha.net/
-        www.gstatic.com/recaptcha/
-      )
-    end
+  # If Rails.application.config.x.no_external_csp_exceptions is set, than this should be empty,
+  # but first try to use nonces before adding exceptions here
+  EXTERNAL_SCRIPT_SERVICES = []
 
   EXTERNAL_CONNECT_SERVICES =
     if Rails.application.config.x.no_external_csp_exceptions
