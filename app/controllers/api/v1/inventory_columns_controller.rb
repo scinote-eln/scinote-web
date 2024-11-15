@@ -8,8 +8,9 @@ module Api
       before_action only: %i(show update destroy) do
         load_inventory_column(:id)
       end
-      before_action :check_manage_permissions, only: %i(update destroy)
       before_action :check_create_permissions, only: %i(create)
+      before_action :check_manage_permissions, only: %i(update)
+      before_action :check_delete_permissions, only: %i(destroy)
 
       def index
         columns = timestamps_filter(@inventory.repository_columns).includes(:repository_list_items)
@@ -59,6 +60,10 @@ module Api
 
       def check_manage_permissions
         raise PermissionError.new(RepositoryColumn, :manage) unless can_manage_repository_column?(@inventory_column)
+      end
+
+      def check_delete_permissions
+        raise PermissionError.new(RepositoryColumn, :delete) unless can_delete_repository_column?(@inventory_column)
       end
 
       def check_create_permissions

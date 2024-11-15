@@ -40,7 +40,7 @@
                 <div class="basis-1/4 flex justify-end">
                   <a class="btn btn-icon p-0 px-2 hover:bg-sn-light-grey"
                     v-if="enabled || index === 0"
-                    :href="fileVersion.attributes.url"
+                    :href="fileVersion.attributes.download_url"
                     target="_blank"
                     data-render-tooltip="true"
                     :title="i18n.t('assets.file_versions_modal.download')"

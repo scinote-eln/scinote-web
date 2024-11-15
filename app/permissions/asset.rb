@@ -27,6 +27,7 @@ Canaid::Permissions.register_for(Asset) do
       if object.repository_column.repository.is_a?(RepositorySnapshot)
         false
       else
+        object.repository_row.active? &&
         can_manage_repository_assets?(user, object.repository_column.repository)
       end
     end
