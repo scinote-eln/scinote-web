@@ -32,7 +32,9 @@
                   </div>
                   <div class="flex text-xs text-sn-grey justify-start">
                     <div class="mr-3">{{ fileVersion.attributes.created_at }}</div>
-                    <div class="mr-3 text-nowrap text-ellipsis overflow-hidden max-w-52">{{ fileVersion.attributes.created_by.full_name }}</div>
+                    <div v-if="fileVersion.attributes.created_by" class="mr-3 text-nowrap text-ellipsis overflow-hidden max-w-52">
+                      {{ fileVersion.attributes.created_by.full_name }}
+                    </div>
                     <div>{{ i18n.t("assets.file_versions_modal.size") }}: {{ Math.round(fileVersion.attributes.byte_size/1024) }}KB</div>
                   </div>
                 </div>
