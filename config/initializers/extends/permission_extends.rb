@@ -210,6 +210,8 @@ module PermissionExtends
       RepositoryPermissions::READ,
       RepositoryPermissions::READ_ARCHIVED,
       RepositoryPermissions::COLUMNS_CREATE,
+      RepositoryPermissions::COLUMNS_UPDATE,
+      RepositoryPermissions::COLUMNS_DELETE,
       RepositoryPermissions::ROWS_CREATE,
       RepositoryPermissions::ROWS_UPDATE,
       RepositoryPermissions::ROWS_DELETE,

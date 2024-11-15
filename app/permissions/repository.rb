@@ -25,7 +25,8 @@ Canaid::Permissions.register_for(Repository) do
      create_repository_rows
      manage_repository_rows
      delete_repository_rows
-     create_repository_columns)
+     create_repository_columns
+     manage_repository_columns)
     .each do |perm|
     can perm do |_, repository|
       repository.active? && repository.repository_snapshots.provisioning.none? &&
@@ -106,7 +107,7 @@ Canaid::Permissions.register_for(Repository) do
   end
 
   can :manage_repository_columns do |user, repository|
-    repository.repository_snapshots.provisioning.none? && can_create_repository_columns?(user, repository)
+    repository.permission_granted?(user, RepositoryPermissions::COLUMNS_UPDATE)
   end
 
   # repository: create/update/delete filters
@@ -123,6 +124,10 @@ Canaid::Permissions.register_for(RepositoryColumn) do
   # repository: update/delete field
   # Tested in scope of RepositoryPermissions spec
   can :manage_repository_column do |user, repository_column|
-    repository_column.repository.repository_snapshots.provisioning.none? && can_create_repository_columns?(user, repository_column.repository)
+    repository_column.repository.repository_snapshots.provisioning.none? && repository_column.repository.permission_granted?(user, RepositoryPermissions::COLUMNS_UPDATE)
+  end
+
+  can :delete_repository_column do |user, repository_column|
+    repository_column.repository.repository_snapshots.provisioning.none? && repository_column.repository.permission_granted?(user, RepositoryPermissions::COLUMNS_DELETE)
   end
 end
