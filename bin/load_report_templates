@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+require 'httparty'
+require 'zip'
+
+template_zip_url_string = ENV.fetch('REPORT_TEMPLATES_ZIP_URL', nil)
+
+return if template_zip_url_string.nil? || template_zip_url_string.empty?
+
+template_zip_url = URI.parse(template_zip_url_string)
+contents = case template_zip_url.scheme
+           when 'https'
+             HTTParty.get(template_zip_url).body
+           when 's3'
+             system("AWS_PAGER=\"\" aws s3api get-object --bucket #{template_zip_url.host} --key #{template_zip_url.path[1..]} #{ENV.fetch('APP_HOME', '.')}/app/views/reports/report_templates.zip")
+             File.read("#{ENV.fetch('APP_HOME', '.')}/app/views/reports/report_templates.zip")
+           end
+
+puts "Loaded report templates zip from #{template_zip_url_string}"
+
+root_folder = nil
+Zip::File.open_buffer(StringIO.new(contents)) do |zip|
+  puts 'Extracting report templates...'
+
+  zip.each do |entry|
+    # set root zip folder
+    root_folder = entry.name and next if entry.name.count('/') == 1
+
+    # create path while omitting root zip folder
+    path = Pathname.new("#{ENV.fetch('APP_HOME', '.')}/app/views/reports/#{entry.name.sub(root_folder, '')}")
+    path.dirname.mkpath
+
+    # don't try and write file if entry is a folder
+    next if entry.name.end_with?('/')
+
+    path.open('wb') do |f|
+      f.write(entry.get_input_stream.read)
+    end
+
+    puts "Extracted #{path}"
+  end
+end

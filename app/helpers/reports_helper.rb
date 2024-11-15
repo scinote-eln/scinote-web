@@ -119,4 +119,8 @@ module ReportsHelper
                    end
     end
   end
+
+  def custom_templates(templates)
+    templates.any? { |template, _| template != :scinote_template }
+  end
 end

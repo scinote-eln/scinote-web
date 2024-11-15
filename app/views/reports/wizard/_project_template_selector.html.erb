@@ -20,7 +20,21 @@
                        disable_on_load: report.settings[:template].blank? && report.new_record?,
                        placeholder: t('projects.reports.wizard.first_step.select_template'),
                        selected_template: report.settings[:template],
+                       default_template: @default_template,
                        values_editor_path: reports_new_template_values_path(report_id: report.id)
+                     } %>
+    </div>
+    <div class='template-selector <%= "hidden" unless custom_templates(Extends::DOCX_REPORT_TEMPLATES) %>'>
+      <%= label_tag :docxTemplateSelector, t('projects.reports.wizard.first_step.select_docx_template') %>
+      <%= select_tag :docxTemplateSelector,
+                     options_for_select(@docx_templates.invert, @active_docx_template),
+                     prompt: t('projects.reports.wizard.first_step.select_docx_template'),
+                     data: {
+                       disable_on_load: report.settings[:docx_template].blank? && report.new_record?,
+                       placeholder: t('projects.reports.wizard.first_step.select_docx_template'),
+                       selected_template: report.settings[:docx_template],
+                       default_template: @default_docx_template,
+                       values_editor_path: reports_new_docx_template_values_path(report_id: report.id)
                      } %>
     </div>
   </div>
