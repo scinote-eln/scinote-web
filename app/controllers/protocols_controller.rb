@@ -18,10 +18,12 @@ class ProtocolsController < ApplicationController
     print
     versions_modal
     protocol_status_bar
-    linked_children
-    linked_children_datatable
     versions_list
     permissions
+  )
+  before_action :check_linked_protocol_view_permissions, only: %i(
+    linked_children
+    linked_children_datatable
   )
   before_action :switch_team_with_param, only: %i(index protocolsio_index)
   before_action :check_view_all_permissions, only: %i(
@@ -933,6 +935,16 @@ class ProtocolsController < ApplicationController
   end
 
   def check_view_permissions
+    @protocol = Protocol.find_by(id: params[:id])
+    current_team_switch(@protocol.team) if current_team != @protocol.team
+    unless @protocol.present? &&
+           (can_read_protocol_in_module?(@protocol) ||
+           can_read_protocol_in_repository?(@protocol))
+      render_403
+    end
+  end
+
+  def check_linked_protocol_view_permissions
     @protocol = Protocol.find_by(id: params[:id])
     current_team_switch(@protocol.team) if current_team != @protocol.team
     unless @protocol.present? &&
