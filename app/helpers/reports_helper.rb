@@ -107,15 +107,19 @@ module ReportsHelper
     end
   end
 
-  def permit_report_settings_structure(settings_definition)
+  def permit_report_settings_structure(settings_definition, repositories)
     settings_definition.each_with_object([]) do |(key, value), permitted|
-      permitted << case value
-                   when Hash
-                     { key => permit_report_settings_structure(value) }
-                   when Array
-                     { key => [] }
+      permitted << if key == :excluded_repository_columns && repositories.present?
+                     { key => repositories.each_with_object({}) { |repository, hash| hash[repository.id.to_s] = [] } }
                    else
-                     key
+                     case value
+                     when Hash
+                       { key => permit_report_settings_structure(value, repositories) }
+                     when Array
+                       { key => [] }
+                     else
+                       key
+                     end
                    end
     end
   end

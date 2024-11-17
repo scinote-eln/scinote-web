@@ -66,7 +66,9 @@ class Report < ApplicationRecord
       activities: true,
       repositories: [],
       excluded_repository_columns: {}
-    }
+    },
+    template: 'scinote_template',
+    docx_template: 'scinote_template'
   }.freeze
 
   def self.search(
