@@ -25,7 +25,7 @@ module RepositoryActions
     private
 
     def repository_asset_value_extra_attributes(value)
-      new_asset = @cell.value.asset.duplicate
+      new_asset = @cell.value.asset.duplicate(created_by: @user)
       value.asset = new_asset
     end
 
