@@ -9,6 +9,7 @@ class ReportsController < ApplicationController
   before_action :load_vars_nested, only: %i(create edit update generate_pdf
                                             generate_docx new_template_values new_docx_template_values project_contents)
   before_action :load_wizard_vars, only: %i(new edit)
+  before_action :load_repositories_vars, only: %i(new edit create update)
   before_action :load_available_repositories, only: %i(index save_pdf_to_inventory_modal available_repositories)
   before_action :check_project_read_permissions, only: %i(create edit update generate_pdf
                                                           generate_docx new_template_values new_docx_template_values project_contents)
@@ -355,13 +356,6 @@ class ReportsController < ApplicationController
   def load_wizard_vars
     @templates = Extends::REPORT_TEMPLATES
     @docx_templates = Extends::DOCX_REPORT_TEMPLATES
-    live_repositories = Repository.viewable_by_user(current_user).sort_by { |r| r.name.downcase }
-    snapshots_of_deleted = RepositorySnapshot.left_outer_joins(:original_repository)
-                                             .where(team: current_team)
-                                             .where.not(original_repository: live_repositories)
-                                             .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
-                                             .sort_by { |r| r.name.downcase }
-    @repositories = live_repositories + snapshots_of_deleted
     @visible_projects = current_team.projects
                                     .active
                                     .joins(experiments: :my_modules)
@@ -373,6 +367,16 @@ class ReportsController < ApplicationController
     @default_template = Extends::REPORT_TEMPLATES.keys.first.to_s if Extends::REPORT_TEMPLATES.one?
 
     @default_docx_template = Extends::DOCX_REPORT_TEMPLATES.keys.first.to_s if Extends::DOCX_REPORT_TEMPLATES.one? && custom_templates(Extends::DOCX_REPORT_TEMPLATES)
+  end
+
+  def load_repositories_vars
+    live_repositories = Repository.viewable_by_user(current_user).sort_by { |r| r.name.downcase }
+    snapshots_of_deleted = RepositorySnapshot.left_outer_joins(:original_repository)
+                                             .where(team: current_team)
+                                             .where.not(original_repository: live_repositories)
+                                             .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
+                                             .sort_by { |r| r.name.downcase }
+    @repositories = live_repositories + snapshots_of_deleted
   end
 
   def check_project_read_permissions
@@ -407,7 +411,7 @@ class ReportsController < ApplicationController
 
   def report_params
     params.require(:report)
-          .permit(:name, :description, :grouped_by, :report_contents, settings: permit_report_settings_structure(Report::DEFAULT_SETTINGS))
+          .permit(:name, :description, :grouped_by, :report_contents, settings: permit_report_settings_structure(Report::DEFAULT_SETTINGS, @repositories))
   end
 
   def search_params
