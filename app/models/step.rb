@@ -142,7 +142,7 @@ class Step < ApplicationRecord
       # "Shallow" Copy assets
       assets.each do |asset|
         new_asset = asset.dup
-        new_asset.save!
+        new_asset.update!(created_by: user, last_modified_by: user)
         new_step.assets << new_asset
         assets_to_clone << [asset.id, new_asset.id]
       end

@@ -361,7 +361,8 @@ class AssetsController < ApplicationController
       when Step, Result
         new_asset = @asset.duplicate(
           new_name:
-            "#{@asset.file.filename.base} (1).#{@asset.file.filename.extension}"
+            "#{@asset.file.filename.base} (1).#{@asset.file.filename.extension}",
+          created_by: current_user
         )
 
         @asset.parent.assets << new_asset
@@ -416,6 +417,8 @@ class AssetsController < ApplicationController
   def restore_version
     render_403 unless VersionedAttachments.enabled?
 
+    @asset.last_modified_by = current_user
+
     @asset.restore_file_version(params[:version].to_i)
     @asset.restore_preview_image_version(params[:version].to_i) if @asset.preview_image.attached?
 
@@ -444,6 +447,8 @@ class AssetsController < ApplicationController
       log_restore_activity(:repository_column_restore_asset_version, @repository,
                            @repository.team, nil, message_items)
     end
+
+    @asset.save!
 
     render json: @asset.file.blob
   end

@@ -145,9 +145,14 @@ class Asset < ApplicationRecord
     file&.blob&.content_type
   end
 
-  def duplicate(new_name: nil, include_file_versions: false)
+  def duplicate(new_name: nil, include_file_versions: false, created_by: nil)
     new_asset = dup
     file.filename = new_name if new_name
+
+    if created_by
+      new_asset.created_by = created_by
+      new_asset.last_modified_by = created_by
+    end
 
     return unless new_asset.save
 
@@ -163,7 +168,7 @@ class Asset < ApplicationRecord
       new_blob = ActiveStorage::Blob.create_and_upload!(
         io: tmp_file,
         filename: blob.filename,
-        metadata: metadata || blob.metadata
+        metadata: (metadata || blob.metadata)
       )
 
       attach_method.call(new_blob)
@@ -194,6 +199,7 @@ class Asset < ApplicationRecord
     unless include_file_versions
       metadata.delete('version')
       metadata.delete('restored_from_version')
+      metadata['created_by_id'] = to_asset.created_by_id
     end
 
     duplicate_file_versions(to_asset) if include_file_versions
