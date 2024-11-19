@@ -144,7 +144,7 @@ class ReportsController < ApplicationController
   def edit
     @edit = true
     @active_template = @report.settings[:template]
-    @active_docx_template = @report.settings[:docx_template]
+    @active_docx_template = @report.settings[:docx_template].presence || 'scinote_template'
     @report.settings = Report::DEFAULT_SETTINGS if @report.settings.blank?
 
     @project_contents = {
