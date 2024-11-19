@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:  url('fonts/SN-icon-font.eot?ly6gdh');
-  src:  url('fonts/SN-icon-font.eot?ly6gdh#iefix') format('embedded-opentype'),
-    url('fonts/SN-icon-font.woff2?ly6gdh') format('woff2'),
-    url('fonts/SN-icon-font.ttf?ly6gdh') format('truetype'),
-    url('fonts/SN-icon-font.woff?ly6gdh') format('woff'),
-    url('fonts/SN-icon-font.svg?ly6gdh#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?sflbp2');
+  src:  url('fonts/SN-icon-font.eot?sflbp2#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?sflbp2') format('woff2'),
+    url('fonts/SN-icon-font.ttf?sflbp2') format('truetype'),
+    url('fonts/SN-icon-font.woff?sflbp2') format('woff'),
+    url('fonts/SN-icon-font.svg?sflbp2#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -625,4 +625,7 @@
 }
 .sn-icon-text-fields:before {
   content: "\e9c7";
+}
+.sn-icon-merge-cells:before {
+  content: "\e9c8";
 }
