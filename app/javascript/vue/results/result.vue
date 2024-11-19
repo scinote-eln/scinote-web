@@ -48,7 +48,8 @@
             :btnText="i18n.t('my_modules.results.insert.button')"
             :position="'right'"
             :caret="true"
-            @create:table="(args) => args ? this.createElement('table', ...args) : this.createElement('table')"
+            @create:custom_well_plate="openCustomWellPlateModal"
+            @create:table="(...args) => this.createElement('table', ...args)"
             @create:checklist="createElement('checklist')"
             @create:text="createElement('text')"
             @create:file="openLoadFromComputer"
@@ -134,13 +135,19 @@
         <ContentToolbar
           v-if="orderedElements.length > 2 && insertMenu.length > 0"
           :insertMenu="insertMenu"
-          @create:table="(args) => args ? this.createElement('table', ...args) : this.createElement('table')"
+          @create:custom_well_plate="openCustomWellPlateModal"
+          @create:table="(...args) => this.createElement('table', ...args)"
           @create:text="createElement('text')"
           @create:file="openLoadFromComputer"
           @create:wopi_file="openWopiFileModal"
           @create:ove_file="openOVEditor"
           @create:marvinjs_file="openMarvinJsModal($refs.marvinJsButton)"
         ></ContentToolbar>
+
+        <CustomWellPlateModal v-if="customWellPlate"
+          @cancel="closeCustomWellPlateModal"
+          @create:table="(...args) => this.createElement('table', ...args)"
+        />
       </div>
     </div>
   </div>
@@ -156,6 +163,7 @@ import InlineEdit from '../shared/inline_edit.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
 import deleteResultModal from './delete_result.vue';
 import ContentToolbar from '../shared/content/content_toolbar';
+import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
 
 import AttachmentsMixin from '../shared/content/mixins/attachments.js';
 import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js';
@@ -184,14 +192,16 @@ export default {
       addingContent: false,
       showFileModal: false,
       dragingFile: false,
+      customWellPlate: false,
       wellPlateOptions: [
-        { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table', params: [[32, 48], true] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.16_x_24'), emit: 'create:table', params: [[16, 24], true] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.8_x_12'), emit: 'create:table', params: [[8, 12], true] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_8'), emit: 'create:table', params: [[6, 8], true] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.4_x_6'), emit: 'create:table', params: [[4, 6], true] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.3_x_4'), emit: 'create:table', params: [[3, 4], true] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'), emit: 'create:table', params: [[2, 3], true] }
+        { text: I18n.t('protocols.steps.insert.well_plate_options.custom'), emit: 'create:custom_well_plate'},
+        { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table', params: [32, 48] },
+        { text: I18n.t('protocols.steps.insert.well_plate_options.16_x_24'), emit: 'create:table', params: [16, 24] },
+        { text: I18n.t('protocols.steps.insert.well_plate_options.8_x_12'), emit: 'create:table', params: [8, 12] },
+        { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_8'), emit: 'create:table', params: [6, 8] },
+        { text: I18n.t('protocols.steps.insert.well_plate_options.4_x_6'), emit: 'create:table', params: [4, 6] },
+        { text: I18n.t('protocols.steps.insert.well_plate_options.3_x_4'), emit: 'create:table', params: [3, 4] },
+        { text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'), emit: 'create:table', params: [2, 3] }
       ],
       editingName: false,
       confirmingDelete: false,
@@ -208,7 +218,8 @@ export default {
     MenuDropdown,
     deleteResultModal,
     StorageUsage,
-    ContentToolbar
+    ContentToolbar,
+    CustomWellPlateModal
   },
   watch: {
     resultToReload() {
@@ -483,8 +494,11 @@ export default {
         this.attachments[index] = attachment;
       }
     },
-    createElement(elementType, tableDimensions = [5, 5], plateTemplate = false) {
-      $.post(this.urls[`create_${elementType}_url`], { tableDimensions, plateTemplate }, (result) => {
+    createElement(elementType, tableDimensions = null, name = '') {
+      let plateTemplate = tableDimensions != null;
+      tableDimensions ||= [5, 5];
+
+      $.post(this.urls[`create_${elementType}_url`], { tableDimensions, plateTemplate, name }, (result) => {
         result.data.isNew = true;
         this.elements.push(result.data);
 
@@ -506,6 +520,12 @@ export default {
           });
         });
       });
+    },
+    openCustomWellPlateModal() {
+      this.customWellPlate = true;
+    },
+    closeCustomWellPlateModal() {
+      this.customWellPlate = false;
     },
     archiveResult() {
       axios.post(this.urls.archive_url).then((response) => {

@@ -1383,6 +1383,7 @@ en:
         add_file: 'From your PC'
         checklist_item: 'Add new'
         well_plate_options:
+          custom: 'Custom'
           32_x_48: '1536 (32 x 48)'
           16_x_24: '384 (16 x 24)'
           8_x_12: '96 (8 x 12)'
@@ -3749,6 +3750,7 @@ en:
         add_file: 'From your PC'
         checklist_item: 'Add new'
         well_plate_options:
+          custom: 'Custom'
           32_x_48: '1536 (32 x 48)'
           16_x_24: '384 (16 x 24)'
           8_x_12: '96 (8 x 12)'
@@ -3805,6 +3807,11 @@ en:
           confirm: 'Yes, delete them'
         reorder_elements:
           title: 'Rearrange step %{step_position} content'
+        custom_well_plate:
+          title: 'Insert custom well plate'
+          name_label: 'Well plate name'
+          name_placeholder: 'Plate'
+          dimension_label: 'Dimensions (rows x columns)' 
       options:
         up_arrow_title: "Move step up"
         down_arrow_title: "Move step down"
@@ -4292,6 +4299,7 @@ en:
     replace: "Replace"
     archive: "Archive"
     assign: "Assign"
+    insert: "Insert"
     options_selected: 'options selected'
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"

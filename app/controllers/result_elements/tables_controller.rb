@@ -6,11 +6,13 @@ module ResultElements
 
     def create
       predefined_table_dimensions = create_table_params[:tableDimensions].map(&:to_i)
-      name = if predefined_table_dimensions[0] == predefined_table_dimensions[1]
-               t('protocols.steps.table.default_name',
+      name = if create_table_params[:name].present?
+               create_table_params[:name]
+             elsif create_table_params[:plateTemplate] == 'true'
+               t('protocols.steps.plate.default_name',
                  position: @result.result_tables.length + 1)
              else
-               t('protocols.steps.plate.default_name',
+               t('protocols.steps.table.default_name',
                  position: @result.result_tables.length + 1)
              end
       result_table = @result.result_tables.new(table:
@@ -119,7 +121,7 @@ module ResultElements
     end
 
     def create_table_params
-      params.permit(:plateTemplate, tableDimensions: [])
+      params.permit(:plateTemplate, :name, tableDimensions: [])
     end
 
     def load_table

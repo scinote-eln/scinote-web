@@ -65,6 +65,7 @@
           :position="'right'"
           :caret="true"
           :dataE2e="`e2e-DD-protocol-step${step.id}-insertContent`"
+          @create:custom_well_plate="openCustomWellPlateModal"
           @create:table="(...args) => this.createElement('table', ...args)"
           @create:checklist="createElement('checklist')"
           @create:text="createElement('text')"
@@ -148,6 +149,7 @@
       <ContentToolbar
         v-if="orderedElements.length > 2 && insertMenu.length > 0"
         :insertMenu="insertMenu"
+        @create:custom_well_plate="openCustomWellPlateModal"
         @create:table="(...args) => this.createElement('table', ...args)"
         @create:checklist="createElement('checklist')"
         @create:text="createElement('text')"
@@ -166,6 +168,12 @@
       @reorder="updateElementOrder"
       @close="closeReorderModal"
     />
+
+    <CustomWellPlateModal v-if="customWellPlate"
+      @cancel="closeCustomWellPlateModal"
+      @create:table="(...args) => this.createElement('table', ...args)"
+    />
+
   </div>
 </template>
 
@@ -185,6 +193,7 @@
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
   import MenuDropdown from '../shared/menu_dropdown.vue'
   import ContentToolbar from '../shared/content/content_toolbar.vue'
+  import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
 
   import UtilsMixin from '../mixins/utils.js'
   import AttachmentsMixin from '../shared/content/mixins/attachments.js'
@@ -236,7 +245,11 @@
         isCollapsed: false,
         editingName: false,
         inlineEditError: null,
+        customWellPlate: false,
         wellPlateOptions: [
+          { text: I18n.t('protocols.steps.insert.well_plate_options.custom'),
+            emit: 'create:custom_well_plate',
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-customWellPlate` },
           { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'),
             emit: 'create:table',
             params: [32, 48],
@@ -279,7 +292,8 @@
       StorageUsage,
       ReorderableItemsModal,
       MenuDropdown,
-      ContentToolbar
+      ContentToolbar,
+      CustomWellPlateModal
     },
     created() {
       this.loadAttachments();
@@ -613,10 +627,11 @@
           }
         });
       },
-      createElement(elementType, tableDimensions = null) {
+      createElement(elementType, tableDimensions = null, name = '') {
         let plateTemplate = tableDimensions != null;
         tableDimensions ||= [5, 5];
-        $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate }, (result) => {
+
+        $.post(this.urls[`create_${elementType}_url`], { tableDimensions, plateTemplate, name }, (result) => {
           result.data.isNew = true;
           this.elements.push(result.data)
 
@@ -638,6 +653,12 @@
             });
           })
         });
+      },
+      openCustomWellPlateModal() {
+        this.customWellPlate = true;
+      },
+      closeCustomWellPlateModal() {
+        this.customWellPlate = false;
       },
       openCommentsSidebar() {
         $('.comments-sidebar .close-btn').click();
