@@ -4,6 +4,7 @@ module Reports::Docx::DrawStepChecklist
   def draw_step_checklist(checklist)
     team = @report_team
     user = @user
+    settings = @settings
 
     items = checklist.checklist_items
     timestamp = checklist.created_at
@@ -15,9 +16,11 @@ module Reports::Docx::DrawStepChecklist
         team,
         I18n.t('projects.reports.elements.step_checklist.checklist_name', name: checklist.name)
       ).text, italic: true
-      text ' '
-      text I18n.t('projects.reports.elements.step_checklist.user_time',
-                  timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+      unless settings['exclude_timestamps']
+        text ' '
+        text I18n.t('projects.reports.elements.step_checklist.user_time',
+                    timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+      end
     end
     if items.any?
       @docx.ul do

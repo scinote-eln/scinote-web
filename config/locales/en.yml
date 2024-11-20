@@ -164,7 +164,6 @@ en:
         protocol:
           unchangable: "Published protocols can not be changed!"
           wrong_parent_type: "Protocol can only be linked to published protocol!"
-          wrong_version_name: "Protocol versions should have same name!"
           wrong_version_number: "Protocol version number should be sequential!"
           wrong_parent_draft_number: "Procol can have only 1 draft"
           attributes:
@@ -310,6 +309,9 @@ en:
     academy_tooltip: "SciNote Academy"
     notifications:
       title: "Notifications"
+      read: "Read"
+      unread: "Unread"
+      read_all: "Read all"
       all: "All"
       message: "Messages"
       system: "System"
@@ -808,16 +810,20 @@ en:
           select_project_title: "Select project and report template"
           select_project_description: "You are about to create a new report. Please select a project for which you would like to create a report, and choose the report design template. Only projects with at least 1 task are displayed."
           select_project: "Select a project"
-          select_template: "Select your template"
+          select_template: "Select your PDF template"
+          select_docx_template: "Select your DOCX template"
           report_description: "Report description (optional)"
           report_description_placeholder: "In this report you can see..."
           values_editor:
-            title: "Enter template data"
+            title_pdf: "PDF %{template}"
+            title_docx: "DOCX %{template}"
             description: "This template requires you to fill out additional information about this project. This is the only place you will be able to do so."
             header: "Header"
             cover: "Title page"
             footer: "Footer"
-            no_values_title: "No additional data required"
+            toc: "Table of contents"
+            no_values_title_pdf: "PDF %{template}:  No additional data required"
+            no_values_title_docx: "DOCX %{template}: No additional data required"
             no_values_description: "SciNote template doesn’t need any additional input for it to be successfully generated."
         second_step:
           select_project_content: "Select and reorder experiments and tasks"
@@ -841,6 +847,7 @@ en:
           step_comments: "Step comments"
           assigned_items: "Assigned items"
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
+          assigned_items_repository_items_description_html: "You can customize inventory columns <strong>only for the docx report.</strong> The stock management column by default reflects item consumption."
           include_all_assigned_iitems: "Include all assigned items from the following inventories"
           results: "Results"
           all_results: "Include all results elements"
@@ -859,8 +866,15 @@ en:
           results_comments: "Result comments"
           additional_content: "Additional content"
           task_activity: "Include task activity"
+          exclude_task_metadata: "Exclude task metadata"
+          exclude_timestamps: "Exclude timestamps"
           archived: "[archived]"
           deleted: "[deleted]"
+          repository_column:
+            select_deselect_all: 'Select/deselect all'
+            placeholder: 'Select columns'
+            all_selected: 'All columns selected'
+            selected: 'columns selected'
 
       new:
         report_name_placeholder: "Name your report"
@@ -963,6 +977,7 @@ en:
           name: "%{repository} of task %{my_module}"
           table_name: "%{name}"
           no_items: "No items"
+          no_columns: "No columns selected"
         result:
           user_time: "Added on %{timestamp} by %{user}."
         result_asset:
@@ -1043,7 +1058,8 @@ en:
     types:
       fluics_label_template: 'Fluics'
       zebra_label_template: 'ZPL'
-    default_zebra_name: 'SciNote Item (ZPL)'
+    default_zebra_name: 'SciNote Item (ZPL, 300dpi)'
+    default_zebra_name_203dpi: 'SciNote Item (ZPL, 203dpi)'
     default_fluics_name: 'SciNote Item (Fluics)'
     new_label_template: 'New label'
     fluics:
@@ -2421,6 +2437,10 @@ en:
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"
+      delete: "Delete"
+    modal_delete_asset_value:
+      title: "Confirm file deletion?"
+      notice_html: "<p>Deleting this file will remove the entire column history.<br><br></p><p>This action is irreversible.<br><br></p><p>To retain version history, replace the file with a new one instead.</p>"
       delete: "Delete"
     modal_delete_column:
       title: "Delete a column"
@@ -4024,6 +4044,16 @@ en:
       inline_html: "Large"
       thumbnail_html: "Thumbnail"
       list_html: "List"
+      versions: "Version history"
+    file_versions_modal:
+      title: "Version history"
+      download: "Download"
+      restore: "Restore this version"
+      size: "Size"
+      restored_from_version: "restored from v%{version}"
+      original_file: "Original file"
+      enable_button: "Enable"
+      disabled_disclaimer: "This feature is currently disabled"
     rename_modal:
       title: "Rename file"
       min_length_error: "File name must be at least 1 character long."
@@ -4050,7 +4080,7 @@ en:
     edit_launching_application_modal:
       title: "Launching application"
       description: "%{file_name} will now open in %{application}. Saved changes in %{application} will automatically be synced in SciNote."
-    conflict_error: "A newer version of the file was already present in the SciNote web app and your file was saved as “%{filename}”. Close this window and re-open file to get the latest changes."
+    conflict_error: "The file got updated in the SciNote web app while you were editing. Your version will be stored as the latest version, and the previous one is kept in version history."
     default_error: "An error occurred while saving to SciNote. Please save changes to your open document using “Save As…” to avoid losing any working changes."
     default_error_with_filename: "An error occurred while saving “%{filename}” to SciNote. Please save changes to your open document using “Save As…” to avoid losing any working changes."
 
@@ -4288,6 +4318,7 @@ en:
     comment_placeholder: "Your Message"
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
+    invalid_params: "Invalid params"
     sort:
       title: "Sorting"
       new_html: "Started last"

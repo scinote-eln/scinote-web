@@ -9,7 +9,7 @@ module FormTagHelper
         res << label_tag(:recaptcha_label, I18n.t('users.registrations.new.captcha_description'))
       end
 
-      res << recaptcha_tags
+      res << recaptcha_tags(nonce: content_security_policy_nonce)
       if flash[:recaptcha_error]
         res << "<span class='help-block'>"
         res << flash[:recaptcha_error]

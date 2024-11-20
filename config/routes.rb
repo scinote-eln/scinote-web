@@ -3,6 +3,10 @@ Rails.application.routes.draw do
     skip_controllers :applications, :authorized_applications, :token_info
   end
 
+  # Global healthcheck endpoints
+  get 'api/health', to: 'api/api#health', as: 'api_health'
+  get 'api/status', to: 'api/api#status', as: 'api_status'
+
   post 'access_tokens/revoke', to: 'doorkeeper/access_tokens#revoke'
 
   # Addons
@@ -168,6 +172,10 @@ Rails.application.routes.draw do
       collection do
         get :filter_groups
         get :unseen_counter
+        post :mark_all_read
+      end
+      member do
+        post :toggle_read
       end
     end
 
@@ -276,6 +284,7 @@ Rails.application.routes.draw do
     end
     get 'reports/datatable', to: 'reports#datatable'
     get 'reports/new_template_values', to: 'reports#new_template_values', defaults: { format: 'json' }
+    get 'reports/new_docx_template_values', to: 'reports#new_docx_template_values', defaults: { format: 'json' }
     get 'reports/available_repositories', to: 'reports#available_repositories',
                                            defaults: { format: 'json' }
     get 'available_asset_type_columns',
@@ -861,6 +870,8 @@ Rails.application.routes.draw do
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     get 'files/:id/checksum', to: 'assets#checksum', as: 'asset_checksum'
     get 'files/:id/show', to: 'assets#show', as: 'asset_show'
+    get 'files/:id/versions', to: 'assets#versions', as: 'asset_versions'
+    post 'files/:id/restore_version', to: 'assets#restore_version', as: 'asset_restore_version'
     patch 'files/:id/toggle_view_mode', to: 'assets#toggle_view_mode', as: 'toggle_view_mode'
     get 'files/:id/load_asset', to: 'assets#load_asset', as: 'load_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
@@ -895,8 +906,6 @@ Rails.application.routes.draw do
     end
 
     namespace :api, defaults: { format: 'json' } do
-      get 'health', to: 'api#health'
-      get 'status', to: 'api#status'
       namespace :service do
         post 'projects_json_export', to: 'projects_json_export#projects_json_export'
         resources :teams, only: [] do

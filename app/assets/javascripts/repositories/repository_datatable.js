@@ -328,6 +328,40 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
+  function initDeleteAssetValueConfirmModal() {
+    $('#deleteRepositoryAssetValueModal').on('shown.bs.modal', function() {
+      let $fileBtn = $(this).data('cellFileBtn');
+      let $input = $(this).data('cellInput');
+      let $label = $(this).data('cellLabel');
+
+      $('#confirmAssetValueDelete').one('click', function() {
+        $fileBtn.addClass('new-file');
+        $label.text('');
+        $input.val('');
+        $fileBtn.removeClass('error');
+
+        if (!$input.data('is-empty')) { // set hidden field for deletion only if original value has been set on rendering
+          $input
+            .prev('.file-hidden-field-container')
+            .html(`<input type="hidden"
+                       form="${$input.attr('form')}"
+                       name="repository_cells[${$input.data('col-id')}]"
+                       value=""/>`);
+        }
+
+        $('#deleteRepositoryAssetValueModal').modal('hide');
+      });
+    });
+
+    $('#deleteRepositoryAssetValueModal').on('hidden.bs.modal', function() {
+      const $deleteRepositoryAssetValueModal = $('#deleteRepositoryAssetValueModal');
+
+      $deleteRepositoryAssetValueModal.data('cellFileBtn', null);
+      $deleteRepositoryAssetValueModal.data('cellInput', null);
+      $deleteRepositoryAssetValueModal.data('cellLabel', null);
+    });
+  }
+
   function initActiveRemindersFilter() {
     $(TABLE_WRAPPER_ID).find('#only_reminders').on('change', function() {
       var $activeRemindersFilter = $(this).closest('.active-reminders-filter');
@@ -804,6 +838,7 @@ var RepositoryDatatable = (function(global) {
         initSaveButton();
         initCancelButton();
         initBSTooltips();
+        initDeleteAssetValueConfirmModal();
         window.initRepositoryStateMenu();
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 

@@ -145,7 +145,10 @@ class SearchController < ApplicationController
 
   def quick
     results = if params[:filter].present?
-                object_quick_search(params[:filter].singularize)
+                class_name = params[:filter].singularize
+                return render_422(t('general.invalid_params')) unless Constants::QUICK_SEARCH_SEARCHABLE_OBJECTS.include?(class_name)
+
+                object_quick_search(class_name)
               else
                 Constants::QUICK_SEARCH_SEARCHABLE_OBJECTS.filter_map do |object|
                   next if object == 'label_template' && !LabelTemplate.enabled?

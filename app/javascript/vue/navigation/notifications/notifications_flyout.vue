@@ -6,17 +6,47 @@
         {{ i18n.t('nav.settings') }}
       </a>
     </div>
-    <hr>
+    <div class="flex items-center">
+      <div
+        @click="changeTab('all')"
+        class="px-4 py-2 text-sn-grey cursor-pointer border-solid border-0 border-b-4 border-transparent"
+        :class="{'!text-sn-black border-sn-blue': activeTab === 'all'}"
+      >
+        {{ i18n.t('nav.notifications.all') }}
+      </div>
+      <div
+        @click="changeTab('unread')"
+        class="px-4 py-2 text-sn-grey cursor-pointer border-solid border-0 border-b-4 border-transparent"
+        :class="{'!text-sn-black border-sn-blue': activeTab === 'unread'}"
+      >
+        {{ i18n.t('nav.notifications.unread') }}
+      </div>
+      <div
+        @click="changeTab('read')"
+        class="px-4 py-2 text-sn-grey cursor-pointer border-solid border-0 border-b-4 border-transparent"
+        :class="{'!text-sn-black  border-sn-blue': activeTab === 'read'}"
+      >
+      {{ i18n.t('nav.notifications.read') }}
+      </div>
+      <div v-if="activeTab !== 'read'" class="py-2 ml-auto cursor-pointer" @click="markAllNotificationsAsRead">
+        {{ i18n.t('nav.notifications.read_all') }}
+      </div>
+    </div>
+    <hr class="!mt-0.5">
     <perfect-scrollbar @wheel="preventPropagation" ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
       <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="todayNotifications.length">
         {{ i18n.t('nav.notifications.today') }}
       </div>
       <NotificationItem v-for="notification in todayNotifications" :key="notification.type_of + '-' + notification.id"
+        @updateNotification="updateNotification"
+        @close="$emit('close')"
         :notification="notification" />
       <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="olderNotifications.length">
         {{ i18n.t('nav.notifications.older') }}
       </div>
       <NotificationItem v-for="notification in olderNotifications" :key="notification.type_of + '-' + notification.id"
+        @updateNotification="updateNotification"
+        @close="$emit('close')"
         :notification="notification" />
       <div class="next-page-loader">
         <img src="/images/medium/loading.svg" v-if="loadingPage" />
@@ -37,6 +67,7 @@ export default {
   },
   props: {
     notificationsUrl: String,
+    markAllNotificationsUrl: String,
     unseenNotificationsCount: Number,
     preferencesUrl: String
   },
@@ -45,11 +76,14 @@ export default {
       notifications: [],
       nextPageUrl: null,
       scrollBar: null,
-      loadingPage: false
+      activeTab: 'all',
+      loadingPage: false,
+      firstPageUrl: null
     };
   },
   created() {
     this.nextPageUrl = this.notificationsUrl;
+    this.firstPageUrl = this.notificationsUrl;
     this.loadNotifications();
   },
   mounted() {
@@ -76,6 +110,27 @@ export default {
     }
   },
   methods: {
+    changeTab(tab) {
+      this.activeTab = tab;
+      this.notifications = [];
+      this.nextPageUrl = this.firstPageUrl;
+      this.loadNotifications();
+    },
+    markAllNotificationsAsRead() {
+      axios.post(this.markAllNotificationsUrl)
+        .then(() => {
+          this.notifications = this.notifications.map((n) => {
+            n.attributes.checked = true;
+            return n;
+          });
+          this.$emit('update:unseenNotificationsCount');
+        });
+    },
+    updateNotification(notification) {
+      const index = this.notifications.findIndex((n) => n.id === notification.id);
+      this.notifications.splice(index, 1, notification);
+      this.$emit('update:unseenNotificationsCount');
+    },
     preventPropagation(e) {
       e.stopPropagation();
       e.preventDefault();
@@ -85,7 +140,7 @@ export default {
 
       this.loadingPage = true;
 
-      axios.get(this.nextPageUrl)
+      axios.get(this.nextPageUrl, { params: { tab: this.activeTab } })
         .then((response) => {
           this.notifications = this.notifications.concat(response.data.data);
           this.nextPageUrl = response.data.links.next;

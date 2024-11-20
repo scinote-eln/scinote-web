@@ -13,3 +13,17 @@ Dir.chdir(Rails.root.join('app/views/reports/templates')) do
       end
   end
 end
+
+Dir.chdir(Rails.root.join('app/views/reports/docx_templates')) do
+  templates = Dir.glob('*').select { |entry| File.directory?(entry) }
+  templates.each do |template|
+    next if Extends::DOCX_REPORT_TEMPLATES[template.to_sym].present?
+
+    Extends::DOCX_REPORT_TEMPLATES[template.to_sym] =
+      if File.file?("#{template}/name.txt")
+        File.open("#{template}/name.txt").read.strip
+      else
+        template
+      end
+  end
+end

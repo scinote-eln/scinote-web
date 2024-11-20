@@ -3,11 +3,11 @@
 class Asset < ApplicationRecord
   include SearchableModel
   include DatabaseHelper
-  include Encryptor
   include WopiUtil
   include ActiveStorageFileUtil
   include ActiveStorageConcerns
   include ActiveStorageHelper
+  include VersionedAttachments
 
   require 'tempfile'
   # Lock duration set to 30 minutes
@@ -17,9 +17,9 @@ class Asset < ApplicationRecord
   enum view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
   # ActiveStorage configuration
-  has_one_attached :file
+  has_one_versioned_attached :file
+  has_one_versioned_attached :preview_image
   has_one_attached :file_pdf_preview
-  has_one_attached :preview_image
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -145,40 +145,66 @@ class Asset < ApplicationRecord
     file&.blob&.content_type
   end
 
-  def duplicate(new_name: nil)
+  def duplicate(new_name: nil, include_file_versions: false, created_by: nil)
     new_asset = dup
     file.filename = new_name if new_name
 
+    if created_by
+      new_asset.created_by = created_by
+      new_asset.last_modified_by = created_by
+    end
+
     return unless new_asset.save
 
-    duplicate_file(new_asset)
+    duplicate_file(new_asset, new_name: new_name, include_file_versions: include_file_versions)
+
     new_asset
   end
 
-  def duplicate_file(to_asset)
+  def duplicate_blob(blob, attach_method, metadata: nil)
+    new_blob = nil
+
+    blob.open do |tmp_file|
+      new_blob = ActiveStorage::Blob.create_and_upload!(
+        io: tmp_file,
+        filename: blob.filename,
+        metadata: (metadata || blob.metadata)
+      )
+
+      attach_method.call(new_blob)
+    end
+
+    new_blob
+  end
+
+  def duplicate_file_versions(to_asset)
+    previous_files.map(&:blob).sort_by(&:created_at).each do |blob|
+      duplicate_blob(blob, to_asset.previous_files.method(:attach)) # .update_column(:created_at, blob.created_at)
+    end
+  end
+
+  def duplicate_file(to_asset, new_name: nil, include_file_versions: false)
     return unless file.attached?
 
     raise ArgumentError, 'Destination asset should be persisted first!' unless to_asset.persisted?
 
-    file.blob.open do |tmp_file|
-      to_blob = ActiveStorage::Blob.create_and_upload!(
-        io: tmp_file,
-        filename: blob.filename,
-        metadata: blob.metadata
-      )
-      to_asset.file.attach(to_blob)
+    metadata = file.blob.metadata.dup
+
+    # set new name in metadata for OVE and MarvinJS files
+    if new_name && file.blob.metadata['asset_type'].in?(%w(gene_sequence marvinjs))
+      new_metadata_name = File.basename(new_name, File.extname(new_name))
+      metadata['name'] = new_metadata_name
     end
 
-    if preview_image.attached?
-      preview_image.blob.open do |tmp_preview_image|
-        to_blob = ActiveStorage::Blob.create_and_upload!(
-          io: tmp_preview_image,
-          filename: blob.filename,
-          metadata: blob.metadata
-        )
-        to_asset.preview_image.attach(to_blob)
-      end
+    unless include_file_versions
+      metadata.delete('version')
+      metadata.delete('restored_from_version')
+      metadata['created_by_id'] = to_asset.created_by_id
     end
+
+    duplicate_file_versions(to_asset) if include_file_versions
+    duplicate_blob(blob, to_asset.method(:attach_file_version), metadata: metadata)
+    duplicate_blob(preview_image.blob, to_asset.method(:attach_preview_image_version)) if preview_image.attached?
 
     to_asset.post_process_file
   end
@@ -341,7 +367,7 @@ class Asset < ApplicationRecord
   end
 
   def update_contents(new_file)
-    file.attach(io: new_file, filename: file_name)
+    attach_file_version(io: new_file, filename: file_name)
     self.version = version.nil? ? 1 : version + 1
     save
   end

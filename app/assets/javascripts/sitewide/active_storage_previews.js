@@ -22,8 +22,10 @@ var ActiveStoragePreviews = (function() {
       if (!$(img).parent().hasClass('processing')) $(img).parent().addClass('processing');
 
       setTimeout(() => {
-        img.src = src;
-        img.retryCount += 1;
+        if (document.body.contains(img)) {
+          img.src = src;
+          img.retryCount += 1;
+        }
       }, RETRY_DELAY);
     },
     showPreview: function(ev) {

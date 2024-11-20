@@ -138,7 +138,8 @@ class AssetSerializer < ActiveModel::Serializer
       load_asset: load_asset_path(object),
       asset_file: asset_file_url_path(object),
       marvin_js: marvin_js_asset_path(object),
-      marvin_js_icon: image_path('icon_small/marvinjs.svg')
+      marvin_js_icon: image_path('icon_small/marvinjs.svg'),
+      versions: (asset_versions_path(object) if attached)
     }
     user = scope[:user] || @instance_options[:user]
     if can_manage_asset?(user, object)
@@ -155,6 +156,7 @@ class AssetSerializer < ActiveModel::Serializer
       )
     end
 
+    urls[:restore_version] = asset_restore_version_path(object) if can_restore_asset?(user, object)
     urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)
 
     if can_manage_asset?(user, object) && can_open_asset_locally?(user, object)

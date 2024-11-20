@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 ruby '~> 3.2.2'
 
@@ -13,7 +13,7 @@ gem 'pg', '~> 1.5'
 gem 'pg_search' # PostgreSQL full text search
 gem 'psych', '< 4.0'
 gem 'rails', '~> 7.0.8'
-gem 'recaptcha', require: 'recaptcha/rails'
+gem 'recaptcha'
 gem 'sanitize'
 gem 'sprockets-rails'
 gem 'view_component'
@@ -47,8 +47,7 @@ gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
 # gem 'caracal'
-gem 'caracal',
-    git: 'https://github.com/scinote-eln/caracal.git', branch: 'rubyzip2' # Build docx report
+gem 'caracal', git: 'https://github.com/scinote-eln/caracal.git', branch: 'custom-docx-reports' # Build docx report
 gem 'caxlsx' # Build XLSX files
 gem 'deface', '~> 1.9'
 gem 'down', '~> 5.0'

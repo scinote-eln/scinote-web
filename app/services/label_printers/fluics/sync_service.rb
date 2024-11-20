@@ -9,6 +9,7 @@ module LabelPrinters
       end
 
       def sync_templates!
+        NewRelic::Agent.ignore_transaction
         LabelPrinter.fluics.each do |printer|
           api_client = ApiClient.new(printer.fluics_api_key)
           templates = api_client.list_templates

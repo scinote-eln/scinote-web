@@ -27,9 +27,14 @@ Canaid::Permissions.register_for(Asset) do
       if object.repository_column.repository.is_a?(RepositorySnapshot)
         false
       else
+        object.repository_row.active? &&
         can_manage_repository_assets?(user, object.repository_column.repository)
       end
     end
+  end
+
+  can :restore_asset do |user, asset|
+    VersionedAttachments.enabled? && can_manage_asset?(user, asset)
   end
 
   can :open_asset_locally do |_user, asset|

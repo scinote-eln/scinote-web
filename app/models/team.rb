@@ -221,6 +221,7 @@ class Team < ApplicationRecord
 
   def create_default_label_templates
     ZebraLabelTemplate.default.update(team: self, default: true)
+    ZebraLabelTemplate.default_203dpi.update(team: self, default: false)
     FluicsLabelTemplate.default.update(team: self, default: true)
   end
 end

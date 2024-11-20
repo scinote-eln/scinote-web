@@ -142,23 +142,14 @@ $.fn.initSubmitModal = function(modalID, modelName) {
  * @returns {string} - HTML with tables wrapped.
  */
 function wrapTables(htmlStringOrDomEl) {
-  if (typeof htmlStringOrDomEl === 'string') {
-    const container = $(`<span class="text-base">${htmlStringOrDomEl}</span>`);
-    container.find('table').toArray().forEach((table) => {
-      if ($(table).parent().hasClass('table-wrapper')) return;
-      $(table).css('float', 'none').wrapAll(`
-          <div class="table-wrapper" style="overflow: auto; width: 100%"></div>
-        `);
-    });
-    return container.prop('outerHTML');
-  }
-  // Check if the value is a DOM element
-  if (htmlStringOrDomEl instanceof Element) {
-    const tableElement = $(htmlStringOrDomEl).find('table');
-    if (tableElement.length > 0) {
-      tableElement.wrap('<div class="table-wrapper" style="overflow: auto; width: 100%"></div>');
-      const updatedHtml = $(htmlStringOrDomEl).html();
-      $(htmlStringOrDomEl).replaceWith(updatedHtml);
+  const htmlContent = `<span class="text-base">${htmlStringOrDomEl}</span>`;
+  const container = typeof htmlStringOrDomEl === 'string' ? $(htmlContent) : $(htmlStringOrDomEl);
+
+  container.find('table').toArray().forEach((table) => {
+    if ($(table).parents('table').length === 0) {
+      $(table).css('float', 'none')
+        .wrapAll('<div class="table-wrapper w-full" style="overflow: auto"></div>');
     }
-  }
+  });
+  return container.prop('outerHTML');
 }

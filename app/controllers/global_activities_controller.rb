@@ -151,7 +151,25 @@ class GlobalActivitiesController < ApplicationController
   end
 
   def activity_filter_params
-    params.permit(:name, filter: {})
+    params.permit(
+      :name,
+      filter: [
+        :to_date,
+        :from_date,
+        { types: [] },
+        { subjects: {
+          'Report' => [],
+          'Project' => [],
+          'MyModule' => [],
+          'Protocol' => [],
+          'Experiment' => [],
+          'RepositoryRow' => [],
+          'RepositoryBase' => []
+        } },
+        { users: [] },
+        { teams: [] }
+      ]
+    )
   end
 
   def activity_filters

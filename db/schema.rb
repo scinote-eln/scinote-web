@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_02_122340) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_28_105317) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -635,6 +635,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_02_122340) do
     t.bigint "archived_by_id"
     t.bigint "restored_by_id"
     t.string "external_id"
+    t.integer "repository_rows_count", default: 0, null: false
     t.index ["archived"], name: "index_repositories_on_archived"
     t.index ["archived_by_id"], name: "index_repositories_on_archived_by_id"
     t.index ["discarded_at"], name: "index_repositories_on_discarded_at"
