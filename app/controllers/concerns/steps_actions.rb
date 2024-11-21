@@ -92,6 +92,18 @@ module StepsActions
     )
   end
 
+  def table_content_annotation(step, table, old_content = nil)
+    smart_annotation_notification(
+      old_text: old_content,
+      new_text: table.contents,
+      subject: step.protocol,
+      title: t(table.metadata['plateTemplate'] ? 'notifications.step_well_plate_title' : 'notifications.step_table_title',
+               user: current_user.full_name,
+               step: step.name),
+      message: annotation_message(step)
+    )
+  end
+
   def annotation_message(step)
     return t('notifications.step_annotation_message_html',
              project: link_to(

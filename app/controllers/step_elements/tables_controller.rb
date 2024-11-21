@@ -2,6 +2,9 @@
 
 module StepElements
   class TablesController < BaseController
+    include ApplicationHelper
+    include StepsActions
+
     before_action :load_table, only: %i(update destroy duplicate move)
 
     def create
@@ -37,6 +40,7 @@ module StepElements
 
     def update
       ActiveRecord::Base.transaction do
+        old_content = @table.contents
         @table.assign_attributes(table_params.except(:metadata))
         begin
           if table_params[:metadata].present?
@@ -51,7 +55,9 @@ module StepElements
           @table.metadata = {}
         end
         @table.save!
+
         log_step_activity(:table_edited, { table_name: @table.name })
+        table_content_annotation(@table.step, @table, old_content)
       end
 
       render json: @table, serializer: TableSerializer, user: current_user

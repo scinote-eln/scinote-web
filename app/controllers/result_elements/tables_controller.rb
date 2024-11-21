@@ -2,6 +2,8 @@
 
 module ResultElements
   class TablesController < BaseController
+    include ApplicationHelper
+
     before_action :load_table, only: %i(update destroy duplicate move)
 
     def create
@@ -37,6 +39,7 @@ module ResultElements
 
     def update
       ActiveRecord::Base.transaction do
+        old_content = @table.contents
         @table.assign_attributes(table_params.except(:metadata))
         begin
           if table_params[:metadata].present?
@@ -52,6 +55,7 @@ module ResultElements
         end
         @table.save!
         log_result_activity(:result_table_edited, { table_name: @table.name })
+        result_annotation_notification(old_content)
       end
 
       render json: @table, serializer: ResultTableSerializer, user: current_user
@@ -127,6 +131,29 @@ module ResultElements
     def load_table
       @table = @result.tables.find_by(id: params[:id])
       return render_404 unless @table
+    end
+
+    def result_annotation_notification(old_content = nil)
+      smart_annotation_notification(
+        old_text: old_content,
+        new_text: @table.contents,
+        subject: @result,
+        title: t(@table.metadata['plateTemplate'] ? 'notifications.result_well_plate_annotation_title' : 'notifications.result_table_annotation_title',
+                 result: @result.name,
+                 user: current_user.full_name),
+        message: t('notifications.result_annotation_message_html',
+                   project: link_to(@result.my_module.experiment.project.name,
+                                    project_url(@result.my_module
+                                                     .experiment
+                                                     .project)),
+                   experiment: link_to(@result.my_module.experiment.name,
+                                       my_modules_experiment_url(@result.my_module
+                                                                        .experiment)),
+                   my_module: link_to(@result.my_module.name,
+                                      protocols_my_module_url(
+                                        @result.my_module
+                                      )))
+      )
     end
   end
 end
