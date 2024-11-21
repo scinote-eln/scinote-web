@@ -64,12 +64,6 @@ module ReportsHelper
     "<span class=\"label step-label-#{style}\">[#{text}]</span>".html_safe
   end
 
-  def font_awesome_links
-    [{ url: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/fontawesome.min.css' },
-     { url: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/regular.min.css' },
-     { url: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/solid.min.css' }]
-  end
-
   def filter_steps_for_report(steps, settings)
     include_completed_steps = settings.dig('task', 'protocol', 'completed_steps')
     include_uncompleted_steps = settings.dig('task', 'protocol', 'uncompleted_steps')
