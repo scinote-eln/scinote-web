@@ -14,7 +14,7 @@ module VersionedAttachments
           __send__(name).attach(*args, **options)
 
           new_blob = __send__(name).blob
-          new_blob.metadata['created_by_id'] = last_modified_by_id
+          new_blob.metadata['created_by_id'] ||= last_modified_by_id
 
           # set version of current latest file if previous versions exist
           new_blob.save! and next unless __send__(:"previous_#{name.to_s.pluralize}").any?
@@ -36,7 +36,7 @@ module VersionedAttachments
             new_blob = ActiveStorage::Blob.create_and_upload!(
               io: tmp_file,
               filename: blob.filename,
-              metadata: blob.metadata.merge({ 'restored_from_version' => version })
+              metadata: blob.metadata.merge({ 'restored_from_version' => version, 'created_by_id' => last_modified_by_id })
             )
 
             __send__(:"attach_#{name}_version", new_blob)
@@ -50,5 +50,12 @@ module VersionedAttachments
 
   def enabled?
     ApplicationSettings.instance.values['versioned_attachments_enabled']
+  end
+
+  def disabled_disclaimer
+    {
+      text: I18n.t('assets.file_versions_modal.disabled_disclaimer'),
+      button: I18n.t('assets.file_versions_modal.enable_button')
+    }
   end
 end

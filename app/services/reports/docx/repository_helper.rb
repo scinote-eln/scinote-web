@@ -4,19 +4,25 @@ module Reports::Docx::RepositoryHelper
   include InputSanitizeHelper
   include ActionView::Helpers::NumberHelper
 
-  def prepare_row_columns_for_docx(repository_data, my_module, repository)
+  def prepare_row_columns_for_docx(repository_data, my_module = nil, repository = nil)
+    return if repository_data[:headers].blank?
+
     result = [repository_data[:headers]]
+    excluded_columns = repository_data[:excluded_columns]
+
     repository_data[:rows].each do |record|
       row = []
-      row.push(record.code)
-      row.push(escape_input(record.archived ? "#{record.name} [#{I18n.t('general.archived')}]" : record.name))
-      row.push(I18n.l(record.created_at, format: :full))
-      row.push(escape_input(record.created_by.full_name))
+      row.push(record.code) unless excluded_columns.include?(-1)
+      unless excluded_columns.include?(-2)
+        row.push(escape_input(record.archived ? "#{record.name} [#{I18n.t('general.archived')}]" : record.name))
+      end
+      row.push(I18n.l(record.created_at, format: :full)) unless excluded_columns.include?(-3)
+      row.push(escape_input(record.created_by.full_name)) unless excluded_columns.include?(-4)
 
       cell_values = {}
       custom_cells = record.repository_cells
       custom_cells.each do |cell|
-        if cell.value.instance_of? RepositoryStockValue
+        if cell.value.instance_of?(RepositoryStockValue) && my_module
           if repository.is_a?(RepositorySnapshot)
             consumed_stock = record.repository_stock_consumption_cell&.value&.formatted || 0
             cell_values[cell.repository_column_id] = consumed_stock
@@ -38,6 +44,8 @@ module Reports::Docx::RepositoryHelper
       end
 
       repository_data[:custom_columns].each do |column_id|
+        next if excluded_columns.include?(column_id)
+
         value = cell_values[column_id]
         row.push(value)
       end

@@ -32,7 +32,9 @@
                   </div>
                   <div class="flex text-xs text-sn-grey justify-start">
                     <div class="mr-3">{{ fileVersion.attributes.created_at }}</div>
-                    <div class="mr-3 text-nowrap text-ellipsis overflow-hidden max-w-52">{{ fileVersion.attributes.created_by.full_name }}</div>
+                    <div v-if="fileVersion.attributes.created_by" class="mr-3 text-nowrap text-ellipsis overflow-hidden max-w-52">
+                      {{ fileVersion.attributes.created_by.full_name }}
+                    </div>
                     <div>{{ i18n.t("assets.file_versions_modal.size") }}: {{ Math.round(fileVersion.attributes.byte_size/1024) }}KB</div>
                   </div>
                 </div>
@@ -40,7 +42,7 @@
                 <div class="basis-1/4 flex justify-end">
                   <a class="btn btn-icon p-0 px-2 hover:bg-sn-light-grey"
                     v-if="enabled || index === 0"
-                    :href="fileVersion.attributes.url"
+                    :href="fileVersion.attributes.download_url"
                     target="_blank"
                     data-render-tooltip="true"
                     :title="i18n.t('assets.file_versions_modal.download')"
@@ -67,7 +69,7 @@
             </div>
             <div>
               <h3 class="mt-1 mb-2">{{ i18n.t('assets.file_versions_modal.title') }}</h3>
-              {{ i18n.t('assets.file_versions_modal.disabled_disclaimer') }}
+              {{ disabledDisclaimer.text }}
             </div>
           </div>
         </div>
@@ -76,7 +78,7 @@
             {{ i18n.t('general.cancel') }}
           </button>
           <a v-if="fileVersions && !enabled" :href="enableUrl" class='btn btn-primary' target="_blank">
-            {{ i18n.t('assets.file_versions_modal.enable_button') }}
+            {{ disabledDisclaimer.button }}
           </a>
         </div>
       </div>
@@ -96,8 +98,7 @@ export default {
       required: true
     },
     restoreVersionUrl: {
-      type: String,
-      required: true
+      type: String
     }
   },
   mixins: [modalMixin],
@@ -105,7 +106,8 @@ export default {
     return {
       fileVersions: null,
       enabled: null,
-      enableUrl: null
+      enableUrl: null,
+      disabledDisclaimer: null
     };
   },
   created() {
@@ -122,6 +124,7 @@ export default {
         this.fileVersions = response.data.data;
         this.enabled = response.data.enabled;
         this.enableUrl = response.data.enable_url;
+        this.disabledDisclaimer = response.data.disabled_disclaimer;
         this.$nextTick(() => {
           document.querySelectorAll('[data-render-tooltip]').forEach((e) => {
             window.initTooltip(e);

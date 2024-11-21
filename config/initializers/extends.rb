@@ -570,6 +570,7 @@ class Extends
   ]
 
   REPORT_TEMPLATES = {}
+  DOCX_REPORT_TEMPLATES = {}
 
   NOTIFIABLE_ACTIVITIES = %w(
     assign_user_to_project
@@ -619,21 +620,32 @@ class Extends
       HEREDOC
   }
 
+  DEFAULT_LABEL_TEMPLATE_203DPI = {
+    zpl:
+      <<~HEREDOC
+        ^XA
+        ^MTT
+        ^MUD,200,200
+        ^PR2
+        ^MD30
+        ^LH0,8
+        ^PW180
+        ^CF0,15
+        ^FO0,5^FD{{ITEM_ID}}^FS
+        ^FO0,13^BQN,2,3^FDMA,{{ITEM_ID}}^FS
+        ^FO70,27^FB100,2,0,L^FD{{NAME}}^FS^FS
+        ^XZ
+      HEREDOC
+  }
+
   LABEL_TEMPLATE_FORMAT_MAP = {
     'ZebraLabelTemplate' => 'ZPL',
     'FluicsLabelTemplate' => 'Fluics'
   }
 
-  EXTERNAL_SCRIPT_SERVICES =
-    if Rails.application.config.x.no_external_csp_exceptions
-      []
-    else
-      %w(
-        https://marvinjs.chemicalize.com/
-        www.recaptcha.net/
-        www.gstatic.com/recaptcha/
-      )
-    end
+  # If Rails.application.config.x.no_external_csp_exceptions is set, than this should be empty,
+  # but first try to use nonces before adding exceptions here
+  EXTERNAL_SCRIPT_SERVICES = []
 
   EXTERNAL_CONNECT_SERVICES =
     if Rails.application.config.x.no_external_csp_exceptions

@@ -77,9 +77,9 @@ class RepositoryCell < ApplicationRecord
       '"repository_date_time_values"."id" = "repository_cells"."value_id" AND ' \
       '"repository_cells"."value_type" = \'RepositoryDateTimeValueBase\' ' \
       'AND repository_reminder_columns.metadata ->> \'reminder_value\' <> \'\' AND ' \
-      '(repository_date_time_values.data - NOW()) <= ' \
-      '(repository_reminder_columns.metadata ->> \'reminder_value\')::int * ' \
-      '(repository_reminder_columns.metadata ->> \'reminder_unit\')::int * interval \'1 sec\''
+      'repository_date_time_values.data <= ' \
+      '(NOW() AT TIME ZONE \'UTC\') + (repository_reminder_columns.metadata ->> \'reminder_value\')::int * ' \
+      '(repository_reminder_columns.metadata ->> \'reminder_unit\')::int * \'1 SECOND\'::interval'
     ).joins(
       'LEFT OUTER JOIN "hidden_repository_cell_reminders" ON ' \
       '"repository_cells"."id" = "hidden_repository_cell_reminders"."repository_cell_id" AND ' \

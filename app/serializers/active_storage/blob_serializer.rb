@@ -4,7 +4,7 @@ module ActiveStorage
   class BlobSerializer < ActiveModel::Serializer
     include Rails.application.routes.url_helpers
 
-    attributes :filename, :extension, :basename, :url, :created_at, :byte_size, :version, :restored_from_version, :created_by
+    attributes :filename, :extension, :basename, :url, :created_at, :byte_size, :version, :restored_from_version, :created_by, :download_url
 
     def basename
       object.filename.base
@@ -12,6 +12,10 @@ module ActiveStorage
 
     def extension
       object.filename.extension_without_delimiter
+    end
+
+    def download_url
+      rails_blob_url(object, disposition: 'attachment')
     end
 
     def version

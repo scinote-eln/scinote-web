@@ -21,9 +21,11 @@
       <% end %>
     <% end %>
    </div>
-    <div class="user-time">
-      <%= t('projects.reports.elements.result_table.user_time', timestamp: l(timestamp, format: :full)) %>
-    </div>
+    <% unless @settings['exclude_timestamps'] %>
+      <div class="user-time">
+        <%= t('projects.reports.elements.result_table.user_time', timestamp: l(timestamp, format: :full)) %>
+      </div>
+    <% end %>
   </div>
   <div class="report-element-body">
     <div class="report-native-table report-common-table-format" id="native-table-<%= table.id %>">
