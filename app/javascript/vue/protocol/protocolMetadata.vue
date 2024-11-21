@@ -154,7 +154,7 @@ export default {
       $.post(this.protocol.attributes.urls.save_as_draft_url, (result) => {
         this.creatingDraft = false;
         window.location.replace(result.url);
-      }).error(() => {
+      }).fail(() => {
         this.creatingDraft = false;
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'));
       });
