@@ -25,7 +25,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal" data-e2e="e2e-BT-newInventoryModal-cancel">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" data-e2e="e2e-BT-newInventoryModal-create">
+            <button class="btn btn-primary" type="submit" :disabled="!validName" data-e2e="e2e-BT-newInventoryModal-create">
               {{ i18n.t('repositories.index.modal_create.submit') }}
             </button>
           </div>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-/* global HelperModule */
+/* global HelperModule GLOBAL_CONSTANTS */
 
 import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
@@ -52,6 +52,11 @@ export default {
       name: '',
       error: null
     };
+  },
+  computed: {
+    validName() {
+      return this.name.length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH;
+    }
   },
   methods: {
     submit() {

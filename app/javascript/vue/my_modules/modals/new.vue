@@ -74,7 +74,7 @@
 </template>
 
 <script>
-/* global HelperModule SmartAnnotation */
+/* global HelperModule SmartAnnotation GLOBAL_CONSTANTS */
 
 import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
@@ -105,7 +105,7 @@ export default {
   },
   computed: {
     validName() {
-      return this.name.length > 1;
+      return this.name.length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH;
     },
     formattedTags() {
       return this.allTags.map((tag) => (
