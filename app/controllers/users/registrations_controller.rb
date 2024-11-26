@@ -262,7 +262,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
       :current_password,
       :change_password,
       :change_avatar,
-      :external_id
+      :external_id,
+      :job_title
     )
   end
 

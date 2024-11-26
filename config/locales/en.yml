@@ -3080,6 +3080,7 @@ en:
         new_email_label: "New email"
         external_id_label: 'External ID'
         external_id_title: 'External Id'
+        job_title_label: 'Job title'
         current_password_label: "Current password"
         password_explanation: "(we need your current password to confirm your changes)"
         waiting_for_confirm: "Currently waiting confirmation for: %{email}"
