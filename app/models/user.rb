@@ -29,8 +29,9 @@ class User < ApplicationRecord
   validate :time_zone_check
 
   validates :external_id, length: { maximum: Constants::EMAIL_MAX_LENGTH }
+  validates :job_title, length: { maximum: Constants::NAME_MAX_LENGTH }
 
-  store_accessor :settings, :time_zone, :notifications_settings, :external_id
+  store_accessor :settings, :time_zone, :notifications_settings, :external_id, :job_title
 
   DEFAULT_SETTINGS = {
     time_zone: 'UTC',

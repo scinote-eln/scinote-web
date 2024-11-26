@@ -1424,6 +1424,18 @@ function reportHandsonTableConverter() {
     });
   }
 
+  function setJobTitles(selectedClass) {
+    if (!selectedClass) return;
+
+    const targetElement = $(`[data-job-title-element-target="${selectedClass}"]`);
+    const jobTitles = dropdownSelector.getData(targetElement)
+      .map((item) => item.params.job_title)
+      .filter(Boolean)
+      .join(', ');
+
+    $(`#${selectedClass}`).val(jobTitles);
+  }
+
   function loadDocxTemplate() {
     const template = dropdownSelector.getValues('#docxTemplateSelector');
     let params = {
@@ -1448,7 +1460,14 @@ function reportHandsonTableConverter() {
 
       $('.report-template-value-dropdown').each(function() {
         dropdownSelector.init($(this), {
-          noEmptyOption: true
+          noEmptyOption: true,
+          optionClass: $(this).data('job-title-element-target'),
+          onSelect: function() {
+            setJobTitles(this.optionClass);
+          },
+          onUnSelect: function() {
+            setJobTitles(this.optionClass);
+          }
         });
       });
     });
