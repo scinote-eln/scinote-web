@@ -143,6 +143,7 @@ export default {
         }
       } catch (error) {
         console.error('Error polling for changes:', error);
+        this.stopPolling();
       }
     },
     startPolling() {
