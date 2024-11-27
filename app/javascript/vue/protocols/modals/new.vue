@@ -41,7 +41,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal" data-e2e="e2e-BT-newProtocolModal-cancel">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="visible && !defaultRole" data-e2e="e2e-BT-newProtocolModal-create">
+            <button class="btn btn-primary" type="submit" :disabled="(visible && !defaultRole) || !validName" data-e2e="e2e-BT-newProtocolModal-create">
               {{ i18n.t('protocols.new_protocol_modal.create_new') }}
             </button>
           </div>
@@ -52,6 +52,7 @@
 </template>
 
 <script>
+/* global GLOBAL_CONSTANTS */
 
 import SelectDropdown from '../../shared/select_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
@@ -78,6 +79,11 @@ export default {
   },
   mounted() {
     this.fetchUserRoles();
+  },
+  computed: {
+    validName() {
+      return this.name.length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH;
+    }
   },
   data() {
     return {

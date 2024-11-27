@@ -1,4 +1,4 @@
-/* global dropdownSelector HelperModule */
+/* global dropdownSelector HelperModule GLOBAL_CONSTANTS */
 (function() {
   const protocolModal = '#newProtocolModal';
   const submitButton = $('.create-protocol-button');
@@ -15,6 +15,13 @@
   });
 
   $(protocolModal)
+    .on('input', '#protocol_name', function() {
+      if ($(this).val().length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH) {
+        submitButton.removeAttr('disabled');
+      } else {
+        submitButton.attr('disabled', 'disabled');
+      }
+    })
     .on('change', '#protocol_visibility', function() {
       let checked = $(this)[0].checked;
       $('#roleSelectWrapper').toggleClass('hidden', !checked);

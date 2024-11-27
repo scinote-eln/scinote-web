@@ -36,7 +36,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="disableSubmit || (visible && !defaultRole)">
+            <button class="btn btn-primary" type="submit" :disabled="disableSubmit || (visible && !defaultRole) || !validName ">
               {{ i18n.t('projects.index.modal_new_project.create') }}
             </button>
           </div>
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+/* global GLOBAL_CONSTANTS */
 
 import SelectDropdown from '../../shared/select_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
@@ -70,6 +71,11 @@ export default {
       } else {
         this.defaultRole = null;
       }
+    }
+  },
+  computed: {
+    validName() {
+      return this.name.length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH;
     }
   },
   mounted() {
