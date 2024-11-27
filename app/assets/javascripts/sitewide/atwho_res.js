@@ -64,7 +64,7 @@ var SmartAnnotation = (function() {
               $('.atwho-header-res').css({ 'pointer-events': 'none' });
             }, 250);
 
-            var $currentAtWho = $(`.atwho-view[data-at-who-id=${$(field).attr('data-smart-annotation')}]`);
+            var $currentAtWho = $(`.atwho-view[data-at-who-id=${$(field).attr('data-smart-annotation')}]`).last();
             var filterType;
             var params = { query: query };
             filterType = FilterTypeEnum[$currentAtWho.find('.tab-pane.active').data('object-type')];
