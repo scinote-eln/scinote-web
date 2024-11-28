@@ -3,8 +3,6 @@
 class GeneSequenceAssetsController < ApplicationController
   include ActiveStorage::SetCurrent
 
-  skip_before_action :verify_authenticity_token
-
   before_action :check_open_vector_service_enabled, except: %i(new edit)
   before_action :load_vars, except: %i(new create)
   before_action :load_create_vars, only: %i(new create)
