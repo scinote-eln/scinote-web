@@ -103,22 +103,24 @@ enginePaths.forEach((path) => {
     console.log(`No extra yarn packages in ${path}.`);
   }
 
-  console.log(`Checking for engine JS file overrides in ${path}...`)
-  let jsFileOverrides
+  if (mode === 'production') {
+    console.log(`Checking for engine JS file overrides in ${path}...`)
+    let jsFileOverrides
 
-  try {
-    jsFileOverrides = execSync(`[ -f ${path}/app/javascript/overrides.txt ] && cat ${path}/app/javascript/overrides.txt`).toString().split('\n').filter((p) => !!p);
-  } catch {
-    jsFileOverrides = [];
-  }
+    try {
+      jsFileOverrides = execSync(`[ -f ${path}/app/javascript/overrides.txt ] && cat ${path}/app/javascript/overrides.txt`).toString().split('\n').filter((p) => !!p);
+    } catch {
+      jsFileOverrides = [];
+    }
 
-  if (jsFileOverrides.length > 0) {
-    jsFileOverrides.forEach((jsFilePath) => {
-      console.log(`Overwritting ${jsFilePath}...`);
-      execSync(`\\cp -f ${path}/${jsFilePath} ./${jsFilePath}`);
-    });
-  } else {
-    console.log(`No JS file overrides in ${path}.`);
+    if (jsFileOverrides.length > 0) {
+      jsFileOverrides.forEach((jsFilePath) => {
+        console.log(`Overwritting ${jsFilePath}...`);
+        execSync(`\\cp -f ${path}/${jsFilePath} ./${jsFilePath}`);
+      });
+    } else {
+      console.log(`No JS file overrides in ${path}.`);
+    }
   }
 
   const packsFolderPath = `${path}/app/javascript/packs`;
