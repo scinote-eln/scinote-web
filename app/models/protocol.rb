@@ -157,11 +157,13 @@ class Protocol < ApplicationRecord
                            templates = latest_available_versions(teams)
                                        .with_granted_permissions(user, ProtocolPermissions::READ)
                            templates = templates.active unless include_archived
-                           templates.select(:id)
+                           templates
                          end || []
 
     protocol_my_modules = if options[:options]&.dig(:in_repository).blank?
                             protocols = viewable_by_user_my_module_protocols(user, teams)
+                                        .where(protocol_type: [Protocol.protocol_types[:unlinked],
+                                                               Protocol.protocol_types[:linked]])
                             unless include_archived
                               protocols = protocols.joins(my_module: { experiment: :project })
                                                    .active
@@ -170,12 +172,16 @@ class Protocol < ApplicationRecord
                                                           projects: { archived: false })
                             end
 
-                            protocols.select(:id)
+                            protocols
                           end || []
 
-    protocols = Protocol.where('(protocols.protocol_type IN (?) AND protocols.id IN (?)) OR (protocols.id IN (?))',
-                               [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
-                               protocol_my_modules, protocol_templates)
+    protocols = if (options[:options]&.dig(:in_repository).present? || options[:options].blank?) &&
+                   options[:options]&.dig(:in_repository).blank?
+                  where('protocols.id IN ((?) UNION ALL (?))',
+                        protocol_templates.select(:id), protocol_my_modules.select(:id))
+                else
+                  options[:options]&.dig(:in_repository).blank? ? protocol_my_modules : Protocol.where(id: protocol_templates.pluck(:id))
+                end
 
     protocols.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: protocols })
   end
@@ -209,7 +215,7 @@ class Protocol < ApplicationRecord
                  .where(protocol_type: Protocol.protocol_types[:in_repository_draft], parent_id: nil)
                  .select(:id)
 
-    where('protocols.id IN ((?) UNION (?) UNION (?))', original_without_versions, published_versions, new_drafts)
+    where('protocols.id IN ((?) UNION ALL (?) UNION ALL (?))', original_without_versions, published_versions, new_drafts)
   end
 
   def self.viewable_by_user(user, teams, options = {})

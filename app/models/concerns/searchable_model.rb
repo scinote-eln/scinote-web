@@ -115,7 +115,7 @@ module SearchableModel
                               options[:raw_input].where(id: search_subquery(phrase[:query], options[:raw_input]))
                             end
           query_clauses = if index.zero?
-                            where(id: subquery_result)
+                            subquery_result
                           elsif phrase[:current_operator] == 'or'
                             query_clauses.or(subquery_result)
                           else
