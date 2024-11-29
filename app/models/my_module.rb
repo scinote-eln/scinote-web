@@ -116,8 +116,7 @@ class MyModule < ApplicationRecord
     teams = options[:teams] || current_team || user.teams.select(:id)
 
     new_query = distinct.left_joins(:task_comments, my_module_tags: :tag, user_my_modules: :user)
-                        .with_granted_permissions(user, MyModulePermissions::READ)
-                        .where(user_assignments: { team: teams })
+                        .viewable_by_user(user, teams)
                         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
     unless include_archived
@@ -130,7 +129,7 @@ class MyModule < ApplicationRecord
 
   def self.viewable_by_user(user, teams)
     with_granted_permissions(user, MyModulePermissions::READ)
-      .where(experiment: Experiment.viewable_by_user(user, teams))
+      .where(user_assignments: { team: teams })
   end
 
   def self.filter_by_teams(teams = [])
