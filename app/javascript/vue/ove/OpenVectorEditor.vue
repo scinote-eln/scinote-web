@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '../../packs/custom_axios.js';
 import { blobToBase64 } from '../shared/blobToBase64.js';
 
 export default {
