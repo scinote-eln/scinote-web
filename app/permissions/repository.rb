@@ -34,6 +34,15 @@ Canaid::Permissions.register_for(Repository) do
     end
   end
 
+  %i(archive_repository
+     delete_repository
+     manage_repository_assets)
+    .each do |perm|
+    can perm do |_, repository|
+      !repository.is_a?(SoftLockedRepository) || repository.unlocked?
+    end
+  end
+
   %i(create_repository_rows
      manage_repository_rows
      manage_repository_assets
