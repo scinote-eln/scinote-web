@@ -25,7 +25,8 @@ module Api
             blob = ActiveStorage::Blob.create_and_upload!(
               io: StringIO.new(Base64.decode64(asset_params[:file_data])),
               filename: asset_params[:file_name],
-              content_type: asset_params[:file_type]
+              content_type: asset_params[:file_type],
+              metadata: { created_by_id: current_user.id }
             )
             asset = @step.assets.new(file: blob, team: @team)
           end
