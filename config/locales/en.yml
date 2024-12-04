@@ -4549,7 +4549,7 @@ en:
           detail: "You don't have permisson to update stock consumption on this task item."
         assing_repository_item_to_task_permission:
           title: "Permission denied"
-          detail: "You don't have permisson to assign/unassign inventory item on this task item."
+          detail: "You don't have permisson to assign/unassign inventory item on this task."
         record_not_found:
           title: "Not found"
           detail: "%{model} record with id %{id} not found in the specified scope"
