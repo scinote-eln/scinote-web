@@ -4,6 +4,7 @@ import { mountWithTurbolinks } from '../helpers/turbolinks.js';
 
 window.initReportNativeTableRenderer = (id) => {
   const app = createApp({});
+  app.config.globalProperties.i18n = window.I18n;
   app.component('NativeTableRenderer', NativeTableRenderer);
   mountWithTurbolinks(app, id);
 };
