@@ -193,7 +193,9 @@ module TinyMceImages
       return unless sanitized_text
 
       ActiveRecord::Base.transaction do
-        sanitized_text.scan(/src="(data:image\/[^;]+;base64[^"]+)"/i).flatten.each do |base64_src|
+        sanitized_text.scan(%r{src=['"](data:image/[^;]+;base64[^"]+)['"]}i).flatten.each do |base64_src|
+          next unless Team.search_by_object(self)
+
           base64_data_parts = base64_src.split('base64,')
           base64_file_extension =
             MIME::Types[
@@ -217,10 +219,8 @@ module TinyMceImages
 
           encoded_id = Base62.encode(tiny_image.id)
 
-          sanitized_text.gsub!(
-            "#{base64_src}\"",
-            "\" data-mce-token=\"#{encoded_id}\" alt=\"description-#{encoded_id}\""
-          )
+          sanitized_text.gsub!("#{base64_src}\"", "\" data-mce-token=\"#{encoded_id}\" alt=\"description-#{encoded_id}\"")
+          sanitized_text.gsub!("#{base64_src}'", "' data-mce-token=\"#{encoded_id}\" alt=\"description-#{encoded_id}\"")
         end
 
         assign_attributes(object_field => sanitized_text)

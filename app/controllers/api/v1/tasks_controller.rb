@@ -38,7 +38,12 @@ module Api
       def create
         raise PermissionError.new(MyModule, :create) unless can_create_experiment_tasks?(@experiment)
 
-        my_module = @experiment.my_modules.create!(task_params_create.merge(created_by: current_user))
+        my_module = @experiment.my_modules.create!(task_params_create.except(:description).merge(created_by: current_user))
+
+        if task_params_create[:description]
+          my_module.description = task_params_create[:description]
+          my_module.save!
+        end
 
         render jsonapi: my_module, serializer: TaskSerializer,
                                    rte_rendering: render_rte?,
