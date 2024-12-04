@@ -109,7 +109,7 @@ module TinyMceImages
     end
 
     def copy_unknown_tiny_mce_images(user)
-      asset_team_id = Team.search_by_object(self).id
+      asset_team_id = team.id
       return unless asset_team_id
 
       object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
@@ -193,7 +193,9 @@ module TinyMceImages
       return unless sanitized_text
 
       ActiveRecord::Base.transaction do
-        sanitized_text.scan(/src="(data:image\/[^;]+;base64[^"]+)"/i).flatten.each do |base64_src|
+        sanitized_text.scan(%r{src=['"](data:image/[^;]+;base64[^"]+)['"]}i).flatten.each do |base64_src|
+          next unless team.id
+
           base64_data_parts = base64_src.split('base64,')
           base64_file_extension =
             MIME::Types[
@@ -202,7 +204,7 @@ module TinyMceImages
           base64_data = base64_data_parts.last
 
           tiny_image = TinyMceAsset.create!(
-            team: Team.search_by_object(self),
+            team:,
             object_id: id,
             object_type: self.class.name,
             saved: true
@@ -217,10 +219,8 @@ module TinyMceImages
 
           encoded_id = Base62.encode(tiny_image.id)
 
-          sanitized_text.gsub!(
-            "#{base64_src}\"",
-            "\" data-mce-token=\"#{encoded_id}\" alt=\"description-#{encoded_id}\""
-          )
+          sanitized_text.gsub!("#{base64_src}\"", "\" data-mce-token=\"#{encoded_id}\" alt=\"description-#{encoded_id}\"")
+          sanitized_text.gsub!("#{base64_src}'", "' data-mce-token=\"#{encoded_id}\" alt=\"description-#{encoded_id}\"")
         end
 
         assign_attributes(object_field => sanitized_text)

@@ -169,7 +169,7 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def clone_tinymce_asset(obj)
-    team_id = Team.search_by_object(obj)&.id
+    team_id = obj.team&.id
 
     return false unless team_id
 
