@@ -81,7 +81,7 @@ class RepositoryCsvExport
         when -1, -2
           next
         when -3
-          csv_row << (repository.is_a?(RepositorySnapshot) ? row.parent.code : row.code)
+          csv_row << row.code
         when -4
           csv_row << row.name
         when -5
