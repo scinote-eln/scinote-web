@@ -32,6 +32,7 @@ class RepositorySnapshotDatatableService < RepositoryDatatableService
     @all_count = repository_rows.count
 
     if search_value.present?
+      repository_rows = repository_rows.joins(:created_by)
       repository_row_matches = repository_rows.where_attributes_like(@repository.default_search_fileds, search_value)
       results = repository_rows.where(id: repository_row_matches)
 
@@ -45,7 +46,10 @@ class RepositorySnapshotDatatableService < RepositoryDatatableService
         results = results.or(repository_rows.where(id: custom_cell_matches))
       end
 
+      @filtered_count = results.count
       repository_rows = results
+    else
+      @filtered_count = @all_count
     end
 
     repository_rows.joins('LEFT OUTER JOIN "users" "created_by" ON "created_by"."id" = "repository_rows"."created_by_id"')

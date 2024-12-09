@@ -32,10 +32,10 @@ class MyModuleRepositoriesController < ApplicationController
     }
 
     @all_rows_count = datatable_service.all_count
+    @filtered_rows_count = datatable_service.filtered_count
     @columns_mappings = datatable_service.mappings
     repository_rows = datatable_service.repository_rows
     @repository_rows = repository_rows.page(page).per(per_page)
-    @filtered_rows_count = @repository_rows.load.take&.filtered_count || 0
     render rows_view
   end
 
@@ -54,7 +54,7 @@ class MyModuleRepositoriesController < ApplicationController
         )
         unless service.succeed?
           status = :unprocessable_entity
-          raise ActiveRecord::Rollback 
+          raise ActiveRecord::Rollback
         end
         assigned_count += service.assigned_rows_count
         skipped_count += (params[:rows_to_assign].length - service.assigned_rows_count)
