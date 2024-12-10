@@ -16,7 +16,6 @@ const entryList = {
   emoji_button: './app/javascript/packs/emoji_button.js',
   fontawesome: './app/javascript/packs/fontawesome.scss',
   prism: './app/javascript/packs/prism.js',
-  open_vector_editor: './app/javascript/packs/open_vector_editor.js',
   tiny_mce: './app/javascript/packs/tiny_mce.js',
   tiny_mce_styles: './app/javascript/packs/tiny_mce_styles.scss',
   tui_image_editor: './app/javascript/packs/tui_image_editor.js',
