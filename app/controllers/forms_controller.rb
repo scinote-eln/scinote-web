@@ -1,0 +1,131 @@
+# frozen_string_literal: true
+
+class FormsController < ApplicationController
+  before_action :load_form, only: %i(show update publish unpublish)
+
+  def index
+    respond_to do |format|
+      format.html
+      format.json do
+        forms = Lists::FormsService.new(current_user, current_team, params).call
+        render json: forms,
+               each_serializer: Lists::FormSerializer,
+               user: current_user
+      end
+    end
+  end
+
+  def show
+    respond_to do |format|
+      format.json { render json: @form, serializer: Lists::FormSerializer, include: %i(form_fields), user: current_user }
+      format.html
+    end
+  end
+
+  def create
+    ActiveRecord::Base.transaction do
+      @form = Form.new(
+        name: I18n.t('forms.default_name'),
+        team: current_team,
+        created_by: current_user,
+        last_modified_by: current_user
+      )
+
+      if @form.save
+        render json: @form, serializer: Lists::FormSerializer, user: current_user
+      else
+        render json: { error: @form.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+  end
+
+  def update
+    ActiveRecord::Base.transaction do
+      if @form.update(form_params.merge({ last_modified_by: current_user }))
+        render json: @form, serializer: Lists::FormSerializer, user: current_user
+      else
+        render json: { error: @form.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+  end
+
+  def publish
+    ActiveRecord::Base.transaction do
+      @form.update!(
+        published_by: current_user,
+        published_on: DateTime.now
+      )
+
+      render json: @form, serializer: Lists::FormSerializer, user: current_user
+    end
+  end
+
+  def unpublish
+    ActiveRecord::Base.transaction do
+      @form.update!(
+        published_by: nil,
+        published_on: nil
+      )
+
+      render json: @form, serializer: Lists::FormSerializer, user: current_user
+    end
+  end
+
+  def archive
+    forms = current_team.forms.active.where(id: params[:form_ids])
+    return render_404 if forms.blank?
+
+    counter = 0
+
+    forms.each do |form|
+      form.transaction do
+        form.archive!(current_user)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+
+    if counter.positive?
+      render json: { message: t('forms.archived.success_flash', number: counter) }
+    else
+      render json: { message: t('forms.archived.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
+  def restore
+    forms = current_team.forms.archived.where(id: params[:form_ids])
+    return render_404 if forms.blank?
+
+    counter = 0
+
+    forms.each do |form|
+      form.transaction do
+        form.restore!(current_user)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+
+    if counter.positive?
+      render json: { message: t('forms.restored.success_flash', number: counter) }
+    else
+      render json: { message: t('forms.restored.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def load_form
+    @form = Form.find_by(id: params[:id])
+
+    return render_404 unless @form
+  end
+
+  def form_params
+    params.require(:form).permit(:name, :description)
+  end
+end
