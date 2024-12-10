@@ -15,6 +15,4 @@ class FormField < ApplicationRecord
 
   acts_as_list scope: [:form, discarded_at: nil], top_of_list: 0, sequential_updates: true
 
-  private
-
 end

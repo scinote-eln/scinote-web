@@ -11,7 +11,6 @@ class FormSerializer < ActiveModel::Serializer
            serializer: FormFieldSerializer,
            order: :position
 
-
   def published_by
     object.published_by&.full_name
   end

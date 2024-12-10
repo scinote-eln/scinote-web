@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_28_105317) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_09_074134) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -240,7 +240,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_28_105317) do
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_form_fields_on_created_by_id"
     t.index ["discarded_at"], name: "index_form_fields_on_discarded_at"
-    t.index ["form_id", "position"], name: "index_form_fields_on_form_id_and_position", unique: true
     t.index ["form_id"], name: "index_form_fields_on_form_id"
     t.index ["last_modified_by_id"], name: "index_form_fields_on_last_modified_by_id"
   end
