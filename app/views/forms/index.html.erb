@@ -1,0 +1,18 @@
+ <div class="content-pane flexible">
+  <div class="content-header sticky-header">
+    <div class="title-row">
+      <h1>
+        <%= t('forms.index.head_title') %>
+      </h1>
+    </div>
+  </div>
+  <div id="formsTable" class="fixed-content-body"
+  >
+    <forms-table
+      actions-url="<%= actions_toolbar_forms_url %>"
+      data-source="<%= forms_path(format: :json) %>"
+      create-url="<%= forms_path  %>"
+    />
+  </div>
+</div>
+<%= javascript_include_tag 'vue_form_table' %>

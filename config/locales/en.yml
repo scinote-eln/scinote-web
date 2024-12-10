@@ -350,6 +350,7 @@ en:
     projects: "Projects"
     repositories: "Inventories"
     templates: "Templates"
+    forms: "Forms"
     protocol: "Protocol"
     label: "Label"
     items: "Items"
@@ -1053,7 +1054,6 @@ en:
       select_user_role: "Please select a user role."
       add_user_generic_error: "An error occurred. "
       can_add_user_to_project: "Can not add user to the project."
-
   forms:
     default_name: "Untitled form"
     restored:
@@ -1062,7 +1062,38 @@ en:
     archived:
       success_flash: "<strong>%{number}</strong> form(s) successfully archived."
       error_flash: "Failed to archive form(s)."
-
+    index:
+      head_title: "Forms"
+      toolbar:
+        new: 'New form'
+      table:
+        name: 'Form name'
+        code: 'ID'
+        versions: 'Versions'
+        used_in_protocols: 'Used in protocols'
+        access: 'Access'
+        published_by: 'Published by'
+        published_on: 'Published on'
+        updated_on: 'Updated on'
+    show:
+      build_form: 'Build your form'
+      add_block: 'Add a block'
+      title_label: Title (required)
+      title_placeholder: 'Add a title'
+      description_label: Description
+      description_placeholder: 'Add a description'
+      required_label: 'Required'
+      mark_as_na: 'Mark as N/A'
+      mark_as_na_explanation: 'Allow user to mark the field as Not-applicable.'
+      delete: 'Delete'
+      test_form: 'Test form'
+      publish: 'Publish'
+      blocks:
+        text: 'Text'
+        number: 'Number'
+        single_choice: 'Single choice'
+        multiple_choice: 'Multiple choice'
+        datetime: 'Date & Time'
   label_templates:
     types:
       fluics_label_template: 'Fluics'
@@ -4483,6 +4514,7 @@ en:
     locations: "Locations"
     label_printer: "Label printer"
     fluics_printer: "Fluics printer"
+    forms: "Forms"
 
   Add: "Add"
   Asset: "File"

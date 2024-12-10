@@ -2,6 +2,7 @@
 
 class FormsController < ApplicationController
   before_action :load_form, only: %i(show update publish unpublish)
+  before_action :set_breadcrumbs_items, only: %i(index show)
 
   def index
     respond_to do |format|
@@ -10,14 +11,15 @@ class FormsController < ApplicationController
         forms = Lists::FormsService.new(current_user, current_team, params).call
         render json: forms,
                each_serializer: Lists::FormSerializer,
-               user: current_user
+               user: current_user,
+               meta: pagination_dict(forms)
       end
     end
   end
 
   def show
     respond_to do |format|
-      format.json { render json: @form, serializer: Lists::FormSerializer, include: %i(form_fields), user: current_user }
+      format.json { render json: @form, serializer: FormSerializer, include: %i(form_fields), user: current_user }
       format.html
     end
   end
@@ -117,7 +119,35 @@ class FormsController < ApplicationController
     end
   end
 
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::FormsService.new(
+          current_user,
+          form_ids: JSON.parse(params[:items]).map { |i| i['id'] }
+        ).actions
+    }
+  end
+
   private
+
+  def set_breadcrumbs_items
+    @breadcrumbs_items = []
+
+    @breadcrumbs_items.push(
+      { label: t('breadcrumbs.templates') }
+    )
+
+    @breadcrumbs_items.push(
+      { label: t('breadcrumbs.forms'), url: forms_path }
+    )
+
+    if @form
+      @breadcrumbs_items.push(
+        { label: @form.name }
+      )
+    end
+  end
 
   def load_form
     @form = Form.find_by(id: params[:id])

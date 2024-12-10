@@ -857,6 +857,7 @@ Rails.application.routes.draw do
       end
 
       collection do
+        get :actions_toolbar
         post :archive
         post :restore
       end
