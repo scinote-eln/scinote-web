@@ -47,7 +47,7 @@ describe FormFieldsController, type: :controller do
     end
   end
 
-  describe 'PUT create' do
+  describe 'PUT update' do
     let(:action) { put :update, params: params, format: :json }
     let(:params) do 
       {

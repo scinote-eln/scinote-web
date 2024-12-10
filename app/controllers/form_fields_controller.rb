@@ -39,7 +39,7 @@ class FormFieldsController < ApplicationController
       if @form_field.discard
         render json: {}
       else
-        render json: { error: @storage_location.errors.full_messages }, status: :unprocessable_entity
+        render json: { error: @form_field.errors.full_messages }, status: :unprocessable_entity
       end
     end
   end
@@ -47,8 +47,8 @@ class FormFieldsController < ApplicationController
   def reorder
     ActiveRecord::Base.transaction do
       params.permit(form_field_positions: %i(position id))[:form_field_positions].each do |data|
-        form_field = @form.form_fields.find(data['id'].to_i)
-        form_field.insert_at(data['position'].to_i)
+        form_field = @form.form_fields.find(data[:id])
+        form_field.insert_at(data[:position].to_i)
       end
     end
 
