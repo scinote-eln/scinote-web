@@ -850,6 +850,24 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :forms, only: %i(index show create update) do
+      member do
+        post :publish
+        post :unpublish
+      end
+
+      collection do
+        post :archive
+        post :restore
+      end
+
+      resources :form_fields, only: %i(create update destroy) do
+        collection do
+          post :reorder
+        end
+      end
+    end
+
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
     resource :search, only: [], controller: :search do

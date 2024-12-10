@@ -1054,6 +1054,15 @@ en:
       add_user_generic_error: "An error occurred. "
       can_add_user_to_project: "Can not add user to the project."
 
+  forms:
+    default_name: "Untitled form"
+    restored:
+      success_flash: "<strong>%{number}</strong> form(s) successfully restored."
+      error_flash: "Failed to restore form(s)."
+    archived:
+      success_flash: "<strong>%{number}</strong> form(s) successfully archived."
+      error_flash: "Failed to archive form(s)."
+
   label_templates:
     types:
       fluics_label_template: 'Fluics'
