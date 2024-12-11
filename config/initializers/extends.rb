@@ -678,6 +678,7 @@ class Extends
     search/index
     storage_locations/index
     storage_locations/show
+    forms/show
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
@@ -706,6 +707,8 @@ class Extends
     ProjectList_archived_state
     ProtocolTemplates_active_state
     ProtocolTemplates_archived_state
+    FormsTable_active_state
+    FormsTable_archived_state
     ReportTemplates_active_state
     ReportTemplates_archived_state
     Repositories_active_state

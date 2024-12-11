@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Form < ApplicationRecord
+  ID_PREFIX = 'FR'
+  include PrefixedIdModel
   include ArchivableModel
 
   belongs_to :team

@@ -2,9 +2,10 @@
 
 module Lists
   class FormSerializer < ActiveModel::Serializer
-    attributes :id, :name, :description, :published_on, :published_by, :updated_at
+    include Canaid::Helpers::PermissionsHelper
+    include Rails.application.routes.url_helpers
 
-    has_many :form_fields, key: :form_fields, serializer: FormFieldSerializer
+    attributes :id, :name, :published_on, :published_by, :updated_at, :urls, :code
 
     def published_by
       object.published_by&.full_name
@@ -16,6 +17,12 @@ module Lists
 
     def updated_at
       I18n.l(object.updated_at, format: :full) if object.updated_at
+    end
+
+    def urls
+      {
+        show: form_path(object)
+      }
     end
   end
 end

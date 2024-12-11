@@ -35,6 +35,10 @@ module LeftMenuBarHelper
         icon: 'sn-icon-protocols-templates',
         active: protocols_are_selected? || label_templates_are_selected?,
         submenu: [{
+          url: forms_path,
+          name: t('left_menu_bar.forms'),
+          active: forms_are_selected?
+        }, {
           url: protocols_path,
           name: t('left_menu_bar.protocol'),
           active: protocols_are_selected?
@@ -77,6 +81,10 @@ module LeftMenuBarHelper
 
   def protocols_are_selected?
     controller_name == 'protocols'
+  end
+
+  def forms_are_selected?
+    controller_name == 'forms'
   end
 
   def label_templates_are_selected?

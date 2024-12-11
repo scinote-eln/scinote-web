@@ -33,8 +33,6 @@ class CreateForms < ActiveRecord::Migration[7.0]
       t.string :uid
       t.datetime :discarded_at, index: true
 
-      t.index %i(form_id position), unique: true
-
       t.timestamps
     end
   end
