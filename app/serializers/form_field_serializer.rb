@@ -5,7 +5,7 @@ class FormFieldSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
   attributes :id, :name, :description, :updated_at, :type, :required,
-             :allow_not_applicable, :uid, :position, :urls
+             :allow_not_applicable, :uid, :position, :urls, :data
 
   def type
     object.data['type']
