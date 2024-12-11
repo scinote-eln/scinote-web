@@ -40,7 +40,7 @@
         <input type="text" class="sci-input" v-model="editField.attributes.description" @change="updateField" :placeholder="i18n.t('forms.show.description_placeholder')" />
       </div>
     </div>
-    <hr class="my-4 w-full">
+    <component :is="camelCaseType" :field="editField" @updateField="updateField" @syncField="syncField" />
     <div class="bg-sn-super-light-grey rounded p-4">
       <div class="flex items-center gap-4">
         <h5>{{ i18n.t('forms.show.mark_as_na') }}</h5>
@@ -59,6 +59,11 @@
 
 <script>
 import GeneralDropdown from '../shared/general_dropdown.vue';
+import datetime from './edit_fields/datetime.vue';
+import number from './edit_fields/number.vue';
+import singleChoice from './edit_fields/single_choice.vue';
+import text from './edit_fields/text.vue';
+import multipleChoice from './edit_fields/multiple_choice.vue';
 
 export default {
   name: 'EditField',
@@ -66,7 +71,12 @@ export default {
     field: Object
   },
   components: {
-    GeneralDropdown
+    GeneralDropdown,
+    datetime,
+    number,
+    singleChoice,
+    text,
+    multipleChoice
   },
   data() {
     return {
@@ -78,6 +88,9 @@ export default {
   computed: {
     validField() {
       return this.editField.attributes.name.length > 0;
+    },
+    camelCaseType() {
+      return this.editField.attributes.type.replace(/_([a-z])/g, (g) => (g[1].toUpperCase()));
     }
   },
   methods: {
@@ -89,6 +102,9 @@ export default {
     },
     deleteField() {
       this.$emit('delete', this.editField);
+    },
+    syncField(field) {
+      this.editField = field;
     }
   }
 };
