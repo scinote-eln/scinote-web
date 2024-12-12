@@ -10,6 +10,7 @@ module PermissionExtends
       PROJECTS_CREATE
       INVENTORIES_CREATE
       PROTOCOLS_CREATE
+      FORMS_CREATE
       REPORTS_CREATE
       LABEL_TEMPLATES_READ
       LABEL_TEMPLATES_MANAGE
@@ -31,6 +32,16 @@ module PermissionExtends
       USERS_MANAGE
       MANAGE_DRAFT
     ).each { |permission| const_set(permission, "protocol_#{permission.parameterize}") }
+  end
+
+  module FormPermissions
+    %w(
+      NONE
+      READ
+      READ_ARCHIVED
+      MANAGE
+      USERS_MANAGE
+    ).each { |permission| const_set(permission, "form_#{permission.parameterize}") }
   end
 
   module ReportPermissions
@@ -140,6 +151,7 @@ module PermissionExtends
     OWNER_PERMISSIONS = (
       TeamPermissions.constants.map { |const| TeamPermissions.const_get(const) } +
       ProtocolPermissions.constants.map { |const| ProtocolPermissions.const_get(const) } +
+      FormPermissions.constants.map { |const| FormPermissions.const_get(const) } +
       ReportPermissions.constants.map { |const| ReportPermissions.const_get(const) } +
       ProjectPermissions.constants.map { |const| ProjectPermissions.const_get(const) } +
       ExperimentPermissions.constants.map { |const| ExperimentPermissions.const_get(const) } +
@@ -151,6 +163,7 @@ module PermissionExtends
       TeamPermissions::PROJECTS_CREATE,
       TeamPermissions::PROTOCOLS_CREATE,
       TeamPermissions::REPORTS_CREATE,
+      TeamPermissions::FORMS_CREATE,
       TeamPermissions::LABEL_TEMPLATES_READ,
       TeamPermissions::LABEL_TEMPLATES_MANAGE,
       TeamPermissions::STORAGE_LOCATIONS_READ,
@@ -162,6 +175,8 @@ module PermissionExtends
       ProtocolPermissions::READ,
       ProtocolPermissions::READ_ARCHIVED,
       ProtocolPermissions::MANAGE_DRAFT,
+      FormPermissions::READ,
+      FormPermissions::READ_ARCHIVED,
       ReportPermissions::READ,
       ReportPermissions::MANAGE,
       ProjectPermissions::READ,
@@ -259,6 +274,8 @@ module PermissionExtends
       TeamPermissions::STORAGE_LOCATION_CONTAINERS_READ,
       ProtocolPermissions::READ,
       ProtocolPermissions::READ_ARCHIVED,
+      FormPermissions::READ,
+      FormPermissions::READ_ARCHIVED,
       ReportPermissions::READ,
       ProjectPermissions::READ,
       ProjectPermissions::READ_ARCHIVED,

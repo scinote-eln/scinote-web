@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 class FormsController < ApplicationController
+  include UserRolesHelper
+
   before_action :load_form, only: %i(show update publish unpublish)
   before_action :set_breadcrumbs_items, only: %i(index show)
+  before_action :check_manage_permissions, only: %i(update publish unpublish)
+  before_action :check_create_permissions, only: :create
 
   def index
     respond_to do |format|
@@ -34,7 +38,7 @@ class FormsController < ApplicationController
       )
 
       if @form.save
-        render json: @form, serializer: Lists::FormSerializer, user: current_user
+        render json: @form, serializer: FormSerializer, user: current_user
       else
         render json: { error: @form.errors.full_messages }, status: :unprocessable_entity
       end
@@ -44,7 +48,7 @@ class FormsController < ApplicationController
   def update
     ActiveRecord::Base.transaction do
       if @form.update(form_params.merge({ last_modified_by: current_user }))
-        render json: @form, serializer: Lists::FormSerializer, user: current_user
+        render json: @form, serializer: FormSerializer, user: current_user
       else
         render json: { error: @form.errors.full_messages }, status: :unprocessable_entity
       end
@@ -58,7 +62,7 @@ class FormsController < ApplicationController
         published_on: DateTime.now
       )
 
-      render json: @form, serializer: Lists::FormSerializer, user: current_user
+      render json: @form, serializer: FormSerializer, user: current_user
     end
   end
 
@@ -69,13 +73,14 @@ class FormsController < ApplicationController
         published_on: nil
       )
 
-      render json: @form, serializer: Lists::FormSerializer, user: current_user
+      render json: @form, serializer: FormSerializer, user: current_user
     end
   end
 
   def archive
     forms = current_team.forms.active.where(id: params[:form_ids])
     return render_404 if forms.blank?
+    return render_403 unless forms.all? { |f| can_archive_form?(f) }
 
     counter = 0
 
@@ -99,6 +104,7 @@ class FormsController < ApplicationController
   def restore
     forms = current_team.forms.archived.where(id: params[:form_ids])
     return render_404 if forms.blank?
+    return render_403 unless forms.all? { |f| can_restore_form?(f) }
 
     counter = 0
 
@@ -129,6 +135,10 @@ class FormsController < ApplicationController
     }
   end
 
+  def user_roles
+    render json: { data: user_roles_collection(Form.new).map(&:reverse) }
+  end
+
   private
 
   def set_breadcrumbs_items
@@ -150,9 +160,18 @@ class FormsController < ApplicationController
   end
 
   def load_form
-    @form = Form.find_by(id: params[:id])
+    @form = current_team.forms.readable_by_user(current_user).find_by(id: params[:id])
 
-    return render_404 unless @form
+    render_404 unless @form
+  end
+
+  def check_create_permissions
+    render_403 unless can_create_forms?(current_team)
+  end
+
+  def check_manage_permissions
+
+    render_403 unless @form && can_manage_form?(@form)
   end
 
   def form_params

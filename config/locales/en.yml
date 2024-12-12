@@ -1066,6 +1066,7 @@ en:
       head_title: "Forms"
       toolbar:
         new: 'New form'
+        access: 'Access'
       table:
         name: 'Form name'
         code: 'ID'
@@ -4239,6 +4240,8 @@ en:
       experiment_tooltip_inherit: "This role was inherited from the experiment."
       mymodule: "Task"
       mymodule_tooltip: "This role was set on this task"
+      form_tooltip: "This role was set on this form."
+      form_tooltip_inherit: "This role was inherited from the form."
       public_members_dropdown:
         title: "Members of team %{team}"
 
@@ -4268,6 +4271,12 @@ en:
         edit_modal:
           title: "Manage access for %{resource_name}"
           description: "Changing a role will take away any permissions inherited from the project or the experiment. New permissions will apply only to this specific task."
+    forms:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
   zip_export:
     repositories_modal_label: 'Export inventory'
     notification_title: 'Your requested export package is ready!'

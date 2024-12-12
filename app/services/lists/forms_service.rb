@@ -8,7 +8,7 @@ module Lists
     end
 
     def fetch_records
-      @records = Form.where(team: @team)
+      @records = Form.where(team: @team).readable_by_user(@user)
     end
 
     def filter_records; end

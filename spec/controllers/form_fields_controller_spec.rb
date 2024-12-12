@@ -7,13 +7,13 @@ describe FormFieldsController, type: :controller do
 
   include_context 'reference_project_structure'
 
-  let!(:form) { create :form, team: team }
-  let!(:form_field) { create :form_field, form: form }
-  let!(:form_fields) { create_list :form_field, 5, form: form }
+  let!(:form) { create :form, team: team, created_by: user }
+  let!(:form_field) { create :form_field, form: form, created_by: user }
+  let!(:form_fields) { create_list :form_field, 5, form: form, created_by: user }
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
-    let(:params) do 
+    let(:params) do
       {
         form_id: form.id,
         form_field: {
@@ -49,7 +49,7 @@ describe FormFieldsController, type: :controller do
 
   describe 'PUT update' do
     let(:action) { put :update, params: params, format: :json }
-    let(:params) do 
+    let(:params) do
       {
         form_id: form.id,
         id: form_field.id,
