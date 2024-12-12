@@ -193,21 +193,6 @@ class Team < ApplicationRecord
     query
   end
 
-  def self.search_by_object(obj)
-    find(
-      case obj.class.name
-      when 'Protocol'
-        obj.team_id
-      when 'StepText'
-        obj.step.protocol.team_id
-      when 'MyModule', 'Step'
-        obj.protocol.team_id
-      when 'ResultText'
-        obj.result.my_module.protocol.team_id
-      end
-    )
-  end
-
   def number_of_task_shared
     shareable_links.count
   end

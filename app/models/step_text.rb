@@ -16,6 +16,8 @@ class StepText < ApplicationRecord
   belongs_to :step, inverse_of: :step_texts, touch: true
   has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
+  delegate :team, to: :step
+
   scope :asc, -> { order('step_texts.created_at ASC') }
 
   def duplicate(step, position = nil)
