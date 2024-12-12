@@ -1,7 +1,10 @@
 <template>
   <div class="flex flex-col gap-4">
     <div class="flex items-center">
-      <h3>{{ i18n.t(`forms.show.blocks.${editField.attributes.type}`) }}</h3>
+      <h3 class="flex items-center gap-2">
+        <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="icon"></i>
+        {{ i18n.t(`forms.show.blocks.${editField.attributes.type}`) }}
+      </h3>
       <div class="ml-auto flex items-center gap-3">
         <div class="flex items-center gap-2">
           <span class="sci-toggle-checkbox-container">
@@ -40,7 +43,7 @@
         <input type="text" class="sci-input" v-model="editField.attributes.description" @change="updateField" :placeholder="i18n.t('forms.show.description_placeholder')" />
       </div>
     </div>
-    <component :is="camelCaseType" :field="editField" @updateField="updateField" @syncField="syncField" />
+    <component :is="this.editField.attributes.type" :field="editField" @updateField="updateField()" @syncField="syncField" />
     <div class="bg-sn-super-light-grey rounded p-4">
       <div class="flex items-center gap-4">
         <h5>{{ i18n.t('forms.show.mark_as_na') }}</h5>
@@ -59,24 +62,25 @@
 
 <script>
 import GeneralDropdown from '../shared/general_dropdown.vue';
-import datetime from './edit_fields/datetime.vue';
-import number from './edit_fields/number.vue';
-import singleChoice from './edit_fields/single_choice.vue';
-import text from './edit_fields/text.vue';
-import multipleChoice from './edit_fields/multiple_choice.vue';
+import DatetimeField from './edit_fields/datetime.vue';
+import NumberField from './edit_fields/number.vue';
+import SingleChoiceField from './edit_fields/single_choice.vue';
+import TextField from './edit_fields/text.vue';
+import MultipleChoiceField from './edit_fields/multiple_choice.vue';
 
 export default {
   name: 'EditField',
   props: {
-    field: Object
+    field: Object,
+    icon: String
   },
   components: {
     GeneralDropdown,
-    datetime,
-    number,
-    singleChoice,
-    text,
-    multipleChoice
+    DatetimeField,
+    NumberField,
+    SingleChoiceField,
+    TextField,
+    MultipleChoiceField
   },
   data() {
     return {
@@ -84,13 +88,13 @@ export default {
     };
   },
   created() {
+    if (!this.editField.attributes.data.validations) {
+      this.editField.attributes.data.validations = {};
+    }
   },
   computed: {
     validField() {
       return this.editField.attributes.name.length > 0;
-    },
-    camelCaseType() {
-      return this.editField.attributes.type.replace(/_([a-z])/g, (g) => (g[1].toUpperCase()));
     }
   },
   methods: {
