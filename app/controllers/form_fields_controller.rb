@@ -36,7 +36,7 @@ class FormFieldsController < ApplicationController
 
   def destroy
     ActiveRecord::Base.transaction do
-      if @form_field.discard
+      if @form_field.destroy
         render json: {}
       else
         render json: { error: @form_field.errors.full_messages }, status: :unprocessable_entity

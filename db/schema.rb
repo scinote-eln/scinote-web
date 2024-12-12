@@ -235,11 +235,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_074134) do
     t.boolean "required", default: false, null: false
     t.boolean "allow_not_applicable", default: false, null: false
     t.string "uid"
-    t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_form_fields_on_created_by_id"
-    t.index ["discarded_at"], name: "index_form_fields_on_discarded_at"
     t.index ["form_id"], name: "index_form_fields_on_form_id"
     t.index ["last_modified_by_id"], name: "index_form_fields_on_last_modified_by_id"
   end

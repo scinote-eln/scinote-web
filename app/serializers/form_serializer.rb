@@ -8,8 +8,7 @@ class FormSerializer < ActiveModel::Serializer
 
   has_many :form_fields,
            key: :form_fields,
-           serializer: FormFieldSerializer,
-           order: :position
+           serializer: FormFieldSerializer
 
   def published_by
     object.published_by&.full_name
@@ -26,7 +25,8 @@ class FormSerializer < ActiveModel::Serializer
   def urls
     {
       show: form_path(object),
-      create_field: form_form_fields_path(object)
+      create_field: form_form_fields_path(object),
+      reorder_fields: reorder_form_form_fields_path(object)
     }
   end
 end
