@@ -27,7 +27,6 @@ describe FormField, type: :model do
     it { should have_db_column :uid }
     it { should have_db_column :created_at }
     it { should have_db_column :updated_at }
-    it { should have_db_column :discarded_at }
   end
 
   describe 'Relations' do

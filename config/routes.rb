@@ -320,6 +320,10 @@ Rails.application.routes.draw do
         put :update_default_public_user_role, on: :member
       end
 
+      resources :forms, defaults: { format: 'json' } do
+        put :update_default_public_user_role, on: :member
+      end
+
       resources :experiments, only: %i(show update edit)
       resources :my_modules, only: %i(show update edit)
     end
@@ -860,6 +864,7 @@ Rails.application.routes.draw do
         get :actions_toolbar
         post :archive
         post :restore
+        get :user_roles
       end
 
       resources :form_fields, only: %i(create update destroy) do

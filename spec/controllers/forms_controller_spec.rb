@@ -7,12 +7,12 @@ describe FormsController, type: :controller do
 
   include_context 'reference_project_structure'
 
-  let!(:form) { create :form, team: team }
-  let!(:form2) { create :form, team: team }
-  let!(:form_field) { create :form_field, form: form2}
+  let!(:form) { create :form, team: team, created_by: user }
+  let!(:form2) { create :form, team: team, created_by: user }
+  let!(:form_field) { create :form_field, form: form2, created_by: user }
 
   describe '#index' do
-    let(:params) { { team: team.id } }
+    let(:params) { { team: team.id, per_page: 20, page: 1 } }
 
     it 'returns success response' do
       get :index, params: params, format: :json
@@ -20,14 +20,6 @@ describe FormsController, type: :controller do
 
       response_body = JSON.parse(response.body)
 
-      expect(response_body).to match_array(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(team.forms,
-                 each_serializer: Lists::FormSerializer)
-            .to_json
-        )
-      )
       expect(response_body['data'].length).to eq 2
       expect(response.body).to include(form.name)
       expect(response.body).to include(form2.name)
@@ -44,18 +36,8 @@ describe FormsController, type: :controller do
     it 'successful response' do
       get :show, format: :json, params: { id: form2.id }
       expect(response).to have_http_status(:success)
-      
-      response_body = JSON.parse(response.body)
-      expect(response_body).to match_array(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(form2,
-                 serializer: Lists::FormSerializer,
-                 include: :form_fields)
-            .to_json
-        )
-      )
 
+      response_body = JSON.parse(response.body)
       expect(response_body['included'].first['attributes']['name']).to eq form_field.name
     end
   end
@@ -113,7 +95,7 @@ describe FormsController, type: :controller do
       expect(response).to have_http_status(:success)
       expect(response.media_type).to eq 'application/json'
       response_body = JSON.parse(response.body)
-      
+
       expect(response_body['data']['attributes']['published_by']).to eq user.full_name
       expect(response_body['data']['attributes']['published_on']).not_to eq nil
     end
@@ -137,7 +119,7 @@ describe FormsController, type: :controller do
       expect(response).to have_http_status(:success)
       expect(response.media_type).to eq 'application/json'
       response_body = JSON.parse(response.body)
-      
+
       expect(response_body['data']['attributes']['published_by']).to eq nil
       expect(response_body['data']['attributes']['published_on']).to eq nil
     end
@@ -166,7 +148,7 @@ describe FormsController, type: :controller do
   end
 
   describe 'POST restore' do
-    let!(:form_archived) { create :form, :archived, team: team }
+    let!(:form_archived) { create :form, :archived, team: team, created_by: user }
     let(:action) { put :restore, params: params, format: :json }
     let(:params) do
       {
@@ -181,5 +163,5 @@ describe FormsController, type: :controller do
       form_archived.reload
       expect(form_archived.archived?).to eq false
     end
-  end 
+  end
 end

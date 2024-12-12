@@ -3,6 +3,7 @@
 class FormFieldsController < ApplicationController
   before_action :load_form
   before_action :load_form_field, only: %i(update destroy)
+  before_action :check_manage_permissions, only: %i(create update destroy reorder)
 
   def create
     ActiveRecord::Base.transaction do
@@ -47,14 +48,14 @@ class FormFieldsController < ApplicationController
   def reorder
     ActiveRecord::Base.transaction do
       params.permit(form_field_positions: %i(position id))[:form_field_positions].each do |data|
-        form_field = @form.form_fields.find(data[:id])
-        form_field.insert_at(data[:position].to_i)
+        @form_field = @form.form_fields.find(data[:id])
+        @form_field.insert_at!(data[:position].to_i)
       end
     end
 
     render json: params[:form_field_positions], status: :ok
   rescue ActiveRecord::RecordInvalid
-    render json: { errors: form_field.errors }, status: :conflict
+    render json: { errors: @form_field.errors }, status: :unprocessable_entity
   end
 
   private
@@ -62,13 +63,17 @@ class FormFieldsController < ApplicationController
   def load_form
     @form = Form.find_by(id: params[:form_id])
 
-    return render_404 unless @form
+    render_404 unless @form
   end
 
   def load_form_field
     @form_field = @form.form_fields.find_by(id: params[:id])
 
-    return render_404 unless @form_field
+    render_404 unless @form_field
+  end
+
+  def check_manage_permissions
+    render_403 unless @form && can_manage_form?(@form)
   end
 
   def form_field_params

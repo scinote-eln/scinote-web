@@ -190,7 +190,7 @@ class Extends
 
   ACTIVITY_SUBJECT_TYPES = %w(
     Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
-    ProjectFolder Asset Step LabelTemplate StorageLocation StorageLocationRepositoryRow
+    ProjectFolder Asset Step LabelTemplate StorageLocation StorageLocationRepositoryRow Form
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -520,7 +520,13 @@ class Extends
     task_step_restore_asset_version: 327,
     task_result_restore_asset_version: 328,
     repository_column_restore_asset_version: 329,
-    protocol_step_restore_asset_version: 330
+    protocol_step_restore_asset_version: 330,
+    form_access_granted: 331,
+    form_access_changed: 332,
+    form_access_revoked: 333,
+    form_access_granted_all_team_members: 334,
+    form_access_changed_all_team_members: 335,
+    form_access_revoked_all_team_members: 336
   }
 
   ACTIVITY_GROUPS = {
@@ -543,10 +549,11 @@ class Extends
     label_templates: [*216..219],
     storage_locations: [*309..315],
     container_storage_locations: [*316..322, 326],
-    storage_location_repository_rows: [*323..325]
+    storage_location_repository_rows: [*323..325],
+    forms: [331, 332, 333, 334, 335, 336]
   }
 
-  TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository).freeze
+  TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository Form).freeze
 
   SHARED_OBJECTS_PERMISSION_LEVELS = {
     not_shared: 0,
