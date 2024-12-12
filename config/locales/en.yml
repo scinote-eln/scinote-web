@@ -1088,12 +1088,24 @@ en:
       delete: 'Delete'
       test_form: 'Test form'
       publish: 'Publish'
+      dropdown_options_label: 'Dropdown options'
+      dropdown_options_placeholder_html: "Enter dropdown list options one per line:\nDropdown list option\nDropdown list option\n..."
+      unit_label: 'Unit'
+      unit_placeholder: 'Add a unit'
+      time_label: 'Include time'
+      range_label: 'Include range'
+      validations:
+        response_validation:
+          title: 'Response validation'
+          min_placeholder: 'Add min. value'
+          max_placeholder: 'Add max. value'
+          message_placeholder: 'Add a custom warning message'
       blocks:
-        text: 'Text'
-        number: 'Number'
-        single_choice: 'Single choice'
-        multiple_choice: 'Multiple choice'
-        datetime: 'Date & Time'
+        TextField: 'Text'
+        NumberField: 'Number'
+        SingleChoiceField: 'Single choice'
+        MultipleChoiceField: 'Multiple choice'
+        DatetimeField: 'Date & Time'
   label_templates:
     types:
       fluics_label_template: 'Fluics'

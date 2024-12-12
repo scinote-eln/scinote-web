@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-col gap-4">
     <hr class="my-4 w-full">
     <div>
       <h5 class="mb-4">{{ i18n.t('forms.show.dropdown_options_label') }}</h5>
@@ -17,23 +17,10 @@
 
 <script>
 
+import fieldMixin from './field_mixin';
+
 export default {
   name: 'MultipleChoiceField',
-  props: {
-    field: Object
-  },
-  watch: {
-    editField: {
-      handler() {
-        this.$emit('syncField', this.editField);
-      },
-      deep: true
-    }
-  },
-  data() {
-    return {
-      editField: { ...this.field }
-    };
-  }
+  mixins: [fieldMixin]
 };
 </script>

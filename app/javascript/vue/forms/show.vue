@@ -7,6 +7,7 @@
             v-if="canManage"
             :value="form.attributes.name"
             :characterLimit="255"
+            attributeName="name"
             :characterMinLimit="2"
             :allowBlank="false"
             @editingEnabled="editingName = true"
@@ -36,9 +37,10 @@
             <div v-for="(field) in fields"
                  @click="activeField = field"
                  :key="field.id"
-                 class="font-bold p-3 rounded-lg border-sn-grey-100 cursor-pointer border"
+                 class="font-bold p-3 rounded-lg flex items-center gap-2 border-sn-grey-100 cursor-pointer border"
                  :class="{ '!border-sn-blue bg-sn-super-light-blue': activeField.id === field.id }"
             >
+              <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="fieldIcon[field.attributes.data.type]"></i>
               {{ field.attributes.name }}
             </div>
           </div>
@@ -50,7 +52,8 @@
               </button>
             </template>
             <template v-slot:flyout>
-              <div v-for="e in newFields" :key="e.type" @click="addField(e.type)" class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer">
+              <div v-for="e in newFields" :key="e.type" @click="addField(e.type)" class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer flex items-center gap-2">
+                <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="fieldIcon[e.type]"></i>
                 {{ e.name }}
               </div>
             </template>
@@ -61,6 +64,7 @@
             :key="activeField.id"
             v-if="activeField.id"
             :field="activeField"
+            :icon="fieldIcon[activeField.attributes.data.type]"
             @update="updateField"
             @delete="deleteField"
           />
@@ -93,12 +97,21 @@ export default {
     },
     newFields() {
       return [
-        { name: this.i18n.t('forms.show.blocks.text'), type: 'text' },
-        { name: this.i18n.t('forms.show.blocks.number'), type: 'number' },
-        { name: this.i18n.t('forms.show.blocks.single_choice'), type: 'single_choice' },
-        { name: this.i18n.t('forms.show.blocks.multiple_choice'), type: 'multiple_choice' },
-        { name: this.i18n.t('forms.show.blocks.datetime'), type: 'datetime' }
+        { name: this.i18n.t('forms.show.blocks.TextField'), type: 'TextField' },
+        { name: this.i18n.t('forms.show.blocks.NumberField'), type: 'NumberField' },
+        { name: this.i18n.t('forms.show.blocks.SingleChoiceField'), type: 'SingleChoiceField' },
+        { name: this.i18n.t('forms.show.blocks.MultipleChoiceField'), type: 'MultipleChoiceField' },
+        { name: this.i18n.t('forms.show.blocks.DatetimeField'), type: 'DatetimeField' }
       ];
+    },
+    fieldIcon() {
+      return {
+        TextField: 'sn-icon-result-text',
+        NumberField: 'sn-icon-value',
+        SingleChoiceField: 'sn-icon-choice-single',
+        MultipleChoiceField: 'sn-icon-choice-multiple',
+        DatetimeField: 'sn-icon-created'
+      };
     }
   },
   created() {
