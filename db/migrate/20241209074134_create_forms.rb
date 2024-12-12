@@ -31,7 +31,6 @@ class CreateForms < ActiveRecord::Migration[7.0]
       t.boolean :required, default: false, null: false
       t.boolean :allow_not_applicable, default: false, null: false
       t.string :uid
-      t.datetime :discarded_at, index: true
 
       t.timestamps
     end

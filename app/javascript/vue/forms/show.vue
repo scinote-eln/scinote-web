@@ -34,17 +34,29 @@
         <div class="p-6 border-transparent border-r-sn-sleepy-grey border-solid border-r">
           <h3 class="mb-3">{{  i18n.t('forms.show.build_form') }}</h3>
           <div class="mb-3 flex flex-col gap-3">
-            <div v-for="(field) in fields"
-                 @click="activeField = field"
-                 :key="field.id"
-                 class="font-bold p-3 rounded-lg flex items-center gap-2 border-sn-grey-100 cursor-pointer border"
-                 :class="{ '!border-sn-blue bg-sn-super-light-blue': activeField.id === field.id }"
-            >
-              <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="fieldIcon[field.attributes.data.type]"></i>
-              {{ field.attributes.name }}
-            </div>
+          <Draggable
+            v-model="fields"
+            class="flex flex-col gap-3"
+            handle=".element-grip"
+            item-key="id"
+            @end="saveOrder"
+          >
+            <template #item="{element, index}">
+              <div class="flex items-center relative group -ml-6 w-[calc(100%_+_24px)]">
+                <i class="sn-icon sn-icon-drag text-sn-grey element-grip cursor-grab opacity-0 group-hover:opacity-100"></i>
+                <div @click="activeField = element"
+                    :key="element.id"
+                    class="font-bold relative grow p-2 rounded-lg overflow-hidden flex items-center gap-2 border-sn-grey-100 cursor-pointer border"
+                    :class="{ '!border-sn-blue bg-sn-super-light-blue': activeField.id === element.id }"
+                >
+                  <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="fieldIcon[element.attributes.data.type]"></i>
+                  <span class="truncate">{{ element.attributes.name }}</span>
+                </div>
+              </div>
+            </template>
+          </Draggable>
           </div>
-          <GeneralDropdown>
+          <GeneralDropdown ref="addFieldDropdown">
             <template v-slot:field>
               <button class="btn btn-secondary w-full">
                 <i class="sn-icon sn-icon-new-task"></i>
@@ -76,6 +88,7 @@
 
 <script>
 
+import Draggable from 'vuedraggable';
 import InlineEdit from '../shared/inline_edit.vue';
 import axios from '../../packs/custom_axios.js';
 import GeneralDropdown from '../shared/general_dropdown.vue';
@@ -89,7 +102,8 @@ export default {
   components: {
     InlineEdit,
     GeneralDropdown,
-    EditField
+    EditField,
+    Draggable
   },
   computed: {
     canManage() {
@@ -129,6 +143,7 @@ export default {
       axios.get(this.formUrl).then((response) => {
         this.form = response.data.data;
         this.fields = response.data.included || [];
+        this.fields = this.fields.sort((a, b) => a.attributes.position - b.attributes.position);
         if (this.fields.length > 0) {
           [this.activeField] = this.fields;
         }
@@ -147,6 +162,7 @@ export default {
         if (this.fields.length === 1) {
           [this.activeField] = this.fields;
         }
+        this.$refs.addFieldDropdown.isOpen = false;
       });
     },
     updateName(name) {
@@ -164,6 +180,11 @@ export default {
         form_field: field.attributes
       }).then((response) => {
         this.fields.splice(index, 1, response.data.data);
+      });
+    },
+    saveOrder() {
+      axios.post(this.form.attributes.urls.reorder_fields, {
+        form_field_positions: this.fields.map((f, i) => ({ id: f.id, position: i }))
       });
     },
     deleteField(field) {
