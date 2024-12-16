@@ -158,6 +158,12 @@
       border-color: transparent;
     }
   }
+
+  &.error {
+    .dp__input {
+      border-color: var(--sn-delete-red);
+    }
+  }
 }
 
 .dp__theme_light {
