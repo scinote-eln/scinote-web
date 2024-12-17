@@ -20,16 +20,19 @@
         </h1>
       </div>
       <div class="flex items-center gap-4 ml-auto">
-        <button v-if="preview" class="btn btn-secondary" @click="preview = false">
+        <button v-if="preview && !this.form.attributes.published_on" class="btn btn-secondary"@click="preview = false">
           <i class="sn-icon sn-icon-edit"></i>
           {{ i18n.t('forms.show.edit_form') }}
         </button>
-        <button v-else class="btn btn-secondary" @click="preview = true">
+        <button v-if="!preview" class="btn btn-secondary" @click="preview = true">
           <i class="sn-icon sn-icon-visibility-show"></i>
           {{ i18n.t('forms.show.test_form') }}
         </button>
-        <button class="btn btn-primary">
+        <button v-if="form.attributes.urls.publish" class="btn btn-primary" @click="publishForm">
           {{ i18n.t('forms.show.publish') }}
+        </button>
+        <button v-if="form.attributes.urls.unpublish" class="btn btn-secondary" @click="unpublishForm">
+          {{ i18n.t('forms.show.unpublish') }}
         </button>
       </div>
     </div>
@@ -114,7 +117,7 @@ export default {
   },
   computed: {
     canManage() {
-      return true;
+      return !this.form.attributes.published_on;
     },
     newFields() {
       return [
@@ -154,6 +157,9 @@ export default {
         this.fields = this.fields.sort((a, b) => a.attributes.position - b.attributes.position);
         if (this.fields.length > 0) {
           [this.activeField] = this.fields;
+        }
+        if (this.form.attributes.published_on) {
+          this.preview = true;
         }
       });
     },
@@ -204,6 +210,18 @@ export default {
         } else {
           this.activeField = {};
         }
+      });
+    },
+    publishForm() {
+      axios.post(this.form.attributes.urls.publish).then((response) => {
+        this.form = response.data.data;
+        this.preview = true;
+      });
+    },
+    unpublishForm() {
+      axios.post(this.form.attributes.urls.unpublish).then((response) => {
+        this.form = response.data.data;
+        this.preview = false;
       });
     }
   }

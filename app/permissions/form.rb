@@ -36,6 +36,10 @@ Canaid::Permissions.register_for(Form) do
   end
 
   can :publish_form do |user, form|
-    form.permission_granted?(user, FormPermissions::MANAGE)
+    !form.published? && form.permission_granted?(user, FormPermissions::MANAGE)
+  end
+
+  can :unpublish_form do |user, form|
+    form.published? && form.permission_granted?(user, FormPermissions::MANAGE)
   end
 end

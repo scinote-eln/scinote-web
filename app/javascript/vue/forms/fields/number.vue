@@ -19,21 +19,21 @@ export default {
     isValidValue() {
       const { validations } = this.field.attributes.data;
 
-      if (!validations.response_validation) {
+      if (!validations || !validations.response_validation) {
         return true;
       }
 
-      if (validations.response_validation.type === 'between') {
+      if (validations.response_validation.type === 'between' && validations.response_validation.enabled) {
         return this.value >= validations.response_validation.min
          && this.value <= validations.response_validation.max;
       }
 
-      return false;
+      return true;
     },
     errorMessage() {
       const { validations } = this.field.attributes.data;
 
-      if (!validations.response_validation) {
+      if (!validations || !validations.response_validation) {
         return '';
       }
 
