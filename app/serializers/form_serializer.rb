@@ -23,10 +23,16 @@ class FormSerializer < ActiveModel::Serializer
   end
 
   def urls
-    {
+    list = {
       show: form_path(object),
       create_field: form_form_fields_path(object),
       reorder_fields: reorder_form_form_fields_path(object)
     }
+
+    list[:publish] = publish_form_path(object) if can_publish_form?(current_user, object)
+
+    list[:unpublish] = unpublish_form_path(object) if can_unpublish_form?(current_user, object)
+
+    list
   end
 end

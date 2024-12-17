@@ -1098,6 +1098,7 @@ en:
       edit_form: 'Edit form'
       test_form: 'Test form'
       publish: 'Publish'
+      unpublish: 'Unpublish'
       dropdown_options_label: 'Dropdown options'
       dropdown_options_placeholder_html: "Enter dropdown list options one per line:\nDropdown list option\nDropdown list option\n..."
       unit_label: 'Unit'

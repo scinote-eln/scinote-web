@@ -33,6 +33,10 @@ class Form < ApplicationRecord
     nil
   end
 
+  def published?
+    published_on.present?
+  end
+
   def create_or_update_public_user_assignments!(assigned_by)
     public_role = default_public_user_role || UserRole.find_predefined_viewer_role
     team.user_assignments.where.not(user: assigned_by).find_each do |team_user_assignment|
