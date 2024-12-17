@@ -77,6 +77,6 @@ class FormFieldsController < ApplicationController
   end
 
   def form_field_params
-    params.require(:form_field).permit(:name, :description, { data: [:type, :options, :unit, :time, :range, validations: {}] }, :required, :allow_not_applicable, :uid)
+    params.require(:form_field).permit(:name, :description, { data: [:type, :unit, :time, :range, validations: {}, options: []] }, :required, :allow_not_applicable, :uid)
   end
 end

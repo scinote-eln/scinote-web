@@ -20,7 +20,11 @@
         </h1>
       </div>
       <div class="flex items-center gap-4 ml-auto">
-        <button class="btn btn-secondary">
+        <button v-if="preview" class="btn btn-secondary" @click="preview = false">
+          <i class="sn-icon sn-icon-edit"></i>
+          {{ i18n.t('forms.show.edit_form') }}
+        </button>
+        <button v-else class="btn btn-secondary" @click="preview = true">
           <i class="sn-icon sn-icon-visibility-show"></i>
           {{ i18n.t('forms.show.test_form') }}
         </button>
@@ -30,7 +34,8 @@
       </div>
     </div>
     <div class="content-body">
-      <div class="bg-white rounded-xl grid grid-cols-[360px_auto] min-h-[calc(100vh_-_200px)]">
+      <Preview v-if="preview" :form="form" :fields="fields" />
+      <div v-else class="bg-white rounded-xl grid grid-cols-[360px_auto] min-h-[calc(100vh_-_200px)]">
         <div class="p-6 border-transparent border-r-sn-sleepy-grey border-solid border-r">
           <h3 class="mb-3">{{  i18n.t('forms.show.build_form') }}</h3>
           <div class="mb-3 flex flex-col gap-3">
@@ -93,6 +98,7 @@ import InlineEdit from '../shared/inline_edit.vue';
 import axios from '../../packs/custom_axios.js';
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import EditField from './edit_field.vue';
+import Preview from './preview.vue';
 
 export default {
   name: 'ShowForm',
@@ -103,7 +109,8 @@ export default {
     InlineEdit,
     GeneralDropdown,
     EditField,
-    Draggable
+    Draggable,
+    Preview
   },
   computed: {
     canManage() {
@@ -135,7 +142,8 @@ export default {
     return {
       form: null,
       fields: [],
-      activeField: {}
+      activeField: {},
+      preview: false
     };
   },
   methods: {

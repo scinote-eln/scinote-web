@@ -6,7 +6,7 @@
       <div class="sci-input-container-v2 h-40" >
         <textarea
           class="sci-input"
-          v-model="editField.attributes.data.options"
+          v-model="options"
           @change="$emit('updateField')"
           :placeholder="i18n.t('forms.show.dropdown_options_placeholder_html')" />
       </div>
@@ -18,9 +18,10 @@
 <script>
 
 import fieldMixin from './field_mixin';
+import optionsMixin from './options_mixin';
 
 export default {
   name: 'MultipleChoiceField',
-  mixins: [fieldMixin]
+  mixins: [fieldMixin, optionsMixin]
 };
 </script>

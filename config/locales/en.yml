@@ -1062,6 +1062,14 @@ en:
     archived:
       success_flash: "<strong>%{number}</strong> form(s) successfully archived."
       error_flash: "Failed to archive form(s)."
+    fields:
+      mark_as_na: "Mark as N/A"
+      add_text: "Add text"
+      add_number: "Add number"
+      from: "From"
+      to: "To"
+      add_date: "Add date"
+      add_datetime: "Add date & time"
     index:
       head_title: "Forms"
       toolbar:
@@ -1087,6 +1095,7 @@ en:
       mark_as_na: 'Mark as N/A'
       mark_as_na_explanation: 'Allow user to mark the field as Not-applicable.'
       delete: 'Delete'
+      edit_form: 'Edit form'
       test_form: 'Test form'
       publish: 'Publish'
       dropdown_options_label: 'Dropdown options'
