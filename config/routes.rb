@@ -875,6 +875,15 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :form_responses, only: %i(create) do
+      member do
+        post :submit
+        post :reset
+      end
+
+      resources :form_field_values, only: %i(create)
+    end
+
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
     resource :search, only: [], controller: :search do
