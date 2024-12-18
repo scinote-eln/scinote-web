@@ -144,7 +144,13 @@ class RepositoryDatatableService
 
     repository_rows = repository_rows.where(id: advanced_search(repository_rows)) if @params[:advanced_search].present?
 
-    @filtered_count = repository_rows.count
+    @filtered_count =
+      if @assigned_view
+        repository_rows.joins(:my_module_repository_rows)
+                       .where(my_module_repository_rows: { my_module_id: @my_module }).count
+      else
+        repository_rows.where(archived: !@params[:archived].nil? && @params[:archived]).count
+      end
 
     repository_rows.joins('LEFT OUTER JOIN "users" "created_by" ON "created_by"."id" = "repository_rows"."created_by_id"')
                    .joins('LEFT OUTER JOIN "users" "last_modified_by" ON "last_modified_by"."id" = "repository_rows"."last_modified_by_id"')
