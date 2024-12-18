@@ -102,8 +102,7 @@ export default {
       tableObject: null,
       nameModalOpen: false,
       reloadHeader: 0,
-      updatingTableData: false,
-      htmlObject: ''
+      updatingTableData: false
     };
   },
   computed: {
@@ -304,13 +303,6 @@ export default {
         };
       }
       return true;
-    },
-    emitRenderHTML() {
-      const header = this.$refs.hotTable.querySelector('.htCore thead');
-      const body = this.$refs.hotTable.querySelector('.htCore tbody');
-      const html = `<table>${header.outerHTML}${body.outerHTML}</table>`;
-      this.htmlObject = html;
-      this.$emit('renderHTML', html);
     },
     loadTableData() {
       const container = this.$refs.hotTable;

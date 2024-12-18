@@ -77,6 +77,22 @@ label {
   page-break-inside: avoid;
   width: 100%;
 
+  &.simple-table {
+    th,
+    td:first-child {
+      background: $color-concrete;
+      font-weight: bold;
+    }
+
+    tr:first-child {
+      height: 27px;
+    }
+
+    th:first-child {
+      width: 50px;
+    }
+  }
+
   tr {
     text-align: left;
     vertical-align: top;

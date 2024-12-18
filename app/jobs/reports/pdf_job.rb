@@ -109,8 +109,7 @@ module Reports
         'big.min',
         'handsontable.formula',
         'reports/content',
-        'reports/template_helpers',
-        'vue_legacy_report_table'
+        'reports/template_helpers'
       ]
 
       @style_tag_options = []

@@ -49,7 +49,7 @@
         </div>
       <% when 'StepTable' %>
         <% table = step_element.orderable.table %>
-        <%= render partial: 'protocols/table_element', locals: {table: table}%>
+        <%= render partial: 'protocols/table_element', locals: { table: table, include_name: true }%>
       <% when 'Checklist' %>
         <% checklist = step_element.orderable %>
         <div class="print-checklist">
@@ -129,4 +129,3 @@
   <hr>
   <div class="page-break"></div>
 <% end %>
-<%= javascript_include_tag('vue_legacy_report_table') %>
