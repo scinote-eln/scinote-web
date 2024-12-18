@@ -865,6 +865,7 @@ Rails.application.routes.draw do
         post :archive
         post :restore
         get :user_roles
+        get :published_forms
       end
 
       resources :form_fields, only: %i(create update destroy) do

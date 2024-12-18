@@ -55,6 +55,18 @@ class FormsController < ApplicationController
     end
   end
 
+  def published_forms
+    forms = current_team.forms.readable_by_user(current_user).published
+    forms = forms.where('forms.name ILIKE ?', "%#{params[:query]}%") if params[:query].present?
+    forms = forms.page(params[:page])
+
+    render json: {
+      data: forms.map { |f| [f.id, f.name] },
+      paginated: true,
+      next_page: forms.next_page
+    }
+  end
+
   def publish
     ActiveRecord::Base.transaction do
       @form.update!(
