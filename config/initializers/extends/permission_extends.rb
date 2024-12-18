@@ -44,6 +44,15 @@ module PermissionExtends
     ).each { |permission| const_set(permission, "form_#{permission.parameterize}") }
   end
 
+  module FormResponsePermissions
+    %w(
+      NONE
+      CREATE
+      SUBMIT
+      RESET
+    ).each { |permission| const_set(permission, "form_response_#{permission.parameterize}") }
+  end
+
   module ReportPermissions
     %w(
       NONE
@@ -156,8 +165,9 @@ module PermissionExtends
       ProjectPermissions.constants.map { |const| ProjectPermissions.const_get(const) } +
       ExperimentPermissions.constants.map { |const| ExperimentPermissions.const_get(const) } +
       MyModulePermissions.constants.map { |const| MyModulePermissions.const_get(const) } +
-      RepositoryPermissions.constants.map { |const| RepositoryPermissions.const_get(const) }
-    ).reject { |p| p.end_with?("_none") }
+      RepositoryPermissions.constants.map { |const| RepositoryPermissions.const_get(const) } +
+      FormResponsePermissions.constants.map { |const| FormResponsePermissions.const_get(const) }
+    ).reject { |p| p.end_with?('_none') }
 
     NORMAL_USER_PERMISSIONS = [
       TeamPermissions::PROJECTS_CREATE,
@@ -177,6 +187,9 @@ module PermissionExtends
       ProtocolPermissions::MANAGE_DRAFT,
       FormPermissions::READ,
       FormPermissions::READ_ARCHIVED,
+      FormResponsePermissions::CREATE,
+      FormResponsePermissions::SUBMIT,
+      FormResponsePermissions::RESET,
       ReportPermissions::READ,
       ReportPermissions::MANAGE,
       ProjectPermissions::READ,
@@ -265,7 +278,8 @@ module PermissionExtends
       MyModulePermissions::REPOSITORY_ROWS_ASSIGN,
       MyModulePermissions::REPOSITORY_ROWS_MANAGE,
       MyModulePermissions::USERS_READ,
-      MyModulePermissions::STOCK_CONSUMPTION_UPDATE
+      MyModulePermissions::STOCK_CONSUMPTION_UPDATE,
+      FormResponsePermissions::SUBMIT
     ]
 
     VIEWER_PERMISSIONS = [

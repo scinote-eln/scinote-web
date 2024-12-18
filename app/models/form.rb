@@ -17,6 +17,7 @@ class Form < ApplicationRecord
   belongs_to :default_public_user_role, class_name: 'UserRole', optional: true
 
   has_many :form_fields, inverse_of: :form, dependent: :destroy
+  has_many :form_responses, dependent: :destroy
   has_many :users, through: :user_assignments
 
   validates :name, length: { minimum: Constants::NAME_MIN_LENGTH, maximum: Constants::NAME_MAX_LENGTH }
@@ -27,7 +28,7 @@ class Form < ApplicationRecord
   after_update :update_automatic_user_assignments,
                if: -> { saved_change_to_default_public_user_role_id? }
 
-  enum visibility: { hidden: 0, visible: 1 }
+  enum :visibility, { hidden: 0, visible: 1 }
 
   def permission_parent
     nil
