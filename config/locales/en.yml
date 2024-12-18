@@ -3822,6 +3822,7 @@ en:
         well_plate: 'Well plate'
         text: 'Text'
         checklist: 'Checklist'
+        form: 'Form'
         attachment: 'File'
         add_file: 'From your PC'
         checklist_item: 'Add new'
@@ -3860,6 +3861,14 @@ en:
           description_1: 'You’re about to delete a content block from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
           description_2: 'Are you sure you want to delete it?'
           confirm: 'Delete forever'
+        form_modal:
+          title: "Insert form"
+          description: "Select a form you want to add to your protocol"
+          label: "Form"
+          placeholder: "Select a form"
+          no_forms: "Create and publish one or request access from your team."
+          add_form: "Add form"
+          take_me_there: "Take me there"
         move_element:
           step:
             title: Move to different step

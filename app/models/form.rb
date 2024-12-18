@@ -19,6 +19,8 @@ class Form < ApplicationRecord
   has_many :form_fields, inverse_of: :form, dependent: :destroy
   has_many :users, through: :user_assignments
 
+  scope :published, -> { where.not(published_on: nil) }
+
   validates :name, length: { minimum: Constants::NAME_MIN_LENGTH, maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::NAME_MAX_LENGTH }
 
