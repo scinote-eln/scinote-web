@@ -17,8 +17,32 @@
 }
 
 .common-table-format {
+  display: block;
   page-break-inside: avoid;
   width: 100%;
+  overflow: auto;
+
+  &.simple-table {
+    th,
+    td:first-child {
+      background: $color-concrete;
+      font-weight: normal;
+    }
+  }
+
+  tr:first-child {
+    height: 27px;
+  }
+
+  th:first-child {
+    width: 50px;
+  }
+
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: max-content;
+  }
 
   tr {
     text-align: left;

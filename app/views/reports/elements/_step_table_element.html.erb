@@ -25,12 +25,8 @@
     <% end %>
   </div>
   <div class="report-element-body">
-    <div class="report-native-table report-common-table-format" id="native-table-<%= table.id %>">
-      <native-table-renderer
-        :contents="<%= table.contents %>"
-        :metadata="<%= table.metadata.to_json %>"
-      >
-      </native-table-renderer>
+    <div class="report-native-table report-common-table-format simple-table" id="native-table-<%= table.id %>">
+      <%= render partial: 'protocols/table_element', locals: { table: table }%>
     </div>
   </div>
   <% if defined?(children) %>
