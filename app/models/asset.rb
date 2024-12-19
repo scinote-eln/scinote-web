@@ -299,7 +299,7 @@ class Asset < ApplicationRecord
 
       # Extract only the licenced user flag parameter
       is_licenced_user = ENV['WOPI_BUSINESS_USERS'] == 'true' && action_url.include?('IsLicensedUser=BUSINESS_USER')
-      action_url = action_url.split('?').first + "?IsLicencedUser=#{is_licenced_user ? 1 : 0}"
+      action_url = action_url.split('?').first + "?IsLicencedUser=#{is_licenced_user ? 1 : 0}&"
 
       rest_url = Rails.application.routes.url_helpers.wopi_rest_endpoint_url(
         host: ENV['WOPI_ENDPOINT_URL'],
