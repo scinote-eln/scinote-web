@@ -13,6 +13,8 @@ class FormFieldValuesController < ApplicationController
       not_applicable: form_field_value_params[:not_applicable]
     )
 
+    log_form_field_value_create_activity
+
     render json: @form_field_value, serializer: FormFieldValueSerializer, user: current_user
   end
 
@@ -36,5 +38,29 @@ class FormFieldValuesController < ApplicationController
 
   def check_create_permissions
     render_403 unless can_submit_form_response?(@form_response)
+  end
+
+  def log_form_field_value_create_activity
+    step = @form_response.step
+    protocol = step.protocol
+
+    Activities::CreateActivityService.call(
+      activity_type: :task_step_form_field_edited,
+      owner: current_user,
+      team: protocol.team,
+      project: nil,
+      subject: protocol,
+      message_items: {
+        user: current_user.id,
+        form_field_name: @form_field.name,
+        form: @form_field.form.id,
+        step: step.id,
+        step_position: {
+          id: step.id,
+          value_for: 'position_plus_one'
+        },
+        my_module: protocol.my_module.id
+      }
+    )
   end
 end
