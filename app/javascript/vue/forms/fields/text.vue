@@ -1,6 +1,6 @@
 <template>
   <div class="sci-input-container-v2 h-24">
-    <textarea class="sci-input" :disabled="marked_as_na" :placeholder="i18n.t('forms.fields.add_text')"></textarea>
+    <textarea class="sci-input" :value="value" :disabled="fieldDisabled" @change="saveValue" :placeholder="i18n.t('forms.fields.add_text')"></textarea>
   </div>
 </template>
 
@@ -9,6 +9,16 @@ import fieldMixin from './field_mixin';
 
 export default {
   name: 'TextField',
-  mixins: [fieldMixin]
+  mixins: [fieldMixin],
+  methods: {
+    saveValue(event) {
+      this.$emit('save', event.target.value);
+    }
+  },
+  computed: {
+    value() {
+      return this.field.field_value?.value;
+    }
+  }
 };
 </script>

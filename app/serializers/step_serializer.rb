@@ -97,6 +97,7 @@ class StepSerializer < ActiveModel::Serializer
         create_table_url: step_tables_path(object),
         create_text_url: step_texts_path(object),
         create_checklist_url: step_checklists_path(object),
+        create_form_response_url: step_form_responses_path(object),
         update_asset_view_mode_url: update_asset_view_mode_step_path(object),
         update_view_state_url: update_view_state_step_path(object),
         direct_upload_url: rails_direct_uploads_url,

@@ -1133,6 +1133,10 @@ en:
         SingleChoiceField: 'Single choice'
         MultipleChoiceField: 'Multiple choice'
         DatetimeField: 'Date & Time'
+    response:
+      submit: 'Submit form'
+      submitted_on: 'Submitted on'
+      by: 'by'
   label_templates:
     types:
       fluics_label_template: 'Fluics'

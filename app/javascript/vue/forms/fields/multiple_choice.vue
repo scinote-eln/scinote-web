@@ -1,8 +1,10 @@
 <template>
   <div>
     <SelectDropdown
-      :disabled="marked_as_na"
+      :disabled="fieldDisabled"
       :options="options"
+      :value="value"
+      @change="saveValue"
       :multiple="true"
       :withCheckboxes="true"
       :clearable="true"
@@ -21,11 +23,19 @@ export default {
     SelectDropdown
   },
   computed: {
+    value() {
+      return (this.field.field_value?.selection || '[]');
+    },
     options() {
       if (!this.field.attributes.data.options) {
         return [];
       }
       return this.field.attributes.data.options.map((option) => ([option, option]));
+    }
+  },
+  methods: {
+    saveValue(value) {
+      this.$emit('save', value);
     }
   }
 };

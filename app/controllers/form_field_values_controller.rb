@@ -9,7 +9,8 @@ class FormFieldValuesController < ApplicationController
     @form_field_value = @form_response.create_value!(
       current_user,
       @form_field,
-      form_field_value_params[:value]
+      form_field_value_params[:value],
+      not_applicable: form_field_value_params[:not_applicable]
     )
 
     render json: @form_field_value, serializer: FormFieldValueSerializer, user: current_user
@@ -18,7 +19,7 @@ class FormFieldValuesController < ApplicationController
   private
 
   def form_field_value_params
-    params.require(:form_field_value).permit(:form_field_id, :value)
+    params.require(:form_field_value).permit(:form_field_id, :value, :not_applicable, value: [])
   end
 
   def load_form_response
