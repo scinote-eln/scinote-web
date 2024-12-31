@@ -13,6 +13,9 @@
       data-source="<%= forms_path(format: :json) %>"
       create-url="<%= forms_path  %>"
       user-roles-url="<%= user_roles_forms_path %>"
+      active-page-url="<%= forms_path(view_mode: :active) %>"
+      archived-page-url="<%= forms_path(view_mode: :archived) %>"
+      current-view-mode="<%= params[:view_mode] || :active %>"
     />
   </div>
 </div>

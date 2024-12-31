@@ -1075,6 +1075,8 @@ en:
       toolbar:
         new: 'New form'
         access: 'Access'
+        archive: 'Archive'
+        restore: 'Restore'
       table:
         name: 'Form name'
         code: 'ID'

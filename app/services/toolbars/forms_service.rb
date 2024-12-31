@@ -18,7 +18,9 @@ module Toolbars
       return [] if @forms.none?
 
       [
-        access_action
+        access_action,
+        archive_action,
+        restore_action
       ].compact
     end
 
@@ -31,6 +33,30 @@ module Toolbars
         name: 'access',
         label: I18n.t('forms.index.toolbar.access'),
         icon: 'sn-icon sn-icon-project-member-access',
+        type: :emit
+      }
+    end
+
+    def archive_action
+      return unless @forms.all? { |form| can_archive_form?(form) }
+
+      {
+        name: 'archive',
+        label: I18n.t('forms.index.toolbar.archive'),
+        icon: 'sn-icon sn-icon-archive',
+        path: archive_forms_path(form_ids: @forms.pluck(:id)),
+        type: :emit
+      }
+    end
+
+    def restore_action
+      return unless @forms.all? { |form| can_restore_form?(form) }
+
+      {
+        name: 'restore',
+        label: I18n.t('forms.index.toolbar.restore'),
+        icon: 'sn-icon sn-icon-restore',
+        path: restore_forms_path(form_ids: @forms.pluck(:id)),
         type: :emit
       }
     end

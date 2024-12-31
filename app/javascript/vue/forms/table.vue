@@ -5,9 +5,14 @@
                :dataUrl="dataSource"
                :reloadingTable="reloadingTable"
                :toolbarActions="toolbarActions"
+               :activePageUrl="activePageUrl"
+               :archivedPageUrl="archivedPageUrl"
+               :currentViewMode="currentViewMode"
                :actionsUrl="actionsUrl"
                @tableReloaded="reloadingTable = false"
                @create="createForm"
+               @archive="archive"
+               @restore="restore"
                @access="access"
       />
   </div>
@@ -52,7 +57,10 @@ export default {
     userRolesUrl: {
       type: String,
       required: true
-    }
+    },
+    activePageUrl: { type: String },
+    archivedPageUrl: { type: String },
+    currentViewMode: { type: String, required: true }
   },
   data() {
     return {
@@ -129,6 +137,22 @@ export default {
         object: rows[0],
         roles_path: this.userRolesUrl
       };
+    },
+    archive(event) {
+      axios.post(event.path).then((response) => {
+        this.reloadingTable = true;
+        HelperModule.flashAlertMsg(response.data.message, 'success');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
+    },
+    restore(event) {
+      axios.post(event.path).then((response) => {
+        this.reloadingTable = true;
+        HelperModule.flashAlertMsg(response.data.message, 'success');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
     }
   }
 };
