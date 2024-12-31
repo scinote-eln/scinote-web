@@ -14,10 +14,18 @@
                @archive="archive"
                @restore="restore"
                @access="access"
+               @export="exportFormResponse"
       />
   </div>
   <AccessModal v-if="accessModalParams" :params="accessModalParams"
                @close="accessModalParams = null" @refresh="this.reloadingTable = true" />
+  <ConfirmationModal
+    :title="i18n.t('forms.export.title')"
+    :description="i18n.t('forms.export.description')"
+    confirmClass="btn btn-primary"
+    :confirmText="i18n.t('forms.export.export_button')"
+    ref="exportModal"
+  ></ConfirmationModal>
 </template>
 
 <script>
@@ -27,6 +35,7 @@ import axios from '../../packs/custom_axios.js';
 
 import DataTable from '../shared/datatable/table.vue';
 import DeleteModal from '../shared/confirmation_modal.vue';
+import ConfirmationModal from '../shared/confirmation_modal.vue';
 import NameRenderer from './renderers/name.vue';
 import UsersRenderer from '../projects/renderers/users.vue';
 
@@ -40,7 +49,8 @@ export default {
     DeleteModal,
     NameRenderer,
     UsersRenderer,
-    AccessModal
+    AccessModal,
+    ConfirmationModal
   },
   props: {
     dataSource: {
@@ -153,6 +163,17 @@ export default {
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
+    },
+    async exportFormResponse(event) {
+      const ok = await this.$refs.exportModal.show();
+      if (ok) {
+        axios.post(event.path).then((response) => {
+          this.reloadingTable = true;
+          HelperModule.flashAlertMsg(response.data.message, 'success');
+        }).catch((error) => {
+          HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+        });
+      }
     }
   }
 };

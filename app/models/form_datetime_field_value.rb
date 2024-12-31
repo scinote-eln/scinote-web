@@ -17,4 +17,8 @@ class FormDatetimeFieldValue < FormFieldValue
   def range?
     datetime_to.present?
   end
+
+  def formatted
+    range? ? [datetime, datetime_to].join(' - ') : datetime.to_s
+  end
 end

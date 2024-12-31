@@ -359,6 +359,7 @@ en:
       form_block_edited_html: "%{user} edited form block %{block_name} in form %{form} in Form templates."
       form_block_deleted_html: "%{user} deleted form block %{block_name} in form %{form} in Form templates."
       form_block_rearranged_html: "%{user} rearranged form blocks in form %{form} in Form templates."
+      export_form_responses_html: "%{user} exported data from form %{form} in Form templates."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -669,6 +670,7 @@ en:
       form_block_edited: "Form block edited"
       form_block_deleted: "Form block deleted"
       form_block_rearranged: "Form block rearranged"
+      export_form_responses: "Form data exported"
     activity_group:
       projects: "Projects"
       task_results: "Task results"

@@ -20,7 +20,8 @@ module Toolbars
       [
         access_action,
         archive_action,
-        restore_action
+        restore_action,
+        export_action
       ].compact
     end
 
@@ -57,6 +58,22 @@ module Toolbars
         label: I18n.t('forms.index.toolbar.restore'),
         icon: 'sn-icon sn-icon-restore',
         path: restore_forms_path(form_ids: @forms.pluck(:id)),
+        type: :emit
+      }
+    end
+
+    def export_action
+      return unless @single
+
+      return unless @forms.first.published?
+
+      return unless can_read_form?(@forms.first)
+
+      {
+        name: 'export',
+        label: I18n.t('protocols.index.toolbar.export'),
+        icon: 'sn-icon sn-icon-export',
+        path: export_form_responses_form_path(@forms.first),
         type: :emit
       }
     end
