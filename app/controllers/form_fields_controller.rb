@@ -18,6 +18,7 @@ class FormFieldsController < ApplicationController
         )
       )
       if @form_field.save
+        log_activity(:form_block_added, block_name: @form_field.name)
         render json: @form_field, serializer: FormFieldSerializer, user: current_user
       else
         render json: { error: @form_field.errors.full_messages }, status: :unprocessable_entity
@@ -28,6 +29,7 @@ class FormFieldsController < ApplicationController
   def update
     ActiveRecord::Base.transaction do
       if @form_field.update(form_field_params.merge({ last_modified_by: current_user }))
+        log_activity(:form_block_edited, block_name: @form_field.name)
         render json: @form_field, serializer: FormFieldSerializer, user: current_user
       else
         render json: { error: @form_field.errors.full_messages }, status: :unprocessable_entity
@@ -38,6 +40,7 @@ class FormFieldsController < ApplicationController
   def destroy
     ActiveRecord::Base.transaction do
       if @form_field.destroy
+        log_activity(:form_block_deleted, block_name: @form_field.name)
         render json: {}
       else
         render json: { error: @form_field.errors.full_messages }, status: :unprocessable_entity
@@ -51,6 +54,7 @@ class FormFieldsController < ApplicationController
         @form_field = @form.form_fields.find(data[:id])
         @form_field.insert_at!(data[:position].to_i)
       end
+      log_activity(:form_block_rearranged)
     end
 
     render json: params[:form_field_positions], status: :ok
@@ -78,5 +82,17 @@ class FormFieldsController < ApplicationController
 
   def form_field_params
     params.require(:form_field).permit(:name, :description, { data: [:type, :unit, :time, :range, validations: {}, options: []] }, :required, :allow_not_applicable, :uid)
+  end
+
+  def log_activity(type_of, message_items = {})
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: @form.team,
+            subject: @form,
+            message_items: {
+              form: @form.id,
+              user: current_user.id
+            }.merge(message_items))
   end
 end
