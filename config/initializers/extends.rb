@@ -534,7 +534,16 @@ class Extends
     form_access_revoked: 333,
     form_access_granted_all_team_members: 334,
     form_access_changed_all_team_members: 335,
-    form_access_revoked_all_team_members: 336
+    form_access_revoked_all_team_members: 336,
+    form_created: 337,
+    form_archived: 338,
+    form_restored: 339,
+    form_published: 340,
+    form_name_changed: 341,
+    form_block_added: 342,
+    form_block_edited: 343,
+    form_block_deleted: 344,
+    form_block_rearranged: 345
   }
 
   ACTIVITY_GROUPS = {
@@ -558,7 +567,7 @@ class Extends
     storage_locations: [*309..315],
     container_storage_locations: [*316..322, 326],
     storage_location_repository_rows: [*323..325],
-    forms: [331, 332, 333, 334, 335, 336]
+    forms: [331, 332, 333, 334, 335, 336, *337..345]
   }
 
   TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository Form).freeze
