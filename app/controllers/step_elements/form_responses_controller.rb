@@ -1,15 +1,18 @@
 # frozen_string_literal: true
+
 module StepElements
   class FormResponsesController < BaseController
     before_action :load_form, only: :create
-    before_action :load_parent, only: :create
+    before_action :load_step, only: :create
     before_action :load_form_response, except: :create
+    skip_before_action :check_manage_permissions, only: %i(submit reset)
 
     def create
-      render_403 and return unless can_create_protocol_form_responses?(@parent.protocol)
+      render_403 and return unless can_create_protocol_form_responses?(@step.protocol)
+
       ActiveRecord::Base.transaction do
         @form_response = FormResponse.create!(form: @form, created_by: current_user)
-        @parent.step_orderable_elements.create!(orderable: @form_response)
+        create_in_step!(@step, @form_response)
       end
 
       render_step_orderable_element(@form_response)
@@ -28,7 +31,7 @@ module StepElements
 
       new_form_response = @form_response.reset!(current_user)
 
-      render_step_orderable_element(@form_response)
+      render_step_orderable_element(new_form_response)
     end
 
     private
@@ -43,9 +46,10 @@ module StepElements
       render_404 unless @form && can_read_form?(@form)
     end
 
-    def load_parent
-      @parent = Step.find_by(id: form_response_params[:step_id])
-      render_404 unless @parent
+    def load_step
+      @step = Step.find_by(id: form_response_params[:step_id])
+
+      render_404 unless @step
     end
 
     def load_form_response

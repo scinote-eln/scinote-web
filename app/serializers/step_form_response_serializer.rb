@@ -31,8 +31,8 @@ class StepFormResponseSerializer < ActiveModel::Serializer
       add_value: form_response_form_field_values_path(object)
     }
 
-    list[:submit] = submit_step_form_response_path(object.step ,object) if can_submit_form_response?(user, object)
-    list[:reset] = reset_step_form_response_path(object.step ,object) if can_reset_form_response?(user, object)
+    list[:submit] = submit_step_form_response_path(object.step, object) if can_submit_form_response?(user, object)
+    list[:reset] = reset_step_form_response_path(object.step, object) if can_reset_form_response?(user, object)
 
     list
   end
