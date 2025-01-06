@@ -149,7 +149,7 @@ class Step < ApplicationRecord
 
       # Copy tables
       tables.each do |table|
-        table.duplicate(new_step, user, table.step_table.step_orderable_element.position)
+        duplicate_table(new_step, user, table)
       end
 
       # Call clone helper
@@ -166,6 +166,10 @@ class Step < ApplicationRecord
   end
 
   private
+
+  def duplicate_table(new_step, user, table)
+    table.duplicate(new_step, user, table.step_table.step_orderable_element.position)
+  end
 
   def remove_from_user_settings
     CleanupUserSettingsJob.perform_later('task_step_states', id)
