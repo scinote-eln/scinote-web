@@ -3,7 +3,7 @@
 class FormsController < ApplicationController
   include UserRolesHelper
 
-  before_action :load_form, only: %i(show update publish unpublish)
+  before_action :load_form, only: %i(show update publish unpublish export_form_responses)
   before_action :set_breadcrumbs_items, only: %i(index show)
   before_action :check_manage_permissions, only: %i(update publish unpublish)
   before_action :check_create_permissions, only: :create
@@ -140,6 +140,27 @@ class FormsController < ApplicationController
     else
       render json: { message: t('forms.restored.error_flash') }, status: :unprocessable_entity
     end
+  end
+
+  def export_form_responses
+    FormResponsesZipExportJob.perform_later(
+      user_id: current_user.id,
+      params: {
+        form_id: @form.id
+      }
+    )
+
+    Activities::CreateActivityService.call(
+      activity_type: :export_form_responses,
+      owner: current_user,
+      subject: @form,
+      team: @form.team,
+      message_items: {
+        form: @form.id
+      }
+    )
+
+    render json: { message: t('zip_export.export_request_success') }
   end
 
   def actions_toolbar

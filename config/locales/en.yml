@@ -289,6 +289,7 @@ en:
         repository: "Inventories"
         repository_item: "Items"
         stock_consumption: "Stock consumption"
+        form: "Form"
 
   head:
     title: "SciNote | %{title}"
@@ -1062,6 +1063,19 @@ en:
     archived:
       success_flash: "<strong>%{number}</strong> form(s) successfully archived."
       error_flash: "Failed to archive form(s)."
+    export:
+      title: "Export form data"
+      description: "You are about to export data from the selected form template. Only completed form submissions will be included in a .xlsx file. You will receive an <strong>email and a notification</strong> with the download link when the file is ready. For security reasons, the link will expire in 7 days."
+      export_button: "Export"
+      columns:
+        form_path: "Form path"
+        form_timestamp: "Timestamp of form submission (UTC)"
+        submitted_by: "Submitted by user"
+        form_field_timestamp: "Timestamp for %{name} (UTC)"
+        form_field_submitted_by: "User for %{name}"
+      values:
+        not_applicable: 'N/A'
+        
     fields:
       mark_as_na: "Mark as N/A"
       add_text: "Add text"

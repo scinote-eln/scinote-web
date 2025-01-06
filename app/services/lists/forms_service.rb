@@ -17,5 +17,7 @@ module Lists
     end
 
     def filter_records; end
+
+    def sort_records; end
   end
 end

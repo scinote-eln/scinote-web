@@ -37,6 +37,7 @@ class FormResponse < ApplicationRecord
         # these can change if the form_response is reset, as submitted_by will be kept the same, but created_by will change
         created_by: created_by,
         submitted_by: created_by,
+        submitted_at: DateTime.current,
         value: value
       )
     end
@@ -62,9 +63,10 @@ class FormResponse < ApplicationRecord
       end
 
       # if attached to step, reattach new form response
-      self&.step_orderable_element&.update!(orderable: new_form_response)
 
       discard
+
+      self&.step_orderable_element&.update!(orderable: new_form_response)
 
       new_form_response
     end

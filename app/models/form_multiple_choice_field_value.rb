@@ -8,4 +8,8 @@ class FormMultipleChoiceFieldValue < FormFieldValue
   def value
     selection
   end
+
+  def formatted
+    value.join('|')
+  end
 end

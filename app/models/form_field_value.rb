@@ -15,4 +15,12 @@ class FormFieldValue < ApplicationRecord
   def value
     raise NotImplementedError
   end
+
+  def formatted
+    value
+  end
+
+  def value_in_range?
+    true
+  end
 end
