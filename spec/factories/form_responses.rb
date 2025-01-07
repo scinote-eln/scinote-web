@@ -4,6 +4,8 @@ FactoryBot.define do
   factory :form_response do
     association :form
     association :created_by, factory: :user
+    association :step_orderable_element, factory: :step_orderable_element
+
     status { :pending }
 
     trait :submitted do
