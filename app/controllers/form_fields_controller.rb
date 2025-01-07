@@ -17,6 +17,7 @@ class FormFieldsController < ApplicationController
           }
         )
       )
+
       if @form_field.save
         log_activity(:form_block_added, block_name: @form_field.name)
         render json: @form_field, serializer: FormFieldSerializer, user: current_user

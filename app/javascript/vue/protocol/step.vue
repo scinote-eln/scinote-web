@@ -168,7 +168,11 @@
       @reorder="updateElementOrder"
       @close="closeReorderModal"
     />
-    <SelectFormModal v-if="openFormSelectModal" @close="openFormSelectModal = false" />
+    <SelectFormModal
+      v-if="openFormSelectModal"
+      @close="openFormSelectModal = false"
+      @submit="createElement('form_response', null, $event); openFormSelectModal = false"
+    />
   </div>
 </template>
 
@@ -183,6 +187,7 @@
   import StepTable from '../shared/content/table.vue'
   import StepText from '../shared/content/text.vue'
   import Checklist from '../shared/content/checklist.vue'
+  import FormResponse from '../shared/content/form_response.vue'
   import deleteStepModal from './modals/delete_step.vue'
   import Attachments from '../shared/content/attachments.vue'
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
@@ -285,7 +290,8 @@
       ReorderableItemsModal,
       MenuDropdown,
       ContentToolbar,
-      SelectFormModal
+      SelectFormModal,
+      FormResponse
     },
     created() {
       this.loadAttachments();
@@ -624,10 +630,10 @@
           }
         });
       },
-      createElement(elementType, tableDimensions = null) {
+      createElement(elementType, tableDimensions = null, formId = null) {
         let plateTemplate = tableDimensions != null;
         tableDimensions ||= [5, 5];
-        $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate }, (result) => {
+        $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate, form_id: formId }, (result) => {
           result.data.isNew = true;
           this.elements.push(result.data)
 

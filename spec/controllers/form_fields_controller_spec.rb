@@ -8,8 +8,12 @@ describe FormFieldsController, type: :controller do
   include_context 'reference_project_structure'
 
   let!(:form) { create :form, team: team, created_by: user }
-  let!(:form_field) { create :form_field, form: form, created_by: user }
-  let!(:form_fields) { create_list :form_field, 5, form: form, created_by: user }
+  let!(:form_field) { create :form_field, position: 0, form: form, created_by: user }
+  let!(:form_fields) do
+    5.times.map.with_index do |_, i|
+      create :form_field, position: i + 1, form: form, created_by: user
+    end
+  end
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }

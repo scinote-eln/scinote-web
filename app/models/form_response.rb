@@ -25,7 +25,7 @@ class FormResponse < ApplicationRecord
     step_orderable_element&.step
   end
 
-  def create_value!(created_by, form_field, value)
+  def create_value!(created_by, form_field, value, not_applicable: false)
     ActiveRecord::Base.transaction(requires_new: true) do
       form_field_values.where(form_field: form_field).find_each do |form_field_value|
         form_field_value.update!(latest: false)
@@ -38,7 +38,8 @@ class FormResponse < ApplicationRecord
         created_by: created_by,
         submitted_by: created_by,
         submitted_at: DateTime.current,
-        value: value
+        value: value,
+        not_applicable: not_applicable
       )
     end
   end

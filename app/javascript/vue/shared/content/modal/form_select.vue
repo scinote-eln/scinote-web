@@ -29,7 +29,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="close">{{ i18n.t('general.cancel') }}</button>
-          <button v-if="anyForms" :disabled="!form" @submit="$emit('submit', form)" class="btn btn-primary">
+          <button v-if="anyForms" :disabled="!form" @click="$emit('submit', form)" class="btn btn-primary">
             {{ i18n.t('protocols.steps.modals.form_modal.add_form') }}
           </button>
           <a v-else :href="formsPageUrl" class="btn btn-primary">

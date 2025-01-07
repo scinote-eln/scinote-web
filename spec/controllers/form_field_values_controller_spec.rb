@@ -18,7 +18,8 @@ describe FormFieldValuesController, type: :controller do
         form_response_id: form_response.id,
         form_field_value: {
           form_field_id: form_field.id,
-          value: 'Test value'
+          value: 'Test value',
+          not_applicable: false
         }
       }
     end
@@ -50,7 +51,8 @@ describe FormFieldValuesController, type: :controller do
           form_response_id: form_response.id,
           form_field_value: {
             form_field_id: -1,
-            value: 'Test value'
+            value: 'Test value',
+            not_applicable: false
           }
         }
       end
@@ -67,7 +69,8 @@ describe FormFieldValuesController, type: :controller do
           form_response_id: 0,
           form_field_value: {
             form_field_id: form_field.id,
-            value: 'Test value'
+            value: 'Test value',
+            not_applicable: false
           }
         }
       end

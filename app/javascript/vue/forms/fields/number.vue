@@ -1,6 +1,6 @@
 <template>
   <div class="sci-input-container-v2 mb-2" :class="{'error': !isValidValue}" :data-error="errorMessage">
-    <input type="number" v-model="value" class="sci-input" :disabled="marked_as_na" :placeholder="i18n.t('forms.fields.add_number')"></input>
+    <input type="number" v-model="value" class="sci-input" :disabled="fieldDisabled" @change="saveValue" :placeholder="i18n.t('forms.fields.add_number')"></input>
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
   mixins: [fieldMixin],
   data() {
     return {
-      value: ''
+      value: this.field.field_value?.value
     };
   },
   computed: {
@@ -42,6 +42,13 @@ export default {
       }
 
       return '';
+    }
+  },
+  methods: {
+    saveValue() {
+      if (this.isValidValue) {
+        this.$emit('save', this.value);
+      }
     }
   }
 };

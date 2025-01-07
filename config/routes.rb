@@ -613,6 +613,12 @@ Rails.application.routes.draw do
           post :reorder, on: :collection
         end
       end
+      resources :form_responses, controller: 'step_elements/form_responses', only: %i(create) do
+        member do
+          post :submit
+          post :reset
+        end
+      end
       member do
         get 'elements'
         get 'attachments'
@@ -876,12 +882,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :form_responses, only: %i(create) do
-      member do
-        post :submit
-        post :reset
-      end
-
+    resources :form_responses, only: [] do
       resources :form_field_values, only: %i(create)
     end
 
