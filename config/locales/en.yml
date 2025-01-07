@@ -1075,7 +1075,9 @@ en:
         form_field_submitted_by: "User for %{name}"
       values:
         not_applicable: 'N/A'
-        
+    publish:
+      title: "Publish form"
+      description_html: "<p>Publishing a form locks it for editing and makes it available for use in protocol steps. You can unpublish the form only if it isn't linked to any steps.</p><p>Are you sure you want to publish the form?</p>"
     fields:
       mark_as_na: "Mark as N/A"
       add_text: "Add text"

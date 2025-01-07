@@ -91,6 +91,13 @@
         </div>
       </div>
     </div>
+    <ConfirmationModal
+      :title="i18n.t('forms.publish.title')"
+      :description="i18n.t('forms.publish.description_html')"
+      confirmClass="btn btn-primary"
+      :confirmText="i18n.t('forms.show.publish')"
+      ref="publishModal">
+    </ConfirmationModal>
   </div>
 </template>
 
@@ -102,6 +109,7 @@ import axios from '../../packs/custom_axios.js';
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import EditField from './edit_field.vue';
 import Preview from './preview.vue';
+import ConfirmationModal from '../shared/confirmation_modal.vue';
 
 export default {
   name: 'ShowForm',
@@ -113,7 +121,8 @@ export default {
     GeneralDropdown,
     EditField,
     Draggable,
-    Preview
+    Preview,
+    ConfirmationModal
   },
   computed: {
     canManage() {
@@ -212,11 +221,14 @@ export default {
         }
       });
     },
-    publishForm() {
-      axios.post(this.form.attributes.urls.publish).then((response) => {
+    async publishForm() {
+      const ok = await this.$refs.publishModal.show();
+      if (ok) {
+        axios.post(this.form.attributes.urls.publish).then((response) => {
         this.form = response.data.data;
         this.preview = true;
-      });
+        });
+      }
     },
     unpublishForm() {
       axios.post(this.form.attributes.urls.unpublish).then((response) => {
