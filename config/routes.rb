@@ -613,10 +613,11 @@ Rails.application.routes.draw do
           post :reorder, on: :collection
         end
       end
-      resources :form_responses, controller: 'step_elements/form_responses', only: %i(create) do
+      resources :form_responses, controller: 'step_elements/form_responses', only: %i(create destroy) do
         member do
           post :submit
           post :reset
+          post :move
         end
       end
       member do
