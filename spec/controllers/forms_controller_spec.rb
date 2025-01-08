@@ -9,6 +9,7 @@ describe FormsController, type: :controller do
 
   let!(:form) { create :form, team: team, created_by: user }
   let!(:form2) { create :form, team: team, created_by: user }
+  let!(:published_form) { create :form, team: team, created_by: user, published_by: user, published_on: DateTime.parse('1-1-2000') }
   let!(:form_field) { create :form_field, form: form2, created_by: user }
 
   describe '#index' do
@@ -20,7 +21,7 @@ describe FormsController, type: :controller do
 
       response_body = JSON.parse(response.body)
 
-      expect(response_body['data'].length).to eq 2
+      expect(response_body['data'].length).to eq 3
       expect(response.body).to include(form.name)
       expect(response.body).to include(form2.name)
       expect(response.body).not_to include(form_field.name)
@@ -110,7 +111,7 @@ describe FormsController, type: :controller do
     let(:action) { put :unpublish, params: params, format: :json }
     let(:params) do
       {
-        id: form.id,
+        id: published_form.id,
       }
     end
 
