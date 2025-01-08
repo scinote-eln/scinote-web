@@ -31,7 +31,7 @@
         <button v-if="form.attributes.urls.publish" class="btn btn-primary" @click="publishForm">
           {{ i18n.t('forms.show.publish') }}
         </button>
-        <button v-if="form.attributes.urls.unpublish" class="btn btn-secondary" @click="unpublishForm">
+        <button v-if="form.attributes.published_on" :disabled="!form.attributes.urls.unpublish" class="btn btn-secondary" @click="unpublishForm">
           {{ i18n.t('forms.show.unpublish') }}
         </button>
       </div>

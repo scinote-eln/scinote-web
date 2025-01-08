@@ -32,6 +32,10 @@ class Form < ApplicationRecord
 
   enum :visibility, { hidden: 0, visible: 1 }
 
+  def unused?
+    form_responses.none?
+  end
+
   def permission_parent
     nil
   end

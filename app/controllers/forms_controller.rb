@@ -70,6 +70,8 @@ class FormsController < ApplicationController
   end
 
   def publish
+    render_403 and return unless can_publish_form?(@form)
+
     ActiveRecord::Base.transaction do
       @form.update!(
         published_by: current_user,
@@ -82,6 +84,8 @@ class FormsController < ApplicationController
   end
 
   def unpublish
+    render_403 and return unless can_unpublish_form?(@form)
+
     ActiveRecord::Base.transaction do
       @form.update!(
         published_by: nil,
@@ -208,7 +212,6 @@ class FormsController < ApplicationController
   end
 
   def check_manage_permissions
-
     render_403 unless @form && can_manage_form?(@form)
   end
 
