@@ -6,6 +6,10 @@ class Form < ApplicationRecord
   include ArchivableModel
   include PermissionCheckableModel
   include Assignable
+  include SearchableModel
+  include SearchableByNameModel
+
+  SEARCHABLE_ATTRIBUTES = ['forms.name'].freeze
 
   belongs_to :team
   belongs_to :parent, class_name: 'Form', optional: true

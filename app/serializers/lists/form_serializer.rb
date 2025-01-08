@@ -6,7 +6,7 @@ module Lists
     include Rails.application.routes.url_helpers
 
     attributes :id, :name, :published_on, :published_by, :updated_at, :urls, :code, :top_level_assignable, :hidden,
-               :team, :default_public_user_role_id, :permissions, :assigned_users
+               :team, :default_public_user_role_id, :permissions, :assigned_users, :versions, :used_in_protocols
 
     def published_by
       object.published_by&.full_name
@@ -26,6 +26,14 @@ module Lists
 
     def hidden
       object.hidden?
+    end
+
+    def used_in_protocols
+      object.form_responses.count
+    end
+
+    def versions
+      I18n.t("forms.#{object.published? ? 'published' : 'draft'}")
     end
 
     def team
