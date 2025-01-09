@@ -39,7 +39,8 @@ class StepFormResponseSerializer < ActiveModel::Serializer
     list[:reset] = reset_step_form_response_path(object.step, object) if can_reset_form_response?(user, object)
     if can_manage_step?(user, object.step)
       list[:move_url] = move_step_form_response_path(object.step, object)
-      list[:move_targets_url] = move_targets_step_text_path(object.step, object) if can_manage_step?(user, object.step)
+      list[:move_targets_url] = move_targets_step_text_path(object.step, object)
+      list[:delete_url] = step_form_response_path(object.step, object)
     end
 
     list

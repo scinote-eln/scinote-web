@@ -17,6 +17,19 @@ class FormResponse < ApplicationRecord
 
   has_many :form_field_values, dependent: :destroy
 
+  belongs_to :previous_form_response,
+             -> { unscope(where: :discarded_at) },
+             class_name: 'FormResponse',
+             inverse_of: :next_form_response,
+             optional: true,
+             dependent: :destroy
+
+  has_one  :next_form_response,
+           class_name: 'FormResponse',
+           foreign_key: 'previous_form_response_id',
+           inverse_of: :previous_form_response,
+           dependent: :destroy
+
   def step
     step_orderable_element&.step
   end
@@ -57,7 +70,7 @@ class FormResponse < ApplicationRecord
 
     ActiveRecord::Base.transaction(requires_new: true) do
       new_form_response = dup
-      new_form_response.update!(status: 'pending', created_by: user)
+      new_form_response.update!(status: 'pending', created_by: user, previous_form_response: self)
 
       form_field_values.latest.find_each do |form_field_value|
         form_field_value.dup.update!(form_response: new_form_response, created_by: user)
