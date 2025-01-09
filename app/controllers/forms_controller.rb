@@ -191,12 +191,12 @@ class FormsController < ApplicationController
     )
 
     @breadcrumbs_items.push(
-      { label: t('breadcrumbs.forms'), url: forms_path }
+      { label: "#{@form && (@form.archived? ? t('labels.archived') : '')} #{t('breadcrumbs.forms')}", url: forms_path }
     )
 
     if @form
       @breadcrumbs_items.push(
-        { label: @form.name }
+        { label: @form.name_with_label, url: form_path(@form) }
       )
     end
   end

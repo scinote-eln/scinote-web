@@ -33,7 +33,7 @@ module LeftMenuBarHelper
         url: "#",
         name: t('left_menu_bar.templates'),
         icon: 'sn-icon-protocols-templates',
-        active: protocols_are_selected? || label_templates_are_selected?,
+        active: protocols_are_selected? || label_templates_are_selected? || forms_are_selected?,
         submenu: [{
           url: forms_path,
           name: t('left_menu_bar.forms'),

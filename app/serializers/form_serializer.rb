@@ -4,7 +4,7 @@ class FormSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
-  attributes :id, :name, :published_on, :published_by, :updated_at, :description, :urls
+  attributes :id, :name, :archived, :published_on, :published_by, :updated_at, :description, :urls
 
   has_many :form_fields,
            key: :form_fields,
@@ -12,6 +12,10 @@ class FormSerializer < ActiveModel::Serializer
 
   def published_by
     object.published_by&.full_name
+  end
+
+  def archived
+    object.archived?
   end
 
   def published_on

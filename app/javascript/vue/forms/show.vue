@@ -3,6 +3,7 @@
     <div class="content-header flex items-center mb-4">
       <div class="title-row">
         <h1>
+          <span class="w-12" v-if="form.attributes.archived">{{ i18n.t('labels.archived') }}</span>
           <InlineEdit
             v-if="canManage"
             :value="form.attributes.name"

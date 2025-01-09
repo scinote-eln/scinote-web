@@ -36,6 +36,10 @@ class Form < ApplicationRecord
 
   enum :visibility, { hidden: 0, visible: 1 }
 
+  def archived_branch?
+    archived?
+  end
+
   def unused?
     form_responses.none?
   end
