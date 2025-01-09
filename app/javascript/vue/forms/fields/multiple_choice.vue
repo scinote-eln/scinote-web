@@ -24,7 +24,7 @@ export default {
   },
   computed: {
     value() {
-      return (this.field.field_value?.selection || '[]');
+      return (this.field.field_value?.selection || []);
     },
     options() {
       if (!this.field.attributes.data.options) {
