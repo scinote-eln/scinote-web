@@ -4,7 +4,7 @@ class StepFormResponseSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
-  attributes :id, :created_at, :form_id, :urls, :submitted_by_full_name, :status, :submitted_at
+  attributes :id, :created_at, :form_id, :urls, :submitted_by_full_name, :status, :submitted_at, :parent_type
 
   has_one :form, serializer: FormSerializer
 
@@ -14,6 +14,10 @@ class StepFormResponseSerializer < ActiveModel::Serializer
 
   has_many :form_field_values do
     object.form_field_values.latest
+  end
+
+  def parent_type
+    :step
   end
 
   def submitted_by_full_name
@@ -33,6 +37,10 @@ class StepFormResponseSerializer < ActiveModel::Serializer
 
     list[:submit] = submit_step_form_response_path(object.step, object) if can_submit_form_response?(user, object)
     list[:reset] = reset_step_form_response_path(object.step, object) if can_reset_form_response?(user, object)
+    if can_manage_step?(user, object.step)
+      list[:move_url] = move_step_form_response_path(object.step, object)
+      list[:move_targets_url] = move_targets_step_text_path(object.step, object) if can_manage_step?(user, object.step)
+    end
 
     list
   end

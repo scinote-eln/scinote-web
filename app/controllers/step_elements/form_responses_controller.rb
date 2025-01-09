@@ -13,7 +13,7 @@ module StepElements
       ActiveRecord::Base.transaction do
         @form_response = FormResponse.create!(form: @form, created_by: current_user)
         create_in_step!(@step, @form_response)
-        log_step_form_activity(:form_added, @step, { form: @form.id })
+        log_step_form_activity(:form_added, { form: @form.id })
       end
 
       render_step_orderable_element(@form_response)
@@ -23,7 +23,7 @@ module StepElements
       render_403 and return unless can_submit_form_response?(@form_response)
 
       @form_response.submit!(current_user)
-      log_step_form_activity(:form_field_submitted, @form_response.step, { form: @form_response.form.id })
+      log_step_form_activity(:form_field_submitted, { form: @form_response.form.id })
 
       render_step_orderable_element(@form_response)
     end
@@ -32,26 +32,32 @@ module StepElements
       render_403 and return unless can_reset_form_response?(@form_response)
 
       new_form_response = @form_response.reset!(current_user)
-      log_step_form_activity(:form_field_reopened, @form_response.step, { form: @form_response.form.id })
+      log_step_form_activity(:form_field_reopened, { form: @form_response.form.id })
 
       render_step_orderable_element(new_form_response)
     end
 
     def move
+      target = @protocol.steps.find_by(id: params[:target_id])
+
       ActiveRecord::Base.transaction do
-        target = @form_response.step
+        @form_response.step_orderable_element.update!(step: target, position: target.step_orderable_elements.size)
+        @step.normalize_elements_position
+
         log_step_form_activity(:form_moved,
-                               @form_response.step, {
+                               {
                                  form: @form_response.form.id,
                                  step_position_destination: target.position + 1,
                                  step_destination: target.id
                                })
+
+        render_step_orderable_element(@form_response)
       end
     end
 
     def destroy
       ActiveRecord::Base.transaction do
-        log_step_form_activity(:form_deleted, @form_response.step, { form: @form_response.form.id })
+        log_step_form_activity(:form_deleted, { form: @form_response.form.id })
       end
     end
 
@@ -79,21 +85,20 @@ module StepElements
       render_404 unless @form_response
     end
 
-    def log_step_form_activity(element_type_of, step, message_items = {})
-      protocol = step.protocol
-      message_items[:my_module] = protocol.my_module.id if protocol.in_module?
+    def log_step_form_activity(element_type_of, message_items = {})
+      message_items[:my_module] = @protocol.my_module.id if @protocol.in_module?
 
       Activities::CreateActivityService.call(
-        activity_type: "#{step.protocol.in_module? ? 'task_step_' : 'protocol_step_'}#{element_type_of}",
+        activity_type: "#{@step.protocol.in_module? ? 'task_step_' : 'protocol_step_'}#{element_type_of}",
         owner: current_user,
-        team: protocol.team,
-        project: protocol.in_module? ? protocol.my_module.project : nil,
-        subject: protocol,
+        team:  @protocol.team,
+        project: @protocol.in_module? ? @protocol.my_module.project : nil,
+        subject: @protocol,
         message_items: {
           user: current_user.id,
-          step: step.id,
+          step: @step.id,
           step_position: {
-            id: step.id,
+            id: @step.id,
             value_for: 'position_plus_one'
           }
         }.merge(message_items)
