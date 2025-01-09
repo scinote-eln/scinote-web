@@ -1141,6 +1141,7 @@ en:
     response:
       submit: 'Submit form'
       submitted_on: 'Submitted on'
+      not_submitted: 'Not submitted yet'
       by: 'by'
   label_templates:
     types:

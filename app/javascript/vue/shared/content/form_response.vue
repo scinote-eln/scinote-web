@@ -20,6 +20,9 @@
           {{ i18n.t('forms.response.submitted_on') }} {{ this.formResponse.submitted_at }}<br>
           {{ i18n.t('forms.response.by') }} {{ this.formResponse.submitted_by_full_name }}
         </div>
+        <div v-else class="ml-auto text-right text-xs text-sn-grey-700">
+          {{ i18n.t('forms.response.not_submitted') }}
+        </div>
       </div>
       <Field v-for="field in formFields" :disabled="formDisabled" ref="formFields" :key="field.id" :field="field" :formResponse="formResponse" @save="saveValue" />
       <div>
