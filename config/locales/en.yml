@@ -1922,9 +1922,9 @@ en:
       success_flash: "File result successfully deleted."
     wopi_open_file: "Open in %{app}"
     wopi_edit_file: "Open in %{app}"
-    wopi_word: "MS Word online"
-    wopi_excel: "Excel online"
-    wopi_powerpoint: "PowerPoint online"
+    wopi_word: "Microsoft Word for the Web"
+    wopi_excel: "Microsoft Excel for the Web"
+    wopi_powerpoint: "Microsoft PowerPoint for the Web"
     error_flash: 'Something went wrong! Please try again later.'
 
   result_tables:
@@ -3011,7 +3011,7 @@ en:
       text: "text"
       table: "table"
       asset: "file"
-    wupi_file_editing:
+    wopi_file_editing:
       started: "editing started"
       finished: "editing finished"
     file_editing:
@@ -3619,7 +3619,7 @@ en:
       clone_btn: "Copy"
       import: "Import"
       import_eln: "SciNote file (.eln)"
-      import_docx: "MS Word (.docx)"
+      import_docx: "Microsoft Word (.docx)"
       beta: "BETA"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
@@ -4015,19 +4015,19 @@ en:
     placeholder:
       modified_label: "Modified:"
       size_label: "Size: %{size}"
-    wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
-    wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
-    wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint Online.'
+    wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word for the web.'
+    wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel for the web.'
+    wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint for the web.'
     create_wopi_file:
-      button_text: 'New MS Office file'
+      button_text: 'New Microsoft Office file'
       li_text: "Office file"
-      modal_title: 'Create new Microsoft Office Online document'
+      modal_title: 'Create new Microsoft Office document'
       text_field_label: 'Document name'
       type_select_label: 'Document type'
       text_field_placeholder: 'Enter document name...'
-      ms_word: 'Word<br/>Online'
-      ms_excel: 'Excel<br/>Online'
-      ms_powerpoint: 'PowerPoint<br/>Online'
+      ms_word: 'Microsoft<br/>Word'
+      ms_excel: 'Microsoft<br/>Excel'
+      ms_powerpoint: 'Microsoft<br/>PowerPoint'
       create_document_button: 'Create document'
       errors:
         forbidden: 'You do not have permission to add files.'

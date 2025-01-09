@@ -298,7 +298,7 @@ class Constants
   # Other
   #=============================================================================
 
-  FILE_TEXT_FORMATS = %w(doc docm docx dot dotm dotx odt rtf).freeze
+  FILE_TEXT_FORMATS = %w(doc docm docx dot dotm dotx odt rtf wopitest wopitestx).freeze
 
   FILE_TABLE_FORMATS = %w(csv ods xls xlsb xlsm xlsx).freeze
 
@@ -306,7 +306,7 @@ class Constants
     %w(odp pot potm potx pps ppsm ppsx ppt pptm pptx).freeze
 
   WOPI_EDITABLE_FORMATS = %w(
-    docx docm odt xlsx xlsm xlsb ods pptx ppsx odp
+    docx docm odt xlsx xlsm xlsb ods pptx ppsx odp wopitest wopitestx
   ).freeze
 
   TEXT_EXTRACT_FILE_TYPES = [

@@ -108,9 +108,9 @@ module WopiUtil
 
   def create_wopi_file_activity(current_user, started_editing)
     action = if started_editing
-               t('activities.wupi_file_editing.started')
+               t('activities.wopi_file_editing.started')
              else
-               t('activities.wupi_file_editing.finished')
+               t('activities.wopi_file_editing.finished')
              end
     if @assoc.class == Step
       default_step_items =
