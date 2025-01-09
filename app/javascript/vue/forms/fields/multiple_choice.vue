@@ -8,6 +8,7 @@
       :multiple="true"
       :withCheckboxes="true"
       :clearable="true"
+      :placeholder="fieldDisabled ? ' ' : null"
     />
   </div>
 </template>

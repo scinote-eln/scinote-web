@@ -17,9 +17,15 @@
     <button class="btn btn-secondary mb-0.5"
             :disabled="disabled"
             v-if="field.attributes.allow_not_applicable"
-            :class="{'!bg-sn-super-light-blue !border-sn-blue': markAsNa}"
+            :class="{'!bg-sn-super-light-blue !border-sn-blue': markAsNa && !disabled }"
             @click="markAsNa = !markAsNa">
-      <div class="w-4 h-4 !border-sn-blue border rounded-sm flex items-center justify-center" :class="{'bg-sn-blue': markAsNa}">
+      <div class="w-4 h-4  border rounded-sm flex items-center justify-center"
+        :class="{
+          'bg-sn-blue': markAsNa && !disabled,
+          'bg-sn-grey-500': markAsNa && disabled,
+          '!border-sn-blue': !disabled,
+          'border-sn-grey-500': disabled
+        }">
         <i class="sn-icon sn-icon-check text-white" style="font-size: 16px !important;"></i>
       </div>
       {{ i18n.t('forms.fields.mark_as_na') }}

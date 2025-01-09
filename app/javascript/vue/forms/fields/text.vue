@@ -1,6 +1,11 @@
 <template>
   <div class="sci-input-container-v2 h-24">
-    <textarea class="sci-input" :value="value" :disabled="fieldDisabled" @change="saveValue" :placeholder="i18n.t('forms.fields.add_text')"></textarea>
+    <textarea
+      class="sci-input"
+      :value="value"
+      :disabled="fieldDisabled"
+      @change="saveValue"
+      :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.add_text')"></textarea>
   </div>
 </template>
 

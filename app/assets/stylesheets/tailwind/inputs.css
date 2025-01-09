@@ -91,6 +91,12 @@
     @apply border-sn-science-blue;
   }
 
+  .sci-input-container-v2 textarea:disabled {
+    background-color: var(--sn-super-light-grey);
+    color: var(--sn-grey);
+    border: 1px solid var(--sn-light-grey);
+  }
+
   .sci-input-container-v2 .history-flyout li:hover {
     @apply bg-sn-super-light-grey;
   }

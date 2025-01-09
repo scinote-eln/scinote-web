@@ -1088,6 +1088,7 @@ en:
       to: "To"
       add_date: "Add date"
       add_datetime: "Add date & time"
+      not_valid_range: "Range is not valid"
     index:
       head_title: "Forms"
       toolbar:
@@ -3887,6 +3888,7 @@ en:
           confirm: 'Delete forever'
         form_modal:
           title: "Insert form"
+          no_forms_title: "No available forms found"
           description: "Select a form you want to add to your protocol"
           label: "Form"
           placeholder: "Select a form"

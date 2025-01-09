@@ -1,25 +1,30 @@
 <template>
-  <div>
-    <div v-if="range" class="flex items-center gap-4">
-      <DateTimePicker
-        @change="updateFromDate"
-        :mode="mode"
-        :defaultValue="fromValue"
-        :clearable="true"
-        :disabled="fieldDisabled"
-        :placeholder="i18n.t('forms.fields.from')"
-        :class="{'error': !validValue}"
-      />
-      <DateTimePicker
-        @change="updateToDate"
-        :defaultValue="toValue"
-        :mode="mode"
-        :disabled="fieldDisabled"
-        :clearable="true"
-        :placeholder="i18n.t('forms.fields.to')"
-        :class="{'error': !validValue}"
-      />
-    </div>
+  <div class='relative'>
+    <template v-if="range">
+      <div class="flex items-center gap-4">
+        <DateTimePicker
+          @change="updateFromDate"
+          :mode="mode"
+          :defaultValue="fromValue"
+          :clearable="true"
+          :disabled="fieldDisabled"
+          :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.from')"
+          :class="{'error': !validValue}"
+        />
+        <DateTimePicker
+          @change="updateToDate"
+          :defaultValue="toValue"
+          :mode="mode"
+          :disabled="fieldDisabled"
+          :clearable="true"
+          :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.to')"
+          :class="{'error': !validValue}"
+        />
+      </div>
+      <span v-if="!validValue" class="text-xs text-sn-delete-red block absolute -bottom-3.5">
+        {{ i18n.t('forms.fields.not_valid_range') }}
+      </span>
+    </template>
     <DateTimePicker
       v-else
       @change="updateDate"
@@ -27,7 +32,7 @@
       :mode="mode"
       :disabled="fieldDisabled"
       :clearable="true"
-      :placeholder="i18n.t(`forms.fields.add_${mode}`)"
+      :placeholder="fieldDisabled ? '' : i18n.t(`forms.fields.add_${mode}`)"
     />
   </div>
 </template>
