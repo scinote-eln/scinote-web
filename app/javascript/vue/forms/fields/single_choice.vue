@@ -6,6 +6,7 @@
       :value="value"
       @change="saveValue"
       :clearable="true"
+      :placeholder="fieldDisabled ? ' ' : null"
     />
   </div>
 </template>

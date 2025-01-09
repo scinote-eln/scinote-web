@@ -5,7 +5,12 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
           <h4 class="modal-title" id="modal-move-result-element">
-            {{ i18n.t(`protocols.steps.modals.form_modal.title`) }}
+            <template v-if="anyForms">
+              {{ i18n.t(`protocols.steps.modals.form_modal.title`) }}
+            </template>
+            <template v-else>
+              {{ i18n.t(`protocols.steps.modals.form_modal.no_forms_title`) }}
+            </template>
           </h4>
         </div>
         <div class="modal-body">

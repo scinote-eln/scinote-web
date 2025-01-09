@@ -1,6 +1,7 @@
 <template>
   <div class="sci-input-container-v2 mb-2" :class="{'error': !isValidValue}" :data-error="errorMessage">
-    <input type="number" v-model="value" class="sci-input" :disabled="fieldDisabled" @change="saveValue" :placeholder="i18n.t('forms.fields.add_number')"></input>
+    <input type="number" v-model="value" class="sci-input" :disabled="fieldDisabled" @change="saveValue"
+      :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.add_number')"></input>
   </div>
 </template>
 
@@ -23,7 +24,7 @@ export default {
         return true;
       }
 
-      if (validations.response_validation.type === 'between' && validations.response_validation.enabled) {
+      if (validations.response_validation.type === 'between' && validations.response_validation.enabled && this.value) {
         return this.value >= validations.response_validation.min
          && this.value <= validations.response_validation.max;
       }
