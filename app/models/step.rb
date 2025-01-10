@@ -42,6 +42,8 @@ class Step < ApplicationRecord
   has_many :step_tables, inverse_of: :step, dependent: :destroy
   has_many :tables, through: :step_tables, dependent: :destroy
   has_many :report_elements, inverse_of: :step, dependent: :destroy
+  has_many :form_responses, through: :step_orderable_elements,
+           source: :orderable, source_type: 'FormResponse', dependent: :destroy
 
   accepts_nested_attributes_for :checklists,
                                 reject_if: :all_blank,
@@ -204,6 +206,7 @@ class Step < ApplicationRecord
   def cascade_before_destroy
     assets.each(&:destroy)
     tables.each(&:destroy)
+    form_responses.each(&:destroy)
   end
 
   def set_completed_on

@@ -13,7 +13,7 @@ export default {
     },
     deleteElement() {
       $.ajax({
-        url: this.element.attributes.orderable.urls.delete_url,
+        url: this.deleteUrl || this.element.attributes.orderable.urls.delete_url,
         type: 'DELETE',
         success: (result) => {
           this.$emit(

@@ -58,6 +58,11 @@ module StepElements
     def destroy
       ActiveRecord::Base.transaction do
         log_step_form_activity(:form_deleted, { form: @form_response.form.id })
+        if @form_response.destroy
+          render json: {}, status: :ok
+        else
+          render json: { errors: @form_response.errors.full_messages }, status: :unprocessable_entity
+        end
       end
     end
 
