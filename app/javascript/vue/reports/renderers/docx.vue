@@ -21,7 +21,7 @@
           class="file-preview-link flex items-center gap-1
                 docx hover:no-underline whitespace-nowrap"
           :data-preview-url="docx.preview_url">
-        <i class="sn-icon sn-icon-file-word"></i>
+        <i class="sn-icon sn-icon-file-word flex items-center"></i>
         {{ i18n.t('projects.reports.index.docx') }}
       </a>
     </template>

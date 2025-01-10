@@ -30,21 +30,21 @@
           <label><%= t('assets.create_wopi_file.type_select_label') %></label>
           <div class="btn-group btn-group-toggle btn-group-justified"
                data-toggle="buttons">
-            <label class="btn btn-secondary active" id="word-btn">
-              <%= image_tag 'office/ms-word-active.svg', class: 'act' %>
-              <%= image_tag 'office/ms-word-inactive.svg', class: 'inactive' %>
+            <label class="btn btn-secondary active !leading-4 !py-1" id="word-btn">
+              <%= image_tag 'office/ms-word-active.svg', class: 'act w-6 h-6' %>
+              <%= image_tag 'office/ms-word-inactive.svg', class: 'inactive w-6 h-6' %>
               <input type="radio" name="file_type" value='docx' checked>
               <span><%= t('assets.create_wopi_file.ms_word').html_safe %></span>
             </label>
-            <label class="btn btn-secondary" id="excel-btn">
-              <%= image_tag 'office/ms-excel-active.svg', class: 'act' %>
-              <%= image_tag 'office/ms-excel-inactive.svg', class: 'inactive' %>
+            <label class="btn btn-secondary !leading-4 !py-1" id="excel-btn">
+              <%= image_tag 'office/ms-excel-active.svg', class: 'act w-6 h-6' %>
+              <%= image_tag 'office/ms-excel-inactive.svg', class: 'inactive w-6 h-6' %>
               <input type="radio" name="file_type" value='xlsx'>
               <span><%= t('assets.create_wopi_file.ms_excel').html_safe %></span>
             </label>
-            <label class="btn btn-secondary" id='powerpoint-btn'>
-              <%= image_tag 'office/ms-pwrpt-active.svg', class: 'act' %>
-              <%= image_tag 'office/ms-pwrpt-inactive.svg', class: 'inactive' %>
+            <label class="btn btn-secondary !leading-4 !py-1" id='powerpoint-btn'>
+              <%= image_tag 'office/ms-pwrpt-active.svg', class: 'act w-6 h-6' %>
+              <%= image_tag 'office/ms-pwrpt-inactive.svg', class: 'inactive w-6 h-6' %>
               <input type="radio" name="file_type" value='pptx'>
               <span><%= t('assets.create_wopi_file.ms_powerpoint').html_safe %></span>
             </label>
