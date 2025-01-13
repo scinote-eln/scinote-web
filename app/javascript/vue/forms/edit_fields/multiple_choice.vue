@@ -3,7 +3,7 @@
     <hr class="my-4 w-full">
     <div>
       <h5 class="mb-4">{{ i18n.t('forms.show.dropdown_options_label') }}</h5>
-      <div class="sci-input-container-v2 h-40" >
+      <div class="sci-input-container-v2 h-40" :class="{'error': !validField}" :data-error="optionFieldErrors">
         <textarea
           class="sci-input"
           v-model="options"

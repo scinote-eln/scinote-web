@@ -1110,8 +1110,11 @@ en:
       add_block: 'Add a block'
       title_label: Title (required)
       title_placeholder: 'Add a title'
+      title_empty_error: 'Title cannot be empty'
+      title_too_long_error: 'Title is too long'
       description_label: Description
       description_placeholder: 'Add a description'
+      description_too_long_error: 'Description is too long'
       required_label: 'Required'
       mark_as_na: 'Mark as N/A'
       mark_as_na_explanation: 'Allow user to mark the field as Not-applicable.'
@@ -1127,6 +1130,8 @@ en:
       time_label: 'Include time'
       range_label: 'Include range'
       no_block: 'Add your first form block'
+      field_too_long_error: 'Field is too long'
+      options_too_many_error: 'Too many options'
       validations:
         response_validation:
           title: 'Response validation'

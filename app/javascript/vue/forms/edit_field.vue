@@ -33,14 +33,14 @@
     <hr class="my-4 w-full">
     <div>
       <label class="sci-label">{{ i18n.t('forms.show.title_label') }}</label>
-      <div class="sci-input-container-v2" :class="{ 'error': editField.attributes.name.length == 0 }"  >
+      <div class="sci-input-container-v2" :class="{ 'error': !nameValid }" :data-error="nameFieldError"  >
         <input type="text" class="sci-input" v-model="editField.attributes.name" @change="updateField" :placeholder="i18n.t('forms.show.title_placeholder')" />
       </div>
     </div>
     <div>
       <label class="sci-label">{{ i18n.t('forms.show.description_label') }}</label>
-      <div class="sci-input-container-v2" >
-        <input type="text" class="sci-input" v-model="editField.attributes.description" @change="updateField" :placeholder="i18n.t('forms.show.description_placeholder')" />
+      <div class="sci-input-container-v2 h-24" :class="{ 'error': !descriptionValid }" :data-error="descriptionFieldError"  >
+        <textarea class="sci-input " v-model="editField.attributes.description" @change="updateField" :placeholder="i18n.t('forms.show.description_placeholder')" />
       </div>
     </div>
     <component :is="this.editField.attributes.type" :field="editField" @updateField="updateField()" @syncField="syncField" />
@@ -61,6 +61,9 @@
 </template>
 
 <script>
+
+/* global GLOBAL_CONSTANTS */
+
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import DatetimeField from './edit_fields/datetime.vue';
 import NumberField from './edit_fields/number.vue';
@@ -91,10 +94,38 @@ export default {
     if (!this.editField.attributes.data.validations) {
       this.editField.attributes.data.validations = {};
     }
+
+    if (!this.editField.attributes.description) {
+      this.editField.attributes.description = '';
+    }
   },
   computed: {
     validField() {
-      return this.editField.attributes.name.length > 0;
+      return this.nameValid && this.descriptionValid;
+    },
+    nameValid() {
+      return this.editField.attributes.name.length > 0 && this.editField.attributes.name.length <= GLOBAL_CONSTANTS.NAME_MAX_LENGTH;
+    },
+    descriptionValid() {
+      return this.editField.attributes.description.length <= GLOBAL_CONSTANTS.TEXT_MAX_LENGTH;
+    },
+    nameFieldError() {
+      if (this.editField.attributes.name.length === 0) {
+        return this.i18n.t('forms.show.title_empty_error');
+      }
+
+      if (this.editField.attributes.name.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
+        return this.i18n.t('forms.show.title_too_long_error');
+      }
+
+      return '';
+    },
+    descriptionFieldError() {
+      if (this.editField.attributes.description.length > GLOBAL_CONSTANTS.TEXT_MAX_LENGTH) {
+        return this.i18n.t('forms.show.description_too_long_error');
+      }
+
+      return '';
     }
   },
   methods: {

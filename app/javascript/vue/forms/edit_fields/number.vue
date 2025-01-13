@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-4">
     <div>
       <label class="sci-label">{{ i18n.t('forms.show.unit_label') }}</label>
-      <div class="sci-input-container-v2">
+      <div class="sci-input-container-v2" :class="{'error': !unitValid}" :data-error="unitFieldError">
         <input type="text"
               class="sci-input"
               v-model="editField.attributes.data.unit"
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+/* global GLOBAL_CONSTANTS */
 import fieldMixin from './field_mixin';
 import SelectDropdown from '../../shared/select_dropdown.vue';
 
@@ -89,7 +90,17 @@ export default {
       return (this.responseValidation.min < this.responseValidation.max) || !this.responseValidationEnabled;
     },
     validField() {
-      return this.responseValidationIsValid;
+      return this.responseValidationIsValid && this.unitValid;
+    },
+    unitValid() {
+      return !this.editField.attributes.data.unit || this.editField.attributes.data.unit.length <= GLOBAL_CONSTANTS.NAME_MAX_LENGTH;
+    },
+    unitFieldError() {
+      if (this.editField.attributes.data.unit.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
+        return this.i18n.t('forms.show.field_too_long_error');
+      }
+
+      return '';
     }
   },
   methods: {
