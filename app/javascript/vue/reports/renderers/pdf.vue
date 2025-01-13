@@ -21,7 +21,7 @@
           class="file-preview-link flex items-center gap-1
                 pdf hover:no-underline whitespace-nowrap"
           :data-preview-url="pdf.preview_url">
-        <i class="sn-icon sn-icon-file-word"></i>
+        <i class="sn-icon sn-icon-file-pdf"></i>
         {{ i18n.t('projects.reports.index.pdf') }}
       </a>
     </template>
