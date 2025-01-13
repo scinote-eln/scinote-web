@@ -1126,6 +1126,7 @@ en:
       unit_placeholder: 'Add a unit'
       time_label: 'Include time'
       range_label: 'Include range'
+      no_block: 'Add your first form block'
       validations:
         response_validation:
           title: 'Response validation'

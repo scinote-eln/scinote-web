@@ -89,6 +89,10 @@
             @update="updateField"
             @delete="deleteField"
           />
+          <div v-if="!activeField.id"
+               class="text-xl font-semibold text-sn-grey font-inter flex items-center justify-center w-full h-full">
+            {{ i18n.t('forms.show.no_block') }}
+          </div>
         </div>
       </div>
     </div>
@@ -216,7 +220,7 @@ export default {
       axios.delete(field.attributes.urls.show).then(() => {
         this.fields.splice(index, 1);
         if (this.fields.length > 0) {
-          [this.activeField] = this.fields;
+          this.activeField = this.fields[index - 1];
         } else {
           this.activeField = {};
         }

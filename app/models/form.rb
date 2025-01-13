@@ -20,7 +20,7 @@ class Form < ApplicationRecord
   belongs_to :restored_by, class_name: 'User', optional: true
   belongs_to :default_public_user_role, class_name: 'UserRole', optional: true
 
-  has_many :form_fields, inverse_of: :form, dependent: :destroy
+  has_many :form_fields, -> { order(:position) }, inverse_of: :form, dependent: :destroy
   has_many :form_responses, dependent: :destroy
   has_many :users, through: :user_assignments
 
