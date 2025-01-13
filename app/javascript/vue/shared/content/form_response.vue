@@ -26,9 +26,10 @@
           </div>
         </template>
       </div>
-      <Field v-for="field in formFields" :disabled="formDisabled" ref="formFields" :key="field.id" :field="field" :formResponse="formResponse" @save="saveValue" />
+      <Field v-for="field in formFields" :disabled="formDisabled" ref="formFields" :key="field.id" :field="field"
+                                         :formResponse="formResponse" @save="saveValue" @validChanged="checkValidFormFields" />
       <div>
-        <button v-if="this.formResponse.urls.submit" class="btn btn-primary" :disabled="!validResponse" @click="submitForm">
+        <button v-if="this.formResponse.urls.submit" class="btn btn-primary" :disabled="!validResponse || !isValid" @click="submitForm">
           {{ i18n.t('forms.response.submit') }}
         </button>
         <button v-else-if="this.formResponse.urls.reset" class="btn btn-secondary" @click="resetForm">
@@ -87,10 +88,12 @@ export default {
       formResponse: this.element.attributes.orderable,
       formFieldValues: this.element.attributes.orderable.form_field_values,
       deleteUrl: this.element.attributes.orderable.urls.delete_url,
-      moveUrl: this.element.attributes.orderable.urls.move_url
+      moveUrl: this.element.attributes.orderable.urls.move_url,
+      isValid: false
     };
   },
   mounted() {
+    this.checkValidFormFields();
   },
   computed: {
     formDisabled() {
@@ -170,6 +173,11 @@ export default {
         this.deleteUrl = attributes.orderable.urls.delete_url;
         this.moveUrl = attributes.orderable.urls.move_url;
       });
+    },
+    checkValidFormFields() {
+      if (this.$refs.formFields) {
+        this.isValid = this.$refs.formFields.every((field) => field.isValid == null || field.isValid);
+      }
     }
   }
 };

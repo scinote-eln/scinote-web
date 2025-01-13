@@ -4,7 +4,7 @@ class StepFormResponseSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
-  attributes :id, :created_at, :form_id, :urls, :submitted_by_full_name, :status, :submitted_at, :parent_type, :in_repository
+  attributes :id, :created_at, :form_id, :urls, :submitted_by_full_name, :status, :submitted_at, :parent_type, :in_repository, :icon, :name
 
   has_one :form, serializer: FormSerializer
 
@@ -22,6 +22,14 @@ class StepFormResponseSerializer < ActiveModel::Serializer
 
   def in_repository
     !object.step.protocol.my_module
+  end
+
+  def name
+    object&.form&.name
+  end
+
+  def icon
+    'sn-icon-forms'
   end
 
   def submitted_by_full_name

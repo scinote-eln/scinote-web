@@ -11,7 +11,7 @@ class ResultTableSerializer < ActiveModel::Serializer
   end
 
   def icon
-    'fa-table'
+    'sn-icon-tables'
   end
 
   def parent_type
