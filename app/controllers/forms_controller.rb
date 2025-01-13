@@ -58,7 +58,7 @@ class FormsController < ApplicationController
   end
 
   def published_forms
-    forms = current_team.forms.readable_by_user(current_user).published
+    forms = current_team.forms.active.readable_by_user(current_user).published
     forms = forms.where('forms.name ILIKE ?', "%#{params[:query]}%") if params[:query].present?
     forms = forms.page(params[:page])
 
@@ -184,20 +184,22 @@ class FormsController < ApplicationController
   private
 
   def set_breadcrumbs_items
+    archived = params[:view_mode] || (@form&.archived? && 'archived')
+
     @breadcrumbs_items = []
-
+    @breadcrumbs_items.push({ label: t('breadcrumbs.templates') })
     @breadcrumbs_items.push(
-      { label: t('breadcrumbs.templates') }
-    )
-
-    @breadcrumbs_items.push(
-      { label: "#{@form && (@form.archived? ? t('labels.archived') : '')} #{t('breadcrumbs.forms')}", url: forms_path }
+      { label: t('breadcrumbs.forms'), url: forms_path(view_mode: archived ? 'archived' : nil) }
     )
 
     if @form
       @breadcrumbs_items.push(
-        { label: @form.name_with_label, url: form_path(@form) }
+        { label: @form.name, url: form_path(@form) }
       )
+    end
+
+    @breadcrumbs_items.each do |item|
+      item[:label] = "#{t('labels.archived')} #{item[:label]}" if archived
     end
   end
 
