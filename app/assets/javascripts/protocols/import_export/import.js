@@ -641,6 +641,12 @@ function importProtocolFromFile(
     return json;
   }
 
+  function formJson(formNode) {
+    return {
+      id: formNode.attr('id')
+    };
+  }
+
   function stepElementJson(stepElementNode, folderIndex, stepGuid) {
     var json = {
       type: stepElementNode.attr('type')
@@ -655,6 +661,9 @@ function importProtocolFromFile(
         break;
       case 'StepText':
         json.stepText = stepTextJson(stepElementNode.find('stepText'), folderIndex, stepGuid);
+        break;
+      case 'FormResponse':
+        json.form = formJson(stepElementNode.find('form'));
         break;
       default:
         // nothing to do
