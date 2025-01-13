@@ -16,6 +16,7 @@ Canaid::Permissions.register_for(FormResponse) do
     when Step
       next false unless parent.protocol.my_module # protocol template forms can't be submitted
       next false unless form_response.pending?
+      next false unless can_manage_my_module_steps?(user, parent.protocol.my_module)
 
       parent.protocol.my_module.permission_granted?(user, FormResponsePermissions::SUBMIT)
     end
@@ -27,6 +28,7 @@ Canaid::Permissions.register_for(FormResponse) do
     when Step
       next false unless parent.protocol.my_module # protocol template forms can't be reset
       next false unless form_response.submitted?
+      next false unless can_manage_my_module_steps?(user, parent.protocol.my_module)
 
       parent.protocol.my_module.permission_granted?(user, FormResponsePermissions::SUBMIT)
     end
