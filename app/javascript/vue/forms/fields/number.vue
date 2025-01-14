@@ -16,6 +16,13 @@ export default {
       value: this.field.field_value?.value
     };
   },
+  watch: {
+    marked_as_na() {
+      if (this.marked_as_na) {
+        this.value = null;
+      }
+    }
+  },
   computed: {
     isValidValue() {
       const { validations } = this.field.attributes.data;

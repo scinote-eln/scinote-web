@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :key="marked_as_na">
     <SelectDropdown
       :disabled="fieldDisabled"
       :options="options"
@@ -22,14 +22,23 @@ export default {
     SelectDropdown
   },
   computed: {
-    value() {
-      return this.field.field_value?.value;
-    },
     options() {
       if (!this.field.attributes.data.options) {
         return [];
       }
       return this.field.attributes.data.options.map((option) => ([option, option]));
+    }
+  },
+  data() {
+    return {
+      value: this.field.field_value?.value
+    };
+  },
+  watch: {
+    marked_as_na() {
+      if (this.marked_as_na) {
+        this.value = null;
+      }
     }
   },
   methods: {
