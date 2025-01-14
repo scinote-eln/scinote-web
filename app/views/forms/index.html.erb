@@ -2,8 +2,12 @@
   <div class="content-header sticky-header">
     <div class="title-row">
       <h1>
-        <%= t('forms.index.head_title') %>
-      </h1>
+        <% if params[:view_mode] == 'archived' %>
+          <%= t('labels.archived')%>
+          <%= t('forms.index.head_title_archived') %>
+        <% else %>
+          <%= t('forms.index.head_title') %>
+        <% end %>
     </div>
   </div>
   <div id="formsTable" class="fixed-content-body"

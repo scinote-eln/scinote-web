@@ -184,7 +184,7 @@ class FormsController < ApplicationController
   private
 
   def set_breadcrumbs_items
-    archived = params[:view_mode] || (@form&.archived? && 'archived')
+    archived = params[:view_mode] == 'archived' || @form&.archived?
 
     @breadcrumbs_items = []
     @breadcrumbs_items.push({ label: t('breadcrumbs.templates') })
