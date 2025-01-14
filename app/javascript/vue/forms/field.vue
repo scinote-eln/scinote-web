@@ -1,5 +1,5 @@
 <template>
-<div class="p-4 rounded bg-white text-sm grid grid-cols-[auto_170px]">
+<div class="p-4 rounded bg-white text-sm grid grid-cols-[minmax(0,1fr)_170px]">
   <div>
     <div class="font-bold">
       {{ field.attributes.name }}
