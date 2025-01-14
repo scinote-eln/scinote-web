@@ -5,7 +5,7 @@ class AddFormPermissions < ActiveRecord::Migration[7.0]
     TeamPermissions::FORMS_CREATE,
     FormPermissions::READ,
     FormPermissions::READ_ARCHIVED,
-    FormPermissions::MANAGE
+    FormPermissions::MANAGE_DRAFT
   ].freeze
 
   FORM_READ_PERMISSION = [
@@ -18,7 +18,7 @@ class AddFormPermissions < ActiveRecord::Migration[7.0]
     @normal_user_role = UserRole.find_predefined_normal_user_role
     @viewer_user_role = UserRole.find_predefined_viewer_role
 
-    @owner_role.permissions = @owner_role.permissions | (FORM_MANAGE_PERMISSION + [FormPermissions::USERS_MANAGE]) |
+    @owner_role.permissions = @owner_role.permissions | (FORM_MANAGE_PERMISSION + [FormPermissions::MANAGE, FormPermissions::USERS_MANAGE]) |
                               FORM_READ_PERMISSION
     @normal_user_role.permissions = @normal_user_role.permissions | FORM_MANAGE_PERMISSION |
                                     FORM_READ_PERMISSION
@@ -35,7 +35,7 @@ class AddFormPermissions < ActiveRecord::Migration[7.0]
     @viewer_user_role = UserRole.find_predefined_viewer_role
 
     @owner_role.permissions = @owner_role.permissions - FORM_MANAGE_PERMISSION -
-                              FORM_READ_PERMISSION - [FormPermissions::USERS_MANAGE]
+                              FORM_READ_PERMISSION - [FormPermissions::MANAGE, FormPermissions::USERS_MANAGE]
     @normal_user_role.permissions = @normal_user_role.permissions - FORM_MANAGE_PERMISSION -
                                     FORM_READ_PERMISSION
     @viewer_user_role.permissions = @viewer_user_role.permissions - FORM_READ_PERMISSION

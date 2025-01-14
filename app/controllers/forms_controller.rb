@@ -5,7 +5,7 @@ class FormsController < ApplicationController
 
   before_action :load_form, only: %i(show update publish unpublish export_form_responses)
   before_action :set_breadcrumbs_items, only: %i(index show)
-  before_action :check_manage_permissions, only: %i(update publish unpublish)
+  before_action :check_manage_permissions, only: :update
   before_action :check_create_permissions, only: :create
 
   def index
@@ -214,7 +214,7 @@ class FormsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless @form && can_manage_form?(@form)
+    render_403 unless @form && can_manage_form_draft?(@form)
   end
 
   def form_params

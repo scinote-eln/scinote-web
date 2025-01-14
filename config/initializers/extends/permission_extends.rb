@@ -40,6 +40,7 @@ module PermissionExtends
       READ
       READ_ARCHIVED
       MANAGE
+      MANAGE_DRAFT
       USERS_MANAGE
     ).each { |permission| const_set(permission, "form_#{permission.parameterize}") }
   end
@@ -186,6 +187,7 @@ module PermissionExtends
       ProtocolPermissions::READ_ARCHIVED,
       ProtocolPermissions::MANAGE_DRAFT,
       FormPermissions::READ,
+      FormPermissions::MANAGE_DRAFT,
       FormPermissions::READ_ARCHIVED,
       FormResponsePermissions::CREATE,
       FormResponsePermissions::SUBMIT,

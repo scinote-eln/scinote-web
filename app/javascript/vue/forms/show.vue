@@ -172,7 +172,7 @@ export default {
         if (this.fields.length > 0) {
           [this.activeField] = this.fields;
         }
-        if (this.form.attributes.published_on) {
+        if (this.form.attributes.published_on || !this.form.attributes.urls.create_field) {
           this.preview = true;
         }
       });

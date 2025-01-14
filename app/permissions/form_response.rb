@@ -28,7 +28,7 @@ Canaid::Permissions.register_for(FormResponse) do
       next false unless parent.protocol.my_module # protocol template forms can't be reset
       next false unless form_response.submitted?
 
-      parent.protocol.my_module.permission_granted?(user, FormResponsePermissions::SUBMIT)
+      parent.protocol.my_module.permission_granted?(user, FormResponsePermissions::RESET)
     end
   end
 end
