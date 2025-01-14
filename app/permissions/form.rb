@@ -18,6 +18,11 @@ Canaid::Permissions.register_for(Form) do
     form.permission_granted?(user, FormPermissions::MANAGE)
   end
 
+  can :manage_form_draft do |user, form|
+    !form.published? &&
+      form.permission_granted?(user, FormPermissions::MANAGE_DRAFT)
+  end
+
   can :manage_form_users do |user, form|
     form.permission_granted?(user, FormPermissions::USERS_MANAGE) ||
       form.team.permission_granted?(user, TeamPermissions::MANAGE)

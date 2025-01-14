@@ -28,14 +28,14 @@ class FormSerializer < ActiveModel::Serializer
 
   def urls
     user = scope[:user] || @instance_options[:user]
-    list = {
-      show: form_path(object),
-      create_field: form_form_fields_path(object),
-      reorder_fields: reorder_form_form_fields_path(object)
-    }
+    list = { show: form_path(object) }
+
+    if can_manage_form_draft?(user, object)
+      list[:create_field] = form_form_fields_path(object)
+      list[:reorder_fields] = reorder_form_form_fields_path(object)
+    end
 
     list[:publish] = publish_form_path(object) if can_publish_form?(user, object)
-
     list[:unpublish] = unpublish_form_path(object) if can_unpublish_form?(user, object)
 
     list

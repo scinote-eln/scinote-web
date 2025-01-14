@@ -78,7 +78,7 @@ class FormFieldsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless @form && can_manage_form?(@form)
+    render_403 unless @form && can_manage_form_draft?(@form)
   end
 
   def form_field_params
