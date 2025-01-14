@@ -115,14 +115,14 @@ export default {
       }
 
       if (this.editField.attributes.name.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
-        return this.i18n.t('forms.show.title_too_long_error');
+        return this.i18n.t('forms.show.title_too_long_error', { limit: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
       }
 
       return '';
     },
     descriptionFieldError() {
       if (this.editField.attributes.description.length > GLOBAL_CONSTANTS.TEXT_MAX_LENGTH) {
-        return this.i18n.t('forms.show.description_too_long_error');
+        return this.i18n.t('forms.show.description_too_long_error', { limit: GLOBAL_CONSTANTS.TEXT_MAX_LENGTH });
       }
 
       return '';

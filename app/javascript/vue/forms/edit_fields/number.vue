@@ -96,8 +96,8 @@ export default {
       return !this.editField.attributes.data.unit || this.editField.attributes.data.unit.length <= GLOBAL_CONSTANTS.NAME_MAX_LENGTH;
     },
     unitFieldError() {
-      if (this.editField.attributes.data.unit.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
-        return this.i18n.t('forms.show.field_too_long_error');
+      if (this.editField.attributes.data.unit && this.editField.attributes.data.unit.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
+        return this.i18n.t('forms.show.field_too_long_error', { limit: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
       }
 
       return '';
