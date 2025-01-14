@@ -1091,6 +1091,7 @@ en:
       not_valid_range: "Range is not valid"
     index:
       head_title: "Forms"
+      head_title_archived: "Archived forms"
       toolbar:
         new: 'New form'
         access: 'Access'
