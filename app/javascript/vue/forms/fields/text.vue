@@ -23,6 +23,13 @@ export default {
       value: this.field.field_value?.value
     };
   },
+  watch: {
+    marked_as_na() {
+      if (this.marked_as_na) {
+        this.value = null;
+      }
+    }
+  },
   methods: {
     saveValue(event) {
       this.value = event.target.value;
