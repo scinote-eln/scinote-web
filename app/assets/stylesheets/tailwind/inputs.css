@@ -101,7 +101,8 @@
     @apply bg-sn-super-light-grey;
   }
 
-  .sci-input-container-v2.error input {
+  .sci-input-container-v2.error input,
+  .sci-input-container-v2.error textarea{
     @apply border-sn-alert-passion;
   }
 

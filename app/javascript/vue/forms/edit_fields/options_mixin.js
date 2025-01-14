@@ -12,7 +12,7 @@ export default {
     },
     optionFieldErrors() {
       if (!this.validField) {
-        return this.i18n.t('forms.show.options_too_many_error');
+        return this.i18n.t('forms.show.options_too_many_error', { limit: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
       }
 
       return '';
