@@ -31,31 +31,33 @@
       </div>
     </div>
     <hr class="my-4 w-full">
-    <div>
-      <label class="sci-label">{{ i18n.t('forms.show.title_label') }}</label>
-      <div class="sci-input-container-v2" :class="{ 'error': !nameValid }" :data-error="nameFieldError"  >
-        <input type="text" class="sci-input" v-model="editField.attributes.name" @change="updateField" :placeholder="i18n.t('forms.show.title_placeholder')" />
+    <div class="flex flex-col gap-4 max-w-[768px]">
+      <div>
+        <label class="sci-label">{{ i18n.t('forms.show.title_label') }}</label>
+        <div class="sci-input-container-v2" :class="{ 'error': !nameValid }" :data-error="nameFieldError"  >
+          <input type="text" class="sci-input" v-model="editField.attributes.name" @change="updateField" :placeholder="i18n.t('forms.show.title_placeholder')" />
+        </div>
       </div>
-    </div>
-    <div>
-      <label class="sci-label">{{ i18n.t('forms.show.description_label') }}</label>
-      <div class="sci-input-container-v2 h-24" :class="{ 'error': !descriptionValid }" :data-error="descriptionFieldError"  >
-        <textarea class="sci-input " v-model="editField.attributes.description" @change="updateField" :placeholder="i18n.t('forms.show.description_placeholder')" />
+      <div>
+        <label class="sci-label">{{ i18n.t('forms.show.description_label') }}</label>
+        <div class="sci-input-container-v2 h-24" :class="{ 'error': !descriptionValid }" :data-error="descriptionFieldError"  >
+          <textarea class="sci-input " v-model="editField.attributes.description" @change="updateField" :placeholder="i18n.t('forms.show.description_placeholder')" />
+        </div>
       </div>
-    </div>
-    <component :is="this.editField.attributes.type" :field="editField" @updateField="updateField()" @syncField="syncField" />
-    <div class="bg-sn-super-light-grey rounded p-4">
-      <div class="flex items-center gap-4">
-        <h5>{{ i18n.t('forms.show.mark_as_na') }}</h5>
-        <span class="sci-toggle-checkbox-container">
-          <input type="checkbox"
-                 class="sci-toggle-checkbox"
-                 @change="updateField"
-                 v-model="editField.attributes.allow_not_applicable" />
-          <span class="sci-toggle-checkbox-label"></span>
-        </span>
+      <component :is="this.editField.attributes.type" :field="editField" @updateField="updateField()" @syncField="syncField" />
+      <div class="bg-sn-super-light-grey rounded p-4">
+        <div class="flex items-center gap-4">
+          <h5>{{ i18n.t('forms.show.mark_as_na') }}</h5>
+          <span class="sci-toggle-checkbox-container">
+            <input type="checkbox"
+                  class="sci-toggle-checkbox"
+                  @change="updateField"
+                  v-model="editField.attributes.allow_not_applicable" />
+            <span class="sci-toggle-checkbox-label"></span>
+          </span>
+        </div>
+        <div>{{ i18n.t('forms.show.mark_as_na_explanation') }}</div>
       </div>
-      <div>{{ i18n.t('forms.show.mark_as_na_explanation') }}</div>
     </div>
   </div>
 </template>

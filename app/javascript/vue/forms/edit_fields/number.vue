@@ -22,7 +22,7 @@
           <span class="sci-toggle-checkbox-label"></span>
         </span>
       </div>
-      <div class="grid grid-cols-3 gap-2">
+      <div v-if="responseValidation.enabled" class="grid grid-cols-3 gap-2">
         <div>
           <SelectDropdown
             class="bg-white"

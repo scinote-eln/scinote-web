@@ -187,9 +187,7 @@ export default {
         }
       }).then((response) => {
         this.fields.push(response.data.data);
-        if (this.fields.length === 1) {
-          [this.activeField] = this.fields;
-        }
+        this.activeField = this.fields[this.fields.length - 1];
         this.$refs.addFieldDropdown.isOpen = false;
       });
     },
