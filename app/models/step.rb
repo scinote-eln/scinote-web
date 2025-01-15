@@ -154,6 +154,11 @@ class Step < ApplicationRecord
         table.duplicate(new_step, user, table.step_table.step_orderable_element.position)
       end
 
+      # Copy form responses
+      form_responses.each do |form_response|
+        form_response.duplicate(new_step, user, form_response.step_orderable_element.position)
+      end
+
       # Call clone helper
       Protocol.delay(queue: :assets).deep_clone_assets(assets_to_clone, include_file_versions)
 

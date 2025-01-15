@@ -85,4 +85,23 @@ class FormResponse < ApplicationRecord
       new_form_response
     end
   end
+
+  def duplicate(parent, user, position = nil)
+    ActiveRecord::Base.transaction do
+      new_form_response = FormResponse.create!(
+        status: :pending,
+        form_id: form_id,
+        discarded_at: nil,
+        submitted_by: nil,
+        created_by_id: user.id
+      )
+
+      parent.step_orderable_elements.create!(
+        position: position || parent.step_orderable_elements.length,
+        orderable: new_form_response
+      )
+
+      new_form_response
+    end
+  end
 end
