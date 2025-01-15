@@ -24,7 +24,7 @@ describe WopiController, type: :controller do
   let(:step_asset) { create :step_asset, step: step, asset: asset }
   let(:step_asset_in_repository) { create :step_asset, step: step_in_repository, asset: asset }
   let(:result_asset) { create :result_asset, result: result, asset: asset }
-  let(:token) { Token.create(token: 'token', ttl: 0, user_id: user.id) }
+  let(:token) { Token.create(token: 'token', ttl: Time.now.utc.to_i + Constants::WOPI_TOKEN_VALIDITY, user_id: user.id) }
 
   describe 'POST unlock' do
     before do
