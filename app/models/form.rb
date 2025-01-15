@@ -66,7 +66,7 @@ class Form < ApplicationRecord
   end
 
   def self.forms_enabled?
-    false
+    ApplicationSettings.instance.values['forms_enabled'] == true
   end
 
   private
