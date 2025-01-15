@@ -3,6 +3,7 @@
 Canaid::Permissions.register_for(Form) do
   %i(manage_form
      clone_form
+     manage_form_draft
      publish_form)
     .each do |perm|
     can perm do |_, form|

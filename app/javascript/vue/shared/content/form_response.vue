@@ -16,13 +16,15 @@
     <div class="max-w-[800px] w-full rounded bg-sn-super-light-grey p-6 flex flex-col gap-4">
       <div class="flex items-center">
         <h3 class="my-1">{{ form.name }}</h3>
-        <div v-if="this.formResponse.status == 'submitted'" class="ml-auto text-right text-xs text-sn-grey-700">
-          {{ i18n.t('forms.response.submitted_on') }} {{ this.formResponse.submitted_at }}<br>
-          {{ i18n.t('forms.response.by') }} {{ this.formResponse.submitted_by_full_name }}
-        </div>
-        <div v-else class="ml-auto text-right text-xs text-sn-grey-700">
-          {{ i18n.t('forms.response.not_submitted') }}
-        </div>
+        <template v-if="!this.formResponse.in_repository">
+          <div v-if="this.formResponse.status == 'submitted'" class="ml-auto text-right text-xs text-sn-grey-700">
+            {{ i18n.t('forms.response.submitted_on') }} {{ this.formResponse.submitted_at }}<br>
+            {{ i18n.t('forms.response.by') }} {{ this.formResponse.submitted_by_full_name }}
+          </div>
+          <div v-else class="ml-auto text-right text-xs text-sn-grey-700">
+            {{ i18n.t('forms.response.not_submitted') }}
+          </div>
+        </template>
       </div>
       <Field v-for="field in formFields" :disabled="formDisabled" ref="formFields" :key="field.id" :field="field" :formResponse="formResponse" @save="saveValue" />
       <div>
