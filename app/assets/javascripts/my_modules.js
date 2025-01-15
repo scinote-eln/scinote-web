@@ -104,6 +104,7 @@
     dropdownSelector.init($(myModuleTagsSelector), {
       closeOnSelect: true,
       tagClass: 'my-module-white-tags',
+      labelHTML: true,
       tagStyle: (data) => {
         return `background: ${data.params.color}`;
       },
@@ -143,13 +144,14 @@
         } else if (lastTag.length > 0) {
           newTag = {
             tag: {
-              name: lastTag.find('.tag-label').html(),
+              name: lastTag.find('.tag-label').text(),
               project_id: selectElement.data('project-id'),
               color: null
             },
             my_module_id: selectElement.data('module-id'),
             simple_creation: true
           };
+
           $.post(selectElement.data('tags-create-url'), newTag, function(result) {
             dropdownSelector.removeValue(myModuleTagsSelector, 0, '', true);
             dropdownSelector.addValue(myModuleTagsSelector, {
