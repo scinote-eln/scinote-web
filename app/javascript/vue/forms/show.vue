@@ -1,5 +1,5 @@
 <template>
-   <div v-if="form" class="content-pane flexible with-grey-background">
+   <div v-if="form" class="content-pane flexible with-grey-background" data-e2e="e2e-CO-forms-builder">
     <div class="content-header flex items-center mb-4">
       <div class="title-row">
         <h1>
@@ -21,18 +21,31 @@
         </h1>
       </div>
       <div class="flex items-center gap-4 ml-auto">
-        <button v-if="preview && !this.form.attributes.published_on && this.form.attributes.can_manage_form_draft" class="btn btn-secondary"@click="preview = false">
+        <button v-if="preview && !this.form.attributes.published_on && this.form.attributes.can_manage_form_draft"
+                class="btn btn-secondary"
+                @click="preview = false"
+                data-e2e="e2e-BT-forms-editForm">
           <i class="sn-icon sn-icon-edit"></i>
           {{ i18n.t('forms.show.edit_form') }}
         </button>
-        <button v-if="!preview" class="btn btn-secondary" @click="preview = true">
+        <button v-if="!preview"
+                class="btn btn-secondary"
+                @click="preview = true"
+                data-e2e="e2e-BT-forms-testForm">
           <i class="sn-icon sn-icon-visibility-show"></i>
           {{ i18n.t('forms.show.test_form') }}
         </button>
-        <button v-if="form.attributes.urls.publish" class="btn btn-primary" @click="publishForm">
+        <button v-if="form.attributes.urls.publish"
+                class="btn btn-primary"
+                @click="publishForm"
+                data-e2e="e2e-BT-forms-publish">
           {{ i18n.t('forms.show.publish') }}
         </button>
-        <button v-if="form.attributes.published_on" :disabled="!form.attributes.urls.unpublish" class="btn btn-secondary" @click="unpublishForm">
+        <button v-if="form.attributes.published_on"
+                :disabled="!form.attributes.urls.unpublish"
+                class="btn btn-secondary"
+                @click="unpublishForm"
+                data-e2e="e2e-BT-forms-unpublish">
           {{ i18n.t('forms.show.unpublish') }}
         </button>
       </div>
@@ -67,7 +80,7 @@
           </div>
           <GeneralDropdown ref="addFieldDropdown">
             <template v-slot:field>
-              <button class="btn btn-secondary w-full">
+              <button class="btn btn-secondary w-full" data-e2e="e2e-DD-forms-builder-addBlock">
                 <i class="sn-icon sn-icon-new-task"></i>
                 {{ i18n.t('forms.show.add_block') }}
               </button>
@@ -228,8 +241,8 @@ export default {
       const ok = await this.$refs.publishModal.show();
       if (ok) {
         axios.post(this.form.attributes.urls.publish).then((response) => {
-        this.form = response.data.data;
-        this.preview = true;
+          this.form = response.data.data;
+          this.preview = true;
         });
       }
     },

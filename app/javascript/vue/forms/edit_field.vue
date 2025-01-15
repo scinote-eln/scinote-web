@@ -10,6 +10,7 @@
           <span class="sci-toggle-checkbox-container">
             <input type="checkbox"
                   class="sci-toggle-checkbox"
+                  data-e2e="e2e-TG-forms-builder-required"
                   @change="updateField"
                   v-model="editField.attributes.required" />
             <span class="sci-toggle-checkbox-label"></span>
@@ -51,7 +52,8 @@
           <span class="sci-toggle-checkbox-container">
             <input type="checkbox"
                   class="sci-toggle-checkbox"
-                  @change="updateField"
+                  data-e2e="e2e-TG-forms-builder-notApplicable"
+                 @change="updateField"
                   v-model="editField.attributes.allow_not_applicable" />
             <span class="sci-toggle-checkbox-label"></span>
           </span>
