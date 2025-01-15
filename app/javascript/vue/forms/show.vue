@@ -21,7 +21,7 @@
         </h1>
       </div>
       <div class="flex items-center gap-4 ml-auto">
-        <button v-if="preview && !this.form.attributes.published_on" class="btn btn-secondary"@click="preview = false">
+        <button v-if="preview && !this.form.attributes.published_on && this.form.attributes.can_manage_form_draft" class="btn btn-secondary"@click="preview = false">
           <i class="sn-icon sn-icon-edit"></i>
           {{ i18n.t('forms.show.edit_form') }}
         </button>

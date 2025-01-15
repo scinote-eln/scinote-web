@@ -4,7 +4,7 @@ class FormSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
-  attributes :id, :name, :archived, :published_on, :published_by, :updated_at, :description, :urls
+  attributes :id, :name, :archived, :published_on, :published_by, :updated_at, :description, :urls, :can_manage_form_draft
 
   has_many :form_fields,
            key: :form_fields,
@@ -24,6 +24,11 @@ class FormSerializer < ActiveModel::Serializer
 
   def updated_at
     I18n.l(object.updated_at, format: :full) if object.updated_at
+  end
+
+  def can_manage_form_draft
+    user = scope[:user] || @instance_options[:user]
+    can_manage_form_draft?(user, object)
   end
 
   def urls
