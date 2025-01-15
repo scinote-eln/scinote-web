@@ -59,7 +59,7 @@ class FormsController < ApplicationController
   end
 
   def published_forms
-    forms = current_team.forms.active.readable_by_user(current_user).published
+    forms = current_team.forms.active.readable_by_user(current_user).published.order(name: :asc)
     forms = forms.where('forms.name ILIKE ?', "%#{params[:query]}%") if params[:query].present?
     forms = forms.page(params[:page])
 
