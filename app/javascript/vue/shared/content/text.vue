@@ -61,7 +61,7 @@
         {{ i18n.t("protocols.steps.text.empty_text") }}
       </div>
     </div>
-    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @cancel="closeDeleteModal"/>
+    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @close="closeDeleteModal"/>
     <moveElementModal v-if="movingElement"
                       :parent_type="element.attributes.orderable.parent_type"
                       :targets_url="element.attributes.orderable.urls.move_targets_url"
