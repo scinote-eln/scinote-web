@@ -3,6 +3,7 @@
 class FormsController < ApplicationController
   include UserRolesHelper
 
+  before_action :check_forms_enabled
   before_action :load_form, only: %i(show update publish unpublish export_form_responses)
   before_action :set_breadcrumbs_items, only: %i(index show)
   before_action :check_manage_permissions, only: :update
@@ -219,6 +220,10 @@ class FormsController < ApplicationController
 
   def form_params
     params.require(:form).permit(:name, :description)
+  end
+
+  def check_forms_enabled
+    render_404 unless Form.forms_enabled?
   end
 
   def log_activity(form, type_of, message_items = {})

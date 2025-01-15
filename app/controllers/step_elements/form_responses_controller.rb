@@ -2,6 +2,7 @@
 
 module StepElements
   class FormResponsesController < BaseController
+    before_action :check_forms_enabled, except: %i(destroy)
     before_action :load_form, only: :create
     before_action :load_step, only: :create
     before_action :load_form_response, except: :create
@@ -88,6 +89,10 @@ module StepElements
       @form_response = FormResponse.find_by(id: params[:id])
 
       render_404 unless @form_response
+    end
+
+    def check_forms_enabled
+      render_404 unless Form.forms_enabled?
     end
 
     def log_step_form_activity(element_type_of, message_items = {})

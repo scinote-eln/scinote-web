@@ -410,12 +410,16 @@
                     emit: 'create:checklist',
                     icon: 'sn-icon sn-icon-checkllist',
                     data_e2e: `e2e-BT-protocol-step${this.step.id}-insertChecklist`
-                  },{
-                    text: this.i18n.t('protocols.steps.insert.form'),
-                    emit: 'create:form',
-                    icon: 'sn-icon sn-icon-forms',
-                    data_e2e: `e2e-BT-protocol-step${this.step.id}-insertForm`
                   }]);
+        }
+
+        if (this.urls.create_form_response_url) {
+          menu = menu.concat([{
+                   text: this.i18n.t('protocols.steps.insert.form'),
+                   emit: 'create:form',
+                   icon: 'sn-icon sn-icon-forms',
+                   data_e2e: `e2e-BT-protocol-step${this.step.id}-insertForm`
+                 }]);
         }
 
         return menu;

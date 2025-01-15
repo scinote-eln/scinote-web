@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class FormFieldValuesController < ApplicationController
+  before_action :check_forms_enabled
   before_action :load_form_response
   before_action :load_form_field
   before_action :check_create_permissions
@@ -38,6 +39,10 @@ class FormFieldValuesController < ApplicationController
 
   def check_create_permissions
     render_403 unless can_submit_form_response?(@form_response)
+  end
+
+  def check_forms_enabled
+    render_404 unless Form.forms_enabled?
   end
 
   def log_form_field_value_create_activity

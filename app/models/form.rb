@@ -65,6 +65,10 @@ class Form < ApplicationRecord
     end
   end
 
+  def self.forms_enabled?
+    false
+  end
+
   private
 
   def update_automatic_user_assignments
