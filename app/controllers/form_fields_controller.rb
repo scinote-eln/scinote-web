@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class FormFieldsController < ApplicationController
+  before_action :check_forms_enabled
   before_action :load_form
   before_action :load_form_field, only: %i(update destroy)
   before_action :check_manage_permissions, only: %i(create update destroy reorder)
@@ -83,6 +84,10 @@ class FormFieldsController < ApplicationController
 
   def form_field_params
     params.require(:form_field).permit(:name, :description, { data: [:type, :unit, :time, :range, validations: {}, options: []] }, :required, :allow_not_applicable, :uid)
+  end
+
+  def check_forms_enabled
+    render_404 unless Form.forms_enabled?
   end
 
   def log_activity(type_of, message_items = {})

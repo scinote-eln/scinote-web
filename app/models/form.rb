@@ -65,6 +65,10 @@ class Form < ApplicationRecord
     end
   end
 
+  def self.forms_enabled?
+    ApplicationSettings.instance.values['forms_enabled'] == true
+  end
+
   private
 
   def update_automatic_user_assignments

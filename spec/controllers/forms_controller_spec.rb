@@ -12,6 +12,10 @@ describe FormsController, type: :controller do
   let!(:published_form) { create :form, team: team, created_by: user, published_by: user, published_on: DateTime.parse('1-1-2000') }
   let!(:form_field) { create :form_field, form: form2, created_by: user }
 
+  before do
+    allow(Form).to(receive(:forms_enabled?)).and_return(true)
+  end
+
   describe '#index' do
     let(:params) { { team: team.id, per_page: 20, page: 1 } }
 

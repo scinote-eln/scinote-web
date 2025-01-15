@@ -13,6 +13,10 @@ describe StepElements::FormResponsesController, type: :controller do
   let!(:form_response) { create(:form_response, form: form, created_by: user) }
   let!(:step_orderable_element) { create(:step_orderable_element, orderable: form_response) }
 
+  before do
+    allow(Form).to(receive(:forms_enabled?)).and_return(true)
+  end
+
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
     let(:params) do
