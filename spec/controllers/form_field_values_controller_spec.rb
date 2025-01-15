@@ -11,6 +11,10 @@ describe FormFieldValuesController, type: :controller do
   let!(:form_response) { create(:form_response, form: form, created_by: user) }
   let!(:form_field) { create(:form_field, form: form, created_by: user, data: { type: 'TextField' }) }
 
+  before do
+    allow(Form).to(receive(:forms_enabled?)).and_return(true)
+  end
+
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
     let(:params) do

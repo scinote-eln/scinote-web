@@ -15,6 +15,10 @@ describe FormFieldsController, type: :controller do
     end
   end
 
+  before do
+    allow(Form).to(receive(:forms_enabled?)).and_return(true)
+  end
+
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
     let(:params) do
