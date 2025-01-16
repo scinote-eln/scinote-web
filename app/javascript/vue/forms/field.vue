@@ -10,7 +10,8 @@
       {{ field.attributes.description }}
     </div>
     <div class="mt-2">
-      <component :is="field.attributes.data.type" ref="formField" :disabled="disabled" :field="field" :marked_as_na="markAsNa" @save="saveValue" />
+      <component :is="field.attributes.data.type" ref="formField" :disabled="disabled"
+                 :field="field" :marked_as_na="markAsNa" @save="saveValue" @validChanged="checkValidField" />
     </div>
   </div>
   <div class="flex justify-end items-end">
@@ -60,13 +61,20 @@ export default {
   },
   data() {
     return {
-      markAsNa: this.field.field_value?.not_applicable || false
+      markAsNa: this.field.field_value?.not_applicable || false,
+      isValid: false
     };
   },
   watch: {
     markAsNa() {
       this.saveValue(null);
+    },
+    isValid() {
+      this.$emit('validChanged');
     }
+  },
+  mounted() {
+    this.checkValidField();
   },
   computed: {
     unit() {
@@ -74,6 +82,9 @@ export default {
     }
   },
   methods: {
+    checkValidField() {
+      this.isValid = this.$refs.formField?.validValue;
+    },
     saveValue(value) {
       if (this.formResponse) {
         this.$emit(

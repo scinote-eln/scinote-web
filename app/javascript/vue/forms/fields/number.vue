@@ -24,6 +24,7 @@ export default {
     }
   },
   computed: {
+    // This method is used for user defined validation and we do not disable submit button
     isValidValue() {
       const { validations } = this.field.attributes.data;
 

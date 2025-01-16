@@ -33,7 +33,7 @@ class StepTextSerializer < ActiveModel::Serializer
   end
 
   def icon
-    'fa-font'
+    'sn-icon-result-text'
   end
 
   def urls
