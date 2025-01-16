@@ -24,28 +24,28 @@
         <button v-if="preview && !this.form.attributes.published_on && this.form.attributes.can_manage_form_draft"
                 class="btn btn-secondary"
                 @click="preview = false"
-                data-e2e="e2e-BT-forms-editForm">
+                data-e2e="e2e-BT-forms-builder-editForm">
           <i class="sn-icon sn-icon-edit"></i>
           {{ i18n.t('forms.show.edit_form') }}
         </button>
         <button v-if="!preview"
                 class="btn btn-secondary"
                 @click="preview = true"
-                data-e2e="e2e-BT-forms-testForm">
+                data-e2e="e2e-BT-forms-builder-testForm">
           <i class="sn-icon sn-icon-visibility-show"></i>
           {{ i18n.t('forms.show.test_form') }}
         </button>
         <button v-if="form.attributes.urls.publish"
                 class="btn btn-primary"
                 @click="publishForm"
-                data-e2e="e2e-BT-forms-publish">
+                data-e2e="e2e-BT-forms-builder-publish">
           {{ i18n.t('forms.show.publish') }}
         </button>
         <button v-if="form.attributes.published_on"
                 :disabled="!form.attributes.urls.unpublish"
                 class="btn btn-secondary"
                 @click="unpublishForm"
-                data-e2e="e2e-BT-forms-unpublish">
+                data-e2e="e2e-BT-forms-builder-unpublish">
           {{ i18n.t('forms.show.unpublish') }}
         </button>
       </div>
