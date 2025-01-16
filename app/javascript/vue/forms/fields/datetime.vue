@@ -11,6 +11,7 @@
           :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.from')"
           :class="{'error': !validValue}"
         />
+        -
         <DateTimePicker
           @change="updateToDate"
           :defaultValue="toValue"

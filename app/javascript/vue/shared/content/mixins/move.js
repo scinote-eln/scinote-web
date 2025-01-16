@@ -13,11 +13,11 @@ export default {
     closeMoveModal() {
       this.movingElement = false;
     },
-    moveElement(target_id) {
-      axios.post(this.element.attributes.orderable.urls.move_url, { target_id: target_id }).
-        then(() => {
+    moveElement(targetId) {
+      axios.post(this.moveUrl || this.element.attributes.orderable.urls.move_url, { target_id: targetId })
+        .then(() => {
           this.movingElement = false;
-          this.$emit('moved', this.element.attributes.position, target_id);
+          this.$emit('moved', this.element.attributes.position, targetId);
         });
     }
   }
