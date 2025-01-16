@@ -92,7 +92,8 @@ module Reports
         'application',
         'reports_pdf',
         'bootstrap_pack',
-        'handsontable.formula'
+        'handsontable.formula',
+        'fontawesome'
       ]
 
       javascript_files = [
@@ -118,8 +119,6 @@ module Reports
       @style_tag_options = css_files.map do |file_name|
         { content: fetch_asset_content("#{file_name}.css") }
       end
-
-      @style_tag_options.concat(font_awesome_links)
 
       @script_tag_options = javascript_files.map do |file_name|
         { content: fetch_asset_content("#{file_name}.js") }
