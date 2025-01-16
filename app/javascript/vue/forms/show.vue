@@ -218,7 +218,11 @@ export default {
       axios.delete(field.attributes.urls.show).then(() => {
         this.fields.splice(index, 1);
         if (this.fields.length > 0) {
-          this.activeField = this.fields[index - 1];
+          if (index === 0) {
+            [this.activeField] = this.fields;
+          } else {
+            this.activeField = this.fields[index - 1];
+          }
         } else {
           this.activeField = {};
         }
