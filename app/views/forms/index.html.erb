@@ -15,7 +15,7 @@
     <forms-table
       actions-url="<%= actions_toolbar_forms_url %>"
       data-source="<%= forms_path(format: :json) %>"
-      create-url="<%= forms_path  %>"
+      create-url="<%= forms_path if can_create_forms?(current_team)  %>"
       user-roles-url="<%= user_roles_forms_path %>"
       active-page-url="<%= forms_path(view_mode: :active) %>"
       archived-page-url="<%= forms_path(view_mode: :archived) %>"
