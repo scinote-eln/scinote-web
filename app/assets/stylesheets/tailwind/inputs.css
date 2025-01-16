@@ -107,7 +107,7 @@
   }
 
   .sci-input-container-v2.error::after {
-    @apply absolute -bottom-5 text-sn-alert-passion text-xs;
+    @apply absolute -bottom-4 text-sn-alert-passion text-xs truncate w-full;
     content: attr(data-error);
   }
 

@@ -44,7 +44,7 @@
                  :placeholder="i18n.t('forms.show.validations.response_validation.max_placeholder')"
                  v-model="responseValidation.max" />
         </div>
-        <div class="col-span-3 sci-input-container-v2">
+        <div class="col-span-3 sci-input-container-v2" :class="{'error': !validationMessageValid}" :data-error="validationMessageError">
           <input type="text" class="sci-input !bg-white"
                  :disabled="!responseValidationEnabled"
                  @change="updateField"
@@ -90,13 +90,23 @@ export default {
       return (this.responseValidation.min < this.responseValidation.max) || !this.responseValidationEnabled;
     },
     validField() {
-      return this.responseValidationIsValid && this.unitValid;
+      return this.responseValidationIsValid && this.unitValid && this.validationMessageValid;
     },
     unitValid() {
       return !this.editField.attributes.data.unit || this.editField.attributes.data.unit.length <= GLOBAL_CONSTANTS.NAME_MAX_LENGTH;
     },
     unitFieldError() {
       if (this.editField.attributes.data.unit && this.editField.attributes.data.unit.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
+        return this.i18n.t('forms.show.field_too_long_error', { limit: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
+      }
+
+      return '';
+    },
+    validationMessageValid() {
+      return !this.responseValidationEnabled || !this.responseValidation.message || this.responseValidation.message.length <= GLOBAL_CONSTANTS.NAME_MAX_LENGTH;
+    },
+    validationMessageError() {
+      if (!this.validationMessageValid) {
         return this.i18n.t('forms.show.field_too_long_error', { limit: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
       }
 
