@@ -510,9 +510,10 @@
 }
 
 .asset-icon {
-  display: inline-block;
+  align-items: center;
+  display: inline-flex;
   font-size: $font-size-h2;
-  text-align: center;
+  justify-content: center;
   width: 24px;
 
   &.fa-file-pdf {

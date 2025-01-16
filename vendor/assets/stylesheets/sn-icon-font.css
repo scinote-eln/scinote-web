@@ -245,15 +245,6 @@
 .sn-icon-files:before {
   content: "\e948";
 }
-.sn-icon-file-word:before {
-  content: "\e949";
-}
-.sn-icon-file-powerpoint:before {
-  content: "\e94a";
-}
-.sn-icon-file-excel:before {
-  content: "\e94b";
-}
 .sn-icon-export:before {
   content: "\e94c";
 }
