@@ -1,5 +1,5 @@
 <template>
-  <div class="sci-input-container-v2 mb-2" :class="{'error': !isValidValue}" :data-error="errorMessage">
+  <div class="sci-input-container-v2" :class="{'error': !isValidValue}" :data-error="errorMessage">
     <input type="number" v-model="value" class="sci-input" :disabled="fieldDisabled" @change="saveValue"
       :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.add_number')"></input>
   </div>

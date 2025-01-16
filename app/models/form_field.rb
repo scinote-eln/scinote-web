@@ -7,7 +7,7 @@ class FormField < ApplicationRecord
   has_many :form_field_values, dependent: :destroy
 
   validates :name, length: { minimum: Constants::NAME_MIN_LENGTH, maximum: Constants::NAME_MAX_LENGTH }
-  validates :description, length: { maximum: Constants::NAME_MAX_LENGTH }
+  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :position, presence: true, uniqueness: { scope: :form }
 
   acts_as_list scope: :form, top_of_list: 0, sequential_updates: true
