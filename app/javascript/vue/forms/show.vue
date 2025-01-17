@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="content-body">
-      <Preview v-if="preview" :form="form" :fields="fields" />
+      <Preview v-if="preview" :form="form" :fields="savedFields" />
       <div v-else class="bg-white rounded-xl grid grid-cols-[360px_auto] min-h-[calc(100vh_-_200px)]">
         <div class="p-6 border-transparent border-r-sn-sleepy-grey border-solid border-r">
           <h3 class="mb-3">{{  i18n.t('forms.show.build_form') }}</h3>
@@ -159,11 +159,15 @@ export default {
     return {
       form: null,
       fields: [],
+      savedFields: [],
       activeField: {},
       preview: false
     };
   },
   methods: {
+    syncSavedFields() {
+      this.savedFields = this.fields.map((f) => ({ ...f }));
+    },
     loadForm() {
       axios.get(this.formUrl).then((response) => {
         this.form = response.data.data;
@@ -172,6 +176,7 @@ export default {
         if (this.fields.length > 0) {
           [this.activeField] = this.fields;
         }
+        this.syncSavedFields();
         if (this.form.attributes.published_on || !this.form.attributes.urls.create_field) {
           this.preview = true;
         }
@@ -206,11 +211,14 @@ export default {
         form_field: field.attributes
       }).then((response) => {
         this.fields.splice(index, 1, response.data.data);
+        this.syncSavedFields();
       });
     },
     saveOrder() {
       axios.post(this.form.attributes.urls.reorder_fields, {
         form_field_positions: this.fields.map((f, i) => ({ id: f.id, position: i }))
+      }).then(() => {
+        this.syncSavedFields();
       });
     },
     deleteField(field) {
@@ -226,6 +234,7 @@ export default {
         } else {
           this.activeField = {};
         }
+        this.syncSavedFields();
       });
     },
     async publishForm() {

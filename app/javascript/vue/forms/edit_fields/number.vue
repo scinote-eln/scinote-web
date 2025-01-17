@@ -30,14 +30,14 @@
             :options="responseValidationTypes"
             :value="responseValidation.type" />
         </div>
-        <div class="sci-input-container-v2" :class="{ 'error': !responseValidationIsValid }" >
+        <div class="sci-input-container-v2" :class="{ 'error': !responseValidationIsValid && responseValidation.max }" >
           <input type="number" class="sci-input !bg-white"
                  :disabled="!responseValidationEnabled"
                  @change="updateField"
                  :placeholder="i18n.t('forms.show.validations.response_validation.min_placeholder')"
                  v-model="responseValidation.min" />
         </div>
-        <div class="sci-input-container-v2" :class="{ 'error': !responseValidationIsValid }">
+        <div class="sci-input-container-v2" :class="{ 'error': !responseValidationIsValid && responseValidation.min }">
           <input type="number" class="sci-input !bg-white"
                  :disabled="!responseValidationEnabled"
                  @change="updateField"
