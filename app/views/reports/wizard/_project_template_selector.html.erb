@@ -4,14 +4,14 @@
 </p>
 <div class="row">
   <div class="col-md-6">
-    <div class='project-selector'>
+    <div class='project-selector' data-e2e='e2e-DD-reports-wizard-selectProject'>
       <%= label_tag :projectSelector, t('projects.reports.wizard.first_step.select_project') %>
       <%= select_tag :projectSelector,
                      options_from_collection_for_select(@visible_projects, :id, :name, report.project_id),
                      prompt: t('projects.reports.wizard.first_step.select_project') %>
     </div>
 
-    <div class='template-selector'>
+    <div class='template-selector' data-e2e='e2e-DD-reports-wizard-selectPdfTemplate'>
       <%= label_tag :templateSelector, t('projects.reports.wizard.first_step.select_template') %>
       <%= select_tag :templateSelector,
                      options_for_select(@templates.invert, @active_template),
@@ -24,7 +24,7 @@
                        values_editor_path: reports_new_template_values_path(report_id: report.id)
                      } %>
     </div>
-    <div class='template-selector <%= "hidden" unless custom_templates(Extends::DOCX_REPORT_TEMPLATES) %>'>
+    <div class='template-selector <%= "hidden" unless custom_templates(Extends::DOCX_REPORT_TEMPLATES) %>' data-e2e='e2e-DD-reports-wizard-selectDocxTemplate'>
       <%= label_tag :docxTemplateSelector, t('projects.reports.wizard.first_step.select_docx_template') %>
       <%= select_tag :docxTemplateSelector,
                      options_for_select(@docx_templates.invert, @active_docx_template),
@@ -41,7 +41,7 @@
   <div class="col-md-6">
     <div class="sci-input-container">
       <%= label_tag :projectDescription, t('projects.reports.wizard.first_step.report_description') %>
-      <%= text_area_tag :projectDescription, report.description, placeholder: t('projects.reports.wizard.first_step.report_description_placeholder'), class: 'sci-input-field' %>
+      <%= text_area_tag :projectDescription, report.description, placeholder: t('projects.reports.wizard.first_step.report_description_placeholder'), class: 'sci-input-field' data: { e2e: "e2e-TX-reports-wizard-description"} %>
     </div>
   </div>
 </div>
