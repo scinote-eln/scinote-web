@@ -1126,6 +1126,8 @@ en:
       unpublish: 'Unpublish'
       dropdown_options_label: 'Dropdown options'
       dropdown_options_placeholder_html: "Enter dropdown list options one per line:\nDropdown list option\nDropdown list option\n..."
+      checklist_options_label: 'Checklist options'
+      checklist_options_placeholder_html: "Enter checklist items one per line:\nChecklist item\nChecklist item\n..."
       unit_label: 'Unit'
       unit_placeholder: 'Add a unit'
       time_label: 'Include time'
