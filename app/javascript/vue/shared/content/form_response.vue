@@ -8,7 +8,7 @@
         :btnClasses="'btn btn-light icon-btn btn-sm'"
         :position="'right'"
         :btnIcon="'sn-icon sn-icon-more-hori'"
-        :dataE2e="`e2e-DD-${dataE2e}-stepText${element.id}-options`"
+        :dataE2e="`e2e-DD-${dataE2e}-stepForm${element.id}-options`"
         @move="showMoveModal"
         @delete="showDeleteModal"
       ></MenuDropdown>
@@ -29,10 +29,17 @@
       <Field v-for="field in formFields" :disabled="formDisabled" ref="formFields" :key="field.id" :field="field"
                                          :formResponse="formResponse" @save="saveValue" @validChanged="checkValidFormFields" />
       <div>
-        <button v-if="this.formResponse.urls.submit" class="btn btn-primary" :disabled="!validResponse || !isValid" @click="submitForm">
+        <button v-if="this.formResponse.urls.submit"
+                class="btn btn-primary"
+                :disabled="!validResponse || !isValid"
+                @click="submitForm"
+                :data-e2e="`e2e-BT-${dataE2e}-stepForm${element.id}-submitForm`">
           {{ i18n.t('forms.response.submit') }}
         </button>
-        <button v-else-if="this.formResponse.urls.reset" class="btn btn-secondary" @click="resetForm">
+        <button v-else-if="this.formResponse.urls.reset"
+                class="btn btn-secondary"
+                @click="resetForm"
+                :data-e2e="`e2e-BT-${dataE2e}-stepForm${element.id}-editForm`">
           {{ i18n.t('general.edit')}}
         </button>
       </div>
@@ -124,14 +131,14 @@ export default {
         menu.push({
           text: I18n.t('general.move'),
           emit: 'move',
-          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-move`
+          data_e2e: `e2e-BT-${this.dataE2e}-stepForm${this.element.id}-options-move`
         });
       }
       if (this.element.attributes.orderable.urls.delete_url) {
         menu.push({
           text: I18n.t('general.delete'),
           emit: 'delete',
-          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-delete`
+          data_e2e: `e2e-BT-${this.dataE2e}-stepForm${this.element.id}-options-delete`
         });
       }
       return menu;

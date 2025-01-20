@@ -1,10 +1,12 @@
 <template>
-  <div ref="modal" @keydown.esc="cancel" class="modal" id="selectFormContent" tabindex="-1" role="dialog">
+  <div ref="modal" @keydown.esc="cancel" class="modal" id="selectFormContent" tabindex="-1" role="dialog" data-e2e="e2e-MD-insertFormModal">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
-          <h4 class="modal-title" id="modal-move-result-element">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-insertFormModal-close">
+            <i class="sn-icon sn-icon-close"></i>
+          </button>
+          <h4 class="modal-title" id="modal-move-result-element" data-e2e="e2e-TX-insertFormModal-title">
             <template v-if="anyForms">
               {{ i18n.t(`protocols.steps.modals.form_modal.title`) }}
             </template>
@@ -15,8 +17,8 @@
         </div>
         <div class="modal-body">
           <template v-if="anyForms">
-            <p>{{ i18n.t(`protocols.steps.modals.form_modal.description`) }}</p>
-            <label class="font-normal text-sn-dark-grey">
+            <p data-e2e="e2e-TX-insertFormModal-description">{{ i18n.t(`protocols.steps.modals.form_modal.description`) }}</p>
+            <label class="font-normal text-sn-dark-grey" data-e2e="e2e-TX-insertFormModal-selectForm">
               {{ i18n.t(`protocols.steps.modals.form_modal.label`) }}
             </label>
             <div class="w-full">
@@ -25,16 +27,17 @@
                 :optionsUrl="formsUrl"
                 :placeholder="i18n.t(`protocols.steps.modals.form_modal.placeholder`)"
                 :searchable="true"
+                data-e2e="e2e-DD-insertFormModal-selectForm"
               />
             </div>
           </template>
-          <p v-else>
+          <p v-else >
             {{ i18n.t(`protocols.steps.modals.form_modal.no_forms`) }}
           </p>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="close">{{ i18n.t('general.cancel') }}</button>
-          <button v-if="anyForms" :disabled="!form" @click="$emit('submit', form)" class="btn btn-primary">
+          <button class="btn btn-secondary" @click="close" data-e2e="e2e-BT-insertFormModal-cancel">{{ i18n.t('general.cancel') }}</button>
+          <button v-if="anyForms" :disabled="!form" @click="$emit('submit', form)" class="btn btn-primary" data-e2e="e2e-BT-insertFormModal-addForm">
             {{ i18n.t('protocols.steps.modals.form_modal.add_form') }}
           </button>
           <a v-else :href="formsPageUrl" class="btn btn-primary">

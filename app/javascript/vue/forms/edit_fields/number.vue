@@ -17,6 +17,7 @@
         <span class="sci-toggle-checkbox-container">
           <input type="checkbox"
                  class="sci-toggle-checkbox"
+                 data-e2e="e2e-TG-forms-builder-number-responseValidation"
                  @change="updateField"
                  v-model="responseValidation.enabled" />
           <span class="sci-toggle-checkbox-label"></span>
