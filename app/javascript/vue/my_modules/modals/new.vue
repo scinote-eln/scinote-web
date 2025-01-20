@@ -63,7 +63,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button type="submit" :disabled="!validName" class="btn btn-primary">
+            <button type="submit" :disabled="submitting || !validName" class="btn btn-primary">
               {{ i18n.t('experiments.canvas.new_my_module_modal.create') }}
             </button>
           </div>
@@ -100,7 +100,8 @@ export default {
       tags: [],
       users: [],
       allTags: [],
-      allUsers: []
+      allUsers: [],
+      submitting: false
     };
   },
   computed: {
@@ -135,6 +136,8 @@ export default {
 
   methods: {
     submit() {
+      this.submitting = true;
+
       axios.post(this.createUrl, {
         my_module: {
           name: this.name,
@@ -144,7 +147,9 @@ export default {
         }
       }).then(() => {
         this.$emit('create');
+        this.submitting = false;
       }).catch((error) => {
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.message, 'danger');
       });
     },

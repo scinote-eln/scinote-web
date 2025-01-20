@@ -20,7 +20,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" :disabled="!targetProject || disableSubmit" type="submit">
+            <button class="btn btn-primary" :disabled="!targetProject || submitting" type="submit">
               {{ i18n.t('experiments.move.modal_submit') }}
             </button>
           </div>
@@ -49,12 +49,13 @@ export default {
   data() {
     return {
       targetProject: null,
-      disableSubmit: false
+      submitting: false
     };
   },
   methods: {
     async submit() {
-      this.disableSubmit = true;
+      this.submitting = true;
+
       await axios.post(this.experiment.movePath, {
         project_id: this.targetProject
       }).then((response) => {
@@ -63,7 +64,7 @@ export default {
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.message, 'danger');
       });
-      this.disableSubmit = false;
+      this.submitting = false;
     },
     changeProject(project) {
       this.targetProject = project;

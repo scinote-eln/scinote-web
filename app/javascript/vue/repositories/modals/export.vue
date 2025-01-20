@@ -27,7 +27,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-          <button type="submit" class="btn btn-primary"> {{ i18n.t('repositories.index.modal_export.export') }} </button>
+          <button type="submit" class="btn btn-primary" :disabled="submitting"> {{ i18n.t('repositories.index.modal_export.export') }} </button>
         </div>
       </form>
     </div>
@@ -48,7 +48,8 @@ export default {
   mixins: [modalMixin],
   data() {
     return {
-      selectedOption: this.exportAction.export_file_type
+      selectedOption: this.exportAction.export_file_type,
+      submitting: false
     };
   },
   methods: {
@@ -58,10 +59,14 @@ export default {
         file_type: this.selectedOption
       };
 
+      this.submitting = true;
+
       axios.post(this.exportAction.path, payload).then((response) => {
         this.$emit('export');
+        this.submitting = false;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
+        this.submitting = flase;
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
     }

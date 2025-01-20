@@ -21,7 +21,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button type="submit" :disabled="!nameIsValid" class="btn btn-primary">
+            <button type="submit" :disabled="submitting || !nameIsValid" class="btn btn-primary">
               {{ i18n.t('experiments.canvas.edit.modal_edit_module.confirm') }}
             </button>
           </div>
@@ -44,7 +44,8 @@ export default {
   },
   data() {
     return {
-      name: this.my_module.name
+      name: this.my_module.name,
+      submitting: false
     };
   },
   computed: {
@@ -55,13 +56,17 @@ export default {
   mixins: [modalMixin],
   methods: {
     submit() {
+      this.submitting = true;
+
       axios.patch(this.my_module.urls.update, {
         my_module: {
           name: this.name
         }
       }).then(() => {
         this.$emit('update');
+        this.submitting = false;
       }).catch((error) => {
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.message, 'danger');
       });
     }

@@ -25,7 +25,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal" data-e2e="e2e-BT-renameInventoryModal-cancel">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" data-e2e="e2e-BT-renameInventoryModal-save">
+            <button class="btn btn-primary" type="submit" :disabled="submitting" data-e2e="e2e-BT-renameInventoryModal-save">
               {{ i18n.t('repositories.index.modal_rename.rename') }}
             </button>
           </div>
@@ -49,11 +49,14 @@ export default {
   data() {
     return {
       name: this.repository.name,
-      error: null
+      error: null,
+      submitting: false
     };
   },
   methods: {
     submit() {
+      this.submitting = true;
+
       axios.put(this.repository.urls.update, {
         repository: {
           name: this.name
@@ -61,7 +64,9 @@ export default {
       }).then(() => {
         this.error = null;
         this.$emit('update');
+        this.submitting = false;
       }).catch((error) => {
+        this.submitting = false;
         this.error = error.response.data.name;
       });
     }

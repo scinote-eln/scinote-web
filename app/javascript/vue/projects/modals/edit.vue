@@ -34,7 +34,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="visible && !defaultRole">
+            <button class="btn btn-primary" type="submit" :disabled="visible && !defaultRole || submitting">
               {{ i18n.t('projects.index.modal_edit_project.submit') }}
             </button>
           </div>
@@ -78,11 +78,13 @@ export default {
       visible: !this.project.hidden,
       defaultRole: this.project.default_public_user_role_id,
       error: null,
-      userRoles: []
+      userRoles: [],
+      submitting: false
     };
   },
   methods: {
     submit() {
+      this.submitting = true;
       axios.put(this.project.urls.update, {
         project: {
           name: this.name,
@@ -92,7 +94,9 @@ export default {
       }).then(() => {
         this.error = null;
         this.$emit('update');
+        this.submitting = false;
       }).catch((error) => {
+        this.submitting = false;
         this.error = error.response.data.errors.name;
       });
     },
