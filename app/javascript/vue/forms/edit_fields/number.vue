@@ -88,7 +88,8 @@ export default {
       return [['between', 'Between']];
     },
     responseValidationIsValid() {
-      return (this.responseValidation.min < this.responseValidation.max) || !this.responseValidationEnabled;
+      return (this.responseValidation.min && this.responseValidation.max && this.responseValidation.min < this.responseValidation.max)
+        || !this.responseValidationEnabled;
     },
     validField() {
       return this.responseValidationIsValid && this.unitValid && this.validationMessageValid;
