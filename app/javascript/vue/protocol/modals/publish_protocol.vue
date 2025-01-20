@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       submitting: false
-    }
+    };
   },
   mounted() {
     $(this.$refs.modal).modal('show');

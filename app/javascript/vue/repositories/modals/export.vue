@@ -66,7 +66,7 @@ export default {
         this.submitting = false;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
-        this.submitting = flase;
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
     }
