@@ -73,7 +73,7 @@ export default {
     },
     validValue() {
       if (this.range) {
-        return !this.fromValue || !this.toValue || this.fromValue <= this.toValue;
+        return Boolean(this.fromValue) === Boolean(this.toValue) && (!this.fromValue || !this.toValue || this.fromValue <= this.toValue);
       }
       return this.value;
     }
