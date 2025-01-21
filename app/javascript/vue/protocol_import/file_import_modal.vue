@@ -13,7 +13,8 @@
         <div class="modal-footer">
           <button v-if="state === 'confirm'" type="button"
                   class="btn btn-primary"
-                  @click.stop.prevent="confirm">{{ i18n.t('protocols.import_modal.import') }}</button>
+                  @click.stop.prevent="confirm"
+                  :disabled="submitting">{{ i18n.t('protocols.import_modal.import') }}</button>
           <button v-else-if="state === 'failed'" type="button"
                   class="btn btn-primary"
                   data-dismiss="modal">{{ i18n.t('protocols.import_modal.close') }}</button>
@@ -41,7 +42,8 @@ export default {
       jobPollInterval: null,
       pollCount: 0,
       jobId: null,
-      refreshCallback: null
+      refreshCallback: null,
+      submitting: false
     };
   },
   mounted() {
@@ -69,6 +71,7 @@ export default {
     confirm() {
       const formData = new FormData();
       Array.from(this.files).forEach((file) => formData.append('files[]', file, file.name));
+      this.submitting = true;
 
       $.post({
         url: this.importUrl, data: formData, processData: false, contentType: false
@@ -97,10 +100,12 @@ export default {
             break;
           case 'done':
             this.state = 'done';
+            this.submitting = false;
             clearInterval(this.jobPollInterval);
             break;
           case 'failed':
             this.state = 'failed';
+            this.submitting = false;
             clearInterval(this.jobPollInterval);
             break;
         }

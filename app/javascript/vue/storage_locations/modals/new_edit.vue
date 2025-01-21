@@ -88,7 +88,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" :disabled="!validObject" type="submit">
+            <button class="btn btn-primary" :disabled="submitting || !validObject" type="submit">
               {{ mode == 'create' ? i18n.t('general.create') : i18n.t('general.save') }}
             </button>
           </div>
@@ -127,7 +127,7 @@ export default {
       },
       attachedImage: null,
       imageError: false,
-      savingLocaiton: false,
+      submitting: false,
       errors: {}
     };
   },
@@ -187,11 +187,11 @@ export default {
       // Smart annotation fix
       this.object.description = $(this.$refs.description).val();
 
-      if (this.savingLocaiton) {
+      if (this.submitting) {
         return;
       }
 
-      this.savingLocaiton = true;
+      this.submitting = true;
 
       const params = {
         name: this.object.name,
@@ -214,22 +214,22 @@ export default {
           .then(() => {
             this.$emit('tableReloaded');
             HelperModule.flashAlertMsg(this.i18n.t(`storage_locations.index.edit_modal.success_message.edit_${this.editModalMode}`, { name: this.object.name }), 'success');
-            this.savingLocaiton = false;
+            this.submitting = false;
             this.close();
           }).catch((error) => {
             HelperModule.flashAlertMsg(error.response.data.error, 'danger');
-            this.savingLocaiton = false;
+            this.submitting = false;
           });
       } else {
         axios.post(this.createUrl, params)
           .then(() => {
             this.$emit('tableReloaded');
+            this.submitting = false;
             HelperModule.flashAlertMsg(this.i18n.t(`storage_locations.index.edit_modal.success_message.create_${this.editModalMode}`, { name: this.object.name }), 'success');
-            this.savingLocaiton = false;
             this.close();
           }).catch((error) => {
+            this.submitting = false;
             HelperModule.flashAlertMsg(error.response.data.error, 'danger');
-            this.savingLocaiton = false;
           });
       }
     },

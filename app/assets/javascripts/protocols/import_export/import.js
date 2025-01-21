@@ -476,10 +476,16 @@ function importProtocolFromFile(
     // Bind on "Import" buttons
     $('[data-action="import-current"]')
       .off('click')
-      .on('click', function(ev) { importCurrentProtocol(ev); });
+      .on('click', function(ev) {
+        $(this).attr('disabled', true);
+        importCurrentProtocol(ev);
+      });
     $('[data-action="import-all"]')
       .off('click')
-      .on('click', function(ev) { importAllProtocols(ev); });
+      .on('click', function(ev) {
+        $(this).attr('disabled', true);
+        importAllProtocols(ev);
+      });
 
     // Bind on navigation buttons
     $('[data-action="jump-to-first-protocol"]')
@@ -520,6 +526,7 @@ function importProtocolFromFile(
         animateSpinner();
         importSingleProtocol(currentProtocol, false, function(data) {
           importModal.find('[data-role="preview-container"]').html('');
+          importModal.find('[data-action]').removeAttr('disabled');
           afterImportCallback([data]);
         });
       } else {
@@ -529,6 +536,7 @@ function importProtocolFromFile(
           animateSpinner(importModal, false);
           importModal.find('[data-role="preview-container"]').html('');
           importModal.modal('hide');
+          importModal.find('[data-action]').removeAttr('disabled');
           afterImportCallback([data]);
         });
       }
