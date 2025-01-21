@@ -1,6 +1,7 @@
 <template>
   <div :key="marked_as_na">
     <SelectDropdown
+      v-if="!fieldDisabled"
       :disabled="fieldDisabled"
       :options="options"
       :value="value"
@@ -10,6 +11,12 @@
       :clearable="true"
       :placeholder="fieldDisabled ? ' ' : null"
     />
+    <span v-else-if="value && value.length > 0">
+      {{ value.join(' | ') }}
+    </span>
+    <span v-else class="text-sn-dark-grey">
+      {{ i18n.t('forms.fields.no_selection') }}
+    </span>
   </div>
 </template>
 
@@ -45,7 +52,8 @@ export default {
   },
   methods: {
     saveValue(value) {
-      this.$emit('save', value);
+      this.value = value;
+      this.$emit('save', (value.length === 0 ? null : value));
     }
   }
 };

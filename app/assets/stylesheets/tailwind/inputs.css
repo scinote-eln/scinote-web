@@ -51,7 +51,6 @@
 
   .sci-input-container-v2 input:disabled {
     background-color: var(--sn-super-light-grey);
-    color: var(--sn-grey);
     border: 1px solid var(--sn-light-grey);
   }
 
@@ -93,7 +92,6 @@
 
   .sci-input-container-v2 textarea:disabled {
     background-color: var(--sn-super-light-grey);
-    color: var(--sn-grey);
     border: 1px solid var(--sn-light-grey);
   }
 

@@ -72,7 +72,7 @@
                     :class="{ '!border-sn-blue bg-sn-super-light-blue': activeField.id === element.id }"
                 >
                   <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="fieldIcon[element.attributes.data.type]"></i>
-                  <span class="truncate">{{ element.attributes.name }}</span>
+                  <span :title="element.attributes.name" class="truncate">{{ element.attributes.name }}</span>
                 </div>
               </div>
             </template>
