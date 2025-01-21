@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Comment < ApplicationRecord
   include SearchableModel
 
@@ -5,21 +7,15 @@ class Comment < ApplicationRecord
   validates :message,
             presence: true,
             length: { maximum: Constants::TEXT_MAX_LENGTH }
-  validates :user, presence: true
 
   belongs_to :user, inverse_of: :comments
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
+  belongs_to :last_modified_by, class_name: 'User', inverse_of: :comments, optional: true
 
   scope :unseen_by, ->(user) { where('? = ANY (unseen_by)', user.id) }
 
-  def self.mark_as_seen_by(user, commentable)
+  def self.mark_as_seen_by(user)
     # rubocop:disable Rails/SkipsModelValidations
-    all.where('? = ANY (unseen_by)', user.id).update_all("unseen_by = array_remove(unseen_by, #{user.id.to_i}::bigint)")
-
-    # Because we want the number of unseen comments to affect the cache of project
-    # and experiment lists, we need to set the updated_at of Project or Experiment.
-    commentable.touch if commentable.class.in? [Project, Experiment]
-
+    where('? = ANY (unseen_by)', user.id).update_all("unseen_by = array_remove(unseen_by, #{user.id.to_i}::bigint)")
     # rubocop:enable Rails/SkipsModelValidations
   end
 end

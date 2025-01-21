@@ -4,4 +4,4 @@
              locals: { comment: comment, skip_header: user == comment.user } %>
   <% user = comment.user %>
 <% end %>
-<% comments.mark_as_seen_by(current_user, @commentable) %>
+<% comments.mark_as_seen_by(current_user) %>
