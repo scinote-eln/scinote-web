@@ -1,6 +1,6 @@
 <template>
-<div class="p-4 rounded bg-white text-sm grid grid-cols-[minmax(0,1fr)_170px] mb-2">
-  <div>
+<div class="p-4 rounded bg-white text-sm flex flex-wrap mb-2 gap-x-6 gap-y-2">
+  <div class="grow">
     <div class="font-bold">
       {{ field.attributes.name }}
       <span v-if="unit">({{ unit }})</span>
@@ -14,11 +14,13 @@
                  :field="field" :marked_as_na="markAsNa" @save="saveValue" @validChanged="checkValidField" />
     </div>
   </div>
-  <div class="flex justify-end items-end">
+  <div class="flex items-end">
     <button class="btn btn-secondary mb-0.5"
             :disabled="disabled"
-            v-if="field.attributes.allow_not_applicable"
-            :class="{'!bg-sn-super-light-blue !border-sn-blue': markAsNa && !disabled }"
+            :class="{
+              '!bg-sn-super-light-blue !border-sn-blue': markAsNa && !disabled,
+              'opacity-0 pointer-events-none !h-0': !field.attributes.allow_not_applicable
+            }"
             @click="markAsNa = !markAsNa">
       <div class="w-4 h-4  border rounded-sm flex items-center justify-center"
         :class="{

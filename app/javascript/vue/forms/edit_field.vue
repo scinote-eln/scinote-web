@@ -1,22 +1,26 @@
 <template>
   <div class="flex flex-col gap-4">
-    <div class="flex items-center">
-      <h3 class="flex items-center gap-2">
-        <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="icon"></i>
-        {{ i18n.t(`forms.show.blocks.${editField.attributes.type}`) }}
-      </h3>
-      <div class="ml-auto flex items-center gap-3">
-        <div class="flex items-center gap-2">
-          <span class="sci-toggle-checkbox-container">
-            <input type="checkbox"
-                  class="sci-toggle-checkbox"
-                  data-e2e="e2e-TG-forms-builder-required"
-                  @change="updateField"
-                  v-model="editField.attributes.required" />
-            <span class="sci-toggle-checkbox-label"></span>
-          </span>
-          <span>{{ i18n.t('forms.show.required_label') }}</span>
+    <div class="flex items-center gap-4">
+      <div class="flex items-center grow flex-wrap gap-4 ">
+        <h3 class="flex items-center gap-2 m-0 mr-auto">
+          <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="icon"></i>
+          {{ i18n.t(`forms.show.blocks.${editField.attributes.type}`) }}
+        </h3>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <span class="sci-toggle-checkbox-container">
+              <input type="checkbox"
+                    class="sci-toggle-checkbox"
+                    data-e2e="e2e-TG-forms-builder-required"
+                    @change="updateField"
+                    v-model="editField.attributes.required" />
+              <span class="sci-toggle-checkbox-label"></span>
+            </span>
+            <span>{{ i18n.t('forms.show.required_label') }}</span>
+          </div>
         </div>
+      </div>
+      <div>
         <GeneralDropdown  position="right">
           <template v-slot:field>
             <button class="btn btn-secondary icon-btn">
