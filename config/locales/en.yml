@@ -1089,6 +1089,7 @@ en:
       add_date: "Add date"
       add_datetime: "Add date & time"
       not_valid_range: "Range is not valid"
+      no_selection: "No options selected"
     index:
       head_title: "Forms"
       head_title_archived: "Archived forms"

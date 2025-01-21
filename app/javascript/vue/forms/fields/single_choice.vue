@@ -43,6 +43,7 @@ export default {
   },
   methods: {
     saveValue(value) {
+      this.value = value;
       this.$emit('save', value);
     }
   }
