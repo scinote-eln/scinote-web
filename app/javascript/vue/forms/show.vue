@@ -54,8 +54,8 @@
       <Preview v-if="preview" :form="form" :fields="savedFields" />
       <div v-else class="bg-white rounded-xl grid grid-cols-[360px_auto] min-h-[calc(100vh_-_200px)]">
         <div class="p-6 border-transparent border-r-sn-sleepy-grey border-solid border-r">
-          <h3 class="mb-3">{{  i18n.t('forms.show.build_form') }}</h3>
-          <div class="mb-3 flex flex-col gap-3">
+          <h3 class="m-0">{{  i18n.t('forms.show.build_form') }}</h3>
+          <div class="my-3 flex flex-col gap-3">
           <Draggable
             v-model="fields"
             class="flex flex-col gap-3"
