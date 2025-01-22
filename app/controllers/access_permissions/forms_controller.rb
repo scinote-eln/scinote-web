@@ -168,7 +168,7 @@ module AccessPermissions
     end
 
     def check_read_permissions
-      render_403 unless can_read_form?(@form)
+      render_403 unless can_read_form?(@form) || can_manage_team?(@form.team)
     end
 
     def log_activity(type_of, message_items = {})
