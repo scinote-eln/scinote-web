@@ -57,9 +57,10 @@ module Lists
 
     def urls
       urls_list = {
-        show: form_path(object),
         show_access: access_permissions_form_path(object)
       }
+
+      urls_list[:show] = form_path(object) if can_read_form?(object)
 
       if can_manage_form_users?(object)
         urls_list[:update_access] = access_permissions_form_path(object)

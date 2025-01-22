@@ -10,8 +10,9 @@ module Lists
     def fetch_records
       @records =
         Form.includes(:team, user_assignments: %i(user user_role))
-            .joins(:user_assignments)
+            .left_outer_joins(:user_assignments)
             .left_outer_joins(:form_responses)
+            .viewable_by_user(@user, @team)
             .joins(
               'LEFT OUTER JOIN users AS publishers ' \
               'ON forms.published_by_id = publishers.id'
@@ -20,7 +21,7 @@ module Lists
               'publishers.full_name AS published_by_user',
               'COUNT(DISTINCT form_responses.id) AS used_in_protocols_count',
               'COUNT(DISTINCT user_assignments.id) AS user_assignment_count'
-            ).where(team: @team).readable_by_user(@user).group('forms.id', 'publishers.full_name')
+            ).where(team: @team).group('forms.id', 'publishers.full_name')
 
       view_mode = @params[:view_mode] || 'active'
 
