@@ -1,6 +1,6 @@
 <template>
 <div class="p-4 rounded bg-white text-sm flex flex-wrap mb-2 gap-x-6 gap-y-2">
-  <div class="grow">
+  <div class="grow overflow-hidden">
     <div class="font-bold">
       {{ field.attributes.name }}
       <span v-if="unit">({{ unit }})</span>
