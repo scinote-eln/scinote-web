@@ -68,6 +68,7 @@
           @create:table="(...args) => this.createElement('table', ...args)"
           @create:checklist="createElement('checklist')"
           @create:text="createElement('text')"
+          @create:form="openFormSelectModal = true"
           @create:file="openLoadFromComputer"
           @create:wopi_file="openWopiFileModal"
           @create:ove_file="openOVEditor"
@@ -151,6 +152,7 @@
         @create:table="(...args) => this.createElement('table', ...args)"
         @create:checklist="createElement('checklist')"
         @create:text="createElement('text')"
+        @create:form="openFormSelectModal = true"
         @create:file="openLoadFromComputer"
         @create:wopi_file="openWopiFileModal"
         @create:ove_file="openOVEditor"
@@ -166,6 +168,11 @@
       @reorder="updateElementOrder"
       @close="closeReorderModal"
     />
+    <SelectFormModal
+      v-if="openFormSelectModal"
+      @close="openFormSelectModal = false"
+      @submit="createElement('form_response', null, $event); openFormSelectModal = false"
+    />
   </div>
 </template>
 
@@ -180,6 +187,7 @@
   import StepTable from '../shared/content/table.vue'
   import StepText from '../shared/content/text.vue'
   import Checklist from '../shared/content/checklist.vue'
+  import FormResponse from '../shared/content/form_response.vue'
   import deleteStepModal from './modals/delete_step.vue'
   import Attachments from '../shared/content/attachments.vue'
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
@@ -189,6 +197,7 @@
   import UtilsMixin from '../mixins/utils.js'
   import AttachmentsMixin from '../shared/content/mixins/attachments.js'
   import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js'
+  import SelectFormModal from '../shared/content/modal/form_select.vue'
   import OveMixin from '../shared/content/attachments/mixins/ove.js'
   import StorageUsage from '../shared/content/attachments/storage_usage.vue'
   import axios from '../../packs/custom_axios';
@@ -236,6 +245,7 @@
         isCollapsed: false,
         editingName: false,
         inlineEditError: null,
+        openFormSelectModal: false,
         wellPlateOptions: [
           { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'),
             emit: 'create:table',
@@ -279,7 +289,9 @@
       StorageUsage,
       ReorderableItemsModal,
       MenuDropdown,
-      ContentToolbar
+      ContentToolbar,
+      SelectFormModal,
+      FormResponse
     },
     created() {
       this.loadAttachments();
@@ -399,6 +411,15 @@
                     icon: 'sn-icon sn-icon-checkllist',
                     data_e2e: `e2e-BT-protocol-step${this.step.id}-insertChecklist`
                   }]);
+        }
+
+        if (this.urls.create_form_response_url) {
+          menu = menu.concat([{
+                   text: this.i18n.t('protocols.steps.insert.form'),
+                   emit: 'create:form',
+                   icon: 'sn-icon sn-icon-forms',
+                   data_e2e: `e2e-BT-protocol-step${this.step.id}-insertForm`
+                 }]);
         }
 
         return menu;
@@ -613,10 +634,10 @@
           }
         });
       },
-      createElement(elementType, tableDimensions = null) {
+      createElement(elementType, tableDimensions = null, formId = null) {
         let plateTemplate = tableDimensions != null;
         tableDimensions ||= [5, 5];
-        $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate }, (result) => {
+        $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate, form_id: formId }, (result) => {
           result.data.isNew = true;
           this.elements.push(result.data)
 

@@ -22,7 +22,7 @@
             <i id="close-icon" data-e2e="e2e-BT-itemCard-close" @click="toggleShowHideSidebar(null)"
               class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
           </div>
-          <div id="divider" class="bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
+          <div id="divider" class="bg-sn-light-grey flex items-center self-stretch h-px mt-5 mr-6"></div>
         </div>
 
         <div ref="bodyWrapper" id="body-wrapper" class="overflow-y-auto overflow-x-hidden h-[calc(100%-78px)] pt-6 ">

@@ -118,6 +118,8 @@ module GlobalActivitiesHelper
              else
                storage_location_path(obj, team: activity.team.id)
              end
+    when Form
+      path = form_path(obj, team: obj.team.id)
     else
       return current_value
     end

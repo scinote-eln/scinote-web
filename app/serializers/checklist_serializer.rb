@@ -9,7 +9,7 @@ class ChecklistSerializer < ActiveModel::Serializer
   attributes :id, :name, :urls, :icon, :sa_name, :checklist_items, :parent_type
 
   def icon
-    'fa-list-ul'
+    'sn-icon-checkllist'
   end
 
   def parent_type

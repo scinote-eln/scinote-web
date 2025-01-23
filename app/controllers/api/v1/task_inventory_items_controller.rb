@@ -9,6 +9,7 @@ module Api
       before_action :load_task
       before_action :load_my_module_repository_row, only: :update
       before_action :check_stock_consumption_update_permissions, only: :update
+      before_action :check_task_assign_permissions, only: %i(create destroy)
 
       def index
         items =
@@ -31,6 +32,20 @@ module Api
                include: %i(inventory_cells inventory)
       end
 
+      def create
+        @inventory_item = RepositoryRow.find_by(id: repository_row_params[:attributes][:item_id])
+
+        raise PermissionError.new(Repository, :read) unless @inventory_item && can_read_repository?(@inventory_item.repository)
+
+        @task.my_module_repository_rows.create!(repository_row: @inventory_item, assigned_by: current_user)
+
+        render jsonapi: @task.repository_rows,
+               each_serializer: TaskInventoryItemSerializer,
+               show_repository: true,
+               my_module: @task,
+               include: include_params
+      end
+
       def update
         @my_module_repository_row.consume_stock(
           current_user,
@@ -43,6 +58,16 @@ module Api
                show_repository: true,
                my_module: @task,
                include: %i(inventory_cells inventory)
+      end
+
+      def destroy
+        @inventory_item = @task.repository_rows.find(params.require(:id))
+
+        raise PermissionError.new(Repository, :read) unless @inventory_item && can_read_repository?(@inventory_item.repository)
+
+        @task.my_module_repository_rows.find_by(repository_row: @inventory_item).destroy!
+
+        render body: nil
       end
 
       private
@@ -61,11 +86,15 @@ module Api
         end
       end
 
+      def check_task_assign_permissions
+        raise PermissionError.new(MyModule, :assing_repository_item_to_task) unless can_assign_my_module_repository_rows?(@task)
+      end
+
       def repository_row_params
         raise TypeError unless params.require(:data).require(:type) == 'inventory_items'
 
         params.require(:data).require(:attributes)
-        params.permit(data: { attributes: %i(stock_consumption stock_consumption_comment) })[:data]
+        params.permit(data: { attributes: %i(stock_consumption stock_consumption_comment item_id) })[:data]
       end
 
       def permitted_includes

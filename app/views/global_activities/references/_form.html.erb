@@ -1,0 +1,15 @@
+<%= render partial: "global_activities/references/team",
+           locals: { team: team, subject: team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
+<div class="ga-breadcrumb">
+  <span class="sn-icon sn-icon-reports"></span>
+  <% if subject %>
+    <%= route_to_other_team(form_path(subject, team: subject.team.id, preview_report_id: subject.id, preview_type: :pdf),
+                            team,
+                            subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                            title: subject.name) %>
+  <% else %>
+    <span title="<%= breadcrumbs['form'] %>">
+      <%= breadcrumbs['form']&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    </span>
+  <% end %>
+</div>

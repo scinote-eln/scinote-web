@@ -14,6 +14,7 @@
       :format="format"
       :month-change-on-scroll="false"
       :six-weeks="true"
+      :disabled="disabled"
       :auto-apply="true"
       :partial-flow="true"
       :markers="markers"

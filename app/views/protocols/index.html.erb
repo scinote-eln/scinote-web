@@ -14,14 +14,14 @@
   <div class="content-pane flexible protocols-index <%= @type %>">
     <div class="content-header sticky-header">
       <div class="title-row" data-e2e="e2e-TX-protocolTemplates-title">
-        <% if templates_view_mode_archived?(type: @type) %>
-          <h1>
-            <span><%= t('labels.archived')%></span>&nbsp;
+        <h1>
+          <% if params[:view_mode] == 'archived' %>
+            <%= t('labels.archived')%>
             <%= t('protocols.index.head_title_archived') %>
-          </h1>
-        <% else %>
-          <h1><%= t('protocols.index.head_title') %></h1>
-        <% end %>
+          <% else %>
+            <%= t('protocols.index.head_title') %>
+          <% end %>
+        </h1>
       </div>
     </div>
     <div class="protocols-container" data-e2e="e2e-CO-protocolTemplates">
