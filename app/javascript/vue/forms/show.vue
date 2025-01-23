@@ -38,11 +38,12 @@
         <button v-if="form.attributes.urls.publish"
                 class="btn btn-primary"
                 @click="publishForm"
+                :disabled="submitting"
                 data-e2e="e2e-BT-forms-builder-publish">
           {{ i18n.t('forms.show.publish') }}
         </button>
         <button v-if="form.attributes.published_on"
-                :disabled="!form.attributes.urls.unpublish"
+                :disabled="!form.attributes.urls.unpublish || submitting"
                 class="btn btn-secondary"
                 @click="unpublishForm"
                 data-e2e="e2e-BT-forms-builder-unpublish">
@@ -174,7 +175,8 @@ export default {
       fields: [],
       savedFields: [],
       activeField: {},
-      preview: false
+      preview: false,
+      submitting: false
     };
   },
   methods: {
@@ -196,6 +198,11 @@ export default {
       });
     },
     addField(type) {
+      if (this.submitting) {
+        return;
+      }
+
+      this.submitting = true;
       axios.post(this.form.attributes.urls.create_field, {
         form_field: {
           name: this.i18n.t(`forms.show.blocks.${type}`),
@@ -207,6 +214,8 @@ export default {
         this.fields.push(response.data.data);
         this.activeField = this.fields[this.fields.length - 1];
         this.$refs.addFieldDropdown.isOpen = false;
+      }).then(() => {
+        this.submitting = false;
       });
     },
     updateName(name) {
@@ -235,6 +244,12 @@ export default {
       });
     },
     deleteField(field) {
+      if (this.submitting) {
+        return;
+      }
+
+      this.submitting = true;
+
       const index = this.fields.findIndex((f) => f.id === field.id);
       axios.delete(field.attributes.urls.show).then(() => {
         this.fields.splice(index, 1);
@@ -248,21 +263,37 @@ export default {
           this.activeField = {};
         }
         this.syncSavedFields();
+      }).finally(() => {
+        this.submitting = false;
       });
     },
     async publishForm() {
       const ok = await this.$refs.publishModal.show();
       if (ok) {
+        if (this.submitting) {
+          return;
+        }
+
+        this.submitting = true;
         axios.post(this.form.attributes.urls.publish).then((response) => {
           this.form = response.data.data;
           this.preview = true;
+        }).finally(() => {
+          this.submitting = false;
         });
       }
     },
     unpublishForm() {
+      if (this.submitting) {
+        return;
+      }
+
+      this.submitting = true;
       axios.post(this.form.attributes.urls.unpublish).then((response) => {
         this.form = response.data.data;
         this.preview = false;
+      }).finally(() => {
+        this.submitting = false;
       });
     }
   }

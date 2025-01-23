@@ -44,7 +44,7 @@ describe FormField, type: :model do
     end
     describe '#description' do
       it do
-        is_expected.to(validate_length_of(:description).is_at_most(Constants::NAME_MAX_LENGTH))
+        is_expected.to(validate_length_of(:description).is_at_most(Constants::TEXT_MAX_LENGTH))
       end
     end
   end

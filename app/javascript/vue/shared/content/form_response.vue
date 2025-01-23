@@ -31,7 +31,7 @@
       <div>
         <button v-if="this.formResponse.urls.submit"
                 class="btn btn-primary"
-                :disabled="!validResponse || !isValid"
+                :disabled="!validResponse || !isValid || submitting"
                 @click="submitForm"
                 :data-e2e="`e2e-BT-${dataE2e}-stepForm${element.id}-submitForm`">
           {{ i18n.t('forms.response.submit') }}
@@ -39,6 +39,7 @@
         <button v-else-if="this.formResponse.urls.reset"
                 class="btn btn-secondary"
                 @click="resetForm"
+                :disabled="submitting"
                 :data-e2e="`e2e-BT-${dataE2e}-stepForm${element.id}-editForm`">
           {{ i18n.t('general.edit')}}
         </button>
@@ -96,7 +97,8 @@ export default {
       formFieldValues: this.element.attributes.orderable.form_field_values,
       deleteUrl: this.element.attributes.orderable.urls.delete_url,
       moveUrl: this.element.attributes.orderable.urls.move_url,
-      isValid: false
+      isValid: false,
+      submitting: false
     };
   },
   mounted() {
@@ -165,19 +167,33 @@ export default {
       });
     },
     submitForm() {
+      if (this.submitting) {
+        return;
+      }
+
+      this.submitting = true;
       axios.post(this.formResponse.urls.submit).then((response) => {
         const { attributes } = response.data.data;
         this.formResponse = attributes.orderable;
         this.deleteUrl = attributes.orderable.urls.delete_url;
         this.moveUrl = attributes.orderable.urls.move_url;
+      }).finally(() => {
+        this.submitting = false;
       });
     },
     resetForm() {
+      if (this.submitting) {
+        return;
+      }
+
+      this.submitting = true;
       axios.post(this.formResponse.urls.reset).then((response) => {
         const { attributes } = response.data.data;
         this.formResponse = attributes.orderable;
         this.deleteUrl = attributes.orderable.urls.delete_url;
         this.moveUrl = attributes.orderable.urls.move_url;
+      }).finally(() => {
+        this.submitting = false;
       });
     },
     checkValidFormFields() {
