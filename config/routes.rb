@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   get 'api/health', to: 'api/api#health', as: 'api_health'
   get 'api/status', to: 'api/api#status', as: 'api_status'
 
+  get '/global_constants', to: 'global_constants#index', as: 'global_constants'
+
   post 'access_tokens/revoke', to: 'doorkeeper/access_tokens#revoke'
 
   # Addons
