@@ -76,6 +76,7 @@ export default {
     return {
       reloadingTable: false,
       accessModalParams: null,
+      submitting: false,
       columnDefs: [
         {
           field: 'name',
@@ -138,8 +139,15 @@ export default {
   },
   methods: {
     createForm(action) {
+      if (this.submitting) {
+        return;
+      }
+
+      this.submitting = true;
       axios.post(action.path).then((response) => {
         window.location.href = response.data.data.attributes.urls.show;
+      }).finally(() => {
+        this.submitting = false;
       });
     },
     access(_event, rows) {
@@ -149,19 +157,33 @@ export default {
       };
     },
     archive(event) {
+      if (this.submitting) {
+        return;
+      }
+
+      this.submitting = true;
       axios.post(event.path).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      }).finally(() => {
+        this.submitting = false;
       });
     },
     restore(event) {
+      if (this.submitting) {
+        return;
+      }
+
+      this.submitting = true;
       axios.post(event.path).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      }).finally(() => {
+        this.submitting = false;
       });
     },
     async exportFormResponse(event) {
