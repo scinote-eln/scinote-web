@@ -32,6 +32,6 @@ describe Comment, type: :model do
   describe 'Validations' do
     it { should validate_presence_of :message }
     it { should validate_length_of(:message).is_at_most(Constants::TEXT_MAX_LENGTH) }
-    it { should validate_presence_of :user }
+    it { should belong_to(:user) }
   end
 end
