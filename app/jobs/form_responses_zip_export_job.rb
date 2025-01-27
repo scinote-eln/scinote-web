@@ -27,19 +27,29 @@ class FormResponsesZipExportJob < ZipExportJob
 
     workbook.add_worksheet(name: 'Form submissions') do |sheet|
       sheet.add_row build_header(form)
+      form_fields = form.form_fields
+
       form.form_responses.where(status: 'submitted').find_each do |form_response|
+        form_field_values = form_response.form_field_values
         sheet.add_row do |row|
           row.add_cell breadcrumbs(form_response)
-          row.add_cell form_response.submitted_at.to_s
+          row.add_cell form_response.submitted_at.utc.to_s
           row.add_cell form_response.submitted_by.full_name
-          form_response.form_field_values.joins(:form_field).where(latest: true).order(:position).each do |form_field_value|
-            if form_field_value.value_in_range?
-              row.add_cell form_field_value.formatted
+          form_fields.each do |form_field|
+            form_field_value = form_field_values.find_by(form_field_id: form_field.id, latest: true)
+            if form_field_value.present?
+              if form_field_value.value_in_range?
+                row.add_cell form_field_value.formatted
+              else
+                row.add_cell form_field_value.formatted, style: warning_bg_style
+              end
+              row.add_cell form_field_value.submitted_at.utc.to_s
+              row.add_cell form_field_value.submitted_by.full_name
             else
-              row.add_cell form_field_value.formatted, style: warning_bg_style
+              row.add_cell ''
+              row.add_cell ''
+              row.add_cell ''
             end
-            row.add_cell form_field_value.submitted_at.to_s
-            row.add_cell form_field_value.submitted_by.full_name
           end
         end
       end
