@@ -33,7 +33,7 @@ class FormResponsesZipExportJob < ZipExportJob
         form_field_values = form_response.form_field_values
         sheet.add_row do |row|
           row.add_cell breadcrumbs(form_response)
-          row.add_cell form_response.submitted_at.utc.to_s
+          row.add_cell form_response.submitted_at&.utc.to_s
           row.add_cell form_response.submitted_by.full_name
           form_fields.each do |form_field|
             form_field_value = form_field_values.find_by(form_field_id: form_field.id, latest: true)
@@ -43,7 +43,7 @@ class FormResponsesZipExportJob < ZipExportJob
               else
                 row.add_cell form_field_value.formatted, style: warning_bg_style
               end
-              row.add_cell form_field_value.submitted_at.utc.to_s
+              row.add_cell form_field_value.submitted_at&.utc.to_s
               row.add_cell form_field_value.submitted_by.full_name
             else
               row.add_cell ''
