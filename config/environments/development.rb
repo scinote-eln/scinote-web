@@ -42,14 +42,16 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = ENV['ACTIVESTORAGE_SERVICE'] || :local
 
+  Rails.application.routes.default_url_options = {
+    host: ENV['WEB_SERVER_URL'] || ENV['MAIL_SERVER_URL'] || 'localhost'
+  }
+
+  config.action_mailer.default_url_options = { host: Rails.application.routes.default_url_options[:host] }
+
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
   config.action_mailer.perform_caching = false
-
-  Rails.application.routes.default_url_options = {
-    host: Rails.application.secrets.mail_server_url
-  }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -104,7 +106,6 @@ Rails.application.configure do
   else
     config.x.new_team_on_signup = false
   end
-  config.hosts << "dev.scinote.test"
 
   # Automatically update js-routes file
   # when routes.rb is changed
