@@ -10,6 +10,6 @@ class FormMultipleChoiceFieldValue < FormFieldValue
   end
 
   def formatted
-    value.join('|')
+    value&.join('|')
   end
 end
