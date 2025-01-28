@@ -85,6 +85,8 @@ class ProtocolsImporterV2
           create_step_table(step, element_params['elnTable'])
         when 'Checklist'
           create_checklist(step, element_params['checklist'])
+        when 'FormResponse'
+          create_form(step, element_params['form'])
         end
       end
 
@@ -180,6 +182,15 @@ class ProtocolsImporterV2
         checklist: checklist
       )
       item_pos += 1
+    end
+  end
+
+  def create_form(step, params)
+    form = @team.forms.find_by(id: params['id'])
+
+    if form.present?
+      form_response = FormResponse.create!(form: form, created_by: @user)
+      create_in_step!(step, form_response)
     end
   end
 

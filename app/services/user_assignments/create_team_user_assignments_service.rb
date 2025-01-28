@@ -21,11 +21,7 @@ module UserAssignments
 
     def create_public_projects_assignments
       @team.projects.visible.find_each do |project|
-        UserAssignments::ProjectGroupAssignmentJob.perform_later(
-          @team,
-          project,
-          @assigned_by&.id
-        )
+        UserAssignments::ProjectGroupAssignmentJob.perform_later(project, @assigned_by&.id, @user.id)
       end
     end
 

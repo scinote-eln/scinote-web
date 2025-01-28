@@ -28,7 +28,7 @@
                   <strong v-if="includeNumbers" class="step-element-number" :data-e2e="`e2e-TX-${dataE2e}-element${index + 1}-position`">
                     {{ index + 1 }}
                   </strong>
-                  <i v-if="element.attributes.icon" class="fas" :class="element.attributes.icon" :data-e2e="`e2e-IC-${dataE2e}-element${index + 1}`"></i>
+                  <i v-if="element.attributes.icon" class="sn-icon" :class="element.attributes.icon" :data-e2e="`e2e-IC-${dataE2e}-element${index + 1}`"></i>
                   <span
                     :title="nameWithFallbacks(element)"
                     v-if="nameWithFallbacks(element)"

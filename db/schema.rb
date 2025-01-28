@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_28_105317) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_09_074134) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -222,6 +222,49 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_28_105317) do
     t.index ["last_modified_by_id"], name: "index_experiments_on_last_modified_by_id"
     t.index ["project_id"], name: "index_experiments_on_project_id"
     t.index ["restored_by_id"], name: "index_experiments_on_restored_by_id"
+  end
+
+  create_table "form_fields", force: :cascade do |t|
+    t.bigint "form_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
+    t.string "name"
+    t.string "description"
+    t.integer "position", null: false
+    t.jsonb "data", default: {}, null: false
+    t.boolean "required", default: false, null: false
+    t.boolean "allow_not_applicable", default: false, null: false
+    t.string "uid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_form_fields_on_created_by_id"
+    t.index ["form_id"], name: "index_form_fields_on_form_id"
+    t.index ["last_modified_by_id"], name: "index_form_fields_on_last_modified_by_id"
+  end
+
+  create_table "forms", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.bigint "team_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
+    t.bigint "parent_id"
+    t.bigint "published_by_id"
+    t.datetime "published_on"
+    t.boolean "archived", default: false, null: false
+    t.datetime "archived_on"
+    t.datetime "restored_on"
+    t.bigint "archived_by_id"
+    t.bigint "restored_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["archived_by_id"], name: "index_forms_on_archived_by_id"
+    t.index ["created_by_id"], name: "index_forms_on_created_by_id"
+    t.index ["last_modified_by_id"], name: "index_forms_on_last_modified_by_id"
+    t.index ["parent_id"], name: "index_forms_on_parent_id"
+    t.index ["published_by_id"], name: "index_forms_on_published_by_id"
+    t.index ["restored_by_id"], name: "index_forms_on_restored_by_id"
+    t.index ["team_id"], name: "index_forms_on_team_id"
   end
 
   create_table "hidden_repository_cell_reminders", force: :cascade do |t|
@@ -1409,6 +1452,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_28_105317) do
   add_foreign_key "experiments", "users", column: "created_by_id"
   add_foreign_key "experiments", "users", column: "last_modified_by_id"
   add_foreign_key "experiments", "users", column: "restored_by_id"
+  add_foreign_key "form_fields", "forms"
+  add_foreign_key "form_fields", "users", column: "created_by_id"
+  add_foreign_key "form_fields", "users", column: "last_modified_by_id"
+  add_foreign_key "forms", "forms", column: "parent_id"
+  add_foreign_key "forms", "teams"
+  add_foreign_key "forms", "users", column: "archived_by_id"
+  add_foreign_key "forms", "users", column: "created_by_id"
+  add_foreign_key "forms", "users", column: "last_modified_by_id"
+  add_foreign_key "forms", "users", column: "published_by_id"
+  add_foreign_key "forms", "users", column: "restored_by_id"
   add_foreign_key "hidden_repository_cell_reminders", "repository_cells"
   add_foreign_key "hidden_repository_cell_reminders", "users"
   add_foreign_key "label_templates", "teams"

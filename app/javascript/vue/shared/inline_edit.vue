@@ -43,8 +43,8 @@
       :data-e2e="`e2e-TX-${dataE2e}`"
       @click="enableEdit($event)"
     >
-      <span :class="{'truncate': singleLine }" :title="sa_value || placeholder" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
-      <span :class="{'truncate': singleLine}" :title="newValue || placeholder" v-else>{{newValue || placeholder}}</span>
+      <span :class="{'truncate py-1': singleLine }" :title="sa_value || placeholder" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
+      <span :class="{'truncate py-1': singleLine}" :title="newValue || placeholder" v-else>{{newValue || placeholder}}</span>
     </div>
 
     <div

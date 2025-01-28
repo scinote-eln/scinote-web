@@ -3,6 +3,8 @@
 module FileIconsHelper
   def wopi_file?(asset)
     file_ext = asset.file_name.split('.').last&.downcase
+    return true if ENV['WOPI_TEST_ENABLED'] == 'true' && %w(wopitest wopitestx).include?(file_ext)
+
     %w(ods xls xlsb xlsm xlsx odp pot potm potx pps ppsm
        ppsx ppt pptm pptx doc docm docx dot dotm dotx odt rtf).include?(file_ext)
   end
@@ -37,11 +39,11 @@ module FileIconsHelper
   def file_extension_icon(asset, report = false)
     file_ext = asset.file_name.split('.').last&.downcase
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-      image_link = 'icon_small/docx_file.svg'
+      image_link = 'icon_small/word-document.svg'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-      image_link = 'icon_small/xslx_file.svg'
+      image_link = 'icon_small/excel-document.svg'
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
-      image_link = 'icon_small/pptx_file.svg'
+      image_link = 'icon_small/powerpoint-document.svg'
     elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'marvinjs'
       image_link = 'icon_small/marvinjs_file.svg'
     elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'gene_sequence'
@@ -64,11 +66,11 @@ module FileIconsHelper
   def file_application_url(asset)
     file_ext = asset.file_name.split('.').last&.downcase
     if Constants::FILE_TEXT_FORMATS.include?(file_ext)
-      'icon_small/docx_file.svg'
+      'icon_small/word-document.svg'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-      'icon_small/xslx_file.svg'
+      'icon_small/excel-document.svg'
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
-      'icon_small/pptx_file.svg'
+      'icon_small/powerpoint-document.svg'
     end
   end
 

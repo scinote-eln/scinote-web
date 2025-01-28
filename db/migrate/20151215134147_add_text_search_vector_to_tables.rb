@@ -5,8 +5,6 @@ class AddTextSearchVectorToTables < ActiveRecord::Migration[4.2]
   def change
     add_column :tables, :data_vector, :tsvector
 
-    if db_adapter_is? "PostgreSQL" then
-      add_index :tables, :data_vector, using: "gin"
-    end
+    add_index :tables, :data_vector, using: "gin"
   end
 end

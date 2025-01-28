@@ -174,7 +174,6 @@ module SearchableModel
     end
 
     def self.create_query_clause(attrs, index, negate, query_clauses, value_hash, phrase, current_operator)
-      phrase = sanitize_sql_like(phrase)
       exact_match = phrase =~ /^".*"$/
       like = exact_match ? '~' : 'ILIKE'
 
@@ -205,9 +204,9 @@ module SearchableModel
           if DATA_VECTOR_ATTRIBUTES.include?(attribute)
             new_phrase = Regexp.escape(new_phrase.gsub(/[!()&|:<]/, ' ').strip).split(/\s+/)
             new_phrase.map! { |t| "#{t}:*" } unless exact_match
-            new_phrase = new_phrase.join('&').tr('\'', '"')
+            new_phrase = sanitize_sql_like(new_phrase.join('&').tr('\'', '"'))
           else
-            new_phrase = Regexp.escape(new_phrase)
+            new_phrase = sanitize_sql_like(Regexp.escape(new_phrase))
             new_phrase = exact_match ? "(^|\\s)#{new_phrase}(\\s|$)" : "%#{new_phrase}%"
           end
 

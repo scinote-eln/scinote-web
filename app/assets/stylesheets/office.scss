@@ -1,0 +1,23 @@
+.sn-icon-file-word::before,
+.sn-icon-file-powerpoint::before,
+.sn-icon-file-excel::before {
+  background-repeat: no-repeat;
+  background-size: 1rem auto;
+  content: '' !important;
+  display: inline-block;
+  height: 1rem;
+  vertical-align: middle;
+  width: 1rem;
+}
+
+.sn-icon-file-word::before {
+  background-image: url('/images/office/word-document.svg');
+}
+
+.sn-icon-file-powerpoint::before {
+  background-image: url('/images/office/powerpoint-document.svg');
+}
+
+.sn-icon-file-excel::before {
+  background-image: url('/images/office/excel-document.svg');
+}

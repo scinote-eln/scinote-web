@@ -1,0 +1,26 @@
+ <div class="content-pane flexible">
+  <div class="content-header sticky-header">
+    <div class="title-row">
+      <h1>
+        <% if params[:view_mode] == 'archived' %>
+          <%= t('labels.archived')%>
+          <%= t('forms.index.head_title_archived') %>
+        <% else %>
+          <%= t('forms.index.head_title') %>
+        <% end %>
+    </div>
+  </div>
+  <div id="formsTable" class="fixed-content-body"
+  >
+    <forms-table
+      actions-url="<%= actions_toolbar_forms_url %>"
+      data-source="<%= forms_path(format: :json) %>"
+      create-url="<%= forms_path if can_create_forms?(current_team)  %>"
+      user-roles-url="<%= user_roles_forms_path %>"
+      active-page-url="<%= forms_path(view_mode: :active) %>"
+      archived-page-url="<%= forms_path(view_mode: :archived) %>"
+      current-view-mode="<%= params[:view_mode] || :active %>"
+    />
+  </div>
+</div>
+<%= javascript_include_tag 'vue_form_table' %>

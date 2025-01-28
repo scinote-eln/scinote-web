@@ -72,6 +72,8 @@ module ProtocolsExporterV2
           xml << table_xml(element.table)
         when Checklist
           xml << checklist_xml(element)
+        when FormResponse
+          xml << form_xml(element.form)
         end
 
         xml << "</stepElement>\n"
@@ -134,5 +136,9 @@ module ProtocolsExporterV2
       "<fileType>#{asset.content_type}</fileType>\n" \
       "<fileMetadata><!--[CDATA[  #{asset.file.metadata.except('version', 'restored_from_version').to_json}  ]]--></fileMetadata>\n" \
       "</asset>\n"
+  end
+
+  def form_xml(form)
+    "<form id=\"#{form.id}\" guid=\"#{get_guid(form.id)}\"> </form>\n" \
   end
 end

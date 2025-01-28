@@ -289,6 +289,7 @@ en:
         repository: "Inventories"
         repository_item: "Items"
         stock_consumption: "Stock consumption"
+        form: "Form"
 
   head:
     title: "SciNote | %{title}"
@@ -350,6 +351,7 @@ en:
     projects: "Projects"
     repositories: "Inventories"
     templates: "Templates"
+    forms: "Forms"
     protocol: "Protocol"
     label: "Label"
     items: "Items"
@@ -1053,7 +1055,104 @@ en:
       select_user_role: "Please select a user role."
       add_user_generic_error: "An error occurred. "
       can_add_user_to_project: "Can not add user to the project."
-
+  forms:
+    published: "Published"
+    draft: "Draft"
+    default_name: "Untitled form"
+    restored:
+      success_flash: "<strong>%{number}</strong> form(s) successfully restored."
+      error_flash: "Failed to restore form(s)."
+    archived:
+      success_flash: "<strong>%{number}</strong> form(s) successfully archived."
+      error_flash: "Failed to archive form(s)."
+    export:
+      title: "Export form data"
+      description: "You are about to export data from the selected form template. Only completed form submissions will be included in a .xlsx file. You will receive an <strong>email and a notification</strong> with the download link when the file is ready. For security reasons, the link will expire in 7 days."
+      export_button: "Export"
+      columns:
+        form_path: "Form path"
+        form_timestamp: "Timestamp of form submission (UTC)"
+        submitted_by: "Submitted by user"
+        form_field_timestamp: "Timestamp for %{name} (UTC)"
+        form_field_submitted_by: "User for %{name}"
+      values:
+        not_applicable: 'N/A'
+    publish:
+      title: "Publish form"
+      description_html: "<p>Publishing a form locks it for editing and makes it available for use in protocol steps. You can unpublish the form only if it isn't linked to any steps.</p><p>Are you sure you want to publish the form?</p>"
+    fields:
+      mark_as_na: "Mark as N/A"
+      add_text: "Add text"
+      add_number: "Add number"
+      from: "From"
+      to: "To"
+      add_date: "Add date"
+      add_datetime: "Add date & time"
+      not_valid_range: "Range is not valid"
+      no_selection: "No options selected"
+    index:
+      head_title: "Forms"
+      head_title_archived: "Archived forms"
+      toolbar:
+        new: 'New form'
+        access: 'Access'
+        archive: 'Archive'
+        restore: 'Restore'
+      table:
+        name: 'Form name'
+        code: 'ID'
+        versions: 'Versions'
+        used_in_protocols: 'Used in protocols'
+        access: 'Access'
+        published_by: 'Published by'
+        published_on: 'Published on'
+        updated_on: 'Updated on'
+    show:
+      build_form: 'Build your form'
+      add_block: 'Add a block'
+      title_label: Title (required)
+      title_placeholder: 'Add a title'
+      title_empty_error: 'Title cannot be empty'
+      title_too_long_error: 'Title is too long (maximum number is %{limit} characters)'
+      description_label: Description
+      description_placeholder: 'Add a description'
+      description_too_long_error: 'Description is too long (maximum number is %{limit} characters)'
+      required_label: 'Required'
+      mark_as_na: 'Mark as N/A'
+      mark_as_na_explanation: 'Allow user to mark the field as Not-applicable.'
+      delete: 'Delete'
+      edit_form: 'Edit form'
+      test_form: 'Test form'
+      publish: 'Publish'
+      unpublish: 'Unpublish'
+      dropdown_options_label: 'Dropdown options'
+      dropdown_options_placeholder_html: "Enter dropdown list options one per line:\nDropdown list option\nDropdown list option\n..."
+      checklist_options_label: 'Checklist options'
+      checklist_options_placeholder_html: "Enter checklist items one per line:\nChecklist item\nChecklist item\n..."
+      unit_label: 'Unit'
+      unit_placeholder: 'Add a unit'
+      time_label: 'Include time'
+      range_label: 'Include range'
+      no_block: 'Add your first form block'
+      field_too_long_error: 'Field is too long (maximum number is %{limit} characters)'
+      options_too_many_error: 'Too many options (maximum number is %{limit} options)'
+      validations:
+        response_validation:
+          title: 'Response validation'
+          min_placeholder: 'Add min. value'
+          max_placeholder: 'Add max. value'
+          message_placeholder: 'Add a custom warning message'
+      blocks:
+        TextField: 'Text'
+        NumberField: 'Number'
+        SingleChoiceField: 'Single choice'
+        MultipleChoiceField: 'Multiple choice'
+        DatetimeField: 'Date & Time'
+    response:
+      submit: 'Submit form'
+      submitted_on: 'Submitted on'
+      not_submitted: 'Not submitted yet'
+      by: 'by'
   label_templates:
     types:
       fluics_label_template: 'Fluics'
@@ -1923,9 +2022,9 @@ en:
       success_flash: "File result successfully deleted."
     wopi_open_file: "Open in %{app}"
     wopi_edit_file: "Open in %{app}"
-    wopi_word: "MS Word online"
-    wopi_excel: "Excel online"
-    wopi_powerpoint: "PowerPoint online"
+    wopi_word: "Microsoft Word for the Web"
+    wopi_excel: "Microsoft Excel for the Web"
+    wopi_powerpoint: "Microsoft PowerPoint for the Web"
     error_flash: 'Something went wrong! Please try again later.'
 
   result_tables:
@@ -3012,7 +3111,7 @@ en:
       text: "text"
       table: "table"
       asset: "file"
-    wupi_file_editing:
+    wopi_file_editing:
       started: "editing started"
       finished: "editing finished"
     file_editing:
@@ -3621,7 +3720,7 @@ en:
       clone_btn: "Copy"
       import: "Import"
       import_eln: "SciNote file (.eln)"
-      import_docx: "MS Word (.docx)"
+      import_docx: "Microsoft Word (.docx)"
       beta: "BETA"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
@@ -3761,6 +3860,7 @@ en:
         well_plate: 'Well plate'
         text: 'Text'
         checklist: 'Checklist'
+        form: 'Form'
         attachment: 'File'
         add_file: 'From your PC'
         checklist_item: 'Add new'
@@ -3800,6 +3900,15 @@ en:
           description_1: 'You’re about to delete a content block from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
           description_2: 'Are you sure you want to delete it?'
           confirm: 'Delete forever'
+        form_modal:
+          title: "Insert form"
+          no_forms_title: "No available forms found"
+          description: "Select a form you want to add to your protocol"
+          label: "Form"
+          placeholder: "Select a form"
+          no_forms: "Create and publish one or request access from your team."
+          add_form: "Add form"
+          take_me_there: "Take me there"
         move_element:
           step:
             title: Move to different step
@@ -4027,19 +4136,19 @@ en:
     placeholder:
       modified_label: "Modified:"
       size_label: "Size: %{size}"
-    wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word Online.'
-    wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
-    wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint Online.'
+    wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word for the web.'
+    wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel for the web.'
+    wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint for the web.'
     create_wopi_file:
-      button_text: 'New MS Office file'
+      button_text: 'New Microsoft Office file'
       li_text: "Office file"
-      modal_title: 'Create new Microsoft Office Online document'
+      modal_title: 'Create new Microsoft Office document'
       text_field_label: 'Document name'
       type_select_label: 'Document type'
       text_field_placeholder: 'Enter document name...'
-      ms_word: 'Word<br/>Online'
-      ms_excel: 'Excel<br/>Online'
-      ms_powerpoint: 'PowerPoint<br/>Online'
+      ms_word: 'Microsoft<br/>Word'
+      ms_excel: 'Microsoft<br/>Excel'
+      ms_powerpoint: 'Microsoft<br/>PowerPoint'
       create_document_button: 'Create document'
       errors:
         forbidden: 'You do not have permission to add files.'
@@ -4199,6 +4308,8 @@ en:
       experiment_tooltip_inherit: "This role was inherited from the experiment."
       mymodule: "Task"
       mymodule_tooltip: "This role was set on this task"
+      form_tooltip: "This role was set on this form."
+      form_tooltip_inherit: "This role was inherited from the form."
       public_members_dropdown:
         title: "Members of team %{team}"
 
@@ -4228,6 +4339,12 @@ en:
         edit_modal:
           title: "Manage access for %{resource_name}"
           description: "Changing a role will take away any permissions inherited from the project or the experiment. New permissions will apply only to this specific task."
+    forms:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
   zip_export:
     repositories_modal_label: 'Export inventory'
     notification_title: 'Your requested export package is ready!'
@@ -4490,6 +4607,7 @@ en:
     locations: "Locations"
     label_printer: "Label printer"
     fluics_printer: "Fluics printer"
+    forms: "Forms"
 
   Add: "Add"
   Asset: "File"

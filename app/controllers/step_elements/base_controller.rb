@@ -5,7 +5,6 @@ module StepElements
     before_action :load_step_and_protocol
     before_action :check_manage_permissions
 
-
     def move_targets
       render json: { targets: @protocol.steps.order(:position).where.not(id: @step.id).map{|i| [i.id, i.name] } }
     end

@@ -139,7 +139,15 @@ class Extends
     RepositoryStockValue
   )
 
-  STI_PRELOAD_CLASSES = %w(LinkedRepository SoftLockedRepository)
+  STI_PRELOAD_CLASSES = %w(
+    LinkedRepository
+    SoftLockedRepository
+    FormTextFieldValue
+    FormNumberFieldValue
+    FormDatetimeFieldValue
+    FormMultipleChoiceFieldValue
+    FormSingleChoiceFieldValue
+  )
 
   # Array of preload relations used in search query for repository rows
   REPOSITORY_ROWS_PRELOAD_RELATIONS = []
@@ -190,7 +198,7 @@ class Extends
 
   ACTIVITY_SUBJECT_TYPES = %w(
     Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
-    ProjectFolder Asset Step LabelTemplate StorageLocation StorageLocationRepositoryRow
+    ProjectFolder Asset Step LabelTemplate StorageLocation StorageLocationRepositoryRow Form
   ).freeze
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
@@ -520,7 +528,33 @@ class Extends
     task_step_restore_asset_version: 327,
     task_result_restore_asset_version: 328,
     repository_column_restore_asset_version: 329,
-    protocol_step_restore_asset_version: 330
+    protocol_step_restore_asset_version: 330,
+    form_access_granted: 331,
+    form_access_changed: 332,
+    form_access_revoked: 333,
+    form_access_granted_all_team_members: 334,
+    form_access_changed_all_team_members: 335,
+    form_access_revoked_all_team_members: 336,
+    form_created: 337,
+    form_archived: 338,
+    form_restored: 339,
+    form_published: 340,
+    form_name_changed: 341,
+    form_block_added: 342,
+    form_block_edited: 343,
+    form_block_deleted: 344,
+    form_block_rearranged: 345,
+    export_form_responses: 346,
+    task_step_form_added: 347,
+    task_step_form_deleted: 348,
+    task_step_form_moved: 349,
+    task_step_form_field_edited: 350,
+    task_step_form_field_submitted: 351,
+    task_step_form_field_reopened: 352,
+    protocol_step_form_added: 353,
+    protocol_step_form_deleted: 354,
+    protocol_step_form_moved: 355
+
   }
 
   ACTIVITY_GROUPS = {
@@ -529,7 +563,7 @@ class Extends
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            148, 166],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
-                    184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327],
+                    184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327, *347..352],
     task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
@@ -538,15 +572,16 @@ class Extends
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
-                          *237..240, *253..256, *279..283, 300, 304, 307, 330],
+                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355],
     team: [92, 94, 93, 97, 104, 244, 245],
     label_templates: [*216..219],
     storage_locations: [*309..315],
     container_storage_locations: [*316..322, 326],
-    storage_location_repository_rows: [*323..325]
+    storage_location_repository_rows: [*323..325],
+    forms: [331, 332, 333, 334, 335, 336, *337..346]
   }
 
-  TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository).freeze
+  TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository Form).freeze
 
   SHARED_OBJECTS_PERMISSION_LEVELS = {
     not_shared: 0,
@@ -678,6 +713,7 @@ class Extends
     search/index
     storage_locations/index
     storage_locations/show
+    forms/show
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
@@ -706,6 +742,8 @@ class Extends
     ProjectList_archived_state
     ProtocolTemplates_active_state
     ProtocolTemplates_archived_state
+    FormsTable_active_state
+    FormsTable_archived_state
     ReportTemplates_active_state
     ReportTemplates_archived_state
     Repositories_active_state

@@ -387,6 +387,8 @@ class User < ApplicationRecord
   end
 
   def self.from_omniauth(auth)
+    return nil unless auth.provider.present? && auth.uid.present?
+
     includes(:user_identities)
       .where(
         'user_identities.provider=? AND user_identities.uid=?',

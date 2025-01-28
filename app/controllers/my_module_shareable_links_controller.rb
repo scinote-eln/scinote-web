@@ -73,10 +73,10 @@ class MyModuleShareableLinksController < ApplicationController
     }
 
     @all_rows_count = datatable_service.all_count
+    @filtered_rows_count = datatable_service.filtered_count
     @columns_mappings = datatable_service.mappings
 
     @repository_rows = datatable_service.repository_rows.page(page).per(per_page)
-    @filtered_rows_count = @repository_rows.load.take&.filtered_count || 0
 
     render 'repository_rows/simple_view_index'
   end
@@ -88,11 +88,11 @@ class MyModuleShareableLinksController < ApplicationController
     datatable_service = RepositorySnapshotDatatableService.new(@repository_snapshot, params, nil, @my_module, preload_cells: false)
 
     @all_rows_count = datatable_service.all_count
+    @filtered_rows_count = datatable_service.filtered_count
     @columns_mappings = datatable_service.mappings
 
     @repository = @repository_snapshot
     @repository_rows = datatable_service.repository_rows.page(page).per(per_page)
-    @filtered_rows_count = @repository_rows.load.take&.filtered_count || 0
 
     render 'repository_rows/simple_view_index'
   end

@@ -1,11 +1,20 @@
 @font-face {
   font-family: 'SN-icon-font';
+<<<<<<< HEAD
   src:  url('fonts/SN-icon-font.eot?kflgh8');
   src:  url('fonts/SN-icon-font.eot?kflgh8#iefix') format('embedded-opentype'),
     url('fonts/SN-icon-font.woff2?kflgh8') format('woff2'),
     url('fonts/SN-icon-font.ttf?kflgh8') format('truetype'),
     url('fonts/SN-icon-font.woff?kflgh8') format('woff'),
     url('fonts/SN-icon-font.svg?kflgh8#SN-icon-font') format('svg');
+=======
+  src:  url('fonts/SN-icon-font.eot?5dc4pr');
+  src:  url('fonts/SN-icon-font.eot?5dc4pr#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?5dc4pr') format('woff2'),
+    url('fonts/SN-icon-font.ttf?5dc4pr') format('truetype'),
+    url('fonts/SN-icon-font.woff?5dc4pr') format('woff'),
+    url('fonts/SN-icon-font.svg?5dc4pr#SN-icon-font') format('svg');
+>>>>>>> develop
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -244,15 +253,6 @@
 }
 .sn-icon-files:before {
   content: "\e948";
-}
-.sn-icon-file-word:before {
-  content: "\e949";
-}
-.sn-icon-file-powerpoint:before {
-  content: "\e94a";
-}
-.sn-icon-file-excel:before {
-  content: "\e94b";
 }
 .sn-icon-export:before {
   content: "\e94c";
@@ -632,3 +632,18 @@
 .sn-icon-text-Italic:before {
   content: "\e9c9";
 }
+<<<<<<< HEAD
+=======
+.sn-icon-forms:before {
+  content: "\e9ca";
+}
+.sn-icon-value:before {
+  content: "\e9cb";
+}
+.sn-icon-choice-multiple:before {
+  content: "\e9cc";
+}
+.sn-icon-choice-single:before {
+  content: "\e9cd";
+}
+>>>>>>> develop

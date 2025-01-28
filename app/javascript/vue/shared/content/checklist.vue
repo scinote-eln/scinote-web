@@ -77,7 +77,7 @@
     <div v-else class="text-sn-grey ml-12">
       {{ i18n.t("protocols.steps.checklist.empty_checklist") }}
     </div>
-    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
+    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @close="closeDeleteModal"/>
     <moveElementModal v-if="movingElement"
                       :parent_type="element.attributes.orderable.parent_type"
                       :targets_url="element.attributes.orderable.urls.move_targets_url"

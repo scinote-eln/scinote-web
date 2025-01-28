@@ -669,10 +669,7 @@ class Protocol < ApplicationRecord
   def destroy_contents
     # Calculate total space taken by the protocol
     st = space_taken
-    steps.order(position: :desc).each do |step|
-      step.step_orderable_elements.delete_all
-      step.destroy!
-    end
+    steps.order(position: :desc).destroy_all
 
     # Release space taken by the step
     team.release_space(st)

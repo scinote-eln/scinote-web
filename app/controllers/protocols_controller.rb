@@ -925,7 +925,7 @@ class ProtocolsController < ApplicationController
   def load_team_and_type
     @current_team = current_team
     # :public, :private or :archive
-    @type = (params[:type] || 'active').to_sym
+    @type = (params[:view_mode] || 'active').to_sym
   end
 
   def check_view_all_permissions
@@ -1101,30 +1101,22 @@ class ProtocolsController < ApplicationController
   end
 
   def set_breadcrumbs_items
+    archived = params[:view_mode] || (@protocol&.archived? && 'archived')
+
     @breadcrumbs_items = []
-    archived_branch = params[:type] == 'archived' || @protocol&.archived?
-
-    @breadcrumbs_items.push({
-                              label: t('breadcrumbs.templates'),
-                              archived: archived_branch
-                            })
-
-    @breadcrumbs_items.push({
-                              label: t('breadcrumbs.protocols'),
-                              url: archived_branch ? protocols_path(type: :archived) : protocols_path,
-                              archived: archived_branch
-                            })
+    @breadcrumbs_items.push({ label: t('breadcrumbs.templates') })
+    @breadcrumbs_items.push(
+      { label: t('breadcrumbs.protocols'), url: protocols_path(view_mode: archived ? 'archived' : nil) }
+    )
 
     if @protocol
-      @breadcrumbs_items.push({
-                                label: @protocol.name,
-                                url: protocol_path(@protocol),
-                                archived: archived_branch
-                              })
+      @breadcrumbs_items.push(
+        { label: @protocol.name, url: protocol_path(@protocol) }
+      )
     end
 
     @breadcrumbs_items.each do |item|
-      item[:label] = "(A) #{item[:label]}" if item[:archived]
+      item[:label] = "#{t('labels.archived')} #{item[:label]}" if archived
     end
   end
 end

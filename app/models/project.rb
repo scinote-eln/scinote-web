@@ -343,11 +343,7 @@ class Project < ApplicationRecord
   def auto_assign_project_members
     return if skip_user_assignments
 
-    UserAssignments::ProjectGroupAssignmentJob.perform_now(
-      team,
-      self,
-      last_modified_by&.id || created_by&.id
-    )
+    UserAssignments::ProjectGroupAssignmentJob.perform_now(self, last_modified_by&.id || created_by&.id)
   end
 
   def bulk_assignment?
