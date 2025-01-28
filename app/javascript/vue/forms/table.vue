@@ -144,9 +144,10 @@ export default {
       }
 
       this.submitting = true;
+
       axios.post(action.path).then((response) => {
         window.location.href = response.data.data.attributes.urls.show;
-      }).finally(() => {
+      }).catch(() => {
         this.submitting = false;
       });
     },
