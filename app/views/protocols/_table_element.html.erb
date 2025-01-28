@@ -24,7 +24,9 @@
           <td style="text-align:center"> <%= content[:rows_title][row_index] %></td>
           <% line.each_with_index do |el, column_index| %>
             <% if content[:cells_attributes][[row_index, column_index]].present? %>
-              <td <%= content[:cells_attributes][[row_index, column_index]].map { |key, value| "#{key.to_s.dasherize}=#{value}" }.join(" ") %>>
+              <td style="<%= content[:cells_attributes][[row_index, column_index]][:style] %>"
+                  colspan="<%= content[:cells_attributes][[row_index, column_index]][:colspan] %>"
+                  rowspan="<%= content[:cells_attributes][[row_index, column_index]][:rowspan] %>">
             <% else %>
               <td>
             <% end %>
