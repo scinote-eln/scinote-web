@@ -62,6 +62,10 @@ Canaid::Permissions.register_for(Team) do
   can :manage_label_templates do |user, team|
     team.permission_granted?(user, TeamPermissions::LABEL_TEMPLATES_MANAGE)
   end
+
+  can :create_forms do |user, team|
+    team.permission_granted?(user, TeamPermissions::FORMS_CREATE)
+  end
 end
 
 Canaid::Permissions.register_for(ProjectFolder) do

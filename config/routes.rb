@@ -320,6 +320,10 @@ Rails.application.routes.draw do
         put :update_default_public_user_role, on: :member
       end
 
+      resources :forms, defaults: { format: 'json' } do
+        put :update_default_public_user_role, on: :member
+      end
+
       resources :experiments, only: %i(show update edit)
       resources :my_modules, only: %i(show update edit)
     end
@@ -609,6 +613,13 @@ Rails.application.routes.draw do
           post :reorder, on: :collection
         end
       end
+      resources :form_responses, controller: 'step_elements/form_responses', only: %i(create destroy) do
+        member do
+          post :submit
+          post :reset
+          post :move
+        end
+      end
       member do
         get 'elements'
         get 'attachments'
@@ -850,6 +861,32 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :forms, only: %i(index show create update) do
+      member do
+        post :publish
+        post :unpublish
+        post :export_form_responses
+      end
+
+      collection do
+        get :actions_toolbar
+        post :archive
+        post :restore
+        get :user_roles
+        get :published_forms
+      end
+
+      resources :form_fields, only: %i(create update destroy) do
+        collection do
+          post :reorder
+        end
+      end
+    end
+
+    resources :form_responses, only: [] do
+      resources :form_field_values, only: %i(create)
+    end
+
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
     resource :search, only: [], controller: :search do
@@ -974,7 +1011,7 @@ Rails.application.routes.draw do
                   resources :user_assignments,
                             only: %i(index show update),
                             controller: :task_user_assignments
-                  resources :task_inventory_items, only: %i(index show update),
+                  resources :task_inventory_items, only: %i(index show update create destroy),
                             path: 'items',
                             as: :items
                   resources :task_users, only: %i(index show),

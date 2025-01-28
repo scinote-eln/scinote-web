@@ -78,7 +78,7 @@ gem 'wicked_pdf'
 gem 'zip-zip' # will load compatibility for old rubyzip API.
 
 gem 'aws-sdk-lambda'
-gem 'aws-sdk-rails'
+gem 'aws-sdk-rails', '~> 4'
 gem 'aws-sdk-s3'
 gem 'delayed_job_active_record'
 gem 'image_processing'

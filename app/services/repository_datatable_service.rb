@@ -8,7 +8,7 @@ end
 
 class RepositoryDatatableService
   include MyModulesHelper
-  attr_reader :repository_rows, :all_count, :mappings
+  attr_reader :repository_rows, :all_count, :filtered_count, :mappings
 
   PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by
                           assigned relationships updated_on updated_by).freeze
@@ -144,6 +144,14 @@ class RepositoryDatatableService
 
     repository_rows = repository_rows.where(id: advanced_search(repository_rows)) if @params[:advanced_search].present?
 
+    @filtered_count =
+      if @assigned_view
+        repository_rows.joins(:my_module_repository_rows)
+                       .where(my_module_repository_rows: { my_module_id: @my_module }).count
+      else
+        repository_rows.where(archived: !@params[:archived].nil? && @params[:archived]).count
+      end
+
     repository_rows.joins('LEFT OUTER JOIN "users" "created_by" ON "created_by"."id" = "repository_rows"."created_by_id"')
                    .joins('LEFT OUTER JOIN "users" "last_modified_by" ON "last_modified_by"."id" = "repository_rows"."last_modified_by_id"')
                    .joins('LEFT OUTER JOIN "users" "archived_by" ON "archived_by"."id" = "repository_rows"."archived_by_id"')
@@ -151,7 +159,6 @@ class RepositoryDatatableService
                    .select('MAX("created_by"."full_name") AS created_by_full_name')
                    .select('MAX("last_modified_by"."full_name") AS last_modified_by_full_name')
                    .select('MAX("archived_by"."full_name") AS archived_by_full_name')
-                   .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
                    .group('repository_rows.id')
   end
 

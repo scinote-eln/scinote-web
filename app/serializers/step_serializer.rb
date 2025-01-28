@@ -103,6 +103,8 @@ class StepSerializer < ActiveModel::Serializer
         upload_attachment_url: upload_attachment_step_path(object),
         reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)
       })
+
+      urls_list[:create_form_response_url] = step_form_responses_path(object) if Form.forms_enabled?
     end
 
     urls_list

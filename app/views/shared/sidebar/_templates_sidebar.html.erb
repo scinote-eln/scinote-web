@@ -1,5 +1,5 @@
 <ul class="sidebar-branch">
-  <% if templates_view_mode_archived?(type: @type, protocol: @protocol) %>
+  <% if params[:view_mode] == 'archived' %>
     <li class="sidebar-leaf">
       <%= link_to protocols_path, class: "sidebar-link back-button" do %>
         <%= t("protocols.index.back_to_active_protocols") %>

@@ -61,6 +61,10 @@ class UserRole < ApplicationRecord
     predefined.find_by(name: UserRole.public_send('viewer_role').name)
   end
 
+  def self.find_predefined_technician_role
+    predefined.find_by(name: UserRole.public_send('technician_role').name)
+  end
+
   def has_permission?(permission)
     permissions.include?(permission)
   end

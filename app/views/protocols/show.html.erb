@@ -14,10 +14,10 @@
                         config: @inline_editable_title_config
                       } %>
         <% else %>
-          <% if @protocol.archived %>
-            <span><%= t('labels.archived')%></span>&nbsp;
-          <% end %>
           <div class="name-readonly-placeholder">
+            <% if @protocol.archived %>
+              <span class="w-12"><%= t('labels.archived')%></span>&nbsp;
+            <% end %>
             <% if @protocol.in_repository_draft? %>
               <span title="<%= t('protocols.draft_name', name: @protocol.name ) %>"><%= t('protocols.draft_name', name: @protocol.name ) %></span>
             <% else %>

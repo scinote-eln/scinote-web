@@ -33,16 +33,8 @@ module LeftMenuBarHelper
         url: "#",
         name: t('left_menu_bar.templates'),
         icon: 'sn-icon-protocols-templates',
-        active: protocols_are_selected? || label_templates_are_selected?,
-        submenu: [{
-          url: protocols_path,
-          name: t('left_menu_bar.protocol'),
-          active: protocols_are_selected?
-        }, {
-          url: label_templates_path,
-          name: t('left_menu_bar.label'),
-          active: label_templates_are_selected?
-        }]
+        active: protocols_are_selected? || label_templates_are_selected? || forms_are_selected?,
+        submenu: template_submenu
       }, {
         url: reports_path,
         name: t('left_menu_bar.reports'),
@@ -79,6 +71,10 @@ module LeftMenuBarHelper
     controller_name == 'protocols'
   end
 
+  def forms_are_selected?
+    controller_name == 'forms'
+  end
+
   def label_templates_are_selected?
     controller_name == 'label_templates'
   end
@@ -94,5 +90,28 @@ module LeftMenuBarHelper
 
   def activities_are_selected?
     controller_name == 'global_activities'
+  end
+
+  def template_submenu
+    submenu = [
+      {
+        url: protocols_path,
+        name: t('left_menu_bar.protocol'),
+        active: protocols_are_selected?
+      }, {
+        url: label_templates_path,
+        name: t('left_menu_bar.label'),
+        active: label_templates_are_selected?
+      }
+    ]
+
+    if Form.forms_enabled?
+      submenu.unshift({
+                        url: forms_path,
+                        name: t('left_menu_bar.forms'),
+                        active: forms_are_selected?
+                      })
+    end
+    submenu
   end
 end

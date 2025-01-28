@@ -1,10 +1,10 @@
-<div class="content-pane flexible reports-new">
+<div class="content-pane flexible reports-new" data-e2e="e2e-CO-reports-wizard">
   <div class="reports-new-header">
     <div class="sci-input-container report-name-container">
-      <input type="text" class="sci-input-field report-name" placeholder="<%= t("projects.reports.new.report_name_placeholder") %>" value="<%= @report.name %>"></input>
+      <input type="text" class="sci-input-field report-name" placeholder="<%= t("projects.reports.new.report_name_placeholder") %>" value="<%= @report.name %>" data-e2e="e2e-IF-reports-wizard-title"></input>
 
     </div>
-    <button class="btn btn-secondary cancel-button" data-toggle="modal" data-target="#reportWizardExitWarning">
+    <button class="btn btn-secondary cancel-button" data-toggle="modal" data-target="#reportWizardExitWarning" data-e2e="e2e-BT-reports-wizard-cancel">
       <%= t("general.cancel") %>
     </button>
   </div>
@@ -54,7 +54,7 @@
       <% end %>
     </div>
     <div class="next-button-container">
-      <button class="btn btn-primary continue-button" disabled>
+      <button class="btn btn-primary continue-button" disabled data-e2e="e2e-BT-reports-wizard-continue">
         <%= t("projects.reports.new.continue_button") %>
       </button>
       <% if @edit %>
@@ -79,7 +79,7 @@
           </ul>
         </div>
       <% else %>
-        <button class="btn btn-primary generate-button"  data-create-url="<%= reports_path %>" disabled>
+        <button class="btn btn-primary generate-button"  data-create-url="<%= reports_path %>" disabled data-e2e="e2e-BT-reports-wizard-generate">
           <%= t("projects.reports.new.generate_button") %>
         </button>
       <% end %>
