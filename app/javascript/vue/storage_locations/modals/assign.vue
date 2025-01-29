@@ -40,7 +40,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="!validObject">
+            <button class="btn btn-primary" type="submit" :disabled="submitting || !validObject">
               {{ i18n.t(`storage_locations.show.assign_modal.${assignMode}_action`) }}
             </button>
           </div>
@@ -102,7 +102,7 @@ export default {
       rowId: this.selectedRow,
       containerId: this.selectedContainer,
       position: this.selectedPosition,
-      saving: false
+      submitting: false
     };
   },
   components: {
@@ -112,21 +112,21 @@ export default {
   },
   methods: {
     submit() {
-      if (this.saving) {
+      if (this.submitting) {
         return;
       }
 
-      this.saving = true;
+      this.submitting = true;
 
       axios.post(this.actionUrl, {
         repository_row_id: this.rowId,
         metadata: { position: this.position?.map((pos) => parseInt(pos, 10)) }
       }).then(() => {
         this.$emit('close');
-        this.saving = false;
+        this.submitting = false;
       }).catch((error) => {
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.errors.join(', '), 'danger');
-        this.saving = false;
       });
     }
   }

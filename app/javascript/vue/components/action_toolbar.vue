@@ -4,7 +4,7 @@
        :class="{ 'sn-action-toolbar--button-overflow': buttonOverflow }"
        :style="`width: ${width}px; bottom: ${bottomOffset}px; transform: translateX(${leftOffset}px)`"
        :data-e2e="`e2e-CO-actionToolbar`">
-    <div class="sn-action-toolbar__actions flex gap-4">
+    <div class="sn-action-toolbar__actions flex gap-4" :class="{ 'disable-click': submitting }">
       <div v-if="loading && !actions.length" class="sn-action-toolbar__action">
         <a class="rounded flex items-center py-1.5 px-2.5 bg-transparent text-transparent no-underline"></a>
       </div>
@@ -94,7 +94,8 @@ export default {
       width: 0,
       bottomOffset: 0,
       leftOffset: 0,
-      buttonOverflow: false
+      buttonOverflow: false,
+      submitting: false
     };
   },
   created() {
@@ -185,6 +186,8 @@ export default {
           break;
         case 'request':
           event.stopPropagation();
+          this.submitting = true;
+
           $.ajax({
             type: action.request_method,
             url: action.path,
@@ -194,6 +197,7 @@ export default {
           }).fail((data) => {
             HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'danger');
           }).always(() => {
+            this.submitting = false;
             if (this.reloadCallback) this.reloadCallback();
           });
           break;

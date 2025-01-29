@@ -3,6 +3,8 @@
 module ActiveStorageFileUtil
   # Method expects instance of ActiveStorage::Blob as argument
   def previewable_document?(blob)
+    return false if blob.blank?
+
     previewable = Constants::PREVIEWABLE_FILE_TYPES.include?(blob.content_type)
 
     file_extension = blob.filename.extension

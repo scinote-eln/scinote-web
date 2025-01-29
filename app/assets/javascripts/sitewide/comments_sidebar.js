@@ -61,6 +61,8 @@ var CommentsSidebar = (function() {
 
   function initSendButton() {
     $(document).on('click', `${SIDEBAR} .send-comment, ${SIDEBAR} .update-comment`, function() {
+      $(this).addClass('disable-click');
+
       var requestUrl;
       var requestType;
       var updateMode = $(SIDEBAR).find('.sidebar-footer').hasClass('update');
@@ -94,9 +96,11 @@ var CommentsSidebar = (function() {
           }
           $('.error-container').empty();
           updateCounter();
+          $(this).removeClass('disable-click');
         },
         error: (result) => {
           $('.error-container').text(result.responseJSON.errors.message);
+          $(this).removeClass('disable-click');
         }
       });
     });

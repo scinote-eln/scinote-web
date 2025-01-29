@@ -30,7 +30,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button type="submit" :disabled="!validName" class="btn btn-primary">
+            <button type="submit" :disabled="submitting || !validName" class="btn btn-primary">
               {{ i18n.t('experiments.edit.modal_create') }}
             </button>
           </div>
@@ -55,6 +55,7 @@ export default {
     return {
       name: this.experiment.name,
       description: this.experiment.description,
+      submitting: false
     };
   },
   computed: {
@@ -69,6 +70,8 @@ export default {
   mixins: [modalMixin],
   methods: {
     submit() {
+      this.submitting = true;
+
       axios.patch(this.experiment.urls.update, {
         experiment: {
           name: this.name,
@@ -76,8 +79,10 @@ export default {
         },
       }).then((response) => {
         this.$emit('update');
+        this.submitting = false;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.message, 'danger');
       });
     },

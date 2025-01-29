@@ -277,6 +277,7 @@ var protocolsIO = function() {
   function initFormSubmits() {
     var modal = $('#protocol-preview-modal');
     modal.find('button[data-action=import_protocol]').off('click').on('click', function() {
+      $(this).attr('disabled', true);
       var form = modal.find('form');
       var hiddenField = form.find('#protocol_protocol_type');
       hiddenField.attr('value', $(this).data('import_type'));
