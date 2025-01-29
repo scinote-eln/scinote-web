@@ -258,4 +258,8 @@ module ApplicationHelper
 
     Extends::COLORED_BACKGROUND_ACTIONS.include?("#{controller_name}/#{action_name}")
   end
+
+  def application_logo_url
+    '/images/scinote_logo.svg'
+  end
 end

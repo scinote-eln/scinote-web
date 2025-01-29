@@ -1,5 +1,10 @@
 <template>
   <div class="sci--navigation--top-menu-container">
+    <div class="h-6 mr-2">
+    <a title="SciNote" href="/">
+      <img :src="logoUrl" alt="SciNote" class="h-full block">
+    </a>
+  </div>
     <div v-if="currentTeam" class="w-64" :data-e2e="'e2e-DD-topMenu-teams'">
       <SelectDropdown
         :value="currentTeam"
@@ -97,7 +102,8 @@ export default {
     unseenNotificationsUrl: String,
     quickSearchUrl: String,
     teamsUrl: String,
-    usersUrl: String
+    usersUrl: String,
+    logoUrl: String
   },
   data() {
     return {
