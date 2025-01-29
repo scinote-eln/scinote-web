@@ -19,11 +19,14 @@
   });
 
   function restoreMyModules(url, ids) {
-    $.post(url, { my_modules_ids: ids, view: 'cards' });
+    $.post(url, { my_modules_ids: ids, view: 'cards' }, () => {
+      window.location.reload();
+    });
   }
 
   function initRestoreMyModules() {
     $('#module-archive').on('click', '#restoreTask', (e) => {
+      $('#restoreTask').addClass('disable-click');
       e.stopPropagation();
       restoreMyModules(e.currentTarget.dataset.url, selectedTasks);
     });
@@ -46,6 +49,8 @@
         });
 
         $('#modal-move-modules').on('click', 'button[data-action="confirm"]', () => {
+          $('#modal-move-modules button[data-action="confirm"]').addClass('disable-click');
+
           const moveParams = {
             to_experiment_id: $('#modal-move-modules').find('.selectpicker').val(),
             my_module_ids: selectedTasks
@@ -54,6 +59,7 @@
             HelperModule.flashAlertMsg(data.message, 'success');
             window.location.reload();
           }).fail((data) => {
+            $('#modal-move-modules button[data-action="confirm"]').removeClass('disable-click');
             HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
           });
           $('#modal-move-modules').modal('hide');

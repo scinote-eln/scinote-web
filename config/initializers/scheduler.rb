@@ -34,6 +34,13 @@ if ENV['WORKER'].present?
     RepositoryItemDateReminderJob.perform_now
   end
 
+  if ENV['WOPI_ENABLED'] == 'true'
+    # Clean up expired WOPI tokens
+    schedule_task(scheduler, '1d') do
+      Token.where(ttl: ...Time.now.utc.to_i).delete_all
+    end
+  end
+
   schedule_task(scheduler, '1d') do
     NotificationCleanupJob.perform_now
   end

@@ -25,7 +25,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="cancel" data-e2e="e2e-BT-publishProtocol-cancel">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-primary" @click="confirm" data-e2e="e2e-BT-publishProtocol-publish">{{ i18n.t('protocols.publish_modal.publish')}}</button>
+          <button class="btn btn-primary" @click="confirm" :disabled="submitting" data-e2e="e2e-BT-publishProtocol-publish">{{ i18n.t('protocols.publish_modal.publish')}}</button>
         </div>
       </div>
     </div>
@@ -40,6 +40,11 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      submitting: false
+    };
+  },
   mounted() {
     $(this.$refs.modal).modal('show');
     $(this.$refs.modal).on('hidden.bs.modal', () => {
@@ -51,6 +56,7 @@ export default {
     confirm() {
       $(this.$refs.modal).modal('hide');
       this.$emit('publish', this.protocol.attributes.version_comment);
+      this.submitting = true;
     },
     cancel() {
       $(this.$refs.modal).modal('hide');

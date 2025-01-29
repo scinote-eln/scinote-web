@@ -293,7 +293,7 @@ class WopiController < ActionController::Base
         @can_write = can_manage_step?(@assoc)
         @close_url = protocols_url(only_path: false, host: ENV['WOPI_USER_HOST'])
 
-        @breadcrump_brand_name = 'Projects'
+        @breadcrumb_brand_name = @protocol.name
         @breadcrumb_brand_url = root_url(only_path: false, host: ENV['WOPI_USER_HOST'])
         @breadcrumb_folder_name = 'Protocol managament'
       end

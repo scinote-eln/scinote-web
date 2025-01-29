@@ -731,10 +731,13 @@ var MyModuleRepositories = (function() {
       });
 
     UPDATE_REPOSITORY_MODAL.on('click', '.downstream-action', function() {
+      $(this).addClass('disable-click');
       submitUpdateRepositoryRecord({ downstream: true });
     }).on('click', '.task-action', function() {
+      $(this).addClass('disable-click');
       submitUpdateRepositoryRecord({ downstream: false });
     }).on('hidden.bs.modal', function() {
+      UPDATE_REPOSITORY_MODAL.find('.downstream-action, .task-action').removeClass('disable-click');
       FULL_VIEW_MODAL.focus();
     }).on('click', '.next-step', function() {
       UPDATE_REPOSITORY_MODAL.find('.next-step, .description-1, .rows-list-container').addClass('hidden');
@@ -763,7 +766,7 @@ var MyModuleRepositories = (function() {
 
   function openAssignRecordsModal(downstream) {
     var assignUrl = FULL_VIEW_MODAL.data('assign-url-modal');
-    $.get(assignUrl, { selected_rows: SELECTED_ROWS, downstream: downstream }, function(data) {
+    $.get(assignUrl, { selected_rows: Object.keys(SELECTED_ROWS), downstream: downstream }, function(data) {
       UPDATE_REPOSITORY_MODAL.find('.modal-content').html(data.html);
       UPDATE_REPOSITORY_MODAL.data('update-url', data.update_url);
       UPDATE_REPOSITORY_MODAL.modal('show');

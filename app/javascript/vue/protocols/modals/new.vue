@@ -41,7 +41,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal" data-e2e="e2e-BT-newProtocolModal-cancel">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="(visible && !defaultRole) || !validName" data-e2e="e2e-BT-newProtocolModal-create">
+            <button class="btn btn-primary" type="submit" :disabled="submitting || (visible && !defaultRole) || !validName" data-e2e="e2e-BT-newProtocolModal-create">
               {{ i18n.t('protocols.new_protocol_modal.create_new') }}
             </button>
           </div>
@@ -91,11 +91,14 @@ export default {
       visible: false,
       defaultRole: null,
       userRoles: [],
-      error: null
+      error: null,
+      submitting: false
     };
   },
   methods: {
     submit() {
+      this.submitting = true;
+
       axios.post(this.createUrl, {
         protocol: {
           name: this.name,
@@ -105,7 +108,9 @@ export default {
       }).then(() => {
         this.error = null;
         this.$emit('create');
+        this.submitting = false;
       }).catch((error) => {
+        this.submitting = false;
         this.error = error.response.data.error;
       });
     },

@@ -99,7 +99,8 @@ export default {
           headerName: this.i18n.t('label_templates.index.created_at'),
           sortable: true
         }
-      ]
+      ],
+      submitting: false
     };
   },
   computed: {
@@ -133,41 +134,70 @@ export default {
   },
   methods: {
     setDefault(action) {
+      if (this.submitting) return;
+
+      this.submitting = true;
+
       axios.post(action.path).then((response) => {
         this.reloadingTable = true;
+        this.submitting = false;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
     },
     duplicate(action, rows) {
+      if (this.submitting) return;
+
+      this.submitting = true;
+
       axios.post(action.path, { selected_ids: rows.map((row) => row.id) }).then((response) => {
         this.reloadingTable = true;
+        this.submitting = false;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
     },
     createTemplate(action) {
+      if (this.submitting) return;
+
+      this.submitting = true;
+
       axios.post(action.path).then((response) => {
         window.location.href = response.data.redirect_url;
       });
     },
     syncFluicsLabels(action) {
+      if (this.submitting) return;
+
+      this.submitting = true;
+
       axios.post(action.path).then((response) => {
         this.reloadingTable = true;
+        this.submitting = false;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
     },
     async deleteTemplates(action, rows) {
+      if (this.submitting) return;
+
       const ok = await this.$refs.deleteModal.show();
+
       if (ok) {
+        this.submitting = true;
+
         axios.delete(action.path, { data: { selected_ids: rows.map((row) => row.id) } }).then((response) => {
           this.reloadingTable = true;
+          this.submitting = false;
           HelperModule.flashAlertMsg(response.data.message, 'success');
         }).catch((error) => {
+          this.submitting = false;
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
         });
       }

@@ -180,10 +180,11 @@ export default {
       type: Object
     }
   },
-  mounted() {
-    if (this.searchValue.length > 0) {
-      this.openSearch();
-    }
+  data() {
+    return {
+      showSearch: false,
+      showColumnsModal: false
+    };
   },
   components: {
     MenuDropdown,
@@ -239,17 +240,16 @@ export default {
       return this.columnDefs.filter((column) => column.sortable);
     }
   },
-  data() {
-    return {
-      showSearch: false,
-      showColumnsModal: false
-    };
-  },
   watch: {
     searchValue() {
       if (this.searchValue.length > 0) {
         this.openSearch();
       }
+    }
+  },
+  mounted() {
+    if (this.searchValue.length > 0) {
+      this.openSearch();
     }
   },
   methods: {

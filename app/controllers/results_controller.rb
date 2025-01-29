@@ -76,9 +76,10 @@ class ResultsController < ApplicationController
   end
 
   def assets
-    render json: @result.assets,
+    render json: @result.assets.preload(:preview_image_attachment, file_attachment: :blob, result: { my_module: { experiment: :project, user_assignments: %i(user user_role) } }),
            each_serializer: AssetSerializer,
-           user: current_user
+           user: current_user,
+           managable_result: can_manage_result?(@result)
   end
 
   def upload_attachment

@@ -143,20 +143,27 @@
     $(document).on(
       'ajax:success',
       "[data-id='destroy-user-team-form']",
-      function() {
-        // Hide modal & clear its contents
-        var modal = $('#destroy-user-team-modal');
-        var modalHeading = modal.find('.modal-header').find('.modal-title');
-        var modalBody = modal.find('.modal-body');
-        modalHeading.text('');
-        modalBody.html('');
+      function(_e, jobData, _status, _xhr) {
+        // Wait for removal job to complete
+        var jobStatusInterval = setInterval(() => {
+          $.get(`/jobs/${jobData.job_id}/status`, function(data) {
+            if (data.status === 'done') {
+              // Reload the whole table
+              HelperModule.flashAlertMsg(jobData.success_message, 'success');
+              usersDatatable.ajax.reload();
+              animateSpinner(null, false);
+              $('#destroy-user-team-modal').modal('hide');
+              clearInterval(jobStatusInterval);
+            }
 
-        // Hide the modal
-        modal.modal('hide');
-
-        animateSpinner(null, false);
-        // Reload the whole table
-        location.reload();
+            if (data.status === 'failed') {
+              HelperModule.flashAlertMsg(I18n.t('users.settings.user_teams.general_error'), 'danger');
+              animateSpinner(null, false);
+              $('#destroy-user-team-modal').modal('hide');
+              clearInterval(jobStatusInterval);
+            }
+          })
+        }, 2000);
       }
     ).on(
       'ajax:error',

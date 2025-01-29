@@ -36,7 +36,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit">
+            <button class="btn btn-primary" type="submit" :disabled="submitting">
               {{ i18n.t('projects.index.modal_move_folder.submit') }}
             </button>
           </div>
@@ -66,6 +66,7 @@ export default {
       selectedFolderId: null,
       foldersTree: [],
       query: '',
+      submitting: false
     };
   },
   components: {
@@ -115,6 +116,7 @@ export default {
       this.selectedFolderId = folderId;
     },
     submit() {
+      this.submitting = true;
       axios.post(this.moveToUrl, {
         destination_folder_id: this.selectedFolderId || 'root_folder',
         movables: this.selectedObjects.map((obj) => (
@@ -125,8 +127,10 @@ export default {
         )),
       }).then((response) => {
         this.$emit('move');
+        this.submitting = false;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.message, 'danger');
       });
     },

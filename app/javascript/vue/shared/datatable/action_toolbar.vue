@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 w-full rounded bg-sn-light-grey min-h-[68px]" data-e2e="e2e-CO-actionToolbar">
+  <div class="p-4 w-full rounded bg-sn-light-grey min-h-[68px]" :class="{ 'disable-click': submitting }" data-e2e="e2e-CO-actionToolbar">
     <div class="flex gap-4 items-center h-full">
       <div v-if="loading && !actions.length" class="sn-action-toolbar__action">
         <a class="rounded flex items-center py-1.5 px-2.5 bg-transparent text-transparent no-underline"></a>
@@ -42,6 +42,7 @@ export default {
       reloadCallback: null,
       loaded: false,
       loading: true,
+      submitting: false
     };
   },
   watch: {
@@ -72,8 +73,8 @@ export default {
       switch (action.type) {
         case 'emit':
           event.preventDefault();
+          this.submitting = true;
           this.$emit('toolbar:action', action);
-          // do nothing, this is handled by legacy code based on the button class
           break;
         case 'modal':
           // do nothihg, boostrap modal handled by data-toggle="modal" and data-target

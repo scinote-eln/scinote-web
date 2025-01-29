@@ -461,23 +461,17 @@ class User < ApplicationRecord
     Rails.logger.warn "WOPI: searching by token #{token}"
     User.joins(:tokens)
         .where(tokens: { token: token })
-        .find_by('tokens.ttl = 0 OR tokens.ttl > ?', Time.now.to_i)
+        .find_by('tokens.ttl > ?', Time.now.utc.to_i)
   end
 
   def get_wopi_token
     # WOPI does not have a good way to request a new token,
     # so a new token should be provided each time this is called,
     # while keeping any old tokens as long as they have not yet expired
-    tokens = Token.where(user_id: id).distinct
-
-    tokens.each do |token|
-      token.delete if token.ttl < Time.now.to_i
-    end
-
-    token_string =  "#{Devise.friendly_token(20)}-#{id}"
-    # WOPI uses millisecond TTLs
-    ttl = (Time.now + 1.day).to_i
-    wopi_token = Token.create(token: token_string, ttl: ttl, user_id: id)
+    token_string = "#{Devise.friendly_token(20)}-#{id}"
+    # WOPI uses millisecond TTLs and 10 hours TTL is recommended by the vendor
+    ttl = Time.now.utc.to_i + Constants::WOPI_TOKEN_VALIDITY
+    wopi_token = tokens.create!(token: token_string, ttl: ttl)
     Rails.logger.warn("WOPI: generating new token #{wopi_token.token}")
     wopi_token
   end

@@ -8,7 +8,8 @@ class ZebraLabelTemplate < LabelTemplate
       height_mm: 12.7,
       content: Extends::DEFAULT_LABEL_TEMPLATE[:zpl],
       unit: 0,
-      density: 12
+      density: 12,
+      predefined: true
     )
   end
 
@@ -19,7 +20,8 @@ class ZebraLabelTemplate < LabelTemplate
       height_mm: 12.7,
       content: Extends::DEFAULT_LABEL_TEMPLATE_203DPI[:zpl],
       unit: 0,
-      density: 12
+      density: 12,
+      predefined: true
     )
   end
 end
