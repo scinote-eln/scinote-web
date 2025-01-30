@@ -19,6 +19,10 @@ describe ReportsController, type: :controller do
 
   describe 'POST create' do
     context 'in JSON format' do
+      before do
+        allow(Reports::PdfJob).to receive(:perform_later)
+      end
+
       let(:action) { post :create, params: params, format: :json }
       let(:params) do
         { project_id: project.id,
@@ -42,11 +46,14 @@ describe ReportsController, type: :controller do
           .to(change { Activity.count })
       end
     end
-  # Temporary disabled due to webpack problems
-  end if false
+  end
 
   describe 'PUT update' do
     context 'in JSON format' do
+      before do
+        allow(Reports::PdfJob).to receive(:perform_later)
+      end
+
       let(:action) { put :update, params: params, format: :json }
       let(:params) do
         { project_id: project.id,
@@ -69,8 +76,7 @@ describe ReportsController, type: :controller do
           .to(change { Activity.count })
       end
     end
-  # Temporary disabled due to webpack problems
-  end if false
+  end
 
   describe 'DELETE destroy' do
     let(:action) { delete :destroy, params: params }
