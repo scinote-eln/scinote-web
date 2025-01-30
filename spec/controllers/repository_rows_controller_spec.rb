@@ -45,11 +45,11 @@ describe RepositoryRowsController, type: :controller do
     end
 
     it 'successful response' do
+      allow_any_instance_of(ActionView::Helpers::AssetUrlHelper).to receive(:asset_path)
       get :show, format: :json, params: { repository_id: repository.id, id: repository_row.id }
       expect(response).to have_http_status(:success)
     end
-  # Temporary disabled due to webpack problems
-  end if false
+  end
 
   context '#index' do
     before do
