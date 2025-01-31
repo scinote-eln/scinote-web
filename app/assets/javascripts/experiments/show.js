@@ -81,16 +81,19 @@
         dropdownSelector.init(myModuleUserSelector, {
           closeOnSelect: true,
           labelHTML: true,
-          tagClass: 'my-module-user-tags',
           tagLabel: (data) => {
-            return `<img class="img-responsive block-inline" src="${data.params.avatar_url}" alt="${data.label}"/>
-                    <span class="user-full-name block-inline">${data.label}</span>`;
+            return `<div class="flex items-center gap-2">
+                      <img class="img-responsive block-inline" src="${data.params.avatar_url}" alt="${data.label}"/>
+                      <span class="user-full-name block-inline">${data.label}</span>
+                    </div>`;
           },
           optionLabel: (data) => {
             if (data.params.avatar_url) {
-              return `<span class="global-avatar-container" style="margin-top: 10px">
-                      <img src="${data.params.avatar_url}" alt="${data.label}"/></span>
-                      <span style="margin-left: 10px">${data.label}</span>`;
+              return `<div class="flex items-center gap-2">
+                        <span class="global-avatar-container">
+                        <img src="${data.params.avatar_url}" alt="${data.label}"/></span>
+                        <span style="margin-left: 10px">${data.label}</span>
+                      </div>`;
             }
 
             return data.label;
