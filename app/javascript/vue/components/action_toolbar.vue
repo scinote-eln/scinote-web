@@ -75,6 +75,7 @@
 
 <script>
 import { debounce } from '../shared/debounce.js';
+import axios from '../../packs/custom_axios.js';
 
 export default {
   name: 'ActionToolbar',
@@ -105,8 +106,8 @@ export default {
     this.debouncedFetchActions = debounce((params) => {
       this.params = params;
 
-      $.get(`${this.actionsUrl}?${new URLSearchParams(this.params).toString()}`, (data) => {
-        this.actions = data.actions;
+      axios.post(this.actionsUrl, this.params).then((response) => {
+        this.actions = response.data.actions;
         this.loading = false;
         this.setButtonOverflow();
         if (this.actionsLoadedCallback) this.$nextTick(this.actionsLoadedCallback);

@@ -32,7 +32,7 @@ export default {
   name: 'ActionToolbar',
   props: {
     actionsUrl: { type: String, required: true },
-    actionsMethod: { type: String, default: 'get' },
+    actionsMethod: { type: String, default: 'post' },
     params: { type: Object },
   },
   data() {
