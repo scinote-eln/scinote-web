@@ -64,7 +64,7 @@ Rails.application.routes.draw do
         get :template_tags
         get :zpl_preview
         post :sync_fluics_templates
-        get :actions_toolbar
+        post :actions_toolbar
       end
     end
 
@@ -202,7 +202,7 @@ Rails.application.routes.draw do
               defaults: { format: 'json' }
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
-          get 'actions_toolbar'
+          post 'actions_toolbar'
           get :list
           get :rows_list
         end
@@ -279,7 +279,7 @@ Rails.application.routes.draw do
       end
       collection do
         get :project_contents
-        get 'actions_toolbar'
+        post 'actions_toolbar'
       end
     end
     get 'reports/datatable', to: 'reports#datatable'
@@ -387,7 +387,7 @@ Rails.application.routes.draw do
         get 'users_filter'
         post 'archive_group'
         post 'restore_group'
-        get 'actions_toolbar'
+        post 'actions_toolbar'
         get :user_roles
       end
     end
@@ -412,7 +412,7 @@ Rails.application.routes.draw do
         get 'inventory_assigning_experiment_filter'
         get 'clone_modal', action: :clone_modal
         get 'move_modal', action: :move_modal
-        get 'actions_toolbar'
+        post 'actions_toolbar'
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
       end
@@ -458,7 +458,7 @@ Rails.application.routes.draw do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
 
       collection do
-        get 'actions_toolbar'
+        post 'actions_toolbar'
         get 'inventory_assigning_my_module_filter'
       end
 
@@ -703,7 +703,7 @@ Rails.application.routes.draw do
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
         get 'protocolsio', to: 'protocols#protocolsio_index'
-        get 'actions_toolbar', to: 'protocols#actions_toolbar'
+        post 'actions_toolbar', to: 'protocols#actions_toolbar'
         get 'user_roles', to: 'protocols#user_roles'
       end
     end
@@ -769,7 +769,7 @@ Rails.application.routes.draw do
         end
 
         collection do
-          get :actions_toolbar
+          post :actions_toolbar
         end
 
         resources :repository_row_connections, only: %i(create destroy) do
@@ -839,7 +839,7 @@ Rails.application.routes.draw do
 
     resources :storage_locations, only: %i(index create destroy update show) do
       collection do
-        get :actions_toolbar
+        post :actions_toolbar
         get :tree
       end
       member do
@@ -869,7 +869,7 @@ Rails.application.routes.draw do
       end
 
       collection do
-        get :actions_toolbar
+        post :actions_toolbar
         post :archive
         post :restore
         get :user_roles
