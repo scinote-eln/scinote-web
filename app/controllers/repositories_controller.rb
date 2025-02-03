@@ -9,6 +9,7 @@ class RepositoriesController < ApplicationController
   include RepositoriesDatatableHelper
   include MyModulesHelper
 
+  before_action :switch_team_with_param, only: %i(index show)
   before_action :load_repository, except: %i(index create create_modal sidebar archive restore actions_toolbar
                                              export_modal export_repositories list)
   before_action :load_repositories, only: %i(index list)
