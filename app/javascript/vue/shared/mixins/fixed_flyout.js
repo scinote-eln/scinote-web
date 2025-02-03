@@ -2,7 +2,8 @@ export default {
   data() {
     return {
       overflowContainerScrollTop: 0,
-      overflowContainerScrollLeft: 0
+      overflowContainerScrollLeft: 0,
+      openDirection: 'down'
     };
   },
   watch: {
@@ -72,11 +73,13 @@ export default {
       }
 
       if (bottom < top) {
+        this.openDirection = 'top';
         flyout.style.bottom = `${bottom}px`;
         flyout.style.top = 'unset';
         flyout.style.boxShadow = '0px -16px 32px 0px rgba(16, 24, 40, 0.07)';
         flyout.style.maxHeight = `${screenHeight - bottom - 25}px`;
       } else {
+        this.openDirection = 'down';
         flyout.style.top = `${top}px`;
         flyout.style.bottom = 'unset';
         flyout.style.boxShadow = '';
