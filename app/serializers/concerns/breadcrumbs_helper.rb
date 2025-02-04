@@ -39,11 +39,12 @@ module BreadcrumbsHelper
       params = {
         id: subject.repository_id,
         landing_page: true,
-        row_id: subject.id
+        row_id: subject.id,
+        team: subject.repository.team_id
       }
       params[:archived] = true if subject.archived
 
-      url = repository_path(params, team: subject.repository.team_id)
+      url = repository_path(params)
     when Report
       parent = subject.team
 
