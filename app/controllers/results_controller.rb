@@ -3,6 +3,7 @@
 class ResultsController < ApplicationController
   include Breadcrumbs
   include TeamsHelper
+
   before_action :load_my_module
   before_action :load_vars, only: %i(destroy elements assets upload_attachment archive restore destroy
                                      update_view_state update_asset_view_mode update duplicate)

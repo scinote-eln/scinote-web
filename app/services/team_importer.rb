@@ -273,8 +273,8 @@ class TeamImporter
         updated = true
       end
     end
-    text.scan(/\[@[\w+-@?! ]+~\w+\]/).each do |user_match|
-      orig_id_encoded = user_match.match(/\[@[\w+-@?! ]+~(\w+)\]/)[1]
+    text.scan(SmartAnnotations::TagToText::USER_REGEX).each do |user_match|
+      orig_id_encoded = user_match[1]
       orig_id = orig_id_encoded.base62_decode
       next unless @user_mappings[orig_id]
 
