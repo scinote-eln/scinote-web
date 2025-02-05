@@ -9,7 +9,10 @@ class ResultOrderableElementsController < ApplicationController
     ActiveRecord::Base.transaction do
       params[:result_orderable_element_positions].each do |id, position|
         result_element = @result.result_orderable_elements.find(id)
-        position_changed ||= result_element.insert_at(position)
+        if result_element.position != position
+          position_changed = true
+          result_element.update_column(:position, position)
+        end
       end
     end
 
