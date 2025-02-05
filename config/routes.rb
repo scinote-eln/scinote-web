@@ -497,7 +497,7 @@ Rails.application.routes.draw do
           get :full_view_table
           post :index_dt, defaults: { format: 'json' }
           post :export_repository
-          get :assign_repository_records_modal, as: :assign_modal
+          post :assign_repository_records_modal, as: :assign_modal
           get :update_repository_records_modal, as: :update_modal
           get :consume_modal
           post :update_consumption
