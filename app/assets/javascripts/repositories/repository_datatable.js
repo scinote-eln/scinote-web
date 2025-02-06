@@ -475,6 +475,10 @@ var RepositoryDatatable = (function(global) {
       })
       .on('ajax:complete', function() {
         exportModal.modal('hide');
+        if ($('.modal-backdrop').length) {
+          $('body').removeClass('modal-open');
+          $('.modal-backdrop').remove();
+        }
         animateSpinner(null, false);
       })
       .on('ajax:success', function(ev, data) {
