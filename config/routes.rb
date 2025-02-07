@@ -500,7 +500,7 @@ Rails.application.routes.draw do
           post :index_dt, defaults: { format: 'json' }
           post :export_repository
           post :assign_repository_records_modal, as: :assign_modal
-          get :update_repository_records_modal, as: :update_modal
+          post :update_repository_records_modal, as: :update_modal
           get :consume_modal
           post :update_consumption
         end

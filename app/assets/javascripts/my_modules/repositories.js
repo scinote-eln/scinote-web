@@ -747,7 +747,7 @@ var MyModuleRepositories = (function() {
 
   function openUpdateRecordsModal(downstream) {
     var updateUrl = FULL_VIEW_MODAL.data('update-url-modal');
-    $.get(updateUrl, { selected_rows: SELECTED_ROWS, downstream: downstream }, function(data) {
+    $.post(updateUrl, { selected_rows: SELECTED_ROWS, downstream: downstream }, function(data) {
       var assignList;
       var assignListScrollbar;
       var unassignList;
