@@ -4185,8 +4185,8 @@ en:
       body: "This file type appears to be executable and can potentially harm your computer. It cannot be opened with SciNote Edit. To open the file please download it manually."
       action: "I understand"
     update_version_modal:
-      title: "Update required"
-      body_text_html: "The current version of the SciNote Edit application is no longer supported. To ensure a seamless and secure user experience, we recommend updating to the latest version."
+      title: "Incompatible SciNote Edit version"
+      body_text_html: "Your current version of the SciNote Edit application is no longer supported. To ensure a seamless and secure experience, download the appropriate version by clicking the Download button below — it will automatically provide the correct version for you."
     edit_launching_application_modal:
       title: "Launching application"
       description: "%{file_name} will now open in %{application}. Saved changes in %{application} will automatically be synced in SciNote."
