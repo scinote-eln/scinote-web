@@ -8,7 +8,7 @@
     role="dialog"
     class="modal">
     <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content w-[400px] m-auto" v-click-outside="handleClickOutside">
+      <div class="modal-content w-[400px] m-auto">
 
         <!-- header -->
         <div class="modal-header h-[76px] flex !flex-col gap-[6px]">
@@ -36,20 +36,17 @@
             <div class="h-5 whitespace-nowrap overflow-auto">
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.inventory_section_title') }}</div>
             <div class="h-11">
-              <select-search ref="ChangeSelectedInventoryDropdownSelector" :value="selectedInventoryValue"
-                :options="inventoryOptions"
-                :isLoading="isLoadingInventories"
-                :lazyLoadEnabled="true"
-                :optionsUrl="inventoriesUrl"
-                optionsClassName="inventory-options"
-                :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_placeholder')"
-                :noOptionsPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_no_options_placeholder')"
-                :searchPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_placeholder')"
-                @update-options="updateInventories"
-                @reached-end="fetchInventories"
+              <SelectDropdown
+                :value="selectedInventoryValue"
+                ref="ChangeSelectedInventoryDropdownSelector"
+                :searchable="true"
                 @change="changeSelectedInventory"
+                :optionsUrl="inventoriesUrl"
+                :isLoading="isLoadingInventories"
+                :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_placeholder')"
+                :no-options-placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_no_options_placeholder')"
                 data-e2e="e2e-DD-repoItemRelationshipsMD-inventory"
-              ></select-search>
+              />
             </div>
           </div>
 
@@ -58,26 +55,20 @@
             <div class="h-5 whitespace-nowrap overflow-auto">
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.item_section_title') }}</div>
             <div class="h-11">
-              <ChecklistSearch
+              <SelectDropdown
                 ref="ChangeSelectedItemChecklistSelector"
-                :shouldUpdateWithoutValues="true"
-                :lazyLoadEnabled="true"
-                :withButtons="false"
-                :withEditCursor="false"
-                optionsClassName="item-options"
-                :optionsUrl="inventoryItemsUrl"
-                :options="itemOptions"
+                :key="selectedInventoryValue"
+                :value="selectedItemValues"
+                :searchable="true"
+                :multiple="true"
+                :withCheckboxes="true"
+                :optionsUrl="selectedInventoryValue && `${inventoryItemsUrl}?selected_repository_id=${selectedInventoryValue}`"
                 :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_item_placeholder')"
                 :noOptionsPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_item_no_options_placeholder')"
-                :initialSelectedValues="selectedItemValues"
-                :shouldUpdateOnToggleClose="true"
-                :params="itemParams"
-                @update-options="updateInventoryItems"
-                @update="selectedItemValues = $event"
-                @reached-end="() => fetchInventoryItems(selectedInventoryValue)"
-                :disabled="!this.selectedInventoryValue"
+                :disabled="!selectedInventoryValue"
+                @change="selectedItemValues = $event"
                 data-e2e="e2e-DC-repoItemRelationshipsMD-item"
-              ></ChecklistSearch>
+              />
             </div>
           </div>
 
@@ -87,15 +78,15 @@
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.relationship_section_title') }}
             </div>
             <div class="h-11">
-              <Select
+              <SelectDropdown
                 ref="ChangeSelectedRelationshipDropdownSelector"
                 class="hover:border-sn-sleepy-grey"
-                @change="selectedRelationshipValue = $event"
                 :value="selectedRelationshipValue"
                 :options="[['parent', 'Parent'], ['child', 'Child']]"
                 :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_relationship_placeholder')"
+                @change="selectedRelationshipValue = $event"
                 data-e2e="e2e-DD-repoItemRelationshipsMD-relationship"
-              ></Select>
+              />
             </div>
           </div>
         </div>
@@ -130,16 +121,12 @@
 </template>
 
 <script>
-import SelectSearch from '../shared/legacy/select_search.vue';
-import ChecklistSearch from '../shared/legacy/checklist_search.vue';
-import Select from '../shared/legacy/select.vue';
+import SelectDropdown from '../shared/select_dropdown.vue';
 
 export default {
   name: 'RepositoryItemRelationshipsModal',
   components: {
-    'select-search': SelectSearch,
-    ChecklistSearch,
-    Select
+    SelectDropdown
   },
   created() {
     window.repositoryItemRelationshipsModal = this;
@@ -170,49 +157,6 @@ export default {
     }
   },
   methods: {
-    handleClickOutside() {
-      this.selectedInventoryValue = null;
-      this.resetSelectedItemValues();
-    },
-    fetchInventories() {
-      if (!this.nextInventoriesPage) return;
-
-      this.loadingInventories = true;
-      $.ajax({
-        url: this.inventoriesUrl,
-        data: {
-          page: this.nextInventoriesPage
-        },
-        success: (result) => {
-          this.inventoryOptions = this.inventoryOptions.concat(result.data.map((val) => [val.id, val.name]));
-          this.loadingInventories = false;
-          this.nextInventoriesPage = result.next_page;
-        }
-      });
-    },
-    fetchInventoryItems(inventoryValue = null) {
-      if (!inventoryValue || !this.nextItemsPage) return;
-
-      this.loadingItems = true;
-      $.ajax({
-        url: this.inventoryItemsUrl,
-        data: {
-          page: this.nextItemsPage,
-          selected_repository_id: inventoryValue
-        },
-        success: (result) => {
-          this.itemOptions = this.itemOptions.concat(result.data.map((val) => ({ id: val.id, label: val.name })));
-          this.loadingItems = false;
-          this.nextItemsPage = result.next_page;
-        }
-      });
-    },
-    updateInventories(currentOptions, result) {
-      this.inventoryOptions = currentOptions.concat(result.data?.map((val) => [val.id, val.name]));
-    },
-    updateInventoryItems(currentOptions, result) {
-      this.itemOptions = currentOptions.concat(result.data.map(({ id, name }) => ({ id, label: name })));
-    },
     show(params = {}) {
       const {
         relation,
@@ -236,24 +180,10 @@ export default {
       if (['parent', 'child'].includes(relation)) {
         this.selectedRelationshipValue = relation;
       }
-      this.$nextTick(() => {
-        this.fetchInventories();
-      });
     },
     changeSelectedInventory(value) {
       if (value === this.selectedInventoryValue) return;
-
       this.selectedInventoryValue = value;
-      this.resetSelectedItemValues();
-      this.itemOptions = [];
-      this.nextItemsPage = 1;
-      if (value) {
-        this.loadingItems = true;
-        this.itemParams = { selected_repository_id: value };
-      }
-      this.$nextTick(() => {
-        this.fetchInventoryItems(value);
-      });
     },
     close() {
       Object.assign(this.$data, {
@@ -291,9 +221,6 @@ export default {
         }
       });
       this.close();
-    },
-    resetSelectedItemValues() {
-      this.selectedItemValues = [];
     }
   }
 };
