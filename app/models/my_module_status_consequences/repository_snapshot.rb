@@ -6,9 +6,9 @@ module MyModuleStatusConsequences
       true
     end
 
-    def before_forward_call(my_module)
+    def before_forward_call(my_module, created_by = nil)
       my_module.assigned_repositories.each do |repository|
-        ::RepositorySnapshot.create_preliminary!(repository, my_module)
+        ::RepositorySnapshot.create_preliminary!(repository, my_module, created_by)
       end
     end
 
