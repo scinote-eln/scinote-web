@@ -36,3 +36,9 @@ table.dataTable.table--resizable-columns {
     }
   }
 }
+
+div.dataTables_wrapper div.dataTables_processing {
+  // This overrides default library behaviour, where the 'Processing' element
+  // can go off-screen on large tables due to top: 50% positioning.
+  top: 150px !important;
+}
