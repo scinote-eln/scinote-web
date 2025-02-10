@@ -13,7 +13,7 @@
         <div class="text-sn-dark-grey mb-4">
           <p>{{ i18n.t("users.settings.account.preferences.edit.time_zone_sublabel") }}</p>
         </div>
-        <SelectSearch
+        <SelectDropdown
           class="max-w-[40ch]"
           :value="selectedTimeZone"
           @change="setTimeZone"
@@ -26,7 +26,7 @@
         <div class="text-sn-dark-grey mb-4">
           <p>{{ i18n.t("users.settings.account.preferences.edit.date_format_sublabel") }}</p>
         </div>
-        <SelectSearch
+        <SelectDropdown
           class="max-w-[40ch]"
           :value="selectedDateFormat"
           @change="setDateFormat"
@@ -77,7 +77,7 @@
 
 <script>
 
-import SelectSearch from "../shared/legacy/select_search.vue";
+import SelectDropdown from '../shared/select_dropdown.vue';
 import axios from '../../packs/custom_axios.js';
 
 export default {
@@ -113,7 +113,7 @@ export default {
     }
   },
   components: {
-    SelectSearch
+    SelectDropdown
   },
   methods: {
     setTimeZone(value) {
