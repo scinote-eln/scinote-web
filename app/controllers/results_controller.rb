@@ -3,7 +3,7 @@
 class ResultsController < ApplicationController
   include Breadcrumbs
   include TeamsHelper
-  skip_before_action :verify_authenticity_token, only: %i(create update destroy duplicate)
+
   before_action :load_my_module
   before_action :load_vars, only: %i(destroy elements assets upload_attachment archive restore destroy
                                      update_view_state update_asset_view_mode update duplicate)
@@ -77,9 +77,10 @@ class ResultsController < ApplicationController
   end
 
   def assets
-    render json: @result.assets,
+    render json: @result.assets.preload(:preview_image_attachment, file_attachment: :blob, result: { my_module: { experiment: :project, user_assignments: %i(user user_role) } }),
            each_serializer: AssetSerializer,
-           user: current_user
+           user: current_user,
+           managable_result: can_manage_result?(@result)
   end
 
   def upload_attachment

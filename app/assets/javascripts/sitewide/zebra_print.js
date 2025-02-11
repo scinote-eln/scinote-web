@@ -182,7 +182,7 @@ var zebraPrint = (function() {
         repository_id: int
       }
     */
-    print: function(modalUrl, progressModal, printModal, printData) {
+    print: function(modalUrl, progressModal, printModal, printData, finishedCallback = null) {
       var modal = $(progressModal);
       $.ajax({
         method: 'GET',
@@ -224,7 +224,7 @@ var zebraPrint = (function() {
         }
       }).fail(() => {
         HelperModule.flashAlertMsg(I18n.t('repository_row.modal_print_label.general_error'), 'danger');
-      });
+      }).always(() => { if (finishedCallback) finishedCallback(); });
     }
   };
 }());

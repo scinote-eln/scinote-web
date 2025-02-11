@@ -7,7 +7,7 @@
       <div v-if="!loading && actions.length === 0" class="text-sn-grey-grey">
         {{ i18n.t('action_toolbar.no_actions') }}
       </div>
-      <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action shrink-0">
+      <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action shrink-0" :class="{ 'disable-click': disabledActions[action.name] }">
         <a :class="`rounded flex gap-2 items-center py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
                   bg-sn-white color-sn-blue hover:no-underline focus:no-underline ${action.button_class}`"
           :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
@@ -32,7 +32,7 @@ export default {
   name: 'ActionToolbar',
   props: {
     actionsUrl: { type: String, required: true },
-    actionsMethod: { type: String, default: 'get' },
+    actionsMethod: { type: String, default: 'post' },
     params: { type: Object },
   },
   data() {
@@ -42,6 +42,7 @@ export default {
       reloadCallback: null,
       loaded: false,
       loading: true,
+      disabledActions: {}
     };
   },
   watch: {
@@ -69,11 +70,16 @@ export default {
       });
     },
     doAction(action, event) {
+      this.disabledActions[action.name] = true;
+
+      setTimeout(() => {
+        delete this.disabledActions[action.name];
+      }, 1000); // enable action after one second, to prevent multi-clicks
+
       switch (action.type) {
         case 'emit':
           event.preventDefault();
           this.$emit('toolbar:action', action);
-          // do nothing, this is handled by legacy code based on the button class
           break;
         case 'modal':
           // do nothihg, boostrap modal handled by data-toggle="modal" and data-target

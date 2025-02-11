@@ -309,6 +309,8 @@ class Constants
     docx docm odt xlsx xlsm xlsb ods pptx ppsx odp wopitest wopitestx
   ).freeze
 
+  WOPI_TOKEN_VALIDITY = 10.hours.to_i
+
   TEXT_EXTRACT_FILE_TYPES = [
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
@@ -455,6 +457,8 @@ class Constants
     ACTION APP BIN COMMAND CSH OSX WORKFLOW DMG BAT BIN CAB CMD COM CPL EX_ EXE GADGET INF1 INS INX ISU JOB
     JSE LNK MSC MSI MSP MST PAF PIF PS1 REG RGS SCR SCT SHB SHS U3P VB VBE VBS VBSCRIPT WS WSF WSH
   ).freeze
+
+  SCINOTE_EDIT_LATEST_JSON_URL = ENV['SCINOTE_EDIT_LATEST_JSON_URL'].freeze
 
   # quick search
   QUICK_SEARCH_LIMIT = 5

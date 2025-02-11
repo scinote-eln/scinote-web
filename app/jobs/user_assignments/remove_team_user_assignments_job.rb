@@ -7,6 +7,7 @@ module UserAssignments
     def perform(team_user_assignment)
       ActiveRecord::Base.transaction do
         RemoveTeamUserAssignmentsService.new(team_user_assignment).call
+        team_user_assignment.destroy!
       end
     end
   end

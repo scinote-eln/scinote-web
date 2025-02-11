@@ -72,6 +72,7 @@ class LabelTemplatesController < ApplicationController
       LabelTemplate.where(team_id: current_team.id, id: params[:selected_ids]).each do |template|
         new_template = template.dup
         new_template.default = false
+        new_template.predefined = false
         new_template.created_by = current_user
         new_template.last_modified_by = current_user
         new_template.name = template.name + '(1)'
@@ -170,7 +171,7 @@ class LabelTemplatesController < ApplicationController
   end
 
   def load_label_templates
-    @label_templates = LabelTemplate.enabled? ? current_team.label_templates : current_team.label_templates.default
+    @label_templates = LabelTemplate.enabled? ? current_team.label_templates : current_team.label_templates.predefined
   end
 
   def load_label_template

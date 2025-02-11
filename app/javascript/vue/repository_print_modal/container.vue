@@ -63,7 +63,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal"> {{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" @click="submitPrint">
+            <button class="btn btn-primary" @click="submitPrint" :disabled="submitting">
               {{ i18n.t(`repository_row.modal_print_label.${labelTemplateError ? 'print_anyway' : 'print_label'}`) }}
             </button>
           </div>
@@ -114,7 +114,8 @@ export default {
       zebraPrinters: null,
       labelTemplateError: null,
       labelTemplateCode: null,
-      fetchedPrintersAndTemplates: false
+      fetchedPrintersAndTemplates: false,
+      submitting: false
     };
   },
   components: {
@@ -223,6 +224,8 @@ export default {
       });
     },
     submitPrint() {
+      this.submitting = true;
+
       this.$nextTick(() => {
         if (this.selectedPrinter.attributes.type_of === 'zebra') {
           this.zebraPrinters.print(
@@ -235,6 +238,9 @@ export default {
               label_template_id: this.selectedTemplate.id,
               row_ids: this.row_ids,
               repository_id: this.repository_id
+            },
+            () => {
+              this.submitting = false;
             }
           );
         } else {
@@ -247,8 +253,10 @@ export default {
           }, (data) => {
             $(this.$refs.modal).modal('hide');
             this.$emit('close');
+            this.submitting = false;
             PrintProgressModal.init(data);
           }).fail(() => {
+            this.submitting = false;
             HelperModule.flashAlertMsg(this.i18n.t('repository_row.modal_print_label.general_error'), 'danger');
           });
         }

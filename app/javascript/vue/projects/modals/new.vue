@@ -36,7 +36,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="disableSubmit || (visible && !defaultRole)">
+            <button class="btn btn-primary" type="submit" :disabled="submitting || (visible && !defaultRole)">
               {{ i18n.t('projects.index.modal_new_project.create') }}
             </button>
           </div>
@@ -81,13 +81,14 @@ export default {
       visible: false,
       defaultRole: null,
       error: null,
-      disableSubmit: false,
+      submitting: false,
       userRoles: []
     };
   },
   methods: {
     async submit() {
-      this.disableSubmit = true;
+      this.submitting = true;
+
       await axios.post(this.createUrl, {
         project: {
           name: this.name,
@@ -101,7 +102,7 @@ export default {
       }).catch((error) => {
         this.error = error.response.data.name;
       });
-      this.disableSubmit = false;
+      this.submitting = false;
     },
     changeRole(role) {
       this.defaultRole = role;

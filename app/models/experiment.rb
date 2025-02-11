@@ -69,8 +69,7 @@ class Experiment < ApplicationRecord
   )
     teams = options[:teams] || current_team || user.teams.select(:id)
 
-    new_query = distinct.with_granted_permissions(user, ExperimentPermissions::READ)
-                        .where(user_assignments: { team: teams })
+    new_query = distinct.viewable_by_user(user, teams)
                         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
     new_query = new_query.joins(:project).active.where(projects: { archived: false }) unless include_archived
@@ -80,7 +79,7 @@ class Experiment < ApplicationRecord
 
   def self.viewable_by_user(user, teams)
     with_granted_permissions(user, ExperimentPermissions::READ)
-      .where(project: Project.viewable_by_user(user, teams))
+      .where(user_assignments: { team: teams })
   end
 
   def self.with_children_viewable_by_user(user)

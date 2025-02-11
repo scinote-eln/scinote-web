@@ -1,0 +1,12 @@
+<span class="settings-job-title user-settings-block">
+  <h3><%= t("users.registrations.edit.job_title_label") %></h3>
+  <%= render partial: "shared/inline_editing",
+             locals: {
+               initial_value: @user.job_title,
+               config: {
+                 params_group: 'user',
+                 field_to_udpate: 'job_title',
+                 path_to_update: registration_path(resource_name, format: :json)
+               }
+             } %>
+</span>

@@ -21,7 +21,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" :disabled="!targetProject" type="submit">
+            <button class="btn btn-primary" :disabled="submitting || !targetProject" type="submit">
               {{ i18n.t('experiments.clone.modal_submit') }}
             </button>
           </div>
@@ -53,10 +53,13 @@ export default {
   data() {
     return {
       targetProject: null,
+      submitting: false
     };
   },
   methods: {
     submit() {
+      this.submitting = true;
+
       axios.post(this.experiment.urls.clone, {
         experiment: {
           project_id: this.targetProject,
@@ -65,6 +68,7 @@ export default {
         this.$emit('update');
         window.location.replace(response.data.url);
       }).catch((error) => {
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.message, 'danger');
       });
     },

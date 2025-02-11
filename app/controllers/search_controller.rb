@@ -92,7 +92,7 @@ class SearchController < ApplicationController
           @model = Protocol
           search_by_name({ in_repository: true })
 
-          render json: @records,
+          render json: @records.includes(:team, :added_by),
                  each_serializer: GlobalSearch::ProtocolSerializer,
                  meta: {
                    total: @records.total_count,
@@ -114,7 +114,7 @@ class SearchController < ApplicationController
           return
         when 'repository_rows'
           @model = RepositoryRow
-          search_by_name(RepositoryRow)
+          search_by_name
 
           render json: @records,
                  each_serializer: GlobalSearch::RepositoryRowSerializer,

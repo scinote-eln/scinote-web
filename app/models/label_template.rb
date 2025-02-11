@@ -20,6 +20,7 @@ class LabelTemplate < ApplicationRecord
   validate :ensure_single_default_template!
 
   scope :default, -> { where(default: true) }
+  scope :predefined, -> { where(predefined: true) }
 
   def self.viewable_by_user(user, teams)
     joins("INNER JOIN user_assignments team_user_assignments
