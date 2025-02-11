@@ -2818,7 +2818,13 @@ en:
         description_single: 'Are you sure you want to remove item from this location?'
         button: 'Unassign'
       assign_modal:
-        selected_position_title: 'Assign to position %{position}'
+        override:
+          title: 'Override location'
+          p_1_html: "You are about to override <b>%{count}</b> occupied locations. This action can't be undone."
+          p_2: 'Are you sure you want to confirm this override?'
+          skip: 'Skip occupied locations'
+          cta: 'Override'
+        selected_position_title: 'Assign to positions %{position}'
         selected_row_title: 'Assign new location'
         assign_title: 'Assign position'
         move_title: 'Move %{name}'
