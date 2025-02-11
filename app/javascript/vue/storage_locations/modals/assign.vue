@@ -2,12 +2,36 @@
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <form @submit.prevent="submit">
-        <div class="modal-content">
+        <div v-if="overrideWarning" class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 v-if="selectedPosition" class="modal-title truncate !block">
+            <h4 class="modal-title truncate !block">
+              {{ i18n.t(`storage_locations.show.assign_modal.override.title`) }}
+            </h4>
+          </div>
+          <div class="modal-body">
+            <p v-html="i18n.t(`storage_locations.show.assign_modal.override.p_1_html`, {count: this.selectedPositions.filter((p) => p[2].occupied).length})"></p>
+            <p>
+              {{ i18n.t(`storage_locations.show.assign_modal.override.p_2`) }}
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="removeOverride = true; submit()">
+              {{ i18n.t(`storage_locations.show.assign_modal.override.skip`) }}
+            </button>
+            <button class="btn btn-danger" @click="confirmOverride = true; submit()">
+              {{ i18n.t(`storage_locations.show.assign_modal.override.cta`) }}
+            </button>
+          </div>
+        </div>
+        <div v-else class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <i class="sn-icon sn-icon-close"></i>
+            </button>
+            <h4 v-if="selectedPositions.length > 0" class="modal-title truncate !block">
               {{ i18n.t(`storage_locations.show.assign_modal.selected_position_title`, { position: formattedPosition }) }}
             </h4>
             <h4 v-else-if="assignMode === 'assign' && selectedRow && selectedRowName" class="modal-title truncate !block">
@@ -33,10 +57,10 @@
             <RowSelector v-if="!selectedRow" @change="this.rowId = $event" class="mb-4"></RowSelector>
             <ContainerSelector v-if="!selectedContainer" @change="this.containerId = $event"></ContainerSelector>
             <PositionSelector
-              v-if="containerId && containerId > 0 && !selectedPosition"
+              v-if="containerId && containerId > 0 && !(selectedPositions.length > 0)"
               :key="containerId"
               :selectedContainerId="containerId"
-              @change="this.position = $event"></PositionSelector>
+              @change="this.positions = [$event]"></PositionSelector>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
@@ -71,11 +95,17 @@ export default {
     selectedRowName: String,
     selectedContainer: Number,
     cellId: Number,
-    selectedPosition: Array,
+    selectedPositions: {
+      type: Array,
+      default: () => []
+    },
     assignMode: String
   },
   mixins: [modalMixin],
   computed: {
+    showOverrideWarning() {
+      return this.selectedPositions.find((p) => p[2].occupied);
+    },
     validObject() {
       return this.rowId && this.containerId && this.containerId > 0;
     },
@@ -85,8 +115,12 @@ export default {
       });
     },
     formattedPosition() {
-      if (this.selectedPosition) {
-        return String.fromCharCode(96 + parseInt(this.selectedPosition[0], 10)).toUpperCase() + this.selectedPosition[1];
+      if (this.selectedPositions.length > 0) {
+        const pos = [];
+        this.selectedPositions.forEach((p) => {
+          pos.push(String.fromCharCode(96 + parseInt(p[0], 10)).toUpperCase() + p[1]);
+        });
+        return pos.join(', ');
       }
       return '';
     },
@@ -101,8 +135,11 @@ export default {
     return {
       rowId: this.selectedRow,
       containerId: this.selectedContainer,
-      position: this.selectedPosition,
-      saving: false
+      positions: this.selectedPositions,
+      saving: false,
+      overrideWarning: false,
+      confirmOverride: false,
+      removeOverride: false
     };
   },
   components: {
@@ -112,16 +149,26 @@ export default {
   },
   methods: {
     submit() {
+      if (this.showOverrideWarning && (!this.confirmOverride && !this.removeOverride)) {
+        this.overrideWarning = true;
+        return;
+      }
+
       if (this.saving) {
         return;
       }
 
       this.saving = true;
 
+      if (this.removeOverride) {
+        this.positions = this.positions.filter((p) => !p[2].occupied);
+      }
+
       axios.post(this.actionUrl, {
         repository_row_id: this.rowId,
-        metadata: { position: this.position?.map((pos) => parseInt(pos, 10)) }
+        positions: this.positions.map((p) => [parseInt(p[0], 10), parseInt(p[1], 10), p[2]])
       }).then(() => {
+        this.$emit('assign');
         this.$emit('close');
         this.saving = false;
       }).catch((error) => {

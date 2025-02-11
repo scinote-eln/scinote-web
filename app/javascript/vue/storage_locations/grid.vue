@@ -3,13 +3,13 @@
     <div class="z-10 bg-sn-super-light-grey"></div>
     <div ref="columnsContainer" class="overflow-x-hidden">
       <div :style="{'width': `${columnsList.length * 54}px`}">
-        <div v-for="column in columnsList" :key="column" class="uppercase float-left flex items-center justify-center w-[54px] ">
+        <div v-for="column in columnsList" :key="column" @click="selectColumn(column)" class=" cursor-pointer uppercase float-left flex items-center justify-center w-[54px] ">
           <span>{{ column }}</span>
         </div>
       </div>
     </div>
     <div ref="rowContainer" class="overflow-y-hidden max-h-[70vh]">
-      <div v-for="row in rowsList" :key="row" class="uppercase flex items-center justify-center h-[54px]">
+      <div v-for="row in rowsList" :key="row" @click="selectRow(row)" class="cursor-pointer uppercase flex items-center justify-center h-[54px]">
         <span>{{ row }}</span>
       </div>
     </div>
@@ -25,7 +25,7 @@
           >
             <div
               class="h-full w-full rounded-full items-center flex justify-center"
-              @click="assignRow(cell)"
+              @click="selectPosition(cell)"
               :class="{
                 'bg-sn-background-green': cellIsOccupied(cell),
                 'bg-sn-grey-100': cellIsHidden(cell),
@@ -62,6 +62,10 @@ export default {
       default: () => []
     },
     selectedItems: {
+      type: Array,
+      default: () => []
+    },
+    selectedEmptyCells: {
       type: Array,
       default: () => []
     }
@@ -108,12 +112,13 @@ export default {
       return this.cellObject(cell)?.hidden;
     },
     cellIsSelected(cell) {
-      return this.selectedItems.some((item) => item.position[0] === cell.row + 1 && item.position[1] === cell.column + 1);
+      return this.selectedItems.some((item) => item.position[0] === cell.row + 1 && item.position[1] === cell.column + 1)
+        || this.selectedEmptyCells.some((selectedCell) => selectedCell.row === cell.row && selectedCell.column === cell.column);
     },
     cellIsAvailable(cell) {
       return !this.cellIsOccupied(cell) && !this.cellIsHidden(cell);
     },
-    assignRow(cell) {
+    selectPosition(cell) {
       if (this.cellIsOccupied(cell)) {
         this.$emit('select', this.cellObject(cell));
         return;
@@ -123,7 +128,23 @@ export default {
         return;
       }
 
-      this.$emit('assign', [cell.row + 1, cell.column + 1]);
+      this.$emit('selectEmptyCell', cell);
+    },
+    selectRow(row) {
+      this.columnsList.forEach((column) => {
+        const cell = { row: this.rowsList.indexOf(row), column: column - 1 };
+        if (!this.cellIsSelected(cell) && !this.cellIsOccupied(cell)) {
+          this.$emit('selectEmptyCell', cell);
+        }
+      });
+    },
+    selectColumn(column) {
+      this.rowsList.forEach((row) => {
+        const cell = { row: this.rowsList.indexOf(row), column: column - 1 };
+        if (!this.cellIsSelected(cell) && !this.cellIsOccupied(cell)) {
+          this.$emit('selectEmptyCell', cell);
+        }
+      });
     },
     handleScroll() {
       this.$refs.columnsContainer.scrollLeft = this.$refs.cellsContainer.scrollLeft;
