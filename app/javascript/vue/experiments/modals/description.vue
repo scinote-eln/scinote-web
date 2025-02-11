@@ -11,7 +11,9 @@
           </h4>
         </div>
         <div class="modal-body">
-          <div class="[&_.atwho-user-container]:!whitespace-normal whitespace-pre-wrap" v-html="experiment.sa_description"></div>
+          <div ref="description" class="[&_.atwho-user-container]:!whitespace-normal whitespace-pre-wrap">
+            {{ experiment.description }}
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-dismiss="modal">{{ i18n.t('general.close') }}</button>
@@ -31,5 +33,8 @@ export default {
     experiment: Object,
   },
   mixins: [modalMixin],
+  mounted() {
+    window.renderElementSmartAnnotations(this.$refs.description);
+  }
 };
 </script>

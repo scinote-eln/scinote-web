@@ -23,6 +23,8 @@ Rails.application.routes.draw do
 
     root 'dashboards#show'
 
+    get '/sa', to: 'smart_annotations#redirect'
+
     resources :navigations, only: [] do
       collection do
         get :top_menu
