@@ -17,7 +17,7 @@
     <% if ::NewRelic::Agent.instance.started? %>
       <%= ::NewRelic::Agent.browser_timing_header(controller.request.content_security_policy_nonce) %>
     <% end %>
-    <script src="<%= global_constants_path %>"></script>
+    <script src="<%= global_constants_path(format: :js) %>"></script>
 
     <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application_pack' %>

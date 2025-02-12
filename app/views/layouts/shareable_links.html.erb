@@ -5,7 +5,7 @@
     <meta data-hook="head-js">
     <title><%=t "head.title", title: (yield :head_title) %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <script src="<%= global_constants_path %>"></script>
+    <script src="<%= global_constants_path(format: :js) %>"></script>
 
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'bootstrap_pack', media: 'all' %>
