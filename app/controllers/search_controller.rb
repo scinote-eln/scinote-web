@@ -114,7 +114,7 @@ class SearchController < ApplicationController
           return
         when 'repository_rows'
           @model = RepositoryRow
-          search_by_name(RepositoryRow)
+          search_by_name
 
           render json: @records,
                  each_serializer: GlobalSearch::RepositoryRowSerializer,

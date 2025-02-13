@@ -238,6 +238,9 @@ export default {
               label_template_id: this.selectedTemplate.id,
               row_ids: this.row_ids,
               repository_id: this.repository_id
+            },
+            () => {
+              this.submitting = false;
             }
           );
         } else {

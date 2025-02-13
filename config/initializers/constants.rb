@@ -458,6 +458,8 @@ class Constants
     JSE LNK MSC MSI MSP MST PAF PIF PS1 REG RGS SCR SCT SHB SHS U3P VB VBE VBS VBSCRIPT WS WSF WSH
   ).freeze
 
+  SCINOTE_EDIT_LATEST_JSON_URL = ENV['SCINOTE_EDIT_LATEST_JSON_URL'].freeze
+
   # quick search
   QUICK_SEARCH_LIMIT = 5
   QUICK_SEARCH_SEARCHABLE_OBJECTS = %w(project experiment my_module protocol repository_row

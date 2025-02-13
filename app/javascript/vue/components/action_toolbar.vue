@@ -11,7 +11,7 @@
       <div v-if="!loading && actions.length === 0" class="sn-action-toolbar__message">
         {{ i18n.t('action_toolbar.no_actions') }}
       </div>
-      <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action shrink-0">
+      <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action shrink-0" :class="{ 'disable-click': disabledActions[action.name] }">
           <div v-if="action.type === 'group' && Array.isArray(action.actions) && action.actions.length > 1" class="export-actions-dropdown sci-dropdown dropup">
             <button class="btn btn-primary dropdown-toggle single-object-action rounded" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-e2e="e2e-DD-actionToolbar-export">
               <i class="sn-icon sn-icon-export"></i>
@@ -75,6 +75,7 @@
 
 <script>
 import { debounce } from '../shared/debounce.js';
+import axios from '../../packs/custom_axios.js';
 
 export default {
   name: 'ActionToolbar',
@@ -95,7 +96,8 @@ export default {
       bottomOffset: 0,
       leftOffset: 0,
       buttonOverflow: false,
-      submitting: false
+      submitting: false,
+      disabledActions: {}
     };
   },
   created() {
@@ -105,8 +107,8 @@ export default {
     this.debouncedFetchActions = debounce((params) => {
       this.params = params;
 
-      $.get(`${this.actionsUrl}?${new URLSearchParams(this.params).toString()}`, (data) => {
-        this.actions = data.actions;
+      axios.post(this.actionsUrl, this.params).then((response) => {
+        this.actions = response.data.actions;
         this.loading = false;
         this.setButtonOverflow();
         if (this.actionsLoadedCallback) this.$nextTick(this.actionsLoadedCallback);
@@ -168,6 +170,12 @@ export default {
       this.actionsLoadedCallback = func;
     },
     doAction(action, event) {
+      this.disabledActions[action.name] = true;
+
+      setTimeout(() => {
+        delete this.disabledActions[action.name];
+      }, 1000); // enable action after one second, to prevent multi-clicks
+
       switch (action.type) {
         case 'legacy':
           // do nothing, this is handled by legacy code based on the button class

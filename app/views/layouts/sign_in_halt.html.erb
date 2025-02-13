@@ -10,6 +10,8 @@
     <style media="all">
       html, body { height: 100%; min-height: 100%; }
     </style>
+    <script src="<%= global_constants_path(format: :js) %>"></script>
+
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'bootstrap_pack', media: 'all' %>
     <%= stylesheet_link_tag 'application_pack_styles', media: 'all' %>

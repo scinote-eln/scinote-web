@@ -114,7 +114,7 @@ export default {
   },
   methods: {
     fetchData() {
-      $.get('https://extras.scinote.net/scinote-edit/latest.json', (result) => {
+      $.get(GLOBAL_CONSTANTS.SCINOTE_EDIT_LATEST_JSON_URL, (result) => {
         this.responseData = result;
       });
     }
