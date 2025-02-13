@@ -43,7 +43,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" :disabled="!validContainer" type="submit">
+            <button class="btn btn-primary" :disabled="submitting || !validContainer" type="submit">
               {{ i18n.t('general.move') }}
             </button>
           </div>
@@ -81,17 +81,22 @@ export default {
       storageLocationsTree: [],
       teamId: null,
       query: '',
-      moveMode: 'locations'
+      moveMode: 'locations',
+      submitting: false
     };
   },
   methods: {
     submit() {
+      this.submitting = true;
+
       axios.post(this.moveToUrl, {
         destination_storage_location_id: this.selectedStorageLocationId || 'root_storage_location'
       }).then((response) => {
         this.$emit('move');
+        this.submitting = false;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
     }

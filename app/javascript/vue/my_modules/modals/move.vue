@@ -19,7 +19,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" :disabled="!targetExperiment" type="submit">
+            <button class="btn btn-primary" :disabled="submitting || !targetExperiment" type="submit">
               {{ i18n.t('experiments.table.modal_move_modules.confirm') }}
             </button>
           </div>
@@ -47,17 +47,22 @@ export default {
   },
   data() {
     return {
-      targetExperiment: null
+      targetExperiment: null,
+      submitting: false
     };
   },
   methods: {
     submit() {
+      this.submitting = true;
+
       axios.post(this.my_module.movePath, {
         to_experiment_id: this.targetExperiment
       }).then((response) => {
         this.$emit('move');
+        this.submitting = false;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.message, 'danger');
       });
     },

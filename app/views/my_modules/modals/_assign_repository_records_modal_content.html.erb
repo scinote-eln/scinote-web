@@ -16,9 +16,9 @@
 <div class="modal-body">
   <p>
     <% if downstream %>
-      <%= t('my_modules.modals.assign_repository_record.message_downstream', size: selected_rows.values.count) %>
+      <%= t('my_modules.modals.assign_repository_record.message_downstream', size: selected_rows.count) %>
     <% else %>
-      <%= t('my_modules.modals.assign_repository_record.message', size: selected_rows.values.count) %>
+      <%= t('my_modules.modals.assign_repository_record.message', size: selected_rows.count) %>
     <% end %>
   </p>
   <% if downstream %>

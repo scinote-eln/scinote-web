@@ -86,7 +86,7 @@ class AssetSerializer < ActiveModel::Serializer
   end
 
   def pdf_previewable
-    object.pdf_previewable? if object.file.attached?
+    object.pdf_previewable?
   end
 
   def pdf
@@ -100,7 +100,7 @@ class AssetSerializer < ActiveModel::Serializer
   end
 
   def image_editable
-    object.editable_image?
+    @image_editable ||= object.editable_image?
   end
 
   def checksum
@@ -142,7 +142,7 @@ class AssetSerializer < ActiveModel::Serializer
       versions: (asset_versions_path(object) if attached)
     }
     user = scope[:user] || @instance_options[:user]
-    if can_manage_asset?(user, object)
+    if managable?
       urls.merge!(
         toggle_view_mode: toggle_view_mode_path(object),
         edit_asset: edit_asset_path(object),
@@ -157,9 +157,9 @@ class AssetSerializer < ActiveModel::Serializer
     end
 
     urls[:restore_version] = asset_restore_version_path(object) if can_restore_asset?(user, object)
-    urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)
+    urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if managable?
 
-    if can_manage_asset?(user, object) && can_open_asset_locally?(user, object)
+    if managable? && can_open_asset_locally?(user, object)
       urls[:open_locally] = asset_sync_show_path(object)
       urls[:open_locally_api] = Constants::ASSET_SYNC_URL
       urls[:asset_show] = asset_show_path(object)
@@ -175,5 +175,14 @@ class AssetSerializer < ActiveModel::Serializer
   def sync_url_present?
     user = scope[:user] || @instance_options[:user]
     can_open_asset_locally?(user, object)
+  end
+
+  private
+
+  def managable?
+    return true if @instance_options[:managable_step] || @instance_options[:managable_result]
+
+    user = scope[:user] || @instance_options[:user]
+    @managable ||= can_manage_asset?(user, object)
   end
 end

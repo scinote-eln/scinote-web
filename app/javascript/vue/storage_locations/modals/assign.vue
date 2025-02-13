@@ -64,7 +64,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="!validObject">
+            <button class="btn btn-primary" type="submit" :disabled="submitting || !validObject">
               {{ i18n.t(`storage_locations.show.assign_modal.${assignMode}_action`) }}
             </button>
           </div>
@@ -136,10 +136,10 @@ export default {
       rowId: this.selectedRow,
       containerId: this.selectedContainer,
       positions: this.selectedPositions,
-      saving: false,
       overrideWarning: false,
       confirmOverride: false,
-      removeOverride: false
+      removeOverride: false,
+      submitting: false
     };
   },
   components: {
@@ -154,11 +154,11 @@ export default {
         return;
       }
 
-      if (this.saving) {
+      if (this.submitting) {
         return;
       }
 
-      this.saving = true;
+      this.submitting = true;
 
       if (this.removeOverride) {
         this.positions = this.positions.filter((p) => !p[2].occupied);
@@ -170,10 +170,10 @@ export default {
       }).then(() => {
         this.$emit('assign');
         this.$emit('close');
-        this.saving = false;
+        this.submitting = false;
       }).catch((error) => {
+        this.submitting = false;
         HelperModule.flashAlertMsg(error.response.data.errors.join(', '), 'danger');
-        this.saving = false;
       });
     }
   }

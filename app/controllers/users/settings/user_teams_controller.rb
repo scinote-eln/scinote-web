@@ -59,6 +59,7 @@ module Users
         # If user is last administrator of team,
         # he/she cannot be deleted from it.
         invalid = @user_assignment.last_with_permission?(TeamPermissions::USERS_MANAGE)
+        job_id = nil
 
         unless invalid
           begin
@@ -84,7 +85,7 @@ module Users
                         })
               end
               reset_user_current_team(@user_assignment)
-              @user_assignment.destroy!
+              job_id = UserAssignments::RemoveTeamUserAssignmentsJob.perform_later(@user_assignment).job_id
             end
           rescue StandardError => e
             Rails.logger.error e.message
@@ -95,7 +96,7 @@ module Users
         if invalid
           render json: @user_assignment.errors, status: :unprocessable_entity
         else
-          flash[:success] = if params[:leave]
+          success_message = if params[:leave]
                               I18n.t(
                                 'users.settings.user_teams.leave_flash',
                                 team: @user_assignment.assignable.name
@@ -112,7 +113,7 @@ module Users
                                 @user_assignment.user,
                                 @user_assignment.assignable,
                                 false)
-          render json: { status: :ok }
+          render json: { status: :ok, job_id: job_id, success_message: success_message }
         end
       end
 

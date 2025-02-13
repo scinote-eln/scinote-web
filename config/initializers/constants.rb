@@ -309,6 +309,8 @@ class Constants
     docx docm odt xlsx xlsm xlsb ods pptx ppsx odp wopitest wopitestx
   ).freeze
 
+  WOPI_TOKEN_VALIDITY = 10.hours.to_i
+
   TEXT_EXTRACT_FILE_TYPES = [
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.template',

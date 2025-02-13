@@ -357,8 +357,8 @@ class Asset < ApplicationRecord
   end
 
   def unlock_expired
-    with_lock do
-      if !lock_ttl.nil? && lock_ttl < Time.now.to_i
+    if !lock_ttl.nil? && lock_ttl < Time.now.to_i
+      with_lock do
         self.lock = nil
         self.lock_ttl = nil
         save!
@@ -373,7 +373,7 @@ class Asset < ApplicationRecord
   end
 
   def editable_image?
-    !locked? && (%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}} =~ file.content_type).present?
+    (%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES_EDITABLE)}} =~ file.content_type).present?
   end
 
   def generate_base64(style)

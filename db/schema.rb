@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_09_074134) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_05_100223) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -224,6 +224,31 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_074134) do
     t.index ["restored_by_id"], name: "index_experiments_on_restored_by_id"
   end
 
+  create_table "form_field_values", force: :cascade do |t|
+    t.string "type"
+    t.bigint "form_response_id", null: false
+    t.bigint "form_field_id", null: false
+    t.bigint "created_by_id", null: false
+    t.bigint "submitted_by_id"
+    t.datetime "submitted_at", precision: nil
+    t.boolean "latest", default: true, null: false
+    t.boolean "not_applicable", default: false, null: false
+    t.datetime "datetime"
+    t.datetime "datetime_to"
+    t.decimal "number"
+    t.decimal "number_to"
+    t.text "unit"
+    t.text "text"
+    t.text "selection", array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_form_field_values_on_created_by_id"
+    t.index ["form_field_id"], name: "index_form_field_values_on_form_field_id"
+    t.index ["form_response_id"], name: "index_form_field_values_on_form_response_id"
+    t.index ["submitted_by_id"], name: "index_form_field_values_on_submitted_by_id"
+    t.index ["type"], name: "index_form_field_values_on_type"
+  end
+
   create_table "form_fields", force: :cascade do |t|
     t.bigint "form_id"
     t.bigint "created_by_id"
@@ -242,6 +267,22 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_074134) do
     t.index ["last_modified_by_id"], name: "index_form_fields_on_last_modified_by_id"
   end
 
+  create_table "form_responses", force: :cascade do |t|
+    t.bigint "form_id", null: false
+    t.bigint "created_by_id", null: false
+    t.bigint "submitted_by_id"
+    t.integer "status", default: 0
+    t.datetime "submitted_at"
+    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "previous_form_response_id"
+    t.index ["created_by_id"], name: "index_form_responses_on_created_by_id"
+    t.index ["form_id"], name: "index_form_responses_on_form_id"
+    t.index ["previous_form_response_id"], name: "index_form_responses_on_previous_form_response_id"
+    t.index ["submitted_by_id"], name: "index_form_responses_on_submitted_by_id"
+  end
+
   create_table "forms", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -258,13 +299,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_074134) do
     t.bigint "restored_by_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "visibility", default: 0
+    t.bigint "default_public_user_role_id"
     t.index ["archived_by_id"], name: "index_forms_on_archived_by_id"
     t.index ["created_by_id"], name: "index_forms_on_created_by_id"
+    t.index ["default_public_user_role_id"], name: "index_forms_on_default_public_user_role_id"
     t.index ["last_modified_by_id"], name: "index_forms_on_last_modified_by_id"
     t.index ["parent_id"], name: "index_forms_on_parent_id"
     t.index ["published_by_id"], name: "index_forms_on_published_by_id"
     t.index ["restored_by_id"], name: "index_forms_on_restored_by_id"
     t.index ["team_id"], name: "index_forms_on_team_id"
+    t.index ["visibility"], name: "index_forms_on_visibility"
   end
 
   create_table "hidden_repository_cell_reminders", force: :cascade do |t|
@@ -306,6 +351,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_074134) do
     t.float "height_mm"
     t.integer "unit", default: 0
     t.integer "density", default: 12
+    t.boolean "predefined", default: false, null: false
     t.index ["created_by_id"], name: "index_label_templates_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_label_templates_on_last_modified_by_id"
     t.index ["team_id"], name: "index_label_templates_on_team_id"
@@ -998,7 +1044,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_074134) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["orderable_type", "orderable_id"], name: "index_result_orderable_elements_on_orderable"
-    t.index ["result_id", "position"], name: "index_result_orderable_elements_on_result_id_and_position", unique: true
   end
 
   create_table "result_tables", force: :cascade do |t|
@@ -1452,11 +1497,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_074134) do
   add_foreign_key "experiments", "users", column: "created_by_id"
   add_foreign_key "experiments", "users", column: "last_modified_by_id"
   add_foreign_key "experiments", "users", column: "restored_by_id"
+  add_foreign_key "form_field_values", "form_fields"
+  add_foreign_key "form_field_values", "form_responses"
+  add_foreign_key "form_field_values", "users", column: "created_by_id"
+  add_foreign_key "form_field_values", "users", column: "submitted_by_id"
   add_foreign_key "form_fields", "forms"
   add_foreign_key "form_fields", "users", column: "created_by_id"
   add_foreign_key "form_fields", "users", column: "last_modified_by_id"
+  add_foreign_key "form_responses", "form_responses", column: "previous_form_response_id"
+  add_foreign_key "form_responses", "forms"
+  add_foreign_key "form_responses", "users", column: "created_by_id"
+  add_foreign_key "form_responses", "users", column: "submitted_by_id"
   add_foreign_key "forms", "forms", column: "parent_id"
   add_foreign_key "forms", "teams"
+  add_foreign_key "forms", "user_roles", column: "default_public_user_role_id"
   add_foreign_key "forms", "users", column: "archived_by_id"
   add_foreign_key "forms", "users", column: "created_by_id"
   add_foreign_key "forms", "users", column: "last_modified_by_id"

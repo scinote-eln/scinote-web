@@ -3,6 +3,8 @@
 require 'caxlsx'
 
 class FormResponsesZipExportJob < ZipExportJob
+  include StringUtility
+
   private
 
   # Override
@@ -11,7 +13,7 @@ class FormResponsesZipExportJob < ZipExportJob
 
     exported_data = to_xlsx(form)
 
-    File.binwrite("#{dir}/#{form.name}.xlsx", exported_data)
+    File.binwrite("#{dir}/#{to_filesystem_name(form.name)}.xlsx", exported_data)
   end
 
   def failed_notification_title

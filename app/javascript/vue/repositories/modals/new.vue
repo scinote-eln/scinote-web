@@ -25,7 +25,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal" data-e2e="e2e-BT-newInventoryModal-cancel">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" data-e2e="e2e-BT-newInventoryModal-create">
+            <button class="btn btn-primary" type="submit" :disabled="submitting" data-e2e="e2e-BT-newInventoryModal-create">
               {{ i18n.t('repositories.index.modal_create.submit') }}
             </button>
           </div>
@@ -50,11 +50,14 @@ export default {
   data() {
     return {
       name: '',
-      error: null
+      error: null,
+      submitting: false
     };
   },
   methods: {
     submit() {
+      this.submitting = true;
+
       axios.post(this.createUrl, {
         repository: {
           name: this.name
@@ -62,8 +65,10 @@ export default {
       }).then((response) => {
         this.error = null;
         this.$emit('create');
+        this.submitting = false;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
+        this.submitting = false;
         this.error = error.response.data.name;
       });
     }
