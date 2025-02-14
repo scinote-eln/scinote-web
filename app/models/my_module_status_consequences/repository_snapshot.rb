@@ -17,11 +17,11 @@ module MyModuleStatusConsequences
         service = Repositories::SnapshotProvisioningService.call(repository_snapshot: repository_snapshot)
 
         unless service.succeed?
-          repository_snapshot.failed!
           raise MyModuleStatus::MyModuleStatusTransitionError.new(
             {
               type: :repository_snapshot,
               repository_id: repository_snapshot.parent_id,
+              repository_snapshot_id: repository_snapshot.id,
               message: service.errors.values.join("\n")
             }
           )
