@@ -747,7 +747,7 @@ var MyModuleRepositories = (function() {
 
   function openUpdateRecordsModal(downstream) {
     var updateUrl = FULL_VIEW_MODAL.data('update-url-modal');
-    $.get(updateUrl, { selected_rows: SELECTED_ROWS, downstream: downstream }, function(data) {
+    $.post(updateUrl, { selected_rows: SELECTED_ROWS, downstream: downstream }, function(data) {
       var assignList;
       var assignListScrollbar;
       var unassignList;
@@ -766,7 +766,7 @@ var MyModuleRepositories = (function() {
 
   function openAssignRecordsModal(downstream) {
     var assignUrl = FULL_VIEW_MODAL.data('assign-url-modal');
-    $.get(assignUrl, { selected_rows: Object.keys(SELECTED_ROWS), downstream: downstream }, function(data) {
+    $.post(assignUrl, { selected_rows: Object.keys(SELECTED_ROWS), downstream: downstream }, function(data) {
       UPDATE_REPOSITORY_MODAL.find('.modal-content').html(data.html);
       UPDATE_REPOSITORY_MODAL.data('update-url', data.update_url);
       UPDATE_REPOSITORY_MODAL.modal('show');

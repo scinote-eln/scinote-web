@@ -48,8 +48,7 @@ class Result < ApplicationRecord
                   options = {})
     teams = options[:teams] || current_team || user.teams.select(:id)
 
-    new_query = left_joins(:result_comments, :result_texts, result_tables: :table)
-                .joins(:my_module)
+    new_query = joins(:my_module)
                 .where(my_modules: MyModule.with_granted_permissions(user, MyModulePermissions::READ)
                                            .where(user_assignments: { team: teams }))
 
@@ -63,11 +62,12 @@ class Result < ApplicationRecord
 
     new_query.where_attributes_like_boolean(
       SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: new_query }
-    ).distinct
+    )
   end
 
   def self.search_subquery(query, raw_input)
-    raw_input.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
+    raw_input.left_joins(:result_comments, :result_texts, result_tables: :table)
+             .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
   def duplicate(my_module, user, result_name: nil)

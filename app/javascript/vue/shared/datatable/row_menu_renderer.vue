@@ -50,7 +50,7 @@ export default {
   methods: {
     loadActions() {
       if (this.actionsMenu.length > 0) return;
-      axios.get(this.params.data.urls.actions)
+      axios.post(this.params.data.urls.actions)
         .then((response) => {
           this.actionsMenu = response.data.actions;
         });

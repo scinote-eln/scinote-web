@@ -33,7 +33,7 @@ module BreadcrumbsHelper
       url = project_folder_path(subject)
     when RepositoryBase
       parent = subject.team
-      url = repository_path(subject, team: subject.team_id)
+      url = repository_path(subject)
     when RepositoryRow
       parent = subject.repository
       params = {
@@ -43,7 +43,7 @@ module BreadcrumbsHelper
       }
       params[:archived] = true if subject.archived
 
-      url = repository_path(params, team: subject.repository.team_id)
+      url = repository_path(params)
     when Report
       parent = subject.team
 

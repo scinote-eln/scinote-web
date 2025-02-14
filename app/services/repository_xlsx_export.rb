@@ -109,7 +109,7 @@ class RepositoryXlsxExport
         when -1, -2
           next
         when -3
-          row_data << (repository.is_a?(RepositorySnapshot) ? row.parent.code : row.code)
+          row_data << row.code
         when -4
           row_data << row.name
         when -5

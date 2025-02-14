@@ -9,16 +9,16 @@ class RepositoriesController < ApplicationController
   include RepositoriesDatatableHelper
   include MyModulesHelper
 
-  before_action :switch_team_with_param, only: %i(index show)
+  before_action :switch_team_with_param, only: %i(index)
   before_action :load_repository, except: %i(index create create_modal sidebar archive restore actions_toolbar
-                                             export_modal export_repositories list)
+                                             export_repositories list)
   before_action :load_repositories, only: %i(index list)
   before_action :load_repositories_for_archiving, only: :archive
   before_action :load_repositories_for_restoring, only: :restore
   before_action :check_view_all_permissions, only: %i(index sidebar list)
   before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet
                                                     import_records sidebar archive restore actions_toolbar
-                                                    export_modal export_repositories list)
+                                                    export_repositories list)
   before_action :check_manage_permissions, only: %i(rename_modal update)
   before_action :check_delete_permissions, only: %i(destroy destroy_modal)
   before_action :check_archive_permissions, only: %i(archive restore)
@@ -84,7 +84,6 @@ class RepositoriesController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        current_team_switch(@repository.team) unless @repository.shared_with?(current_team)
         @display_edit_button = can_create_repository_rows?(@repository)
         @display_delete_button = can_delete_repository_rows?(@repository)
         @display_duplicate_button = can_create_repository_rows?(@repository)
@@ -471,7 +470,7 @@ class RepositoriesController < ApplicationController
 
   def load_repository
     repository_id = params[:id] || params[:repository_id]
-    @repository = Repository.viewable_by_user(current_user).find_by(id: repository_id)
+    @repository = Repository.viewable_by_user(current_user, current_user.teams).find_by(id: repository_id)
     render_404 unless @repository
   end
 
@@ -516,6 +515,7 @@ class RepositoriesController < ApplicationController
   end
 
   def check_view_permissions
+    current_team_switch(@repository.team) unless @repository.shared_with?(current_team)
     render_403 unless can_read_repository?(@repository)
   end
 

@@ -139,7 +139,8 @@ module Api
         blob = ActiveStorage::Blob.create_and_upload!(
           io: StringIO.new(Base64.decode64(result_file_params[:file_data])),
           filename: result_file_params[:file_name],
-          content_type: result_file_params[:file_type]
+          content_type: result_file_params[:file_type],
+          metadata: { created_by_id: current_user.id }
         )
         blob
       end

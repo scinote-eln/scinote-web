@@ -3,13 +3,13 @@
 class ActivitiesService
   def self.load_activities(user, teams, filters = {})
     # Create condition for view permissions checking first
-    visible_teams = user.teams.where(id: teams)
-    visible_projects = Project.viewable_by_user(user, visible_teams)
+    teams = user.teams.where(id: teams).pluck(:id)
+    visible_projects = Project.viewable_by_user(user, teams)
     visible_my_modules = MyModule.viewable_by_user(user, teams)
 
     # Temporary solution until handling of deleted subjects is fully implemented
-    visible_repository_teams = visible_teams.with_user_permission(user, RepositoryPermissions::READ)
-    visible_by_teams = Activity.where(project: nil, team_id: visible_teams.select(:id))
+    visible_repository_teams = user.teams.where(id: teams).with_user_permission(user, RepositoryPermissions::READ)
+    visible_by_teams = Activity.where(project: nil, team_id: teams)
                                .where.not(subject_type: %w(RepositoryBase RepositoryRow Protocol))
                                .order(created_at: :desc)
     visible_by_repositories = Activity.where(subject_type: %w(RepositoryBase RepositoryRow), team_id: visible_repository_teams.select(:id))
@@ -19,7 +19,7 @@ class ActivitiesService
                                   .order(created_at: :desc)
 
     visible_by_experiments = Activity.where(subject_type: 'Experiment')
-                                     .where(subject_id: Experiment.viewable_by_user(user, visible_teams))
+                                     .where(subject_id: Experiment.viewable_by_user(user, teams))
                                      .order(created_at: :desc)
 
     visible_by_my_modules = Activity.where("subject_id IN (?) AND subject_type = 'MyModule' OR " \
