@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign, no-use-before-define  */
-/* global DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner HelperModule
+/* global GLOBAL_CONSTANTS DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner HelperModule
 initAssignedTasksDropdown I18n prepareRepositoryHeaderForExport initReminderDropdown */
 
 var MyModuleRepositories = (function() {
@@ -348,6 +348,8 @@ var MyModuleRepositories = (function() {
             json.state.columns.push({});
             json.state.ColReorder.push(json.state.ColReorder.length);
           }
+          json.state.start = 0;
+          json.state.length = GLOBAL_CONSTANTS.REPOSITORY_DEFAULT_PAGE_SIZE;
           callback(json.state);
         });
       },
