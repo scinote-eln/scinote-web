@@ -12,15 +12,15 @@ module SmartAnnotations
       private
 
       def validate_prj_permissions(user, team, object)
-        object.team.id == team.id && can_read_project?(user, object)
+        Project.viewable_by_user(user, team).exists?(id: object.id)
       end
 
       def validate_exp_permissions(user, team, object)
-        can_read_experiment?(user, object) && validate_prj_permissions(user, team, object.project)
+        Experiment.viewable_by_user(user, team).exists?(id: object.id)
       end
 
       def validate_tsk_permissions(user, team, object)
-        can_read_my_module?(user, object) && validate_exp_permissions(user, team, object.experiment)
+        MyModule.viewable_by_user(user, team).exists?(id: object.id)
       end
 
       def validate_rep_item_permissions(user, team, object)
