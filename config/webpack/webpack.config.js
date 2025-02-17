@@ -70,7 +70,8 @@ const entryList = {
   vue_storage_locations_table: './app/javascript/packs/vue/storage_locations_table.js',
   vue_storage_locations_container: './app/javascript/packs/vue/storage_locations_container.js',
   vue_form_show: './app/javascript/packs/vue/forms_show.js',
-  vue_form_table: './app/javascript/packs/vue/forms_table.js'
+  vue_form_table: './app/javascript/packs/vue/forms_table.js',
+  vue_my_module_assigned_items: './app/javascript/packs/vue/my_module_assigned_items.js'
 };
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

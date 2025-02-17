@@ -54,6 +54,10 @@ var MyModuleRepositories = (function() {
   }
 
   function reloadRepositoriesList(repositoryId, expand = false) {
+
+    window.assignedItemsTable.$refs.assignedItems.loadAssingedRepositories();
+
+    /*
     var repositoriesContainer = $('#assigned-items-container');
     $.get(repositoriesContainer.data('repositories-list-url'), function(result) {
       repositoriesContainer.html(result.html);
@@ -64,6 +68,7 @@ var MyModuleRepositories = (function() {
         $('#assigned-repository-items-container-' + repositoryId).collapse('show');
       }
     });
+    */
   }
 
   function tableColumns(tableContainer, skipCheckbox = false) {
@@ -608,7 +613,7 @@ var MyModuleRepositories = (function() {
   }
 
   function initRepositoryFullView() {
-    $('#assigned-items-container').on('click', '.action-buttons .full-screen', function(e) {
+    $('#assignedItems').on('click', '.full-screen', function(e) {
       var repositoryNameObject = $(this).closest('.assigned-repository-caret')
         .find('.assigned-repository-title');
 
@@ -699,7 +704,7 @@ var MyModuleRepositories = (function() {
   }
 
   function initRepositoryAssignView() {
-    $('.repositories-dropdown-menu').on('click', '.repository', function(e) {
+    $('#assignedItems').on('click', '.repository-assign', function(e) {
       var assignUrlModal = $(this).data('assign-url-modal');
       var updateUrlModal = $(this).data('update-url-modal');
       FULL_VIEW_MODAL.modal('show');
