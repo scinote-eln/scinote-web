@@ -2,7 +2,7 @@
   <li class="repository"
       data-table-url="<%= full_view_table_my_module_repository_path(@my_module, repository) %>"
       data-assign-url-modal="<%= assign_modal_my_module_repository_path(@my_module, repository) %>"
-      data-update-url-modal="<%= update_modal_my_module_repository_path(@my_module, repository)%>" data-repository-id="<%= repository.id %>"
+      data-update-url-modal="<%= update_modal_my_module_repository_path(@my_module, repository) %>" data-repository-id="<%= repository.id %>"
       data-rows-count="<%= repository.rows_count %>" >
     <span class="!px-3 !py-2.5 rounded hover:!bg-sn-super-light-grey !text-sn-blue block cursor-pointer">
       <% if repository.shared_with?(current_team) %>

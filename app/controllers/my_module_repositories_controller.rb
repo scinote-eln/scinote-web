@@ -4,9 +4,9 @@ class MyModuleRepositoriesController < ApplicationController
   include ApplicationHelper
 
   before_action :load_my_module, except: :assign_my_modules
-  before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html create)
+  before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html repositories_list create)
   before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption assign_my_modules)
-  before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list repositories_list_html create)
+  before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list repositories_list_html repositories_list create)
   before_action :check_repository_row_consumption_permissions, only: %i(consume_modal update_consumption)
   before_action :check_assign_repository_records_permissions, only: %i(update create)
   before_action :load_my_modules, only: :assign_my_modules
@@ -149,6 +149,11 @@ class MyModuleRepositoriesController < ApplicationController
     }
   end
 
+  def repositories_list
+    @assigned_repositories = @my_module.readable_live_and_snapshot_repositories_list(current_user)
+    render json: @assigned_repositories, each_serializer: AssignedRepositorySerializer, scope: {user: current_user, my_module: @my_module }
+  end
+
   def full_view_table
     render json: {
       html: render_to_string(
@@ -170,7 +175,20 @@ class MyModuleRepositoriesController < ApplicationController
                               .having('COUNT(my_module_repository_rows.id) > 0 OR repositories.archived = FALSE')
                               .order(:name)
 
-    render json: { html: render_to_string(partial: 'my_modules/repositories/repositories_dropdown_list') }
+    #render json: { html: render_to_string(partial: 'my_modules/repositories/repositories_dropdown_list') }
+    render json: {
+      repositories: @repositories.map do |repository|
+        {
+          id: repository.id,
+          name: repository.name,
+          rows_count: repository.rows_count,
+          shared: repository.shared_with?(current_team),
+          table_url: full_view_table_my_module_repository_path(@my_module, repository),
+          assign_url: assign_modal_my_module_repository_path(@my_module, repository),
+          update_url: update_modal_my_module_repository_path(@my_module, repository),
+        }
+      end
+    }
   end
 
   def export_repository

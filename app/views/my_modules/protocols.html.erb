@@ -79,6 +79,13 @@
         <%= render partial: "my_module_notes" %>
       </div>
     </div>
+    <div id="assignedItems" >
+      <assigned-items
+        ref="assignedItems"
+        avaialable-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>"
+        assigned-repositories-url="<%= my_module_repositories_list_path(@my_module) %>"
+      />
+    </div>
     <!-- Assigned items -->
     <div class="task-section hidden">
       <div class="task-section-header">
@@ -208,5 +215,6 @@
 <%= javascript_include_tag "protocols/new_protocol" %>
 
 <%= javascript_include_tag 'vue_protocol' %>
+<%= javascript_include_tag 'vue_my_module_assigned_items' %>
 <%= javascript_include_tag 'vue_legacy_tags_modal' %>
 <%= javascript_include_tag 'vue_legacy_access_modal' %>
