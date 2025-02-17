@@ -50,32 +50,36 @@ namespace :data do
     end
   end
 
-  desc "Remove unconfirmed user accounts"
+  desc 'Remove unconfirmed user accounts'
   task clean_unconfirmed_users: :environment do
-    Rails.logger.info "Cleaning unconfirmed users"
+    Rails.logger.info 'Cleaning unconfirmed users'
 
     # First, remove the users who signed up by themselves
-    users = User
-    .where(confirmed_at: nil)
-    .where.not(confirmation_token: nil)
-    .where(invitation_token: nil)
-    .where("created_at < ?", Devise.confirm_within.ago)
-    destroy_users(users)
+    if Devise.confirm_within.present?
+      users = User.where(confirmed_at: nil)
+                  .where.not(confirmation_token: nil)
+                  .where(invitation_token: nil)
+                  .where(created_at: ...Devise.confirm_within.ago)
+      destroy_users(users)
+    end
 
     # Now, remove users who were invited
-    users = User
-    .where(confirmed_at: nil)
-    .where(invitation_accepted_at: nil)
-    .where(confirmation_token: nil)
-    .where.not(invitation_token: nil)
-    .where("created_at < ?", Devise.invite_for.ago)
-    destroy_users(users)
+    unless Devise.invite_for.zero?
+      users = User.where(confirmed_at: nil)
+                  .where(invitation_accepted_at: nil)
+                  .where(confirmation_token: nil)
+                  .where.not(invitation_token: nil)
+                  .where(created_at: ...Devise.invite_for.ago)
+      destroy_users(users)
+    end
 
     # Remove users who didn't finish signup with LinkedIn
-    users = User.joins(:user_identities)
-                .where(confirmed_at: nil)
-                .where('users.created_at < ?', Devise.confirm_within.ago)
-    destroy_users(users)
+    if Devise.confirm_within.present?
+      users = User.joins(:user_identities)
+                  .where(confirmed_at: nil)
+                  .where(users: { created_at: ...Devise.confirm_within.ago })
+      destroy_users(users)
+    end
   end
 
   desc "Remove temporary and obsolete data"
