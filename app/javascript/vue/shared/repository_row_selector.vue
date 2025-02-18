@@ -12,10 +12,13 @@
     <div class="relative">
       <div class="sci-label">{{ i18n.t(`storage_locations.show.assign_modal.item`) }}</div>
       <SelectDropdown
+        :key="selectedRepository"
         :disabled="!selectedRepository"
         :optionsUrl="rowsUrl"
         :urlParams="{ repository_id: selectedRepository }"
         placeholder="Select item"
+        :multiple="multiple"
+        :withCheckboxes="multiple"
         :searchable="true"
         :optionRenderer="itemRowOptionRenderer"
         @close="showItemInfo = false"
@@ -43,18 +46,24 @@
 </template>
 
 <script>
-import SelectDropdown from '../../../shared/select_dropdown.vue';
-import axios from '../../../../packs/custom_axios.js';
+import SelectDropdown from './select_dropdown.vue';
+import axios from '../../packs/custom_axios.js';
 import {
   list_team_repositories_path,
   rows_list_team_repositories_path,
   repository_repository_row_path
-} from '../../../../routes.js';
+} from '../../routes.js';
 
 export default {
   name: 'RowSelector',
   components: {
     SelectDropdown
+  },
+  props: {
+    multiple: {
+      type: Boolean,
+      default: false
+    }
   },
   created() {
     this.teamId = document.body.dataset.currentTeamId;
@@ -68,6 +77,8 @@ export default {
   watch: {
     selectedRepository() {
       this.selectedRow = null;
+      this.$emit('repositoryChange', this.selectedRepository);
+      this.$emit('change', this.selectedRow);
     },
     selectedRow() {
       this.$emit('change', this.selectedRow);

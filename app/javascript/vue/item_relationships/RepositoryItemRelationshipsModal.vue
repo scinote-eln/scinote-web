@@ -31,47 +31,11 @@
         </div>
 
         <div class="modal-body flex flex-col gap-6" :class="{ '!pb-3': notification }">
-          <!-- inventory -->
-          <div class="flex flex-col gap-[7px]">
-            <div class="h-5 whitespace-nowrap overflow-auto">
-              {{ i18n.t('repositories.item_card.repository_item_relationships_modal.inventory_section_title') }}</div>
-            <div class="h-11">
-              <SelectDropdown
-                :value="selectedInventoryValue"
-                ref="ChangeSelectedInventoryDropdownSelector"
-                :searchable="true"
-                @change="changeSelectedInventory"
-                :optionsUrl="inventoriesUrl"
-                :isLoading="isLoadingInventories"
-                :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_placeholder')"
-                :no-options-placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_no_options_placeholder')"
-                data-e2e="e2e-DD-repoItemRelationshipsMD-inventory"
-              />
-            </div>
-          </div>
-
-          <!-- item -->
-          <div class="flex flex-col gap-[7px]">
-            <div class="h-5 whitespace-nowrap overflow-auto">
-              {{ i18n.t('repositories.item_card.repository_item_relationships_modal.item_section_title') }}</div>
-            <div class="h-11">
-              <SelectDropdown
-                ref="ChangeSelectedItemChecklistSelector"
-                :key="selectedInventoryValue"
-                :value="selectedItemValues"
-                :searchable="true"
-                :multiple="true"
-                :withCheckboxes="true"
-                :optionsUrl="selectedInventoryValue && `${inventoryItemsUrl}?selected_repository_id=${selectedInventoryValue}`"
-                :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_item_placeholder')"
-                :noOptionsPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_item_no_options_placeholder')"
-                :disabled="!selectedInventoryValue"
-                @change="selectedItemValues = $event"
-                data-e2e="e2e-DC-repoItemRelationshipsMD-item"
-              />
-            </div>
-          </div>
-
+          <RepositoryRowSelector
+            :multiple="true"
+            @change="selectedItemValues = $event"
+            @repositoryChange="changeSelectedInventory"
+          />
           <!-- relationship -->
           <div class="flex flex-col gap-[7px]">
             <div class="h-5 whitespace-nowrap overflow-auto">
@@ -122,11 +86,13 @@
 
 <script>
 import SelectDropdown from '../shared/select_dropdown.vue';
+import RepositoryRowSelector from '../shared/repository_row_selector.vue';
 
 export default {
   name: 'RepositoryItemRelationshipsModal',
   components: {
-    SelectDropdown
+    SelectDropdown,
+    RepositoryRowSelector
   },
   created() {
     window.repositoryItemRelationshipsModal = this;
@@ -153,7 +119,7 @@ export default {
   },
   computed: {
     shouldEnableAddButton() {
-      return (this.selectedInventoryValue && (this.selectedRelationshipValue !== null) && (this.selectedItemValues.length > 0));
+      return (this.selectedInventoryValue && (this.selectedRelationshipValue !== null) && (this.selectedItemValues && this.selectedItemValues.length > 0));
     }
   },
   methods: {

@@ -79,7 +79,7 @@
 
 import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
-import RowSelector from './assign/row_selector.vue';
+import RowSelector from '../../shared/repository_row_selector.vue';
 import ContainerSelector from './assign/container_selector.vue';
 import PositionSelector from './assign/position_selector.vue';
 import {
