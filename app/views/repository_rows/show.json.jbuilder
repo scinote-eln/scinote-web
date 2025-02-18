@@ -133,6 +133,7 @@ json.custom_columns do
               end
 
     if repository_cell
+      json.formatted_value repository_cell.value&.formatted
       json.merge! serialize_repository_cell_value(
         repository_cell, @repository.team, @repository, reminders_enabled: @reminders_present
       ).merge(
