@@ -3,6 +3,8 @@
   <head>
     <title><%= t("protocols.print.title") %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="<%= global_constants_path(format: :js) %>"></script>
+
     <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag "handsontable.full" %>
