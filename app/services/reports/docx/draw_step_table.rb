@@ -8,10 +8,10 @@ module Reports::Docx::DrawStepTable
     obj = self
     obj.render_table(table, table_type, color)
     @docx.p do
-      text I18n.t("projects.reports.elements.#{table_type}.table_name", name: table.name), italic: true
+      text I18n.t("projects.reports.elements.step_#{table_type}.table_name", name: table.name), italic: true
       unless settings['exclude_timestamps']
         text ' '
-        text I18n.t("projects.reports.elements.#{table_type}.user_time",
+        text I18n.t("projects.reports.elements.step_#{table_type}.user_time",
                     timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
       end
     end
