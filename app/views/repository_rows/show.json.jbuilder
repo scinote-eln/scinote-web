@@ -48,6 +48,7 @@ json.storage_locations do
         readable: readable,
         name: readable ? storage_location.name : storage_location.code,
         metadata: storage_location.metadata,
+        breadcrumbs: storage_location.breadcrumbs(readable: readable),
         positions: readable ? storage_location.storage_location_repository_rows.where(repository_row: @repository_row) : []
       }
     end

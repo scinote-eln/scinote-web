@@ -1,6 +1,6 @@
 <template>
   <div v-if="repositoryRow">
-    <div class="flex items-center gap-4">
+    <div v-if="!onlyLocations" class="flex items-center gap-4">
       <h4 data-e2e="e2e-TX-itemCard-locations-title">{{ i18n.t('repositories.locations.title', { count: repositoryRow.storage_locations.locations.length }) }}</h4>
       <button v-if="repositoryRow.permissions.can_manage && repositoryRow.storage_locations.enabled"
               @click="openAssignModal = true" class="btn btn-light ml-auto" data-e2e="e2e-BT-itemCard-assignLocation">
@@ -13,10 +13,8 @@
     <template v-for="(location, index) in repositoryRow.storage_locations.locations" :key="location.id">
       <div>
         <div class="sci-divider my-4" v-if="index > 0"></div>
-        <div class="flex gap-2 mb-3">
-          <span class="shrink-0">{{ i18n.t('repositories.locations.container') }}:</span>
-          <a v-if="location.readable" :href="containerUrl(location.id)">{{ location.name }}</a>
-          <span v-else>{{ location.name }}</span>
+        <div class="flex gap-2 mb-3 items-center">
+          <Breadcrumbs :breadcrumbs="location.breadcrumbs" :readOnly="!location.readable" />
           <i v-if="repositoryRow.permissions.can_manage && location.metadata.display_type !== 'grid'"
                  @click="unassignRow(location.id, location.positions[0].id)"
                  class="sn-icon sn-icon-unlink-italic-s cursor-pointer ml-auto"></i>
@@ -55,6 +53,7 @@
 <script>
 import AssignModal from '../storage_locations/modals/assign.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
+import Breadcrumbs from '../shared/breadcrumbs.vue';
 import axios from '../../packs/custom_axios.js';
 
 import {
@@ -66,11 +65,16 @@ export default {
   name: 'RepositoryItemLocations',
   props: {
     repositoryRow: Object,
-    repository: Object
+    repository: Object,
+    onlyLocations: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     AssignModal,
-    ConfirmationModal
+    ConfirmationModal,
+    Breadcrumbs
   },
   data() {
     return {

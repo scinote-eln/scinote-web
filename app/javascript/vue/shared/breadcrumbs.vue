@@ -2,9 +2,12 @@
   <div ref="container" class="w-full flex items-center flex-wrap gap-0.5">
     <template v-if="!allVisible">
       <div class="flex items-center gap-0.5">
-        <a :href="breadcrumbs[0].url" :title="breadcrumbs[0].name" class="max-w-[200px]">
+        <a v-if="!readOnly" :href="breadcrumbs[0].url" :title="breadcrumbs[0].name" class="max-w-[200px]">
           <StringWithEllipsis class="w-full" :text="breadcrumbs[0].name"></StringWithEllipsis>
         </a>
+        <span v-else class="max-w-[200px]">
+          <StringWithEllipsis class="w-full" :text="breadcrumbs[0].name"></StringWithEllipsis>
+        </span>
       </div>
       <div class="flex items-center gap-0.5">
         <i class="sn-icon sn-icon-right text-sn-grey"></i>
@@ -15,9 +18,12 @@
           <template v-slot:flyout>
             <div class="max-w-[600px]">
               <div v-for="(breadcrumb, index) in hiddenBreadcrumbs" :key="index" class="p-2 hover:bg-sn-super-light-grey cursor-pointer">
-                <a :href="breadcrumb.url" :title="breadcrumb.name" class="max-w-[200px] hover:no-underline">
+                <a v-if="!readOnly" :href="breadcrumb.url" :title="breadcrumb.name" class="max-w-[200px] hover:no-underline">
                   <StringWithEllipsis class="w-full" :text="breadcrumb.name"></StringWithEllipsis>
                 </a>
+                <span v-else class="max-w-[200px]">
+                  <StringWithEllipsis class="w-full" :text="breadcrumb.name"></StringWithEllipsis>
+                </span>
               </div>
             </div>
           </template>
@@ -27,9 +33,12 @@
     </template>
     <div v-for="(breadcrumb, index) in visibleBreadcrumbs" :key="index" class="flex items-center gap-0.5">
       <i v-if="index > 0" class="sn-icon sn-icon-right text-sn-grey"></i>
-      <a :href="breadcrumb.url" :title="breadcrumb.name" class="max-w-[200px]">
+      <a v-if="!readOnly" :href="breadcrumb.url" :title="breadcrumb.name" class="max-w-[200px]">
         <StringWithEllipsis class="w-full" :text="breadcrumb.name"></StringWithEllipsis>
       </a>
+      <span v-else class="max-w-[200px]">
+        <StringWithEllipsis class="w-full" :text="breadcrumb.name"></StringWithEllipsis>
+      </span>
     </div>
   </div>
 </template>
@@ -44,6 +53,10 @@ export default {
     breadcrumbs: {
       type: Array,
       required: true
+    },
+    readOnly: {
+      type: Boolean,
+      default: false
     }
   },
   components: {

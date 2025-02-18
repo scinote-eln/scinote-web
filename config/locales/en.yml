@@ -2903,6 +2903,10 @@ en:
           edit_container: "Box %{name} was successfully updated."
         errors:
           max_length: "is too long (maximum is %{max_length} characters)"
+      find_row_modal:
+        title: "Find an item"
+        description: "Select an item to see its location(s)."
+        no_results: "This item has no assigned locations"
       move_modal:
         title: 'Move %{name}'
         description: 'Select where you want to move %{name}.'

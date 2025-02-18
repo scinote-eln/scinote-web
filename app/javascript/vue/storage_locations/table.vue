@@ -9,6 +9,7 @@
                :filters="filters"
                @create_location="openCreateLocationModal"
                @create_container="openCreateContainerModal"
+               @find_row="openFindRowModal = true"
                @edit="edit"
                @duplicate="duplicate"
                @tableReloaded="reloadingTable = false"
@@ -45,6 +46,9 @@
         :object="shareStorageLocation"
         @close="shareStorageLocation = null"
         @share="updateTable" />
+      <FindRowModal
+        v-if="openFindRowModal"
+        @close="openFindRowModal = false" />
     </Teleport>
   </div>
 </template>
@@ -61,6 +65,7 @@ import DescriptionModal from './modals/description.vue';
 import ShareObjectModal from '../shared/share_modal.vue';
 import DescriptionRenderer from './renderers/description.vue';
 import NameRenderer from './renderers/storage_name_renderer.vue';
+import FindRowModal from './modals/find_row.vue';
 
 export default {
   name: 'RepositoriesTable',
@@ -72,7 +77,8 @@ export default {
     ShareObjectModal,
     DescriptionRenderer,
     NameRenderer,
-    DescriptionModal
+    DescriptionModal,
+    FindRowModal
   },
   props: {
     dataSource: {
@@ -108,7 +114,8 @@ export default {
       shareStorageLocation: null,
       storageLocationDeleteTitle: '',
       storageLocationDeleteDescription: '',
-      descriptionModalObject: null
+      descriptionModalObject: null,
+      openFindRowModal: false
     };
   },
   computed: {
@@ -186,6 +193,14 @@ export default {
           buttonStyle: 'btn btn-secondary'
         });
       }
+
+      left.push({
+        name: 'find_row',
+        label: this.i18n.t('storage_locations.index.find_row_modal.title'),
+        type: 'emit',
+        buttonStyle: 'btn btn-secondary'
+      });
+
       return {
         left,
         right: []
