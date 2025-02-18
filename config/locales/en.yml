@@ -3907,6 +3907,7 @@ en:
           no_forms: "Create and publish one or request access from your team."
           add_form: "Add form"
           take_me_there: "Take me there"
+          recently_used: "Recently used"
         move_element:
           step:
             title: Move to different step
