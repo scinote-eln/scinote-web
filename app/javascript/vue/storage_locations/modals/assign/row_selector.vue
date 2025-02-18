@@ -33,7 +33,7 @@
             <div class="flex items-center gap-0.5 overflow-hidden text-xs" v-for="column in hoveredRow.columns" :key="column.id">
               <span class="truncate shrink-0 max-w-[50%]">{{ column.name }}</span>
               <span>:</span>
-              <span class="truncate shrink-0" v-if="column.value">{{ column.value.view }}</span>
+              <span class="truncate shrink-0" v-if="column.formatted_value">{{ column.formatted_value }}</span>
             </div>
           </template>
         </template>
