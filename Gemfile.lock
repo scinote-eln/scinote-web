@@ -465,9 +465,9 @@ GEM
       net-protocol
     newrelic_rpm (9.14.0)
     nio4r (2.7.3)
-    nokogiri (1.16.8-arm64-darwin)
+    nokogiri (1.18.3-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.8-x86_64-linux)
+    nokogiri (1.18.3-x86_64-linux-gnu)
       racc (~> 1.4)
     noticed (1.6.3)
       http (>= 4.0.0)
@@ -839,7 +839,7 @@ DEPENDENCIES
   logging (~> 2.0.0)
   nested_form_fields
   newrelic_rpm
-  nokogiri (~> 1.16.5)
+  nokogiri (~> 1.18.3)
   noticed
   oj
   omniauth (~> 2.1)
