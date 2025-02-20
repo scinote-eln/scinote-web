@@ -40,15 +40,6 @@ GIT
       omniauth (~> 2.0)
       omniauth-oauth2 (~> 1.7, >= 1.7.1)
 
-GIT
-  remote: https://github.com/scinote-eln/yomu
-  revision: fb518a5fbab82f692dea4ae1fdf30eae5df62590
-  branch: master
-  specs:
-    yomu (0.2.4)
-      json (>= 1.8)
-      mime-types (>= 1.23)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -837,6 +828,7 @@ DEPENDENCIES
   kaminari
   listen
   logging (~> 2.0.0)
+  mime-types (~> 3.4)
   nested_form_fields
   newrelic_rpm
   nokogiri (~> 1.18.3)
