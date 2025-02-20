@@ -10,6 +10,10 @@
   padding: 1rem .5rem;
   width: 100%;
 
+  .tooltip {
+    white-space: nowrap;
+  }
+
   .sci--layout--menu-item {
     @include font-small;
     align-items: center;
