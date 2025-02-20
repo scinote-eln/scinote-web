@@ -41,6 +41,14 @@
         </div>
       </div>
     </div>
+    <ConsumeModal v-if="openConsumeModal" @updateConsume="updateConsume" @close="openConsumeModal = false" :row="selectedRow" />
+    <ConfirmationModal
+      :title="i18n.t('my_modules.repository.stock_warning_modal.title')"
+      :description="warningModalDescription"
+      confirmClass="btn btn-primary"
+      :confirmText="i18n.t('my_modules.repository.stock_warning_modal.consume_anyway')"
+      ref="warningModal"
+    ></ConfirmationModal>
   </div>
 </template>
 <script>
@@ -48,7 +56,11 @@ import { AgGridVue } from 'ag-grid-vue3';
 import axios from '../../../packs/custom_axios.js';
 import CustomHeader from '../../shared/datatable/tableHeader';
 import Pagination from '../../shared/datatable/pagination.vue';
-import nameRenderer from './renderers/name.vue';
+import NameRenderer from './renderers/name.vue';
+import StockRenderer from './renderers/stock.vue';
+import ConsumeRenderer from './renderers/consume.vue';
+import ConsumeModal from './modals/consume.vue';
+import ConfirmationModal from '../../shared/confirmation_modal.vue';
 
 export default {
   name: 'AssignedRepository',
@@ -59,7 +71,11 @@ export default {
     AgGridVue,
     agColumnHeader: CustomHeader,
     Pagination,
-    nameRenderer
+    NameRenderer,
+    StockRenderer,
+    ConsumeRenderer,
+    ConsumeModal,
+    ConfirmationModal
   },
   data: () => ({
     assignedItems: {
@@ -72,10 +88,12 @@ export default {
     perPage: 20,
     gridApi: null,
     columnApi: null,
-    gridReady: false
+    gridReady: false,
+    openConsumeModal: false,
+    selectedRow: null,
+    warningModalDescription: '',
+    submitting: false
   }),
-  created() {
-  },
   computed: {
     preparedAssignedItems() {
       return this.assignedItems.data;
@@ -86,7 +104,7 @@ export default {
         flex: 1,
         headerName: this.i18n.t('repositories.table.row_name'),
         sortable: true,
-        cellRenderer: 'nameRenderer',
+        cellRenderer: 'NameRenderer',
         comparator: () => null
       }];
 
@@ -95,13 +113,18 @@ export default {
           field: 'stock',
           headerName: this.repository.attributes.stock_column_name,
           sortable: true,
+          cellRenderer: 'StockRenderer',
           comparator: () => null
         });
         columns.push({
           field: 'consumedStock',
           headerName: this.i18n.t('repositories.table.row_consumption'),
           sortable: true,
-          comparator: () => null
+          comparator: () => null,
+          cellRendererParams: {
+            dtComponent: this
+          },
+          cellRenderer: 'ConsumeRenderer'
         });
       }
       return columns;
@@ -174,6 +197,40 @@ export default {
     setPage(page) {
       this.page = page;
       this.getRows();
+    },
+    consume(row) {
+      this.selectedRow = row;
+      this.openConsumeModal = true;
+    },
+    async updateConsume({ newConsume, finalStock }) {
+      this.openConsumeModal = false;
+      const {
+        consume, comment, url, unit
+      } = newConsume;
+      let readyToUpdate = false;
+      if (finalStock < 0) {
+        this.warningModalDescription = this.i18n.t('my_modules.repository.stock_warning_modal.description_html', { value: `${consume} ${unit}` });
+        const ok = await this.$refs.warningModal.show();
+        if (ok) {
+          readyToUpdate = true;
+        }
+      } else {
+        readyToUpdate = true;
+      }
+
+      if (readyToUpdate) {
+        if (this.submitting) return;
+
+        this.submitting = true;
+
+        axios.post(url, {
+          stock_consumption: consume,
+          comment
+        }).then(() => {
+          this.getRows();
+          this.submitting = false;
+        });
+      }
     }
   }
 };
