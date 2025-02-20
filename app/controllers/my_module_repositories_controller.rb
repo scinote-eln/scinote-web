@@ -223,11 +223,7 @@ class MyModuleRepositoriesController < ApplicationController
     @repository_row = @repository.repository_rows.find(params[:row_id])
     @module_repository_row = @my_module.my_module_repository_rows.find_by(repository_row: @repository_row)
     @stock_value = @module_repository_row.repository_row.repository_stock_value
-    render json: {
-      html: render_to_string(
-        partial: 'my_modules/repositories/consume_stock_modal_content'
-      )
-    }
+    render 'my_modules/repositories/consume_modal'
   end
 
   def update_consumption
