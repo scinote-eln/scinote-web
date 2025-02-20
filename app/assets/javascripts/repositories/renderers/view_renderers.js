@@ -32,7 +32,7 @@ $.fn.dataTable.render.defaultRepositoryAssetValue = function() {
 };
 
 $.fn.dataTable.render.RepositoryTextValue = function(data) {
-  const text = $(`<span class="text-value [&>p]:mb-0">${data.value.view}</span>`);
+  const text = $(`<span class="text-value [&>p]:mb-0">${window.renderSmartAnnotations(data.value.view)}</span>`);
   text.attr('data-edit-value', data.value.edit);
   return text.prop('outerHTML');
 };
