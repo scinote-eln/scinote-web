@@ -10,14 +10,16 @@
         <ul v-html="reminders" class="list-none pl-0"></ul>
       </template>
     </GeneralDropdown>
-    <a class="hover:no-underline flex items-center gap-1 record-info-link"
+    <a class="hover:no-underline record-info-link truncate block"
       :title="params.data[0]"
       :href="params.data.recordInfoUrl"
     >
-      <span class="truncate">
-        {{ params.data[0] }}
-      </span>
+      {{ params.data[0] }}
     </a>
+
+    <span v-for="state in params.data.DT_RowAttr['data-state']" class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1  ">
+      {{ state }}
+    </span>
   </div>
 </template>
 

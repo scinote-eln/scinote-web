@@ -108,7 +108,7 @@ module RepositoryDatatableHelper
     repository_rows.map do |record|
       row = {
         DT_RowId: record.id,
-        DT_RowAttr: { 'data-state': row_style(record) },
+        DT_RowAttr: { 'data-state': simple_row_style(record, my_module) },
         '0': escape_input(record.name),
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record),
         rowRemindersUrl:
@@ -303,6 +303,14 @@ module RepositoryDatatableHelper
     return I18n.t('general.archived') if row.archived
 
     ''
+  end
+
+  def simple_row_style(row, my_module)
+    style = []
+    style << I18n.t('general.archived') if row.archived
+    style << I18n.t('general.output') if row.output? && row.my_module.id == my_module&.id
+
+    style
   end
 
   def stock_consumption_permitted?(repository, my_module)

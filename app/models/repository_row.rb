@@ -22,6 +22,7 @@ class RepositoryRow < ApplicationRecord
              class_name: 'User',
              inverse_of: :restored_repository_rows,
              optional: true
+  belongs_to :my_module, optional: true
   has_many :repository_cells, -> { order(:id) }, inverse_of: :repository_row, dependent: :destroy
 
   {
@@ -237,5 +238,9 @@ class RepositoryRow < ApplicationRecord
 
   def archived_branch?
     archived?
+  end
+
+  def output?
+    my_module_id.present?
   end
 end

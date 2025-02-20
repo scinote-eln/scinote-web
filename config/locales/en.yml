@@ -1326,6 +1326,15 @@ en:
     assigned_items:
       title: "Assigned items"
       assign_from: "Assign from"
+      create_item: "Create item"
+      create_modal:
+        modal_title: 'Create a new item'
+        description: 'Choose an inventory and name the new item'
+        inventory_label: 'Inventory'
+        inventory_placeholder: 'Select inventory'
+        inventory_item_name: 'Item name'
+        create_item: 'Create item'
+        checkbox_label: 'Mark as output'
       direct_assign:
         success: "Successfully assigned an item to the task."
     protocol:
@@ -4435,6 +4444,7 @@ en:
     archive: "Archive"
     assign: "Assign"
     options_selected: 'options selected'
+    output: 'Output'
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
