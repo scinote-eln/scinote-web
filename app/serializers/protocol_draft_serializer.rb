@@ -29,14 +29,8 @@ class ProtocolDraftSerializer < ActiveModel::Serializer
     }
 
     urls_list[:publish] = publish_protocol_path(object) if can_publish_protocol_in_repository?(current_user, object)
-    if can_delete_protocol_draft_in_repository?(current_user, object)
-      urls_list[:destroy] = destroy_draft_protocol_path(object)
-    end
-
-    if can_manage_protocol_draft_in_repository?(current_user, object) &&
-       can_publish_protocol_in_repository?(current_user, object)
-      urls_list[:comment] = update_version_comment_protocol_path(object)
-    end
+    urls_list[:destroy] = destroy_draft_protocol_path(object) if can_delete_protocol_draft_in_repository?(current_user, object)
+    urls_list[:comment] = update_version_comment_protocol_path(object) if can_manage_protocol_draft_in_repository?(current_user, object)
 
     urls_list
   end
