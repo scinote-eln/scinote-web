@@ -135,8 +135,6 @@ end
 
 group :production do
   gem 'puma'
-  gem 'rails_12factor'
-  gem 'whacamole'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
