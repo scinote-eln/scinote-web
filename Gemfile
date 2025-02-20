@@ -57,6 +57,7 @@ gem 'httparty', '~> 0.21.0'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
+gem 'mime-types', '~> 3.4'
 gem 'nested_form_fields'
 gem 'nokogiri', '~> 1.16.5' # HTML/XML parser
 gem 'noticed'
