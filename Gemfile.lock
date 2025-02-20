@@ -893,7 +893,6 @@ DEPENDENCIES
   webmock
   whacamole
   wicked_pdf
-  yomu!
   zip-zip
 
 RUBY VERSION

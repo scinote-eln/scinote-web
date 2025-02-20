@@ -17,7 +17,6 @@ gem 'recaptcha'
 gem 'sanitize'
 gem 'sprockets-rails'
 gem 'view_component'
-gem 'yomu', git: 'https://github.com/scinote-eln/yomu', branch: 'master'
 
 # Gems for OAuth2 subsystem
 gem 'doorkeeper', '>= 4.6'
