@@ -13,7 +13,7 @@
       <tr>
         <th></th>
         <% content[:contents].first.each_with_index do |el, index| %>
-          <th style="width:<%= content[:columns_size][index] %>px"> 
+          <th style="width:<%= content[:columns_size][index] %>px">
             <%= content[:columns_title][index] %>
           </th>
         <% end %>
@@ -30,7 +30,7 @@
             <% else %>
               <td>
             <% end %>
-              <%= el %>
+              <%= @disable_smart_annotation_links ? smart_annotation_text(el) : custom_auto_link(el, team: current_team) %>
             </td>
           <% end %>
         </tr>
