@@ -586,7 +586,7 @@
 
         this.elements[index].isNew = false;
 
-        if (skipRequest) {
+        if (skipRequest || !element.attributes.orderable?.urls?.update_url) {
           this.elements[index].attributes.orderable = element.attributes.orderable;
           this.$emit('stepUpdated');
         } else {
