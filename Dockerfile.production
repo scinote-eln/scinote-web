@@ -14,6 +14,7 @@ RUN \
 
 ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
+ENV RAILS_SERVE_STATIC_FILES=true
 ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
 ENV PATH=$GEM_HOME/bin:/usr/share/nodejs/yarn/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
@@ -102,6 +103,7 @@ RUN \
 
 ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
+ENV RAILS_SERVE_STATIC_FILES=true
 ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
 ENV PATH=$GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
