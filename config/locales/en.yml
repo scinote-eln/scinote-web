@@ -1153,6 +1153,8 @@ en:
       submitted_on: 'Submitted on'
       not_submitted: 'Not submitted yet'
       by: 'by'
+    promo:
+      promo_title: 'This feature is disabled by default in open source SciNote'
   label_templates:
     types:
       fluics_label_template: 'Fluics'
