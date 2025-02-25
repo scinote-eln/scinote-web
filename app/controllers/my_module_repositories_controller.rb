@@ -224,9 +224,14 @@ class MyModuleRepositoriesController < ApplicationController
     @module_repository_row = @my_module.my_module_repository_rows.find_by(repository_row: @repository_row)
     @stock_value = @module_repository_row.repository_row.repository_stock_value
     render json: {
-      html: render_to_string(
-        partial: 'my_modules/repositories/consume_stock_modal_content'
-      )
+      stock_consumption: @module_repository_row.stock_consumption,
+      name: @repository_row.name,
+      unit: @stock_value.repository_stock_unit_item&.data,
+      formatted_stock_consumption: @module_repository_row.formated_stock_consumption,
+      decimals: @stock_value.repository_cell.repository_column.metadata['decimals'],
+      initial_stock: @stock_value.amount,
+      formatted_stock: @stock_value.formatted_value,
+      update_url: update_consumption_my_module_repository_path(@my_module, @repository, module_row_id: @module_repository_row)
     }
   end
 
