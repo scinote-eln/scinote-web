@@ -371,9 +371,13 @@ class MyModule < ApplicationRecord
                  )
     end
     rows.find_each do |row|
+      row_tags = []
+      row_tags << "[#{I18n.t('general.archived')}]" if row.archived
+      row_tags << "[#{I18n.t('general.output')}]" if row.output? && id == row.my_module_id
+
       row_json = []
       row_json << row.code
-      row_json << (row.archived ? "#{escape_script_tag(row.name)} [#{I18n.t('general.archived')}]" : escape_script_tag(row.name))
+      row_json << "#{escape_script_tag(row.name)} #{row_tags.join(' ')}"
       row_json << I18n.l(row.created_at, format: :full)
       row_json << escape_script_tag(row.created_by.full_name)
       if repository.has_stock_management? && repository.has_stock_consumption?
@@ -414,7 +418,7 @@ class MyModule < ApplicationRecord
     end
 
     records = repository.assigned_rows(self)
-                        .select(:id, :name, :created_at, :created_by_id, :repository_id, :parent_id, :archived)
+                        .select(:id, :name, :created_at, :created_by_id, :repository_id, :parent_id, :archived, :my_module_id)
     { headers: headers, rows: records, custom_columns: custom_columns, excluded_columns: excluded_columns }
   end
 
