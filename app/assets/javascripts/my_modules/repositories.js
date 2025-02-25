@@ -129,9 +129,7 @@ var MyModuleRepositories = (function() {
       }, {
         targets: 3,
         className: 'item-name',
-        render: function(data, type, row) {
-          return "<a href='" + row.recordInfoUrl + "' class='record-info-link'>" + data + '</a>';
-        }
+        render: (data, type, row) => renderFullViewName(data, row)
       }, {
         targets: 4,
         class: 'relationship',
@@ -141,7 +139,7 @@ var MyModuleRepositories = (function() {
       columnDefs.push({
         targets: 2,
         className: 'item-name',
-        render: (data, type, row) => `<a href="${row.recordInfoUrl}" class="record-info-link">${data}</a>`,
+        render: (data, type, row) => renderFullViewName(data, row)
       });
     }
 
@@ -212,6 +210,16 @@ var MyModuleRepositories = (function() {
     }
 
     return columnDefs;
+  }
+
+  function renderFullViewName(data, row) {
+    let tags = '';
+
+    row.DT_RowAttr['data-state'].forEach((state) => {
+      tags += `<span class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1 text-nowrap">${state}</span>`;
+    });
+
+    return `<div class='flex items-center gap-2'><a href='${row.recordInfoUrl}' class='record-info-link wrap'>${data}</a> ${tags}</div>`;
   }
 
   function renderSimpleTable(tableContainer) {
@@ -364,9 +372,6 @@ var MyModuleRepositories = (function() {
           $(row).addClass('selected');
           checkbox.attr('checked', !checkbox.attr('checked'));
         }
-      },
-      createdRow: function(row, data) {
-        $(row).find('.item-name').attr('data-state', data.DT_RowAttr['data-state']);
       }
     });
   }
