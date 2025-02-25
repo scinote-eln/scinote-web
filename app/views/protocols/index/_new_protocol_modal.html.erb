@@ -41,7 +41,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
-          <%= f.submit t("protocols.new_protocol_modal.create_#{type}") , class: "btn btn-primary create-protocol-button" %>
+          <%= f.submit t("protocols.new_protocol_modal.create_#{type}") , class: "btn btn-primary create-protocol-button", disabled: true %>
         </div>
       </div>
     </div>

@@ -33,7 +33,7 @@ class AssetSyncController < ApplicationController
     ActiveRecord::Base.transaction do
       @asset.update(last_modified_by: current_user)
       if wopi_file?(@asset)
-        @asset.update_contents(request.body)
+        @asset.wopi_update_contents(request.body)
       else
         @asset.attach_file_version(io: request.body, filename: @asset.file.filename)
         @asset.touch

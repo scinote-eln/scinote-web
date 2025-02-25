@@ -13,7 +13,9 @@ export default {
   },
   methods: {
     handlePaste(e) {
-      if ( e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' ) return;
+      if (e.target.tagName === 'INPUT'
+        || e.target.tagName === 'TEXTAREA'
+        || e.target.classList.contains('jss_container')) return;
       this.pasteImages = this.getImagesFromClipboard(e);
       if (this.pasteImages && this.firstObjectInViewport()) this.showClipboardPasteModal = true;
     },

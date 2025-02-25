@@ -51,6 +51,10 @@ export default {
     };
   },
   mounted() {
+    if (!window.createVectorEditor) {
+      alert('Open Vector Editor JS missing!');
+    }
+
     let editorConfig = {
       onSave: this.saveFile,
       generatePng: true,

@@ -1,0 +1,40 @@
+<div class="print-table">
+  <% if defined?(include_name) && include_name %>
+    <strong>
+      <%= auto_link(simple_format(table.name),
+                          link: :urls,
+                          html: { target: '_blank' }) %>
+    </strong>
+    <div class="page-break"></div>
+  <% end %>
+  <div class="report-native-table" id="native-table-<%= table.id %>">
+    <% content = table.table_data %>
+    <table>
+      <tr>
+        <th></th>
+        <% content[:contents].first.each_with_index do |el, index| %>
+          <th style="width:<%= content[:columns_size][index] %>px">
+            <%= content[:columns_title][index] %>
+          </th>
+        <% end %>
+      </tr>
+
+      <% content[:contents].each_with_index do |line, row_index| %>
+        <tr style="height:<%= content[:rows_size][row_index] %>px">
+          <td style="text-align:center"> <%= content[:rows_title][row_index] %></td>
+          <% line.each_with_index do |el, column_index| %>
+            <% if content[:cells_attributes][[row_index, column_index]].present? %>
+              <td style="<%= content[:cells_attributes][[row_index, column_index]][:style] %>"
+                  colspan="<%= content[:cells_attributes][[row_index, column_index]][:colspan] %>"
+                  rowspan="<%= content[:cells_attributes][[row_index, column_index]][:rowspan] %>">
+            <% else %>
+              <td>
+            <% end %>
+              <%= @disable_smart_annotation_links ? smart_annotation_text(el) : custom_auto_link(el, team: current_team) %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>

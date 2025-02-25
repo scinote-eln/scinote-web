@@ -372,8 +372,12 @@ class Protocol < ApplicationRecord
 
     # Copy steps
     src.steps.each do |step|
-      step.duplicate(dest, current_user, step_position: step.position, include_file_versions: include_file_versions)
+      clone_step(dest, current_user, step, include_file_versions)
     end
+  end
+
+  def self.clone_step(protocol_dest, current_user, step, include_file_versions)
+    step.duplicate(protocol_dest, current_user, step_position: step.position, include_file_versions: include_file_versions)
   end
 
   def in_repository_active?

@@ -35,6 +35,7 @@ class MyModuleShareableLinksController < ApplicationController
   end
 
   def protocol_show
+    @disable_smart_annotation_links = true
     render 'shareable_links/my_module_protocol_show', layout: 'shareable_links'
   end
 

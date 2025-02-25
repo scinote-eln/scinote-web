@@ -277,6 +277,33 @@ export default {
         });
       });
     },
+    tableColHeaders(isPlateTemplate) {
+      if (isPlateTemplate) {
+        return function(visualColumnIndex) {
+          return visualColumnIndex + 1;
+        };
+      }
+
+      return true;
+    },
+    tableRowHeaders(isPlateTemplate) {
+      if (isPlateTemplate) {
+        return (visualColumnIndex) => {
+          const ordA = 'A'.charCodeAt(0);
+          const ordZ = 'Z'.charCodeAt(0);
+          const len = (ordZ - ordA) + 1;
+          let num = visualColumnIndex;
+
+          let colName = '';
+          while (num >= 0) {
+            colName = String.fromCharCode((num % len) + ordA) + colName;
+            num = Math.floor(num / len) - 1;
+          }
+          return colName;
+        };
+      }
+      return true;
+    },
     loadTableData() {
       const container = this.$refs.hotTable;
       const data = JSON.parse(this.element.attributes.orderable.contents);
@@ -288,8 +315,8 @@ export default {
         width: '100%',
         startRows: 5,
         startCols: 5,
-        rowHeaders: tableColRowName.tableRowHeaders(metadata.plateTemplate),
-        colHeaders: tableColRowName.tableColHeaders(metadata.plateTemplate),
+        rowHeaders: this.tableRowHeaders(metadata.plateTemplate),
+        colHeaders: this.tableColHeaders(metadata.plateTemplate),
         cell: metadata.cells || [],
         contextMenu: this.editingTable,
         formulas: formulasEnabled,
@@ -327,7 +354,10 @@ export default {
           this.editingCell = true;
         }
       });
-      this.$nextTick(this.tableObject.render);
+      this.$nextTick(() => {
+        this.tableObject.render();
+        this.emitRenderHTML();
+      });
     }
   }
 };
