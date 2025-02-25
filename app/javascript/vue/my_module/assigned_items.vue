@@ -6,7 +6,10 @@
         {{ i18n.t('my_modules.assigned_items.title') }}
         <span class="text-sn-grey-500 font-normal text-base">[{{ totalRows }}]</span>
       </h2>
-      <div class="ml-auto">
+      <div class="flex gap-6 ml-auto">
+        <button class="btn btn-secondary" @click="openCreateItemModal=true">
+          {{ i18n.t('my_modules.assigned_items.create_item') }}
+        </button>
         <!-- Next block just for legacy support, JQuery not good works with Teleport -->
           <div class="hidden repository-assign"
             v-for="repository in availableRepositories"
@@ -20,8 +23,9 @@
         <!-- End of block -->
         <GeneralDropdown position="right" @open="loadAvailableRepositories">
           <template v-slot:field>
-            <button class="btn btn-light">
+            <button class="btn btn-secondary">
               {{ i18n.t('my_modules.assigned_items.assign_from') }}
+              <span class="sn-icon sn-icon-down"></span>
             </button>
           </template>
           <template v-slot:flyout>
@@ -52,6 +56,15 @@
         />
       </div>
     </div>
+
+    <Teleport to="body">
+      <CreateItemModal
+        v-if="openCreateItemModal"
+        :repositoriesUrl="repositoriesUrl"
+        :myModuleId="myModuleId"
+        @tableReloaded="newCreatedRow"
+        @close="openCreateItemModal = false"/>
+    </Teleport>
   </div>
 </template>
 
@@ -59,16 +72,20 @@
 import axios from '../../packs/custom_axios.js';
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import AssignedRepository from './assigned_items/repository.vue';
+import CreateItemModal from './assigned_items/modals/new_item.vue';
 
 export default {
   name: 'AssignedItems',
   props: {
     avaialableRepositoriesUrl: String,
-    assignedRepositoriesUrl: String
+    assignedRepositoriesUrl: String,
+    repositoriesUrl: String,
+    myModuleId: String
   },
   components: {
     GeneralDropdown,
-    AssignedRepository
+    AssignedRepository,
+    CreateItemModal
   },
   created() {
     this.loadAssingedRepositories();
@@ -83,7 +100,8 @@ export default {
       availableRepositories: [],
       assignedRepositories: [],
       loadingAvailableRepositories: false,
-      sectionOpened: false
+      sectionOpened: false,
+      openCreateItemModal: false
     };
   },
   methods: {
@@ -110,6 +128,10 @@ export default {
         .then((response) => {
           this.assignedRepositories = response.data.data;
         });
+    },
+    newCreatedRow(repositoryRowSidebarUrl) {
+      this.loadAssingedRepositories();
+      window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
     },
     openAssignModal(repositoryId) {
       const [repository] = this.$refs[`repository_${repositoryId}`];
