@@ -67,6 +67,7 @@ window.initDateTimePickerComponent = (id) => {
       },
       clearDate() {
         this.date = null;
+        this.$refs.vueDateTime.manualUpdate = true;
         this.$refs.vueDateTime.datetime = null;
         this.$nextTick(() => {
           if (this.onChange) this.onChange(null);

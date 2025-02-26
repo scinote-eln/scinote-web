@@ -30,7 +30,6 @@
     "@babel/preset-env": "^7.20.2",
     "@fortawesome/fontawesome-free": "^5.2.0",
     "@joeattardi/emoji-button": "^4.6.2",
-    "@teselagen/ove": "^0.3.23",
     "@vue/compiler-sfc": "^3.3.4",
     "@vuepic/vue-datepicker": "^7.2.0",
     "@vueuse/components": "^10.5.0",

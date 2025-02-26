@@ -206,11 +206,10 @@ module SearchableModel
             new_phrase.map! { |t| "#{t}:*" } unless exact_match
             new_phrase = sanitize_sql_like(new_phrase.join('&').tr('\'', '"'))
           else
-            new_phrase = sanitize_sql_like(Regexp.escape(new_phrase))
-            new_phrase = exact_match ? "(^|\\s)#{new_phrase}(\\s|$)" : "%#{new_phrase}%"
+            new_phrase = exact_match ? "(^|\\s)#{Regexp.escape(new_phrase)}(\\s|$)" : "%#{sanitize_sql_like(new_phrase)}%"
           end
 
-          ["t#{i}".to_sym, new_phrase]
+          [:"t#{i}", new_phrase]
         end).to_h
       )
     end

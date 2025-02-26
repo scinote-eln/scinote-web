@@ -16,7 +16,6 @@ const entryList = {
   emoji_button: './app/javascript/packs/emoji_button.js',
   fontawesome: './app/javascript/packs/fontawesome.scss',
   prism: './app/javascript/packs/prism.js',
-  open_vector_editor: './app/javascript/packs/open_vector_editor.js',
   tiny_mce: './app/javascript/packs/tiny_mce.js',
   tiny_mce_styles: './app/javascript/packs/tiny_mce_styles.scss',
   tui_image_editor: './app/javascript/packs/tui_image_editor.js',
@@ -87,6 +86,44 @@ try {
 }
 
 enginePaths.forEach((path) => {
+  console.log(`Checking for engine extra yarn packages in ${path}...`)
+  let extraYarnPackages
+
+  try {
+    extraYarnPackages = execSync(`[ -f ${path}/app/javascript/extra_yarn_packages.txt ] && cat ${path}/app/javascript/extra_yarn_packages.txt`).toString().split('\n').filter((p) => !!p);
+  } catch {
+    extraYarnPackages = [];
+  }
+
+  if (extraYarnPackages.length > 0) {
+    extraYarnPackages.forEach((extraPackage) => {
+      console.log(`Adding ${extraPackage}`);
+      execSync(`yarn add ${extraPackage}`);
+    });
+  } else {
+    console.log(`No extra yarn packages in ${path}.`);
+  }
+
+  if (mode === 'production') {
+    console.log(`Checking for engine JS file overrides in ${path}...`)
+    let jsFileOverrides
+
+    try {
+      jsFileOverrides = execSync(`[ -f ${path}/app/javascript/overrides.txt ] && cat ${path}/app/javascript/overrides.txt`).toString().split('\n').filter((p) => !!p);
+    } catch {
+      jsFileOverrides = [];
+    }
+
+    if (jsFileOverrides.length > 0) {
+      jsFileOverrides.forEach((jsFilePath) => {
+        console.log(`Overwritting ${jsFilePath}...`);
+        execSync(`\\cp -f ${path}/${jsFilePath} ./${jsFilePath}`);
+      });
+    } else {
+      console.log(`No JS file overrides in ${path}.`);
+    }
+  }
+
   const packsFolderPath = `${path}/app/javascript/packs`;
 
   let entryFiles;
@@ -105,7 +142,6 @@ enginePaths.forEach((path) => {
 
     entryList[fileName] = entryPath;
   });
-
 });
 
 module.exports = {

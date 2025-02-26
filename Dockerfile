@@ -1,6 +1,9 @@
 FROM ruby:3.2-bookworm
 MAINTAINER SciNote <info@scinote.net>
 
+ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/2.9.3/tika-app-2.9.3.jar"
+ENV TIKA_PATH=/usr/local/bin/tika-app.jar
+
 # additional dependecies
 # libreoffice for file preview generation
 RUN apt-get update -qq && \
@@ -23,6 +26,8 @@ RUN apt-get update -qq && \
   chromium \
   chromium-sandbox \
   yarnpkg && \
+  wget -O $TIKA_PATH $TIKA_DIST_URL && \
+  chmod +x $TIKA_PATH && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
   rm -rf /var/lib/apt/lists/*
 

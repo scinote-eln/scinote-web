@@ -2,15 +2,20 @@
 
 module StepElements
   class TablesController < BaseController
+    include ApplicationHelper
+    include StepsActions
+
     before_action :load_table, only: %i(update destroy duplicate move)
 
     def create
       predefined_table_dimensions = create_table_params[:tableDimensions].map(&:to_i)
-      name = if predefined_table_dimensions[0] == predefined_table_dimensions[1]
-               t('protocols.steps.table.default_name',
+      name = if create_table_params[:name].present?
+               create_table_params[:name]
+             elsif create_table_params[:plateTemplate] == 'true'
+               t('protocols.steps.plate.default_name',
                  position: @step.step_tables.length + 1)
              else
-               t('protocols.steps.plate.default_name',
+               t('protocols.steps.table.default_name',
                  position: @step.step_tables.length + 1)
              end
       step_table = @step.step_tables.new(table:
@@ -35,6 +40,7 @@ module StepElements
 
     def update
       ActiveRecord::Base.transaction do
+        old_content = @table.contents
         @table.assign_attributes(table_params.except(:metadata))
         begin
           if table_params[:metadata].present?
@@ -49,7 +55,9 @@ module StepElements
           @table.metadata = {}
         end
         @table.save!
+
         log_step_activity(:table_edited, { table_name: @table.name })
+        table_content_annotation(@table.step, @table, old_content)
       end
 
       render json: @table, serializer: TableSerializer, user: current_user
@@ -114,7 +122,7 @@ module StepElements
     end
 
     def create_table_params
-      params.permit(:plateTemplate, tableDimensions: [])
+      params.permit(:plateTemplate, :name, tableDimensions: [])
     end
 
     def load_table

@@ -148,8 +148,21 @@ $.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cel
 };
 
 $.fn.dataTable.render.editRepositoryStockValue = function(formId, columnId, cell) {
-  const $cell = $(cell.node());
-  $cell.html('');
+  const data = cell.data();
+  const cellNode = $(cell.node());
+  let value;
+
+  if (data.value) {
+    value = `<span class="stock-value-view-render ${data.displayWarnings ? `stock-${data.stock_status}` : ''}">
+               ${data.value.stock_formatted}
+             </span>`;
+  } else {
+    value = `<span class="empty-stock-render">
+               ${I18n.t('libraries.manange_modal_column.stock_type.no_item_stock')}
+             </span>`;
+  }
+
+  cellNode.html(value);
 };
 
 $.fn.dataTable.render.editRepositoryStockConsumptionValue = function(formId, columnId, cell) {

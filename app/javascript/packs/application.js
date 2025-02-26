@@ -1,3 +1,5 @@
+import './smart_annotations.js';
+
 require('jquery-ujs');
 require('jquery-mousewheel');
 require('jquery-autosize');

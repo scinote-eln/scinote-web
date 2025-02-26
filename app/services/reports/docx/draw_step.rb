@@ -57,7 +57,7 @@ module Reports::Docx::DrawStep
 
     if table.metadata.present?
       if has_step_well_plates && table.metadata['plateTemplate']
-        draw_step_table(table, 'step_well_plates_table')
+        draw_step_table(table, 'well_plates_table')
       elsif has_step_tables && !table.metadata['plateTemplate']
         draw_step_table(table, 'step_table')
       end

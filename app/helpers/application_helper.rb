@@ -168,7 +168,7 @@ module ApplicationHelper
           base64_encoded_imgs: base64_encoded_imgs
         },
         formats: :html
-      )
+      ).delete("\n")
   end
 
   # No more dirty hack
