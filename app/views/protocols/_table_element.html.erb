@@ -30,7 +30,7 @@
             <% else %>
               <td>
             <% end %>
-              <%= @disable_smart_annotation_links ? smart_annotation_text(el) : custom_auto_link(el, team: current_team) %>
+              <%= @disable_smart_annotation_links ? smart_annotation_text(el.to_s) : custom_auto_link(el, team: current_team) %>
             </td>
           <% end %>
         </tr>
