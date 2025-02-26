@@ -1,0 +1,5 @@
+@layer components {
+  .sci-tag {
+    @apply text-xs !rounded-full !pl-3 !pr-1 !py-0.5 flex items-center gap-1;
+  }
+}

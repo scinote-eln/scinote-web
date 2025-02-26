@@ -104,7 +104,7 @@
 
         dropdownSelector.init($(myModuleTagsSelector), {
           closeOnSelect: true,
-          tagClass: 'my-module-white-tags',
+          tagClass: 'my-module-white-tags sci-tag',
           tagStyle: (data) => {
             return `background: ${data.params.color}`;
           },
