@@ -70,7 +70,7 @@ module Toolbars
       {
         name: 'update_docx',
         label: label,
-        icon: 'sn-icon sn-icon-file-word',
+        icon: 'sn-icon sn-icon-file-word h-6 w-6 flex items-center justify-center', # Custom icon fix
         type: :emit
       }
     end
