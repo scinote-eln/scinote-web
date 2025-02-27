@@ -56,6 +56,7 @@ class MyModuleShareableLinksController < ApplicationController
 
     @gallery = @results.left_joins(:assets).pluck('assets.id').compact
 
+    @disable_smart_annotation_links = true
     render 'shareable_links/my_module_results_show', layout: 'shareable_links'
   end
 
