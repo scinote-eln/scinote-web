@@ -358,20 +358,8 @@ class Asset < ApplicationRecord
     end
   end
 
-  def wopi_update_contents(new_file)
-    # Only start attaching new versions after an actual first version is created.
-    # This avoids empty file versions when using WOPI.
-    # The first actual version is version 3:
-    # Version 1: Empty 0KB placeholder file.
-    # Version 2: Empty document file, created when first opening the document in Office Online.
-    # Version 3: First actual save of file contents.
-
-    if version.to_i > 2
-      attach_file_version(io: new_file, filename: file_name)
-    else
-      file.attach(io: new_file, filename: file_name)
-    end
-
+  def update_contents(new_file)
+    attach_file_version(io: new_file, filename: file_name)
     self.version = version.nil? ? 1 : version + 1
     save
   end
