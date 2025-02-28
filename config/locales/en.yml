@@ -3937,7 +3937,7 @@ en:
           title: 'Insert custom well plate'
           name_label: 'Well plate name'
           name_placeholder: 'Plate'
-          dimension_label: 'Dimensions (rows x columns)' 
+          dimension_label: 'Dimensions (rows x columns)'
       options:
         up_arrow_title: "Move step up"
         down_arrow_title: "Move step down"
@@ -4227,6 +4227,7 @@ en:
       title: "People"
       header: "Type the name or email of the user you want to mention (they will be notified)"
       help: "Navigate: ↑ ↓    •    Insert: Enter / Tab    •    Dismiss: Esc"
+      not_in_this_team: 'Not in this team'
       popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
     res:
       archived: "(archived)"

@@ -27,9 +27,9 @@ class SmartAnnotationsController < ApplicationController
       avatar_url: user_avatar_absolute_url(resource, :thumb),
       info: I18n.t(
         'atwho.users.popover_html',
-        role: user_team_assignment.user_role.name.capitalize,
-        team: user_team_assignment.assignable.name,
-        time: I18n.l(user_team_assignment.created_at, format: :full_date)
+        role: user_team_assignment ? user_team_assignment.user_role.name.capitalize : '/',
+        team: user_team_assignment ? user_team_assignment.assignable.name : I18n.t('atwho.users.not_in_this_team'),
+        time: user_team_assignment ? I18n.l(user_team_assignment.created_at, format: :full_date) : '/'
       )
     }
   end
