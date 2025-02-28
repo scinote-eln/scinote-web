@@ -1,7 +1,7 @@
 <template>
   <div class='relative'>
     <template v-if="range">
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-x-4 gap-y-2 flex-wrap lg:flex-nowrap">
         <DateTimePicker
           @change="updateFromDate"
           :mode="mode"
@@ -11,7 +11,7 @@
           :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.from')"
           :class="{'error': !validValue}"
         />
-        -
+        <span class="tw-hidden lg:block">-</span>
         <DateTimePicker
           @change="updateToDate"
           :defaultValue="toValue"
