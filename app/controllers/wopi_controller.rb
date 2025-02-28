@@ -201,7 +201,7 @@ class WopiController < ActionController::Base
           logger.warn 'WOPI: replacing file'
 
           @asset.last_modified_by = @user
-          @asset.wopi_update_contents(request.body)
+          @asset.update_contents(request.body)
           @asset.save
 
           @team.take_space(@asset.estimated_size)
@@ -219,7 +219,7 @@ class WopiController < ActionController::Base
       elsif !@asset.file_size.nil? && @asset.file_size.zero?
         logger.warn 'WOPI: initializing empty file'
 
-        @asset.wopi_update_contents(request.body)
+        @asset.update_contents(request.body)
         @asset.last_modified_by = @user
         @asset.save
         @team.save
