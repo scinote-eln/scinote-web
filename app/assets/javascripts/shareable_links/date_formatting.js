@@ -9,6 +9,10 @@
       return;
     }
 
-    $(this).text(moment(text).local(userLang).format('LLL'));
+    if ($(this).hasClass('only-date')) {
+      $(this).text(moment(text).local(userLang).format('LL'));
+    } else {
+      $(this).text(moment(text).local(userLang).format('LLL'));
+    }
   });
 }());
