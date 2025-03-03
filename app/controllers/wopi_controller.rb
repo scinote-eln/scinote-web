@@ -71,6 +71,7 @@ class WopiController < ActionController::Base
       UserCanWrite: @can_write,
       UserCanNotWriteRelative: true,
       CloseUrl: @close_url,
+      FileUrl: @asset.file.blob.url,
       DownloadUrl: url_for(controller: 'assets', action: 'download', id: @asset.id, host: ENV['WOPI_USER_HOST']),
       HostEditUrl: url_for(controller: 'assets', action: 'edit', id: @asset.id, host: ENV['WOPI_USER_HOST']),
       HostViewUrl: url_for(controller: 'assets', action: 'view', id: @asset.id, host: ENV['WOPI_USER_HOST']),
