@@ -14,6 +14,15 @@ module Users
 
     before_action :update_sanitized_params, only: :update
 
+    def new
+      raise NotImplementedError
+    end
+
+    def create
+      # Replaced with invite_users action
+      raise NotImplementedError
+    end
+
     def update
       return super unless Rails.configuration.x.new_team_on_signup
 
@@ -24,9 +33,13 @@ module Users
       super do |user|
         if user.errors.blank?
           @team.created_by = user
-          @team.save
+          @team.save!
         end
       end
+    end
+
+    def destroy
+      raise NotImplementedError
     end
 
     def accept_resource
@@ -71,7 +84,7 @@ module Users
           next
         end
         # Check if user already exists
-        user = User.find_by(email: email)
+        user = User.find_by(email: email.downcase)
 
         if user
           result[:status] = :user_exists
@@ -155,6 +168,11 @@ module Users
     end
 
     private
+
+    def invite_resource
+      # Replaced with invite_users action
+      raise NotImplementedError
+    end
 
     def update_sanitized_params
       # Solution for Devise < 4.0.0
