@@ -19,6 +19,10 @@ class FormDatetimeFieldValue < FormFieldValue
   end
 
   def formatted
-    range? ? [datetime&.utc, datetime_to&.utc].join(' - ') : datetime&.utc.to_s
+    if form_field.data['time']
+      range? ? [datetime&.utc, datetime_to&.utc].join(' - ') : datetime&.utc.to_s
+    else
+      range? ? [datetime&.to_date, datetime_to&.to_date].join(' - ') : datetime&.to_date.to_s
+    end
   end
 end
