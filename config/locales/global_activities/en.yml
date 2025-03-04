@@ -370,6 +370,7 @@ en:
       protocol_step_form_deleted_html: "%{user} deleted form <strong>%{form}</strong> in protocol's step %{step_position} <strong>%{step}</strong> in Protocol repository."
       protocol_step_form_moved_html: "%{user} moved form <strong>%{form}</strong> in protocol's step %{step_position} <strong>%{step}</strong> to step %{step_position_destination} <strong>%{step_destination}</strong> in Protocol repository."
       form_duplicated_html: "%{user} duplicated form %{form_new} from %{form} in Forms."
+      form_block_duplicated_html: "%{user} duplicated form block %{block_name} in form %{form} in Form templates."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -697,6 +698,7 @@ en:
       protocol_step_form_deleted: "Task step form deleted"
       protocol_step_form_moved: "Task step form moved"
       form_duplciated: "Form duplicated"
+      form_block_duplicated: "Form block duplicated"
     activity_group:
       projects: "Projects"
       task_results: "Task results"

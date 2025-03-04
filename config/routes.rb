@@ -881,6 +881,9 @@ Rails.application.routes.draw do
       end
 
       resources :form_fields, only: %i(create update destroy) do
+        member do
+          post :duplicate
+        end
         collection do
           post :reorder
         end

@@ -554,6 +554,7 @@ class Extends
     protocol_step_form_added: 353,
     protocol_step_form_deleted: 354,
     protocol_step_form_moved: 355,
+    form_block_duplicated: 356,
     form_duplicated: 357
   }
 
@@ -578,7 +579,7 @@ class Extends
     storage_locations: [*309..315],
     container_storage_locations: [*316..322, 326],
     storage_location_repository_rows: [*323..325],
-    forms: [331, 332, 333, 334, 335, 336, *337..346, 357]
+    forms: [331, 332, 333, 334, 335, 336, *337..346, 356, 357]
   }
 
   TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository Form).freeze
