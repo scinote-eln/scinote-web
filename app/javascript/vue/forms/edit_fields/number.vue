@@ -121,6 +121,10 @@ export default {
         return;
       }
 
+      if (!this.responseValidationEnabled) {
+        this.editField.attributes.data.validations.response_validation = {};
+      }
+
       this.$emit('updateField');
     }
   }

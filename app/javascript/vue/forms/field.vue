@@ -14,7 +14,7 @@
                  :field="field" :marked_as_na="markAsNa" @save="saveValue" @validChanged="checkValidField" />
     </div>
   </div>
-  <div v-if="field.attributes.allow_not_applicable" class="flex items-end mt-2">
+  <div v-if="field.attributes.allow_not_applicable" class="flex items-end mt-4">
     <button class="btn btn-secondary mb-0.5"
             :disabled="disabled"
             :class="{
