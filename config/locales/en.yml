@@ -1062,6 +1062,8 @@ en:
     restored:
       success_flash: "<strong>%{number}</strong> form(s) successfully restored."
       error_flash: "Failed to restore form(s)."
+    duplicated:
+      success_flash: "<strong>%{name}</strong> form successfully duplicated."
     archived:
       success_flash: "<strong>%{number}</strong> form(s) successfully archived."
       error_flash: "Failed to archive form(s)."
@@ -1098,6 +1100,7 @@ en:
         access: 'Access'
         archive: 'Archive'
         restore: 'Restore'
+        duplicate: 'Duplicate'
       table:
         name: 'Form name'
         code: 'ID'

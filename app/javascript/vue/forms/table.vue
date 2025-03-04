@@ -12,6 +12,7 @@
                @tableReloaded="reloadingTable = false"
                @create="createForm"
                @archive="archive"
+               @duplicate="duplicate"
                @restore="restore"
                @access="access"
                @export="exportFormResponse"
@@ -158,6 +159,21 @@ export default {
       };
     },
     archive(event) {
+      if (this.submitting) {
+        return;
+      }
+
+      this.submitting = true;
+      axios.post(event.path).then((response) => {
+        this.reloadingTable = true;
+        HelperModule.flashAlertMsg(response.data.message, 'success');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      }).finally(() => {
+        this.submitting = false;
+      });
+    },
+    duplicate(event) {
       if (this.submitting) {
         return;
       }
