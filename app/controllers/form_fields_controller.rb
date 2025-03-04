@@ -3,8 +3,8 @@
 class FormFieldsController < ApplicationController
   before_action :check_forms_enabled
   before_action :load_form
-  before_action :load_form_field, only: %i(update destroy)
-  before_action :check_manage_permissions, only: %i(create update destroy reorder)
+  before_action :load_form_field, only: %i(update destroy duplicate)
+  before_action :check_manage_permissions, only: %i(create update destroy reorder duplicate)
 
   def create
     ActiveRecord::Base.transaction do
@@ -35,6 +35,18 @@ class FormFieldsController < ApplicationController
         render json: @form_field, serializer: FormFieldSerializer, user: current_user
       else
         render json: { error: @form_field.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+  end
+
+  def duplicate
+    ActiveRecord::Base.transaction do
+      new_form_field = @form_field.duplicate(current_user)
+      if new_form_field.errors.blank?
+        log_activity(:form_block_duplicated, block_name: @form_field.name)
+        render json: new_form_field, serializer: FormFieldSerializer, user: current_user
+      else
+        render json: { error: new_form_field.errors.full_messages }, status: :unprocessable_entity
       end
     end
   end

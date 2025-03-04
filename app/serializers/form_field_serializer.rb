@@ -13,7 +13,8 @@ class FormFieldSerializer < ActiveModel::Serializer
 
   def urls
     {
-      show: form_form_field_path(object.form, object)
+      show: form_form_field_path(object.form, object),
+      duplicate: duplicate_form_form_field_path(object.form, object)
     }
   end
 end
