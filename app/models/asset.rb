@@ -165,10 +165,11 @@ class Asset < ApplicationRecord
     new_blob = nil
 
     blob.open do |tmp_file|
+      # Analyzed flag should be removed in order to run a new text extraction job needed for search
       new_blob = ActiveStorage::Blob.create_and_upload!(
         io: tmp_file,
         filename: blob.filename,
-        metadata: (metadata || blob.metadata)
+        metadata: (metadata || blob.metadata).except(:analyzed)
       )
 
       attach_method.call(new_blob)

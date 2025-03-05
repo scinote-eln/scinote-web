@@ -223,7 +223,7 @@ class FormsController < ApplicationController
   end
 
   def check_forms_enabled
-    render_404 unless Form.forms_enabled?
+    render :promo unless Form.forms_enabled?
   end
 
   def log_activity(form, type_of, message_items = {})

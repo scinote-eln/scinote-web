@@ -29,7 +29,7 @@ module SmartAnnotations
           if type == 'rep_item'
             repository_item(value[:name], user, team, type, object, is_shared_object)
           else
-            next unless is_shared_object || (object && SmartAnnotations::PermissionEval.check(user,
+            next unless object && (is_shared_object || SmartAnnotations::PermissionEval.check(user,
                                                                                               team,
                                                                                               type,
                                                                                               object))

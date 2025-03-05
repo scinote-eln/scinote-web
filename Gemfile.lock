@@ -40,15 +40,6 @@ GIT
       omniauth (~> 2.0)
       omniauth-oauth2 (~> 1.7, >= 1.7.1)
 
-GIT
-  remote: https://github.com/scinote-eln/yomu
-  revision: fb518a5fbab82f692dea4ae1fdf30eae5df62590
-  branch: master
-  specs:
-    yomu (0.2.4)
-      json (>= 1.8)
-      mime-types (>= 1.23)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -292,7 +283,7 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    date (3.3.4)
+    date (3.4.1)
     debug_inspector (1.1.0)
     deface (1.9.0)
       actionview (>= 5.2)
@@ -454,7 +445,7 @@ GEM
       rails (>= 3.2.0)
     net-http (0.4.1)
       uri
-    net-imap (0.4.17)
+    net-imap (0.4.19)
       date
       net-protocol
     net-pop (0.1.2)
@@ -465,9 +456,9 @@ GEM
       net-protocol
     newrelic_rpm (9.14.0)
     nio4r (2.7.3)
-    nokogiri (1.16.8-arm64-darwin)
+    nokogiri (1.18.3-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.8-x86_64-linux)
+    nokogiri (1.18.3-x86_64-linux-gnu)
       racc (~> 1.4)
     noticed (1.6.3)
       http (>= 4.0.0)
@@ -551,7 +542,7 @@ GEM
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (2.2.10)
+    rack (2.2.11)
     rack-attack (6.6.1)
       rack (>= 1.0, < 3)
     rack-cors (2.0.2)
@@ -595,15 +586,10 @@ GEM
     rails-html-sanitizer (1.6.1)
       loofah (~> 2.21)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
-    rails_12factor (0.0.3)
-      rails_serve_static_assets
-      rails_stdout_logging
     rails_autolink (1.1.8)
       actionview (> 3.1)
       activesupport (> 3.1)
       railties (> 3.1)
-    rails_serve_static_assets (0.0.5)
-    rails_stdout_logging (0.0.5)
     railties (7.0.8.7)
       actionpack (= 7.0.8.7)
       activesupport (= 7.0.8.7)
@@ -728,7 +714,7 @@ GEM
     thor (1.3.1)
     tilt (2.4.0)
     timecop (0.9.6)
-    timeout (0.4.1)
+    timeout (0.4.3)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -769,7 +755,6 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    whacamole (1.2.0)
     wicked_pdf (2.7.0)
       activesupport
     xpath (3.2.0)
@@ -837,9 +822,10 @@ DEPENDENCIES
   kaminari
   listen
   logging (~> 2.0.0)
+  mime-types (~> 3.4)
   nested_form_fields
   newrelic_rpm
-  nokogiri (~> 1.16.5)
+  nokogiri (~> 1.18.3)
   noticed
   oj
   omniauth (~> 2.1)
@@ -861,7 +847,6 @@ DEPENDENCIES
   rack-cors
   rails (~> 7.0.8)
   rails-controller-testing
-  rails_12factor
   rails_autolink (~> 1.1, >= 1.1.6)
   recaptcha
   rgl
@@ -891,9 +876,7 @@ DEPENDENCIES
   underscore-rails
   view_component
   webmock
-  whacamole
   wicked_pdf
-  yomu!
   zip-zip
 
 RUBY VERSION

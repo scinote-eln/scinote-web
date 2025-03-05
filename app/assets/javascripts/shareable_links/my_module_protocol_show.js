@@ -1,4 +1,5 @@
 /* global tableColRowName notTurbolinksPreview */
+//= require ../sitewide/comments_sidebar
 
 (function() {
   'use strict';

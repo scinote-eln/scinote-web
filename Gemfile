@@ -17,7 +17,6 @@ gem 'recaptcha'
 gem 'sanitize'
 gem 'sprockets-rails'
 gem 'view_component'
-gem 'yomu', git: 'https://github.com/scinote-eln/yomu', branch: 'master'
 
 # Gems for OAuth2 subsystem
 gem 'doorkeeper', '>= 4.6'
@@ -58,8 +57,9 @@ gem 'httparty', '~> 0.21.0'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
+gem 'mime-types', '~> 3.4'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.16.5' # HTML/XML parser
+gem 'nokogiri', '~> 1.18.3' # HTML/XML parser
 gem 'noticed'
 gem 'oj'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
@@ -136,8 +136,6 @@ end
 
 group :production do
   gem 'puma'
-  gem 'rails_12factor'
-  gem 'whacamole'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

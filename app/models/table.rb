@@ -2,6 +2,7 @@
 
 class Table < ApplicationRecord
   include SearchableModel
+  include TableHelper
 
   auto_strip_attributes :name, nullify: false
   validates :name,
@@ -45,6 +46,10 @@ class Table < ApplicationRecord
             "WHERE id = " + Integer(id).to_s
       Table.connection.execute(sql)
     end
+  end
+
+  def well_plate?
+    metadata&.dig('plateTemplate') || false
   end
 
   def to_csv

@@ -14,6 +14,7 @@ RUN \
 
 ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
+ENV RAILS_SERVE_STATIC_FILES=true
 ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
 ENV PATH=$GEM_HOME/bin:/usr/share/nodejs/yarn/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
@@ -43,6 +44,9 @@ RUN \
 # Final stage
 FROM ruby:3.2-bookworm AS runner
 MAINTAINER SciNote <info@scinote.net>
+
+ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/2.9.3/tika-app-2.9.3.jar"
+ENV TIKA_PATH=/usr/local/bin/tika-app.jar
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN \
@@ -79,6 +83,8 @@ RUN \
   chromium-sandbox \
   libfile-mimeinfo-perl \
   yarnpkg && \
+  wget -O $TIKA_PATH $TIKA_DIST_URL && \
+  chmod +x $TIKA_PATH && \
   /usr/share/nodejs/yarn/bin/yarn add puppeteer@npm:puppeteer-core@^22.15.0 && \
   apt-get install -y libreoffice && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
@@ -97,6 +103,7 @@ RUN \
 
 ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
+ENV RAILS_SERVE_STATIC_FILES=true
 ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
 ENV PATH=$GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle

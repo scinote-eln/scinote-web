@@ -2,6 +2,8 @@
 
 module ActiveStorage
   class Analyzer::TextExtractionAnalyzer < Analyzer
+    DEFAULT_TIKA_PATH = 'tika-app.jar'
+
     def self.accept?(blob)
       blob.content_type.in?(Constants::TEXT_EXTRACT_FILE_TYPES) && blob.attachments.where(record_type: 'Asset').any?
     end
@@ -40,7 +42,8 @@ module ActiveStorage
     end
 
     def process_other(file)
-      text_data = Yomu.new(file.path).text
+      tika_path = ENV['TIKA_PATH'] || DEFAULT_TIKA_PATH
+      text_data = IO.popen(['java', '-Djava.awt.headless=true', '-jar', tika_path, '-t', file.path], 'r').read
       create_or_update_text_data(text_data)
     end
 

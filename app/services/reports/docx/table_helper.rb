@@ -3,6 +3,40 @@
 module Reports
   class Docx
     module TableHelper
+      def render_table(table, table_type, color)
+        table_data = JSON.parse(table.contents_utf_8)['data']
+        table_data = add_headers_to_table(table_data, table_type == 'well_plates_table')
+
+        if table.metadata.present? && table.metadata['cells'].is_a?(Array)
+          table.metadata['cells'].each do |cell|
+            next unless cell['row'].present? && cell['col'].present?
+
+            row_index = cell['row'].to_i + 1
+            col_index = cell['col'].to_i + 1
+            calculated_value = cell['calculated']
+
+            if calculated_value.present?
+              table_data[row_index][col_index] = calculated_value
+            end
+          end
+        end
+        @docx.p
+        @docx.table table_data, border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE do
+          cell_style rows[0], bold: true, background: color[:concrete]
+          cell_style cols[0], bold: true, background: color[:concrete]
+
+          if table.metadata.present? && table.metadata['cells'].is_a?(Array)
+            table.metadata['cells'].each do |cell|
+              data = cell[1]
+              next unless data.present? && data['row'].present? && data['col'].present? && data['className'].present?
+
+              cell_style rows.dig(data['row'].to_i + 1, data['col'].to_i + 1),
+                        align: table_cell_alignment(data['className'])
+            end
+          end
+        end
+      end
+
       def table_cell_alignment(cell_class)
         if cell_class.include?('htCenter')
           :center

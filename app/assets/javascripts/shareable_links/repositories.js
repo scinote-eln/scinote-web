@@ -1,5 +1,8 @@
 /* eslint-disable no-param-reassign, no-use-before-define  */
 /* global initReminderDropdown */
+//= require i18n.js
+//= require i18n/translations
+//= require ../repositories/renderers/view_renderers
 
 (function() {
   var SIMPLE_TABLE;

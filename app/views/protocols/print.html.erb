@@ -49,19 +49,7 @@
         </div>
       <% when 'StepTable' %>
         <% table = step_element.orderable.table %>
-        <div class="print-table">
-          <strong>
-            <%= auto_link(simple_format(table.name),
-                                link: :urls,
-                                html: { target: '_blank' }) %>
-          </strong>
-          <div class="page-break"></div>
-          <div data-role="hot-table" class="hot-table">
-            <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
-            <%= hidden_field(table, :metadata, value: table.metadata.to_json, class: "hot-metadata" ) %>
-            <div data-role="step-hot-table" class="step-result-hot-table"></div>
-          </div>
-        </div>
+        <%= render partial: 'protocols/table_element', locals: { table: table, include_name: true }%>
       <% when 'Checklist' %>
         <% checklist = step_element.orderable %>
         <div class="print-checklist">

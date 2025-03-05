@@ -57,18 +57,20 @@ class MyModuleTagsController < ApplicationController
     @mt.created_by = current_user
     @mt.save
 
-    my_module = @mt.my_module
+    if @mt.valid?
+      my_module = @mt.my_module
 
-    Activities::CreateActivityService
-      .call(activity_type: :add_task_tag,
-            owner: current_user,
-            subject: my_module,
-            project: my_module.project,
-            team: my_module.team,
-            message_items: {
-              my_module: my_module.id,
-              tag: @mt.tag.id
-            })
+      Activities::CreateActivityService
+        .call(activity_type: :add_task_tag,
+              owner: current_user,
+              subject: my_module,
+              project: my_module.project,
+              team: my_module.team,
+              message_items: {
+                my_module: my_module.id,
+                tag: @mt.tag.id
+              })
+    end
     redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
                 status: :see_other
   end
