@@ -19,6 +19,7 @@ module Toolbars
 
       [
         access_action,
+        duplicate_action,
         archive_action,
         restore_action,
         export_action
@@ -58,6 +59,20 @@ module Toolbars
         label: I18n.t('forms.index.toolbar.restore'),
         icon: 'sn-icon sn-icon-restore',
         path: restore_forms_path(form_ids: @forms.pluck(:id)),
+        type: :emit
+      }
+    end
+
+    def duplicate_action
+      return unless @single
+
+      return unless can_manage_form?(@forms.first)
+
+      {
+        name: 'duplicate',
+        label: I18n.t('forms.index.toolbar.duplicate'),
+        icon: 'sn-icon sn-icon-duplicate',
+        path: duplicate_form_path(@forms.first),
         type: :emit
       }
     end
