@@ -1,7 +1,7 @@
 <div class="sci--layout--left-menu-container">
   <% left_menu_elements.each_with_index do |item, index| %>
     <%= link_to item[:url], title: item[:title] || item[:name], class:"sci--layout--menu-item", data: {
-        e2e: "e2e-BT-leftMenu-#{item[:name].downcase.parameterize}",
+        e2e: "e2e-BT-leftMenu-#{item[:name].parameterize}",
         active: item[:active],
         disabled: current_user.teams.blank?,
         toggle: "tooltip",
