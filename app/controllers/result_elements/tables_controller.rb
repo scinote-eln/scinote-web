@@ -71,9 +71,7 @@ module ResultElements
 
       ActiveRecord::Base.transaction do
         result_table.update!(result: target)
-        result_table.result_orderable_element.destroy
-        new_orderable_element = target.result_orderable_elements.build(orderable: result_table)
-        new_orderable_element.insert_at(target.result_orderable_elements.count)
+        result_table.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
         @result.normalize_elements_position
 
         log_result_activity(

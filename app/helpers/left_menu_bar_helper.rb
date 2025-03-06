@@ -2,68 +2,74 @@
 
 module LeftMenuBarHelper
   def left_menu_elements
-    [
-      {
-        url: dashboard_path,
-        name: t('left_menu_bar.dashboard'),
-        icon: 'sn-icon-dashboard',
-        active: dashboard_are_selected?,
-        submenu: []
-      }, {
-        url: projects_path,
-        name: t('left_menu_bar.projects'),
-        icon: 'sn-icon-projects',
-        active: projects_are_selected?,
-        submenu: []
-      }, {
-        url: repositories_path,
-        name: t('left_menu_bar.repositories'),
-        icon: 'sn-icon-inventory',
-        active: repositories_are_selected? || storage_locations_are_selected?,
-        submenu: [{
-          url: repositories_path,
-          name: t('left_menu_bar.items'),
-          active: repositories_are_selected?
-        }, {
-          url: storage_locations_path,
-          name: t('left_menu_bar.locations'),
-          active: storage_locations_are_selected?
-        }]
-      }, {
-        url: "#",
-        name: t('left_menu_bar.templates'),
-        icon: 'sn-icon-protocols-templates',
-        active: protocols_are_selected? || label_templates_are_selected? || forms_are_selected?,
-        submenu: [
-          {
-            url: forms_path,
-            name: t('left_menu_bar.forms'),
-            active: forms_are_selected?
-          },
-          {
-            url: protocols_path,
-            name: t('left_menu_bar.protocol'),
-            active: protocols_are_selected?
-          }, {
-            url: label_templates_path,
-            name: t('left_menu_bar.label'),
-            active: label_templates_are_selected?
-          }
-        ]
-      }, {
-        url: reports_path,
-        name: t('left_menu_bar.reports'),
-        icon: 'sn-icon-reports',
-        active: reports_are_selected?,
-        submenu: []
-      }, {
-        url: global_activities_path,
-        name: t('left_menu_bar.activities'),
-        icon: 'sn-icon-activities',
-        active: activities_are_selected?,
-        submenu: []
-      }
-    ]
+    menu = []
+
+    menu.push({
+                url: dashboard_path,
+                name: t('left_menu_bar.dashboard'),
+                icon: 'sn-icon-dashboard',
+                active: dashboard_are_selected?
+              })
+
+    menu.push({
+                url: projects_path,
+                name: t('left_menu_bar.projects'),
+                icon: 'sn-icon-projects',
+                active: projects_are_selected?
+              })
+
+    menu.push({
+                url: repositories_path,
+                name: t('left_menu_bar.items'),
+                icon: 'sn-icon-inventory',
+                active: repositories_are_selected?
+              })
+
+    menu.push({
+                url: storage_locations_path,
+                name: t('left_menu_bar.locations'),
+                icon: 'sn-icon-location',
+                active: storage_locations_are_selected?
+              })
+
+    if Form.forms_enabled?
+      menu.push({
+                  url: forms_path,
+                  name: t('left_menu_bar.forms'),
+                  icon: 'sn-icon-forms',
+                  active: forms_are_selected?
+                })
+    end
+
+    menu.push({
+                url: protocols_path,
+                name: t('left_menu_bar.protocol'),
+                icon: 'sn-icon-protocols-templates',
+                active: protocols_are_selected?
+              })
+
+    menu.push({
+                url: label_templates_path,
+                name: t('left_menu_bar.label'),
+                icon: 'sn-icon-printer-labels',
+                active: label_templates_are_selected?
+              })
+
+    menu.push({
+                url: reports_path,
+                name: t('left_menu_bar.reports'),
+                icon: 'sn-icon-reports',
+                active: reports_are_selected?
+              })
+
+    menu.push({
+                url: global_activities_path,
+                name: t('left_menu_bar.activities'),
+                icon: 'sn-icon-activities',
+                active: activities_are_selected?
+              })
+
+    menu
   end
 
   def dashboard_are_selected?

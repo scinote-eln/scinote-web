@@ -6,9 +6,9 @@ module MyModuleStatusConsequences
       true
     end
 
-    def before_forward_call(my_module)
+    def before_forward_call(my_module, created_by = nil)
       my_module.assigned_repositories.each do |repository|
-        ::RepositorySnapshot.create_preliminary!(repository, my_module)
+        ::RepositorySnapshot.create_preliminary!(repository, my_module, created_by)
       end
     end
 
@@ -17,11 +17,11 @@ module MyModuleStatusConsequences
         service = Repositories::SnapshotProvisioningService.call(repository_snapshot: repository_snapshot)
 
         unless service.succeed?
-          repository_snapshot.failed!
           raise MyModuleStatus::MyModuleStatusTransitionError.new(
             {
               type: :repository_snapshot,
               repository_id: repository_snapshot.parent_id,
+              repository_snapshot_id: repository_snapshot.id,
               message: service.errors.values.join("\n")
             }
           )

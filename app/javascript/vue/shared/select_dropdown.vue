@@ -89,7 +89,7 @@
                       'unchecked': !valueSelected(option[0]),
                     }"
                 ></div>
-                <div class="truncate" v-if="optionRenderer" v-html="optionRenderer(option)"></div>
+                <div class="truncate w-full" v-if="optionRenderer" v-html="optionRenderer(option)"></div>
                 <div class="truncate" v-else >{{ option[1] }}</div>
               </div>
             </template>
@@ -326,6 +326,7 @@ export default {
 
       this.$nextTick(() => {
         this.isOpen = false;
+        this.$emit('close');
         if (this.valueChanged) {
           this.$emit('change', this.newValue, this.getLabels(this.newValue));
         }

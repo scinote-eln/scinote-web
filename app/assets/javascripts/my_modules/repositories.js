@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign, no-use-before-define  */
-/* global DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner HelperModule
+/* global GLOBAL_CONSTANTS DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner HelperModule
 initAssignedTasksDropdown I18n prepareRepositoryHeaderForExport initReminderDropdown */
 
 var MyModuleRepositories = (function() {
@@ -54,6 +54,10 @@ var MyModuleRepositories = (function() {
   }
 
   function reloadRepositoriesList(repositoryId, expand = false) {
+
+    window.assignedItemsTable.$refs.assignedItems.loadAssingedRepositories();
+
+    /*
     var repositoriesContainer = $('#assigned-items-container');
     $.get(repositoriesContainer.data('repositories-list-url'), function(result) {
       repositoriesContainer.html(result.html);
@@ -64,6 +68,7 @@ var MyModuleRepositories = (function() {
         $('#assigned-repository-items-container-' + repositoryId).collapse('show');
       }
     });
+    */
   }
 
   function tableColumns(tableContainer, skipCheckbox = false) {
@@ -124,9 +129,7 @@ var MyModuleRepositories = (function() {
       }, {
         targets: 3,
         className: 'item-name',
-        render: function(data, type, row) {
-          return "<a href='" + row.recordInfoUrl + "' class='record-info-link'>" + data + '</a>';
-        }
+        render: (data, type, row) => renderFullViewName(data, row)
       }, {
         targets: 4,
         class: 'relationship',
@@ -136,7 +139,7 @@ var MyModuleRepositories = (function() {
       columnDefs.push({
         targets: 2,
         className: 'item-name',
-        render: (data, type, row) => `<a href="${row.recordInfoUrl}" class="record-info-link">${data}</a>`,
+        render: (data, type, row) => renderFullViewName(data, row)
       });
     }
 
@@ -207,6 +210,16 @@ var MyModuleRepositories = (function() {
     }
 
     return columnDefs;
+  }
+
+  function renderFullViewName(data, row) {
+    let tags = '';
+
+    row.DT_RowAttr['data-state'].forEach((state) => {
+      tags += `<span class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1 text-nowrap">${state}</span>`;
+    });
+
+    return `<div class='flex items-center gap-2'><a href='${row.recordInfoUrl}' class='record-info-link wrap'>${data}</a> ${tags}</div>`;
   }
 
   function renderSimpleTable(tableContainer) {
@@ -348,6 +361,8 @@ var MyModuleRepositories = (function() {
             json.state.columns.push({});
             json.state.ColReorder.push(json.state.ColReorder.length);
           }
+          json.state.start = 0;
+          json.state.length = GLOBAL_CONSTANTS.REPOSITORY_DEFAULT_PAGE_SIZE;
           callback(json.state);
         });
       },
@@ -357,9 +372,6 @@ var MyModuleRepositories = (function() {
           $(row).addClass('selected');
           checkbox.attr('checked', !checkbox.attr('checked'));
         }
-      },
-      createdRow: function(row, data) {
-        $(row).find('.item-name').attr('data-state', data.DT_RowAttr['data-state']);
       }
     });
   }
@@ -606,7 +618,7 @@ var MyModuleRepositories = (function() {
   }
 
   function initRepositoryFullView() {
-    $('#assigned-items-container').on('click', '.action-buttons .full-screen', function(e) {
+    $('#assignedItems').on('click', '.full-screen', function(e) {
       var repositoryNameObject = $(this).closest('.assigned-repository-caret')
         .find('.assigned-repository-title');
 
@@ -697,7 +709,7 @@ var MyModuleRepositories = (function() {
   }
 
   function initRepositoryAssignView() {
-    $('.repositories-dropdown-menu').on('click', '.repository', function(e) {
+    $('#assignedItems').on('click', '.repository-assign', function(e) {
       var assignUrlModal = $(this).data('assign-url-modal');
       var updateUrlModal = $(this).data('update-url-modal');
       FULL_VIEW_MODAL.modal('show');

@@ -82,9 +82,27 @@ class RepositoryRowsController < ApplicationController
         record_annotation_notification(repository_row, repository_cell)
       end
 
+      if update_params[:my_module_id].present?
+        my_module = MyModule.viewable_by_user(current_user, current_team).find_by(id: update_params[:my_module_id])
+
+        return render_403 unless my_module.present? && can_read_my_module?(my_module)
+
+        ActiveRecord::Base.transaction do
+          service_assign = RepositoryRows::MyModuleAssignUnassignService.call(
+            my_module: my_module,
+            repository: @repository,
+            user: current_user,
+            params: { rows_to_assign: [repository_row.id] }
+          )
+
+          render json: service_assign.errors, status: :bad_request unless service_assign.succeed?
+        end
+      end
+
       render json: { id: service.repository_row.id, flash: t('repositories.create.success_flash',
                                                              record: escape_input(repository_row.name),
-                                                             repository: escape_input(@repository.name)) },
+                                                             repository: escape_input(@repository.name)),
+                     repository_row_url: repository_repository_row_path(@repository, repository_row) },
              status: :ok
     else
       render json: service.errors, status: :bad_request
@@ -480,7 +498,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def update_params
-    params.permit(repository_row: :name, repository_cells: {}).to_h
+    params.permit(:my_module_id, :is_output, repository_row: :name, repository_cells: {}).to_h
   end
 
   def log_activity(type_of, repository_row, message_items = {})

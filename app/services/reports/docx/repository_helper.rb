@@ -14,7 +14,10 @@ module Reports::Docx::RepositoryHelper
       row = []
       row.push(record.code) unless excluded_columns.include?(-1)
       unless excluded_columns.include?(-2)
-        row.push(escape_input(record.archived ? "#{record.name} [#{I18n.t('general.archived')}]" : record.name))
+        row_tags = []
+        row_tags << "[#{I18n.t('general.archived')}]" if record.archived
+        row_tags << "[#{I18n.t('general.output')}]" if my_module && record.output? && my_module.id == record.my_module_id
+        row.push(escape_input("#{record.name} #{row_tags.join(' ')}"))
       end
       row.push(I18n.l(record.created_at, format: :full)) unless excluded_columns.include?(-3)
       row.push(escape_input(record.created_by.full_name)) unless excluded_columns.include?(-4)

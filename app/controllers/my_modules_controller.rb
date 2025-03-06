@@ -373,6 +373,8 @@ class MyModulesController < ApplicationController
 
   def update_state
     old_status_id = @my_module.my_module_status_id
+    @my_module.my_module_status_created_by = current_user
+
     if @my_module.update(my_module_status_id: update_status_params[:status_id])
       log_activity(:change_status_on_task_flow, @my_module, my_module_status_old: old_status_id,
                    my_module_status_new: @my_module.my_module_status.id)

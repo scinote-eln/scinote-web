@@ -84,7 +84,7 @@ module MyModulesHelper
                date_time: l(repository.created_at, format: :full))
     end
 
-    t('my_modules.repository.snapshots.simple_view.live_bottom_label')
+    I18n.t('my_modules.repository.snapshots.simple_view.live_bottom_label')
   end
 
   def assigned_repository_simple_view_name_column_id(repository)

@@ -8,7 +8,7 @@
     :handles="['mr']"
     :resizable="true"
     :draggable="false"
-    class="max-w-[400px] !h-full"
+    class="max-w-[540px] !h-full"
     @resize-start="onResizeStart"
     @resizing="onResizeMove"
     @resize-end="onResizeEnd"
@@ -136,7 +136,7 @@ export default {
       return parseInt(computedStyle.getPropertyValue('--navigator-navigation-width').trim());
     },
     onResizeMove(event) {
-      if (event.w > 400) event.w = 400;
+      if (event.w > 540) event.w = 540;
       document.documentElement.style.setProperty('--navigator-navigation-width', `${event.w}px`);
       if (window.resetGridColumns) window.resetGridColumns(false);
     },
@@ -146,9 +146,9 @@ export default {
       $('.sci--layout').addClass('!transition-none');
     },
     onResizeEnd(event) {
-      if (event.w > 400) {
-        event.w = 400;
-        this.width = 400;
+      if (event.w > 540) {
+        event.w = 540;
+        this.width = 540;
       }
       document.body.style.cursor = 'default';
       $('.sci--layout-navigation-navigator').removeClass('!transition-none');

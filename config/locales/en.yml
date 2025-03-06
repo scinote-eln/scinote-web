@@ -352,13 +352,13 @@ en:
     repositories: "Inventories"
     templates: "Templates"
     forms: "Forms"
-    protocol: "Protocol"
-    label: "Label"
-    items: "Items"
-    locations: "Locations"
+    protocol: "Protocol templates"
+    label: "Label templates"
+    items: "Inventories"
+    locations: "Item locations"
     reports: "Reports"
     settings: "Settings"
-    activities: "Activities"
+    activities: "Global activities"
     academy: "Courses"
     support: "Support"
     support_links:
@@ -1328,6 +1328,15 @@ en:
     assigned_items:
       title: "Assigned items"
       assign_from: "Assign from"
+      create_item: "Create item"
+      create_modal:
+        modal_title: 'Create a new item'
+        description: 'Choose an inventory and name the new item'
+        inventory_label: 'Inventory'
+        inventory_placeholder: 'Select inventory'
+        inventory_item_name: 'Item name'
+        create_item: 'Create item'
+        checkbox_label: 'Mark as output'
       direct_assign:
         success: "Successfully assigned an item to the task."
     protocol:
@@ -2821,7 +2830,13 @@ en:
         description_single: 'Are you sure you want to remove item from this location?'
         button: 'Unassign'
       assign_modal:
-        selected_position_title: 'Assign to position %{position}'
+        override:
+          title: 'Override location'
+          p_1_html: "You are about to override <b>%{count}</b> occupied locations. This action can't be undone."
+          p_2: 'Are you sure you want to confirm this override?'
+          skip: 'Skip occupied locations'
+          cta: 'Override'
+        selected_position_title: 'Assign to positions %{position}'
         selected_row_title: 'Assign new location'
         assign_title: 'Assign position'
         move_title: 'Move %{name}'
@@ -2900,6 +2915,10 @@ en:
           edit_container: "Box %{name} was successfully updated."
         errors:
           max_length: "is too long (maximum is %{max_length} characters)"
+      find_row_modal:
+        title: "Find an item"
+        description: "Select an item to see its location(s)."
+        no_results: "This item has no assigned locations"
       move_modal:
         title: 'Move %{name}'
         description: 'Select where you want to move %{name}.'
@@ -4440,6 +4459,7 @@ en:
     assign: "Assign"
     insert: "Insert"
     options_selected: 'options selected'
+    output: 'Output'
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"

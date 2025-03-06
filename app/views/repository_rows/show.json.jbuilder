@@ -48,6 +48,7 @@ json.storage_locations do
         readable: readable,
         name: readable ? storage_location.name : storage_location.code,
         metadata: storage_location.metadata,
+        breadcrumbs: storage_location.breadcrumbs(readable: readable),
         positions: readable ? storage_location.storage_location_repository_rows.where(repository_row: @repository_row) : []
       }
     end
@@ -133,6 +134,7 @@ json.custom_columns do
               end
 
     if repository_cell
+      json.formatted_value repository_cell.value&.formatted
       json.merge! serialize_repository_cell_value(
         repository_cell, @repository.team, @repository, reminders_enabled: @reminders_present
       ).merge(

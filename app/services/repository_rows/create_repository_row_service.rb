@@ -6,12 +6,13 @@ module RepositoryRows
 
     attr_reader :repository, :params, :errors, :repository_row
 
-    def initialize(repository:, user:, params:)
+    def initialize(repository:, user:, params:, my_module: nil)
       @repository = repository
       @user = user
       @params = params
       @errors = {}
       @repository_row = nil
+      @my_module = my_module
     end
 
     def call
@@ -20,7 +21,9 @@ module RepositoryRows
       ActiveRecord::Base.transaction do
         @repository_row = @repository.repository_rows.new(params[:repository_row])
         @repository_row.last_modified_by = @user
+        @repository_row.my_module = @my_module
         @repository_row.created_by = @user
+        @repository_row.my_module_id = params[:my_module_id] if params[:my_module_id] && params[:is_output]
         @repository_row.save!
 
         params[:repository_cells]&.each do |column_id, value|

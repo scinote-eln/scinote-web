@@ -55,6 +55,10 @@ $(document).on('turbolinks:load', () => {
       '--navigator-top-margin',
       ((scrollPosition / navbarHeight) * 16) + 'px'
     );
+    $('.sci--layout-navigation-left').css(
+      '--left-navigation-top-margin',
+      ((scrollPosition / navbarHeight) * 72) + 'px'
+    );
   });
 });
 

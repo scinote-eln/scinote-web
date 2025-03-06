@@ -76,7 +76,7 @@ class Constants
   # Infinite scroll default elements per page
   DEFAULT_ELEMENTS_PER_PAGE = 20
   # Default navigator width
-  DEFAULT_NAV_WIDTH = 208
+  DEFAULT_NAV_WIDTH = 348
 
   #=============================================================================
   # File and data memory size

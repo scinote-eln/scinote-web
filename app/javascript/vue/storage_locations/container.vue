@@ -5,7 +5,8 @@
         :gridSize="gridSize"
         :assignedItems="assignedItems"
         :selectedItems="selectedItems"
-        @assign="assignRowToPosition"
+        :selectedEmptyCells="selectedEmptyCells"
+        @selectEmptyCell="selectEmptyCell"
         @select="selectRow"
       />
     </div>
@@ -32,11 +33,12 @@
         v-if="openAssignModal"
         :assignMode="assignMode"
         :selectedContainer="assignToContainer"
-        :selectedPosition="assignToPosition"
+        :selectedPositions="assignToPositions"
         :selectedRow="rowIdToMove"
         :selectedRowName="rowNameToMove"
         :cellId="cellIdToUnassign"
-        @close="openAssignModal = false; resetTableSearch(); this.reloadingTable = true"
+        @assign="assignCallback"
+        @close="openAssignModal = false"
       ></AssignModal>
       <ImportModal
         v-if="openImportModal"
@@ -112,8 +114,8 @@ export default {
       moveToUrl: null,
       assignedItems: [],
       selectedItems: [],
+      selectedEmptyCells: [],
       openAssignModal: false,
-      assignToPosition: null,
       assignToContainer: null,
       rowIdToMove: null,
       rowNameToMove: null,
@@ -125,6 +127,14 @@ export default {
   computed: {
     paginationMode() {
       return this.withGrid ? 'none' : 'pages';
+    },
+    assignToPositions() {
+      if (this.assignMode === 'assign' && this.withGrid) {
+        return this.selectedEmptyCells.map((cell) => [cell.row + 1, cell.column + 1, { occupied: false }]).concat(
+          this.selectedItems.map((item) => [item.position[0], item.position[1], { occupied: true, id: item.id }])
+        );
+      }
+      return [];
     },
     tableId() {
       return this.withGrid ? 'StorageLocationsContainerGrid' : 'StorageLocationsContainer';
@@ -218,32 +228,37 @@ export default {
       }
       this.$refs.table.restoreSelection();
     },
+    selectEmptyCell(cell) {
+      if (this.selectedEmptyCells.find((c) => c.row === cell.row && c.column === cell.column)) {
+        this.selectedEmptyCells = this.selectedEmptyCells.filter((c) => c.row !== cell.row || c.column !== cell.column);
+      } else {
+        this.selectedEmptyCells.push(cell);
+      }
+    },
     assignRow() {
       this.openAssignModal = true;
       this.rowIdToMove = null;
       this.rowNameToMove = null;
       this.assignToContainer = this.containerId;
-      this.assignToPosition = null;
+      this.assignToPositions = [];
       this.cellIdToUnassign = null;
       this.assignMode = 'assign';
     },
-    assignRowToPosition(position) {
-      this.openAssignModal = true;
-      this.rowIdToMove = null;
-      this.rowNameToMove = null;
-      this.assignToContainer = this.containerId;
-      this.assignToPosition = position;
-      this.cellIdToUnassign = null;
-      this.assignMode = 'assign';
+    assignCallback() {
+      this.openAssignModal = false;
+      this.resetTableSearch();
+      this.reloadingTable = true;
+      this.selectedEmptyCells = [];
     },
     moveRow(_event, data) {
+      this.assignMode = 'move';
       this.openAssignModal = true;
       this.rowIdToMove = data[0].row_id;
       this.rowNameToMove = data[0].row_name || this.i18n.t('storage_locations.show.hidden');
       this.assignToContainer = null;
       this.assignToPosition = null;
       this.cellIdToUnassign = data[0].id;
-      this.assignMode = 'move';
+
     },
     async unassignRows(event, rows) {
       this.storageLocationUnassignDescription = this.i18n.t(
@@ -255,7 +270,6 @@ export default {
         axios.post(event.path).then(() => {
           this.resetTableSearch();
           this.reloadingTable = true;
-
         }).catch((error) => {
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
         });
