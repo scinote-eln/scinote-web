@@ -37,7 +37,7 @@
                   <label class="sci-checkbox-label"></label>
                 </div>
                 <div v-if="!tag.editing" @click="startEditMode(tag)"
-                     class="h-6 px-1.5 flex items-center max-w-80 truncate text-sn-white cursor-text rounded"
+                     class="sci-tag max-w-80  text-sn-white cursor-text"
                      :class="{
                        'cursor-pointer': canManage
                      }"
