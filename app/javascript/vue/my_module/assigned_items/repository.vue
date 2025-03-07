@@ -105,7 +105,10 @@ export default {
         headerName: this.i18n.t('repositories.table.row_name'),
         sortable: true,
         cellRenderer: 'NameRenderer',
-        comparator: () => null
+        comparator: () => null,
+        cellRendererParams: {
+          dtComponent: this
+        }
       }];
 
       if (this.repository.attributes.has_stock && this.repository.attributes.has_stock_consumption) {

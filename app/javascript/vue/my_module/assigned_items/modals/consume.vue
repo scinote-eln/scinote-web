@@ -111,8 +111,8 @@ export default {
     },
     changeConsume(e) {
       const { value } = e.target;
-      this.newConsume.consume = formatDecimalValue(String(value), this.row.decimals);
-      this.finalStock = this.initialValue.minus(new Decimal(value || 0)).plus(this.initialStock);
+      this.newConsume.consume = formatDecimalValue(String(value), this.consumeData.decimals);
+      this.finalStock = this.initialValue.minus(new Decimal(this.newConsume.consume || 0)).plus(this.initialStock);
       if (e.target.value.length === 0) {
         e.target.parentNode.dataset.errorText = this.i18n.t('repository_stock_values.manage_modal.amount_error');
       } else if (e.target.value <= 0) {
