@@ -1,7 +1,7 @@
 <div class="flex flex-wrap ml-3 gap-1">
   <% my_module.tags.order(:id).each do |tag| %>
     <% color = escape_input(tag[:color]) %>
-    <div class="inline-flex flex-nowrap h-6 px-2 py-1 items-center text-sn-white rounded select-none"
+    <div class="sci-tag text-sn-white select-none"
          title="<%= escape_input(tag[:name]) %>"
          style="background-color: <%= color %>;">
       <%= escape_input(tag[:name]) %>
