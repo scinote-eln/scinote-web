@@ -2,9 +2,9 @@
   <div ref="container" class="border rounded transition-all overflow-hidden" :style="{height: (sectionOpened ? '448px' : '48px')}">
     <div class="flex items-center h-12 px-4 gap-4 assigned-repository-title">
       <i ref="openHandler" @click="toggleContainer" class="sn-icon sn-icon-right cursor-pointer"></i>
-      <h3 class="my-0 flex items-center gap-1 ">
-        <span class="assigned-repository-title">{{ repository.attributes.name }}</span>
-        <span class="text-sn-grey-500 font-normal text-base">
+      <h3 class="my-0 flex items-center gap-1 overflow-hidden">
+        <span :title="repository.attributes.name" class="assigned-repository-title truncate">{{ repository.attributes.name }}</span>
+        <span class="text-sn-grey-500 font-normal text-base shrink-0">
           [{{ repository.attributes.assigned_rows_count }}]
         </span>
       </h3>
