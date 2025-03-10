@@ -367,7 +367,7 @@ export default {
     deleteSteps() {
       $.post(this.urls.delete_steps_url, () => {
         this.steps = [];
-        this.refreshProtocolDropdownOptions();
+        this.refreshProtocolStatus();
       }).fail(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });

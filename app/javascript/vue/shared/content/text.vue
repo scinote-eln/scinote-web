@@ -78,6 +78,7 @@ import moveElementModal from './modal/move.vue';
 import InlineEdit from '../inline_edit.vue';
 import Tinymce from '../tinymce.vue';
 import MenuDropdown from '../menu_dropdown.vue';
+import axios from '../../../packs/custom_axios';
 
 export default {
   name: 'TextContent',
@@ -183,12 +184,11 @@ export default {
     },
     updateName(name) {
       this.element.attributes.orderable.name = name;
-      $.ajax({
-        url: this.element.attributes.orderable.urls.update_url,
-        method: 'PUT',
-        data: { text_component: { name } }
+      axios.put(this.element.attributes.orderable.urls.update_url, {
+        text_component: { name }
+      }).then(() => {
+        this.$emit('update', this.element, true);
       });
-      this.$emit('update', this.element, true);
     },
     updateText(data) {
       this.element.attributes.orderable.text_view = data.attributes.text_view;
