@@ -670,6 +670,7 @@ export default {
         if (result) {
           this.customColumns = this.customColumns.map((col) => (col.id === result.id ? { ...col, ...result } : col));
           if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
+          window.assignedItemsTable.$refs.assignedItems.loadAssingedRepositories();
         }
       });
     },
