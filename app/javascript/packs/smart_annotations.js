@@ -39,7 +39,7 @@ const renderUserMention = (tag, userName) => {
 };
 
 window.renderSmartAnnotations = (text) => (
-  text.replace(SA_REGEX, (match, userName, _userId, label, type) => {
+  text.replace(SA_REGEX, (match, userName, _userId, _label, type) => {
     const tag = encodeURIComponent(match.slice(1, -1));
 
     if (userName) {
@@ -60,10 +60,10 @@ async function fetchSmartAnnotationData(element) {
 
   const data = await response.json();
 
-  element.querySelector('.sa-name').innerHTML = data.name || `(${I18n.t('general.private')})`;
+  element.querySelector('.sa-name').innerHTML = escapeHtml(data.name) || `(${I18n.t('general.private')})`;
 
   if (element.querySelector('.sa-type')) {
-    element.querySelector('.sa-type').innerHTML = data.type;
+    element.querySelector('.sa-type').innerHTML = escapeHtml(data.type);
   }
 }
 
