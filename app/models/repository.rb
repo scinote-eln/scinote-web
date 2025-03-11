@@ -50,6 +50,12 @@ class Repository < RepositoryBase
       .where(repository_rows: { my_module_repository_rows: { my_module: { experiments: { project: project } } } })
   }
 
+  scope :appendable_by_user, lambda { |user, team = user.current_team|
+    active.with_granted_permissions(user, RepositoryPermissions::ROWS_CREATE)
+          .where(user_assignments: { team: team })
+          .distinct('repositories.id')
+  }
+
   def self.within_global_limits?
     return true unless Rails.configuration.x.global_repositories_limit.positive?
 

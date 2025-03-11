@@ -53,6 +53,7 @@
         <AssignedRepository
           v-for="repository in assignedRepositories"
           :key="repository.id"
+          ref="assignedRepositories"
           :repository="repository"
           @recalculateContainerSize="recalculateContainerSize"
         />
@@ -131,6 +132,11 @@ export default {
           this.assignedRepositories = response.data.data;
           this.$nextTick(() => {
             this.recalculateContainerSize();
+            this.$refs.assignedRepositories.forEach((repository) => {
+              if (repository.sectionOpened) {
+                repository.getRows();
+              }
+            });
           });
         });
     },

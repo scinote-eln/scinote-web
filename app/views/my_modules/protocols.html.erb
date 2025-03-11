@@ -84,7 +84,7 @@
         ref="assignedItems"
         avaialable-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>"
         assigned-repositories-url="<%= my_module_repositories_list_path(@my_module) %>"
-        repositories-url="<%= list_team_repositories_path(current_team) %>"
+        repositories-url="<%= list_team_repositories_path(current_team, appendable: true) %>"
         my-module-id="<%= @my_module.id%>"
       />
     </div>
