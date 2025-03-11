@@ -16,7 +16,7 @@
       </div>
       <button
         class="btn btn-light icon-btn ml-auto full-screen"
-        :data-table-url="repository.attributes.urls.full_view"
+        :data-table-url="fullViewUrl"
       >
         <i class="sn-icon sn-icon-expand"></i>
       </button>
@@ -103,6 +103,13 @@ export default {
   computed: {
     preparedAssignedItems() {
       return this.assignedItems.data;
+    },
+    fullViewUrl() {
+      let url = this.repository.attributes.urls.full_view;
+      if (this.repository.attributes.has_stock && this.repository.attributes.has_stock_consumption) {
+        url += '?include_stock_consumption=true';
+      }
+      return url;
     },
     columnDefs() {
       const columns = [{

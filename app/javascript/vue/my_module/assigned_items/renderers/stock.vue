@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center gap-1">
-    <i v-if="params.data.stock.stock_status"
+    <i v-if="params.data.stock.stock_status && params.data.stock.stock_status !== 'normal'"
        :class="{
          'text-sn-alert-passion': params.data.stock.stock_status === 'empty',
          'text-sn-alert-brittlebush': params.data.stock.stock_status === 'low'

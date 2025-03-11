@@ -1,0 +1,65 @@
+<%= form_with url: update_consumption_my_module_repository_path(@my_module, @repository, module_row_id: @module_repository_row),
+              method: :post,
+              html: { data: { remote: true } } do |f| %>
+  <div class="modal-header">
+    <button type="button" class="close self-start" data-dismiss="modal" aria-label="<%= t('general.close') %>">
+      <i class="sn-icon sn-icon-close"></i>
+    </button>
+    <h4 class="modal-title">
+      <% if @module_repository_row.stock_consumption %>
+        <%= t('my_modules.repository.stock_modal.title_edit', name: @repository_row.name)%>
+      <% else %>
+        <%= t('my_modules.repository.stock_modal.title', name: @repository_row.name)%>
+      <% end %>
+    </h4>
+  </div>
+  <div class="modal-body">
+    <p><%= t('my_modules.repository.stock_modal.description') %></p>
+    <div class="consumption-container">
+      <div class="sci-input-container" data-error-text="<%= t('repository_stock_values.manage_modal.amount_error') %>">
+        <%= f.label :stock_consumption, t('my_modules.repository.stock_modal.amount') %>
+        <%= f.text_field :stock_consumption,
+                         value: @module_repository_row.formated_stock_consumption,
+                         tabindex: 1,
+                         placeholder: t('my_modules.repository.stock_modal.consumed') ,
+                         class: 'sci-input-field',
+                         data: {initial_value: (@module_repository_row.stock_consumption || 0),
+                                initial_stock: @stock_value.amount,
+                                decimals: @stock_value.repository_cell.repository_column.metadata['decimals'] } %>
+  </div>
+      <span class="units"> <%= @stock_value.repository_stock_unit_item&.data %></span>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="stock-update-view">
+          <div class="stock-initial-container bg-sn-super-light-grey <%= 'negative' if @stock_value.amount < 0 %>">
+            <span class="subtitle"><%= t('repository_stock_values.manage_modal.current_stock') %></span>
+            <span class="value"><%= @stock_value.formatted_value %></span>
+            <span class="units"><%= @stock_value.repository_stock_unit_item&.data %></span>
+          </div>
+          <div class="stock-arrow">
+            <i class="sn-icon sn-icon-arrow-right"></i>
+          </div>
+          <div class="stock-final-container bg-sn-super-light-grey">
+            <span class="subtitle"><%= t('repository_stock_values.manage_modal.new_stock') %></span>
+            <span class="value">-</span>
+            <span class="units"><%= @stock_value.repository_stock_unit_item&.data %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+     <div class="sci-input-container comments-container mt-3"  data-error-text="<%= t('repository_stock_values.manage_modal.comment_limit') %>">
+      <%= f.label :comment, t('my_modules.repository.stock_modal.comment') %>
+      <%= f.text_field :comment, placeholder: t('my_modules.repository.stock_modal.enter_comment'), tabindex: 1, class: 'sci-input-field' %>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            id="cancel"
+            class="btn btn-secondary"
+            tabindex="4"
+            data-dismiss="modal"><%=t('general.cancel') %></button>
+    <%= submit_tag t('general.save'), class: "btn btn-primary update-consumption-button", disabled: @module_repository_row.stock_consumption.nil?, tabindex: 1 %>
+  </div>
+<% end %>

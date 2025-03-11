@@ -88,6 +88,7 @@
         my-module-id="<%= @my_module.id%>"
       />
     </div>
+    <div class="task-section">
       <%= render partial: "my_modules/repositories/full_view_modal" %>
     </div>
     <!-- Protocol -->
@@ -132,6 +133,9 @@
 
 <!-- Delete file modal -->
 <%= render partial: 'assets/asset_delete_modal' %>
+
+<!-- Consume Stock Modal -->
+<%= render partial: 'my_modules/repositories/consume_stock_modal'%>
 
 <!-- Tags modal -->
 <div id="tagsModalContainer" class="vue-tags-modal">
