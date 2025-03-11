@@ -777,6 +777,10 @@ var RepositoryDatatable = (function(global) {
         // Hide edit button if not all selected rows are on the current page
         $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
         TABLE.columns([archivedOnIndex, archivedByIndex]).visible(archived);
+
+        $(`${TABLE_ID} .text-value`).each(function() {
+          window.renderElementSmartAnnotations(this);
+        });
       },
       preDrawCallback: function() {
         var archived = $('.repository-show').hasClass('archived');
