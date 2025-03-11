@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white px-4 my-4">
+  <div class="bg-white px-4 my-4 task-section">
     <div class="py-4 flex items-center gap-4">
       <i ref="openHandler" @click="toggleContainer" class="sn-icon sn-icon-right cursor-pointer"></i>
       <h2 class="my-0 flex items-center gap-1">
