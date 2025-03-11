@@ -3660,7 +3660,7 @@ en:
         row_failed: "Failed"
     delete_draft_modal:
       title: "Delete draft"
-      description_1: "You’ll loose all content from the draft. We can’t recover it once you delete it."
+      description_1: "You’ll lose all content from the draft. We can’t recover it once you delete it."
       description_2: "Are you sure?"
       confirm: "Yes, delete"
       success: "Draft was successfully deleted."
@@ -3947,7 +3947,7 @@ en:
           confirm: 'Delete forever'
         delete_steps:
           title: 'Delete all protocol steps'
-          description_1: 'You’ll loose all protocol steps from your protocol. We can’t recover them once you delete.'
+          description_1: 'You’ll lose all protocol steps from your protocol. We can’t recover them once you delete.'
           description_2: 'Are you sure?'
           confirm: 'Yes, delete them'
         reorder_elements:
