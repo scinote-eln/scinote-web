@@ -50,10 +50,23 @@ class Repository < RepositoryBase
       .where(repository_rows: { my_module_repository_rows: { my_module: { experiments: { project: project } } } })
   }
 
-  scope :appendable_by_user, lambda { |user, team = user.current_team|
-    active.with_granted_permissions(user, RepositoryPermissions::ROWS_CREATE)
-          .where(user_assignments: { team: team })
-          .distinct('repositories.id')
+  scope :appendable_by_user, lambda { |user, teams = user.current_team|
+    readable_ids = active.with_granted_permissions(user, RepositoryPermissions::ROWS_CREATE).where(team: teams).pluck(:id)
+    shared_with_team_ids = joins(:team_shared_objects, :team).where(team_shared_objects: { team: teams, permission_level: :shared_write }).pluck(:id)
+    globally_shared_ids =
+      if column_names.include?('permission_level')
+        joins(:team).where(
+          {
+            permission_level: [
+              Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]
+            ]
+          }
+        ).pluck(:id)
+      else
+        none.pluck(:id)
+      end
+
+    where(id: (readable_ids + shared_with_team_ids + globally_shared_ids).uniq)
   }
 
   def self.within_global_limits?
