@@ -868,6 +868,7 @@ Rails.application.routes.draw do
         post :publish
         post :unpublish
         post :export_form_responses
+        post :duplicate
       end
 
       collection do

@@ -8,6 +8,7 @@ class Form < ApplicationRecord
   include Assignable
   include SearchableModel
   include SearchableByNameModel
+  include Cloneable
 
   SEARCHABLE_ATTRIBUTES = ['forms.name'].freeze
 
@@ -81,6 +82,25 @@ class Form < ApplicationRecord
 
   def self.forms_enabled?
     ApplicationSettings.instance.values['forms_enabled'] == true
+  end
+
+  def duplicate!(user = nil)
+    new_form = dup
+    new_form.name = next_clone_name
+    new_form.created_by = user || created_by
+    new_form.last_modified_by = user || last_modified_by
+    new_form.published_by = nil
+    new_form.published_on = nil
+    new_form.save!
+
+    form_fields.each do |form_field|
+      new_form_field = form_field.dup
+      new_form_field.form = new_form
+      new_form_field.created_by = user || created_by
+      new_form_field.save!
+    end
+
+    new_form
   end
 
   private
