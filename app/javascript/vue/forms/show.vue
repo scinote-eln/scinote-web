@@ -102,6 +102,7 @@
             :icon="fieldIcon[activeField.attributes.data.type]"
             @update="updateField"
             @delete="deleteField"
+            @duplicate="duplicateField"
           />
           <div v-if="!activeField.id"
                class="text-xl font-semibold text-sn-grey font-inter flex items-center justify-center w-full h-full">
@@ -241,6 +242,23 @@ export default {
         form_field_positions: this.fields.map((f, i) => ({ id: f.id, position: i }))
       }).then(() => {
         this.syncSavedFields();
+      });
+    },
+    duplicateField(field) {
+      if (this.submitting) {
+        return;
+      }
+
+      this.submitting = true;
+      axios.post(field.attributes.urls.duplicate, {
+        form_field_id: field.id
+      }).then((response) => {
+        const index = this.fields.findIndex((f) => f.id === field.id);
+        this.fields.splice(index + 1, 0, response.data.data);
+        this.activeField = response.data.data;
+        this.syncSavedFields();
+      }).finally(() => {
+        this.submitting = false;
       });
     },
     deleteField(field) {

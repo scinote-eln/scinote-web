@@ -28,6 +28,9 @@
             </button>
           </template>
           <template v-slot:flyout>
+            <div @click="duplicateField" class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer ">
+              {{ i18n.t('forms.show.duplicate') }}
+            </div>
             <div @click="deleteField" class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-delete-red">
               {{ i18n.t('forms.show.delete') }}
             </div>
@@ -145,6 +148,9 @@ export default {
     },
     deleteField() {
       this.$emit('delete', this.editField);
+    },
+    duplicateField() {
+      this.$emit('duplicate', this.editField);
     },
     syncField(field) {
       this.editField = field;

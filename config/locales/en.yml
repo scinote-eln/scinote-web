@@ -1124,6 +1124,7 @@ en:
       mark_as_na: 'Mark as N/A'
       mark_as_na_explanation: 'Allow user to mark the field as Not-applicable.'
       delete: 'Delete'
+      duplicate: 'Duplicate'
       edit_form: 'Edit form'
       test_form: 'Test form'
       publish: 'Publish'
