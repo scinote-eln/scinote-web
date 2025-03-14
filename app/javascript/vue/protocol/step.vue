@@ -692,6 +692,7 @@
         const index = this.attachments.findIndex(a => a.id === attachment.id);
         if (index !== -1) {
           this.attachments[index] = attachment;
+          this.$emit('stepUpdated');
         }
       },
       closeCommentsSidebar() {
@@ -725,6 +726,7 @@
           return s;
         })
         this.elements.push(element);
+        this.$emit('stepUpdated');
       },
       moveElement(position, target_id) {
         this.elements.splice(position, 1)

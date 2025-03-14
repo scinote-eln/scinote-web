@@ -1,16 +1,22 @@
 <template>
   <div ref="container" class="border rounded transition-all overflow-hidden" :style="{height: (sectionOpened ? '448px' : '48px')}">
     <div class="flex items-center h-12 px-4 gap-4 assigned-repository-title">
-      <i ref="openHandler" @click="toggleContainer" class="sn-icon sn-icon-right cursor-pointer"></i>
-      <h3 class="my-0 flex items-center gap-1 ">
-        <span class="assigned-repository-title">{{ repository.attributes.name }}</span>
-        <span class="text-sn-grey-500 font-normal text-base">
-          [{{ repository.attributes.assigned_rows_count }}]
-        </span>
-      </h3>
+      <div @click="toggleContainer" class="flex items-center grow overflow-hidden cursor-pointer">
+        <i ref="openHandler" class="sn-icon sn-icon-right cursor-pointer"></i>
+        <h3 class="my-0 flex items-center gap-1 overflow-hidden">
+          <span :title="repository.attributes.name" class="assigned-repository-title truncate">{{ repository.attributes.name }}</span>
+          <span class="text-sn-grey-500 font-normal text-base shrink-0">
+            [{{ repository.attributes.assigned_rows_count }}]
+          </span>
+          <span v-if="repository.attributes.is_snapshot"
+                class="bg-sn-light-grey text-sn-grey-500 font-normal  px-1.5 py-1 rounded shrink-0 text-sm">
+            {{  i18n.t('my_modules.repository.snapshots.simple_view.snapshot_tag') }}
+          </span>
+        </h3>
+      </div>
       <button
         class="btn btn-light icon-btn ml-auto full-screen"
-        :data-table-url="repository.attributes.urls.full_view"
+        :data-table-url="fullViewUrl"
       >
         <i class="sn-icon sn-icon-expand"></i>
       </button>
@@ -98,6 +104,13 @@ export default {
     preparedAssignedItems() {
       return this.assignedItems.data;
     },
+    fullViewUrl() {
+      let url = this.repository.attributes.urls.full_view;
+      if (this.repository.attributes.has_stock && this.repository.attributes.has_stock_consumption) {
+        url += '?include_stock_consumption=true';
+      }
+      return url;
+    },
     columnDefs() {
       const columns = [{
         field: '0',
@@ -105,7 +118,10 @@ export default {
         headerName: this.i18n.t('repositories.table.row_name'),
         sortable: true,
         cellRenderer: 'NameRenderer',
-        comparator: () => null
+        comparator: () => null,
+        cellRendererParams: {
+          dtComponent: this
+        }
       }];
 
       if (this.repository.attributes.has_stock && this.repository.attributes.has_stock_consumption) {

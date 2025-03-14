@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white px-4 my-4">
+  <div class="bg-white px-4 my-4 task-section">
     <div class="py-4 flex items-center gap-4">
       <i ref="openHandler" @click="toggleContainer" class="sn-icon sn-icon-right cursor-pointer"></i>
       <h2 class="my-0 flex items-center gap-1">
@@ -32,14 +32,16 @@
             <div v-if="loadingAvailableRepositories" class="flex items-center justify-center w-full h-32">
               <img src="/images/medium/loading.svg" alt="Loading" />
             </div>
-            <div v-else v-for="repository in availableRepositories" :key="repository.id">
-              <div class="px-3 py-2.5 hover:bg-sn-super-light-grey max-w-[320px] cursor-pointer overflow-hidden flex items-center gap-1" @click="openAssignModal(repository.id)">
-                <i v-if="repository.shared"  class="sn-icon sn-icon sn-icon-users shrink-0"></i>
-                <span class="truncate">{{ repository.name }}</span>
-                <span v-if="repository.rows_count > 0" class="text-sn-grey-500">
-                  <i class="fas fa-file-signature"></i>
-                  {{ repository.rows_count }}
-                </span>
+            <div v-else class="overflow-y-auto max-h-96">
+              <div v-for="repository in availableRepositories" :key="repository.id">
+                <div class="px-3 py-2.5 hover:bg-sn-super-light-grey max-w-[320px] cursor-pointer overflow-hidden flex items-center gap-1" @click="openAssignModal(repository.id)">
+                  <i v-if="repository.shared"  class="sn-icon sn-icon sn-icon-users shrink-0"></i>
+                  <span :title="repository.name" class="truncate">{{ repository.name }}</span>
+                  <span v-if="repository.rows_count > 0" class="text-sn-grey-500 shrink-0">
+                    <i class="fas fa-file-signature"></i>
+                    {{ repository.rows_count }}
+                  </span>
+                </div>
               </div>
             </div>
           </template>
@@ -51,6 +53,7 @@
         <AssignedRepository
           v-for="repository in assignedRepositories"
           :key="repository.id"
+          ref="assignedRepositories"
           :repository="repository"
           @recalculateContainerSize="recalculateContainerSize"
         />
@@ -127,6 +130,14 @@ export default {
       axios.get(this.assignedRepositoriesUrl)
         .then((response) => {
           this.assignedRepositories = response.data.data;
+          this.$nextTick(() => {
+            this.recalculateContainerSize();
+            this.$refs.assignedRepositories.forEach((repository) => {
+              if (repository.sectionOpened) {
+                repository.getRows();
+              }
+            });
+          });
         });
     },
     newCreatedRow(repositoryRowSidebarUrl) {

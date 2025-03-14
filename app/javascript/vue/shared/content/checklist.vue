@@ -195,6 +195,9 @@ export default {
     update() {
       this.$emit('update', this.element, false);
     },
+    updatedChecklistItem() {
+      this.$emit('update', this.element, true);
+    },
     loadChecklistItems(insertAfter) {
       $.get(this.element.attributes.orderable.urls.checklist_items_url, (result) => {
         this.checklistItems = result.data;
@@ -219,6 +222,7 @@ export default {
         after_id: afterId
       }).then((result) => {
         this.loadChecklistItems(result.data.data[result.data.data.length - 1].id);
+        this.updatedChecklistItem();
       }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
@@ -232,6 +236,7 @@ export default {
           data: item,
           success: () => {
             this.loadChecklistItems(insertAfter);
+            this.updatedChecklistItem();
           },
           error: (xhr) => this.setFlashErrors(xhr.responseJSON.errors)
         });
@@ -270,6 +275,7 @@ export default {
     },
     removeItem(position) {
       this.checklistItems = this.checklistItems.filter((item) => item.attributes.position !== position);
+      this.updatedChecklistItem();
     },
     startReorder() {
       this.reordering = true;
@@ -299,6 +305,7 @@ export default {
         after_id: afterId
       }).then(() => {
         this.loadChecklistItems();
+        this.updatedChecklistItem();
       }).catch((e) => {
         this.setFlashErrors(e.response.errors);
       });

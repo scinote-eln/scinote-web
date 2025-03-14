@@ -7,7 +7,7 @@
         </div>
       </template>
       <template v-slot:flyout>
-        <ul v-html="reminders" class="list-none pl-0"></ul>
+        <ul ref="reminders" v-html="reminders" class="list-none pl-0"></ul>
       </template>
     </GeneralDropdown>
     <a class="hover:no-underline record-info-link truncate block"
@@ -24,7 +24,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+
+import axios from '../../../../packs/custom_axios.js';
 import GeneralDropdown from '../../../shared/general_dropdown.vue';
 
 export default {
@@ -47,6 +48,17 @@ export default {
       axios.get(this.params.data.rowRemindersUrl)
         .then((response) => {
           this.reminders = response.data.html;
+          this.$nextTick(() => {
+            this.$refs.reminders.querySelector('.row-reminders-footer').addEventListener('click', (e) => {
+              const element = e.currentTarget;
+              const url = element.dataset.rowHideRemindersUrl;
+              axios.post(url)
+                .then(() => {
+                  this.reminders = null;
+                  this.params.dtComponent.getRows();
+                });
+            });
+          });
         });
     }
   }

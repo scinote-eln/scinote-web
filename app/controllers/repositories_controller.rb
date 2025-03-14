@@ -475,7 +475,11 @@ class RepositoriesController < ApplicationController
   end
 
   def load_repositories
-    @repositories = Repository.viewable_by_user(current_user)
+    @repositories = if params[:appendable] == 'true'
+                      Repository.appendable_by_user(current_user)
+                    else
+                      Repository.viewable_by_user(current_user)
+                    end
   end
 
   def load_repositories_for_archiving

@@ -219,7 +219,7 @@ var MyModuleRepositories = (function() {
       tags += `<span class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1 text-nowrap">${state}</span>`;
     });
 
-    return `<div class='flex items-center gap-2'><a href='${row.recordInfoUrl}' class='record-info-link wrap'>${data}</a> ${tags}</div>`;
+    return `<div class='flex items-center gap-2 w-full flex-wrap'><a href='${row.recordInfoUrl}' class='record-info-link wrap'>${data}</a> ${tags}</div>`;
   }
 
   function renderSimpleTable(tableContainer) {

@@ -84,10 +84,11 @@
         ref="assignedItems"
         avaialable-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>"
         assigned-repositories-url="<%= my_module_repositories_list_path(@my_module) %>"
-        repositories-url="<%= list_team_repositories_path(current_team) %>"
+        repositories-url="<%= list_team_repositories_path(current_team, appendable: true) %>"
         my-module-id="<%= @my_module.id%>"
       />
     </div>
+    <div class="task-section">
       <%= render partial: "my_modules/repositories/full_view_modal" %>
     </div>
     <!-- Protocol -->
@@ -132,6 +133,9 @@
 
 <!-- Delete file modal -->
 <%= render partial: 'assets/asset_delete_modal' %>
+
+<!-- Consume Stock Modal -->
+<%= render partial: 'my_modules/repositories/consume_stock_modal'%>
 
 <!-- Tags modal -->
 <div id="tagsModalContainer" class="vue-tags-modal">

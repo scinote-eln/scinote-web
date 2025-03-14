@@ -4,7 +4,7 @@
       <GeneralDropdown v-if="params.data.tags.length > 0">
         <template v-slot:field>
           <div
-              class="h-6 px-1.5 inline-flex items-center rounded text-white max-w-[150px]"
+              class="sci-tag text-white max-w-[150px]"
               :style="{'background': params.data.tags[0].color}">
             <div class="truncate">{{ params.data.tags[0].name }}</div>
           </div>
@@ -21,7 +21,7 @@
           <hr class="my-2" />
           <div class="max-h-[200px] overflow-y-auto flex flex-wrap gap-1.5 max-w-[240px]">
             <div v-for="tag in params.data.tags" :key="tag.id"
-                class="h-6 px-1.5 flex items-center rounded text-white max-w-[150px]"
+                class="sci-tag text-white max-w-[150px]"
                 :style="{'background': tag.color}">
               <div class="truncate">{{ tag.name }}</div>
             </div>
