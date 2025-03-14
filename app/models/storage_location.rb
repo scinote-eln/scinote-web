@@ -81,7 +81,7 @@ class StorageLocation < ApplicationRecord
     url = if container
             storage_location_path(id)
           else
-            storage_locations_path(parent_id: root? ? nil : parent_id)
+            storage_locations_path(parent_id: id)
           end
 
     return [{ name: (readable ? name : code), url: url }] if root?

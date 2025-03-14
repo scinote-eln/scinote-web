@@ -2840,7 +2840,7 @@ en:
         selected_row_title: 'Assign new location'
         assign_title: 'Assign position'
         move_title: 'Move %{name}'
-        assign_description: 'Select an item to assign it to a location.'
+        assign_description: 'Select an item to assign it to a %{number} location(s).'
         move_description: 'Select where you want to move %{name}.'
         selected_row_description: "Select a location for the item %{name}."
         assign_action: 'Assign'
