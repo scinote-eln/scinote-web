@@ -1,8 +1,13 @@
 <template>
-  <div class="sci--navigation--notificaitons-flyout">
-    <div class="sci--navigation--notificaitons-flyout-title">
+  <div class="sci--navigation--notificaitons-flyout" data-e2e="e2e-CO-notifications-flyout">
+    <div class="sci--navigation--notificaitons-flyout-title" data-e2e="e2e-TX-notifications-title">
       {{ i18n.t('nav.notifications.title') }}
-      <a class="ml-auto cursor-pointer text-sm font-normal" :href="this.preferencesUrl" :title="i18n.t('nav.settings')">
+      <a
+        class="ml-auto cursor-pointer text-sm font-normal"
+        :href="this.preferencesUrl"
+        :title="i18n.t('nav.settings')"
+        data-e2e="e2e-BT-notifications-settings"
+      >
         {{ i18n.t('nav.settings') }}
       </a>
     </div>
@@ -11,6 +16,7 @@
         @click="changeTab('all')"
         class="px-4 py-2 text-sn-grey cursor-pointer border-solid border-0 border-b-4 border-transparent"
         :class="{'!text-sn-black border-sn-blue': activeTab === 'all'}"
+        data-e2e="e2e-BT-notifications-all-tab"
       >
         {{ i18n.t('nav.notifications.all') }}
       </div>
@@ -18,6 +24,7 @@
         @click="changeTab('unread')"
         class="px-4 py-2 text-sn-grey cursor-pointer border-solid border-0 border-b-4 border-transparent"
         :class="{'!text-sn-black border-sn-blue': activeTab === 'unread'}"
+        data-e2e="e2e-BT-notifications-unread-tab"
       >
         {{ i18n.t('nav.notifications.unread') }}
       </div>
@@ -25,29 +32,32 @@
         @click="changeTab('read')"
         class="px-4 py-2 text-sn-grey cursor-pointer border-solid border-0 border-b-4 border-transparent"
         :class="{'!text-sn-black  border-sn-blue': activeTab === 'read'}"
+        data-e2e="e2e-BT-notifications-read-tab"
       >
       {{ i18n.t('nav.notifications.read') }}
       </div>
-      <div v-if="activeTab !== 'read'" class="py-2 ml-auto cursor-pointer" @click="markAllNotificationsAsRead">
+      <div v-if="activeTab !== 'read'" class="py-2 ml-auto cursor-pointer" @click="markAllNotificationsAsRead" data-e2e="e2e-BT-notifications-readAll">
         {{ i18n.t('nav.notifications.read_all') }}
       </div>
     </div>
     <hr class="!mt-0.5">
     <perfect-scrollbar @wheel="preventPropagation" ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
-      <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="todayNotifications.length">
+      <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="todayNotifications.length" data-e2e="e2e-TX-notifications-today-subtitle">
         {{ i18n.t('nav.notifications.today') }}
       </div>
       <NotificationItem v-for="notification in todayNotifications" :key="notification.type_of + '-' + notification.id"
         @updateNotification="updateNotification"
         @close="$emit('close')"
-        :notification="notification" />
-      <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="olderNotifications.length">
+        :notification="notification"
+        :dataE2e="'notifications-today'"/>
+      <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="olderNotifications.length" data-e2e="e2e-TX-notifications-older-subtitle">
         {{ i18n.t('nav.notifications.older') }}
       </div>
       <NotificationItem v-for="notification in olderNotifications" :key="notification.type_of + '-' + notification.id"
         @updateNotification="updateNotification"
         @close="$emit('close')"
-        :notification="notification" />
+        :notification="notification"
+        :dataE2e="'notifications-older'"/>
       <div class="next-page-loader">
         <img src="/images/medium/loading.svg" v-if="loadingPage" />
       </div>

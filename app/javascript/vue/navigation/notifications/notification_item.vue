@@ -1,12 +1,12 @@
 <template>
-  <div class="sci-navigation--notificaitons-flyout-notification hover:bg-sn-super-light-grey !px-2 !-mx-2">
+  <div class="sci-navigation--notificaitons-flyout-notification hover:bg-sn-super-light-grey !px-2 !-mx-2" :data-e2e="`e2e-CO-${dataE2e}-${notification.id}`">
     <div class="flex item-center">
       <a :href="lastBreadcrumbUrl" @click="toggleRead(true); closeFlyout()" class="hover:no-underline text-black hover:text-black grow">
-        <div class="sci-navigation--notificaitons-flyout-notification-date">
+        <div class="sci-navigation--notificaitons-flyout-notification-date" :data-e2e="`e2e-TX-${dataE2e}-${notification.id}-timestamp`">
           {{ notification.attributes.created_at }}
         </div>
       </a>
-      <div class="ml-auto cursor-pointer" @click="toggleRead()">
+      <div class="ml-auto cursor-pointer" @click="toggleRead()" :data-e2e="`e2e-IC-${dataE2e}-${notification.id}-status`">
         <div v-if="!notification.attributes.checked" class="w-2.5 h-2.5 bg-sn-coral rounded-full cursor-pointer"></div>
         <div v-else class="w-2.5 h-2.5 border-2 border-sn-grey rounded-full border-solid cursor-pointer hover:border-sn-coral"></div>
       </div>
@@ -14,10 +14,16 @@
     <a :href="lastBreadcrumbUrl" @click="toggleRead(true); closeFlyout()" class="hover:no-underline text-black hover:text-black">
       <div class="sci-navigation--notificaitons-flyout-notification-title"
           v-html="notification.attributes.title"
-          :data-seen="notification.attributes.checked"></div>
-      <div v-html="notification.attributes.message" class="sci-navigation--notificaitons-flyout-notification-message"></div>
+          :data-seen="notification.attributes.checked"
+          :data-e2e="`e2e-TX-${dataE2e}-${notification.id}-title`"
+      ></div>
+      <div
+        v-html="notification.attributes.message"
+        class="sci-navigation--notificaitons-flyout-notification-message"
+        :data-e2e="`e2e-TX-${dataE2e}-${notification.id}-message`"
+      ></div>
     </a>
-    <div v-if="notification.attributes.breadcrumbs" class="flex items-center flex-wrap gap-0.5">
+    <div v-if="notification.attributes.breadcrumbs" class="flex items-center flex-wrap gap-0.5" :data-e2e="`e2e-BC-${dataE2e}-${notification.id}-breadcrumbs`">
       <Breadcrumbs :breadcrumbs="notification.attributes.breadcrumbs" />
     </div>
   </div>
@@ -30,7 +36,8 @@ import Breadcrumbs from '../../shared/breadcrumbs.vue';
 export default {
   name: 'NotificationItem',
   props: {
-    notification: Object
+    notification: Object,
+    dataE2e: { type: String, default: '' }
   },
   components: {
     Breadcrumbs
