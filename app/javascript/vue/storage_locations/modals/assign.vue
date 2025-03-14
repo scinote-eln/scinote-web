@@ -52,7 +52,7 @@
               {{ i18n.t(`storage_locations.show.assign_modal.move_description`, { name: selectedRowName }) }}
             </h4>
             <p v-else class="mb-4">
-              {{ i18n.t(`storage_locations.show.assign_modal.assign_description`) }}
+              {{ i18n.t(`storage_locations.show.assign_modal.assign_description`, { number: selectedPositions.length } )}}
             </p>
             <RowSelector v-if="!selectedRow" @change="this.rowId = $event" class="mb-4"></RowSelector>
             <ContainerSelector v-if="!selectedContainer" @change="this.containerId = $event"></ContainerSelector>
@@ -117,7 +117,12 @@ export default {
     formattedPosition() {
       if (this.selectedPositions.length > 0) {
         const pos = [];
-        this.selectedPositions.forEach((p) => {
+        this.selectedPositions.sort((a, b) => {
+          if (a[0] === b[0]) {
+            return a[1] - b[1];
+          }
+          return a[0] - b[0];
+        }).forEach((p) => {
           pos.push(String.fromCharCode(96 + parseInt(p[0], 10)).toUpperCase() + p[1]);
         });
         return pos.join(', ');

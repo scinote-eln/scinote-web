@@ -24,14 +24,13 @@
               :class="{ '!border-t-sn-grey': cell.row === 0, '!border-l-sn-grey': cell.column === 0 }"
           >
             <div
-              class="h-full w-full rounded-full items-center flex justify-center"
+              class="h-full w-full rounded-full items-center flex justify-center cursor-pointer"
               @click="selectPosition(cell)"
               :class="{
                 'bg-sn-background-green': cellIsOccupied(cell),
                 'bg-sn-grey-100': cellIsHidden(cell),
                 'bg-white': cellIsAvailable(cell),
                 'bg-white border-sn-science-blue border-solid border-[1px]': cellIsSelected(cell),
-                'cursor-pointer': !cellIsHidden(cell)
               }"
             >
               <template v-if="cellIsHidden(cell)">
@@ -119,12 +118,8 @@ export default {
       return !this.cellIsOccupied(cell) && !this.cellIsHidden(cell);
     },
     selectPosition(cell) {
-      if (this.cellIsOccupied(cell)) {
+      if (this.cellIsOccupied(cell) || this.cellIsHidden(cell)) {
         this.$emit('select', this.cellObject(cell));
-        return;
-      }
-
-      if (this.cellIsHidden(cell)) {
         return;
       }
 
@@ -133,7 +128,7 @@ export default {
     selectRow(row) {
       this.columnsList.forEach((column) => {
         const cell = { row: this.rowsList.indexOf(row), column: column - 1 };
-        if (!this.cellIsSelected(cell) && !this.cellIsOccupied(cell)) {
+        if (!this.cellIsSelected(cell) && !this.cellIsOccupied(cell) && !this.cellIsHidden(cell)) {
           this.$emit('selectEmptyCell', cell);
         }
       });
@@ -141,7 +136,7 @@ export default {
     selectColumn(column) {
       this.rowsList.forEach((row) => {
         const cell = { row: this.rowsList.indexOf(row), column: column - 1 };
-        if (!this.cellIsSelected(cell) && !this.cellIsOccupied(cell)) {
+        if (!this.cellIsSelected(cell) && !this.cellIsOccupied(cell) && !this.cellIsHidden(cell)) {
           this.$emit('selectEmptyCell', cell);
         }
       });
