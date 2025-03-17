@@ -126,20 +126,30 @@ export default {
       this.$emit('selectEmptyCell', cell);
     },
     selectRow(row) {
+      let selected = 0;
       this.columnsList.forEach((column) => {
         const cell = { row: this.rowsList.indexOf(row), column: column - 1 };
         if (!this.cellIsSelected(cell) && !this.cellIsOccupied(cell) && !this.cellIsHidden(cell)) {
           this.$emit('selectEmptyCell', cell);
+          selected += 1;
         }
       });
+      if (selected === 0) {
+        this.$emit('unselectRow', row);
+      }
     },
     selectColumn(column) {
+      let selected = 0;
       this.rowsList.forEach((row) => {
         const cell = { row: this.rowsList.indexOf(row), column: column - 1 };
         if (!this.cellIsSelected(cell) && !this.cellIsOccupied(cell) && !this.cellIsHidden(cell)) {
           this.$emit('selectEmptyCell', cell);
+          selected += 1;
         }
       });
+      if (selected === 0) {
+        this.$emit('unselectColumn', column);
+      }
     },
     handleScroll() {
       this.$refs.columnsContainer.scrollLeft = this.$refs.cellsContainer.scrollLeft;
