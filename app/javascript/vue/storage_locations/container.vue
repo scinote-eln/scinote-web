@@ -8,6 +8,8 @@
         :selectedEmptyCells="selectedEmptyCells"
         @selectEmptyCell="selectEmptyCell"
         @select="selectRow"
+        @unselectRow="unselectRow"
+        @unselectColumn="unselectColumn"
       />
     </div>
     <div class="h-full bg-white px-4">
@@ -136,6 +138,9 @@ export default {
       }
       return [];
     },
+    rowsList() {
+      return Array.from({ length: this.gridSize[0] }, (v, i) => String.fromCharCode(97 + i));
+    },
     tableId() {
       return this.withGrid ? 'StorageLocationsContainerGrid' : 'StorageLocationsContainer';
     },
@@ -258,7 +263,16 @@ export default {
       this.assignToContainer = null;
       this.assignToPosition = null;
       this.cellIdToUnassign = data[0].id;
-
+    },
+    unselectRow(row) {
+      this.selectedEmptyCells = this.selectedEmptyCells.filter((cell) => cell.row !== this.rowsList.indexOf(row));
+      this.$refs.table.selectedRows = this.$refs.table.selectedRows.filter((r) => r.position[0] !== this.rowsList.indexOf(row) + 1);
+      this.$refs.table.restoreSelection();
+    },
+    unselectColumn(column) {
+      this.selectedEmptyCells = this.selectedEmptyCells.filter((cell) => cell.column !== column - 1);
+      this.$refs.table.selectedRows = this.$refs.table.selectedRows.filter((r) => r.position[1] !== column);
+      this.$refs.table.restoreSelection();
     },
     async unassignRows(event, rows) {
       this.storageLocationUnassignDescription = this.i18n.t(
