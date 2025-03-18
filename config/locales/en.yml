@@ -20,6 +20,8 @@ en:
         head_title: "Forgot password"
         title: "Forgot your password?"
         submit: "Reset password"
+        head_admin_title: "Admin access - Log in here"
+        description_admin: "Organizaton administrators can access SciNote via password reset if Single Sign-On is not available. Only they will recieve the email with instructions."
     registrations:
       password_changed: "Password successfully updated."
     sessions:
