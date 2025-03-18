@@ -3627,6 +3627,7 @@ en:
         import_to_team_protocols_label: "Import to Team Protocols"
         import_to_private_protocols_label: "Import to My Protocols"
         import_protocols_label: "Import"
+        forms_error: "Form %{form_id} doesn't exist or you don't have access and it won’t be imported."
       import_protocol_notification:
         title: "The import process has been successfully completed. You can download original file here: %{link}"
         message: "Protocol template:"
