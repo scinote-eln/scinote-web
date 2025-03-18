@@ -234,10 +234,10 @@ function importProtocolFromFile(
           addTablePreview(stepEl, this);
         });
       }
-
       // Parse step elements
       $(this).find('stepElements > stepElement').sort(stepComparator).each(function() {
         $element = $(this);
+
         switch ($(this).attr('type')) {
           case 'Checklist':
             addChecklistPreview(stepEl, $(this).find('checklist'));
@@ -247,6 +247,9 @@ function importProtocolFromFile(
             break;
           case 'StepText':
             addStepTextPreview(stepEl, $(this).find('stepText'), protocolFolders[position], stepGuid);
+            break;
+          case 'FormResponse':
+            addStepFormPreview(stepEl, $(this).find('form'));
             break;
           default:
             // nothing to do
@@ -338,6 +341,32 @@ function importProtocolFromFile(
     );
 
     stepEl.append(textEl);
+  }
+
+  function addStepFormPreview(stepEl, stepFormNode) {
+    const formId = $(stepFormNode)[0].id;
+    jQuery.ajaxSetup({ async: false });
+    $.get(`/forms/${formId}?format=json`, (data) => {
+      const formEl = newPreviewElement(
+        'step-form',
+        { name: data.data.attributes.name }
+      );
+      $.each(data.included, (i, field) => {
+        const fieldEl = newPreviewElement(
+          'form-field',
+          { text: field.attributes.name }
+        );
+        formEl.append(fieldEl);
+      });
+      stepEl.append(formEl);
+    }).fail(() => {
+      const formEl = newPreviewElement(
+        'step-form-error',
+        { text: I18n.t('protocols.import_export.import_modal.forms_error', { form_id: formId }) }
+      );
+      stepEl.append(formEl);
+    });
+    jQuery.ajaxSetup({ async: true });
   }
 
   // display tiny_mce_assets in step description
