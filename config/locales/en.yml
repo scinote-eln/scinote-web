@@ -1087,6 +1087,7 @@ en:
       add_text: "Add text"
       add_number: "Add number"
       from: "From"
+      submitted_by: "%{date} by %{user}"
       to: "To"
       add_date: "Add date"
       add_datetime: "Add date & time"

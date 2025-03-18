@@ -9,4 +9,8 @@ class FormFieldValueSerializer < ActiveModel::Serializer
   def submitted_by_full_name
     object.submitted_by.full_name
   end
+
+  def submitted_at
+    I18n.l(object.submitted_at, format: :full) if object.submitted_at
+  end
 end

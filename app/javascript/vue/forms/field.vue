@@ -14,9 +14,13 @@
                  :field="field" :marked_as_na="markAsNa" @save="saveValue" @validChanged="checkValidField" />
     </div>
   </div>
-  <div v-if="field.attributes.allow_not_applicable" class="flex items-end mt-4">
+  <div class="flex items-center justify-end mt-4 gap-4">
+    <span class="text-sn-grey-700 text-xs" v-if="field.field_value && field.field_value.submitted_at">
+      {{  i18n.t('forms.fields.submitted_by', { date: field.field_value.submitted_at, user: field.field_value.submitted_by_full_name}) }}
+    </span>
     <button class="btn btn-secondary mb-0.5"
             :disabled="disabled"
+            v-if="field.attributes.allow_not_applicable"
             :class="{
               '!bg-sn-super-light-blue !border-sn-blue': markAsNa && !disabled
             }"
