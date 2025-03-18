@@ -1157,6 +1157,9 @@ en:
       submitted_on: 'Submitted on'
       not_submitted: 'Not submitted yet'
       by: 'by'
+      edit_modal:
+        title: "Unlock form for editing?"
+        description: "Unlocking the form for editing will require a new submission. Even if no data changes, the new submission's timestamp and user will be updated."
   label_templates:
     types:
       fluics_label_template: 'Fluics'
