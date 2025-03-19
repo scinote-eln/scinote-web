@@ -498,6 +498,12 @@ var RepositoryDatatable = (function(global) {
     //   });
   }
 
+  function renderSmartAnnotations() {
+    $(`${TABLE_ID} .text-value`).each(function() {
+      window.renderElementSmartAnnotations(this);
+    });
+  }
+
   function checkSnapshottingStatus() {
     $.getJSON($(TABLE_ID).data('status-url'), (statusData) => {
       if (statusData.snapshot_provisioning) {
@@ -778,9 +784,7 @@ var RepositoryDatatable = (function(global) {
         $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
         TABLE.columns([archivedOnIndex, archivedByIndex]).visible(archived);
 
-        $(`${TABLE_ID} .text-value`).each(function() {
-          window.renderElementSmartAnnotations(this);
-        });
+        renderSmartAnnotations();
       },
       preDrawCallback: function() {
         var archived = $('.repository-show').hasClass('archived');
@@ -886,6 +890,8 @@ var RepositoryDatatable = (function(global) {
           clearTimeout(resizeTimeout);
           resizeTimeout = setTimeout(restoreColumnSizes, 200);
         });
+
+        renderSmartAnnotations();
       }
     });
 
