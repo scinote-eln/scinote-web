@@ -499,9 +499,8 @@ var RepositoryDatatable = (function(global) {
   }
 
   function renderSmartAnnotations() {
-    $(`${TABLE_ID} .text-value`).each(function() {
-      window.renderElementSmartAnnotations(this);
-    });
+    const scrollElement = $('.repository-table .dataTables_scrollBody')[0];
+    window.renderElementSmartAnnotations(scrollElement, '.text-value', scrollElement);
   }
 
   function checkSnapshottingStatus() {

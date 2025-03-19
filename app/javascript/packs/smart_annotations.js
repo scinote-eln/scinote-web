@@ -65,25 +65,34 @@ async function fetchSmartAnnotationData(element) {
   }
 }
 
-window.renderElementSmartAnnotations = (element) => {
-  if (!element.innerHTML.match(SA_REGEX)) return true;
+window.renderElementSmartAnnotations = (parentElement, selector, scrollElement = null) => {
+  // Check if it was not initialized yet and contains SA strings
+  if (parentElement.classList.contains('sa-initialized' || !parentElement.innerHTML.match(SA_REGEX))) return true;
 
-  element.innerHTML = window.renderSmartAnnotations(element.innerHTML);
+  // Handle rendering smart annotations when innerElement scrolls into viewport
+  const renderFunction = () => {
+    const elements = parentElement.querySelectorAll(`${selector}:not(.sa-rendered)`);
 
-  // Schedule fetch of data for each annotation element when it scrolls into viewport
-  element.querySelectorAll('.sa-link, .user-tooltip').forEach((el) => {
-    if (isInViewport(el)) {
-      fetchSmartAnnotationData(el);
+    if (elements.length === 0) {
+      (scrollElement || window).removeEventListener('scroll', renderFunction);
       return;
     }
 
-    const fetchFunction = () => {
-      fetchSmartAnnotationData(el);
-      window.removeEventListener('scroll', fetchFunction);
-    };
+    elements.forEach((innerElement) => {
+      if (isInViewport(innerElement)) {
+        innerElement.innerHTML = window.renderSmartAnnotations(innerElement.innerHTML);
+        innerElement.classList.add('sa-rendered');
+        innerElement.querySelectorAll('.sa-link, .user-tooltip').forEach((el) => {
+          fetchSmartAnnotationData(el);
+        });
+      }
+    });
+  };
 
-    window.addEventListener('scroll', fetchFunction);
-  });
+  renderFunction();
+  (scrollElement || window).addEventListener('scroll', renderFunction);
+
+  parentElement.classList.add('sa-initialized');
 
   return true;
 };
@@ -107,7 +116,7 @@ $(document).on('click', '.user-tooltip', function () {
         <div class='row'>
           <div class='col-xs-12'>
             <p class='silver email'>${escapeHtml(data.email)}</p>
-            <p>${escapeHtml(data.info)}</p>
+            <p>${data.info}</p>
           </div>
         </div>
       </div>
