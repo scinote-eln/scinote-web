@@ -21,9 +21,7 @@ const isInViewport = (element) => {
   );
 };
 
-const renderUserMention = (tag, userName) => {
-  const safeUserName = escapeHtml(userName);
-
+const renderUserMention = (tag) => {
   return `<a
             role="button"
             class="user-tooltip"
@@ -43,7 +41,7 @@ window.renderSmartAnnotations = (text) => (
     const tag = encodeURIComponent(match.slice(1, -1));
 
     if (userName) {
-      return renderUserMention(tag, userName);
+      return renderUserMention(tag);
     }
 
     switch (type) {
@@ -60,7 +58,7 @@ async function fetchSmartAnnotationData(element) {
 
   const data = await response.json();
 
-  element.querySelector('.sa-name').innerHTML = escapeHtml(data.name) || `(${I18n.t('general.private')})`;
+  element.querySelector('.sa-name').innerHTML = data.name && escapeHtml(data.name) || `(${I18n.t('general.private')})`;
 
   if (element.querySelector('.sa-type')) {
     element.querySelector('.sa-type').innerHTML = escapeHtml(data.type);
@@ -109,7 +107,7 @@ $(document).on('click', '.user-tooltip', function () {
         <div class='row'>
           <div class='col-xs-12'>
             <p class='silver email'>${escapeHtml(data.email)}</p>
-            <p>${data.info}</p>
+            <p>${escapeHtml(data.info)}</p>
           </div>
         </div>
       </div>
