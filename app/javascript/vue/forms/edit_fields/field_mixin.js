@@ -10,6 +10,9 @@ export default {
         }
       },
       deep: true
+    },
+    validField() {
+      this.$emit('validChanged');
     }
   },
   computed: {

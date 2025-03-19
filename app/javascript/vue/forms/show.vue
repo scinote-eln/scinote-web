@@ -38,7 +38,7 @@
         <button v-if="form.attributes.urls.publish"
                 class="btn btn-primary"
                 @click="publishForm"
-                :disabled="submitting"
+                :disabled="submitting || !isValid"
                 data-e2e="e2e-BT-forms-builder-publish">
           {{ i18n.t('forms.show.publish') }}
         </button>
@@ -74,6 +74,7 @@
                 >
                   <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="fieldIcon[element.attributes.data.type]"></i>
                   <span :title="element.attributes.name" class="truncate">{{ element.attributes.name }}</span>
+                  <i v-if="element.isValid == false" class="ml-auto text-sn-delete-red sn-icon sn-icon-alert-warning"></i>
                 </div>
               </div>
             </template>
@@ -98,11 +99,13 @@
           <EditField
             :key="activeField.id"
             v-if="activeField.id"
+            ref="editField"
             :field="activeField"
             :icon="fieldIcon[activeField.attributes.data.type]"
             @update="updateField"
             @delete="deleteField"
             @duplicate="duplicateField"
+            @validChanged="isValidChanged"
           />
           <div v-if="!activeField.id"
                class="text-xl font-semibold text-sn-grey font-inter flex items-center justify-center w-full h-full">
@@ -177,10 +180,18 @@ export default {
       savedFields: [],
       activeField: {},
       preview: false,
-      submitting: false
+      submitting: false,
+      isValid: false
     };
   },
   methods: {
+    isValidChanged() {
+      if (this.$refs.editField?.field) {
+        const index = this.fields.findIndex((f) => f.id === this.$refs.editField.field.id);
+        this.fields[index].isValid = this.$refs.editField.isValid;
+        this.isValid = !this.fields.some((field) => field.isValid === false);
+      }
+    },
     syncSavedFields() {
       this.savedFields = this.fields.map((f) => ({ ...f }));
     },
