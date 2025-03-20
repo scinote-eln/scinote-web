@@ -8,7 +8,7 @@
       <h3><%= t("users.registrations.edit.email_label") %></h3>
       <div class="user-attribute">
         <%= @user.email %>
-        <a href="#" class="btn btn-secondary" data-action="edit"><%= t("general.change") %></a>
+        <a href="#" class="btn btn-secondary <%= 'disabled' if sso_enabled? && sso_provider_enabled? %>" data-action="edit"><%= t("general.change") %></a>
       </div>
       <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
         <div class="alert alert-info" style="margin-top: 15px;" role="alert">

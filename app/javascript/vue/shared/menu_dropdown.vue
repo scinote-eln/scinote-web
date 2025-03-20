@@ -41,10 +41,12 @@
                 <i class="sn-icon sn-icon-right ml-auto"></i>
               </span>
               <div
-                  class="absolute bg-sn-white top-0 rounded p-2.5 sn-shadow-menu-sm  flex flex-col gap-[1px] tw-hidden group-hover:block"
+                  class="absolute bg-sn-white rounded p-2.5 sn-shadow-menu-sm  flex flex-col gap-[1px] tw-hidden group-hover:block"
                   :class="{
                     'left-0 ml-[100%]': item.position === 'right',
-                    'right-0 mr-[100%]': item.position === 'left'
+                    'right-0 mr-[100%]': item.position === 'left',
+                    'top-0': this.openDirection === 'down',
+                    'bottom-0': this.openDirection === 'top'
                   }"
               >
                 <a v-for="(sub_item, si) in item.submenu" :key="si"

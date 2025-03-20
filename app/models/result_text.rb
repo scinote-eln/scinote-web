@@ -12,6 +12,8 @@ class ResultText < ApplicationRecord
   belongs_to :result, inverse_of: :result_texts, touch: true
   has_one :result_orderable_element, as: :orderable, dependent: :destroy
 
+  delegate :team, to: :result
+
   def duplicate(result, position = nil)
     ActiveRecord::Base.transaction do
       new_result_text = result.result_texts.create!(

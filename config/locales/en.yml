@@ -20,6 +20,8 @@ en:
         head_title: "Forgot password"
         title: "Forgot your password?"
         submit: "Reset password"
+        head_admin_title: "Admin access - Log in here"
+        description_admin: "Organizaton administrators can access SciNote via password reset if Single Sign-On is not available. Only they will recieve the email with instructions."
     registrations:
       password_changed: "Password successfully updated."
     sessions:
@@ -352,13 +354,13 @@ en:
     repositories: "Inventories"
     templates: "Templates"
     forms: "Forms"
-    protocol: "Protocol"
-    label: "Label"
-    items: "Items"
-    locations: "Locations"
+    protocol: "Protocol templates"
+    label: "Label templates"
+    items: "Inventories"
+    locations: "Item locations"
     reports: "Reports"
     settings: "Settings"
-    activities: "Activities"
+    activities: "Global activities"
     academy: "Courses"
     support: "Support"
     support_links:
@@ -1161,6 +1163,8 @@ en:
       edit_modal:
         title: "Unlock form for editing?"
         description: "Unlocking the form for editing will require a new submission. Even if no data changes, the new submission's timestamp and user will be updated."
+    promo:
+      promo_title: 'This feature is disabled by default in open source SciNote'
   label_templates:
     types:
       fluics_label_template: 'Fluics'
@@ -1334,6 +1338,15 @@ en:
     assigned_items:
       title: "Assigned items"
       assign_from: "Assign from"
+      create_item: "Create item"
+      create_modal:
+        modal_title: 'Create a new item'
+        description: 'Choose an inventory and name the new item'
+        inventory_label: 'Inventory'
+        inventory_placeholder: 'Select inventory'
+        inventory_item_name: 'Item name'
+        create_item: 'Create item'
+        checkbox_label: 'Mark as output'
       direct_assign:
         success: "Successfully assigned an item to the task."
     protocol:
@@ -1504,6 +1517,7 @@ en:
         add_file: 'From your PC'
         checklist_item: 'Add new'
         well_plate_options:
+          custom: 'Custom'
           32_x_48: '1536 (32 x 48)'
           16_x_24: '384 (16 x 24)'
           8_x_12: '96 (8 x 12)'
@@ -2826,11 +2840,17 @@ en:
         description_single: 'Are you sure you want to remove item from this location?'
         button: 'Unassign'
       assign_modal:
-        selected_position_title: 'Assign to position %{position}'
+        override:
+          title: 'Override location'
+          p_1_html: "You are about to override <b>%{count}</b> occupied locations. This action can't be undone."
+          p_2: 'Are you sure you want to confirm this override?'
+          skip: 'Skip occupied locations'
+          cta: 'Override'
+        selected_position_title: 'Assign to positions %{position}'
         selected_row_title: 'Assign new location'
         assign_title: 'Assign position'
         move_title: 'Move %{name}'
-        assign_description: 'Select an item to assign it to a location.'
+        assign_description: 'Select an item to assign it to a %{number} location(s).'
         move_description: 'Select where you want to move %{name}.'
         selected_row_description: "Select a location for the item %{name}."
         assign_action: 'Assign'
@@ -2905,6 +2925,10 @@ en:
           edit_container: "Box %{name} was successfully updated."
         errors:
           max_length: "is too long (maximum is %{max_length} characters)"
+      find_row_modal:
+        title: "Find an item"
+        description: "Select an item to see its location(s)."
+        no_results: "This item has no assigned locations"
       move_modal:
         title: 'Move %{name}'
         description: 'Select where you want to move %{name}.'
@@ -3646,7 +3670,7 @@ en:
         row_failed: "Failed"
     delete_draft_modal:
       title: "Delete draft"
-      description_1: "You’ll loose all content from the draft. We can’t recover it once you delete it."
+      description_1: "You’ll lose all content from the draft. We can’t recover it once you delete it."
       description_2: "Are you sure?"
       confirm: "Yes, delete"
       success: "Draft was successfully deleted."
@@ -3872,6 +3896,7 @@ en:
         add_file: 'From your PC'
         checklist_item: 'Add new'
         well_plate_options:
+          custom: 'Custom'
           32_x_48: '1536 (32 x 48)'
           16_x_24: '384 (16 x 24)'
           8_x_12: '96 (8 x 12)'
@@ -3933,11 +3958,16 @@ en:
           confirm: 'Delete forever'
         delete_steps:
           title: 'Delete all protocol steps'
-          description_1: 'You’ll loose all protocol steps from your protocol. We can’t recover them once you delete.'
+          description_1: 'You’ll lose all protocol steps from your protocol. We can’t recover them once you delete.'
           description_2: 'Are you sure?'
           confirm: 'Yes, delete them'
         reorder_elements:
           title: 'Rearrange step %{step_position} content'
+        custom_well_plate:
+          title: 'Insert custom well plate'
+          name_label: 'Well plate name'
+          name_placeholder: 'Plate'
+          dimension_label: 'Dimensions (rows x columns)'
       options:
         up_arrow_title: "Move step up"
         down_arrow_title: "Move step down"
@@ -4099,8 +4129,12 @@ en:
     step_description_title: "%{user} mentioned you in a description on step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
     step_text_title: "%{user} mentioned you in a text on step %{step}."
+    step_table_title: "%{user} mentioned you in a table on step %{step}."
+    step_well_plate_title: "%{user} mentioned you in a well plate on step %{step}."
     step_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module} | Step: %{step}"
     result_annotation_title: "%{user} mentioned you in result %{result}."
+    result_table_annotation_title: "%{user} mentioned you in a table on result %{result}."
+    result_well_plate_annotation_title: "%{user} mentioned you in a well plate on result %{result}."
     result_comment_annotation_title: "%{user} mentioned you in a comment on result %{result}."
     result_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     repository_annotation_title: "%{user} mentioned you in Column: %{column} of Item %{record} in Inventory %{repository}"
@@ -4223,6 +4257,7 @@ en:
       title: "People"
       header: "Type the name or email of the user you want to mention (they will be notified)"
       help: "Navigate: ↑ ↓    •    Insert: Enter / Tab    •    Dismiss: Esc"
+      not_in_this_team: 'Not in this team'
       popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
     res:
       archived: "(archived)"
@@ -4433,7 +4468,9 @@ en:
     replace: "Replace"
     archive: "Archive"
     assign: "Assign"
+    insert: "Insert"
     options_selected: 'options selected'
+    output: 'Output'
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"

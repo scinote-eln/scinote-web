@@ -20,6 +20,10 @@ module PermissionCheckableModel
     user_role_permissions.include?(permission)
   end
 
+  def readable_by_user?(user)
+    permission_granted?(user, "::#{self.class.to_s.split('::').first}Permissions".constantize::READ)
+  end
+
   private
 
   def load_user_role_permissions(user)

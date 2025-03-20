@@ -3,13 +3,13 @@
     <div class="z-10 bg-sn-super-light-grey"></div>
     <div ref="columnsContainer" class="overflow-x-hidden">
       <div :style="{'width': `${columnsList.length * 54}px`}">
-        <div v-for="column in columnsList" :key="column" class="uppercase float-left flex items-center justify-center w-[54px] ">
+        <div v-for="column in columnsList" :key="column" @click="selectColumn(column)" class=" cursor-pointer uppercase float-left flex items-center justify-center w-[54px] ">
           <span>{{ column }}</span>
         </div>
       </div>
     </div>
     <div ref="rowContainer" class="overflow-y-hidden max-h-[70vh]">
-      <div v-for="row in rowsList" :key="row" class="uppercase flex items-center justify-center h-[54px]">
+      <div v-for="row in rowsList" :key="row" @click="selectRow(row)" class="cursor-pointer uppercase flex items-center justify-center h-[54px]">
         <span>{{ row }}</span>
       </div>
     </div>
@@ -24,14 +24,13 @@
               :class="{ '!border-t-sn-grey': cell.row === 0, '!border-l-sn-grey': cell.column === 0 }"
           >
             <div
-              class="h-full w-full rounded-full items-center flex justify-center"
-              @click="assignRow(cell)"
+              class="h-full w-full rounded-full items-center flex justify-center cursor-pointer"
+              @click="selectPosition(cell)"
               :class="{
                 'bg-sn-background-green': cellIsOccupied(cell),
                 'bg-sn-grey-100': cellIsHidden(cell),
                 'bg-white': cellIsAvailable(cell),
                 'bg-white border-sn-science-blue border-solid border-[1px]': cellIsSelected(cell),
-                'cursor-pointer': !cellIsHidden(cell)
               }"
             >
               <template v-if="cellIsHidden(cell)">
@@ -62,6 +61,10 @@ export default {
       default: () => []
     },
     selectedItems: {
+      type: Array,
+      default: () => []
+    },
+    selectedEmptyCells: {
       type: Array,
       default: () => []
     }
@@ -108,22 +111,45 @@ export default {
       return this.cellObject(cell)?.hidden;
     },
     cellIsSelected(cell) {
-      return this.selectedItems.some((item) => item.position[0] === cell.row + 1 && item.position[1] === cell.column + 1);
+      return this.selectedItems.some((item) => item.position[0] === cell.row + 1 && item.position[1] === cell.column + 1)
+        || this.selectedEmptyCells.some((selectedCell) => selectedCell.row === cell.row && selectedCell.column === cell.column);
     },
     cellIsAvailable(cell) {
       return !this.cellIsOccupied(cell) && !this.cellIsHidden(cell);
     },
-    assignRow(cell) {
-      if (this.cellIsOccupied(cell)) {
+    selectPosition(cell) {
+      if (this.cellIsOccupied(cell) || this.cellIsHidden(cell)) {
         this.$emit('select', this.cellObject(cell));
         return;
       }
 
-      if (this.cellIsHidden(cell)) {
-        return;
+      this.$emit('selectEmptyCell', cell);
+    },
+    selectRow(row) {
+      let selected = 0;
+      this.columnsList.forEach((column) => {
+        const cell = { row: this.rowsList.indexOf(row), column: column - 1 };
+        if (!this.cellIsSelected(cell) && !this.cellIsOccupied(cell) && !this.cellIsHidden(cell)) {
+          this.$emit('selectEmptyCell', cell);
+          selected += 1;
+        }
+      });
+      if (selected === 0) {
+        this.$emit('unselectRow', row);
       }
-
-      this.$emit('assign', [cell.row + 1, cell.column + 1]);
+    },
+    selectColumn(column) {
+      let selected = 0;
+      this.rowsList.forEach((row) => {
+        const cell = { row: this.rowsList.indexOf(row), column: column - 1 };
+        if (!this.cellIsSelected(cell) && !this.cellIsOccupied(cell) && !this.cellIsHidden(cell)) {
+          this.$emit('selectEmptyCell', cell);
+          selected += 1;
+        }
+      });
+      if (selected === 0) {
+        this.$emit('unselectColumn', column);
+      }
     },
     handleScroll() {
       this.$refs.columnsContainer.scrollLeft = this.$refs.cellsContainer.scrollLeft;

@@ -182,7 +182,7 @@ module Users
       user = User.from_omniauth(auth)
 
       # User found in database so just signing in
-      return sign_in_and_redirect(user) if user.present?
+      return sign_in_and_redirect(user, event: :authentication) if user.present?
 
       if email.blank?
         # No email in the token so can not link or create user
@@ -198,13 +198,13 @@ module Users
         if user.errors.present?
           redirect_to after_omniauth_failure_path_for(resource_name)
         else
-          sign_in_and_redirect(user)
+          sign_in_and_redirect(user, event: :authentication)
         end
       elsif provider_conf['auto_link_on_sign_in']
         # Link to existing local account
         user.user_identities.create!(provider: auth.provider, uid: auth.uid)
         user.update!(confirmed_at: user.created_at) if user.confirmed_at.blank?
-        sign_in_and_redirect(user)
+        sign_in_and_redirect(user, event: :authentication)
       else
         # Cannot do anything with it, so just return an error
         error_message = I18n.t('devise.openid_connect.errors.no_local_user_map')
@@ -240,7 +240,7 @@ module Users
       user = User.from_omniauth(auth)
 
       # User found in database so just signing in
-      return sign_in_and_redirect(user) if user.present?
+      return sign_in_and_redirect(user, event: :authentication) if user.present?
 
       if email.blank?
         # No email in the token so can not link or create user
@@ -255,13 +255,13 @@ module Users
         if user.errors.present?
           redirect_to after_omniauth_failure_path_for(resource_name)
         else
-          sign_in_and_redirect(user)
+          sign_in_and_redirect(user, event: :authentication)
         end
       elsif provider_conf['auto_link_on_sign_in']
         # Link to existing local account
         user.user_identities.create!(provider: auth.provider, uid: auth.uid)
         user.update!(confirmed_at: user.created_at) if user.confirmed_at.blank?
-        sign_in_and_redirect(user)
+        sign_in_and_redirect(user, event: :authentication)
       else
         # Cannot do anything with it, so just return an error
         error_message = I18n.t('devise.saml.errors.no_local_user_map')

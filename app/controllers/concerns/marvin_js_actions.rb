@@ -47,7 +47,7 @@ module MarvinJsActions
   end
 
   def marvinjs_find_target_object(asset, current_user, activity_type, action = nil)
-    if marvinjs_asset_type(asset, Step)
+    if marvinjs_asset_type(asset, Step) || marvinjs_asset_type(asset, StepText)
       marvinjs_step_activity(asset, current_user, activity_type, action)
     elsif marvinjs_asset_type(asset, Result) || marvinjs_asset_type(asset, ResultText)
       marvinjs_result_activity(asset, current_user, activity_type, action)

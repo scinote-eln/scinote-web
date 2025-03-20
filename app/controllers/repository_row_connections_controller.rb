@@ -63,7 +63,8 @@ class RepositoryRowConnectionsController < ApplicationController
                              .per(Constants::SEARCH_LIMIT)
     render json: {
       data: repositories.select(:id, :name, :archived)
-                        .map { |repository| { id: repository.id, name: repository.name_with_label } },
+                        .map { |repository| [repository.id, repository.name_with_label] },
+      paginated: true,
       next_page: repositories.next_page
     }
   end
@@ -81,7 +82,8 @@ class RepositoryRowConnectionsController < ApplicationController
                                          .per(Constants::SEARCH_LIMIT)
     render json: {
       data: repository_rows.select(:id, :name, :archived, :repository_id)
-                           .map { |row| { id: row.id, name: row.name_with_label } },
+                           .map { |row| [row.id, row.name_with_label] },
+      paginated: true,
       next_page: repository_rows.next_page
     }
   end

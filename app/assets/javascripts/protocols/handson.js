@@ -31,5 +31,7 @@
     }, 500);
   });
 
-  window.print();
+  setTimeout(() => {
+    window.print();
+  }, 1000);
 }());

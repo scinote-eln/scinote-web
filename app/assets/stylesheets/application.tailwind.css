@@ -4,6 +4,7 @@
 @import "tailwind/flyouts";
 @import "tailwind/radio";
 @import "tailwind/loader.css";
+@import "tailwind/tags.css";
 
 @tailwind base;
 @tailwind components;

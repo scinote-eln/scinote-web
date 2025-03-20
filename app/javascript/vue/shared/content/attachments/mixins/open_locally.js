@@ -47,6 +47,8 @@ export default {
         return;
       }
 
+      if (this.attributes.urls.open_locally_api === undefined) return;
+
       try {
         const statusResponse = await axios.get(
           `${this.attributes.urls.open_locally_api}/status`
@@ -66,6 +68,8 @@ export default {
     },
     async fetchLocalAppInfo() {
       this.checkScinoteEditRunning();
+
+      if (this.attributes.urls.open_locally_api === undefined) return;
 
       // responses will be cached on window, so the requests only run once per page load
       if (window.scinoteEditRunning === false) return;
@@ -139,6 +143,7 @@ export default {
         }
       } catch (error) {
         console.error('Error polling for changes:', error);
+        this.stopPolling();
       }
     },
     startPolling() {

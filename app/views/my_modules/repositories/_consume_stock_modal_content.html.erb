@@ -26,7 +26,7 @@
                          data: {initial_value: (@module_repository_row.stock_consumption || 0),
                                 initial_stock: @stock_value.amount,
                                 decimals: @stock_value.repository_cell.repository_column.metadata['decimals'] } %>
-      </div>
+  </div>
       <span class="units"> <%= @stock_value.repository_stock_unit_item&.data %></span>
     </div>
 
@@ -49,7 +49,7 @@
         </div>
       </div>
     </div>
-    <div class="sci-input-container comments-container mt-3"  data-error-text="<%= t('repository_stock_values.manage_modal.comment_limit') %>">
+     <div class="sci-input-container comments-container mt-3"  data-error-text="<%= t('repository_stock_values.manage_modal.comment_limit') %>">
       <%= f.label :comment, t('my_modules.repository.stock_modal.comment') %>
       <%= f.text_field :comment, placeholder: t('my_modules.repository.stock_modal.enter_comment'), tabindex: 1, class: 'sci-input-field' %>
     </div>

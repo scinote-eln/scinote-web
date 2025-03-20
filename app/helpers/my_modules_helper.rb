@@ -80,11 +80,11 @@ module MyModulesHelper
 
   def assigned_repository_simple_view_footer_label(repository)
     if repository.is_a?(RepositorySnapshot)
-      return t('my_modules.repository.snapshots.simple_view.snapshot_bottom_label',
-               date_time: l(repository.created_at, format: :full))
+      return I18n.t('my_modules.repository.snapshots.simple_view.snapshot_bottom_label',
+                    date_time: I18n.l(repository.created_at, format: :full))
     end
 
-    t('my_modules.repository.snapshots.simple_view.live_bottom_label')
+    I18n.t('my_modules.repository.snapshots.simple_view.live_bottom_label')
   end
 
   def assigned_repository_simple_view_name_column_id(repository)

@@ -10,7 +10,7 @@
   data-module-y="<%= my_module.y %>"
   data-module-conns="<%= construct_module_connections(my_module) %>">
 
-  <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
+  <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_path(my_module, format: :json) %>">
     <%= render partial: "canvas/tags", locals: { my_module: my_module } %>
   </a>
 

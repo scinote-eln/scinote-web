@@ -205,6 +205,7 @@
     }).on('shown.bs.modal', function() {
       emailsInput.focus();
       dropdownSelector.init(teamsInput, {
+        labelHTML: true,
         optionClass: 'checkbox-icon'
       });
       // Remove 'data-invited="true"' status

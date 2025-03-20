@@ -1,3 +1,5 @@
+import './smart_annotations.js';
+
 require('jquery-ujs');
 require('jquery-mousewheel');
 require('jquery-autosize');
@@ -52,6 +54,10 @@ $(document).on('turbolinks:load', () => {
     $('.sci--layout-navigation-navigator').css(
       '--navigator-top-margin',
       ((scrollPosition / navbarHeight) * 16) + 'px'
+    );
+    $('.sci--layout-navigation-left').css(
+      '--left-navigation-top-margin',
+      ((scrollPosition / navbarHeight) * 72) + 'px'
     );
   });
 });

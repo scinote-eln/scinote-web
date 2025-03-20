@@ -148,7 +148,7 @@ class ProtocolsImporterV2
       table: Table.new(
         name: params['name'],
         contents: Base64.decode64(params['contents']),
-        metadata: JSON.parse(params['metadata'].presence || '{}'),
+        metadata: table_metadata(params),
         created_by: @user,
         last_modified_by: @user,
         team: @team
@@ -239,5 +239,9 @@ class ProtocolsImporterV2
       description.gsub!('  ]]--&gt;', '')
     end
     description
+  end
+
+  def table_metadata(table)
+    JSON.parse(table['metadata'].presence || '{}')
   end
 end

@@ -2,12 +2,12 @@
 
 <div id="GlobalSearch" class="contents">
   <global_search
-    :query="'<%= @display_query %>'"
+    query="<%= @display_query %>"
     :search-url="'<%= search_path(format: :json) %>'"
     teams-url="<%= visible_teams_teams_path %>"
     users-url="<%= visible_users_teams_path %>"
     :single-team="<%= current_user.teams.count == 1 %>"
-    current-team="<%= current_team.id %>"
+    :current-team="<%= current_team.id %>"
   />
 </div>
 

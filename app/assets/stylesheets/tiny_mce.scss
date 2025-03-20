@@ -1,11 +1,5 @@
 // scss-lint:disable ImportantRule SelectorDepth
 
-
-@font-face {
-  font-family: "tinymce";
-  src: asset-url("tinymce/skins/lightgray/fonts/tinymce.woff");
-}
-
 .tinymce-view {
   border: solid 1px;
   border-color: $color-white;

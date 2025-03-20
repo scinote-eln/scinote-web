@@ -21,7 +21,7 @@ module RepositoryDatatableHelper
       row = public_send(default_columns_method_name, record)
       row['code'] = record.code
       row['DT_RowId'] = record.id
-      row['DT_RowAttr'] = { 'data-state': row_style(record), 'data-e2e': "e2e-TR-invInventory-bodyRow-#{record.id}" }
+      row['DT_RowAttr'] = { 'data-state': row_style(record, options[:my_module]), 'data-e2e': "e2e-TR-invInventory-bodyRow-#{record.id}" }
       row['recordInfoUrl'] = Rails.application.routes.url_helpers.repository_repository_row_path(repository.id, record.id)
       row['rowRemindersUrl'] = Rails.application.routes.url_helpers
                                     .active_reminder_repository_cells_repository_repository_row_url(repository.id, record.id)
@@ -108,7 +108,7 @@ module RepositoryDatatableHelper
     repository_rows.map do |record|
       row = {
         DT_RowId: record.id,
-        DT_RowAttr: { 'data-state': row_style(record) },
+        DT_RowAttr: { 'data-state': row_style(record, my_module) },
         '0': escape_input(record.name),
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record),
         rowRemindersUrl:
@@ -175,12 +175,12 @@ module RepositoryDatatableHelper
     end
   end
 
-  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team, repository_snapshot, options = {})
+  def prepare_snapshot_row_columns(repository_rows, columns_mappings, team, repository_snapshot, my_module, options = {})
     has_stock_management = repository_snapshot.has_stock_management?
     repository_rows.map do |record|
       row = {
         'DT_RowId': record.id,
-        'DT_RowAttr': { 'data-state': row_style(record) },
+        'DT_RowAttr': { 'data-state': row_style(record, my_module) },
         '1': record.code,
         '2': escape_input(record.name),
         '3': I18n.l(record.created_at, format: :full),
@@ -299,10 +299,12 @@ module RepositoryDatatableHelper
     ).serializable_hash
   end
 
-  def row_style(row)
-    return I18n.t('general.archived') if row.archived
+  def row_style(row, my_module)
+    style = []
+    style << I18n.t('general.archived') if row.archived
+    style << I18n.t('general.output') if row.output? && row.my_module.id == my_module&.id
 
-    ''
+    style
   end
 
   def stock_consumption_permitted?(repository, my_module)

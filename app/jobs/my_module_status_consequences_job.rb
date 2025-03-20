@@ -24,6 +24,11 @@ class MyModuleStatusConsequencesJob < ApplicationJob
       raise ActiveRecord::Rollback
     end
     if error.present?
+      if error[:type] == :repository_snapshot
+        my_module.repository_snapshots.find_by(id: error[:repository_snapshot_id])&.failed!
+        my_module.repository_snapshots.where(status: 'provisioning').destroy_all
+      end
+
       my_module.transition_error_rollback = true
       my_module.my_module_status = my_module.changing_from_my_module_status
       my_module.last_transition_error = error

@@ -2,6 +2,7 @@
 
 class Table < ApplicationRecord
   include SearchableModel
+  include TableHelper
 
   auto_strip_attributes :name, nullify: false
   validates :name,
@@ -20,14 +21,13 @@ class Table < ApplicationRecord
              optional: true
   belongs_to :team, optional: true
   has_one :step_table, inverse_of: :table, dependent: :destroy
-  has_one :step, through: :step_table
+  has_one :step, through: :step_table, touch: true
 
   has_one :result_table, inverse_of: :table, dependent: :destroy
-  has_one :result, through: :result_table
+  has_one :result, through: :result_table, touch: true
   has_many :report_elements, inverse_of: :table, dependent: :destroy
 
   after_save :update_ts_index
-  after_save { result&.touch; step&.touch }
 
   def metadata
     attributes['metadata'].is_a?(String) ? JSON.parse(attributes['metadata']) : attributes['metadata']
@@ -45,6 +45,10 @@ class Table < ApplicationRecord
             "WHERE id = " + Integer(id).to_s
       Table.connection.execute(sql)
     end
+  end
+
+  def well_plate?
+    metadata&.dig('plateTemplate') || false
   end
 
   def to_csv

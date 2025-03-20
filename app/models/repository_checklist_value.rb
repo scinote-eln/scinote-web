@@ -97,6 +97,9 @@ class RepositoryChecklistValue < ApplicationRecord
   def snapshot!(cell_snapshot)
     value_snapshot = dup
     item_values = repository_checklist_items.pluck(:data)
+
+    return if item_values.blank?
+
     checklist_items_snapshot = cell_snapshot.repository_column
                                             .repository_checklist_items
                                             .select { |snapshot_item| item_values.include?(snapshot_item.data) }

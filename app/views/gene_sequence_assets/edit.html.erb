@@ -7,7 +7,8 @@
     <%= stylesheet_link_tag 'sn_icon_font' %>
     <%= stylesheet_link_tag 'application' %>
     <%= stylesheet_link_tag 'tailwind' %>
-    <%= stylesheet_link_tag 'open_vector_editor' %>
+    <%= stylesheet_link_tag '/vendor/ove/ove.css' %>
+    <%= csrf_meta_tags %>
     <style>
       body {
         margin: 0;
@@ -25,7 +26,7 @@
           ove-warning="<%= defined?(@warnings) ? @warnings : '' %>"
         />
       </div>
-      <%= javascript_include_tag 'open_vector_editor' %>
+      <%= javascript_include_tag '/vendor/ove/ove.js' %>
       <%= javascript_include_tag 'vue_components_open_vector_editor' %>
     <% end %>
   </body>

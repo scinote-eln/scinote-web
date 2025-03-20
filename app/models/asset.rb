@@ -25,7 +25,6 @@ class Asset < ApplicationRecord
   # This could cause some problems if you create empty asset and want to
   # assign it to result
   validate :step_or_result_or_repository_asset_value
-  validate :wopi_filename_valid, on: :wopi_file_creation
   validate :check_file_size, on: :on_api_upload
 
   belongs_to :created_by, class_name: 'User', optional: true
@@ -165,10 +164,11 @@ class Asset < ApplicationRecord
     new_blob = nil
 
     blob.open do |tmp_file|
+      # Analyzed flag should be removed in order to run a new text extraction job needed for search
       new_blob = ActiveStorage::Blob.create_and_upload!(
         io: tmp_file,
         filename: blob.filename,
-        metadata: (metadata || blob.metadata)
+        metadata: (metadata || blob.metadata).except(:analyzed)
       )
 
       attach_method.call(new_blob)
@@ -358,8 +358,13 @@ class Asset < ApplicationRecord
     end
   end
 
-  def update_contents(new_file)
-    attach_file_version(io: new_file, filename: file_name)
+  def put_wopi_contents(new_file)
+    if file_size.zero? && version.zero?
+      # wopi client  puts initial blanc file therefore skipping version creation
+      file.attach(io: new_file, filename: file_name)
+    else
+      attach_file_version(io: new_file, filename: file_name)
+    end
     self.version = version.nil? ? 1 : version + 1
     save
   end
@@ -414,6 +419,27 @@ class Asset < ApplicationRecord
     end
   end
 
+  def wopi_filename_valid?(file_name)
+    # Check that filename without extension is not blank
+    if file_name[0..-6].blank?
+      errors.add(
+        :file,
+        I18n.t('general.text.not_blank')
+      )
+    end
+    # Check maximum filename length
+    if file_name.length > Constants::FILENAME_MAX_LENGTH
+      errors.add(
+        :file,
+        I18n.t(
+          'general.file.file_name_too_long',
+          limit: Constants::FILENAME_MAX_LENGTH
+        )
+      )
+    end
+    errors.blank?
+  end
+
   private
 
   def tempdir
@@ -434,26 +460,6 @@ class Asset < ApplicationRecord
       errors.add(
         :base,
         'Asset can only be result or step or repository cell, not ever.'
-      )
-    end
-  end
-
-  def wopi_filename_valid
-    # Check that filename without extension is not blank
-    if file_name[0..-6].blank?
-      errors.add(
-        :file,
-        I18n.t('general.text.not_blank')
-      )
-    end
-    # Check maximum filename length
-    if file_name.length > Constants::FILENAME_MAX_LENGTH
-      errors.add(
-        :file,
-        I18n.t(
-          'general.file.file_name_too_long',
-          limit: Constants::FILENAME_MAX_LENGTH
-        )
       )
     end
   end
