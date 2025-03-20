@@ -16,7 +16,7 @@ class WopiController < ActionController::Base
     # special case for newly created empty files
     response.body =
       if @asset.file_size.zero? && @asset.version.zero?
-        nil
+        ''
       else
         @asset.file.download
       end
