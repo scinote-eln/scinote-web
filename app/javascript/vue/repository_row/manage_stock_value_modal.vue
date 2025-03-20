@@ -286,6 +286,9 @@ export default {
           $this.isSaving = false;
           $this.closeModal();
           $this.closeCallback && $this.closeCallback(result);
+          if (window.assignedItemsTable) {
+            window.assignedItemsTable.$refs.assignedItems.loadAssingedRepositories();
+          }
         }
       });
     }
