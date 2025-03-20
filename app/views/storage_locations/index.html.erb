@@ -5,7 +5,19 @@
   <div class="content-pane with-grey-background flexible">
     <div class="content-header">
       <div class="title-row">
-        <h1><%= @parent_location ? @parent_location.name : t('storage_locations.index.head_title') %></h1>
+        <% if @parent_location && can_manage_storage_location?(@parent_location)  %>
+          <h1 class="storage-locations-title">
+            <%= render partial: "shared/inline_editing",
+                       locals: {
+                         initial_value: @parent_location.name,
+                         config: @inline_editable_title_config
+                       } %>
+          </h1>
+        <% elsif @parent_location %>
+          <h1><%= @parent_location.name %></h1>
+        <% else %>
+          <h1><%= t('storage_locations.index.head_title') %></h1>
+        <% end %>
       </div>
     </div>
     <div class="content-body " data-e2e="e2e-CO-storageLocations">
