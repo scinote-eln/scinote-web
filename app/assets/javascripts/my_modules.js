@@ -113,7 +113,7 @@
       },
       optionLabel: (data) => {
         if (data.value > 0) {
-          return `<span class="h-6 px-1.5 flex items-center max-w-80 truncate text-sn-white rounded"
+          return `<span class="sci-tag max-w-80 truncate text-sn-white "
                         style="background:${data.params.color}">${data.label}</span>`;
         }
         return `<span class="my-module-tags-color new"><i class="sn-icon sn-icon-new-task"></i></span>
