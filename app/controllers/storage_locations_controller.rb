@@ -9,6 +9,7 @@ class StorageLocationsController < ApplicationController
   before_action :switch_team_with_param, only: %i(index show)
   before_action :check_storage_locations_enabled, except: :unassign_rows
   before_action :load_storage_location, only: %i(update destroy duplicate move show available_positions unassign_rows export_container import_container)
+  before_action :set_inline_name_editing, only: %i(show)
   before_action :check_read_permissions, except: %i(index create tree actions_toolbar import_container unassign_rows)
   before_action :check_manage_repository_rows_permissions, only: %i(import_container unassign_rows)
   before_action :check_create_permissions, only: :create
@@ -19,6 +20,8 @@ class StorageLocationsController < ApplicationController
     @parent_location = StorageLocation.find(storage_location_params[:parent_id]) if storage_location_params[:parent_id]
 
     render_403 if @parent_location && !can_read_storage_location?(@parent_location)
+
+    set_inline_name_editing
 
     respond_to do |format|
       format.html
@@ -309,6 +312,20 @@ class StorageLocationsController < ApplicationController
       message: t('notifications.storage_location_annotation_message_html',
                  storage_location: link_to(@storage_location.name, url))
     )
+  end
+
+  def set_inline_name_editing
+    location = @storage_location || @parent_location
+
+    if location
+      @inline_editable_title_config = {
+        name: 'title',
+        params_group: nil,
+        item_id: location.id,
+        field_to_udpate: 'name',
+        path_to_update: storage_location_path(location)
+      }
+    end
   end
 
   def log_unassign_activities
