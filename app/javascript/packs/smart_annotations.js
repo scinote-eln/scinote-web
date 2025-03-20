@@ -71,8 +71,7 @@ window.renderElementSmartAnnotations = (parentElement, selector, scrollElement =
 
   // Handle rendering smart annotations when innerElement scrolls into viewport
   const renderFunction = () => {
-    const elements = parentElement.querySelectorAll(`${selector}:not(.sa-rendered)`);
-
+    const elements = Array.from(parentElement.querySelectorAll(selector)).filter((e) => e.innerHTML.match(SA_REGEX));
     if (elements.length === 0) {
       (scrollElement || window).removeEventListener('scroll', renderFunction);
       return;
@@ -81,7 +80,6 @@ window.renderElementSmartAnnotations = (parentElement, selector, scrollElement =
     elements.forEach((innerElement) => {
       if (isInViewport(innerElement)) {
         innerElement.innerHTML = window.renderSmartAnnotations(innerElement.innerHTML);
-        innerElement.classList.add('sa-rendered');
         innerElement.querySelectorAll('.sa-link, .user-tooltip').forEach((el) => {
           fetchSmartAnnotationData(el);
         });
