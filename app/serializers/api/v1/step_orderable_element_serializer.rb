@@ -13,6 +13,8 @@ module Api
           TableSerializer.new(object.orderable.table).as_json
         when 'StepText'
           StepTextSerializer.new(object.orderable).as_json
+        when 'FromResponse'
+          FormResponseSerializer.new(object.orderable).as_json
         end
       end
     end
