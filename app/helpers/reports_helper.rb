@@ -121,4 +121,19 @@ module ReportsHelper
   def custom_templates(templates)
     templates.any? { |template, _| template != :scinote_template }
   end
+
+  def report_form_response_content(form_response)
+    form_field_values = form_response.form_field_values
+
+    form_response.form.form_fields&.map do |form_field|
+      form_field_value = form_field_values.find_by(form_field_id: form_field.id, latest: true)
+
+      {
+        name: form_field.name,
+        value: form_field_value&.not_applicable ? I18n.t('forms.export.values.not_applicable') : form_field_value&.formatted.to_s,
+        submitted_at: form_field_value&.submitted_at&.utc.to_s,
+        submitted_by: form_field_value&.submitted_by&.full_name.to_s
+      }
+    end
+  end
 end

@@ -848,6 +848,7 @@ en:
           step_files: "Step files"
           step_tables: "Step tables"
           step_well_plates: "Step well plates"
+          step_forms: "Step forms"
           step_comments: "Step comments"
           assigned_items: "Assigned items"
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
@@ -1027,6 +1028,15 @@ en:
           name: "Step comments"
           no_comments: "No comments"
           comment_prefix: "%{user} on %{date} at %{time}:"
+        step_forms:
+          field: "Field"
+          answer: "Answer"
+          submitted_at: "Submitted at"
+          submitted_by: "Submitted by"
+          not_submitted: "Not submitted yet"
+          user_time: "Form submitted on %{timestamp} by %{user}."
+          table_name: "%{name}"
+
     experiment_archive:
       head_title: "%{project} | Archived experiments"
       no_archived_experiments: "No archived experiments!"
