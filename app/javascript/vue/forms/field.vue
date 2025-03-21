@@ -6,8 +6,8 @@
       <span v-if="unit">({{ unit }})</span>
       <span v-if="field.attributes.required" class="text-sn-delete-red">*</span>
     </div>
-    <div v-if="field.attributes.description">
-      {{ field.attributes.description }}
+    <div ref="description" v-if="field.attributes.description">
+      <span>{{ field.attributes.description }}</span>
     </div>
     <div class="mt-2">
       <component :is="field.attributes.data.type" ref="formField" :disabled="disabled"
@@ -80,6 +80,11 @@ export default {
   },
   mounted() {
     this.checkValidField();
+    if (this.$refs.description) {
+      this.$nextTick(() => {
+        window.renderElementSmartAnnotations(this.$refs.description, 'span');
+      });
+    }
   },
   computed: {
     unit() {
