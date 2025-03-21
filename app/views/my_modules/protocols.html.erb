@@ -86,6 +86,7 @@
         assigned-repositories-url="<%= my_module_repositories_list_path(@my_module) %>"
         repositories-url="<%= list_team_repositories_path(current_team, appendable: true) %>"
         my-module-id="<%= @my_module.id%>"
+        :can-manage="<%= can_manage_my_module?(@my_module) %>"
       />
     </div>
     <div class="task-section">
