@@ -49,7 +49,11 @@
       <div>
         <label class="sci-label">{{ i18n.t('forms.show.description_label') }}</label>
         <div class="sci-input-container-v2 h-24" :class="{ 'error': !descriptionValid }" :data-error="descriptionFieldError"  >
-          <textarea class="sci-input " v-model="editField.attributes.description" @change="updateField" :placeholder="i18n.t('forms.show.description_placeholder')" />
+          <textarea ref="description"
+                    class="sci-input"
+                    v-model="editField.attributes.description"
+                    @blur="updateField"
+                    :placeholder="i18n.t('forms.show.description_placeholder')" />
         </div>
       </div>
       <component :is="this.editField.attributes.type" :field="editField" @updateField="updateField()" @syncField="syncField" />
@@ -73,7 +77,7 @@
 
 <script>
 
-/* global GLOBAL_CONSTANTS */
+/* global GLOBAL_CONSTANTS SmartAnnotation */
 
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import DatetimeField from './edit_fields/datetime.vue';
@@ -110,6 +114,9 @@ export default {
       this.editField.attributes.description = '';
     }
   },
+  mounted() {
+    SmartAnnotation.init($(this.$refs.description), false);
+  },
   computed: {
     validField() {
       return this.nameValid && this.descriptionValid;
@@ -144,6 +151,8 @@ export default {
       if (!this.validField) {
         return;
       }
+      this.editField.attributes.description = this.$refs.description.value; // SmartAnnotation does not update the model
+
       this.$emit('update', this.editField);
     },
     deleteField() {
