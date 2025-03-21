@@ -5,17 +5,6 @@ class SmartAnnotationsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
 
-  def parse_string
-    render json: {
-      annotations: custom_auto_link(
-        params[:string],
-        simple_format: false,
-        tags: %w(img),
-        team: current_team
-      )
-    }
-  end
-
   def show
     if params[:data]
       render json: {
@@ -29,7 +18,6 @@ class SmartAnnotationsController < ApplicationController
 
   def user
     user_team_assignment = resource.user_assignments.find_by(assignable: current_team)
-
     render json: {
       name: resource.name,
       email: resource.email,
@@ -72,10 +60,12 @@ class SmartAnnotationsController < ApplicationController
         RepositoryRow
       end
 
-    @resource ||= resource_class.find(resource_id)
+    @resource ||= resource_class.find_by(id: resource_id)
   end
 
   def resource_readable?
+    return false unless resource
+
     @resource_readable ||=
       case resource
       when RepositoryRow
