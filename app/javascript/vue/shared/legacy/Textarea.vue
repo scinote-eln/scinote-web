@@ -23,10 +23,7 @@
                   'text-sn-dark-grey': value, 'text-sn-grey': !value
                 }"
         @click="enableEdit">
-    <span v-if="smartAnnotation"
-          v-html="sa_value || noContentPlaceholder"
-          class="[&>p]:mb-0"></span>
-    <span v-else>{{ value || noContentPlaceholder }}</span>
+    <span>{{ value || noContentPlaceholder }}</span>
   </div>
 </template>
 
@@ -49,7 +46,6 @@ export default {
     isNumber: { type: Boolean, default: false },
     unEditableRef: { type: String, required: true },
     smartAnnotation: { type: Boolean, default: false },
-    sa_value: { type: String },
     className: { type: String, default: false }
   },
   mounted() {
@@ -57,6 +53,7 @@ export default {
     this.$nextTick(() => {
       this.toggleExpandableState();
     });
+    this.renderSmartAnnotations();
   },
   beforeUpdate() {
     if (!this.$refs.textareaRef) return;
@@ -105,6 +102,7 @@ export default {
       this.editing = false;
       this.toggleExpandableState();
       this.$emit('update', this.value);
+      this.renderSmartAnnotations();
     },
     toggleExpandableState() {
       this.$nextTick(() => {
@@ -118,6 +116,7 @@ export default {
     },
     enableEdit(e) {
       if (e && $(e.target).hasClass('atwho-user-popover')) return;
+      if (e && $(e.target).hasClass('sa-name')) return;
       if (e && $(e.target).hasClass('sa-link')) return;
       if (e && $(e.target).parent().hasClass('atwho-inserted')) return;
 
@@ -151,6 +150,17 @@ export default {
       value = value.replace(regexp, '');
       value = value.match(decimalsRegex)[0];
       this.value = value;
+    },
+    renderSmartAnnotations() {
+      if (!this.smartAnnotation) return;
+
+      this.$nextTick(() => {
+        window.renderElementSmartAnnotations(
+          this.$refs[this.unEditableRef],
+          'span',
+          document.querySelector('#repositoryItemSidebar #body-wrapper')
+        );
+      });
     }
   }
 };
