@@ -86,12 +86,6 @@ Rails.application.routes.draw do
       get :update_progress_modal, on: :member
     end
 
-    resource :smart_annotations, only: [] do
-      collection do
-        post :parse_string
-      end
-    end
-
     get 'users/settings/account/connected_accounts',
         to: 'users/settings/account/connected_accounts#index',
         as: 'connected_accounts'
