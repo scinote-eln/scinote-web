@@ -6,7 +6,7 @@
         {{ i18n.t('my_modules.assigned_items.title') }}
         <span class="text-sn-grey-500 font-normal text-base">[{{ totalRows }}]</span>
       </h2>
-      <div v-if="canManage" class="flex gap-6 ml-auto">
+      <div v-if="canAssign" class="flex gap-6 ml-auto">
         <button class="btn btn-secondary" @click="openCreateItemModal=true">
           {{ i18n.t('my_modules.assigned_items.create_item') }}
         </button>
@@ -84,7 +84,7 @@ export default {
     assignedRepositoriesUrl: String,
     repositoriesUrl: String,
     myModuleId: String,
-    canManage: Boolean
+    canAssign: Boolean
   },
   components: {
     GeneralDropdown,
