@@ -60,7 +60,7 @@ gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.16.5' # HTML/XML parser
+gem 'nokogiri', '~> 1.18.4' # HTML/XML parser
 gem 'noticed'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
