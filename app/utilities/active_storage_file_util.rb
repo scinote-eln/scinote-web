@@ -4,6 +4,7 @@ module ActiveStorageFileUtil
   # Method expects instance of ActiveStorage::Blob as argument
   def previewable_document?(blob)
     return false if blob.blank?
+    return false if blob.byte_size > Constants::PREVIEW_MAX_FILE_SIZE
 
     previewable = Constants::PREVIEWABLE_FILE_TYPES.include?(blob.content_type)
 

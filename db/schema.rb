@@ -90,7 +90,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_05_100223) do
   end
 
   create_table "asset_text_data", force: :cascade do |t|
-    t.text "data", null: false
     t.bigint "asset_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false

@@ -90,11 +90,11 @@ class AssetSerializer < ActiveModel::Serializer
   end
 
   def pdf
-    return unless object.pdf?
+    return unless object.pdf? || object.file_pdf_preview.attached?
 
     {
       url: object.pdf? ? asset_download_path(object) : asset_pdf_preview_path(object),
-      size: !object.pdf? && object.pdf_preview_ready? ? object.file_pdf_preview&.blob&.byte_size : object.file_size,
+      size: object.pdf? ? object.file_size : object.file_pdf_preview&.blob&.byte_size,
       worker_url: ActionController::Base.helpers.asset_path('pdf_js_worker.js')
     }
   end
