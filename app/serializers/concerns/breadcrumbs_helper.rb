@@ -77,10 +77,12 @@ module BreadcrumbsHelper
     when Team
       parent = nil
       url = projects_path(team: subject.id)
+    when Form
+      parent = subject.team
+      url = form_path(subject, team: subject.team_id)
     end
 
     breadcrumbs << { name: subject.name, code: subject.try(:code), url:} if subject.name.present?
-
     if parent
       generate_breadcrumbs(parent, breadcrumbs)
     else
