@@ -128,9 +128,22 @@ module ReportsHelper
     form_response.form.form_fields&.map do |form_field|
       form_field_value = form_field_values.find_by(form_field_id: form_field.id, latest: true)
 
+      value = if form_field_value&.not_applicable
+                I18n.t('forms.export.values.not_applicable')
+              elsif form_field_value.is_a?(FormTextFieldValue)
+                custom_auto_link(
+                  form_field_value&.formatted,
+                  simple_format: false,
+                  tags: %w(img),
+                  team: current_team
+                )
+              else
+                form_field_value&.formatted
+              end
+
       {
         name: form_field.name,
-        value: form_field_value&.not_applicable ? I18n.t('forms.export.values.not_applicable') : form_field_value&.formatted.to_s,
+        value: value,
         submitted_at: form_field_value&.submitted_at&.utc.to_s,
         submitted_by: form_field_value&.submitted_by&.full_name.to_s
       }

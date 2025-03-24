@@ -28,7 +28,12 @@
           </div>
           <% if field.description %>
             <div>
-              <%= field.description %>
+              <%= custom_auto_link(
+                  field.description,
+                  simple_format: false,
+                  tags: %w(img),
+                  team: current_team
+                ) %>
             </div>
           <% end %>
           <div class="mt-2">
@@ -44,7 +49,14 @@
                 <% else %>
                   <span class='iso-formatted-date <%= 'only-date' unless field.data['time'] %>'><%= field_value.datetime&.iso8601  %></span>
                 <% end %>
-              <% else%>
+              <% elsif field_value.is_a?(FormTextFieldValue)%>
+                <%= custom_auto_link(
+                  field_value.formatted,
+                  simple_format: false,
+                  tags: %w(img),
+                  team: current_team
+                ) %>
+              <% else %>
                 <%= field_value.formatted %>
               <% end %>
             <% else %>

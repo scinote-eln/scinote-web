@@ -6,6 +6,8 @@ module Reports
       def draw_step_forms(element)
         return unless @settings.dig('task', 'protocol', 'step_forms')
 
+        team = @report_team
+        user = @user
         form_response = element.orderable
         color = @color
         form_fields = form_response.form.form_fields
@@ -20,9 +22,16 @@ module Reports
 
         form_fields&.each do |form_field|
           form_field_value = form_field_values.find_by(form_field_id: form_field.id, latest: true)
+          value = if form_field_value&.not_applicable
+                    I18n.t('forms.export.values.not_applicable')
+                  elsif form_field_value.is_a?(FormTextFieldValue)
+                    SmartAnnotations::TagToText.new(user, team, form_field_value&.formatted).text
+                  else
+                    form_field_value&.formatted
+                  end
           table << [
             form_field.name,
-            form_field_value&.not_applicable ? I18n.t('forms.export.values.not_applicable') : form_field_value&.formatted.to_s,
+            value,
             form_field_value&.submitted_at&.utc.to_s,
             form_field_value&.submitted_by&.full_name.to_s
           ]
