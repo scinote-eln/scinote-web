@@ -38,7 +38,7 @@ const renderUserMention = (tag) => {
 
 window.renderSmartAnnotations = (text) => (
   text.replace(SA_REGEX, (match, userName, _userId, _label, type) => {
-    const tag = encodeURIComponent(match.slice(1, -1));
+    const tag = encodeURIComponent(match.slice(1, -1).replaceAll(' ', '_'));
 
     if (userName) {
       return renderUserMention(tag);
