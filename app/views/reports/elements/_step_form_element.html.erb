@@ -1,0 +1,50 @@
+<% form_fields = report_form_response_content(form_response) %>
+<div class="report-element report-step-table-element">
+  <div class="report-element-header">
+    <div class="table-name">
+      <em>
+        <%= truncate(form_response.form.name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+      </em>
+    </div>
+    <div class="user-time">
+      <% if form_response.submitted? %>
+        <%= t("projects.reports.elements.step_forms.user_time", user: form_response.submitted_by&.full_name,
+                                                                   timestamp: l(form_response.submitted_at, format: :full)) %>
+      <% else %>
+        <%= t('projects.reports.elements.step_forms.not_submitted') %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="report-element-body">
+    <div class="row">
+      <div class="col-xs-12">
+        <table class="report-common-table-format">
+          <thead>
+            <tr>
+              <th><%= t('projects.reports.elements.step_forms.field') %></th>
+              <th><%= t('projects.reports.elements.step_forms.answer') %></th>
+              <th><%= t('projects.reports.elements.step_forms.submitted_at') %></th>
+              <th><%= t('projects.reports.elements.step_forms.submitted_by') %></th>
+          </thead>
+          <tbody>
+            <% form_fields.each do |form_field| %>
+              <tr>
+                <td><%= form_field[:name] %></td>
+                <td><%= form_field[:value] %></td>
+                <td><%= form_field[:submitted_at] %></td>
+                <td><%= form_field[:submitted_by] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <% if defined?(children) %>
+    <div class="report-element-children">
+      <%= children %>
+    </div>
+  <% end %>
+</div>

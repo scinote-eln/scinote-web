@@ -40,6 +40,8 @@ module Reports::Docx::DrawStep
         handle_checklist(element.orderable)
       when 'StepText'
         handle_step_text(element)
+      when 'FormResponse'
+        handle_step_forms(element)
       end
     end
     if @settings.dig('task', 'protocol', 'step_files')
@@ -72,5 +74,9 @@ module Reports::Docx::DrawStep
 
   def handle_step_text(element)
     draw_step_text(element) if @settings.dig('task', 'protocol', 'step_texts')
+  end
+
+  def handle_step_forms(element)
+    draw_step_forms(element) if @settings.dig('task', 'protocol', 'step_forms')
   end
 end
