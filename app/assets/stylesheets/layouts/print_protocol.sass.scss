@@ -1,6 +1,8 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
+@import "sn-inter-font";
+@import "sn-icon-font";
 @import "../shared_styles/constants";
 @import "../constants";
 
@@ -293,4 +295,8 @@ hr {
   &:hover {
     text-decoration: none;
   }
+}
+
+textarea {
+  resize: none;
 }
