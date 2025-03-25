@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign, no-use-before-define  */
-/* global DataTableHelpers PerfectScrollbar FilePreviewModal animateSpinner HelperModule
+/* global DataTableHelpers FilePreviewModal animateSpinner HelperModule
 initAssignedTasksDropdown I18n prepareRepositoryHeaderForExport initReminderDropdown */
 
 var MyModuleRepositories = (function() {
@@ -7,7 +7,6 @@ var MyModuleRepositories = (function() {
   const UPDATE_REPOSITORY_MODAL = $('#updateRepositoryRecordModal');
   var SIMPLE_TABLE;
   var FULL_VIEW_TABLE;
-  var FULL_VIEW_TABLE_SCROLLBAR;
   var SELECTED_ROWS = {};
 
   function stockManagementColumns(withConsumption = true) {
@@ -267,7 +266,6 @@ var MyModuleRepositories = (function() {
   function renderFullViewTable(tableContainer, options = {}) {
     if (FULL_VIEW_TABLE) FULL_VIEW_TABLE.destroy();
     SELECTED_ROWS = {};
-    FULL_VIEW_TABLE_SCROLLBAR = false;
     FULL_VIEW_TABLE = $(tableContainer).DataTable({
       dom: "R<'main-actions hidden'<'toolbar'><'filter-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       processing: true,
@@ -320,17 +318,6 @@ var MyModuleRepositories = (function() {
           options.assign_mode
         );
         updateFullViewRowsCount(tableContainer.attr('data-assigned-items-count'));
-        if (FULL_VIEW_TABLE_SCROLLBAR) {
-          FULL_VIEW_TABLE_SCROLLBAR.update();
-        } else {
-          FULL_VIEW_TABLE_SCROLLBAR = new PerfectScrollbar(
-            $(tableContainer).closest('.dataTables_scrollBody')[0],
-            {
-              wheelSpeed: 0.5,
-              minScrollbarLength: 20
-            }
-          );
-        }
       },
 
       stateLoadCallback: function(settings, callback) {
@@ -484,15 +471,10 @@ var MyModuleRepositories = (function() {
       $(this).toggleClass('active');
       if ($(this).hasClass('active')) {
         $.getJSON(FULL_VIEW_MODAL.find('.table').data('versions-sidebar-url'), (data) => {
-          var snapshotsItemsScrollBar;
           FULL_VIEW_MODAL.find('.repository-versions-sidebar').html(data.html);
-          snapshotsItemsScrollBar = new PerfectScrollbar(
-            FULL_VIEW_MODAL.find('.repository-snapshots-container')[0]
-          );
           setSelectedItem();
           FULL_VIEW_MODAL.find('.modal-content').addClass('show-sidebar');
           initVersionsStatusCheck();
-          snapshotsItemsScrollBar.update();
           FULL_VIEW_TABLE.columns.adjust();
         });
       } else {
@@ -749,18 +731,12 @@ var MyModuleRepositories = (function() {
     var updateUrl = FULL_VIEW_MODAL.data('update-url-modal');
     $.post(updateUrl, { selected_rows: SELECTED_ROWS, downstream: downstream }, function(data) {
       var assignList;
-      var assignListScrollbar;
       var unassignList;
-      var unassignListScrollbar;
       UPDATE_REPOSITORY_MODAL.find('.modal-content').html(data.html);
       UPDATE_REPOSITORY_MODAL.data('update-url', data.update_url);
       assignList = UPDATE_REPOSITORY_MODAL.find('.rows-to-assign .rows-list')[0];
       unassignList = UPDATE_REPOSITORY_MODAL.find('.rows-to-unassign .rows-list')[0];
-      if (assignList) assignListScrollbar = new PerfectScrollbar(assignList);
-      if (unassignList) unassignListScrollbar = new PerfectScrollbar(unassignList);
       UPDATE_REPOSITORY_MODAL.modal('show');
-      if (assignList) assignListScrollbar.update();
-      if (unassignList) unassignListScrollbar.update();
     });
   }
 
