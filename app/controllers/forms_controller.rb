@@ -108,6 +108,8 @@ class FormsController < ApplicationController
         published_on: nil
       )
 
+      log_activity(@form, :form_unpublished)
+
       render json: @form, serializer: FormSerializer, user: current_user
     end
   end
