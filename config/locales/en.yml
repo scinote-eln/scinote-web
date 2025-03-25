@@ -1091,6 +1091,8 @@ en:
         form_field_submitted_by: "User for %{name}"
       values:
         not_applicable: 'N/A'
+        completed: "Completed"
+        not_completed: "Not completed"
     publish:
       title: "Publish form"
       description_html: "<p>Publishing a form locks it for editing and makes it available for use in protocol steps. You can unpublish the form only if it isn't linked to any steps.</p><p>Are you sure you want to publish the form?</p>"
@@ -1105,6 +1107,7 @@ en:
       add_datetime: "Add date & time"
       not_valid_range: "Range is not valid"
       no_selection: "No options selected"
+      mark_as_completed: "Mark as completed"
     index:
       head_title: "Forms"
       head_title_archived: "Archived forms"
@@ -1165,6 +1168,7 @@ en:
         SingleChoiceField: 'Single choice'
         MultipleChoiceField: 'Multiple choice'
         DatetimeField: 'Date & Time'
+        ActionField: 'Action'
     response:
       submit: 'Submit form'
       submitted_on: 'Submitted on'

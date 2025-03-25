@@ -154,7 +154,8 @@ export default {
         { name: this.i18n.t('forms.show.blocks.NumberField'), type: 'NumberField' },
         { name: this.i18n.t('forms.show.blocks.SingleChoiceField'), type: 'SingleChoiceField' },
         { name: this.i18n.t('forms.show.blocks.MultipleChoiceField'), type: 'MultipleChoiceField' },
-        { name: this.i18n.t('forms.show.blocks.DatetimeField'), type: 'DatetimeField' }
+        { name: this.i18n.t('forms.show.blocks.DatetimeField'), type: 'DatetimeField' },
+        { name: this.i18n.t('forms.show.blocks.ActionField'), type: 'ActionField' }
       ];
     },
     fieldIcon() {
@@ -163,7 +164,8 @@ export default {
         NumberField: 'sn-icon-value',
         SingleChoiceField: 'sn-icon-choice-single',
         MultipleChoiceField: 'sn-icon-choice-multiple',
-        DatetimeField: 'sn-icon-created'
+        DatetimeField: 'sn-icon-created',
+        ActionField: 'sn-icon-check'
       };
     }
   },
