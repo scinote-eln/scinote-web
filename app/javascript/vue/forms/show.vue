@@ -188,11 +188,14 @@ export default {
   },
   methods: {
     isValidChanged() {
-      if (this.$refs.editField?.field) {
-        const index = this.fields.findIndex((f) => f.id === this.$refs.editField.field.id);
-        this.fields[index].isValid = this.$refs.editField.isValid;
+      this.$nextTick(() => {
+        if (this.$refs.editField?.field) {
+          const index = this.fields.findIndex((f) => f.id === this.$refs.editField.field.id);
+          this.fields[index].isValid = this.$refs.editField.isValid;
+        }
+
         this.isValid = !this.fields.some((field) => field.isValid === false);
-      }
+      });
     },
     syncSavedFields() {
       this.savedFields = this.fields.map((f) => ({ ...f }));
@@ -206,6 +209,8 @@ export default {
           [this.activeField] = this.fields;
         }
         this.syncSavedFields();
+        this.isValidChanged();
+
         if (this.form.attributes.published_on || !this.form.attributes.urls.create_field) {
           this.preview = true;
         }
