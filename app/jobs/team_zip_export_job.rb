@@ -140,7 +140,10 @@ class TeamZipExportJob < ZipExportJob
   # Appends given suffix to file_name and then adds original extension
   def append_file_suffix(file_name, suffix)
     ext = File.extname(file_name)
-    File.basename(file_name, ext) + suffix + ext
+    base_name = File.basename(file_name, ext)
+    max_base_length = Constants::NAME_MAX_LENGTH - suffix.length - ext.length
+
+    "#{base_name[0, max_base_length]}#{suffix}#{ext}"
   end
 
   def create_archived_results_folder(result_path)
