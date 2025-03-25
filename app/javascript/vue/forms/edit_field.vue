@@ -56,7 +56,7 @@
                     :placeholder="i18n.t('forms.show.description_placeholder')" />
         </div>
       </div>
-      <component :is="this.editField.attributes.type" :field="editField" @updateField="updateField()" @syncField="syncField" />
+      <component :is="this.editField.attributes.type" ref="editField" :field="editField" @updateField="updateField()" @syncField="syncField" @validChanged="checkValidField" />
       <div class="bg-sn-super-light-grey rounded p-4">
         <div class="flex items-center gap-4">
           <h5>{{ i18n.t('forms.show.mark_as_na') }}</h5>
@@ -104,7 +104,8 @@ export default {
   },
   data() {
     return {
-      editField: { ...this.field }
+      editField: { ...this.field },
+      isValid: false
     };
   },
   created() {
@@ -115,6 +116,19 @@ export default {
     if (!this.editField.attributes.description) {
       this.editField.attributes.description = '';
     }
+
+    this.isValid = this.editField.isValid;
+  },
+  mounted() {
+    this.checkValidField();
+  },
+  watch: {
+    isValid() {
+      this.$emit('validChanged');
+    },
+    validField() {
+      this.checkValidField();
+    }
   },
   mounted() {
     SmartAnnotation.init($(this.$refs.description), false);
@@ -124,10 +138,10 @@ export default {
       return this.nameValid && this.descriptionValid;
     },
     nameValid() {
-      return this.editField.attributes.name.length > 0 && this.editField.attributes.name.length <= GLOBAL_CONSTANTS.NAME_MAX_LENGTH;
+      return this.editField.attributes.name?.length > 0 && this.editField.attributes.name.length <= GLOBAL_CONSTANTS.NAME_MAX_LENGTH;
     },
     descriptionValid() {
-      return this.editField.attributes.description.length <= GLOBAL_CONSTANTS.TEXT_MAX_LENGTH;
+      return this.editField.attributes.description?.length <= GLOBAL_CONSTANTS.TEXT_MAX_LENGTH;
     },
     nameFieldError() {
       if (this.editField.attributes.name.length === 0) {
@@ -150,7 +164,7 @@ export default {
   },
   methods: {
     updateField() {
-      if (!this.validField) {
+      if (!this.isValid) {
         return;
       }
       this.editField.attributes.description = this.$refs.description.value; // SmartAnnotation does not update the model
@@ -165,6 +179,9 @@ export default {
     },
     syncField(field) {
       this.editField = field;
+    },
+    checkValidField() {
+      this.isValid = this.$refs.editField?.validField !== false && this.validField;
     }
   }
 };

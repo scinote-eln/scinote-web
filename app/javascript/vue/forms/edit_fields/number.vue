@@ -31,19 +31,25 @@
             :options="responseValidationTypes"
             :value="responseValidation.type" />
         </div>
-        <div class="sci-input-container-v2" :class="{ 'error': !responseValidationIsValid && responseValidation.max }" >
-          <input type="number" class="sci-input !bg-white"
-                 :disabled="!responseValidationEnabled"
-                 @change="updateField"
-                 :placeholder="i18n.t('forms.show.validations.response_validation.min_placeholder')"
-                 v-model="responseValidation.min" />
+        <div>
+          <div class="sci-input-container-v2" :class="{ 'error': !responseValidationIsValid && responseValidation.max }">
+            <input type="number" class="sci-input !bg-white"
+                  :disabled="!responseValidationEnabled"
+                  @change="updateField"
+                  :placeholder="i18n.t('forms.show.validations.response_validation.min_placeholder')"
+                  v-model="responseValidation.min" />
+          </div>
+          <p v-if="!responseValidationIsValid && responseValidation.max" class="sci-error-text" > {{ i18n.t('forms.fields.not_valid_range') }} </p>
         </div>
-        <div class="sci-input-container-v2" :class="{ 'error': !responseValidationIsValid && responseValidation.min }">
-          <input type="number" class="sci-input !bg-white"
-                 :disabled="!responseValidationEnabled"
-                 @change="updateField"
-                 :placeholder="i18n.t('forms.show.validations.response_validation.max_placeholder')"
-                 v-model="responseValidation.max" />
+        <div>
+          <div class="sci-input-container-v2" :class="{ 'error': !responseValidationIsValid && responseValidation.min }">
+            <input type="number" class="sci-input !bg-white"
+                  :disabled="!responseValidationEnabled"
+                  @change="updateField"
+                  :placeholder="i18n.t('forms.show.validations.response_validation.max_placeholder')"
+                  v-model="responseValidation.max" />
+          </div>
+          <p v-if="!responseValidationIsValid && responseValidation.min" class="sci-error-text" > {{ i18n.t('forms.fields.not_valid_range') }} </p>
         </div>
         <div class="col-span-3 sci-input-container-v2" :class="{'error': !validationMessageValid}" :data-error="validationMessageError">
           <input type="text" class="sci-input !bg-white"
@@ -82,13 +88,13 @@ export default {
       return this.editField.attributes.data.validations.response_validation;
     },
     responseValidationEnabled() {
-      return this.responseValidation.enabled;
+      return this.responseValidation?.enabled;
     },
     responseValidationTypes() {
       return [['between', 'Between']];
     },
     responseValidationIsValid() {
-      return (this.responseValidation.min && this.responseValidation.max && this.responseValidation.min < this.responseValidation.max)
+      return (this.responseValidation?.min && this.responseValidation?.max && this.responseValidation?.min < this.responseValidation?.max)
         || !this.responseValidationEnabled;
     },
     validField() {
