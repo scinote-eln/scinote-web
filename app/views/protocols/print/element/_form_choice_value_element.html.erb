@@ -1,0 +1,12 @@
+<% field&.data&.dig('options')&.each do |option| %>
+  <div class="print-checklist-item">
+    <span class="checklist-checkbox checked">
+      <% if selected_options&.include?(option) %>
+        <%= image_tag "check-square-solid.svg" %>
+      <% else %>
+        <span class="checklist-checkbox not-checked"></span>
+      <% end %>
+    </span>
+      <div><%= option %></div>
+  </div>
+<% end %>
