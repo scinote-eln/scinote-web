@@ -86,6 +86,7 @@ import SingleChoiceField from './edit_fields/single_choice.vue';
 import TextField from './edit_fields/text.vue';
 import MultipleChoiceField from './edit_fields/multiple_choice.vue';
 import ActionField from './edit_fields/action.vue';
+import RepositoryRowsField from './edit_fields/repository_rows.vue';
 
 export default {
   name: 'EditField',
@@ -100,7 +101,8 @@ export default {
     SingleChoiceField,
     TextField,
     MultipleChoiceField,
-    ActionField
+    ActionField,
+    RepositoryRowsField
   },
   data() {
     return {

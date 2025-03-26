@@ -65,6 +65,8 @@ class RepositoriesController < ApplicationController
 
     results = results.order('LOWER(repository_rows.name) asc').page(params[:page])
 
+    results = results.where.not(id: params[:excluded_ids]) if params[:excluded_ids].present?
+
     render json: {
       paginated: true,
       next_page: results.next_page,

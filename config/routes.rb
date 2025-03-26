@@ -209,7 +209,7 @@ Rails.application.routes.draw do
               defaults: { format: 'json' }
           post 'actions_toolbar'
           get :list
-          get :rows_list
+          post :rows_list
         end
         member do
           get :export_empty_repository
