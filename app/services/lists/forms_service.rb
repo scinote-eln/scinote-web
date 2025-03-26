@@ -47,7 +47,7 @@ module Lists
     def sortable_columns
       @sortable_columns ||= {
         name: 'forms.name',
-        id: 'forms.id',
+        code: 'forms.id',
         updated_at: 'forms.updated_at',
         assigned_users: 'user_assignment_count',
         used_in_protocols: 'used_in_protocols_count',
