@@ -1,24 +1,13 @@
 <div class="sci--layout--left-menu-container">
-  <div class="pl-2.5 mb-8 h-6">
-    <a title="SciNote" href="/">
-      <%= image_tag "scinote_logo.svg", class: "h-full block" %>
-    </a>
-  </div>
   <% left_menu_elements.each_with_index do |item, index| %>
-    <%= link_to item[:url], title: item[:title] || item[:name], class:"sci--layout--menu-item", data: { e2e: "e2e-BT-leftMenu-#{item[:name].downcase}", active: item[:submenu].blank? && item[:active], disabled: current_user.teams.blank?, submenu: item[:submenu].any? } do %>
+    <%= link_to item[:url], title: item[:title] || item[:name], class:"sci--layout--menu-item", data: {
+        e2e: "e2e-BT-leftMenu-#{item[:name].parameterize}",
+        active: item[:active],
+        disabled: current_user.teams.blank?,
+        toggle: "tooltip",
+        placement: "right"
+      } do %>
       <i class="sn-icon <%= item[:icon] %>"></i>
-      <%= item[:name].html_safe %>
-      <i class="sn-icon <%= item[:active] ? 'sn-icon-down' : 'sn-icon-right' %> show-submenu"></i>
-    <% end %>
-    <% if item[:submenu].any? %>
-    <div class="sci--layout--menu-submenu" data-id="<%= index %>" data-collapsed="<%= !item[:active] %>" style="--submenu-items:<%= item[:submenu].length %>">
-      <% item[:submenu].each do |subitem| %>
-        <%= link_to subitem[:url], title: subitem[:title] || subitem[:name], class:"sci--layout--menu-item", data: { e2e: "e2e-BT-leftMenu-#{item[:name].downcase}-#{subitem[:name].downcase}", active: subitem[:active], disabled: current_user.teams.blank? } do %>
-          <i class="sn-icon sn-icon-dot-small"></i>
-          <%= subitem[:name].html_safe %>
-        <% end %>
-      <% end %>
-    </div>
     <% end %>
   <% end %>
 </div>

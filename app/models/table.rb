@@ -21,14 +21,13 @@ class Table < ApplicationRecord
              optional: true
   belongs_to :team, optional: true
   has_one :step_table, inverse_of: :table, dependent: :destroy
-  has_one :step, through: :step_table
+  has_one :step, through: :step_table, touch: true
 
   has_one :result_table, inverse_of: :table, dependent: :destroy
-  has_one :result, through: :result_table
+  has_one :result, through: :result_table, touch: true
   has_many :report_elements, inverse_of: :table, dependent: :destroy
 
   after_save :update_ts_index
-  after_save { result&.touch; step&.touch }
 
   def metadata
     attributes['metadata'].is_a?(String) ? JSON.parse(attributes['metadata']) : attributes['metadata']

@@ -79,35 +79,17 @@
         <%= render partial: "my_module_notes" %>
       </div>
     </div>
-    <!-- Assigned items -->
-    <div class="task-section hidden">
-      <div class="task-section-header">
-        <a class="task-section-caret" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="true" aria-controls="assigned-items-container">
-          <i class="sn-icon sn-icon-right"></i>
-          <span class="task-section-title ">
-            <h2 class="assigned-items-title" data-assigned-items-count="<%= @assigned_repositories.map(&:assigned_rows_count).sum %>">
-              <%= t('my_modules.assigned_items.title') %>
-            </h2>
-          </span>
-        </a>
-        <div class="actions-block">
-          <% if can_assign_my_module_repository_rows?(@my_module) %>
-            <div class="dropdown repositories-assign-container" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
-              <a href="#" id="repositories-assign-button" class="btn btn-light btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <span><%= t('my_modules.assigned_items.assign_from') %></span>
-                <span class="sn-icon sn-icon-down"></span>
-              </a>
-              <ul class="dropdown-menu repositories-dropdown-menu perfect-scrollbar rounded !p-2.5 sn-shadow-menu-sm flex flex-col gap-[1px]" aria-labelledby="repositories-assign-button">
-              </ul>
-            </div>
-          <% end %>
-        </div>
-      </div>
-      <div class="collapse in panel-group task-section-body" id="assigned-items-container" aria-expanded="true"
-          data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
-        <%= render partial: "my_modules/repositories/repositories_list" %>
-      </div>
-
+    <div id="assignedItems" >
+      <assigned-items
+        ref="assignedItems"
+        avaialable-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>"
+        assigned-repositories-url="<%= my_module_repositories_list_path(@my_module) %>"
+        repositories-url="<%= list_team_repositories_path(current_team, appendable: true) %>"
+        my-module-id="<%= @my_module.id%>"
+        :can-assign="<%= can_assign_my_module_repository_rows?(@my_module) %>"
+      />
+    </div>
+    <div class="task-section">
       <%= render partial: "my_modules/repositories/full_view_modal" %>
     </div>
     <!-- Protocol -->
@@ -208,5 +190,6 @@
 <%= javascript_include_tag "protocols/new_protocol" %>
 
 <%= javascript_include_tag 'vue_protocol' %>
+<%= javascript_include_tag 'vue_my_module_assigned_items' %>
 <%= javascript_include_tag 'vue_legacy_tags_modal' %>
 <%= javascript_include_tag 'vue_legacy_access_modal' %>

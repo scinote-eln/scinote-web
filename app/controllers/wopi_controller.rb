@@ -13,7 +13,13 @@ class WopiController < ActionController::Base
   def file_contents_get_endpoint
     # get_file
     response.headers['X-WOPI-ItemVersion'] = @asset.version
-    response.body = @asset.file.download
+    # special case for newly created empty files
+    response.body =
+      if @asset.file_size.zero? && @asset.version.zero?
+        ''
+      else
+        @asset.file.download
+      end
     send_data response.body, disposition: 'inline', content_type: 'text/plain'
   end
 
@@ -79,6 +85,9 @@ class WopiController < ActionController::Base
       BreadcrumbFolderName: @breadcrumb_folder_name,
       BreadcrumbFolderUrl: @breadcrumb_folder_url
     }
+
+    msg[:FileUrl] = @asset.file.blob.url if @asset.file_size.positive?
+
     response.headers['X-WOPI-HostEndpoint'] = ENV['WOPI_ENDPOINT_URL']
     response.headers['X-WOPI-MachineName'] = ENV['WOPI_ENDPOINT_URL']
     response.headers['X-WOPI-ServerVersion'] = Scinote::Application::VERSION
@@ -201,13 +210,11 @@ class WopiController < ActionController::Base
           logger.warn 'WOPI: replacing file'
 
           @asset.last_modified_by = @user
-          @asset.update_contents(request.body)
+          @asset.put_wopi_contents(request.body)
           @asset.save
 
           @team.take_space(@asset.estimated_size)
           @team.save
-
-          @protocol&.update(updated_at: Time.now.utc)
 
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           render body: nil, status: :ok
@@ -219,7 +226,7 @@ class WopiController < ActionController::Base
       elsif !@asset.file_size.nil? && @asset.file_size.zero?
         logger.warn 'WOPI: initializing empty file'
 
-        @asset.update_contents(request.body)
+        @asset.put_wopi_contents(request.body)
         @asset.last_modified_by = @user
         @asset.save
         @team.save

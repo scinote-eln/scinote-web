@@ -237,44 +237,34 @@ class AssetsController < ApplicationController
     params.require(%i(element_type element_id file_type))
 
     # File type validation
-    render_403 && return unless %w(docx xlsx pptx).include?(params[:file_type])
+    return render_403 unless %w(docx xlsx pptx).include?(params[:file_type])
 
-    # Asset validation
-    asset = Asset.new(created_by: current_user, team: current_team)
-    asset.attach_file_version(io: StringIO.new,
-                              filename: "#{params[:file_name]}.#{params[:file_type]}",
-                              content_type: wopi_content_type(params[:file_type]))
-
-    unless asset.valid?(:wopi_file_creation)
-      render json: {
-        message: asset.errors
-      }, status: :bad_request and return
+    if params[:element_type] == 'Step'
+      @assoc = Step.find(params[:element_id])
+      return render_403 unless can_manage_step?(@assoc)
+    elsif params[:element_type] == 'Result'
+      @assoc = Result.find(params[:element_id])
+      return render_403 unless can_manage_result?(@assoc)
+    else
+      return render_403
     end
 
-    # Create file depending on the type
-    if params[:element_type] == 'Step'
-      step = Step.find(params[:element_id].to_i)
-      render_403 && return unless can_manage_step?(step)
+    filename = "#{params[:file_name]}.#{params[:file_type]}"
 
-      step_asset = StepAsset.create!(step: step, asset: asset)
-      asset.update!(view_mode: step.assets_view_mode)
-      step.protocol&.update(updated_at: Time.zone.now)
+    # Asset validation
+    @asset = @assoc.assets.new(created_by: current_user, team: current_team, view_mode: @assoc.assets_view_mode)
+    return render json: { message: @asset.errors }, status: :bad_request unless @asset.wopi_filename_valid?(filename)
 
-      edit_url = edit_asset_url(step_asset.asset_id)
-    elsif params[:element_type] == 'Result'
-      result = Result.find(params[:element_id].to_i)
-      render_403 and return unless can_manage_result?(result)
-
-      result_asset = ResultAsset.create!(result: result, asset: asset)
-      asset.update!(view_mode: result.assets_view_mode)
-
-      edit_url = edit_asset_url(result_asset.asset_id)
-    else
-      render_404 and return
+    @asset.transaction do
+      # Using special version number 0 for new blank wopi files, will be used later by put_wopi_contents method
+      @asset.version = 0
+      @asset.save!
+      # The blob will be replaced later by wopi client thus creating an empty one
+      @asset.file.attach(io: StringIO.new, filename: filename, content_type: wopi_content_type(params[:file_type]))
     end
 
     # Return edit url and asset info
-    render json: asset, scope: { user: current_user }
+    render json: @asset, scope: { user: current_user }
   end
 
   def destroy

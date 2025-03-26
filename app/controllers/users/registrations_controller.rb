@@ -6,6 +6,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
                 only: %i(new create new_with_provider create_with_provider)
   before_action :sign_up_with_provider_enabled?,
                 only: %i(new_with_provider create_with_provider)
+  before_action :check_sso_enabled, only: :update
   layout :layout
 
   def avatar
@@ -310,5 +311,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # Redirect to login page after signing up
   def after_inactive_sign_up_path_for(resource)
     new_user_session_path
+  end
+
+  def check_sso_enabled
+    render_403 if account_update_params.include?(:change_password) && sso_enabled? && sso_provider_enabled? && Rails.application.config.x.disable_local_passwords
+    render_403 if account_update_params.include?(:email) && sso_enabled? && sso_provider_enabled?
   end
 end

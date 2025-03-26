@@ -440,7 +440,7 @@
       },
       actionsMenu() {
         let menu = [];
-        if (this.urls.reorder_elements_url) {
+        if (this.urls.reorder_elements_url && this.elements.length > 1) {
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.rearrange'),
             emit: 'reorder',
@@ -692,6 +692,7 @@
         const index = this.attachments.findIndex(a => a.id === attachment.id);
         if (index !== -1) {
           this.attachments[index] = attachment;
+          this.$emit('stepUpdated');
         }
       },
       closeCommentsSidebar() {
@@ -725,6 +726,7 @@
           return s;
         })
         this.elements.push(element);
+        this.$emit('stepUpdated');
       },
       moveElement(position, target_id) {
         this.elements.splice(position, 1)

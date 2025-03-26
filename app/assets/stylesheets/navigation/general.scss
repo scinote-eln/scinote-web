@@ -8,12 +8,12 @@ body.navigator-collapsed {
 
 .sci--layout {
   --breadcrumbs-navigation-height: 44px;
-  --left-navigation-width: 192px;
+  --left-navigation-width: 52px;
   --navbar-height: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
   --title-row-height: 4em;
   --top-navigation-height: 72px;
   display: grid;
-  grid-template-areas: "left top top"
+  grid-template-areas: "top top top"
                        "left breadcrumbs breadcrumbs"
                        "left navigator content";
   grid-template-columns: var(--left-navigation-width)
@@ -59,13 +59,14 @@ body.navigator-collapsed {
   }
 
   .sci--layout-navigation-left {
+    --left-navigation-top-margin: 0px;
     grid-area: left;
-    height: 100vh;
+    height: calc(100vh - var(--top-navigation-height) + var(--left-navigation-top-margin));
     position: sticky;
     position: -webkit-sticky;
     top: 0;
     width: var(--left-navigation-width);
-    z-index: 600;
+    z-index: 605;
   }
 
   .sci--layout-navigation-navigator {

@@ -5,7 +5,17 @@
   <div class="content-pane flexible with-grey-background">
     <div class="content-header">
       <div class="title-row">
-        <h1><%= @storage_location.name %></h1>
+        <h1 class="storage-location-title">
+          <% if can_manage_storage_location?(@storage_location)%>
+            <%= render partial: "shared/inline_editing",
+                       locals: {
+                         initial_value: @storage_location.name,
+                         config: @inline_editable_title_config
+                       } %>
+          <% else %>
+            <%= @storage_location.name %>
+          <% end %>
+        </h1>
       </div>
     </div>
     <div class="content-body" data-e2e="e2e-CO-storageLocations-box">

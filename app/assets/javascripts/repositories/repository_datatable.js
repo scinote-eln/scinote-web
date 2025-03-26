@@ -61,7 +61,7 @@ var RepositoryDatatable = (function(global) {
     if (scrollBody[0].offsetWidth > scrollBody[0].clientWidth) {
       scrollBody.css('width', `calc(100% + ${scrollBody[0].offsetWidth - scrollBody[0].clientWidth}px)`);
     }
-    TABLE.colResize.restore();
+    TABLE.colResize.restore() && renderSmartAnnotations();
   }
 
   // Enable/disable edit button
@@ -475,6 +475,10 @@ var RepositoryDatatable = (function(global) {
       })
       .on('ajax:complete', function() {
         exportModal.modal('hide');
+        if ($('.modal-backdrop').length) {
+          $('body').removeClass('modal-open');
+          $('.modal-backdrop').remove();
+        }
         animateSpinner(null, false);
       })
       .on('ajax:success', function(ev, data) {
@@ -492,6 +496,14 @@ var RepositoryDatatable = (function(global) {
     //   .on('shown.bs.dropdown hidden.bs.dropdown', function() {
     //     TABLE.columns.adjust();
     //   });
+  }
+
+  function renderSmartAnnotations() {
+    const scrollElement = $('.repository-table .dataTables_scrollBody')[0];
+    scrollElement.classList.remove('sa-initialized');
+    window.renderElementSmartAnnotations(scrollElement, '.text-value', scrollElement);
+
+    return true;
   }
 
   function checkSnapshottingStatus() {
@@ -773,6 +785,8 @@ var RepositoryDatatable = (function(global) {
         // Hide edit button if not all selected rows are on the current page
         $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
         TABLE.columns([archivedOnIndex, archivedByIndex]).visible(archived);
+
+        renderSmartAnnotations();
       },
       preDrawCallback: function() {
         var archived = $('.repository-show').hasClass('archived');

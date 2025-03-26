@@ -4,46 +4,7 @@ class ActivitiesService
   def self.load_activities(user, teams, filters = {})
     # Create condition for view permissions checking first
     teams = user.teams.where(id: teams).pluck(:id)
-    visible_projects = Project.viewable_by_user(user, teams)
-    visible_my_modules = MyModule.viewable_by_user(user, teams)
-
-    # Temporary solution until handling of deleted subjects is fully implemented
-    visible_repository_teams = user.teams.where(id: teams).with_user_permission(user, RepositoryPermissions::READ)
-    visible_by_teams = Activity.where(project: nil, team_id: teams)
-                               .where.not(subject_type: %w(RepositoryBase RepositoryRow Protocol))
-                               .order(created_at: :desc)
-    visible_by_repositories = Activity.where(subject_type: %w(RepositoryBase RepositoryRow), team_id: visible_repository_teams.select(:id))
-                                      .order(created_at: :desc)
-    visible_by_projects = Activity.where(project_id: visible_projects.select(:id))
-                                  .where.not(subject_type: %w(Experiment MyModule Result Protocol))
-                                  .order(created_at: :desc)
-
-    visible_by_experiments = Activity.where(subject_type: 'Experiment')
-                                     .where(subject_id: Experiment.viewable_by_user(user, teams))
-                                     .order(created_at: :desc)
-
-    visible_by_my_modules = Activity.where("subject_id IN (?) AND subject_type = 'MyModule' OR " \
-                                           "subject_id IN (?) AND subject_type = 'Result' OR " \
-                                           "subject_id IN (?) AND subject_type = 'Protocol'",
-                                           visible_my_modules.select(:id),
-                                           Result.with_discarded.where(my_module: visible_my_modules).select(:id),
-                                           Protocol.where(my_module: visible_my_modules).select(:id))
-                                    .order(created_at: :asc)
-
-    visible_by_protocol_templates =
-      Activity.where(
-        subject_type: Protocol,
-        subject_id: Protocol.viewable_by_user(user, teams).select(:id)
-      ).order(created_at: :desc)
-
-    query = Activity.from(
-      "((#{visible_by_teams.to_sql}) UNION ALL " \
-      "(#{visible_by_repositories.to_sql}) UNION ALL " \
-      "(#{visible_by_protocol_templates.to_sql}) UNION ALL " \
-      "(#{visible_by_experiments.to_sql}) UNION ALL " \
-      "(#{visible_by_my_modules.to_sql}) UNION ALL " \
-      "(#{visible_by_projects.to_sql})) AS activities"
-    )
+    activities = Activity.where(team: teams)
 
     if filters[:subjects].present?
       subjects_with_children = load_subjects_children(filters[:subjects], user, teams)
@@ -53,24 +14,45 @@ class ActivitiesService
         where_condition.concat(' OR (my_module_id IN(?))')
         where_arguments << subjects_with_children[:my_module]
       end
-      query = query.where(where_condition, *where_arguments)
+      activities = activities.where(where_condition, *where_arguments)
     end
 
-    query = query.where(owner_id: filters[:users]) if filters[:users]
-    query = query.where(type_of: filters[:types].map(&:to_i)) if filters[:types]
+    activities = activities.where(owner_id: filters[:users]) if filters[:users]
+    activities = activities.where(type_of: filters[:types].map(&:to_i)) if filters[:types]
 
     activities =
       if filters[:from_date].present? && filters[:to_date].present?
-        query.where('created_at <= :from AND created_at >= :to',
-                    from: Time.zone.parse(filters[:from_date]).end_of_day.utc,
-                    to: Time.zone.parse(filters[:to_date]).beginning_of_day.utc)
+        activities.where('created_at <= :from AND created_at >= :to',
+                         from: Time.zone.parse(filters[:from_date]).end_of_day.utc,
+                         to: Time.zone.parse(filters[:to_date]).beginning_of_day.utc)
       elsif filters[:from_date].present? && filters[:to_date].blank?
-        query.where('created_at <= :from', from: Time.zone.parse(filters[:from_date]).end_of_day.utc)
+        activities.where('created_at <= :from', from: Time.zone.parse(filters[:from_date]).end_of_day.utc)
       elsif filters[:from_date].blank? && filters[:to_date].present?
-        query.where('created_at >= :to', to: Time.zone.parse(filters[:to_date]).beginning_of_day.utc)
+        activities.where(created_at: Time.zone.parse(filters[:to_date]).beginning_of_day.utc..)
       else
-        query
+        activities
       end
+
+    visible_projects = Project.viewable_by_user(user, teams)
+    visible_my_modules = MyModule.viewable_by_user(user, teams)
+    visible_forms = Form.viewable_by_user(user, teams)
+    # Temporary solution until handling of deleted subjects is fully implemented
+    visible_repository_teams = user.teams.where(id: teams).with_user_permission(user, RepositoryPermissions::READ)
+
+    activities = Activity.from(activities, 'activities')
+    activities = activities.where(project: nil, team_id: teams).where.not(subject_type: %w(RepositoryBase RepositoryRow Protocol Form))
+                           .or(activities.where(subject_type: %w(RepositoryBase RepositoryRow), team_id: visible_repository_teams.select(:id)))
+                           .or(activities.where(subject_type: 'Protocol', subject_id: Protocol.viewable_by_user(user, teams).select(:id)))
+                           .or(activities.where(project_id: visible_projects.select(:id)).where.not(subject_type: %w(Experiment MyModule Result Protocol)))
+                           .or(activities.where(subject_type: 'Experiment', subject_id: Experiment.viewable_by_user(user, teams)))
+                           .or(activities.where("subject_id IN (?) AND subject_type = 'MyModule' OR " \
+                                                "subject_id IN (?) AND subject_type = 'Result' OR " \
+                                                "subject_id IN (?) AND subject_type = 'Protocol' OR " \
+                                                "subject_id IN (?) AND subject_type = 'Form'",
+                                                visible_my_modules.select(:id),
+                                                Result.with_discarded.where(my_module: visible_my_modules).select(:id),
+                                                Protocol.where(my_module: visible_my_modules).select(:id),
+                                                visible_forms.select(:id)))
 
     activities.order(created_at: :desc)
               .page(filters[:page])

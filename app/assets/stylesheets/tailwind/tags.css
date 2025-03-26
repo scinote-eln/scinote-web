@@ -1,0 +1,9 @@
+@layer components {
+  .sci-tag {
+    @apply text-xs !rounded-full !px-2 !py-1 inline-flex items-center gap-1;
+  }
+
+  .sci-tag .sn-icon {
+    @apply -ml-2;
+  }
+}

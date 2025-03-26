@@ -23,7 +23,7 @@ Rails.application.routes.draw do
 
     root 'dashboards#show'
 
-    get '/sa', to: 'smart_annotations#redirect'
+    get '/sa', to: 'smart_annotations#show'
     get '/sa/u', to: 'smart_annotations#user'
 
     resources :navigations, only: [] do
@@ -84,12 +84,6 @@ Rails.application.routes.draw do
     resources :label_printers, only: [] do
       post :print, on: :member
       get :update_progress_modal, on: :member
-    end
-
-    resource :smart_annotations, only: [] do
-      collection do
-        post :parse_string
-      end
     end
 
     get 'users/settings/account/connected_accounts',
@@ -502,6 +496,7 @@ Rails.application.routes.draw do
 
       get :repositories_dropdown_list, controller: :my_module_repositories
       get :repositories_list_html, controller: :my_module_repositories
+      get :repositories_list, controller: :my_module_repositories
 
       resources :repositories, controller: :my_module_repositories, only: %i(update create) do
         member do

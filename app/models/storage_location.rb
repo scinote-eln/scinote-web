@@ -7,6 +7,7 @@ class StorageLocation < ApplicationRecord
   include PrefixedIdModel
   include Shareable
   include SearchableModel
+  include Rails.application.routes.url_helpers
 
   default_scope -> { kept }
 
@@ -74,6 +75,18 @@ class StorageLocation < ApplicationRecord
     rescue ActiveRecord::RecordInvalid
       false
     end
+  end
+
+  def breadcrumbs(readable: true)
+    url = if container
+            storage_location_path(id)
+          else
+            storage_locations_path(parent_id: id)
+          end
+
+    return [{ name: (readable ? name : code), url: url }] if root?
+
+    parent.breadcrumbs(readable: readable) + [{ name: (readable ? name : code), url: url }]
   end
 
   def with_grid?
