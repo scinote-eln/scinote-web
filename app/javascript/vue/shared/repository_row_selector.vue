@@ -6,6 +6,7 @@
         :optionsUrl="repositoriesUrl"
         placeholder="Select inventory"
         :searchable="true"
+        :value="selectedRepository"
         @change="selectedRepository = $event"
       ></SelectDropdown>
     </div>
@@ -21,6 +22,7 @@
         :withCheckboxes="multiple"
         :searchable="true"
         :optionRenderer="itemRowOptionRenderer"
+        :value="selectedRow"
         @close="showItemInfo = false"
         @change="selectedRow= $event"
       ></SelectDropdown>
@@ -63,10 +65,28 @@ export default {
     multiple: {
       type: Boolean,
       default: false
+    },
+    preSelectedRepository: {
+      type: Number,
+      default: null
+    },
+    preSelectedRows: {
+      type: [Array],
+      default: null
     }
   },
   created() {
     this.teamId = document.body.dataset.currentTeamId;
+    if (this.preSelectedRepository) {
+      this.selectedRepository = this.preSelectedRepository;
+    }
+    if (this.preSelectedRows) {
+      this.selectedRow = this.preSelectedRows;
+    }
+
+    this.$nextTick(() => {
+      this.loading = false;
+    });
   },
   mounted() {
     document.addEventListener('mouseover', this.loadColumnsInfo);
@@ -76,11 +96,15 @@ export default {
   },
   watch: {
     selectedRepository() {
+      if (this.loading) return;
+
       this.selectedRow = null;
       this.$emit('repositoryChange', this.selectedRepository);
       this.$emit('change', this.selectedRow);
     },
     selectedRow() {
+      if (this.loading) return;
+
       this.$emit('change', this.selectedRow);
     }
   },
@@ -103,7 +127,8 @@ export default {
       teamId: null,
       showItemInfo: false,
       hoveredRow: {},
-      loadingHoveredRow: false
+      loadingHoveredRow: false,
+      loading: true
     };
   },
   methods: {

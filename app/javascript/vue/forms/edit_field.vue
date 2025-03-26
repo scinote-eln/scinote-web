@@ -40,6 +40,11 @@
     </div>
     <hr class="my-4 w-full">
     <div class="flex flex-col gap-4 max-w-[768px]">
+      <div v-if="this.editField.attributes.type == 'ItemField'"
+           class="bg-sn-super-light-blue rounded p-4 flex items-center gap-3">
+        <i class="sn-icon sn-icon-alert-warning text-sn-science-blue"></i>
+        {{ i18n.t('forms.show.item_field_warning') }}
+      </div>
       <div>
         <label class="sci-label">{{ i18n.t('forms.show.title_label') }}</label>
         <div class="sci-input-container-v2" :class="{ 'error': !nameValid }" :data-error="nameFieldError"  >
@@ -86,6 +91,7 @@ import SingleChoiceField from './edit_fields/single_choice.vue';
 import TextField from './edit_fields/text.vue';
 import MultipleChoiceField from './edit_fields/multiple_choice.vue';
 import ActionField from './edit_fields/action.vue';
+import ItemField from './edit_fields/item.vue';
 
 export default {
   name: 'EditField',
@@ -100,7 +106,8 @@ export default {
     SingleChoiceField,
     TextField,
     MultipleChoiceField,
-    ActionField
+    ActionField,
+    ItemField
   },
   data() {
     return {
