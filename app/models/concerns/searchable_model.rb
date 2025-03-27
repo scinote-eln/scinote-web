@@ -184,7 +184,7 @@ module SearchableModel
         elsif defined?(model::PREFIXED_ID_SQL) && attribute == model::PREFIXED_ID_SQL
           "#{attribute} IS NOT NULL AND (#{attribute} #{like} :t#{i}) OR "
         elsif DATA_VECTOR_ATTRIBUTES.include?(attribute)
-          "#{attribute} @@ to_tsquery(:t#{i}) OR "
+          "#{attribute} @@ plainto_tsquery(:t#{i}) OR "
         else
           "#{attribute} IS NOT NULL AND ((trim_html_tags(#{attribute})) #{like} :t#{i}) OR "
         end
@@ -202,9 +202,8 @@ module SearchableModel
 
           new_phrase = exact_match ? phrase[1..-2] : phrase
           if DATA_VECTOR_ATTRIBUTES.include?(attribute)
-            new_phrase = Regexp.escape(new_phrase.gsub(/[!()&|:<]/, ' ').strip).split(/\s+/)
+            new_phrase = new_phrase.strip.split(/\s+/)
             new_phrase.map! { |t| "#{t}:*" } unless exact_match
-            new_phrase = sanitize_sql_like(new_phrase.join('&').tr('\'', '"'))
           else
             new_phrase = exact_match ? "(^|\\s)#{Regexp.escape(new_phrase)}(\\s|$)" : "%#{sanitize_sql_like(new_phrase)}%"
           end
