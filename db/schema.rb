@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_05_100223) do
+ActiveRecord::Schema[7.0].define(version: 2025_03_25_124848) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -242,6 +242,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_05_100223) do
     t.text "selection", array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "flag"
+    t.jsonb "data"
     t.index ["created_by_id"], name: "index_form_field_values_on_created_by_id"
     t.index ["form_field_id"], name: "index_form_field_values_on_form_field_id"
     t.index ["form_response_id"], name: "index_form_field_values_on_form_response_id"
@@ -277,8 +279,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_05_100223) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "previous_form_response_id"
+    t.string "parent_type"
+    t.bigint "parent_id"
     t.index ["created_by_id"], name: "index_form_responses_on_created_by_id"
     t.index ["form_id"], name: "index_form_responses_on_form_id"
+    t.index ["parent_type", "parent_id"], name: "index_form_responses_on_parent"
     t.index ["previous_form_response_id"], name: "index_form_responses_on_previous_form_response_id"
     t.index ["submitted_by_id"], name: "index_form_responses_on_submitted_by_id"
   end
@@ -923,6 +928,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_05_100223) do
     t.string "external_id"
     t.integer "parent_connections_count"
     t.integer "child_connections_count"
+    t.bigint "my_module_id"
     t.index "(('IT'::text || id)) gin_trgm_ops", name: "index_repository_rows_on_repository_row_code", using: :gin
     t.index "((id)::text) gin_trgm_ops", name: "index_repository_rows_on_id_text", using: :gin
     t.index "date_trunc('minute'::text, archived_on)", name: "index_repository_rows_on_archived_on_as_date_time_minutes"
@@ -930,6 +936,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_05_100223) do
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_repository_rows_on_name", using: :gin
     t.index ["archived"], name: "index_repository_rows_on_archived"
     t.index ["archived_by_id"], name: "index_repository_rows_on_archived_by_id"
+    t.index ["my_module_id"], name: "index_repository_rows_on_my_module_id"
     t.index ["repository_id", "external_id"], name: "unique_index_repository_rows_on_external_id", unique: true
     t.index ["repository_id"], name: "index_repository_rows_on_repository_id"
     t.index ["restored_by_id"], name: "index_repository_rows_on_restored_by_id"
@@ -1606,6 +1613,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_05_100223) do
   add_foreign_key "repository_row_connections", "repository_rows", column: "parent_id"
   add_foreign_key "repository_row_connections", "users", column: "created_by_id"
   add_foreign_key "repository_row_connections", "users", column: "last_modified_by_id"
+  add_foreign_key "repository_rows", "my_modules"
   add_foreign_key "repository_rows", "users", column: "archived_by_id"
   add_foreign_key "repository_rows", "users", column: "created_by_id"
   add_foreign_key "repository_rows", "users", column: "last_modified_by_id"
