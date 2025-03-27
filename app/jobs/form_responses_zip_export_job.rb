@@ -4,6 +4,8 @@ require 'caxlsx'
 
 class FormResponsesZipExportJob < ZipExportJob
   include StringUtility
+  include BreadcrumbsHelper
+  include Rails.application.routes.url_helpers
 
   private
 
@@ -40,7 +42,9 @@ class FormResponsesZipExportJob < ZipExportJob
           form_fields.each do |form_field|
             form_field_value = form_field_values.find_by(form_field_id: form_field.id, latest: true)
             if form_field_value.present?
-              if form_field_value.value_in_range?
+              if form_field_value.not_applicable
+                row.add_cell I18n.t('forms.export.values.not_applicable')
+              elsif form_field_value.value_in_range?
                 row.add_cell form_field_value.formatted
               else
                 row.add_cell form_field_value.formatted, style: warning_bg_style
@@ -74,12 +78,13 @@ class FormResponsesZipExportJob < ZipExportJob
   def breadcrumbs(form_response)
     return '' unless (my_module = form_response&.step&.my_module)
 
-    [
-      "#{my_module.project.name} (#{my_module.project.code})",
-      "#{my_module.experiment.name} (#{my_module.experiment.code})",
-      "#{my_module.name} (#{my_module.code})",
+    breadcrumbs = generate_breadcrumbs(my_module, []).map { |i| "#{i[:name]}(#{i[:code]})" }
+
+    breadcrumbs += [
       my_module.protocol.name || I18n.t('search.index.untitled_protocol'),
       form_response.step.name || I18n.t('protocols.steps.default_name')
-    ].join('/ ')
+    ]
+
+    breadcrumbs.join('/ ')
   end
 end

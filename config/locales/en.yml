@@ -848,6 +848,7 @@ en:
           step_files: "Step files"
           step_tables: "Step tables"
           step_well_plates: "Step well plates"
+          step_forms: "Step forms"
           step_comments: "Step comments"
           assigned_items: "Assigned items"
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
@@ -1027,6 +1028,15 @@ en:
           name: "Step comments"
           no_comments: "No comments"
           comment_prefix: "%{user} on %{date} at %{time}:"
+        step_forms:
+          field: "Field"
+          answer: "Answer"
+          submitted_at: "Submitted at"
+          submitted_by: "Submitted by"
+          not_submitted: "Not submitted yet"
+          user_time: "Form submitted on %{timestamp} by %{user}."
+          table_name: "%{name}"
+
     experiment_archive:
       head_title: "%{project} | Archived experiments"
       no_archived_experiments: "No archived experiments!"
@@ -1064,6 +1074,8 @@ en:
     restored:
       success_flash: "<strong>%{number}</strong> form(s) successfully restored."
       error_flash: "Failed to restore form(s)."
+    duplicated:
+      success_flash: "<strong>%{name}</strong> form successfully duplicated."
     archived:
       success_flash: "<strong>%{number}</strong> form(s) successfully archived."
       error_flash: "Failed to archive form(s)."
@@ -1079,6 +1091,8 @@ en:
         form_field_submitted_by: "User for %{name}"
       values:
         not_applicable: 'N/A'
+        completed: "Completed"
+        not_completed: "Not completed"
     publish:
       title: "Publish form"
       description_html: "<p>Publishing a form locks it for editing and makes it available for use in protocol steps. You can unpublish the form only if it isn't linked to any steps.</p><p>Are you sure you want to publish the form?</p>"
@@ -1087,11 +1101,13 @@ en:
       add_text: "Add text"
       add_number: "Add number"
       from: "From"
+      submitted_by: "%{date} by %{user}"
       to: "To"
       add_date: "Add date"
       add_datetime: "Add date & time"
       not_valid_range: "Range is not valid"
       no_selection: "No options selected"
+      mark_as_completed: "Mark as completed"
     index:
       head_title: "Forms"
       head_title_archived: "Archived forms"
@@ -1100,6 +1116,7 @@ en:
         access: 'Access'
         archive: 'Archive'
         restore: 'Restore'
+        duplicate: 'Duplicate'
       table:
         name: 'Form name'
         code: 'ID'
@@ -1123,6 +1140,7 @@ en:
       mark_as_na: 'Mark as N/A'
       mark_as_na_explanation: 'Allow user to mark the field as Not-applicable.'
       delete: 'Delete'
+      duplicate: 'Duplicate'
       edit_form: 'Edit form'
       test_form: 'Test form'
       publish: 'Publish'
@@ -1150,11 +1168,15 @@ en:
         SingleChoiceField: 'Single choice'
         MultipleChoiceField: 'Multiple choice'
         DatetimeField: 'Date & Time'
+        ActionField: 'Action'
     response:
       submit: 'Submit form'
       submitted_on: 'Submitted on'
       not_submitted: 'Not submitted yet'
       by: 'by'
+      edit_modal:
+        title: "Unlock form for editing?"
+        description: "Unlocking the form for editing will require a new submission. Even if no data changes, the new submission's timestamp and user will be updated."
     promo:
       promo_title: 'This feature is disabled by default in open source SciNote'
   label_templates:
@@ -3565,6 +3587,9 @@ en:
       header:
         printed_from: "Printed from"
         print_info: "on %{datetime} by %{full_name}"
+      forms: 
+        single_choice_html: "<em>(Select one)</em>"
+        multiple_choice_html: "<em>(Select multiple)</em>"
     protocols_io_import:
       title_too_long: "... Text is too long so we had to cut it off."
       too_long: "... <span class='label label-warning'>Text is too long so we had to cut it off.</span>"
@@ -3932,6 +3957,7 @@ en:
           no_forms: "Create and publish one or request access from your team."
           add_form: "Add form"
           take_me_there: "Take me there"
+          recently_used: "Recently used"
         move_element:
           step:
             title: Move to different step
@@ -4118,6 +4144,8 @@ en:
     my_module_consumption_comment_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
     step_description_title: "%{user} mentioned you in a description on step %{step}."
+    form_field_title: "%{user} mentioned you in a %{field} in form %{form}."
+    form_field_value_title: "%{user} mentioned you in a %{field} in step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
     step_text_title: "%{user} mentioned you in a text on step %{step}."
     step_table_title: "%{user} mentioned you in a table on step %{step}."

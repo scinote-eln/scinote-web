@@ -38,7 +38,7 @@
         <button v-if="form.attributes.urls.publish"
                 class="btn btn-primary"
                 @click="publishForm"
-                :disabled="submitting"
+                :disabled="submitting || !isValid"
                 data-e2e="e2e-BT-forms-builder-publish">
           {{ i18n.t('forms.show.publish') }}
         </button>
@@ -74,6 +74,7 @@
                 >
                   <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="fieldIcon[element.attributes.data.type]"></i>
                   <span :title="element.attributes.name" class="truncate">{{ element.attributes.name }}</span>
+                  <i v-if="element.isValid == false" class="ml-auto text-sn-delete-red sn-icon sn-icon-alert-warning"></i>
                 </div>
               </div>
             </template>
@@ -98,10 +99,13 @@
           <EditField
             :key="activeField.id"
             v-if="activeField.id"
+            ref="editField"
             :field="activeField"
             :icon="fieldIcon[activeField.attributes.data.type]"
             @update="updateField"
             @delete="deleteField"
+            @duplicate="duplicateField"
+            @validChanged="isValidChanged"
           />
           <div v-if="!activeField.id"
                class="text-xl font-semibold text-sn-grey font-inter flex items-center justify-center w-full h-full">
@@ -153,7 +157,8 @@ export default {
         { name: this.i18n.t('forms.show.blocks.NumberField'), type: 'NumberField' },
         { name: this.i18n.t('forms.show.blocks.SingleChoiceField'), type: 'SingleChoiceField' },
         { name: this.i18n.t('forms.show.blocks.MultipleChoiceField'), type: 'MultipleChoiceField' },
-        { name: this.i18n.t('forms.show.blocks.DatetimeField'), type: 'DatetimeField' }
+        { name: this.i18n.t('forms.show.blocks.DatetimeField'), type: 'DatetimeField' },
+        { name: this.i18n.t('forms.show.blocks.ActionField'), type: 'ActionField' }
       ];
     },
     fieldIcon() {
@@ -162,7 +167,8 @@ export default {
         NumberField: 'sn-icon-value',
         SingleChoiceField: 'sn-icon-choice-single',
         MultipleChoiceField: 'sn-icon-choice-multiple',
-        DatetimeField: 'sn-icon-created'
+        DatetimeField: 'sn-icon-created',
+        ActionField: 'sn-icon-check'
       };
     }
   },
@@ -176,10 +182,21 @@ export default {
       savedFields: [],
       activeField: {},
       preview: false,
-      submitting: false
+      submitting: false,
+      isValid: false
     };
   },
   methods: {
+    isValidChanged() {
+      this.$nextTick(() => {
+        if (this.$refs.editField?.field) {
+          const index = this.fields.findIndex((f) => f.id === this.$refs.editField.field.id);
+          this.fields[index].isValid = this.$refs.editField.isValid;
+        }
+
+        this.isValid = !this.fields.some((field) => field.isValid === false);
+      });
+    },
     syncSavedFields() {
       this.savedFields = this.fields.map((f) => ({ ...f }));
     },
@@ -192,6 +209,8 @@ export default {
           [this.activeField] = this.fields;
         }
         this.syncSavedFields();
+        this.isValidChanged();
+
         if (this.form.attributes.published_on || !this.form.attributes.urls.create_field) {
           this.preview = true;
         }
@@ -241,6 +260,23 @@ export default {
         form_field_positions: this.fields.map((f, i) => ({ id: f.id, position: i }))
       }).then(() => {
         this.syncSavedFields();
+      });
+    },
+    duplicateField(field) {
+      if (this.submitting) {
+        return;
+      }
+
+      this.submitting = true;
+      axios.post(field.attributes.urls.duplicate, {
+        form_field_id: field.id
+      }).then((response) => {
+        const index = this.fields.findIndex((f) => f.id === field.id);
+        this.fields.splice(index + 1, 0, response.data.data);
+        this.activeField = response.data.data;
+        this.syncSavedFields();
+      }).finally(() => {
+        this.submitting = false;
       });
     },
     deleteField(field) {

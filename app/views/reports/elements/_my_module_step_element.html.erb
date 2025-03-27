@@ -37,6 +37,9 @@
       <% if e.orderable_type == 'StepText' && @settings.dig('task', 'protocol', 'step_texts') %>
         <%= render partial: 'reports/elements/step_text_element', locals: { step_text: e.orderable, export_all: export_all } %>
       <% end %>
+      <% if e.orderable_type == 'FormResponse' && @settings.dig('task', 'protocol', 'step_forms') %>
+        <%= render partial: 'reports/elements/step_form_element', locals: { form_response: e.orderable } %>
+      <% end %>
     <% end %>
     <% if @settings.dig('task', 'protocol', 'step_files') %>
       <% assets.each do |asset| %>

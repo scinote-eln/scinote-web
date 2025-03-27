@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class FormFieldValuesController < ApplicationController
+  include ApplicationHelper
   before_action :check_forms_enabled
   before_action :load_form_response
   before_action :load_form_field
@@ -15,6 +16,7 @@ class FormFieldValuesController < ApplicationController
     )
 
     log_form_field_value_create_activity
+    form_field_value_annotation if @form_field_value.is_a?(FormTextFieldValue)
 
     render json: @form_field_value, serializer: FormFieldValueSerializer, user: current_user
   end
@@ -43,6 +45,19 @@ class FormFieldValuesController < ApplicationController
 
   def check_forms_enabled
     render_404 unless Form.forms_enabled?
+  end
+
+  def form_field_value_annotation
+    step = @form_response.step
+    smart_annotation_notification(
+      old_text: @form_field_value.text_previously_was,
+      new_text: @form_field_value.text,
+      subject: step.protocol,
+      title: t('notifications.form_field_value_title',
+               user: current_user.full_name,
+               field: @form_field_value.form_field.name,
+               step: step.name)
+    )
   end
 
   def log_form_field_value_create_activity

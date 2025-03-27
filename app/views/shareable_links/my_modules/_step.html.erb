@@ -49,6 +49,8 @@
           <%= render partial: "shareable_links/my_modules/step_elements/checklist", locals: { element: element.orderable } %>
         <% elsif element.orderable_type == 'StepTable'%>
            <%= render partial: "shareable_links/my_modules/step_elements/table", locals: { element: element.orderable.table } %>
+        <% elsif element.orderable_type == 'FormResponse' %>
+          <%= render partial: "shareable_links/my_modules/step_elements/form_response", locals: { element: element.orderable } %>
         <% end %>
       <% end %>
       <% if step.step_assets.present? %>

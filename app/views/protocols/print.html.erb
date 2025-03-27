@@ -67,6 +67,8 @@
             </div>
           <% end %>
         </div>
+      <% when 'FormResponse' %>
+        <%= render partial: 'protocols/print/form_response_element', locals: { form_response: step_element.orderable }%>
       <% end %>
     <% end %>
 

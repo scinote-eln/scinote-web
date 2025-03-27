@@ -1,17 +1,25 @@
 <template>
-  <div class="sci-input-container-v2 h-24 mb-1" :class="{'error': !validValue}" :data-error="valueFieldError">
-    <textarea
-      class="sci-input"
-      :value="value"
-      ref="input"
-      :disabled="fieldDisabled"
-      @change="saveValue"
-      :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.add_text')"></textarea>
+  <div>
+    <div v-if="!fieldDisabled" class="sci-input-container-v2 h-24 mb-1" :class="{'error': !validValue}" :data-error="valueFieldError">
+      <textarea
+        class="sci-input"
+        :value="value"
+        ref="input"
+        @blur="saveValue"
+        :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.add_text')"></textarea>
+    </div>
+    <div v-else
+      ref="fieldValue"
+      class="rounded min-h-[120px] border py-2  w-full px-4 bg-sn-super-light-grey border-sn-grey" >
+      <span>
+        {{ value }}
+      </span>
+    </div>
   </div>
 </template>
 
 <script>
-/* global GLOBAL_CONSTANTS */
+/* global GLOBAL_CONSTANTS SmartAnnotation */
 
 import fieldMixin from './field_mixin';
 
@@ -30,10 +38,18 @@ export default {
       }
     }
   },
+  mounted() {
+    if (this.fieldDisabled) {
+      window.renderElementSmartAnnotations(this.$refs.fieldValue, 'span');
+    } else {
+      SmartAnnotation.init($(this.$refs.input), false);
+    }
+  },
   methods: {
     saveValue(event) {
       this.value = event.target.value;
-      if (this.validValue) {
+      const noActiveSA = [...document.querySelectorAll('.atwho-view')].every((el) => !el.style.display || el.style.display !== 'block');
+      if (this.validValue && noActiveSA) {
         this.$emit('save', this.value);
       }
     }

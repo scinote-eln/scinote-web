@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class FormsController < ApplicationController
+  include InputSanitizeHelper
   include UserRolesHelper
 
   before_action :check_forms_enabled
-  before_action :load_form, only: %i(show update publish unpublish export_form_responses)
+  before_action :load_form, only: %i(show update publish unpublish export_form_responses duplicate)
   before_action :set_breadcrumbs_items, only: %i(index show)
   before_action :check_manage_permissions, only: :update
   before_action :check_create_permissions, only: :create
@@ -70,6 +71,20 @@ class FormsController < ApplicationController
     }
   end
 
+  def latest_attached_forms
+    forms = current_team.forms.active.readable_by_user(current_user).published
+                        .joins(:form_responses)
+                        .where(form_responses: { created_by: current_user })
+                        .select('forms.id, forms.name, MAX(form_responses.created_at) AS last_response_at')
+                        .group('forms.id')
+                        .order('last_response_at DESC')
+                        .limit(5)
+
+    render json: {
+      data: forms
+    }
+  end
+
   def publish
     render_403 and return unless can_publish_form?(@form)
 
@@ -92,6 +107,8 @@ class FormsController < ApplicationController
         published_by: nil,
         published_on: nil
       )
+
+      log_activity(@form, :form_unpublished)
 
       render json: @form, serializer: FormSerializer, user: current_user
     end
@@ -144,6 +161,21 @@ class FormsController < ApplicationController
       render json: { message: t('forms.restored.success_flash', number: counter) }
     else
       render json: { message: t('forms.restored.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
+  def duplicate
+    ActiveRecord::Base.transaction do
+      new_form = @form.duplicate!(current_user)
+      log_activity(@form, :form_duplicated, { form_new: new_form.id })
+      render json: { message: t('forms.duplicated.success_flash', name: escape_input(@form.name)) }
+    rescue ActiveRecord::RecordInvalid
+      render json: { error: new_form.errors.full_messages }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    rescue StandardError => e
+      render json: { message: I18n.t('errors.general') }, status: :unprocessable_entity
+      Rails.logger.error e.message
+      raise ActiveRecord::Rollback
     end
   end
 

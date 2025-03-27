@@ -92,7 +92,7 @@ module Api
       end
 
       def permitted_includes
-        %w(tables assets checklists checklists.checklist_items comments user)
+        %w(tables assets checklists checklists.checklist_items comments user form_responses)
       end
 
       def check_manage_permissions
