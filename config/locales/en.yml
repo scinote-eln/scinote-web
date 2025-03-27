@@ -4144,6 +4144,8 @@ en:
     my_module_consumption_comment_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
     step_description_title: "%{user} mentioned you in a description on step %{step}."
+    form_field_title: "%{user} mentioned you in a %{field} in form %{form}."
+    form_field_value_title: "%{user} mentioned you in a %{field} in step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
     step_text_title: "%{user} mentioned you in a text on step %{step}."
     step_table_title: "%{user} mentioned you in a table on step %{step}."
