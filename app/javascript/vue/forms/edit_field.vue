@@ -121,6 +121,7 @@ export default {
   },
   mounted() {
     this.checkValidField();
+    SmartAnnotation.init($(this.$refs.description), false);
   },
   watch: {
     isValid() {
@@ -129,9 +130,6 @@ export default {
     validField() {
       this.checkValidField();
     }
-  },
-  mounted() {
-    SmartAnnotation.init($(this.$refs.description), false);
   },
   computed: {
     validField() {
