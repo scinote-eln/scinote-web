@@ -235,6 +235,7 @@ export default {
         this.fields.push(response.data.data);
         this.activeField = this.fields[this.fields.length - 1];
         this.$refs.addFieldDropdown.isOpen = false;
+        this.syncSavedFields();
       }).then(() => {
         this.submitting = false;
       });
