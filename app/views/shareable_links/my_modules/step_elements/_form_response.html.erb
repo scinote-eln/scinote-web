@@ -28,12 +28,7 @@
           </div>
           <% if field.description %>
             <div>
-              <%= custom_auto_link(
-                  field.description,
-                  simple_format: false,
-                  tags: %w(img),
-                  team: current_team
-                ) %>
+              <%= smart_annotation_text(field.description) %>
             </div>
           <% end %>
           <div class="mt-2">
@@ -50,12 +45,7 @@
                   <span class='iso-formatted-date <%= 'only-date' unless field.data['time'] %>'><%= field_value.datetime&.iso8601  %></span>
                 <% end %>
               <% elsif field_value.is_a?(FormTextFieldValue)%>
-                <%= custom_auto_link(
-                  field_value.formatted,
-                  simple_format: false,
-                  tags: %w(img),
-                  team: current_team
-                ) %>
+                <%= smart_annotation_text(field_value.formatted) %>
               <% else %>
                 <%= field_value.formatted %>
               <% end %>
