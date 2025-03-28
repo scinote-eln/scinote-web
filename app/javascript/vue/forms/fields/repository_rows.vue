@@ -8,7 +8,7 @@
                       :excludeRows="assignedIds"
                       @close="rowSelectorOpened = false"
                       @save="addValue" />
-    <div class="flex items-center gap-2 mt-4 flex-wrap">
+    <div v-if="field.field_value" class="flex items-center gap-2 mt-4 flex-wrap">
       <template v-for="(row, index) in field.field_value.value" :key="row.id">
         <div class="flex items-center gap-2">
           <span v-if="index > 0">|</span>

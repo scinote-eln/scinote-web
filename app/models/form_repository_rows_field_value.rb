@@ -25,6 +25,10 @@ class FormRepositoryRowsFieldValue < FormFieldValue
     data
   end
 
+  def formatted
+    value&.map { |i| "#{i['name']} (IT#{i['id']})" }&.join(' | ')
+  end
+
   private
 
   def repository_row_snapshots(repository_row_ids)
