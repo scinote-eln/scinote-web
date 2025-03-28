@@ -47,6 +47,7 @@ import SingleChoiceField from './fields/single_choice.vue';
 import TextField from './fields/text.vue';
 import MultipleChoiceField from './fields/multiple_choice.vue';
 import ActionField from './fields/action.vue';
+import RepositoryRowsField from './fields/repository_rows.vue';
 
 export default {
   name: 'ViewField',
@@ -64,7 +65,8 @@ export default {
     SingleChoiceField,
     TextField,
     MultipleChoiceField,
-    ActionField
+    ActionField,
+    RepositoryRowsField
   },
   data() {
     return {

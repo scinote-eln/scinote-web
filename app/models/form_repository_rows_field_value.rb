@@ -7,6 +7,12 @@ class FormRepositoryRowsFieldValue < FormFieldValue
     # adds new snapshots if not yet present
     self.data ||= []
 
+    # If income data is empty, we need nulify data
+    if repository_row_ids.blank?
+      self.data = nil
+      return
+    end
+
     removed_repository_row_ids = data.pluck('id') - repository_row_ids
     existing_repository_row_ids = data.pluck('id') & repository_row_ids
 

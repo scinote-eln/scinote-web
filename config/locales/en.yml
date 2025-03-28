@@ -1156,6 +1156,9 @@ en:
       no_block: 'Add your first form block'
       field_too_long_error: 'Field is too long (maximum number is %{limit} characters)'
       options_too_many_error: 'Too many options (maximum number is %{limit} options)'
+      add_items: 'Add items'
+      add: 'Add'
+      select_items: 'Select items'
       validations:
         response_validation:
           title: 'Response validation'
@@ -1169,6 +1172,7 @@ en:
         MultipleChoiceField: 'Multiple choice'
         DatetimeField: 'Date & Time'
         ActionField: 'Action'
+        RepositoryRowsField: 'Item'
     response:
       submit: 'Submit form'
       submitted_on: 'Submitted on'
@@ -3587,7 +3591,7 @@ en:
       header:
         printed_from: "Printed from"
         print_info: "on %{datetime} by %{full_name}"
-      forms: 
+      forms:
         single_choice_html: "<em>(Select one)</em>"
         multiple_choice_html: "<em>(Select multiple)</em>"
     protocols_io_import:
