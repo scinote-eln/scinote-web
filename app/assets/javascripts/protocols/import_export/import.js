@@ -234,10 +234,10 @@ function importProtocolFromFile(
           addTablePreview(stepEl, this);
         });
       }
-
       // Parse step elements
       $(this).find('stepElements > stepElement').sort(stepComparator).each(function() {
         $element = $(this);
+
         switch ($(this).attr('type')) {
           case 'Checklist':
             addChecklistPreview(stepEl, $(this).find('checklist'));
@@ -247,6 +247,9 @@ function importProtocolFromFile(
             break;
           case 'StepText':
             addStepTextPreview(stepEl, $(this).find('stepText'), protocolFolders[position], stepGuid);
+            break;
+          case 'FormResponse':
+            addStepFormPreview(stepEl, $(this).find('form'));
             break;
           default:
             // nothing to do
@@ -338,6 +341,32 @@ function importProtocolFromFile(
     );
 
     stepEl.append(textEl);
+  }
+
+  function addStepFormPreview(stepEl, stepFormNode) {
+    const formId = $(stepFormNode)[0].id;
+    const $formContainer = $(`<div id="formId-${formId}"></div>`);
+    $.get(`/forms/${formId}?format=json`, (data) => {
+      const formEl = newPreviewElement(
+        'step-form',
+        { name: $('<div>').text(data.data.attributes.name) }
+      );
+      $.each(data.included, (i, field) => {
+        const fieldEl = newPreviewElement(
+          'form-field',
+          { text: $('<div>').text(field.attributes.name) }
+        );
+        formEl.append(fieldEl);
+      });
+      $formContainer.append(formEl);
+    }).fail(() => {
+      const formEl = newPreviewElement(
+        'step-form-error',
+        { text: I18n.t('protocols.import_export.import_modal.forms_error', { form_id: formId }) }
+      );
+      $formContainer.append(formEl);
+    });
+    stepEl.append($formContainer);
   }
 
   // display tiny_mce_assets in step description
