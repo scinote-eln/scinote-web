@@ -1,16 +1,27 @@
 <template>
-  <div class="sci-input-container-v2" :class="{'error': !isValidValue}" :data-error="errorMessage">
-    <input type="number" v-model="value" class="sci-input" :disabled="fieldDisabled" @change="saveValue"
-      :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.add_number')"></input>
+  <div class="w-full">
+    <InputField
+      type="number"
+      v-model="value"
+      :disabled="fieldDisabled"
+      @change="saveValue"
+      :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.add_number')"
+      :warning="!isValidValue"
+      :warningMessage="warningMessage"
+    ></InputField>
   </div>
 </template>
 
 <script>
 import fieldMixin from './field_mixin';
+import InputField from '../../shared/input_field.vue';
 
 export default {
   name: 'NumberField',
   mixins: [fieldMixin],
+  components: {
+    InputField
+  },
   data() {
     return {
       value: this.field.field_value?.value
@@ -39,7 +50,7 @@ export default {
 
       return true;
     },
-    errorMessage() {
+    warningMessage() {
       const { validations } = this.field.attributes.data;
 
       if (!validations || !validations.response_validation) {
@@ -55,9 +66,7 @@ export default {
   },
   methods: {
     saveValue() {
-      if (this.isValidValue) {
-        this.$emit('save', this.value);
-      }
+      this.$emit('save', this.value);
     }
   }
 };
