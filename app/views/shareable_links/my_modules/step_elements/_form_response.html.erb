@@ -62,6 +62,13 @@
             <% else %>
               —
             <% end %>
+            <% if field_value && field_value.submitted_at %>
+              <div class="text-sn-grey-700 text-xs text-right w-full mt-2">
+                <span class='iso-formatted-date'><%= field_value.submitted_at.iso8601 %></span>
+                <%= I18n.t('forms.fields.by') %>
+                <span ><%= field_value.submitted_by.full_name %></span>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>
