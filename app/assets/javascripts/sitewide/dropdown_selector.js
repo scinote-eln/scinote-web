@@ -445,14 +445,13 @@ var dropdownSelector = (function() {
       // If dropdown disabled or we use it in only tag mode we not open it
       if (dropdownContainer.hasClass('disabled') || (config.inputTagMode && noOptionsForSelect(selector))) return;
 
-      // Each time we open option contianer we must scroll it
-      dropdownContainer.animate({
-        scrollTop: optionContainer.offset().top
-      });
-
       // Now open/close option container
       dropdownContainer.toggleClass('open');
       if (dropdownContainer.hasClass('open')) {
+        // Each time we open option container we must scroll it
+        dropdownContainer.find('.dropdown-container').scrollTop(0);
+        PerfectSb().update_all();
+
         // on Open we load new data
         loadData(selectElement, dropdownContainer);
         updateDropdownDirection(selectElement, dropdownContainer);
