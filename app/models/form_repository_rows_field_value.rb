@@ -26,7 +26,7 @@ class FormRepositoryRowsFieldValue < FormFieldValue
   end
 
   def formatted
-    value&.map { |i| "#{i['name']} (IT#{i['id']})" }&.join(' | ')
+    value&.map { |i| "#{i['name']} (#{RepositoryRow::ID_PREFIX}#{i['id']})" }&.join(' | ')
   end
 
   private
