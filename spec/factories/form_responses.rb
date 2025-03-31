@@ -5,6 +5,7 @@ FactoryBot.define do
     association :form
     association :created_by, factory: :user
     association :step_orderable_element, factory: :step_orderable_element
+    association :parent, factory: :step
 
     status { :pending }
 

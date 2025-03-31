@@ -23,4 +23,8 @@ class FormFieldValue < ApplicationRecord
   def value_in_range?
     true
   end
+
+  def name
+    form_field&.name
+  end
 end

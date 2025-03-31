@@ -10,6 +10,7 @@ class FormResponse < ApplicationRecord
   belongs_to :form
   belongs_to :created_by, class_name: 'User'
   belongs_to :submitted_by, class_name: 'User', optional: true
+  belongs_to :parent, polymorphic: true, inverse_of: :form_responses
 
   has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
@@ -31,10 +32,6 @@ class FormResponse < ApplicationRecord
            dependent: :destroy
 
   def step
-    step_orderable_element&.step
-  end
-
-  def parent
     step_orderable_element&.step
   end
 
@@ -102,7 +99,8 @@ class FormResponse < ApplicationRecord
         form_id: form_id,
         discarded_at: nil,
         submitted_by: nil,
-        created_by_id: user.id
+        created_by_id: user.id,
+        parent: parent
       )
 
       parent.step_orderable_elements.create!(

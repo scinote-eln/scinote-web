@@ -10,7 +10,7 @@ describe StepElements::FormResponsesController, type: :controller do
   let!(:form) { create(:form, team: team, created_by: user) }
   let!(:step) { create(:step, protocol: protocol) }
   let!(:protocol) { create(:protocol, added_by: user) }
-  let!(:form_response) { create(:form_response, form: form, created_by: user) }
+  let!(:form_response) { create(:form_response, form: form, created_by: user, parent: step) }
   let!(:step_orderable_element) { create(:step_orderable_element, orderable: form_response) }
 
   before do
