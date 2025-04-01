@@ -7,11 +7,11 @@
     <% end -%>
 
     <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
-      <%= link_to t("devise.links.forgot"), new_password_path(resource_name), class: 'forgot-password-link' %><br />
+      <%= link_to t("devise.links.forgot"), new_password_path(resource_name), class: 'forgot-password-link', :'data-e2e' => "e2e-TL-signIn-forgotPassword" %><br />
     <% end -%>
 
     <%- if devise_mapping.registerable? && Rails.configuration.x.enable_user_registration && controller_name != 'registrations' %>
-      <%= link_to t("devise.links.signup"), new_registration_path(resource_name), class: 'signup-link' %><br />
+      <%= link_to t("devise.links.signup"), new_registration_path(resource_name), class: 'signup-link', :'data-e2e' => "e2e-TL-signIn-signUp" %><br />
     <% end -%>
 
     <%- if Rails.configuration.x.enable_email_confirmations && devise_mapping.confirmable? && controller_name != 'confirmations' %>
