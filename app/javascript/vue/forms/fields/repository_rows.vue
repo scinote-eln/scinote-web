@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     itemCardUrl(row) {
-      return repository_repository_row_path(row.repository_id, row.id);
+      return repository_repository_row_path(row.repository_id, row.id, { form_repository_rows_field_value_id: this.field.field_value.id });
     },
     addValue(rows) {
       const rowIds = this.assignedIds;

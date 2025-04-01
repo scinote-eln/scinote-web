@@ -166,12 +166,12 @@ export default {
         if (this.formFieldValues.find((formFieldValue) => formFieldValue.form_field_id === formFieldId)) {
           this.formFieldValues = this.formFieldValues.map((formFieldValue) => {
             if (formFieldValue.form_field_id === formFieldId) {
-              return response.data.data.attributes;
+              return { ...response.data.data.attributes, id: response.data.data.id };
             }
             return formFieldValue;
           });
         } else {
-          this.formFieldValues.push(response.data.data.attributes);
+          this.formFieldValues.push({ ...response.data.data.attributes, id: response.data.data.id });
         }
       });
     },

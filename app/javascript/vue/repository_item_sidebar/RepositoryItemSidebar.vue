@@ -10,7 +10,7 @@
       <div id="repository-item-sidebar" data-e2e="e2e-CO-itemCard" class="w-full h-full pl-6 bg-white flex flex-col">
 
         <div ref="stickyHeaderRef" id="sticky-header-wrapper"
-          class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
+          class="sticky top-0 right-0 bg-white flex z-50 flex-col pt-6">
           <div class="header flex w-full h-[30px] pr-6">
             <repository-item-sidebar-title v-if="defaultColumns"
               :editable="permissions.can_manage && !defaultColumns?.archived"
@@ -21,6 +21,9 @@
             </repository-item-sidebar-title>
             <i id="close-icon" data-e2e="e2e-BT-itemCard-close" @click="toggleShowHideSidebar(null)"
               class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
+          </div>
+          <div v-if="snapshotAt" class="text-sn-grey mt-2">
+            {{ i18n.t('repositories.item_card.snapshot_label', { timestamp: snapshotAt, name: snapshotByName }) }}
           </div>
           <div id="divider" class="bg-sn-light-grey flex items-center self-stretch h-px mt-5 mr-6"></div>
         </div>
@@ -466,7 +469,9 @@ export default {
       relationshipDetailsState: {},
       selectedToUnlink: null,
       initialSectionId: null,
-      loadingError: false
+      loadingError: false,
+      snapshotAt: null,
+      snapshotByName: null
     };
   },
   provide() {
@@ -624,6 +629,8 @@ export default {
         this.icons = result.icons;
         this.dataLoading = false;
         this.notification = result.notification;
+        this.snapshotByName = result.snapshot_by_name;
+        this.snapshotAt = result.snapshot_at;
         this.$nextTick(() => {
           this.generateBarCode(this.defaultColumns.code);
 
