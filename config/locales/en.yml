@@ -2714,6 +2714,7 @@ en:
           one: "day"
           other: "days"
       stock_export: "Export"
+      snapshot_label: "Snapshot on %{timestamp} by %{name}"
       custom_columns_label: "Custom columns"
       no_custom_columns_label: "No custom columns"
       repository_time_range_value:

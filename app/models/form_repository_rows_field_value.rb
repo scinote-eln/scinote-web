@@ -25,6 +25,35 @@ class FormRepositoryRowsFieldValue < FormFieldValue
     data
   end
 
+  def reified_repository_row_by_id(repository_row_id)
+    # build an in-memory, read-only representation of the repository row in the snapshot
+
+    row_attributes = data.find { |r| r['id'] == repository_row_id.to_i }
+    row = RepositoryRow.new(row_attributes.except('repository_cells'))
+
+    row.repository_cells = row_attributes['repository_cells'].map do |cell_attributes|
+      repository_cell = row.repository_cells.build(cell_attributes.except('value', 'repository_column'))
+      repository_column = RepositoryColumn.new(cell_attributes['repository_column'])
+      repository_column.readonly!
+
+      repository_cell.assign_attributes(
+        repository_column_id: cell_attributes['repository_column']['id'],
+        repository_row_id: repository_row_id.to_i,
+        repository_column: repository_column,
+        value:
+          cell_attributes['repository_column']['data_type'].constantize.new(
+            cell_attributes['value'].except('repository_column')
+          )
+      )
+      repository_cell.readonly!
+      repository_cell
+    end
+
+    row.snapshot_by_name = User.find_by(id: row.snapshot_by_id)&.full_name
+    row.readonly!
+    row
+  end
+
   def formatted
     value&.map { |i| "#{i['name']} (#{RepositoryRow::ID_PREFIX}#{i['id']})" }&.join(' | ')
   end
