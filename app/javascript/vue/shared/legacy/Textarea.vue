@@ -115,6 +115,8 @@ export default {
       });
     },
     enableEdit(e) {
+      if (!this.canEdit) return;
+
       if (e && $(e.target).hasClass('atwho-user-popover')) return;
       if (e && $(e.target).hasClass('sa-name')) return;
       if (e && $(e.target).hasClass('sa-link')) return;
