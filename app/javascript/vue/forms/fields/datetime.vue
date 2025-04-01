@@ -89,20 +89,30 @@ export default {
   },
   methods: {
     updateDate(date) {
-      this.value = date;
+      this.value = this.stripTimeIfDate(date);
       this.$emit('save', this.value);
     },
     updateFromDate(date) {
-      this.fromValue = date;
+      this.fromValue = this.stripTimeIfDate(date);
       if (this.validValue) {
         this.$emit('save', [this.fromValue, this.toValue]);
       }
     },
     updateToDate(date) {
-      this.toValue = date;
+      this.toValue = this.stripTimeIfDate(date);
       if (this.validValue) {
         this.$emit('save', [this.fromValue, this.toValue]);
       }
+    },
+    stripTimeIfDate(date) {
+      if (this.mode !== 'date') return date;
+
+      return new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        0, 0, 0, 0
+      ));
     }
   }
 };
