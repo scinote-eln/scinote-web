@@ -1,9 +1,9 @@
 <% provide(:head_title, t("devise.sessions.new.head_title")) %>
 <% content_for(:body_class, 'sign-in-layout') %>
-<div class="sign-in-container" data-e2e="e2e-CO-signin">
+<div class="sign-in-container" data-e2e="e2e-CO-signIn">
   <div class="sign-in-form-wrapper">
     <div class="center-block center-block-narrow">
-      <h1 class="log-in-title"><%=t "devise.sessions.new.title" %></h1>
+      <h1 class="log-in-title" data-e2e="e2e-TX-signIn-title"><%=t "devise.sessions.new.title" %></h1>
 
       <%- if Rails.configuration.x.enable_user_registration && Rails.configuration.x.linkedin_signin_enabled && @oauth_authorize != true %>
         <div class="linkedin-container">
@@ -15,19 +15,19 @@
       <% unless Rails.application.config.x.disable_local_passwords %>
         <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
           <div class="input-group form-group sci-input-container">
-            <%= f.label :email, t("devise.sessions.new.email_field") %>
-            <%= f.email_field :email, autofocus: true, class: "form-control sci-input-field", placeholder: t("devise.sessions.new.email_placeholder") %>
+            <%= f.label :email, t("devise.sessions.new.email_field"), :'data-e2e' => "e2e-LB-signIn-email" %>
+            <%= f.email_field :email, autofocus: true, class: "form-control sci-input-field", placeholder: t("devise.sessions.new.email_placeholder"), :'data-e2e' => "e2e-IF-signIn-email" %>
           </div>
 
           <div class="input-group form-group sci-input-container">
-            <%= f.label :password, t("devise.sessions.new.password_field") %>
-            <%= f.password_field :password, autocomplete: "off", class: "form-control sci-input-field", placeholder: t("devise.sessions.new.password_placeholder") %>
+            <%= f.label :password, t("devise.sessions.new.password_field"), :'data-e2e' => "e2e-LB-signIn-password" %>
+            <%= f.password_field :password, autocomplete: "off", class: "form-control sci-input-field", placeholder: t("devise.sessions.new.password_placeholder"), :'data-e2e' => "e2e-IF-signIn-password" %>
           </div>
 
           <% if devise_mapping.rememberable? && !@simple_sign_in %>
             <div class="field remember-me">
               <div class="sci-checkbox-container">
-                <%= f.check_box :remember_me, class: "sci-checkbox" %>
+                <%= f.check_box :remember_me, class: "sci-checkbox", :'data-e2e' => "e2e-CB-signIn-rememberMe" %>
                 <span class="sci-checkbox-label"></span>
               </div>
               <%= f.label :remember_me, t("devise.sessions.new.remember_me") %>
@@ -37,7 +37,7 @@
           <%= hidden_field_tag(:simple_sign_in, @simple_sign_in) %>
 
           <div class="actions" style="margin-top: 10px; margin-bottom: 10px;">
-            <%= f.button t("devise.sessions.new.submit"), class: "btn btn-primary log-in-button" %>
+            <%= f.button t("devise.sessions.new.submit"), class: "btn btn-primary log-in-button", :'data-e2e' => "e2e-BT-signIn-logIn" %>
           </div>
         <% end %>
       <% end %>
