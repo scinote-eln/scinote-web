@@ -81,11 +81,6 @@ export default {
       this.toggleExpandableState();
     }
   },
-  computed: {
-    canEdit() {
-      return this.permissions?.can_manage && !this.inArchivedRepositoryRow;
-    }
-  },
   methods: {
     handleKeydown(event) {
       if (event.key === 'Enter') {
@@ -115,8 +110,6 @@ export default {
       });
     },
     enableEdit(e) {
-      if (!this.canEdit) return;
-
       if (e && $(e.target).hasClass('atwho-user-popover')) return;
       if (e && $(e.target).hasClass('sa-name')) return;
       if (e && $(e.target).hasClass('sa-link')) return;
@@ -146,8 +139,8 @@ export default {
       });
     },
     enforceNumberInput() {
-      const regexp = this.decimals === 0 ? /[^0-9]/g : /[^0-9.]/g;
-      const decimalsRegex = new RegExp(`^\\d*(\\.\\d{0,${this.decimals}})?`);
+      const regexp = this.decimals === 0 ? /[^0-9-]/g : /[^0-9.-]/g;
+      const decimalsRegex = new RegExp(`^-?\\d*(\\.\\d{0,${this.decimals}})?`);
       let { value } = this;
       value = value.replace(regexp, '');
       value = value.match(decimalsRegex)[0];

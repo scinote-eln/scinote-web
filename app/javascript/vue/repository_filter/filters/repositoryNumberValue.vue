@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     validateNumber(number) {
-      return number.replace(/[^0-9.]/g, '').match(/^\d*(\.\d{0,10})?/)[0];
+      return number.replace(/[^0-9.-]/g, '').match(/^-?\d*(\.\d{0,10})?/)[0];
     }
   },
   watch: {
