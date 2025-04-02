@@ -33,8 +33,12 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-primary" @click="confirm" :disabled="!target">{{ i18n.t('general.move')}}</button>
+          <button class="btn btn-secondary" @click="cancel" data-e2e="e2e-BT-moveStepResultElementModal-cancel">
+            {{ i18n.t('general.cancel') }}
+          </button>
+          <button class="btn btn-primary" @click="confirm" :disabled="!target" data-e2e="e2e-BT-moveStepResultElementModal-move">
+            {{ i18n.t('general.move')}}
+          </button>
         </div>
       </div>
     </div>
