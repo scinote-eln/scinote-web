@@ -6,6 +6,8 @@ class FormFieldValue < ApplicationRecord
   belongs_to :created_by, class_name: 'User'
   belongs_to :submitted_by, class_name: 'User'
 
+  validate :not_applicable_values
+
   scope :latest, -> { where(latest: true) }
 
   def value=(_)
@@ -26,5 +28,13 @@ class FormFieldValue < ApplicationRecord
 
   def name
     form_field&.name
+  end
+
+  private
+
+  def not_applicable_values
+    return unless not_applicable
+
+    errors.add(:value, :not_applicable) if value.present?
   end
 end
