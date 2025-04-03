@@ -14,6 +14,7 @@ class Team < ApplicationRecord
   before_save -> { shareable_links.destroy_all }, if: -> { !shareable_links_enabled? }
   after_create :generate_template_project
   after_create :create_default_label_templates
+  after_create :create_default_repository_templates
   scope :teams_select, -> { select(:id, :name).order(name: :asc) }
   scope :ordered, -> { order('LOWER(name)') }
 
@@ -44,6 +45,7 @@ class Team < ApplicationRecord
   has_many :activities, inverse_of: :team, dependent: :destroy
   has_many :assets, inverse_of: :team, dependent: :destroy
   has_many :label_templates, dependent: :destroy
+  has_many :repository_templates, inverse_of: :team, dependent: :destroy
   has_many :team_shared_objects, inverse_of: :team, dependent: :destroy
   has_many :team_shared_repositories,
            -> { where(shared_object_type: 'RepositoryBase') },
@@ -209,5 +211,12 @@ class Team < ApplicationRecord
     ZebraLabelTemplate.default.update(team: self, default: true)
     ZebraLabelTemplate.default_203dpi.update(team: self, default: false)
     FluicsLabelTemplate.default.update(team: self, default: true)
+  end
+
+  def create_default_repository_templates
+    RepositoryTemplate.default.update(team: self)
+    RepositoryTemplate.cell_lines.update(team: self)
+    RepositoryTemplate.equipment.update(team: self)
+    RepositoryTemplate.chemicals_and_reagents.update(team: self)
   end
 end

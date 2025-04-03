@@ -841,6 +841,12 @@ Rails.application.routes.draw do
       get :repositories
     end
 
+    resources :repository_templates, only: %i(index) do
+      member do
+        get :list_repository_columns
+      end
+    end
+
     resources :connected_devices, controller: 'users/connected_devices', only: %i(destroy)
 
     resources :storage_locations, only: %i(index create destroy update show) do
