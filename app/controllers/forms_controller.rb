@@ -167,7 +167,7 @@ class FormsController < ApplicationController
   def duplicate
     ActiveRecord::Base.transaction do
       new_form = @form.duplicate!(current_user)
-      log_activity(@form, :form_duplicated, { form_new: new_form.id })
+      log_activity(new_form, :form_duplicated, { form_old: @form.id })
       render json: { message: t('forms.duplicated.success_flash', name: escape_input(@form.name)) }
     rescue ActiveRecord::RecordInvalid
       render json: { error: new_form.errors.full_messages }, status: :unprocessable_entity
