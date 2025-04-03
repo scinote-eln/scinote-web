@@ -37,6 +37,7 @@ describe Team, type: :model do
     it { should have_many(:team_shared_objects).dependent(:destroy) }
     it { should have_many :shared_repositories }
     it { should have_many(:shareable_links).dependent(:destroy) }
+    it { should have_many(:repository_templates).dependent(:destroy) }
   end
 
   describe 'Validations' do
@@ -85,6 +86,13 @@ describe Team, type: :model do
         team.save
 
         expect(team.shareable_links.count).to eq(0)
+      end
+    end
+
+    context 'repository templates after team create' do
+      it 'create repository templates after team create' do
+        expect_any_instance_of(Team).to receive(:create_default_repository_templates)
+        team.save!
       end
     end
   end

@@ -2,7 +2,7 @@
 
 class RepositoryTemplatesController < ApplicationController
   before_action :check_read_permissions
-  before_action :load_repository_template
+  before_action :load_repository_template, only: :list_repository_columns
 
   def index
     repository_templates = current_team.repository_templates.order(:id)
@@ -24,6 +24,7 @@ class RepositoryTemplatesController < ApplicationController
 
   def load_repository_template
     @repository_template = current_team.repository_templates.find_by(id: params[:id])
+    render_404 unless @repository_template
   end
 
   def check_read_permissions
