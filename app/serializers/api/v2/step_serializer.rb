@@ -17,8 +17,8 @@ module Api
       has_many :tables, serializer: Api::V1::TableSerializer
       has_many :step_texts, serializer: Api::V1::StepTextSerializer
       has_many :step_comments, key: :comments, serializer: Api::V1::CommentSerializer
-      has_many :form_responses, serializer: Api::V1::FormResponseSerializer
-      has_many :step_orderable_elements, key: :step_elements, serializer: Api::V1::StepOrderableElementSerializer
+      has_many :form_responses, serializer: Api::V2::FormResponseSerializer
+      has_many :step_orderable_elements, key: :step_elements, serializer: Api::V2::StepOrderableElementSerializer
 
       include TimestampableModel
     end

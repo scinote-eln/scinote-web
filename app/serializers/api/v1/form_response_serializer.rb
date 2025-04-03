@@ -4,7 +4,7 @@ module Api
   module V1
     class FormResponseSerializer < ActiveModel::Serializer
       type :form_responses
-      attributes :id, :form_id, :position
+      attributes :id, :position
 
       include TimestampableModel
 
