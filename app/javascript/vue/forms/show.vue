@@ -88,9 +88,13 @@
               </button>
             </template>
             <template v-slot:flyout>
-              <div v-for="e in newFields" :key="e.type" @click="addField(e.type)" class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer flex items-center gap-2">
-                <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="fieldIcon[e.type]"></i>
-                {{ e.name }}
+              <div class="flex flex-col -m-2.5 py-2.5 max-h-[inherit]">
+                <div class="overflow-y-auto">
+                  <div v-for="e in newFields" :key="e.type" @click="addField(e.type)" class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer flex items-center gap-2">
+                    <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="fieldIcon[e.type]"></i>
+                    {{ e.name }}
+                  </div>
+                </div>
               </div>
             </template>
           </GeneralDropdown>
