@@ -19,9 +19,18 @@ module Api
           .active
           .preload(repository_cells: :repository_column)
           .preload(repository_cells: { value: @inventory.cell_preload_includes })
-          .page(params.dig(:page, :number))
-          .per(params.dig(:page, :size))
-          .order(:id)
+
+        if params[:column_filter]
+          items = items.filtered_by_cell_value(
+            @inventory.repository_columns.find(params[:column_filter][:id]),
+            params[:column_filter][:params]
+          )
+        end
+
+        items =
+          items.page(params.dig(:page, :number))
+               .per(params.dig(:page, :size))
+               .order(:id)
 
         render jsonapi: items, each_serializer: InventoryItemSerializer, include: include_params
       end

@@ -121,6 +121,35 @@ class RepositoryRow < ApplicationRecord
     left_outer_joins_active_reminders(repository, user).where.not(repository_cells_with_active_reminders: { id: nil })
   }
 
+  scope :filtered_by_cell_value, lambda { |repository_column, filter_params|
+    value_class_name = repository_column.data_type
+    value_class = value_class_name.constantize
+    value_type = value_class_name.underscore
+
+    repository_rows =
+      repository_column.repository.repository_rows
+                       .joins(
+                         "LEFT OUTER JOIN repository_cells AS #{value_type}_cells " \
+                         "ON repository_rows.id = #{value_type}_cells.repository_row_id " \
+                         "AND #{value_type}_cells.repository_column_id = '#{repository_column.id}' "
+                       ).joins(
+                         "LEFT OUTER JOIN #{value_type.pluralize} AS values " \
+                         "ON values.id = #{value_type}_cells.value_id"
+                       )
+
+    repository_rows = value_class.add_filter_condition(
+      repository_rows,
+      'values',
+      RepositoryTableFilterElement.new(
+        operator: filter_params[:operator],
+        repository_column: repository_column,
+        parameters: filter_params
+      )
+    )
+
+    where(id: repository_rows.select(:id))
+  }
+
   def code
     "#{ID_PREFIX}#{parent_id || id}"
   end
@@ -134,7 +163,6 @@ class RepositoryRow < ApplicationRecord
                   query = nil,
                   current_team = nil,
                   options = {})
-
     teams = options[:teams] || current_team || user.teams.select(:id)
     searchable_row_fields = [RepositoryRow::PREFIXED_ID_SQL, 'repository_rows.name', 'users.full_name']
 
