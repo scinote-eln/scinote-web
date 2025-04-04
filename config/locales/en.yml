@@ -1098,6 +1098,7 @@ en:
       description_html: "<p>Publishing a form locks it for editing and makes it available for use in protocol steps. You can unpublish the form only if it isn't linked to any steps.</p><p>Are you sure you want to publish the form?</p>"
     fields:
       mark_as_na: "Mark as N/A"
+      mark_as_na_tooltip: "'Mark as N/A' will delete content in this field."
       add_text: "Add text"
       add_number: "Add number"
       from: "From"
