@@ -117,7 +117,6 @@ var DasboardCurrentTasksWidget = (function() {
         }
       }
       appendTasksList(result, '.current-tasks-list-wrapper');
-      PerfectSb().update_all();
 
       InfiniteScroll.init('.current-tasks-list-wrapper', {
         url: $currentTasksList.data('tasksListUrl'),

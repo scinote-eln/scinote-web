@@ -32,8 +32,6 @@ var DasboardRecentWorkWidget = (function() {
       } else {
         container.append($('#recent-work-no-results-template').html());
       }
-
-      PerfectSb().update_all();
     });
   }
 
