@@ -1,9 +1,12 @@
 <template>
   <div>
     <button v-if="!disabled" class="btn btn-secondary" @click="rowSelectorOpened = true">
-      {{  i18n.t('forms.show.add_items') }}
+      {{ i18n.t('forms.show.add_items') }}
       <i class="sn-icon sn-icon-right"></i>
     </button>
+    <span class="text-sn-grey-700" v-if="disabled && !field.field_value?.value">
+      {{ i18n.t('forms.show.no_items_selected') }}
+    </span>
     <RowSelectorModal v-if="rowSelectorOpened"
                       :excludeRows="assignedIds"
                       @close="rowSelectorOpened = false"
@@ -16,7 +19,7 @@
             class="cursor-pointer text-sn-blue record-info-link"
             :href="itemCardUrl(row)"
           >{{ row.name }} (ID{{ row.id }})</a>
-          <i  v-if="!disabled" @click="removeValue(row.id)" class="sn-icon sn-icon-unlink cursor-pointer"></i>
+          <i  v-if="!disabled" @click="removeValue(row.id)" class="sn-icon sn-icon-unlink-italic-s cursor-pointer"></i>
         </div>
       </template>
     </div>

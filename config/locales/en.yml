@@ -1159,6 +1159,7 @@ en:
       field_too_long_error: 'Field is too long (maximum number is %{limit} characters)'
       options_too_many_error: 'Too many options (maximum number is %{limit} options)'
       add_items: 'Add items'
+      no_items_selected: 'No items selected'
       add: 'Add'
       select_items: 'Select items'
       validations:
