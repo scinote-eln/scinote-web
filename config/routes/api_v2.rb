@@ -24,6 +24,7 @@ namespace :v2 do
                 end
                 resources :tables, except: %i(new edit)
                 resources :texts, except: %i(new edit)
+                resources :form_responses, only: %i(index show)
               end
             end
           end
