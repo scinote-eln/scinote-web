@@ -1,7 +1,7 @@
 <template>
   <div class='relative'>
     <template v-if="range">
-      <div class="flex items-center gap-x-4 gap-y-2 flex-wrap lg:flex-nowrap">
+      <div class="flex lg:items-center gap-x-4 gap-y-2 flex-col lg:flex-row">
         <DateTimePicker
           @change="updateFromDate"
           :mode="mode"
@@ -9,6 +9,7 @@
           :clearable="true"
           :disabled="fieldDisabled"
           :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.from')"
+          class="grow"
           :class="{'error': !validValue}"
         />
         <span class="tw-hidden lg:block">-</span>
@@ -19,6 +20,7 @@
           :disabled="fieldDisabled"
           :clearable="true"
           :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.to')"
+          class="grow"
           :class="{'error': !validValue}"
         />
       </div>
