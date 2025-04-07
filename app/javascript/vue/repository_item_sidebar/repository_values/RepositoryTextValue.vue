@@ -20,6 +20,7 @@
                 :smartAnnotation="true"
                 :expandable="expandable"
                 :collapsed="collapsed"
+                :canEdit="canEdit"
                 @toggleExpandableState="toggleExpandableState"
                 @update="update"
                 className="px-3"

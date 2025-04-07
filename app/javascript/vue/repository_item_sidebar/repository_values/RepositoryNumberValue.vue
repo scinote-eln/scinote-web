@@ -21,6 +21,7 @@
                   :isNumber="true"
                   :unEditableRef="`numberRef`"
                   :expandable="expandable"
+                  :canEdit="canEdit"
                   :collapsed="collapsed"
                   @toggleExpandableState="toggleExpandableState"
                   @update="update"
