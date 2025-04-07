@@ -132,7 +132,7 @@ module Api
       end
 
       def permitted_includes
-        %w(inventory_cells)
+        %w(inventory_cells parents children)
       end
     end
   end

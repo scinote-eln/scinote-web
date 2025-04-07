@@ -42,6 +42,9 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
                { repository_row: row, repository_column: file_column })
     end
 
+    @child_inventory_item = create(:repository_row, repository: @valid_inventory, created_by: @user)
+    @child_connection = create(:repository_row_connection, parent: @valid_inventory.repository_rows.first, child: @child_inventory_item, created_by: @user)
+
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id),
         'Content-Type': 'application/json' }
@@ -85,7 +88,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       get api_v1_team_inventory_items_path(
         team_id: @team1.id,
         inventory_id: @team1.repositories.first.id,
-        include: 'inventory_cells'
+        include: 'inventory_cells,parents,children'
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match_array(
@@ -102,7 +105,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
           ActiveModelSerializers::SerializableResource
             .new(@valid_inventory.repository_rows.order(:id).limit(10),
                  each_serializer: Api::V1::InventoryItemSerializer,
-                 include: :inventory_cells)
+                 include: %w(inventory_cells parents children))
             .to_json
         )['included']
       )
@@ -118,9 +121,8 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       expect(hash_body[:data]).to match_array(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
-            .new(@valid_inventory.repository_rows.limit(100),
-                 each_serializer: Api::V1::InventoryItemSerializer,
-                 include: :inventory_cells)
+            .new(@valid_inventory.repository_rows.order(:id).limit(100),
+                 each_serializer: Api::V1::InventoryItemSerializer)
             .to_json
         )['data']
       )

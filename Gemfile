@@ -29,8 +29,7 @@ gem 'omniauth-rails_csrf_protection', '~> 1.0'
 gem 'omniauth-saml'
 
 # Gems for API implementation
-gem 'active_model_serializers', '~> 0.10.7'
-gem 'jsonapi-renderer', '~> 0.2.2'
+gem 'active_model_serializers', '~> 0.10.15'
 gem 'json-jwt'
 gem 'jwt', '~> 1.5'
 gem 'kaminari'
