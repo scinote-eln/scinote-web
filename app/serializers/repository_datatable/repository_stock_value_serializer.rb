@@ -6,12 +6,13 @@ module RepositoryDatatable
     include Rails.application.routes.url_helpers
 
     def value
+      row = value_object.repository_cell.repository_row
+
       data = {
         stock_formatted: value_object.formatted,
         stock_amount: value_object.data,
         low_stock_threshold: value_object.low_stock_threshold,
-        stock_url: edit_repository_stock_repository_repository_row_url(scope[:repository],
-                                                                       value_object.repository_row)
+        stock_url: !row.snapshot_at && edit_repository_stock_repository_repository_row_url(scope[:repository], row)
       }
       data.merge(reminder_values)
     end
