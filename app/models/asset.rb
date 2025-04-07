@@ -225,8 +225,8 @@ class Asset < ApplicationRecord
 
   def pdf_preview_ready?
     return false if pdf_preview_processing
-
     return true if file_pdf_preview.attached?
+    return false unless previewable_document?(blob)
 
     PdfPreviewJob.perform_later(id)
     ActiveRecord::Base.no_touching { update(pdf_preview_processing: true) }
@@ -259,7 +259,6 @@ class Asset < ApplicationRecord
     es = file_size
     if asset_text_datum.present? && asset_text_datum.persisted?
       asset_text_datum.reload
-      es += get_octet_length_record(asset_text_datum, :data)
       es += get_octet_length_record(asset_text_datum, :data_vector)
     end
     es *= Constants::ASSET_ESTIMATED_SIZE_FACTOR

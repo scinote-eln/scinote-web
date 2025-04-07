@@ -147,11 +147,7 @@ class AssetsController < ApplicationController
   end
 
   def show
-    if @asset
-      render json: @asset, serializer: AssetSerializer, user: current_user
-    else
-      render json: { error: 'Asset not found' }, status: :not_found
-    end
+    render json: @asset, serializer: AssetSerializer, user: current_user
   end
 
   def edit

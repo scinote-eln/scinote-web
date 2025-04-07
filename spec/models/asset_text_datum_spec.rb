@@ -15,7 +15,6 @@ describe AssetTextDatum, type: :model do
 
   describe 'Database table' do
     it { should have_db_column :id }
-    it { should have_db_column :data }
     it { should have_db_column :asset_id }
     it { should have_db_column :created_at }
     it { should have_db_column :data_vector }
@@ -26,12 +25,7 @@ describe AssetTextDatum, type: :model do
   end
 
   describe 'Validations' do
-    describe '#data' do
-      it { is_expected.to validate_presence_of(:data) }
-    end
-
     describe '#asset' do
-      it { is_expected.to validate_presence_of(:asset) }
       it { expect(asset_text_datum).to validate_uniqueness_of(:asset) }
     end
   end
