@@ -370,7 +370,17 @@ export default {
     fetchOptions() {
       if (this.optionsUrl) {
         const params = { query: this.query, page: this.nextPage, ...this.urlParams };
-        axios({ method: this.ajaxMethod, url: this.optionsUrl, data: params })
+        let config = {
+          method: this.ajaxMethod,
+          url: this.optionsUrl
+        };
+
+        if (this.ajaxMethod.toLowerCase() === 'get') {
+          config.params = params;
+        } else {
+          config.data = params;
+        }
+        axios(config)
           .then((response) => {
             if (response.data.paginated) {
               this.fetchedOptions = [...this.fetchedOptions, ...response.data.data];

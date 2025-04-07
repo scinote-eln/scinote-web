@@ -659,7 +659,11 @@ Rails.application.routes.draw do
 
     resources :protocols, only: %i(index show edit create update) do
       resources :steps, only: [:create] do
-        post :reorder, on: :collection
+        collection do
+          post :reorder
+          get :list_protocol_steps
+          post :add_protocol_steps
+        end
       end
       member do
         post :publish
@@ -697,6 +701,7 @@ Rails.application.routes.draw do
         post 'delete_steps'
         get :permissions
         put :update_version_comment
+        get :list_published_protocol_templates
       end
       collection do
         post 'archive', to: 'protocols#archive'
