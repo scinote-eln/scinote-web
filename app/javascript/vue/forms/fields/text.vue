@@ -9,6 +9,7 @@
         :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.add_text')"></textarea>
     </div>
     <div v-else
+      :key="value"
       @click="startEditing"
       ref="fieldValue"
       class="rounded h-24 border py-0.5  w-full px-2  border-sn-grey overflow-y-auto"
