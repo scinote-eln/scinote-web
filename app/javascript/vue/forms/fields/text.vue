@@ -67,7 +67,12 @@ export default {
         this.editing = false;
       }
     },
-    startEditing() {
+    startEditing(e) {
+      if (e && $(e.target).hasClass('atwho-user-popover')) return;
+      if (e && $(e.target).hasClass('sa-name')) return;
+      if (e && $(e.target).hasClass('sa-link')) return;
+      if (e && $(e.target).parent().hasClass('atwho-inserted')) return;
+
       if (!this.fieldDisabled) {
         this.editing = true;
         this.$nextTick(() => {
