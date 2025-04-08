@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button v-if="!disabled" class="btn btn-secondary" @click="rowSelectorOpened = true">
-      {{ i18n.t('forms.show.add_items') }}
+    <button v-if="!disabled" class="btn btn-secondary" @click="rowSelectorOpened = true" :disabled="marked_as_na">
+      {{  i18n.t('forms.show.add_items') }}
       <i class="sn-icon sn-icon-right"></i>
     </button>
     <span class="text-sn-grey-700" v-if="disabled && !field.field_value?.value">
