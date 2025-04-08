@@ -42,6 +42,7 @@ export default {
     initialValue: String,
     noContentPlaceholder: String,
     placeholder: String,
+    canEdit: { type: Boolean, default: false },
     decimals: { type: Number, default: 0 },
     isNumber: { type: Boolean, default: false },
     unEditableRef: { type: String, required: true },
@@ -110,6 +111,8 @@ export default {
       });
     },
     enableEdit(e) {
+      if (!this.canEdit) return;
+
       if (e && $(e.target).hasClass('atwho-user-popover')) return;
       if (e && $(e.target).hasClass('sa-name')) return;
       if (e && $(e.target).hasClass('sa-link')) return;
