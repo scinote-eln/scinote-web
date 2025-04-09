@@ -46,8 +46,8 @@
 
             <% case field_type %>
             <% when 'TextField' %>
-              <div class="sci-input-container-v2 h-24 mb-1">
-                <textarea class="sci-input box-border" disabled><%= smart_annotation_text(field_value&.formatted) %></textarea>
+              <div class="mb-1">
+                <div class="rounded border min-h-32 py-0.5 w-full px-2 border-sn-grey box-border" disabled><%= smart_annotation_text(field_value&.formatted) %></div>
               </div>
 
             <% when 'NumberField' %>
