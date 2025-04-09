@@ -19,6 +19,7 @@
               leading-5 border outline-none hover:border-sn-sleepy-grey overflow-y-auto whitespace-pre-line"
         :class="{ 'max-h-[4rem]': collapsed,
                   'max-h-[40rem]': !collapsed,
+                  '!border-0 !pl-0': !canEdit,
                   [className]: true,
                   'text-sn-dark-grey': value, 'text-sn-grey': !value
                 }"

@@ -13,19 +13,24 @@
         }}
       </div>
     </div>
-    <text-area :initialValue="colVal?.edit"
-                :noContentPlaceholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
-                :placeholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
-                :unEditableRef="`textRef`"
-                :smartAnnotation="true"
-                :expandable="expandable"
-                :collapsed="collapsed"
-                :canEdit="canEdit"
-                @toggleExpandableState="toggleExpandableState"
-                @update="update"
-                className="px-3"
-                :data-e2e="'e2e-IF-repoItemSBcustomColumns-input' + colId"
-              />
+    <div v-if="canEdit || colVal?.edit.length > 0" class="w-full contents">
+      <text-area :initialValue="colVal?.edit"
+                  :noContentPlaceholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
+                  :placeholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
+                  :unEditableRef="`textRef`"
+                  :smartAnnotation="true"
+                  :expandable="expandable"
+                  :collapsed="collapsed"
+                  :canEdit="canEdit"
+                  @toggleExpandableState="toggleExpandableState"
+                  @update="update"
+                  className="px-3"
+                  :data-e2e="'e2e-IF-repoItemSBcustomColumns-input' + colId"
+                />
+    </div>
+    <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 pr-3 py-2 w-[calc(100%-2rem)]]">
+      {{ i18n.t("repositories.item_card.repository_text_value.no_text") }}
+    </div>
   </div>
 </template>
 
