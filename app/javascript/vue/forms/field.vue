@@ -19,7 +19,8 @@
       {{  i18n.t('forms.fields.submitted_by', { date: field.field_value.submitted_at, user: field.field_value.submitted_by_full_name}) }}
     </span>
     <button class="btn btn-secondary mb-0.5"
-            :title="i18n.t('forms.fields.mark_as_na_tooltip') "
+            :key="this.field.field_value?.value"
+            :title="this.field.field_value?.value ? i18n.t('forms.fields.mark_as_na_tooltip') : ''"
             data-toggle="tooltip"
             data-placement="top"
             :disabled="disabled"
@@ -90,9 +91,9 @@ export default {
     if (this.$refs.description) {
       this.$nextTick(() => {
         window.renderElementSmartAnnotations(this.$refs.description, 'span');
-        $('[data-toggle="tooltip"]').tooltip();
       });
     }
+    $('[data-toggle="tooltip"]').tooltip();
   },
   computed: {
     unit() {
@@ -111,6 +112,10 @@ export default {
           value,
           this.markAsNa
         );
+
+        setTimeout(() => {
+          $('[data-toggle="tooltip"]').tooltip();
+        }, 1000);
       }
     }
   }
