@@ -53,6 +53,7 @@
 
 <script>
 
+/* global HelperModule */
 import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin.js';
 import SelectDropdown from '../../shared/select_dropdown.vue';
@@ -102,7 +103,7 @@ export default {
       this.submitting = true;
       axios.post(this.protocol.attributes.urls.add_protocol_steps_url, {
         selected_protocol: this.selectedProtocol,
-        steps: this.selectedSteps,
+        steps: this.selectedSteps
       }).then((data) => {
         this.submitting = false;
         this.$emit('confirm', data.data.data);

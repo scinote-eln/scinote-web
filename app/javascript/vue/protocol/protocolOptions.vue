@@ -111,7 +111,7 @@
 
 <script>
 import DeleteStepsModals from './modals/delete_steps';
-import AddStepsModal from './modals/add_protocol_steps'
+import AddStepsModal from './modals/add_protocol_steps';
 
 export default {
 
@@ -145,10 +145,10 @@ export default {
     closeStartStepsDeletingModal() {
       this.stepsDeleting = false;
     },
-    openAddStepsModal(){
-     this.stepsAdding = true;
+    openAddStepsModal() {
+      this.stepsAdding = true;
     },
-    closeAddStepsModal(){
+    closeAddStepsModal() {
       this.stepsAdding = false;
     },
     loadProtocol() {

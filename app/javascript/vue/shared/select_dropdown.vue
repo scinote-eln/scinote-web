@@ -370,7 +370,7 @@ export default {
     fetchOptions() {
       if (this.optionsUrl) {
         const params = { query: this.query, page: this.nextPage, ...this.urlParams };
-        let config = {
+        const config = {
           method: this.ajaxMethod,
           url: this.optionsUrl
         };
