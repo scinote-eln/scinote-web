@@ -109,7 +109,7 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
     it 'When metadata parameter is set to true, it serializes metadata' do
       @team1.projects.first.update(metadata: { status: 'processed' })
       hash_body = nil
-      get api_v1_team_project_path(team_id: @team1.id, id: @team1.projects.first.id, metadata: 'true'),
+      get api_v1_team_project_path(team_id: @team1.id, id: @team1.projects.first.id, 'with-metadata' => 'true'),
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]['attributes']['metadata']['status']).to eq 'processed'

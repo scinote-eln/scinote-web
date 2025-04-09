@@ -15,11 +15,11 @@ module Api
         projects = archived_filter(projects).page(params.dig(:page, :number))
                                             .per(params.dig(:page, :size))
 
-        render jsonapi: projects, each_serializer: ProjectSerializer, scope: { metadata: params[:metadata] == 'true' }, include: include_params
+        render jsonapi: projects, each_serializer: ProjectSerializer, scope: { metadata: params['with-metadata'] == 'true' }, include: include_params
       end
 
       def show
-        render jsonapi: @project, serializer: ProjectSerializer, scope: { metadata: params[:metadata] == 'true' }, include: include_params
+        render jsonapi: @project, serializer: ProjectSerializer, scope: { metadata: params['with-metadata'] == 'true' }, include: include_params
       end
 
       def create
@@ -33,7 +33,7 @@ module Api
 
         project.save!
 
-        render jsonapi: project, serializer: ProjectSerializer, scope: { metadata: params[:metadata] == 'true' }, status: :created
+        render jsonapi: project, serializer: ProjectSerializer, scope: { metadata: params['with-metadata'] == 'true' }, status: :created
       end
 
       def update
@@ -50,7 +50,7 @@ module Api
         end
         @project.last_modified_by = current_user
         @project.save!
-        render jsonapi: @project, serializer: ProjectSerializer, scope: { metadata: params[:metadata] == 'true' }, status: :ok
+        render jsonapi: @project, serializer: ProjectSerializer, scope: { metadata: params['with-metadata'] == 'true' }, status: :ok
       end
 
       def activities
