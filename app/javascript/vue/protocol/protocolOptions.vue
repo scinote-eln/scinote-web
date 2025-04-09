@@ -26,6 +26,16 @@
             <span>{{ i18n.t("my_modules.protocol.options_dropdown.load_from_repo") }}</span>
           </a>
         </li>
+        <li v-if="protocol.attributes.urls.add_protocol_steps_url">
+          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
+            data-turbolinks="false"
+            @click.prevent="openAddStepsModal()"
+          >
+            <span>{{
+              i18n.t("my_modules.protocol.options_dropdown.add_protocol_steps")
+            }}</span>
+          </a>
+        </li>
         <li>
           <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             data-toggle="modal"
@@ -95,19 +105,22 @@
       </ul>
     </div>
     <DeleteStepsModals v-if="stepsDeleting" @confirm="deleteSteps" @close="closeStartStepsDeletingModal" />
+    <AddStepsModal v-if="stepsAdding" :protocol="protocol" @confirm="addSteps" @close="closeAddStepsModal" />
   </div>
 </template>
 
 <script>
 import DeleteStepsModals from './modals/delete_steps';
+import AddStepsModal from './modals/add_protocol_steps';
 
 export default {
 
   name: 'ProtocolOptions',
-  components: { DeleteStepsModals },
+  components: { DeleteStepsModals, AddStepsModal },
   data() {
     return {
-      stepsDeleting: false
+      stepsDeleting: false,
+      stepsAdding: false
     };
   },
   props: {
@@ -131,6 +144,12 @@ export default {
     },
     closeStartStepsDeletingModal() {
       this.stepsDeleting = false;
+    },
+    openAddStepsModal() {
+      this.stepsAdding = true;
+    },
+    closeAddStepsModal() {
+      this.stepsAdding = false;
     },
     loadProtocol() {
       $.get(
@@ -156,6 +175,9 @@ export default {
     },
     deleteSteps() {
       this.$emit('protocol:delete_steps');
+    },
+    addSteps(steps) {
+      this.$emit('protocol:add_protocol_steps', steps);
     }
   }
 };

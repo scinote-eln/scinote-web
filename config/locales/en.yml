@@ -1450,6 +1450,7 @@ en:
         update_protocol: "New version update"
         save_to_repo: "Save as new template"
         delete_steps: "Delete all steps"
+        add_protocol_steps: "Add protocol steps"
     description:
       title: "Edit task %{module} description"
       label: "Description"
@@ -4063,6 +4064,18 @@ en:
           name_label: 'Well plate name'
           name_placeholder: 'Plate'
           dimension_label: 'Dimensions (rows x columns)'
+        add_protocol_steps:
+          title: "Add steps from another template"
+          description: "Select one or more steps from a different protocol template to add them as new steps at the end of your current protocol."
+          confirm: "Add steps"
+          protocol_label: "Protocol"
+          protocol_placeholder: "Select protocol template"
+          protocol_steps_label: "Protocol steps"
+          protocol_steps_placeholder: "Select steps"
+          success_flash:
+            one: "%{count} step successfully added."
+            other: "%{count} steps successfully added."
+          error_flash: "There was an error importing steps. Please try again."
       options:
         up_arrow_title: "Move step up"
         down_arrow_title: "Move step down"

@@ -144,6 +144,7 @@ class Protocol < ApplicationRecord
            dependent: :destroy
   has_many :protocol_keywords, through: :protocol_protocol_keywords
   has_many :steps, inverse_of: :protocol, dependent: :destroy
+  has_many :original_steps, class_name: 'Step', foreign_key: :original_protocol_id, inverse_of: :original_protocol, dependent: :nullify
   has_many :users, through: :user_assignments
 
   def self.search(user,
@@ -216,6 +217,21 @@ class Protocol < ApplicationRecord
                  .select(:id)
 
     where('protocols.id IN ((?) UNION ALL (?) UNION ALL (?))', original_without_versions, published_versions, new_drafts)
+  end
+
+  def self.latest_available_versions_without_drafts(teams)
+    team_protocols = where(team: teams)
+
+    original_without_versions = team_protocols
+                                .where.missing(:published_versions)
+                                .where(protocol_type: Protocol.protocol_types[:in_repository_published_original])
+                                .select(:id)
+    published_versions = team_protocols
+                         .where(protocol_type: Protocol.protocol_types[:in_repository_published_version])
+                         .order(:parent_id, version_number: :desc)
+                         .select('DISTINCT ON (parent_id) id')
+
+    where('protocols.id IN ((?) UNION ALL (?))', original_without_versions, published_versions)
   end
 
   def self.viewable_by_user(user, teams, options = {})

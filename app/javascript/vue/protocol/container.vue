@@ -47,6 +47,7 @@
             v-if="protocol.attributes && protocol.attributes.urls"
             :protocol="protocol"
             @protocol:delete_steps="deleteSteps"
+            @protocol:add_protocol_steps="addSteps"
             :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
           />
           <button class="btn btn-light icon-btn" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
@@ -371,6 +372,9 @@ export default {
       }).fail(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
+    },
+    addSteps(steps) {
+      this.steps.push(...steps);
     },
     refreshProtocolStatus() {
       if (this.inRepository) return;

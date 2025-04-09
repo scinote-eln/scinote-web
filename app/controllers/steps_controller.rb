@@ -7,11 +7,11 @@ class StepsController < ApplicationController
   before_action :load_vars, only: %i(update destroy show toggle_step_state update_view_state
                                      update_asset_view_mode elements
                                      attachments upload_attachment duplicate)
-  before_action :load_vars_nested, only: %i(create index reorder)
+  before_action :load_vars_nested, only: %i(create index reorder list_protocol_steps add_protocol_steps)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
-  before_action :check_protocol_manage_permissions, only: %i(reorder)
-  before_action :check_view_permissions, only: %i(show index attachments elements)
+  before_action :check_protocol_manage_permissions, only: %i(reorder add_protocol_steps)
+  before_action :check_view_permissions, only: %i(show index attachments elements list_protocol_steps)
   before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: %i(update destroy
                                                     update_view_state update_asset_view_mode upload_attachment)
@@ -265,6 +265,49 @@ class StepsController < ApplicationController
     render json: {
       steps_order: @protocol.steps.order(:position).select(:id, :position)
     }
+  end
+
+  def list_protocol_steps
+    steps = @protocol.steps
+
+    if params[:query].present?
+      steps = steps.where_attributes_like(
+        ['steps.name'],
+        params[:query]
+      )
+    end
+
+    steps = steps.order(position: :asc).page(params[:page])
+    render json: {
+      paginated: true,
+      next_page: steps.next_page,
+      data: steps.map { |step| [step.id, step.name] }
+    }
+  end
+
+  def add_protocol_steps
+    Protocol.transaction do
+      selected_protocol = Protocol.find_by(id: params[:selected_protocol])
+      render_403 unless selected_protocol.present? && can_read_protocol_in_repository?(selected_protocol)
+
+      steps = selected_protocol.steps.where(id: params[:steps]).order(position: :asc).map do |step|
+        step.duplicate(@protocol, current_user, original_protocol: selected_protocol)
+      end
+
+      Activities::CreateActivityService
+        .call(activity_type: :task_steps_loaded_from_template,
+              owner: current_user,
+              subject: @protocol.my_module,
+              team: @protocol.team,
+              project: @protocol.my_module.project,
+              message_items: {
+                protocol: selected_protocol.id,
+                my_module: @protocol.my_module.id,
+                count: steps.count
+              })
+
+      render json: steps, each_serializer: StepSerializer, user: current_user
+    end
   end
 
   private
