@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_25_124848) do
+ActiveRecord::Schema[7.0].define(version: 2025_04_10_093420) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -212,6 +212,10 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_25_124848) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.uuid "uuid"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.date "due_date"
+    t.date "start_on"
     t.index "(('EX'::text || id)) gin_trgm_ops", name: "index_experiments_on_experiment_code", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_experiments_on_name", using: :gin
     t.index "trim_html_tags(description) gin_trgm_ops", name: "index_experiments_on_description", using: :gin
@@ -556,7 +560,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_25_124848) do
   create_table "projects", force: :cascade do |t|
     t.string "name", null: false
     t.integer "visibility", default: 0, null: false
-    t.datetime "due_date", precision: nil
+    t.date "due_date"
     t.bigint "team_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -572,6 +576,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_25_124848) do
     t.boolean "demo", default: false, null: false
     t.bigint "project_folder_id"
     t.bigint "default_public_user_role_id"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.date "start_on"
+    t.text "description"
+    t.bigint "supervised_by_id"
     t.index "(('PR'::text || id)) gin_trgm_ops", name: "index_projects_on_project_code", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_projects_on_name", using: :gin
     t.index ["archived"], name: "index_projects_on_archived"
@@ -581,6 +590,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_25_124848) do
     t.index ["last_modified_by_id"], name: "index_projects_on_last_modified_by_id"
     t.index ["project_folder_id"], name: "index_projects_on_project_folder_id"
     t.index ["restored_by_id"], name: "index_projects_on_restored_by_id"
+    t.index ["supervised_by_id"], name: "index_projects_on_supervised_by_id"
     t.index ["team_id"], name: "index_projects_on_team_id"
   end
 
@@ -1559,6 +1569,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_25_124848) do
   add_foreign_key "projects", "users", column: "created_by_id"
   add_foreign_key "projects", "users", column: "last_modified_by_id"
   add_foreign_key "projects", "users", column: "restored_by_id"
+  add_foreign_key "projects", "users", column: "supervised_by_id"
   add_foreign_key "protocol_keywords", "teams"
   add_foreign_key "protocol_protocol_keywords", "protocol_keywords"
   add_foreign_key "protocol_protocol_keywords", "protocols"
