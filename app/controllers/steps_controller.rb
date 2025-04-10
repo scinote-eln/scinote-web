@@ -294,17 +294,17 @@ class StepsController < ApplicationController
         step.duplicate(@protocol, current_user, original_protocol: selected_protocol)
       end
 
-      Activities::CreateActivityService
-        .call(activity_type: :task_steps_loaded_from_template,
-              owner: current_user,
-              subject: @protocol.my_module,
-              team: @protocol.team,
-              project: @protocol.my_module.project,
-              message_items: {
-                protocol: selected_protocol.id,
-                my_module: @protocol.my_module.id,
-                count: steps.count
-              })
+      message_items = {
+        protocol: selected_protocol.id,
+        count: steps.count
+      }
+
+      if @protocol.in_module?
+        message_items[:my_module] = @protocol.my_module.id
+        log_activity(:task_steps_loaded_from_template, @my_module.experiment.project, message_items)
+      else
+        log_activity(:protocol_steps_loaded_from_template, nil, message_items)
+      end
 
       render json: steps, each_serializer: StepSerializer, user: current_user
     end
