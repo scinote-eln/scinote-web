@@ -557,7 +557,8 @@ class Extends
     form_block_duplicated: 356,
     form_duplicated: 357,
     form_unpublished: 358,
-    task_steps_loaded_from_template: 359
+    task_steps_loaded_from_template: 359,
+    protocol_steps_loaded_from_template: 360
   }
 
   ACTIVITY_GROUPS = {
@@ -575,7 +576,7 @@ class Extends
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
-                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355],
+                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360],
     team: [92, 94, 93, 97, 104, 244, 245],
     label_templates: [*216..219],
     storage_locations: [*309..315],

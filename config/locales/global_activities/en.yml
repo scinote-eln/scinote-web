@@ -373,6 +373,7 @@ en:
       form_block_duplicated_html: "%{user} duplicated form block %{block_name} in form %{form} in Form templates."
       form_unpublished_html: "%{user} unpublished form %{form}."
       task_steps_loaded_from_template_html: "%{user} added %{count} steps from template %{protocol} to task %{my_module}."
+      protocol_steps_loaded_from_template_html: "%{user} added %{count} steps from template %{protocol}."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -702,7 +703,8 @@ en:
       form_duplicated: "Form duplicated"
       form_block_duplicated: "Form block duplicated"
       form_unpublished: "Form unpublished"
-      task_steps_loadead_from: "Task step loaded from template"
+      task_steps_loaded_from_template: "Task step loaded from template"
+      protocol_steps_loaded_from_template: "Step loaded from template"
     activity_group:
       projects: "Projects"
       task_results: "Task results"
