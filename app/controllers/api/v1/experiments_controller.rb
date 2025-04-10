@@ -14,11 +14,11 @@ module Api
         experiments = timestamps_filter(@project.experiments)
         experiments = archived_filter(experiments).page(params.dig(:page, :number))
                                                   .per(params.dig(:page, :size))
-        render jsonapi: experiments, each_serializer: ExperimentSerializer
+        render jsonapi: experiments, each_serializer: ExperimentSerializer, scope: { metadata: params['with-metadata'] == 'true' }
       end
 
       def show
-        render jsonapi: @experiment, serializer: ExperimentSerializer
+        render jsonapi: @experiment, serializer: ExperimentSerializer, scope: { metadata: params['with-metadata'] == 'true' }
       end
 
       def create
@@ -27,7 +27,7 @@ module Api
         experiment = @project.experiments.create!(experiment_params.merge!(created_by: current_user,
                                                                            last_modified_by: current_user))
 
-        render jsonapi: experiment, serializer: ExperimentSerializer, status: :created
+        render jsonapi: experiment, serializer: ExperimentSerializer, scope: { metadata: params['with-metadata'] == 'true' }, status: :created
       end
 
       def update
@@ -46,7 +46,7 @@ module Api
         end
         @experiment.last_modified_by = current_user
         @experiment.save!
-        render jsonapi: @experiment, serializer: ExperimentSerializer, status: :ok
+        render jsonapi: @experiment, serializer: ExperimentSerializer, scope: { metadata: params['with-metadata'] == 'true' }, status: :ok
       end
 
       private
@@ -54,7 +54,7 @@ module Api
       def experiment_params
         raise TypeError unless params.require(:data).require(:type) == 'experiments'
 
-        params.require(:data).require(:attributes).permit(:name, :description, :archived)
+        params.require(:data).require(:attributes).permit(:name, :description, :archived, metadata: {})
       end
 
       def load_experiment_for_managing

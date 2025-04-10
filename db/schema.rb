@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_25_124848) do
+ActiveRecord::Schema[7.0].define(version: 2025_04_10_115032) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -213,6 +213,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_25_124848) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.uuid "uuid"
+    t.jsonb "metadata"
     t.index "(('EX'::text || id)) gin_trgm_ops", name: "index_experiments_on_experiment_code", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_experiments_on_name", using: :gin
     t.index "trim_html_tags(description) gin_trgm_ops", name: "index_experiments_on_description", using: :gin

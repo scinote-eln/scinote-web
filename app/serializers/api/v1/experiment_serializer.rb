@@ -5,6 +5,7 @@ module Api
     class ExperimentSerializer < ActiveModel::Serializer
       type :experiments
       attributes :id, :name, :description, :archived
+      attribute :metadata, if: -> { scope && scope[:metadata] == true }
 
       include TimestampableModel
     end
