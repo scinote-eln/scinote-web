@@ -28,6 +28,10 @@ describe Experiment, type: :model do
     it { should have_db_column :created_at }
     it { should have_db_column :updated_at }
     it { should have_db_column :uuid }
+    it { should have_db_column :due_date }
+    it { should have_db_column :started_at }
+    it { should have_db_column :ended_at }
+    it { should have_db_column :start_on }
   end
 
   describe 'Relations' do

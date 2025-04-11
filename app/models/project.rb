@@ -19,6 +19,7 @@ class Project < ApplicationRecord
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
             uniqueness: { scope: :team_id, case_sensitive: false }
+  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :visibility, presence: true
   validates :team, presence: true
   validate :project_folder_team, if: -> { project_folder.present? }
@@ -45,6 +46,10 @@ class Project < ApplicationRecord
   belongs_to :default_public_user_role,
              foreign_key: 'default_public_user_role_id',
              class_name: 'UserRole',
+             optional: true
+  belongs_to :supervised_by,
+             inverse_of: :supervised_projects,
+             class_name: 'User',
              optional: true
   belongs_to :team, inverse_of: :projects, touch: true
   belongs_to :project_folder, inverse_of: :projects, optional: true, touch: true
