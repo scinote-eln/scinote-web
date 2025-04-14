@@ -77,7 +77,7 @@ module LeftMenuBarHelper
   end
 
   def projects_are_selected?
-    controller_name.in? %w(projects experiments my_modules)
+    controller_name.in? %w(projects experiments my_modules results)
   end
 
   def repositories_are_selected?
