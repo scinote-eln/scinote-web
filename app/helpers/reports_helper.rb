@@ -137,6 +137,8 @@ module ReportsHelper
                   tags: %w(img),
                   team: current_team
                 )
+              elsif form_field_value.is_a?(FormDatetimeFieldValue)
+                form_field_value&.formatted_localize
               else
                 form_field_value&.formatted
               end
@@ -144,7 +146,7 @@ module ReportsHelper
       {
         name: form_field.name,
         value: value,
-        submitted_at: form_field_value&.submitted_at&.utc.to_s,
+        submitted_at: form_field_value&.submitted_at ? I18n.l(form_field_value&.submitted_at) : '',
         submitted_by: form_field_value&.submitted_by&.full_name.to_s
       }
     end
