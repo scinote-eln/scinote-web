@@ -34,7 +34,7 @@ module Reports
           table << [
             form_field.name,
             value,
-            form_field_value&.submitted_at ? I18n.l(form_field_value&.submitted_at) : '',
+            form_field_value&.submitted_at ? I18n.l(form_field_value&.submitted_at, format: :full) : '',
             form_field_value&.submitted_by&.full_name.to_s
           ]
         end
