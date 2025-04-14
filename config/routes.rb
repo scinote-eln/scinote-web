@@ -1138,6 +1138,7 @@ Rails.application.routes.draw do
     resources :design_elements, only: %i(index) do
       collection do
         get :test_select
+        get :test_table
       end
     end
   end

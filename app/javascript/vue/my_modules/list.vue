@@ -24,6 +24,7 @@
     @archive="archive"
     @restore="restore"
     @duplicate="duplicate"
+    @updateDueDate="updateDueDate"
     @editTags="editTags"/>
 
   <TagsModal v-if="tagsModalObject"
@@ -60,7 +61,7 @@ import ConfirmationModal from '../shared/confirmation_modal.vue';
 import NameRenderer from './renderers/name.vue';
 import ResultsRenderer from './renderers/results.vue';
 import StatusRenderer from './renderers/status.vue';
-import DueDateRenderer from './renderers/due_date.vue';
+import DueDateRenderer from '../shared/datatable/renderers/date.vue';
 import DesignatedUsers from './renderers/designated_users.vue';
 import TagsModal from './modals/tags.vue';
 import TagsRenderer from './renderers/tags.vue';
@@ -134,6 +135,13 @@ export default {
         headerName: this.i18n.t('experiments.table.column.due_date_html'),
         sortable: true,
         cellRenderer: DueDateRenderer,
+        cellRendererParams: {
+          placeholder: this.i18n.t('my_modules.details.no_due_date_placeholder'),
+          field: 'due_date_cell',
+          mode: 'datetime',
+          emptyPlaceholder: this.i18n.t('my_modules.details.no_due_date'),
+          emitAction: 'updateDueDate'
+        },
         minWidth: 200
       },
       {
@@ -275,6 +283,25 @@ export default {
     }
   },
   methods: {
+    updateDueDate(value, params) {
+      axios.put(params.data.urls.update_due_date, {
+        my_module: {
+          due_date: this.formatDate(value)
+        }
+      }).then(() => {
+        this.updateTable();
+      });
+    },
+    formatDate(date) {
+      if (!(date instanceof Date)) return null;
+
+      const y = date.getFullYear();
+      const m = date.getMonth() + 1;
+      const d = date.getDate();
+      const hours = date.getHours();
+      const mins = date.getMinutes();
+      return `${y}/${m}/${d} ${hours}:${mins}`;
+    },
     updateTable() {
       this.tagsModalObject = null;
       this.newModalOpen = false;

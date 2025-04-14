@@ -1,0 +1,17 @@
+<div>
+  <h1>Table</h1>
+  <div id="table" class="h-[500px]">
+    <data-table
+      :column-defs="columnDefs"
+      table-id="TestDataTable"
+      :data-url="dataUrl"
+      :reloading-table="reloadingTable"
+      :toolbar-actions="toolbarActions"
+      :actions-url="actionsUrl"
+      scroll-mode="infinite"
+      :filters="filters"
+  ></data-table>
+  </div>
+</div>
+
+<%= javascript_include_tag 'vue_design_system_table' %>

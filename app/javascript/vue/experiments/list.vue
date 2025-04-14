@@ -61,7 +61,7 @@
 
 import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
-import DescriptionRenderer from './renderers/description.vue';
+import DescriptionRenderer from '../shared/datatable/renderers/description.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import CompletedTasksRenderer from './renderers/completed_tasks.vue';
 import NameRenderer from './renderers/name.vue';

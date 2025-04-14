@@ -249,9 +249,7 @@ export default {
       const columns = this.columnDefs.map((column) => ({
         ...column,
         minWidth: column.minWidth || 110,
-        cellRendererParams: {
-          dtComponent: this
-        },
+        cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
         pinned: (column.field === 'name' || column.field === 'name_hash' ? 'left' : null),
         comparator: () => null
       }));
