@@ -26,13 +26,15 @@ module Reports
                     I18n.t('forms.export.values.not_applicable')
                   elsif form_field_value.is_a?(FormTextFieldValue)
                     SmartAnnotations::TagToText.new(user, team, form_field_value&.formatted).text
+                  elsif form_field_value.is_a?(FormDatetimeFieldValue)
+                    form_field_value&.formatted_localize
                   else
                     form_field_value&.formatted
                   end
           table << [
             form_field.name,
             value,
-            form_field_value&.submitted_at&.utc.to_s,
+            form_field_value&.submitted_at ? I18n.l(form_field_value&.submitted_at) : '',
             form_field_value&.submitted_by&.full_name.to_s
           ]
         end

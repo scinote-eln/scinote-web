@@ -25,4 +25,12 @@ class FormDatetimeFieldValue < FormFieldValue
       range? ? [datetime&.to_date, datetime_to&.to_date].join(' - ') : datetime&.to_date.to_s
     end
   end
+
+  def formatted_localize
+    format = form_field.data['time'] ? :full : :full_date
+    from = datetime ? I18n.l(datetime, format: format) : ''
+    to = datetime_to ? I18n.l(datetime_to, format: format) : ''
+
+    range? ? [from, to].join(' - ') : from
+  end
 end
