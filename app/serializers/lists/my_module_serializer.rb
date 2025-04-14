@@ -22,10 +22,11 @@ module Lists
       tags_html
       comments
       due_date_formatted
+      due_date_cell
       permissions
       default_public_user_role_id
       team
-    )
+    ).freeze
 
     def attributes(_options = {})
       ATTRIBUTES.index_with do |attribute|
@@ -67,13 +68,9 @@ module Lists
         provisioning_status: provisioning_status_my_module_url(object)
       }
 
-      if can_manage_project_users?(object.experiment.project)
-        urls_list[:update_access] = access_permissions_my_module_path(object)
-      end
+      urls_list[:update_access] = access_permissions_my_module_path(object) if can_manage_project_users?(object.experiment.project)
 
-      if can_update_my_module_due_date?(object)
-        urls_list[:update_due_date] = my_module_path(object, user, format: :json)
-      end
+      urls_list[:update_due_date] = my_module_path(object, user, format: :json) if can_update_my_module_due_date?(object)
 
       urls_list
     end
@@ -84,6 +81,19 @@ module Lists
 
     def due_date_formatted
       I18n.l(object.due_date, format: :full_date) if object.due_date
+    end
+
+    def due_date_cell
+      {
+        value: due_date,
+        value_formatted: due_date_formatted,
+        editable: can_update_my_module_due_date?(object),
+        icon: (if object.is_one_day_prior? && !object.completed?
+                 'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
+               elsif object.is_overdue? && !object.completed?
+                 'sn-icon sn-icon-alert-warning text-sn-delete-red'
+               end)
+      }
     end
 
     def due_date_status

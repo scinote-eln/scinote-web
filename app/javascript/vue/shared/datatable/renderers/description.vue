@@ -1,12 +1,12 @@
 <template>
   <template v-if="params.dtComponent.currentViewRender === 'table'">
   <div class="group relative flex items-center group-hover:marker text-xs h-full w-full leading-[unset]">
-    <div class="flex gap-2 w-full items-center text-sm leading-[unset]">
+    <div ref="descripitonBox" class="flex gap-2 w-full items-center text-sm leading-[unset]">
       <span class="cursor-pointer line-clamp-1 leading-[unset]"
-            @click.stop="showDescriptionModal"
-            v-html="params.data.sa_description">
+            @click.stop="showDescriptionModal">
+        {{ params.data.description }}
       </span>
-      <span @click.stop="showDescriptionModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm">
+      <span @click.stop="showDescriptionModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
         {{ i18n.t('experiments.card.more') }}
       </span>
     </div>
@@ -14,13 +14,13 @@
   </template>
   <template v-else>
     <div class="group relative flex items-center group-hover:marker text-xs h-full w-full">
-      <div class="flex gap-2 w-full items-end text-xs">
+      <div ref="descripitonBox" class="flex gap-2 w-full items-end text-xs">
         <span v-if="shouldTruncateText"
               class="cursor-pointer grow line-clamp-2"
-              @click.stop="showDescriptionModal"
-              v-html="params.data.sa_description">
+              @click.stop="showDescriptionModal">
+          {{ params.data.description }}
         </span>
-        <span v-else class="grow" v-html="params.data.sa_description"></span>
+        <span v-else class="grow">{{ params.data.description }}</span>
         <span v-if="shouldTruncateText" @click.stop="showDescriptionModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-xs">
           {{ i18n.t('experiments.card.more') }}
         </span>
@@ -36,6 +36,11 @@ export default {
     params: {
       required: true
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      window.renderElementSmartAnnotations(this.$refs.descripitonBox, 'span');
+    });
   },
   computed: {
     shouldTruncateText() {
