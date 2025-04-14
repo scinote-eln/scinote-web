@@ -181,6 +181,33 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 404)
     end
+
+    it 'When metadata parameter is set to true, it serializes metadata' do
+      @valid_experiment.my_modules.first.update(metadata: { status: 'processed' })
+      hash_body = nil
+      get api_v1_team_project_experiment_task_path(
+        team_id: @team1.id,
+        project_id: @valid_project,
+        experiment_id: @valid_experiment,
+        id: @valid_experiment.my_modules.first.id,
+        'with-metadata': true
+      ), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body.dig(:data, 'attributes', 'metadata', 'status')).to eq 'processed'
+    end
+
+    it 'When metadata parameter is set to false, it does not serializes metadata' do
+      @valid_experiment.my_modules.first.update(metadata: { status: 'processed' })
+      hash_body = nil
+      get api_v1_team_project_experiment_task_path(
+        team_id: @team1.id,
+        project_id: @valid_project,
+        experiment_id: @valid_experiment,
+        id: @valid_experiment.my_modules.first.id
+      ), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body.dig(:data, 'attributes', 'metadata')).to be_nil
+    end
   end
 
   describe 'POST tasks, #create' do
@@ -196,7 +223,14 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
           attributes: {
             name: 'task name',
             x: 1,
-            y: 4
+            y: 4,
+            metadata: {
+              status: 'processed',
+              info: {
+                tag: 'important',
+                number: 2
+              }
+            }
           }
         }
       }
@@ -208,6 +242,17 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
                team_id: @team1.id,
                project_id: @valid_project.id,
                experiment_id: @valid_experiment.id
+             ),
+             params: request_body.to_json,
+             headers: @valid_headers)
+      end
+
+      let(:action_with_metadata) do
+        post(api_v1_team_project_experiment_tasks_path(
+               team_id: @team1.id,
+               project_id: @valid_project.id,
+               experiment_id: @valid_experiment.id,
+               'with-metadata': true
              ),
              params: request_body.to_json,
              headers: @valid_headers)
@@ -235,6 +280,22 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
             )
           )
         )
+      end
+
+      it 'returns with metadata' do
+        hash_body = nil
+
+        action_with_metadata
+        expect { hash_body = json }.not_to raise_exception
+        expect(hash_body.dig(:data, 'attributes', 'metadata', 'status')).to eq 'processed'
+      end
+
+      it 'returns without metadata' do
+        hash_body = nil
+
+        action
+        expect { hash_body = json }.not_to raise_exception
+        expect(hash_body.dig(:data, 'attributes', 'metadata')).to be_nil
       end
     end
 
@@ -300,6 +361,20 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       )
     end
 
+    let(:action_with_metadata) do
+      patch(
+        api_v1_team_project_experiment_task_path(
+          team_id: @valid_project.team.id,
+          project_id: @valid_project.id,
+          experiment_id: @valid_experiment.id,
+          id: task.id,
+          'with-metadata': true
+        ),
+        params: request_body.to_json,
+        headers: @valid_headers
+      )
+    end
+
     context 'when has valid params' do
       let(:request_body) do
         {
@@ -307,7 +382,10 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
             type: 'tasks',
             attributes: {
               name: 'New task name',
-              description: 'New description about task'
+              description: 'New description about task',
+              metadata: {
+                status: 'processed'
+              }
             }
           }
         }
@@ -330,6 +408,22 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
             )
           )
         )
+      end
+
+      it 'returns metadata' do
+        hash_body = nil
+
+        action_with_metadata
+        expect { hash_body = json }.not_to raise_exception
+        expect(hash_body.dig(:data, 'attributes', 'metadata', 'status')).to eq 'processed'
+      end
+
+      it 'returns without metadata' do
+        hash_body = nil
+
+        action
+        expect { hash_body = json }.not_to raise_exception
+        expect(hash_body.dig(:data, 'attributes', 'metadata')).to be_nil
       end
     end
 

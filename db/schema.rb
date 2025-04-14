@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_04_10_115032) do
+ActiveRecord::Schema[7.0].define(version: 2025_04_10_124417) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -472,6 +472,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_10_115032) do
     t.jsonb "last_transition_error"
     t.integer "provisioning_status"
     t.boolean "due_date_notification_sent", default: false
+    t.jsonb "metadata"
     t.index "(('TA'::text || id)) gin_trgm_ops", name: "index_my_modules_on_my_module_code", using: :gin
     t.index "trim_html_tags((description)::text) gin_trgm_ops", name: "index_my_modules_on_description", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_my_modules_on_name", using: :gin
@@ -574,6 +575,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_10_115032) do
     t.boolean "demo", default: false, null: false
     t.bigint "project_folder_id"
     t.bigint "default_public_user_role_id"
+    t.jsonb "metadata"
     t.index "(('PR'::text || id)) gin_trgm_ops", name: "index_projects_on_project_code", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_projects_on_name", using: :gin
     t.index ["archived"], name: "index_projects_on_archived"

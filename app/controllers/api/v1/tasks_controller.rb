@@ -23,16 +23,18 @@ module Api
                                       .per(params.dig(:page, :size))
 
         render jsonapi: tasks, each_serializer: TaskSerializer,
-                               include: include_params,
-                               rte_rendering: render_rte?,
-                               team: @team
+               scope: { metadata: params['with-metadata'] == 'true' },
+               include: include_params,
+               rte_rendering: render_rte?,
+               team: @team
       end
 
       def show
         render jsonapi: @task, serializer: TaskSerializer,
-                               include: include_params,
-                               rte_rendering: render_rte?,
-                               team: @team
+               include: include_params,
+               scope: { metadata: params['with-metadata'] == 'true' },
+               rte_rendering: render_rte?,
+               team: @team
       end
 
       def create
@@ -41,15 +43,16 @@ module Api
         my_module = @experiment.my_modules.create!(task_params_create.merge(created_by: current_user))
 
         render jsonapi: my_module, serializer: TaskSerializer,
-                                   rte_rendering: render_rte?,
-                                   status: :created
+               scope: { metadata: params['with-metadata'] == 'true' },
+               rte_rendering: render_rte?,
+               status: :created
       end
 
       def update
         @task.assign_attributes(task_params_update)
 
         if @task.changed? && @task.save!
-          render jsonapi: @task, serializer: TaskSerializer, status: :ok
+          render jsonapi: @task, serializer: TaskSerializer, scope: { metadata: params['with-metadata'] == 'true' }, status: :ok
         else
           render body: nil, status: :no_content
         end
@@ -68,13 +71,12 @@ module Api
       def task_params_create
         raise TypeError unless params.require(:data).require(:type) == 'tasks'
 
-        params.require(:data).require(:attributes).permit(%i(name x y description))
+        params.require(:data).require(:attributes).permit(:name, :x, :y, :description, metadata: {})
       end
 
       def task_params_update
         raise TypeError unless params.require(:data).require(:type) == 'tasks'
-
-        params.require(:data).require(:attributes).permit(%i(name x y description my_module_status_id))
+        params.require(:data).require(:attributes).permit(:name, :x, :y, :description, :my_module_status_id, metadata: {})
       end
 
       def permitted_includes
