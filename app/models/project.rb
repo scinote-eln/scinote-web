@@ -11,6 +11,7 @@ class Project < ApplicationRecord
   include ViewableModel
   include PermissionCheckableModel
   include Assignable
+  include MetadataModel
 
   enum visibility: { hidden: 0, visible: 1 }
 
