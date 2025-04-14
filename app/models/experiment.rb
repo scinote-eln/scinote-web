@@ -13,6 +13,7 @@ class Experiment < ApplicationRecord
   include PermissionCheckableModel
   include Assignable
   include Cloneable
+  include MetadataModel
 
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
 
