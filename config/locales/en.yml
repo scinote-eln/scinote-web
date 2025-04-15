@@ -648,6 +648,12 @@ en:
       activities_option: "Activities"
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
+      due_date: "Due date"
+      add_due_date: "Add due date"
+      no_due_date: "No due date"
+      start_date: "Start date"
+      add_start_date: "Add start date"
+      no_start_date: "No start date"
       card:
         start_date: "Created on"
         updated_on: "Updated on"

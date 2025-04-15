@@ -282,7 +282,7 @@ class ProjectsController < ApplicationController
 
   def project_update_params
     params.require(:project)
-          .permit(:name, :visibility, :archived, :default_public_user_role_id)
+          .permit(:name, :visibility, :archived, :default_public_user_role_id, :due_date, :start_on, :description)
   end
 
   def view_type_params

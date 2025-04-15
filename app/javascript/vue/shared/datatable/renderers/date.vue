@@ -1,5 +1,5 @@
 <template>
-  <div class="flex relative items-center gap-2">
+  <div v-if="this.params.data[this.params.field]" class="flex relative items-center gap-2">
     <DateTimePicker
       v-if="this.params.data[this.params.field].editable"
       class="borderless-input -mt-[1px]"
@@ -39,7 +39,7 @@ export default {
     };
   },
   created() {
-    this.date = new Date(this.params.data[this.params.field].value?.replace(/([^!\s])-/g, '$1/'));
+    this.date = new Date(this.params.data[this.params.field]?.value?.replace(/([^!\s])-/g, '$1/'));
   },
   methods: {
     updateDate(value) {

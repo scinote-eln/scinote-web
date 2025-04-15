@@ -22,6 +22,8 @@
              @export="exportProjects"
              @move="move"
              @access="access"
+             @updateDueDate="updateDueDate"
+             @updateStartDate="updateStartDate"
   >
     <template #card="data">
       <ProjectCard :params="data.params" :dtComponent="data.dtComponent" ></ProjectCard>
@@ -70,6 +72,7 @@ import DataTable from '../shared/datatable/table.vue';
 import UsersRenderer from './renderers/users.vue';
 import NameRenderer from './renderers/name.vue';
 import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
+import DueDateRenderer from '../shared/datatable/renderers/date.vue';
 import ProjectCard from './card.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import EditProjectModal from './modals/edit.vue';
@@ -94,7 +97,8 @@ export default {
     NewFolderModal,
     MoveModal,
     AccessModal,
-    ExportLimitExceededModal
+    ExportLimitExceededModal,
+    DueDateRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -137,6 +141,34 @@ export default {
         field: 'code',
         headerName: this.i18n.t('projects.index.card.id'),
         sortable: true
+      },
+      {
+        field: 'due_date',
+        headerName: this.i18n.t('projects.index.due_date'),
+        sortable: true,
+        cellRenderer: DueDateRenderer,
+        cellRendererParams: {
+          placeholder: this.i18n.t('projects.index.add_due_date'),
+          field: 'due_date_cell',
+          mode: 'date',
+          emptyPlaceholder: this.i18n.t('projects.index.no_due_date'),
+          emitAction: 'updateDueDate',
+        },
+        minWidth: 200
+      },
+      {
+        field: 'start_on',
+        headerName: this.i18n.t('projects.index.start_date'),
+        sortable: true,
+        cellRenderer: DueDateRenderer,
+        cellRendererParams: {
+          placeholder: this.i18n.t('projects.index.add_start_date'),
+          field: 'start_on_cell',
+          mode: 'date',
+          emptyPlaceholder: this.i18n.t('projects.index.no_start_date'),
+          emitAction: 'updateStartDate',
+        },
+        minWidth: 200
       },
       {
         field: 'created_at',
@@ -248,6 +280,32 @@ export default {
     }
   },
   methods: {
+    updateDueDate(value, params) {
+      axios.put(params.data.urls.update, {
+        project: {
+          due_date: this.formatDate(value)
+        }
+      }).then(() => {
+        this.updateTable();
+      });
+    },
+    updateStartDate(value, params) {
+      axios.put(params.data.urls.update, {
+        project: {
+          start_on: this.formatDate(value)
+        }
+      }).then(() => {
+        this.updateTable();
+      });
+    },
+    formatDate(date) {
+      if (!(date instanceof Date)) return null;
+
+      const y = date.getFullYear();
+      const m = date.getMonth() + 1;
+      const d = date.getDate();
+      return `${y}/${m}/${d}`;
+    },
     usersFilterRenderer(option) {
       return `<div class="flex items-center gap-2">
                 <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />

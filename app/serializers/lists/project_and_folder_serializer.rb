@@ -8,7 +8,7 @@ module Lists
 
     attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder, :hidden,
                :folder_info, :default_public_user_role_id, :team, :top_level_assignable,
-               :comments, :updated_at, :permissions
+               :comments, :updated_at, :permissions, :due_date_cell, :start_on_cell,
 
     def team
       object.team.name
@@ -63,6 +63,31 @@ module Lists
         {
           count: object.comments.count,
           count_unseen: count_unseen_comments(object, @user)
+        }
+      end
+    end
+
+    def due_date_cell
+      if project?
+        {
+          value: (I18n.l(object.due_date, format: :default) if object.due_date),
+          value_formatted: (I18n.l(object.due_date, format: :full_date) if object.due_date),
+          editable: can_manage_project?(@object),
+          icon: (if object.is_one_day_prior? && !object.ended_at
+                  'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
+                elsif object.is_overdue? && !object.ended_at
+                  'sn-icon sn-icon-alert-warning text-sn-delete-red'
+                end)
+        }
+      end
+    end
+
+    def start_on_cell
+      if project?
+        {
+          value: (I18n.l(object.start_on, format: :default) if object.start_on),
+          value_formatted: (I18n.l(object.start_on, format: :full_date) if object.start_on),
+          editable: can_manage_project?(@object)
         }
       end
     end
