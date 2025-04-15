@@ -213,7 +213,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_10_093420) do
     t.datetime "updated_at", precision: nil, null: false
     t.uuid "uuid"
     t.datetime "started_at"
-    t.datetime "ended_at"
+    t.datetime "completed_at"
     t.date "due_date"
     t.date "start_on"
     t.index "(('EX'::text || id)) gin_trgm_ops", name: "index_experiments_on_experiment_code", using: :gin
@@ -577,7 +577,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_10_093420) do
     t.bigint "project_folder_id"
     t.bigint "default_public_user_role_id"
     t.datetime "started_at"
-    t.datetime "ended_at"
+    t.datetime "completed_at"
     t.date "start_on"
     t.text "description"
     t.bigint "supervised_by_id"
