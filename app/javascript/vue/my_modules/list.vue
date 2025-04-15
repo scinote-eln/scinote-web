@@ -25,6 +25,7 @@
     @restore="restore"
     @duplicate="duplicate"
     @updateDueDate="updateDueDate"
+    @updateStartDate="updateStartDate"
     @editTags="editTags"/>
 
   <TagsModal v-if="tagsModalObject"
@@ -62,6 +63,7 @@ import NameRenderer from './renderers/name.vue';
 import ResultsRenderer from './renderers/results.vue';
 import StatusRenderer from './renderers/status.vue';
 import DueDateRenderer from '../shared/datatable/renderers/date.vue';
+import StartDateRenderer from '../shared/datatable/renderers/date.vue';
 import DesignatedUsers from './renderers/designated_users.vue';
 import TagsModal from './modals/tags.vue';
 import TagsRenderer from './renderers/tags.vue';
@@ -129,6 +131,20 @@ export default {
         field: 'code',
         headerName: this.i18n.t('experiments.table.column.id_html'),
         sortable: true
+      },
+      {
+        field: 'start_date',
+        headerName: this.i18n.t('experiments.table.column.start_date_html'),
+        sortable: true,
+        cellRenderer: StartDateRenderer,
+        cellRendererParams: {
+          placeholder: this.i18n.t('my_modules.details.no_start_date_placeholder'),
+          field: 'start_date_cell',
+          mode: 'datetime',
+          emptyPlaceholder: this.i18n.t('my_modules.details.no_due_date'),
+          emitAction: 'updateStartDate'
+        },
+        minWidth: 200
       },
       {
         field: 'due_date',
@@ -287,6 +303,15 @@ export default {
       axios.put(params.data.urls.update_due_date, {
         my_module: {
           due_date: this.formatDate(value)
+        }
+      }).then(() => {
+        this.updateTable();
+      });
+    },
+    updateStartDate(value, params) {
+      axios.put(params.data.urls.update_start_date, {
+        my_module: {
+          started_on: this.formatDate(value)
         }
       }).then(() => {
         this.updateTable();

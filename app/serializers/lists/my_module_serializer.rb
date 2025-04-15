@@ -23,6 +23,7 @@ module Lists
       comments
       due_date_formatted
       due_date_cell
+      start_date_cell
       permissions
       default_public_user_role_id
       team
@@ -71,6 +72,7 @@ module Lists
       urls_list[:update_access] = access_permissions_my_module_path(object) if can_manage_project_users?(object.experiment.project)
 
       urls_list[:update_due_date] = my_module_path(object, user, format: :json) if can_update_my_module_due_date?(object)
+      urls_list[:update_start_date] = my_module_path(object, user, format: :json) if can_update_my_module_start_date?(object)
 
       urls_list
     end
@@ -93,6 +95,14 @@ module Lists
                elsif object.is_overdue? && !object.completed?
                  'sn-icon sn-icon-alert-warning text-sn-delete-red'
                end)
+      }
+    end
+
+    def start_date_cell
+      {
+        value: start_date,
+        value_formatted: start_date_formatted,
+        editable: can_update_my_module_due_date?(object)
       }
     end
 
@@ -174,6 +184,16 @@ module Lists
 
     def team
       object.team.name
+    end
+
+    private
+
+    def start_date
+      I18n.l(object.started_on, format: :default) if object.started_on
+    end
+
+    def start_date_formatted
+      I18n.l(object.started_on, format: :full_date) if object.started_on
     end
   end
 end
