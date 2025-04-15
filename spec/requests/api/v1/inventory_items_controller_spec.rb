@@ -203,6 +203,30 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
         expect { hash_body = json }.not_to raise_exception
         expect(hash_body['data'].count).to be_eql 100
       end
+
+      it 'return rows with archived filter true' do
+        hash_body = nil
+
+        get api_v1_team_inventory_items_path(
+          team_id: @team1.id,
+          inventory_id: @team1.repositories.first.id
+        ), params: { filter: { archived: true }, page: { size: 200 } }, headers: @valid_headers
+
+        expect { hash_body = json }.not_to raise_exception
+        expect(hash_body['data'].count).to be_eql 1
+      end
+
+      it 'return rows with archived filter false' do
+        hash_body = nil
+
+        get api_v1_team_inventory_items_path(
+          team_id: @team1.id,
+          inventory_id: @team1.repositories.first.id
+        ), params: { filter: { archived: false }, page: { size: 200 } }, headers: @valid_headers
+
+        expect { hash_body = json }.not_to raise_exception
+        expect(hash_body['data'].count).to be_eql 100
+      end
     end
   end
 

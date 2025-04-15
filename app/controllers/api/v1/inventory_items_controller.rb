@@ -12,13 +12,15 @@ module Api
       before_action :check_delete_permissions, only: :destroy
 
       def index
-        items =
-          timestamps_filter(
-            @inventory.repository_rows
-          )
-          .active
-          .preload(repository_cells: :repository_column)
-          .preload(repository_cells: { value: @inventory.cell_preload_includes })
+        items = if params.dig(:filter, :archived).present?
+                  archived_filter(@inventory.repository_rows)
+                else
+                  @inventory.repository_rows.active
+                end
+
+        items = timestamps_filter(items)
+                .preload(repository_cells: :repository_column)
+                .preload(repository_cells: { value: @inventory.cell_preload_includes })
 
         if params.dig(:filter, :inventory_column)
           items = items.filtered_by_column_value(
