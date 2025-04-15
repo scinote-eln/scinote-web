@@ -115,7 +115,7 @@ class FormRepositoryRowsFieldValue < FormFieldValue
       end
 
       cell_value.asset = Asset.new(
-        cell_attributes['repository_asset_value']['asset'].except('file')
+        cell_attributes['repository_asset_value']['asset'].except('file').merge(snapshot: true)
       )
 
       cell_value.asset.file = snapshot_file.blob
