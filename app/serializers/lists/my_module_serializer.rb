@@ -26,7 +26,7 @@ module Lists
       permissions
       default_public_user_role_id
       team
-    ).freeze
+    )
 
     def attributes(_options = {})
       ATTRIBUTES.index_with do |attribute|
