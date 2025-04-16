@@ -30,7 +30,7 @@ describe Experiment, type: :model do
     it { should have_db_column :uuid }
     it { should have_db_column :due_date }
     it { should have_db_column :started_at }
-    it { should have_db_column :ended_at }
+    it { should have_db_column :completed_at }
     it { should have_db_column :start_on }
   end
 
