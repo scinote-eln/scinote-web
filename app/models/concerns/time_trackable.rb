@@ -10,7 +10,7 @@ module TimeTrackable
   end
 
   def status=(status)
-    case status
+    case status.to_sym
     when :not_started
       self.started_at = nil
       self.completed_at = nil
@@ -21,6 +21,16 @@ module TimeTrackable
       complete
     else
       raise ArgumentError, 'Wrong status for TimeTrackable model!'
+    end
+  end
+
+  def status
+    if started_at.nil? && completed_at.nil?
+      :not_started
+    elsif started_at && !completed_at
+      :started
+    else
+      :completed
     end
   end
 
