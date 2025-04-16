@@ -1791,6 +1791,15 @@ en:
         assigned_html: 'Assigned to'
         tags_html: 'Tags'
         comments_html: 'Comments'
+        status_html: 'Status'
+        completed_task: 'Tasks done'
+        no_due_date_placeholder: '+ Add due date'
+        no_due_date: 'not set'
+        no_start_date_placeholder: "+ Add starting date"
+        status:
+          not_started: 'Not started'
+          started: 'In progress'
+          completed: 'Done'
       modal_move_modules:
         title: "Move task(s) to experiment"
         confirm: "Move"

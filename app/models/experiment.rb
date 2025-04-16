@@ -555,6 +555,14 @@ class Experiment < ApplicationRecord
     true
   end
 
+  def overdue?(date = Date.current)
+    due_date.present? && date >= due_date
+  end
+
+  def one_day_prior?(date = Date.current)
+    due_date.present? && date < due_date && date > (due_date - 1.day)
+  end
+
   private
 
   def log_activity(type_of, current_user, my_module)

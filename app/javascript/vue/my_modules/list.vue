@@ -79,6 +79,7 @@ export default {
     DataTable,
     ConfirmationModal,
     DueDateRenderer,
+    StartDateRenderer,
     DesignatedUsers,
     TagsModal,
     NewModal,

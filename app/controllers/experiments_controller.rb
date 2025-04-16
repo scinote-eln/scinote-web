@@ -459,7 +459,7 @@ class ExperimentsController < ApplicationController
   end
 
   def experiment_params
-    params.require(:experiment).permit(:name, :description, :archived)
+    params.require(:experiment).permit(:name, :description, :archived, :due_date, :start_on, :status)
   end
 
   def move_experiment_param

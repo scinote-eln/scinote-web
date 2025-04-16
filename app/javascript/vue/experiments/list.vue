@@ -23,6 +23,9 @@
     @edit="edit"
     @create="create"
     @access="access"
+    @updateDueDate="updateDueDate"
+    @updateStartDate="updateStartDate"
+    @changeStatus="changeStatus"
   >
     <template #card="data">
       <ExperimentCard :params="data.params" :dtComponent="data.dtComponent" ></ExperimentCard>
@@ -71,6 +74,9 @@ import MoveModal from './modals/move.vue';
 import EditModal from './modals/edit.vue';
 import NewModal from './modals/new.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
+import StatusRenderer from './renderers/status.vue';
+import DueDateRenderer from '../shared/datatable/renderers/date.vue';
+import StartDateRenderer from '../shared/datatable/renderers/date.vue';
 import ExperimentCard from './card.vue';
 
 export default {
@@ -84,7 +90,10 @@ export default {
     EditModal,
     NewModal,
     AccessModal,
-    ExperimentCard
+    ExperimentCard,
+    StatusRenderer,
+    StartDateRenderer,
+    DueDateRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -125,6 +134,41 @@ export default {
           minWidth: 80
         },
         {
+          field: 'status',
+          headerName: this.i18n.t('experiments.table.column.status_html'),
+          sortable: true,
+          cellRenderer: StatusRenderer,
+          minWidth: 200
+        },
+        {
+          field: 'start_date',
+          headerName: this.i18n.t('experiments.table.column.start_date_html'),
+          sortable: true,
+          cellRenderer: StartDateRenderer,
+          cellRendererParams: {
+            placeholder: this.i18n.t('experiments.table.column.no_start_date_placeholder'),
+            field: 'start_date_cell',
+            mode: 'date',
+            emptyPlaceholder: this.i18n.t('experiments.table.column.no_due_date'),
+            emitAction: 'updateStartDate'
+          },
+          minWidth: 180
+        },
+        {
+          field: 'due_date',
+          headerName: this.i18n.t('experiments.table.column.due_date_html'),
+          sortable: true,
+          cellRenderer: DueDateRenderer,
+          cellRendererParams: {
+            placeholder: this.i18n.t('experiments.table.column.no_due_date_placeholder'),
+            field: 'due_date_cell',
+            mode: 'date',
+            emptyPlaceholder: this.i18n.t('experiments.table.column.no_due_date'),
+            emitAction: 'updateDueDate'
+          },
+          minWidth: 200
+        },
+        {
           field: 'created_at',
           headerName: this.i18n.t('experiments.card.start_date'),
           sortable: true,
@@ -148,7 +192,7 @@ export default {
 
       columns.push({
         field: 'completed_tasks',
-        headerName: this.i18n.t('experiments.card.completed_task'),
+        headerName: this.i18n.t('experiments.table.column.completed_task'),
         cellRenderer: CompletedTasksRenderer,
         sortable: true,
         minWidth: 110
@@ -267,6 +311,29 @@ export default {
         object: rows[0],
         roles_path: this.userRolesUrl
       };
+    },
+    formatDate(date) {
+      if (!(date instanceof Date)) return null;
+
+      const y = date.getFullYear();
+      const m = date.getMonth() + 1;
+      const d = date.getDate();
+
+      return `${y}/${m}/${d}`;
+    },
+    updateField(url, params) {
+      axios.put(url, params).then(() => {
+        this.updateTable();
+      });
+    },
+    changeStatus(value, params) {
+      this.updateField(params.data.urls.update, { experiment: { status: value } });
+    },
+    updateDueDate(value, params) {
+      this.updateField(params.data.urls.update, { due_date: this.formatDate(value) });
+    },
+    updateStartDate(value, params) {
+      this.updateField(params.data.urls.update, { start_on: this.formatDate(value) });
     }
   }
 };
