@@ -135,7 +135,7 @@
     bottom: calc(100% - 30px);
     box-shadow: $flyout-shadow;
     display: none;
-    overflow: hidden;
+    overflow-y: auto;
     position: fixed;
     transition: .2s;
     transition-property: top, bottom, box-shadow;
