@@ -32,7 +32,7 @@ describe Project, type: :model do
     it { should have_db_column :template }
     it { should have_db_column :supervised_by_id }
     it { should have_db_column :started_at }
-    it { should have_db_column :ended_at }
+    it { should have_db_column :completed_at }
     it { should have_db_column :start_on }
     it { should have_db_column :description }
   end
