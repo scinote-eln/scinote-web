@@ -78,7 +78,10 @@ module Lists
         archived_on: 'archived_on',
         updated_at: 'experiments.updated_at',
         completed_tasks: 'completed_task_count',
-        description: 'experiments.description'
+        description: 'experiments.description',
+        start_date: 'start_on',
+        due_date: 'due_date',
+        status: 'status'
       }
     end
 
@@ -94,6 +97,11 @@ module Lists
                      @records.order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) DESC'))
                              .group('experiments.archived_on', 'projects.archived_on')
                    end
+                 when 'status'
+                   @records.order(Arel.sql("CASE
+                                           WHEN experiments.started_at IS NULL AND experiments.completed_at IS NULL THEN -1
+                                           WHEN experiments.completed_at IS NULL THEN 0
+                                           ELSE 1 END #{sort_direction(order_params)}"))
                  else
                    sort_by = "#{sortable_columns[order_params[:column].to_sym]} #{sort_direction(order_params)}"
                    @records.order(sort_by)
