@@ -1,11 +1,14 @@
 <template>
-  <span
-    class="px-2 py-1 border border-solid rounded truncate"
-    :class="{'text-sn-white' : !params.data.status.light_color}"
-    :style="{'background-color': params.data.status.color}"
-  >
-    {{ params.data.status.name }}
-  </span>
+  <div class="flex items-center gap-2">
+    <div
+      class="w-4 h-4 rounded-full"
+      :class="{ 'bg-sn-grey-500': params.data.status.light_color }"
+      :style="!params.data.status.light_color && { backgroundColor: params.data.status.color }"
+    ></div>
+    <span class="truncate">
+      {{ params.data.status.name }}
+    </span>
+  </div>
 </template>
 
 <script>

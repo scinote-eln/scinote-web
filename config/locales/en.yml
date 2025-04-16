@@ -1783,6 +1783,7 @@ en:
         id_html: 'ID'
         task_name_html: 'Task name'
         due_date_html: 'Due date'
+        start_date_html: 'Start date'
         archived_html: 'Archived on'
         age_html: 'Age'
         results_html: 'Results'

@@ -40,6 +40,7 @@ module Lists
 
     def sortable_columns
       @sortable_columns ||= {
+        start_date: 'start_date',
         due_date: 'due_date',
         name: 'name',
         code: 'id',
@@ -60,6 +61,10 @@ module Lists
       sort = "#{sortable_columns[order_params[:column].to_sym]}_#{sort_direction(order_params)}"
 
       case sort
+      when 'start_date_ASC'
+        @records = @records.order(:started_on, :name)
+      when 'start_date_DESC'
+        @records = @records.order(started_on: :desc, name: :asc)
       when 'due_date_ASC'
         @records = @records.order(:due_date, :name)
       when 'due_date_DESC'
