@@ -8,7 +8,7 @@ module Lists
     include ActionView::Helpers::TextHelper
 
     attributes :name, :code, :created_at, :updated_at, :workflow_img, :description, :completed_tasks,
-               :total_tasks, :archived_on, :urls, :sa_description, :default_public_user_role_id, :team,
+               :total_tasks, :archived_on, :urls, :sa_description, :default_public_user_role_id, :team, :permissions,
                :top_level_assignable, :hidden, :archived, :project_id, :due_date_cell, :start_date_cell, :status_cell
 
     def created_at
@@ -106,6 +106,12 @@ module Lists
         value: start_date,
         value_formatted: start_date,
         editable: can_manage_experiment?(object)
+      }
+    end
+
+    def permissions
+      {
+        manage: can_manage_experiment?(object)
       }
     end
 
