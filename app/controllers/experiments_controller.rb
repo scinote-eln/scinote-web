@@ -97,22 +97,39 @@ class ExperimentsController < ApplicationController
 
   def update
     old_text = @experiment.description
+    old_status = @experiment.status
+
     @experiment.assign_attributes(experiment_params)
     @experiment.last_modified_by = current_user
     name_changed = @experiment.name_changed?
     description_changed = @experiment.description_changed?
+    start_date_changes = @experiment.changes[:start_on]
+    due_date_changes = @experiment.changes[:due_date]
 
     if @experiment.save
       experiment_annotation_notification(old_text) if old_text
 
-      activity_type = if experiment_params[:archived] == 'false'
-                        :restore_experiment
-                      elsif name_changed && !description_changed
-                        :rename_experiment
-                      else
-                        :edit_experiment
-                      end
-      log_activity(activity_type, @experiment)
+      if start_date_changes.present?
+        log_start_date_change_activity(start_date_changes)
+      elsif due_date_changes.present?
+        log_due_date_change_activity(due_date_changes)
+      else
+        activity_type = if experiment_params[:archived] == 'false'
+                          :restore_experiment
+                        elsif name_changed && !description_changed
+                          :rename_experiment
+                        elsif old_status != @experiment.status
+                          :change_experiment_status
+                        else
+                          :edit_experiment
+                        end
+
+        message_items = if activity_type == :change_experiment_status
+                          { old_status: I18n.t("experiments.table.column.status.#{old_status}"),
+                            status: I18n.t("experiments.table.column.status.#{@experiment.status}") }
+                        end || {}
+        log_activity(activity_type, @experiment, message_items)
+      end
 
       render json: { message: t('experiments.update.success_flash', experiment: @experiment.name) }, status: :ok
     else
@@ -550,14 +567,42 @@ class ExperimentsController < ApplicationController
     )
   end
 
-  def log_activity(type_of, experiment)
+  def log_start_date_change_activity(start_date_changes)
+    type_of = if start_date_changes[0].nil?     # set start_on
+                message_items = { start_on: @experiment.start_on }
+                :set_experiment_start_date
+              elsif start_date_changes[1].nil?  # remove start_on
+                message_items = { start_on: start_date_changes[0] }
+                :remove_experiment_start_date
+              else                              # change start_on
+                message_items = { start_on: @experiment.start_on }
+                :change_experiment_start_date
+              end
+    log_activity(type_of, @experiment, message_items)
+  end
+
+  def log_due_date_change_activity(due_date_changes)
+    type_of = if due_date_changes[0].nil?     # set due_date
+                message_items = { due_date: @experiment.due_date }
+                :set_experiment_due_date
+              elsif due_date_changes[1].nil?  # remove due_date
+                message_items = { due_date: due_date_changes[0] }
+                :remove_experiment_due_date
+              else                            # change due_date
+                message_items = { due_date: @experiment.due_date }
+                :change_experiment_due_date
+              end
+    log_activity(type_of, @experiment, message_items)
+  end
+
+  def log_activity(type_of, experiment, message_items = {})
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
             team: experiment.team,
             project: experiment.project,
             subject: experiment,
-            message_items: { experiment: experiment.id })
+            message_items: message_items.merge({ experiment: experiment.id }))
   end
 
   def log_my_module_activity(type_of, my_module)
