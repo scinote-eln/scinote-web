@@ -254,15 +254,15 @@ class Project < ApplicationRecord
     project_comments
   end
 
-  def is_overdue?(date = Date.today)
+  def overdue?(date = Time.zone.today)
     due_date.present? && date >= due_date
   end
 
-  def is_one_day_prior?(date = Date.today)
-    is_due_in?(date, 1.day)
+  def one_day_prior?(date = Time.zone.today)
+    due_in?(date, 1.day)
   end
 
-  def is_due_in?(date, diff)
+  def due_in?(date, diff)
     due_date.present? &&
       date < due_date &&
       date >= (due_date - diff)

@@ -7,12 +7,11 @@ module Lists
     include CommentHelper
 
     attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder, :hidden,
-               :folder_info, :default_public_user_role_id, :team, :top_level_assignable,
-               :comments, :updated_at, :permissions, :due_date_cell, :start_on_cell,
-
-    def team
-      object.team.name
-    end
+               :folder_info, :default_public_user_role_id, :team, :top_level_assignable, :supervised_by,
+               :comments, :updated_at, :permissions, :due_date_cell, :start_on_cell, :description, :status,
+               def team
+                 object.team.name
+               end
 
     def folder
       !project?
@@ -26,13 +25,29 @@ module Lists
       object.hidden? if project?
     end
 
+    def supervised_by
+      if project?
+        {
+          id: object.supervised_by&.id,
+          name: object.supervised_by&.name,
+          avatar: (avatar_path(object.supervised_by, :icon_small) if object.supervised_by)
+        }
+      end
+    end
+
+    def description
+      object.description if project?
+    end
+
+    def status
+      object.status if project?
+    end
+
     def default_public_user_role_id
       object.default_public_user_role_id if project?
     end
 
-    def code
-      object.code
-    end
+    delegate :code, to: :object
 
     def created_at
       I18n.l(object.created_at, format: :full_date) if project?
@@ -73,11 +88,11 @@ module Lists
           value: (I18n.l(object.due_date, format: :default) if object.due_date),
           value_formatted: (I18n.l(object.due_date, format: :full_date) if object.due_date),
           editable: can_manage_project?(@object),
-          icon: (if object.is_one_day_prior? && !object.ended_at
-                  'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
-                elsif object.is_overdue? && !object.ended_at
-                  'sn-icon sn-icon-alert-warning text-sn-delete-red'
-                end)
+          icon: (if object.one_day_prior? && !object.completed?
+                   'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
+                 elsif object.overdue? && !object.completed?
+                   'sn-icon sn-icon-alert-warning text-sn-delete-red'
+                 end)
         }
       end
     end
@@ -113,6 +128,7 @@ module Lists
 
       urls_list[:show_access] = access_permissions_project_path(object)
       if project? && can_manage_project_users?(object)
+        urls_list[:assigned_users] = assigned_users_list_project_path(object)
         urls_list[:update_access] = access_permissions_project_path(object)
         urls_list[:new_access] = new_access_permissions_project_path(id: object.id)
         urls_list[:create_access] = access_permissions_projects_path(id: object.id)
