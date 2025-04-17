@@ -556,7 +556,14 @@ class Extends
     protocol_step_form_moved: 355,
     form_block_duplicated: 356,
     form_duplicated: 357,
-    form_unpublished: 358
+    form_unpublished: 358,
+    change_experiment_status: 361,
+    set_experiment_due_date: 362,
+    change_experiment_due_date: 363,
+    remove_experiment_due_date: 364,
+    set_experiment_start_date: 365,
+    change_experiment_start_date: 366,
+    remove_experiment_start_date: 367
   }
 
   ACTIVITY_GROUPS = {
@@ -567,7 +574,7 @@ class Extends
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
                     184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327, *347..352],
     task_inventory: [55, 56, 146, 147, 183],
-    experiment: [*27..31, 57, 141, 165],
+    experiment: [*27..31, 57, 141, 165, *361..367],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
                   78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329],
