@@ -11,7 +11,7 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
 
     # valid_projects
     2.times do
-      project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team1)
+      project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team1, metadata: { environment: 'test' })
     end
     2.times do
       project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team1, archived: true)
@@ -67,6 +67,19 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
         JSON.parse(
           ActiveModelSerializers::SerializableResource
             .new(@team1.projects.archived, each_serializer: Api::V1::ProjectSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
+    it 'Response with correct projects, filtered by metadata' do
+      hash_body = nil
+      get api_v1_team_projects_path(team_id: @team1.id, 'with-metadata' => 'true', filter: { metadata: { environment: :test } }), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@team1.projects.where('metadata @> ?', { environment: 'test'}.to_json), each_serializer: Api::V1::ProjectSerializer, scope: { metadata: true })
             .to_json
         )['data']
       )

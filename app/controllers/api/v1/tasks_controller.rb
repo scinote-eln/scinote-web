@@ -15,12 +15,10 @@ module Api
       before_action :load_task, only: :activities
 
       def index
-        tasks =
-          timestamps_filter(
-            @experiment.my_modules
-          ).includes(:my_module_status, :my_modules, :my_module_antecessors)
-        tasks = archived_filter(tasks).page(params.dig(:page, :number))
-                                      .per(params.dig(:page, :size))
+        tasks = @experiment.my_modules.includes(:my_module_status, :my_modules, :my_module_antecessors)
+        tasks = metadata_filter(archived_filter(timestamps_filter(tasks)))
+                .page(params.dig(:page, :number))
+                .per(params.dig(:page, :size))
 
         render jsonapi: tasks, each_serializer: TaskSerializer,
                scope: { metadata: params['with-metadata'] == 'true' },
