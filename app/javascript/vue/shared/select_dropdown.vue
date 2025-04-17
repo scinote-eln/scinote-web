@@ -7,12 +7,14 @@
   >
     <div
       ref="field"
-      class="px-3 py-1 border border-solid rounded flex items-center cursor-pointer"
+      class="px-3 py-1 rounded flex items-center cursor-pointer"
       @click="open"
       :class="[sizeClass, {
-        '!border-sn-blue': isOpen,
-        '!border-sn-light-grey': !isOpen,
-        'bg-sn-super-light-grey': disabled
+        'border border-solid': !borderless,
+        '!border-sn-blue': isOpen && !borderless,
+        '!border-sn-light-grey': !isOpen && !borderless,
+        'bg-sn-super-light-grey': disabled,
+        'pl-0': borderless
       }]"
     >
     <template v-if="!tagsView">
@@ -123,6 +125,7 @@ export default {
     labelRenderer: { type: Function },
     disabled: { type: Boolean, default: false },
     size: { type: String, default: 'md' },
+    borderless: { type: Boolean, default: false },
     multiple: { type: Boolean, default: false },
     withCheckboxes: { type: Boolean, default: false },
     searchable: { type: Boolean, default: false },
@@ -160,13 +163,13 @@ export default {
     sizeClass() {
       switch (this.size) {
         case 'xs':
-          return 'min-h-[36px]';
+          return 'h-[36px]';
         case 'sm':
-          return 'min-h-[40px]';
+          return 'h-[40px]';
         case 'md':
-          return 'min-h-[44px]';
+          return 'h-[44px]';
         default:
-          return 'min-h-[44px]';
+          return 'h-[44px]';
       }
     },
     canClear() {

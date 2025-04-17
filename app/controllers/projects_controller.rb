@@ -15,7 +15,7 @@ class ProjectsController < ApplicationController
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(update notifications create_tag)
+  before_action :load_vars, only: %i(update create_tag assigned_users_list)
   before_action :load_current_folder, only: :index
   before_action :check_view_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
@@ -255,6 +255,12 @@ class ProjectsController < ApplicationController
     render json: { data: users }, status: :ok
   end
 
+  def assigned_users_list
+    users = User.where(id: @project.user_assignments.select(:user_id)).order('full_name ASC')
+
+    render json: { data: users.map { |u| [u.id, u.name, { avatar_url: avatar_path(u, :icon_small) }] } }, status: :ok
+  end
+
   def user_roles
     render json: { data: user_roles_collection(Project.new).map(&:reverse) }
   end
@@ -282,7 +288,7 @@ class ProjectsController < ApplicationController
 
   def project_update_params
     params.require(:project)
-          .permit(:name, :visibility, :archived, :default_public_user_role_id)
+          .permit(:name, :visibility, :archived, :default_public_user_role_id, :due_date, :start_on, :description, :status, :supervised_by_id)
   end
 
   def view_type_params

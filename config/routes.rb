@@ -387,6 +387,10 @@ Rails.application.routes.draw do
         end
       end
 
+      member do
+        get :assigned_users_list
+      end
+
       collection do
         get 'inventory_assigning_project_filter'
         get 'users_filter'

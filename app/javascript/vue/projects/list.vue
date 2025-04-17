@@ -20,8 +20,13 @@
              @create_folder="createFolder"
              @delete_folders="deleteFolder"
              @export="exportProjects"
+             @showDescription="showDescription"
+             @changeStatus="changeStatus"
+             @changeSuperviser="changeSuperviser"
              @move="move"
              @access="access"
+             @updateDueDate="updateDueDate"
+             @updateStartDate="updateStartDate"
   >
     <template #card="data">
       <ProjectCard :params="data.params" :dtComponent="data.dtComponent" ></ProjectCard>
@@ -43,6 +48,10 @@
     :confirmText="i18n.t('projects.export_projects.export_button')"
     ref="exportModal"
   ></ConfirmationModal>
+  <DescriptionModal
+    v-if="descriptionModalObject"
+    :project="descriptionModalObject"
+    @close="descriptionModalObject = null"/>
   <ExportLimitExceededModal v-if="exportLimitExceded" :description="exportDescription" @close="exportLimitExceded = false"/>
   <EditProjectModal v-if="editProject" :userRolesUrl="userRolesUrl"
                     :project="editProject" @close="editProject = null" @update="updateTable(); updateNavigator()" />
@@ -69,7 +78,12 @@ import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
 import UsersRenderer from './renderers/users.vue';
 import NameRenderer from './renderers/name.vue';
+import StatusRenderer from './renderers/status.vue';
+import SuperviserRenderer from './renderers/superviser.vue';
 import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
+import DueDateRenderer from '../shared/datatable/renderers/date.vue';
+import DescriptionRenderer from '../shared/datatable/renderers/description.vue';
+import DescriptionModal from './modals/description.vue';
 import ProjectCard from './card.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import EditProjectModal from './modals/edit.vue';
@@ -94,7 +108,12 @@ export default {
     NewFolderModal,
     MoveModal,
     AccessModal,
-    ExportLimitExceededModal
+    ExportLimitExceededModal,
+    DueDateRenderer,
+    DescriptionRenderer,
+    DescriptionModal,
+    StatusRenderer,
+    SuperviserRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -121,7 +140,8 @@ export default {
       reloadingTable: false,
       exportLimitExceded: false,
       folderDeleteDescription: '',
-      exportDescription: ''
+      exportDescription: '',
+      descriptionModalObject: null
     };
   },
   computed: {
@@ -137,6 +157,50 @@ export default {
         field: 'code',
         headerName: this.i18n.t('projects.index.card.id'),
         sortable: true
+      },
+      {
+        field: 'status',
+        headerName: this.i18n.t('projects.index.card.status'),
+        sortable: true,
+        cellRenderer: StatusRenderer,
+        notSelectable: true
+      },
+      {
+        field: 'due_date',
+        headerName: this.i18n.t('projects.index.due_date'),
+        sortable: true,
+        cellRenderer: DueDateRenderer,
+        cellRendererParams: {
+          placeholder: this.i18n.t('projects.index.add_due_date'),
+          field: 'due_date_cell',
+          mode: 'date',
+          emptyPlaceholder: this.i18n.t('projects.index.no_due_date'),
+          emitAction: 'updateDueDate'
+        },
+        minWidth: 200,
+        notSelectable: true
+      },
+      {
+        field: 'start_on',
+        headerName: this.i18n.t('projects.index.start_date'),
+        sortable: true,
+        cellRenderer: DueDateRenderer,
+        cellRendererParams: {
+          placeholder: this.i18n.t('projects.index.add_start_date'),
+          field: 'start_on_cell',
+          mode: 'date',
+          emptyPlaceholder: this.i18n.t('projects.index.no_start_date'),
+          emitAction: 'updateStartDate'
+        },
+        minWidth: 200,
+        notSelectable: true
+      },
+      {
+        field: 'supervised_by',
+        headerName: this.i18n.t('projects.index.card.supervised_by'),
+        sortable: true,
+        cellRenderer: SuperviserRenderer,
+        notSelectable: true
       },
       {
         field: 'created_at',
@@ -162,8 +226,16 @@ export default {
         sortable: true,
         cellRenderer: CommentsRenderer,
         notSelectable: true
+      },
+      {
+        field: 'description',
+        headerName: this.i18n.t('projects.index.card.description'),
+        sortable: true,
+        cellStyle: { 'white-space': 'normal' },
+        cellRenderer: 'DescriptionRenderer',
+        autoHeight: true,
+        minWidth: 110
       }];
-
       if (this.currentViewMode === 'archived') {
         columns.push({
           field: 'archived_on',
@@ -248,6 +320,53 @@ export default {
     }
   },
   methods: {
+    updateDueDate(value, params) {
+      axios.put(params.data.urls.update, {
+        project: {
+          due_date: this.formatDate(value)
+        }
+      }).then(() => {
+        this.updateTable();
+      });
+    },
+    updateStartDate(value, params) {
+      axios.put(params.data.urls.update, {
+        project: {
+          start_on: this.formatDate(value)
+        }
+      }).then(() => {
+        this.updateTable();
+      });
+    },
+    showDescription(_e, project) {
+      [this.descriptionModalObject] = project;
+    },
+    changeStatus(newStatus, params) {
+      axios.put(params.data.urls.update, {
+        project: {
+          status: newStatus
+        }
+      }).then(() => {
+        this.updateTable();
+      });
+    },
+    changeSuperviser(newSuperviser, params) {
+      axios.put(params.data.urls.update, {
+        project: {
+          supervised_by_id: newSuperviser[0]
+        }
+      }).then(() => {
+        this.updateTable();
+      });
+    },
+    formatDate(date) {
+      if (!(date instanceof Date)) return null;
+
+      const y = date.getFullYear();
+      const m = date.getMonth() + 1;
+      const d = date.getDate();
+      return `${y}/${m}/${d}`;
+    },
     usersFilterRenderer(option) {
       return `<div class="flex items-center gap-2">
                 <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />

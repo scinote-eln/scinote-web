@@ -648,6 +648,16 @@ en:
       activities_option: "Activities"
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
+      due_date: "Due date"
+      add_due_date: "Add due date"
+      no_due_date: "No due date"
+      start_date: "Start date"
+      add_start_date: "Add start date"
+      no_start_date: "No start date"
+      status:
+        not_started: "Not started"
+        started: "In progress"
+        completed: "Done"
       card:
         start_date: "Created on"
         updated_on: "Updated on"
@@ -658,6 +668,9 @@ en:
         archived_date: "Archived on"
         comments: 'Comments'
         updated_at: 'Updated on'
+        description: 'Description'
+        supervised_by: 'Head of project'
+        status: 'Status'
       end_of_list_placeholder: 'You’ve reached the end of the list'
       folder:
         description: "%{projects_count} projects | %{folders_count} folders"

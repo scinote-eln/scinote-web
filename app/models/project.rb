@@ -254,6 +254,20 @@ class Project < ApplicationRecord
     project_comments
   end
 
+  def overdue?(date = Time.zone.today)
+    due_date.present? && date >= due_date
+  end
+
+  def one_day_prior?(date = Time.zone.today)
+    due_in?(date, 1.day)
+  end
+
+  def due_in?(date, diff)
+    due_date.present? &&
+      date < due_date &&
+      date >= (due_date - diff)
+  end
+
   # rubocop:disable Metrics/BlockLength
   def generate_teams_export_report_html(
     user, team, html_title, obj_filenames = nil
