@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center gap-2">
     <div
-      class="w-4 h-4 rounded-full"
+      class="w-3 h-3 rounded-full"
       :class="{ 'bg-sn-grey-500': params.data.status.light_color }"
       :style="!params.data.status.light_color && { backgroundColor: params.data.status.color }"
     ></div>

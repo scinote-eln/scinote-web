@@ -102,7 +102,7 @@ module Lists
       {
         value: start_date,
         value_formatted: start_date_formatted,
-        editable: can_update_my_module_due_date?(object)
+        editable: can_update_my_module_start_date?(object)
       }
     end
 
