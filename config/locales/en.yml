@@ -1726,6 +1726,7 @@ en:
       completed_value: "%{completed}/%{all} tasks"
       description: "Description"
       more: "more"
+      add_description: "Add description"
     index:
       edit_option: "Edit"
       clone_option: "Duplicate"
