@@ -18,6 +18,7 @@
       :auto-apply="true"
       :partial-flow="true"
       :markers="markers"
+      :start-time="{ hours: 0, minutes: 0, seconds: 0 }"
       week-start="0"
       :enable-time-picker="mode == 'datetime'"
       :time-picker="mode == 'time'"
