@@ -3,6 +3,7 @@
     <div class="tinymce-container" :class="{ 'error': error }">
       <form class="tiny-mce-editor" role="form" :action="updateUrl" accept-charset="UTF-8" data-remote="true" method="post">
         <input type="hidden" name="_method" value="patch">
+        <input type="hidden" name="format" value="json">
         <div class="hidden tinymce-cancel-button tox-mbtn" tabindex="-1">
         <button type="button" tabindex="-1">
           <span class="sn-icon sn-icon-close"></span>
