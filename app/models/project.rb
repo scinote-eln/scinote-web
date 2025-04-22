@@ -27,6 +27,7 @@ class Project < ApplicationRecord
   validate :selected_user_role_validation, if: :bulk_assignment?
 
   before_validation :remove_project_folder, on: :update, if: :archived_changed?
+  before_save :reset_due_date_notification_sent, if: -> { due_date_changed? }
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -394,5 +395,9 @@ class Project < ApplicationRecord
       num = (num / len).floor - 1
     end
     col_name
+  end
+
+  def reset_due_date_notification_sent
+    self.due_date_notification_sent = false
   end
 end

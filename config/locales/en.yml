@@ -4139,6 +4139,7 @@ en:
       repository_date_reminder: "Date reminder"
       other_smart_annotation: "You were tagged"
       other_team_invitation: "You were invited or removed from the team"
+      experiment_due_date: "Due date reminder if you have Owner or User access role on a Experiment"
     content:
       my_module_due_date_reminder:
         title_html: "Task due date reminder"
@@ -4149,6 +4150,9 @@ en:
       item_date_reminder:
         title_html: "Item date reminder"
         message_html: "Date reminder for %{repository_row_name} is coming up in %{value} %{units}."
+      experiment_due_date_reminder:
+        title_html: "Experiment due date reminder"
+        message_html: "Due date for the experiment %{experiment_name} is coming up."
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
