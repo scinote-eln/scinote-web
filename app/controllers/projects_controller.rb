@@ -74,6 +74,7 @@ class ProjectsController < ApplicationController
 
   def update
     default_public_user_role_name_before_update = @project.default_public_user_role&.name
+    old_status = @project.status
     @project.assign_attributes(project_update_params)
     return_error = false
     flash_error = t('projects.update.error_flash', name: escape_input(@project.name))
@@ -90,7 +91,7 @@ class ProjectsController < ApplicationController
           t("projects.#{is_archive}.error_flash", name: escape_input(@project.name))
     end
 
-    message_renamed = @project.name_changed?
+    message_edited = @project.name_changed? || @project.description_changed?
     message_visibility = if !@project.visibility_changed?
                            nil
                          elsif @project.visible?
@@ -106,6 +107,9 @@ class ProjectsController < ApplicationController
                        else
                          'restore'
                        end
+    supervised_by_id_changes = @project.changes[:supervised_by_id]
+    start_date_changes = @project.changes[:start_on]
+    due_date_changes = @project.changes[:due_date]
 
     default_public_user_role_name = nil
     if !@project.visibility_changed? && @project.default_public_user_role_id_changed?
@@ -131,7 +135,7 @@ class ProjectsController < ApplicationController
                        team: @project.team.id })
       end
 
-      log_activity(:rename_project) if message_renamed.present?
+      log_activity(:edit_project) if message_edited.present?
       log_activity(:archive_project) if message_archived == 'archive'
       log_activity(:restore_project) if message_archived == 'restore'
 
@@ -140,6 +144,19 @@ class ProjectsController < ApplicationController
                      @project,
                      { team: @project.team.id, role: default_public_user_role_name })
       end
+
+      if supervised_by_id_changes.present?
+        log_activity(:remove_head_of_project, @project, { user_target: supervised_by_id_changes[0] }) if supervised_by_id_changes[0].present? # remove head of project
+        log_activity(:set_head_of_project, @project, { user_target: supervised_by_id_changes[1] }) if supervised_by_id_changes[1].present? # add head of project
+      end
+
+      if old_status != @project.status
+        log_activity(:change_project_status, @project, { old_status: I18n.t("projects.index.status.#{old_status}"),
+                                                         status: I18n.t("projects.index.status.#{@project.status}") })
+      end
+
+      log_start_date_change_activity(start_date_changes) if start_date_changes.present?
+      log_due_date_change_activity(due_date_changes) if due_date_changes.present?
 
       flash_success = t('projects.update.success_flash', name: escape_input(@project.name))
       if message_archived == 'archive'
@@ -346,6 +363,34 @@ class ProjectsController < ApplicationController
       field_to_udpate: 'name',
       path_to_update: project_folder_path(@current_folder)
     }
+  end
+
+  def log_start_date_change_activity(start_date_changes)
+    type_of = if start_date_changes[0].nil?     # set start_on
+                message_items = { start_on: @project.start_on }
+                :set_project_start_date
+              elsif start_date_changes[1].nil?  # remove start_on
+                message_items = { start_on: start_date_changes[0] }
+                :remove_project_start_date
+              else                              # change start_on
+                message_items = { start_on: @project.start_on }
+                :change_project_start_date
+              end
+    log_activity(type_of, @project, message_items)
+  end
+
+  def log_due_date_change_activity(due_date_changes)
+    type_of = if due_date_changes[0].nil?     # set due_date
+                message_items = { due_date: @project.due_date }
+                :set_project_due_date
+              elsif due_date_changes[1].nil?  # remove due_date
+                message_items = { due_date: due_date_changes[0] }
+                :remove_project_due_date
+              else                            # change due_date
+                message_items = { due_date: @project.due_date }
+                :change_project_due_date
+              end
+    log_activity(type_of, @project, message_items)
   end
 
   def log_activity(type_of, project = nil, message_items = {})

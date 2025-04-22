@@ -227,7 +227,7 @@ class Extends
 
   ACTIVITY_TYPES = {
     create_project: 0,
-    rename_project: 1,
+    edit_project: 1,
     change_project_visibility: 2,
     archive_project: 3,
     restore_project: 4,
@@ -563,11 +563,20 @@ class Extends
     remove_experiment_due_date: 364,
     set_experiment_start_date: 365,
     change_experiment_start_date: 366,
-    remove_experiment_start_date: 367
+    remove_experiment_start_date: 367,
+    change_project_status: 368,
+    set_project_due_date: 369,
+    change_project_due_date: 370,
+    remove_project_due_date: 371,
+    set_project_start_date: 372,
+    change_project_start_date: 373,
+    remove_project_start_date: 374,
+    set_head_of_project: 375,
+    remove_head_of_project: 376
   }
 
   ACTIVITY_GROUPS = {
-    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243],
+    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243, 368...376],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, *246..248, *257..273, *284..291, 301, 303, 306, 328],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            148, 166],
