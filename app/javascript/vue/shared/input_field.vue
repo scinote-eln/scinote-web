@@ -30,7 +30,6 @@
         :disabled="disabled"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
-        @change="$emit('change', $event.target.value)"
         class="outline-none shadow-none placeholder:text-sn-grey rounded h-full border border-sn-sleepy-grey bg-white w-full px-4 focus:border-sn-science-blue"
         :class="{
           '!bg-sn-super-light-grey ': disabled,
