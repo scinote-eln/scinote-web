@@ -30,6 +30,7 @@ if ENV['WORKER'].present?
 
   reminder_job_interval = ENV['REMINDER_JOB_INTERVAL'] || '1h'
   schedule_task(scheduler, reminder_job_interval) do
+    ProjectDueDateReminderJob.perform_now
     ExperimentDueDateReminderJob.perform_now
     MyModules::DueDateReminderJob.perform_now
     RepositoryItemDateReminderJob.perform_now
