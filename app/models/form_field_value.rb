@@ -7,6 +7,7 @@ class FormFieldValue < ApplicationRecord
   belongs_to :submitted_by, class_name: 'User'
 
   validate :not_applicable_values
+  validate :uniqueness_latest, if: :latest?
 
   scope :latest, -> { where(latest: true) }
 
@@ -36,5 +37,11 @@ class FormFieldValue < ApplicationRecord
     return unless not_applicable
 
     errors.add(:value, :not_applicable) if value.present?
+  end
+
+  def uniqueness_latest
+    return unless form_response.form_field_values.exists?(form_field_id: form_field_id, latest: true)
+
+    errors.add(:value, :not_unique_latest)
   end
 end

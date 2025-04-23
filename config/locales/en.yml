@@ -264,6 +264,7 @@ en:
           attributes:
             value:
               not_applicable: "Field is not applicable"
+              not_unique_latest: "Latest field value already exists"
         storage_location:
           missing_position: 'Missing position metadata'
           not_uniq_position: 'Position already taken'
