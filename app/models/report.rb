@@ -55,6 +55,7 @@ class Report < ApplicationRecord
         step_files: true,
         step_tables: true,
         step_comments: true,
+        step_forms: true,
         step_well_plates: true
       },
       file_results: true,

@@ -32,14 +32,12 @@ module LeftMenuBarHelper
                 active: storage_locations_are_selected?
               })
 
-    if Form.forms_enabled?
-      menu.push({
-                  url: forms_path,
-                  name: t('left_menu_bar.forms'),
-                  icon: 'sn-icon-forms',
-                  active: forms_are_selected?
-                })
-    end
+    menu.push({
+                url: forms_path,
+                name: t('left_menu_bar.forms'),
+                icon: 'sn-icon-forms',
+                active: forms_are_selected?
+              })
 
     menu.push({
                 url: protocols_path,
@@ -77,7 +75,7 @@ module LeftMenuBarHelper
   end
 
   def projects_are_selected?
-    controller_name.in? %w(projects experiments my_modules)
+    controller_name.in? %w(projects experiments my_modules results)
   end
 
   def repositories_are_selected?

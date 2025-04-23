@@ -14,7 +14,8 @@ module RepositoryDatatable
         preview_url: asset_file_preview_path(asset),
         file_name: escape_input(asset.file_name),
         icon_html: sn_icon_for(asset),
-        medium_preview_url: asset.previewable? && rails_representation_url(asset.medium_preview)
+        medium_preview_url: asset.previewable? && rails_representation_url(asset.medium_preview),
+        snapshot: asset.snapshot
       }
     rescue StandardError => e
       Rails.logger.error e.message

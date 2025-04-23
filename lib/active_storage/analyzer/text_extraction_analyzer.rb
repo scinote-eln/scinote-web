@@ -5,7 +5,9 @@ module ActiveStorage
     DEFAULT_TIKA_PATH = 'tika-app.jar'
 
     def self.accept?(blob)
-      blob.content_type.in?(Constants::TEXT_EXTRACT_FILE_TYPES) && blob.attachments.where(record_type: 'Asset').any?
+      blob.content_type.in?(Constants::TEXT_EXTRACT_FILE_TYPES) &&
+        blob.byte_size <= Constants::TEXT_EXTRACT_MAX_FILE_SIZE &&
+        blob.attachments.where(record_type: 'Asset').any?
     end
 
     def self.analyze_later?
@@ -50,14 +52,15 @@ module ActiveStorage
     def create_or_update_text_data(text_data)
       @blob.attachments.where(record_type: 'Asset').each do |attachemnt|
         asset = attachemnt.record
-        if asset.asset_text_datum.present?
-          # Update existing text datum if it exists
-          asset.asset_text_datum.update!(data: text_data)
-        else
-          # Create new text datum
-          asset.create_asset_text_datum!(data: text_data)
-        end
+        asset.create_asset_text_datum! if asset.asset_text_datum.blank?
+        sql = ActiveRecord::Base.sanitize_sql_array(
+          [
+            'UPDATE "asset_text_data" SET "data_vector" = to_tsvector(:text_data) WHERE "id" = :id',
+            { text_data: text_data, id: asset.asset_text_datum.id }
+          ]
+        )
 
+        AssetTextDatum.connection.execute(sql)
         asset.update_estimated_size
 
         Rails.logger.info "Asset #{asset.id}: file text successfully extracted"

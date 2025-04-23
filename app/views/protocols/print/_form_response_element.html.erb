@@ -1,0 +1,98 @@
+<div class="content__form-container pr-8">
+  <div class="sci-divider my-6"></div>
+  <div class="max-w-[800px] w-full rounded bg-sn-super-light-grey p-6 flex flex-col gap-4">
+    <div class="flex items-center">
+      <h3 class="my-1"><%= form_response.form.name %></h3>
+      <% if form_response.status == 'submitted' %>
+        <div class="ml-auto text-right text-xs text-sn-grey-700">
+          <%= t('forms.response.submitted_on') %> <span><%= I18n.l(form_response.submitted_at, format: :full) %></span><br>
+          <%= t('forms.response.by') %> <%= form_response.submitted_by&.full_name %>
+        </div>
+      <% else %>
+        <div class="ml-auto text-right text-xs text-sn-grey-700">
+          <%= t('forms.response.not_submitted') %>
+        </div>
+      <% end %>
+    </div>
+    <% form_response.form.form_fields.each do |field| %>
+      <div class="p-4 rounded bg-white text-sm mb-2">
+        <div class="grow">
+          <div class="font-bold">
+            <%= field.name %>
+            <% if field.data&.dig('unit') %>
+              <span>(<%= field.data&.dig('unit') %>)</span>
+            <% end %>
+
+            <% case field.data.dig('type') %>
+            <% when 'SingleChoiceField' %>
+              <span class="font-normal"><%= t("protocols.print.forms.single_choice_html") %></span>
+            <% when 'MultipleChoiceField' %>
+              <span class="font-normal"><%= t("protocols.print.forms.multiple_choice_html") %></span>
+            <% end %>
+
+            <% if field.required %>
+              <span  class="text-sn-delete-red">*</span>
+            <% end %>
+          </div>
+          <% if field.description %>
+            <div>
+              <%= smart_annotation_text(field.description) %>
+            </div>
+          <% end %>
+
+          <div class="mt-2">
+            <% field_value = form_response.form_field_values.find_by(form_field_id: field.id, latest: true) %>
+            <% field_type = field.data.dig('type') %>
+
+            <% case field_type %>
+            <% when 'TextField' %>
+              <div class="mb-1">
+                <div class="rounded border min-h-32 py-0.5 w-full px-2 border-sn-grey box-border" disabled><%= smart_annotation_text(field_value&.formatted) %></div>
+              </div>
+
+            <% when 'NumberField' %>
+              <div class="sci-input-container-v2">
+                <input
+                  type="number"
+                  class="sci-input box-border <%= '!border-sn-alert-brittlebush' if field_value&.present? && !field_value&.value_in_range? %>"
+                  disabled
+                  value="<%= field_value&.number %>" />
+              </div>
+              <% if field_value&.present? && !field_value&.value_in_range? %>
+                <div class="text-xs text-sn-alert-brittlebush">
+                  <%= field&.data&.dig('validations', 'response_validation', 'message') %>
+                </div>
+              <% end %>
+
+            <% when 'DatetimeField' %>
+              <%= render partial: 'protocols/print/element/form_datetime_field_value_element', locals: { field: field, field_value: field_value } %>
+
+            <% when 'SingleChoiceField' %>
+              <%= render partial: 'protocols/print/element/form_choice_value_element', locals: { field: field, selected_options: [field_value&.text] } %>
+
+            <% when 'MultipleChoiceField' %>
+              <%= render partial: 'protocols/print/element/form_choice_value_element', locals: { field: field, selected_options: field_value&.selection } %>
+
+            <% when 'ActionField' %>
+              <%= render partial: 'protocols/print/element/checkbox_button', locals: { value: field_value&.flag, description: I18n.t('forms.fields.mark_as_completed') } %>
+            <% when 'RepositoryRowsField'%>
+              <%= field_value&.formatted %>
+            <% end %>
+
+            <div class="flex items-center justify-end mt-4 gap-4">
+              <% if field_value&.submitted_at %>
+                <span class="text-sn-grey-700 text-xs">
+                  <%= I18n.t('forms.fields.submitted_by', date: I18n.l(field_value.submitted_at, format: :full), user: field_value.submitted_by&.full_name) %>
+                </span>
+              <% end %>
+
+              <% if field&.allow_not_applicable %>
+                <%= render partial: 'protocols/print/element/checkbox_button', locals: { value: field_value&.not_applicable, description: I18n.t('forms.fields.mark_as_na') } %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end%>
+  </div>
+</div>

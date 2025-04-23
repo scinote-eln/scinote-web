@@ -28,6 +28,7 @@ describe FormFieldValue, type: :model do
     it { should have_db_column :number_to }
     it { should have_db_column :text }
     it { should have_db_column :selection }
+    it { should have_db_column :flag }
   end
 
   describe 'Relations' do

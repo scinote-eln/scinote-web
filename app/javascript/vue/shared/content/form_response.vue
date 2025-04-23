@@ -50,6 +50,13 @@
                       :parent_type="element.attributes.orderable.parent_type"
                       :targets_url="element.attributes.orderable.urls.move_targets_url"
                       @confirm="moveElement($event)" @cancel="closeMoveModal"/>
+    <ConfirmationModal
+      :title="i18n.t('forms.response.edit_modal.title')"
+      :description="i18n.t('forms.response.edit_modal.description')"
+      confirmClass="btn btn-danger"
+      :confirmText="i18n.t('general.edit')"
+      ref="confirmEditModal">
+    </ConfirmationModal>
   </div>
 </template>
 
@@ -63,6 +70,7 @@ import moveElementModal from './modal/move.vue';
 import MenuDropdown from '../menu_dropdown.vue';
 import Field from '../../forms/field.vue';
 import axios from '../../../packs/custom_axios.js';
+import ConfirmationModal from '../confirmation_modal.vue';
 
 export default {
   name: 'TextContent',
@@ -70,7 +78,8 @@ export default {
     deleteElementModal,
     moveElementModal,
     MenuDropdown,
-    Field
+    Field,
+    ConfirmationModal
   },
   mixins: [DeleteMixin, MoveMixin],
   props: {
@@ -157,12 +166,12 @@ export default {
         if (this.formFieldValues.find((formFieldValue) => formFieldValue.form_field_id === formFieldId)) {
           this.formFieldValues = this.formFieldValues.map((formFieldValue) => {
             if (formFieldValue.form_field_id === formFieldId) {
-              return response.data.data.attributes;
+              return { ...response.data.data.attributes, id: response.data.data.id };
             }
             return formFieldValue;
           });
         } else {
-          this.formFieldValues.push(response.data.data.attributes);
+          this.formFieldValues.push({ ...response.data.data.attributes, id: response.data.data.id });
         }
       });
     },
@@ -181,20 +190,24 @@ export default {
         this.submitting = false;
       });
     },
-    resetForm() {
-      if (this.submitting) {
-        return;
-      }
+    async resetForm() {
+      const ok = await this.$refs.confirmEditModal.show();
 
-      this.submitting = true;
-      axios.post(this.formResponse.urls.reset).then((response) => {
-        const { attributes } = response.data.data;
-        this.formResponse = attributes.orderable;
-        this.deleteUrl = attributes.orderable.urls.delete_url;
-        this.moveUrl = attributes.orderable.urls.move_url;
-      }).finally(() => {
-        this.submitting = false;
-      });
+      if (ok) {
+        if (this.submitting) {
+          return;
+        }
+
+        this.submitting = true;
+        axios.post(this.formResponse.urls.reset).then((response) => {
+          const { attributes } = response.data.data;
+          this.formResponse = attributes.orderable;
+          this.deleteUrl = attributes.orderable.urls.delete_url;
+          this.moveUrl = attributes.orderable.urls.move_url;
+        }).finally(() => {
+          this.submitting = false;
+        });
+      }
     },
     checkValidFormFields() {
       if (this.$refs.formFields) {

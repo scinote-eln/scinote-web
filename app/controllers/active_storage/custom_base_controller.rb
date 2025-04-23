@@ -6,7 +6,7 @@ module ActiveStorage
     include TokenAuthentication
     include ActiveStorage::SetCurrent
 
-    prepend_before_action :authenticate_request!, if: -> { request.headers['Authorization'].present? }
+    prepend_before_action :authenticate_request!, if: -> { request.headers['Authorization'].present? || request.headers['Api-Key'].present? }
     skip_before_action :authenticate_user!, if: -> { current_user.present? }
 
     private

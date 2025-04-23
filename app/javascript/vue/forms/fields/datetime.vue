@@ -1,7 +1,7 @@
 <template>
   <div class='relative'>
     <template v-if="range">
-      <div class="flex items-center gap-4">
+      <div class="flex lg:items-center gap-x-4 gap-y-2 flex-col lg:flex-row">
         <DateTimePicker
           @change="updateFromDate"
           :mode="mode"
@@ -9,9 +9,10 @@
           :clearable="true"
           :disabled="fieldDisabled"
           :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.from')"
+          class="grow"
           :class="{'error': !validValue}"
         />
-        -
+        <span class="tw-hidden lg:block">-</span>
         <DateTimePicker
           @change="updateToDate"
           :defaultValue="toValue"
@@ -19,6 +20,7 @@
           :disabled="fieldDisabled"
           :clearable="true"
           :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.to')"
+          class="grow"
           :class="{'error': !validValue}"
         />
       </div>
@@ -89,20 +91,30 @@ export default {
   },
   methods: {
     updateDate(date) {
-      this.value = date;
+      this.value = this.stripTimeIfDate(date);
       this.$emit('save', this.value);
     },
     updateFromDate(date) {
-      this.fromValue = date;
+      this.fromValue = this.stripTimeIfDate(date);
       if (this.validValue) {
         this.$emit('save', [this.fromValue, this.toValue]);
       }
     },
     updateToDate(date) {
-      this.toValue = date;
+      this.toValue = this.stripTimeIfDate(date);
       if (this.validValue) {
         this.$emit('save', [this.fromValue, this.toValue]);
       }
+    },
+    stripTimeIfDate(date) {
+      if (this.mode !== 'date') return date;
+
+      return new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        0, 0, 0, 0
+      ));
     }
   }
 };

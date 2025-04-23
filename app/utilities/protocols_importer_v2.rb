@@ -186,10 +186,11 @@ class ProtocolsImporterV2
   end
 
   def create_form(step, params)
-    form = @team.forms.find_by(id: params['id'])
+    form = @team.forms.readable_by_user(@user).published.find_by(id: params['id'])
 
     if form.present?
-      form_response = FormResponse.create!(form: form, created_by: @user)
+      form_response = FormResponse.create(form: form, created_by: @user, parent: step)
+
       create_in_step!(step, form_response)
     end
   end

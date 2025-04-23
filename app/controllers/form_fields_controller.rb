@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class FormFieldsController < ApplicationController
+  include ApplicationHelper
   before_action :check_forms_enabled
   before_action :load_form
-  before_action :load_form_field, only: %i(update destroy)
-  before_action :check_manage_permissions, only: %i(create update destroy reorder)
+  before_action :load_form_field, only: %i(update destroy duplicate)
+  before_action :check_manage_permissions, only: %i(create update destroy reorder duplicate)
 
   def create
     ActiveRecord::Base.transaction do
@@ -21,6 +22,7 @@ class FormFieldsController < ApplicationController
 
       if @form_field.save
         log_activity(:form_block_added, block_name: @form_field.name)
+        form_field_annotation
         render json: @form_field, serializer: FormFieldSerializer, user: current_user
       else
         render json: { error: @form_field.errors.full_messages }, status: :unprocessable_entity
@@ -31,11 +33,27 @@ class FormFieldsController < ApplicationController
   def update
     ActiveRecord::Base.transaction do
       if @form_field.update(form_field_params.merge({ last_modified_by: current_user }))
+        form_field_annotation
         log_activity(:form_block_edited, block_name: @form_field.name)
         render json: @form_field, serializer: FormFieldSerializer, user: current_user
       else
         render json: { error: @form_field.errors.full_messages }, status: :unprocessable_entity
       end
+    end
+  end
+
+  def duplicate
+    ActiveRecord::Base.transaction do
+      new_form_field = @form_field.duplicate!(current_user)
+      log_activity(:form_block_duplicated, block_name: @form_field.name)
+      render json: new_form_field, serializer: FormFieldSerializer, user: current_user
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: e.errors.full_messages }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    rescue StandardError => e
+      render json: { message: I18n.t('errors.general') }, status: :unprocessable_entity
+      Rails.logger.error e.message
+      raise ActiveRecord::Rollback
     end
   end
 
@@ -80,6 +98,18 @@ class FormFieldsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless @form && can_manage_form_draft?(@form)
+  end
+
+  def form_field_annotation
+    smart_annotation_notification(
+      old_text: @form_field.description_previously_was,
+      new_text: @form_field.description,
+      subject: @form,
+      title: t('notifications.form_field_title',
+               user: current_user.full_name,
+               field: @form_field.name,
+               form: @form.name)
+    )
   end
 
   def form_field_params

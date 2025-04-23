@@ -21,7 +21,7 @@ en:
         title: "Forgot your password?"
         submit: "Reset password"
         head_admin_title: "Admin access - Log in here"
-        description_admin: "Organizaton administrators can access SciNote via password reset if Single Sign-On is not available. Only they will recieve the email with instructions."
+        description_admin: "Organization administrators can access SciNote via password reset if needed (e.g., when Single Sign-On is unavailable). Only Admin users will receive an email with reset instructions."
     registrations:
       password_changed: "Password successfully updated."
     sessions:
@@ -260,6 +260,11 @@ en:
           attributes:
             text: Text is too long
             position: "Position has already been taken by another item in the checklist"
+        form_field_value:
+          attributes:
+            value:
+              not_applicable: "Field is not applicable"
+              not_unique_latest: "Latest field value already exists"
         storage_location:
           missing_position: 'Missing position metadata'
           not_uniq_position: 'Position already taken'
@@ -848,6 +853,7 @@ en:
           step_files: "Step files"
           step_tables: "Step tables"
           step_well_plates: "Step well plates"
+          step_forms: "Step forms"
           step_comments: "Step comments"
           assigned_items: "Assigned items"
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
@@ -1027,6 +1033,15 @@ en:
           name: "Step comments"
           no_comments: "No comments"
           comment_prefix: "%{user} on %{date} at %{time}:"
+        step_forms:
+          field: "Field"
+          answer: "Answer"
+          submitted_at: "Submitted at"
+          submitted_by: "Submitted by"
+          not_submitted: "Not submitted yet"
+          user_time: "Form submitted on %{timestamp} by %{user}."
+          table_name: "%{name}"
+
     experiment_archive:
       head_title: "%{project} | Archived experiments"
       no_archived_experiments: "No archived experiments!"
@@ -1064,6 +1079,8 @@ en:
     restored:
       success_flash: "<strong>%{number}</strong> form(s) successfully restored."
       error_flash: "Failed to restore form(s)."
+    duplicated:
+      success_flash: "<strong>%{name}</strong> form successfully duplicated."
     archived:
       success_flash: "<strong>%{number}</strong> form(s) successfully archived."
       error_flash: "Failed to archive form(s)."
@@ -1079,19 +1096,25 @@ en:
         form_field_submitted_by: "User for %{name}"
       values:
         not_applicable: 'N/A'
+        completed: "Completed"
+        not_completed: "Not completed"
     publish:
       title: "Publish form"
       description_html: "<p>Publishing a form locks it for editing and makes it available for use in protocol steps. You can unpublish the form only if it isn't linked to any steps.</p><p>Are you sure you want to publish the form?</p>"
     fields:
       mark_as_na: "Mark as N/A"
+      mark_as_na_tooltip: "'Mark as N/A' will delete content in this field."
       add_text: "Add text"
       add_number: "Add number"
       from: "From"
+      submitted_by: "%{date} by %{user}"
+      by: "by"
       to: "To"
       add_date: "Add date"
       add_datetime: "Add date & time"
       not_valid_range: "Range is not valid"
       no_selection: "No options selected"
+      mark_as_completed: "Mark as completed"
     index:
       head_title: "Forms"
       head_title_archived: "Archived forms"
@@ -1100,6 +1123,7 @@ en:
         access: 'Access'
         archive: 'Archive'
         restore: 'Restore'
+        duplicate: 'Duplicate'
       table:
         name: 'Form name'
         code: 'ID'
@@ -1123,12 +1147,13 @@ en:
       mark_as_na: 'Mark as N/A'
       mark_as_na_explanation: 'Allow user to mark the field as Not-applicable.'
       delete: 'Delete'
+      duplicate: 'Duplicate'
       edit_form: 'Edit form'
       test_form: 'Test form'
       publish: 'Publish'
       unpublish: 'Unpublish'
       dropdown_options_label: 'Dropdown options'
-      dropdown_options_placeholder_html: "Enter dropdown list options one per line:\nDropdown list option\nDropdown list option\n..."
+      dropdown_options_placeholder_html: "Enter dropdown list options one per line:\nDropdown list option 1\nDropdown list option 2\n..."
       checklist_options_label: 'Checklist options'
       checklist_options_placeholder_html: "Enter checklist items one per line:\nChecklist item\nChecklist item\n..."
       unit_label: 'Unit'
@@ -1138,6 +1163,10 @@ en:
       no_block: 'Add your first form block'
       field_too_long_error: 'Field is too long (maximum number is %{limit} characters)'
       options_too_many_error: 'Too many options (maximum number is %{limit} options)'
+      add_items: 'Add items'
+      no_items_selected: 'No items selected'
+      add: 'Add'
+      select_items: 'Select items'
       validations:
         response_validation:
           title: 'Response validation'
@@ -1150,11 +1179,16 @@ en:
         SingleChoiceField: 'Single choice'
         MultipleChoiceField: 'Multiple choice'
         DatetimeField: 'Date & Time'
+        ActionField: 'Action'
+        RepositoryRowsField: 'Item'
     response:
       submit: 'Submit form'
       submitted_on: 'Submitted on'
       not_submitted: 'Not submitted yet'
       by: 'by'
+      edit_modal:
+        title: "Unlock form for editing?"
+        description: "Unlocking the form for editing will require a new submission. Even if no data changes, the new submission's timestamp and user will be updated."
     promo:
       promo_title: 'This feature is disabled by default in open source SciNote'
   label_templates:
@@ -2687,6 +2721,7 @@ en:
           one: "day"
           other: "days"
       stock_export: "Export"
+      snapshot_label: "Snapshot on %{timestamp} by %{name}"
       custom_columns_label: "Custom columns"
       no_custom_columns_label: "No custom columns"
       repository_time_range_value:
@@ -3565,6 +3600,9 @@ en:
       header:
         printed_from: "Printed from"
         print_info: "on %{datetime} by %{full_name}"
+      forms:
+        single_choice_html: "<em>(Select one)</em>"
+        multiple_choice_html: "<em>(Select multiple)</em>"
     protocols_io_import:
       title_too_long: "... Text is too long so we had to cut it off."
       too_long: "... <span class='label label-warning'>Text is too long so we had to cut it off.</span>"
@@ -3647,6 +3685,7 @@ en:
         import_to_team_protocols_label: "Import to Team Protocols"
         import_to_private_protocols_label: "Import to My Protocols"
         import_protocols_label: "Import"
+        forms_error: "Form %{form_id} doesn't exist or you don't have access and it won’t be imported."
       import_protocol_notification:
         title: "The import process has been successfully completed. You can download original file here: %{link}"
         message: "Protocol template:"
@@ -3932,6 +3971,7 @@ en:
           no_forms: "Create and publish one or request access from your team."
           add_form: "Add form"
           take_me_there: "Take me there"
+          recently_used: "Recently used"
         move_element:
           step:
             title: Move to different step
@@ -4118,6 +4158,8 @@ en:
     my_module_consumption_comment_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
     step_description_title: "%{user} mentioned you in a description on step %{step}."
+    form_field_title: "%{user} mentioned you in a %{field} in form %{form}."
+    form_field_value_title: "%{user} mentioned you in a %{field} in step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
     step_text_title: "%{user} mentioned you in a text on step %{step}."
     step_table_title: "%{user} mentioned you in a table on step %{step}."

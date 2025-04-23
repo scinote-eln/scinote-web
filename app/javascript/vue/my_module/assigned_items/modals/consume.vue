@@ -92,7 +92,7 @@ export default {
   mixins: [modalMixin],
   computed: {
     validConsume() {
-      return this.newConsume.consume > 0;
+      return this.newConsume.consume >= 0;
     }
   },
   methods: {

@@ -129,7 +129,8 @@ export default {
     clearable: { type: Boolean, default: false },
     tagsView: { type: Boolean, default: false },
     urlParams: { type: Object, default: () => ({}) },
-    e2eValue: { type: String, default: '' }
+    e2eValue: { type: String, default: '' },
+    ajaxMethod: { type: String, default: 'get' }
   },
   directives: {
     'click-outside': vOnClickOutside
@@ -369,7 +370,16 @@ export default {
     fetchOptions() {
       if (this.optionsUrl) {
         const params = { query: this.query, page: this.nextPage, ...this.urlParams };
-        axios.get(this.optionsUrl, { params })
+
+        let request = {};
+
+        if (this.ajaxMethod === 'get') {
+          request = { method: 'get', url: this.optionsUrl, params };
+        } else {
+          request = { method: 'post', url: this.optionsUrl, data: params };
+        }
+
+        axios(request)
           .then((response) => {
             if (response.data.paginated) {
               this.fetchedOptions = [...this.fetchedOptions, ...response.data.data];

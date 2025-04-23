@@ -385,7 +385,15 @@ class RepositoryRowsController < ApplicationController
   end
 
   def load_repository_row
-    @repository_row = @repository.repository_rows.eager_load(:repository_columns).find_by(id: params[:id])
+    @repository_row =
+      if params[:form_repository_rows_field_value_id]
+        FormRepositoryRowsFieldValue
+          .find_by(id: params[:form_repository_rows_field_value_id])
+          &.reified_repository_row_by_id(params[:id])
+      else
+        @repository.repository_rows.eager_load(:repository_columns).find_by(id: params[:id])
+      end
+
     render_404 unless @repository_row
   end
 

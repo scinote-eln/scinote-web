@@ -19,6 +19,7 @@
               leading-5 border outline-none hover:border-sn-sleepy-grey overflow-y-auto whitespace-pre-line"
         :class="{ 'max-h-[4rem]': collapsed,
                   'max-h-[40rem]': !collapsed,
+                  '!border-0 !pl-0': !canEdit,
                   [className]: true,
                   'text-sn-dark-grey': value, 'text-sn-grey': !value
                 }"
@@ -42,6 +43,7 @@ export default {
     initialValue: String,
     noContentPlaceholder: String,
     placeholder: String,
+    canEdit: { type: Boolean, default: false },
     decimals: { type: Number, default: 0 },
     isNumber: { type: Boolean, default: false },
     unEditableRef: { type: String, required: true },
@@ -81,11 +83,6 @@ export default {
       this.toggleExpandableState();
     }
   },
-  computed: {
-    canEdit() {
-      return this.permissions?.can_manage && !this.inArchivedRepositoryRow;
-    }
-  },
   methods: {
     handleKeydown(event) {
       if (event.key === 'Enter') {
@@ -115,6 +112,8 @@ export default {
       });
     },
     enableEdit(e) {
+      if (!this.canEdit) return;
+
       if (e && $(e.target).hasClass('atwho-user-popover')) return;
       if (e && $(e.target).hasClass('sa-name')) return;
       if (e && $(e.target).hasClass('sa-link')) return;
@@ -144,8 +143,8 @@ export default {
       });
     },
     enforceNumberInput() {
-      const regexp = this.decimals === 0 ? /[^0-9]/g : /[^0-9.]/g;
-      const decimalsRegex = new RegExp(`^\\d*(\\.\\d{0,${this.decimals}})?`);
+      const regexp = this.decimals === 0 ? /[^0-9-]/g : /[^0-9.-]/g;
+      const decimalsRegex = new RegExp(`^-?\\d*(\\.\\d{0,${this.decimals}})?`);
       let { value } = this;
       value = value.replace(regexp, '');
       value = value.match(decimalsRegex)[0];

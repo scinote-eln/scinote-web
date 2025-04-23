@@ -24,11 +24,27 @@
             <div class="w-full">
               <SelectDropdown
                 @change="setForm"
+                :value="form"
                 :optionsUrl="formsUrl"
                 :placeholder="i18n.t(`protocols.steps.modals.form_modal.placeholder`)"
                 :searchable="true"
                 data-e2e="e2e-DD-insertFormModal-selectForm"
               />
+            </div>
+
+            <div v-if="recentUsedForms.length > 0" class="flex flex-col gap-2 mt-6">
+              <h3 class="m-0">{{ i18n.t(`protocols.steps.modals.form_modal.recently_used`) }}</h3>
+              <div>
+                <div v-for="(option, i) in recentUsedForms" :key="option.id"
+                  @click.stop="setForm(option.id)"
+                  class="py-2.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0 hover:bg-sn-super-light-grey"
+                  :class="[{
+                    '!bg-sn-super-light-blue': form === option.id
+                  }]"
+                >
+                  <div class="truncate text-base text-sn-blue" >{{ option.name }}</div>
+                </div>
+              </div>
             </div>
           </template>
           <p v-else >
@@ -55,6 +71,7 @@ import axios from '../../../../packs/custom_axios.js';
 
 import {
   published_forms_forms_path,
+  latest_attached_forms_forms_path,
   forms_path
 } from '../../../../routes.js';
 
@@ -63,7 +80,8 @@ export default {
   data() {
     return {
       form: null,
-      anyForms: false
+      anyForms: false,
+      recentUsedForms: []
     };
   },
   mixins: [modalMixin],
@@ -73,12 +91,22 @@ export default {
     },
     formsPageUrl() {
       return forms_path();
+    },
+    formsRecentUsedUrl() {
+      return latest_attached_forms_forms_path();
     }
   },
   created() {
     axios.get(this.formsUrl)
       .then((response) => {
         this.anyForms = response.data.data.length > 0;
+
+        if (this.anyForms) {
+          axios.get(this.formsRecentUsedUrl)
+            .then((responseData) => {
+              this.recentUsedForms = responseData.data.data;
+            });
+        }
       });
   },
   components: {

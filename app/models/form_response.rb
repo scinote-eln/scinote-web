@@ -10,6 +10,7 @@ class FormResponse < ApplicationRecord
   belongs_to :form
   belongs_to :created_by, class_name: 'User'
   belongs_to :submitted_by, class_name: 'User', optional: true
+  belongs_to :parent, polymorphic: true, inverse_of: :form_responses
 
   has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
@@ -34,26 +35,31 @@ class FormResponse < ApplicationRecord
     step_orderable_element&.step
   end
 
-  def parent
-    step_orderable_element&.step
-  end
-
   def create_value!(created_by, form_field, value, not_applicable: false)
     ActiveRecord::Base.transaction(requires_new: true) do
+      current_form_field_value = form_field_values.where(latest: true).last
+
       form_field_values.where(form_field: form_field).find_each do |form_field_value|
         form_field_value.update!(latest: false)
       end
 
-      "Form#{form_field.data['type']}Value".constantize.create!(
+      new_form_field_value = "Form#{form_field.data['type']}Value".constantize.new(
         form_field: form_field,
         form_response: self,
         # these can change if the form_response is reset, as submitted_by will be kept the same, but created_by will change
         created_by: created_by,
         submitted_by: created_by,
         submitted_at: DateTime.current,
-        value: value,
         not_applicable: not_applicable
       )
+
+      # for RepositoryRowsField we need to directly set previous data to the new value,
+      # before save, to perserve existing repository row snapshots
+      new_form_field_value.data = current_form_field_value&.data if form_field.data['type'] == 'RepositoryRowsField'
+
+      new_form_field_value.update!(value: value)
+
+      new_form_field_value
     end
   end
 
@@ -93,7 +99,8 @@ class FormResponse < ApplicationRecord
         form_id: form_id,
         discarded_at: nil,
         submitted_by: nil,
-        created_by_id: user.id
+        created_by_id: user.id,
+        parent: parent
       )
 
       parent.step_orderable_elements.create!(

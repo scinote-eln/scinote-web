@@ -1,0 +1,28 @@
+<% if field&.data&.dig('range') %>
+  <div class='flex flex-row w-full gap-4 items-center'>
+    <% [field_value&.datetime, field_value&.datetime_to].each_with_index do |date, index| %>
+      <div class="sci-input-container-v2 h-9 w-full">
+        <input class="sci-input box-border items-center" disabled>
+          <span class="flex relative ml-2 align-middle gap-2">
+            <img src="/images/calendar/calendar.svg"/> 
+            <% if date %>
+              <%= I18n.l(date, format: field&.data['time'] ? :full : :full_date) %>
+            <% end %>
+          </span>
+        </input>
+      </div>
+      <%= '-' if index === 0 %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="sci-input-container-v2 h-9">
+    <input class="sci-input box-border items-center" disabled>
+      <span class="flex relative ml-2 align-middle gap-2">
+        <img src="/images/calendar/calendar.svg"/> 
+        <% if field_value&.datetime %>
+          <%= I18n.l(field_value.datetime, format: field.data['time'] ? :full : :full_date) %>
+        <% end %>
+      </span>
+    </input>
+  </div>
+<% end %>

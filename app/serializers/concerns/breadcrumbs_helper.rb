@@ -8,7 +8,11 @@ module BreadcrumbsHelper
 
     case subject
     when Project
-      parent = subject.team
+      if subject.project_folder
+        parent = subject.project_folder
+      else
+        parent = subject.team
+      end
       url = project_path(subject)
     when Experiment
       parent = subject.project
@@ -29,7 +33,11 @@ module BreadcrumbsHelper
       view_mode = subject.archived? ? 'archived' : 'active'
       url = my_module_results_path(subject.my_module, view_mode:)
     when ProjectFolder
-      parent = subject.team
+      if subject.parent_folder
+        parent = subject.parent_folder
+      else
+        parent = subject.team
+      end
       url = project_folder_path(subject)
     when RepositoryBase
       parent = subject.team
@@ -69,10 +77,12 @@ module BreadcrumbsHelper
     when Team
       parent = nil
       url = projects_path(team: subject.id)
+    when Form
+      parent = subject.team
+      url = form_path(subject, team: subject.team_id)
     end
 
-    breadcrumbs << { name: subject.name, url: } if subject.name.present?
-
+    breadcrumbs << { name: subject.name, code: subject.try(:code), url:} if subject.name.present?
     if parent
       generate_breadcrumbs(parent, breadcrumbs)
     else

@@ -61,6 +61,10 @@ module Api
 
         params.require(:data).require(:attributes).permit(:name, :completed)
       end
+
+      def permitted_includes
+        %w(tables assets checklists checklists.checklist_items comments user form_responses)
+      end
     end
   end
 end

@@ -18,7 +18,7 @@
       ></SelectDropdown>
       <div v-else-if="status && icon"
            class="flex flex-row items-center text-sn-dark-grey font-inter text-sm font-normal leading-5 gap-1.5">
-        <div v-html="parseEmoji(icon)" class="flex h-6 w-6"></div>
+        <div v-if="!twemojiInit" v-html="parseEmoji(icon)" class="flex h-6 w-6"></div>
         {{ status }}
       </div>
       <div
@@ -49,6 +49,7 @@ export default {
       status: null,
       selected: null,
       isLoading: true,
+      twemojiInit: true,
       options: []
     };
   },
@@ -102,6 +103,7 @@ export default {
         twemoji.size = '24x24';
         twemoji.base = '/images/twemoji/';
         twemoji.parse(this.$refs.container);
+        this.twemojiInit = false;
       }, 300);
     }
   }

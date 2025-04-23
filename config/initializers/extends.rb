@@ -553,8 +553,10 @@ class Extends
     task_step_form_field_reopened: 352,
     protocol_step_form_added: 353,
     protocol_step_form_deleted: 354,
-    protocol_step_form_moved: 355
-
+    protocol_step_form_moved: 355,
+    form_block_duplicated: 356,
+    form_duplicated: 357,
+    form_unpublished: 358
   }
 
   ACTIVITY_GROUPS = {
@@ -578,7 +580,7 @@ class Extends
     storage_locations: [*309..315],
     container_storage_locations: [*316..322, 326],
     storage_location_repository_rows: [*323..325],
-    forms: [331, 332, 333, 334, 335, 336, *337..346]
+    forms: [331, 332, 333, 334, 335, 336, *337..346, 356, 357, 358]
   }
 
   TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository Form).freeze

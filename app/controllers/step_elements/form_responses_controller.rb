@@ -12,7 +12,7 @@ module StepElements
       render_403 and return unless can_create_protocol_form_responses?(@step.protocol)
 
       ActiveRecord::Base.transaction do
-        @form_response = FormResponse.create!(form: @form, created_by: current_user)
+        @form_response = FormResponse.create!(form: @form, created_by: current_user, parent: @step)
         create_in_step!(@step, @form_response)
         log_step_form_activity(:form_added, { form: @form.id })
       end
@@ -43,6 +43,7 @@ module StepElements
 
       ActiveRecord::Base.transaction do
         @form_response.step_orderable_element.update!(step: target, position: target.step_orderable_elements.size)
+        @form_response.update!(parent: target)
         @step.normalize_elements_position
 
         log_step_form_activity(:form_moved,

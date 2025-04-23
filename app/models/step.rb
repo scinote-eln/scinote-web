@@ -42,8 +42,7 @@ class Step < ApplicationRecord
   has_many :step_tables, inverse_of: :step, dependent: :destroy
   has_many :tables, through: :step_tables, dependent: :destroy
   has_many :report_elements, inverse_of: :step, dependent: :destroy
-  has_many :form_responses, through: :step_orderable_elements,
-           source: :orderable, source_type: 'FormResponse', dependent: :destroy
+  has_many :form_responses, as: :parent, inverse_of: :parent, dependent: :destroy
 
   accepts_nested_attributes_for :checklists,
                                 reject_if: :all_blank,

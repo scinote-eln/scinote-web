@@ -96,6 +96,7 @@ gem 'js-routes'
 gem 'tailwindcss-rails', '~> 2.4'
 
 gem 'base62' # Used for smart annotations
+gem 'datadog'
 gem 'newrelic_rpm'
 
 # Permission helper Gem

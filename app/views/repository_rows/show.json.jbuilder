@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 json.id @repository_row.id
+if @repository_row.snapshot_at
+  json.snapshot_at DateTime.parse(@repository_row.snapshot_at).strftime("#{I18n.backend.date_format} %H:%M")
+  json.snapshot_by_name @repository_row.snapshot_by_name
+end
+
 json.repository do
   json.id @repository.id
   json.name @repository.name
-  json.is_snapshot @repository.is_a?(RepositorySnapshot)
+  json.is_snapshot @repository.is_a?(RepositorySnapshot) || !@repository_row.snapshot_at.nil?
 end
 json.editable @repository_row.editable?
 json.notification @notification
@@ -12,9 +17,9 @@ json.notification @notification
 json.update_path update_cell_repository_repository_row_path(@repository, @repository_row)
 
 json.permissions do
-  json.can_export_repository_stock can_export_repository_stock?(@repository)
-  json.can_manage can_manage_repository_rows?(@repository) if @repository.is_a?(Repository) && !@repository.is_a?(SoftLockedRepository)
-  json.can_connect_rows can_connect_repository_rows?(@repository) if @repository.is_a?(Repository) && !@repository.is_a?(SoftLockedRepository)
+  json.can_export_repository_stock @repository_row.snapshot_at.nil? && can_export_repository_stock?(@repository)
+  json.can_manage @repository_row.snapshot_at.nil? && can_manage_repository_rows?(@repository) if @repository.is_a?(Repository) && !@repository.is_a?(SoftLockedRepository)
+  json.can_connect_rows @repository_row.snapshot_at.nil? && can_connect_repository_rows?(@repository) if @repository.is_a?(Repository) && !@repository.is_a?(SoftLockedRepository)
 end
 
 json.actions do
@@ -106,7 +111,7 @@ end
 
 json.custom_columns do
   json.array! repository_columns_ordered_by_state(@repository_row.repository).each do |repository_column|
-    repository_cell = @repository_row.repository_cells.find_by(repository_column: repository_column)
+    repository_cell = @repository_row.repository_cells.find { |c| c.repository_column_id == repository_column.id }
 
     options = case repository_column.data_type
               when 'RepositoryListValue'

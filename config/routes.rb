@@ -209,7 +209,7 @@ Rails.application.routes.draw do
               defaults: { format: 'json' }
           post 'actions_toolbar'
           get :list
-          get :rows_list
+          post :rows_list
         end
         member do
           get :export_empty_repository
@@ -872,6 +872,7 @@ Rails.application.routes.draw do
         post :publish
         post :unpublish
         post :export_form_responses
+        post :duplicate
       end
 
       collection do
@@ -880,9 +881,13 @@ Rails.application.routes.draw do
         post :restore
         get :user_roles
         get :published_forms
+        get :latest_attached_forms
       end
 
       resources :form_fields, only: %i(create update destroy) do
+        member do
+          post :duplicate
+        end
         collection do
           post :reorder
         end

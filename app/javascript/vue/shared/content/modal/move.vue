@@ -1,10 +1,12 @@
 <template>
-  <div ref="modal" @keydown.esc="cancel" class="modal" id="modalMoveProtocolContent" tabindex="-1" role="dialog">
+  <div ref="modal" @keydown.esc="cancel" class="modal" id="modalMoveProtocolContent" tabindex="-1" role="dialog" data-e2e="e2e-MD-moveStepResultElement">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
-          <h4 class="modal-title" id="modal-move-result-element">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-moveStepResultElementModal-close">
+            <i class="sn-icon sn-icon-close"></i>
+          </button>
+          <h4 class="modal-title" id="modal-move-result-element" data-e2e="e2e-TX-moveStepResultElementModal-title">
             {{ i18n.t(`protocols.steps.modals.move_element.${parent_type}.title`) }}
           </h4>
         </div>
@@ -26,20 +28,25 @@
                   `my_modules.results.move_modal.${parent_type}.no_options_placeholder`
                 )
               "
+              :data-e2e="`e2e-DD-moveStepResultElementModal-selectTarget`"
             />
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-primary" @click="confirm" :disabled="!target">{{ i18n.t('general.move')}}</button>
+          <button class="btn btn-secondary" @click="cancel" data-e2e="e2e-BT-moveStepResultElementModal-cancel">
+            {{ i18n.t('general.cancel') }}
+          </button>
+          <button class="btn btn-primary" @click="confirm" :disabled="!target" data-e2e="e2e-BT-moveStepResultElementModal-move">
+            {{ i18n.t('general.move')}}
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
- <script>
+<script>
 import axios from '../../../../packs/custom_axios.js';
-import SelectDropdown from "../../select_dropdown.vue";
+import SelectDropdown from '../../select_dropdown.vue';
 
 export default {
   name: 'moveElementModal',
