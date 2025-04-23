@@ -16,6 +16,7 @@ class Experiment < ApplicationRecord
   include TimeTrackable
 
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
+  before_save :reset_due_date_notification_sent, if: -> { due_date_changed? }
 
   belongs_to :project, inverse_of: :experiments, touch: true
   delegate :team, to: :project
@@ -560,10 +561,14 @@ class Experiment < ApplicationRecord
   end
 
   def one_day_prior?(date = Date.current)
-    due_date.present? && date < due_date && date > (due_date - 1.day)
+    due_date.present? && date < due_date && date >= (due_date - 1.day)
   end
 
   private
+
+  def reset_due_date_notification_sent
+    self.due_date_notification_sent = false
+  end
 
   def log_activity(type_of, current_user, my_module)
     Activities::CreateActivityService
