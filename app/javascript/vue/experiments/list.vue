@@ -114,7 +114,12 @@ export default {
       moveModalObject: null,
       duplicateModalObject: null,
       descriptionModalObject: null,
-      reloadingTable: false
+      reloadingTable: false,
+      statusesList: [
+        ['not_started', this.i18n.t('experiments.table.column.status.not_started')],
+        ['started', this.i18n.t('experiments.table.column.status.started')],
+        ['completed', this.i18n.t('experiments.table.column.status.completed')]
+      ]
     };
   },
   computed: {
@@ -139,6 +144,9 @@ export default {
           headerName: this.i18n.t('experiments.table.column.status_html'),
           sortable: true,
           cellRenderer: StatusRenderer,
+          cellRendererParams: {
+            statusesList: this.statusesList
+          },
           minWidth: 200
         },
         {
@@ -239,14 +247,28 @@ export default {
           type: 'Text'
         },
         {
-          key: 'created_at',
+          key: 'start_on',
           type: 'DateRange',
-          label: this.i18n.t('filters_modal.created_on.label')
+          label: this.i18n.t('filters_modal.created_on.label'),
+          mode: 'date'
+        },
+        {
+          key: 'due_date',
+          type: 'DateRange',
+          label: this.i18n.t('filters_modal.due_date.label'),
+          mode: 'date'
         },
         {
           key: 'updated_on',
           type: 'DateRange',
           label: this.i18n.t('filters_modal.updated_on.label')
+        },
+        {
+          key: 'statuses',
+          type: 'Select',
+          options: this.statusesList,
+          label: this.i18n.t('experiments.index.filters.status'),
+          placeholder: this.i18n.t('experiments.index.filters.status_placeholder')
         }
       ];
 
