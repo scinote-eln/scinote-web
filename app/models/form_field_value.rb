@@ -40,7 +40,7 @@ class FormFieldValue < ApplicationRecord
   end
 
   def uniqueness_latest
-    return unless form_response.form_field_values.exists?(form_field_id: form_field_id, latest: true)
+    return unless form_response&.form_field_values&.exists?(form_field_id: form_field_id, latest: true)
 
     errors.add(:value, :not_unique_latest)
   end
