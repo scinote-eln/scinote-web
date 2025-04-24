@@ -34,7 +34,8 @@
 
   <DescriptionModal
     v-if="descriptionModalObject"
-    :experiment="descriptionModalObject"
+    :object="descriptionModalObject"
+    @update="updateDescription"
     @close="descriptionModalObject = null"/>
   <DuplicateModal
     v-if="duplicateModalObject"
@@ -68,7 +69,7 @@ import DescriptionRenderer from '../shared/datatable/renderers/description.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import CompletedTasksRenderer from './renderers/completed_tasks.vue';
 import NameRenderer from './renderers/name.vue';
-import DescriptionModal from './modals/description.vue';
+import DescriptionModal from '../shared/datatable/modals/description.vue';
 import DuplicateModal from './modals/duplicate.vue';
 import MoveModal from './modals/move.vue';
 import EditModal from './modals/edit.vue';
@@ -279,6 +280,15 @@ export default {
         this.updateNavigator(false);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
+    },
+    updateDescription(description) {
+      axios.put(this.descriptionModalObject.urls.update, {
+        experiment: {
+          description
+        }
+      }).then(() => {
+        this.updateTable();
       });
     },
     restore(event, rows) {
