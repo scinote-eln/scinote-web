@@ -19,7 +19,7 @@ class ProjectsController < ApplicationController
   before_action :load_current_folder, only: :index
   before_action :check_view_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
-                                                    actions_toolbar user_roles users_filter)
+                                                    actions_toolbar user_roles users_filter head_of_project_users_list)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: :update
   before_action :set_folder_inline_name_editing, only: %i(index cards)
@@ -266,6 +266,14 @@ class ProjectsController < ApplicationController
 
   def users_filter
     users = current_team.users.search(false, params[:query]).map do |u|
+      [u.id, u.name, { avatar_url: avatar_path(u, :icon_small) }]
+    end
+
+    render json: { data: users }, status: :ok
+  end
+
+  def head_of_project_users_list
+    users = User.where(id: current_team.projects.select(:supervised_by_id)).map do |u|
       [u.id, u.name, { avatar_url: avatar_path(u, :icon_small) }]
     end
 

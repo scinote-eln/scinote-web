@@ -1,7 +1,7 @@
 <template>
 <div v-if="params.data.status" class="py-0.5">
   <SelectDropdown
-    :options="statuses"
+    :options="params.statusesList"
     :value="params.data.status"
     @change="changeStatus"
     size="xs"
@@ -24,15 +24,6 @@ export default {
     params: {
       required: true
     }
-  },
-  data() {
-    return {
-      statuses: [
-        ['not_started', this.i18n.t('projects.index.status.not_started')],
-        ['started', this.i18n.t('projects.index.status.started')],
-        ['completed', this.i18n.t('projects.index.status.completed')]
-      ]
-    };
   },
   methods: {
     optionRenderer(option) {

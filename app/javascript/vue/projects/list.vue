@@ -125,6 +125,7 @@ export default {
     archivedPageUrl: { type: String },
     currentViewMode: { type: String, required: true },
     usersFilterUrl: { type: String },
+    headOfProjectUsersListUrl: { type: String },
     userRolesUrl: { type: String },
     currentFolderId: { type: String },
     foldersTreeUrl: { type: String },
@@ -142,7 +143,12 @@ export default {
       exportLimitExceded: false,
       folderDeleteDescription: '',
       exportDescription: '',
-      descriptionModalObject: null
+      descriptionModalObject: null,
+      statusesList: [
+        ['not_started', this.i18n.t('projects.index.status.not_started')],
+        ['started', this.i18n.t('projects.index.status.started')],
+        ['completed', this.i18n.t('projects.index.status.completed')]
+      ]
     };
   },
   computed: {
@@ -164,6 +170,9 @@ export default {
         headerName: this.i18n.t('projects.index.card.status'),
         sortable: true,
         cellRenderer: StatusRenderer,
+        cellRendererParams: {
+          statusesList: this.statusesList
+        },
         notSelectable: true
       },
       {
@@ -287,9 +296,16 @@ export default {
           type: 'Text'
         },
         {
-          key: 'created_at',
+          key: 'start_on',
           type: 'DateRange',
-          label: this.i18n.t('filters_modal.created_on.label')
+          label: this.i18n.t('filters_modal.created_on.label'),
+          mode: 'date'
+        },
+        {
+          key: 'due_date',
+          type: 'DateRange',
+          label: this.i18n.t('filters_modal.due_date.label'),
+          mode: 'date'
         }
       ];
 
@@ -309,6 +325,24 @@ export default {
         labelRenderer: this.usersFilterRenderer,
         label: this.i18n.t('projects.index.filters_modal.members.label'),
         placeholder: this.i18n.t('projects.index.filters_modal.members.placeholder')
+      });
+
+      filters.push({
+        key: 'head_of_project',
+        type: 'Select',
+        optionsUrl: this.headOfProjectUsersListUrl,
+        optionRenderer: this.usersFilterRenderer,
+        labelRenderer: this.usersFilterRenderer,
+        label: this.i18n.t('projects.index.filters_modal.head_of_project.label'),
+        placeholder: this.i18n.t('projects.index.filters_modal.head_of_project.placeholder')
+      });
+
+      filters.push({
+        key: 'statuses',
+        type: 'Select',
+        options: this.statusesList,
+        label: this.i18n.t('projects.index.filters_modal.status.label'),
+        placeholder: this.i18n.t('projects.index.filters_modal.status.placeholder')
       });
 
       filters.push({

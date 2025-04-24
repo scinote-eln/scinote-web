@@ -725,6 +725,12 @@ en:
         members:
           label: "Members"
           placeholder: "Select members of a project"
+        head_of_project:
+          label: "Head of project"
+          placeholder: "Select a person"
+        status:
+          label: "Status"
+          placeholder: "Select project status"
         folders:
           label: "Look inside folders"
           popover_html: "When <strong>“Look inside folders”</strong> is active, the filters will also take all folders and their content into account."

@@ -10,6 +10,7 @@
     <projects-list
       actions-url="<%= actions_toolbar_projects_path %>"
       users-filter-url="<%= users_filter_projects_path %>"
+      head-of-project-users-list-url="<%= head_of_project_users_list_projects_path %>"
       data-source="<%= projects_path(project_folder_id: current_folder&.id, format: :json) %>"
       active-page-url="<%= projects_path(project_folder_id: current_folder&.id, view_mode: :active) %>"
       archived-page-url="<%= projects_path(project_folder_id: current_folder&.id, view_mode: :archived) %>"
