@@ -108,6 +108,8 @@ class ProjectFolder < ApplicationRecord
     false
   end
 
+  def description; end
+
   private
 
   def inherit_team_from_parent_folder
