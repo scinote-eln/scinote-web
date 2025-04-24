@@ -328,14 +328,14 @@ class Constants
     'text/plain'
   ].freeze
 
-  TEXT_EXTRACT_MAX_FILE_SIZE = ENV['TEXT_EXTRACT_MAX_FILE_SIZE_MB'] ? ENV['TEXT_EXTRACT_MAX_FILE_SIZE_MB'].to_i : 50.megabytes
+  TEXT_EXTRACT_MAX_FILE_SIZE = ENV.fetch('TEXT_EXTRACT_MAX_FILE_SIZE_MB', 50).to_i.megabytes
 
   PREVIEWABLE_FILE_TYPES = TEXT_EXTRACT_FILE_TYPES
 
   # default preview timeout to 15 minutes
   PREVIEW_TIMEOUT_SECONDS = ENV['PREVIEW_TIMEOUT_SECONDS'] ? ENV['PREVIEW_TIMEOUT_SECONDS'].to_i : 900
 
-  PREVIEW_MAX_FILE_SIZE = ENV['PREVIEW_MAX_FILE_SIZE_MB'] ? ENV['PREVIEW_MAX_FILE_SIZE_MB'].to_i : 50.megabytes
+  PREVIEW_MAX_FILE_SIZE = ENV.fetch('PREVIEW_MAX_FILE_SIZE_MB', 50).to_i.megabytes
 
   WHITELISTED_IMAGE_TYPES = [
     'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff', 'jpg'
