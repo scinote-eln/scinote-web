@@ -4120,7 +4120,7 @@ en:
 
   notifications:
     title: "Notifications"
-    sub_title: "Define which updates to get notified and where"
+    sub_title: "Select the updates you want to be notified about and where you receive them."
     in_app: "In-app"
     email: "Email"
     breadcrumb: "Preferences"
