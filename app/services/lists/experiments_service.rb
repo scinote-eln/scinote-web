@@ -45,13 +45,14 @@ module Lists
         )
       end
 
-      if @filters[:created_at_from].present?
-        @records = @records.where('experiments.created_at > ?', @filters[:created_at_from])
-      end
-      if @filters[:created_at_to].present?
-        @records = @records.where('experiments.created_at < ?',
-                                @filters[:created_at_to])
-      end
+      @records = @records.where('experiments.start_on >= ?', @filters[:start_on_from]) if @filters[:start_on_from].present?
+
+      @records = @records.where('experiments.start_on <= ?', @filters[:start_on_to]) if @filters[:start_on_to].present?
+
+      @records = @records.where('experiments.due_date >= ?', @filters[:due_date_from]) if @filters[:due_date_from].present?
+
+      @records = @records.where('experiments.due_date <= ?', @filters[:due_date_to]) if @filters[:due_date_to].present?
+
       if @filters[:updated_on_from].present?
         @records = @records.where('experiments.updated_at > ?', @filters[:updated_on_from])
       end
@@ -67,6 +68,18 @@ module Lists
       if @filters[:archived_on_to].present?
         @records = @records.where('COALESCE(experiments.archived_on, projects.archived_on) < ?',
                                 @filters[:archived_on_to])
+      end
+
+      if @filters[:statuses].present?
+        scopes = {
+          'not_started' => @records.not_started,
+          'started' => @records.started,
+          'completed' => @records.completed
+        }
+
+        selected_scopes = @filters[:statuses].values.filter_map { |status| scopes[status] }
+
+        @records = selected_scopes.reduce(@records.none, :or) if selected_scopes.any?
       end
     end
 

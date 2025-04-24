@@ -1,7 +1,7 @@
 <template>
   <div v-if="params.data.status_cell.editable" class="py-0.5">
     <SelectDropdown
-      :options="statuses"
+      :options="params.statusesList"
       :value="params.data.status_cell.status"
       @change="changeStatus"
       size="xs"
@@ -32,15 +32,6 @@ export default {
     params: {
       required: true
     }
-  },
-  data() {
-    return {
-      statuses: [
-        ['not_started', this.i18n.t('experiments.table.column.status.not_started')],
-        ['started', this.i18n.t('experiments.table.column.status.started')],
-        ['completed', this.i18n.t('experiments.table.column.status.completed')]
-      ]
-    };
   },
   methods: {
     statusColor(status) {

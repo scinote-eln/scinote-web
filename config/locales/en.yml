@@ -1737,6 +1737,9 @@ en:
       experiment_access: "Access"
       details_modal:
         description: "%{name} description"
+      filters:
+        status: "Status"
+        status_placeholder: "Select experiment status"
     new:
       create: 'New Experiment'
       modal_title: 'Create new experiment'
@@ -4796,9 +4799,11 @@ en:
     created_on:
       label: "Start date"
     updated_on:
-      label: "Modified date"
+      label: "Updated date"
     archived_on:
       label: "Archived on"
+    due_date:
+      label: "Due date"
     recent_searches_label: "Recent searches"
     show_btn:
      one: "Show results"
