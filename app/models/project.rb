@@ -3,7 +3,7 @@
 class Project < ApplicationRecord
   ID_PREFIX = 'PR'
   include PrefixedIdModel
-  SEARCHABLE_ATTRIBUTES = ['projects.name', PREFIXED_ID_SQL, 'comments.message'].freeze
+  SEARCHABLE_ATTRIBUTES = ['projects.name', PREFIXED_ID_SQL, 'comments.message', 'projects.description'].freeze
 
   include ArchivableModel
   include SearchableModel

@@ -583,6 +583,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_10_093420) do
     t.bigint "supervised_by_id"
     t.index "(('PR'::text || id)) gin_trgm_ops", name: "index_projects_on_project_code", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_projects_on_name", using: :gin
+    t.index "trim_html_tags(description) gin_trgm_ops", name: "index_projects_on_description", using: :gin
     t.index ["archived"], name: "index_projects_on_archived"
     t.index ["archived_by_id"], name: "index_projects_on_archived_by_id"
     t.index ["created_by_id"], name: "index_projects_on_created_by_id"

@@ -58,13 +58,8 @@ module Lists
       records = records.archived if @params[:view_mode] == 'archived'
       records = records.active if @params[:view_mode] == 'active'
 
-      if @params[:search].present?
-        records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL], @params[:search])
-      end
-
-      if @filters[:query].present?
-        records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL], @filters[:query])
-      end
+      search_query = @params[:search].presence || @filters[:query]
+      records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL, 'projects.description'], search_query) if search_query.present?
 
       if @filters[:members].present?
         records = records.joins(:user_assignments).where(user_assignments: { user_id: @filters[:members].values })

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AddManagementColumnsToProjectAndExperiment < ActiveRecord::Migration[7.0]
+  include DatabaseHelper
+
   def change
     add_column :projects, :started_at, :datetime
     add_column :projects, :completed_at, :datetime
@@ -14,8 +16,14 @@ class AddManagementColumnsToProjectAndExperiment < ActiveRecord::Migration[7.0]
     add_column :experiments, :start_on, :date
 
     reversible do |dir|
-      dir.up { change_column :projects, :due_date, :date }
-      dir.down { change_column :projects, :due_date, :datetime }
+      dir.up do
+        change_column :projects, :due_date, :date
+        add_gin_index_without_tags(:projects, :description)
+      end
+      dir.down do
+        change_column :projects, :due_date, :datetime
+        remove_index :projects, name: 'index_projects_on_description'
+      end
     end
   end
 end
