@@ -334,7 +334,7 @@ class StorageLocationsController < ApplicationController
         .call(activity_type: :storage_location_repository_row_deleted,
               owner: current_user,
               team: @storage_location.team,
-              subject: storage_location_repository_row.repository_row,
+              subject: @storage_location,
               message_items: {
                 storage_location: storage_location_repository_row.storage_location_id,
                 repository_row: storage_location_repository_row.repository_row_id,
