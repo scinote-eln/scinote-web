@@ -1323,6 +1323,76 @@ en:
         unreachable: "Printer is offline"
         search: "Checking printer status"
 
+  repository_templates:
+    default_template_name: 'Default template'
+    cell_lines_template_name: 'Cell lines template'
+    equipment_template_name: 'Equipment template'
+    chemicals_and_reagents_template_name: "Chemicals & reagents template"
+    repository_list_value_delimiter: 'return'
+    template_columns:
+      species: 'Species'
+      organ: 'Organ'
+      morphology: 'Morphology'
+      culture_type: 'Culture Type'
+      stock: 'Stock'
+      passage_number: 'Passage Number'
+      lot_number: 'Lot Number'
+      freezing_date: 'Freezing Date'
+      operator: 'Operator'
+      yield: 'Yield'
+      status: 'Status'
+      handling_procedure: 'Handling Procedure'
+      notes: 'Notes'
+      calibration_date: 'Calibration Date'
+      calibration_message: 'Consider recalibration.'
+      availability_status: 'Availability Status'
+      safety_handling_info: 'Safety & Handling Info'
+      training_records: 'Training Records'
+      contact_person: 'Contact Person'
+      contact_phone: 'Contact Phone'
+      internal_id: 'Internal ID'
+      manufacturer: 'Manufacturer'
+      serial_number: 'Serial Number'
+      concentration: 'Concentration'
+      date_opened: 'Date Opened'
+      expiration_date: 'Expiration Date'
+      expiration_date_message: 'Consider replacing the item.'
+      storage_conditions: 'Storage Conditions'
+      type: 'Type'
+      purity: 'Purity'
+      cas_number: 'CAS Number'
+      safety_sheet: 'Safety Sheet'
+      vendor: 'Vendor'
+      catalog_number: 'Catalog Number'
+      lot: 'Lot'
+      price: 'Price'
+      molecular_weight: 'Molecular Weight'
+      repository_list_value:
+        endothelial: 'Endothelial'
+        epithelial: 'Epithelial'
+        fibroblast: 'Fibroblast'
+        lymphoblast: 'Lymphoblast'
+        adherent: 'Adherent'
+        suspension: 'Suspension'
+        minus_twenty_celsious: "-20°C"
+        two_to_eigth_celsious: "2°C to 8°C"
+        minus_eigthty: "-80°C"
+        ambient: 'Ambient'
+        buffer: 'Buffer'
+        liquid: 'Liquid'
+        reagent: 'Reagent'
+        solid: 'Solid'
+      stock_units:
+        vials: 'Vial(s)'
+      repository_status_value:
+        frozen: 'Frozen'
+        in_subculturing: 'In subculturing'
+        out_of_tock: 'Out of stock'
+        available_for_use: 'Available for use'
+        in_use: 'In use'
+        out_of_service: 'Out of service'
+        under_maintenance: 'Under maintenance'
+
   my_modules:
     details:
       title: "Details"
@@ -1387,6 +1457,7 @@ en:
         update_protocol: "New version update"
         save_to_repo: "Save as new template"
         delete_steps: "Delete all steps"
+        add_protocol_steps: "Add protocol steps"
     description:
       title: "Edit task %{module} description"
       label: "Description"
@@ -2178,6 +2249,7 @@ en:
         name_placeholder: "My inventory"
         submit: "Create"
         success_flash_html: "Inventory <strong>%{name}</strong> successfully created."
+        repository_template_label: "Select inventory template"
       modal_confirm_sharing:
         title: "Inventory sharing changes"
         description_1: "You will no longer share this inventory with some of the teams. All unshared inventory items assigned to tasks will be automatically removed and this action is irreversible. Any item relationship links (if they exist) will also be deleted."
@@ -3999,6 +4071,18 @@ en:
           name_label: 'Well plate name'
           name_placeholder: 'Plate'
           dimension_label: 'Dimensions (rows x columns)'
+        add_protocol_steps:
+          title: "Add steps from another template"
+          description: "Select one or more steps from a different protocol template to add them as new steps at the end of your current protocol."
+          confirm: "Add steps"
+          protocol_label: "Protocol"
+          protocol_placeholder: "Select protocol template"
+          protocol_steps_label: "Protocol steps"
+          protocol_steps_placeholder: "Select steps"
+          success_flash:
+            one: "%{count} step successfully added."
+            other: "%{count} steps successfully added."
+          error_flash: "There was an error importing steps. Please try again."
       options:
         up_arrow_title: "Move step up"
         down_arrow_title: "Move step down"

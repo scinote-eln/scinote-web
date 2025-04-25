@@ -32,6 +32,7 @@ class Step < ApplicationRecord
   belongs_to :user, inverse_of: :steps
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
   belongs_to :protocol, inverse_of: :steps
+  belongs_to :original_protocol, class_name: 'Protocol', optional: true, inverse_of: :original_steps
   delegate :team, to: :protocol
   has_many :step_orderable_elements, inverse_of: :step, dependent: :destroy
   has_many :checklists, inverse_of: :step, dependent: :destroy
@@ -118,7 +119,7 @@ class Step < ApplicationRecord
     step_texts.order(created_at: :asc).first
   end
 
-  def duplicate(protocol, user, step_position: nil, step_name: nil, include_file_versions: false)
+  def duplicate(protocol, user, step_position: nil, step_name: nil, include_file_versions: false, original_protocol: nil)
     ActiveRecord::Base.transaction do
       assets_to_clone = []
 
@@ -126,7 +127,8 @@ class Step < ApplicationRecord
         name: step_name || name,
         position: step_position || protocol.steps.length,
         completed: false,
-        user: user
+        user: user,
+        original_protocol: original_protocol
       )
       new_step.save!
 

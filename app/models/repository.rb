@@ -22,6 +22,7 @@ class Repository < RepositoryBase
              class_name: 'User',
              inverse_of: :restored_repositories,
              optional: true
+  belongs_to :repository_template, inverse_of: :repositories, optional: true
   has_many :repository_snapshots,
            class_name: 'RepositorySnapshot',
            foreign_key: :parent_id,

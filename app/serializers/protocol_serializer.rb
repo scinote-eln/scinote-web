@@ -98,7 +98,8 @@ class ProtocolSerializer < ActiveModel::Serializer
       version_comment_url: version_comment_url,
       print_protocol_url: print_protocol_url,
       versions_modal: versions_modal_protocol_path(object.parent || object),
-      redirect_to_protocols: protocols_path
+      redirect_to_protocols: protocols_path,
+      add_protocol_steps_url: add_protocol_steps_url
     }
   end
 
@@ -148,6 +149,12 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_read_protocol_in_module?(object)
 
     export_protocols_path(protocol_ids: object.id, my_module_id: object.my_module.id)
+  end
+
+  def add_protocol_steps_url
+    return unless can_manage_protocol_in_module?(object) || can_manage_protocol_draft_in_repository?(object)
+
+    add_protocol_steps_protocol_steps_path(object)
   end
 
   def steps_url

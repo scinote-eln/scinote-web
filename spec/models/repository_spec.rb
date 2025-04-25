@@ -24,6 +24,7 @@ describe Repository, type: :model do
   describe 'Relations' do
     it { should belong_to :team }
     it { should belong_to(:created_by).class_name('User') }
+    it { should belong_to(:repository_template).optional }
     it { should have_many :repository_rows }
     it { should have_many :repository_table_states }
     it { should have_many :report_elements }
