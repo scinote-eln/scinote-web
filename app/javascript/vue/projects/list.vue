@@ -95,7 +95,6 @@ import MoveModal from './modals/move.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
 import ExportLimitExceededModal from './modals/export_limit_exceeded_modal.vue';
 import FavoriteRenderer from '../shared/datatable/renderers/favorite.vue';
-import { max } from 'lodash';
 
 export default {
   name: 'ProjectsList',
