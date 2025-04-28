@@ -398,6 +398,7 @@ Rails.application.routes.draw do
         post 'restore_group'
         post 'actions_toolbar'
         get :user_roles
+        get :head_of_project_users_list
       end
     end
 
