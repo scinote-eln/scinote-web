@@ -654,6 +654,7 @@ en:
       start_date: "Start date"
       add_start_date: "Add start date"
       no_start_date: "No start date"
+      add_description: 'Add description'
       status:
         not_started: "Not started"
         started: "In progress"
