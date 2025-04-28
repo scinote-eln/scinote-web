@@ -126,6 +126,11 @@ module Lists
                              project_folder_path(object)
                            end
 
+      if project?
+        urls_list[:favorite] = favorite_project_url(object)
+        urls_list[:unfavorite] = unfavorite_project_url(object)
+      end
+
       urls_list[:show_access] = access_permissions_project_path(object)
       if project? && can_manage_project_users?(object)
         urls_list[:assigned_users] = assigned_users_list_project_path(object)

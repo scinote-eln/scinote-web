@@ -7,6 +7,7 @@ class ExperimentsController < ApplicationController
   include ApplicationHelper
   include Rails.application.routes.url_helpers
   include Breadcrumbs
+  include FavoritesActions
 
   before_action :load_project, only: %i(index create archive_group restore_group move)
   before_action :load_experiment, except: %i(create archive_group restore_group

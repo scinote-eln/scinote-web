@@ -68,7 +68,9 @@ module Lists
         clone: clone_experiment_path(object),
         update: experiment_path(object),
         show_access: access_permissions_experiment_path(object),
-        workflow_img: fetch_workflow_img_experiment_path(object)
+        workflow_img: fetch_workflow_img_experiment_path(object),
+        favorite: favorite_experiment_url(object),
+        unfavorite: unfavorite_experiment_url(object)
       }
 
       if can_manage_project_users?(object.project)
