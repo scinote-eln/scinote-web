@@ -10,7 +10,7 @@
              :currentViewMode="currentViewMode"
              scrollMode="infinite"
              :filters="filters"
-             :viewRenders="viewRenders"
+             :tableOnly="true"
              @tableReloaded="reloadingTable = false"
              @comments="openComments"
              @archive="archive"
@@ -255,12 +255,6 @@ export default {
       }
 
       return columns;
-    },
-    viewRenders() {
-      return [
-        { type: 'table' },
-        { type: 'cards' }
-      ];
     },
     toolbarActions() {
       const left = [];
