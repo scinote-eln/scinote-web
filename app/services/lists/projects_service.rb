@@ -35,11 +35,12 @@ module Lists
     def fetch_projects
       @team.projects
            .includes(:team, :project_comments, user_assignments: %i(user user_role))
+           .with_favorites(@user)
            .visible_to(@user, @team)
            .left_outer_joins(:project_comments)
            .select('projects.*')
            .select('COUNT(DISTINCT comments.id) AS comment_count')
-           .group('projects.id')
+           .group('projects.id, favorites.id')
     end
 
     def fetch_project_folders

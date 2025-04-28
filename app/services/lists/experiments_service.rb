@@ -6,19 +6,20 @@ module Lists
 
     def fetch_records
       @records = @raw_data.joins(:project)
-                           .includes(my_modules: { my_module_status: :my_module_status_implications })
-                           .includes(workflowimg_attachment: :blob, user_assignments: %i(user_role user))
-                           .joins('LEFT OUTER JOIN my_modules AS active_tasks ON
+                          .includes(my_modules: { my_module_status: :my_module_status_implications })
+                          .includes(workflowimg_attachment: :blob, user_assignments: %i(user_role user))
+                          .joins('LEFT OUTER JOIN my_modules AS active_tasks ON
                                   active_tasks.experiment_id = experiments.id
                                   AND active_tasks.archived = FALSE')
-                           .joins('LEFT OUTER JOIN my_modules AS active_completed_tasks ON
-                                   active_completed_tasks.experiment_id = experiments.id
-                                   AND active_completed_tasks.archived = FALSE AND active_completed_tasks.state = 1')
-                           .readable_by_user(@user)
-                           .select('experiments.*')
-                           .select('COUNT(DISTINCT active_tasks.id) AS task_count')
-                           .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_task_count')
-                           .group('experiments.id')
+                          .joins('LEFT OUTER JOIN my_modules AS active_completed_tasks ON
+                                  active_completed_tasks.experiment_id = experiments.id
+                                  AND active_completed_tasks.archived = FALSE AND active_completed_tasks.state = 1')
+                          .readable_by_user(@user)
+                          .with_favorites(@user)
+                          .select('experiments.*')
+                          .select('COUNT(DISTINCT active_tasks.id) AS task_count')
+                          .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_task_count')
+                          .group('experiments.id, favorites.id')
 
       view_mode = if @params[:project].archived?
                     'archived'
