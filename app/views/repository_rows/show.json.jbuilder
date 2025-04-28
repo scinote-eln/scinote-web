@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# handle deleted repos
+@repository ||= Repository.new(id: @repository_row.repository_id)
+@repository_row.repository = @repository
+
 json.id @repository_row.id
 if @repository_row.snapshot_at
   json.snapshot_at DateTime.parse(@repository_row.snapshot_at).strftime("#{I18n.backend.date_format} %H:%M")
