@@ -7,6 +7,7 @@ class MyModulesController < ApplicationController
   include ApplicationHelper
   include MyModulesHelper
   include Breadcrumbs
+  include FavoritesActions
 
   before_action :load_vars, except: %i(index restore_group create new save_table_state
                                        inventory_assigning_my_module_filter actions_toolbar)

@@ -9,6 +9,7 @@ class ProjectsController < ApplicationController
   include ExperimentsHelper
   include Breadcrumbs
   include UserRolesHelper
+  include FavoritesActions
 
   attr_reader :current_folder
 
@@ -17,9 +18,10 @@ class ProjectsController < ApplicationController
   before_action :switch_team_with_param, only: :index
   before_action :load_vars, only: %i(update create_tag assigned_users_list)
   before_action :load_current_folder, only: :index
-  before_action :check_view_permissions, except: %i(index create update archive_group restore_group
+  before_action :check_read_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
-                                                    actions_toolbar user_roles users_filter head_of_project_users_list)
+                                                    actions_toolbar user_roles users_filter head_of_project_users_list
+                                                    favorite unfavorite)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: :update
   before_action :set_folder_inline_name_editing, only: %i(index cards)
@@ -338,7 +340,7 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def check_view_permissions
+  def check_read_permissions
     current_team_switch(@project.team) if current_team != @project.team
     render_403 unless can_read_project?(@project)
   end

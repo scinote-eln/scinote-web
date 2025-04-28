@@ -12,6 +12,7 @@ class Project < ApplicationRecord
   include PermissionCheckableModel
   include Assignable
   include TimeTrackable
+  include Favoritable
 
   enum visibility: { hidden: 0, visible: 1 }
 

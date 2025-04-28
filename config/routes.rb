@@ -389,6 +389,8 @@ Rails.application.routes.draw do
 
       member do
         get :assigned_users_list
+        post :favorite
+        post :unfavorite
       end
 
       collection do
@@ -457,6 +459,8 @@ Rails.application.routes.draw do
         get :projects_to_clone
         get :projects_to_move
         get :experiments_to_move
+        post :favorite
+        post :unfavorite
       end
     end
 
@@ -476,6 +480,8 @@ Rails.application.routes.draw do
         get :permissions
         get :actions_dropdown
         get :provisioning_status
+        post :favorite
+        post :unfavorite
       end
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do

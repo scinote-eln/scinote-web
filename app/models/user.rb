@@ -327,6 +327,8 @@ class User < ApplicationRecord
 
   has_many :hidden_repository_cell_reminders, dependent: :destroy
 
+  has_many :favorites, dependent: :destroy
+
   before_validation :downcase_email!
 
   def name
