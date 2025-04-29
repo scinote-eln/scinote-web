@@ -34,12 +34,16 @@
       </ul>
     </div>
     <div class="result-toolbar__right flex items-center [&_.sn-icon-filter]:!text-sn-blue">
-      <button class="btn btn-secondary mr-3" @click="collapseResults" tabindex="0">
-        {{ i18n.t('my_modules.results.collapse_label') }}
-      </button>
-      <button class="btn btn-secondary mr-3" @click="expandResults" tabindex="0">
-        {{ i18n.t('my_modules.results.expand_label') }}
-      </button>
+      <template v-if="results.length > 0">
+        <button :title="i18n.t('protocols.steps.collapse_label')" v-if="!resultsCollapsed" class="btn btn-secondary icon-btn xl:!px-4" @click="collapseResults" tabindex="0">
+          <i class="sn-icon sn-icon-collapse-all"></i>
+          <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.collapse_label") }}</span>
+        </button>
+        <button v-else  :title="i18n.t('protocols.steps.expand_label')" class="btn btn-secondary icon-btn xl:!px-4" @click="expandResults" tabindex="0">
+          <i class="sn-icon sn-icon-expand-all"></i>
+          <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.expand_label") }}</span>
+        </button>
+      </template>
 
       <FilterDropdown :filters="filters" @applyFilters="setFilters" />
       <MenuDropdown
@@ -75,7 +79,9 @@ export default {
     headerSticked: { type: Boolean, required: true },
     active_url: { type: String, required: true },
     archived_url: { type: String, required: true },
-    moduleName: { type: String, required: true }
+    moduleName: { type: String, required: true },
+    results: { type: Array, required: true },
+    resultsCollapsed: { type: Boolean, required: true }
   },
   data() {
     return {
