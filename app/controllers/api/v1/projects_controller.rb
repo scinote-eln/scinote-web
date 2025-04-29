@@ -11,9 +11,10 @@ module Api
       before_action :load_project_for_managing, only: %i(update)
 
       def index
-        projects = timestamps_filter(@team.projects.visible_to(current_user, @team))
-        projects = archived_filter(projects).page(params.dig(:page, :number))
-                                            .per(params.dig(:page, :size))
+        projects = @team.projects.visible_to(current_user, @team)
+        projects = metadata_filter(timestamps_filter(archived_filter(projects)))
+                   .page(params.dig(:page, :number))
+                   .per(params.dig(:page, :size))
 
         render jsonapi: projects, each_serializer: ProjectSerializer, scope: { metadata: params['with-metadata'] == 'true' }, include: include_params
       end
