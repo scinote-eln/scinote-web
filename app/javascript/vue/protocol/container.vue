@@ -384,6 +384,7 @@ export default {
     },
     addSteps(steps) {
       this.steps.push(...steps);
+      this.refreshProtocolStatus();
     },
     refreshProtocolStatus() {
       if (this.inRepository) return;
