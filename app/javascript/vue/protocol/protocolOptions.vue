@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="optionsAvailable">
     <div class="dropdown protocol-options-dropdown">
       <button
         class="btn btn-secondary dropdown-toggle"
@@ -142,6 +142,19 @@ export default {
     if (!this.inRepository) {
       initLoadFromRepository();
       initLinkUpdate();
+    }
+  },
+  computed: {
+    optionsAvailable() {
+      return (
+        (this.protocol.attributes.urls.load_from_repo_url && !this.inRepository)
+        || this.protocol.attributes.urls.add_protocol_steps_url
+        || !this.inRepository
+        || (this.protocol.attributes.urls.update_protocol_url && !this.inRepository)
+        || (this.protocol.attributes.urls.unlink_url && !this.inRepository)
+        || (this.protocol.attributes.urls.revert_protocol_url && !this.inRepository)
+        || this.canDeleteSteps
+      );
     }
   },
   methods: {
