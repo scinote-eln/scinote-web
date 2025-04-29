@@ -46,12 +46,12 @@
     :experiment="moveModalObject"
     @close="moveModalObject = null"
     @move="updateTable"/>
-  <EditModal
+  <ExperimentFormModal
     v-if="editModalObject"
     :experiment="editModalObject"
     @close="editModalObject = null"
     @update="updateTable"/>
-  <NewModal
+  <ExperimentFormModal
     v-if="newModalOpen"
     :createUrl="createUrl"
     @close="newModalOpen = false"
@@ -72,8 +72,7 @@ import NameRenderer from './renderers/name.vue';
 import DescriptionModal from '../shared/datatable/modals/description.vue';
 import DuplicateModal from './modals/duplicate.vue';
 import MoveModal from './modals/move.vue';
-import EditModal from './modals/edit.vue';
-import NewModal from './modals/new.vue';
+import ExperimentFormModal from './modals/form.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
 import StatusRenderer from './renderers/status.vue';
 import DueDateRenderer from '../shared/datatable/renderers/date.vue';
@@ -88,8 +87,7 @@ export default {
     DescriptionModal,
     DuplicateModal,
     MoveModal,
-    EditModal,
-    NewModal,
+    ExperimentFormModal,
     AccessModal,
     ExperimentCard,
     StatusRenderer,

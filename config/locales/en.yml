@@ -1742,6 +1742,11 @@ en:
       restore_option: "Restore"
       more_link: "More"
       experiment_access: "Access"
+      add_due_date: "Add due date"
+      add_start_date: "Add start date"
+      add_description: "Add description"
+      due_date: "Due date"
+      start_date: "Start date"
       details_modal:
         description: "%{name} description"
       filters:
