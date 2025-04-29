@@ -2,7 +2,7 @@
 
 class RepositoryTemplate < ApplicationRecord
   belongs_to :team, inverse_of: :repository_templates
-  has_many :repositories, inverse_of: :repository_template, dependent: :destroy
+  has_many :repositories, inverse_of: :repository_template, dependent: :nullify
 
   def self.default
     RepositoryTemplate.new(
