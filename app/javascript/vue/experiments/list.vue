@@ -10,7 +10,7 @@
     :archivedPageUrl="archivedPageUrl"
     :currentViewMode="currentViewMode"
     :filters="filters"
-    :viewRenders="viewRenders"
+    :tableOnly="true"
     :objectArchived="archived"
     :hiddenDataMessage="i18n.t('projects.show.empty_state.no_active_experiment_archived_project')"
     scrollMode="infinite"
@@ -217,9 +217,6 @@ export default {
       });
 
       return columns;
-    },
-    viewRenders() {
-      return [{ type: 'table' }, { type: 'cards' }];
     },
     toolbarActions() {
       const left = [];

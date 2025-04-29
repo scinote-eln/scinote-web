@@ -184,6 +184,10 @@ export default {
     },
     hiddenDataMessage: {
       type: String
+    },
+    tableOnly: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -403,7 +407,7 @@ export default {
         .then((response) => {
           if (response.data.data) {
             this.tableState = response.data.data;
-            this.currentViewRender = this.tableState.currentViewRender;
+            this.currentViewRender = this.tableOnly ? 'table' : this.tableState.currentViewRender;
             this.perPage = this.tableState.perPage;
             this.order = this.tableState.order;
             if (this.currentViewRender === 'cards') {
