@@ -81,7 +81,7 @@ export default {
   },
   computed: {
     validObject() {
-      return this.selectedProtocol && this.selectedSteps;
+      return this.selectedProtocol && this.selectedSteps?.length !== 0;
     },
     protocolsUrl() {
       return list_published_protocol_templates_protocol_path(this.protocol.id);
