@@ -39,12 +39,15 @@
                   <div class="flex gap-4 overflow-hidden items-centers">
                     <div class="truncate font-bold">{{  hoveredRow.name }}</div>
                   </div>
-                  <template v-if="hoveredRow.columns">
+                  <template v-if="hoveredRow.columns?.length !== 0">
                     <div class="flex items-center gap-0.5 overflow-hidden text-xs" v-for="column in hoveredRow.columns">
                       <span class="truncate shrink-c">{{ column[0] }}</span>
                       <span>-</span>
                       <span class="truncate shrink-0">{{ column[1] }}</span>
                     </div>
+                  </template>
+                  <template v-else>
+                    {{ i18n.t('repositories.index.modal_create.only_system_defined_columns') }}
                   </template>
                 </template>
               </div>
@@ -65,6 +68,7 @@
 <script>
 /* global HelperModule GLOBAL_CONSTANTS */
 
+import escapeHtml from '../../shared/escape_html.js';
 import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
 import SelectDropdown from '../../shared/select_dropdown.vue';
@@ -138,7 +142,7 @@ export default {
       return `
         <div class="flex items-center gap-4 w-full">
           <div class="grow overflow-hidden">
-            <div class="truncate" >${row[1]}</div>
+            <div class="truncate" >${escapeHtml(row[1])}</div>
           </div>
           <i class="sn-icon sn-icon-info show-items-columns" title="" data-item-id="${row[0]}"></i>
         </div>`;

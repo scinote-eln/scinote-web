@@ -2250,6 +2250,7 @@ en:
         submit: "Create"
         success_flash_html: "Inventory <strong>%{name}</strong> successfully created."
         repository_template_label: "Select inventory template"
+        only_system_defined_columns: 'Only system defined columns.'
       modal_confirm_sharing:
         title: "Inventory sharing changes"
         description_1: "You will no longer share this inventory with some of the teams. All unshared inventory items assigned to tasks will be automatically removed and this action is irreversible. Any item relationship links (if they exist) will also be deleted."
