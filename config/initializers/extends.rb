@@ -558,7 +558,9 @@ class Extends
     form_duplicated: 357,
     form_unpublished: 358,
     task_steps_loaded_from_template: 359,
-    protocol_steps_loaded_from_template: 360
+    protocol_steps_loaded_from_template: 360,
+    storage_location_duplicated: 361,
+    container_storage_location_duplicated: 362
   }
 
   ACTIVITY_GROUPS = {
@@ -579,8 +581,8 @@ class Extends
                           *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360],
     team: [92, 94, 93, 97, 104, 244, 245],
     label_templates: [*216..219],
-    storage_locations: [*309..315],
-    container_storage_locations: [*316..322, 326],
+    storage_locations: [*309..315, 361],
+    container_storage_locations: [*316..322, 326, 362],
     storage_location_repository_rows: [*323..325],
     forms: [331, 332, 333, 334, 335, 336, *337..346, 356, 357, 358]
   }
