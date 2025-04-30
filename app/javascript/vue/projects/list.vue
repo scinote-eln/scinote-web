@@ -54,11 +54,11 @@
     @update="updateDescription"
     @close="descriptionModalObject = null"/>
   <ExportLimitExceededModal v-if="exportLimitExceded" :description="exportDescription" @close="exportLimitExceded = false"/>
-  <EditProjectModal v-if="editProject" :userRolesUrl="userRolesUrl"
+  <ProjectFormModal v-if="editProject" :userRolesUrl="userRolesUrl"
                     :project="editProject" @close="editProject = null" @update="updateTable(); updateNavigator()" />
   <EditFolderModal v-if="editFolder" :folder="editFolder"
                    @close="editFolder = null" @update="updateTable(); updateNavigator()" />
-  <NewProjectModal v-if="newProject" :createUrl="createUrl"
+  <ProjectFormModal v-if="newProject" :createUrl="createUrl"
                    :currentFolderId="currentFolderId" :userRolesUrl="userRolesUrl"
                    @close="newProject = false" @create="updateTable(); updateNavigator()" />
   <NewFolderModal v-if="newFolder" :createFolderUrl="createFolderUrl"
@@ -87,9 +87,8 @@ import DescriptionRenderer from '../shared/datatable/renderers/description.vue';
 import DescriptionModal from '../shared/datatable/modals/description.vue';
 import ProjectCard from './card.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
-import EditProjectModal from './modals/edit.vue';
+import ProjectFormModal from './modals/form.vue';
 import EditFolderModal from './modals/edit_folder.vue';
-import NewProjectModal from './modals/new.vue';
 import NewFolderModal from './modals/new_folder.vue';
 import MoveModal from './modals/move.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
@@ -103,9 +102,8 @@ export default {
     NameRenderer,
     ProjectCard,
     ConfirmationModal,
-    EditProjectModal,
+    ProjectFormModal,
     EditFolderModal,
-    NewProjectModal,
     NewFolderModal,
     MoveModal,
     AccessModal,

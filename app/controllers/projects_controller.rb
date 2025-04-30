@@ -309,7 +309,10 @@ class ProjectsController < ApplicationController
           .permit(
             :name, :visibility,
             :archived, :project_folder_id,
-            :default_public_user_role_id
+            :default_public_user_role_id,
+            :due_date,
+            :start_on,
+            :description
           )
   end
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <textarea :id="textareaId" ref="inputField"></textarea>
+    <textarea :id="textareaId" :placeholder="placeholder" ref="inputField"></textarea>
   </div>
 </template>
 
@@ -59,6 +59,10 @@ export default {
       type: String,
       default: '',
       required: true
+    },
+    placeholder: {
+      type: String,
+      default: ''
     },
     plugins: {
       default: () => `
