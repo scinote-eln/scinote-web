@@ -58,10 +58,6 @@ module Api
         params.require(:data).require(:attributes).permit(:text)
       end
 
-      def permitted_includes
-        %w(step_text_items)
-      end
-
       def load_step_text_for_managing
         @step_text = @step.step_texts.find(params.require(:id))
         raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@protocol)
