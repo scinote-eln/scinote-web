@@ -38,9 +38,6 @@
       <%= link_to shared_asset_download_path(@shareable_link.uuid, asset), class: 'btn btn-light icon-btn thumbnail-action-btn', data: { turbolinks: false } do %>
         <span class="sn-icon sn-icon-export"></span>
       <% end %>
-      <% if defined?(show_context) && show_context %>
-          <%= render partial: "shareable_links/my_modules/step_attachments/context_menu", locals: { asset: asset } %>
-      <% end %>
     </div>
   </div>
 
