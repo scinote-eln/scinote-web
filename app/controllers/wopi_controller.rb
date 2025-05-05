@@ -2,8 +2,8 @@ class WopiController < ActionController::Base
   include WopiUtil
 
   skip_before_action :verify_authenticity_token
-  before_action :load_vars, :authenticate_user_from_token!
   before_action :verify_proof!
+  before_action :load_vars, :authenticate_user_from_token!
 
   # Only used for checkfileinfo
   def file_get_endpoint
@@ -25,11 +25,11 @@ class WopiController < ActionController::Base
 
   def post_file_endpoint
     override = request.headers['X-WOPI-Override']
+    return render body: nil, status: :unauthorized if !@can_write && %w(LOCK UNLOCK REFRESH_LOCK).include?(override)
+
     case override
     when 'GET_LOCK'
       get_lock
-    when 'PUT_RELATIVE'
-      put_relative
     when 'LOCK'
       old_lock = request.headers['X-WOPI-OldLock']
       if old_lock.nil?
@@ -41,7 +41,7 @@ class WopiController < ActionController::Base
       unlock
     when 'REFRESH_LOCK'
       refresh_lock
-    when 'GET_SHARE_URL'
+    when 'GET_SHARE_URL', 'PUT_RELATIVE'
       render body: nil, status: :not_implemented
     else
       render body: nil, status: :not_found
@@ -51,6 +51,8 @@ class WopiController < ActionController::Base
   # Only used for putfile
   def file_contents_post_endpoint
     logger.warn 'WOPI: post_file_contents called'
+    return render body: nil, status: :unauthorized unless @can_write
+
     put_file
   end
 
@@ -93,10 +95,6 @@ class WopiController < ActionController::Base
     response.headers['X-WOPI-ServerVersion'] = Scinote::Application::VERSION
 
     render json: msg
-  end
-
-  def put_relative
-    render body: nil, status: :not_implemented
   end
 
   def lock
