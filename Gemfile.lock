@@ -459,7 +459,7 @@ GEM
       rails (>= 3.2.0)
     net-http (0.4.1)
       uri
-    net-imap (0.4.19)
+    net-imap (0.4.20)
       date
       net-protocol
     net-pop (0.1.2)
