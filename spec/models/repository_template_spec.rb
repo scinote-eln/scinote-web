@@ -24,6 +24,6 @@ describe RepositoryTemplate, type: :model do
 
   describe 'Relations' do
     it { should belong_to :team }
-    it { should have_many(:repositories).dependent(:destroy) }
+    it { should have_many(:repositories).dependent(:nullify) }
   end
 end
