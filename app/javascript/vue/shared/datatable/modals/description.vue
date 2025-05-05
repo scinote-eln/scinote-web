@@ -59,6 +59,11 @@ export default {
       editMode: false
     };
   },
+  created() {
+    if (!this.object.description || this.object.description === '') {
+      this.editMode = true;
+    }
+  },
   mounted() {
     this.$nextTick(() => {
       window.renderElementSmartAnnotations(this.$refs.description, 'span');
@@ -71,12 +76,16 @@ export default {
       this.$emit('close');
     },
     cancelEdit() {
-      this.editMode = false;
-      this.description = this.object.description;
-      this.$refs.description.classList.remove('sa-initialized');
-      this.$nextTick(() => {
-        window.renderElementSmartAnnotations(this.$refs.description, 'span');
-      });
+      if (!this.object.description || this.object.description === '') {
+        this.$emit('close');
+      } else {
+        this.editMode = false;
+        this.description = this.object.description;
+        this.$refs.description.classList.remove('sa-initialized');
+        this.$nextTick(() => {
+          window.renderElementSmartAnnotations(this.$refs.description, 'span');
+        });
+      }
     }
   }
 };
