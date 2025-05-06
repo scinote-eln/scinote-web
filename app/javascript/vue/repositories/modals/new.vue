@@ -23,13 +23,16 @@
               </div>
             </div>
             <div>
-              <label class="sci-label">{{ i18n.t("repositories.index.modal_create.repository_template_label") }}</label>
+              <label class="sci-label" data-e2e="e2e-LB-newInventoryModal-inventoryTemplate">
+                {{ i18n.t("repositories.index.modal_create.repository_template_label") }}
+              </label>
               <SelectDropdown
                 :options="repositoryTemplates"
                 :value="repositoryTemplate"
                 :optionRenderer="repositoryTemplateOptionRenderer"
                 @change="repositoryTemplate = $event"
                 @close="showColumnInfo = false"
+                e2eValue="e2e-DD-newInventoryModal-inventoryTemplate"
               />
               <div v-if="showColumnInfo" class="absolute -right-64 w-60 bg-white border border-radius p-4 min-h-[10rem]">
                 <div v-if="loadingHoveredRow" class="flex absolute top-0 left-0 items-center justify-center w-full flex-grow h-full z-10">
