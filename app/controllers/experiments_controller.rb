@@ -43,6 +43,10 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def show
+    render json: @experiment, serializer: Lists::ExperimentSerializer, user: current_user
+  end
+
   def assigned_users
     render json: User.where(id: @experiment.user_assignments.select(:user_id)),
            each_serializer: UserSerializer,

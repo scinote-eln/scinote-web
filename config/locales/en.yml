@@ -1718,6 +1718,7 @@ en:
     toolbar:
       new_button: "New experiment"
       new_button_tooltip: "Create new experiment"
+      description_button: "Description"
       edit_button: "Edit details"
       duplicate_button: "Duplicate"
       move_button: "Move"

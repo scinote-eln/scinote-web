@@ -360,7 +360,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, except: [:destroy, :new, :show, :edit] do
+    resources :projects, except: %i(destroy new edit) do
       # Activities popup (JSON) for individual project in projects index,
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
@@ -417,9 +417,8 @@ Rails.application.routes.draw do
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
-    get 'projects/:project_id', to: 'experiments#index'
     get 'projects/:project_id/experiments', to: 'experiments#index', as: :experiments
-    resources :experiments, only: %i(update) do
+    resources :experiments, only: %i(update show) do
       collection do
         get 'inventory_assigning_experiment_filter'
         get 'clone_modal', action: :clone_modal

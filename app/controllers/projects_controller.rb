@@ -16,7 +16,7 @@ class ProjectsController < ApplicationController
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(update create_tag assigned_users_list)
+  before_action :load_vars, only: %i(update create_tag assigned_users_list show)
   before_action :load_current_folder, only: :index
   before_action :check_read_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
@@ -40,6 +40,10 @@ class ProjectsController < ApplicationController
         render 'projects/index'
       end
     end
+  end
+
+  def show
+    render json: @project, serializer: ProjectSerializer, user: current_user
   end
 
   def inventory_assigning_project_filter
