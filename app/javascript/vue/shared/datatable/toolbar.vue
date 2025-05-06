@@ -8,7 +8,7 @@
            :data-e2e="`e2e-BT-topToolbar-${action.name}`"
            @click="doAction(action, $event)">
           <i :class="action.icon"></i>
-          {{ action.label }}
+          <span class="tw-hidden lg:inline">{{ action.label }}</span>
         </a>
         <MenuDropdown
           v-if="action.type === 'menu'"

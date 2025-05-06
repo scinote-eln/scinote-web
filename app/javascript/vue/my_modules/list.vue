@@ -23,6 +23,7 @@
     @access="access"
     @archive="archive"
     @restore="restore"
+    @showExperimentDescription="showExperimentDescription = true"
     @duplicate="duplicate"
     @updateDueDate="updateDueDate"
     @updateStartDate="updateStartDate"
@@ -34,6 +35,11 @@
               :projectName="projectName"
               :projectTagsUrl="projectTagsUrl"
               @close="updateTable" />
+  <ExperimentDescriptionModal
+    v-if="experiment && showExperimentDescription"
+    :object="experiment.attributes"
+    @update="updateExperimentDescription"
+    @close="showExperimentDescription = false"/>
   <NewModal v-if="newModalOpen"
             :createUrl="createUrl"
             :projectTagsUrl="projectTagsUrl"
@@ -59,6 +65,7 @@
 import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
+import ExperimentDescriptionModal from '../shared/datatable/modals/description.vue';
 import NameRenderer from './renderers/name.vue';
 import ResultsRenderer from './renderers/results.vue';
 import StatusRenderer from './renderers/status.vue';
@@ -79,6 +86,7 @@ export default {
     DataTable,
     ConfirmationModal,
     DueDateRenderer,
+    ExperimentDescriptionModal,
     StartDateRenderer,
     DesignatedUsers,
     TagsModal,
@@ -106,7 +114,8 @@ export default {
     usersFilterUrl: { type: String, required: true },
     statusesList: { type: Array, required: true },
     projectName: { type: String },
-    archived: { type: Boolean }
+    archived: { type: Boolean },
+    experimentUrl: { type: String, required: true }
   },
   data() {
     return {
@@ -117,10 +126,14 @@ export default {
       reloadingTable: false,
       accessModalParams: null,
       columnDefs: [],
-      filters: []
+      filters: [],
+      showExperimentDescription: false,
+      experiment: null
     };
   },
   created() {
+    this.loadExperiment();
+
     const columns = [
       {
         field: 'name',
@@ -293,6 +306,14 @@ export default {
         });
       }
 
+      left.push({
+        name: 'showExperimentDescription',
+        icon: 'sn-icon sn-icon-info',
+        label: this.i18n.t('experiments.toolbar.description_button'),
+        type: 'emit',
+        buttonStyle: 'btn btn-light'
+      });
+
       return {
         left,
         right: []
@@ -300,6 +321,13 @@ export default {
     }
   },
   methods: {
+    loadExperiment() {
+      axios.get(this.experimentUrl).then((response) => {
+        this.experiment = response.data.data;
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
+    },
     updateDueDate(value, params) {
       axios.put(params.data.urls.update_due_date, {
         my_module: {
@@ -307,6 +335,15 @@ export default {
         }
       }).then(() => {
         this.updateTable();
+      });
+    },
+    updateExperimentDescription(description) {
+      axios.put(this.experiment.attributes.urls.update, {
+        experiment: {
+          description
+        }
+      }).then(() => {
+        this.loadExperiment();
       });
     },
     updateStartDate(value, params) {

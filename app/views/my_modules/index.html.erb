@@ -5,6 +5,7 @@
   <div id="MyModulesList" class="fixed-content-body">
     <% view_mode = params[:view_mode] || 'active' %>
     <my-modules-list
+      experiment-url="<%= experiment_path(@experiment) %>"
       actions-url="<%= actions_toolbar_my_modules_path %>"
       create-url="<%= modules_experiment_path(@experiment) if can_manage_experiment?(@experiment) %>"
       data-source="<%= my_modules_path(experiment_id: @experiment, format: :json) %>"
@@ -23,5 +24,6 @@
       :archived="<%= @experiment.archived_branch?%>"
     />
   </div>
+  <%= render 'shared/tiny_mce_packs' %>
   <%= javascript_include_tag 'vue_my_modules_list' %>
 </div>

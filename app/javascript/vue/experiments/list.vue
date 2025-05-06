@@ -18,6 +18,7 @@
     @archive="archive"
     @restore="restore"
     @showDescription="showDescription"
+    @showProjectDescription="showProjectDescription = true"
     @duplicate="duplicate"
     @move="move"
     @edit="edit"
@@ -37,6 +38,11 @@
     :object="descriptionModalObject"
     @update="updateDescription"
     @close="descriptionModalObject = null"/>
+  <ProjectDescriptionModal
+    v-if="project && showProjectDescription"
+    :object="project.attributes"
+    @update="updateProjectDescription"
+    @close="showProjectDescription = false"/>
   <DuplicateModal
     v-if="duplicateModalObject"
     :experiment="duplicateModalObject"
@@ -70,6 +76,7 @@ import ConfirmationModal from '../shared/confirmation_modal.vue';
 import CompletedTasksRenderer from './renderers/completed_tasks.vue';
 import NameRenderer from './renderers/name.vue';
 import DescriptionModal from '../shared/datatable/modals/description.vue';
+import ProjectDescriptionModal from '../shared/datatable/modals/description.vue';
 import DuplicateModal from './modals/duplicate.vue';
 import MoveModal from './modals/move.vue';
 import ExperimentFormModal from './modals/form.vue';
@@ -85,6 +92,7 @@ export default {
     DataTable,
     ConfirmationModal,
     DescriptionModal,
+    ProjectDescriptionModal,
     DuplicateModal,
     MoveModal,
     ExperimentFormModal,
@@ -102,7 +110,8 @@ export default {
     currentViewMode: { type: String, required: true },
     createUrl: { type: String, required: true },
     userRolesUrl: { type: String, required: true },
-    archived: { type: Boolean }
+    archived: { type: Boolean },
+    projectUrl: { type: String, required: true }
   },
   data() {
     return {
@@ -112,6 +121,8 @@ export default {
       moveModalObject: null,
       duplicateModalObject: null,
       descriptionModalObject: null,
+      showProjectDescription: false,
+      project: null,
       reloadingTable: false,
       statusesList: [
         ['not_started', this.i18n.t('experiments.table.column.status.not_started')],
@@ -230,6 +241,14 @@ export default {
         });
       }
 
+      left.push({
+        name: 'showProjectDescription',
+        icon: 'sn-icon sn-icon-info',
+        label: this.i18n.t('experiments.toolbar.description_button'),
+        type: 'emit',
+        buttonStyle: 'btn btn-light'
+      });
+
       return {
         left,
         right: []
@@ -278,7 +297,17 @@ export default {
       return filters;
     }
   },
+  created() {
+    this.loadProject();
+  },
   methods: {
+    loadProject() {
+      axios.get(this.projectUrl).then((response) => {
+        this.project = response.data.data;
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
+    },
     updateTable() {
       this.newModalOpen = false;
       this.editModalObject = null;
@@ -306,6 +335,15 @@ export default {
         }
       }).then(() => {
         this.updateTable();
+      });
+    },
+    updateProjectDescription(description) {
+      axios.put(this.project.attributes.urls.update, {
+        project: {
+          description
+        }
+      }).then(() => {
+        this.loadProject();
       });
     },
     restore(event, rows) {
