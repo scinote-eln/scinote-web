@@ -2,6 +2,9 @@
 
 class AddRepositoryTemplatesToTeams < ActiveRecord::Migration[7.0]
   def up
+    # don't create templates if feature is disabled
+    return unless ENV.fetch('SCINOTE_REPOSITORY_TEMPLATES_ENABLED', false)
+
     Team.find_each do |team|
       RepositoryTemplate.default.update!(team: team)
       RepositoryTemplate.cell_lines.update!(team: team)

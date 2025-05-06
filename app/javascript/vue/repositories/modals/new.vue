@@ -22,7 +22,7 @@
                        :placeholder="i18n.t('repositories.index.modal_create.name_placeholder')" />
               </div>
             </div>
-            <div>
+            <div v-if="repositoryTemplatesAvailable">
               <label class="sci-label" data-e2e="e2e-LB-newInventoryModal-inventoryTemplate">
                 {{ i18n.t("repositories.index.modal_create.repository_template_label") }}
               </label>
@@ -58,7 +58,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal" data-e2e="e2e-BT-newInventoryModal-cancel">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="submitting || !validName || !repositoryTemplate" data-e2e="e2e-BT-newInventoryModal-create">
+            <button class="btn btn-primary" type="submit" :disabled="submitting || !validName || (repositoryTemplatesAvailable && !repositoryTemplate)" data-e2e="e2e-BT-newInventoryModal-create">
               {{ i18n.t('repositories.index.modal_create.submit') }}
             </button>
           </div>
@@ -115,6 +115,9 @@ export default {
     repositoryTemplateUrl() {
       return repository_templates_path();
     },
+    repositoryTemplatesAvailable() {
+      return this.repositoryTemplates && this.repositoryTemplates.length !== 0;
+    },
     validName() {
       return this.name.length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH;
     }
@@ -154,7 +157,7 @@ export default {
       axios.get(this.repositoryTemplateUrl)
         .then((response) => {
           this.repositoryTemplates = response.data.data;
-          [this.repositoryTemplate] = this.repositoryTemplates[0];
+          if (this.repositoryTemplates.length !== 0) [this.repositoryTemplate] = this.repositoryTemplates[0];
         });
     },
     loadColumnsInfo(e) {
