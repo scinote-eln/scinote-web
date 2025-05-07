@@ -27,6 +27,7 @@
              @access="access"
              @updateDueDate="updateDueDate"
              @updateStartDate="updateStartDate"
+             @updateFavorite="updateFavorite"
   >
     <template #card="data">
       <ProjectCard :params="data.params" :dtComponent="data.dtComponent" ></ProjectCard>
@@ -93,6 +94,7 @@ import NewFolderModal from './modals/new_folder.vue';
 import MoveModal from './modals/move.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
 import ExportLimitExceededModal from './modals/export_limit_exceeded_modal.vue';
+import FavoriteRenderer from '../shared/datatable/renderers/favorite.vue';
 
 export default {
   name: 'ProjectsList',
@@ -112,7 +114,8 @@ export default {
     DescriptionRenderer,
     DescriptionModal,
     StatusRenderer,
-    SuperviserRenderer
+    SuperviserRenderer,
+    FavoriteRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -157,6 +160,17 @@ export default {
         headerName: this.i18n.t('projects.index.card.name'),
         sortable: true,
         cellRenderer: 'NameRenderer'
+      },
+      {
+        field: 'favorite',
+        headerComponentParams: {
+          html: '<div class="sn-icon sn-icon-star-filled"></div>'
+        },
+        headerName: this.i18n.t('projects.index.favorite'),
+        sortable: true,
+        cellRenderer: FavoriteRenderer,
+        minWidth: 80,
+        notSelectable: true
       },
       {
         field: 'code',
@@ -362,6 +376,12 @@ export default {
           start_on: this.formatDate(value)
         }
       }).then(() => {
+        this.updateTable();
+      });
+    },
+    updateFavorite(value, params) {
+      const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;
+      axios.post(url).then(() => {
         this.updateTable();
       });
     },

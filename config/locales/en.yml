@@ -655,6 +655,7 @@ en:
       add_start_date: "Add start date"
       no_start_date: "No start date"
       add_description: 'Add description'
+      favorite: 'Favorites'
       status:
         not_started: "Not started"
         started: "In progress"
