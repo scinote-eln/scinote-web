@@ -95,7 +95,8 @@ module Lists
         description: 'experiments.description',
         start_date: 'start_on',
         due_date: 'due_date',
-        status: 'status'
+        status: 'status',
+        favorite: 'favorite'
       }
     end
 

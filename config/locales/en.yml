@@ -1827,6 +1827,7 @@ en:
         no_due_date_placeholder: '+ Add due date'
         no_due_date: 'not set'
         no_start_date_placeholder: "+ Add starting date"
+        favorite: 'Favorites'
         status:
           not_started: 'Not started'
           started: 'In progress'
