@@ -27,6 +27,7 @@ module Lists
       permissions
       default_public_user_role_id
       team
+      favorite
     )
 
     def attributes(_options = {})
@@ -38,6 +39,8 @@ module Lists
     delegate :name, to: :object
 
     delegate :provisioning_status, to: :object
+
+    delegate :favorite, to: :object
 
     def default_public_user_role_id
       object.experiment.project.default_public_user_role_id

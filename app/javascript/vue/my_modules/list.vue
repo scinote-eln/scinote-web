@@ -27,7 +27,8 @@
     @duplicate="duplicate"
     @updateDueDate="updateDueDate"
     @updateStartDate="updateStartDate"
-    @editTags="editTags"/>
+    @editTags="editTags"
+    @updateFavorite="updateFavorite"/>
 
   <TagsModal v-if="tagsModalObject"
               :params="tagsModalObject"
@@ -79,6 +80,7 @@ import NewModal from './modals/new.vue';
 import EditModal from './modals/edit.vue';
 import MoveModal from './modals/move.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
+import FavoriteRenderer from '../shared/datatable/renderers/favorite.vue';
 
 export default {
   name: 'MyModulesList',
@@ -96,7 +98,8 @@ export default {
     AccessModal,
     NameRenderer,
     ResultsRenderer,
-    StatusRenderer
+    StatusRenderer,
+    FavoriteRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -140,6 +143,17 @@ export default {
         headerName: this.i18n.t('experiments.table.column.task_name_html'),
         sortable: true,
         cellRenderer: NameRenderer
+      },
+      {
+        field: 'favorite',
+        headerComponentParams: {
+          html: '<div class="sn-icon sn-icon-star-filled"></div>'
+        },
+        headerName: this.i18n.t('experiments.table.column.favorite'),
+        sortable: true,
+        cellRenderer: FavoriteRenderer,
+        minWidth: 80,
+        notSelectable: true
       },
       {
         field: 'code',
@@ -423,6 +437,12 @@ export default {
                 <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
                 <span title="${option[1]}" class="truncate">${option[1]}</span>
               </div>`;
+    },
+    updateFavorite(value, params) {
+      const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;
+      axios.post(url).then(() => {
+        this.updateTable();
+      });
     }
   }
 };

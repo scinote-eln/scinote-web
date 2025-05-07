@@ -51,7 +51,8 @@ module Lists
         results: 'results',
         tags: 'tags',
         signatures: 'signatures',
-        comments: 'comments'
+        comments: 'comments',
+        favorite: 'favorite'
       }
     end
 
@@ -121,6 +122,10 @@ module Lists
         @records = @records.left_joins(:tags)
                            .group('my_modules.id')
                            .order(Arel.sql('COUNT(DISTINCT tags.id) DESC'))
+      when 'favorite_ASC'
+        @records = @records.order(:favorite)
+      when 'favorite_DESC'
+        @records = @records.order(favorite: :desc)
       else
         __send__("#{sortable_columns[order_params[:column].to_sym]}_sort", sort_direction(order_params))
       end
