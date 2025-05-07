@@ -148,6 +148,10 @@ module Lists
         @records = @records.sort_by { |object| project_comments_count(object) }
       when 'comments_DESC'
         @records = @records.sort_by { |object| project_comments_count(object) }.reverse!
+      when 'favorite_ASC'
+        @records = @records.sort_by { |object| project_favorites(object) }
+      when 'favorite_DESC'
+        @records = @records.sort_by { |object| project_favorites(object) }.reverse!
       end
     end
 
@@ -161,6 +165,14 @@ module Lists
 
     def project_users_count(object)
       project?(object) ? object.users.count : -1
+    end
+
+    def project_favorites(object)
+      if project?(object)
+        object.favorite ? 1 : 0
+      else
+        -1
+      end
     end
 
     def project?(object)

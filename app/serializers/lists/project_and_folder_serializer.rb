@@ -8,13 +8,17 @@ module Lists
 
     attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder, :hidden,
                :folder_info, :default_public_user_role_id, :team, :top_level_assignable, :supervised_by,
-               :comments, :updated_at, :permissions, :due_date_cell, :start_on_cell, :description, :status,
+               :comments, :updated_at, :permissions, :due_date_cell, :start_on_cell, :description, :status, :favorite,
                def team
                  object.team.name
                end
 
     def folder
       !project?
+    end
+
+    def favorite
+      object.favorite if project?
     end
 
     def top_level_assignable
