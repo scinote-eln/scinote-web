@@ -27,6 +27,7 @@
     @updateDueDate="updateDueDate"
     @updateStartDate="updateStartDate"
     @changeStatus="changeStatus"
+    @updateFavorite="updateFavorite"
   >
     <template #card="data">
       <ExperimentCard :params="data.params" :dtComponent="data.dtComponent" ></ExperimentCard>
@@ -85,6 +86,7 @@ import StatusRenderer from './renderers/status.vue';
 import DueDateRenderer from '../shared/datatable/renderers/date.vue';
 import StartDateRenderer from '../shared/datatable/renderers/date.vue';
 import ExperimentCard from './card.vue';
+import FavoriteRenderer from '../shared/datatable/renderers/favorite.vue';
 
 export default {
   name: 'ExperimentsList',
@@ -100,7 +102,8 @@ export default {
     ExperimentCard,
     StatusRenderer,
     StartDateRenderer,
-    DueDateRenderer
+    DueDateRenderer,
+    FavoriteRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -141,6 +144,17 @@ export default {
           sortable: true,
           cellRenderer: NameRenderer,
           minWidth: 150
+        },
+        {
+          field: 'favorite',
+          headerComponentParams: {
+            html: '<div class="sn-icon sn-icon-star-filled"></div>'
+          },
+          headerName: this.i18n.t('experiments.table.column.favorite'),
+          sortable: true,
+          cellRenderer: FavoriteRenderer,
+          minWidth: 80,
+          notSelectable: true
         },
         {
           field: 'code',
@@ -399,6 +413,12 @@ export default {
     },
     updateStartDate(value, params) {
       this.updateField(params.data.urls.update, { start_on: this.formatDate(value) });
+    },
+    updateFavorite(value, params) {
+      const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;
+      axios.post(url).then(() => {
+        this.updateTable();
+      });
     }
   }
 };
