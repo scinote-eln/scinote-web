@@ -301,6 +301,7 @@ Rails.application.routes.draw do
       resource :current_tasks, module: 'dashboard', only: :show do
         get :project_filter
         get :experiment_filter
+        get :favorites
       end
 
       namespace :quick_start, module: :dashboard, controller: :quick_start do

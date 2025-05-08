@@ -27,6 +27,13 @@ var DasboardCurrentTasksWidget = (function() {
     return values;
   }
 
+  function initFavorites() {
+    $('.current-tasks-widget .actions-container').addClass('hidden');
+    $('.current-tasks-list-wrapper').addClass('hidden');
+    $('#favoritesWidget').removeClass('hidden');
+    window.favoritesWidget.$refs.widget.resetFavorites();
+  }
+
   function resetMarkAppliedFilters() {
     $('.filter-container').removeClass('filters-applied');
   }
@@ -84,6 +91,10 @@ var DasboardCurrentTasksWidget = (function() {
         $('.current-tasks-navbar .navbar-link').removeClass('active');
         $('.current-tasks-navbar').find(`[data-mode='${parsedFilterState.mode}']`).addClass('active');
         markAppliedFilters();
+
+        if (parsedFilterState.mode === 'favorites') {
+          initFavorites();
+        }
       } catch (e) {
         dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
         resetMarkAppliedFilters();
@@ -236,7 +247,14 @@ var DasboardCurrentTasksWidget = (function() {
     $('.current-tasks-navbar .navbar-link').on('click', function() {
       $(this).parent().find('.navbar-link').removeClass('active');
       $(this).addClass('active');
-      loadCurrentTasksList(true);
+      if (this.dataset.mode === 'favorites') {
+        initFavorites();
+      } else {
+        $('.current-tasks-widget .actions-container').removeClass('hidden');
+        $('.current-tasks-list-wrapper').removeClass('hidden');
+        $('#favoritesWidget').addClass('hidden');
+        loadCurrentTasksList(true);
+      }
       filterStateSave();
     });
   }

@@ -1,9 +1,10 @@
 en:
   dashboard:
     current_tasks:
-      title: "Current tasks"
+      title: "Current work"
       search: "Search tasks"
       navbar:
+        favorites: "Favorites"
         assigned: "Assigned to me"
         all: "All"
       filter:
@@ -32,6 +33,7 @@ en:
         apply: "Apply"
         show_results: "Show results"
       no_tasks:
+        favorites: "Projects, experiments and tasks you mark as favorites appear here."
         assigned_tasks:
           title: "There are no tasks assigned to you at the moment."
           description: "Use the  “+ New task” button above to create a new one, or assign yourself to an existing task."
@@ -83,7 +85,7 @@ en:
       new_project: "Create \"%{name}\" Project"
       new_experiment: "Create \"%{name}\" Experiment"
     recent_work:
-      title: "Recent work"
+      title: "My recent activity"
       no_results:
         title: "You have not worked on anything recently."
         description: "All tasks, projects, inventories protocols and reports, you last worked on will appear here, when you make some changes."
