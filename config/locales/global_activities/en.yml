@@ -723,7 +723,6 @@ en:
       form_duplicated: "Form duplicated"
       form_block_duplicated: "Form block duplicated"
       form_unpublished: "Form unpublished"
-<<<<<<< HEAD
       change_experiment_status: "Experiment status changed"
       set_experiment_due_date: "Experiment due date set"
       change_experiment_due_date: "Experiment due date changed"
@@ -740,10 +739,8 @@ en:
       remove_project_start_date: "Project start date removed"
       set_head_of_project: "Head of project added"
       remove_head_of_project: "Head of project removed"
-=======
       task_steps_loaded_from_template: "Task step loaded from template"
       protocol_steps_loaded_from_template: "Step loaded from template"
->>>>>>> develop
     activity_group:
       projects: "Projects"
       task_results: "Task results"
