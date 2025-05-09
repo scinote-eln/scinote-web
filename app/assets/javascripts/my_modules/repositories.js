@@ -100,6 +100,15 @@ var MyModuleRepositories = (function() {
     return columns;
   }
 
+  function renderSmartAnnotations() {
+    const scrollElement = $('#myModuleRepositoryFullViewModal .dataTables_scrollBody')[0];
+    scrollElement.classList.remove('sa-initialized');
+    window.renderElementSmartAnnotations(scrollElement, '.text-value', scrollElement);
+
+    return true;
+  }
+
+
   function fullViewColumnDefs(tableContainer) {
     let columnDefs = [{
       targets: 0,
@@ -344,6 +353,8 @@ var MyModuleRepositories = (function() {
             }
           );
         }
+
+        renderSmartAnnotations();
       },
 
       stateLoadCallback: function(settings, callback) {
