@@ -59,7 +59,7 @@ gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'mime-types', '~> 3.4'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.18.4' # HTML/XML parser
+gem 'nokogiri', '~> 1.18.8' # HTML/XML parser
 gem 'noticed'
 gem 'oj'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
@@ -96,6 +96,7 @@ gem 'js-routes'
 gem 'tailwindcss-rails', '~> 2.4'
 
 gem 'base62' # Used for smart annotations
+gem 'datadog'
 gem 'newrelic_rpm'
 
 # Permission helper Gem

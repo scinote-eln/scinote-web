@@ -13,6 +13,10 @@ module Api
 
       include TimestampableModel
 
+      def form_field_values
+        object.form_field_values.latest
+      end
+
       def position
         object&.step_orderable_element&.position
       end

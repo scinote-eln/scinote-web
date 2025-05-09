@@ -46,7 +46,9 @@
           <ProtocolOptions
             v-if="protocol.attributes && protocol.attributes.urls"
             :protocol="protocol"
+            :inRepository="inRepository"
             @protocol:delete_steps="deleteSteps"
+            @protocol:add_protocol_steps="addSteps"
             :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
           />
           <button class="btn btn-light icon-btn" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
@@ -128,7 +130,7 @@
       </div>
       <div :class="inRepository ? 'protocol-section protocol-steps-section protocol-information' : ''">
         <div v-if="inRepository" id="protocol-steps" class="protocol-section-header">
-          <div class="protocol-steps-container">
+          <div class="protocol-steps-container w-full flex flex-row items-center justify-between">
             <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#protocol-steps-container" aria-expanded="false" aria-controls="protocol-steps-container">
               <i class="sn-icon sn-icon-right"></i>
               <span id="protocolStepsLabel" class="protocol-section-title" data-e2e="e2e-TX-protocol-templateSteps-title">
@@ -137,6 +139,14 @@
                 </h2>
               </span>
             </a>
+            <ProtocolOptions
+              v-if="protocol.attributes && protocol.attributes.urls"
+              :protocol="protocol"
+              :inRepository="inRepository"
+              @protocol:delete_steps="deleteSteps"
+              @protocol:add_protocol_steps="addSteps"
+              :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
+            />
           </div>
         </div>
         <div class="sci-divider my-4" v-if="!inRepository"></div>
@@ -371,6 +381,10 @@ export default {
       }).fail(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
+    },
+    addSteps(steps) {
+      this.steps.push(...steps);
+      this.refreshProtocolStatus();
     },
     refreshProtocolStatus() {
       if (this.inRepository) return;

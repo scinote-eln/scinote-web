@@ -17,7 +17,7 @@ describe WopiController, type: :controller do
   end
 
 
-  let(:protocol_in_repository) { create :protocol, :in_public_repository, team: team, added_by: user }
+  let(:protocol_in_repository) { create :protocol, :in_repository_draft, team: team, added_by: user }
   let(:step_in_repository) { create :step, protocol: protocol_in_repository, user: user }
 
   let!(:asset) { create :asset }

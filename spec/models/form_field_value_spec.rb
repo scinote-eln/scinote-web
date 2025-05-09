@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 describe FormFieldValue, type: :model do
-  let(:form_response) { build :form_field_value }
+  let(:form_field_value) { build :form_field_value }
 
   it 'is valid' do
-    expect(form_response).to be_valid
+    expect(form_field_value).to be_valid
   end
 
   it 'should be of class form field value' do

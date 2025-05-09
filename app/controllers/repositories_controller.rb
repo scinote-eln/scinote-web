@@ -151,17 +151,31 @@ class RepositoriesController < ApplicationController
   end
 
   def create
-    @repository = Repository.new(
-      team: current_team,
-      created_by: current_user
-    )
-    @repository.assign_attributes(repository_params)
+    Repository.transaction do
+      @repository = Repository.new(team: current_team, created_by: current_user)
+      @repository.assign_attributes(repository_params)
 
-    if @repository.save
+      @repository.save!
       log_activity(:create_inventory)
+
+      repository_template = current_team.repository_templates.find_by(id: repository_params[:repository_template_id])
+      if repository_template.present?
+        repository_template.column_definitions&.each do |column_attributes|
+          service = RepositoryColumns::CreateColumnService
+                    .call(user: current_user, repository: @repository, team: current_team,
+                          column_type: column_attributes['column_type'],
+                          params: column_attributes['params'].with_indifferent_access)
+          unless service.succeed?
+            render json: service.errors, status: :unprocessable_entity
+            raise ActiveRecord::Rollback
+          end
+        end
+      end
       render json: { message: t('repositories.index.modal_create.success_flash_html', name: @repository.name) }
-    else
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error e.message
       render json: @repository.errors, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
     end
   end
 
@@ -548,7 +562,7 @@ class RepositoriesController < ApplicationController
   end
 
   def repository_params
-    params.require(:repository).permit(:name)
+    params.require(:repository).permit(:name, :repository_template_id)
   end
 
   def import_params

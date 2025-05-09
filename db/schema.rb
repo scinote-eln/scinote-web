@@ -740,10 +740,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_10_093420) do
     t.bigint "restored_by_id"
     t.string "external_id"
     t.integer "repository_rows_count", default: 0, null: false
+    t.bigint "repository_template_id"
     t.index ["archived"], name: "index_repositories_on_archived"
     t.index ["archived_by_id"], name: "index_repositories_on_archived_by_id"
     t.index ["discarded_at"], name: "index_repositories_on_discarded_at"
     t.index ["my_module_id"], name: "index_repositories_on_my_module_id"
+    t.index ["repository_template_id"], name: "index_repositories_on_repository_template_id"
     t.index ["restored_by_id"], name: "index_repositories_on_restored_by_id"
     t.index ["team_id", "external_id"], name: "unique_index_repositories_on_external_id", unique: true
     t.index ["team_id"], name: "index_repositories_on_team_id"
@@ -1035,6 +1037,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_10_093420) do
     t.datetime "updated_at", precision: nil, null: false
     t.index ["repository_id"], name: "index_repository_table_states_on_repository_id"
     t.index ["user_id"], name: "index_repository_table_states_on_user_id"
+  end
+
+  create_table "repository_templates", force: :cascade do |t|
+    t.string "name"
+    t.jsonb "column_definitions"
+    t.bigint "team_id"
+    t.boolean "predefined", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["team_id"], name: "index_repository_templates_on_team_id"
   end
 
   create_table "repository_text_values", force: :cascade do |t|
@@ -1597,6 +1609,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_10_093420) do
   add_foreign_key "reports", "projects"
   add_foreign_key "reports", "users"
   add_foreign_key "reports", "users", column: "last_modified_by_id"
+  add_foreign_key "repositories", "repository_templates"
   add_foreign_key "repositories", "users", column: "archived_by_id"
   add_foreign_key "repositories", "users", column: "created_by_id"
   add_foreign_key "repositories", "users", column: "restored_by_id"
@@ -1642,6 +1655,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_10_093420) do
   add_foreign_key "repository_stock_values", "users", column: "created_by_id"
   add_foreign_key "repository_stock_values", "users", column: "last_modified_by_id"
   add_foreign_key "repository_table_filters", "users", column: "created_by_id"
+  add_foreign_key "repository_templates", "teams"
   add_foreign_key "repository_text_values", "users", column: "created_by_id"
   add_foreign_key "repository_text_values", "users", column: "last_modified_by_id"
   add_foreign_key "result_assets", "assets"

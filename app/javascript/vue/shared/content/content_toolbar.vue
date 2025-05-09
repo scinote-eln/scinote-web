@@ -7,12 +7,13 @@
       <template v-for="item in insertMenu">
         <button v-if="!item.submenu" @click="$emit(item.emit)" class="btn btn-light">
           <i :class="item.icon"></i>
-          {{ item.text }}
+          <span class="tw-hidden xl:inline">{{ item.text }}</span>
         </button>
         <MenuDropdown
           :listItems="item.submenu"
           :btnText="item.text"
           :btnClasses="'btn btn-light'"
+          :smallScreenCollapse="true"
           :position="'right'"
           :caret="true"
           :btnIcon="item.icon"

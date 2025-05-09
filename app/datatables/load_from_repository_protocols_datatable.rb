@@ -81,18 +81,7 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
   end
 
   def get_raw_records_base
-    original_without_versions = @team.protocols
-                                     .left_outer_joins(:published_versions)
-                                     .where(protocol_type: Protocol.protocol_types[:in_repository_published_original])
-                                     .where(published_versions: { id: nil })
-                                     .select(:id)
-
-    published_versions = @team.protocols
-                              .where(protocol_type: Protocol.protocol_types[:in_repository_published_version])
-                              .order('parent_id, version_number DESC')
-                              .select('DISTINCT ON (parent_id) id')
-
-    Protocol.where("protocols.id IN ((#{original_without_versions.to_sql}) UNION (#{published_versions.to_sql}))")
+    Protocol.latest_available_versions_without_drafts(@team)
             .active
             .with_granted_permissions(@user, ProtocolPermissions::READ)
   end

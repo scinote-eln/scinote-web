@@ -1,13 +1,13 @@
 <template>
   <div class="w-full">
     <InputField
-      type="number"
       v-model="value"
       :disabled="fieldDisabled"
       @change="saveValue"
       :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.add_number')"
       :warning="!isValidValue"
       :warningMessage="warningMessage"
+      :isNumber="true"
     ></InputField>
   </div>
 </template>

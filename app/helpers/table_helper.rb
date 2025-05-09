@@ -6,7 +6,12 @@ module TableHelper
     data = JSON.parse(contents)['data']
     return [] if data.blank?
 
-    metadata.fetch('cells', []).each do |cell|
+    cells = metadata.fetch('cells', [])
+
+    # Convert legacy table format
+    cells = cells.values if cells.is_a?(Hash)
+
+    cells.each do |cell|
       next unless cell['calculated']
 
       data[cell['row']][cell['col']] = cell['calculated']

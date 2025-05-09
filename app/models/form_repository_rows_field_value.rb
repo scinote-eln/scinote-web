@@ -21,9 +21,15 @@ class FormRepositoryRowsFieldValue < FormFieldValue
   before_save :attach_snapshot_files
 
   def attach_snapshot_files
-    # find asset values and attach file blobs
-    data.map { |r| r['repository_cells'] }.flatten.filter { |c| c['value_type'] == 'RepositoryAssetValue' }.each do |c|
-      snapshot_files.attach(ActiveStorage::Blob.find(c.dig('repository_asset_value', 'asset', 'file', 'blob', 'id')))
+    if data.present?
+      # find asset values and attach file blobs
+      data.map { |r| r['repository_cells'] }.flatten.filter { |c| c['value_type'] == 'RepositoryAssetValue' }.each do |c|
+        blob_id = c.dig('repository_asset_value', 'asset', 'file', 'blob', 'id')
+
+        next if snapshot_files.find { |f| f.blob.id == blob_id }
+
+        snapshot_files.attach(ActiveStorage::Blob.find(blob_id))
+      end
     end
   end
 
@@ -115,7 +121,7 @@ class FormRepositoryRowsFieldValue < FormFieldValue
       end
 
       cell_value.asset = Asset.new(
-        cell_attributes['repository_asset_value']['asset'].except('file')
+        cell_attributes['repository_asset_value']['asset'].except('file').merge(snapshot: true)
       )
 
       cell_value.asset.file = snapshot_file.blob

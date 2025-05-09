@@ -251,6 +251,7 @@ export default {
       } else {
         $(resultId).collapse('show');
       }
+      this.$emit('result:collapsed');
     });
   },
   computed: {
@@ -370,6 +371,8 @@ export default {
       };
 
       axios.put(this.userSettingsUrl, { settings: [settings] });
+
+      this.$emit('result:collapsed');
     },
     dragEnter(e) {
       if (!this.urls.upload_attachment_url) return;

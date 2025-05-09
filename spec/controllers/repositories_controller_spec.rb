@@ -8,6 +8,7 @@ describe RepositoriesController, type: :controller do
   let!(:user) { controller.current_user }
   let!(:team) { create :team, created_by: user }
   let(:action) { post :create, params: params, format: :json }
+  let(:repository_template) { create :repository_template, team: team }
 
   describe 'index' do
     let(:repository) { create :repository, team: team, created_by: user }
@@ -29,7 +30,7 @@ describe RepositoriesController, type: :controller do
   end
 
   describe 'POST create' do
-    let(:params) { { repository: { name: 'My Repository' } } }
+    let(:params) { { repository: { name: 'My Repository', repository_template_id: repository_template.id  } } }
 
     it 'calls create activity for creating inventory' do
       expect(Activities::CreateActivityService)
@@ -42,6 +43,13 @@ describe RepositoriesController, type: :controller do
     it 'adds activity in DB' do
       expect { action }
         .to(change { Activity.count })
+    end
+
+    it 'returns success response' do
+      expect { action }.to change(Repository, :count).by(1)
+      expect(response).to have_http_status(:success)
+      expect(response.media_type).to eq 'application/json'
+      expect(Repository.order(created_at: :desc).first.repository_template).to eq repository_template
     end
   end
 

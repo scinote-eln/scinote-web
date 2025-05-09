@@ -376,7 +376,7 @@ export default {
 
         let request = {};
 
-        if (this.ajaxMethod === 'get') {
+        if (this.ajaxMethod.toLowerCase() === 'get') {
           request = { method: 'get', url: this.optionsUrl, params };
         } else {
           request = { method: 'post', url: this.optionsUrl, data: params };

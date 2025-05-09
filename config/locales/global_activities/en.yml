@@ -329,6 +329,7 @@ en:
       storage_location_shared_html: "%{user} shared location %{storage_location} with team %{team} with %{permission_level} permission."
       storage_location_unshared_html: "%{user} unshared location %{storage_location} with team %{team}."
       storage_location_sharing_updated_html: "%{user} changed permission of shared location %{storage_location} with team %{team} to %{permission_level}."
+      storage_location_duplicated_html: "%{user} duplicated location %{storage_location}."
       container_storage_location_created_html: "%{user} created box %{storage_location}."
       container_storage_location_deleted_html: "%{user} deleted box %{storage_location}."
       container_storage_location_edited_html: "%{user} edited box %{storage_location}."
@@ -336,6 +337,7 @@ en:
       container_storage_location_shared_html: "%{user} shared box %{storage_location} with team %{team} with %{permission_level} permission."
       container_storage_location_unshared_html: "%{user} unshared box %{storage_location} with team %{team}."
       container_storage_location_sharing_updated_html: "%{user} changed permission of shared box %{storage_location} with team %{team} to %{permission_level}."
+      container_storage_location_duplicated_html: "%{user} duplicated box %{storage_location}."
       storage_location_repository_row_created_html: "%{user} assigned %{repository_row} to box %{storage_location} %{position}."
       storage_location_repository_row_deleted_html: "%{user} unassigned %{repository_row} from box %{storage_location} %{position}."
       storage_location_repository_row_moved_html: "%{user} moved item %{repository_row} from box %{storage_location_original} %{position_original} to box %{storage_location} %{position}."
@@ -388,6 +390,8 @@ en:
       remove_project_start_date_html: "%{user} removed start date %{start_on} on project %{project}."
       set_head_of_project_html: "%{user} added user %{user_target} as head of project %{project}."
       remove_head_of_project_html: "%{user} removed user %{user_target} as head of project %{project}."
+      task_steps_loaded_from_template_html: "%{user} added %{count} steps from template %{protocol} to task %{my_module}."
+      protocol_steps_loaded_from_template_html: "%{user} added %{count} steps from template %{protocol}."
     activity_name:
       create_project: "Project created"
       edit_project: "Project edited"
@@ -673,6 +677,7 @@ en:
       storage_location_moved: "Location moved"
       storage_location_shared: "Location shared"
       storage_location_unshared: "Location unshared"
+      storage_location_duplicated: "Location duplicated"
       storage_location_sharing_updated: "Location sharing permission updated"
       container_storage_location_created: "Box created"
       container_storage_location_deleted: "Box deleted"
@@ -681,6 +686,7 @@ en:
       container_storage_location_shared: "Box shared"
       container_storage_location_unshared: "Box unshared"
       container_storage_location_sharing_updated: "Box sharing permission updated"
+      container_storage_location_duplicated: "Box duplicated"
       storage_location_repository_row_created: "Inventory item location assigned"
       storage_location_repository_row_deleted: "Inventory item location unassigned"
       storage_location_repository_row_moved: "Inventory item location moved"
@@ -717,6 +723,7 @@ en:
       form_duplicated: "Form duplicated"
       form_block_duplicated: "Form block duplicated"
       form_unpublished: "Form unpublished"
+<<<<<<< HEAD
       change_experiment_status: "Experiment status changed"
       set_experiment_due_date: "Experiment due date set"
       change_experiment_due_date: "Experiment due date changed"
@@ -733,6 +740,10 @@ en:
       remove_project_start_date: "Project start date removed"
       set_head_of_project: "Head of project added"
       remove_head_of_project: "Head of project removed"
+=======
+      task_steps_loaded_from_template: "Task step loaded from template"
+      protocol_steps_loaded_from_template: "Step loaded from template"
+>>>>>>> develop
     activity_group:
       projects: "Projects"
       task_results: "Task results"

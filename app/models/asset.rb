@@ -51,7 +51,7 @@ class Asset < ApplicationRecord
     joins(file_attachment: :blob).order(sort)
   }
 
-  attr_accessor :file_content, :file_info
+  attr_accessor :file_content, :file_info, :snapshot
 
   before_save :reset_file_processing, if: -> { file.new_record? }
 

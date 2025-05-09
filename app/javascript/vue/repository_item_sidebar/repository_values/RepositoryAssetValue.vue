@@ -22,7 +22,7 @@
       <div v-if="file_name">
         <div class="flex flex-row justify-between">
           <div class="w-full cursor-pointer relative" @mouseover="tooltipShowing = true" @mouseout="tooltipShowing = false">
-            <a class="w-full inline-block file-preview-link truncate text-sn-science-blue" :id="modalPreviewLinkId" data-no-turbolink="true"
+            <a :class="{ 'file-preview-link': !this?.snapshot }" class="w-full inline-block truncate text-sn-science-blue" :id="modalPreviewLinkId" data-no-turbolink="true"
               data-id="true" data-status="asset-present" :data-preview-url=this?.preview_url :href=this?.url>
               {{ file_name }}
             </a>
@@ -97,6 +97,7 @@ export default {
     this.file_name = this.colVal.file_name;
     this.icon_html = this.colVal.icon_html;
     this.medium_preview_url = this.colVal.medium_preview_url;
+    this.snapshot = this.colVal.snapshot;
   },
   computed: {
     modalPreviewLinkId() {
