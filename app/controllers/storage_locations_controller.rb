@@ -242,10 +242,6 @@ class StorageLocationsController < ApplicationController
     @breadcrumbs_items = []
 
     @breadcrumbs_items.push({
-                              label: t('breadcrumbs.inventories')
-                            })
-
-    @breadcrumbs_items.push({
                               label: t('breadcrumbs.locations'),
                               url: storage_locations_path
                             })

@@ -1125,7 +1125,6 @@ class ProtocolsController < ApplicationController
     archived = params[:view_mode] || (@protocol&.archived? && 'archived')
 
     @breadcrumbs_items = []
-    @breadcrumbs_items.push({ label: t('breadcrumbs.templates') })
     @breadcrumbs_items.push(
       { label: t('breadcrumbs.protocols'), url: protocols_path(view_mode: archived ? 'archived' : nil) }
     )
