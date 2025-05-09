@@ -69,7 +69,8 @@
       </div>
     </div>
 
-    <div class="sci-secondary-navbar current-tasks-navbar">
+    <div class="sci-secondary-navbar current-tasks-navbar ml-auto">
+      <span class="navbar-link" data-mode="favorites"><%= t("dashboard.current_tasks.navbar.favorites") %></span>
       <span class="navbar-link active" data-mode="assigned"><%= t("dashboard.current_tasks.navbar.assigned") %></span>
       <span class="navbar-link" data-mode="team"><%= t("dashboard.current_tasks.navbar.all") %></span>
     </div>
@@ -80,6 +81,12 @@
       <div class="current-tasks-list "
            data-tasks-list-url="<%= dashboard_current_tasks_path %>">
       </div>
+    </div>
+    <div id="favoritesWidget" class="hidden h-full">
+      <favorites-widget
+        ref="widget"
+        favorites-url="<%= favorites_dashboard_current_tasks_path %>"
+      ></favorites-widget>
     </div>
   </div>
 </div>
@@ -97,3 +104,5 @@
     <p class="widget-placeholder-title"><%= I18n.t('dashboard.current_tasks.no_tasks.search_result.title') %></p>
   </div>
 </template>
+
+<%= javascript_include_tag 'vue_favorites_widget' %>

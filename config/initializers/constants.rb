@@ -443,6 +443,12 @@ class Constants
   FAST_STATUS_POLLING_INTERVAL = 5000
   SLOW_STATUS_POLLING_INTERVAL = 10000
 
+  STATUS_COLORS = {
+    not_started: '#fffff',
+    started: '#3070ED',
+    completed: '#5EC66F'
+  }
+
   # Interval time for polling asset changes when editing with SciNote Edit
   ASSET_POLLING_INTERVAL = 5000
 
