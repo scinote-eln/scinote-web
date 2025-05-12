@@ -183,7 +183,11 @@
           </a>
           </div>
           </div>
-          <div class="protocol-steps pb-8">
+          <div :class="{
+              'tw-hidden': loadingOverlay
+            }"
+            class="protocol-steps pb-8"
+          >
             <div v-for="(step, index) in steps" :key="step.id" class="step-block">
               <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
                 <i class="sn-icon sn-icon-new-task"></i>
@@ -200,9 +204,9 @@
                 @step:update="updateStep"
                 @stepUpdated="refreshProtocolStatus"
                 @step:insert="updateStepsPosition"
-                @step:elements:loaded="stepToReload = null"
+                @step:elements:loaded="stepToReload = null; elementsLoaded++"
                 @step:move_element="reloadStep"
-                @step:attachemnts:loaded="stepToReload = null"
+                @step:attachments:loaded="stepToReload = null; attachmentsLoaded++"
                 @step:move_attachment="reloadStep"
                 @step:drag_enter="dragEnter"
                 @step:collapsed="checkStepsState"
@@ -227,6 +231,9 @@
                   <span>{{ i18n.t("protocols.steps.new_step") }}</span>
               </a>
             </div>
+          </div>
+          <div v-if="loadingOverlay" class="text-center h-20 flex items-center justify-center">
+            <div class="sci-loader"></div>
           </div>
         </div>
       </div>
@@ -307,8 +314,32 @@ export default {
       stepToReload: null,
       activeDragStep: null,
       userSettingsUrl: null,
-      stepCollapsed: false
+      stepCollapsed: false,
+      anchorId: null,
+      elementsLoaded: 0,
+      attachmentsLoaded: 0,
+      loadingOverlay: false
     };
+  },
+  created() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.anchorId = urlParams.get('step_id');
+
+    if (this.anchorId) {
+      this.loadingOverlay = true;
+    }
+  },
+  watch: {
+    elementsLoaded() {
+      if (this.anchorId) {
+        this.scrollToStep();
+      }
+    },
+    attachmentsLoaded() {
+      if (this.anchorId) {
+        this.scrollToStep();
+      }
+    }
   },
   mounted() {
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
@@ -332,6 +363,20 @@ export default {
     }
   },
   methods: {
+    scrollToStep() {
+      if (this.elementsLoaded === this.steps.length && this.attachmentsLoaded === this.steps.length) {
+        this.loadingOverlay = false;
+        this.$nextTick(() => {
+          if (this.anchorId) {
+            const step = this.$refs.steps.find((child) => child.step?.id === this.anchorId);
+            if (step) {
+              step.$refs.stepContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            this.anchorId = null;
+          }
+        });
+      }
+    },
     getHeader() {
       return this.$refs.header;
     },
