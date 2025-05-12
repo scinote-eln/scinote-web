@@ -95,6 +95,7 @@ import MoveModal from './modals/move.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
 import ExportLimitExceededModal from './modals/export_limit_exceeded_modal.vue';
 import FavoriteRenderer from '../shared/datatable/renderers/favorite.vue';
+import { max } from 'lodash';
 
 export default {
   name: 'ProjectsList',
@@ -169,7 +170,8 @@ export default {
         headerName: this.i18n.t('projects.index.favorite'),
         sortable: true,
         cellRenderer: FavoriteRenderer,
-        minWidth: 80,
+        minWidth: 70,
+        maxWidth: 70,
         notSelectable: true
       },
       {
@@ -185,7 +187,8 @@ export default {
         cellRendererParams: {
           statusesList: this.statusesList
         },
-        notSelectable: true
+        notSelectable: true,
+        minWidth: 180
       },
       {
         field: 'due_date',
