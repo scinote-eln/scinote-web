@@ -152,7 +152,8 @@ export default {
         headerName: this.i18n.t('experiments.table.column.favorite'),
         sortable: true,
         cellRenderer: FavoriteRenderer,
-        minWidth: 80,
+        minWidth: 70,
+        maxWidth: 70,
         notSelectable: true
       },
       {
