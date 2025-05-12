@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class UpdateLabelTemplates < ActiveRecord::Migration[6.1]
+  class TempLabelTemplate < ApplicationRecord
+    self.table_name = 'label_templates'
+  end
+
   def up
     change_table :label_templates, bulk: true do |t|
       t.string :type
@@ -11,10 +15,10 @@ class UpdateLabelTemplates < ActiveRecord::Migration[6.1]
       t.remove :size
     end
 
-    LabelTemplate.reset_column_information
+    TempLabelTemplate.reset_column_information
 
     # Remove our original default template
-    LabelTemplate.order(created_at: :asc).find_by(default: true)&.destroy
+    TempLabelTemplate.order(created_at: :asc).find_by(default: true)&.destroy
 
     Team.find_each do |team|
       FluicsLabelTemplate.create!(

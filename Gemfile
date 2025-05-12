@@ -6,13 +6,13 @@ ruby '~> 3.2.2'
 
 gem 'activerecord-session_store'
 gem 'bootsnap', require: false
-gem 'devise', '~> 4.8.1'
+gem 'devise', '~> 4.9.4'
 gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 1.5'
 gem 'pg_search' # PostgreSQL full text search
 gem 'psych', '< 4.0'
-gem 'rails', '~> 7.0.8'
+gem 'rails', '~> 7.2.2.1'
 gem 'recaptcha'
 gem 'sanitize'
 gem 'sprockets-rails'
@@ -60,7 +60,7 @@ gem 'logging', '~> 2.0.0'
 gem 'mime-types', '~> 3.4'
 gem 'nested_form_fields'
 gem 'nokogiri', '~> 1.18.8' # HTML/XML parser
-gem 'noticed'
+gem 'noticed', '~> 1.6'
 gem 'oj'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
@@ -116,7 +116,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rails-controller-testing'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 7'
   gem 'rubocop', require: false
   gem 'rubocop-performance'
   gem 'rubocop-rails'
@@ -141,3 +141,4 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i(mingw mswin x64_mingw jruby)
+

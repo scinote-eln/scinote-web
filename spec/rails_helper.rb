@@ -32,7 +32,7 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 # Checks for pending migration
 begin
-  ActiveRecord::Migration.check_pending!
+  ActiveRecord::Migration.check_all_pending!
 rescue ActiveRecord::PendingMigrationError => e
   abort(e.message)
 end

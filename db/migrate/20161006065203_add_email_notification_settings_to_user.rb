@@ -1,10 +1,14 @@
 class AddEmailNotificationSettingsToUser < ActiveRecord::Migration[4.2]
+  class TempUser < ApplicationRecord
+    self.table_name = 'users'
+  end
+
   def up
     add_column :users, :assignments_notification_email, :boolean, default: false
     add_column :users, :recent_notification_email, :boolean, default: false
 
-    User.update_all(assignments_notification_email: false,
-                    recent_notification_email: false)
+    TempUser.update_all(assignments_notification_email: false,
+                        recent_notification_email: false)
   end
 
   def down
