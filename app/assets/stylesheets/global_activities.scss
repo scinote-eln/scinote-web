@@ -10,7 +10,7 @@
   padding: 0 15px;
 
   &.task-activities {
-    height: calc(100vh - var(--navbar-height) - var(--title-row-height) - 4rem);
+    height: calc(100vh - var(--navbar-height) - var(--title-row-height) - 6rem);
     padding-top: 20px;
   }
 
@@ -155,6 +155,7 @@
 
     .activities-container {
       height: 100%;
+      overflow-y: auto;
       padding-top: 10px;
       position: absolute;
       width: 100%;
@@ -284,6 +285,7 @@
   .filters-container {
     height: 100%;
     margin-bottom: 60px;
+    overflow-y: auto;
     padding: 15px 20px;
     position: absolute;
   }

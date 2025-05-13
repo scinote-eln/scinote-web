@@ -6,16 +6,21 @@
   <button type="button" class="close self-start" data-dismiss="modal" aria-label="Close">
     <i class="sn-icon sn-icon-close"></i>
   </button>
-  <h4 class="modal-title">
-    <% if downstream %>
-        <%= t('my_modules.modals.update_repository_record.title_downstream',
+  <% if downstream %>
+    <h4 class="modal-title !line-clamp-3" title="<%= t('my_modules.modals.update_repository_record.title_downstream',
+             repository_name: repository.name) %>">
+      <%= t('my_modules.modals.update_repository_record.title_downstream',
              repository_name: repository.name) %>
-    <% else %>
+    </h4>
+  <% else %>
+    <h4 class="modal-title !line-clamp-3" title="<%= t('my_modules.modals.update_repository_record.title',
+             repository_name: repository.name,
+             my_module_name: my_module.name) %>">
       <%= t('my_modules.modals.update_repository_record.title',
            repository_name: repository.name,
            my_module_name: my_module.name) %>
-    <% end %>
-  </h4>
+    </h4>
+  <% end %>
 </div>
 <div class="modal-body">
   <% if downstream %>

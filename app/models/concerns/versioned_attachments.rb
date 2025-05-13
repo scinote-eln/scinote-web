@@ -5,8 +5,8 @@ module VersionedAttachments
 
   class_methods do
     def has_one_versioned_attached(name)
-      has_one_attached name, dependent: :detach
-      has_many_attached "previous_#{name.to_s.pluralize}", dependent: :detach
+      has_one_attached name
+      has_many_attached "previous_#{name.to_s.pluralize}"
 
       define_method :"attach_#{name}_version" do |*args, **options|
         ActiveRecord::Base.transaction(requires_new: true) do

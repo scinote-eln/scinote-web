@@ -3,17 +3,19 @@
     <ResultsToolbar
       ref="resultsToolbar"
       :sort="sort"
+      :results="results"
       :canCreate="canCreate == 'true'"
       :archived="archived == 'true'"
       :active_url="active_url"
       :archived_url="archived_url"
       :headerSticked="headerSticked"
       :moduleName="moduleName"
+      :resultsCollapsed="resultsCollapsed"
       @setSort="setSort"
       @setFilters="setFilters"
       @newResult="createResult"
-      @expandAll="expandAll"
-      @collapseAll="collapseAll"
+      @expandAll="expandResults"
+      @collapseAll="collapseResults"
       class="my-4"
     />
     <div class="results-list">
@@ -32,6 +34,7 @@
         @result:deleted="removeResult"
         @result:restored="removeResult"
         @result:drag_enter="dragEnter"
+        @result:collapsed="checkResultsState"
       />
     </div>
     <clipboardPasteModal v-if="showClipboardPasteModal"
@@ -77,7 +80,8 @@ export default {
       nextPageUrl: null,
       loadingPage: false,
       activeDragResult: null,
-      userSettingsUrl: null
+      userSettingsUrl: null,
+      resultsCollapsed: false
     };
   },
   mounted() {
@@ -143,15 +147,27 @@ export default {
         }
       );
     },
-    expandAll() {
-      $('.result-wrapper .collapse').collapse('show');
-      this.toggleCollapsed(false);
+    checkResultsState() {
+      this.resultsCollapsed = this.$refs.results.every((result) => result.isCollapsed);
     },
-    collapseAll() {
+    collapseResults() {
       $('.result-wrapper .collapse').collapse('hide');
-      this.toggleCollapsed(true);
+      this.updateResultStateSettings(true);
+      this.$refs.results.forEach((result) => { result.isCollapsed = true; });
+      this.resultsCollapsed = true;
     },
-    toggleCollapsed(newState) {
+    expandResults() {
+      $('.result-wrapper .collapse').collapse('show');
+      this.updateResultStateSettings(false);
+      this.$refs.results.forEach((result) => { result.isCollapsed = false; });
+      this.resultsCollapsed = false;
+    },
+    updateResultStateSettings(newState) {
+      const updatedData = this.results.reduce((acc, currentResult) => {
+        acc[currentResult.id] = newState;
+        return acc;
+      }, {});
+
       this.results = this.results.map((result) => ({
         ...result,
         attributes: {
@@ -159,6 +175,13 @@ export default {
           collapsed: newState
         }
       }));
+
+      const settings = {
+        key: 'result_states',
+        data: updatedData
+      };
+
+      axios.put(this.userSettingsUrl, { settings: [settings] });
     },
     removeResult(result_id) {
       this.results = this.results.filter((r) => r.id != result_id);

@@ -3,8 +3,8 @@
        :key="storageLocationTree.storage_location.id">
     <div class="flex items-center">
       <i v-if="storageLocationTree.children.length > 0"
-         :class="{'sn-icon-up': opendedStorageLocations[storageLocationTree.storage_location.id],
-                  'sn-icon-down': !opendedStorageLocations[storageLocationTree.storage_location.id]}"
+         :class="{'sn-icon-down': opendedStorageLocations[storageLocationTree.storage_location.id],
+                  'sn-icon-right': !opendedStorageLocations[storageLocationTree.storage_location.id]}"
          @click="opendedStorageLocations[storageLocationTree.storage_location.id] = !opendedStorageLocations[storageLocationTree.storage_location.id]"
          class="sn-icon p-2 pr-1 cursor-pointer"></i>
       <i v-else class="sn-icon sn-icon-up p-2 pr-1 opacity-0"></i>

@@ -2,7 +2,7 @@
   <div class="relative" v-if="listItems.length > 0 || alwaysShow" v-click-outside="closeMenu" >
     <button ref="field" :class="btnClasses" :title="title" @click="isOpen = !isOpen" :data-e2e="dataE2e">
       <i v-if="btnIcon" :class="btnIcon"></i>
-      {{ btnText }}
+      <span v-if="btnText" :class="{'tw-hidden xl:inline': smallScreenCollapse}">{{ btnText }}</span>
       <i v-if="caret && isOpen" class="sn-icon sn-icon-up"></i>
       <i v-else-if="caret" class="sn-icon sn-icon-down"></i>
     </button>
@@ -84,7 +84,8 @@ export default {
     caret: { type: Boolean, default: false },
     alwaysShow: { type: Boolean, default: false },
     title: { type: String, default: '' },
-    dataE2e: { type: String, default: '' }
+    dataE2e: { type: String, default: '' },
+    smallScreenCollapse: { type: Boolean, default: false }
   },
   data() {
     return {

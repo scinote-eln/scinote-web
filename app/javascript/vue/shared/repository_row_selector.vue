@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import escapeHtml from '../shared/escape_html.js';
 import SelectDropdown from './select_dropdown.vue';
 import axios from '../../packs/custom_axios.js';
 import {
@@ -144,7 +145,7 @@ export default {
       return `
         <div class="flex items-center gap-4 w-full">
           <div class="grow overflow-hidden">
-            <div class="truncate" >${row[1]}</div>
+            <div class="truncate" >${escapeHtml(row[1])}</div>
             <div class="text-sn-grey">IT${row[0]}</div>
           </div>
           <i class="sn-icon sn-icon-info show-items-columns" title="" data-item-id="${row[0]}" data-repository-id='${this.selectedRepository}'></i>

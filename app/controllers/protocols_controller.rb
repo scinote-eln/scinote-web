@@ -40,6 +40,7 @@ class ProtocolsController < ApplicationController
     unlink
     unlink_modal
     delete_steps
+    list_published_protocol_templates
   )
 
   before_action :check_manage_with_read_protocol_permissions, only: %i(
@@ -795,6 +796,26 @@ class ProtocolsController < ApplicationController
   def load_from_repository_modal
     render json: {
       html: render_to_string(partial: 'my_modules/protocols/load_from_repository_modal_body', formats: :html)
+    }
+  end
+
+  def list_published_protocol_templates
+    protocols = Protocol.latest_available_versions_without_drafts(current_team)
+                        .active
+                        .with_granted_permissions(current_user, ProtocolPermissions::READ)
+
+    if params[:query].present?
+      protocols = protocols.where_attributes_like(
+        ['protocols.name', Protocol::PREFIXED_ID_SQL],
+        params[:query]
+      )
+    end
+
+    protocols = protocols.order('LOWER(protocols.name) asc').page(params[:page])
+    render json: {
+      paginated: true,
+      next_page: protocols.next_page,
+      data: protocols.map { |protocol_template| [protocol_template.id, protocol_template.name] }
     }
   end
 

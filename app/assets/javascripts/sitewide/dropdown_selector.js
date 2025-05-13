@@ -1,4 +1,4 @@
-/* global PerfectScrollbar activePSB PerfectSb I18n */
+/* global I18n */
 /* eslint-disable no-unused-vars, no-use-before-define */
 
 /*
@@ -301,7 +301,6 @@ var dropdownSelector = (function() {
   function generateDropdown(selector, config = {}) {
     var selectElement = $(selector);
     var optionContainer;
-    var perfectScroll;
     var dropdownContainer;
     var toggleElement;
 
@@ -410,10 +409,6 @@ var dropdownSelector = (function() {
         }
       });
 
-    // Initialize scroll bar inside options container
-    perfectScroll = new PerfectScrollbar(dropdownContainer.find('.dropdown-container')[0]);
-    activePSB.push(perfectScroll);
-
     // Select options container
     optionContainer = dropdownContainer.find('.dropdown-container');
 
@@ -450,7 +445,6 @@ var dropdownSelector = (function() {
       if (dropdownContainer.hasClass('open')) {
         // Each time we open option container we must scroll it
         dropdownContainer.find('.dropdown-container').scrollTop(0);
-        PerfectSb().update_all();
 
         // on Open we load new data
         loadData(selectElement, dropdownContainer);
@@ -651,9 +645,6 @@ var dropdownSelector = (function() {
       // If we data empty, draw placeholder
       $(`<div class="empty-dropdown">${I18n.t('dropdown_selector.nothing_found')}</div>`).appendTo(container.find('.dropdown-container'));
     }
-
-    // Update scrollbar
-    PerfectSb().update_all();
 
     // Check position of option dropdown
     refreshDropdownSelection(selector, container);
@@ -865,7 +856,6 @@ var dropdownSelector = (function() {
           }].concat(optionsAjax);
         }
         loadData(selector, container, optionsAjax);
-        PerfectSb().update_all();
       });
     // For local options we convert options element from select to correct array
     } else if (selector.data('select-by-group')) {

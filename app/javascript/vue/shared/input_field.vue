@@ -29,7 +29,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
+        @input="emitValue"
         class="outline-none shadow-none placeholder:text-sn-grey rounded h-full border border-sn-sleepy-grey bg-white w-full px-4 focus:border-sn-science-blue"
         :class="{
           '!bg-sn-super-light-grey ': disabled,
@@ -112,6 +112,24 @@ export default {
     warningMessage: {
       type: String,
       default: null
+    },
+    isNumber: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    emitValue(e) {
+      let newValue = e.target.value;
+      if (this.isNumber) {
+        [newValue] = newValue.replace(/[^-0-9.]/g, '').match('^-?\\d*(\\.\\d{0,50})?');
+        this.$emit('update:modelValue', e.target.value);
+        this.$nextTick(() => {
+          this.$emit('update:modelValue', newValue);
+        });
+      } else {
+        this.$emit('update:modelValue', newValue);
+      }
     }
   }
 };

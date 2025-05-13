@@ -379,20 +379,23 @@ class RepositoryRowsController < ApplicationController
   end
 
   def load_repository_or_snapshot
+    if params[:form_repository_rows_field_value_id]
+      @form_repository_rows_field_value =
+        FormRepositoryRowsFieldValue.find_by(id: params[:form_repository_rows_field_value_id])
+    end
+
     @repository = Repository.viewable_by_user(current_user).find_by(id: params[:repository_id]) ||
                   RepositorySnapshot.find_by(id: params[:repository_id])
-    return render_404 unless @repository
+
+    render_404 unless @form_repository_rows_field_value || @repository
   end
 
   def load_repository_row
-    @repository_row =
-      if params[:form_repository_rows_field_value_id]
-        FormRepositoryRowsFieldValue
-          .find_by(id: params[:form_repository_rows_field_value_id])
-          &.reified_repository_row_by_id(params[:id])
-      else
-        @repository.repository_rows.eager_load(:repository_columns).find_by(id: params[:id])
-      end
+    @repository_row = if @form_repository_rows_field_value
+                        @form_repository_rows_field_value.reified_repository_row_by_id(params[:id])
+                      else
+                        @repository.repository_rows.eager_load(:repository_columns).find_by(id: params[:id])
+                      end
 
     render_404 unless @repository_row
   end
@@ -404,7 +407,13 @@ class RepositoryRowsController < ApplicationController
   end
 
   def check_read_permissions
-    render_403 unless can_read_repository?(@repository)
+    if @form_repository_rows_field_value
+      render_403 unless can_read_my_module?(
+        @form_repository_rows_field_value.form_response.step.protocol.my_module
+      )
+    else
+      render_403 unless can_read_repository?(@repository)
+    end
   end
 
   def check_snapshotting_status
