@@ -5,7 +5,7 @@
     :update-url = "'<%= update_preferences_path(format: :json) %>'"
     :user-settings = "<%= @user.settings.to_json %>"
     :time-zones = "<%= ActiveSupport::TimeZone.all.map{ |tz|
-                                [ tz.name, tz.formatted_offset + " " + tz.name]
+                                [ tz.tzinfo.name, tz.formatted_offset + " " + tz.name]
                               }.to_json %>"
     :date-formats = "<%= Constants::SUPPORTED_DATE_FORMATS.map { |df|
                                 [df, "#{l(Time.new(2024, 4, 22), format: :full_date, date_format: df)}"]
