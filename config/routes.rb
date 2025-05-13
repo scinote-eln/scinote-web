@@ -459,6 +459,13 @@ Rails.application.routes.draw do
     # as well as 'module info' page for single module (HTML)
     get 'experiments/:experiment_id/table', to: 'my_modules#index'
     get 'experiments/:experiment_id/modules', to: 'my_modules#index', as: :my_modules
+
+    resources :step_results, only: %i(destroy) do
+      collection do
+        post :create
+      end
+    end
+
     resources :my_modules, path: '/modules', only: [:show, :update] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
 

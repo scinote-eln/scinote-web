@@ -38,6 +38,8 @@ describe Step, type: :model do
     it { should have_many :tables }
     it { should have_many :report_elements }
     it { should have_many :tiny_mce_assets }
+    it { should have_many :step_results }
+    it { should have_many :results }
   end
 
   describe 'Validations' do
