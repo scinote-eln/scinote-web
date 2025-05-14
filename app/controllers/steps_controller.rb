@@ -7,11 +7,11 @@ class StepsController < ApplicationController
   before_action :load_vars, only: %i(update destroy show toggle_step_state update_view_state
                                      update_asset_view_mode elements
                                      attachments upload_attachment duplicate)
-  before_action :load_vars_nested, only: %i(create index reorder list_protocol_steps add_protocol_steps)
+  before_action :load_vars_nested, only: %i(create index list reorder list_protocol_steps add_protocol_steps)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
   before_action :check_protocol_manage_permissions, only: %i(reorder add_protocol_steps)
-  before_action :check_view_permissions, only: %i(show index attachments elements list_protocol_steps)
+  before_action :check_view_permissions, only: %i(show index list attachments elements list_protocol_steps)
   before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: %i(update destroy
                                                     update_view_state update_asset_view_mode upload_attachment)
@@ -19,6 +19,10 @@ class StepsController < ApplicationController
 
   def index
     render json: @protocol.steps.in_order, each_serializer: StepSerializer, user: current_user
+  end
+
+  def list
+    @steps = @protocol.steps.in_order
   end
 
   def elements

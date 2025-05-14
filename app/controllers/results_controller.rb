@@ -40,6 +40,12 @@ class ResultsController < ApplicationController
     end
   end
 
+  def list
+    @results = @my_module.results.active
+
+    update_and_apply_user_sort_preference!
+  end
+
   def create
     result = @my_module.results.create!(user: current_user)
     log_activity(:add_result, { result: result })
