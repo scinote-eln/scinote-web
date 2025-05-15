@@ -79,6 +79,11 @@ export default {
       selectedSteps: null
     };
   },
+  watch: {
+    selectedProtocol() {
+      this.selectedSteps = null;
+    }
+  },
   computed: {
     validObject() {
       return this.selectedProtocol && this.selectedSteps?.length;
