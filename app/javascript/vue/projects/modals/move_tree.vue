@@ -2,7 +2,7 @@
   <div class="pl-6" v-if="objects.length" v-for="object in objects" :key="object.folder.id">
     <div class="flex items-center">
       <i v-if="object.children.length > 0"
-         :class="{'sn-icon-up': opendedFolders[object.folder.id], 'sn-icon-down': !opendedFolders[object.folder.id]}"
+         :class="{'sn-icon-down': opendedFolders[object.folder.id], 'sn-icon-right': !opendedFolders[object.folder.id]}"
          @click="opendedFolders[object.folder.id] = !opendedFolders[object.folder.id]"
          class="sn-icon p-2 pr-1 cursor-pointer"></i>
       <i v-else class="sn-icon sn-icon-up p-2 pr-1 opacity-0"></i>
