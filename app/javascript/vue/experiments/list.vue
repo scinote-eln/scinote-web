@@ -153,7 +153,8 @@ export default {
           headerName: this.i18n.t('experiments.table.column.favorite'),
           sortable: true,
           cellRenderer: FavoriteRenderer,
-          minWidth: 80,
+          minWidth: 70,
+          maxWidth: 70,
           notSelectable: true
         },
         {
@@ -170,7 +171,7 @@ export default {
           cellRendererParams: {
             statusesList: this.statusesList
           },
-          minWidth: 200
+          minWidth: 180
         },
         {
           field: 'start_date',
