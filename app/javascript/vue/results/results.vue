@@ -86,14 +86,14 @@ export default {
   },
   mounted() {
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
-    window.addEventListener('scroll', this.loadResults, false);
+    window.addEventListener('scroll', this.infiniteScrollLoad, false);
     window.addEventListener('scroll', this.initStackableHeaders, false);
     this.nextPageUrl = this.url;
     this.loadResults();
     this.initStackableHeaders();
   },
   beforeUnmount() {
-    window.removeEventListener('scroll', this.loadResults, false);
+    window.removeEventListener('scroll', this.infiniteScrollLoad, false);
     window.removeEventListener('scroll', this.initStackableHeaders, false);
   },
   methods: {
@@ -110,19 +110,22 @@ export default {
         this.loadResults();
       });
     },
+    infiniteScrollLoad() {
+      if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
+        this.loadResults();
+      }
+    },
     loadResults() {
       if (this.nextPageUrl === null || this.loadingPage) return;
 
-      if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
-        this.loadingPage = true;
-        const params = this.sort ? { ...this.filters, sort: this.sort } : { ...this.filters };
-        axios.get(this.nextPageUrl, { params }).then((response) => {
-          this.results = this.results.concat(response.data.data);
-          this.sort = response.data.meta.sort;
-          this.nextPageUrl = response.data.links.next;
-          this.loadingPage = false;
-        });
-      }
+      this.loadingPage = true;
+      const params = this.sort ? { ...this.filters, sort: this.sort } : { ...this.filters };
+      axios.get(this.nextPageUrl, { params }).then((response) => {
+        this.results = this.results.concat(response.data.data);
+        this.sort = response.data.meta.sort;
+        this.nextPageUrl = response.data.links.next;
+        this.loadingPage = false;
+      });
     },
     setSort(sort) {
       this.sort = sort;
