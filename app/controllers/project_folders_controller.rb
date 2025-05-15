@@ -11,7 +11,7 @@ class ProjectFoldersController < ApplicationController
   before_action :load_current_folder, only: %i(new)
   before_action :load_project_folder, only: %i(edit update)
   before_action :check_create_permissions, only: %i(new create)
-  before_action :check_manage_permissions, only: %i(archive move_to)
+  before_action :check_manage_permissions, only: %i(move_to)
 
   def tree
     render json: folders_tree(current_team, current_user)

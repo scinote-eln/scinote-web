@@ -3,9 +3,13 @@
 class ConvertToActiveStorage < ActiveRecord::Migration[5.2]
   require 'open-uri'
 
+  class TempAsset < ApplicationRecord
+    self.table_name = 'assets'
+  end
+
   ID_PARTITION_LIMIT = 1_000_000_000
   DIGEST = OpenSSL::Digest.const_get('SHA1').new
-  MODELS = [Asset, TempFile, TinyMceAsset, User, ZipExport].freeze
+  MODELS = [TempAsset, TempFile, TinyMceAsset, User, ZipExport].freeze
 
   def up
     ActiveRecord::Base.connection.raw_connection.prepare('active_storage_blob_statement', <<-SQL)

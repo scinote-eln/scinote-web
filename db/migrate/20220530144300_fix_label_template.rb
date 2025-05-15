@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 class FixLabelTemplate < ActiveRecord::Migration[6.1]
+  class TempLabelTemplate < ApplicationRecord
+    self.table_name = 'label_templates'
+  end
+
   def change
     # rubocop:disable Rails/SkipsModelValidations
-    LabelTemplate.last.update_columns(
+    TempLabelTemplate.last.update_columns(
       name: 'SciNote Item',
       size: '1" x 0.5" / 25.4mm x 12.7mm',
       language_type: :zpl,

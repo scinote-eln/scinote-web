@@ -1,8 +1,12 @@
 class RefactorUserSettings < ActiveRecord::Migration[5.1]
+  class TempUser < ApplicationRecord
+    self.table_name = 'users'
+  end
+
   def up
     add_column :users, :settings, :jsonb, default: {}, null: false
 
-    User.find_each do |user|
+    TempUser.find_each do |user|
       settings = {
         time_zone: user['time_zone'],
         notifications_settings: {
@@ -33,7 +37,7 @@ class RefactorUserSettings < ActiveRecord::Migration[5.1]
     add_column :users,
                :system_message_notification_email, :boolean, default: false
 
-    User.find_each do |user|
+    TempUser.find_each do |user|
       user.time_zone = user.settings[:time_zone]
       user.assignments_notification =
         user.settings[:notifications_settings][:assignments]

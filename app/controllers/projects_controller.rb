@@ -24,7 +24,7 @@ class ProjectsController < ApplicationController
                                                     favorite unfavorite)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: :update
-  before_action :set_folder_inline_name_editing, only: %i(index cards)
+  before_action :set_folder_inline_name_editing, only: %i(index)
   before_action :set_breadcrumbs_items, only: :index
   before_action :set_navigator, only: :index
   layout 'fluid'

@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 class AddDefaultSettingsToOldReports < ActiveRecord::Migration[6.1]
+  class TempReport < ApplicationRecord
+    self.table_name = 'reports'
+  end
+
   def change
-    Report.find_each do |report|
+    TempReport.find_each do |report|
       report.update!(settings: Report::DEFAULT_SETTINGS)
     end
   end

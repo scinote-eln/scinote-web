@@ -1,4 +1,8 @@
 class CreateProtocols < ActiveRecord::Migration[4.2]
+  class TempMyModule < ApplicationRecord
+    self.table_name = 'my_modules'
+  end
+
   def up
     # First, create protocol table
     create_table :protocols do |t|
@@ -56,7 +60,7 @@ class CreateProtocols < ActiveRecord::Migration[4.2]
     add_foreign_key :steps, :protocols, column: :protocol_id
     add_index :steps, :protocol_id
 
-    MyModule.find_each do |my_module|
+    TempMyModule.find_each do |my_module|
       protocol = Protocol.new(
         my_module_id: my_module.id,
         team_id: my_module.project.team.id,
@@ -80,7 +84,7 @@ class CreateProtocols < ActiveRecord::Migration[4.2]
     add_foreign_key :steps, :my_modules
     add_index :steps, :my_module_id
 
-    MyModule.find_each do |my_module|
+    TempMyModule.find_each do |my_module|
       protocol = Protocol.where(my_module_id: my_module.id).first
       if protocol.present?
         Step.where(protocol_id: protocol.id).find_each do |step|
