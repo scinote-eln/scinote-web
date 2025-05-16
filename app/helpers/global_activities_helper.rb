@@ -115,10 +115,10 @@ module GlobalActivitiesHelper
                project_folder_path(obj, team: obj.team.id)
              end
     when StorageLocation
-      path = if obj.new_record?
-               storage_locations_path(team: activity.team.id)
+      path = if obj.container
+               storage_location_path(obj, team: obj.team_id)
              else
-               storage_location_path(obj, team: activity.team.id)
+               storage_locations_path(parent_id: obj.id, team: obj.team_id)
              end
     when Form
       path = form_path(obj, team: obj.team.id)
