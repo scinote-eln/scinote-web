@@ -38,7 +38,9 @@ class StorageLocationsController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    redirect_to storage_locations_path(parent_id: @storage_location.id) and return unless @storage_location.container
+  end
 
   def create
     ActiveRecord::Base.transaction do

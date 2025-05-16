@@ -7,6 +7,10 @@ class StorageLocationRepositoryRow < ApplicationRecord
   default_scope -> { kept }
 
   belongs_to :storage_location, inverse_of: :storage_location_repository_rows
+  belongs_to :container_storage_location, -> { where(container: true) },
+             class_name: 'StorageLocation',
+             foreign_key: 'storage_location_id',
+             inverse_of: :storage_location_repository_rows
   belongs_to :repository_row, inverse_of: :storage_location_repository_rows
   belongs_to :created_by, class_name: 'User'
 
