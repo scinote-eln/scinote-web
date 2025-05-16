@@ -74,7 +74,8 @@ export default {
     archived: { type: String, required: true },
     active_url: { type: String, required: true },
     archived_url: { type: String, required: true },
-    userSettingsUrl: { type: String, required: false }
+    userSettingsUrl: { type: String, required: false },
+    changeStatesUrl: { type: String, required: false }
   },
   data() {
     return {
@@ -218,25 +219,15 @@ export default {
       this.resultsCollapsed = false;
     },
     updateResultStateSettings(newState) {
-      const updatedData = this.results.reduce((acc, currentResult) => {
-        acc[currentResult.id] = newState;
-        return acc;
-      }, {});
+      const data = {};
 
-      this.results = this.results.map((result) => ({
-        ...result,
-        attributes: {
-          ...result.attributes,
-          collapsed: newState
-        }
-      }));
+      if (newState) {
+        data.collapsed = true;
+      } else {
+        data.expanded = true;
+      }
 
-      const settings = {
-        key: 'result_states',
-        data: updatedData
-      };
-
-      axios.put(this.userSettingsUrl, { settings: [settings] });
+      axios.post(this.changeStatesUrl, data);
     },
     removeResult(result_id) {
       this.results = this.results.filter((r) => r.id != result_id);
