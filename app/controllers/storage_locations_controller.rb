@@ -217,7 +217,7 @@ class StorageLocationsController < ApplicationController
   end
 
   def check_read_permissions
-    render_403 unless can_read_storage_location?(@storage_location)
+    render_403 unless can_read_storage_location?(@storage_location) && @storage_location.container
   end
 
   def check_create_permissions
