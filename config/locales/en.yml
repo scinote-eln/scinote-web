@@ -897,7 +897,7 @@ en:
           results_comments: "Result comments"
           additional_content: "Additional content"
           task_activity: "Include task activity"
-          exclude_task_metadata: "Exclude task metadata"
+          exclude_task_metadata: "Exclude project, experiment and task metadata"
           exclude_timestamps: "Exclude timestamps"
           archived: "[archived]"
           deleted: "[deleted]"
@@ -982,6 +982,14 @@ en:
         project_header:
           user_time: "Project %{code} created on %{timestamp}."
           title: "Report for project %{project}"
+          started_on: "Start date: %{started_on}"
+          due_date: "Due date: %{due_date}"
+          status_label: "Status:"
+          supervised_by: "Head of project: %{user}"
+          status:
+            not_started: "Not started"
+            started: "In progress"
+            completed: "Completed"
         module:
           user_time: "Task %{code} created on %{timestamp}."
           started_on: "Start date: %{started_on}"
@@ -1000,6 +1008,13 @@ en:
           user_time: "Experiment %{code} created on %{timestamp}."
           no_description: "No description"
           no_tags: "No tags"
+          started_on: "Start date: %{started_on}"
+          due_date: "Due date: %{due_date}"
+          status_label: "Status:"
+          status:
+            not_started: "Not started"
+            started: "In progress"
+            completed: "Completed"
         module_activity:
           name: "Task activity"
           sidebar_name: "Activity"

@@ -1,7 +1,7 @@
 <template>
   <div v-if="hasFavorite">
     <button @click="updateFavorite(!favorite)"
-            class="flex justify-center items-center w-full h-9 bg-transparent border-none cursor-pointer">
+            class="p-0 flex items-center w-full h-9 bg-transparent border-none cursor-pointer">
       <div v-if="favorite" class="sn-icon sn-icon-star-filled text-sn-alert-brittlebush"></div>
       <div v-else @mouseover="hovered = true"
                   @mouseleave="hovered = false">
