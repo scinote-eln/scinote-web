@@ -436,6 +436,10 @@ export default {
 
       setTimeout(() => {
         this.initializing = false;
+
+        if (this.tableState.columnsState.length !== this.columnDefs.length + 1) {
+          this.saveTableState();
+        }
       }, 200);
     },
     saveTableState() {
