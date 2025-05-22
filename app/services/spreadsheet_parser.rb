@@ -61,7 +61,12 @@ class SpreadsheetParser
             "#{date_format} #{' %H:%M' if cell.value.is_a?(DateTime)}"
           )
         else
-          cell&.formatted_value
+          begin
+            cell&.formatted_value
+          rescue RuntimeError
+            # fallback to raw value without format
+            cell.value
+          end
         end
       end
     else
