@@ -72,7 +72,7 @@ module Users
       end
 
       def webhook_params
-        params.require(:webhook).permit(:http_method, :url, :active, :secret_key)
+        params.require(:webhook).permit(:http_method, :url, :active, :secret_key, :include_serialized_subject)
       end
 
       def load_filter_elements(filter)

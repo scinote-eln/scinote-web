@@ -4599,6 +4599,8 @@ en:
       webhook_updated: "Webhook successfully updated"
       webhook_deleted: "Webhook successfully deleted"
       delete_webhook_confimration: "Are you sure you want to delete the webhook?"
+      include_serialized_subject: "Include serialized subject"
+      include_serialized_subject_hint: "(Optional) Include the full webhook subject info, using API serializers"
       secret_key: "Secret key"
       secret_key_hint: "(Optional) A secret key that will be included in the Webhook-Secret-Key header, for authentication purposes."
   # This section contains general words that can be used in any parts of
@@ -4727,6 +4729,9 @@ en:
       all_options_placeholder: 'All options selected'
       no_options_placeholder: 'No options found'
   api:
+    webhooks:
+      errors:
+        subject_not_serializable: "Subject not serializable."
     core:
       status_ok: "Ok"
       invalid_api_key: "API key is invalid or expired"

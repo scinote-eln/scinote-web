@@ -17,6 +17,16 @@
   <% end %>
 </div>
 <div class="webhook-form-row">
+  <span class="form-text"><%= t("webhooks.index.include_serialized_subject") %></span>
+  <div class="sci-input-container form-group">
+    <span class="sci-checkbox-container ml-3">
+      <input type="checkbox" class="sci-checkbox" name="webhook[include_serialized_subject]" <%= 'checked' if f.object.include_serialized_subject %>/>
+      <span class="sci-checkbox-label"></span>
+    </span>
+    <small><%= t("webhooks.index.include_serialized_subject_hint") %></small>
+  </div>
+</div>
+<div class="webhook-form-row">
   <span class="form-text  webhook-form-secret-key-text"><%= t("webhooks.index.secret_key") %></span>
   <div class="webhook-secret-key-container">
     <div class="sci-input-container form-group">
