@@ -3,7 +3,7 @@
     <template v-if="params.dtComponent.currentViewRender === 'table'">
     <div class="group relative flex items-center group-hover:marker text-xs h-full w-full leading-[unset]">
       <div ref="descripitonBox" class="flex gap-2 w-full items-center text-sm leading-[unset]">
-        <span v-if="removeTags(params.data.description).length > 0" class="cursor-pointer line-clamp-1 leading-[unset]"
+        <span v-if="params.data.description && removeTags(params.data.description).length > 0" class="cursor-pointer line-clamp-1 leading-[unset]"
               @click.stop="showDescriptionModal">
           {{ removeTags(params.data.description) }}
         </span>
