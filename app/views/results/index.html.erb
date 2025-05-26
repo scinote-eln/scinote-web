@@ -22,6 +22,7 @@
              active_url="<%= my_module_results_url(@my_module) %>"
              protocol-id="<%= @my_module.protocol.id %>"
              archived_url="<%= my_module_results_url(@my_module, view_mode: :archived) %>"
+             change-states-url="<%= change_results_state_my_module_path(@my_module) %>"
              can-create=<%= can_create_results?(@my_module) && !(params[:view_mode] == 'archived') %>
              archived=<%= params[:view_mode] == 'archived' %>>
   </div>

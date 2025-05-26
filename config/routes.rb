@@ -479,6 +479,7 @@ Rails.application.routes.draw do
         get :permissions
         get :actions_dropdown
         get :provisioning_status
+        post :change_results_state
       end
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do
