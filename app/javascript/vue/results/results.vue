@@ -27,6 +27,8 @@
         :resultToReload="resultToReload"
         :activeDragResult="activeDragResult"
         :userSettingsUrl="userSettingsUrl"
+        :protocolId="protocolId"
+        @result:update="updateResult"
         @result:elements:loaded="resultToReload = null; elementsLoaded++"
         @result:move_element="reloadResult"
         @result:attachments:loaded="resultToReload = null; attachmentsLoaded++"
@@ -75,7 +77,8 @@ export default {
     active_url: { type: String, required: true },
     archived_url: { type: String, required: true },
     userSettingsUrl: { type: String, required: false },
-    changeStatesUrl: { type: String, required: false }
+    changeStatesUrl: { type: String, required: false },
+    protocolId: { type: Number, required: false }
   },
   data() {
     return {
@@ -228,6 +231,13 @@ export default {
       }
 
       axios.post(this.changeStatesUrl, data);
+    },
+    updateResult(id, attributes) {
+      const resultIndex = this.results.findIndex((result) => result.id === id);
+      this.results[resultIndex].attributes = {
+        ...this.results[resultIndex].attributes,
+        ...attributes
+      };
     },
     removeResult(result_id) {
       this.results = this.results.filter((r) => r.id != result_id);

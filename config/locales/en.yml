@@ -1603,6 +1603,17 @@ en:
       info_tab: "Info"
       comments_tab: "Comments"
       comment_title: "%{user} at %{time}:"
+      link_to_step: "Link to step"
+      modals:
+        link_steps:
+          title: 'Link result to protocol steps'
+          description: 'You can link result to multipple steps'
+          empty_description: 'No step found. Add a step first to enable linking with a result.'
+          steps_label: 'Protocol steps'
+          placeholder: 'Select steps'
+          link_steps: 'Link steps'
+          go_to_protocol: 'Go to Protocol'
+          step_label: "Step %{position} - %{name}"
       insert:
         button: 'Insert content'
         title: 'Insert result content'
@@ -3980,6 +3991,7 @@ en:
       component_duplication_failed: "Step content could not be duplicated, try again later."
       timestamp: "Created on %{date} by %{user}"
       timestamp_iso_html: "Created on <span class='iso-formatted-date'>%{date}</span> by %{user}"
+      manage_links: "Manage links"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"
@@ -4067,6 +4079,16 @@ en:
           confirm: 'Yes, delete them'
         reorder_elements:
           title: 'Rearrange step %{step_position} content'
+        link_results:
+          title: 'Link results to this step'
+          description: 'You can link multiple results to a step'
+          empty_description: 'No results found. Add a result first to enable linking with a step.'
+          result_label: 'Result'
+          placeholder: 'Select results'
+          link_results: 'Link results'
+          go_to_results: 'Go to Results'
+          success: 'Step and result links successfully updated.'
+          error: 'There was a problem with linking result to the step.'
         custom_well_plate:
           title: 'Insert custom well plate'
           name_label: 'Well plate name'

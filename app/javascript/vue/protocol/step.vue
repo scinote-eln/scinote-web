@@ -83,8 +83,35 @@
           :data-object-type="step.attributes.type"
           tabindex="0"
         ></span> <!-- Hidden element to support legacy code -->
-
-        <a href="#"
+        <button v-if="step.attributes.results.length == 0" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
+          <i class="sn-icon sn-icon-results"></i>
+        </button>
+        <GeneralDropdown v-else ref="linkedResultsDropdown"  position="right">
+          <template v-slot:field>
+            <button class="btn btn-light icon-btn">
+              <i class="sn-icon sn-icon-results"></i>
+              <span class="absolute top-1 right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
+                {{ step.attributes.results.length }}
+              </span>
+            </button>
+          </template>
+          <template v-slot:flyout>
+            <a v-for="result in step.attributes.results"
+               :key="result.id"
+               :title="result.name"
+               :href="resultUrl(result.id)"
+               class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer block hover:no-underline text-sn-blue truncate"
+            >
+              {{ result.name }}
+            </a>
+            <hr class="my-0">
+            <div class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-blue"
+                 @click="this.openLinkResultsModal = true; $refs.linkedResultsDropdown.closeMenu()">
+              {{ i18n.t('protocols.steps.manage_links') }}
+            </div>
+          </template>
+        </GeneralDropdown>
+        <a href=" #"
            v-if="!inRepository"
            ref="comments"
            class="open-comments-sidebar btn icon-btn btn-light"
@@ -181,6 +208,12 @@
       @close="openFormSelectModal = false"
       @submit="createElement('form_response', null, null, $event); openFormSelectModal = false"
     />
+    <LinkResultsModal
+      v-if="openLinkResultsModal"
+      :step="step"
+      @updateStep="updateLinkedResults"
+      @close="openLinkResultsModal = false"
+    />
   </div>
 </template>
 
@@ -197,9 +230,11 @@
   import Checklist from '../shared/content/checklist.vue'
   import FormResponse from '../shared/content/form_response.vue'
   import deleteStepModal from './modals/delete_step.vue'
+  import LinkResultsModal from './modals/link_results.vue'
   import Attachments from '../shared/content/attachments.vue'
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
   import MenuDropdown from '../shared/menu_dropdown.vue'
+  import GeneralDropdown from '../shared/general_dropdown.vue'
   import ContentToolbar from '../shared/content/content_toolbar.vue'
   import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
 
@@ -210,6 +245,10 @@
   import OveMixin from '../shared/content/attachments/mixins/ove.js'
   import StorageUsage from '../shared/content/attachments/storage_usage.vue'
   import axios from '../../packs/custom_axios';
+
+  import {
+    my_module_results_path,
+  } from '../../routes.js';
 
   export default {
     name: 'StepContainer',
@@ -256,6 +295,7 @@
         inlineEditError: null,
         customWellPlate: false,
         openFormSelectModal: false,
+        openLinkResultsModal: false,
         wellPlateOptions: [
           { text: I18n.t('protocols.steps.insert.well_plate_options.custom'),
             emit: 'create:custom_well_plate',
@@ -305,7 +345,9 @@
       ContentToolbar,
       CustomWellPlateModal,
       SelectFormModal,
-      FormResponse
+      FormResponse,
+      LinkResultsModal,
+      GeneralDropdown
     },
     created() {
       this.loadAttachments();
@@ -751,7 +793,16 @@
         }).fail(() => {
           HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplication_failed'), 'danger');
         });
-      }
+      },
+      updateLinkedResults(results) {
+        this.$emit('step:update', {
+          results: results,
+          position: this.step.attributes.position
+        })
+      },
+      resultUrl(result_id) {
+        return my_module_results_path({my_module_id: this.step.attributes.my_module_id, result_id: result_id})
+      },
     }
   }
 </script>
