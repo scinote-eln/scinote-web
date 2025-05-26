@@ -29,7 +29,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
           end
           storage_location_repository_row = StorageLocationRepositoryRow.new(
             repository_row: @repository_row,
-            storage_location: @storage_location,
+            container_storage_location: @storage_location,
             metadata: { position: position[0..1] },
             created_by: current_user
           )
@@ -41,7 +41,7 @@ class StorageLocationRepositoryRowsController < ApplicationController
       else
         storage_location_repository_row = StorageLocationRepositoryRow.new(
           repository_row: @repository_row,
-          storage_location: @storage_location,
+          container_storage_location: @storage_location,
           created_by: current_user
         )
         storage_location_repository_row.with_lock do
