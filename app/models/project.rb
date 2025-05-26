@@ -13,6 +13,7 @@ class Project < ApplicationRecord
   include Assignable
   include TimeTrackable
   include Favoritable
+  include MetadataModel
 
   enum visibility: { hidden: 0, visible: 1 }
 

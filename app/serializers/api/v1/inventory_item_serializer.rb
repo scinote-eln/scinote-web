@@ -13,6 +13,10 @@ module Api
                               serializer: InventorySerializer,
                               class_name: 'Repository',
                               if: -> { instance_options[:show_repository] }
+      has_many :parent_repository_rows, key: :parents,
+                                        serializer: Api::V1::ConnectedInventoryItemSerializer
+      has_many :child_repository_rows, key: :children,
+                                       serializer: Api::V1::ConnectedInventoryItemSerializer
 
       include TimestampableModel
     end

@@ -15,6 +15,7 @@ class Experiment < ApplicationRecord
   include Cloneable
   include TimeTrackable
   include Favoritable
+  include MetadataModel
 
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
   before_save :reset_due_date_notification_sent, if: -> { due_date_changed? }
