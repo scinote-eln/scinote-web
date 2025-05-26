@@ -301,6 +301,7 @@ Rails.application.routes.draw do
       resource :current_tasks, module: 'dashboard', only: :show do
         get :project_filter
         get :experiment_filter
+        get :favorites
       end
 
       namespace :quick_start, module: :dashboard, controller: :quick_start do
@@ -360,7 +361,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, except: [:destroy, :new, :show, :edit] do
+    resources :projects, except: %i(destroy new edit) do
       # Activities popup (JSON) for individual project in projects index,
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
@@ -387,6 +388,12 @@ Rails.application.routes.draw do
         end
       end
 
+      member do
+        get :assigned_users_list
+        post :favorite
+        post :unfavorite
+      end
+
       collection do
         get 'inventory_assigning_project_filter'
         get 'users_filter'
@@ -394,6 +401,7 @@ Rails.application.routes.draw do
         post 'restore_group'
         post 'actions_toolbar'
         get :user_roles
+        get :head_of_project_users_list
       end
     end
 
@@ -410,9 +418,8 @@ Rails.application.routes.draw do
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
-    get 'projects/:project_id', to: 'experiments#index'
     get 'projects/:project_id/experiments', to: 'experiments#index', as: :experiments
-    resources :experiments, only: %i(update) do
+    resources :experiments, only: %i(update show) do
       collection do
         get 'inventory_assigning_experiment_filter'
         get 'clone_modal', action: :clone_modal
@@ -452,6 +459,8 @@ Rails.application.routes.draw do
         get :projects_to_clone
         get :projects_to_move
         get :experiments_to_move
+        post :favorite
+        post :unfavorite
       end
     end
 
@@ -471,6 +480,8 @@ Rails.application.routes.draw do
         get :permissions
         get :actions_dropdown
         get :provisioning_status
+        post :favorite
+        post :unfavorite
       end
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do
@@ -1149,6 +1160,7 @@ Rails.application.routes.draw do
     resources :design_elements, only: %i(index) do
       collection do
         get :test_select
+        get :test_table
       end
     end
   end

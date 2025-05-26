@@ -46,6 +46,14 @@ module Activities
           next
         end
 
+        if v.is_a? Date
+          @activity.message_items[k] = {
+            type: 'Date',
+            value: v.to_s
+          }
+          next
+        end
+
         const = try_to_constantize k
 
         k = k.to_s.sub('tiny_mce_asset', 'asset').to_sym if k.to_s.include? 'tiny_mce_asset'

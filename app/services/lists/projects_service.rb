@@ -35,11 +35,12 @@ module Lists
     def fetch_projects
       @team.projects
            .includes(:team, :project_comments, user_assignments: %i(user user_role))
+           .with_favorites(@user)
            .visible_to(@user, @team)
            .left_outer_joins(:project_comments)
            .select('projects.*')
            .select('COUNT(DISTINCT comments.id) AS comment_count')
-           .group('projects.id')
+           .group('projects.id, favorites.id')
     end
 
     def fetch_project_folders
@@ -58,22 +59,23 @@ module Lists
       records = records.archived if @params[:view_mode] == 'archived'
       records = records.active if @params[:view_mode] == 'active'
 
-      if @params[:search].present?
-        records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL], @params[:search])
-      end
-
-      if @filters[:query].present?
-        records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL], @filters[:query])
-      end
+      search_query = @params[:search].presence || @filters[:query]
+      records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL, 'projects.description'], search_query) if search_query.present?
 
       if @filters[:members].present?
         records = records.joins(:user_assignments).where(user_assignments: { user_id: @filters[:members].values })
       end
-      if @filters[:created_at_from].present?
-        records = records.where('projects.created_at > ?',
-                                @filters[:created_at_from])
-      end
-      records = records.where('projects.created_at < ?', @filters[:created_at_to]) if @filters[:created_at_to].present?
+
+      records = records.where(supervised_by_id: @filters[:head_of_project].values) if @filters[:head_of_project].present?
+
+      records = records.where('projects.start_on >= ?', @filters[:start_on_from]) if @filters[:start_on_from].present?
+
+      records = records.where('projects.start_on <= ?', @filters[:start_on_to]) if @filters[:start_on_to].present?
+
+      records = records.where('projects.due_date >= ?', @filters[:due_date_from]) if @filters[:due_date_from].present?
+
+      records = records.where('projects.due_date <= ?', @filters[:due_date_to]) if @filters[:due_date_to].present?
+
       if @filters[:archived_on_to].present?
         records = records.where('projects.archived_on < ?',
                                 @filters[:archived_on_to])
@@ -81,6 +83,19 @@ module Lists
       if @filters[:archived_on_from].present?
         records = records.where('projects.archived_on > ?', @filters[:archived_on_from])
       end
+
+      if @filters[:statuses].present?
+        scopes = {
+          'not_started' => records.not_started,
+          'started' => records.started,
+          'completed' => records.completed
+        }
+
+        selected_scopes = @filters[:statuses].values.filter_map { |status| scopes[status] }
+
+        records = selected_scopes.reduce(records.none, :or) if selected_scopes.any?
+      end
+
       records
     end
 
@@ -133,6 +148,10 @@ module Lists
         @records = @records.sort_by { |object| project_comments_count(object) }
       when 'comments_DESC'
         @records = @records.sort_by { |object| project_comments_count(object) }.reverse!
+      when 'favorite_ASC'
+        @records = @records.sort_by { |object| project_favorites(object) }
+      when 'favorite_DESC'
+        @records = @records.sort_by { |object| project_favorites(object) }.reverse!
       end
     end
 
@@ -146,6 +165,14 @@ module Lists
 
     def project_users_count(object)
       project?(object) ? object.users.count : -1
+    end
+
+    def project_favorites(object)
+      if project?(object)
+        object.favorite ? 1 : 0
+      else
+        -1
+      end
     end
 
     def project?(object)

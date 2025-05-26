@@ -13,6 +13,12 @@ class NotificationExtends
     my_module_due_date_reminder: {
       recipients_module: :MyModuleDesignatedRecipients
     },
+    projects_due_date_reminder: {
+      recipients_module: :DueDateRecipients
+    },
+    experiments_due_date_reminder: {
+      recipients_module: :DueDateRecipients
+    },
     add_comment_to_module_activity: {
       code: 35,
       recipients_module: :MyModuleDesignatedRecipients
@@ -140,6 +146,12 @@ class NotificationExtends
         change_user_role_on_experiment_activity
         change_user_role_on_my_module_activity
         project_access_changed_all_team_members_activity
+      ],
+      project_due_date: %I[
+        projects_due_date_reminder
+      ],
+      experiment_due_date: %I[
+        experiments_due_date_reminder
       ]
     },
     repository: {

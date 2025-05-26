@@ -2,6 +2,7 @@
 <% provide(:sidebar_url, sidebar_team_path(current_team, project_folder_id: current_folder&.id)) %>
 <% provide(:container_class, 'no-second-nav-container') %>
 
+
 <div id="projectsWrapper" class="content-pane flexible projects-index <%= projects_view_mode %>" data-view-mode="<%= projects_view_mode %>" data-e2e="e2e-projects-container">
   <%= render partial: 'projects/header', locals: { current_folder: current_folder} %>
 
@@ -9,6 +10,7 @@
     <projects-list
       actions-url="<%= actions_toolbar_projects_path %>"
       users-filter-url="<%= users_filter_projects_path %>"
+      head-of-project-users-list-url="<%= head_of_project_users_list_projects_path %>"
       data-source="<%= projects_path(project_folder_id: current_folder&.id, format: :json) %>"
       active-page-url="<%= projects_path(project_folder_id: current_folder&.id, view_mode: :active) %>"
       archived-page-url="<%= projects_path(project_folder_id: current_folder&.id, view_mode: :archived) %>"
@@ -21,6 +23,7 @@
       move-to-url="<%= move_to_project_folders_path %>"
     />
   </div>
+  <%= render 'shared/tiny_mce_packs' %>
   <%= javascript_include_tag 'vue_projects_list' %>
 </div>
 

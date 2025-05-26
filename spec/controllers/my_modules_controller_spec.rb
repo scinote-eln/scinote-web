@@ -256,4 +256,24 @@ describe MyModulesController, type: :controller do
       end
     end
   end
+
+  describe 'POST favorite' do
+    let(:action) { post :favorite, params: { id: my_module.id } }
+
+    it 'creates a favorite' do
+      expect(user.favorites.exists?(item: my_module )).to eq(false)
+      action
+      expect(user.favorites.exists?(item: my_module )).to eq(true)
+    end
+  end
+
+  describe 'POST unfavorite' do
+    let(:action) { post :unfavorite, params: { id: my_module.id } }
+
+    it 'removes a favorite' do
+      Favorite.create!(user: user, item: my_module, team: my_module.team)
+      action
+      expect(user.favorites.exists?(item: my_module )).to eq(false)
+    end
+  end
 end

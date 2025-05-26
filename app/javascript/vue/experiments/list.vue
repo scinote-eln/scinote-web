@@ -10,7 +10,7 @@
     :archivedPageUrl="archivedPageUrl"
     :currentViewMode="currentViewMode"
     :filters="filters"
-    :viewRenders="viewRenders"
+    :tableOnly="true"
     :objectArchived="archived"
     :hiddenDataMessage="i18n.t('projects.show.empty_state.no_active_experiment_archived_project')"
     scrollMode="infinite"
@@ -18,11 +18,16 @@
     @archive="archive"
     @restore="restore"
     @showDescription="showDescription"
+    @showProjectDescription="showProjectDescription = true"
     @duplicate="duplicate"
     @move="move"
     @edit="edit"
     @create="create"
     @access="access"
+    @updateDueDate="updateDueDate"
+    @updateStartDate="updateStartDate"
+    @changeStatus="changeStatus"
+    @updateFavorite="updateFavorite"
   >
     <template #card="data">
       <ExperimentCard :params="data.params" :dtComponent="data.dtComponent" ></ExperimentCard>
@@ -31,8 +36,14 @@
 
   <DescriptionModal
     v-if="descriptionModalObject"
-    :experiment="descriptionModalObject"
+    :object="descriptionModalObject"
+    @update="updateDescription"
     @close="descriptionModalObject = null"/>
+  <ProjectDescriptionModal
+    v-if="project && showProjectDescription"
+    :object="project.attributes"
+    @update="updateProjectDescription"
+    @close="showProjectDescription = false"/>
   <DuplicateModal
     v-if="duplicateModalObject"
     :experiment="duplicateModalObject"
@@ -42,12 +53,12 @@
     :experiment="moveModalObject"
     @close="moveModalObject = null"
     @move="updateTable"/>
-  <EditModal
+  <ExperimentFormModal
     v-if="editModalObject"
     :experiment="editModalObject"
     @close="editModalObject = null"
     @update="updateTable"/>
-  <NewModal
+  <ExperimentFormModal
     v-if="newModalOpen"
     :createUrl="createUrl"
     @close="newModalOpen = false"
@@ -61,17 +72,21 @@
 
 import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
-import DescriptionRenderer from './renderers/description.vue';
+import DescriptionRenderer from '../shared/datatable/renderers/description.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import CompletedTasksRenderer from './renderers/completed_tasks.vue';
 import NameRenderer from './renderers/name.vue';
-import DescriptionModal from './modals/description.vue';
+import DescriptionModal from '../shared/datatable/modals/description.vue';
+import ProjectDescriptionModal from '../shared/datatable/modals/description.vue';
 import DuplicateModal from './modals/duplicate.vue';
 import MoveModal from './modals/move.vue';
-import EditModal from './modals/edit.vue';
-import NewModal from './modals/new.vue';
+import ExperimentFormModal from './modals/form.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
+import StatusRenderer from './renderers/status.vue';
+import DueDateRenderer from '../shared/datatable/renderers/date.vue';
+import StartDateRenderer from '../shared/datatable/renderers/date.vue';
 import ExperimentCard from './card.vue';
+import FavoriteRenderer from '../shared/datatable/renderers/favorite.vue';
 
 export default {
   name: 'ExperimentsList',
@@ -79,12 +94,16 @@ export default {
     DataTable,
     ConfirmationModal,
     DescriptionModal,
+    ProjectDescriptionModal,
     DuplicateModal,
     MoveModal,
-    EditModal,
-    NewModal,
+    ExperimentFormModal,
     AccessModal,
-    ExperimentCard
+    ExperimentCard,
+    StatusRenderer,
+    StartDateRenderer,
+    DueDateRenderer,
+    FavoriteRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -94,7 +113,8 @@ export default {
     currentViewMode: { type: String, required: true },
     createUrl: { type: String, required: true },
     userRolesUrl: { type: String, required: true },
-    archived: { type: Boolean }
+    archived: { type: Boolean },
+    projectUrl: { type: String, required: true }
   },
   data() {
     return {
@@ -104,7 +124,14 @@ export default {
       moveModalObject: null,
       duplicateModalObject: null,
       descriptionModalObject: null,
-      reloadingTable: false
+      showProjectDescription: false,
+      project: null,
+      reloadingTable: false,
+      statusesList: [
+        ['not_started', this.i18n.t('experiments.table.column.status.not_started')],
+        ['started', this.i18n.t('experiments.table.column.status.started')],
+        ['completed', this.i18n.t('experiments.table.column.status.completed')]
+      ]
     };
   },
   computed: {
@@ -119,10 +146,60 @@ export default {
           minWidth: 150
         },
         {
+          field: 'favorite',
+          headerComponentParams: {
+            html: '<div class="sn-icon sn-icon-star-filled"></div>'
+          },
+          headerName: this.i18n.t('experiments.table.column.favorite'),
+          sortable: true,
+          cellRenderer: FavoriteRenderer,
+          minWidth: 70,
+          maxWidth: 70,
+          notSelectable: true
+        },
+        {
           field: 'code',
           headerName: this.i18n.t('experiments.id'),
           sortable: true,
           minWidth: 80
+        },
+        {
+          field: 'status',
+          headerName: this.i18n.t('experiments.table.column.status_html'),
+          sortable: true,
+          cellRenderer: StatusRenderer,
+          cellRendererParams: {
+            statusesList: this.statusesList
+          },
+          minWidth: 180
+        },
+        {
+          field: 'start_date',
+          headerName: this.i18n.t('experiments.table.column.start_date_html'),
+          sortable: true,
+          cellRenderer: StartDateRenderer,
+          cellRendererParams: {
+            placeholder: this.i18n.t('experiments.table.column.no_start_date_placeholder'),
+            field: 'start_date_cell',
+            mode: 'date',
+            emptyPlaceholder: this.i18n.t('experiments.table.column.no_due_date'),
+            emitAction: 'updateStartDate'
+          },
+          minWidth: 180
+        },
+        {
+          field: 'due_date',
+          headerName: this.i18n.t('experiments.table.column.due_date_html'),
+          sortable: true,
+          cellRenderer: DueDateRenderer,
+          cellRendererParams: {
+            placeholder: this.i18n.t('experiments.table.column.no_due_date_placeholder'),
+            field: 'due_date_cell',
+            mode: 'date',
+            emptyPlaceholder: this.i18n.t('experiments.table.column.no_due_date'),
+            emitAction: 'updateDueDate'
+          },
+          minWidth: 200
         },
         {
           field: 'created_at',
@@ -148,7 +225,7 @@ export default {
 
       columns.push({
         field: 'completed_tasks',
-        headerName: this.i18n.t('experiments.card.completed_task'),
+        headerName: this.i18n.t('experiments.table.column.completed_task'),
         cellRenderer: CompletedTasksRenderer,
         sortable: true,
         minWidth: 110
@@ -165,9 +242,6 @@ export default {
 
       return columns;
     },
-    viewRenders() {
-      return [{ type: 'table' }, { type: 'cards' }];
-    },
     toolbarActions() {
       const left = [];
 
@@ -182,6 +256,14 @@ export default {
         });
       }
 
+      left.push({
+        name: 'showProjectDescription',
+        icon: 'sn-icon sn-icon-info',
+        label: this.i18n.t('experiments.toolbar.description_button'),
+        type: 'emit',
+        buttonStyle: 'btn btn-light'
+      });
+
       return {
         left,
         right: []
@@ -194,14 +276,28 @@ export default {
           type: 'Text'
         },
         {
-          key: 'created_at',
+          key: 'start_on',
           type: 'DateRange',
-          label: this.i18n.t('filters_modal.created_on.label')
+          label: this.i18n.t('filters_modal.created_on.label'),
+          mode: 'date'
+        },
+        {
+          key: 'due_date',
+          type: 'DateRange',
+          label: this.i18n.t('filters_modal.due_date.label'),
+          mode: 'date'
         },
         {
           key: 'updated_on',
           type: 'DateRange',
           label: this.i18n.t('filters_modal.updated_on.label')
+        },
+        {
+          key: 'statuses',
+          type: 'Select',
+          options: this.statusesList,
+          label: this.i18n.t('experiments.index.filters.status'),
+          placeholder: this.i18n.t('experiments.index.filters.status_placeholder')
         }
       ];
 
@@ -216,7 +312,17 @@ export default {
       return filters;
     }
   },
+  created() {
+    this.loadProject();
+  },
   methods: {
+    loadProject() {
+      axios.get(this.projectUrl).then((response) => {
+        this.project = response.data.data;
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
+    },
     updateTable() {
       this.newModalOpen = false;
       this.editModalObject = null;
@@ -235,6 +341,24 @@ export default {
         this.updateNavigator(false);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
+    },
+    updateDescription(description) {
+      axios.put(this.descriptionModalObject.urls.update, {
+        experiment: {
+          description
+        }
+      }).then(() => {
+        this.updateTable();
+      });
+    },
+    updateProjectDescription(description) {
+      axios.put(this.project.attributes.urls.update, {
+        project: {
+          description
+        }
+      }).then(() => {
+        this.loadProject();
       });
     },
     restore(event, rows) {
@@ -267,6 +391,35 @@ export default {
         object: rows[0],
         roles_path: this.userRolesUrl
       };
+    },
+    formatDate(date) {
+      if (!(date instanceof Date)) return null;
+
+      const y = date.getFullYear();
+      const m = date.getMonth() + 1;
+      const d = date.getDate();
+
+      return `${y}/${m}/${d}`;
+    },
+    updateField(url, params) {
+      axios.put(url, params).then(() => {
+        this.updateTable();
+      });
+    },
+    changeStatus(value, params) {
+      this.updateField(params.data.urls.update, { experiment: { status: value } });
+    },
+    updateDueDate(value, params) {
+      this.updateField(params.data.urls.update, { due_date: this.formatDate(value) });
+    },
+    updateStartDate(value, params) {
+      this.updateField(params.data.urls.update, { start_on: this.formatDate(value) });
+    },
+    updateFavorite(value, params) {
+      const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;
+      axios.post(url).then(() => {
+        this.updateTable();
+      });
     }
   }
 };

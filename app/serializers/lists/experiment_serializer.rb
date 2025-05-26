@@ -8,8 +8,8 @@ module Lists
     include ActionView::Helpers::TextHelper
 
     attributes :name, :code, :created_at, :updated_at, :workflow_img, :description, :completed_tasks,
-               :total_tasks, :archived_on, :urls, :sa_description, :default_public_user_role_id, :team,
-               :top_level_assignable, :hidden, :archived, :project_id
+               :total_tasks, :archived_on, :urls, :sa_description, :default_public_user_role_id, :team, :permissions,
+               :top_level_assignable, :hidden, :archived, :project_id, :due_date_cell, :start_date_cell, :status_cell, :favorite
 
     def created_at
       I18n.l(object.created_at, format: :full_date)
@@ -68,7 +68,9 @@ module Lists
         clone: clone_experiment_path(object),
         update: experiment_path(object),
         show_access: access_permissions_experiment_path(object),
-        workflow_img: fetch_workflow_img_experiment_path(object)
+        workflow_img: fetch_workflow_img_experiment_path(object),
+        favorite: favorite_experiment_url(object),
+        unfavorite: unfavorite_experiment_url(object)
       }
 
       if can_manage_project_users?(object.project)
@@ -79,6 +81,50 @@ module Lists
 
     def workflow_img
       rails_blob_path(object.workflowimg, only_path: true) if object.workflowimg.attached?
+    end
+
+    def status_cell
+      {
+        status: object.status,
+        editable: can_manage_experiment?(object)
+      }
+    end
+
+    def due_date_cell
+      {
+        value: due_date,
+        value_formatted: due_date,
+        editable: can_manage_experiment?(object),
+        icon: (if object.one_day_prior? && !object.completed?
+                 'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
+               elsif object.overdue? && !object.completed?
+                 'sn-icon sn-icon-alert-warning text-sn-delete-red'
+               end)
+      }
+    end
+
+    def start_date_cell
+      {
+        value: start_date,
+        value_formatted: start_date,
+        editable: can_manage_experiment?(object)
+      }
+    end
+
+    def permissions
+      {
+        manage: can_manage_experiment?(object)
+      }
+    end
+
+    private
+
+    def due_date
+      I18n.l(object.due_date, format: :full_date) if object.due_date
+    end
+
+    def start_date
+      I18n.l(object.start_on, format: :full_date) if object.start_on
     end
   end
 end

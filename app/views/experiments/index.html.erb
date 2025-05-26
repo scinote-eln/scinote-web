@@ -4,6 +4,7 @@
   <%= render partial: 'experiments/index/header' %>
   <div id="ExperimentsList" class="fixed-content-body">
     <experiments-list
+      project-url="<%= project_path(@project) %>"
       actions-url="<%= actions_toolbar_experiments_path %>"
       create-url="<%= project_experiments_path(@project) if can_create_project_experiments?(@project) %>"
       data-source="<%= experiments_path(project_id: @project, format: :json) %>"
@@ -14,5 +15,6 @@
       :archived="<%= @project.archived?%>"
     />
   </div>
+  <%= render 'shared/tiny_mce_packs' %>
   <%= javascript_include_tag 'vue_experiments_list' %>
 </div>

@@ -3,7 +3,7 @@
 class Project < ApplicationRecord
   ID_PREFIX = 'PR'
   include PrefixedIdModel
-  SEARCHABLE_ATTRIBUTES = ['projects.name', PREFIXED_ID_SQL, 'comments.message'].freeze
+  SEARCHABLE_ATTRIBUTES = ['projects.name', PREFIXED_ID_SQL, 'comments.message', 'projects.description'].freeze
 
   include ArchivableModel
   include SearchableModel
@@ -11,6 +11,8 @@ class Project < ApplicationRecord
   include ViewableModel
   include PermissionCheckableModel
   include Assignable
+  include TimeTrackable
+  include Favoritable
 
   enum visibility: { hidden: 0, visible: 1 }
 
@@ -19,12 +21,14 @@ class Project < ApplicationRecord
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
             uniqueness: { scope: :team_id, case_sensitive: false }
+  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :visibility, presence: true
   validates :team, presence: true
   validate :project_folder_team, if: -> { project_folder.present? }
   validate :selected_user_role_validation, if: :bulk_assignment?
 
   before_validation :remove_project_folder, on: :update, if: :archived_changed?
+  before_save :reset_due_date_notification_sent, if: -> { due_date_changed? }
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -45,6 +49,10 @@ class Project < ApplicationRecord
   belongs_to :default_public_user_role,
              foreign_key: 'default_public_user_role_id',
              class_name: 'UserRole',
+             optional: true
+  belongs_to :supervised_by,
+             inverse_of: :supervised_projects,
+             class_name: 'User',
              optional: true
   belongs_to :team, inverse_of: :projects, touch: true
   belongs_to :project_folder, inverse_of: :projects, optional: true, touch: true
@@ -248,6 +256,20 @@ class Project < ApplicationRecord
     project_comments
   end
 
+  def overdue?(date = Time.zone.today)
+    due_date.present? && date >= due_date
+  end
+
+  def one_day_prior?(date = Time.zone.today)
+    due_in?(date, 1.day)
+  end
+
+  def due_in?(date, diff)
+    due_date.present? &&
+      date < due_date &&
+      date >= (due_date - diff)
+  end
+
   # rubocop:disable Metrics/BlockLength
   def generate_teams_export_report_html(
     user, team, html_title, obj_filenames = nil
@@ -374,5 +396,9 @@ class Project < ApplicationRecord
       num = (num / len).floor - 1
     end
     col_name
+  end
+
+  def reset_due_date_notification_sent
+    self.due_date_notification_sent = false
   end
 end

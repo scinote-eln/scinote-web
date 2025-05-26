@@ -71,7 +71,9 @@ const entryList = {
   vue_form_show: './app/javascript/packs/vue/forms_show.js',
   vue_form_table: './app/javascript/packs/vue/forms_table.js',
   vue_my_module_assigned_items: './app/javascript/packs/vue/my_module_assigned_items.js',
-  vue_design_system_inputs: './app/javascript/packs/vue/design_system/inputs.js'
+  vue_design_system_inputs: './app/javascript/packs/vue/design_system/inputs.js',
+  vue_design_system_table: './app/javascript/packs/vue/design_system/table.js',
+  vue_favorites_widget: './app/javascript/packs/vue/favorites_widget.js'
 };
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949
