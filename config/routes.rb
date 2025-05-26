@@ -1056,7 +1056,7 @@ Rails.application.routes.draw do
                   resources :task_assignments, only: %i(index create destroy),
                             path: 'task_assignments',
                             as: :task_assignments
-                  resources :protocols, only: %i(index show) do
+                  resources :protocols, only: %i(index show update) do
                     resources :steps, only: %i(index show create update destroy) do
                       resources :assets, only: %i(index show create), path: 'attachments'
                       resources :checklists, only: %i(index show create update destroy), path: 'checklists' do

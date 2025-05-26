@@ -88,6 +88,7 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :re
           data: {
             type: 'step_texts',
             attributes: {
+             name: 'Hi!',
              text: "<p>Hello!</p>"
             }
           }
@@ -111,7 +112,7 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :re
           hash_including(
             data: hash_including(
               type: 'step_texts',
-              attributes: hash_including(text: '<p>Hello!</p>')
+              attributes: hash_including(name: 'Hi!', text: '<p>Hello!</p>')
             )
           )
         )
@@ -157,7 +158,8 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :re
           data: {
             type: 'step_texts',
             attributes: {
-              text: '<h1>Hello!</h1>'
+              name: 'Hello!',
+              text: '<h1>Hi!</h1>'
             }
           }
         }
@@ -177,7 +179,8 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :re
             data: hash_including(
               type: 'step_texts',
               attributes: hash_including(
-                text: '<h1>Hello!</h1>'
+                name: 'Hello!',
+                text: '<h1>Hi!</h1>'
               )
             )
           )
