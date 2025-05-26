@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_04_10_124417) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -1470,6 +1470,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_10_124417) do
     t.text "last_error"
     t.text "text"
     t.string "secret_key"
+    t.boolean "include_serialized_subject", default: false, null: false
     t.index ["activity_filter_id"], name: "index_webhooks_on_activity_filter_id"
   end
 
