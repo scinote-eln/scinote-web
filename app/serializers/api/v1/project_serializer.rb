@@ -4,10 +4,11 @@ module Api
   module V1
     class ProjectSerializer < ActiveModel::Serializer
       type :projects
-      attributes :name, :visibility, :start_date, :archived
+      attributes :name, :status, :visibility, :start_date, :archived, :started_at, :completed_at, :start_on, :due_date, :description
       attribute :metadata, if: -> { scope && scope[:metadata] == true }
 
       belongs_to :project_folder, serializer: ProjectFolderSerializer
+      belongs_to :supervised_by, serializer: UserSerializer
       has_many :project_comments, key: :comments, serializer: CommentSerializer
 
       include TimestampableModel
