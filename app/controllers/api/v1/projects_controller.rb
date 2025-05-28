@@ -67,11 +67,13 @@ module Api
       def project_params
         raise TypeError unless params.require(:data).require(:type) == 'projects'
 
-        params.require(:data).require(:attributes).permit(:name, :visibility, :archived, :project_folder_id, metadata: {})
+        params.require(:data)
+              .require(:attributes)
+              .permit(:name, :visibility, :archived, :project_folder_id, :start_on, :due_date, :status, :description, metadata: {})
       end
 
       def permitted_includes
-        %w(comments)
+        %w(comments supervised_by)
       end
 
       def load_project_for_managing
