@@ -14,6 +14,7 @@
           <div v-if="editMode">
             <TinymceEditor
               v-model="description"
+              :placeholder="i18n.t('projects.index.add_description')"
               textareaId="descriptionModelInput"
             ></TinymceEditor>
           </div>

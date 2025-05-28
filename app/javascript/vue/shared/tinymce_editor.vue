@@ -199,6 +199,7 @@ export default {
     initCssOverrides(editor) {
       const editorIframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe');
       const primaryColor = '#104da9';
+      const placeholderColor = '#98A2B3';
       editorIframe.contents().find('head').append(`<style type="text/css">
           img::-moz-selection{background:0 0}
           img::selection{background:0 0}
@@ -209,6 +210,10 @@ export default {
           .mce-content-body div#mceResizeHandlene{border-right: 2px solid ${primaryColor}; border-top: 2px solid ${primaryColor}}
           .mce-content-body div#mceResizeHandlesw{border-left: 2px solid ${primaryColor}; border-bottom: 2px solid ${primaryColor}}
           .mce-content-body div#mceResizeHandlese{border-right: 2px solid ${primaryColor}; border-bottom: 2px solid ${primaryColor}}
+          .mce-content-body:not([dir=rtl])[data-mce-placeholder]:not(.mce-visualblocks)::before {
+            color: ${placeholderColor};
+            opacity: 0.7;
+          }
           h1 {font-size: 24px !important }
           h2 {font-size: 18px !important }
           h3 {font-size: 16px !important }
