@@ -16,9 +16,9 @@ describe ProtocolImporters::ProtocolIntermediateObject do
   end
 
   before do
+    Delayed::Worker.delay_jobs = true
     stub_request(:get, 'https://pbs.twimg.com/media/Cwu3zrZWQAA7axs.jpg').to_return(status: 200, body: '', headers: {})
     stub_request(:get, 'http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg')
-      .to_return(status: 200, body: '', headers: {})
   end
 
   describe '.build' do
@@ -40,7 +40,7 @@ describe ProtocolImporters::ProtocolIntermediateObject do
 
     context 'when build wihout assets' do
       it { expect { pio_without_assets.import }.to change { Protocol.all.count }.by(1) }
-      it { expect { invalid_pio.import }.not_to(change { Asset.all.count }) }
+      it { expect { pio_without_assets.import }.not_to(change { Asset.all.count }) }
     end
   end
 

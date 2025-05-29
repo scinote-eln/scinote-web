@@ -112,7 +112,7 @@ class RepositoryCell < ApplicationRecord
       cell.value = value
       value.save!
     end
-    cell
+    cell.reload
   end
 
   def snapshot!(row_snapshot)
