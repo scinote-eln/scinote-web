@@ -674,6 +674,8 @@ en:
         description: 'Description'
         supervised_by: 'Head of project'
         status: 'Status'
+        completed_experiment: "Experiments done"
+        completed_experiments: "%{completed}/%{all} experiments"
       end_of_list_placeholder: 'You’ve reached the end of the list'
       folder:
         description: "%{projects_count} projects | %{folders_count} folders"

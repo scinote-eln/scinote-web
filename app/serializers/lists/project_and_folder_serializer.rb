@@ -6,15 +6,32 @@ module Lists
     include Canaid::Helpers::PermissionsHelper
     include CommentHelper
 
-    attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder, :hidden,
-               :folder_info, :default_public_user_role_id, :team, :top_level_assignable, :supervised_by,
-               :comments, :updated_at, :permissions, :due_date_cell, :start_on_cell, :description, :status, :favorite,
-               def team
-                 object.team.name
-               end
+    attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder, :hidden, :completed_experiments, :completed_tasks, :total_tasks,
+               :folder_info, :default_public_user_role_id, :team, :top_level_assignable, :supervised_by, :total_experiments,
+               :comments, :updated_at, :permissions, :due_date_cell, :start_on_cell, :description, :status, :favorite
+
+    def team
+      object.team.name
+    end
 
     def folder
       !project?
+    end
+
+    def completed_experiments
+      object[:completed_experiments_count]
+    end
+
+    def total_experiments
+      object[:experiments_count]
+    end
+
+    def completed_tasks
+      object[:completed_tasks_count]
+    end
+
+    def total_tasks
+      object[:tasks_count]
     end
 
     def favorite

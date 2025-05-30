@@ -11,6 +11,10 @@ RSpec.describe Lists::ExperimentsService do
   let(:params) {{ page: 1, per_page: 10, search: '', project: project } }
   let(:service) { described_class.new(raw_data, params, user:) }
 
+  before(:all) do
+    MyModuleStatusFlow.ensure_default
+  end
+
   describe '#fetch_records' do
     context 'when view_mode is archived' do
       before do
