@@ -36,6 +36,8 @@ import 'tinymce/plugins/help/js/i18n/keynav/en';
 import 'tinymce/plugins/quickbars';
 import 'tinymce/plugins/directionality';
 
+import './external_tinymce_plugins.js'; // Load external plugins
+
 // Content styles, including inline UI like fake cursors
 // All the above CSS files are loaded on to the page but these two must
 // be loaded into the editor iframe so they are loaded as strings and passed
@@ -68,8 +70,7 @@ export default {
       default: () => `
           table autoresize link advlist codesample code autolink lists
           charmap anchor searchreplace wordcount visualblocks visualchars
-          insertdatetime nonbreaking save directionality help quickbars
-        `
+          insertdatetime nonbreaking save directionality help quickbars`
     },
     menubar: {
       default: 'file edit view insert format'
@@ -86,13 +87,13 @@ export default {
   mounted() {
     tinyMCE.init({
       selector: `#${this.textareaId}`,
-      plugins: this.plugins,
+      plugins: `${this.plugins} ${window.extraTinyMcePlugins || ''}`,
       menubar: this.menubar,
       skin: false,
       content_css: false,
       content_style: contentStyle,
       convert_urls: false,
-      toolbar: this.toolbar,
+      toolbar: window.customLightTinyMceToolbar || this.toolbar,
       contextmenu: '',
       promotion: false,
       menu: {
@@ -185,7 +186,13 @@ export default {
           editor.setContent(this.modelValue);
         });
         editor.on('change', () => {
-          this.$emit('update:modelValue', editor.getContent());
+          let content = editor.getContent();
+
+          // Remove images
+          content = content.replace(/<img[^>]*>/g, '');
+
+          editor.setContent(content);
+          this.$emit('update:modelValue', content);
         });
       }
     });
@@ -203,6 +210,7 @@ export default {
       editorIframe.contents().find('head').append(`<style type="text/css">
           img::-moz-selection{background:0 0}
           img::selection{background:0 0}
+
           .mce-content-body img[data-mce-selected]{outline:2px solid ${primaryColor}}
           .mce-content-body div.mce-resizehandle{background:transparent;border-color:transparent;box-sizing:border-box;height:10px;width:10px; position:absolute}
           .mce-content-body div.mce-resizehandle:hover{background:transparent}
@@ -217,6 +225,9 @@ export default {
           h1 {font-size: 24px !important }
           h2 {font-size: 18px !important }
           h3 {font-size: 16px !important }
+          #tinymce {
+            overflow-y: auto !important;
+          }
         </style>`);
       editorIframe.contents().find('head').append($('#font-css-pack').clone());
     }
