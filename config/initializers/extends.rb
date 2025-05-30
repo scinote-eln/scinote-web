@@ -708,7 +708,7 @@ class Extends
         ^CF0,15
         ^FO0,5^FD{{ITEM_ID}}^FS
         ^FO0,13^BQN,2,3^FDMA,{{ITEM_ID}}^FS
-        ^FO70,27^FB100,2,0,L^FD{{NAME}}^FS^FS
+        ^FO70,27^FB100,4,0,L^FD{{NAME}}^FS^FS
         ^XZ
       HEREDOC
   }
