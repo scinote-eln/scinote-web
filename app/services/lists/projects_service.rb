@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 module Lists
   class ProjectsService < BaseService
     include ActionView::Helpers::SanitizeHelper
+    include Canaid::Helpers::PermissionsHelper
 
     def initialize(team, user, folder, params)
       @team = team
@@ -167,13 +170,13 @@ module Lists
       when 'status_DESC'
         @records = @records.sort_by { |object| project_status(object, 'desc') }.reverse!
       when 'supervised_by_ASC'
-        @records = @records.sort_by { |object| project_supervised_by(object, 'asc') }
+        @records = @records.sort_by { |object| project_supervised_by(object) }
       when 'supervised_by_DESC'
-        @records = @records.sort_by { |object| project_supervised_by(object, 'desc') }.reverse!
+        @records = @records.sort_by { |object| project_supervised_by(object) }.reverse!
       when 'description_ASC'
-        @records = @records.sort_by { |object| project_description(object, 'asc') }
+        @records = @records.sort_by { |object| project_description(object) }
       when 'description_DESC'
-        @records = @records.sort_by { |object| project_description(object, 'desc') }.reverse!
+        @records = @records.sort_by { |object| project_description(object) }.reverse!
       end
     end
 
@@ -182,11 +185,15 @@ module Lists
     end
 
     def project_comments_count(object)
-      project?(object) ? object.comments.count : -1
+      return [0, 0, -1] unless project?(object)
+
+      [1, can_create_project_comments?(@user, object) ? 1 : 0, object.comments.count]
     end
 
     def project_users_count(object)
-      project?(object) ? object.users.count : -1
+      return [0, -1] unless project?(object)
+
+      [1, object.users.count]
     end
 
     def project_favorites(object)
@@ -221,28 +228,16 @@ module Lists
       statuses[object.status.to_sym]
     end
 
-    def project_supervised_by(object, direction)
-      no_value = direction == 'asc' ? 1 : 0
-      has_value = direction == 'asc' ? 0 : 1
+    def project_supervised_by(object)
+      return [1, '', 1] unless project?(object)
 
-      return [no_value, ''] unless project?(object)
-
-      if object.supervised_by
-        [has_value, object.supervised_by.name]
-      else
-        [no_value, '']
-      end
+      [object.supervised_by_id ? 0 : 1, object.supervised_by&.full_name || '', 0]
     end
 
-    def project_description(object, direction)
-      no_value = direction == 'asc' ? 1 : 0
-      has_value = direction == 'asc' ? 0 : 1
+    def project_description(object)
+      return [1, '', 1] unless project?(object)
 
-      if object.description.present?
-        [has_value, strip_tags(object.description)]
-      else
-        [no_value, '']
-      end
+      [object.description ? 0 : 1, strip_tags(object.description || ''), 0]
     end
 
     def project?(object)
