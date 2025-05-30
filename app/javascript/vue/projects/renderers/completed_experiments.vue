@@ -1,9 +1,10 @@
 <template>
   <CounterRenderer
+    v-if="!params.data.folder"
     :params="params"
-    totalField="total_tasks"
-    completedField="completed_tasks"
-    label="experiments.card.completed_value"
+    totalField="total_experiments"
+    completedField="completed_experiments"
+    label="projects.index.card.completed_experiments"
   />
 </template>
 
@@ -11,7 +12,7 @@
 import CounterRenderer from '../../shared/datatable/renderers/counter.vue';
 
 export default {
-  name: 'CompletedTasksRenderer',
+  name: 'CompletedExperimentsRenderer',
   props: {
     params: {
       required: true

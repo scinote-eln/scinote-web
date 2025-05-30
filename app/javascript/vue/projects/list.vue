@@ -81,6 +81,8 @@ import DataTable from '../shared/datatable/table.vue';
 import UsersRenderer from './renderers/users.vue';
 import NameRenderer from './renderers/name.vue';
 import StatusRenderer from './renderers/status.vue';
+import CompletedTasksRenderer from './renderers/completed_tasks.vue';
+import CompletedExperimentsRenderer from './renderers/completed_experiments.vue';
 import SuperviserRenderer from './renderers/superviser.vue';
 import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
 import DueDateRenderer from '../shared/datatable/renderers/date.vue';
@@ -115,7 +117,9 @@ export default {
     DescriptionModal,
     StatusRenderer,
     SuperviserRenderer,
-    FavoriteRenderer
+    FavoriteRenderer,
+    CompletedTasksRenderer,
+    CompletedExperimentsRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -225,6 +229,20 @@ export default {
         sortable: true,
         cellRenderer: SuperviserRenderer,
         notSelectable: true
+      },
+      {
+        field: 'completed_experiments',
+        headerName: this.i18n.t('projects.index.card.completed_experiment'),
+        cellRenderer: CompletedExperimentsRenderer,
+        sortable: true,
+        minWidth: 110
+      },
+      {
+        field: 'completed_tasks',
+        headerName: this.i18n.t('experiments.table.column.completed_task'),
+        cellRenderer: CompletedTasksRenderer,
+        sortable: true,
+        minWidth: 110
       },
       {
         field: 'created_at',

@@ -1,5 +1,6 @@
 <template>
   <CounterRenderer
+    v-if="!params.data.folder"
     :params="params"
     totalField="total_tasks"
     completedField="completed_tasks"
