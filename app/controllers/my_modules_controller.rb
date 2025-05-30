@@ -461,6 +461,8 @@ class MyModulesController < ApplicationController
                             .find_by(id: params[:id] || params[:experiment_id])
 
     render_404 unless @experiment
+    current_team_switch(@experiment.project.team) if current_team != @experiment.project.team
+
     render_403 unless can_read_experiment?(@experiment)
   end
 
