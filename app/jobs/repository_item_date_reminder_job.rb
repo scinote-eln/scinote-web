@@ -21,10 +21,10 @@ class RepositoryItemDateReminderJob < ApplicationJob
         repositories: { type: 'Repository', archived: false },
         repository_rows: { archived: false }
       ).where( # date(time) values that are within the reminder range including buffer
-        "(data > (:comparison_value::timestamp - (INTERVAL ':buffer_days DAY'))) AND data <= " \
-        "(:comparison_value::timestamp + CAST(((repository_columns.metadata->>'reminder_unit')::int * " \
+        "(data > :comparison_cutoff) AND " \
+        "data <= (:comparison_value::timestamp + CAST(((repository_columns.metadata->>'reminder_unit')::int * " \
         "(repository_columns.metadata->>'reminder_value')::int) || ' seconds' AS Interval))",
-        buffer_days: BUFFER_DAYS,
+        comparison_cutoff: comparison_value - BUFFER_DAYS.days,
         comparison_value: comparison_value
       )
   end

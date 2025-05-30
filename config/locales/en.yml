@@ -3358,6 +3358,7 @@ en:
           title: 'Change your profile photo'
           upload_button: 'Upload a photo'
           option_text_html: 'or<br>Select your avatar below'
+        avatar_total_size: 'Your avatar file cannot be larger than ${size} MB. (Please try again with a smaller file.)'
         name_label: "Full name"
         name_title: "Change name"
         initials_label: "Initials"

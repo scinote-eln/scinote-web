@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
 class ReportElement < ApplicationRecord
-  enum type_of: Extends::REPORT_ELEMENT_TYPES
+  enum :type_of, Extends::REPORT_ELEMENT_TYPES
 
   # This is only used by certain elements
-  enum sort_order: {
+  enum :sort_order, {
     asc: 0,
     desc: 1
   }
 
   validates :position, presence: true
-  validates :report, presence: true
   validates :type_of, presence: true
 
   belongs_to :report, inverse_of: :report_elements

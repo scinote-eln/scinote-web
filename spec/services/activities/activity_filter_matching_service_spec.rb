@@ -27,7 +27,6 @@ describe Activities::ActivityFilterMatchingService do
     )
 
     activity.update_column(:created_at, Date.parse("2021-1-4").to_time)
-    p activity
     matched_activity_filters = Activities::ActivityFilterMatchingService.new(activity).activity_filters
 
     expect(matched_activity_filters).to include(matching_filter)

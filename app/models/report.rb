@@ -11,8 +11,8 @@ class Report < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
 
-  enum pdf_file_status: { pdf_empty: 0, pdf_processing: 1, pdf_ready: 2, pdf_error: 3 }
-  enum docx_file_status: { docx_empty: 0, docx_processing: 1, docx_ready: 2, docx_error: 3 }
+  enum :pdf_file_status, { pdf_empty: 0, pdf_processing: 1, pdf_ready: 2, pdf_error: 3 }
+  enum :docx_file_status, { docx_empty: 0, docx_processing: 1, docx_ready: 2, docx_error: 3 }
 
   # ActiveStorage configuration
   has_one_attached :pdf_file
@@ -24,16 +24,11 @@ class Report < ApplicationRecord
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
-  validates :project, presence: true
-  validates :user, presence: true
 
   belongs_to :project, inverse_of: :reports
   belongs_to :user, inverse_of: :reports
   belongs_to :team, inverse_of: :reports
-  belongs_to :last_modified_by,
-             foreign_key: 'last_modified_by_id',
-             class_name: 'User',
-             optional: true
+  belongs_to :last_modified_by, class_name: 'User', optional: true
   has_many :users, through: :user_assignments
   has_many :report_template_values, dependent: :destroy
 

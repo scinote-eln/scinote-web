@@ -2,17 +2,17 @@
 
 source 'https://rubygems.org'
 
-ruby '~> 3.2.2'
+ruby '~> 3.3.8'
 
 gem 'activerecord-session_store'
 gem 'bootsnap', require: false
-gem 'devise', '~> 4.8.1'
+gem 'devise', '~> 4.9.4'
 gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 1.5'
 gem 'pg_search' # PostgreSQL full text search
 gem 'psych', '< 4.0'
-gem 'rails', '~> 7.0.8'
+gem 'rails', '~> 7.2.2'
 gem 'recaptcha'
 gem 'sanitize'
 gem 'sprockets-rails'
@@ -52,7 +52,7 @@ gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
 gem 'grover'
-gem 'httparty', '~> 0.21.0'
+gem 'httparty', '~> 0.23.1'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'

@@ -1,5 +1,5 @@
 # Building stage
-FROM ruby:3.2-bookworm AS builder
+FROM ruby:3.3-bookworm AS builder
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN \
@@ -42,7 +42,7 @@ RUN \
   bash -c "rake assets:precompile && rake deface:precompile && rm -rf ./tmp/cache"
 
 # Final stage
-FROM ruby:3.2-bookworm AS runner
+FROM ruby:3.3-bookworm AS runner
 MAINTAINER SciNote <info@scinote.net>
 
 ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/2.9.4/tika-app-2.9.4.jar"

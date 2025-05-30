@@ -1,4 +1,4 @@
-FROM ruby:3.2-bookworm
+FROM ruby:3.3-bookworm
 MAINTAINER SciNote <info@scinote.net>
 
 ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/2.9.4/tika-app-2.9.4.jar"

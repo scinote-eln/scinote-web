@@ -1,7 +1,7 @@
 module Api
   class CoreJwt
     require 'jwt'
-    KEY_SECRET = Rails.application.secrets.secret_key_base
+    KEY_SECRET = Rails.application.secret_key_base
 
     def self.encode(payload, expires_at = nil)
       if expires_at

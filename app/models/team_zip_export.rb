@@ -2,6 +2,6 @@
 
 class TeamZipExport < ZipExport
   def self.exports_limit
-    (Rails.application.secrets.export_all_limit_24h || 3).to_i
+    Rails.configuration.x.export_all_limit_24h
   end
 end

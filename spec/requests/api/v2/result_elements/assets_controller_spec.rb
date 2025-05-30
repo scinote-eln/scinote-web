@@ -65,6 +65,7 @@ RSpec.describe 'Api::V2::ResultElements::AssetsController', type: :request do
     context 'when has valid params' do
       it 'renders 200' do
         hash_body = nil
+        result_asset.asset.reload
         get api_v2_team_project_experiment_task_result_asset_path(
           team_id: team.id,
           project_id: project.id,

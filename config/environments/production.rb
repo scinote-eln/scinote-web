@@ -4,7 +4,7 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
-  config.cache_classes = true
+  config.enable_reloading = false
 
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers
@@ -13,7 +13,7 @@ Rails.application.configure do
   config.eager_load = true
 
   # Full error reports are disabled and caching is turned on.
-  config.consider_all_requests_local       = false
+  config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
 
   Rails.application.routes.default_url_options = {
@@ -22,39 +22,38 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: Rails.application.routes.default_url_options[:host] }
   config.action_mailer.default_options = {
-    from: Rails.application.secrets.mailer_from,
-    reply_to: Rails.application.secrets.mailer_reply_to
+    from: ENV.fetch('MAIL_FROM'),
+    reply_to: ENV.fetch('MAIL_REPLYTO')
   }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = ENV['SMTP_USE_AWS_SES'] == 'true' ? :ses : :smtp
 
   config.action_mailer.smtp_settings = {
-    address: Rails.application.secrets.mailer_address,
-    port: Rails.application.secrets.mailer_port,
-    domain: Rails.application.secrets.mailer_domain,
-    authentication: Rails.application.secrets.mailer_authentication,
+    address: ENV.fetch('SMTP_ADDRESS'),
+    port: ENV.fetch('SMTP_PORT', '587'),
+    domain: ENV.fetch('SMTP_DOMAIN'),
+    authentication: ENV.fetch('SMTP_AUTH_METHOD', 'plain'),
     enable_starttls_auto: true,
-    user_name: Rails.application.secrets.mailer_user_name,
-    password: Rails.application.secrets.mailer_password,
-    openssl_verify_mode: Rails.application.secrets.mailer_openssl_verify_mode,
-    ca_path: Rails.application.secrets.mailer_openssl_ca_path,
-    ca_file: Rails.application.secrets.mailer_openssl_ca_file
+    user_name: ENV.fetch('SMTP_USERNAME'),
+    password: ENV.fetch('SMTP_PASSWORD'),
+    openssl_verify_mode: ENV.fetch('SMTP_OPENSSL_VERIFY_MODE', 'peer'),
+    ca_path: ENV.fetch('SMTP_OPENSSL_CA_PATH', '/etc/ssl/certs'),
+    ca_file: ENV.fetch('SMTP_OPENSSL_CA_FILE', '/etc/ssl/certs/ca-certificates.crt')
   }
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
   # config.require_master_key = true
 
-  # Disable serving static files from the `/public` folder by default since
-  # Apache or NGINX already handles this.
+  # Disable serving static files from `public/`, relying on NGINX/Apache to do so instead.
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   # Compress CSS using a preprocessor.
   # Set to nil to fix builds in production (https://github.com/sass/sassc-rails/issues/93)
   config.assets.css_compressor = nil
 
-  # Do not fallback to assets pipeline if a precompiled asset is missed.
+  # Do not fall back to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
@@ -67,25 +66,39 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = ENV['ACTIVESTORAGE_SERVICE'] || :local
 
+  # Assume all access to the app is happening through a SSL-terminating reverse proxy.
+  # Can be used together with config.force_ssl for Strict-Transport-Security and secure cookies.
+  # config.assume_ssl = true
+
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = ENV['RAILS_FORCE_SSL'].present?
 
+  # Skip http-to-https redirect for the default health check endpoint.
+  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
   config.ssl_options = { redirect: { exclude: ->(request) { request.path =~ %r{api/health|status} } } }
 
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
-  config.log_level = :debug
+  # Log to STDOUT by default
+  config.logger = ActiveSupport::Logger.new(STDOUT)
+    .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
+    .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
+
+  # "info" includes generic and useful information about system operation, but avoids logging too much
+  # information to avoid inadvertent exposure of personally identifiable information (PII). If you
+  # want to log everything, set the level to "debug".
+  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter     = :resque
+  # config.active_job.queue_adapter = :resque
   # config.active_job.queue_name_prefix = "scinote_production"
 
+  # Disable caching for Action Mailer templates even if Action Controller
+  # caching is enabled.
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
@@ -98,9 +111,6 @@ Rails.application.configure do
 
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
-
-  # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
 
   # Enable/disable Deface
   config.deface.enabled = ENV['DEFACE_ENABLED'] != 'false'
@@ -126,14 +136,20 @@ Rails.application.configure do
   # require "syslog/logger"
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
-    logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
-  end
-
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Only use :id for inspections in production.
+  config.active_record.attributes_for_inspect = [ :id ]
+
+  # Enable DNS rebinding protection and other `Host` header attacks.
+  # config.hosts = [
+  #   "example.com",     # Allow requests from example.com
+  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
+  # ]
+  # Skip DNS rebinding protection for the default health check endpoint.
+  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
 
   # Use a different cache store in production.
   config.cache_store = :memory_store, { size: (ENV['RAILS_MEM_CACHE_SIZE_MB'] || 32).to_i.megabytes }
