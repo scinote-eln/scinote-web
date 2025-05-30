@@ -1,6 +1,6 @@
 <template>
   <div v-if="params.data.comments" class="w-9 flex justify-end items-center h-10">
-    <span v-if="!params.data.permissions.create_comments && params.data.comments.count === 0">0</span>
+    <span class="px-1" v-if="!params.data.permissions.create_comments && params.data.comments.count === 0">0</span>
     <a v-else
       href="#"
       class="open-comments-sidebar relative px-1 h-4 leading-4" tabindex=0 :id="'comment-count-' + params.data.id"

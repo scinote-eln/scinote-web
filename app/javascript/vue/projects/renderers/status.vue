@@ -8,6 +8,7 @@
     :borderless="true"
     :optionRenderer="optionRenderer"
     :labelRenderer="optionRenderer"
+    :disabled="!params.data.urls.update"
   />
 </div>
 </template>

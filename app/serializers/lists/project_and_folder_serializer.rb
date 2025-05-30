@@ -124,13 +124,11 @@ module Lists
 
       urls_list[:show] = nil if project? && !can_read_project?(object)
 
-      urls_list[:update] = if project?
-                             project_path(object)
-                           else
-                             project_folder_path(object)
-                           end
+      if !project? || can_manage_project?(object)
+        urls_list[:update] = project? ? project_path(object) : project_folder_path(object)
+      end
 
-      if project?
+      if project? && can_read_project?(object)
         urls_list[:favorite] = favorite_project_url(object)
         urls_list[:unfavorite] = unfavorite_project_url(object)
       end
