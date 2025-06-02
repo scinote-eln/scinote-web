@@ -61,7 +61,7 @@ export default {
     };
   },
   created() {
-    if (!this.object.description || this.object.description === '') {
+    if (this.object.permissions.manage && (!this.object.description || this.object.description === '')) {
       this.editMode = true;
     }
   },

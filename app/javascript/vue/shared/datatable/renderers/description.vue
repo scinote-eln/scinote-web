@@ -7,12 +7,12 @@
               @click.stop="showDescriptionModal">
           {{ removeTags(params.data.description) }}
         </span>
-        <span v-if="!params.data.permissions.manage || (params.data.description && params.data.description.length > 0)"
+        <span v-if="params.data.description && params.data.description.length > 0"
               @click.stop="showDescriptionModal"
               class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
           {{ i18n.t('experiments.card.more') }}
         </span>
-        <span v-else @click.stop="showDescriptionModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
+        <span v-else-if="params.data.permissions.manage" @click.stop="showDescriptionModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
           {{ i18n.t('experiments.card.add_description') }}
         </span>
       </div>
