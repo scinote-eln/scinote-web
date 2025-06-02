@@ -38,13 +38,35 @@ module Lists
     private
 
     def fetch_projects
+      done_status_id = MyModuleStatusFlow.first.final_status.id
       @team.projects
            .includes(:team, :project_comments, user_assignments: %i(user user_role))
+           .joins('LEFT OUTER JOIN experiments AS active_experiments ON
+                   active_experiments.project_id = projects.id
+                   AND active_experiments.archived = FALSE')
+           .joins('LEFT OUTER JOIN experiments AS active_completed_experiments ON
+                   active_completed_experiments.project_id = projects.id
+                   AND active_completed_experiments.archived = FALSE AND active_completed_experiments.completed_at IS NOT NULL')
+           .joins('LEFT OUTER JOIN my_modules AS active_tasks ON
+                   active_tasks.experiment_id = active_experiments.id
+                   AND active_tasks.archived = FALSE')
+           .joins(
+             ActiveRecord::Base.sanitize_sql_array([
+                                                     'LEFT OUTER JOIN my_modules AS active_completed_tasks ON
+               active_completed_tasks.experiment_id = active_experiments.id
+               AND active_completed_tasks.archived = FALSE AND active_completed_tasks.my_module_status_id = ?',
+                                                     done_status_id
+                                                   ])
+           )
            .with_favorites(@user)
            .visible_to(@user, @team)
            .left_outer_joins(:project_comments)
            .select('projects.*')
            .select('COUNT(DISTINCT comments.id) AS comment_count')
+           .select('COUNT(DISTINCT active_experiments.id) AS experiments_count')
+           .select('COUNT(DISTINCT active_completed_experiments.id) AS completed_experiments_count')
+           .select('COUNT(DISTINCT active_tasks.id) AS tasks_count')
+           .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_tasks_count')
            .group('projects.id, favorites.id')
     end
 
@@ -67,27 +89,20 @@ module Lists
       search_query = @params[:search].presence || @filters[:query]
       records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL, 'projects.description'], search_query) if search_query.present?
 
-      if @filters[:members].present?
-        records = records.joins(:user_assignments).where(user_assignments: { user_id: @filters[:members].values })
-      end
+      records = records.joins(:user_assignments).where(user_assignments: { user_id: @filters[:members].values }) if @filters[:members].present?
 
       records = records.where(supervised_by_id: @filters[:head_of_project].values) if @filters[:head_of_project].present?
 
-      records = records.where('projects.start_on >= ?', @filters[:start_on_from]) if @filters[:start_on_from].present?
+      records = records.where(projects: { start_on: (@filters[:start_on_from]).. }) if @filters[:start_on_from].present?
 
-      records = records.where('projects.start_on <= ?', @filters[:start_on_to]) if @filters[:start_on_to].present?
+      records = records.where(projects: { start_on: ..(@filters[:start_on_to]) }) if @filters[:start_on_to].present?
 
-      records = records.where('projects.due_date >= ?', @filters[:due_date_from]) if @filters[:due_date_from].present?
+      records = records.where(projects: { due_date: (@filters[:due_date_from]).. }) if @filters[:due_date_from].present?
 
-      records = records.where('projects.due_date <= ?', @filters[:due_date_to]) if @filters[:due_date_to].present?
+      records = records.where(projects: { due_date: ..(@filters[:due_date_to]) }) if @filters[:due_date_to].present?
 
-      if @filters[:archived_on_to].present?
-        records = records.where('projects.archived_on < ?',
-                                @filters[:archived_on_to])
-      end
-      if @filters[:archived_on_from].present?
-        records = records.where('projects.archived_on > ?', @filters[:archived_on_from])
-      end
+      records = records.where(projects: { archived_on: ...(@filters[:archived_on_to]) }) if @filters[:archived_on_to].present?
+      records = records.where('projects.archived_on > ?', @filters[:archived_on_from]) if @filters[:archived_on_from].present?
 
       if @filters[:statuses].present?
         scopes = {
