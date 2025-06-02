@@ -990,6 +990,7 @@ en:
           no_columns: "No columns selected"
         result:
           user_time: "Added on %{timestamp} by %{user}."
+          linked_steps: "Linked to steps: "
         result_asset:
           file_name: "%{file}"
           user_time: "Added on %{timestamp} by %{user}."
@@ -1003,6 +1004,7 @@ en:
           sidebar_name: "Step %{pos}: %{name}"
           step_pos: "Step %{pos}:"
           no_description: "No description"
+          linked_results: "Linked to results:"
           completed:
             user_time: "Completed by %{user} on %{timestamp}."
           uncompleted:
