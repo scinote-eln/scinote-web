@@ -43,7 +43,14 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    render json: @project, serializer: ProjectSerializer, user: current_user
+    respond_to do |format|
+      format.json do
+        render json: @project, serializer: ProjectSerializer, user: current_user
+      end
+      format.html do
+        render 'experiments/index'
+      end
+    end
   end
 
   def inventory_assigning_project_filter
