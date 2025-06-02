@@ -15,7 +15,7 @@
     <% unless @settings['exclude_task_metadata'] %>
       <p class="project-start-date">
         <% if project.start_on.present? %>
-          <%= t('projects.reports.elements.project_header.started_on', start_on: l(project.start_on, format: :full)) %>
+          <%= t('projects.reports.elements.project_header.started_on', started_on: l(project.start_on, format: :full)) %>
         <% end %>
       </p>
       <p class="project-due-date">
