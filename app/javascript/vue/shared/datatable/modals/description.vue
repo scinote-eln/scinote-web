@@ -56,7 +56,7 @@ export default {
   },
   data() {
     return {
-      description: this.object.description,
+      description: this.object.description || '',
       editMode: false
     };
   },

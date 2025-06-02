@@ -31,6 +31,12 @@
                 <span class="hidden-sm hidden-xs"><%= t('experiments.canvas.canvas_edit') %></span>
               <% end %>
       <% end %>
+
+      <span id="experimentDescriptionModal">
+        <experiment-description-modal
+          experiment-url="<%= experiment_path(@experiment) %>"
+        ></experiment-description-modal>
+      </span>
     </span>
 
     <%= render partial: 'task_view_dropdowns' %>
@@ -88,3 +94,6 @@
 
 <%= javascript_include_tag("projects/canvas") %>
 <%= javascript_include_tag 'vue_legacy_access_modal' %>
+
+<%= render 'shared/tiny_mce_packs' %>
+<%= javascript_include_tag 'vue_experiment_description_modal' %>
