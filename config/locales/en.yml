@@ -2093,6 +2093,7 @@ en:
       title: "Welcome to SciNote"
       description: "You have been invited to view the %{my_module}."
       view_task_btn: "View task"
+    linked_results: "%{count} linked results"
   tags:
     new:
       head_title: "Create tag"
