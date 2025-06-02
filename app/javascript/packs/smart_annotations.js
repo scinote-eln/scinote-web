@@ -123,6 +123,6 @@ $(document).on('click', '.user-tooltip', function () {
     $(this).attr('data-content', content);
     $(this).popover('show');
 
-    $(this).one('mouseout', function () { $(this).popover('hide'); });
+    $(this).one('blur', () => { $(this).popover('hide'); });
   });
 });

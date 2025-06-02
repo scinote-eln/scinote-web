@@ -18,6 +18,7 @@ class Project < ApplicationRecord
   enum visibility: { hidden: 0, visible: 1 }
 
   auto_strip_attributes :name, nullify: false
+  auto_strip_attributes :description, nullify: true
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
