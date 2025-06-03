@@ -2,7 +2,7 @@
 
 <div class="content-pane flexible">
   <%= render partial: 'my_modules/index/header' %>
-  <div id="MyModulesList" class="fixed-content-body">
+  <div id="MyModulesList" class="fixed-content-body" data-e2e="e2e-CO-tasks">
     <% view_mode = params[:view_mode] || 'active' %>
     <my-modules-list
       experiment-url="<%= experiment_path(@experiment) %>"

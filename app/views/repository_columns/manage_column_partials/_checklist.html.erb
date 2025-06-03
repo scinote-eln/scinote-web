@@ -30,7 +30,7 @@
       </span>
     </div>
   </div>
-  <div class="col-sm-9">
+  <div class="col-sm-9" data-e2e="e2e-IF-invItems-manageColumns-checklist-options">
     <%= text_area_tag 'items-textarea', column.repository_checklist_items.pluck(:data).join(selected_delimiter_char), rows: 10, class: 'form-control items-textarea' %>
     <% unless column.new_record? %>
       <div class="bg-danger hidden changing-existing-list-items-warning">

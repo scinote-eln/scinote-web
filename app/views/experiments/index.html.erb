@@ -2,7 +2,7 @@
 
 <div class="content-pane flexible projects-show">
   <%= render partial: 'experiments/index/header' %>
-  <div id="ExperimentsList" class="fixed-content-body">
+  <div id="ExperimentsList" class="fixed-content-body" data-e2e="e2e-CO-experiments">
     <experiments-list
       project-url="<%= project_path(@project) %>"
       actions-url="<%= actions_toolbar_experiments_path %>"

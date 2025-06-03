@@ -7,7 +7,7 @@
   <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: @experiment, my_modules: @active_modules } %>
 <% end %>
 
-<div class="content-pane flexible experiment-new-my_module" id="experiment-canvas">
+<div class="content-pane flexible experiment-new-my_module" id="experiment-canvas" data-e2e="e2e-CO-canvas">
   <%= render partial: 'experiments/show_header' %>
   <div class="toolbar-row" id="diagram-buttons" data-width-breakpoint="750">
     <span class="left" id="toolbar-left-block">

@@ -30,7 +30,7 @@
     </span>
   </div>
 </div>
-  <div class="col-sm-9">
+  <div class="col-sm-9" data-e2e="e2e-IF-invItems-manageColumns-dropdown-options">
     <%= text_area_tag 'items-textarea', column.repository_list_items.pluck(:data).join(selected_delimiter_char), rows: 10, class: 'form-control items-textarea', name: "repository_column[repository_list_items]" %>
     <% unless column.new_record? %>
       <div class="bg-danger hidden changing-existing-list-items-warning">
