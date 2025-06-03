@@ -46,7 +46,7 @@
                 :searchable="true"
                 :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_tags_placeholder')"
                 :tagsView="true"
-                :dataE2e="'e2e-DD-tasks-newTaskModal-tags'">
+                :e2eValue="'e2e-DD-tasks-newTaskModal-tags'">
               </SelectDropdown>
 
                 <template v-if="this.assignedUsersUrl">
@@ -63,7 +63,7 @@
                     :searchable="true"
                     :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')"
                     :tagsView="true"
-                    :dataE2e="'e2e-DD-tasks-newTaskModal-designatedUsers'">
+                    :e2eValue="'e2e-DD-tasks-newTaskModal-designatedUsers'">
                   </SelectDropdown>
                 </template>
           </div>

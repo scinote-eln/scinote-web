@@ -64,7 +64,7 @@
                 :options="userRoles"
                 :value="defaultRole"
                 @change="changeRole"
-                :dataE2e="'e2e-DD-projects-newProjectModal-defaultRole'"
+                :e2eValue="'e2e-DD-projects-newProjectModal-defaultRole'"
               />
             </div>
           </div>
