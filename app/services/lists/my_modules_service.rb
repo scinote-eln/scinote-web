@@ -128,6 +128,8 @@ module Lists
       else
         __send__("#{sortable_columns[order_params[:column].to_sym]}_sort", sort_direction(order_params))
       end
+
+      @records = @records.distinct('my_modules.id')
     end
 
     def query_filter(value)
