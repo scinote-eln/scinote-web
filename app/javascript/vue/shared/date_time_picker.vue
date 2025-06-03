@@ -1,5 +1,5 @@
 <template>
-  <div class="date-time-picker grow" :class="`size-${size}`" >
+  <div class="date-time-picker grow" :class="`size-${size}`" :data-e2e="dataE2e">
     <VueDatePicker
       ref="datetimePicker"
       :class="{
@@ -70,7 +70,8 @@ export default {
     timeClassName: { type: String, default: '' },
     disabled: { type: Boolean, default: false },
     customIcon: { type: String },
-    size: { type: String, default: 'xs' }
+    size: { type: String, default: 'xs' },
+    dataE2e: { type: String, default: '' }
   },
   data() {
     return {
