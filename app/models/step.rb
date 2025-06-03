@@ -117,6 +117,10 @@ class Step < ApplicationRecord
     step_comments
   end
 
+  def navigable?
+    !protocol.my_module.archived? && protocol.my_module.navigable? if protocol.my_module
+  end
+
   def description_step_text
     step_texts.order(created_at: :asc).first
   end
