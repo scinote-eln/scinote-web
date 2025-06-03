@@ -294,7 +294,7 @@ class ProjectsController < ApplicationController
   end
 
   def assigned_users_list
-    users = User.where(id: @project.user_assignments.select(:user_id)).order('full_name ASC')
+    users = @project.users.search(false, params[:query]).order(:full_name)
 
     render json: { data: users.map { |u| [u.id, u.name, { avatar_url: avatar_path(u, :icon_small) }] } }, status: :ok
   end
