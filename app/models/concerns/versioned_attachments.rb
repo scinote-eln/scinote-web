@@ -10,7 +10,7 @@ module VersionedAttachments
 
       define_method :"attach_#{name}_version" do |*args, **options|
         ActiveRecord::Base.transaction(requires_new: true) do
-          __send__(:"previous_#{name.to_s.pluralize}").attach(__send__(name).blob) if __send__(name).attached?
+          __send__(:"previous_#{name.to_s.pluralize}").attach([__send__(name).blob.signed_id]) if __send__(name).attached?
           __send__(name).attach(*args, **options)
 
           new_blob = __send__(name).blob
