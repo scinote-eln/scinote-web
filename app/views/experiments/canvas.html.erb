@@ -18,7 +18,7 @@
                     data: { view_mode: 'active' },
                     remote: true do %>
                 <span class="sn-icon sn-icon-new-task" data-e2e="e2e-BT-canvasToolbar-createTask"></span>
-                <span class="hidden-sm hidden-xs"><%= t('experiments.canvas.new_my_module') %></span>
+                <span class="2xl:inline tw-hidden"><%= t('experiments.canvas.new_my_module') %></span>
         <% end %>
         <%=link_to canvas_edit_experiment_url(@experiment),
               remote: true,
@@ -28,7 +28,7 @@
               data: { action: 'edit' },
               class: 'ajax btn btn-light' do %>
                 <span class="sn-icon sn-icon-edit" data-e2e="e2e-BT-canvasToolbar-editWorkflow"></span>
-                <span class="hidden-sm hidden-xs"><%= t('experiments.canvas.canvas_edit') %></span>
+                <span class="2xl:inline tw-hidden"><%= t('experiments.canvas.canvas_edit') %></span>
               <% end %>
       <% end %>
 
@@ -43,7 +43,7 @@
 
     <span class="right">
       <div id="zoom-level-buttons" class="sci-toggles-group change-canvas-view" data-toggle="buttons">
-      <span class="hidden-sm hidden-xs zoom-text"><%=t 'experiments.canvas.zoom' %></span>
+      <span class="2xl:inline tw-hidden zoom-text"><%=t 'experiments.canvas.zoom' %></span>
         <input type="radio" name="canvas-format" class="sci-toggle-item" checked>
         <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax sci-toggle-item-label", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
           <%= render partial: 'experiments/canvas_svg_icons', locals: { type: 'full' } %>
