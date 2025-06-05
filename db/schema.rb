@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
+ActiveRecord::Schema[7.0].define(version: 20250605061957) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -1323,6 +1323,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.string "description"
     t.bigint "space_taken", default: 1048576, null: false
     t.boolean "shareable_links_enabled", default: false, null: false
+    t.jsonb "settings", default: {}, null: false
     t.index ["created_by_id"], name: "index_teams_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_teams_on_last_modified_by_id"
     t.index ["name"], name: "index_teams_on_name"

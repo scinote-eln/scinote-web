@@ -68,6 +68,8 @@ class NavigationsController < ApplicationController
       }
     ]
 
+    links.insert(1, { name: I18n.t('users.settings.sidebar.account_nav.automations'), url: automations_team_path(current_team) }) if can_manage_team?(current_team)
+
     if can_create_acitivity_filters?
       links.push({ name: I18n.t('users.settings.sidebar.webhooks'), url: users_settings_webhooks_path })
     end
