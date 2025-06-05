@@ -18,7 +18,7 @@ class ProjectsController < ApplicationController
 
   before_action :switch_team_with_param, only: :index
   before_action :load_projects, only: %i(index actions_toolbar)
-  before_action :load_project, only: %i(update assigned_users_list show)
+  before_action :load_project, only: %i(update assigned_users_list show stock_report)
   before_action :load_current_folder, only: :index
   before_action :check_read_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
@@ -265,6 +265,7 @@ class ProjectsController < ApplicationController
     }
   end
 
+<<<<<<< HEAD
   def projects_to_move
     projects = current_team.projects
                            .active
@@ -276,6 +277,16 @@ class ProjectsController < ApplicationController
 
   def user_roles
     render json: { data: user_roles_collection(Project.new).map(&:reverse) }
+=======
+  def stock_report
+    render_403 unless can_read_project?(@project)
+
+    send_data(
+      StockReportService.new(@project).to_csv,
+      filename: "#{@project.code}-stock-report-#{Time.zone.today}.csv",
+      type: 'text/csv'
+    )
+>>>>>>> f5a255165 (Project stock consumption report feature [EX-1])
   end
 
   private

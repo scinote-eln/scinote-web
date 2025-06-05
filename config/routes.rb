@@ -442,6 +442,7 @@ Rails.application.routes.draw do
 
       member do
         get :assigned_users_list
+        get :stock_report
         post :favorite
         post :unfavorite
       end

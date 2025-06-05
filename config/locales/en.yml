@@ -2979,6 +2979,14 @@ en:
       reminder_at: "Reminder at"
       units_remaining: "%{unit} remaining."
       enter_ammount: "Enter an amount"
+    stock_report:
+      title: "Stock Report"
+      headers:
+        experiment: 'Experiment'
+        my_module: 'Task'
+        repository: 'Inventory'
+        repository_row: 'Item'
+        stock_consumption: 'Stock Consumed'
     stock_export:
       headers:
         consumption_type: 'Consumption type'

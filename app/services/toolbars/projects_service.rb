@@ -37,7 +37,8 @@ module Toolbars
         archive_action,
         comments_action,
         activities_action,
-        delete_folder_action
+        delete_folder_action,
+        stock_report_action
       ].compact
     end
 
@@ -204,6 +205,27 @@ module Toolbars
         icon: 'sn-icon sn-icon-activities',
         button_class: 'project-activities-btn',
         path: "/global_activities?#{activity_url_params}",
+        type: :link
+      }
+    end
+
+    def stock_report_action
+      return unless RepositoryBase.stock_management_enabled?
+
+      return unless @single
+
+      return unless @item_type == :project
+
+      project = @items.first
+
+      return unless can_read_project?(project)
+
+      {
+        name: 'activities',
+        label: I18n.t('repository_stock_values.stock_report.title'),
+        icon: 'sn-icon sn-icon-reports',
+        button_class: 'project-stock-report-btn',
+        path: stock_report_project_path(project, format: :csv),
         type: :link
       }
     end
