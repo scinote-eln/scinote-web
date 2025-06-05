@@ -191,7 +191,6 @@ export default {
           // Remove images
           content = content.replace(/<img[^>]*>/g, '');
 
-          editor.setContent(content);
           this.$emit('update:modelValue', content);
         });
       }
