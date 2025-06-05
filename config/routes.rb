@@ -160,6 +160,14 @@ Rails.application.routes.draw do
             get :filter_info
           end
         end
+
+        namespace :account do
+          resources :team_automations, only: %i(index update) do
+            member do
+              get :team
+            end
+          end
+        end
       end
     end
 
