@@ -16,7 +16,7 @@ class ProjectsController < ApplicationController
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(update create_tag assigned_users_list show)
+  before_action :load_vars, only: %i(update create_tag assigned_users_list show stock_report)
   before_action :load_current_folder, only: :index
   before_action :check_read_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
@@ -311,6 +311,16 @@ class ProjectsController < ApplicationController
           items: JSON.parse(params[:items])
         ).actions
     }
+  end
+
+  def stock_report
+    render_403 unless can_read_project?(@project)
+
+    send_data(
+      StockReportService.new(@project).to_csv,
+      filename: "#{@project.code}-stock-report-#{Time.zone.today}.csv",
+      type: 'text/csv'
+    )
   end
 
   private
