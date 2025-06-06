@@ -1016,7 +1016,7 @@ en:
           status:
             not_started: "Not started"
             in_progress: "In progress"
-            done: "done"
+            done: "Done"
         module_activity:
           name: "Task activity"
           sidebar_name: "Activity"

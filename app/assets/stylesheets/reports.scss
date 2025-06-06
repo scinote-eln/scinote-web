@@ -305,11 +305,11 @@ label {
         color: $color-black;
       }
 
-      &.started {
-        background: $brand-primary;
+      &.in_progress {
+        background: var(--sn-alert-bloo);
       }
 
-      &.completed {
+      &.done {
         background: $brand-success;
       }
     }
@@ -356,11 +356,11 @@ label {
         color: $color-black;
       }
 
-      &.started {
-        background: $brand-primary;
+      &.in_progress {
+        background: var(--sn-alert-bloo);
       }
 
-      &.completed {
+      &.done {
         background: $brand-success;
       }
     }
