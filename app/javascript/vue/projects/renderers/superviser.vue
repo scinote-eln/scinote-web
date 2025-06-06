@@ -84,7 +84,7 @@ export default {
   },
   computed: {
     canManage() {
-      return this.params.data.urls.assigned_users && !this.params.data.archived_on;
+      return this.params.data.urls.update;
     }
   },
   methods: {

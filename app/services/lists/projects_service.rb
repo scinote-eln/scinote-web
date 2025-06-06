@@ -141,9 +141,9 @@ module Lists
 
       case sort
       when 'created_at_ASC'
-        @records = @records.sort_by(&:created_at).reverse!
+        @records = @records.sort_by { |object| project_timestamp(:created_at, object) }.reverse!
       when 'created_at_DESC'
-        @records = @records.sort_by(&:created_at)
+        @records = @records.sort_by { |object| project_timestamp(:created_at, object) }
       when 'name_ASC'
         @records = @records.sort_by { |c| c.name.downcase }
       when 'name_DESC'
@@ -153,17 +153,17 @@ module Lists
       when 'code_DESC'
         @records = @records.sort_by(&:id).reverse!
       when 'archived_on_ASC'
-        @records = @records.sort_by(&:archived_on)
+        @records = @records.sort_by { |object| project_timestamp(:archived_on, object) }
       when 'archived_on_DESC'
-        @records = @records.sort_by(&:archived_on).reverse!
+        @records = @records.sort_by { |object| project_timestamp(:archived_on, object) }.reverse!
       when 'users_ASC'
         @records = @records.sort_by { |object| project_users_count(object) }
       when 'users_DESC'
         @records = @records.sort_by { |object| project_users_count(object) }.reverse!
       when 'updated_at_ASC'
-        @records = @records.sort_by(&:updated_at).reverse!
+        @records = @records.sort_by { |object| project_timestamp(:updated_at, object) }.reverse!
       when 'updated_at_DESC'
-        @records = @records.sort_by(&:updated_at)
+        @records = @records.sort_by { |object| project_timestamp(:updated_at, object) }
       when 'comments_ASC'
         @records = @records.sort_by { |object| project_comments_count(object) }
       when 'comments_DESC'
@@ -181,9 +181,9 @@ module Lists
       when 'due_date_DESC'
         @records = @records.sort_by { |object| project_due_date(object) }.reverse!
       when 'status_ASC'
-        @records = @records.sort_by { |object| project_status(object, 'asc') }
+        @records = @records.sort_by { |object| project_status(object) }
       when 'status_DESC'
-        @records = @records.sort_by { |object| project_status(object, 'desc') }.reverse!
+        @records = @records.sort_by { |object| project_status(object) }.reverse!
       when 'supervised_by_ASC'
         @records = @records.sort_by { |object| project_supervised_by(object) }
       when 'supervised_by_DESC'
@@ -202,7 +202,7 @@ module Lists
     def project_comments_count(object)
       return [0, 0, -1] unless project?(object)
 
-      [1, can_create_project_comments?(@user, object) ? 1 : 0, object.comments.count]
+      [1, object.comments.count, can_create_project_comments?(@user, object) ? 1 : 0]
     end
 
     def project_users_count(object)
@@ -220,24 +220,24 @@ module Lists
     end
 
     def project_start_date(object)
-      return Date.new(2100, 1, 1) unless project?(object)
+      return Date::Infinity.new unless project?(object)
 
-      object.start_date || Date.new(2100, 1, 1)
+      object.start_date || Date::Infinity.new
     end
 
     def project_due_date(object)
-      return Date.new(2100, 1, 1) unless project?(object)
+      return Date::Infinity.new unless project?(object)
 
-      object.due_date || Date.new(2100, 1, 1)
+      object.due_date || Date::Infinity.new
     end
 
-    def project_status(object, direction)
-      return (direction == 'asc' ? 10 : -1) unless project?(object)
+    def project_status(object)
+      return 3 unless project?(object) # should come after done (2)
 
       statuses = {
         not_started: 0,
-        started: 1,
-        completed: 2
+        in_progress: 1,
+        done: 2
       }
 
       statuses[object.status.to_sym]
@@ -252,7 +252,11 @@ module Lists
     def project_description(object)
       return [1, '', 1] unless project?(object)
 
-      [object.description ? 0 : 1, strip_tags(object.description || ''), 0]
+      [object.description ? 0 : 1, strip_tags(object.description&.downcase || ''), 0]
+    end
+
+    def project_timestamp(timestamp_name, object)
+      project?(object) ? object[timestamp_name] : Date::Infinity.new
     end
 
     def project?(object)
