@@ -10,11 +10,14 @@ module Api
       def index
         child_connections = timestamps_filter(@inventory_item.child_connections).page(params.dig(:page, :number))
                                                                                 .per(params.dig(:page, :size))
-        render jsonapi: child_connections, each_serializer: InventoryItemRelationshipSerializer, include: include_params
+        render jsonapi: child_connections,
+               each_serializer: InventoryItemRelationshipSerializer,
+               show_repository: true,
+               include: include_params
       end
 
       def show
-        render jsonapi: @child_connection, serializer: InventoryItemRelationshipSerializer, include: include_params
+        render jsonapi: @child_connection, serializer: InventoryItemRelationshipSerializer, show_repository: true, include: include_params
       end
 
       def create

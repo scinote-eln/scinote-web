@@ -37,7 +37,7 @@ RSpec.describe 'Api::V2::InventoryItemParentRelationshipsController', type: :req
             .to_json
         )['data']
       )
-      expect(hash_body).to include('included')
+      expect(hash_body['included'][0]['relationships']).to have_key('inventory')
     end
   end
 
@@ -61,7 +61,7 @@ RSpec.describe 'Api::V2::InventoryItemParentRelationshipsController', type: :req
             .to_json
         )['data']
       )
-      expect(hash_body).to include('included')
+      expect(hash_body['included'][0]['relationships']).to have_key('inventory')
     end
   end
 
