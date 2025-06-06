@@ -3,7 +3,7 @@
      data-e2e="e2e-BT-topToolbar-showExperimentDescription"
      @click="showExperimentDescription = true">
     <i class="sn-icon sn-icon-info"></i>
-    <span class="tw-hidden lg:inline">{{ i18n.t('experiments.toolbar.description_button') }}</span>
+    <span class="2xl:inline tw-hidden">{{ i18n.t('experiments.toolbar.description_button') }}</span>
   </a>
   <div class="flex">
     <ExperimentDescriptionModal
