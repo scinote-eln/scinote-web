@@ -1,7 +1,7 @@
 <template>
   <div ref="scrollContainer" class="h-full overflow-y-auto">
     <div v-if="favorites.length > 0" v-for="favorite in favorites" class="px-4 hover:bg-sn-super-light-grey">
-      <a :href="favorite.attributes.url" class="flex text-black items-center gap-2 py-2 hover:no-underline hover:text-black ">
+      <a :href="favorite.attributes.url" class="flex text-black items-center gap-2 py-0.5 hover:no-underline hover:text-black ">
         <i class="sn-icon sn-icon-star-filled  text-sn-alert-brittlebush" style="font-size: 32px !important"></i>
         <div class="overflow-hidden">
           <div class="flex items-center gap-2 text-sn-grey">
@@ -17,10 +17,10 @@
               </div>
             </template>
           </div>
-          <div :title="favorite.attributes.name" class="font-bold text-sn-dark-grey text-base truncate">{{ favorite.attributes.name }}</div>
+          <div :title="favorite.attributes.name" class="font-bold text-sn-dark-grey text-base truncate h-7">{{ favorite.attributes.name }}</div>
         </div>
         <div
-          class="ml-auto rounded px-1.5 py-1 mt-4 shrink-0"
+          class="ml-auto rounded px-1.5 py-1 mt-4 shrink-0 text-xs font-bold"
           :class="{
             'text-black border': favorite.attributes.status.light_color,
             'text-white': !favorite.attributes.status.light_color,
