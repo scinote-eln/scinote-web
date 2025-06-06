@@ -220,24 +220,24 @@ module Lists
     end
 
     def project_start_date(object)
-      return Date.new(2100, 1, 1) unless project?(object)
+      return Date::Infinity.new unless project?(object)
 
-      object.start_date || Date.new(2100, 1, 1)
+      object.start_date || Date::Infinity.new
     end
 
     def project_due_date(object)
-      return Date.new(2100, 1, 1) unless project?(object)
+      return Date::Infinity.new unless project?(object)
 
-      object.due_date || Date.new(2100, 1, 1)
+      object.due_date || Date::Infinity.new
     end
 
     def project_status(object)
-      return 3 unless project?(object)
+      return 3 unless project?(object) # should come after done (2)
 
       statuses = {
         not_started: 0,
-        started: 1,
-        completed: 2
+        in_progress: 1,
+        done: 2
       }
 
       statuses[object.status.to_sym]
@@ -256,7 +256,7 @@ module Lists
     end
 
     def project_timestamp(timestamp_name, object)
-      project?(object) ? object[timestamp_name] : DateTime.new(2100, 1, 1)
+      project?(object) ? object[timestamp_name] : Date::Infinity.new
     end
 
     def project?(object)
