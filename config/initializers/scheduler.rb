@@ -3,8 +3,12 @@
 require 'rufus-scheduler'
 
 def schedule_task(scheduler, interval, &block)
-  scheduler.every interval do
-    ActiveRecord::Base.connection_pool.with_connection(&block)
+  # Introduce a special time jitter for better load distribution
+  schedule_jitter = %w(12h 24h 1d).include?(interval) ? "#{rand(3)}h#{rand(60)}m" : "#{rand(60)}m"
+  scheduler.in schedule_jitter do
+    scheduler.every interval do
+      ActiveRecord::Base.connection_pool.with_connection(&block)
+    end
   end
 end
 
