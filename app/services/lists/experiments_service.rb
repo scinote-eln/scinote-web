@@ -52,9 +52,9 @@ module Lists
         )
       end
 
-      @records = @records.where('experiments.start_on >= ?', @filters[:start_on_from]) if @filters[:start_on_from].present?
+      @records = @records.where('experiments.start_date >= ?', @filters[:start_date_from]) if @filters[:start_date_from].present?
 
-      @records = @records.where('experiments.start_on <= ?', @filters[:start_on_to]) if @filters[:start_on_to].present?
+      @records = @records.where('experiments.start_date <= ?', @filters[:start_date_to]) if @filters[:start_date_to].present?
 
       @records = @records.where('experiments.due_date >= ?', @filters[:due_date_from]) if @filters[:due_date_from].present?
 
@@ -78,8 +78,8 @@ module Lists
       if @filters[:statuses].present?
         scopes = {
           'not_started' => @records.not_started,
-          'started' => @records.started,
-          'completed' => @records.completed
+          'in_progress' => @records.in_progress,
+          'done' => @records.done
         }
 
         selected_scopes = @filters[:statuses].values.filter_map { |status| scopes[status] }
@@ -97,7 +97,7 @@ module Lists
         updated_at: 'experiments.updated_at',
         completed_tasks: 'completed_task_count',
         description: 'experiments.description',
-        start_date: 'start_on',
+        start_date: 'start_date',
         due_date: 'due_date',
         status: 'status',
         favorite: 'favorite'
@@ -118,8 +118,8 @@ module Lists
                    end
                  when 'status'
                    @records.order(Arel.sql("CASE
-                                           WHEN experiments.started_at IS NULL AND experiments.completed_at IS NULL THEN -1
-                                           WHEN experiments.completed_at IS NULL THEN 0
+                                           WHEN experiments.started_at IS NULL AND experiments.done_at IS NULL THEN -1
+                                           WHEN experiments.done_at IS NULL THEN 0
                                            ELSE 1 END #{sort_direction(order_params)}"))
                  else
                    sort_by = "#{sortable_columns[order_params[:column].to_sym]} #{sort_direction(order_params)}"

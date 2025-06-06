@@ -47,16 +47,16 @@ class FavoriteSerializer < ActiveModel::Serializer
           color: Constants::STATUS_COLORS[:not_started],
           light_color: true
         }
-      when :started
+      when :in_progress
         {
-          name: I18n.t('projects.index.status.started'),
-          color: Constants::STATUS_COLORS[:started],
+          name: I18n.t('projects.index.status.in_progress'),
+          color: Constants::STATUS_COLORS[:in_progress],
           light_color: false
         }
-      when :completed
+      when :done
         {
-          name: I18n.t('projects.index.status.completed'),
-          color: Constants::STATUS_COLORS[:completed],
+          name: I18n.t('projects.index.status.done'),
+          color: Constants::STATUS_COLORS[:done],
           light_color: false
         }
       end

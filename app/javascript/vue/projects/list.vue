@@ -151,8 +151,8 @@ export default {
       descriptionModalObject: null,
       statusesList: [
         ['not_started', this.i18n.t('projects.index.status.not_started')],
-        ['started', this.i18n.t('projects.index.status.started')],
-        ['completed', this.i18n.t('projects.index.status.completed')]
+        ['in_progress', this.i18n.t('projects.index.status.in_progress')],
+        ['done', this.i18n.t('projects.index.status.done')]
       ]
     };
   },
@@ -209,13 +209,13 @@ export default {
         notSelectable: true
       },
       {
-        field: 'start_on',
+        field: 'start_date',
         headerName: this.i18n.t('projects.index.start_date'),
         sortable: true,
         cellRenderer: DueDateRenderer,
         cellRendererParams: {
           placeholder: this.i18n.t('projects.index.add_start_date'),
-          field: 'start_on_cell',
+          field: 'start_date_cell',
           mode: 'date',
           emptyPlaceholder: this.i18n.t('projects.index.no_start_date'),
           emitAction: 'updateStartDate'
@@ -322,7 +322,7 @@ export default {
           type: 'Text'
         },
         {
-          key: 'start_on',
+          key: 'start_date',
           type: 'DateRange',
           label: this.i18n.t('filters_modal.created_on.label'),
           mode: 'date'
@@ -393,7 +393,7 @@ export default {
     updateStartDate(value, params) {
       axios.put(params.data.urls.update, {
         project: {
-          start_on: this.formatDate(value)
+          start_date: this.formatDate(value)
         }
       }).then(() => {
         this.updateTable();

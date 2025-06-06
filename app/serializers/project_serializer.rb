@@ -6,7 +6,7 @@ class ProjectSerializer < ActiveModel::Serializer
   include CommentHelper
 
   attributes :name, :code, :created_at, :archived_on, :users, :urls, :hidden, :default_public_user_role_id, :supervised_by,
-             :comments, :updated_at, :due_date_cell, :start_on_cell, :description, :status, :permissions
+             :comments, :updated_at, :due_date_cell, :start_date_cell, :description, :status, :permissions
 
   def hidden
     object.hidden?
@@ -54,18 +54,18 @@ class ProjectSerializer < ActiveModel::Serializer
       value: (I18n.l(object.due_date, format: :default) if object.due_date),
       value_formatted: (I18n.l(object.due_date, format: :full_date) if object.due_date),
       editable: can_manage_project?(@object),
-      icon: (if object.one_day_prior? && !object.completed?
+      icon: (if object.one_day_prior? && !object.done?
                'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
-             elsif object.overdue? && !object.completed?
+             elsif object.overdue? && !object.done?
                'sn-icon sn-icon-alert-warning text-sn-delete-red'
              end)
     }
   end
 
-  def start_on_cell
+  def start_date_cell
     {
-      value: (I18n.l(object.start_on, format: :default) if object.start_on),
-      value_formatted: (I18n.l(object.start_on, format: :full_date) if object.start_on),
+      value: (I18n.l(object.start_date, format: :default) if object.start_date),
+      value_formatted: (I18n.l(object.start_date, format: :full_date) if object.start_date),
       editable: can_manage_project?(@object)
     }
   end

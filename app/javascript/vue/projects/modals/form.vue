@@ -159,8 +159,8 @@ export default {
     };
   },
   created() {
-    if (this.project?.start_on_cell?.value) {
-      this.startDate = new Date(this.project.start_on_cell?.value);
+    if (this.project?.start_date_cell?.value) {
+      this.startDate = new Date(this.project.start_date_cell?.value);
     }
 
     if (this.project?.due_date_cell?.value) {
@@ -173,7 +173,7 @@ export default {
 
       const projectData = {
         name: this.name,
-        start_on: this.startDate,
+        start_date: this.startDate,
         due_date: this.dueDate,
         description: this.description,
         visibility: (this.visible ? 'visible' : 'hidden'),

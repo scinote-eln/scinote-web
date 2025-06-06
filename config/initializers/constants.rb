@@ -445,8 +445,8 @@ class Constants
 
   STATUS_COLORS = {
     not_started: '#fffff',
-    started: '#3070ED',
-    completed: '#5EC66F'
+    in_progress: '#3070ED',
+    done: '#5EC66F'
   }
 
   # Interval time for polling asset changes when editing with SciNote Edit

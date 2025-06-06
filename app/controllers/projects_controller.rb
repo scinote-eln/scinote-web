@@ -121,7 +121,7 @@ class ProjectsController < ApplicationController
                          'restore'
                        end
     supervised_by_id_changes = @project.changes[:supervised_by_id]
-    start_date_changes = @project.changes[:start_on]
+    start_date_changes = @project.changes[:start_date]
     due_date_changes = @project.changes[:due_date]
 
     default_public_user_role_name = nil
@@ -322,14 +322,14 @@ class ProjectsController < ApplicationController
             :archived, :project_folder_id,
             :default_public_user_role_id,
             :due_date,
-            :start_on,
+            :start_date,
             :description
           )
   end
 
   def project_update_params
     params.require(:project)
-          .permit(:name, :visibility, :archived, :default_public_user_role_id, :due_date, :start_on, :description, :status, :supervised_by_id)
+          .permit(:name, :visibility, :archived, :default_public_user_role_id, :due_date, :start_date, :description, :status, :supervised_by_id)
   end
 
   def view_type_params
@@ -390,14 +390,14 @@ class ProjectsController < ApplicationController
   end
 
   def log_start_date_change_activity(start_date_changes)
-    type_of = if start_date_changes[0].nil?     # set start_on
-                message_items = { start_on: @project.start_on }
+    type_of = if start_date_changes[0].nil?     # set start_date
+                message_items = { start_date: @project.start_date }
                 :set_project_start_date
-              elsif start_date_changes[1].nil?  # remove start_on
-                message_items = { start_on: start_date_changes[0] }
+              elsif start_date_changes[1].nil?  # remove start_date
+                message_items = { start_date: start_date_changes[0] }
                 :remove_project_start_date
-              else                              # change start_on
-                message_items = { start_on: @project.start_on }
+              else                              # change start_date
+                message_items = { start_date: @project.start_date }
                 :change_project_start_date
               end
     log_activity(type_of, @project, message_items)

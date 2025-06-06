@@ -659,8 +659,8 @@ en:
       favorite: 'Favorites'
       status:
         not_started: "Not started"
-        started: "In progress"
-        completed: "Done"
+        in_progress: "In progress"
+        done: "Done"
       card:
         start_date: "Created on"
         updated_on: "Updated on"
@@ -990,8 +990,8 @@ en:
           supervised_by: "Head of project: %{user}"
           status:
             not_started: "Not started"
-            started: "In progress"
-            completed: "Completed"
+            in_progress: "In progress"
+            done: "Done"
         module:
           user_time: "Task %{code} created on %{timestamp}."
           started_on: "Start date: %{started_on}"
@@ -1015,8 +1015,8 @@ en:
           status_label: "Status:"
           status:
             not_started: "Not started"
-            started: "In progress"
-            completed: "Completed"
+            in_progress: "In progress"
+            done: "done"
         module_activity:
           name: "Task activity"
           sidebar_name: "Activity"
@@ -1919,8 +1919,8 @@ en:
         favorite: 'Favorites'
         status:
           not_started: 'Not started'
-          started: 'In progress'
-          completed: 'Done'
+          in_progress: 'In progress'
+          done: 'Done'
       modal_move_modules:
         title: "Move task(s) to experiment"
         confirm: "Move"
