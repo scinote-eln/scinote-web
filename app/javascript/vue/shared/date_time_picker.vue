@@ -133,6 +133,8 @@ export default {
 
       if (this.defaultValue !== this.datetime) {
         this.$emit('change', this.datetime);
+
+        if (this.mode === 'date') this.close();
       }
     },
     time() {
