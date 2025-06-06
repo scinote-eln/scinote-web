@@ -129,8 +129,8 @@ export default {
       reloadingTable: false,
       statusesList: [
         ['not_started', this.i18n.t('experiments.table.column.status.not_started')],
-        ['started', this.i18n.t('experiments.table.column.status.started')],
-        ['completed', this.i18n.t('experiments.table.column.status.completed')]
+        ['in_progress', this.i18n.t('experiments.table.column.status.in_progress')],
+        ['done', this.i18n.t('experiments.table.column.status.done')]
       ]
     };
   },
@@ -276,7 +276,7 @@ export default {
           type: 'Text'
         },
         {
-          key: 'start_on',
+          key: 'start_date',
           type: 'DateRange',
           label: this.i18n.t('filters_modal.created_on.label'),
           mode: 'date'
@@ -413,7 +413,7 @@ export default {
       this.updateField(params.data.urls.update, { due_date: this.formatDate(value) });
     },
     updateStartDate(value, params) {
-      this.updateField(params.data.urls.update, { start_on: this.formatDate(value) });
+      this.updateField(params.data.urls.update, { start_date: this.formatDate(value) });
     },
     updateFavorite(value, params) {
       const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;

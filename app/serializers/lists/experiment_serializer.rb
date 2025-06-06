@@ -95,9 +95,9 @@ module Lists
         value: due_date,
         value_formatted: due_date,
         editable: can_manage_experiment?(object),
-        icon: (if object.one_day_prior? && !object.completed?
+        icon: (if object.one_day_prior? && !object.done?
                  'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
-               elsif object.overdue? && !object.completed?
+               elsif object.overdue? && !object.done?
                  'sn-icon sn-icon-alert-warning text-sn-delete-red'
                end)
       }
@@ -124,7 +124,7 @@ module Lists
     end
 
     def start_date
-      I18n.l(object.start_on, format: :full_date) if object.start_on
+      I18n.l(object.start_date, format: :full_date) if object.start_date
     end
   end
 end

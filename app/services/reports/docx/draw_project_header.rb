@@ -24,10 +24,10 @@ module Reports::Docx::DrawProjectHeader
     end
 
     unless @settings['exclude_task_metadata']
-      if project.start_on.present?
+      if project.start_date.present?
         @docx.p do
           text I18n.t('projects.reports.elements.project_header.started_on',
-                      started_on: I18n.l(project.start_on, format: :full))
+                      started_on: I18n.l(project.start_date, format: :full))
         end
       end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
+ActiveRecord::Schema[7.0].define(version: 202111301212633) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -110,6 +110,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.boolean "file_processing"
     t.integer "team_id"
     t.integer "file_image_quality"
+    t.boolean "previews_generated", default: false, null: false
     t.integer "view_mode", default: 0, null: false
     t.boolean "pdf_preview_processing", default: false
     t.index ["created_at"], name: "index_assets_on_created_at"
@@ -213,9 +214,10 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.datetime "updated_at", precision: nil, null: false
     t.uuid "uuid"
     t.datetime "started_at"
-    t.datetime "completed_at"
+    t.datetime "done_at"
     t.date "due_date"
-    t.date "start_on"
+    t.date "start_date"
+    t.boolean "due_date_notification_sent", default: false, null: false
     t.jsonb "metadata"
     t.index "(('EX'::text || id)) gin_trgm_ops", name: "index_experiments_on_experiment_code", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_experiments_on_name", using: :gin
@@ -226,6 +228,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.index ["last_modified_by_id"], name: "index_experiments_on_last_modified_by_id"
     t.index ["project_id"], name: "index_experiments_on_project_id"
     t.index ["restored_by_id"], name: "index_experiments_on_restored_by_id"
+  end
+
+  create_table "favorites", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "team_id", null: false
+    t.string "item_type", null: false
+    t.bigint "item_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_type", "item_id"], name: "index_favorites_on_item"
+    t.index ["team_id"], name: "index_favorites_on_team_id"
+    t.index ["user_id", "team_id", "item_id", "item_type"], name: "index_favorites_on_user_and_item_and_team", unique: true
+    t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
   create_table "form_field_values", force: :cascade do |t|
@@ -366,6 +381,15 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.index ["team_id"], name: "index_label_templates_on_team_id"
   end
 
+  create_table "logs", force: :cascade do |t|
+    t.integer "action_type", null: false
+    t.string "user_name"
+    t.jsonb "details", default: {}, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["created_at", "action_type"], name: "index_logs_on_created_at_and_action_type"
+  end
+
   create_table "my_module_groups", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -468,6 +492,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.bigint "experiment_id", default: 0, null: false
     t.integer "state", limit: 2, default: 0
     t.datetime "completed_on", precision: nil
+    t.integer "electronic_signature_status", default: 1
+    t.datetime "electronic_signature_status_locked_at", precision: nil
     t.datetime "started_on", precision: nil
     t.bigint "my_module_status_id"
     t.boolean "status_changing", default: false
@@ -578,12 +604,13 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.boolean "demo", default: false, null: false
     t.bigint "project_folder_id"
     t.bigint "default_public_user_role_id"
+    t.jsonb "metadata"
     t.datetime "started_at"
-    t.datetime "completed_at"
-    t.date "start_on"
+    t.datetime "done_at"
+    t.date "start_date"
     t.text "description"
     t.bigint "supervised_by_id"
-    t.jsonb "metadata"
+    t.boolean "due_date_notification_sent", default: false, null: false
     t.index "(('PR'::text || id)) gin_trgm_ops", name: "index_projects_on_project_code", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_projects_on_name", using: :gin
     t.index "trim_html_tags(description) gin_trgm_ops", name: "index_projects_on_description", using: :gin
@@ -741,6 +768,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.datetime "restored_on", precision: nil
     t.bigint "archived_by_id"
     t.bigint "restored_by_id"
+    t.boolean "locked", default: false, null: false
     t.string "external_id"
     t.integer "repository_rows_count", default: 0, null: false
     t.bigint "repository_template_id"
@@ -1118,6 +1146,64 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.index ["user_id"], name: "index_results_on_user_id"
   end
 
+  create_table "scinote_common_labviva_orders_lists", force: :cascade do |t|
+    t.string "order_id"
+    t.integer "user_id"
+    t.jsonb "order"
+  end
+
+  create_table "scinote_common_repository_labviva_values", force: :cascade do |t|
+    t.string "data"
+    t.string "lvid"
+    t.string "sku"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.integer "created_by_id", null: false
+    t.integer "last_modified_by_id", null: false
+  end
+
+  create_table "scinote_enterprise_electronic_signature_requests", force: :cascade do |t|
+    t.string "type"
+    t.integer "group"
+    t.integer "reminder_count", default: 0, null: false
+    t.bigint "user_id"
+    t.string "signable_type"
+    t.bigint "signable_id"
+    t.bigint "fulfilled_by_id"
+    t.bigint "created_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "fulfillable", default: true
+    t.bigint "user_role_id"
+    t.index ["fulfilled_by_id"], name: "electronic_signature_requests_on_fulfilled_by_id"
+    t.index ["signable_type", "signable_id"], name: "electronic_signature_requests_on_signable_type_and_signable_id"
+    t.index ["user_id"], name: "electronic_signature_requests_on_user_id"
+    t.index ["user_role_id"], name: "index_electronic_signature_requests_on_user_role_id"
+  end
+
+  create_table "scinote_enterprise_electronic_signatures", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "user_full_name", null: false
+    t.string "user_role", null: false
+    t.string "user_email", null: false
+    t.text "comment"
+    t.integer "action"
+    t.integer "type_of_signature"
+    t.integer "reference_object_id"
+    t.integer "reference_object_name"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.boolean "revoked", default: false
+    t.bigint "my_module_status_id"
+    t.string "signable_type"
+    t.bigint "signable_id"
+    t.bigint "revoked_by_id"
+    t.index ["created_at"], name: "index_scinote_enterprise_electronic_signatures_on_created_at"
+    t.index ["my_module_status_id"], name: "index_electronic_signatures_on_my_module_status_id"
+    t.index ["signable_type", "signable_id"], name: "electronic_signatures_signable_fkey"
+    t.index ["user_id"], name: "index_scinote_enterprise_electronic_signatures_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.string "session_id", null: false
     t.jsonb "data"
@@ -1196,10 +1282,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.bigint "last_modified_by_id"
     t.bigint "protocol_id", null: false
     t.integer "assets_view_mode", default: 0, null: false
+    t.bigint "original_protocol_id"
     t.index "trim_html_tags((description)::text) gin_trgm_ops", name: "index_steps_on_description", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_steps_on_name", using: :gin
     t.index ["created_at"], name: "index_steps_on_created_at"
     t.index ["last_modified_by_id"], name: "index_steps_on_last_modified_by_id"
+    t.index ["original_protocol_id"], name: "index_steps_on_original_protocol_id"
     t.index ["position"], name: "index_steps_on_position"
     t.index ["protocol_id"], name: "index_steps_on_protocol_id"
     t.index ["user_id"], name: "index_steps_on_user_id"
@@ -1290,6 +1378,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.bigint "last_modified_by_id"
     t.string "description"
     t.bigint "space_taken", default: 1048576, null: false
+    t.bigint "hub_spot_deal_id"
     t.boolean "shareable_links_enabled", default: false, null: false
     t.index ["created_by_id"], name: "index_teams_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_teams_on_last_modified_by_id"
@@ -1426,7 +1515,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.integer "invitations_count", default: 0
     t.bigint "current_team_id"
     t.string "authentication_token", limit: 30
+    t.integer "organization_role", limit: 2, default: 0
+    t.datetime "password_changed_at", precision: nil
     t.jsonb "settings", default: {}, null: false
+    t.bigint "hub_spot_contact_id"
+    t.integer "subscription_status", default: 0
     t.jsonb "variables", default: {}, null: false
     t.boolean "two_factor_auth_enabled", default: false, null: false
     t.string "otp_secret"
@@ -1436,6 +1529,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.string "unlock_token"
     t.string "api_key"
     t.datetime "api_key_expires_at", precision: nil
+    t.datetime "last_seen_at", precision: nil
     t.datetime "api_key_created_at", precision: nil
     t.index "trim_html_tags((full_name)::text) gin_trgm_ops", name: "index_users_on_full_name", using: :gin
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
@@ -1444,8 +1538,23 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
+    t.index ["password_changed_at"], name: "index_users_on_password_changed_at"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
+  end
+
+  create_table "versions", force: :cascade do |t|
+    t.string "item_type"
+    t.string "{:null=>false}"
+    t.integer "item_id", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.text "object"
+    t.text "object_changes"
+    t.integer "team_id"
+    t.datetime "created_at", precision: nil
+    t.string "item_subtype"
+    t.index ["item_type", "item_id", "team_id"], name: "index_versions_on_item_type_and_item_id_and_team_id"
   end
 
   create_table "view_states", force: :cascade do |t|
@@ -1530,6 +1639,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
   add_foreign_key "experiments", "users", column: "created_by_id"
   add_foreign_key "experiments", "users", column: "last_modified_by_id"
   add_foreign_key "experiments", "users", column: "restored_by_id"
+  add_foreign_key "favorites", "teams"
+  add_foreign_key "favorites", "users"
   add_foreign_key "form_field_values", "form_fields"
   add_foreign_key "form_field_values", "form_responses"
   add_foreign_key "form_field_values", "users", column: "created_by_id"
@@ -1673,6 +1784,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
   add_foreign_key "results", "users", column: "archived_by_id"
   add_foreign_key "results", "users", column: "last_modified_by_id"
   add_foreign_key "results", "users", column: "restored_by_id"
+  add_foreign_key "scinote_common_repository_labviva_values", "users", column: "created_by_id"
+  add_foreign_key "scinote_common_repository_labviva_values", "users", column: "last_modified_by_id"
+  add_foreign_key "scinote_enterprise_electronic_signature_requests", "scinote_enterprise_electronic_signatures", column: "fulfilled_by_id"
+  add_foreign_key "scinote_enterprise_electronic_signature_requests", "users"
+  add_foreign_key "scinote_enterprise_electronic_signature_requests", "users", column: "created_by_id"
+  add_foreign_key "scinote_enterprise_electronic_signatures", "scinote_enterprise_electronic_signatures", column: "revoked_by_id"
   add_foreign_key "shareable_links", "teams"
   add_foreign_key "shareable_links", "users", column: "created_by_id"
   add_foreign_key "shareable_links", "users", column: "last_modified_by_id"
@@ -1683,6 +1800,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
   add_foreign_key "step_tables", "tables"
   add_foreign_key "step_texts", "steps"
   add_foreign_key "steps", "protocols"
+  add_foreign_key "steps", "protocols", column: "original_protocol_id"
   add_foreign_key "steps", "users"
   add_foreign_key "steps", "users", column: "last_modified_by_id"
   add_foreign_key "storage_location_repository_rows", "repository_rows"

@@ -46,7 +46,7 @@ module Lists
                    AND active_experiments.archived = FALSE')
            .joins('LEFT OUTER JOIN experiments AS active_completed_experiments ON
                    active_completed_experiments.project_id = projects.id
-                   AND active_completed_experiments.archived = FALSE AND active_completed_experiments.completed_at IS NOT NULL')
+                   AND active_completed_experiments.archived = FALSE AND active_completed_experiments.done_at IS NOT NULL')
            .joins('LEFT OUTER JOIN my_modules AS active_tasks ON
                    active_tasks.experiment_id = active_experiments.id
                    AND active_tasks.archived = FALSE')
@@ -93,9 +93,9 @@ module Lists
 
       records = records.where(supervised_by_id: @filters[:head_of_project].values) if @filters[:head_of_project].present?
 
-      records = records.where(projects: { start_on: (@filters[:start_on_from]).. }) if @filters[:start_on_from].present?
+      records = records.where(projects: { start_date: (@filters[:start_date_from]).. }) if @filters[:start_date_from].present?
 
-      records = records.where(projects: { start_on: ..(@filters[:start_on_to]) }) if @filters[:start_on_to].present?
+      records = records.where(projects: { start_date: ..(@filters[:start_date_to]) }) if @filters[:start_date_to].present?
 
       records = records.where(projects: { due_date: (@filters[:due_date_from]).. }) if @filters[:due_date_from].present?
 
@@ -107,8 +107,8 @@ module Lists
       if @filters[:statuses].present?
         scopes = {
           'not_started' => records.not_started,
-          'started' => records.started,
-          'completed' => records.completed
+          'in_progress' => records.in_progress,
+          'done' => records.done
         }
 
         selected_scopes = @filters[:statuses].values.filter_map { |status| scopes[status] }
@@ -172,10 +172,10 @@ module Lists
         @records = @records.sort_by { |object| project_favorites(object) }
       when 'favorite_DESC'
         @records = @records.sort_by { |object| project_favorites(object) }.reverse!
-      when 'start_on_ASC'
-        @records = @records.sort_by { |object| project_start_on(object) }
-      when 'start_on_DESC'
-        @records = @records.sort_by { |object| project_start_on(object) }.reverse!
+      when 'start_date_ASC'
+        @records = @records.sort_by { |object| project_start_date(object) }
+      when 'start_date_DESC'
+        @records = @records.sort_by { |object| project_start_date(object) }.reverse!
       when 'due_date_ASC'
         @records = @records.sort_by { |object| project_due_date(object) }
       when 'due_date_DESC'
@@ -219,10 +219,10 @@ module Lists
       end
     end
 
-    def project_start_on(object)
+    def project_start_date(object)
       return Date.new(2100, 1, 1) unless project?(object)
 
-      object.start_on || Date.new(2100, 1, 1)
+      object.start_date || Date.new(2100, 1, 1)
     end
 
     def project_due_date(object)

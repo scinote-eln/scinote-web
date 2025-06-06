@@ -148,7 +148,7 @@ export default {
       const experimentData = {
         name: this.name,
         description: this.description,
-        start_on: this.startDate,
+        start_date: this.startDate,
         due_date: this.dueDate
       };
       if (this.createUrl) {
