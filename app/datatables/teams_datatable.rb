@@ -2,7 +2,7 @@ class TeamsDatatable < CustomDatatable
   include InputSanitizeHelper
 
   def_delegator :@view, :link_to
-  def_delegator :@view, :team_path
+  def_delegator :@view, :members_users_settings_team_path
   def_delegator :@view, :leave_user_team_html_path
 
   MEMEBERS_SORT_COL = 'members'.freeze
@@ -28,7 +28,7 @@ class TeamsDatatable < CustomDatatable
       {
         'DT_RowId': record.id,
         '0': if current_user_team_role(record)&.owner?
-               link_to(escape_input(record.name), team_path(record))
+               link_to(escape_input(record.name), members_users_settings_team_path(record))
              else
                escape_input(record.name)
              end,

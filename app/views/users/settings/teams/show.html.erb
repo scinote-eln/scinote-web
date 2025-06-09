@@ -7,120 +7,67 @@
 
 <div data-hook="team-beginning"></div>
 
-<%= render partial: "users/settings/sidebar" %>
-<div class="tab-content">
-  <div class="tab-pane content-pane" role="tabpanel"></div>
-  <div class="tab-pane content-pane active team-settings-pane" role="tabpanel">
-    <!-- TITLE -->
-    <h1 id="team-name" class="settings-team-name" data-current-team="<%= current_team == @team %>">
-      <% if can_manage_team?(@team) %>
-        <%= render partial: "shared/inline_editing",
-                   locals: {
-                     initial_value: @team.name,
-                     config: {
-                       field_to_udpate: 'name',
-                       params_group: 'team',
-                       path_to_update: update_team_path(@team, format: :json)
-                     }
-                   } %>
-      <% else %>
-        <span class="view-mode"><%= @team.name %></span>
-      <% end %>
-    </h1>
-    <!-- End of TITLE -->
+<div class="content-pane flexible team-settings-pane with-grey-background">
+  <%= render partial: 'header' %>
 
-    <!-- HEADER -->
-    <div class="team-metadata">
+  <!-- HEADER -->
+  <div class="team-metadata">
 
-      <div class="created-at grid-block">
-       <span class="sn-icon sn-icon-calendar"></span>
-       <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_at") %></span>
-       <b><%= l(@team.created_at, format: :full_date) %></b>
-      </div>
-
-      <div class="created-by grid-block">
-        <span class="sn-icon sn-icon-user-menu fa-lg"></span>
-        <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_by") %></span>
-        <b>
-          <%= t('users.settings.teams.edit.header_created_by_name_email', name: @team.created_by.full_name, email: @team.created_by.email) if @team.created_by %>
-        </b>
-      </div>
-
-      <div class="space-usage grid-block">
-        <span class="fas fa-hdd"></span>
-        <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_space_taken") %></span>
-        <b data-hook="team-space-taken"><%= "#{number_to_human_size(@team.storage_used)}" %></b>
-      </div>
+    <div class="created-at grid-block">
+      <span class="sn-icon sn-icon-calendar"></span>
+      <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_at") %></span>
+      <b><%= l(@team.created_at, format: :full_date) %></b>
     </div>
 
-    <div class="flex items-center py-4 leading-6 gap-6">
-      <span><%= t("users.settings.teams.show.tasks_share.enable_label") %></span>
-      <span class="sci-toggle-checkbox-container">
-        <%= check_box_tag 'select_team_share_permission', 0, @team.shareable_links_enabled?, { class: 'sci-toggle-checkbox team-share-permission',
-                                                                                           data: { disable_url: disable_tasks_sharing_modal_team_path(),
-                                                                                                   enable_url: shared_tasks_toggle_team_path()
-                                                                                                 },
-                                                                                           disabled: !can_manage_team?(@team) } %>
-        <span class="sci-toggle-checkbox-label"></span>
-      </span>
+    <div class="created-by grid-block">
+      <span class="sn-icon sn-icon-user-menu fa-lg"></span>
+      <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_by") %></span>
+      <b>
+        <%= t('users.settings.teams.edit.header_created_by_name_email', name: @team.created_by.full_name, email: @team.created_by.email) if @team.created_by %>
+      </b>
     </div>
 
-    <div class="team-description inline-editing-container">
-      <% if can_manage_team?(@team) %>
-        <div
-          class="inline-init-handler"
-          data-field-to-update="description"
-          data-params-group="team"
-          data-path-to-update="<%= update_team_path(@team, format: :json) %>"
-          data-original-name="<%= @team.description %>"
-        >
-          <div class="view-mode" data-placeholder="<%= t("users.settings.teams.show.enter_description") %>"><%= @team.description %></div>
-          <textarea placeholder="<%= t("users.settings.teams.show.enter_description") %>" class="hidden input-field smart-text-area" type="text" value="<%= @team.description %>" disabled><%= @team.description %></textarea>
-          <div class="button-container">
-            <span class="cancel-button inline-field-button"><i class="sn-icon sn-icon-close"></i></span>
-            <span class="save-button inline-field-button"><i class="sn-icon sn-icon-check"></i></span>
-
-          </div>
-        </div>
-      <% else %>
-        <span class="view-mode disable-select"><%= @team.description.blank? ? t('users.settings.teams.edit.header_no_description') : @team.description %></span>
-      <% end %>
+    <div class="space-usage grid-block">
+      <span class="fas fa-hdd"></span>
+      <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_space_taken") %></span>
+      <b data-hook="team-space-taken"><%= "#{number_to_human_size(@team.storage_used)}" %></b>
     </div>
-    <!-- End of HEADER -->
-
-    <!-- USERS TABLE -->
-    <div class="users-datatable">
-      <% if can_invite_team_users?(@team) %>
-        <div id="add-new-team-members-button" class="hidden">
-          <a href="#" class="btn btn-primary" data-trigger="invite-users" data-turbolinks="false" data-modal-id="team-invite-users-modal">
-            <span class="sn-icon sn-icon-new-task"></span>
-            <%= I18n.t('users.settings.teams.edit.add_user') %>
-          </a>
-        </div>
-        <%= render(partial: 'shared/invite_users_modal',
-                   locals: { modal_id: 'team-invite-users-modal',
-                             type: 'invite_to_team_with_role',
-                             team: @team } ) %>
-      <% end %>
-      <table id="users-table" class="table" data-source="<%= team_users_datatable_path(@team, format: :json) %>">
-        <thead>
-          <tr>
-            <th id="user-name"><%= t("users.settings.teams.edit.thead_user_name") %></th>
-            <th id="email"><%= t("users.settings.teams.edit.thead_email") %></th>
-            <th id="user-role"><%= t("users.settings.teams.edit.thead_role") %></th>
-            <th id="joined-on"><%= t("users.settings.teams.edit.thead_joined_on") %></th>
-            <th id="status"><%= t("users.settings.teams.edit.thead_status") %></th>
-            <th id="options"><%= t("users.settings.teams.edit.thead_actions") %></th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <!-- End of USERS TABLE -->
-
-    <div data-hook="team-the-end"></div>
-
   </div>
+
+  <div class="flex items-center py-4 leading-6 gap-6">
+    <span><%= t("users.settings.teams.show.tasks_share.enable_label") %></span>
+    <span class="sci-toggle-checkbox-container">
+      <%= check_box_tag 'select_team_share_permission', 0, @team.shareable_links_enabled?, { class: 'sci-toggle-checkbox team-share-permission',
+                                                                                          data: { disable_url: disable_tasks_sharing_modal_team_path(),
+                                                                                                  enable_url: shared_tasks_toggle_team_path()
+                                                                                                },
+                                                                                          disabled: !can_manage_team?(@team) } %>
+      <span class="sci-toggle-checkbox-label"></span>
+    </span>
+  </div>
+
+  <div class="team-description inline-editing-container">
+    <% if can_manage_team?(@team) %>
+      <div
+        class="inline-init-handler"
+        data-field-to-update="description"
+        data-params-group="team"
+        data-path-to-update="<%= update_team_path(@team, format: :json) %>"
+        data-original-name="<%= @team.description %>"
+      >
+        <div class="view-mode bg-white !px-4" data-placeholder="<%= t("users.settings.teams.show.enter_description") %>"><%= @team.description %></div>
+        <textarea placeholder="<%= t("users.settings.teams.show.enter_description") %>" class="hidden input-field smart-text-area !px-4" type="text" value="<%= @team.description %>" disabled><%= @team.description %></textarea>
+        <div class="button-container">
+          <span class="cancel-button inline-field-button"><i class="sn-icon sn-icon-close"></i></span>
+          <span class="save-button inline-field-button"><i class="sn-icon sn-icon-check"></i></span>
+        </div>
+      </div>
+    <% else %>
+      <span class="view-mode disable-select"><%= @team.description.blank? ? t('users.settings.teams.edit.header_no_description') : @team.description %></span>
+    <% end %>
+  </div>
+  <!-- End of HEADER -->
+  <div data-hook="team-the-end"></div>
 </div>
 
 <%= render partial: 'users/settings/teams/description_modal' %>

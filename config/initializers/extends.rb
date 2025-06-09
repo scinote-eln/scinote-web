@@ -754,6 +754,9 @@ class Extends
     storage_locations/index
     storage_locations/show
     forms/show
+    teams/show
+    teams/members
+    user_groups/index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {

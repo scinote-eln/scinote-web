@@ -15,6 +15,7 @@ module Users
         create
         show
         users_datatable
+        members
       )
 
       before_action :load_team, only: %i(
@@ -24,12 +25,13 @@ module Users
         description_html
         update
         destroy
+        members
       )
 
       before_action :check_create_team_permission,
                     only: %i(new create)
 
-      before_action :set_breadcrumbs_items, only: %i(index show)
+      before_action :set_breadcrumbs_items, only: %i(index show members)
 
       layout 'fluid'
 
@@ -57,7 +59,13 @@ module Users
         end
       end
 
-      def show; end
+      def show
+        @active_tab = :details
+      end
+
+      def members
+        @active_tab = :members
+      end
 
       def users_datatable
         render json: ::TeamUsersDatatable.new(view_context, @team, @user)

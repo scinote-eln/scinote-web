@@ -3599,6 +3599,10 @@ en:
         breadcrumbs:
           all: "All teams"
           new_team: "New team"
+        navigation:
+          details: "Details"
+          members: "Members"
+          groups: "Groups"
         show:
           enter_description: "Enter Team description"
           tasks_share:
