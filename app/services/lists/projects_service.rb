@@ -220,15 +220,15 @@ module Lists
     end
 
     def project_start_date(object)
-      return Date::Infinity.new unless project?(object)
+      return Constants::INFINITE_DATE unless project?(object)
 
-      object.start_date || Date::Infinity.new
+      object.start_date || Constants::INFINITE_DATE
     end
 
     def project_due_date(object)
-      return Date::Infinity.new unless project?(object)
+      return Constants::INFINITE_DATE unless project?(object)
 
-      object.due_date || Date::Infinity.new
+      object.due_date || Constants::INFINITE_DATE
     end
 
     def project_status(object)
@@ -256,7 +256,7 @@ module Lists
     end
 
     def project_timestamp(timestamp_name, object)
-      project?(object) ? object[timestamp_name] : Date::Infinity.new
+      project?(object) ? object[timestamp_name] : Constants::INFINITE_DATE
     end
 
     def project?(object)
