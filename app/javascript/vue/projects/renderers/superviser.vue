@@ -1,6 +1,6 @@
 <template>
   <div v-if="params.data.supervised_by">
-    <GeneralDropdown v-if="canManage" @open="loadUsers" @close="closeFlyout" position="right">
+    <GeneralDropdown v-if="canManage" @open="openFlyout" @close="closeFlyout" position="right">
       <template v-slot:field>
         <div class="flex items-center gap-1 cursor-pointer h-9">
           <div v-if="params.data.supervised_by.id" class="flex items-center gap-2" :title="params.data.supervised_by.name">
@@ -75,19 +75,20 @@ export default {
       this.loadUsers();
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      if (this.$refs.searchInput) {
-        this.$refs.searchInput.focus();
-      }
-    });
-  },
   computed: {
     canManage() {
       return this.params.data.urls.update;
     }
   },
   methods: {
+    openFlyout() {
+      this.loadUsers();
+      this.$nextTick(() => {
+        if (this.$refs.searchInput) {
+          this.$refs.searchInput.focus();
+        }
+      });
+    },
     loadUsers() {
       axios.get(this.params.data.urls.assigned_users, {
         params: {
