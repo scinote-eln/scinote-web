@@ -71,15 +71,15 @@
         <a class="task-section-caret" role="button" data-toggle="collapse" href="#notes-container" aria-expanded="true" aria-controls="notes-container">
           <i class="sn-icon sn-icon-right"></i>
           <span class="task-section-title">
-            <h2><%= t('my_modules.notes.title') %></h2>
+            <h2 data-e2e="e2e-TX-task-notes-title"><%= t('my_modules.notes.title') %></h2>
           </span>
         </a>
       </div>
-      <div class="collapse in task-section-body" id="notes-container" aria-expanded="true">
+      <div class="collapse in task-section-body" id="notes-container" aria-expanded="true" data-e2e="e2e-IF-task-notes">
         <%= render partial: "my_module_notes" %>
       </div>
     </div>
-    <div id="assignedItems" >
+    <div id="assignedItems" data-e2e="e2e-CO-task-assignedItems">
       <assigned-items
         ref="assignedItems"
         avaialable-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>"
