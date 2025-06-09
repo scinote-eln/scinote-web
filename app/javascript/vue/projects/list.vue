@@ -384,7 +384,7 @@ export default {
     updateDueDate(value, params) {
       axios.put(params.data.urls.update, {
         project: {
-          due_date: this.formatDate(value)
+          due_date: value
         }
       }).then(() => {
         this.updateTable();
@@ -393,7 +393,7 @@ export default {
     updateStartDate(value, params) {
       axios.put(params.data.urls.update, {
         project: {
-          start_date: this.formatDate(value)
+          start_date: value
         }
       }).then(() => {
         this.updateTable();

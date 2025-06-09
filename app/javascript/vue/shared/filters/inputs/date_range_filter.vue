@@ -12,6 +12,7 @@
           :clearable="true"
           :placeholder="i18n.t('From')"
           :dateOnly="true"
+          :valueType="'stringWithoutTimezone'"
           :selectorId="`DatePicker${filter.key}`"
         />
       </div>
@@ -25,6 +26,7 @@
           :clearable="true"
           :placeholder="i18n.t('To')"
           :dateOnly="true"
+          :valueType="'stringWithoutTimezone'"
           :selectorId="`DatePickerTo${filter.key}`"
         />
       </div>

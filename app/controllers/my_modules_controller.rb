@@ -527,11 +527,11 @@ class MyModulesController < ApplicationController
 
     if permitted_params[:started_on].present?
       permitted_params[:started_on] =
-        Time.zone.strptime(permitted_params[:started_on], '%Y/%m/%d %H:%M')
+        Time.zone.strptime(permitted_params[:started_on], '%Y-%m-%d %H:%M')
     end
     if permitted_params[:due_date].present?
       permitted_params[:due_date] =
-        Time.zone.strptime(permitted_params[:due_date], '%Y/%m/%d %H:%M')
+        Time.zone.strptime(permitted_params[:due_date], '%Y-%m-%d %H:%M')
     end
 
     permitted_params
