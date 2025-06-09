@@ -149,6 +149,10 @@ Rails.application.routes.draw do
         resource :user_settings, only: %i(show update)
 
         resources :teams, only: [] do
+          resources :user_groups
+          member do
+            get :members
+          end
           collection do
             post :switch
           end
