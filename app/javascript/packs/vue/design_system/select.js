@@ -1,6 +1,6 @@
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import SelectDropdown from '../../../vue/shared/select_dropdown.vue';
-import PerfectScrollbar from 'vue3-perfect-scrollbar';
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
 import { mountWithTurbolinks } from '../helpers/turbolinks.js';
 
 const app = createApp({
@@ -41,5 +41,5 @@ const app = createApp({
 });
 app.component('SelectDropdown', SelectDropdown);
 app.config.globalProperties.i18n = window.I18n;
-app.use(PerfectScrollbar);
+app.component('PerfectScrollbar', PerfectScrollbar);
 mountWithTurbolinks(app, '#selects');
