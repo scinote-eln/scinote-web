@@ -346,7 +346,7 @@ export default {
     updateDueDate(value, params) {
       axios.put(params.data.urls.update_due_date, {
         my_module: {
-          due_date: this.formatDate(value)
+          due_date: value
         }
       }).then(() => {
         this.updateTable();
@@ -364,21 +364,11 @@ export default {
     updateStartDate(value, params) {
       axios.put(params.data.urls.update_start_date, {
         my_module: {
-          started_on: this.formatDate(value)
+          started_on: value
         }
       }).then(() => {
         this.updateTable();
       });
-    },
-    formatDate(date) {
-      if (!(date instanceof Date)) return null;
-
-      const y = date.getFullYear();
-      const m = date.getMonth() + 1;
-      const d = date.getDate();
-      const hours = date.getHours();
-      const mins = date.getMinutes();
-      return `${y}/${m}/${d} ${hours}:${mins}`;
     },
     updateTable() {
       this.tagsModalObject = null;
