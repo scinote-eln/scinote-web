@@ -133,7 +133,7 @@ export default {
       }
 
       if (this.defaultValue !== this.datetime) {
-        this.$emit('change', this.emitValue);
+        this.$emit('change', this.emitValue(this.datetime));
 
         if (this.mode === 'date') this.close();
       }
@@ -161,7 +161,7 @@ export default {
       }
 
       if (this.defaultValue !== newDate) {
-        this.$emit('change', this.emitValue);
+        this.$emit('change', this.emitValue(newDate));
       }
     }
   },
@@ -177,6 +177,11 @@ export default {
         if (this.mode === 'time') {
           this.time = val;
         } else {
+          // If new value has different date then previous date, reset time
+          if (this.datetime && this.datetime.getDate() !== val.getDate()) {
+            val.setHours(0, 0, 0, 0);
+          }
+
           this.datetime = val;
         }
       }
@@ -186,16 +191,6 @@ export default {
       if (this.mode === 'date') return document.body.dataset.datetimePickerFormatVue;
       return `${document.body.dataset.datetimePickerFormatVue} HH:mm`;
     },
-    stringValue() {
-      let time = `${this.datetime.getHours().toString().padStart(2, '0')}:${this.datetime.getMinutes().toString().padStart(2, '0')}`
-      let date = `${this.datetime.getFullYear()}-${(this.datetime.getMonth() + 1).toString().padStart(2, '0')}-${this.datetime.getDate().toString().padStart(2, '0')}`
-      if (this.mode === 'time') return time;
-      if (this.mode === 'date') return date;
-      return `${date} ${time}`;
-    },
-    emitValue() {
-      return this.valueType === 'stringWithoutTimezone' ? this.stringValue : this.datetime
-    }
   },
   mounted() {
     window.addEventListener('resize', this.close);
@@ -204,6 +199,16 @@ export default {
     window.removeEventListener('resize', this.close);
   },
   methods: {
+    stringValue(date) {
+      let time_str = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+      let date_str = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+      if (this.mode === 'time') return time_str;
+      if (this.mode === 'date') return date_str;
+      return `${date_str} ${time_str}`;
+    },
+    emitValue(date) {
+      return this.valueType === 'stringWithoutTimezone' ? this.stringValue(date) : date;
+    },
     close() {
       this.$refs.datetimePicker.closeMenu();
     },
