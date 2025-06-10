@@ -14,8 +14,31 @@
         <%= t('projects.reports.elements.experiment.user_time', code: experiment.code, timestamp: l(timestamp, format: :full)) %>
       </div>
     <% end %>
+    <% unless @settings['exclude_task_metadata'] %>
+      <p class="experiment-start-date">
+        <% if experiment.start_date.present? %>
+          <%= t('projects.reports.elements.experiment.started_on', started_on: l(experiment.start_date, format: :full)) %>
+        <% end %>
+      </p>
+      <p class="experiment-due-date">
+        <% if experiment.due_date.present? %>
+          <%= t('projects.reports.elements.experiment.due_date', due_date: l(experiment.due_date, format: :full)) %>
+        <% end %>
+      </p>
+      <p class="experiment-status">
+        <%= t('projects.reports.elements.experiment.status_label') %>
+        <span class="status-block <%= experiment.status %>">
+          <%= t("projects.reports.elements.experiment.status.#{experiment.status}") %>
+        </span>
+      </p>
+    <% end %>
+    <br>
+    <br>
     <% if experiment.description.present? %>
-      <%= custom_auto_link(experiment.description, team: current_team, base64_encoded_imgs: export_all) %>
+      <%= custom_auto_link(experiment.description,
+                               team: current_team,
+                               simple_format: false,
+                               base64_encoded_imgs: true) %>
     <% end %>
   </div>
   <% if defined?(children) %>

@@ -20,6 +20,13 @@ module Dashboard
       render json: { data: tasks_list, next_page: tasks.next_page }
     end
 
+    def favorites
+      favorites =
+        current_user.favorites.where(team: current_team).includes(:item).order(created_at: :desc)
+                    .page(params[:page]).per(Constants::INFINITE_SCROLL_LIMIT)
+      render json: favorites, each_serializer: FavoriteSerializer, meta: pagination_dict(favorites)
+    end
+
     def project_filter
       projects = current_team.projects
                              .where(archived: false)

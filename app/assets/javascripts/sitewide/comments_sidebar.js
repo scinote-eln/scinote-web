@@ -25,6 +25,11 @@ var CommentsSidebar = (function() {
     });
   }
 
+  function setCommentSidebarHeight() {
+    const sidebarHeight = visualViewport.height - 72;
+    $(SIDEBAR).css('height', `${sidebarHeight}px`);
+  }
+
   function updateCounter() {
     var commentsAmount = $(SIDEBAR).find('.comments-list .comment-container').length;
     if (commentsCounter.length) {
@@ -175,9 +180,13 @@ var CommentsSidebar = (function() {
       $(SIDEBAR).addClass('open loading');
       initInputField();
       loadCommentsList();
+      window.addEventListener('resize', setCommentSidebarHeight);
+      window.addEventListener('scroll', setCommentSidebarHeight);
     },
     close: function() {
       $(SIDEBAR).removeClass('open');
+      window.removeEventListener('resize', setCommentSidebarHeight);
+      window.removeEventListener('scroll', setCommentSidebarHeight);
     }
   };
 }());

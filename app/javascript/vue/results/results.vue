@@ -119,14 +119,14 @@ export default {
   },
   mounted() {
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
-    window.addEventListener('scroll', this.loadResults, false);
+    window.addEventListener('scroll', this.infiniteScrollLoad, false);
     window.addEventListener('scroll', this.initStackableHeaders, false);
     this.nextPageUrl = this.url;
     this.loadResults();
     this.initStackableHeaders();
   },
   beforeUnmount() {
-    window.removeEventListener('scroll', this.loadResults, false);
+    window.removeEventListener('scroll', this.infiniteScrollLoad, false);
     window.removeEventListener('scroll', this.initStackableHeaders, false);
   },
   methods: {
@@ -161,6 +161,11 @@ export default {
       this.$nextTick(() => {
         this.loadResults();
       });
+    },
+    infiniteScrollLoad() {
+      if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
+        this.loadResults();
+      }
     },
     loadResults() {
       if (this.nextPageUrl === null || this.loadingPage) return;

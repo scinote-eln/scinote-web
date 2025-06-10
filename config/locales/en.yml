@@ -649,6 +649,18 @@ en:
       activities_option: "Activities"
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
+      due_date: "Due date"
+      add_due_date: "Add due date"
+      no_due_date: "No due date"
+      start_date: "Start date"
+      add_start_date: "Add start date"
+      no_start_date: "No start date"
+      add_description: 'Add description'
+      favorite: 'Favorites'
+      status:
+        not_started: "Not started"
+        in_progress: "In progress"
+        done: "Done"
       card:
         start_date: "Created on"
         updated_on: "Updated on"
@@ -659,6 +671,11 @@ en:
         archived_date: "Archived on"
         comments: 'Comments'
         updated_at: 'Updated on'
+        description: 'Description'
+        supervised_by: 'Head of project'
+        status: 'Status'
+        completed_experiment: "Experiments done"
+        completed_experiments: "%{completed}/%{all} experiments"
       end_of_list_placeholder: 'You’ve reached the end of the list'
       folder:
         description: "%{projects_count} projects | %{folders_count} folders"
@@ -713,6 +730,12 @@ en:
         members:
           label: "Members"
           placeholder: "Select members of a project"
+        head_of_project:
+          label: "Head of project"
+          placeholder: "Select a person"
+        status:
+          label: "Status"
+          placeholder: "Select project status"
         folders:
           label: "Look inside folders"
           popover_html: "When <strong>“Look inside folders”</strong> is active, the filters will also take all folders and their content into account."
@@ -876,7 +899,7 @@ en:
           results_comments: "Result comments"
           additional_content: "Additional content"
           task_activity: "Include task activity"
-          exclude_task_metadata: "Exclude task metadata"
+          exclude_task_metadata: "Exclude project, experiment and task metadata"
           exclude_timestamps: "Exclude timestamps"
           archived: "[archived]"
           deleted: "[deleted]"
@@ -961,6 +984,14 @@ en:
         project_header:
           user_time: "Project %{code} created on %{timestamp}."
           title: "Report for project %{project}"
+          started_on: "Start date: %{started_on}"
+          due_date: "Due date: %{due_date}"
+          status_label: "Status:"
+          supervised_by: "Head of project: %{user}"
+          status:
+            not_started: "Not started"
+            in_progress: "In progress"
+            done: "Done"
         module:
           user_time: "Task %{code} created on %{timestamp}."
           started_on: "Start date: %{started_on}"
@@ -979,6 +1010,13 @@ en:
           user_time: "Experiment %{code} created on %{timestamp}."
           no_description: "No description"
           no_tags: "No tags"
+          started_on: "Start date: %{started_on}"
+          due_date: "Due date: %{due_date}"
+          status_label: "Status:"
+          status:
+            not_started: "Not started"
+            in_progress: "In progress"
+            done: "Done"
         module_activity:
           name: "Task activity"
           sidebar_name: "Activity"
@@ -1783,6 +1821,7 @@ en:
     toolbar:
       new_button: "New experiment"
       new_button_tooltip: "Create new experiment"
+      description_button: "Description"
       edit_button: "Edit details"
       duplicate_button: "Duplicate"
       move_button: "Move"
@@ -1798,6 +1837,7 @@ en:
       completed_value: "%{completed}/%{all} tasks"
       description: "Description"
       more: "more"
+      add_description: "Add description"
     index:
       edit_option: "Edit"
       clone_option: "Duplicate"
@@ -1806,8 +1846,16 @@ en:
       restore_option: "Restore"
       more_link: "More"
       experiment_access: "Access"
+      add_due_date: "Add due date"
+      add_start_date: "Add start date"
+      add_description: "Add description"
+      due_date: "Due date"
+      start_date: "Start date"
       details_modal:
         description: "%{name} description"
+      filters:
+        status: "Status"
+        status_placeholder: "Select experiment status"
     new:
       create: 'New Experiment'
       modal_title: 'Create new experiment'
@@ -1868,6 +1916,7 @@ en:
         id_html: 'ID'
         task_name_html: 'Task name'
         due_date_html: 'Due date'
+        start_date_html: 'Start date'
         archived_html: 'Archived on'
         age_html: 'Age'
         results_html: 'Results'
@@ -1875,6 +1924,16 @@ en:
         assigned_html: 'Assigned to'
         tags_html: 'Tags'
         comments_html: 'Comments'
+        status_html: 'Status'
+        completed_task: 'Tasks done'
+        no_due_date_placeholder: '+ Add due date'
+        no_due_date: 'not set'
+        no_start_date_placeholder: "+ Add starting date"
+        favorite: 'Favorites'
+        status:
+          not_started: 'Not started'
+          in_progress: 'In progress'
+          done: 'Done'
       modal_move_modules:
         title: "Move task(s) to experiment"
         confirm: "Move"
@@ -4207,7 +4266,7 @@ en:
 
   notifications:
     title: "Notifications"
-    sub_title: "Define which updates to get notified and where"
+    sub_title: "Select the updates you want to be notified about and where you receive them."
     in_app: "In-app"
     email: "Email"
     breadcrumb: "Preferences"
@@ -4226,6 +4285,8 @@ en:
       repository_date_reminder: "Date reminder"
       other_smart_annotation: "You were tagged"
       other_team_invitation: "You were invited or removed from the team"
+      experiment_due_date: "Due date reminder if you have Owner or User access role on a Experiment"
+      project_due_date: "Due date reminder if you have Owner access role on a Project"
     content:
       my_module_due_date_reminder:
         title_html: "Task due date reminder"
@@ -4236,6 +4297,12 @@ en:
       item_date_reminder:
         title_html: "Item date reminder"
         message_html: "Date reminder for %{repository_row_name} is coming up in %{value} %{units}."
+      project_due_date_reminder:
+        title_html: "Project due date reminder"
+        message_html: "Due date for the project %{project_name} is coming up."
+      experiment_due_date_reminder:
+        title_html: "Experiment due date reminder"
+        message_html: "Due date for the experiment %{experiment_name} is coming up."
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
@@ -4559,6 +4626,8 @@ en:
       webhook_updated: "Webhook successfully updated"
       webhook_deleted: "Webhook successfully deleted"
       delete_webhook_confimration: "Are you sure you want to delete the webhook?"
+      include_serialized_subject: "Include serialized subject"
+      include_serialized_subject_hint: "(Optional) Include the full webhook subject info, using API serializers"
       secret_key: "Secret key"
       secret_key_hint: "(Optional) A secret key that will be included in the Webhook-Secret-Key header, for authentication purposes."
   # This section contains general words that can be used in any parts of
@@ -4687,6 +4756,9 @@ en:
       all_options_placeholder: 'All options selected'
       no_options_placeholder: 'No options found'
   api:
+    webhooks:
+      errors:
+        subject_not_serializable: "Subject not serializable."
     core:
       status_ok: "Ok"
       invalid_api_key: "API key is invalid or expired"
@@ -4777,8 +4849,8 @@ en:
     templates: "Templates"
     projects: "Projects"
     inventories: "Inventories"
-    protocols: "Protocol"
-    labels: "Label"
+    protocols: "Protocol templates"
+    labels: "Label templates"
     teams: "All Teams"
     addons: "Add-ons"
     locations: "Locations"
@@ -4875,9 +4947,11 @@ en:
     created_on:
       label: "Start date"
     updated_on:
-      label: "Modified date"
+      label: "Updated date"
     archived_on:
       label: "Archived on"
+    due_date:
+      label: "Due date"
     recent_searches_label: "Recent searches"
     show_btn:
      one: "Show results"

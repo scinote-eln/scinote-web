@@ -77,6 +77,7 @@ module UserAssignments
           assigned_by: @assigned_by
         )
       else
+        object.favorites.where(user: @user).destroy_all if object.respond_to?(:favorites)
         user_assignment.destroy!
       end
     end

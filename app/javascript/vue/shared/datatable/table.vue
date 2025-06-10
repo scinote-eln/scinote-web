@@ -184,6 +184,10 @@ export default {
     },
     hiddenDataMessage: {
       type: String
+    },
+    tableOnly: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -249,9 +253,7 @@ export default {
       const columns = this.columnDefs.map((column) => ({
         ...column,
         minWidth: column.minWidth || 110,
-        cellRendererParams: {
-          dtComponent: this
-        },
+        cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
         pinned: (column.field === 'name' || column.field === 'name_hash' ? 'left' : null),
         comparator: () => null
       }));
@@ -405,7 +407,7 @@ export default {
         .then((response) => {
           if (response.data.data) {
             this.tableState = response.data.data;
-            this.currentViewRender = this.tableState.currentViewRender;
+            this.currentViewRender = this.tableOnly ? 'table' : this.tableState.currentViewRender;
             this.perPage = this.tableState.perPage;
             this.order = this.tableState.order;
             if (this.currentViewRender === 'cards') {
@@ -434,6 +436,10 @@ export default {
 
       setTimeout(() => {
         this.initializing = false;
+
+        if (this.tableState.columnsState.length !== this.columnDefs.length + 1) {
+          this.saveTableState();
+        }
       }, 200);
     },
     saveTableState() {

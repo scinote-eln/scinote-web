@@ -1,43 +1,24 @@
 <template>
-  <div class="relative leading-5 h-full flex items-center">
-    <div>
-      {{ i18n.t('experiments.card.completed_value', {
-        completed: params.data.completed_tasks,
-        all: params.data.total_tasks
-      }) }}
-      <div class="py-1">
-        <div class="w-24 h-1 bg-sn-light-grey">
-          <div class="h-full"
-               :class="{
-                 'bg-sn-black': params.data.archived_on,
-                 'bg-sn-blue': !params.data.archived_on
-               }"
-               :style="{
-                 width: `${progress}%`
-               }"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <CounterRenderer
+    :params="params"
+    totalField="total_tasks"
+    completedField="completed_tasks"
+    label="experiments.card.completed_value"
+  />
 </template>
 
 <script>
+import CounterRenderer from '../../shared/datatable/renderers/counter.vue';
+
 export default {
   name: 'CompletedTasksRenderer',
   props: {
     params: {
-      required: true,
-    },
-  },
-  computed: {
-    progress() {
-      const { completed_tasks: completedTasks, total_tasks: totalTasks } = this.params.data;
-
-      if (totalTasks === 0) return 3;
-      if (completedTasks === 0) return 3;
-
-      return (completedTasks / totalTasks) * 100;
+      required: true
     }
+  },
+  components: {
+    CounterRenderer
   }
 };
 </script>

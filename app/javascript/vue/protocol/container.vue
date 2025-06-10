@@ -103,7 +103,7 @@
             </div>
           </div>
           <div id="protocol-description-container"
-            class="text-base"
+            class="text-base content__text-container"
             :class=" inRepository ? 'protocol-description collapse in' : ''"
             data-e2e="e2e-IF-protocolTemplates-protocolDescription-content">
             <div v-if="urls.update_protocol_description_url">

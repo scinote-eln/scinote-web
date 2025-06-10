@@ -13,6 +13,8 @@ class MyModule < ApplicationRecord
   include PermissionCheckableModel
   include Assignable
   include Cloneable
+  include Favoritable
+  include MetadataModel
 
   attr_accessor :transition_error_rollback, :my_module_status_created_by
 

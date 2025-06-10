@@ -7,6 +7,7 @@ class MyModulesController < ApplicationController
   include ApplicationHelper
   include MyModulesHelper
   include Breadcrumbs
+  include FavoritesActions
 
   before_action :load_vars, except: %i(index restore_group create new save_table_state
                                        inventory_assigning_my_module_filter actions_toolbar)
@@ -468,6 +469,8 @@ class MyModulesController < ApplicationController
                             .find_by(id: params[:id] || params[:experiment_id])
 
     render_404 unless @experiment
+    current_team_switch(@experiment.project.team) if current_team != @experiment.project.team
+
     render_403 unless can_read_experiment?(@experiment)
   end
 
@@ -532,11 +535,11 @@ class MyModulesController < ApplicationController
 
     if permitted_params[:started_on].present?
       permitted_params[:started_on] =
-        Time.zone.strptime(permitted_params[:started_on], '%Y/%m/%d %H:%M')
+        Time.zone.strptime(permitted_params[:started_on], '%Y-%m-%d %H:%M')
     end
     if permitted_params[:due_date].present?
       permitted_params[:due_date] =
-        Time.zone.strptime(permitted_params[:due_date], '%Y/%m/%d %H:%M')
+        Time.zone.strptime(permitted_params[:due_date], '%Y-%m-%d %H:%M')
     end
 
     permitted_params

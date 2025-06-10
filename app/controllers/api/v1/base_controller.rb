@@ -271,6 +271,13 @@ module Api
 
         records
       end
+
+      def metadata_filter(records)
+        metadata_filter = params.permit(filter: { metadata: {} }).to_h
+        return records if metadata_filter.dig(:filter, :metadata).blank?
+
+        records.where('metadata @> ?', metadata_filter[:filter][:metadata].to_json)
+      end
     end
   end
 end

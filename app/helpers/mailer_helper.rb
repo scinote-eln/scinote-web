@@ -14,13 +14,13 @@ module MailerHelper
   private
 
   def prepend_server_url(href)
-    return href if href.start_with? ENV['MAIL_SERVER_URL']
+    return href if href.start_with? Rails.application.config.action_mailer.default_url_options[:host]
 
     new_href = ''
-    unless ENV['MAIL_SERVER_URL'].start_with?('http://', 'https://')
+    unless Rails.application.config.action_mailer.default_url_options[:host].start_with?('http://', 'https://')
       new_href += 'http://'
     end
-    new_href += ENV['MAIL_SERVER_URL']
+    new_href += Rails.application.config.action_mailer.default_url_options[:host]
     new_href += ((href.start_with? '/') ? '' : '/')
     new_href += href
     new_href

@@ -104,6 +104,12 @@ class ProjectFolder < ApplicationRecord
     parent_folder.present? && parent_folder.archived_branch?
   end
 
+  def favorite
+    false
+  end
+
+  def description; end
+
   private
 
   def inherit_team_from_parent_folder

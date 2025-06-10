@@ -23,8 +23,12 @@
     @access="access"
     @archive="archive"
     @restore="restore"
+    @showExperimentDescription="showExperimentDescription = true"
     @duplicate="duplicate"
-    @editTags="editTags"/>
+    @updateDueDate="updateDueDate"
+    @updateStartDate="updateStartDate"
+    @editTags="editTags"
+    @updateFavorite="updateFavorite"/>
 
   <TagsModal v-if="tagsModalObject"
               :params="tagsModalObject"
@@ -32,6 +36,11 @@
               :projectName="projectName"
               :projectTagsUrl="projectTagsUrl"
               @close="updateTable" />
+  <ExperimentDescriptionModal
+    v-if="experiment && showExperimentDescription"
+    :object="experiment.attributes"
+    @update="updateExperimentDescription"
+    @close="showExperimentDescription = false"/>
   <NewModal v-if="newModalOpen"
             :createUrl="createUrl"
             :projectTagsUrl="projectTagsUrl"
@@ -57,10 +66,12 @@
 import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
+import ExperimentDescriptionModal from '../shared/datatable/modals/description.vue';
 import NameRenderer from './renderers/name.vue';
 import ResultsRenderer from './renderers/results.vue';
 import StatusRenderer from './renderers/status.vue';
-import DueDateRenderer from './renderers/due_date.vue';
+import DueDateRenderer from '../shared/datatable/renderers/date.vue';
+import StartDateRenderer from '../shared/datatable/renderers/date.vue';
 import DesignatedUsers from './renderers/designated_users.vue';
 import TagsModal from './modals/tags.vue';
 import TagsRenderer from './renderers/tags.vue';
@@ -69,6 +80,7 @@ import NewModal from './modals/new.vue';
 import EditModal from './modals/edit.vue';
 import MoveModal from './modals/move.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
+import FavoriteRenderer from '../shared/datatable/renderers/favorite.vue';
 
 export default {
   name: 'MyModulesList',
@@ -76,6 +88,8 @@ export default {
     DataTable,
     ConfirmationModal,
     DueDateRenderer,
+    ExperimentDescriptionModal,
+    StartDateRenderer,
     DesignatedUsers,
     TagsModal,
     NewModal,
@@ -84,7 +98,8 @@ export default {
     AccessModal,
     NameRenderer,
     ResultsRenderer,
-    StatusRenderer
+    StatusRenderer,
+    FavoriteRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -102,7 +117,8 @@ export default {
     usersFilterUrl: { type: String, required: true },
     statusesList: { type: Array, required: true },
     projectName: { type: String },
-    archived: { type: Boolean }
+    archived: { type: Boolean },
+    experimentUrl: { type: String, required: true }
   },
   data() {
     return {
@@ -113,10 +129,14 @@ export default {
       reloadingTable: false,
       accessModalParams: null,
       columnDefs: [],
-      filters: []
+      filters: [],
+      showExperimentDescription: false,
+      experiment: null
     };
   },
   created() {
+    this.loadExperiment();
+
     const columns = [
       {
         field: 'name',
@@ -125,15 +145,48 @@ export default {
         cellRenderer: NameRenderer
       },
       {
+        field: 'favorite',
+        headerComponentParams: {
+          html: '<div class="sn-icon sn-icon-star-filled"></div>'
+        },
+        headerName: this.i18n.t('experiments.table.column.favorite'),
+        sortable: true,
+        cellRenderer: FavoriteRenderer,
+        minWidth: 80,
+        maxWidth: 80,
+        notSelectable: true
+      },
+      {
         field: 'code',
         headerName: this.i18n.t('experiments.table.column.id_html'),
         sortable: true
+      },
+      {
+        field: 'start_date',
+        headerName: this.i18n.t('experiments.table.column.start_date_html'),
+        sortable: true,
+        cellRenderer: StartDateRenderer,
+        cellRendererParams: {
+          placeholder: this.i18n.t('my_modules.details.no_start_date_placeholder'),
+          field: 'start_date_cell',
+          mode: 'datetime',
+          emptyPlaceholder: this.i18n.t('my_modules.details.no_due_date'),
+          emitAction: 'updateStartDate'
+        },
+        minWidth: 200
       },
       {
         field: 'due_date',
         headerName: this.i18n.t('experiments.table.column.due_date_html'),
         sortable: true,
         cellRenderer: DueDateRenderer,
+        cellRendererParams: {
+          placeholder: this.i18n.t('my_modules.details.no_due_date_placeholder'),
+          field: 'due_date_cell',
+          mode: 'datetime',
+          emptyPlaceholder: this.i18n.t('my_modules.details.no_due_date'),
+          emitAction: 'updateDueDate'
+        },
         minWidth: 200
       },
       {
@@ -268,6 +321,14 @@ export default {
         });
       }
 
+      left.push({
+        name: 'showExperimentDescription',
+        icon: 'sn-icon sn-icon-info',
+        label: this.i18n.t('experiments.toolbar.description_button'),
+        type: 'emit',
+        buttonStyle: 'btn btn-light'
+      });
+
       return {
         left,
         right: []
@@ -275,6 +336,40 @@ export default {
     }
   },
   methods: {
+    loadExperiment() {
+      axios.get(this.experimentUrl).then((response) => {
+        this.experiment = response.data.data;
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
+    },
+    updateDueDate(value, params) {
+      axios.put(params.data.urls.update_due_date, {
+        my_module: {
+          due_date: value
+        }
+      }).then(() => {
+        this.updateTable();
+      });
+    },
+    updateExperimentDescription(description) {
+      axios.put(this.experiment.attributes.urls.update, {
+        experiment: {
+          description
+        }
+      }).then(() => {
+        this.loadExperiment();
+      });
+    },
+    updateStartDate(value, params) {
+      axios.put(params.data.urls.update_start_date, {
+        my_module: {
+          started_on: value
+        }
+      }).then(() => {
+        this.updateTable();
+      });
+    },
     updateTable() {
       this.tagsModalObject = null;
       this.newModalOpen = false;
@@ -333,6 +428,12 @@ export default {
                 <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
                 <span title="${option[1]}" class="truncate">${option[1]}</span>
               </div>`;
+    },
+    updateFavorite(value, params) {
+      const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;
+      axios.post(url).then(() => {
+        this.updateTable();
+      });
     }
   }
 };

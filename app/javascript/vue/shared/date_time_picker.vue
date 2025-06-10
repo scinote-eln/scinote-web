@@ -1,5 +1,5 @@
 <template>
-  <div class="date-time-picker grow" :class="`size-${size}`" >
+  <div class="date-time-picker grow" :class="`size-${size}`" :data-e2e="dataE2e">
     <VueDatePicker
       ref="datetimePicker"
       :class="{
@@ -18,6 +18,7 @@
       :auto-apply="true"
       :partial-flow="true"
       :markers="markers"
+      :start-time="{ hours: 0, minutes: 0, seconds: 0 }"
       week-start="0"
       :enable-time-picker="mode == 'datetime'"
       :time-picker="mode == 'time'"
@@ -69,7 +70,9 @@ export default {
     timeClassName: { type: String, default: '' },
     disabled: { type: Boolean, default: false },
     customIcon: { type: String },
-    size: { type: String, default: 'xs' }
+    size: { type: String, default: 'xs' },
+    dataE2e: { type: String, default: '' },
+    valueType: { type: String, default: 'object' }
   },
   data() {
     return {
@@ -130,7 +133,9 @@ export default {
       }
 
       if (this.defaultValue !== this.datetime) {
-        this.$emit('change', this.datetime);
+        this.$emit('change', this.emitValue);
+
+        if (this.mode === 'date') this.close();
       }
     },
     time() {
@@ -156,7 +161,7 @@ export default {
       }
 
       if (this.defaultValue !== newDate) {
-        this.$emit('change', newDate);
+        this.$emit('change', this.emitValue);
       }
     }
   },
@@ -180,6 +185,16 @@ export default {
       if (this.mode === 'time') return 'HH:mm';
       if (this.mode === 'date') return document.body.dataset.datetimePickerFormatVue;
       return `${document.body.dataset.datetimePickerFormatVue} HH:mm`;
+    },
+    stringValue() {
+      let time = `${this.datetime.getHours().toString().padStart(2, '0')}:${this.datetime.getMinutes().toString().padStart(2, '0')}`
+      let date = `${this.datetime.getFullYear()}-${(this.datetime.getMonth() + 1).toString().padStart(2, '0')}-${this.datetime.getDate().toString().padStart(2, '0')}`
+      if (this.mode === 'time') return time;
+      if (this.mode === 'date') return date;
+      return `${date} ${time}`;
+    },
+    emitValue() {
+      return this.valueType === 'stringWithoutTimezone' ? this.stringValue : this.datetime
     }
   },
   mounted() {
