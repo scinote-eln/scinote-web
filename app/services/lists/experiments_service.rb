@@ -116,6 +116,10 @@ module Lists
                      @records.order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) DESC'))
                              .group('experiments.archived_on', 'projects.archived_on')
                    end
+                 when 'favorite'
+                   @records.order(Arel.sql("CASE
+                                           WHEN favorites IS NULL THEN 1
+                                           ELSE 0 END #{sort_direction(order_params)}"))
                  when 'status'
                    @records.order(Arel.sql("CASE
                                            WHEN experiments.started_at IS NULL AND experiments.done_at IS NULL THEN -1
