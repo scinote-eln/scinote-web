@@ -34,12 +34,14 @@
     <% end %>
     <br>
     <br>
-    <% if experiment.description.present? %>
-      <%= custom_auto_link(experiment.description,
-                               team: current_team,
-                               simple_format: false,
-                               base64_encoded_imgs: true) %>
-    <% end %>
+    <div class="text-block">
+      <% if experiment.description.present? %>
+        <%= custom_auto_link(experiment.description,
+                                team: current_team,
+                                simple_format: false,
+                                base64_encoded_imgs: true) %>
+      <% end %>
+    </div>
   </div>
   <% if defined?(children) %>
     <div class="report-element-children">
