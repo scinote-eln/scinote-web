@@ -47,37 +47,25 @@ class RepositoryDatatableService
 
     repository_rows = fetch_rows(search_value)
 
-    # filter only rows with reminders if filter param is present
-    repository_rows = repository_rows.with_active_reminders(@repository, @user) if @params[:only_reminders]
-
-    # Aliased my_module_repository_rows join for consistent assigned counts
-    repository_rows =
-      repository_rows.joins(
-        'LEFT OUTER JOIN "my_module_repository_rows" AS "all_my_module_repository_rows" ON '\
-        '"all_my_module_repository_rows"."repository_row_id" = "repository_rows"."id"'
-      )
-
     # Adding assigned counters
     if @my_module
       if @assigned_view
-        repository_rows = repository_rows.joins(:my_module_repository_rows)
+        repository_rows = repository_rows.joins(my_module_repository_rows: { my_module: :experiment })
                                          .where(my_module_repository_rows: { my_module_id: @my_module })
         if @repository.has_stock_management?
           repository_rows = repository_rows
                             .select('SUM(DISTINCT my_module_repository_rows.stock_consumption) AS "consumed_stock"')
         end
       else
-        repository_rows = repository_rows
-                          .joins(:repository)
-                          .joins('LEFT OUTER JOIN "my_module_repository_rows" "current_my_module_repository_rows"'\
-                                 'ON "current_my_module_repository_rows"."repository_row_id" = "repository_rows"."id" '\
-                                 'AND "current_my_module_repository_rows"."my_module_id" = ' + @my_module.id.to_s)
-                          .where('current_my_module_repository_rows.id IS NOT NULL '\
-                                 'OR (repository_rows.archived = FALSE AND repositories.archived = FALSE)')
-                          .select('CASE WHEN current_my_module_repository_rows.id IS NOT NULL '\
-                                  'THEN true ELSE false END as row_assigned')
-                          .group('current_my_module_repository_rows.id')
+        repository_rows = repository_rows.left_outer_joins(my_module_repository_rows: { my_module: :experiment })
+        repository_rows = repository_rows.where(my_module_repository_rows: { my_module: @my_module })
+                                         .or(repository_rows.active)
+        repository_rows = repository_rows.select("EXISTS (SELECT 1 FROM my_module_repository_rows " \
+                                                 "WHERE my_module_repository_rows.repository_row_id = repository_rows.id " \
+                                                 "AND my_module_repository_rows.my_module_id = #{@my_module.id}) AS row_assigned")
       end
+    else
+      repository_rows = repository_rows.left_outer_joins(my_module_repository_rows: { my_module: :experiment })
     end
 
     if Repository.reminders_enabled? && !@disable_reminders
@@ -86,19 +74,21 @@ class RepositoryDatatableService
           # don't load reminders for archived repositories or snapshots
           repository_rows.select('FALSE AS has_active_reminders')
         else
-          repository_rows.left_outer_joins_active_reminders(@repository, @user)
-                         .select('COUNT(repository_cells_with_active_reminders.id) > 0 AS has_active_reminders')
+          repository_rows.select("EXISTS (#{RepositoryCell.with_active_reminder(@user)
+                                                          .joins(:repository_column)
+                                                          .where(repository_column: { repository: @repository })
+                                                          .where('repository_cells.repository_row_id = repository_rows.id')
+                                                          .select(1)
+                                                          .to_sql}) AS has_active_reminders")
         end
     end
 
     repository_rows = repository_rows
-                      .left_outer_joins(my_module_repository_rows: { my_module: :experiment })
-                      .select('COUNT(DISTINCT all_my_module_repository_rows.id) AS "assigned_my_modules_count"')
+                      .select('COUNT(DISTINCT my_module_repository_rows.id) AS "assigned_my_modules_count"')
                       .select('COUNT(DISTINCT my_modules.experiment_id) AS "assigned_experiments_count"')
                       .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
                       .select('COALESCE(parent_connections_count, 0) + COALESCE(child_connections_count, 0)
                                AS "relationships_count"')
-    repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
     repository_rows = repository_rows.preload(:repository_columns, repository_cells: { value: @repository.cell_preload_includes }) if @preload_cells
     repository_rows = repository_rows.preload(:repository_stock_cell, :repository_stock_value) if @repository.has_stock_management?
 
@@ -121,6 +111,9 @@ class RepositoryDatatableService
       end
 
     repository_rows = repository_rows.where(external_id: @params[:external_ids]) if @params[:external_ids]
+
+    # filter only rows with reminders if filter param is present
+    repository_rows = repository_rows.with_active_reminders(@repository, @user) if @params[:only_reminders]
 
     if search_value.present?
       if @repository.default_search_fileds.include?('users.full_name')
