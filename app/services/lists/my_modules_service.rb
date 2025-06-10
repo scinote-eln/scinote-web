@@ -122,9 +122,9 @@ module Lists
                            .group('my_modules.id')
                            .order(Arel.sql('COUNT(DISTINCT tags.id) DESC'))
       when 'favorite_ASC'
-        @records = @records.order(:favorite)
-      when 'favorite_DESC'
         @records = @records.order(favorite: :desc)
+      when 'favorite_DESC'
+        @records = @records.order(:favorite)
       else
         __send__("#{sortable_columns[order_params[:column].to_sym]}_sort", sort_direction(order_params))
       end
