@@ -25,7 +25,7 @@ window.initDateTimePickerComponent = (id) => {
     mounted() {
       if (this.$refs.input.dataset.default) {
         const defaultDate = new Date(this.$refs.input.dataset.default.replace(/([^!\s])-/g, '$1/')); // Safari fix
-        this.date = this.formatDate(defaultDate);
+        this.date = defaultDate;
         this.$refs.vueDateTime.manualUpdate = true;
         this.$refs.vueDateTime.datetime = defaultDate;
       } else if (this.date) {
@@ -37,28 +37,15 @@ window.initDateTimePickerComponent = (id) => {
       $(this.$el.parentElement).parent().trigger('dp:ready');
     },
     methods: {
-      formatDate(date) {
-        if (!(date instanceof Date)) return null;
-
-        if (this.$refs.input.dataset.simpleFormat) {
-          const y = date.getFullYear();
-          const m = date.getMonth() + 1;
-          const d = date.getDate();
-          const hours = date.getHours();
-          const mins = date.getMinutes();
-          return `${y}/${m}/${d} ${hours}:${mins}`;
-        }
-        return date.toISOString();
-      },
       updateDate(date) {
-        this.date = this.formatDate(date);
+        this.date = date;
         this.$nextTick(() => {
           if (this.onChange) this.onChange(date);
         });
 
       },
       setDate(date) {
-        this.date = this.formatDate(date);
+        this.date = date;
         this.$refs.vueDateTime.manualUpdate = true;
         this.$refs.vueDateTime.datetime = date;
         this.$nextTick(() => {

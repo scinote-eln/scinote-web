@@ -29,6 +29,7 @@
               mode="datetime"
               class="mb-4"
               size="mb"
+              valueType="stringWithoutTimezone"
               :placeholder="i18n.t('experiments.canvas.new_my_module_modal.due_date_placeholder')"
               :clearable="true"
               :dataE2e="'e2e-DP-tasks-newTaskModal-dueDate'"
@@ -172,23 +173,13 @@ export default {
       });
     },
     setDueDate(value) {
-      this.dueDate = this.formatDate(value);
+      this.dueDate = value;
     },
     setTags(tags) {
       this.tags = tags;
     },
     setUsers(users) {
       this.users = users;
-    },
-    formatDate(date) {
-      if (!(date instanceof Date)) return null;
-
-      const y = date.getFullYear();
-      const m = date.getMonth() + 1;
-      const d = date.getDate();
-      const hours = date.getHours();
-      const mins = date.getMinutes();
-      return `${y}/${m}/${d} ${hours}:${mins}`;
     },
     loadTags() {
       axios.get(this.projectTagsUrl).then((response) => {
