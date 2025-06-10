@@ -35,7 +35,7 @@ describe MyModulesController, type: :controller do
 
     context 'when setting due_date' do
       let(:params) do
-        { id: my_module.id, my_module: { due_date: '2019/03/21 23:59' } }
+        { id: my_module.id, my_module: { due_date: '2019-03-21 23:59' } }
       end
 
       it 'calls create activity for setting due date' do
@@ -74,7 +74,7 @@ describe MyModulesController, type: :controller do
 
     context 'when updating due_date' do
       let(:params) do
-        { id: my_module.id, my_module: { due_date: '2019/02/21 23:59' } }
+        { id: my_module.id, my_module: { due_date: '2019-02-21 23:59' } }
       end
       let(:my_module) do
         create :my_module, :with_due_date, experiment: experiment, created_by: experiment.created_by
