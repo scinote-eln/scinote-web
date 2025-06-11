@@ -97,9 +97,9 @@ module Lists
       when 'archived_on_DESC'
         @records = @records.order(archived_on: :desc)
       when 'age_ASC'
-        @records = @records.order(:created_at)
-      when 'age_DESC'
         @records = @records.order(created_at: :desc)
+      when 'age_DESC'
+        @records = @records.order(created_at: :asc)
       when 'status_ASC'
         @records = @records.order(:my_module_status_id)
       when 'status_DESC'
