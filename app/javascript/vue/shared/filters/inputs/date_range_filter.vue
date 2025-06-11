@@ -46,9 +46,17 @@ export default {
   components: { DateTimePicker },
   data() {
     return {
-      dateFrom: this.values[`${this.filter.key}_from`],
-      dateTo: this.values[`${this.filter.key}_to`]
+      dateFrom: null,
+      dateTo: null
     };
+  },
+  created() {
+    if (this.values[`${this.filter.key}_from`]) {
+      this.dateFrom = new Date(this.values[`${this.filter.key}_from`])
+    }
+    if (this.values[`${this.filter.key}_to`]) {
+      this.dateTo = new Date(this.values[`${this.filter.key}_to`]);
+    }
   },
   methods: {
     updateDateFrom(value) {
