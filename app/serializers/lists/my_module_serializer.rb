@@ -22,9 +22,12 @@ module Lists
       tags_html
       comments
       due_date_formatted
+      due_date_cell
+      start_date_cell
       permissions
       default_public_user_role_id
       team
+      favorite
     )
 
     def attributes(_options = {})
@@ -36,6 +39,8 @@ module Lists
     delegate :name, to: :object
 
     delegate :provisioning_status, to: :object
+
+    delegate :favorite, to: :object
 
     def default_public_user_role_id
       object.experiment.project.default_public_user_role_id
@@ -64,16 +69,15 @@ module Lists
         experiments_to_move: experiments_to_move_experiment_path(object.experiment),
         update: my_module_path(object),
         show_access: access_permissions_my_module_path(object),
-        provisioning_status: provisioning_status_my_module_url(object)
+        provisioning_status: provisioning_status_my_module_url(object),
+        favorite: favorite_my_module_url(object),
+        unfavorite: unfavorite_my_module_url(object)
       }
 
-      if can_manage_project_users?(object.experiment.project)
-        urls_list[:update_access] = access_permissions_my_module_path(object)
-      end
+      urls_list[:update_access] = access_permissions_my_module_path(object) if can_manage_project_users?(object.experiment.project)
 
-      if can_update_my_module_due_date?(object)
-        urls_list[:update_due_date] = my_module_path(object, user, format: :json)
-      end
+      urls_list[:update_due_date] = my_module_path(object, user, format: :json) if can_update_my_module_due_date?(object)
+      urls_list[:update_start_date] = my_module_path(object, user, format: :json) if can_update_my_module_start_date?(object)
 
       urls_list
     end
@@ -84,6 +88,27 @@ module Lists
 
     def due_date_formatted
       I18n.l(object.due_date, format: :full_date) if object.due_date
+    end
+
+    def due_date_cell
+      {
+        value: due_date,
+        value_formatted: due_date_formatted,
+        editable: can_update_my_module_due_date?(object),
+        icon: (if object.is_one_day_prior? && !object.completed?
+                 'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
+               elsif object.is_overdue? && !object.completed?
+                 'sn-icon sn-icon-alert-warning text-sn-delete-red'
+               end)
+      }
+    end
+
+    def start_date_cell
+      {
+        value: start_date,
+        value_formatted: start_date_formatted,
+        editable: can_update_my_module_start_date?(object)
+      }
     end
 
     def due_date_status
@@ -164,6 +189,16 @@ module Lists
 
     def team
       object.team.name
+    end
+
+    private
+
+    def start_date
+      I18n.l(object.started_on, format: :default) if object.started_on
+    end
+
+    def start_date_formatted
+      I18n.l(object.started_on, format: :full_date) if object.started_on
     end
   end
 end

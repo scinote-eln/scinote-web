@@ -8,9 +8,11 @@
           class="w-full"
           @change="updateDateFrom"
           @cleared="updateDateFrom"
+          :mode="this.filter.mode || 'datetime'"
           :clearable="true"
           :placeholder="i18n.t('From')"
           :dateOnly="true"
+          :valueType="'stringWithoutTimezone'"
           :selectorId="`DatePicker${filter.key}`"
         />
       </div>
@@ -20,9 +22,11 @@
           class="w-full"
           @change="updateDateTo"
           @cleared="updateDateTo"
+          :mode="this.filter.mode || 'datetime'"
           :clearable="true"
           :placeholder="i18n.t('To')"
           :dateOnly="true"
+          :valueType="'stringWithoutTimezone'"
           :selectorId="`DatePickerTo${filter.key}`"
         />
       </div>

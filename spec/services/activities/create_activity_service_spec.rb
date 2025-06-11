@@ -126,7 +126,24 @@ describe Activities::CreateActivityService do
     context 'when message item is an Time object' do
       it 'adds time value and type to message items as hash' do
         project.update_attribute(:visibility, 'hidden')
-        project.update_attribute(:due_date, Time.now)
+        project.update_attribute(:started_at, Time.now)
+
+        activity = Activities::CreateActivityService.call(activity_type: :create_project,
+                                                          owner: user,
+                                                          subject: project,
+                                                          team: team,
+                                                          message_items: {
+                                                            project_started_at: project.started_at
+                                                          }).activity
+
+        expect(activity.message_items).to include(project_started_at: { type: 'Time', value: project.started_at.to_i })
+      end
+    end
+
+    context 'when message item is an Date object' do
+      it 'adds date value and type to message items as hash' do
+        project.update_attribute(:visibility, 'hidden')
+        project.update_attribute(:due_date, Date.today)
 
         activity = Activities::CreateActivityService.call(activity_type: :create_project,
                                                           owner: user,
@@ -136,7 +153,7 @@ describe Activities::CreateActivityService do
                                                             project_duedate: project.due_date
                                                           }).activity
 
-        expect(activity.message_items).to include(project_duedate: { type: 'Time', value: project.due_date.to_i })
+        expect(activity.message_items).to include(project_duedate: { type: 'Date', value: project.due_date.to_s })
       end
     end
   end

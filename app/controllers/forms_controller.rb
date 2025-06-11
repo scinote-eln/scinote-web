@@ -220,7 +220,6 @@ class FormsController < ApplicationController
     archived = params[:view_mode] == 'archived' || @form&.archived?
 
     @breadcrumbs_items = []
-    @breadcrumbs_items.push({ label: t('breadcrumbs.templates') })
     @breadcrumbs_items.push(
       { label: t('breadcrumbs.forms'), url: forms_path(view_mode: archived ? 'archived' : nil) }
     )

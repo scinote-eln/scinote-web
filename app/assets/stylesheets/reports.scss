@@ -288,6 +288,33 @@ label {
 .report-project-header-element {
   margin-bottom: 0;
 
+  .project-start-date,
+  .project-due-date {
+    white-space: nowrap;
+  }
+
+  .project-status {
+    .status-block {
+      border-radius: $border-radius-tag;
+      color: $color-white;
+      padding: 2px 4px;
+
+      &.not_started {
+        background: $color-white;
+        border: 1px solid $color-silver-chalice;
+        color: $color-black;
+      }
+
+      &.in_progress {
+        background: var(--sn-alert-bloo);
+      }
+
+      &.done {
+        background: $brand-success;
+      }
+    }
+  }
+
   .report-element-header {
     border-bottom: none;
   }
@@ -310,6 +337,33 @@ label {
   .experiment-name {
     font-size: 16pt;
     font-weight: bold;
+  }
+
+  .experiment-start-date,
+  .experiment-due-date {
+    white-space: nowrap;
+  }
+
+  .experiment-status {
+    .status-block {
+      border-radius: $border-radius-tag;
+      color: $color-white;
+      padding: 2px 4px;
+
+      &.not_started {
+        background: $color-white;
+        border: 1px solid $color-silver-chalice;
+        color: $color-black;
+      }
+
+      &.in_progress {
+        background: var(--sn-alert-bloo);
+      }
+
+      &.done {
+        background: $brand-success;
+      }
+    }
   }
 }
 

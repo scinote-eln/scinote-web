@@ -1,7 +1,12 @@
 <template>
   <div class="relative w-full">
     <label v-if="label" class="sci-label" :class="{ 'error': !!inputError }" :for="id">{{ label }}</label>
-    <div class="sci-input-container-v2" :class="{ 'error': !!inputError }" :data-error-text="inputError">
+    <div
+      class="sci-input-container-v2"
+      :class="{ 'error': !!inputError }"
+      :data-error-text="inputError"
+      :data-e2e="dataE2e"
+    >
       <input ref="input"
         lang="en-US"
         type="text"
@@ -39,7 +44,8 @@ export default {
     min: { type: [String, Number] },
     max: { type: [String, Number] },
     blockInvalidInput: { type: Boolean, default: true },
-    negativeNumbersEnabled: {type: Boolean, required: false }
+    negativeNumbersEnabled: { type: Boolean, required: false },
+    dataE2e: { type: String, default: ' ' }
   },
   data() {
     return {

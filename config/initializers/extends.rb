@@ -201,6 +201,24 @@ class Extends
     ProjectFolder Asset Step LabelTemplate StorageLocation StorageLocationRepositoryRow Form
   ).freeze
 
+  ACTIVITY_SUBJECT_TYPE_API_SERIALIZER_MAP = {
+    'Team' => 'Api::V1::TeamSerializer',
+    'RepositoryBase' => 'Api::V1::InventorySerializer',
+    'Project' => 'Api::V1::ProjectSerializer',
+    'Experiment' => 'Api::V1::ExperimentSerializer',
+    'MyModule' => 'Api::V1::TaskSerializer',
+    'Result' => 'Api::V2::ResultSerializer',
+    'Protocol' => 'Api::V1::ProtocolSerializer',
+    'Report' => 'Api::V1::ReportSerializer',
+    'RepositoryRow' => 'Api::V1::InventoryItemSerializer',
+    'ProjectFolder' => 'Api::V1::ProjectFolderSerializer',
+    'Asset' => 'Api::V2::AssetSerializer',
+    'Step' => 'Api::V2::StepSerializer',
+    'LabelTemplate' => 'Api::V1::LabelTemplateSerializer',
+    'StorageLocation' => 'Api::V1::StorageLocationSerializer',
+    'Form' => 'Api::V2::FormSerialize'
+  }
+
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
     RepositoryBase RepositoryRow Project Experiment MyModule Result Protocol Step Report
   ).freeze
@@ -227,7 +245,7 @@ class Extends
 
   ACTIVITY_TYPES = {
     create_project: 0,
-    rename_project: 1,
+    edit_project: 1,
     change_project_visibility: 2,
     archive_project: 3,
     restore_project: 4,
@@ -560,18 +578,34 @@ class Extends
     task_steps_loaded_from_template: 359,
     protocol_steps_loaded_from_template: 360,
     storage_location_duplicated: 361,
-    container_storage_location_duplicated: 362
+    container_storage_location_duplicated: 362,
+    change_experiment_status: 363,
+    set_experiment_due_date: 364,
+    change_experiment_due_date: 365,
+    remove_experiment_due_date: 366,
+    set_experiment_start_date: 367,
+    change_experiment_start_date: 368,
+    remove_experiment_start_date: 369,
+    change_project_status: 370,
+    set_project_due_date: 371,
+    change_project_due_date: 372,
+    remove_project_due_date: 373,
+    set_project_start_date: 374,
+    change_project_start_date: 375,
+    remove_project_start_date: 376,
+    set_head_of_project: 377,
+    remove_head_of_project: 378
   }
 
   ACTIVITY_GROUPS = {
-    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243],
+    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243, *370..378],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, *246..248, *257..273, *284..291, 301, 303, 306, 328],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            148, 166],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
                     184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327, *347..352, 359],
     task_inventory: [55, 56, 146, 147, 183],
-    experiment: [*27..31, 57, 141, 165],
+    experiment: [*27..31, 57, 141, 165, *363..369],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
                   78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329],

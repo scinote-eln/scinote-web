@@ -8,7 +8,7 @@
     <div class="datetime-picker-container" id="start-date">
       <div id="calendarStartDateContainer">
         <input type="hidden" ref="input" v-model="date" data-simple-format="true" id="calendarStartDate" data-default="<%= l(my_module.started_on, format: :default) if my_module.started_on %>" />
-        <date-time-picker class="w-full" ref="vueDateTime" :teleport="false" @change="updateDate" mode="datetime" :placeholder="'<%= t('my_modules.details.no_start_date_placeholder') %>'"></date-time-picker>
+        <date-time-picker class="w-full" value-type="stringWithoutTimezone" ref="vueDateTime" :teleport="false" @change="updateDate" mode="datetime" :placeholder="'<%= t('my_modules.details.no_start_date_placeholder') %>'"></date-time-picker>
       </div>
       <span class="sn-icon sn-icon-close clear-date" data-toggle='clear-date-time-picker' data-target='calendarStartDate'></span>
     </div>

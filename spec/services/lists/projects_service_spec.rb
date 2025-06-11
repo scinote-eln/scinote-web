@@ -11,6 +11,10 @@ RSpec.describe Lists::ProjectsService do
   let(:params) {{ page: 1, per_page: 10, search: '', team: team } }
   let(:service) { described_class.new(team, user, folder, params) }
 
+  before(:all) do
+    MyModuleStatusFlow.ensure_default
+  end
+
   describe '#call' do
     context 'when view_mode is archived' do
       before do

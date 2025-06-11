@@ -2,12 +2,12 @@
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <form @submit.prevent="submit">
-        <div class="modal-content">
+        <div class="modal-content" data-e2e="e2e-MD-tasks-newTask">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-tasks-newTaskModal-close">
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 class="modal-title truncate !block">
+            <h4 class="modal-title truncate !block" data-e2e="e2e-TX-tasks-newTaskModal-title">
               {{ i18n.t('experiments.canvas.new_my_module_modal.title') }}
             </h4>
           </div>
@@ -17,7 +17,8 @@
               <input type="text" class="sci-input-field"
                      v-model="name"
                      autofocus ref="input"
-                    :placeholder="i18n.t('experiments.canvas.new_my_module_modal.name_placeholder')">
+                    :placeholder="i18n.t('experiments.canvas.new_my_module_modal.name_placeholder')"
+                    data-e2e="'e2e-IF-tasks-newTaskModal-name'">
             </div>
 
             <label class="sci-label">
@@ -28,9 +29,11 @@
               mode="datetime"
               class="mb-4"
               size="mb"
+              valueType="stringWithoutTimezone"
               :placeholder="i18n.t('experiments.canvas.new_my_module_modal.due_date_placeholder')"
-              :clearable="true"/>
-
+              :clearable="true"
+              :dataE2e="'e2e-DP-tasks-newTaskModal-dueDate'"
+            />
               <label class="sci-label">
                 {{ i18n.t('experiments.canvas.new_my_module_modal.assigned_tags_label') }}
               </label>
@@ -43,7 +46,9 @@
                 :multiple="true"
                 :searchable="true"
                 :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_tags_placeholder')"
-                :tagsView="true" ></SelectDropdown>
+                :tagsView="true"
+                :e2eValue="'e2e-DD-tasks-newTaskModal-tags'">
+              </SelectDropdown>
 
                 <template v-if="this.assignedUsersUrl">
                   <label class="sci-label">
@@ -58,12 +63,26 @@
                     :value="users"
                     :searchable="true"
                     :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')"
-                    :tagsView="true" ></SelectDropdown>
+                    :tagsView="true"
+                    :e2eValue="'e2e-DD-tasks-newTaskModal-designatedUsers'">
+                  </SelectDropdown>
                 </template>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button type="submit" :disabled="submitting || !validName" class="btn btn-primary">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              data-e2e="e2e-BT-tasks-newTaskModal-cancel"
+            >
+              {{ i18n.t('general.cancel') }}
+            </button>
+            <button
+              type="submit"
+              :disabled="submitting || !validName"
+              class="btn btn-primary"
+              data-e2e="e2e-BT-tasks-newTaskModal-create"
+            >
               {{ i18n.t('experiments.canvas.new_my_module_modal.create') }}
             </button>
           </div>
@@ -154,23 +173,13 @@ export default {
       });
     },
     setDueDate(value) {
-      this.dueDate = this.formatDate(value);
+      this.dueDate = value;
     },
     setTags(tags) {
       this.tags = tags;
     },
     setUsers(users) {
       this.users = users;
-    },
-    formatDate(date) {
-      if (!(date instanceof Date)) return null;
-
-      const y = date.getFullYear();
-      const m = date.getMonth() + 1;
-      const d = date.getDate();
-      const hours = date.getHours();
-      const mins = date.getMinutes();
-      return `${y}/${m}/${d} ${hours}:${mins}`;
     },
     loadTags() {
       axios.get(this.projectTagsUrl).then((response) => {

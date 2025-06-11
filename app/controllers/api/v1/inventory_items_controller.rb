@@ -12,16 +12,27 @@ module Api
       before_action :check_delete_permissions, only: :destroy
 
       def index
-        items =
-          timestamps_filter(
-            @inventory.repository_rows
+        items = if params.dig(:filter, :archived).present?
+                  archived_filter(@inventory.repository_rows)
+                else
+                  @inventory.repository_rows.active
+                end
+
+        items = timestamps_filter(items)
+                .preload(repository_cells: :repository_column)
+                .preload(repository_cells: { value: @inventory.cell_preload_includes })
+
+        if params.dig(:filter, :inventory_column)
+          items = items.filtered_by_column_value(
+            @inventory.repository_columns.find(params[:filter][:inventory_column][:id]),
+            params[:filter][:inventory_column][:value]
           )
-          .active
-          .preload(repository_cells: :repository_column)
-          .preload(repository_cells: { value: @inventory.cell_preload_includes })
-          .page(params.dig(:page, :number))
-          .per(params.dig(:page, :size))
-          .order(:id)
+        end
+
+        items =
+          items.page(params.dig(:page, :number))
+               .per(params.dig(:page, :size))
+               .order(:id)
 
         render jsonapi: items, each_serializer: InventoryItemSerializer, include: include_params
       end
@@ -132,7 +143,7 @@ module Api
       end
 
       def permitted_includes
-        %w(inventory_cells)
+        %w(inventory_cells parents children)
       end
     end
   end

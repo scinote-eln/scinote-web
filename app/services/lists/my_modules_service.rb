@@ -16,8 +16,7 @@ module Lists
 
     def fetch_records
       @records = @raw_data.includes(PRELOAD)
-                          .select('my_modules.*')
-                          .group('my_modules.id')
+                          .with_favorites(@user)
 
       view_mode = if @params[:experiment].archived_branch?
                     'archived'
@@ -40,6 +39,7 @@ module Lists
 
     def sortable_columns
       @sortable_columns ||= {
+        start_date: 'start_date',
         due_date: 'due_date',
         name: 'name',
         code: 'id',
@@ -50,7 +50,8 @@ module Lists
         results: 'results',
         tags: 'tags',
         signatures: 'signatures',
-        comments: 'comments'
+        comments: 'comments',
+        favorite: 'favorite'
       }
     end
 
@@ -60,6 +61,10 @@ module Lists
       sort = "#{sortable_columns[order_params[:column].to_sym]}_#{sort_direction(order_params)}"
 
       case sort
+      when 'start_date_ASC'
+        @records = @records.order(:started_on, :name)
+      when 'start_date_DESC'
+        @records = @records.order(started_on: :desc, name: :asc)
       when 'due_date_ASC'
         @records = @records.order(:due_date, :name)
       when 'due_date_DESC'
@@ -116,9 +121,15 @@ module Lists
         @records = @records.left_joins(:tags)
                            .group('my_modules.id')
                            .order(Arel.sql('COUNT(DISTINCT tags.id) DESC'))
+      when 'favorite_ASC'
+        @records = @records.order(favorite: :desc)
+      when 'favorite_DESC'
+        @records = @records.order(:favorite)
       else
         __send__("#{sortable_columns[order_params[:column].to_sym]}_sort", sort_direction(order_params))
       end
+
+      @records = @records.distinct('my_modules.id')
     end
 
     def query_filter(value)

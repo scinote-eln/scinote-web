@@ -307,6 +307,11 @@ class User < ApplicationRecord
            foreign_key: 'created_by_id',
            inverse_of: :created_by,
            dependent: :destroy
+  has_many :supervised_projects,
+           class_name: 'Project',
+           foreign_key: 'supervised_by_id',
+           inverse_of: :supervised_by,
+           dependent: :nullify
 
   has_many :notifications, as: :recipient, dependent: :destroy, inverse_of: :recipient
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
@@ -321,6 +326,8 @@ class User < ApplicationRecord
   has_many :asset_sync_tokens, dependent: :destroy
 
   has_many :hidden_repository_cell_reminders, dependent: :destroy
+
+  has_many :favorites, dependent: :destroy
 
   before_validation :downcase_email!
 

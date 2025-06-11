@@ -30,6 +30,11 @@ describe Project, type: :model do
     it { should have_db_column :restored_on }
     it { should have_db_column :experiments_order }
     it { should have_db_column :template }
+    it { should have_db_column :supervised_by_id }
+    it { should have_db_column :started_at }
+    it { should have_db_column :done_at }
+    it { should have_db_column :start_date }
+    it { should have_db_column :description }
   end
 
   describe 'Relations' do
@@ -38,6 +43,7 @@ describe Project, type: :model do
     it { should belong_to(:last_modified_by).class_name('User').optional }
     it { should belong_to(:archived_by).class_name('User').optional }
     it { should belong_to(:restored_by).class_name('User').optional }
+    it { should belong_to(:supervised_by).class_name('User').optional }
     it { should have_many :user_projects }
     it { should have_many :users }
     it { should have_many :experiments }
@@ -65,6 +71,11 @@ describe Project, type: :model do
       end
       it do
         expect(project).to validate_uniqueness_of(:name).scoped_to(:team_id).case_insensitive
+      end
+
+      it do
+        should validate_length_of(:description)
+          .is_at_most(Constants::TEXT_MAX_LENGTH)
       end
     end
 

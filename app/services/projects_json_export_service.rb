@@ -182,6 +182,6 @@ class ProjectsJsonExportService
   end
 
   def asset_url(asset)
-    ENV['MAIL_SERVER_URL'] + Rails.application.routes.url_helpers.asset_file_url_path(asset)
+    Rails.application.routes.url_helpers.asset_file_url_url(asset)
   end
 end

@@ -17,7 +17,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
     create(:repository, name: Faker::Name.unique.name,
                 created_by: @another_user, team: @team2)
 
-    text_column = create(:repository_column, name: Faker::Name.unique.name,
+    @text_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryTextValue)
     list_column = create(:repository_column, name: Faker::Name.unique.name,
       repository: @valid_inventory, data_type: :RepositoryListValue)
@@ -27,13 +27,15 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       repository: @valid_inventory, data_type: :RepositoryAssetValue)
     asset = create(:asset)
 
-    create_list(:repository_row, 100, repository: @valid_inventory)
+    @repository_rows = create_list(:repository_row, 100, repository: @valid_inventory)
 
-    @valid_inventory.repository_rows.each do |row|
+    @searchable_repository_row = @repository_rows.last
+
+    @valid_inventory.repository_rows.each_with_index do |row, i|
       create(:repository_text_value,
-             data: Faker::Name.name,
+             data: row.id == @searchable_repository_row.id ? 'SEARCH TEXT VALUE' : Faker::Name.name,
              repository_cell_attributes:
-               { repository_row: row, repository_column: text_column })
+               { repository_row: row, repository_column: @text_column })
       create(:repository_list_value, repository_list_item: list_item,
              repository_cell_attributes:
                { repository_row: row, repository_column: list_column })
@@ -41,6 +43,9 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
              repository_cell_attributes:
                { repository_row: row, repository_column: file_column })
     end
+
+    @child_inventory_item = create(:repository_row, repository: @valid_inventory, created_by: @user)
+    @child_connection = create(:repository_row_connection, parent: @valid_inventory.repository_rows.first, child: @child_inventory_item, created_by: @user)
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id),
@@ -54,7 +59,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
                          included: [
                            { type: 'inventory_cells',
                              attributes: {
-                               column_id: text_column.id,
+                               column_id: @text_column.id,
                                value: Faker::Name.unique.name
                              } }
                          ] }
@@ -85,7 +90,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       get api_v1_team_inventory_items_path(
         team_id: @team1.id,
         inventory_id: @team1.repositories.first.id,
-        include: 'inventory_cells'
+        include: 'inventory_cells,parents,children'
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match_array(
@@ -102,7 +107,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
           ActiveModelSerializers::SerializableResource
             .new(@valid_inventory.repository_rows.order(:id).limit(10),
                  each_serializer: Api::V1::InventoryItemSerializer,
-                 include: :inventory_cells)
+                 include: %w(inventory_cells parents children))
             .to_json
         )['included']
       )
@@ -118,13 +123,34 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       expect(hash_body[:data]).to match_array(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
-            .new(@valid_inventory.repository_rows.limit(100),
-                 each_serializer: Api::V1::InventoryItemSerializer,
-                 include: :inventory_cells)
+            .new(@valid_inventory.repository_rows.order(:id).limit(100),
+                 each_serializer: Api::V1::InventoryItemSerializer)
             .to_json
         )['data']
       )
       expect(hash_body).not_to include('included')
+    end
+
+    it 'When provided a column filter, finds correct item' do
+      hash_body = nil
+      get api_v1_team_inventory_items_path(
+        team_id: @team1.id,
+        inventory_id: @team1.repositories.first.id
+      ), params: {
+          filter: {
+            inventory_column: {
+              id: @text_column.id,
+              value: {
+                operator: 'contains',
+                text: 'SEARCH TEXT VALUE'
+              }
+            }
+          }
+        }, headers: @valid_headers
+
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data].length).to eq(1)
+      expect(hash_body[:data].first[:id].to_i).to eq(@searchable_repository_row.id)
     end
 
     it 'When invalid request, user in not member of the team' do
@@ -173,6 +199,30 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
           team_id: @team1.id,
           inventory_id: @team1.repositories.first.id
         ), params: { page: { size: 200 } }, headers: @valid_headers
+
+        expect { hash_body = json }.not_to raise_exception
+        expect(hash_body['data'].count).to be_eql 100
+      end
+
+      it 'return rows with archived filter true' do
+        hash_body = nil
+
+        get api_v1_team_inventory_items_path(
+          team_id: @team1.id,
+          inventory_id: @team1.repositories.first.id
+        ), params: { filter: { archived: true }, page: { size: 200 } }, headers: @valid_headers
+
+        expect { hash_body = json }.not_to raise_exception
+        expect(hash_body['data'].count).to be_eql 1
+      end
+
+      it 'return rows with archived filter false' do
+        hash_body = nil
+
+        get api_v1_team_inventory_items_path(
+          team_id: @team1.id,
+          inventory_id: @team1.repositories.first.id
+        ), params: { filter: { archived: false }, page: { size: 200 } }, headers: @valid_headers
 
         expect { hash_body = json }.not_to raise_exception
         expect(hash_body['data'].count).to be_eql 100

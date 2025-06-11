@@ -105,18 +105,19 @@
           max-height: 160px;
           outline: none;
           padding: .5em;
+          padding-right: 2rem;
           transition: height .3s;
           width: 100%;
         }
 
         .send-comment {
-          bottom: 5px;
           color: $brand-primary;
           cursor: pointer;
           display: inline-block;
           position: absolute;
           right: 5px;
           text-align: center;
+          top: 5px;
         }
       }
 
