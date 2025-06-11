@@ -291,13 +291,6 @@ export default {
           key: 'updated_on',
           type: 'DateRange',
           label: this.i18n.t('filters_modal.updated_on.label')
-        },
-        {
-          key: 'statuses',
-          type: 'Select',
-          options: this.statusesList,
-          label: this.i18n.t('experiments.index.filters.status'),
-          placeholder: this.i18n.t('experiments.index.filters.status_placeholder')
         }
       ];
 
@@ -308,6 +301,14 @@ export default {
           label: this.i18n.t('filters_modal.archived_on.label')
         });
       }
+
+      filters.push( {
+        key: 'statuses',
+        type: 'Select',
+        options: this.statusesList,
+        label: this.i18n.t('experiments.index.filters.status'),
+        placeholder: this.i18n.t('experiments.index.filters.status_placeholder')
+      });
 
       return filters;
     }

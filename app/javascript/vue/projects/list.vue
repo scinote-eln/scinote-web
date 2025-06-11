@@ -337,7 +337,7 @@ export default {
 
       if (this.currentViewMode === 'archived') {
         filters.push({
-          key: 'archived_at',
+          key: 'archived_on',
           type: 'DateRange',
           label: this.i18n.t('filters_modal.archived_on.label')
         });
