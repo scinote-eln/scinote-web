@@ -178,7 +178,7 @@ export default {
           this.time = val;
         } else {
           // If new value has different date then previous date, reset time
-          if (this.datetime && this.datetime.getDate() !== val.getDate()) {
+          if (val && this.datetime && this.datetime.getDate() !== val.getDate()) {
             val.setHours(0, 0, 0, 0);
           }
 
@@ -207,6 +207,11 @@ export default {
       return `${date_str} ${time_str}`;
     },
     emitValue(date) {
+      if (date == null) {
+        this.$emit('cleared');
+        return null;
+      }
+
       return this.valueType === 'stringWithoutTimezone' ? this.stringValue(date) : date;
     },
     close() {
