@@ -1,6 +1,11 @@
-<div class="repository-versions-header">
-  <h4><%= t('my_modules.repository.snapshots.full_view.header') %>
-    <a id="collapseVersionsSidebar" class="pull-right sidebar-collapse-button" href="#">
+<div class="repository-versions-header" data-e2e="e2e-SB-task-assignItemModal-versions">
+  <h4 data-e2e="e2e-TX-task-assignItemModal-versionsSidebar-title">
+    <%= t('my_modules.repository.snapshots.full_view.header') %>
+    <a
+      id="collapseVersionsSidebar"
+      class="pull-right sidebar-collapse-button"
+      href="#"
+      data-e2e="e2e-BT-task-assignItemModal-versionsSidebar-close">
       <i class="sn-icon sn-icon sn-icon-double-navigate-after"></i>
     </a>
   </h4>
@@ -11,6 +16,7 @@
        data-id="<%= @repository.id %>"
        data-selected="<%= @repository_snapshots.select{ |s| s.selected == true }.blank? %>"
        data-table-url="<%= full_view_table_my_module_repository_path(@my_module, @repository, include_stock_consumption: @repository.has_stock_consumption?) %>"
+       data-e2e="e2e-BT-task-assignItemModal-versionsSidebar-liveVersion"
     >
       <h2 class="list-group-item-heading">
         <%= t('my_modules.repository.snapshots.full_view.live') %>
@@ -37,7 +43,12 @@
       <p class="info <%= 'hidden' unless @repository_snapshots.blank? %>">
         <%= t('my_modules.repository.snapshots.full_view.no_snapshots_label') %>
       </p>
-      <button id="createRepositorySnapshotButton" class="btn btn-secondary" data-action-path="<%= my_module_repository_snapshots_path(@my_module, @repository) %>">
+      <button
+        id="createRepositorySnapshotButton"
+        class="btn btn-secondary"
+        data-action-path="<%= my_module_repository_snapshots_path(@my_module, @repository) %>"
+        data-e2e="e2e-BT-task-assignItemModal-versionsSidebar-createSnapshot"
+      >
         <i class="fas fa-camera"></i>
         <%= t('my_modules.repository.snapshots.full_view.create_button') %>
       </button>
@@ -54,7 +65,12 @@
 
   <% if can_manage_my_module_repository_snapshots?(@my_module) %>
   <div class="list-group-item text-center hidden">
-    <a id="setDefaultVersionButton" class="btn btn-primary default-version-button" data-select-path="<%= my_module_select_default_snapshot_path(@my_module) %>">
+    <a
+      id="setDefaultVersionButton"
+      class="btn btn-primary default-version-button"
+        data-select-path="<%= my_module_select_default_snapshot_path(@my_module) %>"
+        data-e2e="e2e-BT-task-assignItemModal-versionsSidebar-setAsDefault"
+      >
       <%= t('my_modules.repository.snapshots.full_view.set_default_button') %>
     </a>
   </div>

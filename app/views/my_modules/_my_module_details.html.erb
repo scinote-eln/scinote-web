@@ -5,7 +5,12 @@
     <span class="sn-icon block-icon sn-icon-calendar mr-2.5"></span>
     <span class="hidden-xs hidden-sm hidden-md"><%= t('my_modules.details.start_date') %></span>
   </div>
-  <div id="startDateContainer" class="datetime-container" data-update-url="<%= my_module_path(@my_module, format: :json) %>">
+  <div
+    id="startDateContainer"
+    class="datetime-container"
+    data-update-url="<%= my_module_path(@my_module, format: :json) %>"
+    data-e2e="e2e-DP-task-details-startDate"
+  >
     <%= render partial: "module_header_start_date", locals: { my_module: @my_module } %>
   </div>
 </div>
@@ -15,7 +20,12 @@
     <span class="sn-icon block-icon sn-icon-calendar mr-2.5"></span>
     <span class="hidden-xs hidden-sm  hidden-md"><%= t('my_modules.details.due_date') %></span>
   </div>
-  <div id="dueDateContainer" class="datetime-container" data-update-url="<%= my_module_path(@my_module, format: :json) %>">
+  <div
+    id="dueDateContainer"
+    class="datetime-container"
+    data-update-url="<%= my_module_path(@my_module, format: :json) %>"
+    data-e2e="e2e-DP-task-details-dueDate"
+  >
     <%= render partial: "module_header_due_date", locals: { my_module: @my_module } %>
   </div>
 </div>
@@ -26,7 +36,7 @@
       <span class="sn-icon sn-icon-calendar mr-2.5"></span>
       <span class="hidden-xs hidden-sm  hidden-md"><%= t('my_modules.details.completed_date') %></span>
     </div>
-    <div class="datetime-container">
+    <div class="datetime-container" data-e2e="e2e-TX-task-details-completedOn">
       <span class="date-text">
         <%= l(@my_module.completed_on, format: :full) %>
       </span>

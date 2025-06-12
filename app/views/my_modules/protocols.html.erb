@@ -32,18 +32,18 @@
     <!-- Header Actions -->
     <%= render partial: 'my_modules/header_actions' %>
     <!-- Details -->
-    <div class="task-section task-information hidden">
+    <div class="task-section task-information hidden" data-e2e="e2e-CO-task-details">
       <div id="task-details" class="task-section-header">
         <div class="flex items-center mr-auto">
           <a class="task-section-caret collapsed" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
             <i class="sn-icon sn-icon-right"></i>
             <span id="taskDetailsLabel" class="task-section-title">
-              <h2>
+              <h2 data-e2e="e2e-TX-task-details-title">
                 <%= t('my_modules.details.title') %>
               </h2>
             </span>
           </a>
-          <span class="dropdown task-details-dropdown-container">
+          <span class="dropdown task-details-dropdown-container" data-e2e="e2e-DD-task-details-taskDetails">
             <a href="#"
               id="taskDetailsButton"
               class="btn btn-light btn-black icon-btn dropdown-toggle mr-2"
@@ -56,7 +56,7 @@
               <%= render partial: "module_header_details_popover" %>
             </div>
           </span>
-          <span class="task-details-code">
+          <span class="task-details-code" data-e2e="e2e-TX-task-details-taskId">
             <%= @my_module.code %>
           </span>
         </div>
@@ -71,15 +71,15 @@
         <a class="task-section-caret" role="button" data-toggle="collapse" href="#notes-container" aria-expanded="true" aria-controls="notes-container">
           <i class="sn-icon sn-icon-right"></i>
           <span class="task-section-title">
-            <h2><%= t('my_modules.notes.title') %></h2>
+            <h2 data-e2e="e2e-TX-task-notes-title"><%= t('my_modules.notes.title') %></h2>
           </span>
         </a>
       </div>
-      <div class="collapse in task-section-body" id="notes-container" aria-expanded="true">
+      <div class="collapse in task-section-body" id="notes-container" aria-expanded="true" data-e2e="e2e-IF-task-notes">
         <%= render partial: "my_module_notes" %>
       </div>
     </div>
-    <div id="assignedItems" >
+    <div id="assignedItems" data-e2e="e2e-CO-task-assignedItems">
       <assigned-items
         ref="assignedItems"
         avaialable-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>"

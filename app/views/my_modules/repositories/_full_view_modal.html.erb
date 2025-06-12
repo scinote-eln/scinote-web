@@ -1,8 +1,16 @@
-<div class="modal modal-full-screen custom-z-index" id="myModuleRepositoryFullViewModal" data-keyboard="false" role="dialog" >
+<div
+  class="modal modal-full-screen custom-z-index"
+  id="myModuleRepositoryFullViewModal"
+  data-keyboard="false"
+  role="dialog"
+  data-e2e="e2e-MD-task-assignItem"
+>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><i class="sn-icon sn-icon-close"></i></button>
+        <button type="button" class="close" data-dismiss="modal" data-e2e="e2e-BT-task-assignItemModal-close">
+          <i class="sn-icon sn-icon-close"></i>
+        </button>
         <div class="header-container">
           <div class="breadcrumbs">
             <span class="project" title="<%= @project.name %>"><%= @project.name %></span>
@@ -11,7 +19,7 @@
             <span class="slash">/</span>
             <span class="my-module" title="<%= @my_module.name %>"><%= @my_module.name %></span>
           </div>
-          <div class="repository-name-container">
+          <div class="repository-name-container" data-e2e="e2e-TX-task-assignItemModal-title">
             <span class="repository-title"></span>
             <span class="repository-version"></span>
           </div>
@@ -21,11 +29,21 @@
         <template id="repositoryToolbarButtonsTemplate">
           <div class="">
             <div class="pull-left sci-btn-group">
-              <button id="showVersionsSidebar" type="button" class="btn btn-secondary">
+              <button
+                id="showVersionsSidebar"
+                type="button"
+                class="btn btn-secondary"
+                data-e2e="e2e-BT-task-assignItemModal-viewVersions"
+              >
                 <span class="sn-icon sn-icon-visibility-show"></span>
                 <%= t('my_modules.repository.snapshots.full_view.versions_sidebar_button') %>
               </button>
-              <button id="exportAssignedItems" type="button" class="btn btn-secondary">
+              <button
+                id="exportAssignedItems"
+                type="button"
+                class="btn btn-secondary"
+                data-e2e="e2e-BT-task-assignItemModal-exportItems"
+              >
                 <span class="sn-icon sn-icon-import"></span>
                 <%= t('my_modules.repository.snapshots.full_view.export_button') %>
               </button>
@@ -40,25 +58,49 @@
 </div>
 
 <template id="my-module-repository-full-view-assign-button">
-  <button type="button" class="btn btn-primary assign-button" id="assignRepositoryRecords" disabled>
+  <button
+    type="button"
+    class="btn btn-primary assign-button"
+    id="assignRepositoryRecords"
+    disabled
+    data-e2e="e2e-BT-assignItemModal-assignItem"
+  >
       <%= t('repositories.assign_records_to_module') %>
   </button>
 </template>
 
 <template id="my-module-repository-full-view-assign-downstream-button">
-  <button type="button" class="btn btn-secondary assign-button" id="assignRepositoryRecordsDownstream" disabled>
+  <button
+    type="button"
+    class="btn btn-secondary assign-button"
+    id="assignRepositoryRecordsDownstream"
+    disabled
+    data-e2e="e2e-BT-assignItemModal-assignDownstream"
+  >
       <%= t('my_modules.modals.assign_repository_record.task_and_downstream') %>
   </button>
 </template>
 
 <template id="my-module-repository-full-view-update-button">
-   <button type="button" class="btn btn-primary assign-button" id="updateRepositoryRecords" disabled>
+   <button
+    type="button"
+    class="btn btn-primary assign-button"
+    id="updateRepositoryRecords"
+    disabled
+    data-e2e="e2e-BT-assignItemModal-update"
+  >
       <%= t('repositories.update_records_to_module') %>
    </button>
 </template>
 
 <template id="my-module-repository-full-view-update-downstream-button">
-   <button type="button" class="btn btn-secondary assign-button" id="updateRepositoryRecordsDownstream" disabled>
+   <button
+    type="button"
+    class="btn btn-secondary assign-button"
+    id="updateRepositoryRecordsDownstream"
+    disabled
+    data-e2e="e2e-BT-assignItemModal-updateDownstream"
+  >
       Update task & downstream
    </button>
 </template>
