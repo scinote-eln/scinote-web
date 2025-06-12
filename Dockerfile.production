@@ -85,7 +85,7 @@ RUN \
   yarnpkg && \
   wget -O $TIKA_PATH $TIKA_DIST_URL && \
   chmod +x $TIKA_PATH && \
-  /usr/share/nodejs/yarn/bin/yarn add puppeteer@npm:puppeteer-core@^22.15.0 && \
+  /usr/share/nodejs/yarn/bin/yarn install && \
   apt-get install -y libreoffice && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
 
