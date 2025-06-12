@@ -4,7 +4,7 @@
       <label class="sci-label">{{ filter.label }}</label>
       <div class="w-full mb-2">
         <DateTimePicker
-          :defaultValue="dateFrom"
+          :defaultValue="dateFromObject"
           class="w-full"
           @change="updateDateFrom"
           @cleared="updateDateFrom"
@@ -18,7 +18,7 @@
       </div>
       <div class="w-full">
         <DateTimePicker
-        :defaultValue="dateTo"
+        :defaultValue="dateToObject"
           class="w-full"
           @change="updateDateTo"
           @cleared="updateDateTo"
@@ -46,16 +46,16 @@ export default {
   components: { DateTimePicker },
   data() {
     return {
-      dateFrom: null,
-      dateTo: null
+      dateFrom: this.values[`${this.filter.key}_from`],
+      dateTo: this.values[`${this.filter.key}_to`]
     };
   },
-  created() {
-    if (this.values[`${this.filter.key}_from`]) {
-      this.dateFrom = new Date(this.values[`${this.filter.key}_from`])
-    }
-    if (this.values[`${this.filter.key}_to`]) {
-      this.dateTo = new Date(this.values[`${this.filter.key}_to`]);
+  computed: {
+    dateFromObject() {
+      return this.dateFrom ? new Date(this.dateFrom) : null;
+    },
+    dateToObject() {
+      return this.dateTo ? new Date(this.dateTo) : null;
     }
   },
   methods: {
