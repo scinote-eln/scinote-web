@@ -59,6 +59,8 @@ class User < ApplicationRecord
   # Relations
   has_many :user_identities, inverse_of: :user
   has_many :user_assignments, dependent: :destroy
+  has_many :user_group_memberships, dependent: :destroy
+  has_many :user_groups, through: :user_group_memberships
   has_many :user_projects, inverse_of: :user
   has_many :teams, through: :user_assignments, source: :assignable, source_type: 'Team'
   has_many :projects, through: :user_assignments, source: :assignable, source_type: 'Project'

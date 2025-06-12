@@ -149,10 +149,14 @@ Rails.application.routes.draw do
         resource :user_settings, only: %i(show update)
 
         resources :teams, only: [] do
-          resources :user_groups
+          resources :user_groups, only: %i(index create update destroy) do
+            resources :user_group_memberships, only: %i(index create update destroy)
+          end
+
           member do
             get :members
           end
+
           collection do
             post :switch
           end
