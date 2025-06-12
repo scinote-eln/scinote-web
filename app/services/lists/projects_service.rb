@@ -23,6 +23,8 @@ module Lists
 
       if @filters[:folder_search].present? && @filters[:folder_search] == 'true'
         @records = projects
+      elsif @filters.present?
+        @records = projects.where(project_folder: @current_folder)
       else
         projects = projects.where(project_folder: @current_folder)
         folders = folders.where(parent_folder: @current_folder)
