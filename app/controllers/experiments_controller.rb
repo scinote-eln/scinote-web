@@ -275,7 +275,7 @@ class ExperimentsController < ApplicationController
 
       flash[:success] = t('experiments.table.move_success_flash', project: escape_input(@project.name))
       render json: { message: t('experiments.table.move_success_flash',
-                                project: escape_input(@project.name)), path: project_path(@project) }
+                                project: escape_input(@project.name)), path: project_experiments_path(@project) }
     rescue StandardError => e
       Rails.logger.error(e.message)
       Rails.logger.error(e.backtrace.join("\n"))
