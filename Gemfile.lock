@@ -353,9 +353,8 @@ GEM
       activesupport (>= 6.1)
     graphviz (1.2.1)
       process-pipeline
-    grover (1.1.5)
-      combine_pdf (~> 1.0)
-      nokogiri (~> 1.0)
+    grover (1.2.3)
+      nokogiri (~> 1)
     hashdiff (1.0.1)
     hashie (5.0.0)
     htmlentities (4.3.4)
