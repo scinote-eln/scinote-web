@@ -74,7 +74,8 @@ const entryList = {
   vue_design_system_inputs: './app/javascript/packs/vue/design_system/inputs.js',
   vue_design_system_table: './app/javascript/packs/vue/design_system/table.js',
   vue_favorites_widget: './app/javascript/packs/vue/favorites_widget.js',
-  vue_experiment_description_modal: './app/javascript/packs/vue/experiment_description_modal.js'
+  vue_experiment_description_modal: './app/javascript/packs/vue/experiment_description_modal.js',
+  vue_team_automations: './app/javascript/packs/vue/team_automations.js'
 };
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949
