@@ -27,6 +27,7 @@ class Team < ApplicationRecord
   belongs_to :created_by, class_name: 'User', optional: true
   belongs_to :last_modified_by, class_name: 'User', optional: true
   has_many :users, through: :user_assignments, dependent: :destroy
+  has_many :user_groups, dependent: :destroy
   has_many :projects, inverse_of: :team, dependent: :destroy
   has_many :project_folders, inverse_of: :team, dependent: :destroy
   has_many :protocols, inverse_of: :team, dependent: :destroy
