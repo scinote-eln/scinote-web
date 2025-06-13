@@ -25,7 +25,7 @@ module Lists
                           .select('experiments.*')
                           .select('COUNT(DISTINCT active_tasks.id) AS task_count')
                           .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_task_count')
-                          .group('experiments.id, favorites.id')
+                          .group('experiments.id')
 
       view_mode = if @params[:project].archived?
                     'archived'
