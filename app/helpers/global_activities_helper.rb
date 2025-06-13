@@ -102,7 +102,7 @@ module GlobalActivitiesHelper
     when Result
       return current_value unless obj.navigable?
 
-      path = obj.archived? ? archive_my_module_path(obj.my_module) : my_module_results_path(obj.my_module, result_id: obj.id)
+      path = obj.archived? ? my_module_results_path(obj.my_module, result_id: obj.id, view_mode: :archived) : my_module_results_path(obj.my_module, result_id: obj.id)
     when Step
       return current_value unless obj.navigable?
 

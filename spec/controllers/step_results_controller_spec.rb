@@ -15,12 +15,12 @@ describe StepResultsController, type: :controller do
   let(:result_second) { create :result, my_module: my_modules.first, user: user }
   let(:step_result) { create :step_result, step: step_second, result:  result_second }
 
-  describe 'POST create link step result succesfully' do
-    let(:action) { post :create, params: params }
+  describe 'POST create link result succesfully' do
+    let(:action) { post :link_results, params: params }
     let(:params) do
       {
-        step_id: step.id,
-        result_id: result_text.result.id
+        step_ids:[step.id],
+        result_ids: [result_text.result.id]
       }
     end
 
@@ -30,22 +30,24 @@ describe StepResultsController, type: :controller do
     end
 
     it 'calls create activity service' do
-      params[:step_id] = step_second.id
+      params[:step_ids] = [step_second.id]
       action
       expect(response).to have_http_status(:forbidden)
     end
   end
 
-  describe 'DELETE destroy' do
-    let(:action) { delete :destroy, params: params, format: :json }
+  describe 'POST create link step succesfully' do
+    let(:action) { delete :link_steps, params: params, format: :json }
+    let(:params) do
+      {
+        step_ids:[step.id],
+        result_ids: [result_text.result.id]
+      }
+    end
 
-    context 'when in protocol repository' do
-      let(:params) { { id: step_result.id } }
-
-      it 'calls create activity for deleting step in protocol repository' do
-        action
-        expect(response).to have_http_status(:success)
-      end
+    it 'calls create activity service' do
+      action
+      expect(response).to have_http_status(:success)
     end
   end
 end

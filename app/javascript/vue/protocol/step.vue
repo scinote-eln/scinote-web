@@ -99,7 +99,7 @@
             <a v-for="result in step.attributes.results"
                :key="result.id"
                :title="result.name"
-               :href="resultUrl(result.id)"
+               :href="resultUrl(result.id, result.archived)"
                class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer block hover:no-underline text-sn-blue truncate"
             >
               {{ result.name }}
@@ -800,8 +800,8 @@
           position: this.step.attributes.position
         })
       },
-      resultUrl(result_id) {
-        return my_module_results_path({my_module_id: this.step.attributes.my_module_id, result_id: result_id})
+      resultUrl(result_id, archived) {
+        return my_module_results_path({my_module_id: this.step.attributes.my_module_id, result_id: result_id, view_mode: (archived ? 'archived' : 'active') });
       },
     }
   }
