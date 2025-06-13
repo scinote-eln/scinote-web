@@ -69,7 +69,7 @@ module Lists
            .select('COUNT(DISTINCT active_completed_experiments.id) AS completed_experiments_count')
            .select('COUNT(DISTINCT active_tasks.id) AS tasks_count')
            .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_tasks_count')
-           .group('projects.id, favorites.id')
+           .group('projects.id')
     end
 
     def fetch_project_folders

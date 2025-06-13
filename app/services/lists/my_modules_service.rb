@@ -17,7 +17,7 @@ module Lists
     def fetch_records
       @records = @raw_data.includes(PRELOAD)
                           .with_favorites(@user)
-                          .group('my_modules.id, favorites.id')
+                          .group('my_modules.id')
 
       view_mode = if @params[:experiment].archived_branch?
                     'archived'
