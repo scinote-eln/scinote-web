@@ -71,7 +71,7 @@
           <GeneralDropdown v-else ref="linkedStepsDropdown"  position="right">
             <template v-slot:field>
               <button class="btn btn-light icon-btn">
-                {{ i18n.t('my_modules.results.link_to_step') }}
+                <i class="sn-icon sn-icon-steps"></i>
                 <span class="absolute top-1 -right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
                   {{ result.attributes.steps.length }}
                 </span>
