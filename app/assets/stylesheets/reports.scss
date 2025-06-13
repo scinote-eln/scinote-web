@@ -265,6 +265,11 @@ label {
       max-height: 300px;
       max-width: 300px;
     }
+
+    &.text-block p,
+    .text-block p {
+      margin: 0;
+    }
   }
 
   .report-element-children {
