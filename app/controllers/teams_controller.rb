@@ -7,10 +7,13 @@ class TeamsController < ApplicationController
   helper_method :current_folder
 
   before_action :load_vars, only: %i(sidebar export_projects export_projects_modal
-                                     disable_tasks_sharing_modal shared_tasks_toggle)
+                                     disable_tasks_sharing_modal shared_tasks_toggle
+                                     settings update_settings team_automations)
   before_action :load_current_folder, only: :sidebar
   before_action :check_read_permissions, except: %i(view_type visible_teams visible_users)
+  before_action :check_manage_permissions, only: %i(settings update_settings team_automations)
   before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
+  before_action :set_team_automations_breadcrumbs_items, only: %i(team_automations)
 
   def visible_teams
     teams = current_user.teams.order(:name)
@@ -121,6 +124,26 @@ class TeamsController < ApplicationController
     render json: { cards_view_type_class: cards_view_type_class(view_type_params) }, status: :ok
   end
 
+  def team_automations; end
+
+  def settings
+    render json: {
+      teamName: @team.name,
+      teamAutomationGroups: Extends::TEAM_AUTOMATION_GROUPS,
+      teamSettings: @team.settings,
+      updateUrl: update_settings_team_path(@team)
+    }
+  end
+
+  def update_settings
+    @team.settings.merge!(update_settings_params)
+    if @team.save
+      render json: {}
+    else
+      render json: @team.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def load_vars
@@ -138,6 +161,10 @@ class TeamsController < ApplicationController
 
   def check_read_permissions
     render_403 unless can_read_team?(@team)
+  end
+
+  def check_manage_permissions
+    render_403 unless can_manage_team?(@team)
   end
 
   def load_current_folder
@@ -161,6 +188,19 @@ class TeamsController < ApplicationController
     @exp_projects.each do |project|
       return render_403 unless can_export_project?(current_user, project)
     end
+  end
+
+  def update_settings_params
+    params.require(:team).permit(team_automation_settings: {})
+  end
+
+  def set_team_automations_breadcrumbs_items
+    @breadcrumbs_items = [{
+      label: t('breadcrumbs.team_automations'),
+      url: team_automations_team_path(current_team)
+    }]
+
+    @breadcrumbs_items
   end
 
   def log_activity(type_of, message_items = {})
