@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserGroup < ApplicationRecord
+  include SearchableModel
+
   validates :name,
             presence: true,
             length: { minimum: Constants::NAME_MIN_LENGTH,
@@ -12,4 +14,13 @@ class UserGroup < ApplicationRecord
   belongs_to :last_modified_by, class_name: 'User', optional: true
   has_many :user_group_memberships, dependent: :destroy
   has_many :users, through: :user_group_memberships, dependent: :destroy
+
+  accepts_nested_attributes_for :user_group_memberships
+
+  def user_group_memberships_attributes=(attributes)
+    attributes.each do |membership|
+      membership[:created_by_id] = last_modified_by_id
+      user_group_memberships.build(membership)
+    end
+  end
 end

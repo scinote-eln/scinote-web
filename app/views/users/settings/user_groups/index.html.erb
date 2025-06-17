@@ -7,4 +7,13 @@
 
 <div class="content-pane flexible with-grey-background">
   <%= render partial: 'users/settings/teams/header' %>
+  <div id="userGroupsTable" class="fixed-content-body user-groups-table-container">
+    <user-groups-table
+      actions-url="<%= actions_toolbar_users_settings_team_user_groups_path(@team) %>"
+      data-source="<%= users_settings_team_user_groups_path(@team, format: :json) %>"
+      users-url="<%= unassigned_users_users_settings_team_user_groups_path(@team) %>"
+      create-url="<%= users_settings_team_user_groups_path(@team) if can_manage_team?(@team) %>"
+    />
+  </div>
 </div>
+<%= javascript_include_tag 'vue_user_groups_table' %>

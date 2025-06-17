@@ -4189,7 +4189,34 @@ en:
     edit:
       head_title: "Edit protocol"
     no_keywords: "—"
-
+  user_groups:
+    create:
+      success: "Group created successfully."
+      error: "There was a problem creating group. Please try again."
+    delete:
+      success: "Group deleted successfully."
+      error: "There was a problem deleting group. Please try again."
+    index:
+      new_group: "New group"
+      group_name: "Group name"
+      members: "Members"
+      created_by: "Created by"
+      created_on: "Created on"
+      updated_on: "Updated on"
+      create_modal:
+        title: "Create a new group"
+        description: "You can add as many members from this workspace as you wish."
+        name: "Group name"
+        name_placeholder: "Add a name for your group"
+        select_members: "Select members"
+        select_members_placeholder: "Select for members"
+        create_button: "Create group"
+      delete_modal:
+        title: "Delete group"
+        description_html: "You are about to delete <b>%{group}</b>. All members added to this group will lose their access to all related content in this workspace.<br><br>Access added to members outside of this group will not be affected.<br><br>This action cannot be undone. <b>Are you sure you want to delete this group?</b>"
+        confirm: "Delete group"
+      toolbar:
+        delete: "Delete"
   invite_users:
     to_team:
       title: "Invite members to %{team}"
