@@ -17,6 +17,10 @@
   .fixed-content-body {
     height: calc(100vh - var(--content-header-size) - var(--navbar-height));
     width: 100%;
+
+    &.user-groups-table-container {
+      height: calc(100vh - var(--content-header-size) - var(--navbar-height) - 72px);
+    }
   }
 
   .content-header {
