@@ -83,12 +83,12 @@
           :data-object-type="step.attributes.type"
           tabindex="0"
         ></span> <!-- Hidden element to support legacy code -->
-        <button v-if="step.attributes.results.length == 0" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
+        <button v-if="step.attributes.results.length == 0" :title="i18n.t('protocols.steps.link_results')" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
           <i class="sn-icon sn-icon-results"></i>
         </button>
         <GeneralDropdown v-else ref="linkedResultsDropdown"  position="right">
           <template v-slot:field>
-            <button class="btn btn-light icon-btn">
+            <button class="btn btn-light icon-btn" :title="i18n.t('protocols.steps.link_results')">
               <i class="sn-icon sn-icon-results"></i>
               <span class="absolute top-1 right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
                 {{ step.attributes.results.length }}
