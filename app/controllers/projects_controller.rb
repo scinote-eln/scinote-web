@@ -9,17 +9,19 @@ class ProjectsController < ApplicationController
   include ExperimentsHelper
   include Breadcrumbs
   include UserRolesHelper
+  include FavoritesActions
 
   attr_reader :current_folder
 
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(update notifications create_tag)
+  before_action :load_vars, only: %i(update create_tag assigned_users_list show)
   before_action :load_current_folder, only: :index
-  before_action :check_view_permissions, except: %i(index create update archive_group restore_group
+  before_action :check_read_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
-                                                    actions_toolbar user_roles users_filter)
+                                                    actions_toolbar user_roles users_filter head_of_project_users_list
+                                                    favorite unfavorite)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: :update
   before_action :set_folder_inline_name_editing, only: %i(index cards)
@@ -36,6 +38,17 @@ class ProjectsController < ApplicationController
       end
       format.html do
         render 'projects/index'
+      end
+    end
+  end
+
+  def show
+    respond_to do |format|
+      format.json do
+        render json: @project, serializer: ProjectSerializer, user: current_user
+      end
+      format.html do
+        render 'experiments/index'
       end
     end
   end
@@ -74,6 +87,7 @@ class ProjectsController < ApplicationController
 
   def update
     default_public_user_role_name_before_update = @project.default_public_user_role&.name
+    old_status = @project.status
     @project.assign_attributes(project_update_params)
     return_error = false
     flash_error = t('projects.update.error_flash', name: escape_input(@project.name))
@@ -90,7 +104,7 @@ class ProjectsController < ApplicationController
           t("projects.#{is_archive}.error_flash", name: escape_input(@project.name))
     end
 
-    message_renamed = @project.name_changed?
+    message_edited = @project.name_changed? || @project.description_changed?
     message_visibility = if !@project.visibility_changed?
                            nil
                          elsif @project.visible?
@@ -106,6 +120,9 @@ class ProjectsController < ApplicationController
                        else
                          'restore'
                        end
+    supervised_by_id_changes = @project.changes[:supervised_by_id]
+    start_date_changes = @project.changes[:start_date]
+    due_date_changes = @project.changes[:due_date]
 
     default_public_user_role_name = nil
     if !@project.visibility_changed? && @project.default_public_user_role_id_changed?
@@ -131,7 +148,7 @@ class ProjectsController < ApplicationController
                        team: @project.team.id })
       end
 
-      log_activity(:rename_project) if message_renamed.present?
+      log_activity(:edit_project) if message_edited.present?
       log_activity(:archive_project) if message_archived == 'archive'
       log_activity(:restore_project) if message_archived == 'restore'
 
@@ -140,6 +157,19 @@ class ProjectsController < ApplicationController
                      @project,
                      { team: @project.team.id, role: default_public_user_role_name })
       end
+
+      if supervised_by_id_changes.present?
+        log_activity(:remove_head_of_project, @project, { user_target: supervised_by_id_changes[0] }) if supervised_by_id_changes[0].present? # remove head of project
+        log_activity(:set_head_of_project, @project, { user_target: supervised_by_id_changes[1] }) if supervised_by_id_changes[1].present? # add head of project
+      end
+
+      if old_status != @project.status
+        log_activity(:change_project_status, @project, { old_status: I18n.t("projects.index.status.#{old_status}"),
+                                                         status: I18n.t("projects.index.status.#{@project.status}") })
+      end
+
+      log_start_date_change_activity(start_date_changes) if start_date_changes.present?
+      log_due_date_change_activity(due_date_changes) if due_date_changes.present?
 
       flash_success = t('projects.update.success_flash', name: escape_input(@project.name))
       if message_archived == 'archive'
@@ -255,6 +285,20 @@ class ProjectsController < ApplicationController
     render json: { data: users }, status: :ok
   end
 
+  def head_of_project_users_list
+    users = User.where(id: current_team.projects.select(:supervised_by_id)).map do |u|
+      [u.id, u.name, { avatar_url: avatar_path(u, :icon_small) }]
+    end
+
+    render json: { data: users }, status: :ok
+  end
+
+  def assigned_users_list
+    users = @project.users.search(false, params[:query]).order(:full_name)
+
+    render json: { data: users.map { |u| [u.id, u.name, { avatar_url: avatar_path(u, :icon_small) }] } }, status: :ok
+  end
+
   def user_roles
     render json: { data: user_roles_collection(Project.new).map(&:reverse) }
   end
@@ -276,13 +320,16 @@ class ProjectsController < ApplicationController
           .permit(
             :name, :visibility,
             :archived, :project_folder_id,
-            :default_public_user_role_id
+            :default_public_user_role_id,
+            :due_date,
+            :start_date,
+            :description
           )
   end
 
   def project_update_params
     params.require(:project)
-          .permit(:name, :visibility, :archived, :default_public_user_role_id)
+          .permit(:name, :visibility, :archived, :default_public_user_role_id, :due_date, :start_date, :description, :status, :supervised_by_id)
   end
 
   def view_type_params
@@ -307,7 +354,7 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def check_view_permissions
+  def check_read_permissions
     current_team_switch(@project.team) if current_team != @project.team
     render_403 unless can_read_project?(@project)
   end
@@ -340,6 +387,34 @@ class ProjectsController < ApplicationController
       field_to_udpate: 'name',
       path_to_update: project_folder_path(@current_folder)
     }
+  end
+
+  def log_start_date_change_activity(start_date_changes)
+    type_of = if start_date_changes[0].nil?     # set start_date
+                message_items = { start_date: @project.start_date }
+                :set_project_start_date
+              elsif start_date_changes[1].nil?  # remove start_date
+                message_items = { start_date: start_date_changes[0] }
+                :remove_project_start_date
+              else                              # change start_date
+                message_items = { start_date: @project.start_date }
+                :change_project_start_date
+              end
+    log_activity(type_of, @project, message_items)
+  end
+
+  def log_due_date_change_activity(due_date_changes)
+    type_of = if due_date_changes[0].nil?     # set due_date
+                message_items = { due_date: @project.due_date }
+                :set_project_due_date
+              elsif due_date_changes[1].nil?  # remove due_date
+                message_items = { due_date: due_date_changes[0] }
+                :remove_project_due_date
+              else                            # change due_date
+                message_items = { due_date: @project.due_date }
+                :change_project_due_date
+              end
+    log_activity(type_of, @project, message_items)
   end
 
   def log_activity(type_of, project = nil, message_items = {})

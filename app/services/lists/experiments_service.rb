@@ -5,20 +5,27 @@ module Lists
     private
 
     def fetch_records
+      done_status_id = MyModuleStatusFlow.first.final_status.id
       @records = @raw_data.joins(:project)
-                           .includes(my_modules: { my_module_status: :my_module_status_implications })
-                           .includes(workflowimg_attachment: :blob, user_assignments: %i(user_role user))
-                           .joins('LEFT OUTER JOIN my_modules AS active_tasks ON
+                          .includes(my_modules: { my_module_status: :my_module_status_implications })
+                          .includes(workflowimg_attachment: :blob, user_assignments: %i(user_role user))
+                          .joins('LEFT OUTER JOIN my_modules AS active_tasks ON
                                   active_tasks.experiment_id = experiments.id
                                   AND active_tasks.archived = FALSE')
-                           .joins('LEFT OUTER JOIN my_modules AS active_completed_tasks ON
-                                   active_completed_tasks.experiment_id = experiments.id
-                                   AND active_completed_tasks.archived = FALSE AND active_completed_tasks.state = 1')
-                           .readable_by_user(@user)
-                           .select('experiments.*')
-                           .select('COUNT(DISTINCT active_tasks.id) AS task_count')
-                           .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_task_count')
-                           .group('experiments.id')
+                          .joins(
+                            ActiveRecord::Base.sanitize_sql_array([
+                                                                    'LEFT OUTER JOIN my_modules AS active_completed_tasks ON
+                              active_completed_tasks.experiment_id = experiments.id
+                              AND active_completed_tasks.archived = FALSE AND active_completed_tasks.my_module_status_id = ?',
+                                                                    done_status_id
+                                                                  ])
+                          )
+                          .readable_by_user(@user)
+                          .with_favorites(@user)
+                          .select('experiments.*')
+                          .select('COUNT(DISTINCT active_tasks.id) AS task_count')
+                          .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_task_count')
+                          .group('experiments.id')
 
       view_mode = if @params[:project].archived?
                     'archived'
@@ -45,28 +52,39 @@ module Lists
         )
       end
 
-      if @filters[:created_at_from].present?
-        @records = @records.where('experiments.created_at > ?', @filters[:created_at_from])
-      end
-      if @filters[:created_at_to].present?
-        @records = @records.where('experiments.created_at < ?',
-                                @filters[:created_at_to])
-      end
-      if @filters[:updated_on_from].present?
-        @records = @records.where('experiments.updated_at > ?', @filters[:updated_on_from])
-      end
+      @records = @records.where('experiments.start_date >= ?', @filters[:start_date_from]) if @filters[:start_date_from].present?
+
+      @records = @records.where('experiments.start_date <= ?', @filters[:start_date_to]) if @filters[:start_date_to].present?
+
+      @records = @records.where('experiments.due_date >= ?', @filters[:due_date_from]) if @filters[:due_date_from].present?
+
+      @records = @records.where('experiments.due_date <= ?', @filters[:due_date_to]) if @filters[:due_date_to].present?
+
+      @records = @records.where('experiments.updated_at > ?', @filters[:updated_on_from]) if @filters[:updated_on_from].present?
       if @filters[:updated_on_to].present?
         @records = @records.where('experiments.updated_at < ?',
-                                @filters[:updated_on_to])
+                                  @filters[:updated_on_to])
       end
 
       if @filters[:archived_on_from].present?
         @records = @records.where('COALESCE(experiments.archived_on, projects.archived_on) > ?',
-                                @filters[:archived_on_from])
+                                  @filters[:archived_on_from])
       end
       if @filters[:archived_on_to].present?
         @records = @records.where('COALESCE(experiments.archived_on, projects.archived_on) < ?',
-                                @filters[:archived_on_to])
+                                  @filters[:archived_on_to])
+      end
+
+      if @filters[:statuses].present?
+        scopes = {
+          'not_started' => @records.not_started,
+          'in_progress' => @records.in_progress,
+          'done' => @records.done
+        }
+
+        selected_scopes = @filters[:statuses].values.filter_map { |status| scopes[status] }
+
+        @records = selected_scopes.reduce(@records.none, :or) if selected_scopes.any?
       end
     end
 
@@ -78,7 +96,11 @@ module Lists
         archived_on: 'archived_on',
         updated_at: 'experiments.updated_at',
         completed_tasks: 'completed_task_count',
-        description: 'experiments.description'
+        description: 'experiments.description',
+        start_date: 'start_date',
+        due_date: 'due_date',
+        status: 'status',
+        favorite: 'favorite'
       }
     end
 
@@ -94,6 +116,13 @@ module Lists
                      @records.order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) DESC'))
                              .group('experiments.archived_on', 'projects.archived_on')
                    end
+                 when 'favorite'
+                   @records.order(Arel.sql("favorite #{sort_direction(order_params) == 'ASC' ? 'DESC' : 'ASC'}"))
+                 when 'status'
+                   @records.order(Arel.sql("CASE
+                                           WHEN experiments.started_at IS NULL AND experiments.done_at IS NULL THEN -1
+                                           WHEN experiments.done_at IS NULL THEN 0
+                                           ELSE 1 END #{sort_direction(order_params)}"))
                  else
                    sort_by = "#{sortable_columns[order_params[:column].to_sym]} #{sort_direction(order_params)}"
                    @records.order(sort_by)

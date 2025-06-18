@@ -103,4 +103,24 @@ describe ExperimentsController, type: :controller do
         .to(change { Activity.count })
     end
   end
+
+  describe 'POST favorite' do
+    let(:action) { post :favorite, params: { id: experiment.id } }
+
+    it 'creates a favorite' do
+      expect(user.favorites.exists?(item: experiment )).to eq(false)
+      action
+      expect(user.favorites.exists?(item: experiment )).to eq(true)
+    end
+  end
+
+  describe 'POST unfavorite' do
+    let(:action) { post :unfavorite, params: { id: experiment.id } }
+
+    it 'removes a favorite' do
+      Favorite.create!(user: user, item: experiment, team: experiment.team)
+      action
+      expect(user.favorites.exists?(item: experiment )).to eq(false)
+    end
+  end
 end

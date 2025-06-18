@@ -32,6 +32,7 @@
                   :value="operation"
                   :options="operations"
                   @change="setOperation"
+                  :dataE2e="'e2e-DD-invItems-manageColumns-stock-operation'"
                 ></Select>
               </div>
               <div class="flex flex-col w-40">
@@ -48,6 +49,7 @@
                   :min="0"
                   :negativeNumbersEnabled="this.operation == 'set'"
                   :error="errors.amount"
+                  :dataE2e="'e2e-IF-invItems-manageColumns-stock-amount'"
                 />
               </div>
               <div class="flex flex-col w-40">
@@ -61,6 +63,7 @@
                   :placeholder="i18n.t('repository_stock_values.manage_modal.unit_prompt')"
                   @change="unit = $event; validateStockValue()"
                   :className="`${errors.unit ? 'error' : ''}`"
+                  :dataE2e="'e2e-DD-invItems-manageColumns-stock-unit'"
                 ></Select>
                 <div class="text-sn-coral text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
                   {{ errors.unit }}
@@ -86,7 +89,16 @@
             </template>
             <div class="repository-stock-reminder-selector flex">
               <div class="sci-checkbox-container my-auto">
-                <input type="checkbox" name="reminder-enabled" tabindex="4" class="sci-checkbox" id="reminder-selector-checkbox" :checked="reminderEnabled" @change="reminderEnabled = $event.target.checked"/>
+                <input
+                  type="checkbox"
+                  name="reminder-enabled"
+                  tabindex="4"
+                  class="sci-checkbox"
+                  id="reminder-selector-checkbox"
+                  :checked="reminderEnabled"
+                  @change="reminderEnabled = $event.target.checked"
+                  :dataE2e="'e2e-CB-invItems-manageColumns-stock-lowStock'"
+                />
                 <span class="sci-checkbox-label"></span>
               </div>
               <span class="ml-2">{{ i18n.t('repository_stock_values.manage_modal.create_reminder') }}</span>
@@ -104,6 +116,7 @@
                   :label="i18n.t('repository_stock_values.manage_modal.reminder_at')"
                   :min="0"
                   :error="errors.tresholdAmount"
+                  :dataE2e="'e2e-IF-invItems-manageColumns-stock-reminderTresholdAmount'"
                 />
               <span class="text-sm font-normal mt-5 shrink-0">
                 {{ unitLabel }}
@@ -118,14 +131,15 @@
               :label=" i18n.t('repository_stock_values.manage_modal.comment')"
               :error="errors.comment"
               :placeholder="i18n.t('repository_stock_values.manage_modal.comment_placeholder')"
+              :dataE2e="'e2e-IF-invItems-manageColumns-stock-comment'"
             />
           </form>
         </div>
         <div class="modal-footer">
-          <button type='button' class='btn btn-secondary' data-dismiss='modal'>
+          <button type='button' class='btn btn-secondary' data-dismiss='modal' data-e2e='e2e-BT-invItems-manageColumns-stock-cancel'>
             {{ i18n.t('general.cancel') }}
           </button>
-          <button class="btn btn-primary" @click="saveStockValue" :disabled="isSaving">
+          <button class="btn btn-primary" @click="saveStockValue" :disabled="isSaving" data-e2e='e2e-BT-invItems-manageColumns-stock-save'>
             {{ i18n.t('repository_stock_values.manage_modal.save_stock') }}
           </button>
         </div>

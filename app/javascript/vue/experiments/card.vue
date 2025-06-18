@@ -75,7 +75,7 @@
 import RowMenuRenderer from '../shared/datatable/row_menu_renderer.vue';
 import CardSelectorMixin from '../shared/datatable/mixins/card_selector.js';
 import workflowImgMixin from './workflow_img_mixin.js';
-import Description from './renderers/description.vue';
+import Description from '../shared/datatable/renderers/description.vue';
 
 export default {
   name: 'ProjectCard',

@@ -42,7 +42,7 @@
     <div>
       <div id="protocol-description-container" >
         <% if protocol.description.present? %>
-          <div class="rtf-view overflow-auto w-full">
+          <div class="rtf-view overflow-auto w-full [&_p]:m-0">
             <%=  smart_annotation_text(protocol.shareable_tinymce_render(:description)) %>
           </div>
         <% else %>

@@ -443,6 +443,15 @@ class Constants
   FAST_STATUS_POLLING_INTERVAL = 5000
   SLOW_STATUS_POLLING_INTERVAL = 10000
 
+  STATUS_COLORS = {
+    not_started: '#fffff',
+    in_progress: '#3070ED',
+    done: '#5EC66F'
+  }
+
+  # Infinite date, for use in sorting
+  INFINITE_DATE = Date.new(9999, 1, 1).freeze
+
   # Interval time for polling asset changes when editing with SciNote Edit
   ASSET_POLLING_INTERVAL = 5000
 

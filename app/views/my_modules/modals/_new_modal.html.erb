@@ -2,10 +2,19 @@
      data-create-url="<%= modules_experiment_path(@experiment) %>" data-user-id="<%= current_user.id %>">
   <%= form_with model: @my_module, url: modules_experiment_path(@experiment) do |f| %>
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content" data-e2e="e2e-MD-tasksCanvas-newTask">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" tabindex=0 ><i class="sn-icon sn-icon-close"></i></button>
-          <h4 class="modal-title"><%= t('experiments.canvas.new_my_module_modal.title') %></h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            tabindex=0
+            data-e2e="e2e-BT-canvas-newTaskModal-close"
+          >
+            <i class="sn-icon sn-icon-close"></i>
+          </button>
+          <h4 class="modal-title" data-e2e="e2e-TX-canvas-newTaskModal-title"><%= t('experiments.canvas.new_my_module_modal.title') %></h4>
         </div>
         <div class="modal-body">
           <%= f.hidden_field :view_mode, value: view_mode%>
@@ -13,7 +22,11 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <label class="sci-label"><%= t('experiments.canvas.new_my_module_modal.name') %></label>
               <div class="sci-input-container form-group">
-                <%= text_field_tag 'my_module[name]', '', placeholder: t('experiments.canvas.new_my_module_modal.name_placeholder'), class: "sci-input-field" %>
+                <%= text_field_tag 'my_module[name]',
+                  '',
+                  placeholder: t('experiments.canvas.new_my_module_modal.name_placeholder'),
+                  class: "sci-input-field",
+                  data: {'data-e2e'=>'e2e-IF-canvas-newTaskModal-name'} %>
               </div>
             </div>
           </div>
@@ -22,9 +35,9 @@
               <div class="form-group">
                 <div class="my-module-due-date-container">
                   <label class="sci-label" for="my_module_due_date"><%= t('experiments.canvas.new_my_module_modal.due_date') %></label>
-                  <div  id="date-time-picker-my-module" class="vue-date-time-picker w-full">
+                  <div id="date-time-picker-my-module" class="vue-date-time-picker w-full" data-e2e="e2e-DP-canvas-newTaskModal-dueDate">
                     <input ref="input" type="hidden" data-simple-format="true"  class="calendar-input" id="date-time-picker-input" v-model="date" name="my_module[due_date]"  />
-                    <date-time-picker class="w-full" @cleared="clearDate" ref="vueDateTime" placeholder="<%= t('experiments.canvas.new_my_module_modal.due_date_placeholder') %>" @change="updateDate" mode="datetime"></date-time-picker>
+                    <date-time-picker class="w-full" @cleared="clearDate" ref="vueDateTime" value-type="stringWithoutTimezone" placeholder="<%= t('experiments.canvas.new_my_module_modal.due_date_placeholder') %>" @change="updateDate" mode="datetime"></date-time-picker>
                   </div>
                 </div>
               </div>
@@ -32,7 +45,7 @@
           </div>
 
           <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" data-e2e="e2e-DD-canvas-newTaskModal-tags">
               <%= f.hidden_field :tag_ids%>
               <div class="form-group">
                 <label class="sci-label"><%= t('experiments.canvas.new_my_module_modal.assigned_tags_label') %></label>
@@ -48,14 +61,16 @@
           </div>
           <% if can_designate_users_to_new_task?(@experiment) %>
             <div class="row">
-              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" data-e2e="e2e-DD-canvas-newTaskModal-designatedUsers">
                 <label class="sci-label"><%= t('experiments.canvas.new_my_module_modal.assigned_users') %></label>
                 <%= select_tag 'my_module[user_ids]',
                               options_for_select(users.map{ |user|
                                 [
                                   user.full_name,
                                   user.id,
-                                  {'data-params' => {avatar_url: avatar_path(user, :icon_small) }.to_json}
+                                  {'data-params' => {
+                                    avatar_url: avatar_path(user, :icon_small),
+                                  }.to_json}
                                 ]
                               }),
                               data: {
@@ -68,10 +83,14 @@
           <% end %>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" data-e2e="e2e-BT-canvas-newTaskModal-cancel">
             <%= t('general.cancel') %>
           </button>
-          <%= f.submit t('experiments.canvas.new_my_module_modal.create'), class: "btn btn-primary", id: "new-modal-submit-btn" %>
+          <%= f.submit t('experiments.canvas.new_my_module_modal.create'),
+            class: "btn btn-primary",
+            id: "new-modal-submit-btn",
+            data: { 'e2e'=>'e2e-BT-canvas-newTaskModal-create' }
+          %>
         </div>
       </div>
     </div>

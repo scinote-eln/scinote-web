@@ -35,7 +35,7 @@ describe MyModulesController, type: :controller do
 
     context 'when setting due_date' do
       let(:params) do
-        { id: my_module.id, my_module: { due_date: '2019/03/21 23:59' } }
+        { id: my_module.id, my_module: { due_date: '2019-03-21 23:59' } }
       end
 
       it 'calls create activity for setting due date' do
@@ -74,7 +74,7 @@ describe MyModulesController, type: :controller do
 
     context 'when updating due_date' do
       let(:params) do
-        { id: my_module.id, my_module: { due_date: '2019/02/21 23:59' } }
+        { id: my_module.id, my_module: { due_date: '2019-02-21 23:59' } }
       end
       let(:my_module) do
         create :my_module, :with_due_date, experiment: experiment, created_by: experiment.created_by
@@ -254,6 +254,26 @@ describe MyModulesController, type: :controller do
           expect(task3.reload.active?).to be_truthy
         end
       end
+    end
+  end
+
+  describe 'POST favorite' do
+    let(:action) { post :favorite, params: { id: my_module.id } }
+
+    it 'creates a favorite' do
+      expect(user.favorites.exists?(item: my_module )).to eq(false)
+      action
+      expect(user.favorites.exists?(item: my_module )).to eq(true)
+    end
+  end
+
+  describe 'POST unfavorite' do
+    let(:action) { post :unfavorite, params: { id: my_module.id } }
+
+    it 'removes a favorite' do
+      Favorite.create!(user: user, item: my_module, team: my_module.team)
+      action
+      expect(user.favorites.exists?(item: my_module )).to eq(false)
     end
   end
 end

@@ -4,6 +4,6 @@
   </label>
   <div  id="date-time-picker" class="vue-date-time-picker">
     <input ref="input" type="hidden" v-model="date" data-simple-format="true"  name="my_module[due_date]" data-default="<%= l(@my_module.due_date, format: :default) if @my_module.due_date %>" />
-    <date-time-picker class="w-64" :clearable="true" @cleared="clearDate" ref="vueDateTime" @change="updateDate" mode="datetime"></date-time-picker>
+    <date-time-picker class="w-64" :clearable="true" @cleared="clearDate" value-type="stringWithoutTimezone" ref="vueDateTime" @change="updateDate" mode="datetime"></date-time-picker>
   </div>
 <% end %>

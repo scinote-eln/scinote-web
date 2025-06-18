@@ -88,7 +88,7 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    active_model_serializers (0.10.14)
+    active_model_serializers (0.10.15)
       actionpack (>= 4.1)
       activemodel (>= 4.1)
       case_transform (>= 0.2)
@@ -353,9 +353,8 @@ GEM
       activesupport (>= 6.1)
     graphviz (1.2.1)
       process-pipeline
-    grover (1.1.5)
-      combine_pdf (~> 1.0)
-      nokogiri (~> 1.0)
+    grover (1.2.3)
+      nokogiri (~> 1)
     hashdiff (1.0.1)
     hashie (5.0.0)
     htmlentities (4.3.4)
@@ -782,7 +781,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  active_model_serializers (~> 0.10.7)
+  active_model_serializers (~> 0.10.15)
   activerecord-import
   activerecord-session_store
   acts_as_list
@@ -832,7 +831,6 @@ DEPENDENCIES
   jsbundling-rails
   json-jwt
   json_matchers
-  jsonapi-renderer (~> 0.2.2)
   jwt (~> 1.5)
   kaminari
   listen

@@ -1,5 +1,12 @@
 <template>
-  <div v-click-outside="close" @click="toggle" ref="container" class="sn-select" :class="{ 'sn-select--open': isOpen, 'sn-select--blank': !valueLabel, 'disabled': disabled }">
+  <div
+    v-click-outside="close"
+    @click="toggle"
+    ref="container"
+    class="sn-select"
+    :class="{ 'sn-select--open': isOpen, 'sn-select--blank': !valueLabel, 'disabled': disabled }"
+    :data-e2e="dataE2e"
+  >
     <slot>
       <button ref="focusElement" class="sn-select__value">
         <span>{{ valueLabel || (placeholder || i18n.t('general.select')) }}</span>
@@ -66,7 +73,8 @@ export default {
     noOptionsPlaceholder: { type: String },
     className: { type: String, default: '' },
     optionsClassName: { type: String, default: '' },
-    disabled: { type: Boolean, default: false }
+    disabled: { type: Boolean, default: false },
+    dataE2e: { type: String, default: '' }
   },
   directives: {
     'click-outside': vOnClickOutside
