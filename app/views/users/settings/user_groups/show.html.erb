@@ -1,0 +1,28 @@
+<% provide(:head_title, t("users.settings.teams.head_title")) %>
+<% provide(:container_class, "no-second-nav-container") %>
+
+<% content_for :head do %>
+  <meta id="cache-directive" name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
+<div class="content-pane flexible with-grey-background">
+  <%= render partial: 'users/settings/teams/header' %>
+  <div class="flex items-center h-8 gap-4 p-4">
+    <%= link_to users_settings_team_user_groups_path, class: "hover:text-black text-black hover:no-underline" do %>
+      <i class="sn-icon sn-icon-arrow-left"></i>
+    <% end %>
+    <h3 class="m-0">
+      <%= t('user_groups.show.title', group: @user_group.name) %>
+    </h3>
+  </div>
+  <div id="userGroupShow" class="fixed-content-body user-group-table-container">
+    <user-group-show
+      group-name="<%= @user_group.name %>"
+      actions-url="<%= actions_toolbar_users_settings_team_user_group_user_group_memberships_path(@team, @user_group) %>"
+      data-source="<%= users_settings_team_user_group_user_group_memberships_path(@team, @user_group, format: :json) %>"
+      users-url="<%= unassigned_users_users_settings_team_user_groups_path(@team, user_group_id: @user_group.id) %>"
+      create-url="<%= users_settings_team_user_group_user_group_memberships_path(@team, @user_group) if can_manage_team?(@team) %>"
+    />
+  </div>
+</div>
+<%= javascript_include_tag 'vue_user_groups_show' %>

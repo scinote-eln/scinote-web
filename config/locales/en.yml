@@ -4217,6 +4217,25 @@ en:
         confirm: "Delete group"
       toolbar:
         delete: "Delete"
+    show:
+      title: "Group %{group}"
+      add_members: "Add members"
+      name: "Name"
+      email: "Email"
+      created_at: "Added on"
+      remove: "Remove"
+      add_members_modal:
+        title: "Add members"
+        select_members: "Select members"
+        select_members_placeholder: "Search for members"
+        success: "Members added successfully."
+        error: "There was a problem adding members. Please try again."
+      remove_modal:
+        title: "Remove member from %{group}"
+        description_html: "You are about to remove %{number} member(s) from this group. <br><br>Group-based access to content will be removed.<br><br><b>Are you sure you want to remove members from group?</b>"
+        confirm: "Remove"
+        success: "Members removed successfully."
+        error: "There was a problem removing members. Please try again."
   invite_users:
     to_team:
       title: "Invite members to %{team}"

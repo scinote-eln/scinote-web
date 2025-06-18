@@ -150,7 +150,12 @@ Rails.application.routes.draw do
 
         resources :teams, only: [] do
           resources :user_groups, only: %i(index create update destroy show) do
-            resources :user_group_memberships, only: %i(index create update destroy)
+            resources :user_group_memberships, only: %i(index create update) do
+              collection do
+                delete :destroy_multiple
+                post :actions_toolbar
+              end
+            end
             collection do
               get :unassigned_users
               post :actions_toolbar

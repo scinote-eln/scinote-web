@@ -3,11 +3,25 @@
 module Users
   module Settings
     class UserGroupMembershipsController < ApplicationController
-      before_action :load_team, except: :index
+      before_action :load_team
       before_action :load_user_group
       before_action :check_manage_permissions, except: %i(index show)
 
-      def index; end
+      def index
+        memberships = Lists::UserGroupMembershipsService.new(@user_group.user_group_memberships, params).call
+        render json: memberships, each_serializer: Lists::UserGroupMembershipSerializer, user: current_user, meta: pagination_dict(memberships)
+      end
+
+      def actions_toolbar
+        render json: {
+          actions:
+            Toolbars::UserGroupMembershipsService.new(
+              current_user,
+              @user_group,
+              user_group_membership_ids: JSON.parse(params[:items]).pluck('id')
+            ).actions
+        }
+      end
 
       def show; end
 
@@ -27,7 +41,15 @@ module Users
         end
       end
 
-      def destroy; end
+      def destroy_multiple
+        members = @user_group.user_group_memberships.where(id: params[:membership_ids])
+
+        if members.destroy_all
+          render json: { message: :success }, status: :ok
+        else
+          head :unprocessable_entity
+        end
+      end
 
       private
 
