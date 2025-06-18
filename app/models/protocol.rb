@@ -632,6 +632,9 @@ class Protocol < ApplicationRecord
       parent_protocol.sync_child_protocol_user_assignment(parent_user_assignment, draft.id)
     end
 
+    parent_protocol.user_group_assignments.each do |parent_user_group_assignment|
+      parent_protocol.sync_child_protocol_user_assignment(parent_user_group_assignment, draft.id)
+    end
     draft
   end
 
@@ -722,13 +725,14 @@ class Protocol < ApplicationRecord
     Protocol.transaction(requires_new: true) do
       # Reload to ensure a potential new draft is also included in child versions
       reload
-
+      assignment_type = user_assignment.respond_to?(:user_group) ? 'user_group' : 'user'
+      assignment_key = "#{assignment_type}_id".to_sym
       (
         # all or single child version protocol
         child_protocol_id ? child_version_protocols.where(id: child_protocol_id) : child_version_protocols
       ).find_each do |child_protocol|
-        child_assignment = child_protocol.user_assignments.find_or_initialize_by(
-          user: user_assignment.user
+        child_assignment = child_protocol.public_send("#{assignment_type}_assignments").find_or_initialize_by(
+          assignment_key => user_assignment.public_send(assignment_key)
         )
 
         if user_assignment.destroyed?
@@ -754,6 +758,12 @@ class Protocol < ApplicationRecord
     return unless in_repository_published_original?
 
     sync_child_protocol_user_assignment(user_assignment)
+  end
+
+  def after_user_group_assignment_changed(user_group_assignment)
+    return unless in_repository_published_original?
+
+    sync_child_protocol_user_assignment(user_group_assignment)
   end
 
   def update_automatic_user_assignments

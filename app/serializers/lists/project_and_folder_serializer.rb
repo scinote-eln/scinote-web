@@ -83,14 +83,23 @@ module Lists
     end
 
     def users
-      if project?
-        object.user_assignments.map do |ua|
-          {
-            avatar: avatar_path(ua.user, :icon_small),
-            full_name: ua.user_name_with_role
-          }
-        end
+      return unless project?
+
+      users = object.user_assignments.map do |ua|
+        {
+          avatar: avatar_path(ua.user, :icon_small),
+          full_name: ua.user_name_with_role
+        }
       end
+
+      user_groups = object.user_group_assignments.map do |ua|
+        {
+          avatar: ActionController::Base.helpers.asset_path('icon/group.svg'),
+          full_name: ua.user_group_name_with_role
+        }
+      end
+
+      user_groups + users
     end
 
     def comments
@@ -151,11 +160,14 @@ module Lists
       end
 
       urls_list[:show_access] = access_permissions_project_path(object)
+      urls_list[:show_user_group_assignments_access] = show_user_group_assignments_access_permissions_project_path(object)
       if project? && can_manage_project_users?(object)
         urls_list[:assigned_users] = assigned_users_list_project_path(object)
         urls_list[:update_access] = access_permissions_project_path(object)
         urls_list[:new_access] = new_access_permissions_project_path(id: object.id)
+        urls_list[:unassigned_user_groups] = unassigned_user_groups_access_permissions_project_path(id: object.id)
         urls_list[:create_access] = access_permissions_projects_path(id: object.id)
+        urls_list[:user_group_members] = users_users_settings_team_user_groups_path(team_id: object.team.id)
         urls_list[:default_public_user_role_path] =
           update_default_public_user_role_access_permissions_project_path(object)
       end

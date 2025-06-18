@@ -154,6 +154,7 @@ Rails.application.routes.draw do
             collection do
               get :unassigned_users
               post :actions_toolbar
+              get :users
             end
           end
 
@@ -331,19 +332,39 @@ Rails.application.routes.draw do
 
     namespace :access_permissions do
       resources :projects, defaults: { format: 'json' } do
-        put :update_default_public_user_role, on: :member
+        member do
+          get :show_user_group_assignments
+          get :unassigned_user_groups
+          put :update_default_public_user_role
+        end
       end
 
       resources :protocols, defaults: { format: 'json' } do
-        put :update_default_public_user_role, on: :member
+        member do
+          get :show_user_group_assignments
+          get :unassigned_user_groups
+          put :update_default_public_user_role
+        end
       end
 
       resources :forms, defaults: { format: 'json' } do
-        put :update_default_public_user_role, on: :member
+        member do
+          get :show_user_group_assignments
+          get :unassigned_user_groups
+          put :update_default_public_user_role
+        end
       end
 
-      resources :experiments, only: %i(show update edit)
-      resources :my_modules, only: %i(show update edit)
+      resources :experiments, only: %i(show update edit) do
+        member do
+          get :show_user_group_assignments
+        end
+      end
+      resources :my_modules, only: %i(show update edit) do
+        member do
+          get :show_user_group_assignments
+        end
+      end
     end
 
     namespace :navigator do

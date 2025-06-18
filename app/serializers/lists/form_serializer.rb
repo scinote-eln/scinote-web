@@ -41,12 +41,21 @@ module Lists
     end
 
     def assigned_users
-      object.user_assignments.map do |ua|
+      users = object.user_assignments.map do |ua|
         {
           avatar: avatar_path(ua.user, :icon_small),
           full_name: ua.user_name_with_role
         }
       end
+
+      user_groups = object.user_group_assignments.map do |ua|
+        {
+          avatar: ActionController::Base.helpers.asset_path('icon/group.svg'),
+          full_name: ua.user_group_name_with_role
+        }
+      end
+
+      users + user_groups
     end
 
     def permissions
@@ -57,7 +66,8 @@ module Lists
 
     def urls
       urls_list = {
-        show_access: access_permissions_form_path(object)
+        show_access: access_permissions_form_path(object),
+        show_user_group_assignments_access: show_user_group_assignments_access_permissions_form_path(object)
       }
 
       urls_list[:show] = form_path(object) if can_read_form?(object)
@@ -66,6 +76,8 @@ module Lists
         urls_list[:update_access] = access_permissions_form_path(object)
         urls_list[:new_access] = new_access_permissions_form_path(id: object.id)
         urls_list[:create_access] = access_permissions_forms_path(id: object.id)
+        urls_list[:unassigned_user_groups] = unassigned_user_groups_access_permissions_form_path(id: object.id)
+        urls_list[:user_group_members] = users_users_settings_team_user_groups_path(team_id: object.team.id)
         urls_list[:default_public_user_role_path] =
           update_default_public_user_role_access_permissions_form_path(object)
       end

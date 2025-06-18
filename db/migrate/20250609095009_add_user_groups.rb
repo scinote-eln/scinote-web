@@ -29,6 +29,7 @@ class AddUserGroups < ActiveRecord::Migration[7.0]
       t.references :user_group, foreign_key: true, null: false
       t.references :user_role, foreign_key: true, null: false
       t.references :assigned_by, foreign_key: { to_table: :users }
+      t.integer :assigned, null: false, default: 0
 
       t.index %i(user_group_id assignable_type assignable_id team_id), unique: true, name: 'index_user_group_assignments_on_unique_assignable_in_team'
 
@@ -40,6 +41,7 @@ class AddUserGroups < ActiveRecord::Migration[7.0]
       t.references :assignable, polymorphic: true, null: false
       t.references :user_role, foreign_key: true, null: false
       t.references :assigned_by, foreign_key: { to_table: :users }
+      t.integer :assigned, null: false, default: 0
 
       t.index %i(assignable_type assignable_id team_id), unique: true, name: 'index_team_assignments_on_unique_assignable_in_team'
 
