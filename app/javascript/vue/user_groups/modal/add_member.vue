@@ -8,24 +8,12 @@
               <i class="sn-icon sn-icon-close"></i>
             </button>
             <h4 class="modal-title truncate !block">
-              {{ i18n.t('user_groups.index.create_modal.title') }}
+              {{ i18n.t('user_groups.show.add_members_modal.title') }}
             </h4>
           </div>
           <div class="modal-body">
-            <p class="mb-4">
-              {{ i18n.t('user_groups.index.create_modal.description') }}
-            </p>
-            <div class="mb-6">
-              <label class="sci-label">{{ i18n.t('user_groups.index.create_modal.name') }}</label>
-              <div class="sci-input-container-v2">
-                <input type="text" v-model="name" class="sci-input-field"
-                       autofocus="true" ref="input"
-                       :placeholder="i18n.t('user_groups.index.create_modal.name_placeholder')"
-                />
-              </div>
-            </div>
-            <div class="mt-6">
-              <label class="sci-label">{{ i18n.t('user_groups.index.create_modal.select_members') }}</label>
+            <div>
+              <label class="sci-label">{{ i18n.t('user_groups.show.add_members_modal.select_members') }}</label>
               <SelectDropdown
                 :optionsUrl="usersUrl"
                 @change="changeUsers"
@@ -33,7 +21,7 @@
                 :option-renderer="usersRenderer"
                 :label-renderer="usersRenderer"
                 :multiple="true"
-                :placeholder="i18n.t('user_groups.index.create_modal.select_members_placeholder')"
+                :placeholder="i18n.t('user_groups.show.add_members_modal.select_members_placeholder')"
               />
             </div>
           </div>
@@ -48,9 +36,9 @@
             <button
               class="btn btn-primary"
               type="submit"
-              :disabled="submitting || !validName"
+              :disabled="submitting || users.length === 0"
             >
-              {{ i18n.t('user_groups.index.create_modal.create_button') }}
+              {{ i18n.t('user_groups.show.add_members') }}
             </button>
           </div>
         </div>
@@ -66,7 +54,7 @@ import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
 
 export default {
-  name: 'ProjectFormModal',
+  name: 'AddMembersModal',
   props: {
     usersUrl: String,
     createUrl: String
@@ -75,14 +63,8 @@ export default {
   components: {
     SelectDropdown,
   },
-  computed: {
-    validName() {
-      return this.name.length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH;
-    }
-  },
   data() {
     return {
-      name: '',
       users: [],
       submitting: false
     };
@@ -94,21 +76,13 @@ export default {
     async submit() {
       this.submitting = true;
 
-      const userGroupData = {
-        name: this.name,
-        user_group_memberships_attributes: this.users.map((user) => ({
-          user_id: user
-        }))
-      };
-
       await axios.post(this.createUrl, {
-        user_group: userGroupData
-      }).then((data) => {
-        HelperModule.flashAlertMsg(data.data.message, 'success');
+        user_ids: this.users,
+      }).then(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('user_groups.show.add_members_modal.success') , 'success');
         this.$emit('create');
-      }).catch((data) => {
-        console.log(data);
-        HelperModule.flashAlertMsg(data.response.data.error, 'danger');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('user_groups.show.add_members_modal.error'), 'danger');
       });
       this.submitting = false;
     },

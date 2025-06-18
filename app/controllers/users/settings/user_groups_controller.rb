@@ -39,7 +39,9 @@ module Users
         end
       end
 
-      def show; end
+      def show
+        @active_tab = :user_groups
+      end
 
       def create
         @user_group = @team.user_groups.new

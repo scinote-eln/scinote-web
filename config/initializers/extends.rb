@@ -757,6 +757,7 @@ class Extends
     teams/show
     teams/members
     user_groups/index
+    user_groups/show
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {

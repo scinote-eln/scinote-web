@@ -21,6 +21,10 @@
     &.user-groups-table-container {
       height: calc(100vh - var(--content-header-size) - var(--navbar-height) - 72px);
     }
+
+    &.user-group-table-container {
+      height: calc(100vh - var(--content-header-size) - var(--navbar-height) - 104px);
+    }
   }
 
   .content-header {
