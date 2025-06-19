@@ -392,6 +392,8 @@ en:
       remove_head_of_project_html: "%{user} removed user %{user_target} as head of project %{project}."
       task_steps_loaded_from_template_html: "%{user} added %{count} steps from template %{protocol} to task %{my_module}."
       protocol_steps_loaded_from_template_html: "%{user} added %{count} steps from template %{protocol}."
+      step_and_result_linked_html: "%{user} linked result <strong>%{result}</strong> and step <strong>%{position}</strong> <strong>%{step}</strong> on task <strong>%{my_module}</strong>."
+      step_and_result_unlinked_html: "%{user} unlinked result <strong>%{result}</strong> and step <strong>%{position}</strong> <strong>%{step}</strong> on task <strong>%{my_module}</strong>."
     activity_name:
       create_project: "Project created"
       edit_project: "Project edited"
@@ -741,6 +743,8 @@ en:
       remove_head_of_project: "Head of project removed"
       task_steps_loaded_from_template: "Task step loaded from template"
       protocol_steps_loaded_from_template: "Step loaded from template"
+      step_and_result_linked: "Task Result and Task protocol step linked"
+      step_and_result_unlinked: "Task Result and Task protocol step unlinked"
     activity_group:
       projects: "Projects"
       task_results: "Task results"

@@ -24,6 +24,26 @@
       </div>
     </div>
     <div class="elements-actions-container">
+      <% if step.results.size > 0 %>
+        <div class="dropdown">
+          <button class="btn btn-light icon-btn dropdown-toggle"
+                  type="button" id="ResultsMenuDropdown<%= step.id %>"
+                  title="<%= t("shareable_links.linked_results", count: step.results.size) %>"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <i class="sn-icon sn-icon-results"></i>
+            <span class="absolute top-1 right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
+              <%= step.results.size %>
+            </span>
+          </button>
+          <ul id="ResultsMenuDropdown<%= step.id %>" class="dropdown-menu dropdown-menu-right px-4 py-2">
+            <% step.results.each do |result| %>
+              <li class="dropdown-item">
+                <%= link_to result.name, shared_protocol_results_path(@shareable_link.uuid), class: "!py-2.5 !px-3 hover:!bg-sn-super-light-grey !cursor-pointer !block hover:!no-underline !text-sn-blue !truncate" %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
       <a href="#"
          class="shareable-link-open-comments-sidebar btn icon-btn btn-light"
          data-turbolinks="false"
