@@ -1644,6 +1644,8 @@ en:
       comments_tab: "Comments"
       comment_title: "%{user} at %{time}:"
       link_to_step: "Link to step"
+      link_steps: "Link steps to this result"
+      linked_steps: "Linked steps"
       modals:
         link_steps:
           title: 'Link result to protocol steps'
@@ -4055,6 +4057,7 @@ en:
       timestamp_iso_html: "Created on <span class='iso-formatted-date'>%{date}</span> by %{user}"
       manage_links: "Manage links"
       link_results: "Link results to this step"
+      linked_results: "Linked results"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"
