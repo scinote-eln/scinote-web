@@ -13,22 +13,22 @@
   <!-- HEADER -->
   <div class="team-metadata">
 
-    <div class="created-at grid-block">
+    <div class="created-at flex items-center gap-2">
       <span class="sn-icon sn-icon-calendar"></span>
       <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_at") %></span>
       <b><%= l(@team.created_at, format: :full_date) %></b>
     </div>
 
-    <div class="created-by grid-block">
-      <span class="sn-icon sn-icon-user-menu fa-lg"></span>
+    <div class="created-by flex items-center gap-2">
+      <span class="sn-icon sn-icon-users"></span>
       <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_by") %></span>
       <b>
         <%= t('users.settings.teams.edit.header_created_by_name_email', name: @team.created_by.full_name, email: @team.created_by.email) if @team.created_by %>
       </b>
     </div>
 
-    <div class="space-usage grid-block">
-      <span class="fas fa-hdd"></span>
+    <div class="space-usage flex items-center gap-2">
+      <span class="sn-icon sn-icon-cloud-storage"></span>
       <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_space_taken") %></span>
       <b data-hook="team-space-taken"><%= "#{number_to_human_size(@team.storage_used)}" %></b>
     </div>
