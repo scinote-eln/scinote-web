@@ -39,7 +39,7 @@ RUN \
   DATABASE_URL=postgresql://postgres@db/scinote_production \
   SECRET_KEY_BASE=dummy \
   DEFACE_ENABLED=true \
-  bash -c "rake assets:precompile && rake deface:precompile && rm -rf ./tmp/cache"
+  bash -c "bundle exec rake assets:precompile && bundle exec rake deface:precompile && rm -rf ./tmp/cache"
 
 # Final stage
 FROM ruby:3.3-bookworm AS runner
