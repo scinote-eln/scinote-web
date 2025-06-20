@@ -21,26 +21,32 @@ Rails.application.configure do
   }
 
   config.action_mailer.default_url_options = { host: Rails.application.routes.default_url_options[:host] }
-  config.action_mailer.default_options = {
-    from: ENV.fetch('MAIL_FROM'),
-    reply_to: ENV.fetch('MAIL_REPLYTO')
-  }
+
+  if ENV['MAIL_FROM'] # don't try and configure if mailing config is not present
+    config.action_mailer.default_options = {
+      from: ENV.fetch('MAIL_FROM'),
+      reply_to: ENV.fetch('MAIL_REPLYTO')
+    }
+  end
+
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = ENV['SMTP_USE_AWS_SES'] == 'true' ? :ses : :smtp
 
-  config.action_mailer.smtp_settings = {
-    address: ENV.fetch('SMTP_ADDRESS'),
-    port: ENV.fetch('SMTP_PORT', '587'),
-    domain: ENV.fetch('SMTP_DOMAIN'),
-    authentication: ENV.fetch('SMTP_AUTH_METHOD', 'plain'),
-    enable_starttls_auto: true,
-    user_name: ENV.fetch('SMTP_USERNAME'),
-    password: ENV.fetch('SMTP_PASSWORD'),
-    openssl_verify_mode: ENV.fetch('SMTP_OPENSSL_VERIFY_MODE', 'peer'),
-    ca_path: ENV.fetch('SMTP_OPENSSL_CA_PATH', '/etc/ssl/certs'),
-    ca_file: ENV.fetch('SMTP_OPENSSL_CA_FILE', '/etc/ssl/certs/ca-certificates.crt')
-  }
+  if ENV['SMTP_ADDRESS'] # don't try and configure if SMTP config is not present
+    config.action_mailer.smtp_settings = {
+      address: ENV.fetch('SMTP_ADDRESS'),
+      port: ENV.fetch('SMTP_PORT', '587'),
+      domain: ENV.fetch('SMTP_DOMAIN'),
+      authentication: ENV.fetch('SMTP_AUTH_METHOD', 'plain'),
+      enable_starttls_auto: true,
+      user_name: ENV.fetch('SMTP_USERNAME'),
+      password: ENV.fetch('SMTP_PASSWORD'),
+      openssl_verify_mode: ENV.fetch('SMTP_OPENSSL_VERIFY_MODE', 'peer'),
+      ca_path: ENV.fetch('SMTP_OPENSSL_CA_PATH', '/etc/ssl/certs'),
+      ca_file: ENV.fetch('SMTP_OPENSSL_CA_FILE', '/etc/ssl/certs/ca-certificates.crt')
+    }
+  end
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
