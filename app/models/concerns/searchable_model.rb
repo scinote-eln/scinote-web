@@ -157,7 +157,7 @@ module SearchableModel
         phrase = phrase.to_s.strip
 
         case phrase.downcase
-        when *%w(and or)
+        when 'and', 'or'
           current_operator = phrase.downcase
         when 'not'
           negate = true
@@ -201,13 +201,12 @@ module SearchableModel
           i = (index * attrs.count) + i
 
           new_phrase = exact_match ? phrase[1..-2] : phrase
-          if DATA_VECTOR_ATTRIBUTES.include?(attribute)
+          if DATA_VECTOR_ATTRIBUTES.include?(attribute) && !exact_match
             new_phrase = new_phrase.strip.split(/\s+/)
-            new_phrase.map! { |t| "#{t}:*" } unless exact_match
+            new_phrase.map! { |t| "#{t}:*" }
           else
             new_phrase = exact_match ? "(^|\\s)#{Regexp.escape(new_phrase)}(\\s|$)" : "%#{sanitize_sql_like(new_phrase)}%"
           end
-
           [:"t#{i}", new_phrase]
         end).to_h
       )
