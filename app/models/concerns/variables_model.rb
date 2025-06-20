@@ -6,7 +6,7 @@ module VariablesModel
   @@default_variables = HashWithIndifferentAccess.new
 
   included do
-    serialize :variables, JsonbHashSerializer
+    serialize :variables, coder: JsonbHashSerializer
     after_initialize :init_default_variables, if: :new_record?
   end
 

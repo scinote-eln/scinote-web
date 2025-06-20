@@ -11,7 +11,7 @@ module SearchableModel
     scope :where_attributes_like, lambda { |attributes, query, options = {}|
       return unless query
 
-      attrs = normalized_attributes(attributes)
+      attrs = normalized_search_attributes(attributes)
 
       if options[:whole_word].to_s == 'true' ||
          options[:whole_phrase].to_s == 'true' ||
@@ -103,7 +103,7 @@ module SearchableModel
     scope :where_attributes_like_boolean, lambda { |attributes, query, options = {}|
       return unless query
 
-      normalized_attrs = normalized_attributes(attributes)
+      normalized_attrs = normalized_search_attributes(attributes)
       query_clauses = []
       value_hash = {}
 
@@ -131,7 +131,7 @@ module SearchableModel
       options[:with_subquery] ? query_clauses : where(query_clauses.join, value_hash)
     }
 
-    def self.normalized_attributes(attributes)
+    def self.normalized_search_attributes(attributes)
       attrs = []
       if attributes.blank?
         # Do nothing in this case
