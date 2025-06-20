@@ -20,6 +20,7 @@
               <SelectDropdown
                 :options="results"
                 :value="selectedResults"
+                :searchable="true"
                 @change="changeResults"
                 :multiple="true"
                 :withCheckboxes="true"
