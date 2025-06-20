@@ -28,16 +28,16 @@ module Reports::Docx::DrawExperiment
     end
 
     unless settings['exclude_task_metadata']
-      if experiment.start_on.present?
+      if experiment.start_date.present?
         @docx.p do
           text I18n.t('projects.reports.elements.experiment.started_on',
-                      started_on: I18n.l(experiment.start_on, format: :full))
+                      started_on: I18n.l(experiment.start_date, format: :full))
         end
       end
 
       if experiment.due_date.present?
         @docx.p do
-          text I18n.t('projects.reports.elements.experiment_header.due_date',
+          text I18n.t('projects.reports.elements.experiment.due_date',
                       due_date: I18n.l(experiment.due_date, format: :full))
         end
       end

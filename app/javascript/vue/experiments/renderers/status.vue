@@ -36,9 +36,9 @@ export default {
   methods: {
     statusColor(status) {
       let color = 'bg-sn-grey-500';
-      if (status === 'started') {
+      if (status === 'in_progress') {
         color = 'bg-sn-science-blue';
-      } else if (status === 'completed') {
+      } else if (status === 'done') {
         color = 'bg-sn-alert-green';
       }
 

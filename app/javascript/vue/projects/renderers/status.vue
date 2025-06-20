@@ -8,6 +8,7 @@
     :borderless="true"
     :optionRenderer="optionRenderer"
     :labelRenderer="optionRenderer"
+    :disabled="!params.data.urls.update"
   />
 </div>
 </template>
@@ -28,9 +29,9 @@ export default {
   methods: {
     optionRenderer(option) {
       let color = 'bg-sn-grey-500';
-      if (option[0] === 'started') {
+      if (option[0] === 'in_progress') {
         color = 'bg-sn-science-blue';
-      } else if (option[0] === 'completed') {
+      } else if (option[0] === 'done') {
         color = 'bg-sn-alert-green';
       }
 

@@ -2,12 +2,12 @@
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <form @submit.prevent="submit">
-        <div class="modal-content">
+        <div class="modal-content" data-e2e="e2e-MD-projects-newProject">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-projects-newProjectModal-close">
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 class="modal-title truncate !block" id="edit-project-modal-label" :title="project?.name">
+            <h4 class="modal-title truncate !block" id="edit-project-modal-label" :title="project?.name" data-e2e="e2e-TX-projects-newProjectModal-title">
               {{ modalHeader }}
             </h4>
           </div>
@@ -17,7 +17,9 @@
               <div class="sci-input-container-v2" :class="{'error': error}" :data-error="error">
                 <input type="text" v-model="name" class="sci-input-field"
                        autofocus="true" ref="input"
-                       :placeholder="i18n.t('projects.index.modal_new_project.name_placeholder')" />
+                       :placeholder="i18n.t('projects.index.modal_new_project.name_placeholder')"
+                       data-e2e="e2e-IF-projects-newProjectModal-name"
+                />
               </div>
             </div>
             <div class="mb-6">
@@ -28,6 +30,7 @@
                 mode="date"
                 :clearable="true"
                 :placeholder="i18n.t('projects.index.add_start_date')"
+                :dataE2e="'e2e-DP-projects-newProjectModal-start'"
               />
             </div>
             <div class="mb-6">
@@ -38,9 +41,10 @@
                 mode="date"
                 :clearable="true"
                 :placeholder="i18n.t('projects.index.add_due_date')"
+                :dataE2e="'e2e-DP-projects-newProjectsModal-due'"
               />
             </div>
-            <div class="mb-6">
+            <div class="mb-6" data-e2e="e2e-IF-projects-newProjectModal-description">
               <TinymceEditor
                 v-model="description"
                 textareaId="descriptionModelInput"
@@ -49,19 +53,36 @@
             </div>
             <div class="flex gap-2 text-xs items-center">
               <div class="sci-checkbox-container">
-                <input type="checkbox" class="sci-checkbox" v-model="visible" value="visible"/>
+                <input type="checkbox" class="sci-checkbox" v-model="visible" value="visible" data-e2e="e2e-CB-projects-newProjectModal-access"/>
                 <span class="sci-checkbox-label"></span>
               </div>
               <span v-html="i18n.t('projects.index.modal_new_project.visibility_html')"></span>
             </div>
             <div class="mt-6" :class="{'hidden': !visible}">
               <label class="sci-label">{{ i18n.t("user_assignment.select_default_user_role") }}</label>
-              <SelectDropdown :options="userRoles" :value="defaultRole" @change="changeRole" />
+              <SelectDropdown
+                :options="userRoles"
+                :value="defaultRole"
+                @change="changeRole"
+                :e2eValue="'e2e-DD-projects-newProjectModal-defaultRole'"
+              />
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="submitting || (visible && !defaultRole) || !validName">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              data-e2e="e2e-BT-projects-newProjectModal-cancel"
+            >
+              {{ i18n.t('general.cancel') }}
+            </button>
+            <button
+              class="btn btn-primary"
+              type="submit"
+              :disabled="submitting || (visible && !defaultRole) || !validName"
+              data-e2e="e2e-BT-projects-newProjectModal-create"
+            >
               {{ submitButtonLabel }}
             </button>
           </div>
@@ -138,8 +159,8 @@ export default {
     };
   },
   created() {
-    if (this.project?.start_on_cell?.value) {
-      this.startDate = new Date(this.project.start_on_cell?.value);
+    if (this.project?.start_date_cell?.value) {
+      this.startDate = new Date(this.project.start_date_cell?.value);
     }
 
     if (this.project?.due_date_cell?.value) {
@@ -152,7 +173,7 @@ export default {
 
       const projectData = {
         name: this.name,
-        start_on: this.startDate,
+        start_date: this.startDate,
         due_date: this.dueDate,
         description: this.description,
         visibility: (this.visible ? 'visible' : 'hidden'),

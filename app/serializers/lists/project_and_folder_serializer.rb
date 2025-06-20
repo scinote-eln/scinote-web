@@ -6,15 +6,32 @@ module Lists
     include Canaid::Helpers::PermissionsHelper
     include CommentHelper
 
-    attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder, :hidden,
-               :folder_info, :default_public_user_role_id, :team, :top_level_assignable, :supervised_by,
-               :comments, :updated_at, :permissions, :due_date_cell, :start_on_cell, :description, :status, :favorite,
-               def team
-                 object.team.name
-               end
+    attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder, :hidden, :completed_experiments, :completed_tasks, :total_tasks,
+               :folder_info, :default_public_user_role_id, :team, :top_level_assignable, :supervised_by, :total_experiments,
+               :comments, :updated_at, :permissions, :due_date_cell, :start_date_cell, :description, :status, :favorite
+
+    def team
+      object.team.name
+    end
 
     def folder
       !project?
+    end
+
+    def completed_experiments
+      object[:completed_experiments_count]
+    end
+
+    def total_experiments
+      object[:experiments_count]
+    end
+
+    def completed_tasks
+      object[:completed_tasks_count]
+    end
+
+    def total_tasks
+      object[:tasks_count]
     end
 
     def favorite
@@ -92,20 +109,20 @@ module Lists
           value: (I18n.l(object.due_date, format: :default) if object.due_date),
           value_formatted: (I18n.l(object.due_date, format: :full_date) if object.due_date),
           editable: can_manage_project?(@object),
-          icon: (if object.one_day_prior? && !object.completed?
+          icon: (if object.one_day_prior? && !object.done?
                    'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
-                 elsif object.overdue? && !object.completed?
+                 elsif object.overdue? && !object.done?
                    'sn-icon sn-icon-alert-warning text-sn-delete-red'
                  end)
         }
       end
     end
 
-    def start_on_cell
+    def start_date_cell
       if project?
         {
-          value: (I18n.l(object.start_on, format: :default) if object.start_on),
-          value_formatted: (I18n.l(object.start_on, format: :full_date) if object.start_on),
+          value: (I18n.l(object.start_date, format: :default) if object.start_date),
+          value_formatted: (I18n.l(object.start_date, format: :full_date) if object.start_date),
           editable: can_manage_project?(@object)
         }
       end
@@ -124,13 +141,11 @@ module Lists
 
       urls_list[:show] = nil if project? && !can_read_project?(object)
 
-      urls_list[:update] = if project?
-                             project_path(object)
-                           else
-                             project_folder_path(object)
-                           end
+      if !project? || can_manage_project?(object)
+        urls_list[:update] = project? ? project_path(object) : project_folder_path(object)
+      end
 
-      if project?
+      if project? && can_read_project?(object)
         urls_list[:favorite] = favorite_project_url(object)
         urls_list[:unfavorite] = unfavorite_project_url(object)
       end

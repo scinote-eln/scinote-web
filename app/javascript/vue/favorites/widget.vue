@@ -1,26 +1,26 @@
 <template>
   <div ref="scrollContainer" class="h-full overflow-y-auto">
-    <div v-if="favorites.length > 0" v-for="favorite in favorites" class="px-4">
-      <a :href="favorite.attributes.url" class="flex text-black items-center gap-2 py-2 hover:no-underline">
+    <div v-if="favorites.length > 0" v-for="favorite in favorites" class="px-4 hover:bg-sn-super-light-grey">
+      <a :href="favorite.attributes.url" class="flex text-black items-center gap-2 py-0.5 hover:no-underline hover:text-black ">
         <i class="sn-icon sn-icon-star-filled  text-sn-alert-brittlebush" style="font-size: 32px !important"></i>
-        <div>
+        <div class="overflow-hidden">
           <div class="flex items-center gap-2 text-sn-grey">
             <template v-for="(breadcrumb, index) in favorite.attributes.breadcrumbs" :key="index" >
-              <div v-if="index > 0">
+              <div v-if="index > 0" class="flex items-center gap-2 overflow-hidden">
                 <span v-if="index > 1"> / </span>
-                <span v-if="index + 1 < favorite.attributes.breadcrumbs.length" class="text-xs">
+                <span v-if="index + 1 < favorite.attributes.breadcrumbs.length" :title="breadcrumb.name" class="text-xs truncate">
                   {{ breadcrumb.name }}
                 </span>
-                <span v-else class="text-xs">
+                <span v-else class="text-xs shrink-0 min-w-36">
                   {{ favorite.attributes.code }}
                 </span>
               </div>
             </template>
           </div>
-          <div class="font-bold text-base">{{ favorite.attributes.name }}</div>
+          <div :title="favorite.attributes.name" class="font-bold text-sn-dark-grey text-base truncate h-7">{{ favorite.attributes.name }}</div>
         </div>
         <div
-          class="ml-auto rounded px-1.5 py-1 mt-4"
+          class="ml-auto rounded px-1.5 py-1 mt-4 shrink-0 text-xs font-bold"
           :class="{
             'text-black border': favorite.attributes.status.light_color,
             'text-white': !favorite.attributes.status.light_color,
@@ -32,9 +32,9 @@
       </a>
       <hr class="my-0">
     </div>
-    <h2 v-else-if="!loading" class="ml-6">
+    <h1 v-else-if="!loading" class="ml-6">
       {{ i18n.t('dashboard.current_tasks.no_tasks.favorites') }}
-    </h2>
+    </h1>
   </div>
 </template>
 

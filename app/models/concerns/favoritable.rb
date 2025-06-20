@@ -8,8 +8,13 @@ module Favoritable
 
     scope :favorite_for, ->(user) { joins(:favorites).where(favorites: { user: user }) }
     scope :with_favorites, lambda { |user|
-      joins("LEFT JOIN favorites ON item_id = #{table_name}.id AND item_type = '#{name}' AND favorites.user_id = #{user.id}")
-        .select("#{table_name}.*, favorites.id IS NOT NULL AS favorite")
+      favorite_exists_subquery =
+        Favorite
+        .where("favorites.item_id = #{table_name}.id")
+        .where(item_type: name, user_id: user.id)
+        .select('1')
+
+      select("#{table_name}.*, EXISTS (#{favorite_exists_subquery.to_sql}) AS favorite")
     }
   end
 

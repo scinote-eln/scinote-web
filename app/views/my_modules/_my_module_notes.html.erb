@@ -1,12 +1,14 @@
 <div class="task-notes">
-  <div class="task-notes-content text-base">
+  <div class="task-notes-content text-base content__text-container">
     <% if can_update_my_module_description?(@my_module) %>
       <%= render partial: "my_modules/description_form" %>
     <% elsif @my_module.description.present? %>
-      <%= custom_auto_link(@my_module.tinymce_render(:description),
-                           simple_format: false,
-                           tags: %w(img),
-                           team: current_team) %>
+      <div class="view-text-element">
+        <%= custom_auto_link(@my_module.tinymce_render(:description),
+                            simple_format: false,
+                            tags: %w(img),
+                            team: current_team) %>
+      </div>
     <% else %>
       <span class="no-description"><%= t('my_modules.notes.no_description') %></span>
     <% end %>

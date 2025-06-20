@@ -2,12 +2,18 @@
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <form @submit.prevent="submit">
-        <div class="modal-content">
+        <div class="modal-content" data-e2e="e2e-MD-experiments-newExperiment">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              data-e2e="e2e-BT-experiments-newExperimentModal-close"
+            >
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 class="modal-title truncate !block" :title="experiment?.name">
+            <h4 class="modal-title truncate !block" :title="experiment?.name" data-e2e="e2e-TX-experiments-newExperimentModal-title">
               {{ modalHeader }}
             </h4>
           </div>
@@ -17,7 +23,9 @@
               <input type="text" class="sci-input-field"
                      v-model="name"
                      autofocus ref="input"
-                    :placeholder="i18n.t('experiments.new.name_placeholder')">
+                    :placeholder="i18n.t('experiments.new.name_placeholder')"
+                    data-e2e="e2e-IF-experiments-newExperimentModal-name"
+              />
             </div>
             <div class="mb-6">
               <label class="sci-label">{{ i18n.t("experiments.index.start_date") }}</label>
@@ -27,6 +35,7 @@
                 mode="date"
                 :clearable="true"
                 :placeholder="i18n.t('experiments.index.add_start_date')"
+                :dataE2e="'e2e-DP-experiments-newExperimentModal-start'"
               />
             </div>
             <div class="mb-6">
@@ -37,9 +46,10 @@
                 mode="date"
                 :clearable="true"
                 :placeholder="i18n.t('experiments.index.add_due_date')"
+                :dataE2e="'e2e-DP-experiments-newExperimentModal-due'"
               />
             </div>
-            <div class="mb-6">
+            <div class="mb-6" data-e2e="e2e-IF-experiments-newExperimentModal-description">
               <TinymceEditor
                 v-model="description"
                 textareaId="descriptionModelInput"
@@ -48,8 +58,20 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button type="submit" :disabled="submitting || !validName" class="btn btn-primary">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              data-e2e="e2e-BT-experiments-newExperimentModal-cancel"
+            >
+              {{ i18n.t('general.cancel') }}
+            </button>
+            <button
+              type="submit"
+              :disabled="submitting || !validName"
+              class="btn btn-primary"
+              data-e2e="e2e-BT-experiments-newExperimentModal-create"
+            >
               {{ submitButtonLabel }}
             </button>
           </div>
@@ -126,7 +148,7 @@ export default {
       const experimentData = {
         name: this.name,
         description: this.description,
-        start_on: this.startDate,
+        start_date: this.startDate,
         due_date: this.dueDate
       };
       if (this.createUrl) {

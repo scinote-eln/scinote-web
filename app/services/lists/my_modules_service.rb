@@ -17,7 +17,7 @@ module Lists
     def fetch_records
       @records = @raw_data.includes(PRELOAD)
                           .with_favorites(@user)
-                          .group('my_modules.id, favorites.id')
+                          .group('my_modules.id')
 
       view_mode = if @params[:experiment].archived_branch?
                     'archived'
@@ -56,10 +56,24 @@ module Lists
       }
     end
 
+    def select_count_for_sort
+      case sortable_columns[order_params[:column].to_sym]
+      when 'comments'
+        @records = @records.left_joins(:task_comments).select('COUNT(DISTINCT comments.id) AS comment_count')
+      when 'designated'
+        @records = @records.left_joins(:user_my_modules).select('COUNT(DISTINCT user_my_modules.id) AS designated_count')
+      when 'results'
+        @records = @records.left_joins(:results).select('COUNT(DISTINCT results.id) AS result_count')
+      when 'tags'
+        @records = @records.left_joins(:tags).select('COUNT(DISTINCT tags.id) AS tag_count')
+      end
+    end
+
     def sort_records
       return unless @params[:order]
 
       sort = "#{sortable_columns[order_params[:column].to_sym]}_#{sort_direction(order_params)}"
+      select_count_for_sort
 
       case sort
       when 'start_date_ASC'
@@ -69,7 +83,7 @@ module Lists
       when 'due_date_ASC'
         @records = @records.order(:due_date, :name)
       when 'due_date_DESC'
-        @records = @records.order(Arel.sql("COALESCE(due_date, DATE '2100-01-01') DESC"), :name)
+        @records = @records.order({ due_date: :desc }, :name)
       when 'name_ASC'
         @records = @records.order(:name)
       when 'name_DESC'
@@ -79,56 +93,42 @@ module Lists
       when 'id_DESC'
         @records = @records.order(id: :desc)
       when 'archived_on_ASC'
-        @records = @records.order(Arel.sql('COALESCE(my_modules.archived_on, my_modules.archived_on) ASC'))
+        @records = @records.order(archived_on: :asc)
       when 'archived_on_DESC'
-        @records = @records.order(Arel.sql('COALESCE(my_modules.archived_on, my_modules.archived_on) DESC'))
+        @records = @records.order(archived_on: :desc)
       when 'age_ASC'
-        @records = @records.order(:created_at)
-      when 'age_DESC'
         @records = @records.order(created_at: :desc)
+      when 'age_DESC'
+        @records = @records.order(created_at: :asc)
       when 'status_ASC'
         @records = @records.order(:my_module_status_id)
       when 'status_DESC'
         @records = @records.order(my_module_status_id: :desc)
       when  'comments_ASC'
-        @records = @records.left_joins(:task_comments)
-                           .group('my_modules.id')
-                           .order(Arel.sql('COUNT(DISTINCT comments.id) ASC'))
+        @records = @records.order('comment_count ASC')
       when  'comments_DESC'
-        @records = @records.left_joins(:task_comments)
-                           .group('my_modules.id')
-                           .order(Arel.sql('COUNT(DISTINCT comments.id) DESC'))
+        @records = @records.order('comment_count DESC')
       when 'designated_ASC'
-        @records = @records.left_joins(:user_my_modules)
-                           .group('my_modules.id')
-                           .order(Arel.sql('COUNT(DISTINCT user_my_modules.id) ASC'))
+        @records = @records.order('designated_count ASC')
       when 'designated_DESC'
-        @records = @records.left_joins(:user_my_modules)
-                           .group('my_modules.id')
-                           .order(Arel.sql('COUNT(DISTINCT user_my_modules.id) DESC'))
+        @records = @records.order('designated_count DESC')
       when 'results_ASC'
-        @records = @records.left_joins(:results)
-                           .group('my_modules.id')
-                           .order(Arel.sql('COUNT(DISTINCT results.id) ASC'))
+        @records = @records.order('result_count ASC')
       when 'results_DESC'
-        @records = @records.left_joins(:results)
-                           .group('my_modules.id')
-                           .order(Arel.sql('COUNT(DISTINCT results.id) DESC'))
+        @records = @records.order('result_count DESC')
       when 'tags_ASC'
-        @records = @records.left_joins(:tags)
-                           .group('my_modules.id')
-                           .order(Arel.sql('COUNT(DISTINCT tags.id) ASC'))
+        @records = @records.order('tag_count ASC')
       when 'tags_DESC'
-        @records = @records.left_joins(:tags)
-                           .group('my_modules.id')
-                           .order(Arel.sql('COUNT(DISTINCT tags.id) DESC'))
+        @records = @records.order('tag_count DESC')
       when 'favorite_ASC'
-        @records = @records.order(:favorite)
-      when 'favorite_DESC'
         @records = @records.order(favorite: :desc)
+      when 'favorite_DESC'
+        @records = @records.order(:favorite)
       else
         __send__("#{sortable_columns[order_params[:column].to_sym]}_sort", sort_direction(order_params))
       end
+
+      @records = @records.distinct('my_modules.id')
     end
 
     def query_filter(value)

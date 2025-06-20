@@ -129,8 +129,8 @@ export default {
       reloadingTable: false,
       statusesList: [
         ['not_started', this.i18n.t('experiments.table.column.status.not_started')],
-        ['started', this.i18n.t('experiments.table.column.status.started')],
-        ['completed', this.i18n.t('experiments.table.column.status.completed')]
+        ['in_progress', this.i18n.t('experiments.table.column.status.in_progress')],
+        ['done', this.i18n.t('experiments.table.column.status.done')]
       ]
     };
   },
@@ -153,8 +153,8 @@ export default {
           headerName: this.i18n.t('experiments.table.column.favorite'),
           sortable: true,
           cellRenderer: FavoriteRenderer,
-          minWidth: 70,
-          maxWidth: 70,
+          minWidth: 80,
+          maxWidth: 80,
           notSelectable: true
         },
         {
@@ -276,7 +276,7 @@ export default {
           type: 'Text'
         },
         {
-          key: 'start_on',
+          key: 'start_date',
           type: 'DateRange',
           label: this.i18n.t('filters_modal.created_on.label'),
           mode: 'date'
@@ -291,13 +291,6 @@ export default {
           key: 'updated_on',
           type: 'DateRange',
           label: this.i18n.t('filters_modal.updated_on.label')
-        },
-        {
-          key: 'statuses',
-          type: 'Select',
-          options: this.statusesList,
-          label: this.i18n.t('experiments.index.filters.status'),
-          placeholder: this.i18n.t('experiments.index.filters.status_placeholder')
         }
       ];
 
@@ -308,6 +301,14 @@ export default {
           label: this.i18n.t('filters_modal.archived_on.label')
         });
       }
+
+      filters.push( {
+        key: 'statuses',
+        type: 'Select',
+        options: this.statusesList,
+        label: this.i18n.t('experiments.index.filters.status'),
+        placeholder: this.i18n.t('experiments.index.filters.status_placeholder')
+      });
 
       return filters;
     }
@@ -392,15 +393,6 @@ export default {
         roles_path: this.userRolesUrl
       };
     },
-    formatDate(date) {
-      if (!(date instanceof Date)) return null;
-
-      const y = date.getFullYear();
-      const m = date.getMonth() + 1;
-      const d = date.getDate();
-
-      return `${y}/${m}/${d}`;
-    },
     updateField(url, params) {
       axios.put(url, params).then(() => {
         this.updateTable();
@@ -410,10 +402,10 @@ export default {
       this.updateField(params.data.urls.update, { experiment: { status: value } });
     },
     updateDueDate(value, params) {
-      this.updateField(params.data.urls.update, { due_date: this.formatDate(value) });
+      this.updateField(params.data.urls.update, { due_date: value });
     },
     updateStartDate(value, params) {
-      this.updateField(params.data.urls.update, { start_on: this.formatDate(value) });
+      this.updateField(params.data.urls.update, { start_date: value });
     },
     updateFavorite(value, params) {
       const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;

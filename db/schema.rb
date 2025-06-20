@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
+ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -213,10 +213,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.datetime "updated_at", precision: nil, null: false
     t.uuid "uuid"
     t.datetime "started_at"
-    t.datetime "completed_at"
+    t.datetime "done_at"
     t.date "due_date"
-    t.date "start_on"
+    t.date "start_date"
     t.jsonb "metadata"
+    t.boolean "due_date_notification_sent", default: false, null: false
     t.index "(('EX'::text || id)) gin_trgm_ops", name: "index_experiments_on_experiment_code", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_experiments_on_name", using: :gin
     t.index "trim_html_tags(description) gin_trgm_ops", name: "index_experiments_on_description", using: :gin
@@ -226,6 +227,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.index ["last_modified_by_id"], name: "index_experiments_on_last_modified_by_id"
     t.index ["project_id"], name: "index_experiments_on_project_id"
     t.index ["restored_by_id"], name: "index_experiments_on_restored_by_id"
+  end
+
+  create_table "favorites", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "team_id", null: false
+    t.string "item_type", null: false
+    t.bigint "item_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_type", "item_id"], name: "index_favorites_on_item"
+    t.index ["team_id"], name: "index_favorites_on_team_id"
+    t.index ["user_id", "team_id", "item_id", "item_type"], name: "index_favorites_on_user_and_item_and_team", unique: true
+    t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
   create_table "form_field_values", force: :cascade do |t|
@@ -578,12 +592,13 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.boolean "demo", default: false, null: false
     t.bigint "project_folder_id"
     t.bigint "default_public_user_role_id"
+    t.jsonb "metadata"
     t.datetime "started_at"
-    t.datetime "completed_at"
-    t.date "start_on"
+    t.datetime "done_at"
+    t.date "start_date"
     t.text "description"
     t.bigint "supervised_by_id"
-    t.jsonb "metadata"
+    t.boolean "due_date_notification_sent", default: false, null: false
     t.index "(('PR'::text || id)) gin_trgm_ops", name: "index_projects_on_project_code", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_projects_on_name", using: :gin
     t.index "trim_html_tags(description) gin_trgm_ops", name: "index_projects_on_description", using: :gin
@@ -1196,10 +1211,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
     t.bigint "last_modified_by_id"
     t.bigint "protocol_id", null: false
     t.integer "assets_view_mode", default: 0, null: false
+    t.bigint "original_protocol_id"
     t.index "trim_html_tags((description)::text) gin_trgm_ops", name: "index_steps_on_description", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_steps_on_name", using: :gin
     t.index ["created_at"], name: "index_steps_on_created_at"
     t.index ["last_modified_by_id"], name: "index_steps_on_last_modified_by_id"
+    t.index ["original_protocol_id"], name: "index_steps_on_original_protocol_id"
     t.index ["position"], name: "index_steps_on_position"
     t.index ["protocol_id"], name: "index_steps_on_protocol_id"
     t.index ["user_id"], name: "index_steps_on_user_id"
@@ -1530,6 +1547,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
   add_foreign_key "experiments", "users", column: "created_by_id"
   add_foreign_key "experiments", "users", column: "last_modified_by_id"
   add_foreign_key "experiments", "users", column: "restored_by_id"
+  add_foreign_key "favorites", "teams"
+  add_foreign_key "favorites", "users"
   add_foreign_key "form_field_values", "form_fields"
   add_foreign_key "form_field_values", "form_responses"
   add_foreign_key "form_field_values", "users", column: "created_by_id"
@@ -1683,6 +1702,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_05_22_104614) do
   add_foreign_key "step_tables", "tables"
   add_foreign_key "step_texts", "steps"
   add_foreign_key "steps", "protocols"
+  add_foreign_key "steps", "protocols", column: "original_protocol_id"
   add_foreign_key "steps", "users"
   add_foreign_key "steps", "users", column: "last_modified_by_id"
   add_foreign_key "storage_location_repository_rows", "repository_rows"

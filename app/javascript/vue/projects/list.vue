@@ -81,6 +81,8 @@ import DataTable from '../shared/datatable/table.vue';
 import UsersRenderer from './renderers/users.vue';
 import NameRenderer from './renderers/name.vue';
 import StatusRenderer from './renderers/status.vue';
+import CompletedTasksRenderer from './renderers/completed_tasks.vue';
+import CompletedExperimentsRenderer from './renderers/completed_experiments.vue';
 import SuperviserRenderer from './renderers/superviser.vue';
 import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
 import DueDateRenderer from '../shared/datatable/renderers/date.vue';
@@ -115,7 +117,9 @@ export default {
     DescriptionModal,
     StatusRenderer,
     SuperviserRenderer,
-    FavoriteRenderer
+    FavoriteRenderer,
+    CompletedTasksRenderer,
+    CompletedExperimentsRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -147,8 +151,8 @@ export default {
       descriptionModalObject: null,
       statusesList: [
         ['not_started', this.i18n.t('projects.index.status.not_started')],
-        ['started', this.i18n.t('projects.index.status.started')],
-        ['completed', this.i18n.t('projects.index.status.completed')]
+        ['in_progress', this.i18n.t('projects.index.status.in_progress')],
+        ['done', this.i18n.t('projects.index.status.done')]
       ]
     };
   },
@@ -169,8 +173,8 @@ export default {
         headerName: this.i18n.t('projects.index.favorite'),
         sortable: true,
         cellRenderer: FavoriteRenderer,
-        minWidth: 70,
-        maxWidth: 70,
+        minWidth: 80,
+        maxWidth: 80,
         notSelectable: true
       },
       {
@@ -205,13 +209,13 @@ export default {
         notSelectable: true
       },
       {
-        field: 'start_on',
+        field: 'start_date',
         headerName: this.i18n.t('projects.index.start_date'),
         sortable: true,
         cellRenderer: DueDateRenderer,
         cellRendererParams: {
           placeholder: this.i18n.t('projects.index.add_start_date'),
-          field: 'start_on_cell',
+          field: 'start_date_cell',
           mode: 'date',
           emptyPlaceholder: this.i18n.t('projects.index.no_start_date'),
           emitAction: 'updateStartDate'
@@ -225,6 +229,20 @@ export default {
         sortable: true,
         cellRenderer: SuperviserRenderer,
         notSelectable: true
+      },
+      {
+        field: 'completed_experiments',
+        headerName: this.i18n.t('projects.index.card.completed_experiment'),
+        cellRenderer: CompletedExperimentsRenderer,
+        sortable: true,
+        minWidth: 110
+      },
+      {
+        field: 'completed_tasks',
+        headerName: this.i18n.t('experiments.table.column.completed_task'),
+        cellRenderer: CompletedTasksRenderer,
+        sortable: true,
+        minWidth: 110
       },
       {
         field: 'created_at',
@@ -304,7 +322,7 @@ export default {
           type: 'Text'
         },
         {
-          key: 'start_on',
+          key: 'start_date',
           type: 'DateRange',
           label: this.i18n.t('filters_modal.created_on.label'),
           mode: 'date'
@@ -319,7 +337,7 @@ export default {
 
       if (this.currentViewMode === 'archived') {
         filters.push({
-          key: 'archived_at',
+          key: 'archived_on',
           type: 'DateRange',
           label: this.i18n.t('filters_modal.archived_on.label')
         });
@@ -366,7 +384,7 @@ export default {
     updateDueDate(value, params) {
       axios.put(params.data.urls.update, {
         project: {
-          due_date: this.formatDate(value)
+          due_date: value
         }
       }).then(() => {
         this.updateTable();
@@ -375,7 +393,7 @@ export default {
     updateStartDate(value, params) {
       axios.put(params.data.urls.update, {
         project: {
-          start_on: this.formatDate(value)
+          start_date: value
         }
       }).then(() => {
         this.updateTable();

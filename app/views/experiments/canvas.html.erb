@@ -7,7 +7,7 @@
   <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: @experiment, my_modules: @active_modules } %>
 <% end %>
 
-<div class="content-pane flexible experiment-new-my_module" id="experiment-canvas">
+<div class="content-pane flexible experiment-new-my_module" id="experiment-canvas" data-e2e="e2e-CO-canvas">
   <%= render partial: 'experiments/show_header' %>
   <div class="toolbar-row" id="diagram-buttons" data-width-breakpoint="750">
     <span class="left" id="toolbar-left-block">
@@ -18,7 +18,7 @@
                     data: { view_mode: 'active' },
                     remote: true do %>
                 <span class="sn-icon sn-icon-new-task" data-e2e="e2e-BT-canvasToolbar-createTask"></span>
-                <span class="hidden-sm hidden-xs"><%= t('experiments.canvas.new_my_module') %></span>
+                <span class="2xl:inline tw-hidden"><%= t('experiments.canvas.new_my_module') %></span>
         <% end %>
         <%=link_to canvas_edit_experiment_url(@experiment),
               remote: true,
@@ -28,16 +28,22 @@
               data: { action: 'edit' },
               class: 'ajax btn btn-light' do %>
                 <span class="sn-icon sn-icon-edit" data-e2e="e2e-BT-canvasToolbar-editWorkflow"></span>
-                <span class="hidden-sm hidden-xs"><%= t('experiments.canvas.canvas_edit') %></span>
+                <span class="2xl:inline tw-hidden"><%= t('experiments.canvas.canvas_edit') %></span>
               <% end %>
       <% end %>
+
+      <span id="experimentDescriptionModal">
+        <experiment-description-modal
+          experiment-url="<%= experiment_path(@experiment) %>"
+        ></experiment-description-modal>
+      </span>
     </span>
 
     <%= render partial: 'task_view_dropdowns' %>
 
     <span class="right">
       <div id="zoom-level-buttons" class="sci-toggles-group change-canvas-view" data-toggle="buttons">
-      <span class="hidden-sm hidden-xs zoom-text"><%=t 'experiments.canvas.zoom' %></span>
+      <span class="2xl:inline tw-hidden zoom-text"><%=t 'experiments.canvas.zoom' %></span>
         <input type="radio" name="canvas-format" class="sci-toggle-item" checked>
         <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax sci-toggle-item-label", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
           <%= render partial: 'experiments/canvas_svg_icons', locals: { type: 'full' } %>
@@ -88,3 +94,6 @@
 
 <%= javascript_include_tag("projects/canvas") %>
 <%= javascript_include_tag 'vue_legacy_access_modal' %>
+
+<%= render 'shared/tiny_mce_packs' %>
+<%= javascript_include_tag 'vue_experiment_description_modal' %>

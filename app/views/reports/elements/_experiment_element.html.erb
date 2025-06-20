@@ -16,8 +16,8 @@
     <% end %>
     <% unless @settings['exclude_task_metadata'] %>
       <p class="experiment-start-date">
-        <% if experiment.start_on.present? %>
-          <%= t('projects.reports.elements.experiment.started_on', start_on: l(experiment.start_on, format: :full)) %>
+        <% if experiment.start_date.present? %>
+          <%= t('projects.reports.elements.experiment.started_on', started_on: l(experiment.start_date, format: :full)) %>
         <% end %>
       </p>
       <p class="experiment-due-date">
@@ -34,12 +34,14 @@
     <% end %>
     <br>
     <br>
-    <% if experiment.description.present? %>
-      <%= custom_auto_link(experiment.description,
-                               team: current_team,
-                               simple_format: false,
-                               base64_encoded_imgs: true) %>
-    <% end %>
+    <div class="text-block">
+      <% if experiment.description.present? %>
+        <%= custom_auto_link(experiment.description,
+                                team: current_team,
+                                simple_format: false,
+                                base64_encoded_imgs: true) %>
+      <% end %>
+    </div>
   </div>
   <% if defined?(children) %>
     <div class="report-element-children">

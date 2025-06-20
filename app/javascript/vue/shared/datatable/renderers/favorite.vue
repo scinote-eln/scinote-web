@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasFavorite">
+  <div v-if="canFavorite">
     <button @click="updateFavorite(!favorite)"
             class="p-0 flex items-center w-full h-9 bg-transparent border-none cursor-pointer">
       <div v-if="favorite" class="sn-icon sn-icon-star-filled text-sn-alert-brittlebush"></div>
@@ -29,8 +29,8 @@ export default {
     this.favorite = this.params.data.favorite;
   },
   computed: {
-    hasFavorite() {
-      return this.params.data.favorite !== null;
+    canFavorite() {
+      return this.params.data.urls.favorite;
     }
   },
   methods: {

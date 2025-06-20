@@ -33,7 +33,7 @@ RUN apt-get update -qq && \
 
 ENV PATH=/usr/share/nodejs/yarn/bin:$PATH
 
-RUN yarn add puppeteer@npm:puppeteer-core@^22.15.0
+RUN yarn add npm:puppeteer-core@24.10.0
 
 ENV BUNDLE_PATH /usr/local/bundle/
 

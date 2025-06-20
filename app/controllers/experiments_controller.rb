@@ -107,7 +107,7 @@ class ExperimentsController < ApplicationController
     @experiment.last_modified_by = current_user
     name_changed = @experiment.name_changed?
     description_changed = @experiment.description_changed?
-    start_date_changes = @experiment.changes[:start_on]
+    start_date_changes = @experiment.changes[:start_date]
     due_date_changes = @experiment.changes[:due_date]
 
     if @experiment.save
@@ -274,7 +274,7 @@ class ExperimentsController < ApplicationController
 
       flash[:success] = t('experiments.table.move_success_flash', project: escape_input(@project.name))
       render json: { message: t('experiments.table.move_success_flash',
-                                project: escape_input(@project.name)), path: project_path(@project) }
+                                project: escape_input(@project.name)), path: project_experiments_path(@project) }
     rescue StandardError => e
       Rails.logger.error(e.message)
       Rails.logger.error(e.backtrace.join("\n"))
@@ -480,7 +480,7 @@ class ExperimentsController < ApplicationController
   end
 
   def experiment_params
-    params.require(:experiment).permit(:name, :description, :archived, :due_date, :start_on, :status)
+    params.require(:experiment).permit(:name, :description, :archived, :due_date, :start_date, :status)
   end
 
   def move_experiment_param
@@ -572,14 +572,14 @@ class ExperimentsController < ApplicationController
   end
 
   def log_start_date_change_activity(start_date_changes)
-    type_of = if start_date_changes[0].nil?     # set start_on
-                message_items = { start_on: @experiment.start_on }
+    type_of = if start_date_changes[0].nil?     # set start_date
+                message_items = { start_date: @experiment.start_date }
                 :set_experiment_start_date
-              elsif start_date_changes[1].nil?  # remove start_on
-                message_items = { start_on: start_date_changes[0] }
+              elsif start_date_changes[1].nil?  # remove start_date
+                message_items = { start_date: start_date_changes[0] }
                 :remove_experiment_start_date
-              else                              # change start_on
-                message_items = { start_on: @experiment.start_on }
+              else                              # change start_date
+                message_items = { start_date: @experiment.start_date }
                 :change_experiment_start_date
               end
     log_activity(type_of, @experiment, message_items)

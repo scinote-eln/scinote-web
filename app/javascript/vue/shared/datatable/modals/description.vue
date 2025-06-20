@@ -56,12 +56,12 @@ export default {
   },
   data() {
     return {
-      description: this.object.description,
+      description: this.object.description || '',
       editMode: false
     };
   },
   created() {
-    if (!this.object.description || this.object.description === '') {
+    if (this.object.permissions.manage && (!this.object.description || this.object.description === '')) {
       this.editMode = true;
     }
   },

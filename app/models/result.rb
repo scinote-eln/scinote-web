@@ -31,6 +31,8 @@ class Result < ApplicationRecord
   has_many :result_texts, inverse_of: :result, dependent: :destroy
   has_many :result_comments, inverse_of: :result, foreign_key: :associated_id, dependent: :destroy
   has_many :report_elements, inverse_of: :result, dependent: :destroy
+  has_many :step_results, inverse_of: :result, dependent: :destroy
+  has_many :steps, through: :step_results
 
   accepts_nested_attributes_for :result_texts
   accepts_nested_attributes_for :assets

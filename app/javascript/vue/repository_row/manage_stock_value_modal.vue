@@ -7,12 +7,18 @@
     aria-labelledby="manage-stock-value"
   >
     <div class="modal-dialog" role="document" v-if="stockValue">
-      <div class="modal-content">
+      <div class="modal-content" data-e2e="e2e-MD-manageStock">
         <div class="modal-header">
-          <button type="button" class="close self-start" data-dismiss="modal" :aria-label="i18n.t('general.close')">
+          <button
+            type="button"
+            class="close self-start"
+            data-dismiss="modal"
+            :aria-label="i18n.t('general.close')"
+            data-e2e="e2e-BT-manageStockModal-close"
+          >
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <h4 class="modal-title">
+          <h4 class="modal-title" data-e2e="e2e-TX-manageStockModal-title">
             <template v-if="stockValue?.id">
               {{ i18n.t('repository_stock_values.manage_modal.edit_title', { item: repositoryRowName }) }}
             </template>
@@ -32,6 +38,7 @@
                   :value="operation"
                   :options="operations"
                   @change="setOperation"
+                  :dataE2e="'e2e-DD-invItems-manageStockModal-operation'"
                 ></Select>
               </div>
               <div class="flex flex-col w-40">
@@ -48,6 +55,7 @@
                   :min="0"
                   :negativeNumbersEnabled="this.operation == 'set'"
                   :error="errors.amount"
+                  :dataE2e="'e2e-IF-invItems-manageStockModal-amount'"
                 />
               </div>
               <div class="flex flex-col w-40">
@@ -61,6 +69,7 @@
                   :placeholder="i18n.t('repository_stock_values.manage_modal.unit_prompt')"
                   @change="unit = $event; validateStockValue()"
                   :className="`${errors.unit ? 'error' : ''}`"
+                  :dataE2e="'e2e-DD-invItems-manageStockModal-unit'"
                 ></Select>
                 <div class="text-sn-coral text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
                   {{ errors.unit }}
@@ -71,13 +80,23 @@
               <div class="flex justify-between w-full items-center">
                 <div class="flex flex-col w-[220px] h-24 border-rounded bg-sn-super-light-grey justify-between text-center">
                   <span class="text-sm text-sn-grey leading-5 pt-2">{{ i18n.t('repository_stock_values.manage_modal.current_stock') }}</span>
-                  <span class="text-2xl text-sn-black font-semibold leading-8" :class="{ 'text-sn-delete-red': stockValue.amount < 0 }">{{ stockValue.amount }}</span>
+                  <span
+                    class="text-2xl text-sn-black font-semibold leading-8"
+                    :class="{ 'text-sn-delete-red': stockValue.amount < 0 }"
+                    data-e2e="e2e-LB-manageStockModal-currentStock"
+                  >
+                    {{ stockValue.amount }}
+                  </span>
                   <span class="text-sm text0sn-black leading-5 pb-2">{{ initUnitLabel }}</span>
                 </div>
                 <i class="sn-icon sn-icon-arrow-right"></i>
                 <div class="flex flex-col w-[220px] h-24 border-rounded bg-sn-super-light-grey justify-between text-center">
                   <span class="text-sm text-sn-grey leading-5 pt-2">{{ i18n.t('repository_stock_values.manage_modal.new_stock') }}</span>
-                  <span class="text-2xl text-sn-black font-semibold leading-8" :class="{ 'text-sn-delete-red': newAmount < 0 }">
+                  <span
+                    class="text-2xl text-sn-black font-semibold leading-8"
+                    :class="{ 'text-sn-delete-red': newAmount < 0 }"
+                    data-e2e="e2e-LB-manageStockModal-newStock"
+                  >
                     {{ (newAmount || newAmount === 0) ? newAmount : '-' }}
                   </span>
                   <span class="text-sm text0sn-black leading-5 pb-2">{{ unitLabel }}</span>
@@ -86,7 +105,16 @@
             </template>
             <div class="repository-stock-reminder-selector flex">
               <div class="sci-checkbox-container my-auto">
-                <input type="checkbox" name="reminder-enabled" tabindex="4" class="sci-checkbox" id="reminder-selector-checkbox" :checked="reminderEnabled" @change="reminderEnabled = $event.target.checked"/>
+                <input
+                  type="checkbox"
+                  name="reminder-enabled"
+                  tabindex="4"
+                  class="sci-checkbox"
+                  id="reminder-selector-checkbox"
+                  :checked="reminderEnabled"
+                  @change="reminderEnabled = $event.target.checked"
+                  :dataE2e="'e2e-CB-invItems-manageStockModal-lowStock'"
+                />
                 <span class="sci-checkbox-label"></span>
               </div>
               <span class="ml-2">{{ i18n.t('repository_stock_values.manage_modal.create_reminder') }}</span>
@@ -104,6 +132,7 @@
                   :label="i18n.t('repository_stock_values.manage_modal.reminder_at')"
                   :min="0"
                   :error="errors.tresholdAmount"
+                  :dataE2e="'e2e-IF-invItems-manageStockModal-reminderTresholdAmount'"
                 />
               <span class="text-sm font-normal mt-5 shrink-0">
                 {{ unitLabel }}
@@ -118,14 +147,15 @@
               :label=" i18n.t('repository_stock_values.manage_modal.comment')"
               :error="errors.comment"
               :placeholder="i18n.t('repository_stock_values.manage_modal.comment_placeholder')"
+              :dataE2e="'e2e-IF-invItems-manageStockModal-comment'"
             />
           </form>
         </div>
         <div class="modal-footer">
-          <button type='button' class='btn btn-secondary' data-dismiss='modal'>
+          <button type='button' class='btn btn-secondary' data-dismiss='modal' data-e2e='e2e-BT-invItems-manageStockModal-cancel'>
             {{ i18n.t('general.cancel') }}
           </button>
-          <button class="btn btn-primary" @click="saveStockValue" :disabled="isSaving">
+          <button class="btn btn-primary" @click="saveStockValue" :disabled="isSaving" data-e2e='e2e-BT-invItems-manageStockModal-save'>
             {{ i18n.t('repository_stock_values.manage_modal.save_stock') }}
           </button>
         </div>

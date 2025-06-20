@@ -14,8 +14,8 @@
     <% end %>
     <% unless @settings['exclude_task_metadata'] %>
       <p class="project-start-date">
-        <% if project.start_on.present? %>
-          <%= t('projects.reports.elements.project_header.started_on', start_on: l(project.start_on, format: :full)) %>
+        <% if project.start_date.present? %>
+          <%= t('projects.reports.elements.project_header.started_on', started_on: l(project.start_date, format: :full)) %>
         <% end %>
       </p>
       <p class="project-due-date">
@@ -38,7 +38,7 @@
     <br>
     <br>
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-xs-12 text-block">
         <% if project.description.present? %>
           <%= custom_auto_link(project.description,
                                team: current_team,

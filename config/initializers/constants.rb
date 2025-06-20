@@ -445,9 +445,12 @@ class Constants
 
   STATUS_COLORS = {
     not_started: '#fffff',
-    started: '#3070ED',
-    completed: '#5EC66F'
+    in_progress: '#3070ED',
+    done: '#5EC66F'
   }
+
+  # Infinite date, for use in sorting
+  INFINITE_DATE = Date.new(9999, 1, 1).freeze
 
   # Interval time for polling asset changes when editing with SciNote Edit
   ASSET_POLLING_INTERVAL = 5000
