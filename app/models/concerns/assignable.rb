@@ -79,6 +79,11 @@ module Assignable
       # Will be called when an assignment is changed (save/destroy) for the assignable model.
     end
 
+    def after_user_group_assignment_changed(user_group_assignment = nil)
+      # Optional, redefine in the assignable model.
+      # Will be called when an assignment is changed (save/destroy) for the assignable model.
+    end
+
     def create_users_assignments
       return if skip_user_assignments
 

@@ -69,13 +69,13 @@ module Lists
         experiments_to_move: experiments_to_move_experiment_path(object.experiment),
         update: my_module_path(object),
         show_access: access_permissions_my_module_path(object),
+        show_user_group_assignments_access: show_user_group_assignments_access_permissions_my_module_path(object),
         provisioning_status: provisioning_status_my_module_url(object),
         favorite: favorite_my_module_url(object),
         unfavorite: unfavorite_my_module_url(object)
       }
 
       urls_list[:update_access] = access_permissions_my_module_path(object) if can_manage_project_users?(object.experiment.project)
-
       urls_list[:update_due_date] = my_module_path(object, user, format: :json) if can_update_my_module_due_date?(object)
       urls_list[:update_start_date] = my_module_path(object, user, format: :json) if can_update_my_module_start_date?(object)
 

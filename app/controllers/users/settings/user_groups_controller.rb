@@ -5,6 +5,7 @@ module Users
     class UserGroupsController < ApplicationController
       before_action :load_team
       before_action :load_user_group, except: %i(index unassigned_users actions_toolbar create)
+      before_action :check_read_permissions, only: %i(users)
       before_action :check_manage_permissions, except: %i(index show unassigned_users actions_toolbar)
       before_action :set_breadcrumbs_items, only: %i(index show)
 
@@ -66,6 +67,10 @@ module Users
         end
       end
 
+      def users
+        render json: @user_group.users, each_serializer: UserSerializer, user: current_user
+      end
+
       private
 
       def user_group_params
@@ -80,7 +85,11 @@ module Users
       end
 
       def load_user_group
-        @user_group = @team.user_groups.find(params[:id])
+        @user_group = @team.user_groups.find(params[:user_group_id] || params[:id])
+      end
+
+      def check_read_permissions
+        render_403 unless can_read_team?(@team)
       end
 
       def check_manage_permissions

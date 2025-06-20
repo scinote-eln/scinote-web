@@ -5,8 +5,8 @@ module AccessPermissions
     include InputSanitizeHelper
 
     before_action :set_project
-    before_action :check_read_permissions, only: %i(show)
-    before_action :check_manage_permissions, except: %i(show)
+    before_action :check_read_permissions, only: %i(show show_user_group_assignments)
+    before_action :check_manage_permissions, except: %i(show show_user_group_assignments)
     before_action :available_users, only: %i(new create)
 
     def show
@@ -30,28 +30,34 @@ module AccessPermissions
                          role: @project.default_public_user_role.name,
                          team: @project.team.id })
         else
-          user_assignment = UserAssignment.find_or_initialize_by(
-            assignable: @project,
-            user_id: permitted_create_params[:user_id],
+          assignment_type = assignment_type(permitted_create_params)
+
+          assignment_key = "#{assignment_type}_id".to_sym
+
+          assignment = @project.public_send("#{assignment_type}_assignments").find_or_initialize_by(
+            assignment_key => permitted_create_params[assignment_key],
             team: current_team
           )
 
-          user_assignment.update!(
+          assignment.update!(
             user_role_id: permitted_create_params[:user_role_id],
             assigned_by: current_user,
             assigned: :manually
           )
 
-          log_activity(:assign_user_to_project, { user_target: user_assignment.user.id,
-                                                  role: user_assignment.user_role.name })
-          created_count += 1
-          propagate_job(user_assignment)
+          if permitted_create_params[:user_id].present?
+            log_activity(:assign_user_to_project, { user_target: assignment.user.id,
+                                                    role: assignment.user_role.name })
+            created_count += 1
+          end
+
+          propagate_job(assignment)
         end
 
         @message = if created_count.zero?
                      t('access_permissions.create.success', member_name: t('access_permissions.all_team'))
                    else
-                     t('access_permissions.create.success', member_name: escape_input(user_assignment.user.name))
+                     t('access_permissions.create.success', member_name: escape_input(assignment.user.name))
                    end
         render json: { message: @message }
       rescue ActiveRecord::RecordInvalid => e
@@ -63,53 +69,73 @@ module AccessPermissions
     end
 
     def update
-      @user_assignment = @project.user_assignments.find_by(
-        user_id: permitted_update_params[:user_id],
+      assignment_type = assignment_type(permitted_update_params)
+      assignment_key = "#{assignment_type}_id".to_sym
+
+      assignment = @project.public_send("#{assignment_type}_assignments").find_by(
+        assignment_key => permitted_update_params[assignment_key],
         team: current_team
       )
 
       # prevent role change if it would result in no manually assigned users having the user management permission
       new_user_role = UserRole.find(permitted_update_params[:user_role_id])
-      if !new_user_role.has_permission?(ProjectPermissions::USERS_MANAGE) &&
-         @user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
+      if permitted_create_params[:user_id].present? && !new_user_role.has_permission?(ProjectPermissions::USERS_MANAGE) &&
+         assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
         raise ActiveRecord::RecordInvalid
       end
 
-      @user_assignment.update!(permitted_update_params)
+      assignment.update!(permitted_update_params)
 
-      log_activity(:change_user_role_on_project, { user_target: @user_assignment.user.id,
-                                                   role: @user_assignment.user_role.name })
-      propagate_job(@user_assignment)
+      if permitted_create_params[:user_id].present?
+        log_activity(:change_user_role_on_project, { user_target: assignment.user.id,
+                                                     role: assignment.user_role.name })
+      end
 
-      render :project_member
+      propagate_job(assignment)
     rescue ActiveRecord::RecordInvalid
       render json: { flash: t('access_permissions.update.failure') }, status: :unprocessable_entity
     end
 
     def destroy
-      user = @project.assigned_users.find(params[:user_id])
-      user_assignment = @project.user_assignments.find_by(user: user, team: current_team)
+      assignment_type = assignment_type(params)
+      assignment_key = "#{assignment_type}_id".to_sym
+
+      assignment = @project.public_send("#{assignment_type}_assignments").find_by(
+        assignment_key => params[assignment_key],
+        team: current_team
+      )
 
       # prevent deletion of last manually assigned user that can manage users
-      if user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
-        raise ActiveRecord::RecordInvalid
-      end
+      raise ActiveRecord::RecordInvalid if params[:user_id].present? && assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
+
+      is_group = assignment.respond_to?(:user_group)
 
       UserAssignments::PropagateAssignmentJob.perform_now(
         @project,
-        user_assignment.user.id,
-        user_assignment.user_role,
+        is_group ? assignment.user_group.id : assignment.user.id,
+        assignment.user_role,
         current_user.id,
+        team_id: current_team.id,
+        group: is_group,
         destroy: true
       )
 
-      log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
-                                                  role: user_assignment.user_role.name })
+      log_activity(:unassign_user_from_project, { user_target: assignment.user.id, role: assignment.user_role.name }) unless is_group
 
-      render json: { message: t('access_permissions.destroy.success', member_name: escape_input(user.full_name)) }
+      render json: { message: t('access_permissions.destroy.success', member_name: escape_input(is_group ? assignment.user_group.name : assignment.user.full_name)) }
     rescue ActiveRecord::RecordInvalid
       render json: { message: t('access_permissions.destroy.failure') },
              status: :unprocessable_entity
+    end
+
+    def show_user_group_assignments
+      render json: @project.user_group_assignments.includes(:user_role, :user_group).order('user_groups.name ASC'),
+             each_serializer: UserGroupAssignmentSerializer, user: current_user
+    end
+
+    def unassigned_user_groups
+      render json: current_team.user_groups.where.not(id: @project.user_group_assignments.select(:user_group_id)),
+             each_serializer: UserGroupSerializer, user: current_user
     end
 
     def update_default_public_user_role
@@ -150,12 +176,12 @@ module AccessPermissions
 
     def permitted_update_params
       params.require(:user_assignment)
-            .permit(%i(user_role_id user_id))
+            .permit(%i(user_role_id user_id user_group_id))
     end
 
     def permitted_create_params
       params.require(:user_assignment)
-            .permit(%i(user_id user_role_id))
+            .permit(%i(user_id user_group_id user_role_id))
     end
 
     def set_project
@@ -164,12 +190,16 @@ module AccessPermissions
       render_404 unless @project
     end
 
-    def propagate_job(user_assignment, destroy: false)
+    def propagate_job(assignment, destroy: false)
+      is_group = assignment.respond_to?(:user_group)
+
       UserAssignments::PropagateAssignmentJob.perform_later(
         @project,
-        user_assignment.user.id,
-        user_assignment.user_role,
+        is_group ? assignment.user_group.id : assignment.user.id,
+        assignment.user_role,
         current_user.id,
+        team_id: current_team.id,
+        group: is_group,
         destroy: destroy
       )
     end
@@ -189,6 +219,14 @@ module AccessPermissions
       ).or(
         current_team.users.where.not(id: @project.users.select(:id))
       ).order('users.full_name ASC')
+    end
+
+    def assignment_type(permitted_params)
+      if permitted_params[:user_id].present?
+        'user'
+      elsif permitted_params[:user_group_id].present?
+        'user_group'
+      end
     end
 
     def log_activity(type_of, message_items = {})

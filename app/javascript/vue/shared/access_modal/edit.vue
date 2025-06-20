@@ -8,7 +8,7 @@
         <div :data-e2e="`e2e-TX-${dataE2e}-everyoneElse`">
           {{ i18n.t('access_permissions.everyone_else', { team_name: params.object.team }) }}
         </div>
-        <GeneralDropdown @open="loadUsers" @close="closeFlyout">
+        <GeneralDropdown>
           <template v-slot:field>
             <i class="sn-icon sn-icon-info" :data-e2e="`e2e-IC-${dataE2e}-everyoneElse-info`"></i>
           </template>
@@ -41,6 +41,65 @@
         ></MenuDropdown>
         <div class="ml-auto btn btn-light pointer-events-none" v-else>
           {{ this.roles.find((role) => role[0] == default_role)[1] }}
+          <div class="h-6 w-6"></div>
+        </div>
+      </div>
+      <div v-for="userGroupAssignment in assignedUserGroups"
+            :key="userGroupAssignment.id"
+            class="p-2 flex items-center gap-2">
+        <div>
+          <img
+            class="rounded-full w-8 h-8"
+            src="/images/icon/group.png"
+          >
+        </div>
+        <div class="truncate">
+          <div class="flex flex-row gap-2">
+            <div class="truncate"
+                :title="userGroupAssignment.attributes.user_group.name"
+            >{{ userGroupAssignment.attributes.user_group.name }}</div>
+            <div
+              v-if="userGroupAssignment.attributes.current_user"
+              class="text-nowrap"
+            >
+              {{ `(${i18n.t('access_permissions.you')})` }}
+            </div>
+            <GeneralDropdown @open="loadUsers(userGroupAssignment.attributes.user_group.id)" @close="groupUsers = []">
+              <template v-slot:field>
+                <i class="sn-icon sn-icon-info"></i>
+              </template>
+              <template v-slot:flyout>
+                <perfect-scrollbar class="flex flex-col max-h-96 max-w-[280px] relative pr-4 gap-y-px">
+                  <div v-for="user in this.groupUsers"
+                       :key="user.attributes.id"
+                       :title="user.attributes.name"
+                       class="rounded px-3 py-2.5 flex items-center hover:no-underline leading-5 gap-2">
+                    <img
+                      :src="user.attributes.avatar_url"
+                      class="w-6 h-6 rounded-full"
+                    >
+                    <span class="truncate">{{ user.attributes.name }}</span>
+                  </div>
+                </perfect-scrollbar>
+              </template>
+            </GeneralDropdown>
+          </div>
+          <div class="text-xs text-sn-grey text-nowrap">
+            {{ userGroupAssignment.attributes.inherit_message }}
+          </div>
+        </div>
+        <MenuDropdown
+          v-if="params.object.urls.update_access"
+          class="ml-auto"
+          :listItems="rolesFromatted(userGroupAssignment.attributes.user_role.id)"
+          :btnText="userGroupAssignment.attributes.user_role.name"
+          :position="'right'"
+          :caret="true"
+          @setRole="(...args) => this.changeRole('userGroup', userGroupAssignment.attributes.user_group.id, ...args)"
+          @removeRole="() => this.removeRole('userGroup', userGroupAssignment.attributes.user_group.id)"
+        ></MenuDropdown>
+        <div v-else class="ml-auto btn btn-light pointer-events-none">
+          {{ userGroupAssignment.attributes.user_role.name }}
           <div class="h-6 w-6"></div>
         </div>
       </div>
@@ -80,8 +139,8 @@
           :position="'right'"
           :caret="true"
           :data-e2e="`e2e-DD-${dataE2e}-${userAssignment.attributes.user.name.replace(/\W/g, '')}-role`"
-          @setRole="(...args) => this.changeRole(userAssignment.attributes.user.id, ...args)"
-          @removeRole="() => this.removeRole(userAssignment.attributes.user.id)"
+          @setRole="(...args) => this.changeRole('user', userAssignment.attributes.user.id, ...args)"
+          @removeRole="() => this.removeRole('user', userAssignment.attributes.user.id)"
         ></MenuDropdown>
         <div v-else class="ml-auto btn btn-light pointer-events-none" :data-e2e="`e2e-TX-${dataE2e}-${userAssignment.attributes.user.name.replace(/\W/g, '')}-role`">
           {{ userAssignment.attributes.user_role.name }}
@@ -120,12 +179,14 @@ export default {
     }
   },
   mounted() {
+    this.getAssignedUserGroups();
     this.getAssignedUsers();
     this.getRoles();
   },
   watch: {
     reloadUsers() {
       if (this.reloadUsers) {
+        this.getAssignedUserGroups();
         this.getAssignedUsers();
       }
     }
@@ -149,7 +210,9 @@ export default {
   data() {
     return {
       assignedUsers: [],
-      roles: []
+      assignedUserGroups: [],
+      roles: [],
+      groupUsers: []
 
     };
   },
@@ -159,6 +222,12 @@ export default {
         .then((response) => {
           this.assignedUsers = response.data.data;
           this.$emit('usersReloaded');
+        });
+    },
+    getAssignedUserGroups() {
+      axios.get(this.params.object.urls.show_user_group_assignments_access)
+        .then((response) => {
+          this.assignedUserGroups = response.data.data;
         });
     },
     rolesFromatted(activeRoleId = null) {
@@ -198,26 +267,39 @@ export default {
           this.roles = response.data.data;
         });
     },
-    changeRole(id, roleId) {
+    changeRole(type, id, roleId) {
+      const assignmentKey = type === 'userGroup' ? 'user_group_id' : 'user_id';
+
       axios.put(this.params.object.urls.update_access, {
         user_assignment: {
-          user_id: id,
+          [assignmentKey]: id,
           user_role_id: roleId
         }
       }).then(() => {
         this.$emit('modified');
-        this.getAssignedUsers();
+
+        if (type === 'userGroup') {
+          this.getAssignedUserGroups();
+        } else {
+          this.getAssignedUsers();
+        }
       });
     },
-    removeRole(id) {
+    removeRole(type, id) {
+      const assignmentKey = type === 'userGroup' ? 'user_group_id' : 'user_id';
+
       axios.delete(this.params.object.urls.update_access, {
         data: {
-          user_id: id
+          [assignmentKey]: id
         }
       }).then((response) => {
         this.$emit('modified');
         HelperModule.flashAlertMsg(response.data.message, 'success');
-        this.getAssignedUsers();
+        if (type === 'userGroup') {
+          this.getAssignedUserGroups();
+        } else {
+          this.getAssignedUsers();
+        }
       });
     },
     changeDefaultRole(roleId) {
@@ -238,6 +320,16 @@ export default {
       });
     },
     removeDefaultRole() {
+    },
+    loadUsers(userGroupId) {
+      axios.get(this.params.object.urls.user_group_members, {
+        params: {
+          user_group_id: userGroupId
+        }
+      })
+        .then((response) => {
+          this.groupUsers = response.data.data;
+        });
     }
   }
 };
