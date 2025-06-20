@@ -38,7 +38,7 @@ en:
           title: "There are no tasks assigned to you at the moment."
           description: "Use the  “+ New task” button above to create a new one, or assign yourself to an existing task."
         team_tasks:
-          title: "Your Team has no tasks at the moment."
+          title: "Your Workspace has no tasks at the moment."
         search_result:
           title: "No results."
       due_date_html: "Due date: <b>%{date}</b>"
@@ -62,7 +62,7 @@ en:
       new_report: "New report"
       placeholder:
         title: "Cannot create."
-        description: "As a guest in this team you cannot create anything."
+        description: "As a guest in this workspace you cannot create anything."
     create_task_modal:
       title: "Create new task"
       description: "Simply type in the fields below to find or create space for your new task to live in"
@@ -72,7 +72,7 @@ en:
       task_name_error: "Task name must be at least %{length} characters long."
       project_visibility_label: "Visible to"
       project_visibility_members: "Project members"
-      project_visibility_all: "All team members"
+      project_visibility_all: "All workspace members"
       experiment: "Experiment"
       user_role: "User role"
       project_placeholder: "Select or create project"
