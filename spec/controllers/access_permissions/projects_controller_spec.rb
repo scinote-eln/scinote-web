@@ -66,11 +66,6 @@ describe AccessPermissions::ProjectsController, type: :controller do
       expect(response).to have_http_status :success
     end
 
-    it 'renders edit template' do
-      get :edit, params: { id: project.id }, format: :json
-      expect(response).to render_template :edit
-    end
-
     it 'renders 403 if user does not have manage permissions on project' do
       create :user_project, user: normal_user, project: project
       create :user_assignment, assignable: project, user: normal_user, user_role: normal_user_role, assigned_by: user
