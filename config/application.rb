@@ -29,6 +29,9 @@ module Scinote
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets generators tasks])
 
+    # Autoload nested omniauth lib paths
+    config.autoload_paths << Rails.root.join('lib/omniauth/strategies')
+
     config.add_autoload_paths_to_load_path = true
 
     # Configuration for the application, engines, and railties goes here.
@@ -42,7 +45,15 @@ module Scinote
     # Don't generate system test files.
     config.generators.system_tests = nil
 
+    # Addon autoloading configuration
+
+    # Load custom database adapters from addons
+    Dir.glob(Rails.root.glob('addons/*/lib/active_record/connection_adapters/*.rb')) do |c|
+      Rails.configuration.cache_classes ? require(c) : load(c)
+    end
+
     Rails.autoloaders.main.ignore(Rails.root.join('addons/*/app/decorators'))
+    Rails.autoloaders.main.ignore(Rails.root.join('addons/*/app/overrides'))
 
     # Add rack-attack middleware for request rate limiting
     config.middleware.use Rack::Attack
