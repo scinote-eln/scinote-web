@@ -23,4 +23,8 @@ class UserGroup < ApplicationRecord
       user_group_memberships.build(membership)
     end
   end
+
+  def self.enabled?
+    ApplicationSettings.instance.values['user_groups_enabled']
+  end
 end

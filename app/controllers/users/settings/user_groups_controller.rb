@@ -3,6 +3,7 @@
 module Users
   module Settings
     class UserGroupsController < ApplicationController
+      before_action :check_user_groups_enabled
       before_action :load_team
       before_action :load_user_group, except: %i(index unassigned_users actions_toolbar create)
       before_action :check_read_permissions, only: %i(users)
@@ -72,6 +73,10 @@ module Users
       end
 
       private
+
+      def check_user_groups_enabled
+        render '/users/settings/user_groups/promo' unless UserGroup.enabled?
+      end
 
       def user_group_params
         params.require(:user_group).permit(

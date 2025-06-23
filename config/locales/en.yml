@@ -4190,6 +4190,9 @@ en:
       head_title: "Edit protocol"
     no_keywords: "—"
   user_groups:
+    promo:
+      head_title: 'User groups'
+      promo_title: 'This feature is disabled by default in open source SciNote'
     create:
       success: "Group created successfully."
       error: "There was a problem creating group. Please try again."
