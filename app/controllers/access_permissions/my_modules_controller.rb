@@ -47,7 +47,11 @@ module AccessPermissions
         )
       end
 
-      log_change_activity unless @assignment.respond_to?(:user_group)
+      if @assignment.respond_to?(:user_group)
+        log_activity(:my_module_access_changed_user_group, user_group: @assignment.user_group.id)
+      else
+        log_activity(:change_user_role_on_my_module, user_target: @assignment.user.id)
+      end
     end
 
     private
@@ -79,19 +83,16 @@ module AccessPermissions
       render_403 unless can_read_my_module?(@my_module)
     end
 
-    def log_change_activity
-      Activities::CreateActivityService.call(
-        activity_type: :change_user_role_on_my_module,
-        owner: current_user,
-        subject: @my_module,
-        team: @project.team,
-        project: @project,
-        message_items: {
-          my_module: @my_module.id,
-          user_target: @assignment.user_id,
-          role: @assignment.user_role.name
-        }
-      )
+    def log_activity(type_of, message_items = {})
+      message_items = { my_module: @my_module.id, role: @assignment.user_role.name }.merge(message_items)
+
+      Activities::CreateActivityService
+        .call(activity_type: type_of,
+              owner: current_user,
+              subject: @my_module,
+              team: @project.team,
+              project: @project,
+              message_items: message_items)
     end
   end
 end
