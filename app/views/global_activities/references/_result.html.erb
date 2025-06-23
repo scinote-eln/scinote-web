@@ -4,7 +4,7 @@
 
   <span class="<%=result_icon_class(subject)%>"></span>
   <% if subject&.navigable? %>
-    <% path = subject.archived? ? archive_my_module_path(subject.my_module) : my_module_results_path(subject.my_module) %>
+    <% path = subject.archived? ? my_module_results_path(subject.my_module, result_id: subject.id, view_mode: :archived) : my_module_results_path(subject.my_module, result_id: subject.id) %>
     <%= route_to_other_team(path,
                             team,
                             subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),

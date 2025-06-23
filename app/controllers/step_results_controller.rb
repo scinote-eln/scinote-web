@@ -9,14 +9,14 @@ class StepResultsController < ApplicationController
   def link_results
     ActiveRecord::Base.transaction do
       @step_results.where.not(result: @results).each do |step_result|
-        log_activity(:step_and_result_unlinked, @steps.first.my_module, step_result.step, step_result.result)
+        log_activity(:step_and_result_unlinked, step_result.step.my_module, step_result.step, step_result.result)
         step_result.destroy!
       end
       @results.where.not(id: @step_results.select(:result_id)).each do |result|
         StepResult.create!(step: @steps.first, result: result, created_by: current_user)
         log_activity(:step_and_result_linked, @steps.first.my_module, @steps.first, result)
       end
-      render json: { results: @steps.first.results.map { |r| { id: r.id, name: r.name } } }, status: :created
+      render json: { results: @steps.first.results.map { |r| { id: r.id, name: r.name, archived: r.archived? } } }, status: :created
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error e.message
       render json: { message: :error }, status: :unprocessable_entity
@@ -27,7 +27,7 @@ class StepResultsController < ApplicationController
   def link_steps
     ActiveRecord::Base.transaction do
       @step_results.where.not(step: @steps).each do |step_result|
-        log_activity(:step_and_result_unlinked, @steps.first.my_module, step_result.step, step_result.result)
+        log_activity(:step_and_result_unlinked, step_result.result.my_module, step_result.step, step_result.result)
         step_result.destroy!
       end
       @steps.where.not(id: @step_results.select(:step_id)).each do |step|

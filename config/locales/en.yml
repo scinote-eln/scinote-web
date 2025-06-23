@@ -1644,10 +1644,12 @@ en:
       comments_tab: "Comments"
       comment_title: "%{user} at %{time}:"
       link_to_step: "Link to step"
+      link_steps: "Link steps to this result"
+      linked_steps: "Linked steps"
       modals:
         link_steps:
           title: 'Link result to protocol steps'
-          description: 'You can link result to multipple steps'
+          description: 'You can link a result to multiple steps.'
           empty_description: 'No step found. Add a step first to enable linking with a result.'
           steps_label: 'Protocol steps'
           placeholder: 'Select steps'
@@ -4055,6 +4057,8 @@ en:
       timestamp: "Created on %{date} by %{user}"
       timestamp_iso_html: "Created on <span class='iso-formatted-date'>%{date}</span> by %{user}"
       manage_links: "Manage links"
+      link_results: "Link results to this step"
+      linked_results: "Linked results"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"

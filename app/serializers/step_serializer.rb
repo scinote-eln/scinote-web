@@ -23,7 +23,7 @@ class StepSerializer < ActiveModel::Serializer
 
   def results
     object.results.map do |result|
-      { id: result.id, name: result.name }
+      { id: result.id, name: result.name, archived: result.archived? }
     end
   end
 

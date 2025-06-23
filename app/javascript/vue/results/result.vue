@@ -65,32 +65,38 @@
             :data-object-type="result.attributes.type"
             tabindex="0"
           ></span> <!-- Hidden element to support legacy code -->
-          <button v-if="result.attributes.steps.length == 0" class="btn btn-light icon-btn" @click="this.openLinkStepsModal = true">
-            {{ i18n.t('my_modules.results.link_to_step') }}
-          </button>
+          <tempplate v-if="result.attributes.steps.length == 0">
+            <button v-if="urls.update_url" :title="i18n.t('my_modules.results.link_steps')" class="btn btn-light icon-btn" @click="this.openLinkStepsModal = true">
+              {{ i18n.t('my_modules.results.link_to_step') }}
+            </button>
+          </tempplate>
           <GeneralDropdown v-else ref="linkedStepsDropdown"  position="right">
             <template v-slot:field>
-              <button class="btn btn-light icon-btn">
-                {{ i18n.t('my_modules.results.link_to_step') }}
+              <button class="btn btn-light icon-btn" :title="i18n.t('my_modules.results.linked_steps')">
+                <i class="sn-icon sn-icon-steps"></i>
                 <span class="absolute top-1 -right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
                   {{ result.attributes.steps.length }}
                 </span>
               </button>
             </template>
             <template v-slot:flyout>
-              <a v-for="step in result.attributes.steps"
-                :key="step.id"
-                :title="step.name"
-                :href="protocolUrl(step.id)"
-                class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer block hover:no-underline text-sn-blue truncate"
-              >
-                {{ step.name }}
-              </a>
-              <hr class="my-0">
-              <div class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-blue"
-                  @click="this.openLinkStepsModal = true; $refs.linkedStepsDropdown.closeMenu()">
-                {{ i18n.t('protocols.steps.manage_links') }}
+              <div class="overflow-y-auto max-h-[calc(50vh_-_6rem)]">
+                <a v-for="step in result.attributes.steps"
+                  :key="step.id"
+                  :title="step.name"
+                  :href="protocolUrl(step.id)"
+                  class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer block hover:no-underline text-sn-blue truncate"
+                >
+                  {{ step.name }}
+                </a>
               </div>
+              <template v-if="urls.update_url">
+                <hr class="my-0">
+                <div class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-blue"
+                    @click="this.openLinkStepsModal = true; $refs.linkedStepsDropdown.closeMenu()">
+                  {{ i18n.t('protocols.steps.manage_links') }}
+                </div>
+              </template>
             </template>
           </GeneralDropdown>
           <a href="#"
