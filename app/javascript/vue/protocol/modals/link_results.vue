@@ -37,10 +37,10 @@
               {{ i18n.t('general.cancel') }}
             </button>
             <template v-if="results.length > 0">
-              <button v-if="step.attributes.results.length == 0" type="submit" class="btn btn-primary" @click="linkResults">
+              <button v-if="step.attributes.results.length == 0" type="submit" :disabled="isSameData" class="btn btn-primary" @click="linkResults">
                 {{ i18n.t('protocols.steps.modals.link_results.link_results') }}
               </button>
-              <button v-else type="submit" class="btn btn-primary" @click="linkResults">
+              <button v-else type="submit" :disabled="isSameData" class="btn btn-primary" @click="linkResults">
                 {{ i18n.t('general.save') }}
               </button>
             </template>
@@ -82,11 +82,13 @@ export default {
   },
   created() {
     this.selectedResults = this.step.attributes.results.map((result) => result.id);
+    this.initialResults = this.step.attributes.results.map((result) => result.id);
     this.loadResults();
   },
   data() {
     return {
       results: [],
+      initialResults: [],
       selectedResults: []
     };
   },
@@ -99,6 +101,10 @@ export default {
     },
     resultsLinkUrl() {
       return link_results_step_results_path({ format: 'json' });
+    },
+    isSameData() {
+      return this.selectedResults.length === this.initialResults.length &&
+             this.selectedResults.every((value) => this.initialResults.includes(value));
     }
   },
   methods: {

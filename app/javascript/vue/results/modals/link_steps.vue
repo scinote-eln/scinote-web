@@ -37,10 +37,10 @@
               {{ i18n.t('general.cancel') }}
             </button>
             <template v-if="steps.length > 0">
-              <button v-if="result.attributes.steps.length == 0" type="submit" class="btn btn-primary" @click="linkSteps">
+              <button v-if="result.attributes.steps.length == 0" type="submit" :disabled="isSameData" class="btn btn-primary" @click="linkSteps">
                 {{ i18n.t('my_modules.results.modals.link_steps.link_steps') }}
               </button>
-              <button v-else type="submit" class="btn btn-primary"  @click="linkSteps">
+              <button v-else type="submit" class="btn btn-primary" :disabled="isSameData" @click="linkSteps">
                 {{ i18n.t('general.save') }}
               </button>
             </template>
@@ -86,12 +86,14 @@ export default {
   },
   created() {
     this.selectedSteps = this.result.attributes.steps.map((step) =>  step.id);
+    this.initialSteps = this.result.attributes.steps.map((step) => step.id);
     this.loadSteps();
   },
   data() {
     return {
       steps: [],
-      selectedSteps: []
+      selectedSteps: [],
+      initialSteps: []
     };
   },
   computed: {
@@ -103,6 +105,10 @@ export default {
     },
     stepsLinkUrl() {
       return link_steps_step_results_path({ format: 'json' });
+    },
+    isSameData() {
+      return this.selectedSteps.length === this.initialSteps.length &&
+             this.selectedSteps.every((value) => this.initialSteps.includes(value));
     }
   },
   methods: {
