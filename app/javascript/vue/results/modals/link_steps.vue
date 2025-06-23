@@ -20,6 +20,7 @@
               <SelectDropdown
                 :options="steps"
                 :value="selectedSteps"
+                :searchable="true"
                 @change="changeSteps"
                 :multiple="true"
                 :withCheckboxes="true"
