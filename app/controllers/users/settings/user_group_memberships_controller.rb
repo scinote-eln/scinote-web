@@ -3,6 +3,7 @@
 module Users
   module Settings
     class UserGroupMembershipsController < ApplicationController
+      before_action :check_user_groups_enabled
       before_action :load_team
       before_action :load_user_group
       before_action :check_manage_permissions, except: %i(index show)
@@ -57,6 +58,10 @@ module Users
       end
 
       private
+
+      def check_user_groups_enabled
+        render '/users/settings/user_groups/promo' unless UserGroup.enabled?
+      end
 
       def load_team
         @team = Team.find(params[:team_id])
