@@ -822,10 +822,8 @@ en:
           accepted_message: "Your report is successfully added to the generator queue. We will notify you when it is done!"
           completed_docx_notification_title: "Your report .DOCX was generated successfully."
           completed_pdf_notification_title: "Your report .PDF was generated successfully."
-          completed_notification_message: "Report: %{report_link} | Team: %{team_name}"
           error_docx_notification_title: "Your report .DOCX generation failed. Please try again."
           error_pdf_notification_title: "Your report .PDF generation failed. Please try again."
-          error_notification_message: "Report: %{report_link} | Team: %{team_name}"
           content_generation_error: "Failed to generate report content"
           file_preview_generation_error: "We were unable to generate preview for this file."
         modal_delete:
@@ -3841,7 +3839,6 @@ en:
         forms_error: "Form %{form_id} doesn't exist or you don't have access and it won’t be imported."
       import_protocol_notification:
         title: "The import process has been successfully completed. You can download original file here: %{link}"
-        message: "Protocol template:"
       import_protocol_notification_error:
         title: "Import failed"
         message: "We're sorry but the file import process has encountered an error. Please make another attempt, and if the issue persists, please contact support for further assistance."
