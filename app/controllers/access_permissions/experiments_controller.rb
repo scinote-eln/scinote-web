@@ -58,7 +58,11 @@ module AccessPermissions
         group: is_group
       )
 
-      log_change_activity unless is_group
+      if is_group
+        log_activity(:experiment_access_changed_user_group, user_group: @assignment.user_group.id)
+      else
+        log_activity(:change_user_role_on_experiment, user_target: @assignment.user.id)
+      end
 
       render json: {}, status: :ok
     end
@@ -88,19 +92,16 @@ module AccessPermissions
       render_403 unless can_read_experiment?(@experiment)
     end
 
-    def log_change_activity
-      Activities::CreateActivityService.call(
-        activity_type: :change_user_role_on_experiment,
-        owner: current_user,
-        subject: @experiment,
-        team: @project.team,
-        project: @project,
-        message_items: {
-          experiment: @experiment.id,
-          user_target: @assignment.user_id,
-          role: @assignment.user_role.name
-        }
-      )
+    def log_activity(type_of, message_items = {})
+      message_items = { experiment: @experiment.id, role: @assignment.user_role.name }.merge(message_items)
+
+      Activities::CreateActivityService
+        .call(activity_type: type_of,
+              owner: current_user,
+              subject: @experiment,
+              team: @project.team,
+              project: @project,
+              message_items: message_items)
     end
   end
 end

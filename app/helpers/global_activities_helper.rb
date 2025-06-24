@@ -53,6 +53,8 @@ module GlobalActivitiesHelper
     path = ''
 
     case obj
+    when UserGroup
+      path = users_settings_team_user_group_path(obj.team, obj)
     when User
       return "[@#{obj.full_name}~#{obj.id.base62_encode}]"
     when Tag

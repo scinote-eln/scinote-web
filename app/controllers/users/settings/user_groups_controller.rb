@@ -51,15 +51,22 @@ module Users
         @user_group.assign_attributes(user_group_params)
 
         if @user_group.save
+          log_activity(:create_user_group)
+          @user_group.users.each do |user|
+            log_activity(:add_group_user_member, { user_target: user.id })
+          end
           render json: { message: t('user_groups.create.success') }, status: :created
         else
           render json: { errors: t('user_groups.create.error') }, status: :unprocessable_entity
         end
       end
 
-      def update; end
+      def update
+        log_activity(:update_user_group)
+      end
 
       def destroy
+        log_activity(:delete_user_group)
         if @user_group.destroy
           render json: { message: t('user_groups.delete.success') }, status: :ok
         else
@@ -94,6 +101,18 @@ module Users
 
       def check_manage_permissions
         render_403 unless can_manage_team?(@team)
+      end
+
+      def log_activity(type_of, message_items = {})
+        Activities::CreateActivityService
+          .call(activity_type: type_of,
+                owner: current_user,
+                subject: @user_group.team,
+                team: @user_group.team,
+                message_items: {
+                  user_group: @user_group.id,
+                  team: @user_group.team.id
+                }.merge(message_items))
       end
 
       def set_breadcrumbs_items

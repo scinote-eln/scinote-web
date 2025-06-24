@@ -46,10 +46,12 @@ module AccessPermissions
           )
 
           if permitted_create_params[:user_id].present?
-            log_activity(:assign_user_to_project, { user_target: assignment.user.id,
-                                                    role: assignment.user_role.name })
-            created_count += 1
+            log_activity(:assign_user_to_project, user_target: assignment.user.id, role: assignment.user_role.name)
+          else
+            log_activity(:project_access_granted_user_group, user_group: assignment.user_group.id, role: assignment.user_role.name)
           end
+
+          created_count += 1
 
           propagate_job(assignment)
         end
@@ -57,7 +59,7 @@ module AccessPermissions
         @message = if created_count.zero?
                      t('access_permissions.create.success', member_name: t('access_permissions.all_team'))
                    else
-                     t('access_permissions.create.success', member_name: escape_input(assignment.user.name))
+                     t('access_permissions.create.success', member_name: escape_input(assignment.respond_to?(:user_group) ? assignment.user_group.name : assignment.user.name))
                    end
         render json: { message: @message }
       rescue ActiveRecord::RecordInvalid => e
@@ -85,10 +87,10 @@ module AccessPermissions
       end
 
       assignment.update!(permitted_update_params)
-
       if permitted_create_params[:user_id].present?
-        log_activity(:change_user_role_on_project, { user_target: assignment.user.id,
-                                                     role: assignment.user_role.name })
+        log_activity(:change_user_role_on_project, user_target: assignment.user.id, role: assignment.user_role.name)
+      else
+        log_activity(:project_access_changed_user_group, user_group: assignment.user_group.id, role: assignment.user_role.name)
       end
 
       propagate_job(assignment)
@@ -120,7 +122,11 @@ module AccessPermissions
         destroy: true
       )
 
-      log_activity(:unassign_user_from_project, { user_target: assignment.user.id, role: assignment.user_role.name }) unless is_group
+      if is_group
+        log_activity(:project_access_revoked_user_group, user_group: assignment.user_group.id, role: assignment.user_role.name)
+      else
+        log_activity(:unassign_user_from_project, user_target: assignment.user.id, role: assignment.user_role.name)
+      end
 
       render json: { message: t('access_permissions.destroy.success', member_name: escape_input(is_group ? assignment.user_group.name : assignment.user.full_name)) }
     rescue ActiveRecord::RecordInvalid
