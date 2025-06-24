@@ -11,8 +11,22 @@
     <%= link_to users_settings_team_user_groups_path, class: "hover:text-black text-black hover:no-underline" do %>
       <i class="sn-icon sn-icon-arrow-left"></i>
     <% end %>
-    <h3 class="m-0">
-      <%= t('user_groups.show.title', group: @user_group.name) %>
+    <h3 class="m-0 flex gap-0.5 items-center">
+      <% if can_manage_team?(@team) %>
+        <span class="shrink-0 mt-1"><%= t('user_groups.show.title') %></span>
+        <%= render partial: "shared/inline_editing",
+                    locals: {
+                      initial_value: @user_group.name,
+                      config: {
+                        field_to_udpate: 'name',
+                        params_group: 'user_group',
+                        path_to_update: users_settings_team_user_group_path(@team, @user_group, format: :json)
+                      }
+                    } %>
+      <% else %>
+        <span class="shrink-0"><%= t('user_groups.show.title') %></span>
+        <span class="view-mode"><%= @user_group.name %></span>
+      <% end %>
     </h3>
   </div>
   <div id="userGroupShow" class="fixed-content-body user-group-table-container">
