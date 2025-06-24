@@ -65,7 +65,40 @@
             :data-object-type="result.attributes.type"
             tabindex="0"
           ></span> <!-- Hidden element to support legacy code -->
-
+          <tempplate v-if="result.attributes.steps.length == 0">
+            <button v-if="urls.update_url" :title="i18n.t('my_modules.results.link_steps')" class="btn btn-light icon-btn" @click="this.openLinkStepsModal = true">
+              {{ i18n.t('my_modules.results.link_to_step') }}
+            </button>
+          </tempplate>
+          <GeneralDropdown v-else ref="linkedStepsDropdown"  position="right">
+            <template v-slot:field>
+              <button class="btn btn-light icon-btn" :title="i18n.t('my_modules.results.linked_steps')">
+                <i class="sn-icon sn-icon-steps"></i>
+                <span class="absolute top-1 -right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
+                  {{ result.attributes.steps.length }}
+                </span>
+              </button>
+            </template>
+            <template v-slot:flyout>
+              <div class="overflow-y-auto max-h-[calc(50vh_-_6rem)]">
+                <a v-for="step in result.attributes.steps"
+                  :key="step.id"
+                  :title="step.name"
+                  :href="protocolUrl(step.id)"
+                  class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer block hover:no-underline text-sn-blue truncate"
+                >
+                  {{ step.name }}
+                </a>
+              </div>
+              <template v-if="urls.update_url">
+                <hr class="my-0">
+                <div class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-blue"
+                    @click="this.openLinkStepsModal = true; $refs.linkedStepsDropdown.closeMenu()">
+                  {{ i18n.t('protocols.steps.manage_links') }}
+                </div>
+              </template>
+            </template>
+          </GeneralDropdown>
           <a href="#"
             ref="comments"
             class="open-comments-sidebar btn icon-btn btn-light"
@@ -148,6 +181,13 @@
           @cancel="closeCustomWellPlateModal"
           @create:table="(...args) => this.createElement('table', ...args)"
         />
+        <LinkStepsModal
+          v-if="openLinkStepsModal"
+          :result="result"
+          :protocolId="protocolId"
+          @updateResult="updateLinkedSteps"
+          @close="openLinkStepsModal = false"
+        />
       </div>
     </div>
   </div>
@@ -161,7 +201,9 @@ import ResultText from '../shared/content/text.vue';
 import Attachments from '../shared/content/attachments.vue';
 import InlineEdit from '../shared/inline_edit.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
+import GeneralDropdown from '../shared/general_dropdown.vue';
 import deleteResultModal from './delete_result.vue';
+import LinkStepsModal from './modals/link_steps.vue'
 import ContentToolbar from '../shared/content/content_toolbar';
 import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
 
@@ -170,12 +212,16 @@ import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.
 import OveMixin from '../shared/content/attachments/mixins/ove.js';
 import UtilsMixin from '../mixins/utils.js';
 import StorageUsage from '../shared/content/attachments/storage_usage.vue';
+import {
+  protocols_my_module_path,
+} from '../../routes.js';
 
 export default {
   name: 'Results',
   props: {
     result: { type: Object, required: true },
     resultToReload: { type: Number, required: false },
+    protocolId: { type: Number, required: false },
     activeDragResult: {
       required: false
     },
@@ -193,6 +239,7 @@ export default {
       showFileModal: false,
       dragingFile: false,
       customWellPlate: false,
+      openLinkStepsModal: false,
       wellPlateOptions: [
         { text: I18n.t('protocols.steps.insert.well_plate_options.custom'), emit: 'create:custom_well_plate'},
         { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table', params: [32, 48] },
@@ -219,7 +266,9 @@ export default {
     deleteResultModal,
     StorageUsage,
     ContentToolbar,
-    CustomWellPlateModal
+    CustomWellPlateModal,
+    LinkStepsModal,
+    GeneralDropdown
   },
   watch: {
     resultToReload() {
@@ -576,7 +625,15 @@ export default {
       axios.patch(this.urls.update_url, { result: { name } }).then((_) => {
         this.$emit('updated');
       });
-    }
+    },
+    updateLinkedSteps(steps) {
+      this.$emit('result:update', this.result.id,{
+        steps: steps
+      })
+    },
+    protocolUrl(step_id) {
+      return protocols_my_module_path({ id: this.result.attributes.my_module_id }, { step_id: step_id })
+    },
   }
 };
 </script>

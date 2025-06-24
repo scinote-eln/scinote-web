@@ -190,6 +190,7 @@ export default {
 
           // Remove images
           content = content.replace(/<img[^>]*>/g, '');
+          this.editorIframe(editor).contents().find('body img').remove();
 
           this.$emit('update:modelValue', content);
         });
@@ -202,8 +203,11 @@ export default {
     }
   },
   methods: {
+    editorIframe(editor) {
+      return $(`#${editor.id}`).next().find('.tox-edit-area iframe');
+    },
     initCssOverrides(editor) {
-      const editorIframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe');
+      const editorIframe = this.editorIframe(editor);
       const primaryColor = '#104da9';
       const placeholderColor = '#98A2B3';
       editorIframe.contents().find('head').append(`<style type="text/css">

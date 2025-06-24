@@ -40,6 +40,8 @@ describe Result, type: :model do
     it { should have_many :result_texts }
     it { should have_many :result_comments }
     it { should have_many :report_elements }
+    it { should have_many :step_results }
+    it { should have_many :steps }
   end
 
   describe 'Validations' do

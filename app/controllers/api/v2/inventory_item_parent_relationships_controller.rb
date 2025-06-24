@@ -12,11 +12,12 @@ module Api
                                                                                   .per(params.dig(:page, :size))
         render jsonapi: parent_connections,
                each_serializer: InventoryItemRelationshipSerializer,
+               show_repository: true,
                include: include_params
       end
 
       def show
-        render jsonapi: @parent_connection, serializer: InventoryItemRelationshipSerializer, include: include_params
+        render jsonapi: @parent_connection, serializer: InventoryItemRelationshipSerializer, show_repository: true, include: include_params
       end
 
       def create

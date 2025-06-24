@@ -4,7 +4,7 @@ module SettingsModel
   extend ActiveSupport::Concern
 
   included do
-    serialize :settings, JsonbHashSerializer
+    serialize :settings, coder: JsonbHashSerializer
     after_initialize :init_default_settings, if: :new_record?
   end
 

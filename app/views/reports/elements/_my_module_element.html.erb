@@ -55,7 +55,7 @@
     <br>
     <br>
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-xs-12 text-block">
         <% if my_module.description.present? %>
           <%= custom_auto_link(my_module.prepare_for_report(:description, export_all: export_all),
                                team: current_team,
@@ -86,6 +86,15 @@
           <% end %>
         </div>
 
+        <div class="user-time">
+          <% unless @settings['exclude_timestamps'] %>
+            <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
+          <% end %>
+          <% if !@settings['exclude_task_metadata'] && result.steps.size.positive? %>
+            | <%= t("projects.reports.elements.result.linked_steps") %> <%= result.steps.pluck(:name).join('; ') %>
+          <% end %>
+        </div>
+
         <% result.result_orderable_elements.each do |element| %>
           <% if element.orderable_type == "ResultTable" && @settings.dig('task', 'table_results') %>
             <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, element: element} %>
@@ -96,11 +105,6 @@
 
         <% if @settings.dig('task', 'file_results')  %>
           <%= render partial: 'reports/elements/my_module_result_asset_element', locals: { result: result, report: report, export_all: export_all } %>
-          <% unless @settings['exclude_timestamps'] %>
-            <div class="user-time">
-              <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
-            </div>
-          <% end %>
         <% end %>
 
         <div class="report-element-children">

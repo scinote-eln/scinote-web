@@ -1,5 +1,5 @@
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
-import PerfectScrollbar from 'vue3-perfect-scrollbar';
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
 import AccessModal from '../../../vue/shared/access_modal/modal.vue';
 import { mountWithTurbolinks } from '../helpers/turbolinks.js';
 
@@ -24,7 +24,7 @@ window.initAccessModalComponent = (id) => {
     }
   });
   app.component('access-modal', AccessModal);
-  app.use(PerfectScrollbar);
+  app.component('PerfectScrollbar', PerfectScrollbar);
   app.config.globalProperties.i18n = window.I18n;
   mountWithTurbolinks(app, id);
 };

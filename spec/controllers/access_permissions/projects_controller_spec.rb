@@ -129,7 +129,6 @@ describe AccessPermissions::ProjectsController, type: :controller do
     end
 
     it 'creates new project user and user assignment' do
-      Delayed::Worker.delay_jobs = false
       dj_worker = Delayed::Worker.new
       post :create, params: valid_params, format: :json
       Delayed::Job.all.each { |job| dj_worker.run(job) }

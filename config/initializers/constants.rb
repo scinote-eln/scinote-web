@@ -449,6 +449,9 @@ class Constants
     done: '#5EC66F'
   }
 
+  # Infinite date, for use in sorting
+  INFINITE_DATE = Date.new(9999, 1, 1).freeze
+
   # Interval time for polling asset changes when editing with SciNote Edit
   ASSET_POLLING_INTERVAL = 5000
 

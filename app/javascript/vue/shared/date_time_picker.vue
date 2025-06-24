@@ -71,7 +71,8 @@ export default {
     disabled: { type: Boolean, default: false },
     customIcon: { type: String },
     size: { type: String, default: 'xs' },
-    dataE2e: { type: String, default: '' }
+    dataE2e: { type: String, default: '' },
+    valueType: { type: String, default: 'object' }
   },
   data() {
     return {
@@ -132,7 +133,7 @@ export default {
       }
 
       if (this.defaultValue !== this.datetime) {
-        this.$emit('change', this.datetime);
+        this.$emit('change', this.emitValue(this.datetime));
 
         if (this.mode === 'date') this.close();
       }
@@ -160,7 +161,7 @@ export default {
       }
 
       if (this.defaultValue !== newDate) {
-        this.$emit('change', newDate);
+        this.$emit('change', this.emitValue(newDate));
       }
     }
   },
@@ -176,6 +177,11 @@ export default {
         if (this.mode === 'time') {
           this.time = val;
         } else {
+          // If new value has different date then previous date, reset time
+          if (val && this.datetime && this.datetime.getDate() !== val.getDate()) {
+            val.setHours(0, 0, 0, 0);
+          }
+
           this.datetime = val;
         }
       }
@@ -184,7 +190,7 @@ export default {
       if (this.mode === 'time') return 'HH:mm';
       if (this.mode === 'date') return document.body.dataset.datetimePickerFormatVue;
       return `${document.body.dataset.datetimePickerFormatVue} HH:mm`;
-    }
+    },
   },
   mounted() {
     window.addEventListener('resize', this.close);
@@ -193,6 +199,21 @@ export default {
     window.removeEventListener('resize', this.close);
   },
   methods: {
+    stringValue(date) {
+      let time_str = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+      let date_str = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+      if (this.mode === 'time') return time_str;
+      if (this.mode === 'date') return date_str;
+      return `${date_str} ${time_str}`;
+    },
+    emitValue(date) {
+      if (date == null) {
+        this.$emit('cleared');
+        return null;
+      }
+
+      return this.valueType === 'stringWithoutTimezone' ? this.stringValue(date) : date;
+    },
     close() {
       this.$refs.datetimePicker.closeMenu();
     },

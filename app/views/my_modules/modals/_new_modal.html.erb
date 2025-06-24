@@ -26,7 +26,7 @@
                   '',
                   placeholder: t('experiments.canvas.new_my_module_modal.name_placeholder'),
                   class: "sci-input-field",
-                  data: {'data-e2e'=>'e2e-IF-canvas-newTaskModal-name'} %>
+                  data: {'e2e'=>'e2e-IF-canvas-newTaskModal-name'} %>
               </div>
             </div>
           </div>
@@ -37,7 +37,7 @@
                   <label class="sci-label" for="my_module_due_date"><%= t('experiments.canvas.new_my_module_modal.due_date') %></label>
                   <div id="date-time-picker-my-module" class="vue-date-time-picker w-full" data-e2e="e2e-DP-canvas-newTaskModal-dueDate">
                     <input ref="input" type="hidden" data-simple-format="true"  class="calendar-input" id="date-time-picker-input" v-model="date" name="my_module[due_date]"  />
-                    <date-time-picker class="w-full" @cleared="clearDate" ref="vueDateTime" placeholder="<%= t('experiments.canvas.new_my_module_modal.due_date_placeholder') %>" @change="updateDate" mode="datetime"></date-time-picker>
+                    <date-time-picker class="w-full" @cleared="clearDate" ref="vueDateTime" value-type="stringWithoutTimezone" placeholder="<%= t('experiments.canvas.new_my_module_modal.due_date_placeholder') %>" @change="updateDate" mode="datetime"></date-time-picker>
                   </div>
                 </div>
               </div>

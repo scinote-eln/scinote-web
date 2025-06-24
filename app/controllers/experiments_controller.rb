@@ -13,15 +13,14 @@ class ExperimentsController < ApplicationController
   before_action :load_experiment, except: %i(create archive_group restore_group
                                              inventory_assigning_experiment_filter actions_toolbar index move)
   before_action :load_experiments, only: :move
-  before_action :check_read_permissions, except: %i(index edit archive clone move new
-                                                    create archive_group restore_group
+  before_action :check_read_permissions, except: %i(index archive clone move create archive_group restore_group
                                                     inventory_assigning_experiment_filter actions_toolbar)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(create move)
   before_action :check_manage_permissions, only: :batch_clone_my_modules
   before_action :check_update_permissions, only: :update
   before_action :check_archive_permissions, only: :archive
-  before_action :check_clone_permissions, only: %i(clone_modal clone)
+  before_action :check_clone_permissions, only: %i(clone)
   before_action :set_inline_name_editing, only: %i(index canvas module_archive)
   before_action :set_breadcrumbs_items, only: %i(index canvas module_archive)
   before_action :set_navigator, only: %i(index canvas module_archive)
@@ -275,7 +274,7 @@ class ExperimentsController < ApplicationController
 
       flash[:success] = t('experiments.table.move_success_flash', project: escape_input(@project.name))
       render json: { message: t('experiments.table.move_success_flash',
-                                project: escape_input(@project.name)), path: project_path(@project) }
+                                project: escape_input(@project.name)), path: project_experiments_path(@project) }
     rescue StandardError => e
       Rails.logger.error(e.message)
       Rails.logger.error(e.backtrace.join("\n"))

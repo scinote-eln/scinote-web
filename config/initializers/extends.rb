@@ -610,14 +610,16 @@ class Extends
     project_access_changed_user_group: 391,
     project_access_revoked_user_group: 392,
     experiment_access_changed_user_group: 393,
-    my_module_access_changed_user_group: 394
+    my_module_access_changed_user_group: 394,
+    step_and_result_linked: 395,
+    step_and_result_unlinked: 396
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243, *370..378, *390..392],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, *246..248, *257..273, *284..291, 301, 303, 306, 328],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
-           148, 166, 394],
+           148, 166, 394, 395, 396],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
                     184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327, *347..352, 359],
     task_inventory: [55, 56, 146, 147, 183],
@@ -724,7 +726,7 @@ class Extends
         ^CF0,15
         ^FO0,5^FD{{ITEM_ID}}^FS
         ^FO0,13^BQN,2,3^FDMA,{{ITEM_ID}}^FS
-        ^FO70,27^FB100,2,0,L^FD{{NAME}}^FS^FS
+        ^FO70,27^FB100,4,0,L^FD{{NAME}}^FS^FS
         ^XZ
       HEREDOC
   }

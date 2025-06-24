@@ -1,4 +1,4 @@
-FROM ruby:3.2-bookworm
+FROM ruby:3.3-bookworm
 MAINTAINER SciNote <info@scinote.net>
 
 ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/2.9.4/tika-app-2.9.4.jar"
@@ -33,7 +33,7 @@ RUN apt-get update -qq && \
 
 ENV PATH=/usr/share/nodejs/yarn/bin:$PATH
 
-RUN yarn add puppeteer@npm:puppeteer-core@^22.15.0
+RUN yarn add npm:puppeteer-core@24.10.0
 
 ENV BUNDLE_PATH /usr/local/bundle/
 

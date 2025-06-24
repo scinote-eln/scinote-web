@@ -38,38 +38,37 @@ module Activities
 
     def filter_users!
       @activity_filters = @activity_filters.where(
-        "NOT(filter ? 'users') OR filter -> 'users' @> '\":owner_id\"'", owner_id: @activity.owner_id
+        "NOT(filter ? 'users') OR filter -> 'users' @> :owner_id::jsonb", owner_id: [@activity.owner_id.to_s].to_json
       )
     end
 
     def filter_types!
       @activity_filters = @activity_filters.where(
-        "NOT(filter ? 'types') OR filter -> 'types' @> '\":type_of\"'", type_of: @activity.type_of_before_type_cast
+        "NOT(filter ? 'types') OR filter -> 'types' @> :type_of::jsonb", type_of: [@activity.type_of_before_type_cast.to_s].to_json
       )
     end
 
     def filter_teams!
       @activity_filters = @activity_filters.where(
-        "NOT(filter ? 'teams') OR filter -> 'teams' @> '\":team_id\"'", team_id: @activity.team_id
+        "NOT(filter ? 'teams') OR filter -> 'teams' @> :team_id::jsonb", team_id: [@activity.team_id.to_s].to_json
       )
     end
 
     def filter_subjects!
       parents = @activity.subject_parents
-      filtered_by_subject = @activity_filters
 
       filtered_by_subject =
         @activity_filters
         .where("NOT(filter ? 'subjects')")
-        .or(@activity_filters.where("filter -> 'subjects' -> 'Project' @> '\":subject_id\"'",
-                                    subject_id: @activity.project_id))
-        .or(@activity_filters.where("filter -> 'subjects' -> :subject_type @> '\":subject_id\"'",
-                                    subject_type: @activity.subject_type, subject_id: @activity.subject_id))
+        .or(@activity_filters.where("filter -> 'subjects' -> 'Project' @> :subject_id::jsonb",
+                                    subject_id: [@activity.project_id.to_s].to_json))
+        .or(@activity_filters.where("filter -> 'subjects' -> :subject_type @> :subject_id::jsonb",
+                                    subject_type: @activity.subject_type, subject_id: [@activity.subject_id.to_s].to_json))
       parents.each do |parent|
         filtered_by_subject =
           filtered_by_subject
-          .or(@activity_filters.where("filter -> 'subjects' -> :subject_type @> '\":subject_id\"'",
-                                      subject_type: parent.class, subject_id: parent.id))
+          .or(@activity_filters.where("filter -> 'subjects' -> :subject_type @> :subject_id::jsonb",
+                                      subject_type: parent.class.name, subject_id: [parent.id.to_s].to_json))
       end
       @activity_filters = filtered_by_subject
     end

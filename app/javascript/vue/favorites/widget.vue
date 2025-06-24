@@ -6,12 +6,12 @@
         <div class="overflow-hidden">
           <div class="flex items-center gap-2 text-sn-grey">
             <template v-for="(breadcrumb, index) in favorite.attributes.breadcrumbs" :key="index" >
-              <div v-if="index > 0">
+              <div v-if="index > 0" class="flex items-center gap-2 overflow-hidden">
                 <span v-if="index > 1"> / </span>
-                <span v-if="index + 1 < favorite.attributes.breadcrumbs.length" class="text-xs">
+                <span v-if="index + 1 < favorite.attributes.breadcrumbs.length" :title="breadcrumb.name" class="text-xs truncate">
                   {{ breadcrumb.name }}
                 </span>
-                <span v-else class="text-xs">
+                <span v-else class="text-xs shrink-0 min-w-36">
                   {{ favorite.attributes.code }}
                 </span>
               </div>

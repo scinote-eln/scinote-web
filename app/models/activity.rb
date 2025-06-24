@@ -17,12 +17,12 @@ class Activity < ApplicationRecord
   # invert the children hash to get a hash defining parents
   ACTIVITY_SUBJECT_PARENTS = Extends::ACTIVITY_SUBJECT_CHILDREN.invert.map do |k, v|
     k&.map { |s| [s.to_s.classify, v.to_s.classify.constantize.reflect_on_association(s)&.inverse_of&.name || v] }
-  end.compact.sum.to_h.freeze
+  end.compact.sum([]).to_h.freeze
 
   include ActivityValuesModel
   include GenerateNotificationModel
 
-  enum type_of: Extends::ACTIVITY_TYPES
+  enum :type_of, Extends::ACTIVITY_TYPES
 
   belongs_to :owner, inverse_of: :activities, class_name: 'User'
   belongs_to :subject, polymorphic: true, optional: true

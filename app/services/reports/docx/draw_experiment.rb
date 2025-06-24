@@ -37,7 +37,7 @@ module Reports::Docx::DrawExperiment
 
       if experiment.due_date.present?
         @docx.p do
-          text I18n.t('projects.reports.elements.experiment_header.due_date',
+          text I18n.t('projects.reports.elements.experiment.due_date',
                       due_date: I18n.l(experiment.due_date, format: :full))
         end
       end

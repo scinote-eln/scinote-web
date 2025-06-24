@@ -25,7 +25,7 @@ module Lists
                           .select('experiments.*')
                           .select('COUNT(DISTINCT active_tasks.id) AS task_count')
                           .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_task_count')
-                          .group('experiments.id, favorites.id')
+                          .group('experiments.id')
 
       view_mode = if @params[:project].archived?
                     'archived'
@@ -116,6 +116,8 @@ module Lists
                      @records.order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) DESC'))
                              .group('experiments.archived_on', 'projects.archived_on')
                    end
+                 when 'favorite'
+                   @records.order(Arel.sql("favorite #{sort_direction(order_params) == 'ASC' ? 'DESC' : 'ASC'}"))
                  when 'status'
                    @records.order(Arel.sql("CASE
                                            WHEN experiments.started_at IS NULL AND experiments.done_at IS NULL THEN -1

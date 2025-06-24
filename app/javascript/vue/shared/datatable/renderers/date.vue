@@ -8,13 +8,16 @@
       :mode="this.params.mode || 'datetime'"
       :placeholder="this.params.placeholder"
       :customIcon="this.params.data[this.params.field].icon"
+      :valueType="'stringWithoutTimezone'"
       :clearable="true"/>
     <template v-else-if="this.params.data[this.params.field].value_formatted">
-      <i :class="this.params.data[this.params.field].icon || 'sn-icon sn-icon-calendar'"></i>
-      {{ this.params.data[this.params.field].value_formatted }}
+      <div class="pl-1">
+        <i :class="this.params.data[this.params.field].icon || 'sn-icon sn-icon-calendar'"></i>
+        {{ this.params.data[this.params.field].value_formatted }}
+      </div>
     </template>
     <template v-else>
-      {{ this.params.emptyPlaceholder }}
+      <div class="pl-2">{{ this.params.emptyPlaceholder }}</div>
     </template>
   </div>
 </template>

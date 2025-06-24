@@ -291,13 +291,6 @@ export default {
           key: 'updated_on',
           type: 'DateRange',
           label: this.i18n.t('filters_modal.updated_on.label')
-        },
-        {
-          key: 'statuses',
-          type: 'Select',
-          options: this.statusesList,
-          label: this.i18n.t('experiments.index.filters.status'),
-          placeholder: this.i18n.t('experiments.index.filters.status_placeholder')
         }
       ];
 
@@ -308,6 +301,14 @@ export default {
           label: this.i18n.t('filters_modal.archived_on.label')
         });
       }
+
+      filters.push( {
+        key: 'statuses',
+        type: 'Select',
+        options: this.statusesList,
+        label: this.i18n.t('experiments.index.filters.status'),
+        placeholder: this.i18n.t('experiments.index.filters.status_placeholder')
+      });
 
       return filters;
     }
@@ -392,15 +393,6 @@ export default {
         roles_path: this.userRolesUrl
       };
     },
-    formatDate(date) {
-      if (!(date instanceof Date)) return null;
-
-      const y = date.getFullYear();
-      const m = date.getMonth() + 1;
-      const d = date.getDate();
-
-      return `${y}/${m}/${d}`;
-    },
     updateField(url, params) {
       axios.put(url, params).then(() => {
         this.updateTable();
@@ -410,10 +402,10 @@ export default {
       this.updateField(params.data.urls.update, { experiment: { status: value } });
     },
     updateDueDate(value, params) {
-      this.updateField(params.data.urls.update, { due_date: this.formatDate(value) });
+      this.updateField(params.data.urls.update, { due_date: value });
     },
     updateStartDate(value, params) {
-      this.updateField(params.data.urls.update, { start_date: this.formatDate(value) });
+      this.updateField(params.data.urls.update, { start_date: value });
     },
     updateFavorite(value, params) {
       const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;

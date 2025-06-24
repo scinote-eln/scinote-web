@@ -111,7 +111,7 @@
 
 /* global GLOBAL_CONSTANTS */
 import { AgGridVue } from 'ag-grid-vue3';
-import PerfectScrollbar from 'vue3-perfect-scrollbar';
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
 import axios from '../../../packs/custom_axios.js';
 import SelectDropdown from '../select_dropdown.vue';
 import Pagination from './pagination.vue';

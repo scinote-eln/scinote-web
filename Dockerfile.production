@@ -1,5 +1,5 @@
 # Building stage
-FROM ruby:3.2-bookworm AS builder
+FROM ruby:3.3-bookworm AS builder
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN \
@@ -39,10 +39,10 @@ RUN \
   DATABASE_URL=postgresql://postgres@db/scinote_production \
   SECRET_KEY_BASE=dummy \
   DEFACE_ENABLED=true \
-  bash -c "rake assets:precompile && rake deface:precompile && rm -rf ./tmp/cache"
+  bash -c "bundle exec rake assets:precompile && bundle exec rake deface:precompile && rm -rf ./tmp/cache"
 
 # Final stage
-FROM ruby:3.2-bookworm AS runner
+FROM ruby:3.3-bookworm AS runner
 MAINTAINER SciNote <info@scinote.net>
 
 ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/2.9.4/tika-app-2.9.4.jar"
@@ -85,7 +85,7 @@ RUN \
   yarnpkg && \
   wget -O $TIKA_PATH $TIKA_DIST_URL && \
   chmod +x $TIKA_PATH && \
-  /usr/share/nodejs/yarn/bin/yarn add puppeteer@npm:puppeteer-core@^22.15.0 && \
+  /usr/share/nodejs/yarn/bin/yarn add npm:puppeteer-core@24.10.0 && \
   apt-get install -y libreoffice && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
 
@@ -115,4 +115,4 @@ COPY --from=builder --chown=scinote:scinote $APP_HOME $APP_HOME
 
 WORKDIR $APP_HOME
 
-CMD rails s -b 0.0.0.0
+CMD bin/rails s -b 0.0.0.0

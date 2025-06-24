@@ -70,6 +70,10 @@ class Repository < RepositoryBase
     active.where(id: (readable_ids + shared_with_team_ids + globally_shared_ids).uniq)
   }
 
+  def readable_by_user?(user)
+    permission_granted?(user, RepositoryPermissions::READ)
+  end
+
   def self.within_global_limits?
     return true unless Rails.configuration.x.global_repositories_limit.positive?
 

@@ -23,6 +23,8 @@ module Lists
 
       if @filters[:folder_search].present? && @filters[:folder_search] == 'true'
         @records = projects
+      elsif @filters.present?
+        @records = projects.where(project_folder: @current_folder)
       else
         projects = projects.where(project_folder: @current_folder)
         folders = folders.where(parent_folder: @current_folder)
@@ -67,7 +69,7 @@ module Lists
            .select('COUNT(DISTINCT active_completed_experiments.id) AS completed_experiments_count')
            .select('COUNT(DISTINCT active_tasks.id) AS tasks_count')
            .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_tasks_count')
-           .group('projects.id, favorites.id')
+           .group('projects.id')
     end
 
     def fetch_project_folders
@@ -141,9 +143,9 @@ module Lists
 
       case sort
       when 'created_at_ASC'
-        @records = @records.sort_by(&:created_at).reverse!
+        @records = @records.sort_by { |object| project_timestamp(:created_at, object) }
       when 'created_at_DESC'
-        @records = @records.sort_by(&:created_at)
+        @records = @records.sort_by { |object| project_timestamp(:created_at, object) }.reverse!
       when 'name_ASC'
         @records = @records.sort_by { |c| c.name.downcase }
       when 'name_DESC'
@@ -153,17 +155,17 @@ module Lists
       when 'code_DESC'
         @records = @records.sort_by(&:id).reverse!
       when 'archived_on_ASC'
-        @records = @records.sort_by(&:archived_on)
+        @records = @records.sort_by { |object| project_timestamp(:archived_on, object) }
       when 'archived_on_DESC'
-        @records = @records.sort_by(&:archived_on).reverse!
+        @records = @records.sort_by { |object| project_timestamp(:archived_on, object) }.reverse!
       when 'users_ASC'
         @records = @records.sort_by { |object| project_users_count(object) }
       when 'users_DESC'
         @records = @records.sort_by { |object| project_users_count(object) }.reverse!
       when 'updated_at_ASC'
-        @records = @records.sort_by(&:updated_at).reverse!
+        @records = @records.sort_by { |object| project_timestamp(:updated_at, object) }
       when 'updated_at_DESC'
-        @records = @records.sort_by(&:updated_at)
+        @records = @records.sort_by { |object| project_timestamp(:updated_at, object) }.reverse!
       when 'comments_ASC'
         @records = @records.sort_by { |object| project_comments_count(object) }
       when 'comments_DESC'
@@ -181,9 +183,9 @@ module Lists
       when 'due_date_DESC'
         @records = @records.sort_by { |object| project_due_date(object) }.reverse!
       when 'status_ASC'
-        @records = @records.sort_by { |object| project_status(object, 'asc') }
+        @records = @records.sort_by { |object| project_status(object) }
       when 'status_DESC'
-        @records = @records.sort_by { |object| project_status(object, 'desc') }.reverse!
+        @records = @records.sort_by { |object| project_status(object) }.reverse!
       when 'supervised_by_ASC'
         @records = @records.sort_by { |object| project_supervised_by(object) }
       when 'supervised_by_DESC'
@@ -192,6 +194,14 @@ module Lists
         @records = @records.sort_by { |object| project_description(object) }
       when 'description_DESC'
         @records = @records.sort_by { |object| project_description(object) }.reverse!
+      when 'completed_experiments_ASC'
+        @records = @records.sort_by { |object| completed_experiments(object) }
+      when 'completed_experiments_DESC'
+        @records = @records.sort_by { |object| completed_experiments(object) }.reverse!
+      when 'completed_tasks_ASC'
+        @records = @records.sort_by { |object| completed_tasks(object) }
+      when 'completed_tasks_DESC'
+        @records = @records.sort_by { |object| completed_tasks(object) }.reverse!
       end
     end
 
@@ -200,44 +210,42 @@ module Lists
     end
 
     def project_comments_count(object)
-      return [0, 0, -1] unless project?(object)
+      return [1, 0, -1] unless project?(object)
 
-      [1, can_create_project_comments?(@user, object) ? 1 : 0, object.comments.count]
+      [0, object.comments.count, can_create_project_comments?(@user, object) ? 1 : 0]
     end
 
     def project_users_count(object)
-      return [0, -1] unless project?(object)
+      return [1, -1] unless project?(object)
 
-      [1, object.users.count]
+      [0, object.users.count]
     end
 
     def project_favorites(object)
-      if project?(object)
-        object.favorite ? 1 : 0
-      else
-        -1
-      end
+      return [1, 0, -1] unless project?(object)
+
+      [0, can_read_project?(@user, object) ? 0 : 1, object.favorite ? 0 : 1]
     end
 
     def project_start_date(object)
-      return Date.new(2100, 1, 1) unless project?(object)
+      return Constants::INFINITE_DATE unless project?(object)
 
-      object.start_date || Date.new(2100, 1, 1)
+      object.start_date || Constants::INFINITE_DATE
     end
 
     def project_due_date(object)
-      return Date.new(2100, 1, 1) unless project?(object)
+      return Constants::INFINITE_DATE unless project?(object)
 
-      object.due_date || Date.new(2100, 1, 1)
+      object.due_date || Constants::INFINITE_DATE
     end
 
-    def project_status(object, direction)
-      return (direction == 'asc' ? 10 : -1) unless project?(object)
+    def project_status(object)
+      return 3 unless project?(object) # should come after done (2)
 
       statuses = {
         not_started: 0,
-        started: 1,
-        completed: 2
+        in_progress: 1,
+        done: 2
       }
 
       statuses[object.status.to_sym]
@@ -246,13 +254,29 @@ module Lists
     def project_supervised_by(object)
       return [1, '', 1] unless project?(object)
 
-      [object.supervised_by_id ? 0 : 1, object.supervised_by&.full_name || '', 0]
+      [object.supervised_by_id ? 0 : 1, strip_tags(object.supervised_by&.full_name&.downcase || ''), 0]
     end
 
     def project_description(object)
       return [1, '', 1] unless project?(object)
 
-      [object.description ? 0 : 1, strip_tags(object.description || ''), 0]
+      [object.description ? 0 : 1, strip_tags(object.description&.downcase || ''), 0]
+    end
+
+    def project_timestamp(timestamp_name, object)
+      project?(object) ? object[timestamp_name] : Constants::INFINITE_DATE
+    end
+
+    def completed_experiments(object)
+      return [1, -1] unless project?(object)
+
+      [0, object.completed_experiments_count]
+    end
+
+    def completed_tasks(object)
+      return [1, -1] unless project?(object)
+
+      [0, object.completed_tasks_count]
     end
 
     def project?(object)

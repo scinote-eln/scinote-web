@@ -24,7 +24,7 @@ class ProjectsController < ApplicationController
                                                     favorite unfavorite)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: :update
-  before_action :set_folder_inline_name_editing, only: %i(index cards)
+  before_action :set_folder_inline_name_editing, only: %i(index)
   before_action :set_breadcrumbs_items, only: :index
   before_action :set_navigator, only: :index
   layout 'fluid'
@@ -294,7 +294,7 @@ class ProjectsController < ApplicationController
   end
 
   def assigned_users_list
-    users = User.where(id: @project.user_assignments.select(:user_id)).order('full_name ASC')
+    users = @project.users.search(false, params[:query]).order(:full_name)
 
     render json: { data: users.map { |u| [u.id, u.name, { avatar_url: avatar_path(u, :icon_small) }] } }, status: :ok
   end
