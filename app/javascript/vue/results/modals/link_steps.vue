@@ -22,6 +22,7 @@
                 :value="selectedSteps"
                 :searchable="true"
                 @change="changeSteps"
+                :option-renderer="stepRenderer"
                 :multiple="true"
                 :withCheckboxes="true"
                 :placeholder="i18n.t('my_modules.results.modals.link_steps.placeholder')" />
@@ -137,6 +138,9 @@ export default {
         .then((response) => {
           this.steps = response.data;
         });
+    },
+    stepRenderer(option) {
+      return `${option[2].position + 1}. ${option[1]}`;
     }
   }
 };
