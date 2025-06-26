@@ -4251,7 +4251,7 @@ en:
       toolbar:
         delete: "Delete"
     show:
-      title: "Group %{group}"
+      title: "Group"
       add_members: "Add members"
       name: "Name"
       email: "Email"

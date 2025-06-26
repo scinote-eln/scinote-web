@@ -63,7 +63,16 @@ module Users
       end
 
       def update
-        log_activity(:update_user_group)
+        ActiveRecord::Base.transaction do
+          @user_group.last_modified_by = current_user
+          @user_group.assign_attributes(user_group_params)
+          @user_group.save!
+          log_activity(:update_user_group)
+          render json: {}, status: :ok
+        rescue ActiveRecord::RecordInvalid => e
+          render json: { errors: e.message }, status: :unprocessable_entity
+          raise ActiveRecord::Rollback
+        end
       end
 
       def destroy
