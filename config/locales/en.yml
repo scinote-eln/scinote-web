@@ -4345,6 +4345,7 @@ en:
       other_team_invitation: "You were invited or removed from the team"
       experiment_due_date: "Due date reminder if you have Owner or User access role on a Experiment"
       project_due_date: "Due date reminder if you have Owner access role on a Project"
+      other_user_group_member: "You were added or removed from the group"
     content:
       my_module_due_date_reminder:
         title_html: "Task due date reminder"

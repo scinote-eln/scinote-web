@@ -1,5 +1,5 @@
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
-import PerfectScrollbar from 'vue3-perfect-scrollbar';
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
 import UserGroupShow from '../../vue/user_groups/show.vue';
 import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
