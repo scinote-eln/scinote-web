@@ -214,12 +214,14 @@
       @close="openFormSelectModal = false"
       @submit="createElement('form_response', null, null, $event); openFormSelectModal = false"
     />
-    <LinkResultsModal
-      v-if="openLinkResultsModal"
-      :step="step"
-      @updateStep="updateLinkedResults"
-      @close="openLinkResultsModal = false"
-    />
+    <Teleport to="body">
+      <LinkResultsModal
+        v-if="openLinkResultsModal"
+        :step="step"
+        @updateStep="updateLinkedResults"
+        @close="openLinkResultsModal = false"
+      />
+    </Teleport>
   </div>
 </template>
 

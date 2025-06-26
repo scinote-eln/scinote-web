@@ -181,13 +181,15 @@
           @cancel="closeCustomWellPlateModal"
           @create:table="(...args) => this.createElement('table', ...args)"
         />
-        <LinkStepsModal
-          v-if="openLinkStepsModal"
-          :result="result"
-          :protocolId="protocolId"
-          @updateResult="updateLinkedSteps"
-          @close="openLinkStepsModal = false"
-        />
+        <Teleport to="body">
+          <LinkStepsModal
+            v-if="openLinkStepsModal"
+            :result="result"
+            :protocolId="protocolId"
+            @updateResult="updateLinkedSteps"
+            @close="openLinkStepsModal = false"
+          />
+        </Teleport>
       </div>
     </div>
   </div>
