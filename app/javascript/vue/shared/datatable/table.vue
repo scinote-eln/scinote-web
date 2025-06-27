@@ -270,7 +270,8 @@ export default {
           maxWidth: 40,
           resizable: true,
           pinned: 'left',
-          lockPosition: 'left'
+          lockPosition: 'left',
+          sortable: false
         });
       }
 
@@ -453,6 +454,9 @@ export default {
         currentViewRender: this.currentViewRender,
         perPage: this.perPage
       };
+
+      columnsState.find((column) => column.colId === 'checkbox').pinned = 'left';
+
       const settings = {
         key: this.stateKey,
         data: tableState
@@ -532,6 +536,11 @@ export default {
           this.restoreSelection();
 
           this.handleScroll();
+        })
+        .catch(() => {
+          this.dataLoading = false;
+          this.$emit('tableReloaded', [], { filtered: this.searchValue.length > 0 });
+          window.HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
         });
     },
     handleInfiniteScroll(response) {
