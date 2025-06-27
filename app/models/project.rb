@@ -87,9 +87,6 @@ class Project < ApplicationRecord
 
   scope :templates, -> { where(template: true) }
 
-  after_create :auto_assign_project_members, if: :visible?
-  before_update :sync_project_assignments, if: :visibility_changed?
-
   def self.search(
     user,
     include_archived,
@@ -137,6 +134,10 @@ class Project < ApplicationRecord
 
   def self.filter_by_teams(teams = [])
     teams.blank? ? self : where(team: teams)
+  end
+
+  def has_permission_children?
+    true
   end
 
   def permission_parent
@@ -364,26 +365,8 @@ class Project < ApplicationRecord
     self.project_folder = nil
   end
 
-  def auto_assign_project_members
-    return if skip_user_assignments
-
-    UserAssignments::ProjectGroupAssignmentJob.perform_now(self, last_modified_by&.id || created_by&.id)
-  end
-
-  def bulk_assignment?
-    visible? && default_public_user_role.present?
-  end
-
   def selected_user_role_validation
     errors.add(:default_public_user_role_id, :inclusion) unless default_public_user_role.in?(UserRole.all)
-  end
-
-  def sync_project_assignments
-    if visible?
-      auto_assign_project_members
-    else
-      UserAssignments::ProjectGroupUnAssignmentJob.perform_now(self)
-    end
   end
 
   def convert_index_to_letter(index)

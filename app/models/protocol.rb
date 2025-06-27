@@ -17,10 +17,6 @@ class Protocol < ApplicationRecord
   include PermissionCheckableModel
   include TinyMceImages
 
-  after_create :update_automatic_user_assignments, if: -> { visible? && in_repository? && parent.blank? }
-  before_update :change_visibility, if: :default_public_user_role_id_changed?
-  after_update :update_automatic_user_assignments,
-               if: -> { saved_change_to_default_public_user_role_id? && in_repository? }
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
 
   enum visibility: { hidden: 0, visible: 1 }
@@ -702,19 +698,6 @@ class Protocol < ApplicationRecord
     steps.map(&:can_destroy?).all?
   end
 
-  def create_or_update_public_user_assignments!(assigned_by)
-    public_role = default_public_user_role || UserRole.find_predefined_viewer_role
-    team.user_assignments.where.not(user: assigned_by).find_each do |team_user_assignment|
-      new_user_assignment = user_assignments.find_or_initialize_by(user: team_user_assignment.user)
-      next if new_user_assignment.manually_assigned?
-
-      new_user_assignment.user_role = public_role
-      new_user_assignment.assigned_by = assigned_by
-      new_user_assignment.assigned = :automatically
-      new_user_assignment.save!
-    end
-  end
-
   def child_version_protocols
     published_versions.or(Protocol.where(id: draft&.id))
   end
@@ -766,17 +749,6 @@ class Protocol < ApplicationRecord
     sync_child_protocol_user_assignment(user_group_assignment)
   end
 
-  def update_automatic_user_assignments
-    return if skip_user_assignments
-
-    case visibility
-    when 'visible'
-      create_or_update_public_user_assignments!(added_by)
-    when 'hidden'
-      automatic_user_assignments.where.not(user: added_by).destroy_all
-    end
-  end
-
   def deep_clone(clone, current_user, include_file_versions: false)
     # Save cloned protocol first
     success = clone.save
@@ -824,9 +796,5 @@ class Protocol < ApplicationRecord
     if parent&.draft && parent.draft.id != id
       errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_draft_number'))
     end
-  end
-
-  def change_visibility
-    self.visibility = default_public_user_role_id.present? ? :visible : :hidden
   end
 end
