@@ -87,7 +87,8 @@ class StepResultsController < ApplicationController
               my_module: my_module.id,
               step: step.id,
               result: result.id,
-              position: step.position + 1
+              step_position: { id: step.id,
+                               value_for: 'position_plus_one' }
             })
   end
 end

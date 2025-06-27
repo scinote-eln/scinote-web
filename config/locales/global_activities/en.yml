@@ -392,8 +392,8 @@ en:
       remove_head_of_project_html: "%{user} removed user %{user_target} as head of project %{project}."
       task_steps_loaded_from_template_html: "%{user} added %{count} steps from template %{protocol} to task %{my_module}."
       protocol_steps_loaded_from_template_html: "%{user} added %{count} steps from template %{protocol}."
-      step_and_result_linked_html: "%{user} linked result <strong>%{result}</strong> and step <strong>%{position}</strong> <strong>%{step}</strong> on task <strong>%{my_module}</strong>."
-      step_and_result_unlinked_html: "%{user} unlinked result <strong>%{result}</strong> and step <strong>%{position}</strong> <strong>%{step}</strong> on task <strong>%{my_module}</strong>."
+      step_and_result_linked_html: "%{user} linked result <strong>%{result}</strong> and step <strong>%{step_position}</strong> <strong>%{step}</strong> on task <strong>%{my_module}</strong>."
+      step_and_result_unlinked_html: "%{user} unlinked result <strong>%{result}</strong> and step <strong>%{step_position}</strong> <strong>%{step}</strong> on task <strong>%{my_module}</strong>."
     activity_name:
       create_project: "Project created"
       edit_project: "Project edited"
