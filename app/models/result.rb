@@ -39,6 +39,7 @@ class Result < ApplicationRecord
   accepts_nested_attributes_for :tables
 
   before_save :ensure_default_name
+  after_discard :delete_step_results
   after_discard do
     CleanupUserSettingsJob.perform_later('result_states', id)
   end
@@ -186,5 +187,9 @@ class Result < ApplicationRecord
 
   def ensure_default_name
     self.name = name.presence || I18n.t('my_modules.results.default_name')
+  end
+
+  def delete_step_results
+    step_results.destroy_all
   end
 end

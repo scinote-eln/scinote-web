@@ -94,7 +94,7 @@ export default {
   },
   computed: {
     resultsListUrl() {
-      return list_my_module_results_path({ my_module_id: this.step.attributes.my_module_id });
+      return list_my_module_results_path({ my_module_id: this.step.attributes.my_module_id, with_linked_step_id: this.step.id });
     },
     resultsPageUrl() {
       return my_module_results_path({ my_module_id: this.step.attributes.my_module_id });

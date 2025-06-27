@@ -41,7 +41,12 @@ class ResultsController < ApplicationController
   end
 
   def list
-    @results = @my_module.results.active
+    if params[:with_linked_step_id].present?
+      step = @my_module.protocol.steps.find_by(id: params[:with_linked_step_id])
+      @results = @my_module.results.where(archived: false).or(@my_module.results.where(id: step.results.select(:id)))
+    else
+      @results = @my_module.results.active
+    end
 
     update_and_apply_user_sort_preference!
   end
