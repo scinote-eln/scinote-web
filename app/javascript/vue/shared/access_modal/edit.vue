@@ -290,7 +290,9 @@ export default {
 
       axios.delete(this.params.object.urls.update_access, {
         data: {
-          [assignmentKey]: id
+          user_assignment: {
+            [assignmentKey]: id
+          }
         }
       }).then((response) => {
         this.$emit('modified');

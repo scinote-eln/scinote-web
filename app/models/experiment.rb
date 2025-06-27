@@ -264,6 +264,10 @@ class Experiment < ApplicationRecord
     project
   end
 
+  def has_permission_children?
+    true
+  end
+
   def permission_parent
     project
   end

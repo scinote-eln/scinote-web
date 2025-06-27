@@ -5,7 +5,7 @@ module AccessPermissions
     include InputSanitizeHelper
 
     before_action :set_model
-    before_action :set_assignment, only: %i(create update destroy)
+    before_action :set_assignment, only: %i(update destroy update_default_public_user_role)
     before_action :check_read_permissions, only: %i(show show_user_group_assignments)
     before_action :check_manage_permissions, except: %i(show show_user_group_assignments)
     before_action :available_users, only: %i(new create)
@@ -25,10 +25,11 @@ module AccessPermissions
       ActiveRecord::Base.transaction do
         created_count = 0
         if permitted_params[:user_id] == 'all'
-          @model.update!(visibility: :visible, default_public_user_role_id: permitted_params[:user_role_id])
-          log_activity(:"#{model_parameter}_grant_access_to_all_team_members",
+          @assingment.update!(assigned_by: current_user, last_modified_by: current_user, user_role_id: permitted_params[:user_role_id])
+
+          log_activity(:"#{model_parameter}_access_granted_all_team_members",
                        { visibility: t('projects.activity.visibility_visible'),
-                         role: @model.default_public_user_role.name,
+                         role: team_assingment.user_role.name,
                          team: @model.team.id })
         else
           @assignment.update!(
@@ -122,27 +123,13 @@ module AccessPermissions
 
     def update_default_public_user_role
       ActiveRecord::Base.transaction do
-        @model.visibility_will_change!
-        @model.last_modified_by = current_user
-        if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
-          # revoke all team members access
-          @model.visibility = :hidden
-          previous_user_role_name = @model.default_public_user_role.name
-          @model.default_public_user_role_id = nil
-          @model.save!
-          log_activity(:"#{model_parameter}_remove_access_from_all_team_members",
-                       { visibility: t('projects.activity.visibility_hidden'),
-                         role: previous_user_role_name,
-                         team: @model.team.id })
-          render json: { message: t('access_permissions.update.revoke_all_team_members') }
-        else
-          # update all team members access
-          @model.visibility = :visible
-          @model.assign_attributes(permitted_default_public_user_role_params)
-          @model.save!
-          log_activity(:"#{model_parameter}_access_changed_all_team_members",
-                       { team: @model.team.id, role: @model.default_public_user_role&.name })
-        end
+        @assignment.update!(
+          last_modified_by: current_user,
+          user_role_id: permitted_default_public_user_role_params[:default_public_user_role_id]
+        )
+
+        log_activity(:"#{model_parameter}_access_changed_all_team_members",
+                     { team: @model.team.id, role: @model.default_public_user_role&.name })
       rescue ActiveRecord::RecordInvalid => e
         Rails.logger.error e.message
         render json: { flash: @model.errors&.map(&:message)&.join(',') }, status: :unprocessable_entity
@@ -179,6 +166,8 @@ module AccessPermissions
     end
 
     def propagate_job(destroy: false)
+      return unless @model.has_permission_children?
+
       is_group = @assignment.is_a?(UserGroupAssignment)
 
       UserAssignments::PropagateAssignmentJob.perform_later(
@@ -213,10 +202,17 @@ module AccessPermissions
     end
 
     def set_assignment
-      @assignment = @model.public_send(:"#{assignment_type}_assignments").find_or_initialize_by(
-        "#{assignment_type}_id": permitted_params[:"#{assignment_type}_id"],
-        team: current_team
-      )
+      case assignment_type
+      when :user, :user_group
+        @assignment = @model.public_send(:"#{assignment_type}_assignments").find_or_initialize_by(
+          "#{assignment_type}_id": permitted_params[:"#{assignment_type}_id"],
+          team: current_team
+        )
+      when :team
+        @assignment =
+          @model.team_assignments
+                .find_or_initialize_by(team: current_team, assignable_id: @model.id, assignable_type: @model.class.name)
+      end
     end
 
     def assignment_type
@@ -224,7 +220,7 @@ module AccessPermissions
         :user
       elsif permitted_params[:user_group_id].present?
         :user_group
-      elsif permitted_params[:team_id].present?
+      elsif permitted_params[:team_id].present? || permitted_params[:user_id] == 'all'
         :team
       end
     end

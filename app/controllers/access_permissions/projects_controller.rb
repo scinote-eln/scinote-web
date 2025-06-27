@@ -6,7 +6,10 @@ module AccessPermissions
     ACTIVITY_TYPE_MAP = {
       project_access_granted: :assign_user_to_project,
       project_access_changed: :change_user_role_on_project,
-      project_access_revoked: :unassign_user_from_project
+      project_access_revoked: :unassign_user_from_project,
+      project_access_granted_all_team_members: :project_grant_access_to_all_team_members,
+      project_access_changed_all_team_members: :project_access_changed_all_team_members,
+      project_access_revoked_all_team_members: :project_remove_access_from_all_team_members
     }.freeze
 
     private
