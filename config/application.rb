@@ -101,5 +101,16 @@ module Scinote
     }
 
     ActiveRecord::SessionStore::Session.serializer = :json
+
+    # Allow additional types for deserialization
+    config.active_record.yaml_column_permitted_classes = [
+      ActiveModel::Type::Binary::Data,
+      ActiveSupport::TimeWithZone,
+      ActiveSupport::TimeZone,
+      Symbol,
+      BigDecimal,
+      Time,
+      Date
+    ]
   end
 end
