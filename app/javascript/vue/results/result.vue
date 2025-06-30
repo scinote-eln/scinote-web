@@ -66,13 +66,13 @@
             tabindex="0"
           ></span> <!-- Hidden element to support legacy code -->
           <tempplate v-if="result.attributes.steps.length == 0">
-            <button v-if="urls.update_url" :title="i18n.t('my_modules.results.link_steps')" class="btn btn-light icon-btn" @click="this.openLinkStepsModal = true">
+            <button v-if="urls.update_url" ref="linkButton" :title="i18n.t('my_modules.results.link_steps')" class="btn btn-light icon-btn" @click="this.openLinkStepsModal = true">
               {{ i18n.t('my_modules.results.link_to_step') }}
             </button>
           </tempplate>
           <GeneralDropdown v-else ref="linkedStepsDropdown"  position="right">
             <template v-slot:field>
-              <button class="btn btn-light icon-btn" :title="i18n.t('my_modules.results.linked_steps')">
+              <button ref="linkButton" class="btn btn-light icon-btn" :title="i18n.t('my_modules.results.linked_steps')">
                 <i class="sn-icon sn-icon-steps"></i>
                 <span class="absolute top-1 -right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
                   {{ result.attributes.steps.length }}
@@ -304,6 +304,11 @@ export default {
       }
       this.$emit('result:collapsed');
     });
+
+    window.initTooltip(this.$refs.linkButton);
+  },
+  beforeUnmount() {
+    window.destroyTooltip(this.$refs.linkButton);
   },
   computed: {
     reorderableElements() {
@@ -629,9 +634,13 @@ export default {
       });
     },
     updateLinkedSteps(steps) {
+      window.destroyTooltip(this.$refs.linkButton);
+
       this.$emit('result:update', this.result.id,{
         steps: steps
-      })
+      });
+
+      this.$nextTick(() => window.initTooltip(this.$refs.linkButton));
     },
     protocolUrl(step_id) {
       return protocols_my_module_path({ id: this.result.attributes.my_module_id }, { step_id: step_id })

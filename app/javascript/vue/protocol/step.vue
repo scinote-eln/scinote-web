@@ -85,13 +85,13 @@
         ></span> <!-- Hidden element to support legacy code -->
         <template v-if="!inRepository">
           <template v-if="step.attributes.results.length == 0">
-            <button v-if="urls.update_url" :title="i18n.t('protocols.steps.link_results')" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
+            <button ref="linkButton" v-if="urls.update_url" :title="i18n.t('protocols.steps.link_results')" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
               <i class="sn-icon sn-icon-results"></i>
             </button>
           </template>
           <GeneralDropdown v-else ref="linkedResultsDropdown"  position="right">
             <template v-slot:field>
-              <button class="btn btn-light icon-btn" :title="i18n.t('protocols.steps.linked_results')">
+              <button ref="linkButton" class="btn btn-light icon-btn" :title="i18n.t('protocols.steps.linked_results')">
                 <i class="sn-icon sn-icon-results"></i>
                 <span class="absolute top-1 right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
                   {{ step.attributes.results.length }}
@@ -403,6 +403,11 @@
       $(this.$refs.elementsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
         this.handleDropdownPosition(this.$refs.elementsDropdownButton, this.$refs.elementsDropdown)
       });
+
+      window.initTooltip(this.$refs.linkButton);
+    },
+    beforeUnmount() {
+      window.destroyTooltip(this.$refs.linkButton);
     },
     computed: {
       reorderableElements() {
@@ -805,10 +810,14 @@
         });
       },
       updateLinkedResults(results) {
+        window.destroyTooltip(this.$refs.linkButton);
+
         this.$emit('step:update', {
           results: results,
           position: this.step.attributes.position
-        })
+        });
+
+        this.$nextTick(() => window.initTooltip(this.$refs.linkButton));
       },
       resultUrl(result_id, archived) {
         return my_module_results_path({my_module_id: this.step.attributes.my_module_id, result_id: result_id, view_mode: (archived ? 'archived' : 'active') });
