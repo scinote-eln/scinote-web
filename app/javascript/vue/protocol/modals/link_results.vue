@@ -11,7 +11,10 @@
               {{ i18n.t('protocols.steps.modals.link_results.title') }}
             </h4>
           </div>
-          <div v-if="results.length > 0" class="modal-body">
+          <div v-if="loading" class="modal-body h-40 flex items-center justify-center">
+            <div class="sci-loader"></div>
+          </div>
+          <div v-else-if="results.length > 0" class="modal-body">
             <p>
               {{ i18n.t('protocols.steps.modals.link_results.description') }}
             </p>
@@ -32,7 +35,7 @@
               {{ i18n.t('protocols.steps.modals.link_results.empty_description') }}
             </p>
           </div>
-          <div class="modal-footer">
+          <div v-if="!loading" class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">
               {{ i18n.t('general.cancel') }}
             </button>
@@ -89,12 +92,13 @@ export default {
     return {
       results: [],
       initialResults: [],
-      selectedResults: []
+      selectedResults: [],
+      loading: true
     };
   },
   computed: {
     resultsListUrl() {
-      return list_my_module_results_path({ my_module_id: this.step.attributes.my_module_id });
+      return list_my_module_results_path({ my_module_id: this.step.attributes.my_module_id, with_linked_step_id: this.step.id });
     },
     resultsPageUrl() {
       return my_module_results_path({ my_module_id: this.step.attributes.my_module_id });
@@ -132,6 +136,10 @@ export default {
       axios.get(this.resultsListUrl)
         .then((response) => {
           this.results = response.data;
+          this.loading = false;
+        }).catch(() => {
+          HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
+          this.loading = false;
         });
     }
   }

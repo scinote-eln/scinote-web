@@ -83,40 +83,42 @@
           :data-object-type="step.attributes.type"
           tabindex="0"
         ></span> <!-- Hidden element to support legacy code -->
-        <template v-if="step.attributes.results.length == 0">
-          <button v-if="urls.update_url" :title="i18n.t('protocols.steps.link_results')" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
-            <i class="sn-icon sn-icon-results"></i>
-          </button>
-        </template>
-        <GeneralDropdown v-else ref="linkedResultsDropdown"  position="right">
-          <template v-slot:field>
-            <button class="btn btn-light icon-btn" :title="i18n.t('protocols.steps.linked_results')">
+        <template v-if="!inRepository">
+          <template v-if="step.attributes.results.length == 0">
+            <button ref="linkButton" v-if="urls.update_url" :title="i18n.t('protocols.steps.link_results')" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
               <i class="sn-icon sn-icon-results"></i>
-              <span class="absolute top-1 right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
-                {{ step.attributes.results.length }}
-              </span>
             </button>
           </template>
-          <template v-slot:flyout>
-            <div class="overflow-y-auto max-h-[calc(50vh_-_6rem)]">
-              <a v-for="result in step.attributes.results"
-                :key="result.id"
-                :title="result.name"
-                :href="resultUrl(result.id, result.archived)"
-                class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer block hover:no-underline text-sn-blue truncate"
-              >
-                {{ result.name }}
-              </a>
-            </div>
-            <template v-if="urls.update_url">
-              <hr class="my-0">
-              <div class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-blue"
-                  @click="this.openLinkResultsModal = true; $refs.linkedResultsDropdown.closeMenu()">
-                {{ i18n.t('protocols.steps.manage_links') }}
-              </div>
+          <GeneralDropdown v-else ref="linkedResultsDropdown"  position="right">
+            <template v-slot:field>
+              <button ref="linkButton" class="btn btn-light icon-btn" :title="i18n.t('protocols.steps.linked_results')">
+                <i class="sn-icon sn-icon-results"></i>
+                <span class="absolute top-1 right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
+                  {{ step.attributes.results.length }}
+                </span>
+              </button>
             </template>
-          </template>
-        </GeneralDropdown>
+            <template v-slot:flyout>
+              <div class="overflow-y-auto max-h-[calc(50vh_-_6rem)]">
+                <a v-for="result in step.attributes.results"
+                  :key="result.id"
+                  :title="result.name"
+                  :href="resultUrl(result.id, result.archived)"
+                  class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer block hover:no-underline text-sn-blue truncate"
+                >
+                  {{ result.name }}
+                </a>
+              </div>
+              <template v-if="urls.update_url">
+                <hr class="my-0">
+                <div class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-blue"
+                    @click="this.openLinkResultsModal = true; $refs.linkedResultsDropdown.closeMenu()">
+                  {{ i18n.t('protocols.steps.manage_links') }}
+                </div>
+              </template>
+            </template>
+          </GeneralDropdown>
+        </template>
         <a href=" #"
            v-if="!inRepository"
            ref="comments"
@@ -214,12 +216,14 @@
       @close="openFormSelectModal = false"
       @submit="createElement('form_response', null, null, $event); openFormSelectModal = false"
     />
-    <LinkResultsModal
-      v-if="openLinkResultsModal"
-      :step="step"
-      @updateStep="updateLinkedResults"
-      @close="openLinkResultsModal = false"
-    />
+    <Teleport to="body">
+      <LinkResultsModal
+        v-if="openLinkResultsModal"
+        :step="step"
+        @updateStep="updateLinkedResults"
+        @close="openLinkResultsModal = false"
+      />
+    </Teleport>
   </div>
 </template>
 
@@ -399,6 +403,11 @@
       $(this.$refs.elementsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
         this.handleDropdownPosition(this.$refs.elementsDropdownButton, this.$refs.elementsDropdown)
       });
+
+      window.initTooltip(this.$refs.linkButton);
+    },
+    beforeUnmount() {
+      window.destroyTooltip(this.$refs.linkButton);
     },
     computed: {
       reorderableElements() {
@@ -801,10 +810,14 @@
         });
       },
       updateLinkedResults(results) {
+        window.destroyTooltip(this.$refs.linkButton);
+
         this.$emit('step:update', {
           results: results,
           position: this.step.attributes.position
-        })
+        });
+
+        this.$nextTick(() => window.initTooltip(this.$refs.linkButton));
       },
       resultUrl(result_id, archived) {
         return my_module_results_path({my_module_id: this.step.attributes.my_module_id, result_id: result_id, view_mode: (archived ? 'archived' : 'active') });

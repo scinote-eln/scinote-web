@@ -11,7 +11,10 @@
               {{ i18n.t('my_modules.results.modals.link_steps.title') }}
             </h4>
           </div>
-          <div v-if="steps.length > 0" class="modal-body">
+          <div v-if="loading" class="modal-body h-40 flex items-center justify-center">
+            <div class="sci-loader"></div>
+          </div>
+          <div v-else-if="steps.length > 0" class="modal-body">
             <p>
               {{ i18n.t('my_modules.results.modals.link_steps.description') }}
             </p>
@@ -22,6 +25,7 @@
                 :value="selectedSteps"
                 :searchable="true"
                 @change="changeSteps"
+                :option-renderer="stepRenderer"
                 :multiple="true"
                 :withCheckboxes="true"
                 :placeholder="i18n.t('my_modules.results.modals.link_steps.placeholder')" />
@@ -32,7 +36,7 @@
               {{ i18n.t('my_modules.results.modals.link_steps.empty_description') }}
             </p>
           </div>
-          <div class="modal-footer">
+          <div v-if="!loading" class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">
               {{ i18n.t('general.cancel') }}
             </button>
@@ -93,7 +97,8 @@ export default {
     return {
       steps: [],
       selectedSteps: [],
-      initialSteps: []
+      initialSteps: [],
+      loading: true
     };
   },
   computed: {
@@ -135,8 +140,15 @@ export default {
     loadSteps() {
       axios.get(this.stepsListUrl)
         .then((response) => {
+          this.loading = false;
           this.steps = response.data;
+        }).catch(() => {
+          HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
+          this.loading = false;
         });
+    },
+    stepRenderer(option) {
+      return `${option[2].position + 1}. ${option[1]}`;
     }
   }
 };

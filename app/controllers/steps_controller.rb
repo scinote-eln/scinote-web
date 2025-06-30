@@ -285,7 +285,7 @@ class StepsController < ApplicationController
     render json: {
       paginated: true,
       next_page: steps.next_page,
-      data: steps.map { |step| [step.id, step.name] }
+      data: steps.map { |step| [step.id, step.name, { position: step.position }] }
     }
   end
 
