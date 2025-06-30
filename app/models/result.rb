@@ -52,8 +52,12 @@ class Result < ApplicationRecord
     teams = options[:teams] || current_team || user.teams.select(:id)
 
     new_query = joins(:my_module)
-                .where(my_modules: MyModule.with_granted_permissions(user, MyModulePermissions::READ)
-                                           .where(user_assignments: { team: teams }))
+                .where(
+                  my_modules: {
+                    id: MyModule.with_granted_permissions(user, MyModulePermissions::READ)
+                                .where(user_assignments: { team: teams }).select(:id)
+                  }
+                )
 
     unless include_archived
       new_query = new_query.joins(my_module: { experiment: :project })
