@@ -430,7 +430,7 @@ en:
 
   attachments:
     menu:
-      office_file: "New Office file"
+      office_file: "New Microsoft 365 file"
       chemical_drawing: "New chemical drawing"
       file_from_pc: "File from your PC"
     modified_label: "Modified:"
@@ -2215,9 +2215,9 @@ en:
       success_flash: "File result successfully deleted."
     wopi_open_file: "Open in %{app}"
     wopi_edit_file: "Open in %{app}"
-    wopi_word: "Microsoft Word for the Web"
-    wopi_excel: "Microsoft Excel for the Web"
-    wopi_powerpoint: "Microsoft PowerPoint for the Web"
+    wopi_word: "Microsoft Word for the web"
+    wopi_excel: "Microsoft Excel for the web"
+    wopi_powerpoint: "Microsoft PowerPoint for the web"
     error_flash: 'Something went wrong! Please try again later.'
 
   result_tables:
@@ -4387,9 +4387,9 @@ en:
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel for the web.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint for the web.'
     create_wopi_file:
-      button_text: 'New Microsoft Office file'
-      li_text: "Office file"
-      modal_title: 'Create new Microsoft Office document'
+      button_text: 'New Microsoft 365 file'
+      li_text: "Microsoft 365 file"
+      modal_title: 'Create new Microsoft 365 document'
       text_field_label: 'Document name'
       type_select_label: 'Document type'
       text_field_placeholder: 'Enter document name...'
