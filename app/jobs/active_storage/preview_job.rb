@@ -20,16 +20,17 @@ class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
 
   def perform(blob_id)
     blob = ActiveStorage::Blob.find(blob_id)
-    preview = blob.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT, format: image_preview_format(blob)).processed
+    asset = blob.attachments.take.record
+    preview = asset.medium_preview.processed
     Rails.logger.info "Preview for the Blod with id: #{blob.id} - successfully generated.\n" \
                       "Transformations applied: #{preview.variation.transformations}"
 
-    preview = blob.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT, format: image_preview_format(blob)).processed
+    preview = asset.large_preview.processed
     Rails.logger.info "Preview for the Blod with id: #{blob.id} - successfully generated.\n" \
                       "Transformations applied: #{preview.variation.transformations}"
 
     ActiveRecord::Base.no_touching do
-      blob.attachments.take.record.update(file_processing: false)
+      asset.update(file_processing: false)
     end
   end
 end

@@ -105,11 +105,11 @@ class Asset < ApplicationRecord
   end
 
   def medium_preview
-    preview_attachment.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT, format: image_preview_format(blob))
+    preview_attachment.variant(resize_to_limit: Constants::MEDIUM_PIC_FORMAT, format: image_preview_format(blob))
   end
 
   def large_preview
-    preview_attachment.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT, format: image_preview_format(blob))
+    preview_attachment.variant(resize_to_limit: Constants::LARGE_PIC_FORMAT, format: image_preview_format(blob))
   end
 
   def file_name
