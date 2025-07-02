@@ -8,6 +8,7 @@ class UserAssignment < ApplicationRecord
   after_update :update_team_children_assignments, if: -> { assignable.is_a?(Team) && saved_change_to_user_role_id? }
   before_destroy :unassign_team_child_objects, if: -> { assignable.is_a?(Team) }
   after_destroy :call_user_assignment_changed_hook
+  after_destroy :remove_user_group_memberships, if: -> { assignable.is_a?(Team) }
   after_save :call_user_assignment_changed_hook
 
   belongs_to :assignable, polymorphic: true, touch: true
@@ -24,6 +25,13 @@ class UserAssignment < ApplicationRecord
 
   def last_assignable_owner?
     assignable_owners.count == 1 && user_role.owner?
+  end
+
+  def remove_user_group_memberships
+    user.user_group_memberships
+        .joins(:user_group)
+        .where(user_group: { team_id: team_id })
+        .destroy_all
   end
 
   def last_with_permission?(permission, assigned: nil)
