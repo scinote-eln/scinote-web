@@ -45,9 +45,6 @@ public/bio_eddie/
 # Ignore ActiveStorage Disc service storage directory
 storage/
 
-# Ignore robots.txt
-public/robots.txt
-
 $ Ignore compiled assets
 public/packs-test/*
 
