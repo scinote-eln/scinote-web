@@ -21,7 +21,7 @@
             :ref="`repository_${repository.id}`"
           ></div>
         <!-- End of block -->
-        <GeneralDropdown position="right" @open="loadAvailableRepositories">
+        <GeneralDropdown position="right" @open="loadAvailableRepositories" :closeOnClick="true">
           <template v-slot:field>
             <button class="btn btn-secondary" data-e2e="e2e-BT-task-assignedItems-assignFrom">
               {{ i18n.t('my_modules.assigned_items.assign_from') }}
