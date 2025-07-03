@@ -179,6 +179,10 @@ class Step < ApplicationRecord
     end
   end
 
+  def label
+    I18n.t('protocols.steps.label', name: name, position: position + 1)
+  end
+
   private
 
   def duplicate_table(new_step, user, table)

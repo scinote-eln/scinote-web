@@ -91,7 +91,7 @@
             <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
           <% end %>
           <% if !@settings['exclude_task_metadata'] && result.steps.size.positive? %>
-            | <%= t("projects.reports.elements.result.linked_steps") %> <%= result.steps.pluck(:name).join('; ') %>
+            | <%= t("projects.reports.elements.result.linked_steps") %> <%= result.steps.map(&:label).join('; ') %>
           <% end %>
         </div>
 
