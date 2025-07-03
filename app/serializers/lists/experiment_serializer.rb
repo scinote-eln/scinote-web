@@ -15,9 +15,17 @@ module Lists
       I18n.l(object.created_at, format: :full_date)
     end
 
+    # normalize description to handle legacy description newlines
+    def description
+      # if description includes HTML, it is already in the new format.
+      return object.description if object.description.match?(/<(.|\n)*?>/)
+
+      simple_format(object.description)
+    end
+
     def sa_description
       @user = scope[:user] || @instance_options[:user]
-      custom_auto_link(object.description,
+      custom_auto_link(description,
                        simple_format: false,
                        tags: %w(img),
                        team: object.project.team)
