@@ -30,7 +30,7 @@ class UserAssignment < ApplicationRecord
   def remove_user_group_memberships
     user.user_group_memberships
         .joins(:user_group)
-        .where(user_group: { team_id: team_id })
+        .where(user_group: { team: assignable })
         .destroy_all
   end
 
