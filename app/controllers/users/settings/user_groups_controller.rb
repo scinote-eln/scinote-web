@@ -3,12 +3,12 @@
 module Users
   module Settings
     class UserGroupsController < ApplicationController
-      before_action :check_user_groups_enabled
       before_action :load_team
+      before_action :set_breadcrumbs_items, only: %i(index show)
+      before_action :check_user_groups_enabled
       before_action :load_user_group, except: %i(index unassigned_users actions_toolbar create)
       before_action :check_read_permissions, only: %i(users)
       before_action :check_manage_permissions, except: %i(index show unassigned_users actions_toolbar)
-      before_action :set_breadcrumbs_items, only: %i(index show)
 
       def index
         respond_to do |format|
@@ -91,6 +91,7 @@ module Users
       private
 
       def check_user_groups_enabled
+        @active_tab = :user_groups
         render '/users/settings/user_groups/promo' unless UserGroup.enabled?
       end
 
