@@ -15,9 +15,9 @@ class UserGroupAssignmentSerializer < ActiveModel::Serializer
   end
 
   def current_user
-    return if object.assignable.user_assignments.find_by(user_id: instance_options[:user].id)
+    return false if object.assignable.user_assignments.exists?(user_id: instance_options[:user].id)
 
-    object.user_group.users.find_by(id: instance_options[:user].id)
+    object.user_group.users.exists?(id: instance_options[:user].id)
   end
 
   def user_role
