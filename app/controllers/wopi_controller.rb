@@ -88,8 +88,6 @@ class WopiController < ActionController::Base
       BreadcrumbFolderUrl: @breadcrumb_folder_url
     }
 
-    msg[:FileUrl] = @asset.file.blob.url if @asset.file_size.positive?
-
     response.headers['X-WOPI-HostEndpoint'] = ENV['WOPI_ENDPOINT_URL']
     response.headers['X-WOPI-MachineName'] = ENV['WOPI_ENDPOINT_URL']
     response.headers['X-WOPI-ServerVersion'] = Scinote::Application::VERSION
