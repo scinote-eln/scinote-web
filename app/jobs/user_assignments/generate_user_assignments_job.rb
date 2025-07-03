@@ -12,8 +12,6 @@ module UserAssignments
           assign_to_experiment(object)
         when MyModule
           assign_to_my_module(object)
-        when Repository
-          assign_to_repository(object)
         when Protocol
           assign_to_protocol(object)
         when Report
@@ -51,13 +49,6 @@ module UserAssignments
 
       experiment.team_assignments.find_each do |team_assignment|
         create_or_update_assignment(team_assignment, my_module)
-      end
-    end
-
-    def assign_to_repository(repository)
-      team = repository.team
-      team.user_assignments.find_each do |assignment|
-        create_or_update_assignment(assignment, repository)
       end
     end
 

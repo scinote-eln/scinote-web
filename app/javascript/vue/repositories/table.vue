@@ -18,6 +18,7 @@
                @share="share"
                @create="newRepository = true"
                @tableReloaded="reloadingTable = false"
+               @access="access"
     />
   </div>
   <ConfirmationModal
@@ -75,6 +76,8 @@
           confirm: 'e2e-BT-confirmSharingChangesModal-delete'
     }"
   ></ConfirmationModal>
+  <AccessModal v-if="accessModalParams" :params="accessModalParams"
+              @close="accessModalParams = null" @refresh="reloadingTable = true" />
 </template>
 
 <script>
@@ -89,6 +92,8 @@ import DuplicateRepositoryModal from './modals/duplicate.vue';
 import ShareObjectModal from '../shared/share_modal.vue';
 import DataTable from '../shared/datatable/table.vue';
 import NameRenderer from './renderers/name.vue';
+import AccessModal from '../shared/access_modal/modal.vue';
+import UsersRenderer from '../projects/renderers/users.vue';
 
 export default {
   name: 'RepositoriesTable',
@@ -100,7 +105,9 @@ export default {
     EditRepositoryModal,
     DuplicateRepositoryModal,
     NameRenderer,
-    ShareObjectModal
+    ShareObjectModal,
+    AccessModal,
+    UsersRenderer
   },
   props: {
     dataSource: {
@@ -125,11 +132,16 @@ export default {
     archivedPageUrl: {
       type: String,
       required: true
+    },
+    userRolesUrl: {
+      type: String,
+      required: true
     }
   },
   data() {
     return {
       reloadingTable: false,
+      accessModalParams: null,
       exportRepository: null,
       newRepository: false,
       editRepository: null,
@@ -186,8 +198,14 @@ export default {
         field: 'created_at',
         headerName: this.i18n.t('libraries.index.table.added_on'),
         sortable: true
-      },
-      {
+      }, {
+          field: 'assigned_users',
+          headerName: this.i18n.t('repositories.index.table.access'),
+          sortable: true,
+          cellRenderer: 'UsersRenderer',
+          minWidth: 210,
+          notSelectable: true
+      }, {
         field: 'created_by',
         headerName: this.i18n.t('libraries.index.table.added_by'),
         sortable: true
@@ -251,6 +269,12 @@ export default {
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
+    },
+    access(_event, rows) {
+      this.accessModalParams = {
+        object: rows[0],
+        roles_path: this.userRolesUrl
+      };
     },
     async deleteRepository(event, rows) {
       const [repository] = rows;
