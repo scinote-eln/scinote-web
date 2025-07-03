@@ -60,7 +60,7 @@ class UserAssignmentSerializer < ActiveModel::Serializer
   def user_assignment_resource_role_name(user, resource, inherit = '')
     user_assignment = resource.user_assignments.find_by(user: user)
 
-    return '' if ([Project, Protocol].include?(resource.class) && inherit.blank?) || user_assignment.blank?
+    return '' if ([Project, Protocol, Repository].any? { |c| resource.is_a?(c) } && inherit.blank?) || user_assignment.blank?
 
     if user_assignment.automatically_assigned? && resource.permission_parent.present?
       parent = resource.permission_parent

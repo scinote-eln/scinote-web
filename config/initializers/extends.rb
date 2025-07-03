@@ -612,7 +612,16 @@ class Extends
     experiment_access_changed_user_group: 393,
     my_module_access_changed_user_group: 394,
     step_and_result_linked: 395,
-    step_and_result_unlinked: 396
+    step_and_result_unlinked: 396,
+    repository_access_granted: 397,
+    repository_access_changed: 398,
+    repository_access_revoked: 399,
+    repository_access_granted_all_team_members: 400,
+    repository_access_changed_all_team_members: 401,
+    repository_access_revoked_all_team_members: 402,
+    repository_access_granted_user_group: 403,
+    repository_access_changed_user_group: 404,
+    repository_access_revoked_user_group: 405
   }
 
   ACTIVITY_GROUPS = {
@@ -626,7 +635,7 @@ class Extends
     experiment: [*27..31, 57, 141, 165, *363..369, 393],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
-                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329],
+                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329, *397..405],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,

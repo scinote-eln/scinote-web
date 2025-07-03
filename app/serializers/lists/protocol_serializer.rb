@@ -122,8 +122,6 @@ module Lists
         urls_list[:create_access] = access_permissions_protocols_path(id: object.id)
         urls_list[:unassigned_user_groups] = unassigned_user_groups_access_permissions_protocol_path(id: object.id)
         urls_list[:user_group_members] = users_users_settings_team_user_groups_path(team_id: object.team.id)
-        urls_list[:default_public_user_role_path] =
-          update_default_public_user_role_access_permissions_protocol_path(object)
       end
 
       urls_list

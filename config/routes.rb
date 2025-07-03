@@ -340,7 +340,6 @@ Rails.application.routes.draw do
         member do
           get :show_user_group_assignments
           get :unassigned_user_groups
-          put :update_default_public_user_role
         end
       end
 
@@ -348,7 +347,6 @@ Rails.application.routes.draw do
         member do
           get :show_user_group_assignments
           get :unassigned_user_groups
-          put :update_default_public_user_role
         end
       end
 
@@ -356,7 +354,13 @@ Rails.application.routes.draw do
         member do
           get :show_user_group_assignments
           get :unassigned_user_groups
-          put :update_default_public_user_role
+        end
+      end
+
+      resources :repositories, defaults: { format: 'json' } do
+        member do
+          get :show_user_group_assignments
+          get :unassigned_user_groups
         end
       end
 
@@ -794,6 +798,9 @@ Rails.application.routes.draw do
         get :assigned_my_modules
         get :repository_users
         get :load_table
+      end
+      collection do
+        get :user_roles
       end
       # Save repository table state
       post 'state_save',

@@ -127,6 +127,10 @@ Canaid::Permissions.register_for(Repository) do
   can :manage_repository_stock do |user, repository|
     RepositoryBase.stock_management_enabled? && can_manage_repository_rows?(user, repository)
   end
+
+  can :manage_repository_users do |user, repository|
+    repository.permission_granted?(user, RepositoryPermissions::USERS_MANAGE)
+  end
 end
 
 Canaid::Permissions.register_for(RepositoryColumn) do

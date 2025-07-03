@@ -22,13 +22,24 @@ module Toolbars
       return [] if @repositories.none?
 
       if @archived_state
-        [export_action, restore_action, delete_action]
+        [access_action, export_action, restore_action, delete_action]
       else
-        [rename_action, duplicate_action, export_action, archive_action, share_action]
+        [access_action, rename_action, duplicate_action, export_action, archive_action, share_action]
       end.compact
     end
 
     private
+
+    def access_action
+      return unless @single
+
+      {
+        name: 'access',
+        label: I18n.t('general.access'),
+        icon: 'sn-icon sn-icon-project-member-access',
+        type: :emit
+      }
+    end
 
     def rename_action
       return unless @single && can_manage_repository?(@repository)

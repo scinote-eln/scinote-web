@@ -3253,6 +3253,7 @@ en:
       no_libraries:
         create_new_button: "New inventory"
         create_new_button_tooltip: "Create new inventory"
+      access: 'Access'
     show:
       head_title: "Inventories | %{library}"
   repository_row:
@@ -4609,6 +4610,8 @@ en:
       mymodule_tooltip: "This role was set on this task"
       form_tooltip: "This role was set on this form."
       form_tooltip_inherit: "This role was inherited from the form."
+      repository_tooltip: "This role was set on this inventory."
+      repository_tooltip_inherit: "This role was inherited from the inventory."
       public_members_dropdown:
         title: "Members of team %{team}"
 
@@ -4619,6 +4622,12 @@ en:
         edit_modal:
           title: "Manage access for %{resource_name}"
     protocols:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
+    repositories:
       modals:
         show_modal:
           title: "Access to %{resource_name}"
