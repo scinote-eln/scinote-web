@@ -8,6 +8,8 @@ class ConvertUserTimezonesToIanaFormat < ActiveRecord::Migration[7.0]
       tz_map[tz.name] = tz.tzinfo.name
     end
 
+    User.reset_column_information
+
     # Update each user's timezone to the IANA version
     User.find_each do |user|
       tz = user.settings['time_zone']
@@ -24,6 +26,8 @@ class ConvertUserTimezonesToIanaFormat < ActiveRecord::Migration[7.0]
     ActiveSupport::TimeZone.all.each do |tz|
       reverse_tz_map[tz.tzinfo.name] = tz.name
     end
+
+    User.reset_column_information
 
     User.find_each do |user|
       tz = user.settings['time_zone']
