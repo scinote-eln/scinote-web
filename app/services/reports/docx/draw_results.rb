@@ -30,7 +30,7 @@ module Reports::Docx::DrawResults
             text ' | '
             text I18n.t('projects.reports.elements.result.linked_steps'), color: color[:gray]
             text ' '
-            text result.steps.pluck(:name).join('; '), color: color[:gray]
+            text result.steps.map(&:label).join('; '), color: color[:gray]
           end
         end
         draw_result_asset(result, @settings) if @settings.dig('task', 'file_results')
