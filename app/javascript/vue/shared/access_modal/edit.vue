@@ -290,7 +290,9 @@ export default {
 
       axios.delete(this.params.object.urls.update_access, {
         data: {
-          [assignmentKey]: id
+          user_assignment: {
+            [assignmentKey]: id
+          }
         }
       }).then((response) => {
         this.$emit('modified');
@@ -303,11 +305,28 @@ export default {
       });
     },
     changeDefaultRole(roleId) {
-      axios.put(this.params.object.urls.default_public_user_role_path, {
-        object: {
-          default_public_user_role_id: roleId || ''
-        }
-      }).then((response) => {
+      let response;
+
+      if (!roleId) {
+        response = axios.delete(this.params.object.urls.update_access,
+          {
+            data: {
+              user_assignment: {
+                user_id: 'all'
+              }
+            }
+          }
+        );
+      } else {
+        response = axios.put(this.params.object.urls.update_access, {
+          user_assignment: {
+            user_id: 'all',
+            user_role_id: roleId
+          }
+        });
+      }
+
+      response.then((response) => {
         this.$emit('modified');
         if (!roleId) {
           this.$emit('changeVisibility', false, null);
@@ -318,8 +337,6 @@ export default {
           HelperModule.flashAlertMsg(response.data.message, 'success');
         }
       });
-    },
-    removeDefaultRole() {
     },
     loadUsers(userGroupId) {
       axios.get(this.params.object.urls.user_group_members, {

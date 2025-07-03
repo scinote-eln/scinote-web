@@ -56,6 +56,14 @@ module Assignable
 
     after_create :create_users_assignments
 
+    def default_public_user_role_id
+      team_assignments.where(team_id: team.id).pick(:user_role_id)
+    end
+
+    def has_permission_children?
+      false
+    end
+
     def role_for_user(user)
       user_assignments.find_by(user: user)&.user_role
     end

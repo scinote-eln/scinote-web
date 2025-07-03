@@ -176,7 +176,9 @@ describe AccessPermissions::ProjectsController, type: :controller do
     let(:valid_params) do
       {
         id: project.id,
-        user_id: normal_user.id
+        user_assignment: {
+          user_id: normal_user.id
+        }
       }
     end
 
