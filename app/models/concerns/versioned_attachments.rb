@@ -10,19 +10,20 @@ module VersionedAttachments
 
       define_method :"attach_#{name}_version" do |*args, **options|
         ActiveRecord::Base.transaction(requires_new: true) do
-          __send__(:"previous_#{name.to_s.pluralize}").attach([__send__(name).blob.signed_id]) if __send__(name).attached?
+          __send__(:"previous_#{name.to_s.pluralize}").attach(__send__(name).blob) if __send__(name).attached?
           __send__(name).attach(*args, **options)
 
           new_blob = __send__(name).blob
-          new_blob.metadata['created_by_id'] ||= last_modified_by_id
+          metadata = new_blob.metadata
+          metadata['created_by_id'] ||= last_modified_by_id
 
           # set version of current latest file if previous versions exist
-          new_blob.save! and next unless __send__(:"previous_#{name.to_s.pluralize}").any?
+          if __send__(:"previous_#{name.to_s.pluralize}").any?
+            new_version = (__send__(:"previous_#{name.to_s.pluralize}").last.blob.metadata['version'] || 1) + 1
+            metadata['version'] = new_version
+          end
 
-          new_version =
-            (__send__(:"previous_#{name.to_s.pluralize}").last.blob.metadata['version'] || 1) + 1
-          new_blob.metadata['version'] = new_version
-          new_blob.save!
+          new_blob.persisted? ? new_blob.update_column(:metadata, metadata) : new_blob.metadata = metadata
         end
       end
 
