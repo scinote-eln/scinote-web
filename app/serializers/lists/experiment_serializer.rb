@@ -17,6 +17,8 @@ module Lists
 
     # normalize description to handle legacy description newlines
     def description
+      return unless object.description
+
       # if description includes HTML, it is already in the new format.
       return object.description if object.description.match?(/<(.|\n)*?>/)
 
