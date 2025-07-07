@@ -202,7 +202,8 @@ class TeamZipExportJob < ZipExportJob
           file_name = preview.image.filename.to_s
           file_data = preview.image.download
         else
-          return unless preview.processed?
+          # ensure preview file is processed and available
+          preview.processed
 
           file_name = preview.blob.filename.to_s
           file_data = preview.download
