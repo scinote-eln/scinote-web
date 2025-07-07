@@ -28,10 +28,10 @@ class UserDataDeletion
           experiment.my_modules.each do |my_module|
             # Destroy result assets
             my_module.results.each do |result|
-              next unless result.asset
-
-              result.asset.file.purge
-              result.asset.destroy!
+              result.assets.each do |asset|
+                asset.file.purge
+                asset.destroy!
+              end
             end
             my_module.activities.destroy_all
             my_module.inputs.destroy_all
@@ -67,8 +67,7 @@ class UserDataDeletion
 
         project.destroy!
       end
-      team.protocols.each { |p| p.update(parent_id: nil) }
-      team.protocols.where(my_module: nil).each do |protocol|
+      team.repository_protocols.each do |protocol|
         destroy_protocol(protocol)
       end
       team.protocol_keywords.destroy_all
