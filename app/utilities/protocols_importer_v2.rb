@@ -60,7 +60,6 @@ class ProtocolsImporterV2
     protocol.description = populate_rte(protocol_json, protocol)
     protocol.name = protocol_json['name'].presence
     protocol.save!
-    asset_ids = []
     step_pos = 0
 
     # Check if protocol has steps
@@ -92,44 +91,31 @@ class ProtocolsImporterV2
 
       next unless step_json['assets']
 
-      asset_ids += create_assets(step_json, step)
-    end
-
-    # Post process assets
-    asset_ids.each do |asset_id|
-      Asset.find(asset_id).post_process_file
+      create_assets(step_json, step)
     end
   end
 
   def create_assets(step_json, step)
-    asset_ids = []
     step_json['assets']&.values&.each do |asset_json|
-      asset = Asset.new(
+      asset = Asset.create!(
         created_by: @user,
         last_modified_by: @user,
-        team: @team
+        team: @team,
+        step: step
       )
 
       # Decode the file bytes
       asset.attach_file_version(io: StringIO.new(Base64.decode64(asset_json['bytes'])),
                         filename: asset_json['fileName'],
                         content_type: asset_json['fileType'],
-                        metadata: JSON.parse(asset_json['fileMetadata'] || '{}'))
+                        metadata: JSON.parse(asset_json['fileMetadata'] || '{}').except('created_by_id'))
       if asset_json['preview_image'].present?
         asset.preview_image.attach(io: StringIO.new(Base64.decode64(asset_json.dig('preview_image', 'bytes'))),
                                    filename: asset_json.dig('preview_image', 'fileName'))
       end
 
-      asset.save!
-      asset_ids << asset.id
-
-      StepAsset.create!(
-        step: step,
-        asset: asset
-      )
+      asset.post_process_file
     end
-
-    asset_ids
   end
 
   def create_step_text(step, params)
