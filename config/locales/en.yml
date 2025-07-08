@@ -2836,6 +2836,7 @@ en:
         item: "Item: "
         inventory: "Inventory: "
         empty: "This item has no relationships assigned."
+        private_item_name: "Private item"
         parents:
           count: "Parents (%{count})"
           empty: ""

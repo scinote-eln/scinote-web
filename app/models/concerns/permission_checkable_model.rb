@@ -23,9 +23,8 @@ module PermissionCheckableModel
                                          .where('user_roles_team_assignments.permissions @> ARRAY[?]::varchar[]', permissions)
                                        )
                                        .distinct
-
-      where(id: with_granted_user_permissions.select(:id))
-        .or(where(id: with_granted_group_permissions.select(:id)))
+      where(id: with_granted_user_permissions.reselect(:id))
+        .or(where(id: with_granted_group_permissions.reselect(:id)))
     }
   end
 
