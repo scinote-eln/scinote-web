@@ -126,6 +126,7 @@ class ProjectsController < ApplicationController
 
     default_public_user_role_name = nil
     if !@project.visibility_changed? && @project.default_public_user_role_id_changed?
+      @project.visibility_will_change! # triggers assignment sync
       default_public_user_role_name = UserRole.find(project_params[:default_public_user_role_id]).name
     end
 
