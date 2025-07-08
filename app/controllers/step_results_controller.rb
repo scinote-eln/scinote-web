@@ -34,7 +34,7 @@ class StepResultsController < ApplicationController
         StepResult.create!(step: step, result: @results.first, created_by: current_user)
         log_activity(:step_and_result_linked, @results.first.my_module, step, @results.first)
       end
-      render json: { steps: @results.first.steps.map { |s| { id: s.id, name: s.name } } }, status: :created
+      render json: { steps: @results.first.steps.map { |s| { id: s.id, name: s.label } } }, status: :created
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error e.message
       render json: { message: :error }, status: :unprocessable_entity

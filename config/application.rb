@@ -81,9 +81,6 @@ module Scinote
 
     config.x.export_all_limit_24h = (ENV['EXPORT_ALL_LIMIT_24_HOURS'] || 3).to_i
 
-    # Fallback to old variant behaviour (pre 7.2)
-    config.active_storage.track_variants = false
-
     # SciNote Core Application version
     VERSION = File.read(Rails.root.join('VERSION')).strip.freeze
 

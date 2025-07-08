@@ -14,7 +14,7 @@
             <button class="btn btn-light icon-btn dropdown-toggle"
                     type="button" id="StepsMenuDropdown<%= result.id %>"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <%= t('my_modules.results.link_to_step') %>
+              <i class="sn-icon sn-icon-steps"></i>
               <span class="absolute top-1 -right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
                 <%= result.steps.size %>
               </span>
@@ -22,7 +22,7 @@
             <ul id="StepsMenuDropdown<%= result.id %>" class="dropdown-menu dropdown-menu-right px-4 py-2">
               <% result.steps.each do |step| %>
                 <li class="dropdown-item">
-                  <%= link_to step.name, shared_protocol_url(@shareable_link.uuid), class: "!py-2.5 !px-3 hover:!bg-sn-super-light-grey !cursor-pointer !block hover:!no-underline !text-sn-blue !truncate" %>
+                  <%= link_to step.label, shared_protocol_url(@shareable_link.uuid), class: "!py-2.5 !px-3 hover:!bg-sn-super-light-grey !cursor-pointer !block hover:!no-underline !text-sn-blue !truncate" %>
                 </li>
               <% end %>
             </ul>

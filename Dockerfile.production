@@ -16,7 +16,7 @@ ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
-ENV PATH=$GEM_HOME/bin:/usr/share/nodejs/yarn/bin:$PATH
+ENV PATH=$APP_HOME/bin:$GEM_HOME/bin:/usr/share/nodejs/yarn/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
 ENV BUNDLE_BUILD__SASSC=--disable-march-tune-native
 
@@ -39,7 +39,7 @@ RUN \
   DATABASE_URL=postgresql://postgres@db/scinote_production \
   SECRET_KEY_BASE=dummy \
   DEFACE_ENABLED=true \
-  bash -c "bundle exec rake assets:precompile && bundle exec rake deface:precompile && rm -rf ./tmp/cache"
+  bash -c "rails assets:precompile && rails deface:precompile && rm -rf ./tmp/cache"
 
 # Final stage
 FROM ruby:3.3-bookworm AS runner
@@ -105,7 +105,7 @@ ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
-ENV PATH=$GEM_HOME/bin:$PATH
+ENV PATH=$APP_HOME/bin:$GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
 
 RUN adduser --uid 1000 scinote
@@ -115,4 +115,4 @@ COPY --from=builder --chown=scinote:scinote $APP_HOME $APP_HOME
 
 WORKDIR $APP_HOME
 
-CMD bin/rails s -b 0.0.0.0
+CMD rails s -b 0.0.0.0

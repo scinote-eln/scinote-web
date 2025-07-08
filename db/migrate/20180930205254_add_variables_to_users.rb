@@ -9,8 +9,6 @@ class AddVariablesToUsers < ActiveRecord::Migration[5.1]
 
   def up
     add_column :users, :variables, :jsonb, default: {}, null: false
-    User.reset_column_information
-    User.update_all(variables: VARIABLES)
   end
 
   def down

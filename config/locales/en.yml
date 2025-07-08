@@ -4029,6 +4029,7 @@ en:
           ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
 
     steps:
+      label: "Step %{position} - %{name}"
       placeholder: 'Step name'
       default_name: 'Untitled step'
       completed: 'Completed'

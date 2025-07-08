@@ -19,7 +19,7 @@ class ResultSerializer < ActiveModel::Serializer
 
   def steps
     object.steps.map do |step|
-      { id: step.id, name: step.name }
+      { id: step.id, name: step.label }
     end
   end
 
