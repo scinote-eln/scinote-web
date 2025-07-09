@@ -130,8 +130,7 @@ class MyModule < ApplicationRecord
   end
 
   def self.viewable_by_user(user, teams)
-    with_granted_permissions(user, MyModulePermissions::READ)
-      .where(user_assignments: { team: teams })
+    with_granted_permissions(user, MyModulePermissions::READ, teams)
   end
 
   def self.filter_by_teams(teams = [])

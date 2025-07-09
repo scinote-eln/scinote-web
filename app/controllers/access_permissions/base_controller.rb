@@ -117,11 +117,11 @@ module AccessPermissions
     private
 
     def model_parameter
-      @model.class.name.parameterize.to_sym
+      @model.class.permission_class.name.parameterize.to_sym
     end
 
     def manage_permission_constant
-      "#{@model.class.name}Permissions::USERS_MANAGE".constantize
+      "#{@model.class.permission_class.name}Permissions::USERS_MANAGE".constantize
     end
 
     def permitted_default_public_user_role_params
@@ -181,7 +181,7 @@ module AccessPermissions
       when :team
         @assignment =
           @model.team_assignments
-                .find_or_initialize_by(team: current_team, assignable_id: @model.id, assignable_type: @model.class.name)
+                .find_or_initialize_by(team: current_team, assignable: @model)
       end
     end
 

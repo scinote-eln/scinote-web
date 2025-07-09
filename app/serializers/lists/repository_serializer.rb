@@ -7,7 +7,7 @@ module Lists
     include ShareableSerializer
 
     attributes :name, :code, :nr_of_rows, :team, :created_at, :created_by, :archived_on, :archived_by,
-               :urls, :top_level_assignable, :assigned_users, :permissions
+               :urls, :top_level_assignable, :default_public_user_role_id, :assigned_users, :permissions
 
     def nr_of_rows
       object[:repository_rows_count]
