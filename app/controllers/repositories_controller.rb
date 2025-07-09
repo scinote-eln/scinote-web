@@ -536,7 +536,7 @@ class RepositoriesController < ApplicationController
   end
 
   def check_view_all_permissions
-    render_403 unless can_read_team?(current_team)
+    render_403 unless @repositories.all? { |repository| can_read_repository?(repository) }
   end
 
   def check_view_permissions
