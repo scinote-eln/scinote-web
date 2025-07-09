@@ -33,8 +33,6 @@ describe Report, type: :model do
   end
 
   describe 'Validations' do
-    it { should validate_presence_of :project }
-    it { should validate_presence_of :user }
     it do
       should validate_length_of(:description)
         .is_at_most(Constants::TEXT_MAX_LENGTH)

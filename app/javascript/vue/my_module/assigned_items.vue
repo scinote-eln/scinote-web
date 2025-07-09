@@ -7,7 +7,7 @@
         <span class="text-sn-grey-500 font-normal text-base">[{{ totalRows }}]</span>
       </h2>
       <div v-if="canAssign" class="flex gap-6 ml-auto">
-        <button class="btn btn-secondary" @click="openCreateItemModal=true">
+        <button class="btn btn-secondary" @click="openCreateItemModal=true" data-e2e="e2e-BT-task-assignedItems-createItem">
           {{ i18n.t('my_modules.assigned_items.create_item') }}
         </button>
         <!-- Next block just for legacy support, JQuery not good works with Teleport -->
@@ -21,18 +21,22 @@
             :ref="`repository_${repository.id}`"
           ></div>
         <!-- End of block -->
-        <GeneralDropdown position="right" @open="loadAvailableRepositories">
+        <GeneralDropdown position="right" @open="loadAvailableRepositories" :closeOnClick="true">
           <template v-slot:field>
-            <button class="btn btn-secondary">
+            <button class="btn btn-secondary" data-e2e="e2e-BT-task-assignedItems-assignFrom">
               {{ i18n.t('my_modules.assigned_items.assign_from') }}
               <span class="sn-icon sn-icon-down"></span>
             </button>
           </template>
           <template v-slot:flyout>
-            <div v-if="loadingAvailableRepositories" class="flex items-center justify-center w-full h-32">
+            <div
+              v-if="loadingAvailableRepositories"
+              class="flex items-center justify-center w-full h-32"
+              data-e2e="e2e-DD-task-assignedItems-assignFrom"
+            >
               <img src="/images/medium/loading.svg" alt="Loading" />
             </div>
-            <div v-else class="overflow-y-auto max-h-96">
+            <div v-else class="overflow-y-auto max-h-96" data-e2e="e2e-DD-task-assignedItems-assignFrom">
               <div v-for="repository in availableRepositories" :key="repository.id">
                 <div class="px-3 py-2.5 hover:bg-sn-super-light-grey max-w-[320px] cursor-pointer overflow-hidden flex items-center gap-1" @click="openAssignModal(repository.id)">
                   <i v-if="repository.shared"  class="sn-icon sn-icon sn-icon-users shrink-0"></i>

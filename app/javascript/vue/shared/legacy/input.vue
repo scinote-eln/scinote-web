@@ -5,7 +5,6 @@
       class="sci-input-container-v2"
       :class="{ 'error': !!inputError }"
       :data-error-text="inputError"
-      :data-e2e="dataE2e"
     >
       <input ref="input"
         lang="en-US"
@@ -22,6 +21,7 @@
         :inputmode="(type === 'number') && 'numeric'"
         :pattern="pattern"
         @input="updateValue"
+        :data-e2e="dataE2e"
       />
     </div>
   </div>

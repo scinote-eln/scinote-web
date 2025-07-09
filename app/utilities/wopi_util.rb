@@ -30,10 +30,10 @@ module WopiUtil
   # with this discovery public key (two key possible old/new)
   def wopi_verify_proof(token, timestamp, signed_proof, signed_proof_old, url)
     discovery = current_wopi_discovery
-    token_length = [token.length].pack('>N').bytes
-    timestamp_bytes = [timestamp.to_i].pack('>Q').bytes.reverse
-    timestamp_length = [timestamp_bytes.length].pack('>N').bytes
-    url_length = [url.length].pack('>N').bytes
+    token_length = [token.length].pack('N').bytes
+    timestamp_bytes = [timestamp.to_i].pack('Q').bytes.reverse
+    timestamp_length = [timestamp_bytes.length].pack('N').bytes
+    url_length = [url.length].pack('N').bytes
 
     expected_proof = token_length + token.bytes +
                      url_length + url.upcase.bytes +

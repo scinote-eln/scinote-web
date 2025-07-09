@@ -11,7 +11,7 @@ module SearchableModel
     scope :where_attributes_like, lambda { |attributes, query, options = {}|
       return unless query
 
-      attrs = normalized_attributes(attributes)
+      attrs = normalized_search_attributes(attributes)
 
       if options[:whole_word].to_s == 'true' ||
          options[:whole_phrase].to_s == 'true' ||
@@ -103,7 +103,7 @@ module SearchableModel
     scope :where_attributes_like_boolean, lambda { |attributes, query, options = {}|
       return unless query
 
-      normalized_attrs = normalized_attributes(attributes)
+      normalized_attrs = normalized_search_attributes(attributes)
       query_clauses = []
       value_hash = {}
 
@@ -131,7 +131,7 @@ module SearchableModel
       options[:with_subquery] ? query_clauses : where(query_clauses.join, value_hash)
     }
 
-    def self.normalized_attributes(attributes)
+    def self.normalized_search_attributes(attributes)
       attrs = []
       if attributes.blank?
         # Do nothing in this case
@@ -157,7 +157,7 @@ module SearchableModel
         phrase = phrase.to_s.strip
 
         case phrase.downcase
-        when *%w(and or)
+        when 'and', 'or'
           current_operator = phrase.downcase
         when 'not'
           negate = true
@@ -201,13 +201,12 @@ module SearchableModel
           i = (index * attrs.count) + i
 
           new_phrase = exact_match ? phrase[1..-2] : phrase
-          if DATA_VECTOR_ATTRIBUTES.include?(attribute)
+          if DATA_VECTOR_ATTRIBUTES.include?(attribute) && !exact_match
             new_phrase = new_phrase.strip.split(/\s+/)
-            new_phrase.map! { |t| "#{t}:*" } unless exact_match
+            new_phrase.map! { |t| "#{t}:*" }
           else
             new_phrase = exact_match ? "(^|\\s)#{Regexp.escape(new_phrase)}(\\s|$)" : "%#{sanitize_sql_like(new_phrase)}%"
           end
-
           [:"t#{i}", new_phrase]
         end).to_h
       )

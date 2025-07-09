@@ -5,7 +5,7 @@
     </div>
     <template v-if="isOpen">
       <teleport to="body">
-        <div ref="flyout"
+        <div @click="closeOnClick && closeMenu()" ref="flyout"
             class="sn-dropdown fixed z-[3000] bg-sn-white inline-block
                   rounded p-2.5 sn-shadow-menu-sm"
             :class="{
@@ -35,7 +35,7 @@ export default {
     btnIcon: { type: String, required: false },
     caret: { type: Boolean, default: false },
     alwaysShow: { type: Boolean, default: false },
-    closeDropdown: { type: Boolean, default: false },
+    closeOnClick: { type: Boolean, default: false },
     fieldOnlyOpen: { type: Boolean, default: false },
     canOpen: { type: Boolean, default: true },
     fixedWidth: { type: Boolean, default: false }

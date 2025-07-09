@@ -358,6 +358,7 @@ class Asset < ApplicationRecord
   end
 
   def put_wopi_contents(new_file)
+    new_file.rewind
     if file_size.zero? && version.zero?
       # wopi client  puts initial blanc file therefore skipping version creation
       file.attach(io: new_file, filename: file_name)

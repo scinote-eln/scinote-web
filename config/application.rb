@@ -22,7 +22,17 @@ Bundler.require(*Rails.groups)
 module Scinote
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 7.2
+
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w[assets generators tasks])
+
+    # Autoload nested omniauth lib paths
+    config.autoload_paths << Rails.root.join('lib/omniauth/strategies')
+
+    config.add_autoload_paths_to_load_path = true
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -35,16 +45,18 @@ module Scinote
     # Don't generate system test files.
     config.generators.system_tests = nil
 
+    # Addon autoloading configuration
+
+    # Load custom database adapters from addons
+    Dir.glob(Rails.root.glob('addons/*/lib/active_record/connection_adapters/*.rb')) do |c|
+      Rails.configuration.cache_classes ? require(c) : load(c)
+    end
+
     Rails.autoloaders.main.ignore(Rails.root.join('addons/*/app/decorators'))
+    Rails.autoloaders.main.ignore(Rails.root.join('addons/*/app/overrides'))
+
     # Add rack-attack middleware for request rate limiting
     config.middleware.use Rack::Attack
-
-    # Swap the Rack::MethodOverride with a wrapped middleware for WOPI handling
-    require_relative '../app/middlewares/wopi_method_override'
-    config.middleware.swap Rack::MethodOverride, WopiMethodOverride
-
-    # Load all model concerns, including subfolders
-    config.autoload_paths += Dir["#{Rails.root}/app/models/concerns/**/*.rb"]
 
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
 
@@ -67,10 +79,7 @@ module Scinote
 
     config.x.no_external_csp_exceptions = ENV['SCINOTE_NO_EXT_CSP_EXCEPTIONS'] == 'true'
 
-    # Logging
-    config.log_formatter = proc do |severity, datetime, progname, msg|
-      "[#{datetime}] #{severity}: #{msg}\n"
-    end
+    config.x.export_all_limit_24h = (ENV['EXPORT_ALL_LIMIT_24_HOURS'] || 3).to_i
 
     # SciNote Core Application version
     VERSION = File.read(Rails.root.join('VERSION')).strip.freeze

@@ -19,7 +19,7 @@ class UserDataDeletion
             repository_cell.value.asset.destroy!
           end
         end
-        repository.destroy
+        repository.destroy!
       end
       team.projects.each do |project|
         project.reports.destroy_all
@@ -28,12 +28,10 @@ class UserDataDeletion
           experiment.my_modules.each do |my_module|
             # Destroy result assets
             my_module.results.each do |result|
-              result.result_table.delete if result.result_table.present?
-              result.table.delete if result.table.present?
-              next unless result.asset
-
-              result.asset.file.purge
-              result.asset.destroy!
+              result.assets.each do |asset|
+                asset.file.purge
+                asset.destroy!
+              end
             end
             my_module.activities.destroy_all
             my_module.inputs.destroy_all
@@ -49,7 +47,7 @@ class UserDataDeletion
               destroy_protocol(protocol)
             end
             my_module.user_assignments.destroy_all
-            my_module.delete
+            my_module.destroy!
           end
 
           # Destroy workflow image
@@ -57,9 +55,9 @@ class UserDataDeletion
 
           experiment.activities.destroy_all
           experiment.report_elements.destroy_all
-          experiment.my_module_groups.delete_all
+          experiment.my_module_groups.destroy_all
           experiment.user_assignments.destroy_all
-          experiment.delete
+          experiment.destroy!
         end
         project.user_projects.destroy_all
         project.tags.destroy_all
@@ -67,10 +65,9 @@ class UserDataDeletion
         project.report_elements.destroy_all
         project.user_assignments.destroy_all
 
-        project.delete
+        project.destroy!
       end
-      team.protocols.each { |p| p.update(parent_id: nil) }
-      team.protocols.where(my_module: nil).each do |protocol|
+      team.repository_protocols.each do |protocol|
         destroy_protocol(protocol)
       end
       team.protocol_keywords.destroy_all
@@ -80,7 +77,6 @@ class UserDataDeletion
       team.reports.destroy_all
       team.user_assignments.destroy_all
       team.destroy!
-      # raise ActiveRecord::Rollback
     end
   end
 
@@ -94,8 +90,9 @@ class UserDataDeletion
         end
       end
       # Destroy step
+      step.skip_position_adjust = true
       step.tables.destroy_all
-      step.step_tables.delete_all
+      step.step_tables.destroy_all
       step.step_texts.destroy_all
       step.report_elements.destroy_all
       step.step_comments.destroy_all
@@ -103,12 +100,12 @@ class UserDataDeletion
       step.checklists.destroy_all
       step.assets.destroy_all
       step.tiny_mce_assets.destroy_all
-      step.delete
+      step.destroy!
     end
     # Destroy protocol
     protocol.protocol_protocol_keywords.destroy_all
     protocol.protocol_keywords.destroy_all
-    protocol.destroy
+    protocol.destroy!
   end
 
   def self.destroy_notifications(user)

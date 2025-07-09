@@ -1,5 +1,5 @@
 # Building stage
-FROM ruby:3.2-bookworm AS builder
+FROM ruby:3.3-bookworm AS builder
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN \
@@ -16,7 +16,7 @@ ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
-ENV PATH=$GEM_HOME/bin:/usr/share/nodejs/yarn/bin:$PATH
+ENV PATH=$APP_HOME/bin:$GEM_HOME/bin:/usr/share/nodejs/yarn/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
 ENV BUNDLE_BUILD__SASSC=--disable-march-tune-native
 
@@ -39,10 +39,10 @@ RUN \
   DATABASE_URL=postgresql://postgres@db/scinote_production \
   SECRET_KEY_BASE=dummy \
   DEFACE_ENABLED=true \
-  bash -c "rake assets:precompile && rake deface:precompile && rm -rf ./tmp/cache"
+  bash -c "rails assets:precompile && rails deface:precompile && rm -rf ./tmp/cache"
 
 # Final stage
-FROM ruby:3.2-bookworm AS runner
+FROM ruby:3.3-bookworm AS runner
 MAINTAINER SciNote <info@scinote.net>
 
 ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/2.9.4/tika-app-2.9.4.jar"
@@ -105,7 +105,7 @@ ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
-ENV PATH=$GEM_HOME/bin:$PATH
+ENV PATH=$APP_HOME/bin:$GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
 
 RUN adduser --uid 1000 scinote
