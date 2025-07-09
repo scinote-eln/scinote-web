@@ -77,10 +77,7 @@ class Project < ApplicationRecord
                         if team.permission_granted?(user, TeamPermissions::MANAGE)
                           where(team: team)
                         else
-                          where(team: team)
-                            .left_outer_joins(user_assignments: :user_role)
-                            .where(user_assignments: { user: user })
-                            .where('? = ANY(user_roles.permissions)', ProjectPermissions::READ)
+                          viewable_by_user(user, team)
                         end
                       end)
 
@@ -104,9 +101,7 @@ class Project < ApplicationRecord
   end
 
   def self.viewable_by_user(user, teams)
-    joins(user_assignments: :user_role)
-      .where(team: teams)
-      .with_granted_permissions(user, ProjectPermissions::READ)
+    with_granted_permissions(user, ProjectPermissions::READ, teams)
       .distinct
   end
 

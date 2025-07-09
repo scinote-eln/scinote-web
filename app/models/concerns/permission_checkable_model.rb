@@ -6,9 +6,9 @@ module PermissionCheckableModel
   included do
     include PermissionExtends
 
-    scope :with_granted_permissions, lambda { |user, permissions|
+    scope :with_granted_permissions, lambda { |user, permissions, teams = user.permission_team|
       with_user_assignments = joins(user_assignments: :user_role)
-                              .where(user_assignments: { user: user, team: user.permission_team })
+                              .where(user_assignments: { user: user, team: teams })
       # direct user assignments take precedence over group assignments, thus skipping objects that already have user assignments.
       with_group_assignments = left_outer_joins(user_group_assignments: [:user_role, { user_group: :users }], team_assignments: :user_role)
                                .where.not(id: with_user_assignments)
@@ -19,13 +19,18 @@ module PermissionCheckableModel
                                        .where('user_roles.permissions @> ARRAY[?]::varchar[]', permissions)
                                        .or(
                                          with_group_assignments
-                                         .where(team_assignments: { assignable: self, team: user.permission_team })
+                                         .where(team_assignments: { assignable: self, team: teams })
                                          .where('user_roles_team_assignments.permissions @> ARRAY[?]::varchar[]', permissions)
                                        )
                                        .distinct
+
       where(id: with_granted_user_permissions.select(:id))
         .or(where(id: with_granted_group_permissions.select(:id)))
     }
+  end
+
+  def self.permission_class
+    self
   end
 
   def permission_granted?(user, permission)
