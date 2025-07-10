@@ -101,11 +101,14 @@ module RepositoryDatatableHelper
     # otherwise it will result in duplicated SQL queries
     has_stock_management = repository.has_stock_management?
     reminders_enabled = !options[:disable_reminders] && Repository.reminders_enabled?
+    shareable_link_view = options[:shareable_link_view] && my_module.shared?
     # Always disabled in a simple view
     stock_managable = false
     stock_consumption_permitted = has_stock_management && stock_consumption_permitted?(repository, my_module)
 
     repository_rows.map do |record|
+      next { code: record.code } unless shareable_link_view || can_read_repository?(record.repository)
+
       row = {
         DT_RowId: record.id,
         DT_RowAttr: { 'data-state': row_style(record, my_module) },
@@ -156,7 +159,7 @@ module RepositoryDatatableHelper
           consumed_stock_formatted =
             number_with_precision(
               record.consumed_stock,
-              precision: (record.repository.repository_stock_column.metadata['decimals'].to_i || 0),
+              precision: record.repository.repository_stock_column.metadata['decimals'].to_i || 0,
               strip_insignificant_zeros: true
             )
           row['consumedStock'][:value] = {
