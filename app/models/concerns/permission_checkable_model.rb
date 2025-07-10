@@ -26,10 +26,10 @@ module PermissionCheckableModel
       where(id: with_granted_user_permissions.reselect(:id))
         .or(where(id: with_granted_group_permissions.reselect(:id)))
     }
-  end
 
-  def self.permission_class
-    self
+    def self.permission_class
+      self
+    end
   end
 
   def permission_granted?(user, permission)

@@ -24,7 +24,10 @@ describe RepositoriesController, type: :controller do
         'id', 'type', 'attributes'
       )
       expect(parsed_response['data'][0]['attributes'].keys).to contain_exactly(
-        'name', 'code', 'nr_of_rows', 'shared', 'shared_label', 'ishared', 'team', 'created_at', 'created_by', 'archived_on', 'archived_by', 'urls', 'shared_read', 'shared_write', 'shareable_write'
+        'name', 'code', 'nr_of_rows', 'shared', 'shared_label', 'ishared', 'team',
+        'created_at', 'created_by', 'archived_on', 'archived_by', 'urls', 'shared_read',
+        'shared_write', 'shareable_write', 'assigned_users', 'default_public_user_role_id',
+        'permissions', 'top_level_assignable'
       )
     end
   end

@@ -60,8 +60,8 @@ module Lists
                                                      done_status_id
                                                    ])
            )
-           .with_favorites(@user)
            .visible_to(@user, @team)
+           .with_favorites(@user)
            .left_outer_joins(:project_comments)
            .select('projects.*')
            .select('COUNT(DISTINCT comments.id) AS comment_count')
