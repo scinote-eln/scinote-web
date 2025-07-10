@@ -7,7 +7,7 @@ class UserGroupAssignment < ApplicationRecord
   belongs_to :user_role
   belongs_to :assigned_by, class_name: 'User'
 
-  enum assigned: { automatically: 0, manually: 1 }, _suffix: true
+  enum :assigned, { automatically: 0, manually: 1 }, suffix: true
 
   validates :user_group, uniqueness: { scope: %i(assignable team_id) }
 

@@ -7,7 +7,7 @@ class TeamAssignment < ApplicationRecord
   belongs_to :assigned_by, class_name: 'User'
   has_many :users, through: :team
 
-  enum assigned: { automatically: 0, manually: 1 }, _suffix: true
+  enum :assigned, { automatically: 0, manually: 1 }, suffix: true
 
   validates :team, uniqueness: { scope: :assignable }
 end
