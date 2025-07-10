@@ -4,7 +4,7 @@ Canaid::Permissions.register_for(RepositoryBase) do
   # repository: read/export
   can :read_repository do |user, repository|
     if repository.is_a?(RepositorySnapshot)
-      can_read_my_module?(user, repository.my_module)
+      repository.original_repository.permission_granted?(user, RepositoryPermissions::READ) && can_read_my_module?(user, repository.my_module)
     else
       repository.permission_granted?(user, RepositoryPermissions::READ)
     end

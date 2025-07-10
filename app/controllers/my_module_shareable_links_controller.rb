@@ -71,7 +71,8 @@ class MyModuleShareableLinksController < ApplicationController
       my_module: @my_module,
       include_stock_consumption: @repository.has_stock_management? && params[:assigned].present?,
       disable_reminders: true, # reminders are always disabled for shareable links
-      disable_stock_management: true # stock management is always disabled in MyModule context
+      disable_stock_management: true, # stock management is always disabled in MyModule context
+      shareable_link_view: true
     }
 
     @all_rows_count = datatable_service.all_count

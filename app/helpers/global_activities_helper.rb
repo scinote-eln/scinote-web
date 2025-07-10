@@ -63,6 +63,8 @@ module GlobalActivitiesHelper
     when Team
       path = projects_path(team: obj.id)
     when Repository
+      return I18n.t('repositories.private') unless can_read_repository?(obj)
+
       path = repository_path(obj, team: obj.team.id)
     when RepositoryRow
       # Handle private repository rows
@@ -72,6 +74,8 @@ module GlobalActivitiesHelper
 
       path = repository_path(obj.repository, team: obj.repository.team.id)
     when RepositoryColumn
+      return I18n.t('repositories.repository_column.private') unless can_read_repository?(obj.repository)
+
       return current_value unless obj.repository
 
       path = repository_path(obj.repository, team: obj.repository.team.id)
