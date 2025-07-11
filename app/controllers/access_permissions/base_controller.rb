@@ -8,7 +8,7 @@ module AccessPermissions
     before_action :set_assignment, only: %i(create update destroy)
     before_action :check_read_permissions, only: %i(show show_user_group_assignments)
     before_action :check_manage_permissions, except: %i(show show_user_group_assignments)
-    before_action :available_users, only: %i(new create)
+    before_action :load_available_users, only: %i(new create)
 
     def show
       render json: @model.user_assignments.includes(:user_role, :user).order('users.full_name ASC'),
@@ -133,13 +133,8 @@ module AccessPermissions
             .permit(%i(user_role_id user_id user_group_id team_id))
     end
 
-    def available_users
-      # automatically assigned or not assigned to project
-      @available_users = current_team.users.where(
-        id: @model.user_assignments.automatically_assigned.select(:user_id)
-      ).or(
-        current_team.users.where.not(id: @model.users.select(:id))
-      ).order('users.full_name ASC')
+    def load_available_users
+      @available_users = current_team.users.where.not(id: @model.users.select(:id)).order(users: { full_name: :asc })
     end
 
     def propagate_job(destroy: false)
