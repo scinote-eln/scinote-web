@@ -4,7 +4,9 @@ Canaid::Permissions.register_for(RepositoryBase) do
   # repository: read/export
   can :read_repository do |user, repository|
     if repository.is_a?(RepositorySnapshot)
-      repository.original_repository.permission_granted?(user, RepositoryPermissions::READ) && can_read_my_module?(user, repository.my_module)
+      original_repository = repository.original_repository
+      # If original repository is deleted, snapshot ownership should be transferred to task
+      (!original_repository || original_repository.permission_granted?(user, RepositoryPermissions::READ)) && can_read_my_module?(user, repository.my_module)
     else
       repository.permission_granted?(user, RepositoryPermissions::READ)
     end
