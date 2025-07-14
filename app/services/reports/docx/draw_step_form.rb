@@ -28,6 +28,8 @@ module Reports
                     SmartAnnotations::TagToText.new(user, team, form_field_value&.formatted).text
                   elsif form_field_value.is_a?(FormDatetimeFieldValue)
                     form_field_value&.formatted_localize
+                  elsif form_field_value.is_a?(FormRepositoryRowsFieldValue)
+                    form_repository_rows_field_value_formatter(form_field_value, @user)
                   else
                     form_field_value&.formatted
                   end
