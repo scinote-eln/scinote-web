@@ -12,7 +12,11 @@
   </div>
   <div v-else class="flex items-center gap-2 py-0.5">
     <div class="w-3 h-3 rounded-full"
-         :class="this.statusColor(params.data.status_cell.status)"></div>
+         :class="{
+           'bg-sn-grey-500': params.data.status_cell.status === 'not_started',
+           'bg-sn-science-blue': params.data.status_cell.status === 'in_progress',
+           'bg-sn-alert-green': params.data.status_cell.status === 'done'
+         }"></div>
       <span class="truncate">
         {{ this.i18n.t(`experiments.table.column.status.${params.data.status_cell.status}`) }}
       </span>
@@ -34,16 +38,6 @@ export default {
     }
   },
   methods: {
-    statusColor(status) {
-      let color = 'bg-sn-grey-500';
-      if (status === 'in_progress') {
-        color = 'bg-sn-science-blue';
-      } else if (status === 'done') {
-        color = 'bg-sn-alert-green';
-      }
-
-      return color;
-    },
     optionRenderer(option) {
       return `
         <div class="flex items-center gap-2">

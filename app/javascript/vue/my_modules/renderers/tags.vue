@@ -3,15 +3,16 @@
     <template v-if="params.data.tags.length > 0 || params.data.permissions.manage_tags">
       <GeneralDropdown v-if="params.data.tags.length > 0">
         <template v-slot:field>
-          <div
-              class="sci-tag text-white max-w-[150px]"
-              :style="{'background': params.data.tags[0].color}">
-            <div class="truncate">{{ params.data.tags[0].name }}</div>
-          </div>
-          <div v-if="params.data.tags.length > 1"
-               class="h-6 min-w-[24px] text-sn-dark-grey inline-flex items-center justify-center rounded-full text-[.625rem]
-                      ml-1.5 bg-sn-light-grey border !border-sn-sleepy-grey cursor-pointer">
-            <span>+{{ params.data.tags.length - 1 }}</span>
+          <div class="flex items-center gap-1.5">
+            <div
+                class="sci-tag text-white max-w-[150px]"
+                :style="{'background': params.data.tags[0].color}">
+              <div class="truncate">{{ params.data.tags[0].name }}</div>
+            </div>
+            <div v-if="params.data.tags.length > 1"
+                class="flex shrink-0 items-center justify-center w-7 h-7 text-xs rounded-full bg-sn-dark-grey text-sn-white">
+              <span>+{{ params.data.tags.length - 1 }}</span>
+            </div>
           </div>
         </template>
         <template v-slot:flyout>
@@ -29,8 +30,7 @@
         </template>
       </GeneralDropdown>
       <div v-if="params.data.permissions.manage_tags" @click.stop="openModal"
-        class="cursor-pointer text-sn-sleep-grey border !border-dashed h-6 w-6 flex items-center
-               justify-center !border-sn-sleep-grey rounded-full ">
+        class="flex items-center shrink-0 justify-center w-7 h-7 rounded-full border-dashed bg-sn-white text-sn-sleepy-grey border-sn-sleepy-grey">
         <i class="sn-icon sn-icon-new-task"></i>
     </div>
     </template>

@@ -2,7 +2,7 @@
   <div v-if="params.data.supervised_by">
     <GeneralDropdown v-if="canManage" @open="openFlyout" @close="closeFlyout" position="right">
       <template v-slot:field>
-        <div class="flex items-center gap-1 cursor-pointer h-9">
+        <div class="flex items-center gap-1 cursor-pointer h-9 px-1" :class="{ 'bg-sn-super-light-blue': opened }">
           <div v-if="params.data.supervised_by.id" class="flex items-center gap-2" :title="params.data.supervised_by.name">
             <img :src="params.data.supervised_by.avatar" class="w-7 h-7 rounded-full" />
             <span>{{ params.data.supervised_by.name }}</span>
@@ -67,7 +67,8 @@ export default {
   data() {
     return {
       allUsers: [],
-      query: ''
+      query: '',
+      opened: false
     };
   },
   watch: {
@@ -83,6 +84,7 @@ export default {
   methods: {
     openFlyout() {
       this.loadUsers();
+      this.opened = true;
       this.$nextTick(() => {
         if (this.$refs.searchInput) {
           this.$refs.searchInput.focus();
@@ -102,6 +104,7 @@ export default {
     },
     closeFlyout() {
       this.query = '';
+      this.opened = false;
     },
     selectUser(user) {
       if (user[0] === this.params.data.supervised_by.id) {
