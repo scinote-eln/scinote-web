@@ -8,6 +8,7 @@ class ProtocolsController < ApplicationController
   include TeamsHelper
   include ProtocolsExporterV2
   include UserRolesHelper
+  include FormFieldValuesHelper
 
   before_action :check_create_permissions, only: %i(
     create

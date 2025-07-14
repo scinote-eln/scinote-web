@@ -76,7 +76,7 @@
             <% when 'ActionField' %>
               <%= render partial: 'protocols/print/element/checkbox_button', locals: { value: field_value&.flag, description: I18n.t('forms.fields.mark_as_completed') } %>
             <% when 'RepositoryRowsField'%>
-              <%= field_value&.formatted %>
+              <%= form_repository_rows_field_value_formatter(field_value)%>
             <% end %>
 
             <div class="flex items-center justify-end mt-4 gap-4">
