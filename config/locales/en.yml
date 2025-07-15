@@ -143,12 +143,12 @@ en:
         project:
           attributes:
             name:
-              taken: "This project name has to be unique inside a team (this includes the archive)."
+              taken: "This project name has to be unique inside a workspace (this includes the archive)."
             project_folder:
-              team: "Project folder and project should belongs to the same team"
+              team: "Project folder and project should belongs to the same workspace"
         project_folder:
           attributes:
-            parent_folder_team: "Parent folder and folder should belongs to the same team"
+            parent_folder_team: "Parent folder and folder should belongs to the same workspace"
             parent_folder: "Folder cannot be parent to itself"
             parent_folder_child: "Folder cannot be moved to it's child"
         view_state:
@@ -160,7 +160,7 @@ en:
         team_shared_object:
           attributes:
             team_id:
-              same_team: "Inventory can't be shared to the same team as it belongs to"
+              same_team: "Inventory can't be shared to the same workspace as it belongs to"
             shared_object_id:
               is_globally_shared: "Inventory is already globally shared"
         protocol:
@@ -172,7 +172,7 @@ en:
             step_order:
               invalid: "Invalid step order."
             name:
-              taken: "This protocol template name has to be unique inside a team (this includes the archive)."
+              taken: "This protocol template name has to be unique inside a workspace (this includes the archive)."
             description:
               too_long: 'Text is too long'
         step:
@@ -271,7 +271,7 @@ en:
           not_uniq_repository_row: 'Inventory item already exists'
           attributes:
             parent_storage_location: "Storage location cannot be parent to itself"
-            parent_storage_location_team: "Parent storage location and storage location should belongs to the same team"
+            parent_storage_location_team: "Parent storage location and storage location should belongs to the same workspace"
             parent_storage_location_child: "Storage location cannot be moved to it's child"
             metadata:
               invalid: 'Invalid metadata'
@@ -280,7 +280,7 @@ en:
   helpers:
     label:
       team:
-        name: "Team name"
+        name: "Workspace name"
       user:
         full_name: "Full name"
         initials: "Initials"
@@ -304,7 +304,7 @@ en:
   body:
     notice: "You need to enable JavaScript to run this app."
   nav:
-    team_switch_title: "Switch team"
+    team_switch_title: "Switch workspace"
     search: "Search in SciNote"
     clear: "Clear"
     support: "Support"
@@ -339,7 +339,7 @@ en:
       calendar: "Calendar"
       activities: "Activities"
       repositories: "Inventories"
-      teams: "Teams"
+      teams: "Workspaces"
       search: "Search"
       notifications: "Notifications"
       info: "Info"
@@ -496,8 +496,8 @@ en:
       by_type: "Filter by type"
       by_created_date: "Filter by created date"
       by_updated_date: "Filter by updated date"
-      by_team: "Filter by team"
-      by_team_placeholder: "Select team"
+      by_team: "Filter by workspace"
+      by_team_placeholder: "Select workspace"
       by_user: "Filter by user"
       by_user_placeholder: "Filter by user"
       by_user_info: "The 'Filter by user' option will refine search results based on records where the selected user is the creator, modifier, or is assigned to the entry."
@@ -541,7 +541,7 @@ en:
       created_at: "Created on"
       created_by: "Created by"
       updated_at: "Updated on"
-      team: "Team"
+      team: "Workspace"
       folder: "Folder"
       task: "Task"
       untitled_protocol: 'Untitled protocol'
@@ -593,18 +593,18 @@ en:
       archived: "Archived"
       active: "Active"
       hidden: "Project members only"
-      visible: "All team members"
+      visible: "All workspace members"
       no_projects:
         text: "You don't have any active projects."
         title: "Please create your Project"
         create_new_button: "New Project"
-        no_permission_title: "You don't have permission to create new project. Please contact your team administrator."
+        no_permission_title: "You don't have permission to create new project. Please contact your workspace administrator."
       new: "New project"
       new_tooltip: "Create new project"
       new_folder: "New folder"
       new_folder_tooltip: "Create new folder"
       visibility_private: "Project is visible to project members only."
-      visibility_public: "Project is visible to all team members."
+      visibility_public: "Project is visible to all workspace members."
       user_project: "%{user} joined on %{timestamp}."
       no_activities: "No activities!"
       no_comments: "No comments!"
@@ -691,10 +691,10 @@ en:
         create: "Create"
         name: "Project name"
         name_placeholder: "My project"
-        team: "Team"
-        visibility_html: "Grant access to this project to all team members"
+        team: "Workspace"
+        visibility_html: "Grant access to this project to all workspace members"
         visibility_hidden: "Project members only"
-        visibility_visible: "All team members"
+        visibility_visible: "All workspace members"
       modal_edit_project:
         modal_title: "Edit project %{project}"
         submit: "Save"
@@ -724,8 +724,8 @@ en:
         create: "Add"
         select_user_role: "Select Role"
         invite_users_link: "Invite users"
-        invite_users_details: "to team %{team}."
-        contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+        invite_users_details: "to workspace %{team}."
+        contact_admins: "To invite additional users to workspace %{team}, contact its administrator/s."
       filters_modal:
         members:
           label: "Members"
@@ -746,7 +746,7 @@ en:
       error_text_p1_html: "It looks like you have exceeded your daily export limit. The number of exports is <strong>limited to %{limit} requests per day </strong>- you currently have 0 export requests left."
       error_text_p2_html: "Please repeat the desired action <strong>tomorrow</strong>, when your daily limit will reset back to %{limit} export requests."
       modal_title: "Export projects"
-      modal_text_p1_html: "You are about to export <strong>%{num_projects} project/s in %{team}</strong> team. Projects will be exported in a .zip file format. It may take anywhere from 5 minutes up to several hours, depending on the file size. Please also note that any new data in the projects from this point will not be included in the exported file."
+      modal_text_p1_html: "You are about to export <strong>%{num_projects} project/s in %{team}</strong> workspace. Projects will be exported in a .zip file format. It may take anywhere from 5 minutes up to several hours, depending on the file size. Please also note that any new data in the projects from this point will not be included in the exported file."
       modal_text_p2_html: "When export is ready, you will receive a confirmation e-mail and the <strong> link </strong> to your .zip file will appear in your <strong>SciNote notifications</strong>. For security reasons, the link will <strong>expire in 7 days</strong>."
       modal_text_p3_html: "Please note that the number of exports is limited to %{limit} requests per day. After you confirm this export you will have %{num} left."
       modal_submit: "Export"
@@ -754,7 +754,7 @@ en:
       zero_projects_flash: "The folder is empty. No projects can be exported."
     activity:
       visibility_hidden: "Project members only"
-      visibility_visible: "All team members"
+      visibility_visible: "All workspace members"
     create:
       success_flash: "Project <strong>%{name}</strong> successfully created."
     update:
@@ -822,8 +822,10 @@ en:
           accepted_message: "Your report is successfully added to the generator queue. We will notify you when it is done!"
           completed_docx_notification_title: "Your report .DOCX was generated successfully."
           completed_pdf_notification_title: "Your report .PDF was generated successfully."
+          completed_notification_message: "Report: %{report_link} | Workspace: %{team_name}"
           error_docx_notification_title: "Your report .DOCX generation failed. Please try again."
           error_pdf_notification_title: "Your report .PDF generation failed. Please try again."
+          error_notification_message: "Report: %{report_link} | Workspace: %{team_name}"
           content_generation_error: "Failed to generate report content"
           file_preview_generation_error: "We were unable to generate preview for this file."
         modal_delete:
@@ -1098,7 +1100,7 @@ en:
         normal_user: "Normal user"
         admin: "Administrator"
   teams:
-    private_team: "Private team"
+    private_team: "Private workspace"
   user_projects:
     view_users:
       modal_title: "Members of %{name}"
@@ -1464,7 +1466,7 @@ en:
     shareable_links:
       share: "Share"
       shared: "Shared"
-      disabled: "<b>Sharing is disabled for your team.</b><br>Ask your team admin to enable sharing in the team settings."
+      disabled: "<b>Sharing is disabled for your workspace.</b><br>Ask your workspace admin to enable sharing in the workspace settings."
     notes:
       title: "Notes"
       no_description: "No task description"
@@ -1606,9 +1608,9 @@ en:
         name_label: "Templates protocol name"
         name_placeholder: "My protocol"
         type_label: "Save to"
-        type_public: "Team protocols"
+        type_public: "Workspace protocols"
         type_private: "My protocols"
-        type_text: "You can make a copy of a protocol and save it to Team protocols or My protocols. Team protocols are visible to all team members, My protocols are for personal usage only."
+        type_text: "You can make a copy of a protocol and save it to Workspace protocols or My protocols. Workspace protocols are visible to all workspace members, My protocols are for personal usage only."
         link_label: "Link task to this protocol in templates"
         link_text: "<strong>Warning!</strong>&nbsp;This will unlink the currently linked protocol."
         error_400: "Due to unknown error, protocol could not be copied to templates."
@@ -1806,8 +1808,8 @@ en:
         title: 'No results found'
         description: 'Try another search request'
     unshared_inventory:
-      title_html: The inventory <b>%{inventory_name}</b> is no longer shared with your team.
-      body_html: This inventory has been unshared with your team by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> team administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
+      title_html: The inventory <b>%{inventory_name}</b> is no longer shared with your workspace.
+      body_html: This inventory has been unshared with your workspace by the inventory’s owner. To view the item/s that are assigned to your task/s contact the <b>%{team_name}</b> workspace administrator <b>%{admin_name}</b> (<b>%{admin_email}</b>).
     open_mobile_app: "Open mobile app"
     status_error:
       general: "Status transition failed"
@@ -2112,8 +2114,8 @@ en:
           user_join_full: "%{user} joined on %{date} at %{time}."
           create: "Add"
           invite_users_link: "Invite users"
-          invite_users_details: "to team %{team}."
-          contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+          invite_users_details: "to workspace %{team}."
+          contact_admins: "To invite additional users to workspace %{team}, contact its administrator/s."
       medium_zoom:
         no_access: "Can't view task"
       update:
@@ -2146,7 +2148,7 @@ en:
     left_navigation:
       welcome: "Welcome to SciNote!"
       title: "SciNote Electronic Lab Notebook (ELN) Software"
-      description_1: "SciNote is a leading ELN with inventory, compliance and team management tools, used by the FDA, USDA and over 100K scientific professionals."
+      description_1: "SciNote is a leading ELN with inventory, compliance and workspace management tools, used by the FDA, USDA and over 100K scientific professionals."
       description_2: "What do our users like the most?"
       description_3:
         bullet_point_1: "Ease of use"
@@ -2250,7 +2252,7 @@ en:
     repository_column:
       private: "Private column"
     icon_title:
-      i_shared: "Shared inventory (owned by your Team)"
+      i_shared: "Shared inventory (owned by your Workspace)"
       shared_edit: "Shared inventory (owned by %{team_name}). You can edit."
       shared_read: "Shared inventory (owned by %{team_name}). You can view."
     index:
@@ -2261,8 +2263,8 @@ en:
         checked_description: "Show all items"
       head_title: "Inventories"
       title: "Inventories"
-      empty_title: "Your team has no inventories yet"
-      empty_description_no_create: "It would be a shame to waste all this space. Sadly you don’t have permission to add inventories. You can ask your team admin to grant you that permission."
+      empty_title: "Your workspace has no inventories yet"
+      empty_description_no_create: "It would be a shame to waste all this space. Sadly you don’t have permission to add inventories. You can ask your workspace admin to grant you that permission."
       empty_description_with_create: "It would be a shame to waste all this space. Create your first inventory now"
       sidebar_instructions: "This is where a list of inventories will appear once they are created. This list will allow you to quickly jump from one inventory to another"
       sidebar_repo1: "Reagents"
@@ -2312,8 +2314,8 @@ en:
       modal_export:
         title: "Export Inventories"
         description_p1_html:
-          one: "You are about to export <strong>1</strong> inventory in %{team_name}'s team."
-          other: "You are about to export <strong>%{count}</strong> inventories in %{team_name}'s team."
+          one: "You are about to export <strong>1</strong> inventory in %{team_name}'s workspace."
+          other: "You are about to export <strong>%{count}</strong> inventories in %{team_name}'s workspace."
         description_alert: "This process may take minutes to hours, depending on the file size. Any new data entered afterward won't be included in the export."
         description_p2: "You will receive an email and a notification when the download file is ready. For security reasons, the link will expire in 7 days."
         description_p3_html: "After this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
@@ -2332,7 +2334,7 @@ en:
         only_system_defined_columns: 'Only system defined columns.'
       modal_confirm_sharing:
         title: "Inventory sharing changes"
-        description_1: "You will no longer share this inventory with some of the teams. All unshared inventory items assigned to tasks will be automatically removed and this action is irreversible. Any item relationship links (if they exist) will also be deleted."
+        description_1: "You will no longer share this inventory with some of the workspaces. All unshared inventory items assigned to tasks will be automatically removed and this action is irreversible. Any item relationship links (if they exist) will also be deleted."
         description_2: "Are you sure you want to apply the changes you made?"
         confirm: "Apply"
       export:
@@ -2345,7 +2347,7 @@ en:
       archived_inventory: "Archived %{repository_name}"
       inventory_archived_items: "%{repository_name} archived items"
       subtitle: "Owned by %{team_name}"
-      your_team: "your Team"
+      your_team: "your Workspace"
       show_active_items: "Show active items"
       show_archived_items: "Show archived items"
       archived_view_label:
@@ -2746,7 +2748,7 @@ en:
       message: "Are you sure you wish to permanently delete selected column %{column}? This action is irreversible."
       alert_heading: "Deleting a column has following consequences:"
       alert_line_1: "you will lose information in this column for %{nr} item(s);"
-      alert_line_2: "the column will be deleted for all team members."
+      alert_line_2: "the column will be deleted for all workspace members."
       alert_line_3: "any saved inventory filters relying on this column will be updated (individual filters based on this column will be removed from saved filters)."
       delete: "Delete"
     modal_parse:
@@ -2791,9 +2793,9 @@ en:
       success_flash: "Successfully restored items in inventory <strong>%{repository}</strong>"
       unsuccess_flash: "Unsuccessfully restored items in inventory <strong>%{repository}</strong>"
     multiple_share_service:
-      unable_to_share: "Unable to share %{repository} inventory with %{team} team."
-      unable_to_unshare: "Unable to unshare %{repository} inventory with %{team} team."
-      unable_to_update: "Unable to update sharing %{repository} inventory with %{team} team."
+      unable_to_share: "Unable to share %{repository} inventory with %{team} workspace."
+      unable_to_unshare: "Unable to unshare %{repository} inventory with %{team} workspace."
+      unable_to_update: "Unable to update sharing %{repository} inventory with %{team} workspace."
       not_allowed: "You are not allowed to share this repository!"
       invalid_arguments: "Can't find %{key}"
       nothing_to_delete: "Can't find sharing relation for destroy"
@@ -2833,7 +2835,7 @@ en:
           one: "Assigned to %{count} private task that will not be displayed"
           other: "Assigned to %{count} private tasks that will not be displayed"
         labels:
-          team: "Team:"
+          team: "Workspace:"
           project: "Project:"
           experiment: "Experiment:"
           my_module: "Task:"
@@ -2931,8 +2933,8 @@ en:
           select_valid_value: 'Select a valid date or date-time value'
           browser_alert_message: 'You have made some changes, are you sure you want to leave this page?'
       errors:
-        load_error_header: 'Your team does not have the necessary permissions to view the details of this item.'
-        load_error_description: 'To obtain access, reach out to your team administrator.'
+        load_error_header: 'Your workspace does not have the necessary permissions to view the details of this item.'
+        load_error_description: 'To obtain access, reach out to your workspace administrator.'
     highlight_component:
       information_label: 'Information'
       custom_columns_label: 'Custom columns'
@@ -2982,7 +2984,7 @@ en:
         added_amount_unit: 'Added amount unit'
         consumed_by: 'Consumed by'
         consumed_on: 'Consumed on'
-        team: 'Team'
+        team: 'Workspace'
         project: 'Project'
         project_id: 'Project ID'
         experiment: 'Experiment'
@@ -3330,8 +3332,8 @@ en:
       started: "editing started"
       finished: "editing finished"
     protocols:
-      my_to_team_message: 'My protocols to Team protocols'
-      team_to_my_message: 'Team protocols to My protocols'
+      my_to_team_message: 'My protocols to Workspace protocols'
+      team_to_my_message: 'Workspace protocols to My protocols'
 
   user_my_modules:
     new:
@@ -3461,7 +3463,7 @@ en:
           revoked: "API key revoked!"
       new:
         head_title: "Sign up"
-        team_name_label: "Team name"
+        team_name_label: "Workspace name"
         team_name_placeholder: "e.g. John's lab"
         email_label: "E-mail"
         full_name_label: "Full name"
@@ -3473,17 +3475,17 @@ en:
         head_title: "Complete the Sign up"
     statistics:
       title: "My statistics"
-      team: "Team"
+      team: "Workspace"
       project: "Project"
       experiment: "Experiment"
       protocol: "Protocol"
     settings:
       changed_team_flash: "You are working on %{team} now!"
       changed_team_error_flash: "Something went wrong! Try again later."
-      changed_team_in_search: "The searched item is not in your current team. You will be redirected to %{team} team!"
+      changed_team_in_search: "The searched item is not in your current workspace. You will be redirected to %{team} workspace!"
       sidebar:
         account: "Account"
-        teams: "Teams"
+        teams: "Workspaces"
         webhooks: "Webhooks"
         account_nav:
           profile: "My profile"
@@ -3618,16 +3620,16 @@ en:
             not_found: "You have no Connected accounts for this provider"
             generic: "Unable to unlink linked account"
       teams:
-        head_title: "Settings | Teams"
+        head_title: "Settings | Workspaces"
         breadcrumbs:
-          all: "All teams"
-          new_team: "New team"
+          all: "All workspaces"
+          new_team: "New workspace"
         navigation:
           details: "Details"
           members: "Members"
           groups: "Groups"
         show:
-          enter_description: "Enter Team description"
+          enter_description: "Enter Workspace description"
           tasks_share:
             enable_label: "Enable task sharing"
             enable_success_message: "Task sharing is enabled."
@@ -3639,25 +3641,25 @@ en:
               description_p2: "This action will deactivate sharing tasks and permanently deactivate all shared links for %{counter} task(s). Any user who has shared links will no longer be able to access the shared tasks."
               disable_button: "Disable"
         index:
-          description_label: "Team is a group of SciNote users who are working on the same projects and share the inventories."
+          description_label: "Workspace is a group of SciNote users who are working on the same projects and share the inventories."
           member_of:
-            one: "Currently you are member of %{count} team."
-            other: "Currently you are member of %{count} teams."
-          no_teams: "You are not a member of any team."
-          new_team: "New team"
-          thead_name: "Team"
+            one: "Currently you are member of %{count} workspace."
+            other: "Currently you are member of %{count} workspaces."
+          no_teams: "You are not a member of any workspace."
+          new_team: "New workspace"
+          thead_name: "Workspace"
           thead_role: "Role"
           thead_created_at: "Created at"
           thead_joined_on: "Joined on"
           thead_members: "Members"
           na: "n/a"
-          leave: "Leave team"
+          leave: "Leave workspace"
         new:
-          name_label: "Team name"
-          name_placeholder: "My team"
-          name_sublabel: "Pick a name that would best describe your team (e.g. 'University of ..., Department of ...')."
+          name_label: "Workspace name"
+          name_placeholder: "My workspace"
+          name_sublabel: "Pick a name that would best describe your workspace (e.g. 'University of ..., Department of ...')."
           description_label: "Description"
-          description_sublabel: "Describe your team."
+          description_sublabel: "Describe your workspace."
           create: "Create"
         edit:
           header_created_at: "Created on:"
@@ -3665,12 +3667,12 @@ en:
           header_created_by_name_email: "%{name} (%{email})"
           header_space_taken: "Space usage:"
           header_no_description: "No description"
-          name_title: "Edit team name"
+          name_title: "Edit workspace name"
           name_label: "Name"
-          description_title: "Edit team description"
+          description_title: "Edit workspace description"
           description_label: "Description"
-          team_members_title: "Team members"
-          add_user: "Add team members"
+          team_members_title: "Workspace members"
+          add_user: "Add workspace members"
           thead_user_name: "Name"
           thead_email: "Email"
           thead_joined_on: "Joined on"
@@ -3680,27 +3682,27 @@ en:
           user_dropdown:
             role_label: "User role"
             remove_label: "Remove"
-          delete_team_heading: "Delete team"
-          can_delete_message: "This team can be deleted because it doesn't have any projects."
-          delete_text: "Delete team."
-          cannot_delete_message_projects: "Cannot delete this team. Only empty teams (without any projects) can be deleted."
+          delete_team_heading: "Delete workspace"
+          can_delete_message: "This workspace can be deleted because it doesn't have any projects."
+          delete_text: "Delete workspace."
+          cannot_delete_message_projects: "Cannot delete this workspace. Only empty workspaces (without any projects) can be deleted."
           modal_destroy_team:
-            title: "Delete team"
-            message: "Are you sure you wish to delete team %{team}? All of the users will be removed from the team as well. This action is irreversible."
-            confirm: "Delete team"
-            flash_success: "Team %{team} was successfully deleted."
+            title: "Delete workspace"
+            message: "Are you sure you wish to delete workspace %{team}? All of the users will be removed from the workspace as well. This action is irreversible."
+            confirm: "Delete workspace"
+            flash_success: "Workspace %{team} was successfully deleted."
       user_teams:
-        leave_uo_heading: "Leave team %{team}"
-        leave_message: "You will lose access to all content associated with the team, including projects, inventories, and protocol templates."
-        destroy_message: 'Removing a team %{role} will revoke their access to all content associated with the team, including projects, inventories, and protocol templates.'
-        leave_uo_confirm: "Leave team"
-        destroy_uo_heading: "Remove team %{role} %{user} from team %{team}"
-        message_owner: "Other team owner(s) will be able to view and manage access to the content."
+        leave_uo_heading: "Leave workspace %{team}"
+        leave_message: "You will lose access to all content associated with the workspace, including projects, inventories, and protocol templates."
+        destroy_message: 'Removing a workspace %{role} will revoke their access to all content associated with the workspace, including projects, inventories, and protocol templates.'
+        leave_uo_confirm: "Leave workspace"
+        destroy_uo_heading: "Remove workspace %{role} %{user} from workspace %{team}"
+        message_owner: "Other workspace owner(s) will be able to view and manage access to the content."
         message_alert: "This action cannot be undone."
         destroy_uo_alert_line_3: "This action cannot be undone."
         destroy_uo_confirm: "Remove"
         leave_flash: "You have left %{team}."
-        remove_flash: "%{user} has been successfully removed from the team %{team}"
+        remove_flash: "%{user} has been successfully removed from the workspace %{team}"
         general_error: "Something went wrong"
 
   user_roles:
@@ -3841,7 +3843,7 @@ en:
         import_current: "Load Current"
         import_all: "Load All"
         import: "Load"
-        import_to_team_protocols_label: "Import to Team Protocols"
+        import_to_team_protocols_label: "Import to Workspace Protocols"
         import_to_private_protocols_label: "Import to My Protocols"
         import_protocols_label: "Import"
         forms_error: "Form %{form_id} doesn't exist or you don't have access and it won’t be imported."
@@ -3875,7 +3877,7 @@ en:
       name_label: "Protocol template name"
       name_placeholder: "Enter a protocol template name…"
       description: "You will create a copy of a protocol and save it to Protocol templates."
-      access_label: "Grant access to all team members"
+      access_label: "Grant access to all workspace members"
       role_label: "Default user role"
       create_new: "Create"
       create_copy: "Save"
@@ -3931,7 +3933,7 @@ en:
         archive: "Archive"
         restore: "Restore"
         empty_placeholder: "There is no action available"
-      public_description: "Team protocols are visible and can be used by everyone from the team."
+      public_description: "Workspace protocols are visible and can be used by everyone from the workspace."
       private_description: "My protocols are only visible to you."
       create_new: "New protocol template"
       create_new_tooltip: "Create new protocol template"
@@ -3948,7 +3950,7 @@ en:
       modal_import_json_notice: "Upload your protocols.io protocol file"
       export: "Export"
       make_private: "Move to My Protocols"
-      publish: "Move to Team protocols"
+      publish: "Move to Workspace protocols"
       archive_action: "Archive"
       archive_flash_html: "<b>%{count} protocol</b> template(s) successfully archived."
       thead:
@@ -3979,15 +3981,15 @@ en:
       restore_flash_html: "<b>%{count} protocol</b> template(s) successfully restored."
       make_private_unauthorized: "You do not have permission to move selected protocols to My protocols."
       make_private_error: "Error occurred while moving selected protocols to My protocols."
-      publish_unauthorized: "You do not have permission to move selected protocols to Team protocols."
-      publish_error: "Error occurred while moving selected protocols to Team protocols."
+      publish_unauthorized: "You do not have permission to move selected protocols to Workspace protocols."
+      publish_error: "Error occurred while moving selected protocols to Workspace protocols."
       row_renamed_html: "%{old_name}<i> to </i>%{new_name}"
       no_protocol_name: "(no name)"
       create:
         title: "Create new protocol"
         name_label: "Protocol name"
         name_placeholder: "My protocol"
-        message_public: "When you create a new Team protocol, it will instantly be visible to all members of the team."
+        message_public: "When you create a new Workspace protocol, it will instantly be visible to all members of the workspace."
         message_private: "When you create a new My protocol, it will only be visible to you."
         submit: "Create"
       clone:
@@ -4026,7 +4028,7 @@ en:
           powered_by: 'Powered by protocols.io'
           banner_text: 'Protocol Preview'
         import:
-          public: "Team protocols"
+          public: "Workspace protocols"
           private: "My protocols"
           success_flash: 'Protocol <strong>%{name}</strong> successfully imported.'
         sort:
@@ -4130,7 +4132,7 @@ en:
           description: "Select a form you want to add to your protocol"
           label: "Form"
           placeholder: "Select a form"
-          no_forms: "Create and publish one or request access from your team."
+          no_forms: "Create and publish one or request access from your workspace."
           add_form: "Add form"
           take_me_there: "Take me there"
           recently_used: "Recently used"
@@ -4278,7 +4280,7 @@ en:
   invite_users:
     to_team:
       title: "Invite members to %{team}"
-      heading: "Invite more people to team %{team} and start using SciNote."
+      heading: "Invite more people to workspace %{team} and start using SciNote."
     no_team:
       title: "Invite users to SciNote"
       heading: "Invite more people to start using SciNote."
@@ -4288,16 +4290,16 @@ en:
         input_label: "New member emails"
         input_subtitle: "You can enter one or more emails."
     input_subtitle: "You can enter one or more emails."
-    invite_to_team_heading: "Invite users to my team:"
+    invite_to_team_heading: "Invite users to my workspace:"
     invite_btn: "Invite members"
     invite_as: "As %{role}"
     invite_guest: "As Guests"
     invite_user: "As Normal Users"
     invite_admin: "As Administrators"
     new_member_email: "New member email"
-    select_team: "Select a team"
-    select_team_blank: "Do not add this user to any team"
-    select_team_role: "Select a team role"
+    select_team: "Select a workspace"
+    select_team_blank: "Do not add this user to any workspace"
+    select_team_role: "Select a workspace role"
     default: "default"
 
     errors:
@@ -4305,11 +4307,11 @@ en:
     results:
       heading: "Invitation results:"
       user_exists: "User is already a member of SciNote."
-      user_exists_unconfirmed_invited_to_team: "User is already a member of SciNote but is not confirmed yet - successfully invited to team %{team} as %{role}."
-      user_exists_and_in_team: "User is already a member of SciNote and team %{team} as %{role}."
-      user_exists_invited_to_team: "User was already a member of SciNote - successfully invited to team %{team} as %{role}."
+      user_exists_unconfirmed_invited_to_team: "User is already a member of SciNote but is not confirmed yet - successfully invited to workspace %{team} as %{role}."
+      user_exists_and_in_team: "User is already a member of SciNote and workspace %{team} as %{role}."
+      user_exists_invited_to_team: "User was already a member of SciNote - successfully invited to workspace %{team} as %{role}."
       user_created: "User successfully invited to SciNote."
-      user_created_invited_to_team: "User successfully invited to SciNote and team %{team} as %{role}."
+      user_created_invited_to_team: "User successfully invited to SciNote and workspace %{team} as %{role}."
       user_invalid: "Invalid email."
       too_many_emails: "Only invited first %{nr} emails. To invite more users, "
 
@@ -4348,7 +4350,7 @@ en:
       repository_stock: "Low stock reminder"
       repository_date_reminder: "Date reminder"
       other_smart_annotation: "You were tagged"
-      other_team_invitation: "You were invited or removed from the team"
+      other_team_invitation: "You were invited or removed from the workspace"
       experiment_due_date: "Due date reminder if you have Owner or User access role on a Experiment"
       project_due_date: "Due date reminder if you have Owner access role on a Project"
       other_user_group_member: "You were added or removed from the group"
@@ -4418,8 +4420,8 @@ en:
     protocol_description_annotation_message_html: "Protocol: %{protocol}"
     protocol_step_annotation_message_html: "Protocol: %{protocol}"
     email_title: "You've received a SciNote notification!"
-    assign_user_to_team: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{team}</strong> by <i>%{assigned_by_user}</i>."
-    unassign_user_from_team: "<i>%{unassigned_user}</i> was removed from team <strong>%{team}</strong> by <i>%{unassigned_by_user}</i>."
+    assign_user_to_team: "<i>%{assigned_user}</i> was added as %{role} to workspace <strong>%{team}</strong> by <i>%{assigned_by_user}</i>."
+    unassign_user_from_team: "<i>%{unassigned_user}</i> was removed from workspace <strong>%{team}</strong> by <i>%{unassigned_by_user}</i>."
     task_completed: "%{user} completed task %{module}. %{date} | Project: %{project} | Experiment: %{experiment}"
 
   assets:
@@ -4532,8 +4534,8 @@ en:
       title: "People"
       header: "Type the name or email of the user you want to mention (they will be notified)"
       help: "Navigate: ↑ ↓    •    Insert: Enter / Tab    •    Dismiss: Esc"
-      not_in_this_team: 'Not in this team'
-      popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
+      not_in_this_team: 'Not in this workspace'
+      popover_html: "<span class='silver'>Workspace:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
     res:
       archived: "(archived)"
       removed: "(removed)"
@@ -4554,7 +4556,7 @@ en:
     change_experiment_role: "Change experiment role"
     change_my_module_role: "Change task role"
     select_role: "Select role"
-    assign_all_team_members: "Grant access to all team members"
+    assign_all_team_members: "Grant access to all workspace members"
     from_project: "%{user_role} [from project]"
     from_experiment: "%{user_role} [from experiment]"
     experiment_select_role: "Change experiment role"
@@ -4565,7 +4567,7 @@ en:
     general_error: "Something went wrong"
 
   access_permissions:
-    all_team: "all team"
+    all_team: "all workspace"
     everyone_else: "Everyone else at %{team_name}"
     reset: "Inherit role"
     remove_access: "Remove access"
@@ -4580,7 +4582,7 @@ en:
       failure: "Something went wrong"
     update:
       failure: "Something went wrong"
-      revoke_all_team_members: "You have successfully removed access from all team members"
+      revoke_all_team_members: "You have successfully removed access from all workspace members"
     partials:
       edit_assignments_content:
         title: "Manage access for %{resource_name}"
@@ -4621,7 +4623,7 @@ en:
       repository_tooltip: "This role was set on this inventory."
       repository_tooltip_inherit: "This role was inherited from the inventory."
       public_members_dropdown:
-        title: "Members of team %{team}"
+        title: "Members of workspace %{team}"
 
     projects:
       modals:
@@ -4822,7 +4824,7 @@ en:
     filter: "Filter:"
     no_teams:
       title: "Your dashboard is empty!"
-      text: "You should request access from your team administrators."
+      text: "You should request access from your workspace administrators."
     select_dropdown:
       placeholder: "Select an option"
       few_options_placeholder: 'options selected'
@@ -4924,7 +4926,7 @@ en:
     inventories: "Inventories"
     protocols: "Protocol templates"
     labels: "Label templates"
-    teams: "All Teams"
+    teams: "All Workspaces"
     addons: "Add-ons"
     locations: "Locations"
     label_printer: "Label printer"
@@ -5044,10 +5046,10 @@ en:
   modal_share:
     title: "Share %{object_name}"
     submit: "Save sharing options"
-    share_with_team: "Share with Team"
+    share_with_team: "Share with Workspace"
     can_edit: "Can Edit"
-    all_teams: "All teams (current & new)"
-    all_teams_tooltip: "This will disable individual team settings"
+    all_teams: "All workspaces (current & new)"
+    all_teams_tooltip: "This will disable individual workspace settings"
     success_message: "Selected sharing options for the %{object_name} have been saved."
 
   errors:
@@ -5057,7 +5059,7 @@ en:
       title: "Access to this page is denied (403)."
       dialog:
         title: "It would seem that you are not allowed in here."
-        text: "You should request access from your team administrators."
+        text: "You should request access from your workspace administrators."
         button: "Go back"
     not_found:
       title: "This page could not be found (404)."
