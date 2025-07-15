@@ -8,17 +8,18 @@ class RepositoriesController < ApplicationController
   include TeamsHelper
   include RepositoriesDatatableHelper
   include MyModulesHelper
+  include UserRolesHelper
 
   before_action :switch_team_with_param, only: %i(index)
   before_action :load_repository, except: %i(index create create_modal sidebar archive restore actions_toolbar
-                                             export_repositories list)
+                                             export_repositories list user_roles)
   before_action :load_repositories, only: %i(index list)
   before_action :load_repositories_for_archiving, only: :archive
   before_action :load_repositories_for_restoring, only: :restore
   before_action :check_view_all_permissions, only: %i(index sidebar list)
   before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet
                                                     import_records sidebar archive restore actions_toolbar
-                                                    export_repositories list)
+                                                    export_repositories list user_roles)
   before_action :check_manage_permissions, only: %i(rename_modal update)
   before_action :check_delete_permissions, only: %i(destroy destroy_modal)
   before_action :check_archive_permissions, only: %i(archive restore)
@@ -482,6 +483,10 @@ class RepositoriesController < ApplicationController
     }
   end
 
+  def user_roles
+    render json: { data: user_roles_collection(Repository.new).map(&:reverse) }
+  end
+
   private
 
   def load_repository
@@ -531,7 +536,7 @@ class RepositoriesController < ApplicationController
   end
 
   def check_view_all_permissions
-    render_403 unless can_read_team?(current_team)
+    render_403 unless @repositories.all? { |repository| can_read_repository?(repository) }
   end
 
   def check_view_permissions

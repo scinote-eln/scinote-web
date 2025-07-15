@@ -56,19 +56,6 @@ class CreateProtocols < ActiveRecord::Migration[4.2]
     add_foreign_key :steps, :protocols, column: :protocol_id
     add_index :steps, :protocol_id
 
-    MyModule.find_each do |my_module|
-      protocol = Protocol.new(
-        my_module_id: my_module.id,
-        team_id: my_module.project.team.id,
-        protocol_type: 0
-      )
-      protocol.save(validate: false)
-
-      Step.where(my_module_id: my_module.id).find_each do |step|
-        step.update_column(:protocol_id, protocol.id)
-      end
-    end
-
     remove_index :steps, column: :my_module_id
     remove_foreign_key :steps, :my_modules
     remove_column :steps, :my_module_id
@@ -79,15 +66,6 @@ class CreateProtocols < ActiveRecord::Migration[4.2]
     add_column :steps, :my_module_id, :integer
     add_foreign_key :steps, :my_modules
     add_index :steps, :my_module_id
-
-    MyModule.find_each do |my_module|
-      protocol = Protocol.where(my_module_id: my_module.id).first
-      if protocol.present?
-        Step.where(protocol_id: protocol.id).find_each do |step|
-          step.update_column(:my_module_id, my_module.id)
-        end
-      end
-    end
 
     remove_index :steps, column: :protocol_id
     remove_foreign_key :steps, :protocols

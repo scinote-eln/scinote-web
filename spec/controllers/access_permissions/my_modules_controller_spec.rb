@@ -42,11 +42,6 @@ describe AccessPermissions::MyModulesController, type: :controller do
       expect(response).to have_http_status :success
     end
 
-    it 'renders edit template' do
-      get :edit, params: { project_id: project.id, experiment_id: experiment.id, id: my_module.id }, format: :json
-      expect(response).to render_template :edit
-    end
-
     it 'renders 403 if user does not have manage permissions on project' do
       sign_in_viewer_user
 

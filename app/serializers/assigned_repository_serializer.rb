@@ -5,7 +5,11 @@ class AssignedRepositorySerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   include MyModulesHelper
 
-  attributes :id, :name
+  attributes :id
+
+  attribute :name do
+    can_read? ? object.name : I18n.t('my_modules.assigned_items.repository.private_repository_name')
+  end
 
   attribute :assigned_rows_count do
     object['assigned_rows_count']
@@ -16,19 +20,19 @@ class AssignedRepositorySerializer < ActiveModel::Serializer
   end
 
   attribute :has_stock do
-    object.has_stock_management?
+    can_read? && object.has_stock_management?
   end
 
   attribute :has_stock_consumption do
-    object.has_stock_consumption?
+    can_read? && object.has_stock_consumption?
   end
 
   attribute :can_manage_consumption do
-    can_update_my_module_stock_consumption?(scope[:user], scope[:my_module])
+    can_read? && can_update_my_module_stock_consumption?(scope[:user], scope[:my_module])
   end
 
   attribute :stock_column_name do
-    object.repository_stock_column.name if object.has_stock_management?
+    object.repository_stock_column.name if can_read? && object.has_stock_management?
   end
 
   attribute :footer_label do
@@ -40,9 +44,13 @@ class AssignedRepositorySerializer < ActiveModel::Serializer
   end
 
   attribute :urls do
-    {
-      full_view: assigned_repository_full_view_table_path(scope[:my_module], object),
-      assigned_rows: assigned_repository_simple_view_index_path(scope[:my_module], object)
-    }
+    list = { assigned_rows: assigned_repository_simple_view_index_path(scope[:my_module], object) }
+    list[:full_view] = assigned_repository_full_view_table_path(scope[:my_module], object) if can_read?
+
+    list
+  end
+
+  def can_read?
+    @can_read ||= can_read_repository?(scope[:user], object)
   end
 end

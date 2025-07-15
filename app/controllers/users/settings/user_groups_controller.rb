@@ -4,9 +4,11 @@ module Users
   module Settings
     class UserGroupsController < ApplicationController
       before_action :load_team
-      before_action :load_user_group, except: %i(index unassigned_users actions_toolbar create)
-      before_action :check_manage_permissions, except: %i(index show unassigned_users actions_toolbar)
       before_action :set_breadcrumbs_items, only: %i(index show)
+      before_action :check_user_groups_enabled
+      before_action :load_user_group, except: %i(index unassigned_users actions_toolbar create)
+      before_action :check_read_permissions, only: %i(users)
+      before_action :check_manage_permissions, except: %i(index show unassigned_users actions_toolbar)
 
       def index
         respond_to do |format|
@@ -50,15 +52,31 @@ module Users
         @user_group.assign_attributes(user_group_params)
 
         if @user_group.save
+          log_activity(:create_user_group)
+          @user_group.users.each do |user|
+            log_activity(:add_group_user_member, { user_target: user.id })
+          end
           render json: { message: t('user_groups.create.success') }, status: :created
         else
           render json: { errors: t('user_groups.create.error') }, status: :unprocessable_entity
         end
       end
 
-      def update; end
+      def update
+        ActiveRecord::Base.transaction do
+          @user_group.last_modified_by = current_user
+          @user_group.assign_attributes(user_group_params)
+          @user_group.save!
+          log_activity(:update_user_group)
+          render json: {}, status: :ok
+        rescue ActiveRecord::RecordInvalid => e
+          render json: { errors: e.message }, status: :unprocessable_entity
+          raise ActiveRecord::Rollback
+        end
+      end
 
       def destroy
+        log_activity(:delete_user_group)
         if @user_group.destroy
           render json: { message: t('user_groups.delete.success') }, status: :ok
         else
@@ -66,7 +84,16 @@ module Users
         end
       end
 
+      def users
+        render json: @user_group.users, each_serializer: UserSerializer, user: current_user
+      end
+
       private
+
+      def check_user_groups_enabled
+        @active_tab = :user_groups
+        render '/users/settings/user_groups/promo' unless UserGroup.enabled?
+      end
 
       def user_group_params
         params.require(:user_group).permit(
@@ -80,11 +107,27 @@ module Users
       end
 
       def load_user_group
-        @user_group = @team.user_groups.find(params[:id])
+        @user_group = @team.user_groups.find(params[:user_group_id] || params[:id])
+      end
+
+      def check_read_permissions
+        render_403 unless can_read_team?(@team)
       end
 
       def check_manage_permissions
         render_403 unless can_manage_team?(@team)
+      end
+
+      def log_activity(type_of, message_items = {})
+        Activities::CreateActivityService
+          .call(activity_type: type_of,
+                owner: current_user,
+                subject: @user_group.team,
+                team: @user_group.team,
+                message_items: {
+                  user_group: @user_group.id,
+                  team: @user_group.team.id
+                }.merge(message_items))
       end
 
       def set_breadcrumbs_items

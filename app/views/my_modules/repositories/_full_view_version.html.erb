@@ -2,7 +2,8 @@
      data-id="<%= repository_snapshot.id %>"
      data-selected="<%= repository_snapshot.selected ? 'true' : 'false' %>"
      data-status-url="<%= status_my_module_repository_snapshot_path(@my_module, repository_snapshot) %>"
-     data-version-item-url="<%= my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
+     data-version-item-url="<%= my_module_repository_snapshot_path(@my_module, repository_snapshot) %>"
+     data-e2e="e2e-BT-task-assignItemModal-versionsSidebar-snapshot<%= repository_snapshot.id %>">
   <div class="row">
     <div class="col-xs-8">
       <% if repository_snapshot.status == 'provisioning' %>
@@ -29,7 +30,12 @@
     </div>
     <div class="col-xs-4">
       <% if can_delete_snapshot %>
-      <a class="pull-right btn btn-light icon-btn version-button delete-snapshot-button" href="#" data-action-path="<%= my_module_repository_snapshot_path(@my_module, repository_snapshot) %>">
+      <a
+        class="pull-right btn btn-light icon-btn version-button delete-snapshot-button"
+        href="#"
+        data-action-path="<%= my_module_repository_snapshot_path(@my_module, repository_snapshot) %>"
+        data-e2e="e2e-BT-task-assignItemModal-versionsSidebar-snapshot<%= repository_snapshot.id %>-delete"
+      >
         <i class="sn-icon sn-icon-delete"></i>
       </a>
       <% end %>

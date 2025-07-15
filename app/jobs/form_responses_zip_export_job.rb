@@ -6,6 +6,7 @@ class FormResponsesZipExportJob < ZipExportJob
   include StringUtility
   include BreadcrumbsHelper
   include Rails.application.routes.url_helpers
+  include FormFieldValuesHelper
 
   private
 
@@ -44,6 +45,8 @@ class FormResponsesZipExportJob < ZipExportJob
             if form_field_value.present?
               if form_field_value.not_applicable
                 row.add_cell I18n.t('forms.export.values.not_applicable')
+              elsif form_field_value.is_a?(FormRepositoryRowsFieldValue)
+                row.add_cell form_repository_rows_field_value_formatter(form_field_value, @user)
               elsif form_field_value.value_in_range?
                 row.add_cell form_field_value.formatted
               else

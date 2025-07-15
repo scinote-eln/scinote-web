@@ -255,7 +255,6 @@ label {
 
   .user-time {
     color: $color-silver-chalice;
-    white-space: nowrap;
   }
 
   .report-element-body {
@@ -264,6 +263,11 @@ label {
     .report-export-img {
       max-height: 300px;
       max-width: 300px;
+    }
+
+    &.text-block p,
+    .text-block p {
+      margin: 0;
     }
   }
 
@@ -305,11 +309,11 @@ label {
         color: $color-black;
       }
 
-      &.started {
-        background: $brand-primary;
+      &.in_progress {
+        background: var(--sn-alert-bloo);
       }
 
-      &.completed {
+      &.done {
         background: $brand-success;
       }
     }
@@ -356,11 +360,11 @@ label {
         color: $color-black;
       }
 
-      &.started {
-        background: $brand-primary;
+      &.in_progress {
+        background: var(--sn-alert-bloo);
       }
 
-      &.completed {
+      &.done {
         background: $brand-success;
       }
     }
@@ -457,7 +461,6 @@ label {
 
     .user-time {
       display: inline-block;
-      white-space: nowrap;
     }
   }
 

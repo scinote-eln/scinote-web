@@ -430,7 +430,7 @@ en:
 
   attachments:
     menu:
-      office_file: "New Office file"
+      office_file: "New Microsoft 365 file"
       chemical_drawing: "New chemical drawing"
       file_from_pc: "File from your PC"
     modified_label: "Modified:"
@@ -1016,7 +1016,7 @@ en:
           status:
             not_started: "Not started"
             in_progress: "In progress"
-            done: "done"
+            done: "Done"
         module_activity:
           name: "Task activity"
           sidebar_name: "Activity"
@@ -1028,6 +1028,7 @@ en:
           no_columns: "No columns selected"
         result:
           user_time: "Added on %{timestamp} by %{user}."
+          linked_steps: "Linked to steps: "
         result_asset:
           file_name: "%{file}"
           user_time: "Added on %{timestamp} by %{user}."
@@ -1041,6 +1042,7 @@ en:
           sidebar_name: "Step %{pos}: %{name}"
           step_pos: "Step %{pos}:"
           no_description: "No description"
+          linked_results: "Linked to results:"
           completed:
             user_time: "Completed by %{user} on %{timestamp}."
           uncompleted:
@@ -1483,6 +1485,9 @@ en:
         checkbox_label: 'Mark as output'
       direct_assign:
         success: "Successfully assigned an item to the task."
+      repository:
+        private_repository_name: "Private inventory"
+        private_repository_row_name: "Private item (%{repository_row_code})"
     protocol:
       title: "Protocol"
       options_dropdown:
@@ -1641,6 +1646,19 @@ en:
       info_tab: "Info"
       comments_tab: "Comments"
       comment_title: "%{user} at %{time}:"
+      link_to_step: "Link to step"
+      link_steps: "Link steps to this result"
+      linked_steps: "Linked steps"
+      modals:
+        link_steps:
+          title: 'Link result to protocol steps'
+          description: 'You can link a result to multiple steps.'
+          empty_description: 'No step found. Add a step first to enable linking with a result.'
+          steps_label: 'Protocol steps'
+          placeholder: 'Select steps'
+          link_steps: 'Link steps'
+          go_to_protocol: 'Go to Protocol'
+          step_label: "Step %{position} - %{name}"
       insert:
         button: 'Insert content'
         title: 'Insert result content'
@@ -2141,6 +2159,7 @@ en:
       title: "Welcome to SciNote"
       description: "You have been invited to view the %{my_module}."
       view_task_btn: "View task"
+    linked_results: "%{count} linked results"
   tags:
     new:
       head_title: "Create tag"
@@ -2199,9 +2218,9 @@ en:
       success_flash: "File result successfully deleted."
     wopi_open_file: "Open in %{app}"
     wopi_edit_file: "Open in %{app}"
-    wopi_word: "Microsoft Word for the Web"
-    wopi_excel: "Microsoft Excel for the Web"
-    wopi_powerpoint: "Microsoft PowerPoint for the Web"
+    wopi_word: "Microsoft Word for the web"
+    wopi_excel: "Microsoft Excel for the web"
+    wopi_powerpoint: "Microsoft PowerPoint for the web"
     error_flash: 'Something went wrong! Please try again later.'
 
   result_tables:
@@ -2227,8 +2246,11 @@ en:
       success_flash: "Table result successfully deleted."
 
   repositories:
+    private: "Private inventory"
     repository: "Inventory: %{name}"
     snapshot_failed: "Snapshot failed"
+    repository_column:
+      private: "Private column"
     icon_title:
       i_shared: "Shared inventory (owned by your Workspace)"
       shared_edit: "Shared inventory (owned by %{team_name}). You can edit."
@@ -2822,6 +2844,7 @@ en:
         item: "Item: "
         inventory: "Inventory: "
         empty: "This item has no relationships assigned."
+        private_item_name: "Private item"
         parents:
           count: "Parents (%{count})"
           empty: ""
@@ -3239,6 +3262,7 @@ en:
       no_libraries:
         create_new_button: "New inventory"
         create_new_button_tooltip: "Create new inventory"
+      access: 'Access'
     show:
       head_title: "Inventories | %{library}"
   repository_row:
@@ -3360,6 +3384,7 @@ en:
           title: 'Change your profile photo'
           upload_button: 'Upload a photo'
           option_text_html: 'or<br>Select your avatar below'
+        avatar_total_size: 'Your avatar file cannot be larger than ${size} MB. (Please try again with a smaller file.)'
         name_label: "Full name"
         name_title: "Change name"
         initials_label: "Initials"
@@ -3824,7 +3849,6 @@ en:
         forms_error: "Form %{form_id} doesn't exist or you don't have access and it won’t be imported."
       import_protocol_notification:
         title: "The import process has been successfully completed. You can download original file here: %{link}"
-        message: "Protocol template:"
       import_protocol_notification_error:
         title: "Import failed"
         message: "We're sorry but the file import process has encountered an error. Please make another attempt, and if the issue persists, please contact support for further assistance."
@@ -4014,6 +4038,7 @@ en:
           ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
 
     steps:
+      label: "Step %{position} - %{name}"
       placeholder: 'Step name'
       default_name: 'Untitled step'
       completed: 'Completed'
@@ -4043,6 +4068,9 @@ en:
       component_duplication_failed: "Step content could not be duplicated, try again later."
       timestamp: "Created on %{date} by %{user}"
       timestamp_iso_html: "Created on <span class='iso-formatted-date'>%{date}</span> by %{user}"
+      manage_links: "Manage links"
+      link_results: "Link results to this step"
+      linked_results: "Linked results"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"
@@ -4130,6 +4158,16 @@ en:
           confirm: 'Yes, delete them'
         reorder_elements:
           title: 'Rearrange step %{step_position} content'
+        link_results:
+          title: 'Link results to this step'
+          description: 'You can link multiple results to a step'
+          empty_description: 'No results found. Add a result first to enable linking with a step.'
+          result_label: 'Result'
+          placeholder: 'Select results'
+          link_results: 'Link results'
+          go_to_results: 'Go to Results'
+          success: 'Step and result links successfully updated.'
+          error: 'There was a problem with linking result to the step.'
         custom_well_plate:
           title: 'Insert custom well plate'
           name_label: 'Well plate name'
@@ -4190,6 +4228,9 @@ en:
       head_title: "Edit protocol"
     no_keywords: "—"
   user_groups:
+    promo:
+      head_title: 'User groups'
+      promo_title: 'This feature is disabled by default in open source SciNote'
     create:
       success: "Group created successfully."
       error: "There was a problem creating group. Please try again."
@@ -4218,7 +4259,7 @@ en:
       toolbar:
         delete: "Delete"
     show:
-      title: "Group %{group}"
+      title: "Group"
       add_members: "Add members"
       name: "Name"
       email: "Email"
@@ -4312,6 +4353,7 @@ en:
       other_team_invitation: "You were invited or removed from the workspace"
       experiment_due_date: "Due date reminder if you have Owner or User access role on a Experiment"
       project_due_date: "Due date reminder if you have Owner access role on a Project"
+      other_user_group_member: "You were added or removed from the group"
     content:
       my_module_due_date_reminder:
         title_html: "Task due date reminder"
@@ -4407,9 +4449,9 @@ en:
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel for the web.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint for the web.'
     create_wopi_file:
-      button_text: 'New Microsoft Office file'
-      li_text: "Office file"
-      modal_title: 'Create new Microsoft Office document'
+      button_text: 'New Microsoft 365 file'
+      li_text: "Microsoft 365 file"
+      modal_title: 'Create new Microsoft 365 document'
       text_field_label: 'Document name'
       type_select_label: 'Document type'
       text_field_placeholder: 'Enter document name...'
@@ -4578,6 +4620,8 @@ en:
       mymodule_tooltip: "This role was set on this task"
       form_tooltip: "This role was set on this form."
       form_tooltip_inherit: "This role was inherited from the form."
+      repository_tooltip: "This role was set on this inventory."
+      repository_tooltip_inherit: "This role was inherited from the inventory."
       public_members_dropdown:
         title: "Members of workspace %{team}"
 
@@ -4588,6 +4632,12 @@ en:
         edit_modal:
           title: "Manage access for %{resource_name}"
     protocols:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
+    repositories:
       modals:
         show_modal:
           title: "Access to %{resource_name}"

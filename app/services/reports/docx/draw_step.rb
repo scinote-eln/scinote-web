@@ -29,6 +29,12 @@ module Reports::Docx::DrawStep
             timestamp: I18n.l(timestamp, format: :full)
           ), color: color[:gray]
         end
+        if !settings['exclude_task_metadata'] && step.results.size.positive?
+          text ' | '
+          text I18n.t('projects.reports.elements.step.linked_results'), color: color[:gray]
+          text ' '
+          text step.results.pluck(:name).join('; '), color: color[:gray]
+        end
       end
     end
 

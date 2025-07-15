@@ -1,7 +1,11 @@
 <template>
   <div ref="container" class="border rounded transition-all overflow-hidden" :style="{height: (sectionOpened ? '448px' : '48px')}">
     <div class="flex items-center h-12 px-4 gap-4 assigned-repository-title">
-      <div @click="toggleContainer" class="flex items-center grow overflow-hidden cursor-pointer">
+      <div
+        @click="toggleContainer"
+        class="flex items-center grow overflow-hidden cursor-pointer"
+        :data-e2e="`e2e-BT-task-assignedItems-inventory${ repository.id }-toggle`"
+      >
         <i ref="openHandler" class="sn-icon sn-icon-right cursor-pointer"></i>
         <h3 class="my-0 flex items-center gap-1 overflow-hidden">
           <span :title="repository.attributes.name" class="assigned-repository-title truncate">{{ repository.attributes.name }}</span>
@@ -15,8 +19,10 @@
         </h3>
       </div>
       <button
+        v-if="repository.attributes.urls.full_view"
         class="btn btn-light icon-btn ml-auto full-screen"
         :data-table-url="fullViewUrl"
+        :data-e2e="`e2e-BT-task-assignedItems-inventory${ repository.id }-expand`"
       >
         <i class="sn-icon sn-icon-expand"></i>
       </button>

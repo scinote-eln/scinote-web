@@ -58,13 +58,11 @@ class RepositoryRowsController < ApplicationController
                                     end
         end
 
-        @assigned_modules = @repository_row.my_modules
-                                           .joins(experiment: :project)
-                                           .joins(:my_module_repository_rows)
-                                           .select('my_module_repository_rows.created_at, my_modules.*')
-                                           .order('my_module_repository_rows.created_at': :desc)
-                                           .distinct
+        @assigned_modules = @repository_row.my_modules.distinct
         @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
+                                             .joins(:my_module_repository_rows)
+                                             .select('my_module_repository_rows.created_at, my_modules.*')
+                                             .order(my_module_repository_rows: { created_at: :desc })
         @reminders_present = @repository_row.repository_cells.with_active_reminder(@current_user).any?
       end
     end

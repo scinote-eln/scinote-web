@@ -53,6 +53,8 @@ module GlobalActivitiesHelper
     path = ''
 
     case obj
+    when UserGroup
+      path = users_settings_team_user_group_path(obj.team, obj)
     when User
       return "[@#{obj.full_name}~#{obj.id.base62_encode}]"
     when Tag
@@ -61,6 +63,8 @@ module GlobalActivitiesHelper
     when Team
       path = projects_path(team: obj.id)
     when Repository
+      return I18n.t('repositories.private') unless can_read_repository?(obj)
+
       path = repository_path(obj, team: obj.team.id)
     when RepositoryRow
       # Handle private repository rows
@@ -70,6 +74,8 @@ module GlobalActivitiesHelper
 
       path = repository_path(obj.repository, team: obj.repository.team.id)
     when RepositoryColumn
+      return I18n.t('repositories.repository_column.private') unless can_read_repository?(obj.repository)
+
       return current_value unless obj.repository
 
       path = repository_path(obj.repository, team: obj.repository.team.id)
@@ -102,9 +108,11 @@ module GlobalActivitiesHelper
     when Result
       return current_value unless obj.navigable?
 
-      path = obj.archived? ? archive_my_module_path(obj.my_module) : my_module_results_path(obj.my_module)
+      path = obj.archived? ? my_module_results_path(obj.my_module, result_id: obj.id, view_mode: :archived) : my_module_results_path(obj.my_module, result_id: obj.id)
     when Step
-      return current_value
+      return current_value unless obj.navigable?
+
+      path = protocols_my_module_path(obj.my_module, step_id: obj.id)
     when Report
       preview_type = activity.type_of == 'generate_docx_report' ? :docx : :pdf
       path = reports_path(team: obj.team.id, preview_report_id: obj.id, preview_type: preview_type)

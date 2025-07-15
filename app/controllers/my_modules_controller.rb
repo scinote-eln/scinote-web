@@ -444,6 +444,14 @@ class MyModulesController < ApplicationController
     render json: my_modules
   end
 
+  def change_results_state
+    @my_module.results.find_each do |result|
+      current_user.settings['result_states'][result.id.to_s] = params[:collapsed].present?
+    end
+    current_user.save!
+    render json: { status: :ok }
+  end
+
   private
 
   def load_vars
@@ -527,11 +535,11 @@ class MyModulesController < ApplicationController
 
     if permitted_params[:started_on].present?
       permitted_params[:started_on] =
-        Time.zone.strptime(permitted_params[:started_on], '%Y/%m/%d %H:%M')
+        Time.zone.strptime(permitted_params[:started_on], '%Y-%m-%d %H:%M')
     end
     if permitted_params[:due_date].present?
       permitted_params[:due_date] =
-        Time.zone.strptime(permitted_params[:due_date], '%Y/%m/%d %H:%M')
+        Time.zone.strptime(permitted_params[:due_date], '%Y-%m-%d %H:%M')
     end
 
     permitted_params

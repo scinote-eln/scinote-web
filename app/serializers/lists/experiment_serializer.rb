@@ -15,9 +15,19 @@ module Lists
       I18n.l(object.created_at, format: :full_date)
     end
 
+    # normalize description to handle legacy description newlines
+    def description
+      return unless object.description
+
+      # if description includes HTML, it is already in the new format.
+      return object.description if object.description.match?(/<(.|\n)*?>/)
+
+      simple_format(object.description)
+    end
+
     def sa_description
       @user = scope[:user] || @instance_options[:user]
-      custom_auto_link(object.description,
+      custom_auto_link(description,
                        simple_format: false,
                        tags: %w(img),
                        team: object.project.team)
@@ -68,6 +78,7 @@ module Lists
         clone: clone_experiment_path(object),
         update: experiment_path(object),
         show_access: access_permissions_experiment_path(object),
+        show_user_group_assignments_access: show_user_group_assignments_access_permissions_experiment_path(object),
         workflow_img: fetch_workflow_img_experiment_path(object),
         favorite: favorite_experiment_url(object),
         unfavorite: unfavorite_experiment_url(object)
@@ -75,6 +86,7 @@ module Lists
 
       if can_manage_project_users?(object.project)
         urls_list[:update_access] = access_permissions_experiment_path(object)
+        urls_list[:user_group_members] = users_users_settings_team_user_groups_path(team_id: object.team.id)
       end
       urls_list
     end

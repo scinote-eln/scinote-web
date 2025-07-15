@@ -8,6 +8,7 @@ ENV['RAILS_ENV'] = 'test'
 
 ENV['CORE_API_V1_ENABLED'] = 'true'
 ENV['CORE_API_V2_ENABLED'] = 'true'
+ENV['EXPORT_ALL_LIMIT_24_HOURS'] = '3'
 
 require File.expand_path('../../config/environment', __FILE__)
 # Prevent database truncation if the environment is production
@@ -32,15 +33,12 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 # Checks for pending migration
 begin
-  ActiveRecord::Migration.check_pending!
+  ActiveRecord::Migration.check_all_pending!
 rescue ActiveRecord::PendingMigrationError => e
   abort(e.message)
 end
 
 RSpec.configure do |config|
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
-
   config.use_transactional_fixtures = false
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)

@@ -8,6 +8,7 @@ class ProtocolsController < ApplicationController
   include TeamsHelper
   include ProtocolsExporterV2
   include UserRolesHelper
+  include FormFieldValuesHelper
 
   before_action :check_create_permissions, only: %i(
     create
@@ -29,7 +30,6 @@ class ProtocolsController < ApplicationController
   before_action :check_view_all_permissions, only: %i(
     index
     protocolsio_index
-    datatable
   )
   before_action :check_manage_permissions, only: %i(
     update_keywords

@@ -56,6 +56,14 @@ module Assignable
 
     after_create :create_users_assignments
 
+    def default_public_user_role_id
+      team_assignments.where(team_id: team.id).pick(:user_role_id)
+    end
+
+    def has_permission_children?
+      false
+    end
+
     def role_for_user(user)
       user_assignments.find_by(user: user)&.user_role
     end
@@ -75,6 +83,11 @@ module Assignable
     private
 
     def after_user_assignment_changed(user_assignment = nil)
+      # Optional, redefine in the assignable model.
+      # Will be called when an assignment is changed (save/destroy) for the assignable model.
+    end
+
+    def after_user_group_assignment_changed(user_group_assignment = nil)
       # Optional, redefine in the assignable model.
       # Will be called when an assignment is changed (save/destroy) for the assignable model.
     end

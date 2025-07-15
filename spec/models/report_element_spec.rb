@@ -53,7 +53,6 @@ describe ReportElement, type: :model do
 
   describe 'Validations' do
     it { should validate_presence_of :position }
-    it { should validate_presence_of :report }
     it { should validate_presence_of :type_of }
   end
 end

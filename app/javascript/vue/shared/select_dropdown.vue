@@ -225,7 +225,7 @@ export default {
       if (this.newValue.length === 0) {
         return false;
       }
-      if (this.newValue.length === 1) {
+      if (this.newValue.length === 1 && this.rawOptions.length > 1) {
         this.selectAllState = 'indeterminate';
         return this.renderLabel(this.rawOptions.find((option) => option[0] === this.newValue[0]));
       }

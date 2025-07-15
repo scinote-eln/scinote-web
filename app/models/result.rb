@@ -31,12 +31,15 @@ class Result < ApplicationRecord
   has_many :result_texts, inverse_of: :result, dependent: :destroy
   has_many :result_comments, inverse_of: :result, foreign_key: :associated_id, dependent: :destroy
   has_many :report_elements, inverse_of: :result, dependent: :destroy
+  has_many :step_results, inverse_of: :result, dependent: :destroy
+  has_many :steps, through: :step_results
 
   accepts_nested_attributes_for :result_texts
   accepts_nested_attributes_for :assets
   accepts_nested_attributes_for :tables
 
   before_save :ensure_default_name
+  after_discard :delete_step_results
   after_discard do
     CleanupUserSettingsJob.perform_later('result_states', id)
   end
@@ -49,8 +52,12 @@ class Result < ApplicationRecord
     teams = options[:teams] || current_team || user.teams.select(:id)
 
     new_query = joins(:my_module)
-                .where(my_modules: MyModule.with_granted_permissions(user, MyModulePermissions::READ)
-                                           .where(user_assignments: { team: teams }))
+                .where(
+                  my_modules: {
+                    id: MyModule.with_granted_permissions(user, MyModulePermissions::READ)
+                                .where(user_assignments: { team: teams }).select(:id)
+                  }
+                )
 
     unless include_archived
       new_query = new_query.joins(my_module: { experiment: :project })
@@ -184,5 +191,9 @@ class Result < ApplicationRecord
 
   def ensure_default_name
     self.name = name.presence || I18n.t('my_modules.results.default_name')
+  end
+
+  def delete_step_results
+    step_results.destroy_all
   end
 end

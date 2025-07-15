@@ -26,6 +26,12 @@ module Reports::Docx::DrawResults
                         timestamp: I18n.l(result.created_at, format: :full),
                         user: result.user.full_name), color: color[:gray]
           end
+          if !settings['exclude_task_metadata'] && result.steps.size.positive?
+            text ' | '
+            text I18n.t('projects.reports.elements.result.linked_steps'), color: color[:gray]
+            text ' '
+            text result.steps.map(&:label).join('; '), color: color[:gray]
+          end
         end
         draw_result_asset(result, @settings) if @settings.dig('task', 'file_results')
         result.result_orderable_elements.each do |element|

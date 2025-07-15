@@ -44,6 +44,8 @@ class Step < ApplicationRecord
   has_many :tables, through: :step_tables, dependent: :destroy
   has_many :report_elements, inverse_of: :step, dependent: :destroy
   has_many :form_responses, as: :parent, inverse_of: :parent, dependent: :destroy
+  has_many :step_results, inverse_of: :step, dependent: :destroy
+  has_many :results, through: :step_results
 
   accepts_nested_attributes_for :checklists,
                                 reject_if: :all_blank,
@@ -115,6 +117,10 @@ class Step < ApplicationRecord
     step_comments
   end
 
+  def navigable?
+    !protocol.my_module.archived? && protocol.my_module.navigable? if protocol.my_module
+  end
+
   def description_step_text
     step_texts.order(created_at: :asc).first
   end
@@ -171,6 +177,10 @@ class Step < ApplicationRecord
     step_orderable_elements.order(:position).each_with_index do |element, index|
       element.update!(position: index) unless element.position == index
     end
+  end
+
+  def label
+    I18n.t('protocols.steps.label', name: name, position: position + 1)
   end
 
   private

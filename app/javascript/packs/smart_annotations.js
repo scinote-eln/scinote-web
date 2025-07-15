@@ -66,6 +66,8 @@ async function fetchSmartAnnotationData(element) {
 }
 
 window.renderElementSmartAnnotations = (parentElement, selector, scrollElement = null) => {
+  if (!parentElement) return true;
+
   // Check if it was not initialized yet and contains SA strings
   if (parentElement.classList.contains('sa-initialized' || !parentElement.innerHTML.match(SA_REGEX))) return true;
 

@@ -21,7 +21,6 @@ module Lists
       tags
       tags_html
       comments
-      due_date_formatted
       due_date_cell
       start_date_cell
       permissions
@@ -69,13 +68,13 @@ module Lists
         experiments_to_move: experiments_to_move_experiment_path(object.experiment),
         update: my_module_path(object),
         show_access: access_permissions_my_module_path(object),
+        show_user_group_assignments_access: show_user_group_assignments_access_permissions_my_module_path(object),
         provisioning_status: provisioning_status_my_module_url(object),
         favorite: favorite_my_module_url(object),
         unfavorite: unfavorite_my_module_url(object)
       }
 
       urls_list[:update_access] = access_permissions_my_module_path(object) if can_manage_project_users?(object.experiment.project)
-
       urls_list[:update_due_date] = my_module_path(object, user, format: :json) if can_update_my_module_due_date?(object)
       urls_list[:update_start_date] = my_module_path(object, user, format: :json) if can_update_my_module_start_date?(object)
 
@@ -86,14 +85,10 @@ module Lists
       I18n.l(object.due_date, format: :default) if object.due_date
     end
 
-    def due_date_formatted
-      I18n.l(object.due_date, format: :full_date) if object.due_date
-    end
-
     def due_date_cell
       {
         value: due_date,
-        value_formatted: due_date_formatted,
+        value_formatted: due_date,
         editable: can_update_my_module_due_date?(object),
         icon: (if object.is_one_day_prior? && !object.completed?
                  'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
@@ -106,7 +101,7 @@ module Lists
     def start_date_cell
       {
         value: start_date,
-        value_formatted: start_date_formatted,
+        value_formatted: start_date,
         editable: can_update_my_module_start_date?(object)
       }
     end
@@ -195,10 +190,6 @@ module Lists
 
     def start_date
       I18n.l(object.started_on, format: :default) if object.started_on
-    end
-
-    def start_date_formatted
-      I18n.l(object.started_on, format: :full_date) if object.started_on
     end
   end
 end

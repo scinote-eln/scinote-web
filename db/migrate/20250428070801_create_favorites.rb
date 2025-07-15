@@ -19,6 +19,8 @@ class CreateFavorites < ActiveRecord::Migration[7.0]
       name: :index_favorites_on_user_and_item_and_team
     )
 
+    User.reset_column_information
+
     reversible do |dir|
       dir.up do
         User.find_each do |user|

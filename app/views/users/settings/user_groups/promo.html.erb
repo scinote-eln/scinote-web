@@ -1,0 +1,16 @@
+<% provide(:sidebar_title, t('sidebar.templates.sidebar_title')) %>
+<% provide(:container_class, "no-second-nav-container") %>
+
+<div class="content-pane flexible with-grey-background min-h-[100vh] flex flex-col">
+  <%= render partial: 'users/settings/teams/header' %>
+  <div class="flex flex-col sm:flex-row items-center justify-center gap-10 py-20 ">
+    <div class="flex justify-center ">
+      <%= image_tag 'user_groups/promo.svg' %>
+    </div>
+    <div class="promo-text w-[489px]">
+      <h1 class="title">
+        <%= t('user_groups.promo.promo_title') %>
+      </h1>
+    </div>
+  </div>
+</div>

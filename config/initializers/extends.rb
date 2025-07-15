@@ -240,7 +240,7 @@ class Extends
   ACTIVITY_MESSAGE_ITEMS_TYPES =
     ACTIVITY_SUBJECT_TYPES + %w(
       User Tag RepositoryColumn RepositoryRow Step Result Asset TinyMceAsset
-      Repository MyModuleStatus RepositorySnapshot
+      Repository MyModuleStatus RepositorySnapshot UserGroup
     ).freeze
 
   ACTIVITY_TYPES = {
@@ -594,31 +594,58 @@ class Extends
     change_project_start_date: 375,
     remove_project_start_date: 376,
     set_head_of_project: 377,
-    remove_head_of_project: 378
+    remove_head_of_project: 378,
+    create_user_group: 379,
+    update_user_group: 380,
+    delete_user_group: 381,
+    add_group_user_member: 382,
+    remove_group_user_member: 383,
+    form_access_granted_user_group: 384,
+    form_access_changed_user_group: 385,
+    form_access_revoked_user_group: 386,
+    protocol_template_access_granted_user_group: 387,
+    protocol_template_access_changed_user_group: 388,
+    protocol_template_access_revoked_user_group: 389,
+    project_access_granted_user_group: 390,
+    project_access_changed_user_group: 391,
+    project_access_revoked_user_group: 392,
+    experiment_access_changed_user_group: 393,
+    my_module_access_changed_user_group: 394,
+    step_and_result_linked: 395,
+    step_and_result_unlinked: 396,
+    repository_access_granted: 397,
+    repository_access_changed: 398,
+    repository_access_revoked: 399,
+    repository_access_granted_all_team_members: 400,
+    repository_access_changed_all_team_members: 401,
+    repository_access_revoked_all_team_members: 402,
+    repository_access_granted_user_group: 403,
+    repository_access_changed_user_group: 404,
+    repository_access_revoked_user_group: 405
   }
 
   ACTIVITY_GROUPS = {
-    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243, *370..378],
+    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243, *370..378, *390..392],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, *246..248, *257..273, *284..291, 301, 303, 306, 328],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
-           148, 166],
+           148, 166, 394, 395, 396],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
                     184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327, *347..352, 359],
     task_inventory: [55, 56, 146, 147, 183],
-    experiment: [*27..31, 57, 141, 165, *363..369],
+    experiment: [*27..31, 57, 141, 165, *363..369, 393],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
-                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329],
+                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329, *397..405],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
-                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360],
-    team: [92, 94, 93, 97, 104, 244, 245],
+                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389],
+    team: [92, 94, 93, 97, 104, 244, 245, *379..383],
     label_templates: [*216..219],
     storage_locations: [*309..315, 361],
     container_storage_locations: [*316..322, 326, 362],
     storage_location_repository_rows: [*323..325],
-    forms: [331, 332, 333, 334, 335, 336, *337..346, 356, 357, 358]
+    forms: [331, 332, 333, 334, 335, 336, *337..346, 356, 357, 358, *384..386]
   }
 
   TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository Form).freeze
@@ -708,7 +735,7 @@ class Extends
         ^CF0,15
         ^FO0,5^FD{{ITEM_ID}}^FS
         ^FO0,13^BQN,2,3^FDMA,{{ITEM_ID}}^FS
-        ^FO70,27^FB100,2,0,L^FD{{NAME}}^FS^FS
+        ^FO70,27^FB100,4,0,L^FD{{NAME}}^FS^FS
         ^XZ
       HEREDOC
   }

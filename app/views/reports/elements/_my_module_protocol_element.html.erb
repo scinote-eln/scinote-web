@@ -14,7 +14,7 @@
         <%= t('projects.reports.elements.module.protocol.user_time', code: protocol.original_code, timestamp: l(protocol.created_at, format: :full)) %>
       </div>
     <% end %>
-    <div class="row module-protocol-description">
+    <div class="row module-protocol-description text-block">
       <% if @settings.dig('task', 'protocol', 'description') && protocol.description.present? %>
         <%= custom_auto_link(protocol.prepare_for_report(:description, export_all: export_all),
                              team: current_team,

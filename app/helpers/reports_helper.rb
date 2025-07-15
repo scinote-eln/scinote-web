@@ -2,6 +2,7 @@
 
 module ReportsHelper
   include StringUtility
+  include FormFieldValuesHelper
   include Canaid::Helpers::PermissionsHelper
 
   def render_report_element(element, provided_locals = nil)
@@ -139,6 +140,8 @@ module ReportsHelper
                 )
               elsif form_field_value.is_a?(FormDatetimeFieldValue)
                 form_field_value&.formatted_localize
+              elsif form_field_value.is_a?(FormRepositoryRowsFieldValue)
+                form_repository_rows_field_value_formatter(form_field_value)
               else
                 form_field_value&.formatted
               end

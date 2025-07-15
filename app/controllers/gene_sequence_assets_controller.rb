@@ -82,9 +82,16 @@ class GeneSequenceAssetsController < ApplicationController
 
       file = @asset.file
 
-      file.blob.metadata['asset_type'] = 'gene_sequence'
-      file.blob.metadata['name'] = params[:sequence_name]
-      file.save!
+      file.blob.update_column(
+        :metadata,
+        file.blob.metadata.merge(
+          {
+            asset_type: 'gene_sequence',
+            name: params[:sequence_name]
+          }
+        )
+      )
+
       @asset.view_mode = view_mode || @parent.assets_view_mode
       @asset.last_modified_by = current_user
       @asset.save!

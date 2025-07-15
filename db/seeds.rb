@@ -1,8 +1,6 @@
 include UsersGenerator
 
-if ActiveRecord::Base.connection.migration_context.needs_migration?
-  raise "There are pending migrations. Run 'rails db:migrate' first."
-end
+ActiveRecord::Migration.check_all_pending!
 
 MyModuleStatusFlow.ensure_default
 

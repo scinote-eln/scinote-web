@@ -4,8 +4,6 @@ class AddEmailSystemNotificationSettingToUser < ActiveRecord::Migration[4.2]
                :system_message_notification_email,
                :boolean,
                default: false
-
-    User.update_all(system_message_notification_email: false)
   end
 
   def down

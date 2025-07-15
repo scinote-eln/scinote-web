@@ -82,8 +82,7 @@ class Experiment < ApplicationRecord
   end
 
   def self.viewable_by_user(user, teams)
-    with_granted_permissions(user, ExperimentPermissions::READ)
-      .where(user_assignments: { team: teams })
+    with_granted_permissions(user, ExperimentPermissions::READ, teams)
   end
 
   def self.with_children_viewable_by_user(user)
@@ -262,6 +261,10 @@ class Experiment < ApplicationRecord
 
   def parent
     project
+  end
+
+  def has_permission_children?
+    true
   end
 
   def permission_parent

@@ -159,6 +159,7 @@ Rails.application.routes.draw do
             collection do
               get :unassigned_users
               post :actions_toolbar
+              get :users
             end
           end
 
@@ -336,19 +337,43 @@ Rails.application.routes.draw do
 
     namespace :access_permissions do
       resources :projects, defaults: { format: 'json' } do
-        put :update_default_public_user_role, on: :member
+        member do
+          get :show_user_group_assignments
+          get :unassigned_user_groups
+        end
       end
 
       resources :protocols, defaults: { format: 'json' } do
-        put :update_default_public_user_role, on: :member
+        member do
+          get :show_user_group_assignments
+          get :unassigned_user_groups
+        end
       end
 
       resources :forms, defaults: { format: 'json' } do
-        put :update_default_public_user_role, on: :member
+        member do
+          get :show_user_group_assignments
+          get :unassigned_user_groups
+        end
       end
 
-      resources :experiments, only: %i(show update edit)
-      resources :my_modules, only: %i(show update edit)
+      resources :repositories, defaults: { format: 'json' } do
+        member do
+          get :show_user_group_assignments
+          get :unassigned_user_groups
+        end
+      end
+
+      resources :experiments, only: %i(show update edit) do
+        member do
+          get :show_user_group_assignments
+        end
+      end
+      resources :my_modules, only: %i(show update edit) do
+        member do
+          get :show_user_group_assignments
+        end
+      end
     end
 
     namespace :navigator do
@@ -485,6 +510,14 @@ Rails.application.routes.draw do
     # as well as 'module info' page for single module (HTML)
     get 'experiments/:experiment_id/table', to: 'my_modules#index'
     get 'experiments/:experiment_id/modules', to: 'my_modules#index', as: :my_modules
+
+    resources :step_results, only: [] do
+      collection do
+        post :link_results
+        post :link_steps
+      end
+    end
+
     resources :my_modules, path: '/modules', only: [:show, :update] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
 
@@ -497,6 +530,7 @@ Rails.application.routes.draw do
         get :permissions
         get :actions_dropdown
         get :provisioning_status
+        post :change_results_state
         post :favorite
         post :unfavorite
       end
@@ -585,6 +619,9 @@ Rails.application.routes.draw do
       get 'users/edit', to: 'user_my_modules#index_edit'
 
       resources :results, only: %i(index show create update destroy) do
+        collection do
+          get :list
+        end
         member do
           get :elements
           get :assets
@@ -662,6 +699,9 @@ Rails.application.routes.draw do
         post 'update_view_state'
         post 'update_asset_view_mode'
         post 'duplicate'
+      end
+      collection do
+        get :list
       end
     end
 
@@ -758,6 +798,9 @@ Rails.application.routes.draw do
         get :assigned_my_modules
         get :repository_users
         get :load_table
+      end
+      collection do
+        get :user_roles
       end
       # Save repository table state
       post 'state_save',

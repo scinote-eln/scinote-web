@@ -17,10 +17,6 @@ class Protocol < ApplicationRecord
   include PermissionCheckableModel
   include TinyMceImages
 
-  after_create :update_automatic_user_assignments, if: -> { visible? && in_repository? && parent.blank? }
-  before_update :change_visibility, if: :default_public_user_role_id_changed?
-  after_update :update_automatic_user_assignments,
-               if: -> { saved_change_to_default_public_user_role_id? && in_repository? }
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
 
   enum visibility: { hidden: 0, visible: 1 }
@@ -260,7 +256,7 @@ class Protocol < ApplicationRecord
 
   def self.viewable_by_user_my_module_protocols(user, teams)
     distinct.joins(:my_module)
-            .where(my_modules: MyModule.viewable_by_user(user, teams))
+            .where(my_modules: { id: MyModule.viewable_by_user(user, teams).select(:id) })
   end
 
   def self.filter_by_teams(teams = [])
@@ -632,6 +628,9 @@ class Protocol < ApplicationRecord
       parent_protocol.sync_child_protocol_user_assignment(parent_user_assignment, draft.id)
     end
 
+    parent_protocol.user_group_assignments.each do |parent_user_group_assignment|
+      parent_protocol.sync_child_protocol_user_assignment(parent_user_group_assignment, draft.id)
+    end
     draft
   end
 
@@ -699,19 +698,6 @@ class Protocol < ApplicationRecord
     steps.map(&:can_destroy?).all?
   end
 
-  def create_or_update_public_user_assignments!(assigned_by)
-    public_role = default_public_user_role || UserRole.find_predefined_viewer_role
-    team.user_assignments.where.not(user: assigned_by).find_each do |team_user_assignment|
-      new_user_assignment = user_assignments.find_or_initialize_by(user: team_user_assignment.user)
-      next if new_user_assignment.manually_assigned?
-
-      new_user_assignment.user_role = public_role
-      new_user_assignment.assigned_by = assigned_by
-      new_user_assignment.assigned = :automatically
-      new_user_assignment.save!
-    end
-  end
-
   def child_version_protocols
     published_versions.or(Protocol.where(id: draft&.id))
   end
@@ -722,13 +708,14 @@ class Protocol < ApplicationRecord
     Protocol.transaction(requires_new: true) do
       # Reload to ensure a potential new draft is also included in child versions
       reload
-
+      assignment_type = user_assignment.respond_to?(:user_group) ? 'user_group' : 'user'
+      assignment_key = "#{assignment_type}_id".to_sym
       (
         # all or single child version protocol
         child_protocol_id ? child_version_protocols.where(id: child_protocol_id) : child_version_protocols
       ).find_each do |child_protocol|
-        child_assignment = child_protocol.user_assignments.find_or_initialize_by(
-          user: user_assignment.user
+        child_assignment = child_protocol.public_send("#{assignment_type}_assignments").find_or_initialize_by(
+          assignment_key => user_assignment.public_send(assignment_key)
         )
 
         if user_assignment.destroyed?
@@ -756,15 +743,10 @@ class Protocol < ApplicationRecord
     sync_child_protocol_user_assignment(user_assignment)
   end
 
-  def update_automatic_user_assignments
-    return if skip_user_assignments
+  def after_user_group_assignment_changed(user_group_assignment)
+    return unless in_repository_published_original?
 
-    case visibility
-    when 'visible'
-      create_or_update_public_user_assignments!(added_by)
-    when 'hidden'
-      automatic_user_assignments.where.not(user: added_by).destroy_all
-    end
+    sync_child_protocol_user_assignment(user_group_assignment)
   end
 
   def deep_clone(clone, current_user, include_file_versions: false)
@@ -814,9 +796,5 @@ class Protocol < ApplicationRecord
     if parent&.draft && parent.draft.id != id
       errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_draft_number'))
     end
-  end
-
-  def change_visibility
-    self.visibility = default_public_user_role_id.present? ? :visible : :hidden
   end
 end

@@ -44,7 +44,7 @@
           <option data-create-url="<%= repository_repository_columns_text_columns_path(@repository) %>"
                   data-edit-url="<%= repository_repository_columns_text_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryTextValue"
-                  data-params="<% {
+                  data-params="<%= {
                       data_e2e: 'e2e-DO-invItems-manageColumns-columnType-text'
                     }.to_json %>"
                   <%= 'selected' if @repository_column.repository_text_value? %> >
@@ -53,7 +53,7 @@
           <option data-create-url="<%= repository_repository_columns_number_columns_path(@repository) %>"
                   data-edit-url="<%= repository_repository_columns_number_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryNumberValue"
-                  data-params="<% {
+                  data-params="<%= {
                       data_e2e: 'e2e-DO-invItems-manageColumns-columnType-number'
                     }.to_json %>"
                   <%= 'selected' if @repository_column.repository_number_value? %> >
@@ -62,7 +62,7 @@
           <option data-create-url="<%= repository_repository_columns_asset_columns_path(@repository) %>"
                   data-edit-url="<%= repository_repository_columns_asset_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryAssetValue"
-                  data-params="<% {
+                  data-params="<%= {
                       data_e2e: 'e2e-DO-invItems-manageColumns-columnType-asset'
                     }.to_json %>"
                   <%= 'selected' if @repository_column.repository_asset_value? %> >
@@ -74,7 +74,7 @@
           <option data-create-url="<%= repository_repository_columns_list_columns_path(@repository) %>"
                   data-edit-url="<%= repository_repository_columns_list_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryListValue"
-                  data-params="<% {
+                  data-params="<%= {
                       data_e2e: 'e2e-DO-invItems-manageColumns-columnType-dropdown'
                     }.to_json %>"
                   <%= 'selected' if @repository_column.repository_list_value? %> >
@@ -83,7 +83,7 @@
           <option data-create-url="<%= repository_repository_columns_checklist_columns_path(@repository) %>"
                   data-edit-url="<%= repository_repository_columns_checklist_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryChecklistValue"
-                  data-params="<% {
+                  data-params="<%= {
                       data_e2e: 'e2e-DO-invItems-manageColumns-columnType-checklist'
                     }.to_json %>"
                   <%= 'selected' if @repository_column.repository_checklist_value? %> >
@@ -92,7 +92,7 @@
           <option data-create-url="<%= repository_repository_columns_status_columns_path(@repository) %>"
                   data-edit-url="<%= repository_repository_columns_status_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryStatusValue"
-                  data-params="<% {
+                  data-params="<%= {
                       data_e2e: 'e2e-DO-invItems-manageColumns-columnType-status'
                     }.to_json %>"
                   <%= 'selected' if @repository_column.repository_status_value? %> >
@@ -104,7 +104,7 @@
                     data-edit-url="<%= repository_repository_columns_stock_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                     value="RepositoryStockValue"
                     <% if @repository.repository_stock_column.present? %>
-                      data-params="<% {
+                      data-params="<%= {
                         optionClass: 'disabled-option',
                         text_description: 'Only one per inventory allowed',
                         data_e2e: 'e2e-DO-invItems-manageColumns-columnType-stock'
@@ -116,7 +116,7 @@
           <% elsif @repository_column.repository_stock_value? && @repository_column.persisted? %>
             <option value="RepositoryTextValue"
                     class="disabled-option"
-                    data-params="<% {
+                    data-params="<%= {
                       optionClass: 'disabled-option',
                         data_e2e: 'e2e-DO-invItems-manageColumns-columnType-stock'
                     }.to_json %>"
@@ -125,7 +125,7 @@
             </option>
           <% elsif !RepositoryBase.stock_management_enabled? %>
             <option value="RepositoryStockValue" class="disabled-option"
-                    data-params="<% {
+                    data-params="<%= {
                       optionClass: 'disabled-option',
                       data_e2e: 'e2e-LB-invItems-manageColumnsModal-stock-dec_clm-disabled'
                     }.to_json %>">
@@ -137,7 +137,7 @@
           <option data-create-url="<%= repository_repository_columns_date_time_columns_path(@repository) %>"
                   data-edit-url="<%= repository_repository_columns_date_time_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryDateTimeValue"
-                  data-params="<% {
+                  data-params="<%= {
                       data_e2e: 'e2e-DO-invItems-manageColumns-columnType-dateTime'
                     }.to_json %>"
                   <%= 'selected' if @repository_column.repository_date_time_value? || @repository_column.repository_date_time_range_value? %> >
@@ -146,7 +146,7 @@
           <option data-create-url="<%= repository_repository_columns_date_time_columns_path(@repository) %>"
                   data-edit-url="<%= repository_repository_columns_date_time_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryDateValue"
-                  data-params="<% {
+                  data-params="<%= {
                       data_e2e: 'e2e-DO-invItems-manageColumns-columnType-date'
                     }.to_json %>"
                   <%= 'selected' if @repository_column.repository_date_value? || @repository_column.repository_date_range_value? %> >
@@ -155,7 +155,7 @@
           <option data-create-url="<%= repository_repository_columns_date_time_columns_path(@repository) %>"
                   data-edit-url="<%= repository_repository_columns_date_time_column_path(@repository, @repository_column) unless @repository_column.new_record? %>"
                   value="RepositoryTimeValue"
-                  data-params="<% {
+                  data-params="<%= {
                       data_e2e: 'e2e-DO-invItems-manageColumns-columnType-time'
                     }.to_json %>"
                   <%= 'selected' if @repository_column.repository_time_value? || @repository_column.repository_time_range_value? %> >
