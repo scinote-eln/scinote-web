@@ -12,6 +12,10 @@ module Api
       has_many :project_comments, key: :comments, serializer: CommentSerializer
 
       include TimestampableModel
+
+      def visibility
+        object.team_assignments.any? ? 'visible' : 'hidden'
+      end
     end
   end
 end

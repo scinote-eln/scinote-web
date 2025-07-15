@@ -26,32 +26,57 @@ module Api
       def create
         raise PermissionError.new(Project, :create) unless can_create_projects?(@team)
 
-        project = @team.projects.build(project_params.merge!(created_by: current_user))
+        ActiveRecord::Base.transaction do
+          project = @team.projects.build(project_params.merge!(created_by: current_user))
 
-        if project.visible? # set default viewer role for public projects
-          project.default_public_user_role = UserRole.predefined.find_by(name: I18n.t('user_roles.predefined.viewer'))
+          project.save!
+
+          if project_params[:visibility] == 'visible'
+            project.team_assignments.create!(
+              team: project.team,
+              user_role: UserRole.find_predefined_viewer_role,
+              assigned_by: current_user,
+              assigned: :manually
+            )
+          end
+
+          render jsonapi: project, serializer: ProjectSerializer, scope: { metadata: params['with-metadata'] == 'true' }, status: :created
         end
-
-        project.save!
-
-        render jsonapi: project, serializer: ProjectSerializer, scope: { metadata: params['with-metadata'] == 'true' }, status: :created
       end
 
       def update
         @project.assign_attributes(project_params)
 
-        return render body: nil, status: :no_content unless @project.changed?
+        return render body: nil, status: :no_content if !@project.changed? && project_params[:visibility].blank?
 
-        if @project.archived_changed?
-          if @project.archived?
-            @project.archived_by = current_user
-          else
-            @project.restored_by = current_user
+        ActiveRecord::Base.transaction do
+          if @project.archived_changed?
+            if @project.archived?
+              @project.archived_by = current_user
+            else
+              @project.restored_by = current_user
+            end
           end
+          @project.last_modified_by = current_user
+          @project.save!
+
+          if project_params[:visibility].present?
+            team_assignment = @project.team_assignments.find_by(team: @team)
+
+            if project_params[:visibility] == 'hidden' && team_assignment.present?
+              team_assignment.destroy!
+            elsif project_params[:visibility] == 'visible' && team_assignment.blank?
+              @project.team_assignments.create!(
+                team: @project.team,
+                user_role: UserRole.find_predefined_viewer_role,
+                assigned_by: current_user,
+                assigned: :manually
+              )
+            end
+          end
+
+          render jsonapi: @project, serializer: ProjectSerializer, scope: { metadata: params['with-metadata'] == 'true' }, status: :ok
         end
-        @project.last_modified_by = current_user
-        @project.save!
-        render jsonapi: @project, serializer: ProjectSerializer, scope: { metadata: params['with-metadata'] == 'true' }, status: :ok
       end
 
       def activities
