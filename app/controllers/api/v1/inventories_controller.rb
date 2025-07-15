@@ -13,6 +13,7 @@ module Api
       def index
         inventories =
           timestamps_filter(@team.repositories).active
+                                               .viewable_by_user(current_user, @team)
                                                .page(params.dig(:page, :number))
                                                .per(params.dig(:page, :size))
 
