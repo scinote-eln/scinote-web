@@ -418,9 +418,9 @@ en:
       repository_access_granted_all_team_members_html: "%{user} granted access to all team members of %{team} team with user role %{role} to inventory %{repository}."
       repository_access_changed_all_team_members_html: "%{user} changed %{team}’s role on inventory %{repository} to %{role}."
       repository_access_revoked_all_team_members_html: "%{user} removed %{team} team members with user role %{role} from inventory %{repository}."
-      repository_granted_user_group_html: "%{user} granted access to %{user_group} with user role %{role} to inventory template %{repository}."
-      repository_changed_user_group_html: "%{user} changed %{user_group}'s role on inventory template %{repository} to %{role}."
-      repository_revoked_user_group_html: "%{user} removed group %{user_group} with user role %{role} from inventory template %{repository}."
+      repository_access_granted_user_group_html: "%{user} granted access to %{user_group} with user role %{role} to inventory template %{repository}."
+      repository_access_changed_user_group_html: "%{user} changed %{user_group}'s role on inventory template %{repository} to %{role}."
+      repository_access_revoked_user_group_html: "%{user} removed group %{user_group} with user role %{role} from inventory template %{repository}."
     activity_name:
       create_project: "Project created"
       edit_project: "Project edited"
