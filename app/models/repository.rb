@@ -191,7 +191,7 @@ class Repository < RepositoryBase
                                          repository_rows_ids,
                                          repository_rows_ids)
                                   .joins(:repository)
-                                  .where.not(repositories: self)
+                                  .where.not(repository: self)
                                   .where.not(repositories: { team: team })
                                   .distinct
 
