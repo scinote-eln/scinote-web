@@ -294,6 +294,7 @@ export default {
           <ul>
             <li>${this.i18n.t('repositories.index.modal_delete.alert_line_1')}</li>
             <li>${this.i18n.t('repositories.index.modal_delete.alert_line_2')}</li>
+            <li>${this.i18n.t('repositories.index.modal_delete.alert_line_3')}</li>
           </ul>
         </div>
       `;

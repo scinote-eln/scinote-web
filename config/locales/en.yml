@@ -2298,7 +2298,8 @@ en:
         message_html: "Are you sure you want to delete inventory <em>%{name}</em>? This action is irreversible."
         alert_heading: "Deleting inventory has following consequences:"
         alert_line_1: "all data inside the inventory will be lost;"
-        alert_line_2: "all references to inventory items will be rendered as invalid."
+        alert_line_2: "all references to inventory items will be rendered as invalid;"
+        alert_line_3: "if task assigned item snapshots exist, access to them will follow task-level permissions."
         delete: "Delete"
       modal_rename:
         title_html: "Rename inventory: %{name}"
