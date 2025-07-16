@@ -287,16 +287,12 @@ class Extends
     edit_result_comment: 40,
     delete_result_comment: 41,
     destroy_result_old: 42,
-    start_edit_wopi_file: 43, # not in use
-    unlock_wopi_file: 44, # not in use
     load_protocol_to_task_from_file: 45,
     load_protocol_to_task_from_repository: 46,
     update_protocol_in_task_from_repository: 47,
     create_report: 48,
     delete_report: 49,
     edit_report: 50,
-    assign_sample: 51, # not in use
-    unassign_sample: 52, # not in use
     complete_task: 53,
     uncomplete_task: 54,
     assign_repository_record: 55,
