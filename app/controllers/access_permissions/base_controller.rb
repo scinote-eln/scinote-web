@@ -3,6 +3,7 @@
 module AccessPermissions
   class BaseController < ApplicationController
     include InputSanitizeHelper
+    include UserRolesHelper
 
     before_action :set_model
     before_action :set_assignment, only: %i(create update destroy)
@@ -11,7 +12,7 @@ module AccessPermissions
     before_action :load_available_users, only: %i(new create)
 
     def show
-      render json: @model.user_assignments.includes(:user_role, :user).order('users.full_name ASC'),
+      render json: @model.user_assignments.where(team: current_team).includes(:user_role, :user).order('users.full_name ASC'),
              each_serializer: UserAssignmentSerializer, user: current_user
     end
 
@@ -112,6 +113,10 @@ module AccessPermissions
     def unassigned_user_groups
       render json: current_team.user_groups.where.not(id: @model.user_group_assignments.select(:user_group_id)),
              each_serializer: UserGroupSerializer, user: current_user
+    end
+
+    def user_roles
+      render json: { data: user_roles_collection(@model).map(&:reverse) }
     end
 
     private

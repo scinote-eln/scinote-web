@@ -73,6 +73,7 @@ module Lists
       urls_list[:show] = form_path(object) if can_read_form?(object)
 
       if can_manage_form_users?(object)
+        urls_list[:user_roles] = user_roles_access_permissions_form_path(object)
         urls_list[:update_access] = access_permissions_form_path(object)
         urls_list[:new_access] = new_access_permissions_form_path(id: object.id)
         urls_list[:create_access] = access_permissions_forms_path(id: object.id)

@@ -15,6 +15,7 @@ class Team < ApplicationRecord
   after_create :generate_template_project
   after_create :create_default_label_templates
   after_create :create_default_repository_templates
+
   scope :teams_select, -> { select(:id, :name).order(name: :asc) }
   scope :ordered, -> { order('LOWER(name)') }
 
@@ -55,22 +56,6 @@ class Team < ApplicationRecord
   has_many :shared_repositories,
            through: :team_shared_objects,
            source: :shared_object,
-           source_type: 'RepositoryBase',
-           dependent: :destroy
-  has_many :repository_sharing_user_assignments,
-           (lambda do |team|
-             joins(
-               "INNER JOIN repositories "\
-               "ON user_assignments.assignable_type = 'RepositoryBase' "\
-               "AND user_assignments.assignable_id = repositories.id"
-             ).where(team_id: team.id)
-             .where.not('user_assignments.team_id = repositories.team_id')
-           end),
-           class_name: 'UserAssignment',
-           dependent: :destroy
-  has_many :shared_by_user_repositories,
-           through: :repository_sharing_user_assignments,
-           source: :assignable,
            source_type: 'RepositoryBase',
            dependent: :destroy
   has_many :shareable_links, inverse_of: :team, dependent: :destroy

@@ -57,16 +57,25 @@ module Shareable
     Rails.logger.info('Not connected to database, skipping sharable model initialization.')
   end
 
+  def can_manage_shared?(user)
+    globally_shared? ||
+      (shared_with?(user.current_team) && user.current_team.permission_granted?(user, TeamPermissions::MANAGE))
+  end
+
   def shareable_write?
     true
   end
 
   def private_shared_with?(team)
-    team_shared_objects.where(team: team).any?
+    team_shared_objects.exists?(team: team)
+  end
+
+  def private_shared_with_read?(team)
+    team_shared_objects.exists?(team: team, permission_level: :shared_read)
   end
 
   def private_shared_with_write?(team)
-    team_shared_objects.where(team: team, permission_level: :shared_write).any?
+    team_shared_objects.exists?(team: team, permission_level: :shared_write)
   end
 
   def i_shared?(team)

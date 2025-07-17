@@ -2,7 +2,6 @@
 
 class FormsController < ApplicationController
   include InputSanitizeHelper
-  include UserRolesHelper
 
   before_action :check_forms_enabled
   before_action :load_form, only: %i(show update publish unpublish export_form_responses duplicate)
@@ -208,10 +207,6 @@ class FormsController < ApplicationController
           form_ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions
     }
-  end
-
-  def user_roles
-    render json: { data: user_roles_collection(Form.new).map(&:reverse) }
   end
 
   private

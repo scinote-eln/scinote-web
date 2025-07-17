@@ -336,41 +336,26 @@ Rails.application.routes.draw do
     end
 
     namespace :access_permissions do
-      resources :projects, defaults: { format: 'json' } do
-        member do
-          get :show_user_group_assignments
-          get :unassigned_user_groups
-        end
-      end
-
-      resources :protocols, defaults: { format: 'json' } do
-        member do
-          get :show_user_group_assignments
-          get :unassigned_user_groups
-        end
-      end
-
-      resources :forms, defaults: { format: 'json' } do
-        member do
-          get :show_user_group_assignments
-          get :unassigned_user_groups
-        end
-      end
-
-      resources :repositories, defaults: { format: 'json' } do
-        member do
-          get :show_user_group_assignments
-          get :unassigned_user_groups
+      %i(projects protocols forms repositories).each do |resource|
+        resources resource do
+          member do
+            get :show_user_group_assignments
+            get :unassigned_user_groups
+            get :user_roles
+          end
         end
       end
 
       resources :experiments, only: %i(show update edit) do
         member do
+          get :user_roles
           get :show_user_group_assignments
         end
       end
+
       resources :my_modules, only: %i(show update edit) do
         member do
+          get :user_roles
           get :show_user_group_assignments
         end
       end

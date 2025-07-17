@@ -43,8 +43,27 @@ module Assignable
                                          .where('? = ANY(user_roles.permissions)', read_permission)
                                        )
                                        .distinct
+
+      shared_objects =
+        if klass.new.respond_to?(:shared_with?)
+          joins(team_shared_objects: :team)
+            .where(team_shared_objects: { team: teams })
+            .where(teams: { id: Team.with_granted_permissions(user, TeamPermissions::MANAGE) })
+        else
+          none
+        end
+
+      globally_shared_objects =
+        if klass.new.respond_to?(:permission_level)
+          where(permission_level: %i(shared_read shared_write))
+        else
+          none
+        end
+
       where(id: with_granted_user_permissions.reselect(:id))
         .or(where(id: with_granted_group_permissions.reselect(:id)))
+        .or(where(id: shared_objects.select(:id)))
+        .or(where(id: globally_shared_objects.select(:id)))
     }
 
     scope :managable_by_user, lambda { |user, teams = user.permission_team|
@@ -87,8 +106,8 @@ module Assignable
       User.where(id: direct_user_ids).or(User.where(id: group_user_ids)).or(User.where(id: team_user_ids))
     end
 
-    def default_public_user_role_id
-      team_assignments.where(team_id: team.id).pick(:user_role_id)
+    def default_public_user_role_id(current_team = nil)
+      team_assignments.where(team_id: (current_team || team).id).pick(:user_role_id)
     end
 
     def has_permission_children?

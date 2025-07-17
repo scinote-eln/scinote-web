@@ -2,15 +2,22 @@
 
 module UserRolesHelper
   def user_roles_collection(object, with_inherit: false)
-    permission_group = "#{object.class.name}Permissions".constantize
-    permissions = permission_group.constants.map { |const| permission_group.const_get(const) }
+    if object.respond_to?(:private_shared_with_read?) && object.private_shared_with_read?(current_team)
+      viewer_role = UserRole.find_predefined_viewer_role
+      roles = [[viewer_role.name, viewer_role.id]]
+    else
+      permission_group = "#{object.class.name}Permissions".constantize
+      permissions = permission_group.constants.map { |const| permission_group.const_get(const) }
 
-    roles = user_roles_subset_by_permissions(permissions).order(id: :asc).pluck(:name, :id)
+      roles = user_roles_subset_by_permissions(permissions).order(id: :asc).pluck(:name, :id)
+    end
+
     if with_inherit
       roles = [[t('access_permissions.reset'), 'reset',
                 t("access_permissions.partials.#{object.class.name.underscore}_member_field.reset_description")]] +
               roles
     end
+
     roles
   end
 

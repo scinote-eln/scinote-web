@@ -11,7 +11,6 @@
       active-page-url="<%= experiments_path(project_id: @project, view_mode: :active) %>"
       archived-page-url="<%= experiments_path(project_id: @project, view_mode: :archived) %>"
       current-view-mode="<%= params[:view_mode] || :active %>"
-      user-roles-url="<%= user_roles_projects_path %>"
       :archived="<%= @project.archived?%>"
     />
   </div>

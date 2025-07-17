@@ -32,10 +32,6 @@ class Repository < RepositoryBase
 
   before_save :sync_name_with_snapshots, if: :name_changed?
   before_destroy :refresh_report_references_on_destroy, prepend: true
-  after_save :assign_globally_shared_inventories, if: -> { saved_change_to_permission_level? && globally_shared? }
-  after_save :unassign_globally_shared_inventories, if: -> { saved_change_to_permission_level? && !globally_shared? }
-  after_save :unassign_unshared_items, if: :saved_change_to_permission_level
-  after_save :unlink_unshared_items, if: -> { saved_change_to_permission_level? && !globally_shared? }
 
   validates :name,
             presence: true,
@@ -178,37 +174,6 @@ class Repository < RepositoryBase
     repository_rows.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: my_module.id })
   end
 
-  def unassign_unshared_items
-    return if shared_read? || shared_write?
-
-    MyModuleRepositoryRow.joins(my_module: { experiment: { project: :team } })
-                         .joins(repository_row: :repository)
-                         .where(repository_rows: { repository: self })
-                         .where.not(my_module: { experiment: { projects: { team: team } } })
-                         .where.not(my_module: { experiment: { projects: { team: teams_shared_with } } })
-                         .destroy_all
-  end
-
-  def unlink_unshared_items
-    repository_rows_ids = repository_rows.select(:id)
-    rows_to_unlink = RepositoryRow.joins("LEFT JOIN repository_row_connections \
-                                         ON repository_rows.id = repository_row_connections.parent_id \
-                                         OR repository_rows.id = repository_row_connections.child_id")
-                                  .where("repository_row_connections.parent_id IN (?) \
-                                         OR repository_row_connections.child_id IN (?)",
-                                         repository_rows_ids,
-                                         repository_rows_ids)
-                                  .joins(:repository)
-                                  .where.not(repositories: self)
-                                  .where.not(repositories: { team: team })
-                                  .distinct
-
-    RepositoryRowConnection.where(parent: repository_rows_ids, child: rows_to_unlink)
-                           .destroy_all
-    RepositoryRowConnection.where(child: repository_rows_ids, parent: rows_to_unlink)
-                           .destroy_all
-  end
-
   def archived_branch?
     archived?
   end
@@ -217,26 +182,6 @@ class Repository < RepositoryBase
 
   def sync_name_with_snapshots
     repository_snapshots.update(name: name)
-  end
-
-  def assign_globally_shared_inventories
-    viewer_role = UserRole.find_by(name: UserRole.public_send('viewer_role').name)
-    normal_user_role = UserRole.find_by(name: UserRole.public_send('normal_user_role').name)
-
-    team_shared_objects.find_each(&:destroy!)
-
-    Team.where.not(id: team.id).find_each do |team|
-      team.users.find_each do |user|
-        team.repository_sharing_user_assignments.find_or_initialize_by(
-          user: user,
-          assignable: self
-        ).update!(user_role: shared_write? ? normal_user_role : viewer_role)
-      end
-    end
-  end
-
-  def unassign_globally_shared_inventories
-    user_assignments.where.not(team: team).find_each(&:destroy!)
   end
 
   def refresh_report_references_on_destroy

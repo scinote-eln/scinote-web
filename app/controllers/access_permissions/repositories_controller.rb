@@ -5,7 +5,7 @@ module AccessPermissions
     private
 
     def set_model
-      @model = current_team.repositories.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
+      @model = Repository.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
 
       render_404 unless @model
     end

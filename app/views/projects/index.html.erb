@@ -18,7 +18,6 @@
       current-folder-id="<%= current_folder&.id %>"
       create-url="<%= projects_path if can_create_projects?(current_team) %>"
       create-folder-url="<%= project_folders_path if can_create_project_folders?(current_team)  %>"
-      user-roles-url="<%= user_roles_projects_path %>"
       folders-tree-url="<%= tree_project_folders_path(view_mode: params[:view_mode]) %>"
       move-to-url="<%= move_to_project_folders_path %>"
     />
@@ -26,5 +25,3 @@
   <%= render 'shared/tiny_mce_packs' %>
   <%= javascript_include_tag 'vue_projects_list' %>
 </div>
-
-

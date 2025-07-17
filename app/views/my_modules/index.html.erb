@@ -14,8 +14,7 @@
       current-view-mode="<%= view_mode %>"
       assigned-users-url="<%= (assigned_users_experiment_path(@experiment) if can_designate_users_to_new_task?(@experiment)) %>"
       current-user-id="<%= current_user.id %>"
-      users-filter-url="<%= users_filter_projects_path %>"v
-      user-roles-url="<%= user_roles_projects_path %>"
+      users-filter-url="<%= users_filter_projects_path %>"
       :tags-colors="<%= Constants::TAG_COLORS.to_json %>"
       project-name="<%= @experiment.project.name %>"
       :statuses-list="<%= MyModuleStatus.all.order(:id).map{ |i| [i.id, i.name] }.to_json %>"

@@ -7,7 +7,6 @@ class ProtocolsController < ApplicationController
   include ProtocolsIoHelper
   include TeamsHelper
   include ProtocolsExporterV2
-  include UserRolesHelper
   include FormFieldValuesHelper
 
   before_action :check_create_permissions, only: %i(
@@ -875,10 +874,6 @@ class ProtocolsController < ApplicationController
     end
     @job = Protocols::DocxImportJob.perform_later(temp_files_ids, user_id: current_user.id, team_id: current_team.id)
     render json: { job_id: @job.job_id }
-  end
-
-  def user_roles
-    render json: { data: user_roles_collection(Protocol.new).map(&:reverse) }
   end
 
   private
