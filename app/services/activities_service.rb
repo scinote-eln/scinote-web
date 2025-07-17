@@ -37,7 +37,7 @@ class ActivitiesService
     visible_my_modules = MyModule.viewable_by_user(user, teams)
     visible_forms = Form.viewable_by_user(user, teams)
     # Temporary solution until handling of deleted subjects is fully implemented
-    visible_repository_teams = user.teams.where(id: teams).with_user_permission(user, RepositoryPermissions::READ)
+    visible_repository_teams = user.teams.with_granted_permissions(user, RepositoryPermissions::READ, teams)
 
     activities = Activity.from(activities, 'activities')
     activities = activities.where(project: nil, team_id: teams).where.not(subject_type: %w(RepositoryBase RepositoryRow Protocol Form))
