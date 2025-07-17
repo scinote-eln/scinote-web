@@ -11,7 +11,7 @@ class MoveEveryOneElseAssignmentToTeamAssignments < ActiveRecord::Migration[7.2]
                       next if shared_obj.shared_repository.blank?
 
                       shared_obj.shared_repository.user_assignments.where(team_id: shared_obj.team_id).delete_all
-                      shared_obj.shared_repository.team_assignments.create!(team_id: shared_obj.team_id, user_role: viewer_role)
+                      shared_obj.shared_repository.team_assignments.find_or_create_by!(team_id: shared_obj.team_id, user_role: viewer_role)
                     end
 
     # Shared repositories with write permission
@@ -20,13 +20,13 @@ class MoveEveryOneElseAssignmentToTeamAssignments < ActiveRecord::Migration[7.2]
                       next if shared_obj.shared_repository.blank?
 
                       shared_obj.shared_repository.user_assignments.where(team_id: shared_obj.team_id, user_role: normal_user_role).delete_all
-                      shared_obj.shared_repository.team_assignments.create!(team_id: shared_obj.team_id, user_role: normal_user_role)
+                      shared_obj.shared_repository.team_assignments.find_or_create_by!(team_id: shared_obj.team_id, user_role: normal_user_role)
                     end
 
     # Other repositories
     Repository.find_each do |repository|
       repository.user_assignments.where(team_id: repository.team_id, user_role: normal_user_role).delete_all
-      repository.team_assignments.create!(team_id: repository.team_id, user_role: normal_user_role)
+      repository.team_assignments.find_or_create_by!(team_id: repository.team_id, user_role: normal_user_role)
     end
 
     # Forms
