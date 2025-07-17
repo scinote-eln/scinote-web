@@ -56,6 +56,21 @@ module Assignable
 
     after_create :create_users_assignments
 
+    def users
+      direct_user_ids = user_assignments.select(:user_id)
+
+      # Users through user_groups assigned
+      group_user_ids = UserGroupMembership.joins(:user_group)
+                                          .where(user_group_id: UserGroupAssignment.where(assignable: self).select(:user_group_id))
+                                          .select(:user_id)
+
+      # Users through teams assigned
+      team_user_ids = UserAssignment.where(assignable_id: team_assignments.select(:team_id), assignable_type: 'Team')
+                                    .select(:user_id)
+
+      User.where(id: direct_user_ids).or(User.where(id: group_user_ids)).or(User.where(id: team_user_ids))
+    end
+
     def default_public_user_role_id
       team_assignments.where(team_id: team.id).pick(:user_role_id)
     end

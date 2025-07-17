@@ -134,7 +134,7 @@ module AccessPermissions
     end
 
     def load_available_users
-      @available_users = current_team.users.where.not(id: @model.users.select(:id)).order(users: { full_name: :asc })
+      @available_users = current_team.users.where.not(id: @model.user_assignments.select(:user_id)).order(users: { full_name: :asc })
     end
 
     def propagate_job(destroy: false)

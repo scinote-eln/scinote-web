@@ -53,7 +53,6 @@ describe MyModule, type: :model do
     it { should have_many :my_module_repository_rows }
     it { should have_many :repository_rows }
     it { should have_many :user_my_modules }
-    it { should have_many :users }
     it { should have_many :activities }
     it { should have_many :report_elements }
     it { should have_many :protocols }

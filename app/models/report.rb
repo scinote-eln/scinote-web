@@ -29,7 +29,6 @@ class Report < ApplicationRecord
   belongs_to :user, inverse_of: :reports
   belongs_to :team, inverse_of: :reports
   belongs_to :last_modified_by, class_name: 'User', optional: true
-  has_many :users, through: :user_assignments
   has_many :report_template_values, dependent: :destroy
 
   # Report either has many report elements (if grouped by timestamp),

@@ -29,7 +29,6 @@ class Repository < RepositoryBase
            inverse_of: :original_repository
   has_many :repository_ledger_records, as: :reference, dependent: :nullify
   has_many :repository_table_filters, dependent: :destroy
-  has_many :users, through: :user_assignments
 
   before_save :sync_name_with_snapshots, if: :name_changed?
   before_destroy :refresh_report_references_on_destroy, prepend: true
