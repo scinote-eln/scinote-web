@@ -31,7 +31,7 @@ module BreadcrumbsHelper
     when Result
       parent = subject.my_module
       view_mode = subject.archived? ? 'archived' : 'active'
-      url = my_module_results_path(subject.my_module, view_mode:)
+      url = my_module_results_path(subject.my_module, view_mode:, result_id: subject.id)
     when ProjectFolder
       if subject.parent_folder
         parent = subject.parent_folder
