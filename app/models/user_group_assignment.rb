@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserGroupAssignment < ApplicationRecord
+  before_validation :set_assignable_team
+
   belongs_to :assignable, polymorphic: true, touch: true
   belongs_to :team
   belongs_to :user_group
@@ -20,5 +22,11 @@ class UserGroupAssignment < ApplicationRecord
 
   def user_group_name_with_role
     "#{user_group.name} - #{user_role.name}"
+  end
+
+  private
+
+  def set_assignable_team
+    self.team = assignable.team
   end
 end

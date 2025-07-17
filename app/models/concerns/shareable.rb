@@ -27,7 +27,11 @@ module Shareable
     end
 
     scope :viewable_by_user, lambda { |user, teams = user.current_team|
-      readable_ids = with_granted_permissions(user, "#{permission_class.name}Permissions::READ".constantize, teams).pluck(:id)
+      readable_ids = if permission_class == StorageLocation
+                       readable_by_user(user).where(team: teams).pluck(:id)
+                     else
+                       with_granted_permissions(user, "#{permission_class.name}Permissions::READ".constantize, teams).pluck(:id)
+                     end
       shared_with_team_ids = joins(:team_shared_objects, :team).where(team_shared_objects: { team: teams }).pluck(:id)
       globally_shared_ids =
         if column_names.include?('permission_level')

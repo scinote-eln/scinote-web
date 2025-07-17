@@ -202,7 +202,7 @@ class ExperimentsController < ApplicationController
 
   def projects_to_clone
     projects = @experiment.project.team.projects.active
-                          .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
+                          .with_granted_permissions(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
                           .where('trim_html_tags(projects.name) ILIKE ?',
                                  "%#{ActiveRecord::Base.sanitize_sql_like(params['query'])}%")
                           .map { |p| [p.id, p.name] }

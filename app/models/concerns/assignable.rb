@@ -24,34 +24,50 @@ module Assignable
              class_name: 'TeamAssignment',
              inverse_of: :assignable
 
-    scope :readable_by_user, lambda { |user|
-      joins("INNER JOIN user_assignments reading_user_assignments " \
-            "ON reading_user_assignments.assignable_type = '#{base_class.name}' " \
-            "AND reading_user_assignments.assignable_id = #{table_name}.id " \
-            "INNER JOIN user_roles reading_user_roles " \
-            "ON reading_user_assignments.user_role_id = reading_user_roles.id")
-        .where(reading_user_assignments: { user_id: user.id })
-        .where('? = ANY(reading_user_roles.permissions)', "::#{self.class.to_s.split('::').first}Permissions".constantize::READ)
+    scope :readable_by_user, lambda { |user, teams = user.permission_team|
+      read_permission = "::#{self.class.to_s.split('::').first}Permissions".constantize::READ
+      with_user_assignments = joins(user_assignments: :user_role)
+                              .where(user_assignments: { user: user, team: teams })
+
+      # direct user assignments take precedence over group assignments, thus skipping objects that already have user assignments.
+      with_group_assignments = left_outer_joins(user_group_assignments: [:user_role, { user_group: :users }], team_assignments: :user_role)
+                               .where.not(id: with_user_assignments)
+
+      with_granted_user_permissions = with_user_assignments.where('? = ANY(user_roles.permissions)', read_permission)
+      with_granted_group_permissions = with_group_assignments
+                                       .where(user_group_assignments: { assignable: self, user_groups: { users: user } })
+                                       .where('? = ANY(user_roles.permissions)', read_permission)
+                                       .or(
+                                         with_group_assignments
+                                         .where(team_assignments: { assignable: self, team: teams })
+                                         .where('? = ANY(user_roles.permissions)', read_permission)
+                                       )
+                                       .distinct
+      where(id: with_granted_user_permissions.reselect(:id))
+        .or(where(id: with_granted_group_permissions.reselect(:id)))
     }
 
-    scope :managable_by_user, lambda { |user|
-      joins("INNER JOIN user_assignments managing_user_assignments " \
-            "ON managing_user_assignments.assignable_type = '#{base_class.name}' " \
-            "AND managing_user_assignments.assignable_id = #{table_name}.id " \
-            "INNER JOIN user_roles managing_user_roles " \
-            "ON managing_user_assignments.user_role_id = managing_user_roles.id")
-        .where(managing_user_assignments: { user_id: user.id })
-        .where('? = ANY(managing_user_roles.permissions)', "::#{self.class.to_s.split('::').first}Permissions".constantize::MANAGE)
-    }
+    scope :managable_by_user, lambda { |user, teams = user.permission_team|
+      manage_permission = "::#{self.class.to_s.split('::').first}Permissions".constantize::MANAGE
+      with_user_assignments = joins(user_assignments: :user_role)
+                              .where(user_assignments: { user: user, team: teams })
 
-    scope :with_user_permission, lambda { |user, permission|
-      joins("INNER JOIN user_assignments permission_checking_user_assignments " \
-            "ON permission_checking_user_assignments.assignable_type = '#{base_class.name}' " \
-            "AND permission_checking_user_assignments.assignable_id = #{table_name}.id " \
-            "INNER JOIN user_roles permission_checking_user_roles " \
-            "ON permission_checking_user_assignments.user_role_id = permission_checking_user_roles.id")
-        .where(permission_checking_user_assignments: { user_id: user.id })
-        .where('? = ANY(permission_checking_user_roles.permissions)', permission)
+      # direct user assignments take precedence over group assignments, thus skipping objects that already have user assignments.
+      with_group_assignments = left_outer_joins(user_group_assignments: [:user_role, { user_group: :users }], team_assignments: :user_role)
+                               .where.not(id: with_user_assignments)
+
+      with_granted_user_permissions = with_user_assignments.where('? = ANY(user_roles.permissions)', manage_permission)
+      with_granted_group_permissions = with_group_assignments
+                                       .where(user_group_assignments: { assignable: self, user_groups: { users: user } })
+                                       .where('? = ANY(user_roles.permissions)', manage_permission)
+                                       .or(
+                                         with_group_assignments
+                                         .where(team_assignments: { assignable: self, team: teams })
+                                         .where('? = ANY(user_roles.permissions)', manage_permission)
+                                       )
+                                       .distinct
+      where(id: with_granted_user_permissions.reselect(:id))
+        .or(where(id: with_granted_group_permissions.reselect(:id)))
     }
 
     after_create :create_users_assignments

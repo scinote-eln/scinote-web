@@ -38,6 +38,10 @@ class StorageLocation < ApplicationRecord
     storage_location_repository_rows.each(&:discard)
   end
 
+  def self.permission_class
+    StorageLocation
+  end
+
   def shared_with?(team)
     return false if self.team == team
 
