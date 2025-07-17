@@ -22,7 +22,6 @@ class Form < ApplicationRecord
 
   has_many :form_fields, -> { order(:position) }, inverse_of: :form, dependent: :destroy
   has_many :form_responses, dependent: :destroy
-  has_many :users, through: :user_assignments
 
   scope :published, -> { where.not(published_on: nil) }
 
