@@ -115,7 +115,7 @@ module Lists
     def due_date_cell
       if project?
         {
-          value: (I18n.l(object.due_date, format: :default) if object.due_date),
+          value: object.due_date,
           value_formatted: (I18n.l(object.due_date, format: :full_date) if object.due_date),
           editable: can_manage_project?(@object),
           icon: (if object.one_day_prior? && !object.done?
@@ -130,7 +130,7 @@ module Lists
     def start_date_cell
       if project?
         {
-          value: (I18n.l(object.start_date, format: :default) if object.start_date),
+          value: object.start_date,
           value_formatted: (I18n.l(object.start_date, format: :full_date) if object.start_date),
           editable: can_manage_project?(@object)
         }
