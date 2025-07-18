@@ -101,7 +101,7 @@ GEM
       activemodel (= 7.2.2.1)
       activesupport (= 7.2.2.1)
       timeout (>= 0.4.0)
-    activerecord-import (1.4.1)
+    activerecord-import (2.2.0)
       activerecord (>= 4.2)
     activerecord-session_store (2.1.0)
       actionpack (>= 6.1)
@@ -810,7 +810,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.10.15)
-  activerecord-import
+  activerecord-import (~> 2.2.0)
   activerecord-session_store
   acts_as_list
   ajax-datatables-rails (~> 0.3.1)
