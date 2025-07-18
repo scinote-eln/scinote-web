@@ -174,6 +174,17 @@ class Repository < RepositoryBase
     repository_rows.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: my_module.id })
   end
 
+  def unassign_unshared_items
+    return if shared_read? || shared_write?
+
+    MyModuleRepositoryRow.joins(my_module: { experiment: { project: :team } })
+                         .joins(repository_row: :repository)
+                         .where(repository_rows: { repository: self })
+                         .where.not(my_module: { experiment: { projects: { team: team } } })
+                         .where.not(my_module: { experiment: { projects: { team: teams_shared_with } } })
+                         .destroy_all
+  end
+
   def archived_branch?
     archived?
   end
