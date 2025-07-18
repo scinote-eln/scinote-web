@@ -12,10 +12,11 @@ module PermissionCheckableModel
       # direct user assignments take precedence over group assignments, thus skipping objects that already have user assignments.
       with_group_assignments = left_outer_joins(user_group_assignments: [:user_role, { user_group: :users }], team_assignments: :user_role)
                                .where.not(id: with_user_assignments)
+                               .where(user_group_assignments: { team: teams })
 
       with_granted_user_permissions = with_user_assignments.where('user_roles.permissions @> ARRAY[?]::varchar[]', permissions)
       with_granted_group_permissions = with_group_assignments
-                                       .where(user_group_assignments: { assignable: self, user_groups: { users: user } })
+                                       .where(user_group_assignments: { assignable: self, user_groups: { users: user }, team: teams })
                                        .where('user_roles.permissions @> ARRAY[?]::varchar[]', permissions)
                                        .or(
                                          with_group_assignments
