@@ -9,12 +9,16 @@ module Lists
     attributes :name, :code, :nr_of_rows, :team, :created_at, :created_by, :archived_on, :archived_by,
                :urls, :top_level_assignable, :default_public_user_role_id, :assigned_users, :permissions
 
+    def default_public_user_role_id
+      object.default_public_user_role_id(current_user.current_team)
+    end
+
     def nr_of_rows
       object[:repository_rows_count]
     end
 
     def team
-      object[:team_name]
+      current_user.current_team.name
     end
 
     def created_at
@@ -70,6 +74,7 @@ module Lists
       }
 
       if can_manage_repository_users?(object)
+        urls[:user_roles] = user_roles_access_permissions_repository_path(object)
         urls[:update_access] = access_permissions_repository_path(id: object)
         urls[:new_access] = new_access_permissions_repository_path(id: object.id)
         urls[:create_access] = access_permissions_repositories_path(id: object.id)

@@ -8,7 +8,6 @@ class ProjectsController < ApplicationController
   include CardsViewHelper
   include ExperimentsHelper
   include Breadcrumbs
-  include UserRolesHelper
   include FavoritesActions
 
   attr_reader :current_folder
@@ -20,7 +19,7 @@ class ProjectsController < ApplicationController
   before_action :load_current_folder, only: :index
   before_action :check_read_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
-                                                    actions_toolbar user_roles users_filter head_of_project_users_list
+                                                    actions_toolbar users_filter head_of_project_users_list
                                                     favorite unfavorite)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: :update
@@ -298,10 +297,6 @@ class ProjectsController < ApplicationController
     users = @project.users.search(false, params[:query]).order(:full_name)
 
     render json: { data: users.map { |u| [u.id, u.name, { avatar_url: avatar_path(u, :icon_small) }] } }, status: :ok
-  end
-
-  def user_roles
-    render json: { data: user_roles_collection(Project.new).map(&:reverse) }
   end
 
   def actions_toolbar

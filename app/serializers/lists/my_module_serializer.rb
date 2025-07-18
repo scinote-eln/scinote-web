@@ -74,7 +74,11 @@ module Lists
         unfavorite: unfavorite_my_module_url(object)
       }
 
-      urls_list[:update_access] = access_permissions_my_module_path(object) if can_manage_project_users?(object.experiment.project)
+      if can_manage_project_users?(object.experiment.project)
+        urls_list[:user_roles] = user_roles_access_permissions_my_module_path(object)
+        urls_list[:update_access] = access_permissions_my_module_path(object)
+      end
+
       urls_list[:update_due_date] = my_module_path(object, user, format: :json) if can_update_my_module_due_date?(object)
       urls_list[:update_start_date] = my_module_path(object, user, format: :json) if can_update_my_module_start_date?(object)
 

@@ -195,7 +195,7 @@ export default {
         });
     },
     getRoles() {
-      axios.get(this.params.roles_path)
+      axios.get(this.params.object.urls.user_roles)
         .then((response) => {
           this.roles = response.data.data;
         });

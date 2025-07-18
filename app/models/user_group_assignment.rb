@@ -27,6 +27,6 @@ class UserGroupAssignment < ApplicationRecord
   private
 
   def set_assignable_team
-    self.team = assignable.team
+    self.team ||= assignable.team
   end
 end

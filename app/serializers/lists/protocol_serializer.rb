@@ -117,6 +117,7 @@ module Lists
       end
 
       if can_manage_protocol_users?(object)
+        urls_list[:user_roles] = user_roles_access_permissions_protocol_path(object)
         urls_list[:update_access] = access_permissions_protocol_path(object)
         urls_list[:new_access] = new_access_permissions_protocol_path(id: object.id)
         urls_list[:create_access] = access_permissions_protocols_path(id: object.id)
