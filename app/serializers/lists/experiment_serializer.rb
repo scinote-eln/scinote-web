@@ -33,10 +33,6 @@ module Lists
                        team: object.project.team)
     end
 
-    def default_public_user_role_id
-      object.project.default_public_user_role_id
-    end
-
     def hidden
       object.project.hidden?
     end
