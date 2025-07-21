@@ -18,7 +18,7 @@ module Lists
     end
 
     def team
-      current_user.current_team.name
+      object.team.name
     end
 
     def created_at
@@ -38,7 +38,7 @@ module Lists
     end
 
     def assigned_users
-      users = object.user_assignments.map do |ua|
+      users = object.user_assignments.where(team: current_user.current_team).map do |ua|
         {
           avatar: avatar_path(ua.user, :icon_small),
           full_name: ua.user_name_with_role

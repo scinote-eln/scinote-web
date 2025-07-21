@@ -29,6 +29,8 @@ module Shareable
     scope :viewable_by_user, lambda { |user, teams = user.current_team|
       readable_ids = if permission_class == StorageLocation
                        readable_by_user(user).where(team: teams).pluck(:id)
+                     elsif teams.permission_granted?(user, TeamPermissions::MANAGE)
+                       where(team: teams).pluck(:id)
                      else
                        with_granted_permissions(user, "#{permission_class.name}Permissions::READ".constantize, teams).pluck(:id)
                      end

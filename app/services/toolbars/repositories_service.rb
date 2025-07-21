@@ -10,7 +10,7 @@ module Toolbars
     def initialize(current_user, current_team, repository_ids: [])
       @current_user = current_user
       @current_team = current_team
-      @repositories = Repository.readable_by_user(current_user)
+      @repositories = Repository.viewable_by_user(current_user)
                                 .where(id: repository_ids)
                                 .distinct
       @repository = @repositories.first
