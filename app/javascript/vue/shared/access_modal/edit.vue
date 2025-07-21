@@ -29,7 +29,7 @@
           </template>
         </GeneralDropdown>
         <MenuDropdown
-          v-if="params.object.top_level_assignable && params.object.urls.update_access"
+          v-if="params.object.urls.update_access"
           class="ml-auto"
           :listItems="rolesFromatted(default_role)"
           :btnText="this.roles.find((role) => role[0] == default_role)[1]"

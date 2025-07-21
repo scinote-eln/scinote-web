@@ -92,8 +92,6 @@ class ProjectSerializer < ActiveModel::Serializer
       urls_list[:update_access] = access_permissions_project_path(object)
       urls_list[:new_access] = new_access_permissions_project_path(id: object.id)
       urls_list[:create_access] = access_permissions_projects_path(id: object.id)
-      urls_list[:default_public_user_role_path] =
-        update_default_public_user_role_access_permissions_project_path(object)
     end
 
     urls_list

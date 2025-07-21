@@ -41,11 +41,7 @@ module Lists
 
     delegate :favorite, to: :object
 
-    def default_public_user_role_id
-      object.experiment.project.default_public_user_role_id
-    end
-
-    delegate :code, to: :object
+    delegate :code, :default_public_user_role_id, to: :object
 
     def permissions
       {
