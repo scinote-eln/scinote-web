@@ -10,7 +10,6 @@ module UserAssignments
     let!(:team) { create :team, created_by: user_one }
     let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
     let!(:project) { create :project, team: team, created_by: user_one }
-    let!(:user_project) { create :user_project, user: user_one, project: project }
     let!(:experiment_one) { create :experiment, project: project, created_by: project.created_by }
     let!(:experiment_two) { create :experiment, project: project, created_by: project.created_by }
     let!(:my_module_one) { create :my_module, experiment: experiment_one, created_by: experiment_one.created_by }
