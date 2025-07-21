@@ -9,7 +9,15 @@
           </div>
         </template>
         <template v-else>
-          <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
+          <a class="task-section-caret"
+            tabindex="0"
+            role="button"
+            data-toggle="collapse"
+            href="#protocol-content"
+            aria-expanded="true"
+            aria-controls="protocol-content"
+            data-e2e="e2e-IC-task-protocol-visibilityToggle"
+          >
             <i class="sn-icon sn-icon-right"></i>
             <div class="task-section-title truncate">
               <h2>{{ i18n.t('Protocol') }}</h2>
