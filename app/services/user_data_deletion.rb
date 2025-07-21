@@ -59,7 +59,6 @@ class UserDataDeletion
           experiment.user_assignments.destroy_all
           experiment.destroy!
         end
-        project.user_projects.destroy_all
         project.tags.destroy_all
         project.project_comments.destroy_all
         project.report_elements.destroy_all

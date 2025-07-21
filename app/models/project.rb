@@ -57,7 +57,6 @@ class Project < ApplicationRecord
              optional: true
   belongs_to :team, inverse_of: :projects, touch: true
   belongs_to :project_folder, inverse_of: :projects, optional: true, touch: true
-  has_many :user_projects, inverse_of: :project
   has_many :experiments, inverse_of: :project
   has_many :active_experiments, -> { where(archived: false) },
            class_name: 'Experiment'

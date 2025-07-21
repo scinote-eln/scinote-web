@@ -1093,25 +1093,8 @@ en:
       created_on_title: "Experiment created on %{date} at %{time}."
       last_modified_on_title: "Experiment last modified on %{date} at %{time}."
 
-  user_teams:
-    enums:
-      role:
-        guest: "Guest"
-        normal_user: "Normal user"
-        admin: "Administrator"
   teams:
     private_team: "Private workspace"
-  user_projects:
-    view_users:
-      modal_title: "Members of %{name}"
-      no_users: "No users!"
-      current_user_label: "(you)"
-    edit:
-      update_role: "Change Role"
-    create:
-      select_user_role: "Please select a user role."
-      add_user_generic_error: "An error occurred. "
-      can_add_user_to_project: "Can not add user to the project."
   forms:
     published: "Published"
     draft: "Draft"

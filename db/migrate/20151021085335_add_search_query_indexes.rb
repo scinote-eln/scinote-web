@@ -4,10 +4,6 @@ include DatabaseHelper
 class AddSearchQueryIndexes < ActiveRecord::Migration[4.2]
   def up
     add_index :projects, :team_id
-    add_index :user_teams, :user_id
-    add_index :user_teams, :team_id
-    add_index :user_projects, :user_id
-    add_index :user_projects, :project_id
     add_index :tags, :project_id
 
     # Add GIST trigram indexes onto columns that check for
@@ -26,10 +22,6 @@ class AddSearchQueryIndexes < ActiveRecord::Migration[4.2]
 
   def down
     remove_index :projects, :team_id
-    remove_index :user_teams, :user_id
-    remove_index :user_teams, :team_id
-    remove_index :user_projects, :user_id
-    remove_index :user_projects, :project_id
     remove_index :tags, :project_id
 
     remove_index :projects, :name
