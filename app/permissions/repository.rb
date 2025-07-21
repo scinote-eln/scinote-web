@@ -8,7 +8,8 @@ Canaid::Permissions.register_for(RepositoryBase) do
       # If original repository is deleted, snapshot ownership should be transferred to task
       (!original_repository || original_repository.permission_granted?(user, RepositoryPermissions::READ)) && can_read_my_module?(user, repository.my_module)
     else
-      repository.can_manage_shared?(user) ||
+      repository.team.permission_granted?(user, TeamPermissions::MANAGE) ||
+        repository.can_manage_shared?(user) ||
         repository.permission_granted?(user, RepositoryPermissions::READ)
     end
   end
@@ -132,7 +133,8 @@ Canaid::Permissions.register_for(Repository) do
   end
 
   can :manage_repository_users do |user, repository|
-    repository.can_manage_shared?(user) ||
+    repository.team.permission_granted?(user, TeamPermissions::MANAGE) ||
+      repository.can_manage_shared?(user) ||
       repository.permission_granted?(user, RepositoryPermissions::USERS_MANAGE)
   end
 end

@@ -2342,6 +2342,8 @@ en:
         notification:
           error:
             title: "Your Inventories export failed. Please contact support."
+      table:
+        access: "Access"
     show:
       name: "Name"
       archived_inventory_items: "%{repository_name} archived items"
