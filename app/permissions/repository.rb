@@ -10,7 +10,9 @@ Canaid::Permissions.register_for(RepositoryBase) do
     else
       repository.team.permission_granted?(user, TeamPermissions::MANAGE) ||
         repository.can_manage_shared?(user) ||
-        repository.permission_granted?(user, RepositoryPermissions::READ)
+        repository.permission_granted?(user, RepositoryPermissions::READ) ||
+        repository.shared_write? ||
+        repository.shared_read?
     end
   end
 
