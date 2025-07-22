@@ -63,6 +63,7 @@ module Lists
             SELECT 1 FROM team_shared_objects
             WHERE team_shared_objects.shared_object_id = repositories.id
               AND team_shared_objects.shared_object_type = 'RepositoryBase'
+              AND team_shared_objects.team_id != :team_id
             ) THEN 1
           WHEN repositories.team_id != :team_id AND repositories.permission_level NOT IN (:not_shared_value)
             OR EXISTS (
