@@ -22,6 +22,9 @@ class UserAssignment < ApplicationRecord
   validates :user, uniqueness: { scope: %i(assignable team_id) }
 
   scope :with_permission, ->(permission) { joins(:user_role).where('? = ANY(user_roles.permissions)', permission) }
+  scope :as_owners, -> { where(user_role: UserRole.find_predefined_owner_role) }
+  scope :as_normal_users, -> { where(user_role: UserRole.find_predefined_normal_user_role) }
+  scope :as_viewers, -> { where(user_role: UserRole.find_predefined_viewer_role) }
 
   def last_assignable_owner?
     assignable_owners.count == 1 && user_role.owner?

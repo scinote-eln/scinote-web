@@ -9,5 +9,9 @@ class TeamAssignment < ApplicationRecord
 
   enum :assigned, { automatically: 0, manually: 1 }, suffix: true
 
+  scope :as_owners, -> { where(user_role: UserRole.find_predefined_owner_role) }
+  scope :as_normal_users, -> { where(user_role: UserRole.find_predefined_normal_user_role) }
+  scope :as_viewers, -> { where(user_role: UserRole.find_predefined_viewer_role) }
+
   validates :team, uniqueness: { scope: :assignable }
 end

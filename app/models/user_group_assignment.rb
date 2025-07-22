@@ -11,6 +11,10 @@ class UserGroupAssignment < ApplicationRecord
 
   enum :assigned, { automatically: 0, manually: 1 }, suffix: true
 
+  scope :as_owners, -> { where(user_role: UserRole.find_predefined_owner_role) }
+  scope :as_normal_users, -> { where(user_role: UserRole.find_predefined_normal_user_role) }
+  scope :as_viewers, -> { where(user_role: UserRole.find_predefined_viewer_role) }
+
   validates :user_group, uniqueness: { scope: %i(assignable team_id) }
 
   after_destroy :call_user_group_assignment_changed_hook
