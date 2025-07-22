@@ -531,6 +531,7 @@ class ProtocolsController < ApplicationController
     Protocol.transaction do
       protocol = @importer.import_new_protocol(@protocol_json)
     rescue StandardError => e
+      Rails.logger.error e.message
       Rails.logger.error e.backtrace.join("\n")
       transaction_error = true
       raise ActiveRecord::Rollback
