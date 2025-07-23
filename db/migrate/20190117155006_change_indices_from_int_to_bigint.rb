@@ -50,9 +50,7 @@ class ChangeIndicesFromIntToBigint < ActiveRecord::Migration[5.1]
     change_column :user_identities, :id, :bigint
     change_column :user_my_modules, :id, :bigint
     change_column :user_notifications, :id, :bigint
-    change_column :user_projects, :id, :bigint
     change_column :users, :id, :bigint
-    change_column :user_teams, :id, :bigint
     change_column :wopi_actions, :id, :bigint
     change_column :wopi_apps, :id, :bigint
     change_column :wopi_discoveries, :id, :bigint
@@ -174,13 +172,7 @@ class ChangeIndicesFromIntToBigint < ActiveRecord::Migration[5.1]
     change_column :user_my_modules, :user_id, :bigint
     change_column :user_notifications, :user_id, :bigint
     change_column :user_notifications, :notification_id, :bigint
-    change_column :user_projects, :assigned_by_id, :bigint
-    change_column :user_projects, :user_id, :bigint
-    change_column :user_projects, :project_id, :bigint
     change_column :users, :current_team_id, :bigint
-    change_column :user_teams, :user_id, :bigint
-    change_column :user_teams, :team_id, :bigint
-    change_column :user_teams, :assigned_by_id, :bigint
     change_column :wopi_actions, :wopi_app_id, :bigint
     change_column :wopi_apps, :wopi_discovery_id, :bigint
     change_column :zip_exports, :user_id, :bigint

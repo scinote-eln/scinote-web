@@ -44,7 +44,6 @@ describe Project, type: :model do
     it { should belong_to(:archived_by).class_name('User').optional }
     it { should belong_to(:restored_by).class_name('User').optional }
     it { should belong_to(:supervised_by).class_name('User').optional }
-    it { should have_many :user_projects }
     it { should have_many :experiments }
     it { should have_many :project_comments }
     it { should have_many :activities }

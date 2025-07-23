@@ -22,7 +22,7 @@ class AddForeignKeysToTables < ActiveRecord::Migration[4.2]
       add_foreign_key table_name, :users, column: :restored_by_id
     end
 
-    %i(user_my_modules user_teams user_projects).each do |table_name|
+    %i(user_my_modules).each do |table_name|
       add_foreign_key table_name, :users, column: :assigned_by_id
     end
   end

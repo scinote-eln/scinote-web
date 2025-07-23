@@ -27,7 +27,7 @@ class AddCreatedByToAssets < ActiveRecord::Migration[4.2]
       add_column table_name, :restored_on, :datetime
     end
 
-    %i(sample_my_modules user_my_modules user_teams user_projects).each do |table_name|
+    %i(sample_my_modules user_my_modules).each do |table_name|
       add_column table_name, :assigned_by_id, :integer
       add_index table_name, :assigned_by_id
     end
