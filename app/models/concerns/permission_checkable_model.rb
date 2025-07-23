@@ -33,14 +33,14 @@ module PermissionCheckableModel
     end
   end
 
-  def permission_granted?(user, permission)
+  def permission_granted?(user, permission, permission_team = user.permission_team)
     return true if user_assignments.joins(:user_role)
-                                   .where(user: user, team: user.permission_team)
+                                   .where(user: user, team: permission_team)
                                    .exists?(['user_roles.permissions @> ARRAY[?]::varchar[]', [permission]])
 
     user_roles = UserRole.left_outer_joins(:team_assignments, user_group_assignments: { user_group: :users })
     user_roles.where(user_group_assignments: { assignable: self, user_groups: { users: user } })
-              .or(user_roles.where(team_assignments: { assignable: self, team: user.permission_team }))
+              .or(user_roles.where(team_assignments: { assignable: self, team: permission_team }))
               .exists?(['user_roles.permissions @> ARRAY[?]::varchar[]', [permission]])
   end
 
