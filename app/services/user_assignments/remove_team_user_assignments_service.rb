@@ -9,8 +9,10 @@ module UserAssignments
 
     def call
       @team.projects.find_each do |project|
-        UserAssignments::PropagateAssignmentJob
-          .perform_now(project, @user.id, nil, nil, destroy: true, remove_from_team: true)
+        project.user_assignments.where(user: @user).find_each do |assignment|
+          UserAssignments::PropagateAssignmentJob
+            .perform_now(assignment, destroy: true, remove_from_team: true)
+        end
       end
       remove_repositories_assignments
       remove_protocols_assignments

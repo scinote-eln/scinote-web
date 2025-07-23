@@ -427,7 +427,6 @@ Rails.application.routes.draw do
         post 'archive_group'
         post 'restore_group'
         post 'actions_toolbar'
-        get :user_roles
         get :head_of_project_users_list
       end
     end
@@ -768,7 +767,6 @@ Rails.application.routes.draw do
         get 'export', to: 'protocols#export'
         get 'protocolsio', to: 'protocols#protocolsio_index'
         post 'actions_toolbar', to: 'protocols#actions_toolbar'
-        get 'user_roles', to: 'protocols#user_roles'
       end
     end
 
@@ -783,9 +781,6 @@ Rails.application.routes.draw do
         get :assigned_my_modules
         get :repository_users
         get :load_table
-      end
-      collection do
-        get :user_roles
       end
       # Save repository table state
       post 'state_save',
@@ -946,7 +941,6 @@ Rails.application.routes.draw do
         post :actions_toolbar
         post :archive
         post :restore
-        get :user_roles
         get :published_forms
         get :latest_attached_forms
       end
