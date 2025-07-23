@@ -100,7 +100,8 @@ module Lists
         versions_list: versions_list_protocol_path(object),
         linked_my_modules: linked_children_protocol_path(object.parent || object),
         versions_modal: versions_modal_protocol_path(object.parent || object),
-        show_user_group_assignments_access: show_user_group_assignments_access_permissions_protocol_path(object)
+        show_user_group_assignments_access: show_user_group_assignments_access_permissions_protocol_path(object),
+        user_roles: user_roles_access_permissions_protocol_path(object)
       }
 
       if can_read_protocol_in_repository?(object)
@@ -117,7 +118,6 @@ module Lists
       end
 
       if can_manage_protocol_users?(object)
-        urls_list[:user_roles] = user_roles_access_permissions_protocol_path(object)
         urls_list[:update_access] = access_permissions_protocol_path(object)
         urls_list[:new_access] = new_access_permissions_protocol_path(id: object.id)
         urls_list[:create_access] = access_permissions_protocols_path(id: object.id)

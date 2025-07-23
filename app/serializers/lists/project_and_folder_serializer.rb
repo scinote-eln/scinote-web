@@ -157,12 +157,12 @@ module Lists
       if project? && can_read_project?(object)
         urls_list[:favorite] = favorite_project_url(object)
         urls_list[:unfavorite] = unfavorite_project_url(object)
+        urls_list[:user_roles] = user_roles_access_permissions_project_path(object)
       end
 
       urls_list[:show_access] = access_permissions_project_path(object)
       urls_list[:show_user_group_assignments_access] = show_user_group_assignments_access_permissions_project_path(object)
       if project? && can_manage_project_users?(object)
-        urls_list[:user_roles] = user_roles_access_permissions_project_path(object)
         urls_list[:assigned_users] = assigned_users_list_project_path(object)
         urls_list[:update_access] = access_permissions_project_path(object)
         urls_list[:new_access] = new_access_permissions_project_path(id: object.id)

@@ -70,11 +70,11 @@ module Lists
           current_user.current_team, object_id: object.id, object_type: 'Repository'
         ),
         show_access: access_permissions_repository_path(object),
-        share: team_shared_objects_path(current_user.current_team, object_id: object.id, object_type: 'Repository')
+        share: team_shared_objects_path(current_user.current_team, object_id: object.id, object_type: 'Repository'),
+        user_roles: user_roles_access_permissions_repository_path(object)
       }
 
       if can_manage_repository_users?(object)
-        urls[:user_roles] = user_roles_access_permissions_repository_path(object)
         urls[:update_access] = access_permissions_repository_path(id: object)
         urls[:new_access] = new_access_permissions_repository_path(id: object.id)
         urls[:create_access] = access_permissions_repositories_path(id: object.id)

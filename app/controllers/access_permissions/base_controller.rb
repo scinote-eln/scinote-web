@@ -7,8 +7,8 @@ module AccessPermissions
 
     before_action :set_model
     before_action :set_assignment, only: %i(create update destroy)
-    before_action :check_read_permissions, only: %i(show show_user_group_assignments)
-    before_action :check_manage_permissions, except: %i(show show_user_group_assignments)
+    before_action :check_read_permissions, only: %i(show show_user_group_assignments user_roles)
+    before_action :check_manage_permissions, except: %i(show show_user_group_assignments user_roles)
     before_action :load_available_users, only: %i(new create)
 
     def show
