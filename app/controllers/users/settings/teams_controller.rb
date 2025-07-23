@@ -144,7 +144,6 @@ module Users
 
       def load_team
         @team = Team.find_by(id: params[:id])
-        current_user.permission_team = @team
         render_403 unless can_manage_team?(@team)
       end
 
