@@ -17,8 +17,7 @@
   <%= link_to t('experiments.canvas.edit.task_access'), nil,
       class: "openAccessModal",
       data: {
-        url: my_module_path(@my_module, format: :json),
-        roles_url: user_roles_projects_path
+        url: my_module_path(@my_module, format: :json)
       }
    %>
 
