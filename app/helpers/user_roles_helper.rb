@@ -2,7 +2,8 @@
 
 module UserRolesHelper
   def user_roles_collection(object, with_inherit: false)
-    if object.respond_to?(:private_shared_with_read?) && object.private_shared_with_read?(current_team)
+    if (object.respond_to?(:private_shared_with_read?) && object.private_shared_with_read?(current_team)) ||
+       (object.respond_to?(:shared_with_read?) && object.shared_with_read?(current_team))
       viewer_role = UserRole.find_predefined_viewer_role
       roles = [[viewer_role.name, viewer_role.id]]
     else
