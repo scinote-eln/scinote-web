@@ -6,7 +6,7 @@
           <img src="/images/icon/team.png" class="rounded-full w-8 h-8" :data-e2e="`e2e-IC-${dataE2e}-everyoneElse-team`">
         </div>
         <div :data-e2e="`e2e-TX-${dataE2e}-everyoneElse`">
-          {{ i18n.t('access_permissions.everyone_else', { team_name: params.object.team }) }}
+          {{ i18n.t('access_permissions.everyone_else', { team_name: params.object.current_team || params.object.team }) }}
         </div>
         <GeneralDropdown>
           <template v-slot:field>
