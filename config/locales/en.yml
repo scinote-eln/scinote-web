@@ -4571,7 +4571,7 @@ en:
 
   access_permissions:
     all_team: "all workspace"
-    everyone_else: "Everyone else at %{team_name}"
+    everyone_else: "Everyone at %{team_name}"
     reset: "Inherit role"
     remove_access: "Remove access"
     grant_access: "Grant new access"

@@ -14,7 +14,7 @@
           </template>
           <template v-slot:flyout>
             <perfect-scrollbar class="flex flex-col max-h-96 max-w-[280px] relative pr-4 gap-y-px">
-              <div v-for="user in this.autoAssignedUsers"
+              <div v-for="user in this.assignedUsers"
                   :key="user.attributes.user.id"
                   :title="user.attributes.user.name"
                   class="rounded px-3 py-2.5 flex items-center hover:no-underline leading-5 gap-2">
@@ -199,11 +199,6 @@ export default {
     manuallyAssignedUsers() {
       return this.assignedUsers.filter((user) => (
         user.attributes?.assigned === 'manually'
-      ));
-    },
-    autoAssignedUsers() {
-      return this.assignedUsers.filter((user) => (
-        user.attributes?.assigned === 'automatically'
       ));
     }
   },
