@@ -8,11 +8,11 @@ module ImportRepository
       @date_format = options[:date_format]
       @repository = options.fetch(:repository)
       @session = options.fetch(:session)
-      @sheet = SpreadsheetParser.open_spreadsheet(@file)
     end
 
     def data
-      header, columns = SpreadsheetParser.first_two_rows(@sheet, date_format: @date_format)
+      sheet = SpreadsheetParser.open_spreadsheet(@file)
+      header, columns = SpreadsheetParser.first_two_rows(sheet, date_format: @date_format)
       # Fill in fields for dropdown
       @repository.importable_repository_fields.transform_values! do |name|
         truncate(name, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
@@ -23,16 +23,20 @@ module ImportRepository
                @repository)
     end
 
+    def rows_count
+      @rows_count ||= Roo::Spreadsheet.open(@file).last_row
+    end
+
     def too_large?
       @file.size > Rails.configuration.x.file_max_size_mb.megabytes
     end
 
     def has_too_many_rows?
-      @sheet.last_row.present? && @sheet.last_row > Constants::IMPORT_REPOSITORY_ITEMS_LIMIT
+      rows_count.present? && rows_count > Constants::IMPORT_REPOSITORY_ITEMS_LIMIT
     end
 
     def has_too_little_rows?
-      @sheet.last_row.nil? || @sheet.last_row < Constants::IMPORT_REPOSITORY_ITEMS_MIN_LIMIT
+      rows_count.nil? || rows_count < Constants::IMPORT_REPOSITORY_ITEMS_MIN_LIMIT
     end
 
     def generate_temp_file
