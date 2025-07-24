@@ -108,6 +108,6 @@ module Shareable
   def shared_with_read?(team)
     return false if self.team == team
 
-    shared_read? || team_shared_objects.where(team: team, permission_level: :shared_read).any?
+    shared_read? || team_shared_objects.exists?(team: team, permission_level: :shared_read)
   end
 end

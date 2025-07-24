@@ -22,6 +22,18 @@ class TeamSharedObjectsController < ApplicationController
         if @model.permission_level_changed?
           @model.save!
           @model.team_shared_objects.each(&:destroy!) unless global_permission_level == :not_shared
+
+          case global_permission_level
+          when :shared_read
+            UserAssignment.where(assignable: @model).where.not(team: @model.team).update!(user_role: UserRole.find_predefined_viewer_role)
+            TeamAssignment.where(assignable: @model).where.not(team: @model.team).update!(user_role: UserRole.find_predefined_viewer_role)
+            UserGroupAssignment.where(assignable: @model).where.not(team: @model.team).update!(user_role: UserRole.find_predefined_viewer_role)
+          when :not_shared
+            UserAssignment.where(assignable: @model).where.not(team: @model.team).destroy_all
+            TeamAssignment.where(assignable: @model).where.not(team: @model.team).destroy_all
+            UserGroupAssignment.where(assignable: @model).where.not(team: @model.team).destroy_all
+          end
+
           case @model
           when Repository
             setup_repository_global_share_activity
