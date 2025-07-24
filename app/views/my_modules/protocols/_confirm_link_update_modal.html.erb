@@ -1,17 +1,42 @@
 <div class="modal" id="confirm-link-update-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-link-update-modal-label">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="modal-content" data-e2e="e2e-MD-task-protocol-updateRevertFromTemplates">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
-        <h4 class="modal-title" id="confirm-link-update-modal-label"></h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          data-e2e="e2e-BT-task-protocol-updateRevertFromTemplatesModal-close"
+        >
+          <i class="sn-icon sn-icon-close"></i>
+        </button>
+        <h4
+          class="modal-title"
+          id="confirm-link-update-modal-label"
+          data-e2e="e2e-TX-task-protocol-updateRevertFromTemplatesModal-title"
+        ></h4>
       </div>
       <div class="modal-body">
-        <p class="message"></p>
-        <p class="warning"><%= t('my_modules.protocols.confirm_link_update_modal.warning') %></p>
+        <p class="message" data-e2e="e2e-TX-task-protocol-updateRevertFromTemplates-description"></p>
+        <p class="warning" data-e2e="e2e-TX-task-protocol-updateRevertFromTemplates-warning">
+          <%= t('my_modules.protocols.confirm_link_update_modal.warning') %>
+        </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t("general.cancel") %></button>
-        <button type="button" class="btn btn-success" data-action="submit"></button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          data-e2e="e2e-BT-task-protocol-updateRevertFromTemplatesModal-cancel">
+            <%= t("general.cancel") %>
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          data-action="submit"
+          data-e2e="e2e-BT-task-protocol-updateRevertFromTemplatesModal-confirm"
+        ></button>
       </div>
     </div>
   </div>

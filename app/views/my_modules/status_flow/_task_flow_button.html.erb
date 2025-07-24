@@ -45,7 +45,12 @@
         <% unless status.initial_status? %>
           <% previous_s = status.previous_status %>
           <% previous_s_errors = previous_s.conditions_errors(my_module) %>
-          <li data-state-id="<%= previous_s.id %>" id="previousStatusSelector" class="<%= 'disabled' if previous_s_errors.any? %>">
+          <li
+              data-state-id="<%= previous_s.id %>"
+              id="previousStatusSelector"
+              class="<%= 'disabled' if previous_s_errors.any? %>"
+              data-e2e="e2e-DO-tasks-taskStatus-previousStatus"
+          >
             <span><%= t('my_module_statuses.dropdown.return_label') %></span>
             <i class="fas fa-long-arrow-alt-right"></i>
             <div class="status-container">
@@ -61,7 +66,12 @@
         <% unless status.final_status? %>
           <% next_s = status.next_status %>
           <% next_s_errors = next_s.conditions_errors(my_module) %>
-          <li data-state-id="<%= next_s.id %>" id="nextStatusSelector" class="<%= 'disabled' if next_s_errors.any? %>">
+          <li
+              data-state-id="<%= next_s.id %>"
+              id="nextStatusSelector"
+              class="<%= 'disabled' if next_s_errors.any? %>"
+              data-e2e="e2e-DO-tasks-taskStatus-nextStatus"
+          >
             <span><%= t('my_module_statuses.dropdown.move_label') %></span>
             <i class="fas fa-long-arrow-alt-right"></i>
             <div class="status-container">
