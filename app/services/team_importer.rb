@@ -428,10 +428,12 @@ class TeamImporter
       repository.archived_by_id = find_user(repository.archived_by_id)
       repository.restored_by_id = find_user(repository.restored_by_id)
       repository.discarded_by_id = find_user(repository.discarded_by_id)
+      repository.repository_template_id = nil
       repository.skip_user_assignments = true
       repository.save!
 
       create_user_assignments(repository_json['user_assignments'], repository)
+      create_team_assignments(repository_json['team_assignments'], repository)
 
       @repository_mappings[orig_repository_id] = repository.id
       @repository_counter += 1
@@ -498,6 +500,7 @@ class TeamImporter
       orig_rep_row_id = repository_row.id
       repository_row.id = nil
       repository_row.repository = repository
+      repository_row.my_module_id = @my_module_mappings[repository_row.my_module_id]
       repository_row.created_by_id = find_user(repository_row.created_by_id)
       repository_row.archived_by_id = find_user(repository_row.archived_by_id)
       repository_row.restored_by_id = find_user(repository_row.restored_by_id)
@@ -578,20 +581,14 @@ class TeamImporter
       project.restored_by_id = find_user(project.restored_by_id)
       project.skip_user_assignments = true
       project.project_folder_id = @project_folder_mappings[project.project_folder_id]
+      project.supervised_by_id = find_user(project.supervised_by_id) if project.supervised_by_id
       project.save!
       @project_mappings[orig_project_id] = project.id
       @project_counter += 1
       puts 'Creating project user_assignments...'
       create_user_assignments(project_json['user_assignments'], project)
-      puts 'Creating user_projects...'
-      project_json['user_projects'].each do |user_project_json|
-        user_project = UserProject.new(user_project_json)
-        user_project.id = nil
-        user_project.project = project
-        user_project.user_id = find_user(user_project.user_id)
-        user_project.assigned_by_id = find_user(user_project.assigned_by_id)
-        user_project.save!
-      end
+      puts 'Creating project team_assignments...'
+      create_team_assignments(project_json['team_assignments'], project)
       puts 'Creating project_comments...'
       project_json['project_comments'].each do |project_comment_json|
         project_comment = ProjectComment.new(project_comment_json)
@@ -641,6 +638,7 @@ class TeamImporter
     @experiment_mappings[orig_experiment_id] = experiment.id
 
     create_user_assignments(experiment_json['user_assignments'], experiment)
+    create_team_assignments(experiment_json['team_assignments'], experiment)
 
     experiment_json['my_module_groups'].each do |my_module_group_json|
       my_module_group = MyModuleGroup.new(my_module_group_json)
@@ -687,6 +685,7 @@ class TeamImporter
       @my_module_counter += 1
 
       create_user_assignments(my_module_json['user_assignments'], my_module)
+      create_team_assignments(my_module_json['team_assignments'], my_module)
 
       unless @is_template
         my_module_json['my_module_tags'].each do |my_module_tag_json|
@@ -777,6 +776,7 @@ class TeamImporter
       protocol.save!
 
       create_user_assignments(protocol_json['user_assignments'], protocol) if protocol.in_repository?
+      create_team_assignments(protocol_json['team_assignments'], protocol) if protocol.in_repository?
 
       @protocol_counter += 1
       @protocol_mappings[orig_protocol_id] = protocol.id
@@ -841,6 +841,7 @@ class TeamImporter
         elsif element_json['checklist']
           orderable = create_step_checklist(element_json['checklist'], step, user_id)
         end
+
         StepOrderableElement.create!(
           position: element_json['position'],
           step: step,
@@ -980,6 +981,7 @@ class TeamImporter
       report.save!
 
       create_user_assignments(report_json['user_assignments'], report)
+      create_team_assignments(report_json['team_assignments'], report)
 
       @report_mappings[orig_report_id] = report.id
       @report_counter += 1
@@ -1056,6 +1058,20 @@ class TeamImporter
       user_assignment.assigned_by_id = find_user(user_assignment_json['assigned_by_id'])
       user_assignment.team_id = @team_id
       user_assignment.save!
+    end
+  end
+
+  def create_team_assignments(team_assignments_json, assignable)
+    return if team_assignments_json.blank?
+
+    team_assignments_json.each do |team_assignment_json|
+      team_assignment = TeamAssignment.new
+      team_assignment.assignable = assignable
+      team_assignment.team_id = @team_id
+      team_assignment.user_role = @user_roles.find { |role| role.name == team_assignment_json['role_name'] }
+      team_assignment.assigned = team_assignment_json['assigned']
+      team_assignment.assigned_by_id = find_user(team_assignment_json['assigned_by_id'])
+      team_assignment.save!
     end
   end
 
