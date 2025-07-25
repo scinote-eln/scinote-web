@@ -1,51 +1,54 @@
 <% experiment ||= report_element.experiment %>
 <% timestamp = experiment.created_at %>
 <% export_all = defined?(export_all) && export_all %>
-<div class="report-element report-experiment-element">
-  <div class="report-element-body" data-hook="report-experiment-element">
-    <h3 class="experiment-name">
-      <%= link_to experiment.name, my_modules_experiment_url(experiment), target: :_blank %>
-      <% if experiment.archived? %>
-        <span class="label label-warning"><%= t('search.index.archived') %></span>
+
+<% if can_read_experiment?(experiment) %>
+  <div class="report-element report-experiment-element">
+    <div class="report-element-body" data-hook="report-experiment-element">
+      <h3 class="experiment-name">
+        <%= link_to experiment.name, my_modules_experiment_url(experiment), target: :_blank %>
+        <% if experiment.archived? %>
+          <span class="label label-warning"><%= t('search.index.archived') %></span>
+        <% end %>
+      </h3>
+      <% unless @settings['exclude_timestamps'] %>
+        <div class="user-time">
+          <%= t('projects.reports.elements.experiment.user_time', code: experiment.code, timestamp: l(timestamp, format: :full)) %>
+        </div>
       <% end %>
-    </h3>
-    <% unless @settings['exclude_timestamps'] %>
-      <div class="user-time">
-        <%= t('projects.reports.elements.experiment.user_time', code: experiment.code, timestamp: l(timestamp, format: :full)) %>
+      <% unless @settings['exclude_task_metadata'] %>
+        <p class="experiment-start-date">
+          <% if experiment.start_date.present? %>
+            <%= t('projects.reports.elements.experiment.started_on', started_on: l(experiment.start_date, format: :full)) %>
+          <% end %>
+        </p>
+        <p class="experiment-due-date">
+          <% if experiment.due_date.present? %>
+            <%= t('projects.reports.elements.experiment.due_date', due_date: l(experiment.due_date, format: :full)) %>
+          <% end %>
+        </p>
+        <p class="experiment-status">
+          <%= t('projects.reports.elements.experiment.status_label') %>
+          <span class="status-block <%= experiment.status %>">
+            <%= t("projects.reports.elements.experiment.status.#{experiment.status}") %>
+          </span>
+        </p>
+      <% end %>
+      <br>
+      <br>
+      <div class="text-block">
+        <% if experiment.description.present? %>
+          <%= custom_auto_link(experiment.description,
+                                  team: current_team,
+                                  simple_format: false,
+                                  base64_encoded_imgs: true) %>
+        <% end %>
+      </div>
+    </div>
+    <% if defined?(children) %>
+      <div class="report-element-children">
+        <%= children %>
       </div>
     <% end %>
-    <% unless @settings['exclude_task_metadata'] %>
-      <p class="experiment-start-date">
-        <% if experiment.start_date.present? %>
-          <%= t('projects.reports.elements.experiment.started_on', started_on: l(experiment.start_date, format: :full)) %>
-        <% end %>
-      </p>
-      <p class="experiment-due-date">
-        <% if experiment.due_date.present? %>
-          <%= t('projects.reports.elements.experiment.due_date', due_date: l(experiment.due_date, format: :full)) %>
-        <% end %>
-      </p>
-      <p class="experiment-status">
-        <%= t('projects.reports.elements.experiment.status_label') %>
-        <span class="status-block <%= experiment.status %>">
-          <%= t("projects.reports.elements.experiment.status.#{experiment.status}") %>
-        </span>
-      </p>
-    <% end %>
-    <br>
-    <br>
-    <div class="text-block">
-      <% if experiment.description.present? %>
-        <%= custom_auto_link(experiment.description,
-                                team: current_team,
-                                simple_format: false,
-                                base64_encoded_imgs: true) %>
-      <% end %>
-    </div>
   </div>
-  <% if defined?(children) %>
-    <div class="report-element-children">
-      <%= children %>
-    </div>
-  <% end %>
-</div>
+<% end %>

@@ -1,7 +1,7 @@
 <% my_module ||= report_element.my_module %>
 <% repository ||= report_element.repository %>
 <% repository = assigned_repository_or_snapshot(my_module, repository) %>
-<% if repository %>
+<% if repository && can_read_repository?(repository) %>
   <% rows_json = my_module.repository_json_hot(repository, :desc) %>
   <div class="report-element report-module-repository-element">
     <div class="report-element-header">

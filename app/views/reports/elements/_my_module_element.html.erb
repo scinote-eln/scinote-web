@@ -1,130 +1,133 @@
 <% my_module ||= report_element.my_module %>
 <% timestamp = my_module.created_at %>
 <% export_all = defined?(export_all) && export_all %>
-<div class="report-element report-module-element">
-  <div class="report-element-body">
-    <h4 class="module-name">
-      <%= link_to my_module.name, protocols_my_module_url(my_module), target: :_blank %>
-      <% if my_module.archived? %>
-        <span class="label label-warning"><%= t('search.index.archived') %></span>
-      <% end %>
-    </h4>
-    <% unless @settings['exclude_timestamps'] %>
-      <div class="user-time">
-        <%= t('projects.reports.elements.module.user_time', code: my_module.code, timestamp: l(timestamp, format: :full)) %>
-      </div>
-    <% end %>
-    <% unless @settings['exclude_task_metadata'] %>
-      <p class="module-start-date">
-        <% if my_module.started_on.present? %>
-          <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
-        <% end %>
-      </p>
-      <p class="module-due-date">
-        <% if my_module.due_date.present? %>
-          <%= t('projects.reports.elements.module.due_date', due_date: l(my_module.due_date, format: :full)) %>
-        <% end %>
-      </p>
-      <p class="module-status">
-        <% status = my_module.my_module_status %>
-        <%= t('projects.reports.elements.module.status') %>
-        <span class="status-block" style="background: <%= status.color %>;
-          <%= 'color: #000000; border: 1px solid #D0D5DD;' if status.light_color? %>">
-          <%= status.name %>
-        </span>
-        <% if my_module.completed? %>
-          <span style="margin-left: 10px;">
-            <%= t('my_modules.states.completed') %>
-            <%= l(my_module.completed_on, format: :full) %>
-          </span>
-        <% end %>
-      </p>
-      <div class="row module-tags">
-        <div class="pull-left">
-          <%= t('projects.reports.elements.module.tags_header') %>
-        </div>
-        <% if (tags = my_module.tags.order(:id)).present? %>
-          <% tags.each do |tag| %>
-            <div class="pull-left module-tag" style="background-color: <%= tag.color %>;">
-              <%= tag.name %>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-    <% end %>
-    <br>
-    <br>
-    <div class="row">
-      <div class="col-xs-12 text-block">
-        <% if my_module.description.present? %>
-          <%= custom_auto_link(my_module.prepare_for_report(:description, export_all: export_all),
-                               team: current_team,
-                               simple_format: false,
-                               base64_encoded_imgs: true) %>
-        <% end %>
-      </div>
-    </div>
-  </div>
-  <div class="report-element-children">
-    <%= render partial: 'reports/elements/my_module_protocol_element', locals: { protocol: my_module.protocol, export_all: export_all } %>
 
-    <% filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step| %>
-      <%= render partial: 'reports/elements/my_module_step_element', locals: { step: step, export_all: export_all } %>
-    <% end %>
-
-
-    <% if my_module.results.any? && %w(file_results table_results text_results).any? { |k| @settings.dig('task', k) } %>
-      <div class="results-title-name">
-        <%= t('projects.reports.elements.module.results') %>
-      </div><br>
-
-      <% order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result| %>
-        <div class="result-name">
-          <%= result.name.presence || I18n.t('projects.reports.unnamed') %>
-          <% if result.archived? %>
-            <span class="label label-warning"><%= t('search.index.archived') %></span>
-          <% end %>
-        </div>
-
+<% if can_read_my_module?(my_module) %>
+  <div class="report-element report-module-element">
+    <div class="report-element-body">
+      <h4 class="module-name">
+        <%= link_to my_module.name, protocols_my_module_url(my_module), target: :_blank %>
+        <% if my_module.archived? %>
+          <span class="label label-warning"><%= t('search.index.archived') %></span>
+        <% end %>
+      </h4>
+      <% unless @settings['exclude_timestamps'] %>
         <div class="user-time">
-          <% unless @settings['exclude_timestamps'] %>
-            <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
-          <% end %>
-          <% if !@settings['exclude_task_metadata'] && result.steps.size.positive? %>
-            | <%= t("projects.reports.elements.result.linked_steps") %> <%= result.steps.map(&:label).join('; ') %>
-          <% end %>
+          <%= t('projects.reports.elements.module.user_time', code: my_module.code, timestamp: l(timestamp, format: :full)) %>
         </div>
-
-        <% result.result_orderable_elements.each do |element| %>
-          <% if element.orderable_type == "ResultTable" && @settings.dig('task', 'table_results') %>
-            <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, element: element} %>
-          <% elsif element.orderable_type == "ResultText" && @settings.dig('task', 'text_results') %>
-            <%= render partial: 'reports/elements/my_module_result_text_element', locals: { result: result, export_all: export_all, element: element } %>
+      <% end %>
+      <% unless @settings['exclude_task_metadata'] %>
+        <p class="module-start-date">
+          <% if my_module.started_on.present? %>
+            <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
           <% end %>
-        <% end %>
-
-        <% if @settings.dig('task', 'file_results')  %>
-          <%= render partial: 'reports/elements/my_module_result_asset_element', locals: { result: result, report: report, export_all: export_all } %>
-        <% end %>
-
-        <div class="report-element-children">
-          <% if @settings.dig('task', 'result_comments') %>
-            <%= render partial: 'reports/elements/result_comments_element', locals: { result: result } %>
+        </p>
+        <p class="module-due-date">
+          <% if my_module.due_date.present? %>
+            <%= t('projects.reports.elements.module.due_date', due_date: l(my_module.due_date, format: :full)) %>
+          <% end %>
+        </p>
+        <p class="module-status">
+          <% status = my_module.my_module_status %>
+          <%= t('projects.reports.elements.module.status') %>
+          <span class="status-block" style="background: <%= status.color %>;
+            <%= 'color: #000000; border: 1px solid #D0D5DD;' if status.light_color? %>">
+            <%= status.name %>
+          </span>
+          <% if my_module.completed? %>
+            <span style="margin-left: 10px;">
+              <%= t('my_modules.states.completed') %>
+              <%= l(my_module.completed_on, format: :full) %>
+            </span>
+          <% end %>
+        </p>
+        <div class="row module-tags">
+          <div class="pull-left">
+            <%= t('projects.reports.elements.module.tags_header') %>
+          </div>
+          <% if (tags = my_module.tags.order(:id)).present? %>
+            <% tags.each do |tag| %>
+              <div class="pull-left module-tag" style="background-color: <%= tag.color %>;">
+                <%= tag.name %>
+              </div>
+            <% end %>
           <% end %>
         </div>
       <% end %>
+      <br>
+      <br>
+      <div class="row">
+        <div class="col-xs-12 text-block">
+          <% if my_module.description.present? %>
+            <%= custom_auto_link(my_module.prepare_for_report(:description, export_all: export_all),
+                                team: current_team,
+                                simple_format: false,
+                                base64_encoded_imgs: true) %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="report-element-children">
+      <%= render partial: 'reports/elements/my_module_protocol_element', locals: { protocol: my_module.protocol, export_all: export_all } %>
+
+      <% filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step| %>
+        <%= render partial: 'reports/elements/my_module_step_element', locals: { step: step, export_all: export_all } %>
+      <% end %>
+
+
+      <% if my_module.results.any? && %w(file_results table_results text_results).any? { |k| @settings.dig('task', k) } %>
+        <div class="results-title-name">
+          <%= t('projects.reports.elements.module.results') %>
+        </div><br>
+
+        <% order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result| %>
+          <div class="result-name">
+            <%= result.name.presence || I18n.t('projects.reports.unnamed') %>
+            <% if result.archived? %>
+              <span class="label label-warning"><%= t('search.index.archived') %></span>
+            <% end %>
+          </div>
+
+          <div class="user-time">
+            <% unless @settings['exclude_timestamps'] %>
+              <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
+            <% end %>
+            <% if !@settings['exclude_task_metadata'] && result.steps.size.positive? %>
+              | <%= t("projects.reports.elements.result.linked_steps") %> <%= result.steps.map(&:label).join('; ') %>
+            <% end %>
+          </div>
+
+          <% result.result_orderable_elements.each do |element| %>
+            <% if element.orderable_type == "ResultTable" && @settings.dig('task', 'table_results') %>
+              <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, element: element} %>
+            <% elsif element.orderable_type == "ResultText" && @settings.dig('task', 'text_results') %>
+              <%= render partial: 'reports/elements/my_module_result_text_element', locals: { result: result, export_all: export_all, element: element } %>
+            <% end %>
+          <% end %>
+
+          <% if @settings.dig('task', 'file_results')  %>
+            <%= render partial: 'reports/elements/my_module_result_asset_element', locals: { result: result, report: report, export_all: export_all } %>
+          <% end %>
+
+          <div class="report-element-children">
+            <% if @settings.dig('task', 'result_comments') %>
+              <%= render partial: 'reports/elements/result_comments_element', locals: { result: result } %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div><br>
+
+    <% if defined?(children) %>
+      <div class="report-element-children">
+        <%= children %>
+      </div>
     <% end %>
-  </div><br>
 
-  <% if defined?(children) %>
-    <div class="report-element-children">
-      <%= children %>
-    </div>
-  <% end %>
-
-  <% if @settings.dig('task', 'activities') %>
-    <div class="report-element-children">
-      <%= render partial: 'reports/elements/my_module_activity_element', locals: { my_module: my_module, export_all: export_all } %>
-    </div>
-  <% end %>
-</div>
+    <% if @settings.dig('task', 'activities') %>
+      <div class="report-element-children">
+        <%= render partial: 'reports/elements/my_module_activity_element', locals: { my_module: my_module, export_all: export_all } %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

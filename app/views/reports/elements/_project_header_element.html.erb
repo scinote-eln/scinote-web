@@ -1,56 +1,58 @@
 <% project ||= report_element.project %>
-<div class="report-element report-project-header-element">
-  <div class="report-element-body" data-hook="report-project-header-element">
-    <h2 class="project-name">
-      <%= link_to t('projects.reports.elements.project_header.title', project: project.name), project_url(project), target: :_blank %>
-      <% if project.archived? %>
-        <span class="label label-warning"><%= t('search.index.archived') %></span>
+<% if can_read_project?(project) %>
+  <div class="report-element report-project-header-element">
+    <div class="report-element-body" data-hook="report-project-header-element">
+      <h2 class="project-name">
+        <%= link_to t('projects.reports.elements.project_header.title', project: project.name), project_url(project), target: :_blank %>
+        <% if project.archived? %>
+          <span class="label label-warning"><%= t('search.index.archived') %></span>
+        <% end %>
+      </h2>
+      <% unless @settings['exclude_timestamps'] %>
+        <div class="user-time">
+          <%= t('projects.reports.elements.project_header.user_time', code: project.code, timestamp: l(project.created_at, format: :full)) %>
+        </div>
       <% end %>
-    </h2>
-    <% unless @settings['exclude_timestamps'] %>
-      <div class="user-time">
-        <%= t('projects.reports.elements.project_header.user_time', code: project.code, timestamp: l(project.created_at, format: :full)) %>
-      </div>
-    <% end %>
-    <% unless @settings['exclude_task_metadata'] %>
-      <p class="project-start-date">
-        <% if project.start_date.present? %>
-          <%= t('projects.reports.elements.project_header.started_on', started_on: l(project.start_date, format: :full)) %>
-        <% end %>
-      </p>
-      <p class="project-due-date">
-        <% if project.due_date.present? %>
-          <%= t('projects.reports.elements.project_header.due_date', due_date: l(project.due_date, format: :full)) %>
-        <% end %>
-      </p>
-      <p class="project-supervised-by">
-        <% if project.supervised_by.present? %>
-          <%= t('projects.reports.elements.project_header.supervised_by', user: project.supervised_by.name) %>
-        <% end %>
-      </p>
-      <p class="project-status">
-        <%= t('projects.reports.elements.project_header.status_label') %>
-        <span class="status-block <%= project.status %>">
-          <%= t("projects.reports.elements.project_header.status.#{project.status}") %>
-        </span>
-      </p>
-    <% end %>
-    <br>
-    <br>
-    <div class="row">
-      <div class="col-xs-12 text-block">
-        <% if project.description.present? %>
-          <%= custom_auto_link(project.description,
-                               team: current_team,
-                               simple_format: false,
-                               base64_encoded_imgs: true) %>
-        <% end %>
+      <% unless @settings['exclude_task_metadata'] %>
+        <p class="project-start-date">
+          <% if project.start_date.present? %>
+            <%= t('projects.reports.elements.project_header.started_on', started_on: l(project.start_date, format: :full)) %>
+          <% end %>
+        </p>
+        <p class="project-due-date">
+          <% if project.due_date.present? %>
+            <%= t('projects.reports.elements.project_header.due_date', due_date: l(project.due_date, format: :full)) %>
+          <% end %>
+        </p>
+        <p class="project-supervised-by">
+          <% if project.supervised_by.present? %>
+            <%= t('projects.reports.elements.project_header.supervised_by', user: project.supervised_by.name) %>
+          <% end %>
+        </p>
+        <p class="project-status">
+          <%= t('projects.reports.elements.project_header.status_label') %>
+          <span class="status-block <%= project.status %>">
+            <%= t("projects.reports.elements.project_header.status.#{project.status}") %>
+          </span>
+        </p>
+      <% end %>
+      <br>
+      <br>
+      <div class="row">
+        <div class="col-xs-12 text-block">
+          <% if project.description.present? %>
+            <%= custom_auto_link(project.description,
+                                team: current_team,
+                                simple_format: false,
+                                base64_encoded_imgs: true) %>
+          <% end %>
+        </div>
       </div>
     </div>
+    <% if defined?(children) %>
+      <div class="report-element-children">
+        <%= children %>
+      </div>
+    <% end %>
   </div>
-  <% if defined?(children) %>
-    <div class="report-element-children">
-      <%= children %>
-    </div>
-  <% end %>
-</div>
+<% end %>
