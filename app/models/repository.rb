@@ -48,7 +48,7 @@ class Repository < RepositoryBase
   }
 
   scope :appendable_by_user, lambda { |user, teams = user.current_team|
-    readable_ids = with_granted_permissions(user, RepositoryPermissions::ROWS_CREATE).where(team: teams).pluck(:id)
+    readable_ids = with_granted_permissions(user, RepositoryPermissions::ROWS_CREATE).where(type: Extends::REPOSITORY_APPENDABLE_TYPES).where(team: teams).pluck(:id)
     shared_with_team_ids = joins(:team_shared_objects, :team).where(team_shared_objects: { team: teams, permission_level: :shared_write }).pluck(:id)
     globally_shared_ids =
       if column_names.include?('permission_level')

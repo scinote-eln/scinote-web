@@ -55,6 +55,8 @@ class Extends
                             RepositoryStockValue: 12,
                             RepositoryStockConsumptionValue: 13 }
 
+  REPOSITORY_APPENDABLE_TYPES = %w(Repository)
+
   # Data types which can be imported to repository,
   # name should match record in REPOSITORY_DATA_TYPES
   REPOSITORY_IMPORTABLE_TYPES = %i(RepositoryTextValue RepositoryListValue RepositoryNumberValue
