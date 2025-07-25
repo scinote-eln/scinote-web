@@ -781,6 +781,7 @@ class Extends
     teams/members
     user_groups/index
     user_groups/show
+    teams/automations
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
@@ -797,6 +798,34 @@ class Extends
       in_app: true
     }
   }
+
+  TEAM_AUTOMATION_GROUPS = {
+    task_automation: {
+      task_status_in_progress: %I[
+        protocol_content_added
+        step_marked_as_completed
+        task_result_added
+      ]
+    },
+    experiment_automation: {
+      experiment_status_in_progress: %I[
+        task_moves_from_not_started_to_in_progress
+      ],
+      experiment_status_done: %I[
+        all_tasks_done
+      ]
+    },
+    project_automation: {
+      project_status_in_progress: %I[
+        experiment_moves_from_not_started_to_in_progress
+      ],
+      project_status_done: %I[
+        all_experiments_done
+      ]
+    }
+  }
+
+  DEFAULT_TEAM_SETTINGS = {}
 
   WHITELISTED_USER_SETTINGS = %w(
     LabelTemplates_active_state

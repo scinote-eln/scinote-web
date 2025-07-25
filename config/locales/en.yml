@@ -3493,6 +3493,7 @@ en:
           preferences: "My preferences"
           addons: "Add-ons"
           connected_accounts: "Connected accounts"
+          automations: "Automations"
       account:
         preferences:
           head_title: "Settings | My preferences"
@@ -4331,6 +4332,28 @@ en:
       time: "%H:%M"
       short: "%H"
 
+  team_automations:
+    description: "Automate repetitive work to enhance efficiency. Enabled settings apply to all projects, experiments, and tasks in your current workspace. Automations start when enabled and don't affect past data. Manual changes remain available and will override automated updates."
+    groups:
+      task_automation: 'Task automations'
+      experiment_automation: 'Experiment automations'
+      project_automation: 'Project automations'
+    sub_groups:
+      task_status_in_progress: 'Automatically update task status to "In progress" when:'
+      task_status_done: 'Automatically update task status to "Done" when:'
+      experiment_status_in_progress: 'Automatically update experiment status to "In progress" when:'
+      experiment_status_done: 'Automatically update experiment status to "Done" when:'
+      project_status_in_progress: 'Automatically update project status to "In progress" when:'
+      project_status_done: 'Automatically update project status to "Done" when:'
+    sub_group_element:
+      protocol_content_added: 'Protocol content is added (including step comments)'
+      step_marked_as_completed: 'At least one step is marked as completed'
+      task_result_added: 'Task result is added'
+      task_moves_from_not_started_to_in_progress: 'At least one task moves from "Not started" to "In progress" or other status'
+      all_tasks_done: 'All tasks inside reach their final status.'
+      experiment_moves_from_not_started_to_in_progress: 'At least one experiment moves to "In progress" or "Done"'
+      all_experiments_done: 'All experiments inside are marked as "Done"'
+
   notifications:
     title: "Notifications"
     sub_title: "Select the updates you want to be notified about and where you receive them."
@@ -4933,6 +4956,7 @@ en:
     label_printer: "Label printer"
     fluics_printer: "Fluics printer"
     forms: "Forms"
+    settings: "Settings"
 
   Add: "Add"
   Asset: "File"
