@@ -17,12 +17,14 @@
               :forceFallback="true"
               :handle="'.element-grip'"
               item-key="field"
+              @start="startReorder"
               @end="endReorder"
             >
               <template #item="{element}">
                 <div
                   class="flex items-center gap-4 py-2.5 px-3 group/column"
                   :class="{
+                    'select-none': reordering,
                     'hover:bg-sn-super-light-grey': element.field !== 'pinnedSeparator',
                     '!py-2.5': element.field === 'pinnedSeparator',
                     'text-sn-grey': (element.field !== 'pinnedSeparator' && !columnVisbile(element))
@@ -77,7 +79,8 @@ export default {
   data() {
     return {
       currentTableState: {},
-      columnsList: []
+      columnsList: [],
+      reordering: false
     };
   },
   created() {
@@ -142,7 +145,11 @@ export default {
         ...columns.slice(pinnedAmount - 1)
       ];
     },
+    startReorder() {
+      this.reordering = true;
+    },
     endReorder(event) {
+      this.reordering = false;
       this.$nextTick(() => {
         const { newIndex } = event;
         const columnName = this.columnsList[newIndex].field;
