@@ -102,8 +102,8 @@ module Lists
 
     def due_date_cell
       {
-        value: due_date,
-        value_formatted: due_date,
+        value: object.due_date,
+        value_formatted: (I18n.l(object.due_date, format: :full_date) if object.due_date),
         editable: can_manage_experiment?(object),
         icon: (if object.one_day_prior? && !object.done?
                  'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
@@ -115,8 +115,8 @@ module Lists
 
     def start_date_cell
       {
-        value: start_date,
-        value_formatted: start_date,
+        value: object.start_date,
+        value_formatted: (I18n.l(object.start_date, format: :full_date) if object.start_date),
         editable: can_manage_experiment?(object)
       }
     end
@@ -125,16 +125,6 @@ module Lists
       {
         manage: can_manage_experiment?(object)
       }
-    end
-
-    private
-
-    def due_date
-      I18n.l(object.due_date, format: :full_date) if object.due_date
-    end
-
-    def start_date
-      I18n.l(object.start_date, format: :full_date) if object.start_date
     end
   end
 end
