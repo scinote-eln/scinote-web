@@ -27,7 +27,7 @@ describe RepositoriesController, type: :controller do
         'name', 'code', 'nr_of_rows', 'shared', 'shared_label', 'ishared', 'team',
         'created_at', 'created_by', 'archived_on', 'archived_by', 'urls', 'shared_read',
         'shared_write', 'shareable_write', 'assigned_users', 'default_public_user_role_id',
-        'permissions', 'top_level_assignable'
+        'permissions', 'top_level_assignable', 'current_team'
       )
     end
   end
