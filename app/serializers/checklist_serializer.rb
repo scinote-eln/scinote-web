@@ -6,7 +6,9 @@ class ChecklistSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :name, :urls, :icon, :sa_name, :checklist_items, :parent_type
+  attributes :id, :name, :urls, :icon, :sa_name, :parent_type
+
+  has_many :checklist_items, serializer: ChecklistItemSerializer
 
   def icon
     'sn-icon-checkllist'
