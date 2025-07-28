@@ -15,7 +15,7 @@ module Api
           timestamps_filter(
             Protocol.latest_available_versions(@team)
           )
-          .viewable_by_user(current_user, @team)
+          .readable_by_user(current_user, @team)
           .page(params.dig(:page, :number))
           .per(params.dig(:page, :size))
 

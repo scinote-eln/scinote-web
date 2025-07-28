@@ -26,31 +26,20 @@ module Shareable
       end
     end
 
-    scope :viewable_by_user, lambda { |user, teams = user.current_team|
-      teams = Team.where(id: teams.id) if teams.is_a?(Team) # handle single team
-      readable_ids = if permission_class == StorageLocation
-                       readable_by_user(user).where(team: teams).pluck(:id)
-                     else
-                       with_granted_permissions(user, "#{permission_class.name}Permissions::READ".constantize, teams).or(
-                         where(team: teams.with_granted_permissions(user, TeamPermissions::MANAGE))
-                       ).pluck(:id)
-                     end
-      shared_with_team_ids = joins(:team_shared_objects, :team).where(team_shared_objects: { team: teams }).pluck(:id)
-      globally_shared_ids =
+    scope :shared_with_team, lambda { |team|
+      directly_shared = joins(:team_shared_objects, :team).where(team_shared_objects: { team: team })
+      globally_shared =
         if column_names.include?('permission_level')
-          joins(:team).where(
-            {
-              permission_level: [
-                Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
-                Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]
-              ]
-            }
-          ).pluck(:id)
+          where(
+            permission_level: [
+              Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
+              Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]
+            ]
+          )
         else
-          none.pluck(:id)
+          none
         end
-
-      where(id: (readable_ids + shared_with_team_ids + globally_shared_ids).uniq)
+      where(id: directly_shared.select(:id)).or(where(id: globally_shared.select(:id)))
     }
   rescue ActiveRecord::NoDatabaseError,
          ActiveRecord::ConnectionNotEstablished,

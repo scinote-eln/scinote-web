@@ -28,10 +28,8 @@ module SmartAnnotations
           if type == 'rep_item'
             repository_item(value[:name], user, team, type, object, preview_repository)
           else
-            next unless object && SmartAnnotations::PermissionEval.check(user,
-                                                                         team,
-                                                                         type,
-                                                                         object)
+            next unless object && SmartAnnotations::PermissionEval.check(user, type, object)
+
             SmartAnnotations::HtmlPreview.html(nil, type, object)
           end
         rescue ActiveRecord::RecordNotFound
@@ -42,7 +40,7 @@ module SmartAnnotations
 
     def repository_item(name, user, team, type, object, preview_repository)
       if object&.repository
-        return unless SmartAnnotations::PermissionEval.check(user, team, type, object)
+        return unless SmartAnnotations::PermissionEval.check(user, type, object)
 
         return SmartAnnotations::HtmlPreview.html(nil, type, object, preview_repository)
       end

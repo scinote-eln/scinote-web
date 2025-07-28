@@ -150,16 +150,13 @@ class Protocol < ApplicationRecord
     teams = options[:teams] || current_team || user.teams.select(:id)
 
     protocol_templates = if options[:options]&.dig(:in_repository).present? || options[:options].blank?
-                           templates = latest_available_versions(teams)
-                                       .with_granted_permissions(user, ProtocolPermissions::READ)
+                           templates = latest_available_versions(teams).readable_by_user(user, teams)
                            templates = templates.active unless include_archived
                            templates
                          end || []
 
     protocol_my_modules = if options[:options]&.dig(:in_repository).blank?
-                            protocols = viewable_by_user_my_module_protocols(user, teams)
-                                        .where(protocol_type: [Protocol.protocol_types[:unlinked],
-                                                               Protocol.protocol_types[:linked]])
+                            protocols = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, teams) })
                             unless include_archived
                               protocols = protocols.joins(my_module: { experiment: :project })
                                                    .active
@@ -180,6 +177,15 @@ class Protocol < ApplicationRecord
                 end
 
     protocols.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: protocols })
+  end
+
+  def self.search_by_search_fields_with_boolean(user, teams = [], query = nil, search_fields = [], options = {})
+    protocol_templates = latest_available_versions(teams).readable_by_user(user, teams)
+    protocol_my_modules = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, teams) })
+
+    where('protocols.id IN ((?) UNION (?))', protocol_templates.select(:id), protocol_my_modules.select(:id))
+      .where_attributes_like_boolean(search_fields, query, options)
+      .limit(options[:limit] || Constants::SEARCH_LIMIT)
   end
 
   def self.search_subquery(query, raw_input)
@@ -227,35 +233,6 @@ class Protocol < ApplicationRecord
                          .select('DISTINCT ON (parent_id) id')
 
     where('protocols.id IN ((?) UNION ALL (?))', original_without_versions, published_versions)
-  end
-
-  def self.viewable_by_user(user, teams, options = {})
-    if options[:fetch_latest_versions]
-      protocol_templates = latest_available_versions(teams)
-                           .with_granted_permissions(user, ProtocolPermissions::READ)
-                           .select(:id)
-      protocol_my_modules = viewable_by_user_my_module_protocols(user, teams).select(:id)
-
-      where('protocols.id IN ((?) UNION (?))', protocol_templates, protocol_my_modules)
-    else
-      # Team owners see all protocol templates in the team
-      owner_role = UserRole.find_predefined_owner_role
-      protocols = Protocol.where(team: teams)
-                          .where(protocol_type: REPOSITORY_TYPES)
-      viewable_as_team_owner = protocols.joins("INNER JOIN user_assignments team_user_assignments " \
-                                               "ON team_user_assignments.assignable_type = 'Team' " \
-                                               "AND team_user_assignments.assignable_id = protocols.team_id")
-                                        .where(team_user_assignments: { user_id: user, user_role_id: owner_role })
-                                        .select(:id)
-      viewable_as_assigned = protocols.with_granted_permissions(user, ProtocolPermissions::READ).select(:id)
-
-      where('protocols.id IN ((?) UNION (?))', viewable_as_team_owner, viewable_as_assigned)
-    end
-  end
-
-  def self.viewable_by_user_my_module_protocols(user, teams)
-    distinct.joins(:my_module)
-            .where(my_modules: { id: MyModule.viewable_by_user(user, teams).select(:id) })
   end
 
   def self.filter_by_teams(teams = [])

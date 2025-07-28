@@ -15,7 +15,8 @@ class ProjectsController < ApplicationController
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(update create_tag assigned_users_list show)
+  before_action :load_projects, only: %i(index actions_toolbar)
+  before_action :load_project, only: %i(update create_tag assigned_users_list show)
   before_action :load_current_folder, only: :index
   before_action :check_read_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
@@ -31,9 +32,9 @@ class ProjectsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        projects = Lists::ProjectsService.new(current_team, current_user, current_folder, params).call
-        render json: projects, each_serializer: Lists::ProjectAndFolderSerializer, user: current_user,
-               meta: pagination_dict(projects)
+        projects_list = Lists::ProjectsService.new(current_team, @projects, @current_folder, params, user: current_user).call
+        render json: projects_list, each_serializer: Lists::ProjectAndFolderSerializer, user: current_user,
+               meta: pagination_dict(projects_list)
       end
       format.html do
         render 'projects/index'
@@ -53,10 +54,10 @@ class ProjectsController < ApplicationController
   end
 
   def inventory_assigning_project_filter
-    viewable_experiments = Experiment.viewable_by_user(current_user, current_team)
+    viewable_experiments = Experiment.readable_by_user(current_user, current_team)
     assignable_my_modules = MyModule.repository_row_assignable_by_user(current_user)
 
-    projects = Project.viewable_by_user(current_user, current_team)
+    projects = Project.readable_by_user(current_user, current_team)
                       .active
                       .joins(experiments: :my_modules)
                       .where(experiments: { id: viewable_experiments })
@@ -300,11 +301,16 @@ class ProjectsController < ApplicationController
   end
 
   def actions_toolbar
+    project_ids = JSON.parse(params[:items]).select { |i| i['type'] == 'projects' }.pluck('id')
+    project_folder_ids = JSON.parse(params[:items]).select { |i| i['type'] == 'project_folders' }.pluck('id')
+    selected_projects = @projects.where(id: project_ids)
+    selected_project_folders = current_user.current_team.project_folders.where(id: project_folder_ids)
     render json: {
       actions:
         Toolbars::ProjectsService.new(
-          current_user,
-          items: JSON.parse(params[:items])
+          selected_projects,
+          selected_project_folders,
+          current_user
         ).actions
     }
   end
@@ -332,7 +338,16 @@ class ProjectsController < ApplicationController
     params.require(:project).require(:view_type)
   end
 
-  def load_vars
+  def load_projects
+    @projects = if can_manage_team?(current_team)
+                  # Team owners see all projects in the team
+                  current_team.projects
+                else
+                  current_team.projects.readable_by_user(current_user, current_team)
+                end
+  end
+
+  def load_project
     @project = Project.find_by(id: params[:id] || params[:project_id])
 
     render_404 unless @project

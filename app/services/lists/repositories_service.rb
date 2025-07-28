@@ -15,6 +15,7 @@ module Lists
                           .select('MAX(creators.full_name) AS created_by_user')
                           .select('MAX(archivers.full_name) AS archived_by_user')
                           .select(shared_sql_select)
+                          .preload(:team_assignments, :user_group_assignments, user_assignments: %i(user user_role))
                           .group('repositories.id')
 
       view_mode = @params[:view_mode] || 'active'

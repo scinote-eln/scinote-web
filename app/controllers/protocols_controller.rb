@@ -79,8 +79,13 @@ class ProtocolsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        protocols = Lists::ProtocolsService.new(Protocol.viewable_by_user(current_user, @current_team), params).call
-        render json: protocols,
+        protocols = if can_manage_team?(current_team)
+                      # Team owners see all protocol templates in the team
+                      current_team.repository_protocols
+                    else
+                      current_team.repository_protocols.readable_by_user(current_user, current_team)
+                    end
+        render json: Lists::ProtocolsService.new(protocols, params).call,
                each_serializer: Lists::ProtocolSerializer,
                user: current_user,
                meta: pagination_dict(protocols)
