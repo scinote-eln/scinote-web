@@ -403,6 +403,17 @@ export default {
       });
       $.get(this.urls.steps_url, (result) => {
         this.steps = result.data;
+        this.steps.forEach((step) => {
+          step.attachments = []
+          step.relationships.assets.data.forEach((asset) => {
+            step.attachments.push(result.included.find((a) => a.id === asset.id && a.type === 'assets'));
+          });
+
+          step.elements = [];
+          step.relationships.step_orderable_elements.data.forEach((element) => {
+            step.elements.push(result.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
+          });
+        });
       });
     });
   },
