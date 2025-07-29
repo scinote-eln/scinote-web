@@ -19,6 +19,8 @@ class MoveEveryOneElseAssignmentToTeamAssignments < ActiveRecord::Migration[7.2]
                     .find_each do |shared_obj|
                       next if shared_obj.shared_repository.blank?
 
+                      shared_obj.shared_repository.user_assignments.where(team_id: shared_obj.team_id).update_all(assigned: :manually)
+
                       shared_obj.shared_repository.user_assignments.where(team_id: shared_obj.team_id, user_role: normal_user_role).delete_all
                       shared_obj.shared_repository.team_assignments.find_or_create_by!(team_id: shared_obj.team_id, user_role: normal_user_role)
                     end
