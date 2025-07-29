@@ -11,13 +11,11 @@ module Api
       end
 
       def index
-        protocol_templates =
-          timestamps_filter(
-            Protocol.latest_available_versions(@team)
-          )
-          .readable_by_user(current_user, @team)
-          .page(params.dig(:page, :number))
-          .per(params.dig(:page, :size))
+        protocol_templates = timestamps_filter(Protocol.latest_available_versions(@team))
+        # Team owners see all protocol templates in the team
+        protocol_templates = protocol_templates.readable_by_user(current_user, @team) unless can_manage_team?(@team)
+        protocol_templates = protocol_templates.page(params.dig(:page, :number))
+                                               .per(params.dig(:page, :size))
 
         render jsonapi: protocol_templates,
                each_serializer: ProtocolTemplateSerializer, rte_rendering: render_rte?, team: @team

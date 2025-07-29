@@ -85,10 +85,11 @@ class ProtocolsController < ApplicationController
                     else
                       current_team.repository_protocols.readable_by_user(current_user, current_team)
                     end
-        render json: Lists::ProtocolsService.new(protocols, params).call,
+        protocols_list = Lists::ProtocolsService.new(protocols, params).call
+        render json: protocols_list,
                each_serializer: Lists::ProtocolSerializer,
                user: current_user,
-               meta: pagination_dict(protocols)
+               meta: pagination_dict(protocols_list)
       end
       format.html do
         render 'index'
