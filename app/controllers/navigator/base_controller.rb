@@ -70,7 +70,11 @@ module Navigator
                                           (projects.archived IS TRUE AND experiments.id IS  NOT NULL)
                                      THEN 1 ELSE 0 END) > 0 AS has_children'
                          end
-      disabled_sql = 'SUM(CASE WHEN project_user_roles IS NULL THEN 0 ELSE 1 END) < 1 AS disabled'
+      disabled_sql = 'SUM(CASE
+                          WHEN project_user_roles IS NULL AND
+                               project_user_group_roles IS NULL AND
+                               project_team_roles IS NULL
+                          THEN 0 ELSE 1 END) < 1 AS disabled'
 
       projects =
         if can_manage_team?(current_team)
@@ -88,7 +92,25 @@ module Navigator
                         AND project_user_assignments.user_id = #{current_user.id}
                       LEFT OUTER JOIN user_roles project_user_roles
                         ON project_user_roles.id = project_user_assignments.user_role_id
-                        AND project_user_roles.permissions @> ARRAY['#{ProjectPermissions::READ}']::varchar[]")
+                        AND project_user_roles.permissions @> ARRAY['#{ProjectPermissions::READ}']::varchar[]
+                      LEFT OUTER JOIN user_group_assignments project_user_group_assignments
+                        ON project_user_group_assignments.assignable_type = 'Project'
+                        AND project_user_group_assignments.assignable_id = projects.id
+                        AND project_user_group_assignments.user_group_id IN (
+                          SELECT user_group_memberships.user_group_id FROM user_group_memberships
+                          WHERE user_group_memberships.user_id = #{current_user.id}
+                        )
+                      LEFT OUTER JOIN user_roles project_user_group_roles
+                        ON project_user_group_roles.id = project_user_group_assignments.user_role_id
+                        AND project_user_group_roles.permissions @> ARRAY['#{ProjectPermissions::READ}']::varchar[]
+                      LEFT OUTER JOIN team_assignments project_team_assignments
+                        ON project_team_assignments.assignable_type = 'Project'
+                        AND project_team_assignments.assignable_id = projects.id
+                        AND project_team_assignments.team_id = #{current_team.id}
+                      LEFT OUTER JOIN user_roles project_team_roles
+                        ON project_team_roles.id = project_team_assignments.user_role_id
+                        AND project_team_roles.permissions @> ARRAY['#{ProjectPermissions::READ}']::varchar[]
+              ")
               .where('projects.archived = :archived OR
                       (
                         (
