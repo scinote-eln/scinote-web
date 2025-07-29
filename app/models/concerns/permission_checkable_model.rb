@@ -27,6 +27,16 @@ module PermissionCheckableModel
         .or(where(id: with_granted_group_permissions.reselect(:id)))
     }
 
+    scope :readable_by_user, lambda { |user, teams = user.permission_team|
+      read_permission = "::#{self.class.to_s.split('::').first}Permissions".constantize::READ
+      with_granted_permissions(user, read_permission, teams)
+    }
+
+    scope :managable_by_user, lambda { |user, teams = user.permission_team|
+      manage_permission = "::#{self.class.to_s.split('::').first}Permissions".constantize::MANAGE
+      with_granted_permissions(user, manage_permission, teams)
+    }
+
     def self.permission_class
       self
     end

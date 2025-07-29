@@ -7,12 +7,10 @@ module Toolbars
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers
 
-    def initialize(current_user, current_team, repository_ids: [])
+    def initialize(repositories, current_user)
+      @repositories = repositories
       @current_user = current_user
-      @current_team = current_team
-      @repositories = Repository.viewable_by_user(current_user)
-                                .where(id: repository_ids)
-                                .distinct
+      @current_team = current_user.current_team
       @repository = @repositories.first
       @archived_state = @repositories.all.any?(&:archived?)
       @single = @repositories.uniq.length == 1

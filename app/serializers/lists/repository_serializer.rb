@@ -38,7 +38,9 @@ module Lists
     end
 
     def assigned_users
-      users = object.user_assignments.where(team: current_user.current_team).map do |ua|
+      users = object.user_assignments.filter_map do |ua|
+        next unless ua.team_id == current_user.current_team.id
+
         {
           avatar: avatar_path(ua.user, :icon_small),
           full_name: ua.user_name_with_role

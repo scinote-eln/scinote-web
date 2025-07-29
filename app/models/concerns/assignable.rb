@@ -24,71 +24,6 @@ module Assignable
              class_name: 'TeamAssignment',
              inverse_of: :assignable
 
-    scope :readable_by_user, lambda { |user, teams = user.permission_team|
-      read_permission = "::#{self.class.to_s.split('::').first}Permissions".constantize::READ
-      with_user_assignments = joins(user_assignments: :user_role)
-                              .where(user_assignments: { user: user, team: teams })
-
-      # direct user assignments take precedence over group assignments, thus skipping objects that already have user assignments.
-      with_group_assignments = left_outer_joins(user_group_assignments: [:user_role, { user_group: :users }], team_assignments: :user_role)
-                               .where.not(id: with_user_assignments)
-
-      with_granted_user_permissions = with_user_assignments.where('? = ANY(user_roles.permissions)', read_permission)
-      with_granted_group_permissions = with_group_assignments
-                                       .where(user_group_assignments: { assignable: self, user_groups: { users: user } })
-                                       .where('? = ANY(user_roles.permissions)', read_permission)
-                                       .or(
-                                         with_group_assignments
-                                         .where(team_assignments: { assignable: self, team: teams })
-                                         .where('? = ANY(user_roles.permissions)', read_permission)
-                                       )
-                                       .distinct
-
-      shared_objects =
-        if klass.new.respond_to?(:shared_with?)
-          joins(team_shared_objects: :team)
-            .where(team_shared_objects: { team: teams })
-            .where(teams: { id: Team.with_granted_permissions(user, TeamPermissions::MANAGE) })
-        else
-          none
-        end
-
-      globally_shared_objects =
-        if klass.new.respond_to?(:permission_level)
-          where(permission_level: %i(shared_read shared_write))
-        else
-          none
-        end
-
-      where(id: with_granted_user_permissions.reselect(:id))
-        .or(where(id: with_granted_group_permissions.reselect(:id)))
-        .or(where(id: shared_objects.select(:id)))
-        .or(where(id: globally_shared_objects.select(:id)))
-    }
-
-    scope :managable_by_user, lambda { |user, teams = user.permission_team|
-      manage_permission = "::#{self.class.to_s.split('::').first}Permissions".constantize::MANAGE
-      with_user_assignments = joins(user_assignments: :user_role)
-                              .where(user_assignments: { user: user, team: teams })
-
-      # direct user assignments take precedence over group assignments, thus skipping objects that already have user assignments.
-      with_group_assignments = left_outer_joins(user_group_assignments: [:user_role, { user_group: :users }], team_assignments: :user_role)
-                               .where.not(id: with_user_assignments)
-
-      with_granted_user_permissions = with_user_assignments.where('? = ANY(user_roles.permissions)', manage_permission)
-      with_granted_group_permissions = with_group_assignments
-                                       .where(user_group_assignments: { assignable: self, user_groups: { users: user } })
-                                       .where('? = ANY(user_roles.permissions)', manage_permission)
-                                       .or(
-                                         with_group_assignments
-                                         .where(team_assignments: { assignable: self, team: teams })
-                                         .where('? = ANY(user_roles.permissions)', manage_permission)
-                                       )
-                                       .distinct
-      where(id: with_granted_user_permissions.reselect(:id))
-        .or(where(id: with_granted_group_permissions.reselect(:id)))
-    }
-
     after_create :create_users_assignments
 
     def users
@@ -107,7 +42,11 @@ module Assignable
     end
 
     def default_public_user_role_id(current_team = nil)
-      team_assignments.where(team_id: (current_team || team).id).pick(:user_role_id)
+      if team_assignments.loaded?
+        team_assignments.find { |ta| ta.team_id == (current_team || team).id }&.user_role_id
+      else
+        team_assignments.where(team_id: (current_team || team).id).pick(:user_role_id)
+      end
     end
 
     def has_permission_children?

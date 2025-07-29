@@ -78,9 +78,9 @@ class TeamSharedObjectsController < ApplicationController
   def load_vars
     case params[:object_type]
     when 'Repository'
-      @model = Repository.viewable_by_user(current_user).find_by(id: params[:object_id])
+      @model = Repository.readable_by_user(current_user).find_by(id: params[:object_id])
     when 'StorageLocation'
-      @model = StorageLocation.viewable_by_user(current_user).find_by(id: params[:object_id])
+      @model = StorageLocation.readable_by_user(current_user).find_by(id: params[:object_id])
     end
 
     render_404 unless @model

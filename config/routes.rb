@@ -851,7 +851,6 @@ Rails.application.routes.draw do
       end
 
       collection do
-        get :sidebar
         get 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
         get 'export_repository_stock_items_modal'
         get :rows_to_print, to: 'repository_rows#rows_to_print'

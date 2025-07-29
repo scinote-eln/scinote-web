@@ -67,7 +67,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def full_view_sidebar
-    @repository = Repository.viewable_by_user(current_user, current_team).find_by(id: params[:repository_id])
+    @repository = Repository.readable_by_user(current_user, current_team).find_by(id: params[:repository_id])
     @repository_snapshots = @my_module.repository_snapshots
                                       .where(parent_id: params[:repository_id])
                                       .order(created_at: :desc)

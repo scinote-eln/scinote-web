@@ -166,7 +166,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def repositories_dropdown_list
-    @repositories = Repository.viewable_by_user(current_user).joins("
+    @repositories = Repository.readable_by_user(current_user).joins("
                                 LEFT OUTER JOIN repository_rows ON
                                   repository_rows.repository_id = repositories.id
                                 LEFT OUTER JOIN my_module_repository_rows ON

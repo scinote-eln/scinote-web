@@ -72,16 +72,12 @@ class Experiment < ApplicationRecord
   )
     teams = options[:teams] || current_team || user.teams.select(:id)
 
-    new_query = distinct.viewable_by_user(user, teams)
+    new_query = distinct.readable_by_user(user, teams)
                         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
     new_query = new_query.joins(:project).active.where(projects: { archived: false }) unless include_archived
 
     new_query
-  end
-
-  def self.viewable_by_user(user, teams)
-    with_granted_permissions(user, ExperimentPermissions::READ, teams)
   end
 
   def self.with_children_viewable_by_user(user)
@@ -90,15 +86,13 @@ class Experiment < ApplicationRecord
     joins("
       LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id
       LEFT OUTER JOIN user_assignments my_module_user_assignments
-        ON my_module_user_assignments.assignable_id = my_modules.id AND
-           my_module_user_assignments.assignable_type = 'MyModule'
+        ON my_module_user_assignments.assignable_id = my_modules.id
+        AND my_module_user_assignments.assignable_type = 'MyModule'
+        AND my_module_user_assignments.user_id = #{user.id}
       LEFT OUTER JOIN user_roles my_module_user_roles
         ON my_module_user_roles.id = my_module_user_assignments.user_role_id
+        AND my_module_user_roles.permissions @> ARRAY['#{MyModulePermissions::READ}', '#{MyModulePermissions::NONE}']::varchar[]
     ")
-      .where('
-        (my_module_user_assignments.user_id = ? AND my_module_user_roles.permissions @> ARRAY[?]::varchar[]
-          OR my_modules.id IS NULL OR my_module_user_roles.permissions @> ARRAY[?]::varchar[])
-      ', user.id, MyModulePermissions::READ, MyModulePermissions::NONE)
   end
 
   def self.filter_by_teams(teams = [])
