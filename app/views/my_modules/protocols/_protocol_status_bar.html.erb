@@ -1,10 +1,10 @@
 <div class="flex items-center dropdown my-module-protocol-status whitespace-nowrap">
   <% if @protocol.linked? %>
-    <span class="status-label linked">
+    <span class="status-label linked" data-e2e="e2e-TX-task-protocol-statusLinked">
       [<%= t("my_modules.protocols.protocol_status_bar.linked") %>]
     </span>
   <% else %>
-    <span class="status-label">
+    <span class="status-label" data-e2e="e2e-TX-task-protocol-statusUnlinked">
       [<%= t("my_modules.protocols.protocol_status_bar.unlinked") %>]
     </span>
   <% end %>

@@ -1,18 +1,26 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="document" data-e2e="e2e-MD-protocol-addProtocolSteps">
       <form @submit.prevent="submit">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              data-e2e="e2e-BT-protocol-addProtocolStepsModal-close"
+            >
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 class="modal-title truncate !block" >
+            <h4 class="modal-title truncate !block" data-e2e="e2e-TX-protocol-addProtocolStepsModal-title">
               {{ i18n.t('protocols.steps.modals.add_protocol_steps.title') }}
             </h4>
           </div>
           <div class="modal-body">
-            <p class="mb-6">{{ i18n.t('protocols.steps.modals.add_protocol_steps.description')}}</p>
+            <p class="mb-6" data-e2e="e2e-TX-protocol-addProtocolStepsModal-description">
+              {{ i18n.t('protocols.steps.modals.add_protocol_steps.description')}}
+            </p>
             <div class="mb-6">
               <label class="sci-label">{{ i18n.t('protocols.steps.modals.add_protocol_steps.protocol_label') }}</label>
               <SelectDropdown
@@ -21,6 +29,7 @@
                 :searchable="true"
                 :value="selectedProtocol"
                 @change="selectedProtocol = $event"
+                :e2eValue="'e2e-DD-protocol-addProtocolStepsModal-selectProtocol'"
               ></SelectDropdown>
             </div>
             <div class="relative">
@@ -36,12 +45,25 @@
                 :searchable="true"
                 :value="selectedSteps"
                 @change="selectedSteps= $event"
+                :e2eValue="'e2e-DD-protocol-addProtocolStepsModal-selectSteps'"
               ></SelectDropdown>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" :disabled="submitting || !validObject" type="submit">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              data-e2e="e2e-BT-protocol-addProtocolStepsModal-cancel"
+            >
+              {{ i18n.t('general.cancel') }}
+            </button>
+            <button
+              class="btn btn-primary"
+              :disabled="submitting || !validObject"
+              type="submit"
+              data-e2e="e2e-BT-protocol-addProtocolStepsModal-addSteps"
+            >
               {{ i18n.t('protocols.steps.modals.add_protocol_steps.confirm') }}
             </button>
           </div>
