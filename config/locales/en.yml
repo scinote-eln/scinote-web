@@ -4340,6 +4340,7 @@ en:
       project_automation: 'Project automations'
     sub_groups:
       task_status_in_progress: 'Automatically update task status to "In progress" when:'
+      task_status_completed: 'Automatically update task status to “Completed” when:'
       task_status_done: 'Automatically update task status to "Done" when:'
       experiment_status_in_progress: 'Automatically update experiment status to "In progress" when:'
       experiment_status_done: 'Automatically update experiment status to "Done" when:'
@@ -4353,6 +4354,7 @@ en:
       all_tasks_done: 'All tasks inside reach their final status.'
       experiment_moves_from_not_started_to_in_progress: 'At least one experiment moves to "In progress" or "Done"'
       all_experiments_done: 'All experiments inside are marked as "Done"'
+      all_my_module_steps_marked_as_completed: 'All steps are marked as done'
 
   notifications:
     title: "Notifications"

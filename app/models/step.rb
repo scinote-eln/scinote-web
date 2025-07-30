@@ -3,6 +3,7 @@ class Step < ApplicationRecord
   include SearchableByNameModel
   include TinyMceImages
   include ViewableModel
+  include ObservableModel
 
   attr_accessor :skip_position_adjust # to be used in bulk deletion
 
@@ -184,6 +185,10 @@ class Step < ApplicationRecord
   end
 
   private
+
+  def run_observers
+    AutomationObservers::AllCheckedStepsAutomationObserver.new(my_module, last_modified_by).call if saved_change_to_completed? && completed
+  end
 
   def duplicate_table(new_step, user, table)
     table.duplicate(new_step, user, table.step_table.step_orderable_element.position)
