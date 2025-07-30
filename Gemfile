@@ -70,7 +70,6 @@ gem 'rubyzip', '>= 2.3.0' # will load new rubyzip version
 gem 'scenic', '~> 1.4'
 gem 'sdoc', '~> 1.0', group: :doc
 gem 'silencer' # Silence certain Rails logs
-gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'turbolinks', '~> 5.2.0'
 gem 'underscore-rails'
 gem 'wicked_pdf'
@@ -95,8 +94,11 @@ gem 'js-routes'
 gem 'tailwindcss-rails', '~> 2.4'
 
 gem 'base62' # Used for smart annotations
-gem 'datadog'
 gem 'newrelic_rpm'
+gem 'opentelemetry-exporter-otlp'
+gem 'opentelemetry-instrumentation-rails'
+gem 'opentelemetry-propagator-xray'
+gem 'opentelemetry-sdk'
 
 # Permission helper Gem
 gem 'canaid', git: 'https://github.com/scinote-eln/canaid'
