@@ -97,6 +97,10 @@ gem 'tailwindcss-rails', '~> 2.4'
 gem 'base62' # Used for smart annotations
 gem 'datadog'
 gem 'newrelic_rpm'
+gem 'opentelemetry-exporter-otlp', '~> 0.30.0'
+gem 'opentelemetry-instrumentation-rails', '~> 0.36.0'
+gem 'opentelemetry-propagator-xray', '~> 0.24.0'
+gem 'opentelemetry-sdk', '~> 1.8'
 
 # Permission helper Gem
 gem 'canaid', git: 'https://github.com/scinote-eln/canaid'
