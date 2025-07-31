@@ -162,13 +162,13 @@ module Lists
 
       urls_list[:show_access] = access_permissions_project_path(object)
       urls_list[:show_user_group_assignments_access] = show_user_group_assignments_access_permissions_project_path(object)
+      urls_list[:user_group_members] = users_users_settings_team_user_groups_path(team_id: object.team.id)
       if project? && users_managable?
         urls_list[:assigned_users] = assigned_users_list_project_path(object)
         urls_list[:update_access] = access_permissions_project_path(object)
         urls_list[:new_access] = new_access_permissions_project_path(id: object.id)
         urls_list[:unassigned_user_groups] = unassigned_user_groups_access_permissions_project_path(id: object.id)
         urls_list[:create_access] = access_permissions_projects_path(id: object.id)
-        urls_list[:user_group_members] = users_users_settings_team_user_groups_path(team_id: object.team.id)
       end
 
       urls_list
