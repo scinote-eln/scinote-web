@@ -22,8 +22,6 @@ module Lists
                     MAX(users.full_name) as created_by_full_name,
                     CASE WHEN storage_locations.container THEN -1 ELSE COUNT(sub_locations.id) END AS sub_location_count'
                  ).group(:id)
-
-      @records = @records.readable_by_user(@user, @user.current_team) unless parent_id
     end
 
     def filter_records
