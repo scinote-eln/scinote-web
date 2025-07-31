@@ -5,6 +5,7 @@ module Lists
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers
     include ShareableSerializer
+    include AssignmentsHelper
 
     attributes :name, :code, :nr_of_rows, :team, :created_at, :created_by, :archived_on, :archived_by,
                :urls, :top_level_assignable, :default_public_user_role_id, :assigned_users, :permissions
@@ -38,23 +39,7 @@ module Lists
     end
 
     def assigned_users
-      users = object.user_assignments.filter_map do |ua|
-        next unless ua.team_id == current_user.current_team.id
-
-        {
-          avatar: avatar_path(ua.user, :icon_small),
-          full_name: ua.user_name_with_role
-        }
-      end
-
-      user_groups = object.user_group_assignments.map do |ua|
-        {
-          avatar: ActionController::Base.helpers.asset_path('icon/group.svg'),
-          full_name: ua.user_group_name_with_role
-        }
-      end
-
-      users + user_groups
+      prepare_assigned_users
     end
 
     def permissions

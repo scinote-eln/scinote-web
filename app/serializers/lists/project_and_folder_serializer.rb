@@ -5,6 +5,7 @@ module Lists
     include Rails.application.routes.url_helpers
     include Canaid::Helpers::PermissionsHelper
     include CommentHelper
+    include AssignmentsHelper
 
     attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder, :hidden, :completed_experiments, :completed_tasks, :total_tasks,
                :folder_info, :default_public_user_role_id, :team, :top_level_assignable, :supervised_by, :total_experiments,
@@ -85,21 +86,7 @@ module Lists
     def users
       return unless project?
 
-      users = object.user_assignments.map do |ua|
-        {
-          avatar: avatar_path(ua.user, :icon_small),
-          full_name: ua.user_name_with_role
-        }
-      end
-
-      user_groups = object.user_group_assignments.map do |ua|
-        {
-          avatar: ActionController::Base.helpers.asset_path('icon/group.svg'),
-          full_name: ua.user_group_name_with_role
-        }
-      end
-
-      user_groups + users
+      prepare_assigned_users
     end
 
     def comments
