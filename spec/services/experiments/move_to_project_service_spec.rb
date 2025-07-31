@@ -12,7 +12,7 @@ describe Experiments::MoveToProjectService do
     create :project, team: team, created_by: user
   end
   let(:experiment) do
-    create :experiment, :with_tasks, name: 'MyExp', project: project
+    create :experiment, :with_tasks, name: 'MyExp', project: project, created_by: user
   end
   let(:service_call) do
     Experiments::MoveToProjectService.call(experiment_id: experiment.id,
@@ -95,8 +95,9 @@ describe Experiments::MoveToProjectService do
     end
 
     it 'returns error if teams is not the same' do
-      t = create :team
-      project.update(team: t)
+      another_team = create :team
+      wrong_project = create :project, team: another_team
+      service_call = Experiments::MoveToProjectService.call(experiment_id: experiment.id, project_id: wrong_project.id, user_id: user.id)
 
       expect(service_call.errors).to have_key(:target_project_not_valid)
     end

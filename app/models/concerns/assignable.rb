@@ -53,8 +53,12 @@ module Assignable
       false
     end
 
-    def role_for_user(user)
-      user_assignments.find_by(user: user)&.user_role
+    def role_for_user(user, team)
+      user_assignments.find_by(user: user, team: team)&.user_role ||
+        user_group_assignments.joins(user_group: :user_group_memberships)
+                              .where(team: team, user_groups: { user_group_memberships: { user_id: user.id } })
+                              .last&.user_role ||
+        team_assignments.find_by(team: team)&.user_role
     end
 
     def manually_assigned_users
@@ -116,7 +120,7 @@ module Assignable
       role = if top_level_assignable?
                UserRole.find_predefined_owner_role
              else
-               permission_parent.user_assignments.find_by(user: created_by).user_role
+               permission_parent.role_for_user(created_by, team)
              end
 
       UserAssignment.create!(
