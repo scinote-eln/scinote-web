@@ -61,8 +61,37 @@ module Assignable
       User.joins(:user_assignments).where(user_assignments: { assigned: :manually, assignable: self })
     end
 
-    def assigned_users
-      User.joins(:user_assignments).where(user_assignments: { assignable: self })
+    def assigned_users(team)
+      team_assignment = team_assignments.find_by(team: team)
+
+      users = User.where(id: user_assignments.where(team: team))
+      users = users.or(User.where(id: team_assignment.team.users.select(:id))) if team_assignment
+
+      users
+    end
+
+    def assigned_users_with_roles(team)
+      users = []
+      user_assignments.where(team: team).includes(:user, :user_role).find_each do |ua|
+        users << {
+          user: ua.user,
+          role: ua.user_role,
+          type: :user_assignment
+        }
+      end
+
+      team_assignment = team_assignments.find_by(team: team)
+      if team_assignment
+        User.where.not(id: user_assignments.select(:user_id)).where(id: team_assignment.team.users.select(:id)).find_each do |user|
+          users << {
+            user: user,
+            role: team_assignment.user_role,
+            type: :team_assignment
+          }
+        end
+      end
+
+      users
     end
 
     def top_level_assignable?

@@ -4,6 +4,7 @@ module Lists
   class ProtocolSerializer < ActiveModel::Serializer
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers
+    include AssignmentsHelper
 
     attributes :name, :code, :keywords, :linked_tasks, :nr_of_versions, :assigned_users, :published_by,
                :published_on, :updated_at, :archived_by, :archived_on, :urls,
@@ -38,21 +39,7 @@ module Lists
     end
 
     def assigned_users
-      users = object.user_assignments.map do |ua|
-        {
-          avatar: avatar_path(ua.user, :icon_small),
-          full_name: ua.user_name_with_role
-        }
-      end
-
-      user_groups = object.user_group_assignments.map do |ua|
-        {
-          avatar: ActionController::Base.helpers.asset_path('icon/group.svg'),
-          full_name: ua.user_group_name_with_role
-        }
-      end
-
-      user_groups + users
+      prepare_assigned_users
     end
 
     def has_draft

@@ -13,19 +13,19 @@
             <i class="sn-icon sn-icon-info" :data-e2e="`e2e-IC-${dataE2e}-everyoneElse-info`"></i>
           </template>
           <template v-slot:flyout>
-            <perfect-scrollbar class="flex flex-col max-h-96 max-w-[280px] relative pr-4 gap-y-px">
-              <div v-for="user in this.assignedUsers"
-                  :key="user.attributes.user.id"
-                  :title="user.attributes.user.name"
+            <div class="flex flex-col max-h-96 max-w-[280px] relative pr-4 gap-y-px overflow-y-auto">
+              <div v-for="user in this.teamUsers"
+                  :key="user.id"
+                  :title="user.attributes.name"
                   class="rounded px-3 py-2.5 flex items-center hover:no-underline leading-5 gap-2">
                 <img
-                  :src="user.attributes.user.avatar_url"
+                  :src="user.attributes.avatar_url"
                   class="w-6 h-6 rounded-full"
-                  :data-e2e="`e2e-IC-${dataE2e}-everyoneElse-${user.attributes.user.name.replace(/\W/g, '')}`"
+                  :data-e2e="`e2e-IC-${dataE2e}-everyoneElse-${user.attributes.name.replace(/\W/g, '')}`"
                 >
-                <span class="truncate" :data-e2e="`e2e-TX-${dataE2e}-everyoneElse-${user.attributes.user.name.replace(/\W/g, '')}`">{{ user.attributes.user.name }}</span>
+                <span class="truncate" :data-e2e="`e2e-TX-${dataE2e}-everyoneElse-${user.attributes.name.replace(/\W/g, '')}`">{{ user.attributes.name }}</span>
               </div>
-            </perfect-scrollbar>
+            </div>
           </template>
         </GeneralDropdown>
         <MenuDropdown
@@ -103,7 +103,7 @@
           <div class="h-6 w-6"></div>
         </div>
       </div>
-      <div v-for="userAssignment in manuallyAssignedUsers"
+      <div v-for="userAssignment in assignedUsers"
             :key="userAssignment.id"
             class="p-2 flex items-center gap-2">
         <div>
@@ -156,6 +156,9 @@
 import MenuDropdown from '../menu_dropdown.vue';
 import GeneralDropdown from '../general_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
+import {
+  current_team_users_teams_path
+} from '../../../routes.js';
 
 export default {
   emits: ['modified', 'usersReloaded', 'changeVisibility', 'assigningNewUsers'],
@@ -181,6 +184,7 @@ export default {
   mounted() {
     this.getAssignedUserGroups();
     this.getAssignedUsers();
+    this.getTeamUsers();
     this.getRoles();
   },
   watch: {
@@ -195,15 +199,9 @@ export default {
     MenuDropdown,
     GeneralDropdown
   },
-  computed: {
-    manuallyAssignedUsers() {
-      return this.assignedUsers.filter((user) => (
-        user.attributes?.assigned === 'manually'
-      ));
-    }
-  },
   data() {
     return {
+      teamUsers: [],
       assignedUsers: [],
       assignedUserGroups: [],
       roles: [],
@@ -212,6 +210,11 @@ export default {
     };
   },
   methods: {
+    getTeamUsers() {
+      axios.get(current_team_users_teams_path({ format: 'json' })).then((response) => {
+        this.teamUsers = response.data.data;
+      });
+    },
     getAssignedUsers() {
       axios.get(this.params.object.urls.show_access)
         .then((response) => {

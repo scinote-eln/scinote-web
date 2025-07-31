@@ -254,6 +254,7 @@ Rails.application.routes.draw do
       collection do
         get :visible_users
         get :visible_teams
+        get :current_team_users
       end
 
       member do
