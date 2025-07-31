@@ -17,6 +17,7 @@ module UserAssignments
       remove_repositories_assignments
       remove_protocols_assignments
       remove_reports_assignments
+      remove_forms_assignments
     end
 
     private
@@ -51,6 +52,17 @@ module UserAssignments
         report.user_assignments
               .select { |assignment| assignment.user_id == @user.id }
               .each(&:destroy!)
+      end
+    end
+
+    def remove_forms_assignments
+      @team.forms
+           .joins(:user_assignments)
+           .preload(:user_assignments)
+           .where(user_assignments: { user: @user, team: @team }).find_each do |form|
+        form.user_assignments
+            .select { |assignment| assignment.user_id == @user.id && assignment.team_id == @team.id }
+            .each(&:destroy!)
       end
     end
   end
