@@ -48,6 +48,7 @@
             :btnText="i18n.t('my_modules.results.insert.button')"
             :position="'right'"
             :caret="true"
+            :disableOverflow="true"
             @create:custom_well_plate="openCustomWellPlateModal"
             @create:table="(...args) => this.createElement('table', ...args)"
             @create:checklist="createElement('checklist')"
