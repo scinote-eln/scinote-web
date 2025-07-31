@@ -583,15 +583,6 @@ class TeamImporter
       @project_counter += 1
       puts 'Creating project user_assignments...'
       create_user_assignments(project_json['user_assignments'], project)
-      puts 'Creating user_projects...'
-      project_json['user_projects'].each do |user_project_json|
-        user_project = UserProject.new(user_project_json)
-        user_project.id = nil
-        user_project.project = project
-        user_project.user_id = find_user(user_project.user_id)
-        user_project.assigned_by_id = find_user(user_project.assigned_by_id)
-        user_project.save!
-      end
       puts 'Creating project_comments...'
       project_json['project_comments'].each do |project_comment_json|
         project_comment = ProjectComment.new(project_comment_json)

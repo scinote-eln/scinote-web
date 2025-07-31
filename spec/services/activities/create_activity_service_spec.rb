@@ -6,7 +6,7 @@ describe Activities::CreateActivityService do
   let(:user) { create :user }
   let(:team) { create :team, created_by: user }
   let(:project) do
-    create :project, team: team, user_projects: []
+    create :project, team: team
   end
   let(:service_call) do
     Activities::CreateActivityService

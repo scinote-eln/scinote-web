@@ -11,7 +11,6 @@ describe SmartAnnotations::PermissionEval do
   let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
   let!(:team_assignment) { create_user_assignment(team, owner_role, user) }
   let(:project) { create :project, name: 'my project', team: team }
-  let!(:user_project) { create :user_project, project: project, user: user }
   let!(:user_assignment) do
     create :user_assignment,
            assignable: project,
