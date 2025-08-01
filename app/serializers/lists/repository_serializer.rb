@@ -50,7 +50,6 @@ module Lists
 
     def urls
       urls = {
-        show: repository_path(object),
         update: team_repository_path(current_user.current_team, id: object, format: :json),
         duplicate: team_repository_copy_path(current_user.current_team, repository_id: object, format: :json),
         shareable_teams: shareable_teams_team_shared_objects_path(
@@ -62,15 +61,23 @@ module Lists
         user_group_members: users_users_settings_team_user_groups_path(team_id: object.team.id)
       }
 
+      urls[:show] = repository_path(object) if can_read?
+
       if can_manage_repository_users?(object)
         urls[:update_access] = access_permissions_repository_path(id: object)
         urls[:new_access] = new_access_permissions_repository_path(id: object.id)
         urls[:create_access] = access_permissions_repositories_path(id: object.id)
-        urls[:unassigned_user_groups] = unassigned_user_groups_access_permissions_project_path(id: object.id)
+        urls[:unassigned_user_groups] = unassigned_user_groups_access_permissions_repository_path(id: object.id)
         urls[:show_user_group_assignments_access] = show_user_group_assignments_access_permissions_repository_path(object)
       end
 
       urls
+    end
+
+    private
+
+    def can_read?
+      @can_read ||= can_read_repository?(object)
     end
   end
 end
