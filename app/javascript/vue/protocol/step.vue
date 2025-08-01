@@ -662,7 +662,7 @@
               }
             }
           }).fail(() => {
-            HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+            HelperModule.flashAlertMsg(this.i18n.t('errors.general_saving_data'), 'danger');
           })
         }
       },
