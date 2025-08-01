@@ -617,14 +617,15 @@ class Extends
     repository_access_revoked_all_team_members: 402,
     repository_access_granted_user_group: 403,
     repository_access_changed_user_group: 404,
-    repository_access_revoked_user_group: 405
+    repository_access_revoked_user_group: 405,
+    automation_task_status_changed: 406
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243, *370..378, *390..392],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, *246..248, *257..273, *284..291, 301, 303, 306, 328],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
-           148, 166, 394, 395, 396],
+           148, 166, 394, 395, 396, 406],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
                     184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327, *347..352, 359],
     task_inventory: [55, 56, 146, 147, 183],
@@ -805,6 +806,9 @@ class Extends
         protocol_content_added
         step_marked_as_completed
         task_result_added
+      ],
+      task_status_completed: %I[
+        all_my_module_steps_marked_as_completed
       ]
     },
     experiment_automation: {
