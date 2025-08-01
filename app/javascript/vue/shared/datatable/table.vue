@@ -535,6 +535,10 @@ export default {
           this.dataLoading = false;
           this.restoreSelection();
 
+          this.gridApi.refreshCells({
+            force: true
+          });
+
           this.handleScroll();
         })
         .catch(() => {

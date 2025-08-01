@@ -51,7 +51,10 @@ module Toolbars
     end
 
     def duplicate_action
-      return unless @single && can_create_repositories?(@current_team) && !@repository.shared_with?(@current_team)
+      return unless @single &&
+                    can_read_repository?(@repository) &&
+                    can_create_repositories?(@current_team) &&
+                    !@repository.shared_with?(@current_team)
 
       {
         name: :duplicate,
