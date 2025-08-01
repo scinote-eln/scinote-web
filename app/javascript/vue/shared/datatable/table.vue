@@ -541,9 +541,10 @@ export default {
 
           this.handleScroll();
         })
-        .catch(() => {
+        .catch((e) => {
           this.dataLoading = false;
           this.$emit('tableReloaded', [], { filtered: this.searchValue.length > 0 });
+          console.error(e);
           window.HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
         });
     },
@@ -558,6 +559,9 @@ export default {
       this.rowData = newRows;
       if (this.gridApi) {
         const viewport = document.querySelector('.ag-body-viewport');
+
+        if (!viewport) return;
+
         const { scrollTop } = viewport;
         this.gridApi.setRowData(this.rowData);
         this.$nextTick(() => {
