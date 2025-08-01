@@ -5058,6 +5058,7 @@ en:
   errors:
     general: "Something went wrong."
     general_text_too_long: 'Text is too long'
+    general_saving_data: 'Error saving data'
     forbidden:
       title: "Access to this page is denied (403)."
       dialog:
