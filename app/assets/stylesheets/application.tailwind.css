@@ -5,6 +5,7 @@
 @import "tailwind/radio";
 @import "tailwind/loader.css";
 @import "tailwind/tags.css";
+@import "tailwind/checkbox";
 
 @tailwind base;
 @tailwind components;

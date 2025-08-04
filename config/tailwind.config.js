@@ -37,6 +37,7 @@ module.exports = {
         'sn-super-light-blue': '#F0F8FF',
         'sn-blue-hover': '#2D5FAA',
         'sn-blue-click': '#056AD7',
+        'sn-blue-disabled': '#B7CAE5',
         'sn-science-blue-hover': '#79B4F3',
         'sn-alert-green': '#5EC66F',
         'sn-alert-violet': '#6F2DC1',
