@@ -25,7 +25,6 @@
     />
   </div>
   <NewProtocolModal v-if="newProtocol" :createUrl="createUrl"
-                   :userRolesUrl="userRolesUrl"
                    @close="newProtocol = false" @create="updateTable" />
   <AccessModal v-if="accessModalParams" :params="accessModalParams"
                @close="accessModalParams = null" @refresh="this.reloadingTable = true" />

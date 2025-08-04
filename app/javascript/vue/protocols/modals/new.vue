@@ -22,26 +22,10 @@
                        :placeholder="i18n.t('protocols.new_protocol_modal.name_placeholder')" />
               </div>
             </div>
-            <div class="flex gap-2 text-xs items-center">
-              <div class="sci-checkbox-container">
-                <input type="checkbox" class="sci-checkbox" v-model="visible" value="visible" data-e2e="e2e-CB-newProtocolModal-grantAccess"/>
-                <span class="sci-checkbox-label"></span>
-              </div>
-              <span v-html="i18n.t('protocols.new_protocol_modal.access_label')" data-e2e="e2e-TX-newProtocolModal-grantAccess"></span>
-            </div>
-            <div class="mt-6" :class="{'hidden': !visible}">
-              <label class="sci-label">{{ i18n.t("protocols.new_protocol_modal.role_label") }}</label>
-              <SelectDropdown
-                :options="userRoles"
-                :value="defaultRole"
-                :data-e2e="`e2e-DD-newProtocolModal-defaultUserRole`"
-                @change="changeRole"
-              />
-            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal" data-e2e="e2e-BT-newProtocolModal-cancel">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="submitting || (visible && !defaultRole) || !validName" data-e2e="e2e-BT-newProtocolModal-create">
+            <button class="btn btn-primary" type="submit" :disabled="submitting || !validName" data-e2e="e2e-BT-newProtocolModal-create">
               {{ i18n.t('protocols.new_protocol_modal.create_new') }}
             </button>
           </div>
@@ -54,32 +38,15 @@
 <script>
 /* global GLOBAL_CONSTANTS */
 
-import SelectDropdown from '../../shared/select_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
 
 export default {
   name: 'NewProtocolModal',
   props: {
-    createUrl: String,
-    userRolesUrl: String
+    createUrl: String
   },
   mixins: [modalMixin],
-  components: {
-    SelectDropdown
-  },
-  watch: {
-    visible(newValue) {
-      if (newValue) {
-        [this.defaultRole] = this.userRoles.find((role) => role[1] === 'Viewer');
-      } else {
-        this.defaultRole = null;
-      }
-    }
-  },
-  mounted() {
-    this.fetchUserRoles();
-  },
   computed: {
     validName() {
       return this.name.length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH;
@@ -88,9 +55,6 @@ export default {
   data() {
     return {
       name: '',
-      visible: false,
-      defaultRole: null,
-      userRoles: [],
       error: null,
       submitting: false
     };
@@ -101,9 +65,7 @@ export default {
 
       axios.post(this.createUrl, {
         protocol: {
-          name: this.name,
-          visibility: (this.visible ? 'visible' : 'hidden'),
-          default_public_user_role_id: this.defaultRole
+          name: this.name
         }
       }).then(() => {
         this.error = null;
@@ -113,17 +75,6 @@ export default {
         this.submitting = false;
         this.error = error.response.data.error;
       });
-    },
-    changeRole(role) {
-      this.defaultRole = role;
-    },
-    fetchUserRoles() {
-      if (this.userRolesUrl) {
-        axios.get(this.userRolesUrl)
-          .then((response) => {
-            this.userRoles = response.data.data;
-          });
-      }
     }
   }
 };
