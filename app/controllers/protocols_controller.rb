@@ -1092,7 +1092,7 @@ class ProtocolsController < ApplicationController
   end
 
   def create_params
-    params.require(:protocol).permit(:name, :default_public_user_role_id, :visibility)
+    params.require(:protocol).permit(:name)
   end
 
   def check_protocolsio_import_permissions

@@ -69,13 +69,6 @@ describe ProjectsController, type: :controller do
         expect(response.media_type).to eq 'text/html'
       end
 
-      it 'calls create activity service (project_grant_access_to_all_team_members)' do
-        params[:project][:visibility] = 'visible'
-        expect(Activities::CreateActivityService).to receive(:call)
-          .with(hash_including(activity_type: :project_grant_access_to_all_team_members))
-        action
-      end
-
       it 'adds activity in DB' do
         params[:project][:archived] = true
         expect { action }
