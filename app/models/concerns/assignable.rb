@@ -113,6 +113,11 @@ module Assignable
       # Will be called when an assignment is changed (save/destroy) for the assignable model.
     end
 
+    def after_team_assignment_changed(team_assignment = nil)
+      # Optional, redefine in the assignable model.
+      # Will be called when an assignment is changed (save/destroy) for the assignable model.
+    end
+
     def create_user_assignments!(user = created_by)
       # First create initial assignments for the object's creator
       if top_level_assignable?

@@ -601,11 +601,11 @@ class Protocol < ApplicationRecord
     end
 
     parent_protocol.user_assignments.each do |parent_user_assignment|
-      parent_protocol.sync_child_protocol_user_assignment(parent_user_assignment, draft.id)
+      parent_protocol.sync_child_protocol_assignment(parent_user_assignment, draft.id)
     end
 
     parent_protocol.user_group_assignments.each do |parent_user_group_assignment|
-      parent_protocol.sync_child_protocol_user_assignment(parent_user_group_assignment, draft.id)
+      parent_protocol.sync_child_protocol_assignment(parent_user_group_assignment, draft.id)
     end
     draft
   end
@@ -678,29 +678,30 @@ class Protocol < ApplicationRecord
     published_versions.or(Protocol.where(id: draft&.id))
   end
 
-  def sync_child_protocol_user_assignment(user_assignment, child_protocol_id = nil)
+  def sync_child_protocol_assignment(assignment, child_protocol_id = nil)
     # Copy user assignments to child protocol(s)
 
     Protocol.transaction(requires_new: true) do
       # Reload to ensure a potential new draft is also included in child versions
       reload
-      assignment_type = user_assignment.respond_to?(:user_group) ? 'user_group' : 'user'
-      assignment_key = "#{assignment_type}_id".to_sym
+      assignment_key = assignment.model_name.param_key
+      assignable_id_key = assignment_key.gsub('assignment', 'id')
+
       (
         # all or single child version protocol
         child_protocol_id ? child_version_protocols.where(id: child_protocol_id) : child_version_protocols
       ).find_each do |child_protocol|
-        child_assignment = child_protocol.public_send("#{assignment_type}_assignments").find_or_initialize_by(
-          assignment_key => user_assignment.public_send(assignment_key)
+        child_assignment = child_protocol.public_send(assignment_key.pluralize).find_or_initialize_by(
+          assignable_id_key => assignment.public_send(assignable_id_key)
         )
 
-        if user_assignment.destroyed?
+        if assignment.destroyed?
           child_assignment.destroy! if child_assignment.persisted?
           next
         end
 
         child_assignment.update!(
-          user_assignment.attributes.slice(
+          assignment.attributes.slice(
             'user_role_id',
             'assigned',
             'assigned_by_id',
@@ -716,13 +717,19 @@ class Protocol < ApplicationRecord
   def after_user_assignment_changed(user_assignment)
     return unless in_repository_published_original?
 
-    sync_child_protocol_user_assignment(user_assignment)
+    sync_child_protocol_assignment(user_assignment)
   end
 
   def after_user_group_assignment_changed(user_group_assignment)
     return unless in_repository_published_original?
 
-    sync_child_protocol_user_assignment(user_group_assignment)
+    sync_child_protocol_assignment(user_group_assignment)
+  end
+
+  def after_team_assignment_changed(user_group_assignment)
+    return unless in_repository_published_original?
+
+    sync_child_protocol_assignment(user_group_assignment)
   end
 
   def deep_clone(clone, current_user, include_file_versions: false)
