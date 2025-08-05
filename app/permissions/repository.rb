@@ -131,8 +131,7 @@ Canaid::Permissions.register_for(Repository) do
   end
 
   can :manage_repository_users do |user, repository|
-    repository.team.permission_granted?(user, TeamPermissions::MANAGE) ||
-      repository.can_manage_shared?(user) ||
+    repository.can_manage_shared?(user) ||
       repository.permission_granted?(user, RepositoryPermissions::USERS_MANAGE)
   end
 end
