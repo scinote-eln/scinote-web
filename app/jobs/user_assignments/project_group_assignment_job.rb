@@ -28,12 +28,7 @@ module UserAssignments
           next unless project.experiments.any?
 
           # make sure all related experiments and my modules are assigned
-          UserAssignments::PropagateAssignmentJob.perform_later(
-            project,
-            user.id,
-            project.default_public_user_role || UserRole.find_predefined_viewer_role,
-            @assigned_by&.id
-          )
+          UserAssignments::PropagateAssignmentJob.perform_later(user_assignment)
         end
       end
     end

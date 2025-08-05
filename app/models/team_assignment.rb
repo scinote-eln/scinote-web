@@ -14,4 +14,11 @@ class TeamAssignment < ApplicationRecord
   scope :as_viewers, -> { where(user_role: UserRole.find_predefined_viewer_role) }
 
   validates :team, uniqueness: { scope: :assignable }
+
+  after_destroy :call_team_assignment_changed_hook
+  after_save :call_team_assignment_changed_hook
+
+  def call_team_assignment_changed_hook
+    assignable.__send__(:after_team_assignment_changed, self)
+  end
 end
