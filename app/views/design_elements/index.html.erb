@@ -10,20 +10,28 @@
   end
 %>
 
-<%= render partial: 'table' %>
+
 
 <%= render partial: 'checkbox' %>
 
 <%= render partial: 'radio' %>
 
+<%= render partial: 'toggle' %>
+
+<%= render partial: 'breadcrumbs' %>
+
+<%= render partial: 'button', locals: {icons_list: icons_list} %>
+
 <%= render partial: 'inputs', locals: {icons_list: icons_list} %>
 
 <%= render partial: 'select' %>
 
-<%= render partial: 'breadcrumbs' %>
+<%= render partial: 'datepicker' %>
 
 <%= render partial: 'modals' %>
 
+<%= render partial: 'table' %>
+
 <%= render partial: 'icons', locals: {icons_list: icons_list} %>
 
-<%= render partial: 'button', locals: {icons_list: icons_list} %>
+

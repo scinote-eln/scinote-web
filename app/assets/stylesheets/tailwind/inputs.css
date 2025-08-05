@@ -1,11 +1,15 @@
 @layer components {
 
   .sci-label {
-    @apply text-sm font-medium text-sn-dark-grey;
+    @apply text-sm font-medium text-sn-dark-grey my-1;
   }
 
   .sci-label.error {
     @apply text-sn-coral;
+  }
+
+  .sci-label.disabled {
+    @apply text-sn-sleepy-grey;
   }
 
   .sci-input-container-v2 {
