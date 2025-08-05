@@ -423,6 +423,7 @@ en:
       repository_access_revoked_user_group_html: "%{user} removed group %{user_group} with user role %{role} from inventory template %{repository}."
       automation_task_status_changed_html: "%{user} triggered automatic status change from <strong>%{my_module_status_old}</strong> to <strong>%{my_module_status_new}</strong> for task %{my_module}."
       automation_experiment_status_changed_html: "%{user} triggered automatic status change from <strong>%{experiment_status_old}</strong> to <strong>%{experiment_status_new}</strong> for experiment %{experiment}."
+      automation_project_status_changed_html: "%{user} triggered automatic status change from <strong>%{project_status_old}</strong> to <strong>%{project_status_new}</strong> for project %{project}."
     activity_name:
       create_project: "Project created"
       edit_project: "Project edited"
@@ -801,6 +802,7 @@ en:
       repository_access_revoked_user_group: "Remove access to group"
       automation_task_status_changed: "Task status changed automatically"
       automation_experiment_status_changed: "Experiment status changed automatically"
+      automation_project_status_changed: "Project status changed automatically"
     activity_group:
       projects: "Projects"
       task_results: "Task results"

@@ -10,7 +10,7 @@ module AutomationObservers
     def call
       return unless @experiment.team.settings.dig('team_automation_settings', 'all_tasks_done')
       return unless @experiment.started?
-      return unless @experiment.my_modules.joins(:my_module_status).where.not(my_module_status: MyModuleStatusFlow.first.final_status).none?
+      return unless @experiment.my_modules.active.joins(:my_module_status).where.not(my_module_status: MyModuleStatusFlow.first.final_status).none?
 
       @experiment.update!(status: :done)
 
