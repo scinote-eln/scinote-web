@@ -25,14 +25,14 @@ module Experiments
 
       ActiveRecord::Base.transaction do
         @exp.project = @project
-        sync_user_assignments(@exp)
+        @exp.reset_all_users_assignments!(@user)
 
         @exp.my_modules.each do |my_module|
           unless can_move_my_module?(@user, my_module)
             @errors[:main] = I18n.t('move_to_project_service.my_modules_permission_error')
             raise
           end
-          sync_user_assignments(my_module)
+          my_module.reset_all_users_assignments!(@user)
           clean_up_user_my_modules(my_module)
           move_tags!(my_module)
         end
@@ -105,20 +105,6 @@ module Experiments
           move_activities!(child_subject)
         end
       end
-    end
-
-    def sync_user_assignments(object)
-      # remove user assignments where the user are not present on the project
-      object.user_assignments.destroy_all
-
-      UserAssignment.create!(
-        user: @user,
-        assignable: object,
-        assigned: :automatically,
-        user_role: @project.user_assignments.find_by(user: @user).user_role
-      )
-
-      UserAssignments::GenerateUserAssignmentsJob.perform_later(object, @user.id)
     end
 
     def clean_up_user_my_modules(my_module)

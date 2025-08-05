@@ -17,7 +17,7 @@ class Protocol < ApplicationRecord
   include PermissionCheckableModel
   include TinyMceImages
 
-  skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
+  before_create -> { self.skip_user_assignments = true }, if: -> { in_module? }
 
   enum visibility: { hidden: 0, visible: 1 }
   enum protocol_type: {

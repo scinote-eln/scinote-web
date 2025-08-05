@@ -348,8 +348,7 @@ class Experiment < ApplicationRecord
       next unless my_module.save
 
       # regenerate user assignments
-      my_module.user_assignments.destroy_all
-      UserAssignments::GenerateUserAssignmentsJob.perform_later(my_module, current_user.id)
+      my_module.reset_all_users_assignments!(current_user)
 
       Activities::CreateActivityService.call(activity_type: :move_task,
                                              owner: current_user,
@@ -405,8 +404,7 @@ class Experiment < ApplicationRecord
             m.save!
 
             # regenerate user assignments
-            m.user_assignments.destroy_all
-            UserAssignments::GenerateUserAssignmentsJob.new(m, current_user.id).perform_now
+            m.reset_all_users_assignments!(current_user)
 
             # Add activity
             Activities::CreateActivityService.call(
