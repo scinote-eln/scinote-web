@@ -15,6 +15,7 @@ class MyModule < ApplicationRecord
   include Cloneable
   include Favoritable
   include MetadataModel
+  include ObservableModel
 
   attr_accessor :transition_error_rollback, :my_module_status_created_by
 
@@ -603,5 +604,13 @@ class MyModule < ApplicationRecord
       self.x = new_pos[:x]
       self.y = new_pos[:y]
     end
+  end
+
+  def run_observers
+    if (saved_change_to_my_module_status_id? && my_module_status.previous_status_id == changing_from_my_module_status_id) || saved_change_to_experiment_id ||
+       (saved_change_to_archived && !archived)
+      AutomationObservers::MyModuleStatusChangeAutomationObserver.new(self, last_modified_by).call
+    end
+    AutomationObservers::AllMyModulesDoneAutomationObserver.new(experiment, last_modified_by).call if saved_change_to_my_module_status_id?
   end
 end
