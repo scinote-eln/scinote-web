@@ -1,5 +1,6 @@
 class Checklist < ApplicationRecord
   include SearchableModel
+  include ObservableModel
 
   auto_strip_attributes :name, nullify: false
   validates :name,
@@ -56,5 +57,11 @@ class Checklist < ApplicationRecord
 
       new_checklist
     end
+  end
+
+  private
+
+  def run_observers
+    AutomationObservers::ProtocolContentChangedAutomationObserver.new(step, last_modified_by || created_by).call
   end
 end

@@ -44,6 +44,8 @@ class Result < ApplicationRecord
     CleanupUserSettingsJob.perform_later('result_states', id)
   end
 
+  after_create :run_observers
+
   def self.search(user,
                   include_archived,
                   query = nil,
@@ -195,5 +197,11 @@ class Result < ApplicationRecord
 
   def delete_step_results
     step_results.destroy_all
+  end
+
+  private
+
+  def run_observers
+    AutomationObservers::ResultCreateAutomationObserver.new(my_module, user).call
   end
 end

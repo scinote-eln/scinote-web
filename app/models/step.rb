@@ -22,6 +22,7 @@ class Step < ApplicationRecord
 
   before_validation :set_completed_on, if: :completed_changed?
   before_save :set_last_modified_by
+  after_create :run_observers
   before_destroy :cascade_before_destroy
   after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust }
 
@@ -187,7 +188,14 @@ class Step < ApplicationRecord
   private
 
   def run_observers
-    AutomationObservers::AllCheckedStepsAutomationObserver.new(my_module, last_modified_by).call if saved_change_to_completed? && completed
+    return unless protocol.in_module?
+
+    if saved_change_to_completed?
+      AutomationObservers::CompletedStepChangeAutomationObserver.new(my_module, last_modified_by).call if completed
+      AutomationObservers::AllCompletedStepsAutomationObserver.new(my_module, last_modified_by).call
+    end
+
+    AutomationObservers::ProtocolContentChangedAutomationObserver.new(self, last_modified_by).call
   end
 
   def duplicate_table(new_step, user, table)

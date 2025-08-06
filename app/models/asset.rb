@@ -8,6 +8,7 @@ class Asset < ApplicationRecord
   include ActiveStorageConcerns
   include ActiveStorageHelper
   include VersionedAttachments
+  include ObservableModel
 
   require 'tempfile'
   # Lock duration set to 30 minutes
@@ -474,5 +475,9 @@ class Asset < ApplicationRecord
 
   def reset_file_processing
     self.file_processing = false
+  end
+
+  def run_observers
+    AutomationObservers::ProtocolContentChangedAutomationObserver.new(step, last_modified_by || created_by).call
   end
 end

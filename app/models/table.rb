@@ -3,6 +3,7 @@
 class Table < ApplicationRecord
   include SearchableModel
   include TableHelper
+  include ObservableModel
 
   auto_strip_attributes :name, nullify: false
   validates :name,
@@ -101,5 +102,9 @@ class Table < ApplicationRecord
         new_table
       end
     end
+  end
+
+  def run_observers
+    AutomationObservers::ProtocolContentChangedAutomationObserver.new(step, step&.last_modified_by).call
   end
 end

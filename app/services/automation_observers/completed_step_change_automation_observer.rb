@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 module AutomationObservers
-  class AllCheckedStepsAutomationObserver
+  class CompletedStepChangeAutomationObserver
     def initialize(my_module, user)
       @my_module = my_module
       @user = user
     end
 
     def call
-      return unless @my_module.team.settings.dig('team_automation_settings', 'all_my_module_steps_marked_as_completed')
-      return unless @my_module.my_module_status.previous_status == @my_module.my_module_status_flow.initial_status && @my_module.steps.where(completed: false).none?
+      return unless @my_module.team.settings.dig('team_automation_settings', 'step_marked_as_completed')
+      return unless @my_module.my_module_status.initial_status?
 
       previous_status_id = @my_module.my_module_status.id
       @my_module.update!(my_module_status: @my_module.my_module_status.next_status)

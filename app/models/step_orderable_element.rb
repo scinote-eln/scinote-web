@@ -4,6 +4,7 @@ class StepOrderableElement < ApplicationRecord
   validates :position, uniqueness: { scope: :step }
   validate :check_step_relations
 
+  after_create :run_observers
   around_destroy :decrement_following_elements_positions
 
   belongs_to :step, inverse_of: :step_orderable_elements, touch: true
@@ -25,5 +26,9 @@ class StepOrderableElement < ApplicationRecord
       yield
       step.normalize_elements_position
     end
+  end
+
+  def run_observers
+    AutomationObservers::ProtocolContentChangedAutomationObserver.new(step, step.last_modified_by).call
   end
 end
