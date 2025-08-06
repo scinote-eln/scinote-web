@@ -11,7 +11,9 @@
         <%= f.text_field :name,
                          autofocus: true,
                          class: 'sci-input-field',
-                         placeholder: t('users.settings.teams.new.name_placeholder') %>
+                         placeholder: t('users.settings.teams.new.name_placeholder'),
+                         data: {'e2e'=>'e2e-IF-settings-workspaces-newWorkspace-name'}
+                       %>
         <br>
         <small>
           <%=t 'users.settings.teams.new.name_sublabel' %>
@@ -19,15 +21,26 @@
       </div>
 
       <div class="sci-input-container mb-4 max-w-lg" style="display: block !important">
-        <%= f.text_area :description, class: "sci-input-field textarea", label: t('users.settings.teams.new.description_label') %>
+        <%= f.text_area :description,
+                        class: "sci-input-field textarea",
+                        label: t('users.settings.teams.new.description_label'),
+                        data: {'e2e'=>'e2e-IF-settings-workspaces-newWorkspace-description'}
+                      %>
         <br>
         <small>
           <%=t 'users.settings.teams.new.description_sublabel' %>
         </small>
       </div>
 
-      <%= link_to t('general.cancel'), teams_path, class: 'btn btn-secondary' %>
-      <%= f.submit t('users.settings.teams.new.create'), class: 'btn btn-success' %>
+      <%= link_to t('general.cancel'),
+                  teams_path,
+                  class: 'btn btn-secondary',
+                  data: {'e2e'=>'e2e-BT-settings-workspaces-newWorkspace-cancel'}
+                %>
+      <%= f.submit t('users.settings.teams.new.create'),
+                   class: 'btn btn-success',
+                   data: {'e2e'=>'e2e-BT-settings-workspaces-newWorkspace-create'} 
+      %>
 
     <% end %>
   </div>
