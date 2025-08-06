@@ -1,6 +1,14 @@
 <div>
   <h1>Modals</h1>
   <div id="modals" class="flex items-center gap-4 flex-wrap mb-8">
+    <div ref="BasicModalWrapper">
+      <button @click="showBasicModal = true" class="btn btn-primary">Show Basic Modal</button>
+      <basic-modal
+        v-if="showBasicModal"
+        @close="showBasicModal = false"
+      >
+      </basic-modal>
+    </div>
     <div ref="wizardModal">
       <button @click="showWizard = true" class="btn btn-primary">Show Wizard Modal</button>
       <wizard-modal

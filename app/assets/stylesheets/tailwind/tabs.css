@@ -1,0 +1,17 @@
+@layer components {
+  .tab-group {
+    @apply flex items-center gap-4 p-2 bg-white;
+  }
+
+  .tab-group .tab-item {
+    @apply p-2.5 hover:no-underline text-sn-grey;
+  }
+
+  .tab-group .tab-item.active {
+    @apply !text-sn-blue;
+  }
+
+  .tab-group .tab-item:hover {
+    @apply  !text-sn-black;
+  }
+}
