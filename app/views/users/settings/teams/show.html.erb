@@ -92,7 +92,14 @@
     <div class="users-datatable">
       <% if can_invite_team_users?(@team) %>
         <div id="add-new-team-members-button" class="hidden">
-          <a href="#" class="btn btn-primary" data-trigger="invite-users" data-turbolinks="false" data-modal-id="team-invite-users-modal">
+          <a
+            href="#"
+            class="btn btn-primary"
+            data-trigger="invite-users"
+            data-turbolinks="false"
+            data-modal-id="team-invite-users-modal"
+            data-e2e="e2e-BT-settings-members-invite"
+          >
             <span class="sn-icon sn-icon-new-task"></span>
             <%= I18n.t('users.settings.teams.edit.add_user') %>
           </a>
