@@ -3,6 +3,7 @@ import { shallowRef } from 'vue';
 
 import WizardModal from '../../../vue/shared/wizard_modal.vue';
 import InfoModal from '../../../vue/shared/info_modal.vue';
+import BasicModal from '../../../vue/design_elements/basic_modal.vue';
 import Step1 from './wizard_steps/step_1.vue';
 import Step2 from './wizard_steps/step_2.vue';
 import Step3 from './wizard_steps/step_3.vue';
@@ -12,7 +13,10 @@ const app = createApp({
   components: {
     Step1,
     Step2,
-    Step3
+    Step3,
+    WizardModal,
+    InfoModal,
+    BasicModal
   },
   methods: {
     fireAlert() {
@@ -21,6 +25,7 @@ const app = createApp({
   },
   data() {
     return {
+      showBasicModal: false,
       // Wizard modal
       wizardConfig: {
         title: 'Wizard steps',
