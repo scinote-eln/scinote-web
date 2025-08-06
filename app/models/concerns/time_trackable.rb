@@ -3,6 +3,8 @@
 module TimeTrackable
   extend ActiveSupport::Concern
 
+  STATUS_ORDER = %i(not_started in_progress done).freeze
+
   included do
     scope :not_started, -> { where(started_at: nil).where(done_at: nil) }
     scope :in_progress, -> { where.not(started_at: nil).where(done_at: nil) }
@@ -25,13 +27,11 @@ module TimeTrackable
   end
 
   def status
-    if started_at.nil? && done_at.nil?
-      :not_started
-    elsif started_at && !done_at
-      :in_progress
-    else
-      :done
-    end
+    compute_status(started_at, done_at)
+  end
+
+  def status_was
+    compute_status(started_at_before_last_save, done_at_before_last_save)
   end
 
   def not_started?
@@ -69,5 +69,23 @@ module TimeTrackable
 
   def complete!
     update!(done_at: DateTime.now)
+  end
+
+  def status_moved_forward?
+    return false unless started_at_previously_changed? || done_at_previously_changed?
+
+    STATUS_ORDER.index(status) > STATUS_ORDER.index(status_was)
+  end
+
+  private
+
+  def compute_status(started_at_value, done_at_value)
+    if started_at_value.nil? && done_at_value.nil?
+      :not_started
+    elsif started_at_value && !done_at_value
+      :in_progress
+    else
+      :done
+    end
   end
 end

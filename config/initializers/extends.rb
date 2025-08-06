@@ -619,11 +619,12 @@ class Extends
     repository_access_changed_user_group: 404,
     repository_access_revoked_user_group: 405,
     automation_task_status_changed: 406,
-    automation_experiment_status_changed: 407
+    automation_experiment_status_changed: 407,
+    automation_project_status_changed: 408
   }
 
   ACTIVITY_GROUPS = {
-    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243, *370..378, *390..392],
+    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243, *370..378, *390..392, 408],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, *246..248, *257..273, *284..291, 301, 303, 306, 328],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            148, 166, 394, 395, 396, 406],
