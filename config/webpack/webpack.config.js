@@ -74,6 +74,7 @@ const entryList = {
   vue_design_system_inputs: './app/javascript/packs/vue/design_system/inputs.js',
   vue_design_system_table: './app/javascript/packs/vue/design_system/table.js',
   vue_design_system_datepicker: './app/javascript/packs/vue/design_system/datepicker.js',
+  vue_design_system_input_titles: './app/javascript/packs/vue/design_system/input_title.js',
   vue_favorites_widget: './app/javascript/packs/vue/favorites_widget.js',
   vue_experiment_description_modal: './app/javascript/packs/vue/experiment_description_modal.js',
   vue_user_groups_table: './app/javascript/packs/vue/user_groups_table.js',
