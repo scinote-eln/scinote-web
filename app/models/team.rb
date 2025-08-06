@@ -61,6 +61,7 @@ class Team < ApplicationRecord
   has_many :shareable_links, inverse_of: :team, dependent: :destroy
   has_many :storage_locations, dependent: :destroy
   has_many :forms, dependent: :destroy
+  has_many :team_assignments, dependent: :destroy
 
   attr_accessor :without_templates
 
