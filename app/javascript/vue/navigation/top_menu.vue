@@ -5,11 +5,12 @@
       <img :src="logoUrl" alt="SciNote" class="h-full block">
     </a>
   </div>
-    <div v-if="currentTeam" class="w-64" :data-e2e="'e2e-DD-topMenu-teams'">
+    <div v-if="currentTeam" class="w-64">
       <SelectDropdown
         :value="currentTeam"
         :options="teams"
         @change="switchTeam"
+        :e2eValue="'e2e-DD-topMenu-teams'"
       ></SelectDropdown>
     </div>
     <QuickSearch
@@ -144,11 +145,16 @@ export default {
   },
   computed: {
     settingsMenuItems() {
-      return this.settingsMenu.map((item) => ({ text: item.name, url: item.url })).concat(
+      return this.settingsMenu.map((item) => ({ 
+        text: item.name,
+        url: item.url,
+        data_e2e: `e2e-DO-topMenu-settings-${item.name.replace(' ','').toLowerCase()}`
+      })).concat(
         {
           text: this.i18n.t('left_menu_bar.support_links.core_version'),
           modalTarget: '#aboutModal',
-          url: ''
+          url: '',
+          data_e2e: `e2e-DO-topMenu-settings-scinoteVersion`
         }
       );
     }

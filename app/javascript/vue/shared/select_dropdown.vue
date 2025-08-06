@@ -60,8 +60,9 @@
     <template v-if="isOpen">
       <teleport to="body">
         <div ref="flyout"
-            class="sn-select-dropdown bg-white inline-block sn-shadow-menu-sm rounded w-full
-                    fixed z-[3000]">
+          class="sn-select-dropdown bg-white inline-block sn-shadow-menu-sm rounded w-full fixed z-[3000]"
+          :data-e2e="`${e2eValue}-dropdownOptions`"
+        >
           <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
             <div @click="selectAll" :class="sizeClass"
                 class="border border-x-0 !border-transparent border-solid !border-b-sn-light-grey
