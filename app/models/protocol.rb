@@ -607,6 +607,11 @@ class Protocol < ApplicationRecord
     parent_protocol.user_group_assignments.each do |parent_user_group_assignment|
       parent_protocol.sync_child_protocol_assignment(parent_user_group_assignment, draft.id)
     end
+
+    parent_protocol.team_assignments.each do |parent_team_assignment|
+      parent_protocol.sync_child_protocol_assignment(parent_team_assignment, draft.id)
+    end
+
     draft
   end
 
