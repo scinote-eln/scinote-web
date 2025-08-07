@@ -1,8 +1,11 @@
-<div class="comments-sidebar" data-comments-url="<%= comments_path %>">
+<div class="comments-sidebar" data-comments-url="<%= comments_path %>" data-e2e="e2e-CO-comments">
   <div class="sidebar-content">
     <div class="sidebar-header">
-      <div class="comments-subject-title"></div>
-      <div class="btn btn-light icon-btn close-btn !bg-transparent">
+      <div class="comments-subject-title" data-e2e="e2e-TX-comments-title"></div>
+      <div
+        class="btn btn-light icon-btn close-btn !bg-transparent"
+        data-e2e="e2e-BT-comments-close"
+      >
         <i class="sn-icon sn-icon-close"></i>
       </div>
       <div class="comments-subject-url">
@@ -14,9 +17,11 @@
       <div class="no-comments-placeholder">
         <%= image_tag 'comments/placeholder.svg', class: 'no-comments-image' %>
         <h1><%= t('comments.empty_state.title') %></h1>
-        <p class="description"><%= t('comments.empty_state.description') %></p>
+        <p class="description" data-e2e="e2e-TX-comments-noCommentDescription">
+          <%= t('comments.empty_state.description') %>
+        </p>
       </div>
-      <div class="loading-placeholder">
+      <div class="loading-placeholder" data-e2e="e2e-CO-comments-commentPlaceholder">
         <% 5.times do |i| %>
           <div class="comment-placeholder <%= i.even? ? 'left' : 'right' %>">
             <div class="comment-user-placeholder"></div>
@@ -27,14 +32,21 @@
     </div>
     <div class="sidebar-footer">
       <div class="comment-input-container !pr-0 grid grid-flow-row">
-        <textarea class="comment-input-field smart-text-area textarea-sm"
-                  placeholder="<%= t('comments.placeholder') %>"></textarea>
-        <i class="sn-icon sn-icon-send send-comment"></i>
+        <textarea
+          class="comment-input-field smart-text-area textarea-sm"
+          placeholder="<%= t('comments.placeholder') %>"
+          data-e2e="e2e-IF-comments-addNew"
+        ></textarea>
+        <i class="sn-icon sn-icon-send send-comment" data-e2e="e2e-BT-comments-send"></i>
       </div>
       <div class="error-container"></div>
       <div class="update-buttons sci-btn-group">
-        <button class="btn btn-secondary cancel-button"><%= t('general.cancel') %></button>
-        <button class="btn btn-primary update-comment"><%= t('comments.save_changes') %></button>
+        <button class="btn btn-secondary cancel-button" data-e2e="e2e-BT-comments-cancel">
+          <%= t('general.cancel') %>
+        </button>
+        <button class="btn btn-primary update-comment" data-e2e="e2e-BT-comments-saveChanges">
+          <%= t('comments.save_changes') %>
+        </button>
       </div>
     </div>
   </div>

@@ -8,7 +8,14 @@
     </div>
 
     <div class="result-toolbar__left flex items-center">
-      <button v-if="canCreate" :title="i18n.t('my_modules.results.add_title')" class="btn btn-secondary" :class="{'mr-3': headerSticked}" @click="$emit('newResult')">
+      <button
+        v-if="canCreate" 
+        :title="i18n.t('my_modules.results.add_title')"
+        class="btn btn-secondary"
+        :class="{'mr-3': headerSticked}"
+        @click="$emit('newResult')"
+        data-e2e="e2e-BT-task-results-createNew"
+      >
         <i class="sn-icon sn-icon-new-task"></i>
         {{ i18n.t('my_modules.results.add_label') }}
       </button>
