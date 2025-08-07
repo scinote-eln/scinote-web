@@ -24,7 +24,6 @@ RSpec.describe "Api::V1::ExperimentUserAssignmentsController", type: :request do
                                  name: Faker::Name.unique.name,
                                  project: @invalid_project,
                                  created_by: @another_user
-    create :user_project, user: @user, project: @own_project
     @technician_user_role = create :technician_role
 
     @valid_headers = { 'Authorization': 'Bearer ' + generate_token(@user.id) }

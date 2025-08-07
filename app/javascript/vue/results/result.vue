@@ -52,6 +52,7 @@
             :position="'right'"
             :caret="true"
             :data-e2e="`e2e-DD-task-result${result.id}-insertContent`"
+            :disableOverflow="true"
             @create:custom_well_plate="openCustomWellPlateModal"
             @create:table="(...args) => this.createElement('table', ...args)"
             @create:checklist="createElement('checklist')"

@@ -19,6 +19,7 @@
         </h3>
       </div>
       <button
+        v-if="repository.attributes.urls.full_view"
         class="btn btn-light icon-btn ml-auto full-screen"
         :data-table-url="fullViewUrl"
         :data-e2e="`e2e-BT-task-assignedItems-inventory${ repository.id }-expand`"

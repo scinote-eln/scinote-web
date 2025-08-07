@@ -59,7 +59,8 @@ class User < ApplicationRecord
   # Relations
   has_many :user_identities, inverse_of: :user
   has_many :user_assignments, dependent: :destroy
-  has_many :user_projects, inverse_of: :user
+  has_many :user_group_memberships, dependent: :destroy
+  has_many :user_groups, through: :user_group_memberships
   has_many :teams, through: :user_assignments, source: :assignable, source_type: 'Team'
   has_many :projects, through: :user_assignments, source: :assignable, source_type: 'Project'
   has_many :user_my_modules, inverse_of: :user
@@ -164,9 +165,6 @@ class User < ApplicationRecord
            foreign_key: 'last_modified_by_id'
   has_many :assigned_user_my_modules,
            class_name: 'UserMyModule',
-           foreign_key: 'assigned_by_id'
-  has_many :assigned_user_projects,
-           class_name: 'UserProject',
            foreign_key: 'assigned_by_id'
   has_many :added_protocols,
            class_name: 'Protocol',
@@ -439,29 +437,6 @@ class User < ApplicationRecord
     else
       I18n.t('users.enums.status.pending')
     end
-  end
-
-  # Finds all activities of user that is assigned to project. If user
-  # is not an owner of the project, user must be also assigned to
-  # module.
-  def last_activities
-    Activity
-      .joins(project: :user_projects)
-      .joins(
-        'LEFT OUTER JOIN my_modules ON activities.my_module_id = my_modules.id'
-      )
-      .joins(
-        'LEFT OUTER JOIN user_my_modules ON my_modules.id = ' \
-        'user_my_modules.my_module_id'
-      )
-      .where(user_projects: { user_id: self })
-      .where(
-        'activities.my_module_id IS NULL OR ' \
-        'user_projects.role = 0 OR ' \
-        'user_my_modules.user_id = ?',
-        id
-      )
-      .order(created_at: :desc)
   end
 
   def self.find_by_valid_wopi_token(token)

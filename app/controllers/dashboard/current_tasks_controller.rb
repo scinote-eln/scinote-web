@@ -30,7 +30,7 @@ module Dashboard
     def project_filter
       projects = current_team.projects
                              .where(archived: false)
-                             .viewable_by_user(current_user, current_team)
+                             .readable_by_user(current_user, current_team)
                              .search_by_name(current_user, current_team, params[:query]).select(:id, :name)
 
       unless params[:mode] == 'team'
@@ -47,7 +47,7 @@ module Dashboard
       end
       experiments = @project.experiments
                             .where(archived: false)
-                            .viewable_by_user(current_user, current_team)
+                            .readable_by_user(current_user, current_team)
                             .search_by_name(current_user, current_team, params[:query]).select(:id, :name)
 
       unless params[:mode] == 'team'
@@ -103,7 +103,7 @@ module Dashboard
                 MyModule.active
               end
 
-      tasks = tasks.viewable_by_user(current_user, current_team)
+      tasks = tasks.readable_by_user(current_user, current_team)
 
       tasks = tasks.joins(experiment: :project)
                    .where(experiments: { archived: false })

@@ -27,6 +27,10 @@ class RepositoryBase < ApplicationRecord
   # Not discarded
   default_scope -> { kept }
 
+  def self.permission_class
+    Repository
+  end
+
   def self.stock_management_enabled?
     ApplicationSettings.instance.values['stock_management_enabled']
   end

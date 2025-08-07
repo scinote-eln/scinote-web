@@ -1288,6 +1288,21 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.index ["project_id"], name: "index_tags_on_project_id"
   end
 
+  create_table "team_assignments", force: :cascade do |t|
+    t.bigint "team_id", null: false
+    t.string "assignable_type", null: false
+    t.bigint "assignable_id", null: false
+    t.bigint "user_role_id", null: false
+    t.bigint "assigned_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assignable_type", "assignable_id", "team_id"], name: "index_team_assignments_on_unique_assignable_in_team", unique: true
+    t.index ["assignable_type", "assignable_id"], name: "index_team_assignments_on_assignable"
+    t.index ["assigned_by_id"], name: "index_team_assignments_on_assigned_by_id"
+    t.index ["team_id"], name: "index_team_assignments_on_team_id"
+    t.index ["user_role_id"], name: "index_team_assignments_on_user_role_id"
+  end
+
   create_table "team_shared_objects", force: :cascade do |t|
     t.bigint "team_id"
     t.bigint "shared_object_id"
@@ -1354,6 +1369,48 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.index ["user_role_id"], name: "index_user_assignments_on_user_role_id"
   end
 
+  create_table "user_group_assignments", force: :cascade do |t|
+    t.bigint "team_id", null: false
+    t.string "assignable_type", null: false
+    t.bigint "assignable_id", null: false
+    t.bigint "user_group_id", null: false
+    t.bigint "user_role_id", null: false
+    t.bigint "assigned_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assignable_type", "assignable_id"], name: "index_user_group_assignments_on_assignable"
+    t.index ["assigned_by_id"], name: "index_user_group_assignments_on_assigned_by_id"
+    t.index ["team_id"], name: "index_user_group_assignments_on_team_id"
+    t.index ["user_group_id", "assignable_type", "assignable_id", "team_id"], name: "index_user_group_assignments_on_unique_assignable_in_team", unique: true
+    t.index ["user_group_id"], name: "index_user_group_assignments_on_user_group_id"
+    t.index ["user_role_id"], name: "index_user_group_assignments_on_user_role_id"
+  end
+
+  create_table "user_group_memberships", force: :cascade do |t|
+    t.bigint "user_group_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "created_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_user_group_memberships_on_created_by_id"
+    t.index ["user_group_id", "user_id"], name: "index_user_group_memberships_on_user_group_id_and_user_id", unique: true
+    t.index ["user_group_id"], name: "index_user_group_memberships_on_user_group_id"
+    t.index ["user_id"], name: "index_user_group_memberships_on_user_id"
+  end
+
+  create_table "user_groups", force: :cascade do |t|
+    t.string "name"
+    t.bigint "team_id", null: false
+    t.bigint "created_by_id", null: false
+    t.bigint "last_modified_by_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "lower((name)::text), team_id", name: "index_user_groups_on_lower_name_and_team_id", unique: true
+    t.index ["created_by_id"], name: "index_user_groups_on_created_by_id"
+    t.index ["last_modified_by_id"], name: "index_user_groups_on_last_modified_by_id"
+    t.index ["team_id"], name: "index_user_groups_on_team_id"
+  end
+
   create_table "user_identities", force: :cascade do |t|
     t.integer "user_id"
     t.string "provider", null: false
@@ -1376,19 +1433,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.index ["user_id"], name: "index_user_my_modules_on_user_id"
   end
 
-  create_table "user_projects", force: :cascade do |t|
-    t.integer "role"
-    t.bigint "user_id", null: false
-    t.bigint "project_id", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.bigint "assigned_by_id"
-    t.index ["assigned_by_id"], name: "index_user_projects_on_assigned_by_id"
-    t.index ["project_id"], name: "index_user_projects_on_project_id"
-    t.index ["user_id", "project_id"], name: "index_user_projects_on_user_id_and_project_id", unique: true
-    t.index ["user_id"], name: "index_user_projects_on_user_id"
-  end
-
   create_table "user_roles", force: :cascade do |t|
     t.string "name"
     t.boolean "predefined", default: false
@@ -1399,19 +1443,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_user_roles_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_user_roles_on_last_modified_by_id"
-  end
-
-  create_table "user_teams", force: :cascade do |t|
-    t.integer "role", default: 1, null: false
-    t.bigint "user_id", null: false
-    t.bigint "team_id", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.bigint "assigned_by_id"
-    t.index ["assigned_by_id"], name: "index_user_teams_on_assigned_by_id"
-    t.index ["team_id"], name: "index_user_teams_on_team_id"
-    t.index ["user_id", "team_id"], name: "index_user_teams_on_user_id_and_team_id", unique: true
-    t.index ["user_id"], name: "index_user_teams_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -1716,6 +1747,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
   add_foreign_key "tags", "projects"
   add_foreign_key "tags", "users", column: "created_by_id"
   add_foreign_key "tags", "users", column: "last_modified_by_id"
+  add_foreign_key "team_assignments", "teams"
+  add_foreign_key "team_assignments", "user_roles"
+  add_foreign_key "team_assignments", "users", column: "assigned_by_id"
   add_foreign_key "team_shared_objects", "teams"
   add_foreign_key "teams", "users", column: "created_by_id"
   add_foreign_key "teams", "users", column: "last_modified_by_id"
@@ -1724,17 +1758,21 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
   add_foreign_key "user_assignments", "user_roles"
   add_foreign_key "user_assignments", "users"
   add_foreign_key "user_assignments", "users", column: "assigned_by_id"
+  add_foreign_key "user_group_assignments", "teams"
+  add_foreign_key "user_group_assignments", "user_groups"
+  add_foreign_key "user_group_assignments", "user_roles"
+  add_foreign_key "user_group_assignments", "users", column: "assigned_by_id"
+  add_foreign_key "user_group_memberships", "user_groups"
+  add_foreign_key "user_group_memberships", "users"
+  add_foreign_key "user_group_memberships", "users", column: "created_by_id"
+  add_foreign_key "user_groups", "teams"
+  add_foreign_key "user_groups", "users", column: "created_by_id"
+  add_foreign_key "user_groups", "users", column: "last_modified_by_id"
   add_foreign_key "user_my_modules", "my_modules"
   add_foreign_key "user_my_modules", "users"
   add_foreign_key "user_my_modules", "users", column: "assigned_by_id"
-  add_foreign_key "user_projects", "projects"
-  add_foreign_key "user_projects", "users"
-  add_foreign_key "user_projects", "users", column: "assigned_by_id"
   add_foreign_key "user_roles", "users", column: "created_by_id"
   add_foreign_key "user_roles", "users", column: "last_modified_by_id"
-  add_foreign_key "user_teams", "teams"
-  add_foreign_key "user_teams", "users"
-  add_foreign_key "user_teams", "users", column: "assigned_by_id"
   add_foreign_key "users", "teams", column: "current_team_id"
   add_foreign_key "view_states", "users"
   add_foreign_key "webhooks", "activity_filters"

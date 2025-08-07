@@ -74,7 +74,9 @@ const entryList = {
   vue_design_system_inputs: './app/javascript/packs/vue/design_system/inputs.js',
   vue_design_system_table: './app/javascript/packs/vue/design_system/table.js',
   vue_favorites_widget: './app/javascript/packs/vue/favorites_widget.js',
-  vue_experiment_description_modal: './app/javascript/packs/vue/experiment_description_modal.js'
+  vue_experiment_description_modal: './app/javascript/packs/vue/experiment_description_modal.js',
+  vue_user_groups_table: './app/javascript/packs/vue/user_groups_table.js',
+  vue_user_groups_show: './app/javascript/packs/vue/user_groups_show.js'
 };
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

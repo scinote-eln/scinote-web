@@ -38,7 +38,7 @@ gem 'rack-cors'
 
 gem 'uglifier', '>= 1.3.0'
 
-gem 'activerecord-import'
+gem 'activerecord-import', '~> 2.2.0'
 gem 'acts_as_list'
 gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'aspector' # Aspect-oriented programming for Rails

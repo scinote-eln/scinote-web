@@ -33,18 +33,18 @@ class ActivitiesService
         activities
       end
 
-    visible_projects = Project.viewable_by_user(user, teams)
-    visible_my_modules = MyModule.viewable_by_user(user, teams)
-    visible_forms = Form.viewable_by_user(user, teams)
+    visible_projects = Project.readable_by_user(user, teams)
+    visible_my_modules = MyModule.readable_by_user(user, teams)
+    visible_forms = Form.readable_by_user(user, teams)
     # Temporary solution until handling of deleted subjects is fully implemented
-    visible_repository_teams = user.teams.where(id: teams).with_user_permission(user, RepositoryPermissions::READ)
+    visible_repository_teams = user.teams.with_granted_permissions(user, RepositoryPermissions::READ, teams)
 
     activities = Activity.from(activities, 'activities')
     activities = activities.where(project: nil, team_id: teams).where.not(subject_type: %w(RepositoryBase RepositoryRow Protocol Form))
                            .or(activities.where(subject_type: %w(RepositoryBase RepositoryRow), team_id: visible_repository_teams.select(:id)))
-                           .or(activities.where(subject_type: 'Protocol', subject_id: Protocol.viewable_by_user(user, teams).select(:id)))
+                           .or(activities.where(subject_type: 'Protocol', subject_id: Protocol.readable_by_user(user, teams).select(:id)))
                            .or(activities.where(project_id: visible_projects.select(:id)).where.not(subject_type: %w(Experiment MyModule Result Protocol)))
-                           .or(activities.where(subject_type: 'Experiment', subject_id: Experiment.viewable_by_user(user, teams)))
+                           .or(activities.where(subject_type: 'Experiment', subject_id: Experiment.readable_by_user(user, teams).select(:id)))
                            .or(activities.where("subject_id IN (?) AND subject_type = 'MyModule' OR " \
                                                 "subject_id IN (?) AND subject_type = 'Result' OR " \
                                                 "subject_id IN (?) AND subject_type = 'Protocol' OR " \
@@ -79,7 +79,7 @@ class ActivitiesService
                         .joins(:results_include_discarded)
                         .pluck('results.id')
           when :repositories
-            parent_model.viewable_by_user(user, teams)
+            parent_model.readable_by_user(user, teams)
                         .where(id: subjects[subject_name])
                         .pluck('repositories.id')
           else

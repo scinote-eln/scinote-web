@@ -22,24 +22,6 @@
         @change="changeProject"
       />
     </div>
-    <div v-if="selectedProject == 0">
-      <div class="flex gap-2 text-xs items-center">
-        <div class="sci-checkbox-container">
-          <input type="checkbox" class="sci-checkbox" v-model="publicProject" value="visible"/>
-          <span class="sci-checkbox-label"></span>
-        </div>
-        <span v-html="i18n.t('projects.index.modal_new_project.visibility_html')"></span>
-      </div>
-      <div class="mt-4" :class="{'hidden': !publicProject}">
-        <label class="sci-label">{{ i18n.t("dashboard.create_task_modal.user_role") }}</label>
-        <SelectDropdown
-          :options="userRoles"
-          :value="defaultRole"
-          @change="changeRole"
-          :placeholder="i18n.t('dashboard.create_task_modal.user_role_placeholder')"
-        />
-      </div>
-    </div>
     <div class="mt-4">
       <label class="sci-label">{{ i18n.t("dashboard.create_task_modal.experiment") }}</label>
       <SelectDropdown
@@ -94,7 +76,6 @@ export default {
     }
   },
   created() {
-    this.fetchUserRoles();
     $('#create-task-modal').on('hidden.bs.modal', () => {
       this.$emit('close');
     });
@@ -113,10 +94,6 @@ export default {
       type: String,
       required: true
     },
-    rolesUrl: {
-      type: String,
-      required: true
-    },
     createUrl: {
       type: String,
       required: true
@@ -130,10 +107,7 @@ export default {
       experiments: [],
       selectedExperiment: null,
       newExperimentName: '',
-      userRoles: [],
       taskName: '',
-      publicProject: false,
-      defaultRole: null,
       creatingTask: false
     };
   },
@@ -153,18 +127,13 @@ export default {
         },
         project: {
           id: this.selectedProject,
-          name: this.newProjectName,
-          visibility: (this.publicProject ? 'visible' : 'hidden'),
-          default_public_user_role_id: this.defaultRole
+          name: this.newProjectName
         }
       })
         .then((response) => {
           this.creatingTask = false;
           window.location.href = response.data.my_module_path;
         });
-    },
-    changeRole(value) {
-      this.defaultRole = value;
     },
     changeProject(value, label) {
       this.selectedProject = value;
@@ -203,12 +172,6 @@ export default {
       this.newProjectName = '';
       this.selectedExperiment = null;
       this.newExperimentName = '';
-    },
-    fetchUserRoles() {
-      axios.get(this.rolesUrl)
-        .then((response) => {
-          this.userRoles = response.data.data;
-        });
     },
     focusInput() {
       this.$refs.taskName.focus();

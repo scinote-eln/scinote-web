@@ -7,9 +7,9 @@ module Toolbars
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers
 
-    def initialize(current_user, form_ids: [])
+    def initialize(forms, current_user)
+      @forms = forms
       @current_user = current_user
-      @forms = Form.where(id: form_ids)
 
       @single = @forms.length == 1
     end

@@ -94,7 +94,7 @@ class RepositoryTemplate < ApplicationRecord
         {
           column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryDateValue],
           params: { name: I18n.t('repository_templates.template_columns.calibration_date'),
-                    reminder_value: 1, reminder_unit: 2419200, reminder_message: I18n.t('repository_templates.template_columns.calibration_message') }
+                    reminder_value: '1', reminder_unit: '2419200', reminder_message: I18n.t('repository_templates.template_columns.calibration_message') }
         },
         {
           column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryStatusValue],
@@ -162,7 +162,7 @@ class RepositoryTemplate < ApplicationRecord
         {
           column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryDateValue],
           params: { name: I18n.t('repository_templates.template_columns.expiration_date'),
-                    reminder_value: 1, reminder_unit: 2419200, reminder_message: I18n.t('repository_templates.template_columns.expiration_date_message') }
+                    reminder_value: '1', reminder_unit: '2419200', reminder_message: I18n.t('repository_templates.template_columns.expiration_date_message') }
         },
         {
           column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryListValue],

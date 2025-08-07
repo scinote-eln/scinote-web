@@ -81,7 +81,7 @@ export default {
     };
   },
   mounted() {
-    this.visible = !this.params.object.hidden;
+    this.visible = !!this.params.object.default_public_user_role_id;
     this.default_role = this.params.object.default_public_user_role_id;
   },
   beforeUnmount() {

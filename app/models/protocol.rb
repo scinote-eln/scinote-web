@@ -17,11 +17,7 @@ class Protocol < ApplicationRecord
   include PermissionCheckableModel
   include TinyMceImages
 
-  after_create :update_automatic_user_assignments, if: -> { visible? && in_repository? && parent.blank? }
-  before_update :change_visibility, if: :default_public_user_role_id_changed?
-  after_update :update_automatic_user_assignments,
-               if: -> { saved_change_to_default_public_user_role_id? && in_repository? }
-  skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
+  before_create -> { self.skip_user_assignments = true }, if: -> { in_module? }
 
   enum visibility: { hidden: 0, visible: 1 }
   enum protocol_type: {
@@ -145,7 +141,6 @@ class Protocol < ApplicationRecord
   has_many :protocol_keywords, through: :protocol_protocol_keywords
   has_many :steps, inverse_of: :protocol, dependent: :destroy
   has_many :original_steps, class_name: 'Step', foreign_key: :original_protocol_id, inverse_of: :original_protocol, dependent: :nullify
-  has_many :users, through: :user_assignments
 
   def self.search(user,
                   include_archived,
@@ -155,16 +150,13 @@ class Protocol < ApplicationRecord
     teams = options[:teams] || current_team || user.teams.select(:id)
 
     protocol_templates = if options[:options]&.dig(:in_repository).present? || options[:options].blank?
-                           templates = latest_available_versions(teams)
-                                       .with_granted_permissions(user, ProtocolPermissions::READ)
+                           templates = latest_available_versions(teams).readable_by_user(user, teams)
                            templates = templates.active unless include_archived
                            templates
                          end || []
 
     protocol_my_modules = if options[:options]&.dig(:in_repository).blank?
-                            protocols = viewable_by_user_my_module_protocols(user, teams)
-                                        .where(protocol_type: [Protocol.protocol_types[:unlinked],
-                                                               Protocol.protocol_types[:linked]])
+                            protocols = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, teams) })
                             unless include_archived
                               protocols = protocols.joins(my_module: { experiment: :project })
                                                    .active
@@ -185,6 +177,15 @@ class Protocol < ApplicationRecord
                 end
 
     protocols.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: protocols })
+  end
+
+  def self.search_by_search_fields_with_boolean(user, teams = [], query = nil, search_fields = [], options = {})
+    protocol_templates = latest_available_versions(teams).readable_by_user(user, teams)
+    protocol_my_modules = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, teams) })
+
+    where('protocols.id IN ((?) UNION (?))', protocol_templates.select(:id), protocol_my_modules.select(:id))
+      .where_attributes_like_boolean(search_fields, query, options)
+      .limit(options[:limit] || Constants::SEARCH_LIMIT)
   end
 
   def self.search_subquery(query, raw_input)
@@ -232,35 +233,6 @@ class Protocol < ApplicationRecord
                          .select('DISTINCT ON (parent_id) id')
 
     where('protocols.id IN ((?) UNION ALL (?))', original_without_versions, published_versions)
-  end
-
-  def self.viewable_by_user(user, teams, options = {})
-    if options[:fetch_latest_versions]
-      protocol_templates = latest_available_versions(teams)
-                           .with_granted_permissions(user, ProtocolPermissions::READ)
-                           .select(:id)
-      protocol_my_modules = viewable_by_user_my_module_protocols(user, teams).select(:id)
-
-      where('protocols.id IN ((?) UNION (?))', protocol_templates, protocol_my_modules)
-    else
-      # Team owners see all protocol templates in the team
-      owner_role = UserRole.find_predefined_owner_role
-      protocols = Protocol.where(team: teams)
-                          .where(protocol_type: REPOSITORY_TYPES)
-      viewable_as_team_owner = protocols.joins("INNER JOIN user_assignments team_user_assignments " \
-                                               "ON team_user_assignments.assignable_type = 'Team' " \
-                                               "AND team_user_assignments.assignable_id = protocols.team_id")
-                                        .where(team_user_assignments: { user_id: user, user_role_id: owner_role })
-                                        .select(:id)
-      viewable_as_assigned = protocols.with_granted_permissions(user, ProtocolPermissions::READ).select(:id)
-
-      where('protocols.id IN ((?) UNION (?))', viewable_as_team_owner, viewable_as_assigned)
-    end
-  end
-
-  def self.viewable_by_user_my_module_protocols(user, teams)
-    distinct.joins(:my_module)
-            .where(my_modules: { id: MyModule.viewable_by_user(user, teams).select(:id) })
   end
 
   def self.filter_by_teams(teams = [])
@@ -629,7 +601,15 @@ class Protocol < ApplicationRecord
     end
 
     parent_protocol.user_assignments.each do |parent_user_assignment|
-      parent_protocol.sync_child_protocol_user_assignment(parent_user_assignment, draft.id)
+      parent_protocol.sync_child_protocol_assignment(parent_user_assignment, draft.id)
+    end
+
+    parent_protocol.user_group_assignments.each do |parent_user_group_assignment|
+      parent_protocol.sync_child_protocol_assignment(parent_user_group_assignment, draft.id)
+    end
+
+    parent_protocol.team_assignments.each do |parent_team_assignment|
+      parent_protocol.sync_child_protocol_assignment(parent_team_assignment, draft.id)
     end
 
     draft
@@ -699,45 +679,34 @@ class Protocol < ApplicationRecord
     steps.map(&:can_destroy?).all?
   end
 
-  def create_or_update_public_user_assignments!(assigned_by)
-    public_role = default_public_user_role || UserRole.find_predefined_viewer_role
-    team.user_assignments.where.not(user: assigned_by).find_each do |team_user_assignment|
-      new_user_assignment = user_assignments.find_or_initialize_by(user: team_user_assignment.user)
-      next if new_user_assignment.manually_assigned?
-
-      new_user_assignment.user_role = public_role
-      new_user_assignment.assigned_by = assigned_by
-      new_user_assignment.assigned = :automatically
-      new_user_assignment.save!
-    end
-  end
-
   def child_version_protocols
     published_versions.or(Protocol.where(id: draft&.id))
   end
 
-  def sync_child_protocol_user_assignment(user_assignment, child_protocol_id = nil)
+  def sync_child_protocol_assignment(assignment, child_protocol_id = nil)
     # Copy user assignments to child protocol(s)
 
     Protocol.transaction(requires_new: true) do
       # Reload to ensure a potential new draft is also included in child versions
       reload
+      assignment_key = assignment.model_name.param_key
+      assignable_id_key = assignment_key.gsub('assignment', 'id')
 
       (
         # all or single child version protocol
         child_protocol_id ? child_version_protocols.where(id: child_protocol_id) : child_version_protocols
       ).find_each do |child_protocol|
-        child_assignment = child_protocol.user_assignments.find_or_initialize_by(
-          user: user_assignment.user
+        child_assignment = child_protocol.public_send(assignment_key.pluralize).find_or_initialize_by(
+          assignable_id_key => assignment.public_send(assignable_id_key)
         )
 
-        if user_assignment.destroyed?
+        if assignment.destroyed?
           child_assignment.destroy! if child_assignment.persisted?
           next
         end
 
         child_assignment.update!(
-          user_assignment.attributes.slice(
+          assignment.attributes.slice(
             'user_role_id',
             'assigned',
             'assigned_by_id',
@@ -753,18 +722,19 @@ class Protocol < ApplicationRecord
   def after_user_assignment_changed(user_assignment)
     return unless in_repository_published_original?
 
-    sync_child_protocol_user_assignment(user_assignment)
+    sync_child_protocol_assignment(user_assignment)
   end
 
-  def update_automatic_user_assignments
-    return if skip_user_assignments
+  def after_user_group_assignment_changed(user_group_assignment)
+    return unless in_repository_published_original?
 
-    case visibility
-    when 'visible'
-      create_or_update_public_user_assignments!(added_by)
-    when 'hidden'
-      automatic_user_assignments.where.not(user: added_by).destroy_all
-    end
+    sync_child_protocol_assignment(user_group_assignment)
+  end
+
+  def after_team_assignment_changed(user_group_assignment)
+    return unless in_repository_published_original?
+
+    sync_child_protocol_assignment(user_group_assignment)
   end
 
   def deep_clone(clone, current_user, include_file_versions: false)
@@ -814,9 +784,5 @@ class Protocol < ApplicationRecord
     if parent&.draft && parent.draft.id != id
       errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_draft_number'))
     end
-  end
-
-  def change_visibility
-    self.visibility = default_public_user_role_id.present? ? :visible : :hidden
   end
 end

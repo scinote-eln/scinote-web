@@ -8,7 +8,6 @@ class ProjectsController < ApplicationController
   include CardsViewHelper
   include ExperimentsHelper
   include Breadcrumbs
-  include UserRolesHelper
   include FavoritesActions
 
   attr_reader :current_folder
@@ -16,11 +15,12 @@ class ProjectsController < ApplicationController
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
-  before_action :load_vars, only: %i(update create_tag assigned_users_list show)
+  before_action :load_projects, only: %i(index actions_toolbar)
+  before_action :load_project, only: %i(update create_tag assigned_users_list show)
   before_action :load_current_folder, only: :index
   before_action :check_read_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
-                                                    actions_toolbar user_roles users_filter head_of_project_users_list
+                                                    actions_toolbar users_filter head_of_project_users_list
                                                     favorite unfavorite)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: :update
@@ -32,9 +32,9 @@ class ProjectsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        projects = Lists::ProjectsService.new(current_team, current_user, current_folder, params).call
-        render json: projects, each_serializer: Lists::ProjectAndFolderSerializer, user: current_user,
-               meta: pagination_dict(projects)
+        projects_list = Lists::ProjectsService.new(current_team, @projects, @current_folder, params, user: current_user).call
+        render json: projects_list, each_serializer: Lists::ProjectAndFolderSerializer, user: current_user,
+               meta: pagination_dict(projects_list)
       end
       format.html do
         render 'projects/index'
@@ -54,10 +54,10 @@ class ProjectsController < ApplicationController
   end
 
   def inventory_assigning_project_filter
-    viewable_experiments = Experiment.viewable_by_user(current_user, current_team)
+    viewable_experiments = Experiment.readable_by_user(current_user, current_team)
     assignable_my_modules = MyModule.repository_row_assignable_by_user(current_user)
 
-    projects = Project.viewable_by_user(current_user, current_team)
+    projects = Project.readable_by_user(current_user, current_team)
                       .active
                       .joins(experiments: :my_modules)
                       .where(experiments: { id: viewable_experiments })
@@ -86,7 +86,6 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    default_public_user_role_name_before_update = @project.default_public_user_role&.name
     old_status = @project.status
     @project.assign_attributes(project_update_params)
     return_error = false
@@ -105,14 +104,6 @@ class ProjectsController < ApplicationController
     end
 
     message_edited = @project.name_changed? || @project.description_changed?
-    message_visibility = if !@project.visibility_changed?
-                           nil
-                         elsif @project.visible?
-                           t('projects.activity.visibility_visible')
-                         else
-                           t('projects.activity.visibility_hidden')
-                         end
-
     message_archived = if !@project.archived_changed?
                          nil
                        elsif @project.archived?
@@ -124,40 +115,13 @@ class ProjectsController < ApplicationController
     start_date_changes = @project.changes[:start_date]
     due_date_changes = @project.changes[:due_date]
 
-    default_public_user_role_name = nil
-    if !@project.visibility_changed? && @project.default_public_user_role_id_changed?
-      @project.visibility_will_change! # triggers assignment sync
-      default_public_user_role_name = UserRole.find(project_params[:default_public_user_role_id]).name
-    end
-
     @project.last_modified_by = current_user
     if !return_error && @project.save
 
       # Add activities if needed
-      if message_visibility.present? && @project.visible?
-        log_activity(:project_grant_access_to_all_team_members,
-                     @project,
-                     { visibility: message_visibility,
-                       role: @project.default_public_user_role.name,
-                       team: @project.team.id })
-      end
-      if message_visibility.present? && !@project.visible?
-        log_activity(:project_remove_access_from_all_team_members,
-                     @project,
-                     { visibility: message_visibility,
-                       role: default_public_user_role_name_before_update,
-                       team: @project.team.id })
-      end
-
       log_activity(:edit_project) if message_edited.present?
       log_activity(:archive_project) if message_archived == 'archive'
       log_activity(:restore_project) if message_archived == 'restore'
-
-      if default_public_user_role_name.present?
-        log_activity(:project_access_changed_all_team_members,
-                     @project,
-                     { team: @project.team.id, role: default_public_user_role_name })
-      end
 
       if supervised_by_id_changes.present?
         log_activity(:remove_head_of_project, @project, { user_target: supervised_by_id_changes[0] }) if supervised_by_id_changes[0].present? # remove head of project
@@ -300,16 +264,17 @@ class ProjectsController < ApplicationController
     render json: { data: users.map { |u| [u.id, u.name, { avatar_url: avatar_path(u, :icon_small) }] } }, status: :ok
   end
 
-  def user_roles
-    render json: { data: user_roles_collection(Project.new).map(&:reverse) }
-  end
-
   def actions_toolbar
+    project_ids = JSON.parse(params[:items]).select { |i| i['type'] == 'projects' }.pluck('id')
+    project_folder_ids = JSON.parse(params[:items]).select { |i| i['type'] == 'project_folders' }.pluck('id')
+    selected_projects = @projects.where(id: project_ids)
+    selected_project_folders = current_user.current_team.project_folders.where(id: project_folder_ids)
     render json: {
       actions:
         Toolbars::ProjectsService.new(
-          current_user,
-          items: JSON.parse(params[:items])
+          selected_projects,
+          selected_project_folders,
+          current_user
         ).actions
     }
   end
@@ -319,9 +284,8 @@ class ProjectsController < ApplicationController
   def project_params
     params.require(:project)
           .permit(
-            :name, :visibility,
+            :name,
             :archived, :project_folder_id,
-            :default_public_user_role_id,
             :due_date,
             :start_date,
             :description
@@ -330,14 +294,23 @@ class ProjectsController < ApplicationController
 
   def project_update_params
     params.require(:project)
-          .permit(:name, :visibility, :archived, :default_public_user_role_id, :due_date, :start_date, :description, :status, :supervised_by_id)
+          .permit(:name, :archived, :due_date, :start_date, :description, :status, :supervised_by_id)
   end
 
   def view_type_params
     params.require(:project).require(:view_type)
   end
 
-  def load_vars
+  def load_projects
+    @projects = if can_manage_team?(current_team)
+                  # Team owners see all projects in the team
+                  current_team.projects
+                else
+                  current_team.projects.readable_by_user(current_user, current_team)
+                end
+  end
+
+  def load_project
     @project = Project.find_by(id: params[:id] || params[:project_id])
 
     render_404 unless @project

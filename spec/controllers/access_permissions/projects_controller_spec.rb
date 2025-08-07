@@ -11,7 +11,6 @@ describe AccessPermissions::ProjectsController, type: :controller do
   let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
   let!(:normal_user_role) { create :normal_user_role }
   let!(:technician_role) { create :technician_role }
-  let!(:user_project) { create :user_project, user: user, project: project }
   let!(:normal_user) { create :user, confirmed_at: Time.zone.now }
 
   before do
@@ -66,13 +65,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
       expect(response).to have_http_status :success
     end
 
-    it 'renders edit template' do
-      get :edit, params: { id: project.id }, format: :json
-      expect(response).to render_template :edit
-    end
-
     it 'renders 403 if user does not have manage permissions on project' do
-      create :user_project, user: normal_user, project: project
       create :user_assignment, assignable: project, user: normal_user, user_role: normal_user_role, assigned_by: user
 
       sign_in_normal_user
@@ -83,7 +76,6 @@ describe AccessPermissions::ProjectsController, type: :controller do
   end
 
   describe 'PUT #update' do
-    let!(:normal_user_project) { create :user_project, user: normal_user, project: project }
     let!(:normal_user_assignment) do
       create :user_assignment,
              assignable: project,
@@ -151,13 +143,11 @@ describe AccessPermissions::ProjectsController, type: :controller do
     end
 
     it 'does not create an assigment when the user is already assigned with different permission' do
-      create :user_project, user: normal_user, project: project
       create :user_assignment, assignable: project, user: normal_user, user_role: normal_user_role, assigned_by: user
 
       expect {
         post :create, params: valid_params, format: :json
-      }.to change(UserProject, :count).by(0).and \
-        change(UserAssignment, :count).by(0)
+      }.to change(UserAssignment, :count).by(0)
     end
 
     it 'renders 403 if user does not have manage permissions on project' do
@@ -169,7 +159,6 @@ describe AccessPermissions::ProjectsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let!(:normal_user_project) { create :user_project, user: normal_user, project: project }
     let!(:normal_user_assignment) do
       create :user_assignment,
              assignable: project,
@@ -181,7 +170,9 @@ describe AccessPermissions::ProjectsController, type: :controller do
     let(:valid_params) do
       {
         id: project.id,
-        user_id: normal_user.id
+        user_assignment: {
+          user_id: normal_user.id
+        }
       }
     end
 

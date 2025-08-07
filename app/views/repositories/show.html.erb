@@ -1,7 +1,6 @@
 <% provide(:head_title, t("libraries.show.head_title", library: @repository.name)) %>
 <%= stylesheet_link_tag 'datatables' %>
 <% provide(:container_class, "no-second-nav-container") %>
-<% provide(:sidebar_url, sidebar_repositories_path) %>
 <% provide(:sidebar_title, t('sidebar.repositories.sidebar_title')) %>
 
 <% content_for :head do %>

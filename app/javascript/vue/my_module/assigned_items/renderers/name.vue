@@ -10,14 +10,22 @@
         <ul ref="reminders" v-html="reminders" class="list-none pl-0"></ul>
       </template>
     </GeneralDropdown>
-    <a class="hover:no-underline record-info-link truncate block"
+    <a v-if="params.data.recordInfoUrl"
+      class="hover:no-underline record-info-link truncate block"
       :title="params.data[0]"
       :href="params.data.recordInfoUrl"
     >
       {{ params.data[0] }}
     </a>
+    <span v-else
+      :title="i18n.t('my_modules.assigned_items.repository.private_repository_row_name', {repository_row_code: params.data.code })"
+      class="text-sn-grey truncate"
+    >
+      <i class="sn-icon sn-icon-locked-task"></i>
+      {{ i18n.t('my_modules.assigned_items.repository.private_repository_row_name', {repository_row_code: params.data.code }) }}
+    </span>
 
-    <span v-for="state in params.data.DT_RowAttr['data-state']" class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1  ">
+    <span v-if="params.data.DT_RowAttr" v-for="state in params.data.DT_RowAttr['data-state']" class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1  ">
       {{ state }}
     </span>
   </div>

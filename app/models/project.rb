@@ -27,7 +27,6 @@ class Project < ApplicationRecord
   validates :visibility, presence: true
   validates :team, presence: true
   validate :project_folder_team, if: -> { project_folder.present? }
-  validate :selected_user_role_validation, if: :bulk_assignment?
 
   before_validation :remove_project_folder, on: :update, if: :archived_changed?
   before_save :reset_due_date_notification_sent, if: -> { due_date_changed? }
@@ -58,8 +57,6 @@ class Project < ApplicationRecord
              optional: true
   belongs_to :team, inverse_of: :projects, touch: true
   belongs_to :project_folder, inverse_of: :projects, optional: true, touch: true
-  has_many :user_projects, inverse_of: :project
-  has_many :users, through: :user_assignments
   has_many :experiments, inverse_of: :project
   has_many :active_experiments, -> { where(archived: false) },
            class_name: 'Experiment'
@@ -73,22 +70,7 @@ class Project < ApplicationRecord
                                 allow_destroy: true,
                                 reject_if: :all_blank
 
-  scope :visible_to, (lambda do |user, team|
-                        # Team owners see all projects in the team
-                        if team.permission_granted?(user, TeamPermissions::MANAGE)
-                          where(team: team)
-                        else
-                          where(team: team)
-                            .left_outer_joins(user_assignments: :user_role)
-                            .where(user_assignments: { user: user })
-                            .where('? = ANY(user_roles.permissions)', ProjectPermissions::READ)
-                        end
-                      end)
-
   scope :templates, -> { where(template: true) }
-
-  after_create :auto_assign_project_members, if: :visible?
-  before_update :sync_project_assignments, if: :visibility_changed?
 
   def self.search(
     user,
@@ -98,20 +80,13 @@ class Project < ApplicationRecord
     options = {}
   )
     teams = options[:teams] || current_team || user.teams.select(:id)
-    new_query = distinct.viewable_by_user(user, teams)
+    new_query = distinct.readable_by_user(user, teams)
                         .left_joins(:project_comments)
                         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
     new_query = new_query.active unless include_archived
 
     new_query
-  end
-
-  def self.viewable_by_user(user, teams)
-    joins(user_assignments: :user_role)
-      .where(team: teams)
-      .with_granted_permissions(user, ProjectPermissions::READ)
-      .distinct
   end
 
   def self.with_children_viewable_by_user(user)
@@ -137,6 +112,10 @@ class Project < ApplicationRecord
 
   def self.filter_by_teams(teams = [])
     teams.blank? ? self : where(team: teams)
+  end
+
+  def has_permission_children?
+    true
   end
 
   def permission_parent
@@ -364,26 +343,8 @@ class Project < ApplicationRecord
     self.project_folder = nil
   end
 
-  def auto_assign_project_members
-    return if skip_user_assignments
-
-    UserAssignments::ProjectGroupAssignmentJob.perform_now(self, last_modified_by&.id || created_by&.id)
-  end
-
-  def bulk_assignment?
-    visible? && default_public_user_role.present?
-  end
-
   def selected_user_role_validation
     errors.add(:default_public_user_role_id, :inclusion) unless default_public_user_role.in?(UserRole.all)
-  end
-
-  def sync_project_assignments
-    if visible?
-      auto_assign_project_members
-    else
-      UserAssignments::ProjectGroupUnAssignmentJob.perform_now(self)
-    end
   end
 
   def convert_index_to_letter(index)

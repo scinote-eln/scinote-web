@@ -2,6 +2,7 @@
 
 module ReportsHelper
   include StringUtility
+  include FormFieldValuesHelper
   include Canaid::Helpers::PermissionsHelper
 
   def render_report_element(element, provided_locals = nil)
@@ -10,6 +11,8 @@ module ReportsHelper
       return unless can_read_experiment?(element.experiment)
     when 'my_module'
       return unless can_read_my_module?(element.my_module)
+    when 'my_module_repository'
+      return unless can_read_repository?(element.repository)
     end
 
     # Determine partial
@@ -22,7 +25,7 @@ module ReportsHelper
     # First, recursively render element's children
     if element.children.active.present?
       element.children.active.find_each do |child|
-        children_html.safe_concat render_report_element(child, provided_locals)
+        children_html.safe_concat render_report_element(child, provided_locals) || ''
       end
     end
     locals[:report_element] = element
@@ -139,6 +142,8 @@ module ReportsHelper
                 )
               elsif form_field_value.is_a?(FormDatetimeFieldValue)
                 form_field_value&.formatted_localize
+              elsif form_field_value.is_a?(FormRepositoryRowsFieldValue)
+                form_repository_rows_field_value_formatter(form_field_value)
               else
                 form_field_value&.formatted
               end

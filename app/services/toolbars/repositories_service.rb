@@ -7,12 +7,10 @@ module Toolbars
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers
 
-    def initialize(current_user, current_team, repository_ids: [])
+    def initialize(repositories, current_user)
+      @repositories = repositories
       @current_user = current_user
-      @current_team = current_team
-      @repositories = Repository.readable_by_user(current_user)
-                                .where(id: repository_ids)
-                                .distinct
+      @current_team = current_user.current_team
       @repository = @repositories.first
       @archived_state = @repositories.all.any?(&:archived?)
       @single = @repositories.uniq.length == 1
@@ -22,13 +20,24 @@ module Toolbars
       return [] if @repositories.none?
 
       if @archived_state
-        [export_action, restore_action, delete_action]
+        [access_action, export_action, restore_action, delete_action]
       else
-        [rename_action, duplicate_action, export_action, archive_action, share_action]
+        [access_action, rename_action, duplicate_action, export_action, archive_action, share_action]
       end.compact
     end
 
     private
+
+    def access_action
+      return unless @single
+
+      {
+        name: 'access',
+        label: I18n.t('general.access'),
+        icon: 'sn-icon sn-icon-project-member-access',
+        type: :emit
+      }
+    end
 
     def rename_action
       return unless @single && can_manage_repository?(@repository)
@@ -42,7 +51,10 @@ module Toolbars
     end
 
     def duplicate_action
-      return unless @single && can_create_repositories?(@current_team) && !@repository.shared_with?(@current_team)
+      return unless @single &&
+                    can_read_repository?(@repository) &&
+                    can_create_repositories?(@current_team) &&
+                    !@repository.shared_with?(@current_team)
 
       {
         name: :duplicate,

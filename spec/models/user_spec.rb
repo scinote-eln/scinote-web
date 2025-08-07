@@ -47,7 +47,6 @@ describe User, type: :model do
 
   describe 'Relations' do
     it { should have_many :teams }
-    it { should have_many :user_projects }
     it { should have_many :projects }
     it { should have_many :user_my_modules }
     it { should have_many :comments }
@@ -84,7 +83,6 @@ describe User, type: :model do
     it { should have_many :tokens }
     it { should have_many :modified_tags }
     it { should have_many :assigned_user_my_modules }
-    it { should have_many :assigned_user_projects }
     it { should have_many :added_protocols }
     it { should have_many :archived_protocols }
     it { should have_many :restored_protocols }
@@ -154,23 +152,6 @@ describe User, type: :model do
 
   describe 'user variables' do
     it { is_expected.to respond_to(:export_vars) }
-  end
-
-  describe '#last_activities' do
-    let!(:user) { create :user }
-    let!(:project) { create :project }
-    let!(:user_projects) do
-      create :user_project, :viewer, project: project, user: user
-    end
-    let!(:activity_one) { create :activity, owner: user, project: project }
-    let!(:activity_two) { create :activity, owner: user, project: project }
-
-    it 'is expected to return an array of user\'s activities' do
-      activities = user.last_activities
-      expect(activities.count).to eq 2
-      expect(activities).to include activity_one
-      expect(activities).to include activity_two
-    end
   end
 
   describe '#increase_daily_exports_counter!' do

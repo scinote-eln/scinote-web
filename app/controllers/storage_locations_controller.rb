@@ -8,6 +8,7 @@ class StorageLocationsController < ApplicationController
 
   before_action :switch_team_with_param, only: %i(index show)
   before_action :check_storage_locations_enabled, except: :unassign_rows
+  before_action :load_storage_locations, only: %i(index actions_toolbar)
   before_action :load_storage_location, only: %i(update destroy duplicate move show available_positions unassign_rows export_container import_container)
   before_action :set_inline_name_editing, only: %i(show)
   before_action :check_read_permissions, except: %i(index create tree actions_toolbar import_container unassign_rows)
@@ -26,7 +27,7 @@ class StorageLocationsController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        storage_locations = Lists::StorageLocationsService.new(current_user, current_team, params).call
+        storage_locations = Lists::StorageLocationsService.new(@storage_locations, params, user: current_user).call
         render json: storage_locations,
                each_serializer: Lists::StorageLocationSerializer,
                user: current_user,
@@ -131,7 +132,7 @@ class StorageLocationsController < ApplicationController
   end
 
   def tree
-    records = StorageLocation.viewable_by_user(current_user, current_team)
+    records = StorageLocation.readable_by_user(current_user, current_team)
                              .where(
                                parent: nil,
                                container: [false, params[:container] == 'true']
@@ -188,11 +189,12 @@ class StorageLocationsController < ApplicationController
   end
 
   def actions_toolbar
+    selected_storage_locations = @storage_locations.where(id: JSON.parse(params[:items]).pluck('id'))
     render json: {
       actions:
         Toolbars::StorageLocationsService.new(
-          current_user,
-          storage_location_ids: JSON.parse(params[:items]).pluck('id')
+          selected_storage_locations,
+          current_user
         ).actions
     }
   end
@@ -210,6 +212,10 @@ class StorageLocationsController < ApplicationController
 
   def move_params
     params.permit(:id, :destination_storage_location_id)
+  end
+
+  def load_storage_locations
+    @storage_locations = StorageLocation.readable_by_user(current_user, current_team).or(StorageLocation.shared_with_team(current_team))
   end
 
   def load_storage_location
