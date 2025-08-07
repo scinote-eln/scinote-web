@@ -13,6 +13,7 @@
             :class="{
                 'right-0': position === 'right',
                 'left-0': position === 'left',
+                'max-h-96 overflow-y-auto': !disableOverflow
             }"
         >
           <span v-for="(item, i) in listItems" :key="i" class="contents">
@@ -85,6 +86,7 @@ export default {
     alwaysShow: { type: Boolean, default: false },
     title: { type: String, default: '' },
     dataE2e: { type: String, default: '' },
+    disableOverflow: { type: Boolean, default: false },
     smallScreenCollapse: { type: Boolean, default: false }
   },
   data() {

@@ -15,10 +15,11 @@
       <template v-for="(row, index) in field.field_value.value" :key="row.id">
         <div class="flex items-center gap-2">
           <span v-if="index > 0">|</span>
-          <a
+          <a v-if="row.has_access"
             class="cursor-pointer text-sn-blue record-info-link"
             :href="itemCardUrl(row)"
-          >{{ row.name }} (ID{{ row.id }})</a>
+          >{{ row.name }}</a>
+          <span v-else class="cursor-pointer"> {{ row.name }}</span>
           <i  v-if="!disabled" @click="removeValue(row.id)" class="sn-icon sn-icon-unlink-italic-s cursor-pointer"></i>
         </div>
       </template>

@@ -1,5 +1,5 @@
 <ul>
-  <% project.experiments.viewable_by_user(current_user, current_team).includes(:my_modules).active.sort_by { |e| @project_contents[:experiments].index(e.id) || @project_contents[:experiments].length if report }.each do |experiment| %>
+  <% project.experiments.readable_by_user(current_user, current_team).includes(:my_modules).active.sort_by { |e| @project_contents[:experiments].index(e.id) || @project_contents[:experiments].length if report }.each do |experiment| %>
     <li class="experiment-element">
       <div class="experiment-block">
         <span class="sci-checkbox-container">
@@ -22,7 +22,7 @@
         </div>
       </div>
       <ul class="experiment-contents collapse in" id="experimentContentContainer<%= experiment.id %>">
-        <% experiment.my_modules.viewable_by_user(current_user, current_team).active.order(id: :asc).each do |my_module| %>
+        <% experiment.my_modules.readable_by_user(current_user, current_team).active.order(id: :asc).each do |my_module| %>
           <li class="experiment-my-module">
             <span class="sci-checkbox-container">
               <input type="checkbox" value="<%= my_module.id %>" class="sci-checkbox report-my-module-checkbox"

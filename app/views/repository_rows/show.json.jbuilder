@@ -87,10 +87,14 @@ json.relationships do
     json.array! @repository_row.parent_repository_rows.preload(:repository).each do |parent|
       json.id parent.id
       json.code parent.code
-      json.name parent.name_with_label
-      json.path repository_repository_row_path(parent.repository, parent)
-      json.repository_name parent.repository.name_with_label
-      json.repository_path repository_path(parent.repository)
+      if can_read_repository?(parent.repository)
+        json.name parent.name_with_label
+        json.path repository_repository_row_path(parent.repository, parent)
+        json.repository_name parent.repository.name_with_label
+        json.repository_path repository_path(parent.repository)
+      else
+        json.name I18n.t('repositories.item_card.relationships.private_item_name')
+      end
       json.unlink_path repository_repository_row_repository_row_connection_path(parent.repository,
                                                                                 parent,
                                                                                 @repository_row.parent_connections
@@ -101,10 +105,14 @@ json.relationships do
     json.array! @repository_row.child_repository_rows.preload(:repository).each do |child|
       json.id child.id
       json.code child.code
-      json.name child.name_with_label
-      json.path repository_repository_row_path(child.repository, child)
-      json.repository_name child.repository.name_with_label
-      json.repository_path repository_path(child.repository)
+      if can_read_repository?(child.repository)
+        json.name child.name_with_label
+        json.path repository_repository_row_path(child.repository, child)
+        json.repository_name child.repository.name_with_label
+        json.repository_path repository_path(child.repository)
+      else
+        json.name I18n.t('repositories.item_card.relationships.private_item_name')
+      end
       json.unlink_path repository_repository_row_repository_row_connection_path(child.repository,
                                                                                 child,
                                                                                 @repository_row.child_connections

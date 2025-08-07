@@ -7,7 +7,7 @@ class RepositoriesExportJob < ApplicationJob
   def perform(file_type, repository_ids, user_id:, team_id:)
     @user = User.find(user_id)
     @team = Team.find(team_id)
-    @repositories = Repository.viewable_by_user(@user, @team).where(id: repository_ids).order(:id)
+    @repositories = Repository.readable_by_user(@user, @team).where(id: repository_ids).order(:id)
     @file_type = file_type.to_sym
     zip_input_dir = FileUtils.mkdir_p(Rails.root.join("tmp/temp_zip_#{Time.now.to_i}")).first
     zip_dir = FileUtils.mkdir_p(Rails.root.join('tmp/zip-ready')).first

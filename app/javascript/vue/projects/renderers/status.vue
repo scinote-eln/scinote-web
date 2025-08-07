@@ -1,15 +1,27 @@
 <template>
-<div v-if="params.data.status" class="py-0.5">
-  <SelectDropdown
-    :options="params.statusesList"
-    :value="params.data.status"
-    @change="changeStatus"
-    size="xs"
-    :borderless="true"
-    :optionRenderer="optionRenderer"
-    :labelRenderer="optionRenderer"
-    :disabled="!params.data.urls.update"
-  />
+<div v-if="params.data.status">
+  <div v-if="params.data.urls.update" class="py-0.5">
+    <SelectDropdown
+      :options="params.statusesList"
+      :value="params.data.status"
+      @change="changeStatus"
+      size="xs"
+      :borderless="true"
+      :optionRenderer="optionRenderer"
+      :labelRenderer="optionRenderer"
+    />
+  </div>
+  <div v-else class="flex items-center gap-2 py-0.5">
+    <div class="w-3 h-3 rounded-full"
+        :class="{
+          'bg-sn-grey-500': params.data.status === 'not_started',
+          'bg-sn-science-blue': params.data.status === 'in_progress',
+          'bg-sn-alert-green': params.data.status === 'done'
+        }"></div>
+      <span class="truncate">
+        {{ this.i18n.t(`projects.index.status.${params.data.status}`) }}
+      </span>
+  </div>
 </div>
 </template>
 

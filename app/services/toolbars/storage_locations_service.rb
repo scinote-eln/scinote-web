@@ -7,9 +7,9 @@ module Toolbars
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers
 
-    def initialize(current_user, storage_location_ids: [])
+    def initialize(storage_locations, current_user)
+      @storage_locations = storage_locations
       @current_user = current_user
-      @storage_locations = StorageLocation.where(id: storage_location_ids)
 
       @single = @storage_locations.length == 1
     end

@@ -7,11 +7,10 @@
             <img :src="user.avatar" class="w-7 h-7 rounded-full" />
           </div>
           <div v-if="hiddenUsers.length > 0" :title="hiddenUsersTitle"
-              class="flex shrink-0 items-center justify-center w-7 h-7 text-xs
-                    rounded-full bg-sn-dark-grey text-sn-white">
+              class="flex shrink-0 items-center justify-center w-7 h-7 text-xs rounded-full bg-sn-dark-grey text-sn-white">
             +{{ hiddenUsers.length }}
           </div>
-          <div v-if="canManage" class="flex items-center shrink-0 justify-center w-7 h-7 rounded-full bg-sn-light-grey text-sn-dark-grey">
+          <div v-if="canManage" class="flex items-center shrink-0 justify-center w-7 h-7 rounded-full border-dashed bg-sn-white text-sn-sleepy-grey border-sn-sleepy-grey">
             <i class="sn-icon sn-icon-new-task"></i>
           </div>
         </div>

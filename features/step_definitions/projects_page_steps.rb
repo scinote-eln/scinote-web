@@ -31,20 +31,6 @@ Then('I click to down arrow of a {string} project card') do |project|
   page.find('.panel-project', text: project).hover.find('.caret').click
 end
 
-Then('user {string} owner of project {string}') do |user, project|
-  FactoryBot.create(:user_project,
-                    role: 0,
-                    user: User.find_by(full_name: user),
-                    project: Project.find_by(name: project))
-end
-
-Then('user {string} normal user of project {string}') do |user, project|
-  FactoryBot.create(:user_project,
-                    role: 1,
-                    user: User.find_by(full_name: user),
-                    project: Project.find_by(name: project))
-end
-
 Given('I click to {string} of a Options modal window') do |link|
   page.find('.panel-project .dropdown-menu', text: 'Options').find('a', text: link).click
 end
@@ -55,7 +41,6 @@ end
 
 Then('I select user {string} in user dropdown of user manage modal for project {string}') do |user, project|
   within('.modal-content', text: "Manage users for #{project}") do
-    find('.btn[data-id="user_project_user_id"]').click
     find('.dropdown-menu.open a', text: user).click
   end
 end

@@ -3,17 +3,6 @@
   const protocolModal = '#newProtocolModal';
   const submitButton = $('.create-protocol-button');
 
-  let roleSelector = `${protocolModal} #protocol_role_selector`;
-  dropdownSelector.init(roleSelector, {
-    noEmptyOption: true,
-    singleSelect: true,
-    closeOnSelect: true,
-    selectAppearance: 'simple',
-    onChange: function() {
-      $('#protocol_default_public_user_role_id').val(dropdownSelector.getValues(roleSelector));
-    }
-  });
-
   $(protocolModal)
     .on('input', '#protocol_name', function() {
       if ($(this).val().length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH) {
@@ -21,11 +10,6 @@
       } else {
         submitButton.attr('disabled', 'disabled');
       }
-    })
-    .on('change', '#protocol_visibility', function() {
-      let checked = $(this)[0].checked;
-      $('#roleSelectWrapper').toggleClass('hidden', !checked);
-      $('#protocol_default_public_user_role_id').prop('disabled', !checked);
     })
     .on('submit', function() {
       submitButton.attr('disabled', 'disabled');

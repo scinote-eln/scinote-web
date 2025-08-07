@@ -153,7 +153,6 @@ RSpec.describe 'Api::V1::ConnectionsController', type: :request do
 
   describe 'POST connections, #create' do
     before :all do
-      create :user_project, :normal_user, user: @user, project: @valid_project
       @valid_headers['Content-Type'] = 'application/json'
     end
 

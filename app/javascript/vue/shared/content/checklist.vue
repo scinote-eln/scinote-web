@@ -55,6 +55,9 @@
             :inRepository="inRepository"
             :draggable="checklistItems.length > 1"
             :data-e2e="`${dataE2e}-checklistItem${element.id}`"
+            :class="{
+              'select-none': reordering
+            }"
             @editStart="editingItem = true"
             @editEnd="editingItem = false"
             @update="saveItem"

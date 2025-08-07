@@ -12,6 +12,7 @@
         <MenuDropdown
           :listItems="item.submenu"
           :btnText="item.text"
+          :disableOverflow="true"
           :btnClasses="'btn btn-light'"
           :smallScreenCollapse="true"
           :position="'right'"

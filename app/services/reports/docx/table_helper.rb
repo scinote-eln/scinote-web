@@ -8,7 +8,8 @@ module Reports
         table_data = add_headers_to_table(table_data, table_type == 'well_plates_table')
 
         if table.metadata.present? && table.metadata['cells'].is_a?(Array)
-          table.metadata['cells'].each do |cell|
+          table.metadata&.dig('cells')&.each do |cell|
+            next unless cell.is_a?(Hash)
             next unless cell['row'].present? && cell['col'].present?
 
             row_index = cell['row'].to_i + 1
@@ -21,6 +22,9 @@ module Reports
           end
         end
         @docx.p
+
+        return unless table_data.present? && table_data[0].present?
+
         @docx.table table_data, border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE do
           cell_style rows[0], bold: true, background: color[:concrete]
           cell_style cols[0], bold: true, background: color[:concrete]
@@ -50,18 +54,16 @@ module Reports
       end
 
       def add_headers_to_table(table, is_well_plate)
-        table.each_with_index do |row, index|
+        table&.each_with_index do |row, index|
           row.unshift(is_well_plate ? convert_index_to_letter(index) : index + 1)
         end
 
-        header_row = Array.new(table.first.length) do |index|
-          if index.zero?
-            ''
-          else
-            is_well_plate ? index : convert_index_to_letter(index - 1)
-          end
+        header_row = Array.new(table&.dig(0)&.length || 0) do |index|
+          next '' if index.zero?
+
+          is_well_plate ? index : convert_index_to_letter(index - 1)
         end
-        table.unshift(header_row)
+        table&.unshift(header_row)
       end
 
       def convert_index_to_letter(index)

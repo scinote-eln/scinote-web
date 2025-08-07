@@ -60,7 +60,7 @@ module Dashboard
     end
 
     def create_project_params
-      params.require(:project).permit(:name, :visibility, :default_public_user_role_id)
+      params.require(:project).permit(:name)
     end
 
     def create_experiment_params

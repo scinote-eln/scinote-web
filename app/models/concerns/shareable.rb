@@ -26,24 +26,20 @@ module Shareable
       end
     end
 
-    scope :viewable_by_user, lambda { |user, teams = user.current_team|
-      readable_ids = readable_by_user(user).where(team: teams).pluck(:id)
-      shared_with_team_ids = joins(:team_shared_objects, :team).where(team_shared_objects: { team: teams }).pluck(:id)
-      globally_shared_ids =
+    scope :shared_with_team, lambda { |team|
+      directly_shared = joins(:team_shared_objects, :team).where(team_shared_objects: { team: team })
+      globally_shared =
         if column_names.include?('permission_level')
-          joins(:team).where(
-            {
-              permission_level: [
-                Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
-                Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]
-              ]
-            }
-          ).pluck(:id)
+          where(
+            permission_level: [
+              Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
+              Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]
+            ]
+          )
         else
-          none.pluck(:id)
+          none
         end
-
-      where(id: (readable_ids + shared_with_team_ids + globally_shared_ids).uniq)
+      where(id: directly_shared.select(:id)).or(where(id: globally_shared.select(:id)))
     }
   rescue ActiveRecord::NoDatabaseError,
          ActiveRecord::ConnectionNotEstablished,
@@ -53,16 +49,25 @@ module Shareable
     Rails.logger.info('Not connected to database, skipping sharable model initialization.')
   end
 
+  def can_manage_shared?(user)
+    globally_shared? ||
+      (shared_with?(user.current_team) && user.current_team.permission_granted?(user, TeamPermissions::MANAGE))
+  end
+
   def shareable_write?
     true
   end
 
   def private_shared_with?(team)
-    team_shared_objects.where(team: team).any?
+    team_shared_objects.exists?(team: team)
+  end
+
+  def private_shared_with_read?(team)
+    team_shared_objects.exists?(team: team, permission_level: :shared_read)
   end
 
   def private_shared_with_write?(team)
-    team_shared_objects.where(team: team, permission_level: :shared_write).any?
+    team_shared_objects.exists?(team: team, permission_level: :shared_write)
   end
 
   def i_shared?(team)
@@ -92,6 +97,6 @@ module Shareable
   def shared_with_read?(team)
     return false if self.team == team
 
-    shared_read? || team_shared_objects.where(team: team, permission_level: :shared_read).any?
+    shared_read? || team_shared_objects.exists?(team: team, permission_level: :shared_read)
   end
 end

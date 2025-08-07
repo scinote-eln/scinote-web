@@ -35,7 +35,7 @@ class Users::PasswordsController < Devise::PasswordsController
         flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
         set_flash_message!(:notice, flash_message)
         resource.after_database_authentication if check_database_authentication?(resource)
-        sign_in(resource_name, resource)
+        sign_in(resource_name, resource, event: :authentication)
       else
         set_flash_message!(:notice, :updated_not_active)
       end

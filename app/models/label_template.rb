@@ -11,7 +11,7 @@ class LabelTemplate < ApplicationRecord
   SEARCHABLE_ATTRIBUTES = ['label_templates.name',
                            'label_templates.description'].freeze
 
-  enum unit: { in: 0, mm: 1 }
+  enum :unit, { in: 0, mm: 1 }
 
   validates :name, presence: true, length: { minimum: Constants::NAME_MIN_LENGTH,
                                              maximum: Constants::NAME_MAX_LENGTH }
@@ -22,15 +22,8 @@ class LabelTemplate < ApplicationRecord
   scope :default, -> { where(default: true) }
   scope :predefined, -> { where(predefined: true) }
 
-  def self.viewable_by_user(user, teams)
-    joins("INNER JOIN user_assignments team_user_assignments
-             ON team_user_assignments.assignable_id = label_templates.team_id
-             AND team_user_assignments.assignable_type = 'Team'
-             AND team_user_assignments.user_id = #{user.id}
-           INNER JOIN user_roles team_user_roles
-             ON team_user_roles.id = team_user_assignments.user_role_id
-             AND team_user_roles.permissions @> ARRAY['#{TeamPermissions::LABEL_TEMPLATES_READ}']::varchar[]")
-      .where(team: teams)
+  def self.readable_by_user(user, teams)
+    where(team: teams.with_granted_permissions(user, TeamPermissions::LABEL_TEMPLATES_READ, teams))
   end
 
   def self.enabled?
@@ -45,7 +38,7 @@ class LabelTemplate < ApplicationRecord
     options = {}
   )
     teams = options[:teams] || current_team || user.teams.select(:id)
-    distinct.viewable_by_user(user, teams)
+    distinct.readable_by_user(user, teams)
             .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
   end
 

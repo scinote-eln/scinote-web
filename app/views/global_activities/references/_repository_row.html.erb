@@ -3,15 +3,23 @@
 <div class="ga-breadcrumb">
   <span class="sn-icon sn-icon-inventory"></span>
   <% if subject %>
-    <%= route_to_other_team(repository_path(subject.repository.id, team: subject.repository.team.id),
-                            team,
-                            subject.repository.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
-                            title: subject.repository.name) %>
+    <% if can_read_repository?(subject.repository) %>
+      <%= route_to_other_team(repository_path(subject.repository.id, team: subject.repository.team.id),
+                              team,
+                              subject.repository.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                              title: subject.repository.name) %>
+    <% else %>
+      <%= I18n.t('repositories.private') %>
+    <% end %>
   <% elsif repository = Repository.find_by(id: values.dig('message_items', 'repository', 'id')) %>
-    <%= route_to_other_team(repository_path(repository.id, team: repository.team.id),
-                        team,
-                        repository.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
-                        title: repository.name) %>
+    <% if can_read_repository?(repository) %>
+      <%= route_to_other_team(repository_path(repository.id, team: repository.team.id),
+                          team,
+                          repository.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                          title: repository.name) %>
+    <% else %>
+      <%= I18n.t('repositories.private') %>
+    <% end %>
   <% else %>
     <span title="<%= breadcrumbs['repository'] %>">
       <%= breadcrumbs['repository']&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
