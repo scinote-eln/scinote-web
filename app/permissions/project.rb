@@ -24,22 +24,7 @@ Canaid::Permissions.register_for(Project) do
   end
 
   can :manage_project do |user, project|
-    next false unless project.permission_granted?(user, ProjectPermissions::MANAGE)
-
-    experiments = project.experiments
-    unless project.association(:experiments).loaded?
-      experiments = experiments.preload(my_modules: { my_module_status: :my_module_status_implications })
-    end
-
-    experiments.all? do |experiment|
-      experiment.my_modules.all? do |my_module|
-        if my_module.my_module_status
-          my_module.my_module_status.my_module_status_implications.all? { |implication| implication.call(my_module) }
-        else
-          true
-        end
-      end
-    end
+    project.permission_granted?(user, ProjectPermissions::MANAGE)
   end
 
   can :read_project_users do |user, project|

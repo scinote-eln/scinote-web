@@ -14,6 +14,7 @@ class UserGroup < ApplicationRecord
   belongs_to :last_modified_by, class_name: 'User', optional: true
   has_many :user_group_memberships, dependent: :destroy
   has_many :users, through: :user_group_memberships, dependent: :destroy
+  has_many :user_group_assignments, dependent: :destroy
 
   accepts_nested_attributes_for :user_group_memberships
 

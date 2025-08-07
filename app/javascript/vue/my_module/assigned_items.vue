@@ -1,8 +1,12 @@
 <template>
   <div class="bg-white px-4 my-4 task-section">
     <div class="py-4 flex items-center gap-4">
-      <i ref="openHandler" @click="toggleContainer" class="sn-icon sn-icon-right cursor-pointer"></i>
-      <h2 class="my-0 flex items-center gap-1">
+      <i ref="openHandler"
+        @click="toggleContainer"
+        class="sn-icon sn-icon-right cursor-pointer"
+        data-e2e="e2e-IC-task-assignedItems-visibilityToggle">
+      </i>
+      <h2 class="my-0 flex items-center gap-1" data-e2e="e2e-TX-task-assignedItems-title">
         {{ i18n.t('my_modules.assigned_items.title') }}
         <span class="text-sn-grey-500 font-normal text-base">[{{ totalRows }}]</span>
       </h2>

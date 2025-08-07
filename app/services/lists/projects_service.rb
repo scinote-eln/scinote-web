@@ -5,13 +5,11 @@ module Lists
     include ActionView::Helpers::SanitizeHelper
     include Canaid::Helpers::PermissionsHelper
 
-    def initialize(team, user, folder, params)
+    def initialize(team, projects, current_folder, params, user:)
+      super(projects, params, user: user)
       @team = team
-      @user = user
-      @current_folder = folder
-      @params = params
-      @filters = params[:filters] || {}
-      @records = []
+      @projects = projects
+      @current_folder = current_folder
     end
 
     def call
@@ -40,48 +38,47 @@ module Lists
     private
 
     def fetch_projects
-      done_status_id = MyModuleStatusFlow.first.final_status.id
-      @team.projects
-           .includes(:team, :project_comments, user_assignments: %i(user user_role))
-           .joins('LEFT OUTER JOIN experiments AS active_experiments ON
-                   active_experiments.project_id = projects.id
-                   AND active_experiments.archived = FALSE')
-           .joins('LEFT OUTER JOIN experiments AS active_completed_experiments ON
-                   active_completed_experiments.project_id = projects.id
-                   AND active_completed_experiments.archived = FALSE AND active_completed_experiments.done_at IS NOT NULL')
-           .joins('LEFT OUTER JOIN my_modules AS active_tasks ON
-                   active_tasks.experiment_id = active_experiments.id
-                   AND active_tasks.archived = FALSE')
-           .joins(
-             ActiveRecord::Base.sanitize_sql_array([
-                                                     'LEFT OUTER JOIN my_modules AS active_completed_tasks ON
-               active_completed_tasks.experiment_id = active_experiments.id
-               AND active_completed_tasks.archived = FALSE AND active_completed_tasks.my_module_status_id = ?',
-                                                     done_status_id
-                                                   ])
-           )
-           .visible_to(@user, @team)
-           .with_favorites(@user)
-           .left_outer_joins(:project_comments)
-           .select('projects.*')
-           .select('COUNT(DISTINCT comments.id) AS comment_count')
-           .select('COUNT(DISTINCT active_experiments.id) AS experiments_count')
-           .select('COUNT(DISTINCT active_completed_experiments.id) AS completed_experiments_count')
-           .select('COUNT(DISTINCT active_tasks.id) AS tasks_count')
-           .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_tasks_count')
-           .group('projects.id')
+      final_status_id = MyModuleStatusFlow.first.final_status.id
+      @projects.includes(:team, :project_comments, user_assignments: %i(user user_role))
+               .joins('LEFT OUTER JOIN experiments AS active_experiments ON
+                       active_experiments.project_id = projects.id
+                       AND active_experiments.archived = FALSE')
+               .joins('LEFT OUTER JOIN experiments AS active_completed_experiments ON
+                       active_completed_experiments.project_id = projects.id
+                       AND active_completed_experiments.archived = FALSE AND active_completed_experiments.done_at IS NOT NULL')
+               .joins('LEFT OUTER JOIN my_modules AS active_tasks ON
+                       active_tasks.experiment_id = active_experiments.id
+                       AND active_tasks.archived = FALSE')
+               .joins(
+                 ActiveRecord::Base.sanitize_sql_array([
+                                                         'LEFT OUTER JOIN my_modules AS active_completed_tasks ON
+                   active_completed_tasks.experiment_id = active_experiments.id
+                   AND active_completed_tasks.archived = FALSE AND active_completed_tasks.my_module_status_id = ?',
+                                                         final_status_id
+                                                       ])
+               )
+               .with_favorites(@user)
+               .left_outer_joins(:project_comments)
+               .preload(:team_assignments, :user_group_assignments, user_assignments: %i(user user_role))
+               .select('projects.*')
+               .select('COUNT(DISTINCT comments.id) AS comment_count')
+               .select('COUNT(DISTINCT active_experiments.id) AS experiments_count')
+               .select('COUNT(DISTINCT active_completed_experiments.id) AS completed_experiments_count')
+               .select('COUNT(DISTINCT active_tasks.id) AS tasks_count')
+               .select('COUNT(DISTINCT active_completed_tasks.id) AS completed_tasks_count')
+               .group('projects.id')
     end
 
     def fetch_project_folders
-      project_folders = @team.project_folders
-                             .includes(:team)
-                             .joins('LEFT OUTER JOIN project_folders child_folders
-                                    ON child_folders.parent_folder_id = project_folders.id')
-                             .left_outer_joins(:projects)
-      project_folders.select('project_folders.*')
-                     .select('COUNT(DISTINCT projects.id) AS projects_count')
-                     .select('COUNT(DISTINCT child_folders.id) AS folders_count')
-                     .group('project_folders.id')
+      @team.project_folders
+           .includes(:team)
+           .joins('LEFT OUTER JOIN project_folders child_folders
+                   ON child_folders.parent_folder_id = project_folders.id')
+           .left_outer_joins(:projects)
+           .select('project_folders.*')
+           .select('COUNT(DISTINCT projects.id) AS projects_count')
+           .select('COUNT(DISTINCT child_folders.id) AS folders_count')
+           .group('project_folders.id')
     end
 
     def filter_project_records(records)

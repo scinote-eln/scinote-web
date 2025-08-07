@@ -36,7 +36,7 @@
       <div id="task-details" class="task-section-header">
         <div class="flex items-center mr-auto">
           <a class="task-section-caret collapsed" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
-            <i class="sn-icon sn-icon-right"></i>
+            <i class="sn-icon sn-icon-right" data-e2e="e2e-IC-task-details-visibilityToggle"></i>
             <span id="taskDetailsLabel" class="task-section-title">
               <h2 data-e2e="e2e-TX-task-details-title">
                 <%= t('my_modules.details.title') %>
@@ -69,7 +69,7 @@
     <div class="task-section hidden">
       <div class="task-section-header">
         <a class="task-section-caret" role="button" data-toggle="collapse" href="#notes-container" aria-expanded="true" aria-controls="notes-container">
-          <i class="sn-icon sn-icon-right"></i>
+          <i class="sn-icon sn-icon-right" data-e2e="e2e-IC-task-notes-visibilityToggle"></i>
           <span class="task-section-title">
             <h2 data-e2e="e2e-TX-task-notes-title"><%= t('my_modules.notes.title') %></h2>
           </span>
@@ -165,7 +165,6 @@
 </div>
 <div id="accessModalContainer" class="vue-access-modal"
      data-url="<%= my_module_path(@my_module, format: :json) %>"
-     data-roles-url="<%= user_roles_projects_path %>"
 >
   <div ref="accessModal" id="accessModalComponent"></div>
   <teleport to="body">

@@ -254,6 +254,7 @@ Rails.application.routes.draw do
       collection do
         get :visible_users
         get :visible_teams
+        get :current_team_users
       end
 
       member do
@@ -430,7 +431,6 @@ Rails.application.routes.draw do
         post 'archive_group'
         post 'restore_group'
         post 'actions_toolbar'
-        get :user_roles
         get :head_of_project_users_list
       end
     end
@@ -771,7 +771,6 @@ Rails.application.routes.draw do
         get 'export', to: 'protocols#export'
         get 'protocolsio', to: 'protocols#protocolsio_index'
         post 'actions_toolbar', to: 'protocols#actions_toolbar'
-        get 'user_roles', to: 'protocols#user_roles'
       end
     end
 
@@ -786,9 +785,6 @@ Rails.application.routes.draw do
         get :assigned_my_modules
         get :repository_users
         get :load_table
-      end
-      collection do
-        get :user_roles
       end
       # Save repository table state
       post 'state_save',
@@ -859,7 +855,6 @@ Rails.application.routes.draw do
       end
 
       collection do
-        get :sidebar
         get 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
         get 'export_repository_stock_items_modal'
         get :rows_to_print, to: 'repository_rows#rows_to_print'
@@ -949,7 +944,6 @@ Rails.application.routes.draw do
         post :actions_toolbar
         post :archive
         post :restore
-        get :user_roles
         get :published_forms
         get :latest_attached_forms
       end

@@ -8,12 +8,12 @@ Canaid::Permissions.register_for(Team) do
 
   # team: update
   can :manage_team do |user, team|
-    team.permission_granted?(user, TeamPermissions::MANAGE)
+    team.permission_granted?(user, TeamPermissions::MANAGE, team)
   end
 
   # team: assign/unassing user, change user role
   can :manage_team_users do |user, team|
-    team.permission_granted?(user, TeamPermissions::USERS_MANAGE)
+    team.permission_granted?(user, TeamPermissions::USERS_MANAGE, team)
   end
 
   # team: invite new users to the team

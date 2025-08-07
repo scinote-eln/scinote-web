@@ -5,6 +5,7 @@ module Lists
     include Rails.application.routes.url_helpers
     include Canaid::Helpers::PermissionsHelper
     include CommentHelper
+    include AssignmentsHelper
 
     attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder, :hidden, :completed_experiments, :completed_tasks, :total_tasks,
                :folder_info, :default_public_user_role_id, :team, :top_level_assignable, :supervised_by, :total_experiments,
@@ -85,21 +86,7 @@ module Lists
     def users
       return unless project?
 
-      users = object.user_assignments.map do |ua|
-        {
-          avatar: avatar_path(ua.user, :icon_small),
-          full_name: ua.user_name_with_role
-        }
-      end
-
-      user_groups = object.user_group_assignments.map do |ua|
-        {
-          avatar: ActionController::Base.helpers.asset_path('icon/group.svg'),
-          full_name: ua.user_group_name_with_role
-        }
-      end
-
-      user_groups + users
+      prepare_assigned_users
     end
 
     def comments
@@ -117,7 +104,7 @@ module Lists
         {
           value: object.due_date,
           value_formatted: (I18n.l(object.due_date, format: :full_date) if object.due_date),
-          editable: can_manage_project?(@object),
+          editable: managable?,
           icon: (if object.one_day_prior? && !object.done?
                    'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
                  elsif object.overdue? && !object.done?
@@ -132,7 +119,7 @@ module Lists
         {
           value: object.start_date,
           value_formatted: (I18n.l(object.start_date, format: :full_date) if object.start_date),
-          editable: can_manage_project?(@object)
+          editable: managable?
         }
       end
     end
@@ -148,27 +135,27 @@ module Lists
                                                          type: project? ? 'projects' : 'project_folders' }].to_json)
       }
 
-      urls_list[:show] = nil if project? && !can_read_project?(object)
+      urls_list[:show] = nil if project? && !readable?
 
-      if !project? || can_manage_project?(object)
+      if !project? || managable?
         urls_list[:update] = project? ? project_path(object) : project_folder_path(object)
       end
 
-      if project? && can_read_project?(object)
+      if project? && readable?
         urls_list[:favorite] = favorite_project_url(object)
         urls_list[:unfavorite] = unfavorite_project_url(object)
       end
 
       urls_list[:show_access] = access_permissions_project_path(object)
       urls_list[:show_user_group_assignments_access] = show_user_group_assignments_access_permissions_project_path(object)
-      if project? && can_manage_project_users?(object)
-        urls_list[:user_roles] = user_roles_access_permissions_project_path(object)
+      urls_list[:user_group_members] = users_users_settings_team_user_groups_path(team_id: object.team.id)
+      urls_list[:user_roles] = user_roles_access_permissions_project_path(object)
+      if project? && users_managable?
         urls_list[:assigned_users] = assigned_users_list_project_path(object)
         urls_list[:update_access] = access_permissions_project_path(object)
         urls_list[:new_access] = new_access_permissions_project_path(id: object.id)
         urls_list[:unassigned_user_groups] = unassigned_user_groups_access_permissions_project_path(id: object.id)
         urls_list[:create_access] = access_permissions_projects_path(id: object.id)
-        urls_list[:user_group_members] = users_users_settings_team_user_groups_path(team_id: object.team.id)
       end
 
       urls_list
@@ -177,8 +164,8 @@ module Lists
     def permissions
       {
         create_comments: project? ? can_create_project_comments?(object) : false,
-        manage_users_assignments: project? ? can_manage_project_users?(object) : false,
-        manage: (project? ? can_manage_project?(object) : can_manage_team?(object.team))
+        manage_users_assignments: project? ? users_managable? : false,
+        manage: (project? ? managable? : can_manage_team?(object.team))
       }
     end
 
@@ -193,6 +180,18 @@ folders_count: object.folders_count)
 
     def project?
       object.instance_of?(Project)
+    end
+
+    def readable?
+      @readable ||= can_read_project?(object)
+    end
+
+    def managable?
+      @managable ||= can_manage_project?(object)
+    end
+
+    def users_managable?
+      @users_managable ||= can_manage_project_users?(object)
     end
   end
 end

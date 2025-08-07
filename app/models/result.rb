@@ -137,8 +137,8 @@ class Result < ApplicationRecord
     end
   end
 
-  def self.viewable_by_user(user, teams)
-    where(my_module: MyModule.viewable_by_user(user, teams))
+  def self.readable_by_user(user, teams)
+    where(my_module: MyModule.readable_by_user(user, teams))
   end
 
   def self.filter_by_teams(teams = [])

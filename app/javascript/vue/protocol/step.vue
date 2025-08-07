@@ -65,6 +65,7 @@
           :position="'right'"
           :caret="true"
           :dataE2e="`e2e-DD-protocol-step${step.id}-insertContent`"
+          :disableOverflow="true"
           @create:custom_well_plate="openCustomWellPlateModal"
           @create:table="(...args) => this.createElement('table', ...args)"
           @create:checklist="createElement('checklist')"
@@ -661,7 +662,7 @@
               }
             }
           }).fail(() => {
-            HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+            HelperModule.flashAlertMsg(this.i18n.t('errors.general_saving_data'), 'danger');
           })
         }
       },

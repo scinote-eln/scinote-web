@@ -4,6 +4,7 @@ class FormsController < ApplicationController
   include InputSanitizeHelper
 
   before_action :check_forms_enabled
+  before_action :load_forms, only: %i(index actions_toolbar)
   before_action :load_form, only: %i(show update publish unpublish export_form_responses duplicate)
   before_action :set_breadcrumbs_items, only: %i(index show)
   before_action :check_manage_permissions, only: :update
@@ -13,11 +14,11 @@ class FormsController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        forms = Lists::FormsService.new(current_user, current_team, params).call
-        render json: forms,
+        forms_list = Lists::FormsService.new(@forms, params, user: current_user).call
+        render json: forms_list,
                each_serializer: Lists::FormSerializer,
                user: current_user,
-               meta: pagination_dict(forms)
+               meta: pagination_dict(forms_list)
       end
     end
   end
@@ -200,11 +201,12 @@ class FormsController < ApplicationController
   end
 
   def actions_toolbar
+    selected_forms = @forms.where(id: JSON.parse(params[:items]).pluck('id'))
     render json: {
       actions:
         Toolbars::FormsService.new(
-          current_user,
-          form_ids: JSON.parse(params[:items]).map { |i| i['id'] }
+          selected_forms,
+          current_user
         ).actions
     }
   end
@@ -228,6 +230,12 @@ class FormsController < ApplicationController
     @breadcrumbs_items.each do |item|
       item[:label] = "#{t('labels.archived')} #{item[:label]}" if archived
     end
+  end
+
+  def load_forms
+    # Team owners see all forms in the team
+    @forms = current_team.forms
+    @forms = @forms.readable_by_user(current_user) unless can_manage_team?(current_team)
   end
 
   def load_form

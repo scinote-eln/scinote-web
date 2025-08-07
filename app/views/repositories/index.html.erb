@@ -2,7 +2,6 @@
 <% provide(:container_class, "no-second-nav-container") %>
 
 <% if current_team %>
-  <% provide(:sidebar_url, sidebar_repositories_path) %>
   <div class="content-pane flexible <%= params[:view_mode] ? :archived : :active %> repositories-index">
     <div class="content-header">
       <div class="title-row">

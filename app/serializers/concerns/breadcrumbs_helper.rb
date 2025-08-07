@@ -28,6 +28,13 @@ module BreadcrumbsHelper
         parent = subject.my_module
         url = protocols_my_module_path(subject.my_module)
       end
+    when Step
+      parent = subject.protocol
+      if parent.in_repository?
+        url = protocol_path(parent, step_id: subject.id)
+      else
+        url = protocols_my_module_path(parent.my_module, step_id: subject.id)
+      end
     when Result
       parent = subject.my_module
       view_mode = subject.archived? ? 'archived' : 'active'

@@ -198,15 +198,6 @@ var protocolsIO = function() {
       e.stopPropagation();
       animateSpinner(modal, true);
 
-      const visibility = $('#protocol-preview-modal .modal-footer #visibility').prop('checked');
-      const defaultPublicUserRoleId = $('#protocol-preview-modal .modal-footer #default_public_user_role_id')
-        .prop('value');
-      const visibilityField = $('#protocol-preview-modal #protocol_visibility');
-      const defaultPublicUserRoleIdField = $('#protocol-preview-modal #protocol_default_public_user_role_id');
-
-      visibilityField.prop('value', visibility ? 'visible' : 'hidden');
-      defaultPublicUserRoleIdField.prop('value', defaultPublicUserRoleId);
-
       $.ajax({
         type: 'POST',
         url: url,
@@ -291,24 +282,6 @@ var protocolsIO = function() {
   $('form.protocols-search-bar').submit();
 
   function initProtocolModalPreview() {
-    $('#protocol-preview-modal').on('change', '#visibility', function() {
-      const checkbox = this;
-      $('#protocol-preview-modal #roleSelectWrapper').toggleClass('hidden', !checkbox.checked);
-    });
-
-
-    const roleSelector = '#protocol-preview-modal #role_selector';
-
-    dropdownSelector.init(roleSelector, {
-      noEmptyOption: true,
-      singleSelect: true,
-      closeOnSelect: true,
-      selectAppearance: 'simple',
-      onChange: function() {
-        $('#protocol-preview-modal #default_public_user_role_id').val(dropdownSelector.getValues(roleSelector));
-      }
-    });
-
     $('#protocol-preview-modal')
       .on('ajax:error', 'form', function(e, error) {
         let msg = error.responseJSON.error;

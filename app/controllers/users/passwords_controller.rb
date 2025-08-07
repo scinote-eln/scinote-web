@@ -5,9 +5,19 @@ class Users::PasswordsController < Devise::PasswordsController
   # end
 
   # POST /resource/password
-  # def create
-  #   super
-  # end
+  def create
+    self.resource = resource_class.send_reset_password_instructions(resource_params)
+    yield resource if block_given?
+
+    if resource.errors.added?(:email, :blank)
+      flash.now[:alert] = I18n.t('devise.errors.email.empty')
+      self.resource = resource_class.new
+      render :new
+    else
+      set_flash_message!(:notice, :send_instructions)
+      respond_with({}, location: after_sending_reset_password_instructions_path_for(resource_name))
+    end
+  end
 
   # GET /resource/password/edit?reset_password_token=abcdef
   # def edit
@@ -25,7 +35,7 @@ class Users::PasswordsController < Devise::PasswordsController
         flash_message = resource.active_for_authentication? ? :updated : :updated_not_active
         set_flash_message!(:notice, flash_message)
         resource.after_database_authentication if check_database_authentication?(resource)
-        sign_in(resource_name, resource)
+        sign_in(resource_name, resource, event: :authentication)
       else
         set_flash_message!(:notice, :updated_not_active)
       end

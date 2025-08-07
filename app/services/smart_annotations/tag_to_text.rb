@@ -29,10 +29,7 @@ module SmartAnnotations
           if type == 'rep_item'
             repository_item(value[:name], user, team, type, object, is_shared_object)
           else
-            next unless object && (is_shared_object || SmartAnnotations::PermissionEval.check(user,
-                                                                                              team,
-                                                                                              type,
-                                                                                              object))
+            next unless object && (is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object))
 
             SmartAnnotations::TextPreview.text(nil, type, object)
           end
@@ -59,7 +56,7 @@ module SmartAnnotations
 
     def repository_item(name, user, team, type, object, is_shared_object)
       if object
-        return unless is_shared_object || SmartAnnotations::PermissionEval.check(user, team, type, object)
+        return unless is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object)
 
         return SmartAnnotations::TextPreview.text(nil, type, object)
       end
