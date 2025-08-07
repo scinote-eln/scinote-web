@@ -9,6 +9,7 @@
         aria-haspopup="true"
         aria-expanded="true"
         tabindex="0"
+        data-e2e="e2e-DD-task-protocol-actions"
       >
         <span>{{ i18n.t("my_modules.protocol.options_dropdown.title") }}</span>
         <span class="sn-icon sn-icon-down"></span>
@@ -22,6 +23,7 @@
             ref="loadProtocol"
             data-action="load-from-repository"
             @click="loadProtocol"
+            data-e2e="e2e-DO-task-protocol-actions-loadFromRepository"
           >
             <span>{{ i18n.t("my_modules.protocol.options_dropdown.load_from_repo") }}</span>
           </a>
@@ -30,6 +32,7 @@
           <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             data-turbolinks="false"
             @click.prevent="openAddStepsModal()"
+            data-e2e="e2e-DO-task-protocol-actions-addProtocolSteps"
           >
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.add_protocol_steps")
@@ -42,6 +45,7 @@
             data-target="#newProtocolModal"
             v-bind:data-protocol-name="protocol.attributes.name"
             :class="{ disabled: !protocol.attributes.urls.save_to_repo_url }"
+            data-e2e="e2e-DO-task-protocol-actions-saveAsNewTemplate"
           >
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.save_to_repo")
@@ -53,6 +57,7 @@
             data-turbolinks="false"
             :href="protocol.attributes.urls.export_url"
             :class="{ disabled: !protocol.attributes.urls.export_url }"
+            data-e2e="e2e-DO-task-protocol-actions-exportProtocol"
           >
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.export")
@@ -64,6 +69,7 @@
             ref="updateProtocol"
             data-action="update-self"
             @click="updateProtocol"
+            data-e2e="e2e-DO-task-protocol-actions-updateProtocol"
           >
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.update_protocol")
@@ -75,6 +81,7 @@
             ref="unlinkProtocol"
             data-action="unlink"
             @click="unlinkProtocol"
+            data-e2e="e2e-DO-task-protocol-actions-unlinkProtocol"
           >
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.unlink")
@@ -86,6 +93,7 @@
             ref="revertProtocol"
             data-action="revert"
             @click="revertProtocol"
+            data-e2e="e2e-DO-task-protocol-actions-revertProtocol"
           >
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.revert_protocol")
@@ -96,6 +104,7 @@
           <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             data-turbolinks="false"
             @click.prevent="openStepsDeletingModal()"
+            data-e2e="e2e-DO-task-protocol-actions-deleteAllSteps"
           >
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.delete_steps")

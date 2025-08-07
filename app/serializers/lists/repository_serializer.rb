@@ -5,6 +5,7 @@ module Lists
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers
     include ShareableSerializer
+    include AssignmentsHelper
 
     attributes :name, :code, :nr_of_rows, :team, :created_at, :created_by, :archived_on, :archived_by,
                :urls, :top_level_assignable, :default_public_user_role_id, :assigned_users, :permissions
@@ -18,7 +19,7 @@ module Lists
     end
 
     def team
-      current_user.current_team.name
+      object.team.name
     end
 
     def created_at
@@ -38,21 +39,7 @@ module Lists
     end
 
     def assigned_users
-      users = object.user_assignments.map do |ua|
-        {
-          avatar: avatar_path(ua.user, :icon_small),
-          full_name: ua.user_name_with_role
-        }
-      end
-
-      user_groups = object.user_group_assignments.map do |ua|
-        {
-          avatar: ActionController::Base.helpers.asset_path('icon/group.svg'),
-          full_name: ua.user_group_name_with_role
-        }
-      end
-
-      users + user_groups
+      prepare_assigned_users
     end
 
     def permissions
@@ -63,27 +50,34 @@ module Lists
 
     def urls
       urls = {
-        show: repository_path(object),
         update: team_repository_path(current_user.current_team, id: object, format: :json),
         duplicate: team_repository_copy_path(current_user.current_team, repository_id: object, format: :json),
         shareable_teams: shareable_teams_team_shared_objects_path(
           current_user.current_team, object_id: object.id, object_type: 'Repository'
         ),
         show_access: access_permissions_repository_path(object),
-        share: team_shared_objects_path(current_user.current_team, object_id: object.id, object_type: 'Repository')
+        share: team_shared_objects_path(current_user.current_team, object_id: object.id, object_type: 'Repository'),
+        user_roles: user_roles_access_permissions_repository_path(object),
+        user_group_members: users_users_settings_team_user_groups_path(team_id: object.team.id)
       }
 
+      urls[:show] = repository_path(object) if can_read?
+
       if can_manage_repository_users?(object)
-        urls[:user_roles] = user_roles_access_permissions_repository_path(object)
         urls[:update_access] = access_permissions_repository_path(id: object)
         urls[:new_access] = new_access_permissions_repository_path(id: object.id)
         urls[:create_access] = access_permissions_repositories_path(id: object.id)
-        urls[:unassigned_user_groups] = unassigned_user_groups_access_permissions_project_path(id: object.id)
-        urls[:user_group_members] = users_users_settings_team_user_groups_path(team_id: object.team.id)
+        urls[:unassigned_user_groups] = unassigned_user_groups_access_permissions_repository_path(id: object.id)
         urls[:show_user_group_assignments_access] = show_user_group_assignments_access_permissions_repository_path(object)
       end
 
       urls
+    end
+
+    private
+
+    def can_read?
+      @can_read ||= can_read_repository?(object)
     end
   end
 end

@@ -4,15 +4,16 @@ module UserAssignments
   class PropagateAssignmentJob < ApplicationJob
     queue_as :high_priority
 
-    def perform(assignment, destroy: false)
+    def perform(assignment, destroy: false, remove_from_team: false)
       @assignment = assignment
       @resource = assignment.assignable
       @destroy = destroy
+      @remove_from_team = remove_from_team
       @type = assignment.class.model_name.param_key.gsub('_assignment', '').to_sym
 
       ActiveRecord::Base.transaction do
-        sync_resource_user_associations(@resource)
         @assignment.destroy! if destroy && !@assignment.destroyed?
+        sync_resource_user_associations(@resource)
       end
     end
 

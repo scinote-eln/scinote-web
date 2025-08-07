@@ -10,14 +10,13 @@ class RepositoriesController < ApplicationController
   include MyModulesHelper
 
   before_action :switch_team_with_param, only: %i(index)
-  before_action :load_repository, except: %i(index create create_modal sidebar archive restore actions_toolbar
+  before_action :load_repository, except: %i(index create create_modal archive restore actions_toolbar
                                              export_repositories list)
-  before_action :load_repositories, only: %i(index list)
+  before_action :load_repositories, only: %i(index list actions_toolbar)
   before_action :load_repositories_for_archiving, only: :archive
   before_action :load_repositories_for_restoring, only: :restore
-  before_action :check_view_all_permissions, only: %i(index sidebar list)
   before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet
-                                                    import_records sidebar archive restore actions_toolbar
+                                                    import_records archive restore actions_toolbar
                                                     export_repositories list)
   before_action :check_manage_permissions, only: %i(rename_modal update)
   before_action :check_delete_permissions, only: %i(destroy destroy_modal)
@@ -71,15 +70,6 @@ class RepositoriesController < ApplicationController
       paginated: true,
       next_page: results.next_page,
       data: results.map { |r| [r.id, r.name] }
-    }
-  end
-
-  def sidebar
-    render json: {
-      html: render_to_string(partial: 'repositories/sidebar', locals: {
-                               repositories: @repositories,
-                               archived: params[:archived] == 'true'
-                             })
     }
   end
 
@@ -332,14 +322,14 @@ class RepositoriesController < ApplicationController
   end
 
   def import_records
-    render_403 unless can_create_repository_rows?(Repository.viewable_by_user(current_user)
+    render_403 unless can_create_repository_rows?(Repository.readable_by_user(current_user)
                                                             .find_by(id: import_params[:id]))
     # Check if there exist mapping for repository record (it's mandatory)
     if import_params[:mappings].present? && import_params[:mappings].value?('-1')
       status = ImportRepository::ImportRecords
                .new(
                  temp_file: TempFile.find_by(id: import_params[:file_id]),
-                 repository: Repository.viewable_by_user(current_user).find_by(id: import_params[:id]),
+                 repository: Repository.readable_by_user(current_user).find_by(id: import_params[:id]),
                  mappings: import_params[:mappings],
                  session: session,
                  user: current_user,
@@ -404,7 +394,7 @@ class RepositoriesController < ApplicationController
   end
 
   def export_repositories
-    repositories = Repository.viewable_by_user(current_user, current_team).where(id: params[:repository_ids])
+    repositories = Repository.readable_by_user(current_user, current_team).where(id: params[:repository_ids])
     if repositories.present?
       RepositoriesExportJob
         .perform_later(params[:file_type], repositories.pluck(:id), user_id: current_user.id, team_id: current_team.id)
@@ -472,12 +462,12 @@ class RepositoriesController < ApplicationController
   end
 
   def actions_toolbar
+    selected_repositories = @repositories.where(id: JSON.parse(params[:items]).pluck('id'))
     render json: {
       actions:
         Toolbars::RepositoriesService.new(
-          current_user,
-          current_team,
-          repository_ids: JSON.parse(params[:items]).map { |i| i['id'] }
+          selected_repositories,
+          current_user
         ).actions
     }
   end
@@ -486,16 +476,20 @@ class RepositoriesController < ApplicationController
 
   def load_repository
     repository_id = params[:id] || params[:repository_id]
-    @repository = Repository.viewable_by_user(current_user, current_user.teams).find_by(id: repository_id)
+    @repository = Repository.readable_by_user(current_user, current_user.teams).find_by(id: repository_id)
     render_404 unless @repository
   end
 
   def load_repositories
-    @repositories = if params[:appendable] == 'true'
-                      Repository.appendable_by_user(current_user)
-                    else
-                      Repository.viewable_by_user(current_user)
-                    end
+    @repositories =
+      if params[:appendable] == 'true'
+        Repository.appendable_by_user(current_user)
+      elsif can_manage_team?(current_team)
+        # Team owners see all repositories in the team
+        current_team.repositories.or(Repository.shared_with_team(current_team))
+      else
+        Repository.readable_by_user(current_user, current_team)
+      end
   end
 
   def load_repositories_for_archiving
@@ -528,10 +522,6 @@ class RepositoriesController < ApplicationController
           "<span class=\"repository-share-icon\">#{inventory_shared_status_icon(@repository, current_team)}</span>"
         )
     }
-  end
-
-  def check_view_all_permissions
-    render_403 unless @repositories.all? { |repository| can_read_repository?(repository) }
   end
 
   def check_view_permissions

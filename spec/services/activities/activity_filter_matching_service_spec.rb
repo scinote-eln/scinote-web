@@ -8,10 +8,10 @@ describe Activities::ActivityFilterMatchingService do
   let(:team) { create :team, created_by: user }
   let(:team_2) { create :team, created_by: user_2 }
   let(:project) do
-    create :project, team: team, user_projects: []
+    create :project, team: team
   end
   let(:project_2) do
-    create :project, team: team, user_projects: []
+    create :project, team: team
   end
   let(:activity) { create :activity }
 

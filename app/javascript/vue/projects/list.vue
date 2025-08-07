@@ -55,12 +55,12 @@
     @update="updateDescription"
     @close="descriptionModalObject = null"/>
   <ExportLimitExceededModal v-if="exportLimitExceded" :description="exportDescription" @close="exportLimitExceded = false"/>
-  <ProjectFormModal v-if="editProject" :userRolesUrl="userRolesUrl"
+  <ProjectFormModal v-if="editProject"
                     :project="editProject" @close="editProject = null" @update="updateTable(); updateNavigator()" />
   <EditFolderModal v-if="editFolder" :folder="editFolder"
                    @close="editFolder = null" @update="updateTable(); updateNavigator()" />
   <ProjectFormModal v-if="newProject" :createUrl="createUrl"
-                   :currentFolderId="currentFolderId" :userRolesUrl="userRolesUrl"
+                   :currentFolderId="currentFolderId"
                    @close="newProject = false" @create="updateTable(); updateNavigator()" />
   <NewFolderModal v-if="newFolder" :createFolderUrl="createFolderUrl"
                   :currentFolderId="currentFolderId" :viewMode="currentViewMode"

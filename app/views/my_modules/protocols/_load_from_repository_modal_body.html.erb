@@ -9,7 +9,7 @@
            data-role="datatable"
            data-source="<%= load_from_repository_datatable_protocol_path(@protocol) %>">
       <thead>
-          <tr>
+        <tr>
             <th class="all" id="protocol-name"><%= t("my_modules.protocols.load_from_repository_modal.thead_name") %></th>
             <th class="min-tablet-p" id="protocol-versions"><%= t("my_modules.protocols.load_from_repository_modal.thead_version") %></th>
             <th class="min-tablet-l" id="protocol-id"><%= t("my_modules.protocols.load_from_repository_modal.thead_id") %></th>
@@ -18,7 +18,7 @@
             <th class="min-desktop" id="protocol-published-on"><%= t("my_modules.protocols.load_from_repository_modal.thead_published_on") %></th>
           </tr>
         </thead>
-      <tbody></tbody>
+      <tbody data-e2e="e2e-CO-task-protocol-loadTemplateModal-table"></tbody>
     </table>
   </div>
 </div>

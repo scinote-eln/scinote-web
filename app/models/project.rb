@@ -57,7 +57,6 @@ class Project < ApplicationRecord
              optional: true
   belongs_to :team, inverse_of: :projects, touch: true
   belongs_to :project_folder, inverse_of: :projects, optional: true, touch: true
-  has_many :user_projects, inverse_of: :project
   has_many :experiments, inverse_of: :project
   has_many :active_experiments, -> { where(archived: false) },
            class_name: 'Experiment'
@@ -71,15 +70,6 @@ class Project < ApplicationRecord
                                 allow_destroy: true,
                                 reject_if: :all_blank
 
-  scope :visible_to, (lambda do |user, team|
-                        # Team owners see all projects in the team
-                        if team.permission_granted?(user, TeamPermissions::MANAGE)
-                          where(team: team)
-                        else
-                          viewable_by_user(user, team)
-                        end
-                      end)
-
   scope :templates, -> { where(template: true) }
 
   def self.search(
@@ -90,18 +80,13 @@ class Project < ApplicationRecord
     options = {}
   )
     teams = options[:teams] || current_team || user.teams.select(:id)
-    new_query = distinct.viewable_by_user(user, teams)
+    new_query = distinct.readable_by_user(user, teams)
                         .left_joins(:project_comments)
                         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
     new_query = new_query.active unless include_archived
 
     new_query
-  end
-
-  def self.viewable_by_user(user, teams)
-    with_granted_permissions(user, ProjectPermissions::READ, teams)
-      .distinct
   end
 
   def self.with_children_viewable_by_user(user)

@@ -109,6 +109,10 @@
                         text_description: 'Only one per inventory allowed',
                         data_e2e: 'e2e-DO-invItems-manageColumns-columnType-stock'
                       }.to_json %>"
+                    <% else %>
+                        data-params="<%= {
+                          data_e2e: 'e2e-DO-invItems-manageColumns-columnType-stock'
+                        }.to_json %>"
                     <% end %>
                     <%= 'selected' if @repository_column.repository_stock_value? %> >
               <%= t('libraries.manange_modal_column.select.repository_stock_value') %>

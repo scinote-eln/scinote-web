@@ -22,6 +22,18 @@ class TeamSharedObjectsController < ApplicationController
         if @model.permission_level_changed?
           @model.save!
           @model.team_shared_objects.each(&:destroy!) unless global_permission_level == :not_shared
+
+          case global_permission_level
+          when :shared_read
+            UserAssignment.where(assignable: @model).where.not(team: @model.team).update!(user_role: UserRole.find_predefined_viewer_role)
+            TeamAssignment.where(assignable: @model).where.not(team: @model.team).update!(user_role: UserRole.find_predefined_viewer_role)
+            UserGroupAssignment.where(assignable: @model).where.not(team: @model.team).update!(user_role: UserRole.find_predefined_viewer_role)
+          when :not_shared
+            UserAssignment.where(assignable: @model).where.not(team: @model.team).destroy_all
+            TeamAssignment.where(assignable: @model).where.not(team: @model.team).destroy_all
+            UserGroupAssignment.where(assignable: @model).where.not(team: @model.team).destroy_all
+          end
+
           case @model
           when Repository
             setup_repository_global_share_activity
@@ -66,9 +78,9 @@ class TeamSharedObjectsController < ApplicationController
   def load_vars
     case params[:object_type]
     when 'Repository'
-      @model = Repository.viewable_by_user(current_user).find_by(id: params[:object_id])
+      @model = Repository.readable_by_user(current_user).find_by(id: params[:object_id])
     when 'StorageLocation'
-      @model = StorageLocation.viewable_by_user(current_user).find_by(id: params[:object_id])
+      @model = StorageLocation.readable_by_user(current_user).find_by(id: params[:object_id])
     end
 
     render_404 unless @model

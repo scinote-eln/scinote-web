@@ -1433,19 +1433,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.index ["user_id"], name: "index_user_my_modules_on_user_id"
   end
 
-  create_table "user_projects", force: :cascade do |t|
-    t.integer "role"
-    t.bigint "user_id", null: false
-    t.bigint "project_id", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.bigint "assigned_by_id"
-    t.index ["assigned_by_id"], name: "index_user_projects_on_assigned_by_id"
-    t.index ["project_id"], name: "index_user_projects_on_project_id"
-    t.index ["user_id", "project_id"], name: "index_user_projects_on_user_id_and_project_id", unique: true
-    t.index ["user_id"], name: "index_user_projects_on_user_id"
-  end
-
   create_table "user_roles", force: :cascade do |t|
     t.string "name"
     t.boolean "predefined", default: false
@@ -1456,19 +1443,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_user_roles_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_user_roles_on_last_modified_by_id"
-  end
-
-  create_table "user_teams", force: :cascade do |t|
-    t.integer "role", default: 1, null: false
-    t.bigint "user_id", null: false
-    t.bigint "team_id", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.bigint "assigned_by_id"
-    t.index ["assigned_by_id"], name: "index_user_teams_on_assigned_by_id"
-    t.index ["team_id"], name: "index_user_teams_on_team_id"
-    t.index ["user_id", "team_id"], name: "index_user_teams_on_user_id_and_team_id", unique: true
-    t.index ["user_id"], name: "index_user_teams_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -1797,14 +1771,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
   add_foreign_key "user_my_modules", "my_modules"
   add_foreign_key "user_my_modules", "users"
   add_foreign_key "user_my_modules", "users", column: "assigned_by_id"
-  add_foreign_key "user_projects", "projects"
-  add_foreign_key "user_projects", "users"
-  add_foreign_key "user_projects", "users", column: "assigned_by_id"
   add_foreign_key "user_roles", "users", column: "created_by_id"
   add_foreign_key "user_roles", "users", column: "last_modified_by_id"
-  add_foreign_key "user_teams", "teams"
-  add_foreign_key "user_teams", "users"
-  add_foreign_key "user_teams", "users", column: "assigned_by_id"
   add_foreign_key "users", "teams", column: "current_team_id"
   add_foreign_key "view_states", "users"
   add_foreign_key "webhooks", "activity_filters"

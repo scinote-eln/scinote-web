@@ -56,7 +56,7 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def repositories
-    repositories = Repository.viewable_by_user(current_user)
+    repositories = Repository.readable_by_user(current_user)
                              .search_by_name_and_id(current_user, current_user.teams, params[:query])
                              .order(name: :asc)
                              .page(params[:page] || 1)
@@ -70,7 +70,7 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def repository_rows
-    selected_repository = Repository.viewable_by_user(current_user).find(params[:selected_repository_id])
+    selected_repository = Repository.readable_by_user(current_user).find(params[:selected_repository_id])
 
     repository_rows = selected_repository.repository_rows
                                          .where.not(id: @repository_row.id)
@@ -95,14 +95,14 @@ class RepositoryRowConnectionsController < ApplicationController
 
     return render_422(t('.invalid_params')) unless @relation_type
 
-    @connection_repository = Repository.viewable_by_user(current_user)
+    @connection_repository = Repository.readable_by_user(current_user)
                                        .find_by(id: connection_params[:connection_repository_id])
     return render_404 unless @connection_repository
     return render_403 unless can_connect_repository_rows?(@connection_repository)
   end
 
   def load_repository
-    @repository = Repository.viewable_by_user(current_user).find_by(id: params[:repository_id])
+    @repository = Repository.readable_by_user(current_user).find_by(id: params[:repository_id])
     render_404 unless @repository
   end
 

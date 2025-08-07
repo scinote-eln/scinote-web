@@ -4,7 +4,7 @@ module TableHelper
   def table_data
     content = {}
     data = JSON.parse(contents)['data']
-    return [] if data.blank?
+    return {} if data.blank?
 
     cells = metadata.fetch('cells', [])
 

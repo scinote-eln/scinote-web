@@ -19,14 +19,42 @@ class MoveEveryOneElseAssignmentToTeamAssignments < ActiveRecord::Migration[7.2]
                     .find_each do |shared_obj|
                       next if shared_obj.shared_repository.blank?
 
+                      shared_obj.shared_repository.user_assignments.where(team_id: shared_obj.team_id).update_all(assigned: :manually)
+
                       shared_obj.shared_repository.user_assignments.where(team_id: shared_obj.team_id, user_role: normal_user_role).delete_all
                       shared_obj.shared_repository.team_assignments.find_or_create_by!(team_id: shared_obj.team_id, user_role: normal_user_role)
                     end
 
     # Other repositories
     Repository.find_each do |repository|
+      repository.user_assignments.where(team_id: repository.team_id).update_all(assigned: :manually)
+
       repository.user_assignments.where(team_id: repository.team_id, user_role: normal_user_role).delete_all
       repository.team_assignments.find_or_create_by!(team_id: repository.team_id, user_role: normal_user_role)
+    end
+
+    # global share
+    Repository.where(permission_level: %i(shared_read shared_write)).find_each do |repository|
+      Team.where.not(id: repository.team_id).find_each do |team|
+        next if repository.private_shared_with?(team) || repository.team_assignments.exists?(team: team)
+
+        repository.user_assignments.where(team: team).delete_all
+
+        if repository.permission_level == 'shared_read'
+          repository.team_assignments.find_or_create_by!(team_id: team.id, user_role: viewer_role)
+        else
+          repository.team_assignments.find_or_create_by!(team_id: team.id, user_role: normal_user_role)
+          team.user_assignments.where.not(user_role: normal_user_role).find_each do |user_assignment|
+            UserAssignment.create!(
+              assignable: repository,
+              team: team,
+              user: user_assignment.user,
+              user_role: user_assignment.user_role,
+              assigned: :manually
+            )
+          end
+        end
+      end
     end
 
     # Forms

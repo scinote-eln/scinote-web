@@ -118,7 +118,7 @@ class ExternalProtocolsController < ApplicationController
   def create_protocol_params
     params
       .require(:protocol)
-      .permit(:name, :authors, :published_on, :protocol_type, :description, :visibility, :default_public_user_role_id)
+      .permit(:name, :authors, :published_on, :protocol_type, :description)
       .except(:steps)
   end
 

@@ -12,7 +12,9 @@ let inlineEditing = (function() {
     }
 
     if ($(container).data('params-group') === 'protocol' && $(container).hasClass('inline-editing-container')) {
-      $('.view-mode').text(I18n.t('protocols.draft_name', { name: $('.view-mode').text() }));
+      container.find('.view-mode').text(I18n.t('protocols.draft_name', { name: container.find('.view-mode').text() }));
+    } else if ($(container).data('params-group') === 'user_group' && $(container).hasClass('inline-editing-container')) {
+      container.find('.view-mode').text(`${I18n.t('user_groups.show.title')} ${container.find('.view-mode').text()}`);
     }
   }
 

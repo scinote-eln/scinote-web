@@ -97,7 +97,7 @@ export default {
       contextmenu: '',
       promotion: false,
       menu: {
-        insert: { title: 'Insert', items: 'link | charmap hr | nonbreaking anchor | insertdatetime' }
+        insert: { title: 'Insert', items: 'charmap hr | nonbreaking | insertdatetime' }
       },
       autoresize_bottom_margin: 20,
       codesample_global_prismjs: true,

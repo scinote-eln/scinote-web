@@ -11,7 +11,13 @@ module Api
       before_action :load_project_for_managing, only: %i(update)
 
       def index
-        projects = @team.projects.visible_to(current_user, @team)
+        projects =
+          if can_manage_team?(@team)
+            # Team owners see all projects in the team
+            @team.projects
+          else
+            @team.projects.readable_by_user(current_user, @team)
+          end
         projects = metadata_filter(timestamps_filter(archived_filter(projects)))
                    .page(params.dig(:page, :number))
                    .per(params.dig(:page, :size))

@@ -30,20 +30,6 @@ class Form < ApplicationRecord
 
   enum :visibility, { hidden: 0, visible: 1 }
 
-  def self.viewable_by_user(user, teams)
-    # Team owners see all forms in the team
-    owner_role = UserRole.find_predefined_owner_role
-    forms = Form.where(team: teams)
-    viewable_as_team_owner = forms.joins("INNER JOIN user_assignments team_user_assignments " \
-                                         "ON team_user_assignments.assignable_type = 'Team' " \
-                                         "AND team_user_assignments.assignable_id = forms.team_id")
-                                  .where(team_user_assignments: { user_id: user, user_role_id: owner_role })
-                                  .select(:id)
-    viewable_as_assigned = forms.with_granted_permissions(user, FormPermissions::READ).select(:id)
-
-    where('forms.id IN ((?) UNION (?))', viewable_as_team_owner, viewable_as_assigned)
-  end
-
   def archived_branch?
     archived?
   end

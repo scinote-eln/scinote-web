@@ -15,7 +15,7 @@ module AccessPermissions
     end
 
     def check_read_permissions
-      render_403 unless can_read_repository?(@model) || can_manage_team?(@model.team)
+      render_403 unless can_manage_repository_users?(@model) || can_read_repository?(@model)
     end
   end
 end

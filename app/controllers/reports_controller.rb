@@ -26,7 +26,7 @@ class ReportsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        reports = Lists::ReportsService.new(Report.viewable_by_user(current_user, current_team), params).call
+        reports = Lists::ReportsService.new(Report.readable_by_user(current_user, current_team), params).call
         render json: reports, each_serializer: Lists::ReportSerializer,
                user: current_user, meta: pagination_dict(reports)
       end
@@ -370,7 +370,7 @@ class ReportsController < ApplicationController
   end
 
   def load_repositories_vars
-    live_repositories = Repository.viewable_by_user(current_user).sort_by { |r| r.name.downcase }
+    live_repositories = Repository.readable_by_user(current_user).sort_by { |r| r.name.downcase }
     snapshots_of_deleted = RepositorySnapshot.left_outer_joins(:original_repository)
                                              .where(team: current_team)
                                              .where.not(original_repository: current_team.repositories)
@@ -398,7 +398,7 @@ class ReportsController < ApplicationController
   def load_available_repositories
     @available_repositories = []
     repositories = Repository.active
-                             .viewable_by_user(current_user)
+                             .readable_by_user(current_user)
                              .name_like(search_params[:query])
                              .limit(Constants::SEARCH_LIMIT)
     repositories.each do |repository|

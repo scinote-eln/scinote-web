@@ -7,23 +7,18 @@ module Toolbars
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers
 
-    def initialize(current_user, items: [])
+    def initialize(projects, project_folders, current_user)
       @current_user = current_user
-      project_ids = items.select { |i| i['type'] == 'projects' }.map { |i| i['id'] }
-      project_folder_ids = items.select { |i| i['type'] == 'project_folders' }.map { |i| i['id'] }
-
-      @projects = current_user.current_team.projects.where(id: project_ids)
-      @project_folders = current_user.current_team.project_folders.where(id: project_folder_ids)
-
+      @projects = projects
+      @project_folders = project_folders
       @items = @projects + @project_folders
-
       @single = @items.length == 1
 
-      @item_type = if project_ids.blank? && project_folder_ids.blank?
+      @item_type = if projects.blank? && project_folders.blank?
                      :none
-                   elsif project_ids.present? && project_folder_ids.present?
+                   elsif projects.present? && project_folders.present?
                      :any
-                   elsif project_folder_ids.present?
+                   elsif project_folders.present?
                      :project_folder
                    else
                      :project
@@ -218,7 +213,7 @@ module Toolbars
         if item.is_a?(Project) && can_export_project?(item)
           1
         elsif item.respond_to?(:inner_projects)
-          item.inner_projects.visible_to(@current_user, item.team).count do |project|
+          item.inner_projects.readable_by_user(@current_user, item.team).count do |project|
             can_export_project?(project)
           end
         else

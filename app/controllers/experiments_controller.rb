@@ -47,7 +47,7 @@ class ExperimentsController < ApplicationController
   end
 
   def assigned_users
-    render json: User.where(id: @experiment.user_assignments.select(:user_id)),
+    render json: @experiment.users,
            each_serializer: UserSerializer,
            user: current_user
   end
@@ -72,10 +72,13 @@ class ExperimentsController < ApplicationController
   def canvas
     @project = @experiment.project
     @active_modules = unless @experiment.archived_branch?
-                        @experiment.my_modules.active.order(:name)
+                        @experiment.my_modules
+                                   .active
+                                   .readable_by_user(current_user)
                                    .left_outer_joins(:designated_users, :task_comments)
                                    .preload(:tags, outputs: :to)
                                    .preload(:my_module_status, :my_module_group, user_assignments: %i(user user_role))
+                                   .order(:name)
                                    .select('COUNT(DISTINCT users.id) as designated_users_count')
                                    .select('COUNT(DISTINCT comments.id) as task_comments_count')
                                    .select('my_modules.*').group(:id)
@@ -355,10 +358,10 @@ class ExperimentsController < ApplicationController
   end
 
   def inventory_assigning_experiment_filter
-    viewable_experiments = Experiment.viewable_by_user(current_user, current_team)
+    viewable_experiments = Experiment.readable_by_user(current_user, current_team)
     assignable_my_modules = MyModule.repository_row_assignable_by_user(current_user)
 
-    project = Project.viewable_by_user(current_user, current_team)
+    project = Project.readable_by_user(current_user, current_team)
                      .joins(experiments: :my_modules)
                      .where(experiments: { id: viewable_experiments })
                      .where(my_modules: { id: assignable_my_modules })

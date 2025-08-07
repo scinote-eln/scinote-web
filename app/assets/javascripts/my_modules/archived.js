@@ -82,13 +82,9 @@
           id: data.data.id,
           type: data.data.type
         };
-        const { rolesUrl } = container.dataset;
-        const params = {
-          object,
-          roles_path: rolesUrl
-        };
+
         const modal = $('#accessModalComponent').data('accessModal');
-        modal.params = params;
+        modal.params = { object };
         modal.open();
       });
     });
