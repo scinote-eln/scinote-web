@@ -50,7 +50,7 @@
         <div>
           <img
             class="rounded-full w-8 h-8"
-            src="/images/icon/group.png"
+            src="/images/icon/group.svg"
           >
         </div>
         <div class="truncate">
