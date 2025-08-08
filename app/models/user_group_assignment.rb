@@ -8,6 +8,7 @@ class UserGroupAssignment < ApplicationRecord
   belongs_to :user_group
   belongs_to :user_role
   belongs_to :assigned_by, class_name: 'User', optional: true
+  has_many :users, through: :user_group
 
   enum :assigned, { automatically: 0, manually: 1 }, suffix: true
 
