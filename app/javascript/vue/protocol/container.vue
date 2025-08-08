@@ -199,13 +199,26 @@
                 <span>{{ i18n.t("protocols.steps.new_step") }}</span>
             </a>
             <div v-if="steps.length > 0" class="flex justify-between items-center gap-4">
-              <button @click="collapseSteps" class="btn btn-secondary flex px-4" tabindex="0" data-e2e="e2e-BT-protocol-templateSteps-collapse">
+              <button
+                :title="i18n.t('protocols.steps.collapse_label')"
+                v-if="!stepCollapsed"
+                class="btn btn-secondary icon-btn xl:!px-4"
+                @click="collapseSteps"
+                tabindex="0"
+                data-e2e="e2e-BT-task-protocol-collapseAll"
+              >
                 <i class="sn-icon sn-icon-collapse-all"></i>
-                {{ i18n.t("protocols.steps.collapse_label") }}
+                <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.collapse_label") }}</span>
               </button>
-              <button @click="expandSteps" class="btn btn-secondary flex px-4" tabindex="0" data-e2e="e2e-BT-protocol-templateSteps-expand">
+              <button v-else
+                :title="i18n.t('protocols.steps.expand_label')"
+                class="btn btn-secondary icon-btn xl:!px-4"
+                @click="expandSteps"
+                tabindex="0"
+                data-e2e="e2e-BT-task-protocol-expandAll"
+              >
                 <i class="sn-icon sn-icon-expand-all"></i>
-                {{ i18n.t("protocols.steps.expand_label") }}
+                <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.expand_label") }}</span>
               </button>
               <a v-if="steps.length > 0 && urls.reorder_steps_url"
                 class="btn btn-light icon-btn"
