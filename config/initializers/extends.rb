@@ -622,7 +622,8 @@ class Extends
     repository_access_revoked_user_group: 405,
     automation_task_status_changed: 406,
     automation_experiment_status_changed: 407,
-    automation_project_status_changed: 408
+    automation_project_status_changed: 408,
+    import_protocol_in_repository_from_protocols_io: 409
   }
 
   ACTIVITY_GROUPS = {
@@ -640,7 +641,7 @@ class Extends
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
-                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389],
+                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409],
     team: [92, 94, 93, 97, 104, 244, 245, *379..383],
     label_templates: [*216..219],
     storage_locations: [*309..315, 361],
