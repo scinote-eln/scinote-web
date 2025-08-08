@@ -37,7 +37,7 @@
         <perfect-scrollbar class="max-h-80 relative">
           <div v-for="userGroup in filteredUserGroups" :key="userGroup.id" class="py-2 flex items-center w-full">
             <div>
-              <img src="/images/icon/group.png" class="rounded-full w-8 h-8">
+              <img src="/images/icon/group.svg" class="rounded-full w-8 h-8">
             </div>
             <div
               class="truncate ml-2"
