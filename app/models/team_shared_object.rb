@@ -26,15 +26,11 @@ class TeamSharedObject < ApplicationRecord
   def update_assignments
     return unless saved_change_to_permission_level? && permission_level == 'shared_read'
 
-    shared_object.user_assignments.where(team: team).update!(user_role: UserRole.find_predefined_viewer_role)
-    shared_object.user_group_assignments.where(team: team).update!(user_role: UserRole.find_predefined_viewer_role)
-    shared_object.team_assignments.where(team: team).update!(user_role: UserRole.find_predefined_viewer_role)
+    shared_object.demote_all_sharing_assignments_to_viewer!(for_team: team)
   end
 
   def destroy_assignments
-    shared_object.user_assignments.where(team: team).destroy_all
-    shared_object.user_group_assignments.where(team: team).destroy_all
-    shared_object.team_assignments.where(team: team).destroy_all
+    shared_object.destroy_all_sharing_assignments!(for_team: team)
   end
 
   def team_cannot_be_the_same
