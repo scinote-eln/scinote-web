@@ -24,7 +24,7 @@ module AccessPermissions
         )
       end
 
-      UserAssignments::PropagateAssignmentJob.perform_later(@assignment, destroy: permitted_params[:user_role_id] == 'reset')
+      UserAssignments::PropagateAssignmentJob.perform_later(@assignment)
 
       case assignment_type
       when :user_group
