@@ -136,7 +136,7 @@ class Repository < RepositoryBase
 
         # Clone columns (only if new_repo was saved)
         repository_columns.find_each do |col|
-          new_col = col.dup
+          new_col = col.deep_dup
           new_col.repository = new_repo
           new_col.created_by = created_by
           new_col.save!
