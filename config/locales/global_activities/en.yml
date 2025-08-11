@@ -424,6 +424,7 @@ en:
       automation_task_status_changed_html: "%{user} triggered automatic status change from <strong>%{my_module_status_old}</strong> to <strong>%{my_module_status_new}</strong> for task %{my_module}."
       automation_experiment_status_changed_html: "%{user} triggered automatic status change from <strong>%{experiment_status_old}</strong> to <strong>%{experiment_status_new}</strong> for experiment %{experiment}."
       automation_project_status_changed_html: "%{user} triggered automatic status change from <strong>%{project_status_old}</strong> to <strong>%{project_status_new}</strong> for project %{project}."
+      import_protocol_in_repository_from_protocols_io_html: "%{user} imported protocol %{protocol} to Protocol repository from protocols.io."
     activity_name:
       create_project: "Project created"
       edit_project: "Project edited"
@@ -803,6 +804,7 @@ en:
       automation_task_status_changed: "Task status changed automatically"
       automation_experiment_status_changed: "Experiment status changed automatically"
       automation_project_status_changed: "Project status changed automatically"
+      import_protocol_in_repository_from_protocols_io: "Protocol imported from protocols.io"
     activity_group:
       projects: "Projects"
       task_results: "Task results"

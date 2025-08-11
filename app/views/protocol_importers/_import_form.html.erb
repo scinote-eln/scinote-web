@@ -35,7 +35,7 @@
         <%= f.label :published_on_label,
             t('protocols.import_export.import_modal.published_on_label'),
             :"data-e2e" => "e2e-TX-protocolTemplates-previewProtocolsIo-publishedOnLabel" %>
-        <%= f.text_field :published_on_label, 
+        <%= f.text_field :published_on_label,
             value: I18n.l(protocol.published_on, format: :full),
             class: 'form-control',
             disabled: true,
@@ -50,6 +50,7 @@
   <%= f.hidden_field(:protocol_type, value: protocol.protocol_type) %>
   <%= f.hidden_field(:visibility) %>
   <%= f.hidden_field(:default_public_user_role_id) %>
+  <%= hidden_field_tag(:source, source) %>
 
 <% end %>
 
