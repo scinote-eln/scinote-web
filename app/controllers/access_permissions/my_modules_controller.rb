@@ -26,6 +26,8 @@ module AccessPermissions
       end
 
       case assignment_type
+      when :team
+        log_activity(:my_module_access_changed_all_team_members, team: @assignment.team.id, role: @assignment.user_role.name)
       when :user_group
         log_activity(:my_module_access_changed_user_group, user_group: @assignment.user_group.id, role: @assignment.user_role.name)
       when :user

@@ -122,7 +122,7 @@ module AccessPermissions
     private
 
     def model_parameter
-      @model.class.permission_class.name.parameterize.to_sym
+      @model.model_name.param_key
     end
 
     def manage_permission_constant
