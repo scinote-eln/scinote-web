@@ -2,7 +2,7 @@
   <li class="sidebar-leaf">
     <%= link_to t('sidebar.my_modules.back_button'), project_url(experiment.project), class: 'sidebar-link back-button' %>
   </li>
-  <% my_modules&.readable_by_user(current_user)&.each do |my_module| %>
+  <% my_modules.each do |my_module| %>
     <li class="sidebar-leaf">
       <%= link_to my_module.name,
                   protocols_my_module_url(my_module),

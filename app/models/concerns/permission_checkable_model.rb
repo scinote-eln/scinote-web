@@ -15,7 +15,7 @@ module PermissionCheckableModel
 
       with_granted_user_permissions = with_user_assignments.where('user_roles.permissions @> ARRAY[?]::varchar[]', permissions)
       with_granted_group_permissions = with_group_assignments
-                                       .where(user_group_assignments: { assignable: self, user_groups: { users: user } })
+                                       .where(user_group_assignments: { assignable: self, user_groups: { users: user }, team: teams })
                                        .where('user_roles.permissions @> ARRAY[?]::varchar[]', permissions)
                                        .or(
                                          with_group_assignments
@@ -27,19 +27,31 @@ module PermissionCheckableModel
         .or(where(id: with_granted_group_permissions.reselect(:id)))
     }
 
+    scope :readable_by_user, lambda { |user, teams = user.permission_team|
+      read_permission = "::#{self.class.to_s.split('::').first}Permissions".constantize::READ
+      with_granted_permissions(user, read_permission, teams)
+    }
+
+    scope :managable_by_user, lambda { |user, teams = user.permission_team|
+      manage_permission = "::#{self.class.to_s.split('::').first}Permissions".constantize::MANAGE
+      with_granted_permissions(user, manage_permission, teams)
+    }
+
     def self.permission_class
       self
     end
   end
 
-  def permission_granted?(user, permission)
-    return true if user_assignments.joins(:user_role)
-                                   .where(user: user, team: user.permission_team)
-                                   .exists?(['user_roles.permissions @> ARRAY[?]::varchar[]', [permission]])
+  def permission_granted?(user, permission, permission_team = user.permission_team)
+    if user_assignments.exists?(user: user, team: permission_team)
+      return user_assignments.joins(:user_role)
+                             .where(user: user, team: permission_team)
+                             .exists?(['user_roles.permissions @> ARRAY[?]::varchar[]', [permission]])
+    end
 
     user_roles = UserRole.left_outer_joins(:team_assignments, user_group_assignments: { user_group: :users })
     user_roles.where(user_group_assignments: { assignable: self, user_groups: { users: user } })
-              .or(user_roles.where(team_assignments: { assignable: self, team: user.permission_team }))
+              .or(user_roles.where(team_assignments: { assignable: self, team: permission_team }))
               .exists?(['user_roles.permissions @> ARRAY[?]::varchar[]', [permission]])
   end
 

@@ -7,7 +7,6 @@ class ProtocolsController < ApplicationController
   include ProtocolsIoHelper
   include TeamsHelper
   include ProtocolsExporterV2
-  include UserRolesHelper
   include FormFieldValuesHelper
 
   before_action :check_create_permissions, only: %i(
@@ -80,11 +79,17 @@ class ProtocolsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        protocols = Lists::ProtocolsService.new(Protocol.viewable_by_user(current_user, @current_team), params).call
-        render json: protocols,
+        protocols = if can_manage_team?(current_team)
+                      # Team owners see all protocol templates in the team
+                      current_team.repository_protocols
+                    else
+                      current_team.repository_protocols.readable_by_user(current_user, current_team)
+                    end
+        protocols_list = Lists::ProtocolsService.new(protocols, params).call
+        render json: protocols_list,
                each_serializer: Lists::ProtocolSerializer,
                user: current_user,
-               meta: pagination_dict(protocols)
+               meta: pagination_dict(protocols_list)
       end
       format.html do
         render 'index'
@@ -532,6 +537,7 @@ class ProtocolsController < ApplicationController
     Protocol.transaction do
       protocol = @importer.import_new_protocol(@protocol_json)
     rescue StandardError => e
+      Rails.logger.error e.message
       Rails.logger.error e.backtrace.join("\n")
       transaction_error = true
       raise ActiveRecord::Rollback
@@ -877,10 +883,6 @@ class ProtocolsController < ApplicationController
     render json: { job_id: @job.job_id }
   end
 
-  def user_roles
-    render json: { data: user_roles_collection(Protocol.new).map(&:reverse) }
-  end
-
   private
 
   def set_importer
@@ -1090,7 +1092,7 @@ class ProtocolsController < ApplicationController
   end
 
   def create_params
-    params.require(:protocol).permit(:name, :default_public_user_role_id, :visibility)
+    params.require(:protocol).permit(:name)
   end
 
   def check_protocolsio_import_permissions

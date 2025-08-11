@@ -47,7 +47,7 @@ class MyModulesController < ApplicationController
 
   def new
     @my_module = @experiment.my_modules.new
-    assigned_users = User.where(id: @experiment.user_assignments.select(:user_id))
+    assigned_users = @experiment.users
 
     render json: {
       html: render_to_string(
@@ -423,10 +423,10 @@ class MyModulesController < ApplicationController
   end
 
   def inventory_assigning_my_module_filter
-    viewable_experiments = Experiment.viewable_by_user(current_user, current_team)
+    viewable_experiments = Experiment.readable_by_user(current_user, current_team)
     assignable_my_modules = MyModule.repository_row_assignable_by_user(current_user)
 
-    experiment = Experiment.viewable_by_user(current_user, current_team)
+    experiment = Experiment.readable_by_user(current_user, current_team)
                            .joins(:my_modules)
                            .where(experiments: { id: viewable_experiments })
                            .where(my_modules: { id: assignable_my_modules })

@@ -4,6 +4,7 @@ module Lists
   class ProtocolSerializer < ActiveModel::Serializer
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers
+    include AssignmentsHelper
 
     attributes :name, :code, :keywords, :linked_tasks, :nr_of_versions, :assigned_users, :published_by,
                :published_on, :updated_at, :archived_by, :archived_on, :urls,
@@ -38,21 +39,7 @@ module Lists
     end
 
     def assigned_users
-      users = object.user_assignments.map do |ua|
-        {
-          avatar: avatar_path(ua.user, :icon_small),
-          full_name: ua.user_name_with_role
-        }
-      end
-
-      user_groups = object.user_group_assignments.map do |ua|
-        {
-          avatar: ActionController::Base.helpers.asset_path('icon/group.svg'),
-          full_name: ua.user_group_name_with_role
-        }
-      end
-
-      user_groups + users
+      prepare_assigned_users
     end
 
     def has_draft
@@ -100,7 +87,9 @@ module Lists
         versions_list: versions_list_protocol_path(object),
         linked_my_modules: linked_children_protocol_path(object.parent || object),
         versions_modal: versions_modal_protocol_path(object.parent || object),
-        show_user_group_assignments_access: show_user_group_assignments_access_permissions_protocol_path(object)
+        show_user_group_assignments_access: show_user_group_assignments_access_permissions_protocol_path(object),
+        user_roles: user_roles_access_permissions_protocol_path(object),
+        user_group_members: users_users_settings_team_user_groups_path(team_id: object.team.id)
       }
 
       if can_read_protocol_in_repository?(object)
@@ -121,7 +110,6 @@ module Lists
         urls_list[:new_access] = new_access_permissions_protocol_path(id: object.id)
         urls_list[:create_access] = access_permissions_protocols_path(id: object.id)
         urls_list[:unassigned_user_groups] = unassigned_user_groups_access_permissions_protocol_path(id: object.id)
-        urls_list[:user_group_members] = users_users_settings_team_user_groups_path(team_id: object.team.id)
       end
 
       urls_list

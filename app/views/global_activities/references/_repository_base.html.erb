@@ -2,13 +2,15 @@
            locals: { team: team, subject: team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <div class="ga-breadcrumb">
   <span class="sn-icon sn-icon-inventory"></span>
-  <%if !can_read_repository?(subject)%>
-    <%= I18n.t('repositories.private') %>
-  <% elsif subject %>
-    <%= route_to_other_team(repository_path(subject.id, team: subject.team.id),
-                            team,
-                            subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
-                            title: subject.name) %>
+  <% if subject %>
+    <% if can_read_repository?(subject) %>
+      <%= route_to_other_team(repository_path(subject.id, team: subject.team.id),
+                              team,
+                              subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                              title: subject.name) %>
+    <% else %>
+       <%= I18n.t('repositories.private') %>
+    <% end %>
   <% else %>
     <span title="<%= breadcrumbs['repository'] %>">
       <%= breadcrumbs['repository']&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>

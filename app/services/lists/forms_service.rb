@@ -2,26 +2,18 @@
 
 module Lists
   class FormsService < BaseService
-    def initialize(user, team, params)
-      super(nil, params, user: user)
-      @team = team
-    end
-
     def fetch_records
-      @records =
-        Form.includes(:team, user_assignments: %i(user user_role))
-            .left_outer_joins(:user_assignments)
-            .left_outer_joins(:form_responses)
-            .viewable_by_user(@user, @team)
-            .joins(
-              'LEFT OUTER JOIN users AS publishers ' \
-              'ON forms.published_by_id = publishers.id'
-            ).select(
-              'forms.* AS forms',
-              'publishers.full_name AS published_by_user',
-              'COUNT(DISTINCT form_responses.id) AS used_in_protocols_count',
-              'COUNT(DISTINCT user_assignments.id) AS user_assignment_count'
-            ).where(team: @team).group('forms.id', 'publishers.full_name')
+      @records = @raw_data.left_outer_joins(:user_assignments)
+                          .left_outer_joins(:form_responses)
+                          .joins(
+                            'LEFT OUTER JOIN users AS publishers ' \
+                            'ON forms.published_by_id = publishers.id'
+                          ).select(
+                            'forms.* AS forms',
+                            'publishers.full_name AS published_by_user',
+                            'COUNT(DISTINCT form_responses.id) AS used_in_protocols_count',
+                            'COUNT(DISTINCT user_assignments.id) AS user_assignment_count'
+                          ).group('forms.id', 'publishers.full_name')
 
       view_mode = @params[:view_mode] || 'active'
 

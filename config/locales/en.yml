@@ -1093,25 +1093,8 @@ en:
       created_on_title: "Experiment created on %{date} at %{time}."
       last_modified_on_title: "Experiment last modified on %{date} at %{time}."
 
-  user_teams:
-    enums:
-      role:
-        guest: "Guest"
-        normal_user: "Normal user"
-        admin: "Administrator"
   teams:
     private_team: "Private workspace"
-  user_projects:
-    view_users:
-      modal_title: "Members of %{name}"
-      no_users: "No users!"
-      current_user_label: "(you)"
-    edit:
-      update_role: "Change Role"
-    create:
-      select_user_role: "Please select a user role."
-      add_user_generic_error: "An error occurred. "
-      can_add_user_to_project: "Can not add user to the project."
   forms:
     published: "Published"
     draft: "Draft"
@@ -2298,7 +2281,8 @@ en:
         message_html: "Are you sure you want to delete inventory <em>%{name}</em>? This action is irreversible."
         alert_heading: "Deleting inventory has following consequences:"
         alert_line_1: "all data inside the inventory will be lost;"
-        alert_line_2: "all references to inventory items will be rendered as invalid."
+        alert_line_2: "all references to inventory items will be rendered as invalid;"
+        alert_line_3: "if task assigned item snapshots exist, access to them will follow task-level permissions."
         delete: "Delete"
       modal_rename:
         title_html: "Rename inventory: %{name}"
@@ -2341,6 +2325,8 @@ en:
         notification:
           error:
             title: "Your Inventories export failed. Please contact support."
+      table:
+        access: "Access"
     show:
       name: "Name"
       archived_inventory_items: "%{repository_name} archived items"
@@ -4568,7 +4554,7 @@ en:
 
   access_permissions:
     all_team: "all workspace"
-    everyone_else: "Everyone else at %{team_name}"
+    everyone_else: "Everyone at %{team_name}"
     reset: "Inherit role"
     remove_access: "Remove access"
     grant_access: "Grant new access"
@@ -5055,6 +5041,7 @@ en:
   errors:
     general: "Something went wrong."
     general_text_too_long: 'Text is too long'
+    general_saving_data: 'Error saving data'
     forbidden:
       title: "Access to this page is denied (403)."
       dialog:

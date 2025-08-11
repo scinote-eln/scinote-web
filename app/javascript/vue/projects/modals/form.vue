@@ -51,22 +51,6 @@
                 :placeholder="i18n.t('projects.index.add_description')"
               ></TinymceEditor>
             </div>
-            <div class="flex gap-2 text-xs items-center">
-              <div class="sci-checkbox-container">
-                <input type="checkbox" class="sci-checkbox" v-model="visible" value="visible" data-e2e="e2e-CB-projects-newProjectModal-access"/>
-                <span class="sci-checkbox-label"></span>
-              </div>
-              <span v-html="i18n.t('projects.index.modal_new_project.visibility_html')"></span>
-            </div>
-            <div class="mt-6" :class="{'hidden': !visible}">
-              <label class="sci-label">{{ i18n.t("user_assignment.select_default_user_role") }}</label>
-              <SelectDropdown
-                :options="userRoles"
-                :value="defaultRole"
-                @change="changeRole"
-                :e2eValue="'e2e-DD-projects-newProjectModal-defaultRole'"
-              />
-            </div>
           </div>
           <div class="modal-footer">
             <button
@@ -80,7 +64,7 @@
             <button
               class="btn btn-primary"
               type="submit"
-              :disabled="submitting || (visible && !defaultRole) || !validName"
+              :disabled="submitting || !validName"
               data-e2e="e2e-BT-projects-newProjectModal-create"
             >
               {{ submitButtonLabel }}
@@ -94,7 +78,6 @@
 
 <script>
 
-import SelectDropdown from '../../shared/select_dropdown.vue';
 import DateTimePicker from '../../shared/date_time_picker.vue';
 import TinymceEditor from '../../shared/tinymce_editor.vue';
 import axios from '../../../packs/custom_axios.js';
@@ -104,24 +87,13 @@ export default {
   name: 'ProjectFormModal',
   props: {
     project: Object,
-    userRolesUrl: String,
     currentFolderId: String,
     createUrl: String
   },
   mixins: [modalMixin],
   components: {
-    SelectDropdown,
     DateTimePicker,
     TinymceEditor
-  },
-  watch: {
-    visible(newValue) {
-      if (newValue) {
-        [this.defaultRole] = this.userRoles.find((role) => role[1] === 'Viewer');
-      } else {
-        this.defaultRole = null;
-      }
-    }
   },
   computed: {
     validName() {
@@ -142,16 +114,10 @@ export default {
       return this.i18n.t('projects.index.modal_edit_project.submit');
     }
   },
-  mounted() {
-    this.fetchUserRoles();
-  },
   data() {
     return {
       name: this.project?.name || '',
-      visible: this.project ? !this.project.hidden : false,
-      defaultRole: this.project?.default_public_user_role_id,
       error: null,
-      userRoles: [],
       submitting: false,
       startDate: null,
       dueDate: null,
@@ -175,9 +141,7 @@ export default {
         name: this.name,
         start_date: this.startDate,
         due_date: this.dueDate,
-        description: this.description,
-        visibility: (this.visible ? 'visible' : 'hidden'),
-        default_public_user_role_id: this.defaultRole
+        description: this.description
       };
 
       if (this.createUrl) {
@@ -209,22 +173,11 @@ export default {
       });
       this.submitting = false;
     },
-    changeRole(role) {
-      this.defaultRole = role;
-    },
     updateStartDate(startDate) {
       this.startDate = this.stripTime(startDate);
     },
     updateDueDate(dueDate) {
       this.dueDate = this.stripTime(dueDate);
-    },
-    fetchUserRoles() {
-      if (this.userRolesUrl) {
-        axios.get(this.userRolesUrl)
-          .then((response) => {
-            this.userRoles = response.data.data;
-          });
-      }
     },
     stripTime(date) {
       if (date) {

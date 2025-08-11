@@ -171,8 +171,7 @@ class SearchController < ApplicationController
                                                       current_team,
                                                       params[:query],
                                                       search_object_classes,
-                                                      limit: Constants::QUICK_SEARCH_LIMIT,
-                                                      fetch_latest_versions: class_name == 'protocol')
+                                                      limit: Constants::QUICK_SEARCH_LIMIT)
                 .order(updated_at: :desc)
   end
 

@@ -37,7 +37,7 @@
         <perfect-scrollbar class="max-h-80 relative">
           <div v-for="userGroup in filteredUserGroups" :key="userGroup.id" class="py-2 flex items-center w-full">
             <div>
-              <img src="/images/icon/group.png" class="rounded-full w-8 h-8">
+              <img src="/images/icon/group.svg" class="rounded-full w-8 h-8">
             </div>
             <div
               class="truncate ml-2"
@@ -195,7 +195,7 @@ export default {
         });
     },
     getRoles() {
-      axios.get(this.params.roles_path)
+      axios.get(this.params.object.urls.user_roles)
         .then((response) => {
           this.roles = response.data.data;
         });

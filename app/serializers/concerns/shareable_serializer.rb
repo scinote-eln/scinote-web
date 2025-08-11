@@ -4,7 +4,11 @@ module ShareableSerializer
   extend ActiveSupport::Concern
 
   included do
-    attributes :shared, :shared_label, :ishared, :shared_read, :shared_write, :shareable_write
+    attributes :shared, :shared_label, :ishared, :shared_read, :shared_write, :shareable_write, :current_team
+  end
+
+  def current_team
+    current_user.current_team.name
   end
 
   def shared

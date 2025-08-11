@@ -12,9 +12,7 @@ describe AccessPermissions::MyModulesController, type: :controller do
   let!(:viewer_user_role) { create :viewer_role }
   let!(:technician_role) { create :technician_role }
   let!(:project) { create :project, team: team, created_by: user }
-  let!(:user_project) { create :user_project, user: user, project: project }
   let!(:viewer_user) { create :user, confirmed_at: Time.zone.now }
-  let!(:viewer_user_project) { create :user_project, user: viewer_user, project: project }
   let!(:my_module) { create :my_module, experiment: experiment, created_by: experiment.created_by, created_by: user }
 
   before do

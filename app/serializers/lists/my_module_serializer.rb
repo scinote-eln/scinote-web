@@ -41,11 +41,7 @@ module Lists
 
     delegate :favorite, to: :object
 
-    def default_public_user_role_id
-      object.experiment.project.default_public_user_role_id
-    end
-
-    delegate :code, to: :object
+    delegate :code, :default_public_user_role_id, to: :object
 
     def permissions
       {
@@ -71,10 +67,14 @@ module Lists
         show_user_group_assignments_access: show_user_group_assignments_access_permissions_my_module_path(object),
         provisioning_status: provisioning_status_my_module_url(object),
         favorite: favorite_my_module_url(object),
-        unfavorite: unfavorite_my_module_url(object)
+        unfavorite: unfavorite_my_module_url(object),
+        user_roles: user_roles_access_permissions_my_module_path(object)
       }
 
-      urls_list[:update_access] = access_permissions_my_module_path(object) if can_manage_project_users?(object.experiment.project)
+      if can_manage_project_users?(object.experiment.project)
+        urls_list[:update_access] = access_permissions_my_module_path(object)
+      end
+
       urls_list[:update_due_date] = my_module_path(object, user, format: :json) if can_update_my_module_due_date?(object)
       urls_list[:update_start_date] = my_module_path(object, user, format: :json) if can_update_my_module_start_date?(object)
 

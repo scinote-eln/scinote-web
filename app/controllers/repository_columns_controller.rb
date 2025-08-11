@@ -108,7 +108,7 @@ class RepositoryColumnsController < ApplicationController
   AvailableRepositoryColumn = Struct.new(:id, :name)
 
   def load_repository
-    @repository = Repository.viewable_by_user(current_user).find_by(id: params[:repository_id])
+    @repository = Repository.readable_by_user(current_user).find_by(id: params[:repository_id])
     render_404 unless @repository
   end
 

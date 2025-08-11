@@ -3,15 +3,16 @@
 module AccessPermissions
   class BaseController < ApplicationController
     include InputSanitizeHelper
+    include UserRolesHelper
 
     before_action :set_model
     before_action :set_assignment, only: %i(create update destroy)
-    before_action :check_read_permissions, only: %i(show show_user_group_assignments)
-    before_action :check_manage_permissions, except: %i(show show_user_group_assignments)
+    before_action :check_read_permissions, only: %i(show show_user_group_assignments user_roles)
+    before_action :check_manage_permissions, except: %i(show show_user_group_assignments user_roles)
     before_action :load_available_users, only: %i(new create)
 
     def show
-      render json: @model.user_assignments.includes(:user_role, :user).order('users.full_name ASC'),
+      render json: @model.user_assignments.where(team: current_team).includes(:user_role, :user).order('users.full_name ASC'),
              each_serializer: UserAssignmentSerializer, user: current_user
     end
 
@@ -114,6 +115,10 @@ module AccessPermissions
              each_serializer: UserGroupSerializer, user: current_user
     end
 
+    def user_roles
+      render json: { data: user_roles_collection(@model).map(&:reverse) }
+    end
+
     private
 
     def model_parameter
@@ -134,7 +139,7 @@ module AccessPermissions
     end
 
     def load_available_users
-      @available_users = current_team.users.where.not(id: @model.users.select(:id)).order(users: { full_name: :asc })
+      @available_users = current_team.users.where.not(id: @model.user_assignments.where(team: current_team).select(:user_id)).order(users: { full_name: :asc })
     end
 
     def propagate_job(destroy: false)

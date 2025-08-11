@@ -13,7 +13,6 @@
     <% end %>
     <h3 class="m-0 flex gap-0.5 items-center">
       <% if can_manage_team?(@team) %>
-        <span class="shrink-0 mt-1"><%= t('user_groups.show.title') %></span>
         <%= render partial: "shared/inline_editing",
                     locals: {
                       initial_value: @user_group.name,

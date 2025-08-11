@@ -15,6 +15,7 @@ class Team < ApplicationRecord
   after_create :generate_template_project
   after_create :create_default_label_templates
   after_create :create_default_repository_templates
+
   scope :teams_select, -> { select(:id, :name).order(name: :asc) }
   scope :ordered, -> { order('LOWER(name)') }
 
@@ -26,7 +27,6 @@ class Team < ApplicationRecord
 
   belongs_to :created_by, class_name: 'User', optional: true
   belongs_to :last_modified_by, class_name: 'User', optional: true
-  has_many :users, through: :user_assignments, dependent: :destroy
   has_many :user_groups, dependent: :destroy
   has_many :projects, inverse_of: :team, dependent: :destroy
   has_many :project_folders, inverse_of: :team, dependent: :destroy
@@ -58,25 +58,10 @@ class Team < ApplicationRecord
            source: :shared_object,
            source_type: 'RepositoryBase',
            dependent: :destroy
-  has_many :repository_sharing_user_assignments,
-           (lambda do |team|
-             joins(
-               "INNER JOIN repositories "\
-               "ON user_assignments.assignable_type = 'RepositoryBase' "\
-               "AND user_assignments.assignable_id = repositories.id"
-             ).where(team_id: team.id)
-             .where.not('user_assignments.team_id = repositories.team_id')
-           end),
-           class_name: 'UserAssignment',
-           dependent: :destroy
-  has_many :shared_by_user_repositories,
-           through: :repository_sharing_user_assignments,
-           source: :assignable,
-           source_type: 'RepositoryBase',
-           dependent: :destroy
   has_many :shareable_links, inverse_of: :team, dependent: :destroy
   has_many :storage_locations, dependent: :destroy
   has_many :forms, dependent: :destroy
+  has_many :team_assignments, dependent: :destroy
 
   attr_accessor :without_templates
 

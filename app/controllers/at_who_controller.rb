@@ -27,7 +27,7 @@ class AtWhoController < ApplicationController
       if params[:repository_id].present?
         Repository.find_by(id: params[:repository_id])
       else
-        Repository.active.viewable_by_user(current_user, @team).first
+        Repository.active.readable_by_user(current_user, @team).first
       end
 
     items = []
@@ -36,7 +36,7 @@ class AtWhoController < ApplicationController
     if repository && can_read_repository?(repository)
       assignable_my_module =
         if params[:assignable_my_module_id].present?
-          MyModule.viewable_by_user(current_user, @team).find_by(id: params[:assignable_my_module_id])
+          MyModule.readable_by_user(current_user, @team).find_by(id: params[:assignable_my_module_id])
         end
       items = SmartAnnotation.new(current_user, current_team, @query)
                              .repository_rows(repository, assignable_my_module&.id)
@@ -54,7 +54,7 @@ class AtWhoController < ApplicationController
   end
 
   def menu
-    repositories = Repository.active.viewable_by_user(current_user, @team)
+    repositories = Repository.active.readable_by_user(current_user, @team)
     render json: {
       html: render_to_string(partial: 'shared/smart_annotation/menu',
                              locals: { repositories: repositories },

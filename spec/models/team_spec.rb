@@ -27,7 +27,6 @@ describe Team, type: :model do
   describe 'Relations' do
     it { should belong_to(:created_by).class_name('User').optional }
     it { should belong_to(:last_modified_by).class_name('User').optional }
-    it { should have_many :users }
     it { should have_many :projects }
     it { should have_many :protocols }
     it { should have_many :protocol_keywords }

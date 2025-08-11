@@ -9,12 +9,15 @@ module UserAssignments
 
     def call
       @team.projects.find_each do |project|
-        UserAssignments::PropagateAssignmentJob
-          .perform_now(project, @user.id, nil, nil, destroy: true, remove_from_team: true)
+        project.user_assignments.where(user: @user).find_each do |assignment|
+          UserAssignments::PropagateAssignmentJob
+            .perform_now(assignment, destroy: true, remove_from_team: true)
+        end
       end
       remove_repositories_assignments
       remove_protocols_assignments
       remove_reports_assignments
+      remove_forms_assignments
     end
 
     private
@@ -28,7 +31,6 @@ module UserAssignments
                   .select { |assignment| assignment.user_id == @user.id && assignment.team_id == @team.id }
                   .each(&:destroy!)
       end
-      @team.repository_sharing_user_assignments.where(user: @user).find_each(&:destroy!)
     end
 
     def remove_protocols_assignments
@@ -50,6 +52,17 @@ module UserAssignments
         report.user_assignments
               .select { |assignment| assignment.user_id == @user.id }
               .each(&:destroy!)
+      end
+    end
+
+    def remove_forms_assignments
+      @team.forms
+           .joins(:user_assignments)
+           .preload(:user_assignments)
+           .where(user_assignments: { user: @user, team: @team }).find_each do |form|
+        form.user_assignments
+            .select { |assignment| assignment.user_id == @user.id && assignment.team_id == @team.id }
+            .each(&:destroy!)
       end
     end
   end

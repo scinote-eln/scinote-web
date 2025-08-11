@@ -42,7 +42,7 @@ module Api
         @task.my_module_repository_rows.create!(repository_row: @inventory_item, assigned_by: current_user)
 
         render jsonapi: @inventory_item,
-               each_serializer: TaskInventoryItemSerializer,
+               serializer: TaskInventoryItemSerializer,
                show_repository: true,
                my_module: @task,
                include: include_params
@@ -75,9 +75,7 @@ module Api
       end
 
       def load_task_inventory_item
-        @task_inventory_item = @task.my_module_repository_rows.find_by(repository_row: @inventory_item)
-
-        raise ActiveRecord::RecordNotFound unless @task_inventory_item
+        @task_inventory_item = @task.my_module_repository_rows.find_by!(repository_row: @inventory_item)
       end
 
       def check_repository_view_permissions
@@ -85,7 +83,7 @@ module Api
       end
 
       def check_stock_consumption_update_permissions
-        raise PermissionError.new(RepositoryRow, :update_stock_consumption) unless can_update_my_module_stock_consumption?(@task)
+        raise PermissionError.new(RepositoryRow, :update_stock_consumption) if @inventory_item.archived? || !can_update_my_module_stock_consumption?(@task)
       end
 
       def check_task_assign_permissions

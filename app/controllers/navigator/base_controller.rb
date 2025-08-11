@@ -53,7 +53,7 @@ module Navigator
     end
 
     def fetch_projects(object = nil, archived = false)
-      if object&.is_a?(ProjectFolder)
+      if object.is_a?(ProjectFolder)
         folder = object
         project = nil
       else
@@ -70,37 +70,65 @@ module Navigator
                                           (projects.archived IS TRUE AND experiments.id IS  NOT NULL)
                                      THEN 1 ELSE 0 END) > 0 AS has_children'
                          end
-      disabled_sql = 'SUM(CASE WHEN project_user_roles IS NULL THEN 0 ELSE 1 END) < 1 AS disabled'
+      disabled_sql = 'SUM(CASE
+                          WHEN project_user_roles IS NULL AND
+                               project_user_group_roles IS NULL AND
+                               project_team_roles IS NULL
+                          THEN 0 ELSE 1 END) < 1 AS disabled'
 
-      current_team.projects
-                  .where(project_folder_id: folder)
-                  .visible_to(current_user, current_team)
-                  .with_children_viewable_by_user(current_user)
-                  .joins("LEFT OUTER JOIN user_assignments project_user_assignments
-                            ON project_user_assignments.assignable_type = 'Project'
-                            AND project_user_assignments.assignable_id = projects.id
-                            AND project_user_assignments.user_id = #{current_user.id}
-                          LEFT OUTER JOIN user_roles project_user_roles
-                            ON project_user_roles.id = project_user_assignments.user_role_id
-                            AND project_user_roles.permissions @> ARRAY['#{ProjectPermissions::READ}']::varchar[]")
-                  .where('projects.archived = :archived OR
-                          (
-                            (
-                              experiments.archived = :archived OR
-                              my_modules.archived = :archived
-                            ) AND
-                            :archived IS TRUE
-                          ) OR
-                          projects.id = :project_id',
-                         archived: archived,
-                         project_id: project&.id || -1)
-                  .select(
-                    'projects.id',
-                    'projects.name',
-                    'projects.archived',
-                    disabled_sql,
-                    has_children_sql
-                  ).group('projects.id')
+      projects =
+        if can_manage_team?(current_team)
+          # Team owners see all projects in the team
+          current_team.projects
+        else
+          current_team.projects.readable_by_user(current_user, current_team)
+        end
+
+      projects.where(project_folder_id: folder)
+              .with_children_viewable_by_user(current_user)
+              .joins("LEFT OUTER JOIN user_assignments project_user_assignments
+                        ON project_user_assignments.assignable_type = 'Project'
+                        AND project_user_assignments.assignable_id = projects.id
+                        AND project_user_assignments.user_id = #{current_user.id}
+                      LEFT OUTER JOIN user_roles project_user_roles
+                        ON project_user_roles.id = project_user_assignments.user_role_id
+                        AND project_user_roles.permissions @> ARRAY['#{ProjectPermissions::READ}']::varchar[]
+                      LEFT OUTER JOIN user_group_assignments project_user_group_assignments
+                        ON project_user_group_assignments.assignable_type = 'Project'
+                        AND project_user_group_assignments.assignable_id = projects.id
+                        AND project_user_group_assignments.user_group_id IN (
+                          SELECT user_group_memberships.user_group_id FROM user_group_memberships
+                          WHERE user_group_memberships.user_id = #{current_user.id}
+                        )
+                      LEFT OUTER JOIN user_roles project_user_group_roles
+                        ON project_user_group_roles.id = project_user_group_assignments.user_role_id
+                        AND project_user_group_roles.permissions @> ARRAY['#{ProjectPermissions::READ}']::varchar[]
+                      LEFT OUTER JOIN team_assignments project_team_assignments
+                        ON project_team_assignments.assignable_type = 'Project'
+                        AND project_team_assignments.assignable_id = projects.id
+                        AND project_team_assignments.team_id = #{current_team.id}
+                      LEFT OUTER JOIN user_roles project_team_roles
+                        ON project_team_roles.id = project_team_assignments.user_role_id
+                        AND project_team_roles.permissions @> ARRAY['#{ProjectPermissions::READ}']::varchar[]
+              ")
+              .where('projects.archived = :archived OR
+                      (
+                        (
+                          experiments.archived = :archived OR
+                          my_modules.archived = :archived
+                        ) AND
+                        :archived IS TRUE
+                      ) OR
+                      projects.id = :project_id',
+                     archived: archived,
+                     project_id: project&.id || -1)
+              .select(
+                'projects.id',
+                'projects.name',
+                'projects.archived',
+                disabled_sql,
+                has_children_sql
+              ).group('projects.id')
     end
 
     def fetch_project_folders(object = nil, archived = false)
@@ -109,13 +137,20 @@ module Navigator
                else
                  object&.project_folder
                end
-      has_children_sql = 'SUM(CASE WHEN viewable_projects.id IS NOT NULL OR project_folders_project_folders.id IS NOT NULL
+      has_children_sql = 'SUM(CASE WHEN visible_projects.id IS NOT NULL OR project_folders_project_folders.id IS NOT NULL
       THEN 1 ELSE 0 END) > 0'
+      visible_projects =
+        if can_manage_team?(current_team)
+          # Team owners see all projects in the team
+          current_team.projects
+        else
+          current_team.projects.readable_by_user(current_user, current_team)
+        end
       current_team.project_folders.where(parent_folder: folder)
                   .left_outer_joins(:projects, project_folders: {})
                   .joins(
-                    "LEFT OUTER JOIN (#{Project.viewable_by_user(current_user, current_team).where(archived: archived).to_sql}) " \
-                    "viewable_projects ON viewable_projects.project_folder_id = project_folders.id"
+                    "LEFT OUTER JOIN (#{visible_projects.where(archived: archived).to_sql}) " \
+                    "visible_projects ON visible_projects.project_folder_id = project_folders.id"
                   )
                   .select(
                     'project_folders.id',
@@ -147,7 +182,7 @@ module Navigator
                                      THEN 1 ELSE 0 END) > 0 AS has_children'
                          end
       experiments = project.experiments
-                           .viewable_by_user(current_user, current_team)
+                           .readable_by_user(current_user, current_team)
                            .with_children_viewable_by_user(current_user)
                            .select(
                              'experiments.id',
@@ -169,8 +204,7 @@ module Navigator
     end
 
     def fetch_my_modules(experiment, archived = false)
-      my_modules = experiment.my_modules
-                             .viewable_by_user(current_user, current_team)
+      my_modules = experiment.my_modules.readable_by_user(current_user, current_team)
       my_modules = my_modules.where(archived: archived) unless experiment.archived_branch?
 
       my_modules

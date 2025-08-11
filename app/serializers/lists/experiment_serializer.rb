@@ -33,10 +33,6 @@ module Lists
                        team: object.project.team)
     end
 
-    def default_public_user_role_id
-      object.project.default_public_user_role_id
-    end
-
     def hidden
       object.project.hidden?
     end
@@ -81,12 +77,13 @@ module Lists
         show_user_group_assignments_access: show_user_group_assignments_access_permissions_experiment_path(object),
         workflow_img: fetch_workflow_img_experiment_path(object),
         favorite: favorite_experiment_url(object),
-        unfavorite: unfavorite_experiment_url(object)
+        unfavorite: unfavorite_experiment_url(object),
+        user_roles: user_roles_access_permissions_experiment_path(object),
+        user_group_members: users_users_settings_team_user_groups_path(team_id: object.team.id)
       }
 
       if can_manage_project_users?(object.project)
         urls_list[:update_access] = access_permissions_experiment_path(object)
-        urls_list[:user_group_members] = users_users_settings_team_user_groups_path(team_id: object.team.id)
       end
       urls_list
     end
@@ -104,8 +101,8 @@ module Lists
 
     def due_date_cell
       {
-        value: due_date,
-        value_formatted: due_date,
+        value: object.due_date,
+        value_formatted: (I18n.l(object.due_date, format: :full_date) if object.due_date),
         editable: can_manage_experiment?(object),
         icon: (if object.one_day_prior? && !object.done?
                  'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
@@ -117,8 +114,8 @@ module Lists
 
     def start_date_cell
       {
-        value: start_date,
-        value_formatted: start_date,
+        value: object.start_date,
+        value_formatted: (I18n.l(object.start_date, format: :full_date) if object.start_date),
         editable: can_manage_experiment?(object)
       }
     end
@@ -127,16 +124,6 @@ module Lists
       {
         manage: can_manage_experiment?(object)
       }
-    end
-
-    private
-
-    def due_date
-      I18n.l(object.due_date, format: :full_date) if object.due_date
-    end
-
-    def start_date
-      I18n.l(object.start_date, format: :full_date) if object.start_date
     end
   end
 end

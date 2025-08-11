@@ -70,7 +70,6 @@ class MyModule < ApplicationRecord
   has_many :repository_rows, through: :my_module_repository_rows
   has_many :repository_snapshots, dependent: :destroy, inverse_of: :my_module
   has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
-  has_many :users, through: :user_assignments
   has_many :designated_users, through: :user_my_modules, source: :user
   has_many :report_elements, inverse_of: :my_module, dependent: :destroy
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
@@ -118,7 +117,7 @@ class MyModule < ApplicationRecord
     teams = options[:teams] || current_team || user.teams.select(:id)
 
     new_query = distinct.left_joins(:task_comments, my_module_tags: :tag, user_my_modules: :user)
-                        .viewable_by_user(user, teams)
+                        .readable_by_user(user, teams)
                         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
 
     unless include_archived
@@ -127,10 +126,6 @@ class MyModule < ApplicationRecord
                            .where(experiments: { archived: false }, projects: { archived: false })
     end
     new_query
-  end
-
-  def self.viewable_by_user(user, teams)
-    with_granted_permissions(user, MyModulePermissions::READ, teams)
   end
 
   def self.filter_by_teams(teams = [])
@@ -195,7 +190,7 @@ class MyModule < ApplicationRecord
                                   .order(:parent_id, updated_at: :desc)
 
     live_repositories = assigned_repositories
-                        .viewable_by_user(user, team)
+                        .readable_by_user(user, team)
                         .select('repositories.*, COUNT(DISTINCT repository_rows.id) AS assigned_rows_count')
                         .where.not(id: repository_snapshots.where(selected: true).select(:parent_id))
 

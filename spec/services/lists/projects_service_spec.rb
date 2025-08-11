@@ -9,7 +9,7 @@ RSpec.describe Lists::ProjectsService do
   let!(:projects) { create_list(:project, 5, team: team) }
   let!(:archived_projects) { create_list(:project, 5, :archived, team: team) }
   let(:params) {{ page: 1, per_page: 10, search: '', team: team } }
-  let(:service) { described_class.new(team, user, folder, params) }
+  let(:service) { described_class.new(team, team.projects, folder, params, user: user) }
 
   before(:all) do
     MyModuleStatusFlow.ensure_default
