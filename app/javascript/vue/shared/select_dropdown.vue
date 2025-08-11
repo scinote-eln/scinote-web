@@ -73,7 +73,7 @@
               {{ i18n.t('general.select_all') }}
             </div>
           </div>
-          <perfect-scrollbar ref="scrollContainer" class="p-2.5 flex flex-col max-h-80 relative" :class="{ 'pt-0': withCheckboxes }">
+          <div ref="scrollContainer" class="p-2.5 flex flex-col max-h-80 relative overflow-y-auto" :class="{ 'pt-0': withCheckboxes }">
             <template v-for="(option, i) in filteredOptions" :key="option[0]">
               <div
                 @click.stop="setValue(option[0])"
@@ -99,7 +99,7 @@
             <div v-if="filteredOptions.length === 0" class="text-sn-grey text-center py-2.5">
               {{ noOptionsPlaceholder || this.i18n.t('general.select_dropdown.no_options_placeholder') }}
             </div>
-          </perfect-scrollbar>
+          </div>
         </div>
       </teleport>
     </template>
@@ -276,7 +276,7 @@ export default {
         this.$nextTick(() => {
           this.setPosition();
           this.$refs.search?.focus();
-          this.$refs.scrollContainer.$el.addEventListener('scroll', this.loadNextPage);
+          this.$refs.scrollContainer.addEventListener('scroll', this.loadNextPage);
         });
       }
     },
@@ -296,7 +296,7 @@ export default {
       this.fetchOptions();
     },
     loadNextPage() {
-      const container = this.$refs.scrollContainer.$el;
+      const container = this.$refs.scrollContainer;
       if (this.nextPage && container.scrollTop + container.clientHeight >= container.scrollHeight) {
         this.fetchOptions();
       }

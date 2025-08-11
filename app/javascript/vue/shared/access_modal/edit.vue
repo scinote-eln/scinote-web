@@ -54,7 +54,7 @@
           >
         </div>
         <div class="truncate">
-          <div class="flex flex-row gap-2">
+          <div class="flex flex-row gap-2 items-center">
             <div class="truncate"
                 :title="userGroupAssignment.attributes.user_group.name"
             >{{ userGroupAssignment.attributes.user_group.name }}</div>
@@ -114,7 +114,7 @@
           >
         </div>
         <div class="truncate">
-          <div class="flex flex-row gap-2">
+          <div class="flex flex-row gap-2 items-center">
             <div class="truncate"
                 :title="userAssignment.attributes.user.name"
                 :data-e2e="`e2e-TX-${dataE2e}-${userAssignment.attributes.user.name.replace(/\W/g, '')}-name`"
