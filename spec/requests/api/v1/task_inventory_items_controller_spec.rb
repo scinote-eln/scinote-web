@@ -148,10 +148,10 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
         expect(json[:data]).to match(
           JSON.parse(
             ActiveModelSerializers::SerializableResource
-              .new(@my_module.repository_rows,
+              .new(@repository_row_second,
                    show_repository: true,
                    my_module: @my_module,
-                   each_serializer: Api::V1::TaskInventoryItemSerializer)
+                   serializer: Api::V1::TaskInventoryItemSerializer)
               .to_json
           )['data']
         )
@@ -279,8 +279,8 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
                 team_id: @team.id,
                 project_id: @project.id,
                 experiment_id: @experiment.id,
-                task_id: @my_module.id  
-              ), 
+                task_id: @my_module.id
+              ),
               headers: @valid_headers)
     }
     it 'Delete assigned item' do
