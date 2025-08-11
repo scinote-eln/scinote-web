@@ -49,7 +49,7 @@
       </GeneralDropdown>
     </div>
     <div v-else>
-      <div class="flex items-center gap-1 cursor-pointer h-9">
+      <div class="flex items-center gap-1 h-9">
         <div v-for="(user, i) in visibleUsers" :key="i" :title="user.full_name">
           <img :src="user.avatar" class="w-7 h-7 rounded-full" />
         </div>
