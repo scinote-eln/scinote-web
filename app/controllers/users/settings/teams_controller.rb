@@ -28,8 +28,6 @@ module Users
         members
       )
 
-      before_action :check_read_permissions, only: :show
-
       before_action :check_create_team_permission,
                     only: %i(new create)
 
@@ -138,10 +136,6 @@ module Users
 
       def check_create_team_permission
         render_403 unless can_create_teams?
-      end
-
-      def check_read_permissions
-        render_403 unless can_read_team?(@team)
       end
 
       def load_user
