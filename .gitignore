@@ -96,3 +96,6 @@ public/marvin4js-license.cxl
 # Ignore automatically generated js-routes files.
 /app/javascript/routes.js
 /app/javascript/routes.d.ts
+
+# Ignore generated reports PDF icons
+/app/assets/stylesheets/reports_pdf_icons.sass.scss
