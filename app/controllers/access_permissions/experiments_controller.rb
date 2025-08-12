@@ -7,7 +7,7 @@ module AccessPermissions
     def update
       if permitted_params[:user_role_id] == 'reset'
         parent_assignment = @project.public_send(:"#{assignment_type}_assignments").find_or_initialize_by(
-          "#{assignment_type}_id": permitted_params[:"#{assignment_type}_id"],
+          "#{assignment_type}_id": permitted_params[:"#{assignment_type}_id"] || current_team.id,
           team: current_team
         )
 
@@ -35,7 +35,7 @@ module AccessPermissions
         log_activity(:change_user_role_on_experiment, user_target: @assignment.user.id, role: @assignment.user_role.name)
       end
 
-      render json: {}, status: :ok
+      render json: { user_role_id: @assignment.user_role_id }, status: :ok
     end
 
     private

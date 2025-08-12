@@ -329,7 +329,7 @@ export default {
         if (!roleId) {
           this.$emit('changeVisibility', false, null);
         } else {
-          this.$emit('changeVisibility', true, roleId);
+          this.$emit('changeVisibility', true, response.data.user_role_id);
         }
         if (response.data.message) {
           HelperModule.flashAlertMsg(response.data.message, 'success');
