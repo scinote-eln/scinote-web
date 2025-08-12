@@ -94,6 +94,7 @@ import DataTable from '../shared/datatable/table.vue';
 import NameRenderer from './renderers/name.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
 import UsersRenderer from '../projects/renderers/users.vue';
+import escapeHtml from '../shared/escape_html.js';
 
 export default {
   name: 'RepositoriesTable',
@@ -287,7 +288,7 @@ export default {
       };
       this.deleteModal.title = this.i18n.t('repositories.index.modal_delete.title_html', { name: repository.name });
       this.deleteModal.description = `
-        <p data-e2e="e2e-TX-deleteInventoryModal-info">${this.i18n.t('repositories.index.modal_delete.message_html', { name: repository.name })}</p>
+        <p data-e2e="e2e-TX-deleteInventoryModal-info">${this.i18n.t('repositories.index.modal_delete.message_html', { name: escapeHtml(repository.name) })}</p>
         <div class="alert alert-danger" role="alert" data-e2e="e2e-TX-deleteInventoryModal-warning">
           <span class="fas fa-exclamation-triangle"></span>
           ${this.i18n.t('repositories.index.modal_delete.alert_heading')}
