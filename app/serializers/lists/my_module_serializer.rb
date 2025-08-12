@@ -68,7 +68,8 @@ module Lists
         provisioning_status: provisioning_status_my_module_url(object),
         favorite: favorite_my_module_url(object),
         unfavorite: unfavorite_my_module_url(object),
-        user_roles: user_roles_access_permissions_my_module_path(object)
+        user_roles: user_roles_access_permissions_my_module_path(object),
+        user_group_members: users_users_settings_team_user_groups_path(team_id: object.team.id)
       }
 
       if can_manage_project_users?(object.experiment.project)
