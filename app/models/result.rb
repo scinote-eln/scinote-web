@@ -54,8 +54,7 @@ class Result < ApplicationRecord
     new_query = joins(:my_module)
                 .where(
                   my_modules: {
-                    id: MyModule.with_granted_permissions(user, MyModulePermissions::READ)
-                                .where(user_assignments: { team: teams }).select(:id)
+                    id: MyModule.with_granted_permissions(user, MyModulePermissions::READ, teams).select(:id)
                   }
                 )
 
