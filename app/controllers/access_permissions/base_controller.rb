@@ -75,6 +75,8 @@ module AccessPermissions
       end
 
       propagate_job
+
+      render json: { user_role_id: @assignment.user_role_id }, status: :ok
     rescue ActiveRecord::RecordInvalid
       render json: { flash: t('access_permissions.update.failure') }, status: :unprocessable_entity
     end
