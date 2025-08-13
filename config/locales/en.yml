@@ -428,6 +428,14 @@ en:
       activities: "Activity"
       archive: "Archived results"
 
+  smart_annotations:
+    private:
+      project: "#private project"
+      experiment: "#private experiment"
+      my_module: "#private task"
+      repository_row: "#private inventory item"
+      object: "#private object"
+
   attachments:
     menu:
       office_file: "New Microsoft 365 file"
