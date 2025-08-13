@@ -17,7 +17,7 @@ class MyModule < ApplicationRecord
   include MetadataModel
   include ObservableModel
 
-  attr_accessor :transition_error_rollback, :my_module_status_created_by
+  attr_accessor :transition_error_rollback, :status_changed_by
 
   enum state: Extends::TASKS_STATES
   enum provisioning_status: { done: 0, in_progress: 1, failed: 2 }
@@ -567,7 +567,7 @@ class MyModule < ApplicationRecord
 
     if status_changing_direction == :forward
       my_module_status.my_module_status_consequences.each do |consequence|
-        consequence.before_forward_call(self, my_module_status_created_by)
+        consequence.before_forward_call(self, status_changed_by)
       end
     end
 
@@ -600,13 +600,5 @@ class MyModule < ApplicationRecord
       self.x = new_pos[:x]
       self.y = new_pos[:y]
     end
-  end
-
-  def run_observers
-    if (saved_change_to_my_module_status_id? && my_module_status.previous_status_id == changing_from_my_module_status_id) || saved_change_to_experiment_id ||
-       (saved_change_to_archived && !archived)
-      AutomationObservers::MyModuleStatusChangeAutomationObserver.new(self, last_modified_by).call
-    end
-    AutomationObservers::AllMyModulesDoneAutomationObserver.new(experiment, last_modified_by).call if saved_change_to_my_module_status_id?
   end
 end

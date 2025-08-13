@@ -5,6 +5,7 @@ class Result < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include ViewableModel
+  include ObservableModel
   include Discard::Model
 
   default_scope -> { kept }
@@ -43,8 +44,6 @@ class Result < ApplicationRecord
   after_discard do
     CleanupUserSettingsJob.perform_later('result_states', id)
   end
-
-  after_create :run_observers
 
   def self.search(user,
                   include_archived,
@@ -201,7 +200,8 @@ class Result < ApplicationRecord
 
   private
 
-  def run_observers
-    AutomationObservers::ResultCreateAutomationObserver.new(my_module, user).call
+  # Override for ObservableModel
+  def changed_by
+    last_modified_by || user
   end
 end

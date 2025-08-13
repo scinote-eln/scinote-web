@@ -2,8 +2,8 @@
 
 class StepText < ApplicationRecord
   include TinyMceImages
-  include ActionView::Helpers::TextHelper
   include ObservableModel
+  include ActionView::Helpers::TextHelper
 
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
@@ -38,11 +38,5 @@ class StepText < ApplicationRecord
 
       new_step_text
     end
-  end
-
-  private
-
-  def run_observers
-    AutomationObservers::ProtocolContentChangedAutomationObserver.new(step, step.last_modified_by).call
   end
 end

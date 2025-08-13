@@ -23,7 +23,6 @@ class ChecklistItem < ApplicationRecord
              class_name: 'User',
              optional: true
 
-  after_create :run_observers
   # conditional touch excluding checked updates
   after_destroy :touch_checklist
   after_save :touch_checklist
@@ -77,9 +76,5 @@ class ChecklistItem < ApplicationRecord
     # rubocop:disable Rails/SkipsModelValidations
     checklist.touch
     # rubocop:enable Rails/SkipsModelValidations
-  end
-
-  def run_observers
-    AutomationObservers::ProtocolContentChangedAutomationObserver.new(checklist.step, last_modified_by || created_by).call
   end
 end
