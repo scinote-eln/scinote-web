@@ -58,7 +58,7 @@ module Lists
         show_access: access_permissions_repository_path(object),
         share: team_shared_objects_path(current_user.current_team, object_id: object.id, object_type: 'Repository'),
         user_roles: user_roles_access_permissions_repository_path(object),
-        user_group_members: users_users_settings_team_user_groups_path(team_id: object.team.id)
+        user_group_members: users_users_settings_team_user_groups_path(team_id: current_user.current_team_id)
       }
 
       urls[:show] = repository_path(object) if can_read?
