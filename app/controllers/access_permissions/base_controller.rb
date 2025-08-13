@@ -108,7 +108,7 @@ module AccessPermissions
     end
 
     def show_user_group_assignments
-      render json: @model.user_group_assignments.includes(:user_role, :user_group).order('user_groups.name ASC'),
+      render json: @model.user_group_assignments.where(team: current_team).includes(:user_role, :user_group).order('user_groups.name ASC'),
              each_serializer: UserGroupAssignmentSerializer, user: current_user
     end
 
