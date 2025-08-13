@@ -11,7 +11,7 @@
     <%= link_to users_settings_team_user_groups_path, class: "btn btn-light btn-black icon-btn" do %>
       <i class="sn-icon sn-icon-arrow-left"></i>
     <% end %>
-    <h3 class="m-0 flex gap-0.5 items-center">
+    <h3 class="m-0 flex gap-0.5 items-center grow">
       <% if can_manage_team?(@team) %>
         <%= render partial: "shared/inline_editing",
                     locals: {

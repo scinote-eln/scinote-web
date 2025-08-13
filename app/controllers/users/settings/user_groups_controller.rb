@@ -58,7 +58,7 @@ module Users
           end
           render json: { message: t('user_groups.create.success') }, status: :created
         else
-          render json: { errors: t('user_groups.create.error') }, status: :unprocessable_entity
+          render json: { error: @user_group.errors.full_messages.join(", ") }, status: :unprocessable_entity
         end
       end
 
