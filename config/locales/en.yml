@@ -3473,6 +3473,7 @@ en:
         account: "Account"
         teams: "Workspaces"
         webhooks: "Webhooks"
+        groups: "Groups"
         account_nav:
           profile: "My profile"
           preferences: "My preferences"

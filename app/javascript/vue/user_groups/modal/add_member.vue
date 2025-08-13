@@ -21,6 +21,7 @@
                 :option-renderer="usersRenderer"
                 :label-renderer="usersRenderer"
                 :multiple="true"
+                :searchable="true"
                 :placeholder="i18n.t('user_groups.show.add_members_modal.select_members_placeholder')"
               />
             </div>

@@ -64,6 +64,8 @@ class NavigationsController < ApplicationController
       {
         name: I18n.t('users.settings.sidebar.teams'), url: teams_path
       }, {
+        name: I18n.t('users.settings.sidebar.groups'), url: users_settings_team_user_groups_path(current_team)
+      }, {
         name: I18n.t('users.settings.sidebar.account_nav.addons'), url: addons_path
       }
     ]
