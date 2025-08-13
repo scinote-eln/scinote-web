@@ -23,7 +23,7 @@ class LabelTemplate < ApplicationRecord
   scope :predefined, -> { where(predefined: true) }
 
   def self.readable_by_user(user, teams)
-    where(team: teams.with_granted_permissions(user, TeamPermissions::LABEL_TEMPLATES_READ, teams))
+    where(team: Team.with_granted_permissions(user, TeamPermissions::LABEL_TEMPLATES_READ, teams))
   end
 
   def self.enabled?
