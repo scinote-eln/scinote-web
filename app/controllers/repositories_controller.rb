@@ -12,7 +12,7 @@ class RepositoriesController < ApplicationController
   before_action :switch_team_with_param, only: %i(index)
   before_action :load_repository, except: %i(index create create_modal archive restore actions_toolbar
                                              export_repositories list)
-  before_action :load_repositories, only: %i(index list actions_toolbar)
+  before_action :load_repositories, only: %i(index actions_toolbar)
   before_action :load_repositories_for_archiving, only: :archive
   before_action :load_repositories_for_restoring, only: :restore
   before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet
@@ -44,7 +44,8 @@ class RepositoriesController < ApplicationController
   end
 
   def list
-    results = @repositories.select(:id, :name, 'LOWER(repositories.name)')
+    repositories = params[:manageable] == 'true' ? Repository.managable_by_user(current_user, current_team) : Repository.readable_by_user(current_user, current_team)
+    results = repositories.select(:id, :name, 'LOWER(repositories.name)')
     results = results.name_like(params[:query]) if params[:query].present?
     results = results.joins(:repository_rows).distinct if params[:non_empty].present?
     results = results.active if params[:active].present?
