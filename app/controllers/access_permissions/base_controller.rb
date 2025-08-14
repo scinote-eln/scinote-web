@@ -124,7 +124,7 @@ module AccessPermissions
     private
 
     def model_parameter
-      @model.model_name.param_key
+      @model.class.permission_class.model_name.param_key
     end
 
     def manage_permission_constant
