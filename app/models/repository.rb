@@ -53,6 +53,10 @@ class Repository < RepositoryBase
           .where(team: teams)
   }
 
+  def self.permission_class
+    Repository
+  end
+
   def top_level_assignable
     true
   end
