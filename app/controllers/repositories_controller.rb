@@ -44,7 +44,11 @@ class RepositoriesController < ApplicationController
   end
 
   def list
-    repositories = params[:manageable] == 'true' ? Repository.managable_by_user(current_user, current_team) : Repository.readable_by_user(current_user, current_team)
+    repositories = if params[:manageable] == 'true'
+                     Repository.with_granted_permissions(current_user, RepositoryPermissions::ROWS_UPDATE, current_team)
+                   else
+                     Repository.readable_by_user(current_user, current_team)
+                   end
     results = repositories.select(:id, :name, 'LOWER(repositories.name)')
     results = results.name_like(params[:query]) if params[:query].present?
     results = results.joins(:repository_rows).distinct if params[:non_empty].present?
