@@ -5,14 +5,11 @@ module Lists
     private
 
     def fetch_records
-      @records = @raw_data.joins(
-        'LEFT OUTER JOIN users AS creators ' \
-        'ON user_groups.created_by_id = creators.id'
-      ).left_joins(:user_group_memberships).includes(:users)
-                          .select('user_groups.* as user_groups')
-                          .select('creators.full_name AS created_by_user')
+      @records = @raw_data.left_joins(:created_by).left_joins(:user_group_memberships).includes(:users)
+                          .select('user_groups.*')
+                          .select('array_agg(users.full_name) AS created_by_user')
                           .select('COUNT(user_groups.id) AS members_count')
-                          .group('user_groups.id, creators.full_name')
+                          .group('user_groups.id')
     end
 
     def filter_records
