@@ -113,8 +113,7 @@ Canaid::Permissions.register_for(Repository) do
 
   # repository: create field
   can :create_repository_columns do |user, repository|
-    !repository.shared_with?(user.current_team) &&
-      repository.permission_granted?(user, RepositoryPermissions::COLUMNS_CREATE)
+    repository.permission_granted?(user, RepositoryPermissions::COLUMNS_CREATE)
   end
 
   can :manage_repository_columns do |user, repository|
