@@ -222,7 +222,7 @@ export default {
   created() {
     window.manageStockModalComponent = this;
   },
-  beforeDestroy() {
+  beforeUnmount() {
     delete window.manageStockModalComponent;
   },
   mounted() {
