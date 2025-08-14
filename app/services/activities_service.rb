@@ -22,13 +22,13 @@ class ActivitiesService
 
     activities =
       if filters[:from_date].present? && filters[:to_date].present?
-        activities.where('created_at <= :from AND created_at >= :to',
+        activities.where('activities.created_at <= :from AND activities.created_at >= :to',
                          from: Time.zone.parse(filters[:from_date]).end_of_day.utc,
                          to: Time.zone.parse(filters[:to_date]).beginning_of_day.utc)
       elsif filters[:from_date].present? && filters[:to_date].blank?
-        activities.where('created_at <= :from', from: Time.zone.parse(filters[:from_date]).end_of_day.utc)
+        activities.where('activities.created_at <= :from', from: Time.zone.parse(filters[:from_date]).end_of_day.utc)
       elsif filters[:from_date].blank? && filters[:to_date].present?
-        activities.where(created_at: Time.zone.parse(filters[:to_date]).beginning_of_day.utc..)
+        activities.where('activities.created_at' => Time.zone.parse(filters[:to_date]).beginning_of_day.utc..)
       else
         activities
       end
