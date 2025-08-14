@@ -33,6 +33,7 @@
         <div class="modal-body flex flex-col gap-6" :class="{ '!pb-3': notification }">
           <RepositoryRowSelector
             :multiple="true"
+            :manageableRepositoriesOnly="true"
             @change="selectedItemValues = $event"
             @repositoryChange="changeSelectedInventory"
           />
