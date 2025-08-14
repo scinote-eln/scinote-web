@@ -18,7 +18,7 @@ class FormFieldValuesController < ApplicationController
     log_form_field_value_create_activity
     form_field_value_annotation if @form_field_value.is_a?(FormTextFieldValue)
 
-    render json: @form_field_value, serializer: FormFieldValueSerializer, user: current_user
+    render json: @form_field_value, serializer: FormFieldValueSerializer, scope: { user: current_user }
   end
 
   private
