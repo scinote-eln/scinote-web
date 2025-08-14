@@ -149,7 +149,8 @@ export default {
       fixedWidth: true,
       focusedOption: null,
       skipQueryCallback: false,
-      nextPage: 1
+      nextPage: 1,
+      totalOptionsCount: this.options.length
     };
   },
   mixins: [FixedFlyoutMixin],
@@ -226,11 +227,11 @@ export default {
       if (this.newValue.length === 0) {
         return false;
       }
-      if (this.newValue.length === 1 && this.rawOptions.length > 1) {
+      if (this.newValue.length === 1 && this.totalOptionsCount > 1) {
         this.selectAllState = 'indeterminate';
         return this.renderLabel(this.rawOptions.find((option) => option[0] === this.newValue[0]));
       }
-      if (this.newValue.length === this.rawOptions.length) {
+      if (this.newValue.length === this.totalOptionsCount) {
         this.selectAllState = 'checked';
         return this.allOptionsPlaceholder || this.i18n.t('general.select_dropdown.all_options_placeholder');
       }
@@ -264,7 +265,6 @@ export default {
     if (!this.newValue && this.multiple) {
       this.newValue = [];
     }
-    this.fetchOptions();
   },
   watch: {
     value(newValue) {
@@ -318,6 +318,7 @@ export default {
     },
     open() {
       if (!this.disabled) this.isOpen = true;
+      this.fetchOptions();
     },
     clear() {
       this.newValue = this.multiple ? [] : null;
@@ -391,6 +392,11 @@ export default {
             } else {
               this.fetchedOptions = response.data.data;
             }
+
+            if (this.fetchedOptions.length > this.totalOptionsCount) {
+              this.totalOptionsCount = this.fetchedOptions.length;
+            }
+
             this.$nextTick(() => {
               this.setPosition();
             });
