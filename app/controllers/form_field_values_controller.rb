@@ -52,7 +52,7 @@ class FormFieldValuesController < ApplicationController
     smart_annotation_notification(
       old_text: @form_field_value.text_previously_was,
       new_text: @form_field_value.text,
-      subject: step.protocol,
+      subject: step,
       title: t('notifications.form_field_value_title',
                user: current_user.full_name,
                field: @form_field_value.form_field.name,
