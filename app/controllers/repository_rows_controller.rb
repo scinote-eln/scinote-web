@@ -214,7 +214,7 @@ class RepositoryRowsController < ApplicationController
                        repository_column: update_params['repository_cells']&.keys&.first ||
                        I18n.t('repositories.table.row_name') })
 
-        record_annotation_notification(@repository_row, row_cell_update.cell) if row_cell_update.cell.value_type == 'RepositoryTextValue'
+        record_annotation_notification(@repository_row, row_cell_update.cell) if row_cell_update.cell && row_cell_update.cell.value_type == 'RepositoryTextValue'
       end
       @reminders_present = @repository_row.repository_cells.with_active_reminder(@current_user).any?
 
