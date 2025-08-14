@@ -85,7 +85,7 @@ module Assignable
 
       team_assignment = team_assignments.find_by(team: team)
       if team_assignment
-        User.where.not(id: user_assignments.select(:user_id)).where(id: team_assignment.team.users.select(:id)).find_each do |user|
+        User.where.not(id: user_assignments.select(:user_id).where(team: team)).where(id: team_assignment.team.users.select(:id)).find_each do |user|
           users << {
             user: user,
             role: team_assignment.user_role,
