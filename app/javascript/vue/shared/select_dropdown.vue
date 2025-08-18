@@ -317,8 +317,15 @@ export default {
       return this.newValue === value;
     },
     open() {
-      if (!this.disabled) this.isOpen = true;
-      this.fetchOptions();
+      if (this.disabled || this.isOpen) return;
+
+      this.isOpen = true;
+
+      if (this.optionsUrl) {
+        this.fetchedOptions = [];
+        this.nextPage = 1;
+        this.fetchOptions();
+      }
     },
     clear() {
       this.newValue = this.multiple ? [] : null;
