@@ -192,7 +192,7 @@
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
                             <a v-if="parent.path" :href="parent.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.name }}</a>
                             <span v-else>{{ parent.name }}</span>
-                            <button v-if="permissions.can_connect_rows" @click="openUnlinkModal(parent)"
+                            <button v-if="permissions.can_connect_rows && parent.can_connect_rows" @click="openUnlinkModal(parent)"
                                     class=" ml-2 bg-transparent border-none opacity-0 group-hover:opacity-100 cursor-pointer">
                               <img :src="icons.unlink_path" />
                             </button>
@@ -243,7 +243,7 @@
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
                             <a v-if="child.path" :href="child.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.name }}</a>
                             <span v-else>{{ child.name }}</span>
-                            <button v-if="permissions.can_connect_rows" @click="openUnlinkModal(child)"
+                            <button v-if="permissions.can_connect_rows && child.can_connect_rows" @click="openUnlinkModal(child)"
                                     class="ml-2 bg-transparent border-none opacity-0 group-hover:opacity-100 cursor-pointer">
                               <img :src="icons.unlink_path" />
                             </button>
