@@ -79,6 +79,11 @@ class Result < ApplicationRecord
              .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
+  def self.find_page_number(result_id, per_page = Kaminari.config.default_per_page)
+    position = pluck(:id).index(result_id)
+    (position.to_f / per_page).ceil
+  end
+
   def duplicate(my_module, user, result_name: nil)
     ActiveRecord::Base.transaction do
       new_result = my_module.results.new(
