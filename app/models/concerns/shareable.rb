@@ -50,8 +50,8 @@ module Shareable
   end
 
   def can_manage_shared?(user)
-    globally_shared? ||
-      (shared_with?(user.current_team) && user.current_team.permission_granted?(user, TeamPermissions::MANAGE))
+    (globally_shared? || shared_with?(user.current_team)) &&
+      user.current_team.permission_granted?(user, TeamPermissions::MANAGE)
   end
 
   def shareable_write?
