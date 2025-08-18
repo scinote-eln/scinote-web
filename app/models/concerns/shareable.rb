@@ -118,7 +118,7 @@ module Shareable
     teams = for_team ? Team.where(id: for_team.id).where.not(id: team.id) : Team.where.not(id: team.id)
 
     user_assignments.where(team_id: teams.select(:id)).destroy_all
-    user_group_assignments.where.not(team_id: teams.select(:id)).destroy_all
-    team_assignments.where.not(team_id: teams.select(:id)).destroy_all
+    user_group_assignments.where(team_id: teams.select(:id)).destroy_all
+    team_assignments.where(team_id: teams.select(:id)).destroy_all
   end
 end
