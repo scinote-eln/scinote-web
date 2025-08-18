@@ -14,10 +14,7 @@ module Recipients
                            end
       return User.none unless record
 
-      User.where(id: record.user_assignments
-                           .joins(:user_role)
-                           .where('? = ANY(user_roles.permissions)', permission)
-                           .select(:user_id))
+      record.users_with_permission(permission)
     end
   end
 end
