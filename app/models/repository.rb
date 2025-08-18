@@ -32,6 +32,8 @@ class Repository < RepositoryBase
 
   before_save :sync_name_with_snapshots, if: :name_changed?
   before_destroy :refresh_report_references_on_destroy, prepend: true
+  after_save :unassign_unshared_items, if: :saved_change_to_permission_level
+  after_save :unlink_unshared_items, if: -> { saved_change_to_permission_level? && !globally_shared? }
 
   validates :name,
             presence: true,
@@ -174,6 +176,26 @@ class Repository < RepositoryBase
                          .where.not(my_module: { experiment: { projects: { team: team } } })
                          .where.not(my_module: { experiment: { projects: { team: teams_shared_with } } })
                          .destroy_all
+  end
+
+  def unlink_unshared_items
+    repository_rows_ids = repository_rows.select(:id)
+    rows_to_unlink = RepositoryRow.joins("LEFT JOIN repository_row_connections \
+                                         ON repository_rows.id = repository_row_connections.parent_id \
+                                         OR repository_rows.id = repository_row_connections.child_id")
+                                  .where("repository_row_connections.parent_id IN (?) \
+                                         OR repository_row_connections.child_id IN (?)",
+                                         repository_rows_ids,
+                                         repository_rows_ids)
+                                  .joins(:repository)
+                                  .where.not(repository: self)
+                                  .where.not(repositories: { team: team })
+                                  .distinct
+
+    RepositoryRowConnection.where(parent: repository_rows_ids, child: rows_to_unlink)
+                           .destroy_all
+    RepositoryRowConnection.where(child: repository_rows_ids, parent: rows_to_unlink)
+                           .destroy_all
   end
 
   def archived_branch?
