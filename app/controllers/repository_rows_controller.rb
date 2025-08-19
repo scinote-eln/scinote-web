@@ -58,13 +58,11 @@ class RepositoryRowsController < ApplicationController
                                     end
         end
 
-        @assigned_modules = @repository_row.my_modules
-                                           .joins(experiment: :project)
-                                           .joins(:my_module_repository_rows)
-                                           .select('my_module_repository_rows.created_at, my_modules.*')
-                                           .order('my_module_repository_rows.created_at': :desc)
-                                           .distinct
-        @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
+        @assigned_modules = @repository_row.my_modules.distinct
+        @viewable_modules = @assigned_modules.readable_by_user(current_user, current_user.teams)
+                                             .joins(:my_module_repository_rows)
+                                             .select('my_module_repository_rows.created_at, my_modules.*')
+                                             .order(my_module_repository_rows: { created_at: :desc })
         @reminders_present = @repository_row.repository_cells.with_active_reminder(@current_user).any?
       end
     end
@@ -83,7 +81,7 @@ class RepositoryRowsController < ApplicationController
       end
 
       if update_params[:my_module_id].present?
-        my_module = MyModule.viewable_by_user(current_user, current_team).find_by(id: update_params[:my_module_id])
+        my_module = MyModule.readable_by_user(current_user, current_team).find_by(id: update_params[:my_module_id])
 
         return render_403 unless my_module.present? && can_read_my_module?(my_module)
 
@@ -215,6 +213,8 @@ class RepositoryRowsController < ApplicationController
                      { repository_row: @repository_row.id,
                        repository_column: update_params['repository_cells']&.keys&.first ||
                        I18n.t('repositories.table.row_name') })
+
+        record_annotation_notification(@repository_row, row_cell_update.cell) if row_cell_update.cell && row_cell_update.cell.value_type == 'RepositoryTextValue'
       end
       @reminders_present = @repository_row.repository_cells.with_active_reminder(@current_user).any?
 
@@ -299,7 +299,7 @@ class RepositoryRowsController < ApplicationController
                                         params[:query],
                                         whole_phrase: true
                                       )
-    viewable_modules = assigned_modules.viewable_by_user(current_user, current_user.teams)
+    viewable_modules = assigned_modules.readable_by_user(current_user, current_user.teams)
     private_modules_number = assigned_modules.where.not(id: viewable_modules).count
     render json: {
       html: render_to_string(partial: 'shared/my_modules_list_partial', locals: {
@@ -372,7 +372,7 @@ class RepositoryRowsController < ApplicationController
   AvailableRepositoryRow = Struct.new(:id, :name, :has_file_attached)
 
   def load_repository
-    @repository = Repository.viewable_by_user(current_user)
+    @repository = Repository.readable_by_user(current_user)
                             .eager_load(:repository_columns)
                             .find_by(id: params[:repository_id])
     render_404 unless @repository
@@ -384,7 +384,7 @@ class RepositoryRowsController < ApplicationController
         FormRepositoryRowsFieldValue.find_by(id: params[:form_repository_rows_field_value_id])
     end
 
-    @repository = Repository.viewable_by_user(current_user).find_by(id: params[:repository_id]) ||
+    @repository = Repository.readable_by_user(current_user).find_by(id: params[:repository_id]) ||
                   RepositorySnapshot.find_by(id: params[:repository_id])
 
     render_404 unless @form_repository_rows_field_value || @repository
@@ -476,7 +476,7 @@ class RepositoryRowsController < ApplicationController
     smart_annotation_notification(
       old_text: old_text,
       new_text: cell.value.data,
-      subject: cell.repository_column.repository,
+      subject: cell.repository_row,
       title: t('notifications.repository_annotation_title',
                user: current_user.full_name,
                column: cell.repository_column.name,

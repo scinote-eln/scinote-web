@@ -149,6 +149,24 @@ Rails.application.routes.draw do
         resource :user_settings, only: %i(show update)
 
         resources :teams, only: [] do
+          resources :user_groups, only: %i(index create update destroy show) do
+            resources :user_group_memberships, only: %i(index create update) do
+              collection do
+                delete :destroy_multiple
+                post :actions_toolbar
+              end
+            end
+            collection do
+              get :unassigned_users
+              post :actions_toolbar
+              get :users
+            end
+          end
+
+          member do
+            get :members
+          end
+
           collection do
             post :switch
           end
@@ -236,6 +254,7 @@ Rails.application.routes.draw do
       collection do
         get :visible_users
         get :visible_teams
+        get :current_team_users
       end
 
       member do
@@ -318,20 +337,29 @@ Rails.application.routes.draw do
     end
 
     namespace :access_permissions do
-      resources :projects, defaults: { format: 'json' } do
-        put :update_default_public_user_role, on: :member
+      %i(projects protocols forms repositories).each do |resource|
+        resources resource do
+          member do
+            get :show_user_group_assignments
+            get :unassigned_user_groups
+            get :user_roles
+          end
+        end
       end
 
-      resources :protocols, defaults: { format: 'json' } do
-        put :update_default_public_user_role, on: :member
+      resources :experiments, only: %i(show update edit) do
+        member do
+          get :user_roles
+          get :show_user_group_assignments
+        end
       end
 
-      resources :forms, defaults: { format: 'json' } do
-        put :update_default_public_user_role, on: :member
+      resources :my_modules, only: %i(show update edit) do
+        member do
+          get :user_roles
+          get :show_user_group_assignments
+        end
       end
-
-      resources :experiments, only: %i(show update edit)
-      resources :my_modules, only: %i(show update edit)
     end
 
     namespace :navigator do
@@ -400,7 +428,6 @@ Rails.application.routes.draw do
         post 'archive_group'
         post 'restore_group'
         post 'actions_toolbar'
-        get :user_roles
         get :head_of_project_users_list
       end
     end
@@ -741,7 +768,6 @@ Rails.application.routes.draw do
         get 'export', to: 'protocols#export'
         get 'protocolsio', to: 'protocols#protocolsio_index'
         post 'actions_toolbar', to: 'protocols#actions_toolbar'
-        get 'user_roles', to: 'protocols#user_roles'
       end
     end
 
@@ -826,7 +852,6 @@ Rails.application.routes.draw do
       end
 
       collection do
-        get :sidebar
         get 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
         get 'export_repository_stock_items_modal'
         get :rows_to_print, to: 'repository_rows#rows_to_print'
@@ -916,7 +941,6 @@ Rails.application.routes.draw do
         post :actions_toolbar
         post :archive
         post :restore
-        get :user_roles
         get :published_forms
         get :latest_attached_forms
       end

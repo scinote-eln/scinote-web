@@ -26,14 +26,12 @@ class TemplatesService
           default_public_user_role: UserRole.predefined.find_by(name: I18n.t('user_roles.predefined.viewer')),
           created_by: team.created_by
         )
+        tmpl_project.team_assignments.as_viewers.create!(team: team, assigned_by: team.created_by, assigned: :manually)
       end
     end
-    owner_role_id = UserRole.find_by(name: I18n.t('user_roles.predefined.owner')).id
-    owner = tmpl_project.user_assignments
-                        .where(user_role_id: owner_role_id)
-                        .order(:created_at)
-                        .first&.user
-    return unless owner.present?
+    owner = tmpl_project.user_assignments.as_owners.order(:created_at).first&.user
+    return if owner.blank?
+
     updated = false
     exp_tmplt_dir_prefix = "#{@base_dir}/experiment_"
     # Create lock in case another worker starts to update same team

@@ -9,47 +9,62 @@ module UserAssignments
       ActiveRecord::Base.transaction do
         case object
         when Experiment
-          assign_users_to_experiment(object)
+          assign_to_experiment(object)
         when MyModule
-          assign_users_to_my_module(object)
-        when Repository
-          assign_users_to_repository(object)
+          assign_to_my_module(object)
         when Protocol
-          assign_users_to_protocol(object)
+          assign_to_protocol(object)
         when Report
-          assign_users_to_report(object)
+          assign_to_report(object)
         end
       end
     end
 
     private
 
-    def assign_users_to_experiment(experiment)
+    def assign_to_experiment(experiment)
       project = experiment.project
-      project.user_assignments.find_each do |user_assignment|
-        create_or_update_user_assignment(user_assignment, experiment)
+      project.user_assignments.find_each do |assignment|
+        create_or_update_assignment(assignment, experiment)
+      end
+
+      project.user_group_assignments.find_each do |user_group_assignment|
+        create_or_update_assignment(user_group_assignment, experiment)
+      end
+
+      project.team_assignments.find_each do |team_assignment|
+        create_or_update_assignment(team_assignment, experiment)
       end
     end
 
-    def assign_users_to_my_module(my_module)
+    def assign_to_my_module(my_module)
       experiment = my_module.experiment
-      experiment.user_assignments.find_each do |user_assignment|
-        create_or_update_user_assignment(user_assignment, my_module)
+      experiment.user_assignments.find_each do |assignment|
+        create_or_update_assignment(assignment, my_module)
+      end
+
+      experiment.user_group_assignments.find_each do |user_group_assignment|
+        create_or_update_assignment(user_group_assignment, my_module)
+      end
+
+      experiment.team_assignments.find_each do |team_assignment|
+        create_or_update_assignment(team_assignment, my_module)
       end
     end
 
-    def assign_users_to_repository(repository)
-      team = repository.team
-      team.user_assignments.find_each do |user_assignment|
-        create_or_update_user_assignment(user_assignment, repository)
-      end
-    end
-
-    def assign_users_to_protocol(protocol)
+    def assign_to_protocol(protocol)
       if protocol.parent_id && protocol.in_repository_draft?
         Protocol.transaction(requires_new: true) do
-          protocol.parent.user_assignments.find_each do |user_assignment|
-            protocol.parent.sync_child_protocol_user_assignment(user_assignment, protocol.id)
+          protocol.parent.user_assignments.find_each do |assignment|
+            protocol.parent.sync_child_protocol_assignment(assignment, protocol.id)
+          end
+
+          protocol.parent.user_group_assignments.find_each do |user_group_assignment|
+            protocol.parent.sync_child_protocol_assignment(user_group_assignment, protocol.id)
+          end
+
+          protocol.parent.team_assignments.find_each do |team_assignment|
+            protocol.parent.sync_child_protocol_assignment(team_assignment, protocol.id)
           end
         end
 
@@ -58,26 +73,31 @@ module UserAssignments
 
       return unless protocol.visible?
 
-      protocol.create_or_update_public_user_assignments!(@assigned_by)
+      protocol.create_or_update_team_assignment!(@assigned_by)
     end
 
-    def assign_users_to_report(report)
+    def assign_to_report(report)
       team = report.team
-      team.user_assignments.find_each do |user_assignment|
-        create_or_update_user_assignment(user_assignment, report)
+      team.user_assignments.find_each do |assignment|
+        create_or_update_assignment(assignment, report)
       end
     end
 
-    def create_or_update_user_assignment(parent_user_assignment, object)
-      user_role = parent_user_assignment.user_role
-      user = parent_user_assignment.user
-      new_user_assignment = UserAssignment.find_or_initialize_by(user: user, assignable: object)
-      return if new_user_assignment.manually_assigned?
+    def create_or_update_assignment(parent_assignment, resource)
+      type = parent_assignment.class.model_name.param_key.gsub('_assignment', '').to_sym
 
-      new_user_assignment.user_role = user_role
-      new_user_assignment.assigned_by = @assigned_by
-      new_user_assignment.assigned = :automatically
-      new_user_assignment.save!
+      new_assignment = parent_assignment.class.find_or_initialize_by(
+        "#{type}_id": parent_assignment.public_send(type).id,
+        assignable: resource
+      )
+
+      return if new_assignment.manually_assigned?
+
+      new_assignment.update!(
+        user_role: parent_assignment.user_role,
+        assigned_by: @assigned_by,
+        assigned: :automatically
+      )
     end
   end
 end

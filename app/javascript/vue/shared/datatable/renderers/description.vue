@@ -7,7 +7,7 @@
               @click.stop="showDescriptionModal">
           {{ removeTags(params.data.description) }}
         </span>
-        <span v-if="params.data.description && params.data.description.length > 0"
+        <span v-if="params.data.description && removeTags(params.data.description).length > 0"
               @click.stop="showDescriptionModal"
               class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
           {{ i18n.t('experiments.card.more') }}

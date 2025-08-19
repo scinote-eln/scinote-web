@@ -33,10 +33,6 @@ module Lists
                        team: object.project.team)
     end
 
-    def default_public_user_role_id
-      object.project.default_public_user_role_id
-    end
-
     def hidden
       object.project.hidden?
     end
@@ -78,9 +74,12 @@ module Lists
         clone: clone_experiment_path(object),
         update: experiment_path(object),
         show_access: access_permissions_experiment_path(object),
+        show_user_group_assignments_access: show_user_group_assignments_access_permissions_experiment_path(object),
         workflow_img: fetch_workflow_img_experiment_path(object),
         favorite: favorite_experiment_url(object),
-        unfavorite: unfavorite_experiment_url(object)
+        unfavorite: unfavorite_experiment_url(object),
+        user_roles: user_roles_access_permissions_experiment_path(object),
+        user_group_members: users_users_settings_team_user_groups_path(team_id: object.team.id)
       }
 
       if can_manage_project_users?(object.project)

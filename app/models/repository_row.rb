@@ -154,8 +154,8 @@ class RepositoryRow < ApplicationRecord
     "#{ID_PREFIX}#{parent_id || id}"
   end
 
-  def self.viewable_by_user(user, teams)
-    where(repository: Repository.viewable_by_user(user, teams))
+  def self.readable_by_user(user, teams)
+    where(repository: Repository.readable_by_user(user, teams))
   end
 
   def self.search(user,
@@ -166,7 +166,7 @@ class RepositoryRow < ApplicationRecord
     teams = options[:teams] || current_team || user.teams.select(:id)
     searchable_row_fields = [RepositoryRow::PREFIXED_ID_SQL, 'repository_rows.name', 'users.full_name']
 
-    readable_rows = distinct.joins(:repository, :created_by).viewable_by_user(user, teams)
+    readable_rows = distinct.joins(:repository, :created_by).readable_by_user(user, teams)
     readable_rows = readable_rows.active unless include_archived
     repository_rows = readable_rows.where_attributes_like_boolean(searchable_row_fields, query, options)
 

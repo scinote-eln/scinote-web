@@ -184,14 +184,15 @@
                       </a>
                     </div>
                     <div v-if="parentsCount">
-                      <details v-for="(parent) in parents" @toggle="updateOpenState(parent.code, $event.target.open)" :key="parent.code" class="flex flex-col font-normal gap-4 group cursor-default">
+                      <details v-for="(parent) in parents" @toggle="updateOpenState(parent.code, $event.target.open)" :key="parent.code" class="flex flex-col font-normal group cursor-default">
                         <summary class="flex flex-row gap-3 mb-4 relative group">
                           <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer flex-shrink-0 relative top-1"
                                :class="{ 'rotate-90': relationshipDetailsState[parent.code] }" />
                           <span>
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
-                            <a :href="parent.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.name }}</a>
-                            <button v-if="permissions.can_connect_rows" @click="openUnlinkModal(parent)"
+                            <a v-if="parent.path" :href="parent.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.name }}</a>
+                            <span v-else>{{ parent.name }}</span>
+                            <button v-if="permissions.can_connect_rows && parent.can_connect_rows" @click="openUnlinkModal(parent)"
                                     class=" ml-2 bg-transparent border-none opacity-0 group-hover:opacity-100 cursor-pointer">
                               <img :src="icons.unlink_path" />
                             </button>
@@ -201,7 +202,7 @@
                           <span>
                             {{ i18n.t('repositories.item_card.relationships.id', { code: parent.code }) }}
                           </span>
-                          <span>
+                          <span v-if="parent.repository_name && parent.repository_path">
                             <span>{{ i18n.t('repositories.item_card.relationships.inventory') }}</span>
                             <a :href="parent.repository_path" class="btn-text-link !text-sn-science-blue">
                               {{ parent.repository_name }}
@@ -233,15 +234,16 @@
                     </div>
                     <div v-if="childrenCount">
                       <details v-for="(child) in children" :key="child.code" @toggle="updateOpenState(child.code, $event.target.open)"
-                               class="flex flex-col font-normal gap-4 group-last-of-type:[&>p:last-child]:mb-0">
+                               class="flex flex-col font-normal group-last-of-type:[&>p:last-child]:mb-0">
                         <summary class="flex flex-row gap-3 mb-4 relative group"
                                  :class="{ 'group-last-of-type:mb-0': !relationshipDetailsState[child.code] }">
                           <img :src="icons.delimiter_path" class="w-3 h-3 flex-shrink-0 cursor-pointer relative top-1"
                                :class="{ 'rotate-90': relationshipDetailsState[child.code] }"/>
                           <span class="group/child">
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
-                            <a :href="child.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.name }}</a>
-                            <button v-if="permissions.can_connect_rows" @click="openUnlinkModal(child)"
+                            <a v-if="child.path" :href="child.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.name }}</a>
+                            <span v-else>{{ child.name }}</span>
+                            <button v-if="permissions.can_connect_rows && child.can_connect_rows" @click="openUnlinkModal(child)"
                                     class="ml-2 bg-transparent border-none opacity-0 group-hover:opacity-100 cursor-pointer">
                               <img :src="icons.unlink_path" />
                             </button>
@@ -249,7 +251,7 @@
                         </summary>
                         <p class="flex flex-col gap-3 ml-6 mb-4">
                           <span>{{ i18n.t('repositories.item_card.relationships.id', { code: child.code }) }}</span>
-                          <span>
+                          <span v-if="child.repository_name && child.repository_path">
                             <span>{{ i18n.t('repositories.item_card.relationships.inventory') }}</span>
                             <a :href="child.repository_path" class="btn-text-link !text-sn-science-blue">
                               {{ child.repository_name }}

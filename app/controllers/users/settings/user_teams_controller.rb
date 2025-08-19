@@ -109,11 +109,13 @@ module Users
                               )
                             end
 
+          redirect_url = teams_path if params[:leave]
+
           generate_notification(current_user,
                                 @user_assignment.user,
                                 @user_assignment.assignable,
                                 false)
-          render json: { status: :ok, job_id: job_id, success_message: success_message }
+          render json: { status: :ok, job_id: job_id, success_message: success_message, redirect_url: redirect_url }
         end
       end
 

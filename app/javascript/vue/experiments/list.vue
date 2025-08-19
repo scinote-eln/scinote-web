@@ -171,6 +171,7 @@ export default {
           cellRendererParams: {
             statusesList: this.statusesList
           },
+          notSelectable: true,
           minWidth: 180
         },
         {

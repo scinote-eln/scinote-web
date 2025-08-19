@@ -108,6 +108,34 @@ class NotificationExtends
       code: 94,
       recipients_module: :UserChangedRecipient
     },
+    add_group_user_member_activity: {
+      code: 382,
+      recipients_module: :AssignedRecipients
+    },
+    remove_group_user_member_activity: {
+      code: 383,
+      recipients_module: :AssignedRecipients
+    },
+    project_access_granted_user_group_activity: {
+      code: 390,
+      recipients_module: :AssignedUserGroupRecipients
+    },
+    project_access_changed_user_group_activity: {
+      code: 391,
+      recipients_module: :AssignedUserGroupRecipients
+    },
+    project_access_revoked_user_group_activity: {
+      code: 392,
+      recipients_module: :AssignedUserGroupRecipients
+    },
+    experiment_access_changed_user_group_activity: {
+      code: 393,
+      recipients_module: :AssignedUserGroupRecipients
+    },
+    my_module_access_changed_user_group_activity: {
+      code: 394,
+      recipients_module: :AssignedUserGroupRecipients
+    },
     delivery: {
       recipients_module: :DirectRecipient
     }
@@ -140,12 +168,17 @@ class NotificationExtends
         unassign_user_from_project_activity
         project_grant_access_to_all_team_members_activity
         project_remove_access_from_all_team_members_activity
+        project_access_granted_user_group_activity
+        project_access_revoked_user_group_activity
       ],
       project_experiment_role_change: %I[
         change_user_role_on_project_activity
         change_user_role_on_experiment_activity
         change_user_role_on_my_module_activity
         project_access_changed_all_team_members_activity
+        project_access_changed_user_group_activity
+        experiment_access_changed_user_group_activity
+        my_module_access_changed_user_group_activity
       ],
       project_due_date: %I[
         projects_due_date_reminder
@@ -170,6 +203,10 @@ class NotificationExtends
         invite_user_to_team
         remove_user_from_team
         change_users_role_on_team_activity
+      ],
+      other_user_group_member: %I[
+        add_group_user_member_activity
+        remove_group_user_member_activity
       ],
       always_on: %I[
         delivery

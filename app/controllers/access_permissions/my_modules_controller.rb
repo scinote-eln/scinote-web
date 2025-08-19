@@ -1,86 +1,64 @@
 # frozen_string_literal: true
 
 module AccessPermissions
-  class MyModulesController < ApplicationController
-    before_action :set_my_module
+  class MyModulesController < BaseController
     before_action :set_experiment
     before_action :set_project
-    before_action :check_read_permissions, only: %i(show)
-    before_action :check_manage_permissions, only: %i(edit update)
-
-    def show
-      render json: @my_module.user_assignments.includes(:user_role, :user).order('users.full_name ASC'),
-             each_serializer: UserAssignmentSerializer, user: current_user
-    end
-
-    def new
-      render json: @available_users, each_serializer: UserSerializer, user: current_user
-    end
-    def edit; end
 
     def update
-      user_id = permitted_update_params[:user_id]
-      @user_assignment = @my_module.user_assignments.find_by(user_id: user_id, team: current_team)
+      if permitted_params[:user_role_id] == 'reset'
+        parent_assignment = @experiment.public_send(:"#{assignment_type}_assignments").find_or_initialize_by(
+          "#{assignment_type}_id": permitted_params[:"#{assignment_type}_id"] || current_team.id,
+          team: current_team
+        )
 
-      if permitted_update_params[:user_role_id] == 'reset'
-        @user_assignment.update!(
-          user_role_id: @experiment.user_assignments.find_by(user_id: user_id, team: current_team).user_role_id,
+        @assignment.update!(
+          user_role_id: parent_assignment.user_role_id,
+          assigned_by: current_user,
           assigned: :automatically
         )
       else
-        @user_assignment.update!(
-          user_role_id: permitted_update_params[:user_role_id],
+        @assignment.update!(
+          user_role_id: permitted_params[:user_role_id],
+          assigned_by: current_user,
           assigned: :manually
         )
       end
 
-      log_change_activity
+      case assignment_type
+      when :team
+        log_activity(:my_module_access_changed_all_team_members, team: @assignment.team.id, role: @assignment.user_role.name)
+      when :user_group
+        log_activity(:my_module_access_changed_user_group, user_group: @assignment.user_group.id, role: @assignment.user_role.name)
+      when :user
+        log_activity(:change_user_role_on_my_module, user_target: @assignment.user.id, role: @assignment.user_role.name)
+      end
 
-      render :my_module_member
+      render json: { user_role_id: @assignment.user_role_id }, status: :ok
     end
 
     private
-
-    def permitted_update_params
-      params.require(:user_assignment)
-            .permit(%i(user_role_id user_id))
-    end
 
     def set_project
       @project = @experiment.project
     end
 
     def set_experiment
-      @experiment = @my_module.experiment
+      @experiment = @model.experiment
     end
 
-    def set_my_module
-      @my_module = MyModule.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
+    def set_model
+      @model = MyModule.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
 
-      render_404 unless @my_module
+      render_404 unless @model
     end
 
     def check_manage_permissions
-      render_403 unless can_manage_my_module_users?(@my_module)
+      render_403 unless can_manage_my_module_users?(@model)
     end
 
     def check_read_permissions
-      render_403 unless can_read_my_module?(@my_module)
-    end
-
-    def log_change_activity
-      Activities::CreateActivityService.call(
-        activity_type: :change_user_role_on_my_module,
-        owner: current_user,
-        subject: @my_module,
-        team: @project.team,
-        project: @project,
-        message_items: {
-          my_module: @my_module.id,
-          user_target: @user_assignment.user_id,
-          role: @user_assignment.user_role.name
-        }
-      )
+      render_403 unless can_read_my_module?(@model)
     end
   end
 end

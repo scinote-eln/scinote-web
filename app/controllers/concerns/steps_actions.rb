@@ -48,7 +48,7 @@ module StepsActions
     smart_annotation_notification(
       old_text: old_text,
       new_text: checklist_item.text,
-      subject: step.protocol,
+      subject: step,
       title: t('notifications.checklist_title',
                user: current_user.full_name,
                step: step.name),
@@ -60,7 +60,7 @@ module StepsActions
     smart_annotation_notification(
       old_text: old_text,
       new_text: step_text.text,
-      subject: step.protocol,
+      subject: step,
       title: t('notifications.step_text_title',
                user: current_user.full_name,
                step: step.name),
@@ -72,7 +72,7 @@ module StepsActions
     smart_annotation_notification(
       old_text: old_text,
       new_text: checklist.name,
-      subject: step.protocol,
+      subject: step,
       title: t('notifications.checklist_title',
                user: current_user.full_name,
                step: step.name),
@@ -84,7 +84,7 @@ module StepsActions
     smart_annotation_notification(
       old_text: old_text,
       new_text: step.description,
-      subject: step.protocol,
+      subject: step,
       title: t('notifications.step_description_title',
                user: current_user.full_name,
                step: step.name),
@@ -96,7 +96,7 @@ module StepsActions
     smart_annotation_notification(
       old_text: old_content,
       new_text: table.contents,
-      subject: step.protocol,
+      subject: step,
       title: t(table.metadata['plateTemplate'] ? 'notifications.step_well_plate_title' : 'notifications.step_table_title',
                user: current_user.full_name,
                step: step.name),

@@ -23,7 +23,7 @@ export default {
     archivedUrl: { type: String, required: true },
     disabled: { type: String, default: 'false' }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     delete window.initRepositoryStateMenu;
   },
   computed: {

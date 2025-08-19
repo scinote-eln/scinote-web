@@ -4,44 +4,35 @@ module Lists
   class StorageLocationsService < BaseService
     include Canaid::Helpers::PermissionsHelper
 
-    def initialize(user, team, params)
-      @user = user
-      @team = team
-      @parent_id = params[:parent_id]
-      @filters = params[:filters] || {}
-      @params = params
-    end
-
     def fetch_records
-      if @parent_id && !can_read_storage_location?(@user, StorageLocation.find(@parent_id))
+      parent_id = @params[:parent_id]
+      if parent_id && !can_read_storage_location?(@user, StorageLocation.find(parent_id))
         @records = StorageLocation.none
         return
       end
 
       @records =
-        StorageLocation.joins('LEFT JOIN storage_locations AS sub_locations ' \
-                              'ON storage_locations.id = sub_locations.parent_id AND sub_locations.discarded_at IS NULL')
-                       .left_joins(:team, :created_by)
-                       .select(StorageLocation.shared_sql_select(@user))
-                       .select(
-                         'storage_locations.*,
-                        MAX(teams.name) as team_name,
-                        MAX(users.full_name) as created_by_full_name,
-                        CASE WHEN storage_locations.container THEN -1 ELSE COUNT(sub_locations.id) END AS sub_location_count'
-                       )
-                       .group(:id)
-
-      @records = @records.viewable_by_user(@user, @team) unless @parent_id
+        @raw_data.joins('LEFT JOIN storage_locations AS sub_locations ' \
+                        'ON storage_locations.id = sub_locations.parent_id AND sub_locations.discarded_at IS NULL')
+                 .left_joins(:team, :created_by)
+                 .select(StorageLocation.shared_sql_select(@user))
+                 .select(
+                   'storage_locations.*,
+                    MAX(teams.name) as team_name,
+                    MAX(users.full_name) as created_by_full_name,
+                    CASE WHEN storage_locations.container THEN -1 ELSE COUNT(sub_locations.id) END AS sub_location_count'
+                 ).group(:id)
     end
 
     def filter_records
+      parent_id = @params[:parent_id]
       if @filters[:search_tree].present?
-        if @parent_id.present?
-          storage_location = @records.find_by(id: @parent_id)
-          @records = @records.where(id: StorageLocation.inner_storage_locations(@team, storage_location))
+        if parent_id.present?
+          storage_location = @records.find_by(id: parent_id)
+          @records = @records.where(id: StorageLocation.inner_storage_locations(@user.current_team, storage_location))
         end
       else
-        @records = @records.where(parent_id: @parent_id)
+        @records = @records.where(parent_id: parent_id)
       end
 
       if @filters[:query].present?

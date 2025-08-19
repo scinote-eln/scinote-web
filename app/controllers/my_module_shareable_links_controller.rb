@@ -71,7 +71,8 @@ class MyModuleShareableLinksController < ApplicationController
       my_module: @my_module,
       include_stock_consumption: @repository.has_stock_management? && params[:assigned].present?,
       disable_reminders: true, # reminders are always disabled for shareable links
-      disable_stock_management: true # stock management is always disabled in MyModule context
+      disable_stock_management: true, # stock management is always disabled in MyModule context
+      shareable_link_view: true
     }
 
     @all_rows_count = datatable_service.all_count
@@ -89,6 +90,7 @@ class MyModuleShareableLinksController < ApplicationController
     page = (params[:start].to_i / per_page) + 1
     datatable_service = RepositorySnapshotDatatableService.new(@repository_snapshot, params, nil, @my_module, preload_cells: false)
 
+    @datatable_params = { shareable_link_view: true }
     @all_rows_count = datatable_service.all_count
     @filtered_rows_count = datatable_service.filtered_count
     @columns_mappings = datatable_service.mappings

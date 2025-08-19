@@ -6,6 +6,7 @@
        @dragover.prevent
        :data-id="result.id"
        :class="{ 'bg-sn-super-light-blue': dragingFile, 'bg-white': !dragingFile, 'locked': locked, 'pointer-events-none': addingContent }"
+       :data-e2e="`e2e-CO-task-result${result.id}`"
   >
     <div class="text-xl items-center flex flex-col text-sn-blue h-full justify-center left-0 absolute top-0 w-full"
          v-if="dragingFile"
@@ -20,6 +21,7 @@
               :href="'#resultBody' + result.id"
               data-toggle="collapse"
               data-remote="true"
+              :data-e2e="`e2e-BT-task-result${result.id}-visibilityToggle`"
               @click="toggleCollapsed">
             <span class="sn-icon sn-icon-right "></span>
           </a>
@@ -35,6 +37,7 @@
             :placeholder="i18n.t('my_modules.results.placeholder')"
             :defaultValue="i18n.t('my_modules.results.default_name')"
             :timestamp="i18n.t('protocols.steps.timestamp', {date: result.attributes.created_at, user: result.attributes.created_by })"
+            :data-e2e="`task-result${result.id}`"
             @editingEnabled="editingName = true"
             @editingDisabled="editingName = false"
             :editOnload="result.newResult == true"
@@ -48,6 +51,8 @@
             :btnText="i18n.t('my_modules.results.insert.button')"
             :position="'right'"
             :caret="true"
+            :data-e2e="`e2e-DD-task-result${result.id}-insertContent`"
+            :disableOverflow="true"
             @create:custom_well_plate="openCustomWellPlateModal"
             @create:table="(...args) => this.createElement('table', ...args)"
             @create:checklist="createElement('checklist')"
@@ -65,14 +70,26 @@
             :data-object-type="result.attributes.type"
             tabindex="0"
           ></span> <!-- Hidden element to support legacy code -->
-          <tempplate v-if="result.attributes.steps.length == 0">
-            <button v-if="urls.update_url" ref="linkButton" :title="i18n.t('my_modules.results.link_steps')" class="btn btn-light icon-btn" @click="this.openLinkStepsModal = true">
+          <template v-if="result.attributes.steps.length == 0">
+            <button
+              v-if="urls.update_url"
+              ref="linkButton"
+              :title="i18n.t('my_modules.results.link_steps')"
+              class="btn btn-light icon-btn"
+              @click="this.openLinkStepsModal = true"
+              :data-e2e="`e2e-BT-task-result${result.id}-linkStep`"
+            >
               {{ i18n.t('my_modules.results.link_to_step') }}
             </button>
-          </tempplate>
+          </template>
           <GeneralDropdown v-else ref="linkedStepsDropdown"  position="right">
             <template v-slot:field>
-              <button ref="linkButton" class="btn btn-light icon-btn" :title="i18n.t('my_modules.results.linked_steps')">
+              <button
+                ref="linkButton"
+                class="btn btn-light icon-btn"
+                :title="i18n.t('my_modules.results.linked_steps')"
+                :data-e2e="`e2e-DD-task-result${result.id}-linkStep-showLinked`"
+              >
                 <i class="sn-icon sn-icon-steps"></i>
                 <span class="absolute top-1 -right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
                   {{ result.attributes.steps.length }}
@@ -86,14 +103,18 @@
                   :title="step.name"
                   :href="protocolUrl(step.id)"
                   class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer block hover:no-underline text-sn-blue truncate"
+                  :data-e2e="`e2e-BT-task-result${result.id}-linkStep-step${step.id}`"
                 >
                   {{ step.name }}
                 </a>
               </div>
               <template v-if="urls.update_url">
                 <hr class="my-0">
-                <div class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-blue"
-                    @click="this.openLinkStepsModal = true; $refs.linkedStepsDropdown.closeMenu()">
+                <div
+                  class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-blue"
+                  @click="this.openLinkStepsModal = true; $refs.linkedStepsDropdown.closeMenu()"
+                  :data-e2e="`e2e-BT-task-result${result.id}-linkStep-manage`"
+                >
                   {{ i18n.t('protocols.steps.manage_links') }}
                 </div>
               </template>
@@ -104,7 +125,9 @@
             class="open-comments-sidebar btn icon-btn btn-light"
             data-turbolinks="false"
             data-object-type="Result"
-            :data-object-id="result.id">
+            :data-object-id="result.id"
+            :data-e2e="`e2e-BT-task-result${result.id}-comments`"
+          >
             <i class="sn-icon sn-icon-comments"></i>
             <span class="comments-counter" :class="{ 'hidden': !result.attributes.comments_count }"
                   :id="`comment-count-${result.id}`">
@@ -118,6 +141,7 @@
             :btnClasses="'btn btn-light icon-btn'"
             :position="'right'"
             :btnIcon="'sn-icon sn-icon-more-hori'"
+            :data-e2e="`e2e-DD-task-result${result.id}-optionsMenu`"
             @reorder="openReorderModal"
             @duplicate="duplicateResult"
             @archive="archiveResult"
@@ -243,14 +267,46 @@ export default {
       customWellPlate: false,
       openLinkStepsModal: false,
       wellPlateOptions: [
-        { text: I18n.t('protocols.steps.insert.well_plate_options.custom'), emit: 'create:custom_well_plate'},
-        { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table', params: [32, 48] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.16_x_24'), emit: 'create:table', params: [16, 24] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.8_x_12'), emit: 'create:table', params: [8, 12] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_8'), emit: 'create:table', params: [6, 8] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.4_x_6'), emit: 'create:table', params: [4, 6] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.3_x_4'), emit: 'create:table', params: [3, 4] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'), emit: 'create:table', params: [2, 3] }
+        {
+          text: I18n.t('protocols.steps.insert.well_plate_options.custom'),
+          emit: 'create:custom_well_plate',
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-custom`
+        },
+        {
+          text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table', 
+          params: [32, 48],
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-32`
+        },
+        {
+          text: I18n.t('protocols.steps.insert.well_plate_options.16_x_24'), emit: 'create:table',
+          params: [16, 24],
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-16`
+        },
+        {
+          text: I18n.t('protocols.steps.insert.well_plate_options.8_x_12'), emit: 'create:table',
+          params: [8, 12],
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-8`
+        },
+        {
+          text: I18n.t('protocols.steps.insert.well_plate_options.6_x_8'), emit: 'create:table',
+          params: [6, 8],
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-6`
+        },
+        {
+          text: I18n.t('protocols.steps.insert.well_plate_options.4_x_6'), emit: 'create:table',
+          params: [4, 6],
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-4`
+        },
+        {
+          text: I18n.t('protocols.steps.insert.well_plate_options.3_x_4'), emit: 'create:table',
+          params: [3, 4],
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-3`
+        },
+        {
+          text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'), emit: 'create:table',
+          params: [2, 3],
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-2`
+        }
       ],
       editingName: false,
       confirmingDelete: false,
@@ -328,25 +384,29 @@ export default {
       if (this.urls.upload_attachment_url) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.insert.add_file'),
-          emit: 'create:file'
+          emit: 'create:file',
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-file-addFromPc`
         }]);
       }
       if (this.result.attributes.wopi_enabled) {
         menu = menu.concat([{
           text: this.i18n.t('assets.create_wopi_file.button_text'),
-          emit: 'create:wopi_file'
+          emit: 'create:wopi_file',
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-file-wopi`
         }]);
       }
       if (this.result.attributes.open_vector_editor_context.new_sequence_asset_url) {
         menu = menu.concat([{
           text: this.i18n.t('open_vector_editor.new_sequence_file'),
-          emit: 'create:ove_file'
+          emit: 'create:ove_file',
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-file-sequence`
         }]);
       }
       if (this.result.attributes.marvinjs_enabled) {
         menu = menu.concat([{
           text: this.i18n.t('marvinjs.new_button'),
-          emit: 'create:marvinjs_file'
+          emit: 'create:marvinjs_file',
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-file-chemical`
         }]);
       }
       return menu;
@@ -357,21 +417,25 @@ export default {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.insert.text'),
           icon: 'sn-icon sn-icon-result-text',
-          emit: 'create:text'
+          emit: 'create:text',
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-text`
         }, {
           text: this.i18n.t('my_modules.results.insert.attachment'),
           submenu: this.filesMenu,
           icon: 'sn-icon sn-icon-file',
-          position: 'left'
+          position: 'left',
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-file`
         }, {
           text: this.i18n.t('my_modules.results.insert.table'),
           icon: 'sn-icon sn-icon-tables',
-          emit: 'create:table'
+          emit: 'create:table',
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-table`
         }, {
           text: this.i18n.t('my_modules.results.insert.well_plate'),
           icon: 'sn-icon sn-icon-tables',
           submenu: this.wellPlateOptions,
-          position: 'left'
+          position: 'left',
+          data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate`
         }]);
       }
 
@@ -382,31 +446,36 @@ export default {
       if (this.urls.reorder_elements_url && this.elements.length > 1) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.rearrange'),
-          emit: 'reorder'
+          emit: 'reorder',
+          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-reorder`
         }]);
       }
       if (this.urls.duplicate_url && !this.result.attributes.archived) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.duplicate'),
-          emit: 'duplicate'
+          emit: 'duplicate',
+          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-duplicate`
         }]);
       }
       if (this.urls.archive_url) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.archive'),
-          emit: 'archive'
+          emit: 'archive',
+          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-archive`
         }]);
       }
       if (this.urls.restore_url) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.restore'),
-          emit: 'restore'
+          emit: 'restore',
+          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-restore`
         }]);
       }
       if (this.urls.delete_url) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.delete'),
-          emit: 'delete'
+          emit: 'delete',
+          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-delete`
         }]);
       }
       return menu;

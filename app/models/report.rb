@@ -29,7 +29,6 @@ class Report < ApplicationRecord
   belongs_to :user, inverse_of: :reports
   belongs_to :team, inverse_of: :reports
   belongs_to :last_modified_by, class_name: 'User', optional: true
-  has_many :users, through: :user_assignments
   has_many :report_template_values, dependent: :destroy
 
   # Report either has many report elements (if grouped by timestamp),
@@ -80,9 +79,9 @@ class Report < ApplicationRecord
             .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
   end
 
-  def self.viewable_by_user(user, teams)
+  def self.readable_by_user(user, teams)
     with_granted_permissions(user, ReportPermissions::READ)
-      .where(project: Project.viewable_by_user(user, teams))
+      .where(project: Project.readable_by_user(user, teams))
   end
 
   def self.filter_by_teams(teams = [])

@@ -6,7 +6,7 @@ class MyModuleRepositoriesController < ApplicationController
   before_action :load_my_module, except: :assign_my_modules
   before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html repositories_list create)
   before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption assign_my_modules)
-  before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list repositories_list_html repositories_list create)
+  before_action :check_repository_view_permissions, except: %i(index_dt repositories_dropdown_list repositories_list_html repositories_list create)
   before_action :check_repository_row_consumption_permissions, only: %i(consume_modal update_consumption)
   before_action :check_assign_repository_records_permissions, only: %i(update create)
   before_action :load_my_modules, only: :assign_my_modules
@@ -19,6 +19,8 @@ class MyModuleRepositoriesController < ApplicationController
       rows_view = 'repository_rows/simple_view_index'
       preload_cells = false
     else
+      return render_403 unless can_read_repository?(@repository)
+
       rows_view = 'repository_rows/index'
       preload_cells = true
     end
@@ -150,8 +152,8 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def repositories_list
-    @assigned_repositories = @my_module.readable_live_and_snapshot_repositories_list(current_user)
-    render json: @assigned_repositories, each_serializer: AssignedRepositorySerializer, scope: {user: current_user, my_module: @my_module }
+    @assigned_repositories = @my_module.live_and_snapshot_repositories_list
+    render json: @assigned_repositories, each_serializer: AssignedRepositorySerializer, scope: { user: current_user, my_module: @my_module }
   end
 
   def full_view_table
@@ -164,7 +166,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def repositories_dropdown_list
-    @repositories = Repository.viewable_by_user(current_user).joins("
+    @repositories = Repository.readable_by_user(current_user).joins("
                                 LEFT OUTER JOIN repository_rows ON
                                   repository_rows.repository_id = repositories.id
                                 LEFT OUTER JOIN my_module_repository_rows ON

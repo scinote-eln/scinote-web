@@ -84,7 +84,7 @@ class SmartAnnotationsController < ApplicationController
     when MyModule
       protocols_my_module_path(resource)
     when RepositoryRow
-      repository_repository_row_path(resource.repository, resource)
+      repository_repository_row_path(resource.repository, resource, my_module_id: params[:my_module_id])
     end
   end
 

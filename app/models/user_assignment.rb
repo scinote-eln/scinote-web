@@ -8,6 +8,7 @@ class UserAssignment < ApplicationRecord
   after_update :update_team_children_assignments, if: -> { assignable.is_a?(Team) && saved_change_to_user_role_id? }
   before_destroy :unassign_team_child_objects, if: -> { assignable.is_a?(Team) }
   after_destroy :call_user_assignment_changed_hook
+  after_destroy :remove_user_group_memberships, if: -> { assignable.is_a?(Team) }
   after_save :call_user_assignment_changed_hook
 
   belongs_to :assignable, polymorphic: true, touch: true
@@ -16,14 +17,24 @@ class UserAssignment < ApplicationRecord
   belongs_to :team
   belongs_to :assigned_by, class_name: 'User', optional: true
 
-  enum assigned: { automatically: 0, manually: 1 }, _suffix: true
+  enum :assigned, { automatically: 0, manually: 1 }, suffix: true
 
   validates :user, uniqueness: { scope: %i(assignable team_id) }
 
   scope :with_permission, ->(permission) { joins(:user_role).where('? = ANY(user_roles.permissions)', permission) }
+  scope :as_owners, -> { where(user_role: UserRole.find_predefined_owner_role) }
+  scope :as_normal_users, -> { where(user_role: UserRole.find_predefined_normal_user_role) }
+  scope :as_viewers, -> { where(user_role: UserRole.find_predefined_viewer_role) }
 
   def last_assignable_owner?
     assignable_owners.count == 1 && user_role.owner?
+  end
+
+  def remove_user_group_memberships
+    user.user_group_memberships
+        .joins(:user_group)
+        .where(user_group: { team: assignable })
+        .destroy_all
   end
 
   def last_with_permission?(permission, assigned: nil)

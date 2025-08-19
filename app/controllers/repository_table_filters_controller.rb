@@ -70,7 +70,7 @@ class RepositoryTableFiltersController < ApplicationController
   private
 
   def load_repository
-    @repository = Repository.viewable_by_user(current_user).find_by(id: params[:repository_id])
+    @repository = Repository.readable_by_user(current_user).find_by(id: params[:repository_id])
     render_403 unless can_read_repository?(@repository)
   end
 

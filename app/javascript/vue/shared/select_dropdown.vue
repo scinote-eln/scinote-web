@@ -60,8 +60,9 @@
     <template v-if="isOpen">
       <teleport to="body">
         <div ref="flyout"
-            class="sn-select-dropdown bg-white inline-block sn-shadow-menu-sm rounded w-full
-                    fixed z-[3000]">
+          class="sn-select-dropdown bg-white inline-block sn-shadow-menu-sm rounded w-full fixed z-[3000]"
+          :data-e2e="`${e2eValue}-dropdownOptions`"
+        >
           <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
             <div @click="selectAll" :class="sizeClass"
                 class="border border-x-0 !border-transparent border-solid !border-b-sn-light-grey
@@ -72,7 +73,7 @@
               {{ i18n.t('general.select_all') }}
             </div>
           </div>
-          <perfect-scrollbar ref="scrollContainer" class="p-2.5 flex flex-col max-h-80 relative" :class="{ 'pt-0': withCheckboxes }">
+          <div ref="scrollContainer" class="p-2.5 flex flex-col max-h-80 relative overflow-y-auto" :class="{ 'pt-0': withCheckboxes }">
             <template v-for="(option, i) in filteredOptions" :key="option[0]">
               <div
                 @click.stop="setValue(option[0])"
@@ -98,7 +99,7 @@
             <div v-if="filteredOptions.length === 0" class="text-sn-grey text-center py-2.5">
               {{ noOptionsPlaceholder || this.i18n.t('general.select_dropdown.no_options_placeholder') }}
             </div>
-          </perfect-scrollbar>
+          </div>
         </div>
       </teleport>
     </template>
@@ -148,7 +149,8 @@ export default {
       fixedWidth: true,
       focusedOption: null,
       skipQueryCallback: false,
-      nextPage: 1
+      nextPage: 1,
+      totalOptionsCount: this.options.length
     };
   },
   mixins: [FixedFlyoutMixin],
@@ -225,11 +227,11 @@ export default {
       if (this.newValue.length === 0) {
         return false;
       }
-      if (this.newValue.length === 1 && this.rawOptions.length > 1) {
+      if (this.newValue.length === 1 && this.totalOptionsCount > 1) {
         this.selectAllState = 'indeterminate';
         return this.renderLabel(this.rawOptions.find((option) => option[0] === this.newValue[0]));
       }
-      if (this.newValue.length === this.rawOptions.length) {
+      if (this.newValue.length === this.totalOptionsCount) {
         this.selectAllState = 'checked';
         return this.allOptionsPlaceholder || this.i18n.t('general.select_dropdown.all_options_placeholder');
       }
@@ -263,7 +265,6 @@ export default {
     if (!this.newValue && this.multiple) {
       this.newValue = [];
     }
-    this.fetchOptions();
   },
   watch: {
     value(newValue) {
@@ -275,7 +276,7 @@ export default {
         this.$nextTick(() => {
           this.setPosition();
           this.$refs.search?.focus();
-          this.$refs.scrollContainer.$el.addEventListener('scroll', this.loadNextPage);
+          this.$refs.scrollContainer.addEventListener('scroll', this.loadNextPage);
         });
       }
     },
@@ -295,7 +296,7 @@ export default {
       this.fetchOptions();
     },
     loadNextPage() {
-      const container = this.$refs.scrollContainer.$el;
+      const container = this.$refs.scrollContainer;
       if (this.nextPage && container.scrollTop + container.clientHeight >= container.scrollHeight) {
         this.fetchOptions();
       }
@@ -316,7 +317,15 @@ export default {
       return this.newValue === value;
     },
     open() {
-      if (!this.disabled) this.isOpen = true;
+      if (this.disabled || this.isOpen) return;
+
+      this.isOpen = true;
+
+      if (this.optionsUrl) {
+        this.fetchedOptions = [];
+        this.nextPage = 1;
+        this.fetchOptions();
+      }
     },
     clear() {
       this.newValue = this.multiple ? [] : null;
@@ -390,6 +399,11 @@ export default {
             } else {
               this.fetchedOptions = response.data.data;
             }
+
+            if (this.fetchedOptions.length > this.totalOptionsCount) {
+              this.totalOptionsCount = this.fetchedOptions.length;
+            }
+
             this.$nextTick(() => {
               this.setPosition();
             });

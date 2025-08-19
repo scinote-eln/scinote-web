@@ -140,10 +140,6 @@ module Protocols
         {
           title:
             I18n.t('protocols.import_export.import_protocol_notification.title', link: original_file_download_link),
-          message: "#{I18n.t('protocols.import_export.import_protocol_notification.message')} " \
-                   "<a data-id='#{@protocol.id}'  data-turbolinks='false' " \
-                   "href='#{Rails.application.routes.url_helpers.protocol_path(@protocol)}'>" \
-                   "#{@protocol.name}</a>",
           user: @user
         }
       )
