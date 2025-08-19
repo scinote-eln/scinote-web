@@ -66,11 +66,11 @@
             :data-object-type="result.attributes.type"
             tabindex="0"
           ></span> <!-- Hidden element to support legacy code -->
-          <tempplate v-if="result.attributes.steps.length == 0">
+          <template v-if="result.attributes.steps.length == 0">
             <button v-if="urls.update_url" ref="linkButton" :title="i18n.t('my_modules.results.link_steps')" class="btn btn-light icon-btn" @click="this.openLinkStepsModal = true">
               {{ i18n.t('my_modules.results.link_to_step') }}
             </button>
-          </tempplate>
+          </template>
           <GeneralDropdown v-else ref="linkedStepsDropdown"  position="right">
             <template v-slot:field>
               <button ref="linkButton" class="btn btn-light icon-btn" :title="i18n.t('my_modules.results.linked_steps')">

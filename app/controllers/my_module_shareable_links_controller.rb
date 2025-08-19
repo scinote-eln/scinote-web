@@ -43,8 +43,6 @@ class MyModuleShareableLinksController < ApplicationController
     @results_order = params[:order] || 'new'
 
     @results = @my_module.results.active
-    @results = @results.page(params[:page]).per(Constants::RESULTS_PER_PAGE_LIMIT)
-
     @results = case @results_order
                when 'old' then @results.order(created_at: :asc)
                when 'old_updated' then @results.order(updated_at: :asc)
@@ -53,6 +51,15 @@ class MyModuleShareableLinksController < ApplicationController
                when 'ztoa' then @results.order(name: :desc)
                else @results.order(created_at: :desc)
                end
+
+    if params[:result_id].present?
+      page = @results.find_page_number(params[:result_id].to_i, Constants::RESULTS_PER_PAGE_LIMIT)
+      params[:result_id] = nil
+    else
+      page = params[:page]
+    end
+
+    @results = @results.page(page).per(Constants::RESULTS_PER_PAGE_LIMIT)
 
     @gallery = @results.left_joins(:assets).pluck('assets.id').compact
 

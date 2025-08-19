@@ -4064,6 +4064,7 @@ en:
       timestamp: "Created on %{date} by %{user}"
       timestamp_iso_html: "Created on <span class='iso-formatted-date'>%{date}</span> by %{user}"
       manage_links: "Manage links"
+      archived_result: "Archived"
       link_results: "Link results to this step"
       linked_results: "Linked results"
       status:
