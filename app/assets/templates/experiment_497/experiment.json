@@ -11,8 +11,6 @@
     "archived_on": null,
     "restored_by_id": null,
     "restored_on": null,
-    "created_at": "2018-12-24T10:56:55.416Z",
-    "updated_at": "2019-01-28T15:15:24.331Z",
     "uuid": "3363b358-1478-402c-8597-57739d3fb2e3"
   },
   "my_modules": [
@@ -25,8 +23,6 @@
         "x": 99,
         "y": 0,
         "my_module_group_id": 1195,
-        "created_at": "2018-12-24T13:08:01.834Z",
-        "updated_at": "2018-12-24T13:43:31.275Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -66,13 +62,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-12-24T13:08:01.843Z",
-            "updated_at": "2019-02-20T07:31:00.167Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -88,8 +81,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T13:33:23.306Z",
-                "updated_at": "2018-12-24T13:33:53.668Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3905
               },
@@ -112,8 +103,6 @@
                       "id": 974,
                       "name": "Guidelines",
                       "step_id": 5264,
-                      "created_at": "2018-12-24T13:33:23.308Z",
-                      "updated_at": "2018-12-24T13:33:23.308Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -123,8 +112,6 @@
                         "text": "Place the membrane in blocking buffer and incubate at room temperature for 1 hour (or at 4°C overnight) with shaking.",
                         "checked": false,
                         "checklist_id": 974,
-                        "created_at": "2018-12-24T13:33:23.310Z",
-                        "updated_at": "2018-12-24T13:33:23.310Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -134,8 +121,6 @@
                         "text": "Wash the membrane with washing buffer 3 times (5 minutes each time).",
                         "checked": false,
                         "checklist_id": 974,
-                        "created_at": "2018-12-24T13:33:23.316Z",
-                        "updated_at": "2018-12-24T13:33:23.316Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -145,8 +130,6 @@
                         "text": "Place the membrane in primary antibody solution diluted in 1% BSA in Tween PBS, pH 7.2, and incubate at room temperature for 1 hour with shaking.",
                         "checked": false,
                         "checklist_id": 974,
-                        "created_at": "2018-12-24T13:33:23.321Z",
-                        "updated_at": "2018-12-24T13:33:23.321Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -156,8 +139,6 @@
                         "text": "Wash the membrane with washing buffer 3 times (10 minutes each time).",
                         "checked": false,
                         "checklist_id": 974,
-                        "created_at": "2018-12-24T13:33:23.327Z",
-                        "updated_at": "2018-12-24T13:33:23.327Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -167,8 +148,6 @@
                         "text": "Place the membrane in secondary antibody diluted in 1% BSA in Tween PBS, pH 7.2, and incubate at room temperature for 1 hour with shaking.",
                         "checked": false,
                         "checklist_id": 974,
-                        "created_at": "2018-12-24T13:33:23.332Z",
-                        "updated_at": "2018-12-24T13:33:23.332Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -178,8 +157,6 @@
                         "text": "Wash the membrane with washing buffer 3 times (10 minutes each time).",
                         "checked": false,
                         "checklist_id": 974,
-                        "created_at": "2018-12-24T13:33:23.337Z",
-                        "updated_at": "2018-12-24T13:33:23.337Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 5
@@ -198,8 +175,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T13:17:10.122Z",
-                "updated_at": "2019-02-20T07:30:20.884Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3905
               },
@@ -210,8 +185,6 @@
                 {
                   "asset": {
                     "id": 3736,
-                    "created_at": "2019-02-20T07:29:55.862Z",
-                    "updated_at": "2019-02-20T07:30:20.876Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 18346,
@@ -243,8 +216,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T13:24:09.108Z",
-                "updated_at": "2019-02-19T14:04:24.998Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3905
               },
@@ -271,8 +242,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T13:34:41.460Z",
-                "updated_at": "2019-02-20T07:31:21.254Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3905
               },
@@ -283,8 +252,6 @@
                 {
                   "asset": {
                     "id": 3737,
-                    "created_at": "2019-02-20T07:30:59.882Z",
-                    "updated_at": "2019-02-20T07:31:21.246Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 14173,
@@ -324,8 +291,6 @@
         "x": 99,
         "y": 14,
         "my_module_group_id": 1195,
-        "created_at": "2018-12-24T12:42:30.757Z",
-        "updated_at": "2018-12-24T13:43:31.281Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -365,13 +330,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-12-24T12:42:30.765Z",
-            "updated_at": "2019-02-19T14:04:53.999Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -387,8 +349,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T12:50:15.910Z",
-                "updated_at": "2019-01-29T10:20:35.719Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3904
               },
@@ -415,8 +375,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T12:47:54.498Z",
-                "updated_at": "2019-01-29T10:09:33.373Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3904
               },
@@ -443,8 +401,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T12:49:39.311Z",
-                "updated_at": "2019-01-29T10:19:56.594Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3904
               },
@@ -471,8 +427,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T12:45:54.303Z",
-                "updated_at": "2019-02-19T14:04:53.947Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3904
               },
@@ -499,8 +453,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T12:52:54.562Z",
-                "updated_at": "2019-01-29T10:21:07.061Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3904
               },
@@ -535,8 +487,6 @@
         "x": 66,
         "y": 7,
         "my_module_group_id": 1195,
-        "created_at": "2018-12-24T12:27:59.858Z",
-        "updated_at": "2018-12-24T13:43:31.284Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -585,13 +535,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-12-24T12:27:59.867Z",
-            "updated_at": "2019-02-20T07:29:26.888Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -607,8 +554,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T12:31:41.933Z",
-                "updated_at": "2019-02-20T07:28:19.933Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3903
               },
@@ -619,8 +564,6 @@
                 {
                   "asset": {
                     "id": 3734,
-                    "created_at": "2019-02-20T07:28:16.226Z",
-                    "updated_at": "2019-02-20T07:28:19.924Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 12542,
@@ -652,8 +595,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T12:39:15.168Z",
-                "updated_at": "2018-12-24T12:39:15.168Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3903
               },
@@ -680,8 +621,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T12:38:33.920Z",
-                "updated_at": "2019-02-20T07:30:20.395Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3903
               },
@@ -692,8 +631,6 @@
                 {
                   "asset": {
                     "id": 3735,
-                    "created_at": "2019-02-20T07:29:26.573Z",
-                    "updated_at": "2019-02-20T07:30:20.386Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 19250,
@@ -733,8 +670,6 @@
         "x": 0,
         "y": 7,
         "my_module_group_id": 1195,
-        "created_at": "2018-12-24T11:00:55.170Z",
-        "updated_at": "2018-12-24T13:43:31.287Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -778,13 +713,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-12-24T11:00:55.177Z",
-            "updated_at": "2019-02-20T07:25:44.713Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -800,8 +732,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T11:04:34.946Z",
-                "updated_at": "2019-01-29T10:02:37.258Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3902
               },
@@ -828,8 +758,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T11:12:28.609Z",
-                "updated_at": "2019-01-29T10:02:55.233Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3902
               },
@@ -849,8 +777,6 @@
                 {
                   "table": {
                     "id": 685,
-                    "created_at": "2018-12-24T11:20:43.674Z",
-                    "updated_at": "2019-01-29T10:02:55.216Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "For 10 mL separating gel:",
@@ -866,8 +792,6 @@
                       "id": 972,
                       "name": "Guideline:",
                       "step_id": 5249,
-                      "created_at": "2018-12-24T11:23:58.433Z",
-                      "updated_at": "2018-12-24T11:23:58.433Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -877,8 +801,6 @@
                         "text": "Prepare the gel solution in a small beaker. AP and TEMED must be added right before each use.",
                         "checked": false,
                         "checklist_id": 972,
-                        "created_at": "2018-12-24T11:23:58.434Z",
-                        "updated_at": "2018-12-24T11:23:58.434Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -888,8 +810,6 @@
                         "text": "Swirl the solution gently but thoroughly.",
                         "checked": false,
                         "checklist_id": 972,
-                        "created_at": "2018-12-24T11:23:58.442Z",
-                        "updated_at": "2018-12-24T11:23:58.442Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -899,8 +819,6 @@
                         "text": "Pipette appropriate amount of separating gel solution (listed above) into the gap between the glass plates.",
                         "checked": false,
                         "checklist_id": 972,
-                        "created_at": "2018-12-24T11:23:58.448Z",
-                        "updated_at": "2018-12-24T11:23:58.448Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -910,8 +828,6 @@
                         "text": "To make the top of the separating gel be horizontal, fill in water (either isopropanol) into the gap until a overflow. Water also prevents contact with oxygen, which inhibits polymerization.",
                         "checked": false,
                         "checklist_id": 972,
-                        "created_at": "2018-12-24T11:23:58.453Z",
-                        "updated_at": "2018-12-24T11:26:09.996Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -921,8 +837,6 @@
                         "text": "Wait for 20-30min to let it gelate.",
                         "checked": false,
                         "checklist_id": 972,
-                        "created_at": "2018-12-24T11:23:58.459Z",
-                        "updated_at": "2018-12-24T11:23:58.459Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -941,8 +855,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T11:30:55.051Z",
-                "updated_at": "2019-02-20T07:26:19.503Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3902
               },
@@ -953,8 +865,6 @@
                 {
                   "asset": {
                     "id": 3733,
-                    "created_at": "2019-02-20T07:25:44.445Z",
-                    "updated_at": "2019-02-20T07:26:19.494Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 48073,
@@ -982,8 +892,6 @@
                       "id": 973,
                       "name": "Guideline",
                       "step_id": 5250,
-                      "created_at": "2018-12-24T11:30:55.053Z",
-                      "updated_at": "2018-12-24T11:30:55.053Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -993,8 +901,6 @@
                         "text": "Discard the water and you can see separating gel left.",
                         "checked": false,
                         "checklist_id": 973,
-                        "created_at": "2018-12-24T11:30:55.054Z",
-                        "updated_at": "2018-12-24T11:30:55.054Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1004,8 +910,6 @@
                         "text": "Pipette in stacking gel until an overflow.",
                         "checked": false,
                         "checklist_id": 973,
-                        "created_at": "2018-12-24T11:30:55.060Z",
-                        "updated_at": "2018-12-24T11:30:55.060Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1015,8 +919,6 @@
                         "text": "Insert the well-forming comb without trapping air under the teeth. Wait for 20-30min to let it gelate.",
                         "checked": false,
                         "checklist_id": 973,
-                        "created_at": "2018-12-24T11:30:55.065Z",
-                        "updated_at": "2018-12-24T11:30:55.065Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1026,8 +928,6 @@
                         "text": "Make sure a complete gelation of the stacking gel and take out the comb.",
                         "checked": false,
                         "checklist_id": 973,
-                        "created_at": "2018-12-24T11:30:55.071Z",
-                        "updated_at": "2018-12-24T11:30:55.071Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1037,8 +937,6 @@
                         "text": "Take the glass plates out of the casting frame and set them in the cell buffer dam.",
                         "checked": false,
                         "checklist_id": 973,
-                        "created_at": "2018-12-24T11:30:55.076Z",
-                        "updated_at": "2018-12-24T11:30:55.076Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -1048,8 +946,6 @@
                         "text": "Pour the running buffer (electrophoresis buffer) into the inner chamber and keep pouring after overflow untill the buffer surface reaches the required level in the outer chamber.",
                         "checked": false,
                         "checklist_id": 973,
-                        "created_at": "2018-12-24T11:30:55.081Z",
-                        "updated_at": "2018-12-24T11:30:55.081Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 5
@@ -1076,8 +972,6 @@
         "x": 33,
         "y": 7,
         "my_module_group_id": 1195,
-        "created_at": "2018-12-24T10:57:17.160Z",
-        "updated_at": "2018-12-24T13:43:31.290Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -1121,13 +1015,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-12-24T10:57:17.170Z",
-            "updated_at": "2019-02-19T14:03:57.520Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -1143,8 +1034,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T11:48:19.756Z",
-                "updated_at": "2019-02-19T14:03:57.459Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3901
               },
@@ -1171,8 +1060,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T11:47:05.158Z",
-                "updated_at": "2019-01-29T10:05:04.115Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3901
               },
@@ -1199,8 +1086,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-24T11:44:32.382Z",
-                "updated_at": "2019-02-19T14:03:43.661Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3901
               },
@@ -1230,8 +1115,6 @@
   "my_module_groups": [
     {
       "id": 1195,
-      "created_at": "2018-12-24T13:43:31.272Z",
-      "updated_at": "2018-12-24T13:43:31.272Z",
       "created_by_id": 202,
       "experiment_id": 497
     }
