@@ -62,9 +62,7 @@ class User < ApplicationRecord
   has_many :user_group_memberships, dependent: :destroy
   has_many :user_groups, through: :user_group_memberships
   has_many :teams, through: :user_assignments, source: :assignable, source_type: 'Team'
-  has_many :projects, through: :user_assignments, source: :assignable, source_type: 'Project'
   has_many :user_my_modules, inverse_of: :user
-  has_many :my_modules, through: :user_assignments, source: :assignable, source_type: 'MyModule'
   has_many :comments, inverse_of: :user
   has_many :activities, inverse_of: :owner, foreign_key: 'owner_id'
   has_many :results, inverse_of: :user
