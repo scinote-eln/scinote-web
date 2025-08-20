@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'activerecord-import/base'
+require 'activerecord-import/active_record/adapters/postgresql_adapter'
+
 class MoveEveryOneElseAssignmentToTeamAssignments < ActiveRecord::Migration[7.2]
   def up
     # rubocop:disable Metrics/BlockLength
@@ -141,6 +144,7 @@ class MoveEveryOneElseAssignmentToTeamAssignments < ActiveRecord::Migration[7.2]
 
     return if scope.blank?
 
+    record.skip_user_assignments = true
     record.team_assignments.create!(team_id: team_id, user_role: scope.first.user_role)
     scope.delete_all
   end

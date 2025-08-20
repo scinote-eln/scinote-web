@@ -720,19 +720,19 @@ class Protocol < ApplicationRecord
   private
 
   def after_user_assignment_changed(user_assignment)
-    return unless in_repository_published_original?
+    return if skip_user_assignments || !in_repository_published_original?
 
     sync_child_protocol_assignment(user_assignment)
   end
 
   def after_user_group_assignment_changed(user_group_assignment)
-    return unless in_repository_published_original?
+    return if skip_user_assignments || !in_repository_published_original?
 
     sync_child_protocol_assignment(user_group_assignment)
   end
 
   def after_team_assignment_changed(user_group_assignment)
-    return unless in_repository_published_original?
+    return if skip_user_assignments || !in_repository_published_original?
 
     sync_child_protocol_assignment(user_group_assignment)
   end
