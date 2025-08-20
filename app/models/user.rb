@@ -463,6 +463,7 @@ class User < ApplicationRecord
   # Returns a hash with user statistics
   def statistics
     statistics = {}
+    projects = Project.readable_by_user(self, teams)
     statistics[:number_of_teams] = teams.count
     statistics[:number_of_projects] = projects.count
     number_of_experiments = 0
