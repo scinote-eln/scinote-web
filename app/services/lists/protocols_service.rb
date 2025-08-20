@@ -22,6 +22,11 @@ module Lists
       @records = Protocol.where('protocols.id IN (?) OR protocols.id IN (?) OR protocols.id IN (?)',
                                 original_without_versions, published_versions, new_drafts)
 
+      user_assignments = @records.joins(:user_assignments).select(:assignable_id, :user_id)
+      user_group_assignments = @records.joins(user_group_assignments: { user_group: :user_group_memberships })
+                                       .select('user_group_assignments.assignable_id, user_group_memberships.user_id')
+      team_assignments = @records.joins(team_assignments: { team: :user_assignments }).select('team_assignments.assignable_id, user_assignments.user_id')
+
       @records = @records.preload(:parent, :latest_published_version, :draft,
                                   :protocol_keywords, user_assignments: %i(user user_role))
                          .joins("LEFT OUTER JOIN protocols protocol_versions " \
@@ -48,9 +53,8 @@ module Lists
                                 'ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
                          .joins('LEFT OUTER JOIN "users" "archived_users" ON "archived_users"."id" = "protocols"."archived_by_id"')
                          .joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."published_by_id"')
-                         .joins('LEFT OUTER JOIN "user_assignments" "all_user_assignments" ' \
-                                'ON "all_user_assignments"."assignable_type" = \'Protocol\' ' \
-                                'AND "all_user_assignments"."assignable_id" = "protocols"."id"')
+                         .joins("LEFT JOIN (#{user_assignments.to_sql} UNION #{team_assignments.to_sql} UNION #{user_group_assignments.to_sql})
+                                 all_assigned_users ON all_assigned_users.assignable_id = protocols.id")
                          .group('"protocols"."id"')
                          .select(
                            '"protocols".*',
@@ -61,7 +65,7 @@ module Lists
                            "THEN 0 ELSE COUNT(DISTINCT(\"protocol_versions\".\"id\")) + 1 " \
                            "END AS nr_of_versions",
                            'COUNT(DISTINCT("linked_task_protocols"."id")) AS nr_of_linked_tasks',
-                           'COUNT(DISTINCT("all_user_assignments"."id")) AS "nr_of_assigned_users"',
+                           'COUNT(DISTINCT all_assigned_users.user_id) AS "nr_of_assigned_users"',
                            'MAX("users"."full_name") AS "full_username_str"', # "Hack" to get single username
                            'MAX("archived_users"."full_name") AS "archived_full_username_str"'
                          )
@@ -107,9 +111,7 @@ module Lists
         @records = @records.where(protocols: { published_by_id: @filters[:published_by].values })
       end
 
-      if @filters[:members].present?
-        @records = @records.where(all_user_assignments: { user_id: @filters[:members].values })
-      end
+      @records = @records.where(all_assigned_users: { user_id: @filters[:members].values }) if @filters[:members].present?
 
       if @filters[:has_draft].present?
         @records =
