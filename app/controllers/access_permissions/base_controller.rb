@@ -75,6 +75,8 @@ module AccessPermissions
       end
 
       propagate_job
+
+      render json: { user_role_id: @assignment.user_role_id }, status: :ok
     rescue ActiveRecord::RecordInvalid
       render json: { flash: t('access_permissions.update.failure') }, status: :unprocessable_entity
     end
@@ -106,7 +108,7 @@ module AccessPermissions
     end
 
     def show_user_group_assignments
-      render json: @model.user_group_assignments.includes(:user_role, :user_group).order('user_groups.name ASC'),
+      render json: @model.user_group_assignments.where(team: current_team).includes(:user_role, :user_group).order('user_groups.name ASC'),
              each_serializer: UserGroupAssignmentSerializer, user: current_user
     end
 
@@ -122,7 +124,7 @@ module AccessPermissions
     private
 
     def model_parameter
-      @model.class.permission_class.name.parameterize.to_sym
+      @model.class.permission_class.model_name.param_key
     end
 
     def manage_permission_constant

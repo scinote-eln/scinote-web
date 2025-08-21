@@ -50,8 +50,8 @@ module Shareable
   end
 
   def can_manage_shared?(user)
-    globally_shared? ||
-      (shared_with?(user.current_team) && user.current_team.permission_granted?(user, TeamPermissions::MANAGE))
+    (globally_shared? || shared_with?(user.current_team)) &&
+      user.current_team.permission_granted?(user, TeamPermissions::MANAGE)
   end
 
   def shareable_write?
@@ -98,5 +98,27 @@ module Shareable
     return false if self.team == team
 
     shared_read? || team_shared_objects.exists?(team: team, permission_level: :shared_read)
+  end
+
+  def demote_all_sharing_assignments_to_viewer!(for_team: nil)
+    # take into account special roles with no read permission, and do not upgrade them to viewer
+    read_permission = "#{self.class.permission_class}Permissions".constantize::READ
+
+    teams = for_team ? Team.where(id: for_team.id).where.not(id: team.id) : Team.where.not(id: team.id)
+
+    [user_assignments, user_group_assignments, team_assignments].each do |assignments|
+      assignments.joins(:user_role)
+                 .where(team_id: teams.select(:id))
+                 .where(['user_roles.permissions @> ARRAY[?]::varchar[]', [read_permission]])
+                 .update!(user_role: UserRole.find_predefined_viewer_role)
+    end
+  end
+
+  def destroy_all_sharing_assignments!(for_team: nil)
+    teams = for_team ? Team.where(id: for_team.id).where.not(id: team.id) : Team.where.not(id: team.id)
+
+    user_assignments.where(team_id: teams.select(:id)).destroy_all
+    user_group_assignments.where(team_id: teams.select(:id)).destroy_all
+    team_assignments.where(team_id: teams.select(:id)).destroy_all
   end
 end

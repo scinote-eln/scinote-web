@@ -2927,7 +2927,7 @@ en:
           select_valid_value: 'Select a valid date or date-time value'
           browser_alert_message: 'You have made some changes, are you sure you want to leave this page?'
       errors:
-        load_error_header: 'Your workspace does not have the necessary permissions to view the details of this item.'
+        load_error_header: 'You do not have the necessary permissions to view the details of this item.'
         load_error_description: 'To obtain access, reach out to your workspace administrator.'
     highlight_component:
       information_label: 'Information'
@@ -3481,6 +3481,7 @@ en:
         account: "Account"
         teams: "Workspaces"
         webhooks: "Webhooks"
+        groups: "Groups"
         account_nav:
           profile: "My profile"
           preferences: "My preferences"

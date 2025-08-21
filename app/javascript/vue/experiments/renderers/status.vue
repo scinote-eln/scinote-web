@@ -39,9 +39,16 @@ export default {
   },
   methods: {
     optionRenderer(option) {
+      let color = 'bg-sn-grey-500';
+      if (option[0] === 'in_progress') {
+        color = 'bg-sn-science-blue';
+      } else if (option[0] === 'done') {
+        color = 'bg-sn-alert-green';
+      }
+
       return `
         <div class="flex items-center gap-2">
-          <div class="${this.statusColor(option[0])} w-3 h-3 rounded-full"></div>
+          <div class="${color} w-3 h-3 rounded-full"></div>
           <span>${option[1]}</span>
         </div>`;
     },

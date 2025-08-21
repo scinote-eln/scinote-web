@@ -34,7 +34,7 @@ module Dashboard
                              .search_by_name(current_user, current_team, params[:query]).select(:id, :name)
 
       unless params[:mode] == 'team'
-        projects = projects.where(id: current_user.my_modules.joins(:experiment)
+        projects = projects.where(id: MyModule.readable_by_user(current_user).joins(:experiment)
           .group(:project_id).select(:project_id).pluck(:project_id))
       end
       render json: projects.map { |i| { value: i.id, label: escape_input(i.name) } }, status: :ok
@@ -51,7 +51,7 @@ module Dashboard
                             .search_by_name(current_user, current_team, params[:query]).select(:id, :name)
 
       unless params[:mode] == 'team'
-        experiments = experiments.where(id: current_user.my_modules
+        experiments = experiments.where(id: MyModule.readable_by_user(current_user)
           .group(:experiment_id).select(:experiment_id).pluck(:experiment_id))
       end
       render json: experiments.map { |i| { value: i.id, label: escape_input(i.name) } }, status: :ok

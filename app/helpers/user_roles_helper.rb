@@ -7,7 +7,7 @@ module UserRolesHelper
       viewer_role = UserRole.find_predefined_viewer_role
       roles = [[viewer_role.name, viewer_role.id]]
     else
-      permission_group = "#{object.class.name}Permissions".constantize
+      permission_group = "#{object.class.permission_class}Permissions".constantize
       permissions = permission_group.constants.map { |const| permission_group.const_get(const) }
 
       roles = user_roles_subset_by_permissions(permissions).order(id: :asc).pluck(:name, :id)

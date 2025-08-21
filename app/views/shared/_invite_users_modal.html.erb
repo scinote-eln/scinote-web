@@ -41,11 +41,19 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
   <%= "data-team-role=#{role}" if type.in?(%w(invite_with_team_selector_and_role)) %>
 >
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="modal-content" data-e2e="e2e-MD-settings-members-invite">
 
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
-        <h4 class="modal-title">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          data-e2e="e2e-BT-settings-members-inviteModal-close"
+        >
+          <i class="sn-icon sn-icon-close"></i>
+        </button>
+        <h4 class="modal-title" data-e2e="e2e-TX-settings-members-inviteModal-title">
           <% if text_title %>
             <%= text_title %>
           <% else %>
@@ -77,8 +85,8 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
             <h4 class="heading">
               <span><%= t('invite_users.new_members.input_label') %></span>
             </h4>
-            <div class="emails-selector" >
-              <div class="select-container">
+            <div class="emails-selector">
+              <div class="select-container" data-e2e="e2e-IF-settings-members-inviteModal-emails">
                 <select name="emails[]" class="emails-input"></select>
               </div>
               <p><small><%= t('invite_users.new_members.input_subtitle') %></small></p>
@@ -122,6 +130,7 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
                     data-select-all = "false"
                     data-toggle-target = "#role-select-container"
                     data-ajax-url = "<%= invitable_teams_path %>"
+                    data-e2e="e2e-DD-settings-members-inviteModal-team"
                   ></select>
                 </div>
 
@@ -129,7 +138,7 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
                   <h4 class="heading">
                     <span><%= t('invite_users.select_team_role') %></span>
                   </h4>
-                  <div class="relative">
+                  <div class="relative" data-e2e="e2e-DD-settings-members-inviteModal-role">
                     <% normal_user_role = UserRole.find_predefined_normal_user_role %>
                     <%= select_tag "role-id",
                       options_for_select(
@@ -155,14 +164,23 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
 
       <div class="modal-footer">
         <div data-role="step-form">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+            data-e2e="e2e-BT-settings-members-inviteModal-cancel"
+          >
             <%= t('general.cancel') %>
           </button>
 
           <!-- Invite buttons -->
-          <button type="button" class="btn btn-primary"
-                  data-role="invite-btn" data-action="invite"
-                  disabled="disabled">
+          <button type="button"
+                  class="btn btn-primary"
+                  data-role="invite-btn"
+                  data-action="invite"
+                  disabled="disabled"
+                  data-e2e="e2e-BT-settings-members-inviteModal-invite"
+          >
             <%= t('invite_users.invite_btn') %>
           </button>
 

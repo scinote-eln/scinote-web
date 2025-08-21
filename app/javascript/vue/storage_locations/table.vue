@@ -66,6 +66,7 @@ import ShareObjectModal from '../shared/share_modal.vue';
 import DescriptionRenderer from './renderers/description.vue';
 import NameRenderer from './renderers/storage_name_renderer.vue';
 import FindRowModal from './modals/find_row.vue';
+import escapeHtml from '../shared/escape_html.js';
 
 export default {
   name: 'RepositoriesTable',
@@ -264,7 +265,7 @@ export default {
       const storageLocationType = rows[0].container ? this.i18n.t('storage_locations.container') : this.i18n.t('storage_locations.location');
       const description = `
         <p>${this.i18n.t('storage_locations.index.delete_modal.description_1_html',
-    { name: rows[0].name, type: storageLocationType, num_of_items: event.number_of_items })}</p>
+    { name: escapeHtml(rows[0].name), type: storageLocationType, num_of_items: event.number_of_items })}</p>
         <p>${this.i18n.t('storage_locations.index.delete_modal.description_2_html')}</p>`;
 
       this.storageLocationDeleteDescription = description;
