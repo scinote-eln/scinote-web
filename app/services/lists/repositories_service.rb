@@ -5,10 +5,13 @@ module Lists
     private
 
     def fetch_records
-      user_assignments = @raw_data.joins(:user_assignments).select(:assignable_id, :user_id)
+      user_assignments = @raw_data.joins(:user_assignments).where(user_assignments: { team_id: @user.current_team.id }).select(:assignable_id, :user_id)
       user_group_assignments = @raw_data.joins(user_group_assignments: { user_group: :user_group_memberships })
+                                        .where(user_group_assignments: { team_id: @user.current_team.id })
                                         .select('user_group_assignments.assignable_id, user_group_memberships.user_id')
-      team_assignments = @raw_data.joins(team_assignments: { team: :user_assignments }).select('team_assignments.assignable_id, user_assignments.user_id')
+      team_assignments = @raw_data.joins(team_assignments: { team: :user_assignments })
+                                  .where(team_assignments: { team_id: @user.current_team.id })
+                                  .select('team_assignments.assignable_id, user_assignments.user_id')
 
       @records = @raw_data.joins('LEFT OUTER JOIN users AS creators ' \
                                  'ON repositories.created_by_id = creators.id')
