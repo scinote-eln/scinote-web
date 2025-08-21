@@ -4,6 +4,7 @@
       <form class="tiny-mce-editor" role="form" :action="updateUrl" accept-charset="UTF-8" data-remote="true" method="post">
         <input type="hidden" name="_method" value="patch">
         <input type="hidden" name="format" value="json">
+        <input type="hidden" name="output" value="object">
         <div class="hidden tinymce-cancel-button tox-mbtn" tabindex="-1">
         <button type="button" tabindex="-1">
           <span class="sn-icon sn-icon-close"></span>
@@ -28,7 +29,7 @@
             :data-placeholder="placeholder"
             :data-tinymce-init="`tinymce-${objectType}-description-${objectId}`">
         </div>
-        <div class="flex tinymce-editor-container">
+        <div class="flex w-full tinymce-editor-container">
           <textarea :id="`${objectType}_textarea_${objectId}`"
                     class="form-control hidden"
                     autocomplete="off"
@@ -143,6 +144,9 @@ export default {
           this.active = true;
           this.initCharacterCount();
           this.$emit('editingEnabled');
+        },
+        onInput: () => {
+          this.$emit('input');
         },
         placeholder: this.placeholder,
         assignableMyModuleId: this.assignableMyModuleId

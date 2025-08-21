@@ -412,6 +412,10 @@ window.TinyMCE = (() => {
               return true;
             });
 
+            editor.on('input', () => {
+              if (options.onInput) { options.onInput(); }
+            });
+
             editor.on('Dirty', () => {
               makeItDirty(editor);
             });
