@@ -47,7 +47,8 @@ class FormFieldValue < ApplicationRecord
     errors.add(:value, :not_unique_latest)
   end
 
-  def run_observers
-    AutomationObservers::ProtocolContentChangedAutomationObserver.new(form_response.step, created_by).call
+  # Override for ObservableModel
+  def changed_by
+    created_by
   end
 end

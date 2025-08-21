@@ -16,6 +16,7 @@ class Protocol < ApplicationRecord
   include Assignable
   include PermissionCheckableModel
   include TinyMceImages
+  include ObservableModel
 
   before_create -> { self.skip_user_assignments = true }, if: -> { in_module? }
 

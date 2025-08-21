@@ -19,7 +19,7 @@
                     <td class="py-3 pl-6">{{ i18n.t(`team_automations.sub_group_element.${subGroupElement}`) }}</td>
                     <td class="p-3">
                       <div class="sci-toggle-checkbox-container">
-                        <input v-model="teamAutomationSettings[subGroupElement]" type="checkbox" class="sci-toggle-checkbox" @change="setTeamAutomationsSettings"/>
+                        <input v-model="teamAutomationSettings[group][subGroup][subGroupElement]" type="checkbox" class="sci-toggle-checkbox" @change="setTeamAutomationsSettings"/>
                         <label class="sci-toggle-checkbox-label"></label>
                       </div>
                     </td>
@@ -41,7 +41,7 @@ import axios from '../../packs/custom_axios.js';
 
 
 export default {
-  name: 'StorageLocationsContainer',
+  name: 'TeamAutomationsSettingsContainer',
   components: {},
   props: {
     teamUrl: String,
@@ -57,12 +57,21 @@ export default {
   },
   computed: {
     emptySettings() {
-      return Object.entries(this.teamObject.teamAutomationGroups).reduce((settings, [_group, subGroups]) => {
-        Object.values(subGroups).flat().forEach(element => {
-          settings[element] = false;
-        });
-        return settings;
-      }, {});
+      const result = {};
+
+      for (const [group, subGroups] of Object.entries(this.teamObject.teamAutomationGroups)) {
+        result[group] = {};
+
+        for (const [subGroup, settingsArray] of Object.entries(subGroups)) {
+          result[group][subGroup] = {};
+
+          settingsArray.forEach(setting => {
+            result[group][subGroup][setting] = false;
+          });
+        }
+      }
+
+      return result;
     }
   },
   methods: {

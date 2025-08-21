@@ -476,8 +476,4 @@ class Asset < ApplicationRecord
   def reset_file_processing
     self.file_processing = false
   end
-
-  def run_observers
-    AutomationObservers::ProtocolContentChangedAutomationObserver.new(step, last_modified_by || created_by).call
-  end
 end

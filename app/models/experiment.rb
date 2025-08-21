@@ -567,13 +567,6 @@ class Experiment < ApplicationRecord
     self.due_date_notification_sent = false
   end
 
-  def run_observers
-    if status_moved_forward? || saved_change_to_project_id || (saved_change_to_archived && !archived)
-      AutomationObservers::ExperimentStatusChangeAutomationObserver.new(self, last_modified_by).call
-    end
-    AutomationObservers::AllExperimentsDoneAutomationObserver.new(project, last_modified_by).call if status_moved_forward?
-  end
-
   def log_activity(type_of, current_user, my_module)
     Activities::CreateActivityService
       .call(activity_type: type_of,

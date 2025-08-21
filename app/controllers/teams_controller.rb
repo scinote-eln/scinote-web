@@ -133,7 +133,7 @@ class TeamsController < ApplicationController
   def settings
     render json: {
       teamName: @team.name,
-      teamAutomationGroups: Extends::TEAM_AUTOMATION_GROUPS,
+      teamAutomationGroups: Extends::TEAM_AUTOMATIONS_GROUPS,
       teamSettings: @team.settings,
       updateUrl: update_settings_team_path(@team)
     }
