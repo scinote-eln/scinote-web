@@ -88,7 +88,8 @@ module UserAssignments
 
       new_assignment = parent_assignment.class.find_or_initialize_by(
         "#{type}_id": parent_assignment.public_send(type).id,
-        assignable: resource
+        assignable: resource,
+        team_id: parent_assignment.team_id
       )
 
       return if new_assignment.manually_assigned?
