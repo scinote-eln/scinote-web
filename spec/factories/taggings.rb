@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :my_module_tag do
+  factory :tagging do
     tag
-    my_module
+    association :taggable, factory: :my_module
   end
 end

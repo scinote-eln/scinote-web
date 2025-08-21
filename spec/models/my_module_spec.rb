@@ -46,7 +46,7 @@ describe MyModule, type: :model do
     it { should belong_to(:archived_by).class_name('User').optional }
     it { should belong_to(:restored_by).class_name('User').optional }
     it { should have_many :results }
-    it { should have_many :my_module_tags }
+    it { should have_many :taggings }
     it { should have_many :tags }
     it { should have_many :task_comments }
     it { should have_many :my_modules }

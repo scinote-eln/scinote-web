@@ -62,7 +62,6 @@ class Project < ApplicationRecord
            class_name: 'Experiment'
   has_many :project_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :activities, inverse_of: :project
-  has_many :tags, inverse_of: :project
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy
 

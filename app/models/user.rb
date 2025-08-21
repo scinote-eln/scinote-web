@@ -95,8 +95,8 @@ class User < ApplicationRecord
   has_many :created_my_module_groups,
            class_name: 'MyModuleGroup',
            foreign_key: 'created_by_id'
-  has_many :created_my_module_tags,
-           class_name: 'MyModuleTag',
+  has_many :created_taggings,
+           class_name: 'Tagging',
            foreign_key: 'created_by_id'
   has_many :created_my_modules,
            class_name: 'MyModule',
