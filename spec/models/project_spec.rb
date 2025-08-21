@@ -47,7 +47,6 @@ describe Project, type: :model do
     it { should have_many :experiments }
     it { should have_many :project_comments }
     it { should have_many :activities }
-    it { should have_many :tags }
     it { should have_many :reports }
     it { should have_many :report_elements }
   end
