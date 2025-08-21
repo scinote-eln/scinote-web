@@ -1,0 +1,14 @@
+@layer components {
+  .numerical-nested-list ol:not([style*="list-style-type"]) {
+    counter-reset: item;
+  }
+
+  .numerical-nested-list ol:not([style*="list-style-type"]) li {
+    @apply block
+  }
+
+  .numerical-nested-list ol:not([style*="list-style-type"]) li::before {
+    content: counters(item, ".") ". ";
+    counter-increment: item;
+  }
+}
