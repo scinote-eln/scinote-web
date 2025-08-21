@@ -35,8 +35,7 @@ class MyModulesController < ApplicationController
         my_modules = Lists::MyModulesService.new(@experiment.my_modules.readable_by_user(current_user),
                                                  params.merge(experiment: @experiment),
                                                  user: current_user).call
-        render json: my_modules, each_serializer: Lists::MyModuleSerializer, user: current_user,
-               meta: pagination_dict(my_modules)
+        render json: my_modules, each_serializer: Lists::MyModuleSerializer, user: current_user, meta: pagination_dict(my_modules)
       end
       format.html do
         save_view_type('table')
@@ -55,6 +54,12 @@ class MyModulesController < ApplicationController
                                                                    users: assigned_users }
       )
     }
+  end
+
+  def assigned_users
+    render json: @my_module.users,
+           each_serializer: UserSerializer,
+           user: current_user
   end
 
   def create
@@ -100,7 +105,7 @@ class MyModulesController < ApplicationController
         }
       end
       format.json do
-        render json: @my_module, serializer: Lists::MyModuleSerializer, controller: self, user: current_user
+        render json: @my_module, serializer: MyModuleSerializer, controller: self, user: current_user
       end
     end
   end
@@ -214,47 +219,51 @@ class MyModulesController < ApplicationController
       end
     end
     if saved
-      alerts = []
-      alerts << 'alert-green' if @my_module.completed?
-      unless @my_module.completed?
-        alerts << 'alert-red' if @my_module.is_overdue?
-        alerts << 'alert-yellow' if @my_module.is_one_day_prior?
+      if params[:output] == 'object'
+        render json: @my_module, serializer: MyModuleSerializer, controller: self, user: current_user
+      else
+        alerts = []
+        alerts << 'alert-green' if @my_module.completed?
+        unless @my_module.completed?
+          alerts << 'alert-red' if @my_module.is_overdue?
+          alerts << 'alert-yellow' if @my_module.is_one_day_prior?
+        end
+        render json: {
+          status: :ok,
+          start_date_label: render_to_string(
+            partial: 'my_modules/start_date_label',
+            formats: :html,
+            locals: { my_module: @my_module, start_date_editable: true }
+          ),
+          due_date_label: render_to_string(
+            partial: 'my_modules/due_date_label',
+            formats: :html,
+            locals: { my_module: @my_module, due_date_editable: true }
+          ),
+          card_due_date_label: render_to_string(
+            partial: 'my_modules/card_due_date_label',
+            formats: :html,
+            locals: { my_module: @my_module }
+          ),
+          table_due_date_label: {
+            html: render_to_string(partial: 'experiments/table_due_date_label',
+              formats: :html,
+              locals: { my_module: @my_module, user: current_user }),
+            due_status: my_module_due_status(@my_module)
+          },
+          module_header_due_date: render_to_string(
+            partial: 'my_modules/module_header_due_date',
+            formats: :html,
+            locals: { my_module: @my_module }
+          ),
+          description_label: render_to_string(
+            partial: 'my_modules/description_label',
+            formats: :html,
+            locals: { my_module: @my_module }
+          ),
+          alerts: alerts
+        }
       end
-      render json: {
-        status: :ok,
-        start_date_label: render_to_string(
-          partial: 'my_modules/start_date_label',
-          formats: :html,
-          locals: { my_module: @my_module, start_date_editable: true }
-        ),
-        due_date_label: render_to_string(
-          partial: 'my_modules/due_date_label',
-          formats: :html,
-          locals: { my_module: @my_module, due_date_editable: true }
-        ),
-        card_due_date_label: render_to_string(
-          partial: 'my_modules/card_due_date_label',
-          formats: :html,
-          locals: { my_module: @my_module }
-        ),
-        table_due_date_label: {
-          html: render_to_string(partial: 'experiments/table_due_date_label',
-                                 formats: :html,
-                                 locals: { my_module: @my_module, user: current_user }),
-          due_status: my_module_due_status(@my_module)
-        },
-        module_header_due_date: render_to_string(
-          partial: 'my_modules/module_header_due_date',
-          formats: :html,
-          locals: { my_module: @my_module }
-        ),
-        description_label: render_to_string(
-          partial: 'my_modules/description_label',
-          formats: :html,
-          locals: { my_module: @my_module }
-        ),
-        alerts: alerts
-      }
     else
       render json: @my_module.errors, status: :unprocessable_entity
     end

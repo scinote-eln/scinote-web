@@ -133,6 +133,14 @@
   }
 }
 
+.dp__main.no-border {
+  .dp__input {
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+}
+
 .date-time-picker {
   &.size-mb {
     .dp__input {
