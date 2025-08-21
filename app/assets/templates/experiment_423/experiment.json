@@ -11,8 +11,6 @@
     "archived_on": null,
     "restored_by_id": null,
     "restored_on": null,
-    "created_at": "2018-11-08T10:28:48.389Z",
-    "updated_at": "2018-12-21T13:26:16.207Z",
     "uuid": "37198411-2ad0-4198-b680-47f3b455ce0d"
   },
   "my_modules": [
@@ -25,8 +23,6 @@
         "x": 72,
         "y": 0,
         "my_module_group_id": 1190,
-        "created_at": "2018-11-08T10:28:49.322Z",
-        "updated_at": "2018-12-21T13:25:20.391Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -70,13 +66,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-08T10:28:49.390Z",
-            "updated_at": "2019-02-20T07:39:44.494Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -92,8 +85,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-08T10:28:49.408Z",
-                "updated_at": "2018-12-21T13:31:50.804Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3407
               },
@@ -120,8 +111,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-08T10:28:49.496Z",
-                "updated_at": "2019-02-07T10:46:31.811Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3407
               },
@@ -141,8 +130,6 @@
                 {
                   "table": {
                     "id": 555,
-                    "created_at": "2018-11-08T10:28:49.522Z",
-                    "updated_at": "2019-02-07T10:46:31.797Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Separation options",
@@ -162,8 +149,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-19T07:24:14.116Z",
-                "updated_at": "2019-02-20T07:40:29.217Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3407
               },
@@ -174,8 +159,6 @@
                 {
                   "asset": {
                     "id": 3754,
-                    "created_at": "2019-02-20T07:39:44.265Z",
-                    "updated_at": "2019-02-20T07:40:29.203Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 12331,
@@ -215,8 +198,6 @@
         "x": 36,
         "y": 0,
         "my_module_group_id": 1190,
-        "created_at": "2018-11-08T10:28:48.971Z",
-        "updated_at": "2018-12-21T13:25:20.382Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -260,13 +241,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-08T10:28:49.025Z",
-            "updated_at": "2019-02-19T14:49:30.738Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -282,8 +260,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-08T10:28:49.261Z",
-                "updated_at": "2018-12-24T09:19:05.983Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3405
               },
@@ -306,8 +282,6 @@
                       "id": 968,
                       "name": "Guideline:",
                       "step_id": 4286,
-                      "created_at": "2018-12-21T13:27:09.411Z",
-                      "updated_at": "2018-12-21T13:27:09.411Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -317,8 +291,6 @@
                         "text": "Equilibrate all materials to the temperature at which the separation will be performed.",
                         "checked": false,
                         "checklist_id": 968,
-                        "created_at": "2018-12-21T13:27:09.413Z",
-                        "updated_at": "2018-12-21T13:27:09.413Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -328,8 +300,6 @@
                         "text": "Eliminate air by flushing column end pieces with buffer. Ensure no air is trapped under the column net. Close column outlet leaving 1–2 cm of the buffer in the column.",
                         "checked": false,
                         "checklist_id": 968,
-                        "created_at": "2018-12-21T13:27:09.421Z",
-                        "updated_at": "2018-12-21T13:27:09.421Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -339,8 +309,6 @@
                         "text": "Gently resuspend the medium. For media not supplied in suspension, use a medium: buffer ratio of approximately 1:2 to produce a suspension for mixing during rehydration. Avoid using magnetic stirrers since they may damage the matrix.",
                         "checked": false,
                         "checklist_id": 968,
-                        "created_at": "2018-12-21T13:27:09.427Z",
-                        "updated_at": "2018-12-21T13:27:09.427Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -359,8 +327,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-08T10:28:49.069Z",
-                "updated_at": "2018-12-21T13:29:08.411Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3405
               },
@@ -387,8 +353,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-08T10:28:49.179Z",
-                "updated_at": "2019-02-19T14:49:30.685Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3405
               },
@@ -423,8 +387,6 @@
         "x": 0,
         "y": 0,
         "my_module_group_id": 1190,
-        "created_at": "2018-11-08T10:28:48.686Z",
-        "updated_at": "2018-12-21T13:25:20.385Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -468,13 +430,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-08T10:28:48.743Z",
-            "updated_at": "2019-02-20T07:39:23.923Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -490,8 +449,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-08T10:28:48.761Z",
-                "updated_at": "2019-02-20T07:39:28.712Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3403
               },
@@ -502,8 +459,6 @@
                 {
                   "asset": {
                     "id": 3753,
-                    "created_at": "2019-02-20T07:39:23.642Z",
-                    "updated_at": "2019-02-20T07:39:28.703Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 29576,
@@ -528,8 +483,6 @@
                 {
                   "table": {
                     "id": 554,
-                    "created_at": "2018-11-08T10:28:48.787Z",
-                    "updated_at": "2018-12-20T13:33:54.646Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Table 1",
@@ -549,8 +502,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-18T14:10:46.319Z",
-                "updated_at": "2018-12-24T09:16:18.589Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3403
               },
@@ -573,8 +524,6 @@
                       "id": 934,
                       "name": "Before use:",
                       "step_id": 5209,
-                      "created_at": "2018-12-18T14:10:46.321Z",
-                      "updated_at": "2018-12-18T14:10:46.321Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -584,8 +533,6 @@
                         "text": "Check the inside of the centrifuge and the rotors to ensure that everything is dry.",
                         "checked": false,
                         "checklist_id": 934,
-                        "created_at": "2018-12-18T14:10:46.323Z",
-                        "updated_at": "2018-12-21T12:47:12.263Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -595,8 +542,6 @@
                         "text": "Check that shock-absorbing pads are in the bottom of the centrifuge buckets.",
                         "checked": false,
                         "checklist_id": 934,
-                        "created_at": "2018-12-18T14:10:46.331Z",
-                        "updated_at": "2018-12-18T14:10:46.331Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -606,8 +551,6 @@
                         "text": "Balance the opposing buckets by weighing them with their tubes on an open two-pan balance.",
                         "checked": false,
                         "checklist_id": 934,
-                        "created_at": "2018-12-18T14:10:46.337Z",
-                        "updated_at": "2018-12-18T14:10:46.337Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -617,8 +560,6 @@
                         "text": "Never fill centrifuge tubes to more than three-quarters capacity.",
                         "checked": false,
                         "checklist_id": 934,
-                        "created_at": "2018-12-18T14:10:46.344Z",
-                        "updated_at": "2018-12-18T14:10:46.344Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -628,8 +569,6 @@
                         "text": "Symmetrically distribute balanced tubes in opposing buckets. Always operate the centrifuge with all buckets in place, even if two opposing buckets are empty.",
                         "checked": false,
                         "checklist_id": 934,
-                        "created_at": "2018-12-18T14:10:46.354Z",
-                        "updated_at": "2018-12-18T14:10:46.354Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -648,8 +587,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-18T14:12:05.603Z",
-                "updated_at": "2019-02-07T10:41:20.533Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3403
               },
@@ -684,8 +621,6 @@
         "x": 105,
         "y": 0,
         "my_module_group_id": 1190,
-        "created_at": "2018-11-08T10:28:49.665Z",
-        "updated_at": "2018-12-21T13:25:20.388Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -725,13 +660,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-08T10:28:49.719Z",
-            "updated_at": "2018-12-24T09:22:25.677Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -747,8 +679,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-19T08:41:05.893Z",
-                "updated_at": "2018-12-24T09:22:25.629Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3409
               },
@@ -771,8 +701,6 @@
                       "id": 970,
                       "name": "Guideline:",
                       "step_id": 5226,
-                      "created_at": "2018-12-21T13:36:26.307Z",
-                      "updated_at": "2018-12-21T13:36:26.307Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -782,8 +710,6 @@
                         "text": "Add 2 µL of 6X SDS loading buffer to 5–10 µL of supernatant from crude extracts, cell lysates or purified fractions as appropriate.",
                         "checked": false,
                         "checklist_id": 970,
-                        "created_at": "2018-12-21T13:36:26.308Z",
-                        "updated_at": "2018-12-21T13:36:26.308Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -793,8 +719,6 @@
                         "text": "Vortex briefly and heat for 5 minutes at +90 to +100 °C.",
                         "checked": false,
                         "checklist_id": 970,
-                        "created_at": "2018-12-21T13:36:26.316Z",
-                        "updated_at": "2018-12-21T13:36:26.316Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -804,8 +728,6 @@
                         "text": "Load the samples onto an SDS-polyacrylamide gel.",
                         "checked": false,
                         "checklist_id": 970,
-                        "created_at": "2018-12-21T13:36:26.323Z",
-                        "updated_at": "2018-12-21T13:36:26.323Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -815,8 +737,6 @@
                         "text": "Run the gel and stain with Coomassie Blue or silver.",
                         "checked": false,
                         "checklist_id": 970,
-                        "created_at": "2018-12-21T13:36:26.329Z",
-                        "updated_at": "2018-12-21T13:36:26.329Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -835,8 +755,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-19T09:32:37.616Z",
-                "updated_at": "2018-12-21T13:38:06.144Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3409
               },
@@ -856,8 +774,6 @@
                 {
                   "table": {
                     "id": 676,
-                    "created_at": "2018-12-19T09:32:37.619Z",
-                    "updated_at": "2018-12-21T13:38:06.147Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Commonly used mass spectrometers and their characteristics",
@@ -877,8 +793,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-19T08:02:56.820Z",
-                "updated_at": "2018-12-24T09:20:53.287Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3409
               },
@@ -901,8 +815,6 @@
                       "id": 969,
                       "name": "Guideline:",
                       "step_id": 4643,
-                      "created_at": "2018-12-21T13:35:09.660Z",
-                      "updated_at": "2018-12-21T13:35:09.660Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -912,8 +824,6 @@
                         "text": "Prepare five to eight dilutions of BSA standard with a range of 5 to 100 µg protein.",
                         "checked": false,
                         "checklist_id": 969,
-                        "created_at": "2018-12-21T13:35:09.662Z",
-                        "updated_at": "2018-12-21T13:35:09.662Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -923,8 +833,6 @@
                         "text": "Dilute protein samples to obtain 5-100 µg protein/30 µL.",
                         "checked": false,
                         "checklist_id": 969,
-                        "created_at": "2018-12-21T13:35:09.669Z",
-                        "updated_at": "2018-12-21T13:35:09.669Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -934,8 +842,6 @@
                         "text": "Set two blank tubes. For the standard curve, add 30 µL of water instead of the standard solution. For the unknown protein samples, add 30 µL protein preparation buffer instead. Protein solutions are normally assayed in duplicate or triplicate.",
                         "checked": false,
                         "checklist_id": 969,
-                        "created_at": "2018-12-21T13:35:09.675Z",
-                        "updated_at": "2018-12-21T13:35:09.675Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -945,8 +851,6 @@
                         "text": "Add 1.5 mL of Bradford reagent to each tube and mix well.",
                         "checked": false,
                         "checklist_id": 969,
-                        "created_at": "2018-12-21T13:35:09.682Z",
-                        "updated_at": "2018-12-21T13:35:09.682Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -956,8 +860,6 @@
                         "text": "Incubate at room temperature for at least 5 min.",
                         "checked": false,
                         "checklist_id": 969,
-                        "created_at": "2018-12-21T13:35:09.688Z",
-                        "updated_at": "2018-12-21T13:35:09.688Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -967,8 +869,6 @@
                         "text": "Absorbance will increase over time; samples should incubate at RT for no more than 1 h.",
                         "checked": false,
                         "checklist_id": 969,
-                        "created_at": "2018-12-21T13:35:09.703Z",
-                        "updated_at": "2018-12-21T13:35:09.703Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 5
@@ -978,8 +878,6 @@
                         "text": "Measure absorbance at 595 nm.",
                         "checked": false,
                         "checklist_id": 969,
-                        "created_at": "2018-12-21T13:35:09.710Z",
-                        "updated_at": "2018-12-21T13:35:09.710Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 6
@@ -1001,8 +899,6 @@
   "my_module_groups": [
     {
       "id": 1190,
-      "created_at": "2018-12-21T13:25:20.378Z",
-      "updated_at": "2018-12-21T13:25:20.378Z",
       "created_by_id": 202,
       "experiment_id": 423
     }

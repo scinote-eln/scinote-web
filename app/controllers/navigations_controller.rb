@@ -60,23 +60,19 @@ class NavigationsController < ApplicationController
   end
 
   def settings_menu_links
-    links = [
-      {
-        name: I18n.t('users.settings.sidebar.teams'), url: teams_path
-      }, {
-        name: I18n.t('users.settings.sidebar.account_nav.addons'), url: addons_path
-      }
-    ]
 
-    links.insert(1, { name: I18n.t('users.settings.sidebar.account_nav.automations'), url: automations_team_path(current_team) }) if current_team && can_manage_team?(current_team)
-
-    if can_create_acitivity_filters?
-      links.push({ name: I18n.t('users.settings.sidebar.webhooks'), url: users_settings_webhooks_path })
+    links = [{ name: I18n.t('users.settings.sidebar.teams'), url: teams_path }]
+    if current_team && can_manage_team?(current_team)
+      links << { name: I18n.t('users.settings.sidebar.account_nav.automations'), url: automations_team_path(current_team) }
+      links << { name: I18n.t('users.settings.sidebar.groups'), url: users_settings_team_user_groups_path(current_team) }
     end
+    links << { name: I18n.t('users.settings.sidebar.account_nav.addons'), url: addons_path }
 
     private_methods.select { |i| i.to_s[/^settings_menu_links_[a-z]*_extension$/] }.each do |method|
       links = __send__(method, links)
     end
+
+    links << { name: I18n.t('users.settings.sidebar.webhooks'), url: users_settings_webhooks_path } if can_create_acitivity_filters?
 
     links
   end

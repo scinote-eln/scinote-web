@@ -5,10 +5,10 @@ module Users
     class UserGroupsController < ApplicationController
       before_action :load_team
       before_action :set_breadcrumbs_items, only: %i(index show)
-      before_action :check_user_groups_enabled
+      before_action :check_user_groups_enabled, except: :users
       before_action :load_user_group, except: %i(index unassigned_users actions_toolbar create)
-      before_action :check_read_permissions, only: %i(index show unassigned_users actions_toolbar users)
-      before_action :check_manage_permissions, except: %i(index show unassigned_users actions_toolbar users)
+      before_action :check_read_permissions, only: %i(users)
+      before_action :check_manage_permissions, except: %i(users)
 
       def index
         respond_to do |format|
@@ -58,7 +58,7 @@ module Users
           end
           render json: { message: t('user_groups.create.success') }, status: :created
         else
-          render json: { errors: t('user_groups.create.error') }, status: :unprocessable_entity
+          render json: { error: @user_group.errors.full_messages.join(", ") }, status: :unprocessable_entity
         end
       end
 

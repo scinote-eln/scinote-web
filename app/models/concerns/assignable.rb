@@ -41,6 +41,30 @@ module Assignable
       User.where(id: direct_user_ids).or(User.where(id: group_user_ids)).or(User.where(id: team_user_ids))
     end
 
+    def users_with_permission(permission, teams = Team.all)
+      permitted_individual_assignments = user_assignments.joins(:user_role).where(team: teams).where(
+        'user_roles.permissions @> ARRAY[?]::varchar[]', [permission]
+      )
+
+      disallowed_assignments = user_assignments.joins(:user_role).where(team: teams).where(
+        'NOT(user_roles.permissions @> ARRAY[?]::varchar[])', [permission]
+      )
+
+      permitted_user_group_assignments = user_group_assignments.joins(:user_role, user_group: { user_group_memberships: :user }).where(team: teams).where(
+        'user_roles.permissions @> ARRAY[?]::varchar[]', [permission]
+      )
+
+      permitted_team_assignments = team_assignments.joins(:user_role, team: { user_assignments: :user }).where(team: teams).where(
+        'user_roles.permissions @> ARRAY[?]::varchar[]', [permission]
+      )
+
+      User.where(id: permitted_individual_assignments.select(:user_id)).or(
+        User.where(id: permitted_user_group_assignments.select('user_group_memberships.user_id')).or(
+          User.where(id: permitted_team_assignments.select('user_assignments.user_id'))
+        )
+      ).where.not(id: disallowed_assignments.select(:user_id))
+    end
+
     def default_public_user_role_id(current_team = nil)
       if team_assignments.loaded?
         team_assignments.find { |ta| ta.team_id == (current_team || team).id }&.user_role_id
@@ -85,7 +109,7 @@ module Assignable
 
       team_assignment = team_assignments.find_by(team: team)
       if team_assignment
-        User.where.not(id: user_assignments.select(:user_id)).where(id: team_assignment.team.users.select(:id)).find_each do |user|
+        User.where.not(id: user_assignments.select(:user_id).where(team: team)).where(id: team_assignment.team.users.select(:id)).find_each do |user|
           users << {
             user: user,
             role: team_assignment.user_role,

@@ -17,7 +17,7 @@
   <%= render partial: 'my_modules/header' %>
   <%= render partial: 'my_modules/header_actions' %>
 
-  <div id="results" data-behaviour="vue">
+  <div id="results" data-behaviour="vue" data-e2e="e2e-CO-task-results">
     <results url="<%= my_module_results_url(@my_module, view_mode: params[:view_mode]) %>"
              active_url="<%= my_module_results_url(@my_module) %>"
              protocol-id="<%= @my_module.protocol.id %>"

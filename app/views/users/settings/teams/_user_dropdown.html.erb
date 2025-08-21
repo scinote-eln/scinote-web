@@ -10,7 +10,8 @@
          id="<%= id %>"
          data-toggle="dropdown"
          aria-haspopup="true"
-         aria-expanded="true">
+         aria-expanded="true"
+          <%= "disabled=disabled" unless can_manage_team_users?(user_assignment.team) %>>
       <span class="sn-icon sn-icon-down"></span>
     </button>
     <ul class="dropdown-menu custom-dropdown-menu dropdown-menu-right" aria-labelledby="<%= id %>">

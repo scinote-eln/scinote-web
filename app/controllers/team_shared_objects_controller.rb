@@ -25,13 +25,9 @@ class TeamSharedObjectsController < ApplicationController
 
           case global_permission_level
           when :shared_read
-            UserAssignment.where(assignable: @model).where.not(team: @model.team).update!(user_role: UserRole.find_predefined_viewer_role)
-            TeamAssignment.where(assignable: @model).where.not(team: @model.team).update!(user_role: UserRole.find_predefined_viewer_role)
-            UserGroupAssignment.where(assignable: @model).where.not(team: @model.team).update!(user_role: UserRole.find_predefined_viewer_role)
+            @model.demote_all_sharing_assignments_to_viewer!
           when :not_shared
-            UserAssignment.where(assignable: @model).where.not(team: @model.team).destroy_all
-            TeamAssignment.where(assignable: @model).where.not(team: @model.team).destroy_all
-            UserGroupAssignment.where(assignable: @model).where.not(team: @model.team).destroy_all
+            @model.destroy_all_sharing_assignments!
           end
 
           case @model

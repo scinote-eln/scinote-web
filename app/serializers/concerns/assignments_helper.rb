@@ -11,7 +11,7 @@ module AssignmentsHelper
       }
     end
 
-    user_groups = object.user_group_assignments.map do |ua|
+    user_groups = object.user_group_assignments.where(team: current_user.current_team).map do |ua|
       {
         avatar: ActionController::Base.helpers.asset_path('icon/group.svg'),
         full_name: ua.user_group_name_with_role

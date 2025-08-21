@@ -623,18 +623,20 @@ class Extends
     automation_task_status_changed: 406,
     automation_experiment_status_changed: 407,
     automation_project_status_changed: 408,
-    import_protocol_in_repository_from_protocols_io: 409
+    import_protocol_in_repository_from_protocols_io: 409,
+    experiment_access_changed_all_team_members: 410,
+    my_module_access_changed_all_team_members: 411
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243, *370..378, *390..392, 408],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, *246..248, *257..273, *284..291, 301, 303, 306, 328],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
-           148, 166, 394, 395, 396, 406],
+           148, 166, 394, 395, 396, 406, 411],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
                     184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327, *347..352, 359],
     task_inventory: [55, 56, 146, 147, 183],
-    experiment: [*27..31, 57, 141, 165, *363..369, 393, 407],
+    experiment: [*27..31, 57, 141, 165, *363..369, 393, 407, 410],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
                   78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329, *397..405],

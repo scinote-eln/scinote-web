@@ -56,8 +56,7 @@ class Result < ApplicationRecord
     new_query = joins(:my_module)
                 .where(
                   my_modules: {
-                    id: MyModule.with_granted_permissions(user, MyModulePermissions::READ)
-                                .where(user_assignments: { team: teams }).select(:id)
+                    id: MyModule.with_granted_permissions(user, MyModulePermissions::READ, teams).select(:id)
                   }
                 )
 
@@ -77,6 +76,11 @@ class Result < ApplicationRecord
   def self.search_subquery(query, raw_input)
     raw_input.left_joins(:result_comments, :result_texts, result_tables: :table)
              .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
+  end
+
+  def self.find_page_number(result_id, per_page = Kaminari.config.default_per_page)
+    position = pluck(:id).index(result_id)
+    (position.to_f / per_page).ceil
   end
 
   def duplicate(my_module, user, result_name: nil)

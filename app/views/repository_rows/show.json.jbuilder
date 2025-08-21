@@ -95,6 +95,7 @@ json.relationships do
       else
         json.name I18n.t('repositories.item_card.relationships.private_item_name')
       end
+      json.can_connect_rows can_connect_repository_rows?(parent.repository) if parent.repository.is_a?(Repository) && !parent.repository.is_a?(SoftLockedRepository)
       json.unlink_path repository_repository_row_repository_row_connection_path(parent.repository,
                                                                                 parent,
                                                                                 @repository_row.parent_connections
@@ -113,6 +114,7 @@ json.relationships do
       else
         json.name I18n.t('repositories.item_card.relationships.private_item_name')
       end
+      json.can_connect_rows can_connect_repository_rows?(child.repository) if child.repository.is_a?(Repository) && !child.repository.is_a?(SoftLockedRepository)
       json.unlink_path repository_repository_row_repository_row_connection_path(child.repository,
                                                                                 child,
                                                                                 @repository_row.child_connections

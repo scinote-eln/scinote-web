@@ -35,7 +35,7 @@ class ProjectFolder < ApplicationRecord
   scope :top_level, -> { where(parent_folder: nil) }
 
   def self.readable_by_user(user, teams)
-    joins(team: :users)
+    joins(team: :user_assignments)
       .where(teams: { user_assignments: { user: user } })
       .where(team: teams)
   end

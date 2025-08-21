@@ -32,7 +32,7 @@ module Toolbars
       {
         name: 'delete',
         label: 'Remove',
-        icon: 'sn-icon sn-icon-delete',
+        icon: 'sn-icon sn-icon-close',
         path: destroy_multiple_users_settings_team_user_group_user_group_memberships_path(@team, @user_group, membership_ids: @memberships.pluck(:id)),
         type: :emit
       }

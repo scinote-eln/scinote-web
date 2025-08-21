@@ -162,7 +162,7 @@ module CommentHelper
     smart_annotation_notification(
       old_text: old_text,
       new_text: comment.message,
-      subject: step.protocol,
+      subject: step,
       title: t('notifications.step_comment_annotation_title',
                step: step.name,
                user: current_user.full_name),

@@ -79,6 +79,10 @@ export default {
     excludeRows: {
       type: Array,
       default: () => []
+    },
+    manageableRepositoriesOnly: {
+      type: Boolean,
+      default: false
     }
   },
   created() {
@@ -97,7 +101,7 @@ export default {
   mounted() {
     document.addEventListener('mouseover', this.loadColumnsInfo);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('mouseover', this.loadColumnsInfo);
   },
   watch: {
@@ -116,7 +120,7 @@ export default {
   },
   computed: {
     repositoriesUrl() {
-      return list_team_repositories_path(this.teamId, { non_empty: true, active: true });
+      return list_team_repositories_path(this.teamId, { non_empty: true, active: true, manageable: this.manageableRepositoriesOnly });
     },
     rowsUrl() {
       if (!this.selectedRepository) {

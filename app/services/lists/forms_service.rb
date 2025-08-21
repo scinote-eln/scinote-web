@@ -3,7 +3,13 @@
 module Lists
   class FormsService < BaseService
     def fetch_records
-      @records = @raw_data.left_outer_joins(:user_assignments)
+      user_assignments = @raw_data.joins(:user_assignments).select(:assignable_id, :user_id)
+      user_group_assignments = @raw_data.joins(user_group_assignments: { user_group: :user_group_memberships })
+                                        .select('user_group_assignments.assignable_id, user_group_memberships.user_id')
+      team_assignments = @raw_data.joins(team_assignments: { team: :user_assignments }).select('team_assignments.assignable_id, user_assignments.user_id')
+
+      @records = @raw_data.joins("LEFT JOIN (#{user_assignments.to_sql} UNION #{team_assignments.to_sql} UNION #{user_group_assignments.to_sql})
+                                  all_assigned_users ON all_assigned_users.assignable_id = forms.id")
                           .left_outer_joins(:form_responses)
                           .joins(
                             'LEFT OUTER JOIN users AS publishers ' \
@@ -12,7 +18,7 @@ module Lists
                             'forms.* AS forms',
                             'publishers.full_name AS published_by_user',
                             'COUNT(DISTINCT form_responses.id) AS used_in_protocols_count',
-                            'COUNT(DISTINCT user_assignments.id) AS user_assignment_count'
+                            'COUNT(DISTINCT all_assigned_users.user_id) AS user_assignment_count'
                           ).group('forms.id', 'publishers.full_name')
 
       view_mode = @params[:view_mode] || 'active'

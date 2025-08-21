@@ -32,6 +32,7 @@
                 :withCheckboxes="true"
                 :option-renderer="usersRenderer"
                 :label-renderer="usersRenderer"
+                :searchable="true"
                 :multiple="true"
                 :placeholder="i18n.t('user_groups.index.create_modal.select_members_placeholder')"
               />
