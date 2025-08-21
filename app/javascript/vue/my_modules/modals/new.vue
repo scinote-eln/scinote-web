@@ -99,6 +99,7 @@ import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
 import DateTimePicker from '../../shared/date_time_picker.vue';
 import SelectDropdown from '../../shared/select_dropdown.vue';
+import escapeHtml from '../../shared/escape_html.js';
 
 export default {
   name: 'NewModal',
@@ -151,8 +152,7 @@ export default {
     this.loadTags();
     this.loadUsers();
   },
-  mixins: [modalMixin],
-
+  mixins: [modalMixin, escapeHtml],
   methods: {
     submit() {
       this.submitting = true;
@@ -203,7 +203,7 @@ export default {
     usersRenderer(user) {
       return `<div class="flex items-center gap-2 truncate">
                 <img class="w-6 h-6 rounded-full" src="${user[2]}">
-                <span title="${user[1]}" class="truncate">${user[1]}</span>
+                <span title="${escapeHtml(user[1])}" class="truncate">${escapeHtml(user[1])}</span>
               </div>`;
     }
   }

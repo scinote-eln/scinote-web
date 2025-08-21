@@ -518,6 +518,7 @@ Rails.application.routes.draw do
         post :change_results_state
         post :favorite
         post :unfavorite
+        get :assigned_users
       end
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do
@@ -531,6 +532,7 @@ Rails.application.routes.draw do
       resources :user_my_modules, path: '/users', only: %i(index create destroy) do
         collection do
           get :designated_users
+          post :designate_users
         end
         member do
           get :search
