@@ -18,7 +18,7 @@
   </div>
 </div>
 <div class="tab-group mb-4">
-  <%= link_to t("users.settings.teams.navigation.details"), team_path(@team), class: "tab-item #{ 'active' if @active_tab == :details }"%>
+  <%= link_to t("users.settings.teams.navigation.details"), team_path(@team), class: "tab-item #{ 'active' if @active_tab == :details } #{ 'disabled' unless can_read_team?(@team) }"%>
   <%= link_to t("users.settings.teams.navigation.members"), members_users_settings_team_path(@team), class: "tab-item #{ 'active' if @active_tab == :members }"%>
-  <%= link_to t("users.settings.teams.navigation.groups"), users_settings_team_user_groups_path(@team), class: "tab-item #{ 'active' if @active_tab == :user_groups }"%>
+  <%= link_to t("users.settings.teams.navigation.groups"), users_settings_team_user_groups_path(@team), class: "tab-item #{ 'active' if @active_tab == :user_groups } #{ 'disabled' unless can_manage_team?(@team) }"%>
 </div>

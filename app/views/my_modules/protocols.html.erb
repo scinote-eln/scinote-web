@@ -35,7 +35,15 @@
     <div class="task-section task-information hidden" data-e2e="e2e-CO-task-details">
       <div id="task-details" class="task-section-header">
         <div class="flex items-center mr-auto">
-          <a class="task-section-caret collapsed" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
+          <a
+            class="task-section-caret collapsed"
+            role="button"
+            data-toggle="collapse"
+            href="#details-container"
+            aria-expanded="false"
+            aria-controls="details-container"
+            data-e2e="e2e-BT-task-details-visibilityToggle"
+          >
             <i class="sn-icon sn-icon-right"></i>
             <span id="taskDetailsLabel" class="task-section-title">
               <h2 data-e2e="e2e-TX-task-details-title">
@@ -68,7 +76,15 @@
     <!-- Notes -->
     <div class="task-section hidden">
       <div class="task-section-header">
-        <a class="task-section-caret" role="button" data-toggle="collapse" href="#notes-container" aria-expanded="true" aria-controls="notes-container">
+        <a
+           class="task-section-caret"
+           role="button"
+           data-toggle="collapse"
+           href="#notes-container"
+           aria-expanded="true"
+           aria-controls="notes-container"
+           data-e2e="e2e-BT-task-notes-visibilityToggle"
+        >
           <i class="sn-icon sn-icon-right"></i>
           <span class="task-section-title">
             <h2 data-e2e="e2e-TX-task-notes-title"><%= t('my_modules.notes.title') %></h2>

@@ -9,10 +9,18 @@
           </div>
         </template>
         <template v-else>
-          <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
+          <a class="task-section-caret"
+            tabindex="0"
+            role="button"
+            data-toggle="collapse"
+            href="#protocol-content"
+            aria-expanded="true"
+            aria-controls="protocol-content"
+            data-e2e="e2e-IC-task-protocol-visibilityToggle"
+          >
             <i class="sn-icon sn-icon-right"></i>
             <div class="task-section-title truncate">
-              <h2>{{ i18n.t('Protocol') }}</h2>
+              <h2 data-e2e="e2e-TX-task-protocol-sectionTitle">{{ i18n.t('Protocol') }}</h2>
             </div>
           </a>
         </template>
@@ -29,16 +37,30 @@
              :title="i18n.t('protocols.steps.new_step_title')"
              @keyup.enter="addStep(steps.length)"
              @click="addStep(steps.length)"
-             tabindex="0">
+             tabindex="0"
+             data-e2e="e2e-BT-task-protocol-newStep">
               <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
               <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
           <template v-if="steps.length > 0">
-            <button :title="i18n.t('protocols.steps.collapse_label')" v-if="!stepCollapsed" class="btn btn-secondary icon-btn xl:!px-4" @click="collapseSteps" tabindex="0">
+            <button
+              :title="i18n.t('protocols.steps.collapse_label')"
+              v-if="!stepCollapsed"
+              class="btn btn-secondary icon-btn xl:!px-4"
+              @click="collapseSteps"
+              tabindex="0"
+              data-e2e="e2e-BT-task-protocol-collapseAll"
+            >
               <i class="sn-icon sn-icon-collapse-all"></i>
               <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.collapse_label") }}</span>
             </button>
-            <button v-else  :title="i18n.t('protocols.steps.expand_label')" class="btn btn-secondary icon-btn xl:!px-4" @click="expandSteps" tabindex="0">
+            <button v-else
+              :title="i18n.t('protocols.steps.expand_label')"
+              class="btn btn-secondary icon-btn xl:!px-4"
+              @click="expandSteps"
+              tabindex="0"
+              data-e2e="e2e-BT-task-protocol-expandAll"
+            >
               <i class="sn-icon sn-icon-expand-all"></i>
               <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.expand_label") }}</span>
             </button>
@@ -51,7 +73,13 @@
             @protocol:add_protocol_steps="addSteps"
             :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
           />
-          <button class="btn btn-light icon-btn" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+          <button
+            class="btn btn-light icon-btn"
+            data-toggle="modal"
+            data-target="#print-protocol-modal"
+            tabindex="0"
+            data-e2e="e2e-BT-task-protocol-print"
+          >
             <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
           </button>
           <a v-if="steps.length > 0 && urls.reorder_steps_url"
@@ -60,13 +88,20 @@
             @click="startStepReorder"
             @keyup.enter="startStepReorder"
             :class="{'disabled': steps.length == 1}"
-            tabindex="0" >
+            tabindex="0"
+            data-e2e="e2e-BT-task-protocol-reorderSteps"
+          >
               <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
           </a>
         </div>
       </div>
     </div>
-    <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
+    <div
+      id="protocol-content"
+      class="protocol-content collapse in"
+      aria-expanded="true"
+      data-e2e="e2e-CO-task-protocol-content"
+    >
       <div class="sci-divider" v-if="!inRepository"></div>
       <div class="mb-4">
         <div class="protocol-name mt-4" v-if="!inRepository">
@@ -78,6 +113,7 @@
             :allowBlank="!inRepository"
             :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
             @update="updateName"
+            :dataE2e="'task-protocol-title'"
           />
           <span v-else>
             {{ protocol.attributes.name }}

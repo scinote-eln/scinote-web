@@ -22,7 +22,6 @@ if ENV['WORKER'].present?
       Rails.logger.info(
         "Templates, total number of updated projects: #{updated} out of #{total}}"
       )
-      Rails.logger.flush
     end
   end
 

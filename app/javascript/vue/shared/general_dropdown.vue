@@ -6,6 +6,7 @@
     <template v-if="isOpen">
       <teleport to="body">
         <div @click="closeOnClick && closeMenu()" ref="flyout"
+            :id="randomId"
             class="sn-dropdown fixed z-[3000] bg-sn-white inline-block
                   rounded p-2.5 sn-shadow-menu-sm"
             :class="{
@@ -42,7 +43,8 @@ export default {
   },
   data() {
     return {
-      isOpen: false
+      isOpen: false,
+      randomId: `dropdown-${Math.random().toString(36).substring(2, 15)}`,
     };
   },
   directives: {
@@ -70,7 +72,7 @@ export default {
       }
     },
     closeMenu(e) {
-      if (e && e.target.closest('.sn-dropdown, .sn-select-dropdown, .sn-menu-dropdown, .dp__instance_calendar')) return;
+      if (e && e.target.closest(`.sn-dropdown#${this.randomId}, .sn-select-dropdown, .sn-menu-dropdown, .dp__instance_calendar`)) return;
       this.isOpen = false;
     }
   }

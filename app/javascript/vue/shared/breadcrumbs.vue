@@ -94,7 +94,7 @@ export default {
     this.setContainerSize();
     window.addEventListener('resize', this.setContainerSize);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.setContainerSize);
   },
   methods: {

@@ -51,9 +51,14 @@ module ModelExporters
         tiny_mce_assets: team.tiny_mce_assets.map { |tma| tiny_mce_asset_data(tma) },
         protocols: team.protocols.where(my_module: nil).map do |pr|
           protocol(pr).merge(
-            user_assignments: pr.user_assignments.map do |ua|
-              user_assignment(ua)
-            end
+            {
+              user_assignments: pr.user_assignments.map do |ua|
+                user_assignment(ua)
+              end,
+              team_assignments: pr.team_assignments.map do |ta|
+                team_assigment(ta)
+              end
+            }
           )
         end,
         protocol_keywords: team.protocol_keywords,
@@ -102,6 +107,9 @@ module ModelExporters
         user_assignments: project.user_assignments.map do |ua|
           user_assignment(ua)
         end,
+        team_assignments: project.team_assignments.map do |ta|
+          team_assigment(ta)
+        end,
         activities: project.activities,
         project_comments: project.project_comments,
         reports: project.reports.map { |r| report(r) },
@@ -120,11 +128,23 @@ module ModelExporters
       }
     end
 
+    def team_assigment(team_assignment)
+      {
+        team_id: team_assignment.team_id,
+        assigned_by_id: team_assignment.assigned_by_id,
+        role_name: team_assignment.user_role.name,
+        assigned: team_assignment.assigned
+      }
+    end
+
     def report(report)
       {
         report: report,
         user_assignments: report.user_assignments.map do |ua|
           user_assignment(ua)
+        end,
+        team_assignments: report.team_assignments.map do |ta|
+          team_assigment(ta)
         end,
         report_elements: report.report_elements
       }
@@ -144,6 +164,10 @@ module ModelExporters
         result[:user_assignments] =
           repository.user_assignments.where(team: repository.team, user: repository.team.users).map do |ua|
             user_assignment(ua)
+          end
+        result[:team_assignments] =
+          repository.team_assignments.where(team: repository.team).map do |ta|
+            team_assigment(ta)
           end
         result[:repository_snapshots] = repository.repository_snapshots.map { |r| repository(r) }
       end

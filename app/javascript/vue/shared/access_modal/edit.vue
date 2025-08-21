@@ -50,11 +50,11 @@
         <div>
           <img
             class="rounded-full w-8 h-8"
-            src="/images/icon/group.png"
+            src="/images/icon/group.svg"
           >
         </div>
         <div class="truncate">
-          <div class="flex flex-row gap-2">
+          <div class="flex flex-row gap-2 items-center">
             <div class="truncate"
                 :title="userGroupAssignment.attributes.user_group.name"
             >{{ userGroupAssignment.attributes.user_group.name }}</div>
@@ -114,7 +114,7 @@
           >
         </div>
         <div class="truncate">
-          <div class="flex flex-row gap-2">
+          <div class="flex flex-row gap-2 items-center">
             <div class="truncate"
                 :title="userAssignment.attributes.user.name"
                 :data-e2e="`e2e-TX-${dataE2e}-${userAssignment.attributes.user.name.replace(/\W/g, '')}-name`"
@@ -329,7 +329,7 @@ export default {
         if (!roleId) {
           this.$emit('changeVisibility', false, null);
         } else {
-          this.$emit('changeVisibility', true, roleId);
+          this.$emit('changeVisibility', true, response.data.user_role_id);
         }
         if (response.data.message) {
           HelperModule.flashAlertMsg(response.data.message, 'success');

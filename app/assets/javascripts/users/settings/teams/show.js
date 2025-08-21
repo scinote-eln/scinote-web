@@ -150,7 +150,11 @@
             if (data.status === 'done') {
               // Reload the whole table
               HelperModule.flashAlertMsg(jobData.success_message, 'success');
-              usersDatatable.ajax.reload();
+              if(jobData.redirect_url) {
+                window.location.href = jobData.redirect_url;
+              } else {
+                usersDatatable.ajax.reload();
+              }
               animateSpinner(null, false);
               $('#destroy-user-team-modal').modal('hide');
               clearInterval(jobStatusInterval);

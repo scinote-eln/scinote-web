@@ -1,17 +1,30 @@
 <div class="modal-header">
-  <button type="button" class="close self-start" data-dismiss="modal" aria-label="Close">
-          <i class="sn-icon sn-icon-close"></i>
+  <button
+    type="button"
+    class="close self-start"
+    data-dismiss="modal"
+    aria-label="Close"
+    data-e2e="e2e-BT-task-assignItemModal-confirmAssignModal-close"
+  >
+    <i class="sn-icon sn-icon-close"></i>
   </button>
   <% if downstream %>
-    <h4 class="modal-title !line-clamp-3" title="<%= t('my_modules.modals.assign_repository_record.title_downstream',
-             repository_name: repository.name) %>">
+    <h4
+      class="modal-title !line-clamp-3"
+      title="<%= t('my_modules.modals.assign_repository_record.title_downstream', repository_name: repository.name) %>"
+      data-e2e="e2e-TX-task-assignItemModal-confirmAssignModal-titleDownstream"
+    >
       <%= t('my_modules.modals.assign_repository_record.title_downstream',
              repository_name: repository.name) %>
     </h4>
   <% else %>
-    <h4 class="modal-title !line-clamp-3" title="<%= t('my_modules.modals.assign_repository_record.title',
-             repository_name: repository.name,
-             my_module_name: my_module.name) %>">
+    <h4
+      class="modal-title !line-clamp-3"
+      title="<%= t('my_modules.modals.assign_repository_record.title',
+            repository_name: repository.name,
+            my_module_name: my_module.name) %>"
+      data-e2e="e2e-TX-task-assignItemModal-confirmAssignModal-title"
+    >
       <%= t('my_modules.modals.assign_repository_record.title',
            repository_name: repository.name,
            my_module_name: my_module.name) %>
@@ -19,7 +32,7 @@
   <% end %>
 </div>
 <div class="modal-body">
-  <p>
+  <p data-e2e="e2e-TX-task-assignItemModal-confirmAssignModal-message">
     <% if downstream %>
       <%= t('my_modules.modals.assign_repository_record.message_downstream', size: selected_rows.count) %>
     <% else %>
@@ -27,7 +40,7 @@
     <% end %>
   </p>
   <% if downstream %>
-    <div class='my-modules-to-assign'>
+    <div class='my-modules-to-assign' data-e2e="e2e-TX-task-assignItemModal-confirmAssignModal-taskList">
       <% visible_modules = 0
          downstream_modules = my_module.downstream_modules
          downstream_modules.each do |m| %>
@@ -52,15 +65,19 @@
 </div>
 <div class="modal-footer">
   <div class="sci-btn-group">
-    <a class="btn btn-secondary hide-assign-repo-modal" data-dismiss="modal">
+    <a
+      class="btn btn-secondary hide-assign-repo-modal"
+      data-dismiss="modal"
+      data-e2e="e2e-BT-task-assignItemModal-confirmAssignModal-cancel"
+    >
       <%= t('general.cancel') %>
     </a>
     <% if downstream %>
-      <a class="btn btn-primary downstream-action">
+      <a class="btn btn-primary downstream-action" data-e2e="e2e-BT-task-assignItemModal-confirmAssignModal-assignDownstream">
         <%= t('my_modules.modals.assign_repository_record.task_and_downstream') %>
       </a>
     <% else %>
-      <a class="btn btn-primary task-action">
+      <a class="btn btn-primary task-action" data-e2e="e2e-BT-task-assignItemModal-confirmAssignModal-assign">
         <%= t('my_modules.modals.assign_repository_record.task') %>
       </a>
     <% end %>

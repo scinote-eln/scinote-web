@@ -7,16 +7,18 @@ module Api
       before_action :load_project
       before_action :load_experiment
       before_action :load_task
-      before_action :load_my_module_repository_row, only: :update
+      before_action :load_inventory_item, only: %i(show destroy update)
+      before_action :load_task_inventory_item, only: %i(update destroy)
+      before_action :check_repository_view_permissions, only: :show
       before_action :check_stock_consumption_update_permissions, only: :update
       before_action :check_task_assign_permissions, only: %i(create destroy)
 
       def index
-        items =
-          timestamps_filter(@task.repository_rows).includes(repository_cells: :repository_column)
-                                                  .preload(repository_cells: :value)
-                                                  .page(params.dig(:page, :number))
-                                                  .per(params.dig(:page, :size))
+        items = @task.repository_rows.where(repository_id: Repository.readable_by_user(current_user).select(:id))
+        items = timestamps_filter(items).includes(repository_cells: :repository_column)
+                                        .preload(repository_cells: :value)
+                                        .page(params.dig(:page, :number))
+                                        .per(params.dig(:page, :size))
         render jsonapi: items,
                each_serializer: TaskInventoryItemSerializer,
                show_repository: true,
@@ -25,7 +27,7 @@ module Api
       end
 
       def show
-        render jsonapi: @task.repository_rows.find(params.require(:id)),
+        render jsonapi: @inventory_item,
                serializer: TaskInventoryItemSerializer,
                show_repository: true,
                my_module: @task,
@@ -39,21 +41,21 @@ module Api
 
         @task.my_module_repository_rows.create!(repository_row: @inventory_item, assigned_by: current_user)
 
-        render jsonapi: @task.repository_rows,
-               each_serializer: TaskInventoryItemSerializer,
+        render jsonapi: @inventory_item,
+               serializer: TaskInventoryItemSerializer,
                show_repository: true,
                my_module: @task,
                include: include_params
       end
 
       def update
-        @my_module_repository_row.consume_stock(
+        @task_inventory_item.consume_stock(
           current_user,
           repository_row_params[:attributes][:stock_consumption],
           repository_row_params[:attributes][:stock_consumption_comment]
         )
 
-        render jsonapi: @my_module_repository_row.repository_row,
+        render jsonapi: @inventory_item,
                serializer: TaskInventoryItemSerializer,
                show_repository: true,
                my_module: @task,
@@ -61,29 +63,27 @@ module Api
       end
 
       def destroy
-        @inventory_item = @task.repository_rows.find(params.require(:id))
-
-        raise PermissionError.new(Repository, :read) unless @inventory_item && can_read_repository?(@inventory_item.repository)
-
-        @task.my_module_repository_rows.find_by(repository_row: @inventory_item).destroy!
+        @task_inventory_item.destroy!
 
         render body: nil
       end
 
       private
 
-      def load_my_module_repository_row
-        @my_module_repository_row = @task.repository_rows
-                                         .find(params.require(:id))
-                                         .my_module_repository_rows
-                                         .find_by(my_module: @task)
+      def load_inventory_item
+        @inventory_item = @task.repository_rows.find(params.require(:id))
+      end
+
+      def load_task_inventory_item
+        @task_inventory_item = @task.my_module_repository_rows.find_by!(repository_row: @inventory_item)
+      end
+
+      def check_repository_view_permissions
+        raise PermissionError.new(RepositoryRow, :read_repository) unless can_read_repository?(@inventory_item.repository)
       end
 
       def check_stock_consumption_update_permissions
-        unless can_update_my_module_stock_consumption?(@task) &&
-               can_manage_repository_rows?(@my_module_repository_row.repository_row.repository)
-          raise PermissionError.new(RepositoryRow, :update_stock_consumption)
-        end
+        raise PermissionError.new(RepositoryRow, :update_stock_consumption) if @inventory_item.archived? || !can_update_my_module_stock_consumption?(@task)
       end
 
       def check_task_assign_permissions

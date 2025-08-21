@@ -108,7 +108,7 @@ export default {
   mounted() {
     document.addEventListener('mouseover', this.loadColumnsInfo);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('mouseover', this.loadColumnsInfo);
   },
   computed: {

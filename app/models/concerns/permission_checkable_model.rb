@@ -50,7 +50,7 @@ module PermissionCheckableModel
     end
 
     user_roles = UserRole.left_outer_joins(:team_assignments, user_group_assignments: { user_group: :users })
-    user_roles.where(user_group_assignments: { assignable: self, user_groups: { users: user } })
+    user_roles.where(user_group_assignments: { assignable: self, user_groups: { users: user }, team: permission_team })
               .or(user_roles.where(team_assignments: { assignable: self, team: permission_team }))
               .exists?(['user_roles.permissions @> ARRAY[?]::varchar[]', [permission]])
   end

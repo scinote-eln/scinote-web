@@ -47,7 +47,7 @@ class MyModulesController < ApplicationController
 
   def new
     @my_module = @experiment.my_modules.new
-    assigned_users = User.where(id: @experiment.user_assignments.select(:user_id))
+    assigned_users = @experiment.users
 
     render json: {
       html: render_to_string(

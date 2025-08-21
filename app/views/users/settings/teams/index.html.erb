@@ -21,7 +21,7 @@
         <em><%= t("users.settings.teams.index.no_teams") %></em>
       <% end %>
       <% if can_create_teams? %>
-        <span id="new-team-button">
+        <span id="new-team-button" data-e2e="e2e-BT-settings-workspaces-newWorkspace">
           <%= link_to new_team_path, class: "btn btn-primary", style: "margin-left: 30px;" do %>
             <span class="sn-icon sn-icon-new-task"></span>
             <span class="hidden-xs">
