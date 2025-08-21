@@ -856,6 +856,8 @@ class Extends
     StorageLocationsTable_active_state
     StorageLocationsContainer_active_state
     StorageLocationsContainerGrid_active_state
+    UserGroups_active_state
+    UserGroup_active_state
     task_step_states
     results_order
     repository_export_file_type
