@@ -74,7 +74,7 @@ class MoveEveryOneElseAssignmentToTeamAssignments < ActiveRecord::Migration[7.2]
               end
 
       # PET
-      Project.visible.preload(:experiments).find_in_batches(batch_size: 100) do |projects|
+      Project.visible.find_in_batches(batch_size: 10) do |projects|
         projects.each do |project|
           project_automatic_user_assignments = project.user_assignments.where(assigned: :automatically)
           next if project_automatic_user_assignments.blank?
@@ -82,8 +82,8 @@ class MoveEveryOneElseAssignmentToTeamAssignments < ActiveRecord::Migration[7.2]
           user_role = project_automatic_user_assignments.first.user_role
           team_assignment_values = []
 
-          project.experiments.preload(:my_modules).each do |experiment|
-            experiment.my_modules.each do |my_module|
+          Experiment.joins(:project).where(project: project).find_each do |experiment|
+            MyModule.joins(:experiment).where(experiment: experiment).find_each do |my_module|
               team_assignment_values << new_team_assignment(project.team_id, my_module, user_role)
               my_module.automatic_user_assignments.where(user_id: project_automatic_user_assignments.select(:user_id)).delete_all
             end
