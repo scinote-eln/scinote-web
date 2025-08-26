@@ -4330,9 +4330,9 @@ en:
   team_automations:
     description: "Automate repetitive work to enhance efficiency. Enabled settings apply to all projects, experiments, and tasks in your current workspace. Automations start when enabled and don't affect past data. Manual changes remain available and will override automated updates."
     groups:
-      task_automation: 'Task automations'
-      experiment_automation: 'Experiment automations'
-      project_automation: 'Project automations'
+      tasks: 'Task automations'
+      experiments: 'Experiment automations'
+      projects: 'Project automations'
     sub_groups:
       task_status_in_progress: 'Automatically update task status to "In progress" when:'
       task_status_completed: 'Automatically update task status to “Completed” when:'
@@ -4342,14 +4342,14 @@ en:
       project_status_in_progress: 'Automatically update project status to "In progress" when:'
       project_status_done: 'Automatically update project status to "Done" when:'
     sub_group_element:
-      protocol_content_added: 'Protocol content is added (including step comments)'
-      step_marked_as_completed: 'At least one step is marked as completed'
-      task_result_added: 'Task result is added'
-      task_moves_from_not_started_to_in_progress: 'At least one task moves from "Not started" to "In progress" or other status'
-      all_tasks_done: 'All tasks inside reach their final status.'
-      experiment_moves_from_not_started_to_in_progress: 'At least one experiment moves to "In progress" or "Done"'
-      all_experiments_done: 'All experiments inside are marked as "Done"'
-      all_my_module_steps_marked_as_completed: 'All steps are marked as done'
+      on_protocol_content_change: 'Protocol content is added (including step comments)'
+      on_step_completion: 'At least one step is marked as completed'
+      on_added_result: 'Task result is added'
+      on_task_in_progress: 'At least one task moves from "Not started" to "In progress" or other status'
+      on_all_tasks_done: 'All tasks inside reach their final status.'
+      on_experiment_in_progress: 'At least one experiment moves to "In progress" or "Done"'
+      on_all_experiments_done: 'All experiments inside are marked as "Done"'
+      on_all_steps_completion: 'All steps are marked as done'
 
   notifications:
     title: "Notifications"

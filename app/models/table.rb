@@ -103,8 +103,4 @@ class Table < ApplicationRecord
       end
     end
   end
-
-  def run_observers
-    AutomationObservers::ProtocolContentChangedAutomationObserver.new(step, step&.last_modified_by).call
-  end
 end
