@@ -35,7 +35,7 @@
              class="w-full bg-transparent border-0 outline-none pl-0 placeholder:text-sn-grey" />
       </template>
       <div v-else class="flex items-center gap-1 flex-wrap">
-        <div v-for="tag in tags" class="px-2 py-1 rounded-sm bg-sn-super-light-grey grid grid-cols-[auto_1fr] items-center gap-1">
+        <div v-for="tag in tags" class="sci-tag bg-sn-super-light-grey" :key="tag.value">
           <div class="truncate" v-if="labelRenderer" v-html="tag.label"></div>
           <div class="truncate" v-else>{{ tag.label }}</div>
           <i @click="removeTag(tag.value)" class="sn-icon mini ml-auto sn-icon-close cursor-pointer"></i>

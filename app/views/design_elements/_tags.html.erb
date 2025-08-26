@@ -17,5 +17,11 @@
       Disabled tag
       <i class="sn-icon sn-icon-close"></i>
     </div>
+    <% Constants::TAG_COLORS.each do |color| %>
+      <div class="sci-tag text-white" style="background-color: <%= color %>">
+        <%= color %>
+        <i class="sn-icon sn-icon-close"></i>
+      </div>
+    <% end %>
   </div>
 </div>
