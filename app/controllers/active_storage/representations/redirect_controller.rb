@@ -13,7 +13,7 @@ module ActiveStorage
 
       def show
         if @blob.attachments.take.record_type == 'Asset'
-          return render plain: '', status: :accepted unless preview_ready?
+          return render json: { preview_failed: @blob.metadata['preview_failed'] }, status: :accepted unless preview_ready?
         end
 
         expires_in ActiveStorage.service_urls_expire_in
