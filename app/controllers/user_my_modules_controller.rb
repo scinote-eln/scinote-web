@@ -5,7 +5,7 @@ class UserMyModulesController < ApplicationController
 
   before_action :load_vars
   before_action :check_view_permissions, except: %i(create destroy)
-  before_action :check_manage_permissions, only: %i(create destroy)
+  before_action :check_manage_permissions, only: %i(create destroy designate_users)
 
   def designated_users
     @user_my_modules = @my_module.user_my_modules
@@ -15,6 +15,24 @@ class UserMyModulesController < ApplicationController
       my_module_id: @my_module.id,
       counter: @my_module.designated_users.count # Used for counter badge
     }
+  end
+
+  def designate_users
+    ActiveRecord::Base.transaction do
+      @my_module.user_my_modules.where.not(user_id: params[:user_ids]).each do |um|
+        um.destroy!
+        um.log_activity(:undesignate_user_from_my_module, current_user)
+      end
+      @my_module.users.where.not(id: @my_module.user_my_modules.select(:user_id)).where(id: params[:user_ids]).each do |user|
+        um = @my_module.user_my_modules.create!(user: user, assigned_by: current_user)
+        um.log_activity(:designate_user_to_my_module, current_user)
+      end
+      render json: { status: :ok, message: :success }
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error e.message
+      render json: { status: :error, message: :error }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
   end
 
   def index

@@ -9,13 +9,14 @@
       ref="field"
       class="px-3 py-1 rounded flex items-center cursor-pointer"
       @click="open"
-      :class="[sizeClass, {
+      :class="[{
         'border border-solid': !borderless,
         '!border-sn-blue': isOpen && !borderless,
         '!border-sn-light-grey': !isOpen && !borderless,
         'bg-sn-super-light-grey': disabled,
         'pl-0': borderless
       }]"
+      :style="sizeStyle"
     >
     <template v-if="!tagsView">
       <template v-if="!isOpen || !searchable">
@@ -64,7 +65,7 @@
           :data-e2e="`${e2eValue}-dropdownOptions`"
         >
           <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
-            <div @click="selectAll" :class="sizeClass"
+            <div @click="selectAll" :style="sizeStyle"
                 class="border border-x-0 !border-transparent border-solid !border-b-sn-light-grey
                         py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
               <div class="sn-checkbox-icon"
@@ -80,10 +81,11 @@
                 ref="options"
                 :title="option[2]?.tooltip || option[1]"
                 class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0 hover:bg-sn-super-light-grey"
-                :class="[sizeClass, {
+                :class="[{
                   '!bg-sn-super-light-blue': valueSelected(option[0]) && focusedOption !== i,
                   '!bg-sn-super-light-grey': focusedOption === i ,
                 }]"
+                :style="sizeStyle"
               >
                 <div v-if="withCheckboxes"
                     class="sn-checkbox-icon shrink-0"
@@ -162,16 +164,16 @@ export default {
 
       return this.label || this.placeholder || this.i18n.t('general.select_dropdown.placeholder');
     },
-    sizeClass() {
+    sizeStyle() {
       switch (this.size) {
         case 'xs':
-          return 'h-[36px]';
+          return 'min-height: 36px';
         case 'sm':
-          return 'h-[40px]';
+          return 'min-height: 40px';
         case 'md':
-          return 'h-[44px]';
+          return 'min-height: 44px';
         default:
-          return 'h-[44px]';
+          return 'min-height: 44px';
       }
     },
     canClear() {
@@ -303,7 +305,6 @@ export default {
     },
     renderLabel(option) {
       if (!option) return false;
-
       if (this.labelRenderer) {
         return this.labelRenderer(option);
       }
