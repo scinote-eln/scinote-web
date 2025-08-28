@@ -65,7 +65,7 @@
 import SelectDropdown from '../../shared/select_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
-import escapeHtml from '../shared/escape_html.js';
+import escapeHtml from '../../shared/escape_html.js';
 
 export default {
   name: 'ProjectFormModal',

@@ -3615,6 +3615,7 @@ en:
           details: "Details"
           members: "Members"
           groups: "Groups"
+          tags: "Tags"
         show:
           enter_description: "Enter Workspace description"
           tasks_share:
@@ -4214,6 +4215,18 @@ en:
     edit:
       head_title: "Edit protocol"
     no_keywords: "—"
+  tags:
+    index:
+      new_tag: "New tag"
+      tag_name: "Tag name"
+      color: "Color"
+      used_in: "Used in"
+      created_by: "Created by"
+      created_on: "Created on"
+      updated_on: "Updated on"
+      too_short_name: "too short (minimum is %{count} characters)"
+      toolbar:
+        delete: "Delete"
   user_groups:
     promo:
       head_title: 'User groups'

@@ -785,6 +785,7 @@ class Extends
     teams/members
     user_groups/index
     user_groups/show
+    tags/index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
@@ -822,6 +823,7 @@ class Extends
     StorageLocationsTable_active_state
     StorageLocationsContainer_active_state
     StorageLocationsContainerGrid_active_state
+    TagsIndexTable_active_state
     task_step_states
     results_order
     repository_export_file_type

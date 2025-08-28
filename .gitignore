@@ -48,7 +48,6 @@ storage/
 $ Ignore compiled assets
 public/packs-test/*
 
-tags
 *.orig
 *.swp
 *.out
