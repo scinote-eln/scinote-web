@@ -16,7 +16,7 @@
   }
 
   input[type="checkbox"].sci-checkbox + .sci-checkbox-label::before {
-    @apply bg-transparent border border-solid border-black rounded-sm inline-block
+    @apply bg-transparent border border-solid !border-black rounded-sm inline-block
     left-0 absolute w-4 h-4 content-[''];
   }
 
@@ -25,7 +25,7 @@
   }
 
   input[type="checkbox"].sci-checkbox:checked + .sci-checkbox-label::before {
-    @apply border-sn-science-blue bg-center bg-sn-science-blue;
+    @apply !border-sn-science-blue bg-center bg-sn-science-blue;
     background-image: image-url("icon_small/sn-check.svg");
   }
 
@@ -42,10 +42,10 @@
   }
 
   input[type="checkbox"].sci-checkbox:disabled + .sci-checkbox-label::before {
-    @apply border border-solid border-sn-sleepy-grey;
+    @apply  !border-sn-sleepy-grey;
   }
 
   input[type="checkbox"].sci-checkbox:disabled:checked + .sci-checkbox-label::before {
-    @apply bg-sn-sleepy-grey border border-solid border-sn-sleepy-grey;
+    @apply bg-sn-sleepy-grey !border-sn-sleepy-grey;
   }
 }
