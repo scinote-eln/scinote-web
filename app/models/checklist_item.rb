@@ -1,4 +1,7 @@
 class ChecklistItem < ApplicationRecord
+  include SearchableModel
+
+  SEARCHABLE_ATTRIBUTES = ['checklist_items.text'].freeze
 
   attr_accessor :with_paragraphs
 

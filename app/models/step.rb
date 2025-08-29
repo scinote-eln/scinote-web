@@ -4,6 +4,8 @@ class Step < ApplicationRecord
   include TinyMceImages
   include ViewableModel
 
+  SEARCHABLE_ATTRIBUTES = ['steps.name'].freeze
+
   attr_accessor :skip_position_adjust # to be used in bulk deletion
 
   enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }

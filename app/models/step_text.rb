@@ -2,7 +2,10 @@
 
 class StepText < ApplicationRecord
   include TinyMceImages
+  include SearchableModel
   include ActionView::Helpers::TextHelper
+
+  SEARCHABLE_ATTRIBUTES = ['step_texts.name', 'step_texts.text'].freeze
 
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }

@@ -52,7 +52,6 @@ class Repository < RepositoryBase
   scope :appendable_by_user, lambda { |user, teams = user.current_team|
     active.with_granted_permissions(user, RepositoryPermissions::ROWS_CREATE, teams)
           .where(type: Extends::REPOSITORY_APPENDABLE_TYPES)
-          .where(team: teams)
   }
 
   def self.permission_class

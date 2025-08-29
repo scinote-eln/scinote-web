@@ -44,7 +44,9 @@ class RepositoriesController < ApplicationController
   end
 
   def list
-    repositories = if params[:manageable] == 'true'
+    repositories = if params[:appendable] == 'true'
+                     Repository.appendable_by_user(current_user)
+                   elsif params[:manageable] == 'true'
                      Repository.with_granted_permissions(current_user, RepositoryPermissions::ROWS_UPDATE, current_team)
                    else
                      Repository.readable_by_user(current_user, current_team)
@@ -487,9 +489,7 @@ class RepositoriesController < ApplicationController
 
   def load_repositories
     @repositories =
-      if params[:appendable] == 'true'
-        Repository.appendable_by_user(current_user)
-      elsif can_manage_team?(current_team)
+      if can_manage_team?(current_team)
         # Team owners see all repositories in the team
         current_team.repositories.or(Repository.shared_with_team(current_team))
       else

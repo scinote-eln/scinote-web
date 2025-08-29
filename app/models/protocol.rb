@@ -5,9 +5,7 @@ class Protocol < ApplicationRecord
 
   include ArchivableModel
   include PrefixedIdModel
-  SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description', PREFIXED_ID_SQL, 'steps.name',
-                           'step_texts.name', 'step_texts.text', 'tables.name', 'tables.data_vector',
-                           'checklists.name', 'checklist_items.text', 'comments.message'].freeze
+  SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description', PREFIXED_ID_SQL, :children].freeze
   REPOSITORY_TYPES = %i(in_repository_published_original in_repository_draft in_repository_published_version).freeze
 
   include SearchableModel
@@ -149,34 +147,37 @@ class Protocol < ApplicationRecord
                   options = {})
     teams = options[:teams] || current_team || user.teams.select(:id)
 
-    protocol_templates = if options[:options]&.dig(:in_repository).present? || options[:options].blank?
-                           templates = latest_available_versions(teams).readable_by_user(user, teams)
-                           templates = templates.active unless include_archived
-                           templates
-                         end || []
+    if options[:options]&.dig(:in_repository)
+      protocols = latest_available_versions(teams)
+      protocols = protocols.active unless include_archived
+    else
+      protocols = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, teams) })
+      unless include_archived
+        protocols = protocols.active
+                             .joins(my_module: { experiment: :project })
+                             .where(my_modules: { archived: false }, experiments: { archived: false }, projects: { archived: false })
+      end
+    end
 
-    protocol_my_modules = if options[:options]&.dig(:in_repository).blank?
-                            protocols = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, teams) })
-                            unless include_archived
-                              protocols = protocols.joins(my_module: { experiment: :project })
-                                                   .active
-                                                   .where(my_modules: { archived: false },
-                                                          experiments: { archived: false },
-                                                          projects: { archived: false })
-                            end
+    protocols.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
+  end
 
-                            protocols
-                          end || []
-
-    protocols = if (options[:options]&.dig(:in_repository).present? || options[:options].blank?) &&
-                   options[:options]&.dig(:in_repository).blank?
-                  where('protocols.id IN ((?) UNION ALL (?))',
-                        protocol_templates.select(:id), protocol_my_modules.select(:id))
-                else
-                  options[:options]&.dig(:in_repository).blank? ? protocol_my_modules : Protocol.where(id: protocol_templates.pluck(:id))
-                end
-
-    protocols.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: protocols })
+  def self.where_children_attributes_like(query)
+    from(
+      "(#{joins(:steps).where_attributes_like(Step::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION
+      #{joins(steps: :step_texts).where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION
+      #{joins(steps: { step_tables: :table }).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION
+      #{joins(steps: :checklists).where_attributes_like(Checklist::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION
+      #{joins(steps: { checklists: :checklist_items }).where_attributes_like(ChecklistItem::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION
+      #{joins(steps: :step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      ) AS protocols",
+      :protocols
+    )
   end
 
   def self.search_by_search_fields_with_boolean(user, teams = [], query = nil, search_fields = [], options = {})
@@ -188,24 +189,11 @@ class Protocol < ApplicationRecord
       .limit(options[:limit] || Constants::SEARCH_LIMIT)
   end
 
-  def self.search_subquery(query, raw_input)
-    raw_input.where_attributes_like_boolean(['protocols.name', 'protocols.description', PREFIXED_ID_SQL], query)
-             .or(raw_input.where(id: Step.left_joins(:step_texts, { step_tables: :table },
-                                                     { checklists: :checklist_items }, :step_comments)
-                                       .where(protocol: raw_input)
-                                       .where_attributes_like_boolean(['steps.name', 'step_texts.name',
-                                                                       'step_texts.text', 'tables.name',
-                                                                       'tables.data_vector', 'comments.message',
-                                                                       'checklists.name', 'checklist_items.text'],
-                                                                      query)
-                                       .select(:protocol_id)))
-  end
-
   def self.latest_available_versions(teams)
     team_protocols = where(team: teams)
 
     original_without_versions = team_protocols
-                                .left_outer_joins(:published_versions)
+                                .where.missing(:published_versions)
                                 .where(protocol_type: Protocol.protocol_types[:in_repository_published_original])
                                 .where(published_versions: { id: nil })
                                 .select(:id)
@@ -720,19 +708,19 @@ class Protocol < ApplicationRecord
   private
 
   def after_user_assignment_changed(user_assignment)
-    return unless in_repository_published_original?
+    return if skip_user_assignments || !in_repository_published_original?
 
     sync_child_protocol_assignment(user_assignment)
   end
 
   def after_user_group_assignment_changed(user_group_assignment)
-    return unless in_repository_published_original?
+    return if skip_user_assignments || !in_repository_published_original?
 
     sync_child_protocol_assignment(user_group_assignment)
   end
 
   def after_team_assignment_changed(user_group_assignment)
-    return unless in_repository_published_original?
+    return if skip_user_assignments || !in_repository_published_original?
 
     sync_child_protocol_assignment(user_group_assignment)
   end

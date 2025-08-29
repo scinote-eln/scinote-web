@@ -5,15 +5,26 @@ module Lists
     private
 
     def fetch_records
+      user_assignments = @raw_data.joins(:user_assignments).where(user_assignments: { team_id: @user.current_team.id }).select(:assignable_id, :user_id)
+      user_group_assignments = @raw_data.joins(user_group_assignments: { user_group: :user_group_memberships })
+                                        .where(user_group_assignments: { team_id: @user.current_team.id })
+                                        .select('user_group_assignments.assignable_id, user_group_memberships.user_id')
+      team_assignments = @raw_data.joins(team_assignments: { team: :user_assignments })
+                                  .where(team_assignments: { team_id: @user.current_team.id })
+                                  .select('team_assignments.assignable_id, user_assignments.user_id')
+
       @records = @raw_data.joins('LEFT OUTER JOIN users AS creators ' \
                                  'ON repositories.created_by_id = creators.id')
                           .joins('LEFT OUTER JOIN users AS archivers ' \
                                  'ON repositories.archived_by_id = archivers.id')
-                          .joins(:team)
+                          .joins("LEFT OUTER JOIN (#{user_assignments.to_sql} UNION #{team_assignments.to_sql} UNION #{user_group_assignments.to_sql})
+                                 all_assigned_users ON all_assigned_users.assignable_id = repositories.id")
+                          .joins('INNER JOIN teams AS teams_repositories ON teams_repositories.id = repositories.team_id')
                           .select('repositories.*')
-                          .select('MAX(teams.name) AS team_name')
+                          .select('MAX(teams_repositories.name) AS team_name')
                           .select('MAX(creators.full_name) AS created_by_user')
                           .select('MAX(archivers.full_name) AS archived_by_user')
+                          .select('COUNT(DISTINCT all_assigned_users.user_id) AS "assigned_users_count"')
                           .select(shared_sql_select)
                           .preload(:team_assignments, :user_group_assignments, user_assignments: %i(user user_role))
                           .group('repositories.id')
@@ -30,7 +41,7 @@ module Lists
       @records = @records.where_attributes_like(
         [
           'repositories.name',
-          'teams.name',
+          'teams_repositories.name',
           'creators.full_name',
           'archivers.full_name'
         ],
@@ -48,7 +59,8 @@ module Lists
         archived_by: 'archived_by_user',
         nr_of_rows: 'repository_rows_count',
         code: 'repositories.id',
-        shared_label: 'shared'
+        shared_label: 'shared',
+        assigned_users: 'assigned_users_count'
       }
     end
 
