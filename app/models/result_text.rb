@@ -2,7 +2,10 @@
 
 class ResultText < ApplicationRecord
   include TinyMceImages
+  include SearchableModel
   include ActionView::Helpers::TextHelper
+
+  SEARCHABLE_ATTRIBUTES = ['result_texts.name', 'result_texts.text'].freeze
 
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }

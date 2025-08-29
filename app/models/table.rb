@@ -4,6 +4,8 @@ class Table < ApplicationRecord
   include SearchableModel
   include TableHelper
 
+  SEARCHABLE_ATTRIBUTES = ['tables.name', 'tables.data_vector'].freeze
+
   auto_strip_attributes :name, nullify: false
   validates :name,
             length: { maximum: Constants::NAME_MAX_LENGTH }

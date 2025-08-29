@@ -2,7 +2,8 @@
 
 module SearchableModel
   extend ActiveSupport::Concern
-  DATA_VECTOR_ATTRIBUTES = ['asset_text_data.data_vector', 'tables.data_vector'].freeze
+  SEARCH_DATA_VECTOR_ATTRIBUTES = ['asset_text_data.data_vector', 'tables.data_vector'].freeze
+  SEARCH_NUMBER_ATTRIBUTES = %w(repository_rows.id repository_number_values.data).freeze
 
   included do
     # Helper function for relations that
@@ -33,10 +34,12 @@ module SearchableModel
 
           where_str =
             (attrs.map.with_index do |a, i|
-              if %w(repository_rows.id repository_number_values.data).include?(a)
+              if SEARCH_NUMBER_ATTRIBUTES.include?(a)
                 "((#{a})::text) #{like} :t#{i} OR "
               elsif defined?(model::PREFIXED_ID_SQL) && a == model::PREFIXED_ID_SQL
                 "#{a} #{like} :t#{i} OR "
+              elsif SEARCH_DATA_VECTOR_ATTRIBUTES.include?(a)
+                "#{a} @@ plainto_tsquery(:t#{i}) OR "
               else
                 col = options[:at_search].to_s == 'true' ? "lower(#{a})": a
                 "(trim_html_tags(#{col})) #{like} :t#{i} OR "
@@ -45,9 +48,10 @@ module SearchableModel
             ).join[0..-5]
           vals = (
             attrs.map.with_index do |_, i|
-              ["t#{i}".to_sym, a_query]
+              [:"t#{i}", a_query]
             end
           ).to_h
+
           return where(where_str, vals)
         end
       end
@@ -59,10 +63,12 @@ module SearchableModel
           a_query = query.split.map { |a| "%#{sanitize_sql_like(a)}%" }
           where_str =
             (attrs.map.with_index do |a, i|
-              if %w(repository_rows.id repository_number_values.data).include?(a)
+              if SEARCH_NUMBER_ATTRIBUTES.include?(a)
                 "((#{a})::text) #{like} ANY (array[:t#{i}]) OR "
               elsif defined?(model::PREFIXED_ID_SQL) && a == model::PREFIXED_ID_SQL
                 "#{a} #{like} ANY (array[:t#{i}]) OR "
+              elsif SEARCH_DATA_VECTOR_ATTRIBUTES.include?(a)
+                "#{a} @@ plainto_tsquery(:t#{i}) OR "
               else
                 "(trim_html_tags(#{a})) #{like} ANY (array[:t#{i}]) OR "
               end
@@ -70,20 +76,22 @@ module SearchableModel
             ).join[0..-5]
           vals = (
             attrs.map.with_index do |_, i|
-              ["t#{i}".to_sym, a_query]
+              [:"t#{i}", a_query]
             end
           ).to_h
 
-          return where(where_str, vals)
+          where(where_str, vals)
         end
       else
         unless attrs.blank?
           where_str =
             (attrs.map.with_index do |a, i|
-              if %w(repository_rows.id repository_number_values.data).include?(a)
+              if SEARCH_NUMBER_ATTRIBUTES.include?(a)
                 "((#{a})::text) #{like} :t#{i} OR "
               elsif defined?(model::PREFIXED_ID_SQL) && a == model::PREFIXED_ID_SQL
                 "#{a} #{like} :t#{i} OR "
+              elsif SEARCH_DATA_VECTOR_ATTRIBUTES.include?(a)
+                "#{a} @@ plainto_tsquery(:t#{i}) OR "
               else
                 "(trim_html_tags(#{a})) #{like} :t#{i} OR "
               end
@@ -91,11 +99,11 @@ module SearchableModel
             ).join[0..-5]
           vals = (
             attrs.map.with_index do |_, i|
-              ["t#{i}".to_sym, "%#{sanitize_sql_like(query.to_s)}%"]
+              [:"t#{i}", "%#{sanitize_sql_like(query.to_s)}%"]
             end
           ).to_h
 
-          return where(where_str, vals)
+          where(where_str, vals)
         end
       end
     }
@@ -103,32 +111,54 @@ module SearchableModel
     scope :where_attributes_like_boolean, lambda { |attributes, query, options = {}|
       return unless query
 
-      normalized_attrs = normalized_search_attributes(attributes)
       query_clauses = []
-      value_hash = {}
+      query_params = []
 
-      extract_phrases(query).each_with_index do |phrase, index|
-        if options[:with_subquery]
-          subquery_result = if phrase[:negate]
-                              options[:raw_input].where.not(id: search_subquery(phrase[:query], options[:raw_input]))
-                            else
-                              options[:raw_input].where(id: search_subquery(phrase[:query], options[:raw_input]))
-                            end
-          query_clauses = if index.zero?
-                            subquery_result
-                          elsif phrase[:current_operator] == 'or'
-                            query_clauses.or(subquery_result)
-                          else
-                            query_clauses.and(subquery_result)
-                          end
-        else
-          phrase[:current_operator] = '' if index.zero?
-          create_query_clause(normalized_attrs, index, phrase[:negate], query_clauses,
-                              value_hash, phrase[:query], phrase[:current_operator])
+      tokenize_search_query(query).each_with_index do |token, index|
+        if token[:type] == :keyword
+          exact_match = token[:value].split.size > 1
+          like = exact_match ? '~' : 'ILIKE'
+
+          where_str = (attributes.map do |attribute|
+            if attribute == :children
+              "\"#{table_name}\".\"id\" IN (#{where_children_attributes_like(token[:value]).select(:id).to_sql}) OR "
+            elsif SEARCH_NUMBER_ATTRIBUTES.include?(attribute)
+              "(#{attribute}::text #{like} ?) OR "
+            elsif defined?(model::PREFIXED_ID_SQL) && attribute == model::PREFIXED_ID_SQL
+              "#{attribute} #{like} ? OR "
+            elsif SEARCH_DATA_VECTOR_ATTRIBUTES.include?(attribute)
+              "#{attribute} @@ plainto_tsquery(?) OR "
+            else
+              "trim_html_tags(#{attribute}) #{like} ? OR "
+            end
+          end).join[0..-5]
+
+          query_clauses << "(#{where_str})"
+
+          attributes.each do |attribute|
+            next if attribute == :children
+
+            query_params <<
+              if SEARCH_DATA_VECTOR_ATTRIBUTES.include?(attribute) && !exact_match
+                token[:value].split(/\s+/).map! { |t| "#{t}:*" }
+              else
+                exact_match ? "(^|\\s)#{Regexp.escape(token[:value])}(\\s|$)" : "%#{sanitize_sql_like(token[:value])}%"
+              end
+          end
+        elsif token[:type] == :operator
+          query_clauses <<
+            case token[:value]
+            when 'AND'
+              ' AND '
+            when 'OR'
+              ' OR '
+            when 'NOT'
+              index.zero? ? ' NOT ' : ' AND NOT '
+            end
         end
       end
 
-      options[:with_subquery] ? query_clauses : where(query_clauses.join, value_hash)
+      where(query_clauses.join, *query_params)
     }
 
     def self.normalized_search_attributes(attributes)
@@ -173,47 +203,34 @@ module SearchableModel
       extracted_phrases
     end
 
-    def self.create_query_clause(attrs, index, negate, query_clauses, value_hash, phrase, current_operator)
-      exact_match = phrase =~ /^".*"$/
-      like = exact_match ? '~' : 'ILIKE'
+    def self.tokenize_search_query(query)
+      tokens = []
 
-      where_clause = (attrs.map.with_index do |attribute, i|
-        i = (index * attrs.count) + i
-        if %w(repository_rows.id repository_number_values.data).include?(attribute)
-          "#{attribute} IS NOT NULL AND (((#{attribute})::text) #{like} :t#{i}) OR "
-        elsif defined?(model::PREFIXED_ID_SQL) && attribute == model::PREFIXED_ID_SQL
-          "#{attribute} IS NOT NULL AND (#{attribute} #{like} :t#{i}) OR "
-        elsif DATA_VECTOR_ATTRIBUTES.include?(attribute)
-          "#{attribute} @@ plainto_tsquery(:t#{i}) OR "
+      # Regular expression to match:
+      # - Quoted phrases: "any phrase inside quotes"
+      # - Or single word tokens
+      pattern = /
+        "(.*?)"         |   # Capture quoted phrases
+        (\S+)               # Or single non-space word
+      /x
+
+      query.scan(pattern) do |quoted, word|
+        if quoted
+          tokens << { type: :keyword, value: quoted }
         else
-          "#{attribute} IS NOT NULL AND ((trim_html_tags(#{attribute})) #{like} :t#{i}) OR "
-        end
-      end).join[0..-5]
+          # Check if it's a boolean operator (only if not inside quotes)
+          case word.upcase
+          when 'AND', 'OR', 'NOT'
+            next if tokens.present? && tokens.last[:type] == :operator
 
-      query_clauses << if negate
-                         " #{current_operator} NOT (#{where_clause})"
-                       else
-                         "#{current_operator} (#{where_clause})"
-                       end
-
-      value_hash.merge!(
-        (attrs.map.with_index do |attribute, i|
-          i = (index * attrs.count) + i
-
-          new_phrase = exact_match ? phrase[1..-2] : phrase
-          if DATA_VECTOR_ATTRIBUTES.include?(attribute) && !exact_match
-            new_phrase = new_phrase.strip.split(/\s+/)
-            new_phrase.map! { |t| "#{t}:*" }
+            tokens << { type: :operator, value: word.upcase }
           else
-            new_phrase = exact_match ? "(^|\\s)#{Regexp.escape(new_phrase)}(\\s|$)" : "%#{sanitize_sql_like(new_phrase)}%"
+            tokens << { type: :keyword, value: word }
           end
-          [:"t#{i}", new_phrase]
-        end).to_h
-      )
-    end
+        end
+      end
 
-    def self.search_subquery(query, raw_input)
-      raise NotImplementedError
+      tokens
     end
   end
 end
