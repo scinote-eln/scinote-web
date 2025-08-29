@@ -152,6 +152,10 @@ Rails.application.routes.draw do
           resources :tags, only: %i(index create update destroy) do
             collection do
               post :actions_toolbar
+              get :list
+            end
+            member do
+              post :merge
             end
           end
           resources :user_groups, only: %i(index create update destroy show) do

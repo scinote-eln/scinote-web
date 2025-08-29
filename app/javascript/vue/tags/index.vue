@@ -14,8 +14,14 @@
                @changeColor="changeColor"
                @changeName="changeName"
                @createRow="createTag"
+               @merge="openMergeModal"
                @delete="deleteTag"
       />
+    <merge-modal v-if="mergeIds"
+                 :team-id="teamId"
+                 :mergeIds="mergeIds"
+                 :list-url="listUrl"
+                 @close="mergeIds = null; reloadingTable = true"/>
   </div>
 </template>
 
@@ -27,6 +33,7 @@ import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
 import colorRenderer from './renderers/color.vue';
 import nameRenderer from './renderers/name.vue';
+import mergeModal from './modals/merge.vue';
 
 import {
   users_settings_team_tag_path,
@@ -38,6 +45,8 @@ export default {
   components: {
     DataTable,
     colorRenderer,
+    nameRenderer,
+    mergeModal
   },
   props: {
     dataSource: {
@@ -54,12 +63,20 @@ export default {
     tagsColors: {
       type: Object,
       required: true
+    },
+    teamId: {
+      required: true
+    },
+    listUrl: {
+      type: String,
+      required: true
     }
   },
   data() {
     return {
       reloadingTable: false,
       addingNewRow: false,
+      mergeIds: null,
       newRowTemplate: {
         name: {
           value: '',
@@ -143,6 +160,9 @@ export default {
       }).then(() => {
         this.reloadingTable = true;
       })
+    },
+    openMergeModal(event, rows) {
+      this.mergeIds = rows.map(row => row.id);
     },
     createTag(newTag) {
       this.addingNewRow = false;

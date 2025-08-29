@@ -9,6 +9,8 @@
   <%= render partial: 'users/settings/teams/header' %>
   <div id="tagsTable" class="fixed-content-body user-groups-table-container">
     <tags-table
+      team-id="<%= @team.id %>"
+      list-url="<%= list_users_settings_team_tags_path(@team) %>"
       actions-url="<%= actions_toolbar_users_settings_team_tags_path(@team) %>"
       data-source="<%= users_settings_team_tags_path(@team, format: :json) %>"
       create-url="<%= users_settings_team_tags_path(@team)  %>"
