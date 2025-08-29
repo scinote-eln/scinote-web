@@ -60,8 +60,9 @@ class NavigationsController < ApplicationController
   end
 
   def settings_menu_links
+
     links = [{ name: I18n.t('users.settings.sidebar.teams'), url: teams_path }]
-    if can_manage_team?(current_team)
+    if current_team && can_manage_team?(current_team)
       links << { name: I18n.t('users.settings.sidebar.account_nav.automations'), url: automations_team_path(current_team) }
       links << { name: I18n.t('users.settings.sidebar.groups'), url: users_settings_team_user_groups_path(current_team) }
     end
