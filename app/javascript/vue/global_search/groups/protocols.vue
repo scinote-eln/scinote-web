@@ -19,12 +19,12 @@
         ]"></TableHeader>
         <div v-for="(row, index) in preparedResults" :key="row.id" class="contents group">
           <hr class="col-span-6 w-full m-0" v-if="index > 0">
-          <LinkTemplate :url="row.attributes.url" :value="labelName({ name: row.attributes.name, archived: row.attributes.archived})"/>
-          <CellTemplate :label="i18n.t('search.index.id')" :value="row.attributes.code"/>
-          <CellTemplate :label="i18n.t('search.index.created_at')" :value="row.attributes.created_at"/>
-          <CellTemplate :label="i18n.t('search.index.updated_at')" :value="row.attributes.updated_at"/>
-          <CellTemplate :label="i18n.t('search.index.created_by')" :avatar="row.attributes.created_by.avatar_url" :value="row.attributes.created_by.name"/>
-          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
+          <LinkTemplate :url="row.url" :value="labelName({ name: row.name, archived: row.archived})"/>
+          <CellTemplate :label="i18n.t('search.index.id')" :value="row.code"/>
+          <CellTemplate :label="i18n.t('search.index.created_at')" :value="row.created_at"/>
+          <CellTemplate :label="i18n.t('search.index.updated_at')" :value="row.updated_at"/>
+          <CellTemplate :label="i18n.t('search.index.created_by')" :avatar="row.created_by.avatar_url" :value="row.created_by.name"/>
+          <CellTemplate :label="i18n.t('search.index.team')" :url="row.team.url" :value="row.team.name"/>
         </div>
       </div>
       <div v-if="viewAll">
