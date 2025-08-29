@@ -58,6 +58,9 @@ module Scinote
     # Add rack-attack middleware for request rate limiting
     config.middleware.use Rack::Attack
 
+    config.i18n.available_locales = %i(en de)
+    config.i18n.default_locale = :de
+    config.i18n.fallbacks = [:en]
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
 
     config.encoding = 'utf-8'

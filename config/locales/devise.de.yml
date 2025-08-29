@@ -1,0 +1,83 @@
+---
+de:
+  devise:
+    confirmations:
+      confirmed: Ihre E-Mail-Adresse wurde erfolgreich bestätigt.
+      send_instructions: Sie erhalten in wenigen Minuten eine E-Mail mit Anweisungen,
+        wie Sie Ihre E-Mail-Adresse bestätigen können.
+      send_paranoid_instructions: Wenn Ihre E-Mail-Adresse in unserer Datenbank existiert,
+        erhalten Sie in wenigen Minuten eine E-Mail mit Anweisungen, wie Sie Ihre
+        E-Mail-Adresse bestätigen können.
+    failure:
+      already_authenticated: ''
+      inactive: Ihr Konto ist noch nicht aktiviert.
+      invalid: Ungültige %{authentication_keys} oder Passwort.
+      locked: Ihr Konto ist gesperrt.
+      last_attempt: Sie haben noch einen Versuch, bevor Ihr Konto gesperrt wird.
+      not_found_in_database: Ungültige %{authentication_keys} oder Passwort.
+      timeout: Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an, um fortzufahren.
+      unauthenticated: Sie müssen sich anmelden oder registrieren, um fortzufahren.
+      unconfirmed: Sie müssen Ihre E-Mail-Adresse bestätigen, bevor Sie fortfahren
+        können.
+      auth_method_disabled: Diese Authentifizierungsmethode ist deaktiviert.
+    mailer:
+      confirmation_instructions:
+        subject: Bestätigungsanweisungen
+      reset_password_instructions:
+        subject: Anleitung zum Zurücksetzen des Passworts
+      unlock_instructions:
+        subject: Entsperranweisungen
+    omniauth_callbacks:
+      failure: Konnte Sie nicht von %{kind} authentifizieren, weil "%{reason}".
+      success: Erfolgreich von %{kind} Konto authentifiziert.
+      missing_attribute: Das Attribut %{attribute} fehlt oder ist leer.
+    passwords:
+      no_token: Sie können nicht auf diese Seite zugreifen, ohne von einer E-Mail
+        zur Zurücksetzung des Passworts zu kommen. Wenn Sie von einer E-Mail zur Zurücksetzung
+        des Passworts kommen, stellen Sie bitte sicher, dass Sie die vollständige
+        bereitgestellte URL verwendet haben.
+      send_instructions: Wenn ein Konto mit dieser E-Mail-Adresse verknüpft ist, werden
+        in Kürze Anweisungen zum Zurücksetzen des Passworts gesendet.
+      send_paranoid_instructions: Wenn Ihre E-Mail-Adresse in unserer Datenbank existiert,
+        erhalten Sie in wenigen Minuten einen Link zur Passwortwiederherstellung an
+        Ihre E-Mail-Adresse.
+      updated: Ihr Passwort wurde erfolgreich geändert. Sie sind jetzt angemeldet.
+      updated_not_active: Ihr Passwort wurde erfolgreich geändert.
+    registrations:
+      destroyed: Auf Wiedersehen! Ihr Konto wurde erfolgreich storniert. Wir hoffen,
+        Sie bald wiederzusehen.
+      signed_up: Willkommen! Sie haben sich erfolgreich angemeldet.
+      signed_up_but_inactive: Sie haben sich erfolgreich angemeldet. Allerdings konnten
+        wir Sie nicht anmelden, da Ihr Konto noch nicht aktiviert ist.
+      signed_up_but_locked: Sie haben sich erfolgreich registriert. Wir konnten Sie
+        jedoch nicht anmelden, da Ihr Konto gesperrt ist.
+      signed_up_but_unconfirmed: Eine Nachricht mit einem Bestätigungslink wurde an
+        Ihre E-Mail-Adresse gesendet. Bitte folgen Sie dem Link, um Ihr Konto zu aktivieren.
+      update_needs_confirmation: Sie haben Ihr Konto erfolgreich aktualisiert, aber
+        wir müssen Ihre neue E-Mail-Adresse überprüfen. Bitte überprüfen Sie Ihre
+        E-Mail und folgen Sie dem Bestätigungslink, um Ihre neue E-Mail-Adresse zu
+        bestätigen.
+      updated: Ihr Konto wurde erfolgreich aktualisiert.
+    sessions:
+      signed_in: Erfolgreich angemeldet.
+      signed_out: Erfolgreich abgemeldet.
+      already_signed_out: Erfolgreich abgemeldet.
+    unlocks:
+      send_instructions: Sie erhalten in wenigen Minuten eine E-Mail mit Anweisungen,
+        wie Sie Ihr Konto entsperren können.
+      send_paranoid_instructions: Wenn Ihr Konto existiert, erhalten Sie in wenigen
+        Minuten eine E-Mail mit Anweisungen, wie Sie es entsperren können.
+      unlocked: Ihr Konto wurde erfolgreich entsperrt. Bitte melden Sie sich an, um
+        fortzufahren.
+  errors:
+    messages:
+      already_confirmed: Diese E-Mail wurde bereits bestätigt, bitte versuchen Sie
+        sich einzuloggen.
+      confirmation_period_expired: muss innerhalb von %{period} bestätigt werden,
+        bitte fordern Sie eine neue an
+      expired: ist abgelaufen, bitte fordern Sie eine neue an
+      not_found: Nicht gefunden
+      not_locked: war nicht gesperrt
+      not_saved:
+        one: '1 Fehler verhinderte, dass dieses %{resource} gespeichert wurde:'
+        other: "%{count} Fehler verhinderten, dass diese %{resource} gespeichert wurde:"

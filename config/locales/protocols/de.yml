@@ -1,0 +1,55 @@
+---
+de:
+  protocol_importers:
+    errors:
+      cannot_import_protocol: Wir konnten das Protokoll nicht importieren, weil etwas
+        schief gelaufen ist.
+    new:
+      modal_title: Importprotokoll - %{protocol_name}
+    card:
+      views_and_steps: "%{nr_of_views} Aufrufe • %{nr_of_steps} Schritte"
+      import_button_text: Import...
+    show_more_button:
+      title: Mehr Protokolle anzeigen
+    templates:
+      amount:
+        title: Menge
+      command:
+        title: Befehl
+        name: Name
+        code: Befehl
+      concentration:
+        title: Konzentration
+      dataset:
+        title: Datensatz
+        name: Name
+        link: Verbindung
+      details:
+        title: Details
+      duration:
+        title: Dauer
+        unit: seconds
+      gotostep:
+        title: Gehe zum Schritt
+        number: Schritt Nr.
+        reason: Wann
+      link:
+        title: Verbindung
+      note:
+        title: Hinweis
+        author: Autor
+      reagent:
+        title: Reagenzien
+        name: Name
+        mol_weight: Molekulargewicht
+        link: Verbindung
+      result:
+        title: Erwartetes Ergebnis
+      software:
+        title: Software
+        name: Name
+        link: Verbindung
+      temperature:
+        title: Temperatur
+      warning:
+        title: Warnung

@@ -1,0 +1,113 @@
+---
+de:
+  dashboard:
+    current_tasks:
+      title: Aktuelle Arbeit
+      search: Suchaufgaben
+      navbar:
+        favorites: Favoriten
+        assigned: Mir zugewiesen
+        all: Alle
+      filter:
+        title: Filterungen
+        clear: Klar
+        sort: Sortieren nach
+        due_first: Fällig zuerst
+        due_last: Fällig letzte
+        start_first: Begonnen zuerst
+        start_last: Begonnen letzte
+        atoz: Name A bis Z
+        ztoa: Name Z to A
+        id_asc: ID aufsteigend
+        id_desc: ID absteigend
+        display: Anzeigen von Statusmeldungen
+        statuses:
+          placeholder: Wählen Sie Status aus
+          all_selected: Alle ausgewählt
+          selected: selected
+        uncompleted_tasks: Aufgaben in Bearbeitung
+        completed_tasks: Aufgaben abgeschlossen
+        project: Projekt
+        select_project: Alle Projekte
+        experiment: Experiment
+        select_experiment: Alle Experimente
+        apply: Anwenden
+        show_results: Ergebnisse anzeigen
+      no_tasks:
+        favorites: Projekte, Experimente und Aufgaben, die Sie als Favoriten markieren,
+          erscheinen hier.
+        assigned_tasks:
+          title: Es sind im Moment keine Aufgaben für dich zugewiesen.
+          description: Verwenden Sie die Schaltfläche "+ Neue Aufgabe" oben, um eine
+            neue Aufgabe zu erstellen, oder weisen Sie sich selbst einer vorhandenen
+            Aufgabe zu.
+        team_tasks:
+          title: Ihr Arbeitsbereich hat derzeit keine Aufgaben.
+        search_result:
+          title: Keine Ergebnisse.
+      due_date_html: 'Fälligkeitsdatum: <b>%{date}</b>'
+      due_date_overdue_html: 'Fälligkeitsdatum: <b>%{date} (überfällig)</b>'
+      completed_on_html: 'Abgeschlossen am: <b>%{date}</b>'
+    calendar:
+      due_on: Fällig am
+      dow:
+        su: Su
+        mo: Mo
+        tu: Du
+        we: Wir
+        th: Th
+        fr: Fr
+        sa: Sa
+    quick_start:
+      title: Schnellstart
+      description: Beginnen Sie schnell eine neue Aufgabe, erstellen Sie ein neues
+        Projekt oder einen neuen Bericht.
+      new_task: Neue Aufgabe
+      new_protocol: Neues Protokoll
+      new_report: Neuer Bericht
+      placeholder:
+        title: Kann nicht erstellt werden.
+        description: Als Gast in diesem Arbeitsbereich können Sie nichts erstellen.
+    create_task_modal:
+      title: Neue Aufgabe erstellen
+      description: Geben Sie einfach die Felder unten ein, um Platz für Ihre neue
+        Aufgabe zu finden oder zu erstellen.
+      project: Projekt
+      task_name: Aufgabename
+      task_name_placeholder: Geben Sie den Aufgabennamen ein
+      task_name_error: Der Aufgabenname muss mindestens %{length} Zeichen lang sein.
+      project_visibility_label: Sichtbar für
+      project_visibility_members: Projektmitglieder
+      project_visibility_all: Alle Arbeitsbereichsmitglieder
+      experiment: Experiment
+      user_role: Benutzerrolle
+      project_placeholder: Projekt auswählen oder erstellen
+      experiment_placeholder: Experiment auswählen oder erstellen
+      user_role_placeholder: Standardbenutzerrolle auswählen
+      experiment_disabled_placeholder: Wählen Sie ein Projekt aus, um Experimente
+        zu aktivieren.
+      filter_create_new: Erstellen
+      cancel: Stornieren
+      create: Erstellen
+      new_project: Erstelle das Projekt "%{name}"
+      new_experiment: Erstelle das Experiment "%{name}"
+    recent_work:
+      title: Meine kürzliche Aktivität
+      no_results:
+        title: Du hast in letzter Zeit an nichts gearbeitet.
+        description: Alle Aufgaben, Projekte, Bestandsprotokolle und Berichte, an
+          denen Sie zuletzt gearbeitet haben, werden hier angezeigt, wenn Sie Änderungen
+          vornehmen.
+      modes:
+        all: Alles
+        projects: PROJEKTE
+        repositories: INVENTAR
+        protocols: PROTOKOLLE
+        reports: BERICHTE
+      subject_type:
+        Project: Projekt
+        Experiment: Experiment
+        MyModule: Aufgabe
+        RepositoryBase: Inventar
+        Protocol: Protokoll
+        Report: Bericht
