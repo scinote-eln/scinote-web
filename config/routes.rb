@@ -149,6 +149,11 @@ Rails.application.routes.draw do
         resource :user_settings, only: %i(show update)
 
         resources :teams, only: [] do
+          resources :tags, only: %i(index create update destroy) do
+            collection do
+              post :actions_toolbar
+            end
+          end
           resources :user_groups, only: %i(index create update destroy show) do
             resources :user_group_memberships, only: %i(index create update) do
               collection do
@@ -393,8 +398,6 @@ Rails.application.routes.draw do
       # Activities popup (JSON) for individual project in projects index,
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
-      resources :tags, only: %i(index create update destroy)
-      post :create_tag
 
       resources :reports,
                 path: '/reports',
@@ -470,7 +473,6 @@ Rails.application.routes.draw do
         get 'canvas/small_zoom', to: 'canvas#small_zoom' # AJAX-loaded canvas zoom
         post 'canvas', to: 'canvas#update' # Save updated canvas action
         get 'module_archive' # Module archive for single experiment
-        get 'my_module_tags', to: 'my_module_tags#canvas_index'
         post 'archive' # archive experiment
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
@@ -519,15 +521,6 @@ Rails.application.routes.draw do
         post :favorite
         post :unfavorite
         get :assigned_users
-      end
-      resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
-        collection do
-          get :search_tags
-          get :assigned_tags
-        end
-        member do
-          post :destroy_by_tag_id
-        end
       end
       resources :user_my_modules, path: '/users', only: %i(index create destroy) do
         collection do
@@ -602,7 +595,6 @@ Rails.application.routes.draw do
 
       # Those routes are defined outside of member block
       # to preserve original id parameters in URL.
-      get 'tags/edit', to: 'my_module_tags#index_edit'
       get 'users/edit', to: 'user_my_modules#index_edit'
 
       resources :results, only: %i(index show create update destroy) do

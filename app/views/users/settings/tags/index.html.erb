@@ -1,0 +1,19 @@
+<% provide(:head_title, t("users.settings.teams.head_title")) %>
+<% provide(:container_class, "no-second-nav-container") %>
+
+<% content_for :head do %>
+  <meta id="cache-directive" name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
+<div class="content-pane flexible with-grey-background">
+  <%= render partial: 'users/settings/teams/header' %>
+  <div id="tagsTable" class="fixed-content-body user-groups-table-container">
+    <tags-table
+      actions-url="<%= actions_toolbar_users_settings_team_tags_path(@team) %>"
+      data-source="<%= users_settings_team_tags_path(@team, format: :json) %>"
+      create-url="<%= users_settings_team_tags_path(@team)  %>"
+      :tags-colors="<%= Constants::TAG_COLORS.to_json %>"
+    />
+  </div>
+</div>
+<%= javascript_include_tag 'vue_tags_table' %>

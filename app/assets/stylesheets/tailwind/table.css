@@ -1,0 +1,12 @@
+@layer components {
+  .sci-table-input {
+    @apply bg-white !border-sn-science-blue border h-8 w-full;
+  }
+  .sci-table-input:focus {
+    @apply  !border-sn-science-blue outline-none shadow-none;
+  }
+
+  .sci-table-input.error {
+    @apply !border-sn-alert-passion h-6;
+  }
+}
