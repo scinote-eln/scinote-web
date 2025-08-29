@@ -19,16 +19,16 @@
         ]"></TableHeader>
         <div v-for="(row, index) in preparedResults" :key="row.id" class="contents group">
           <hr class="col-span-6 w-full m-0" v-if="index > 0">
-          <LinkTemplate :url="row.attributes.parent.url" :icon="row.attributes.icon" :value="row.attributes.file_name"/>
-          <CellTemplate :label="i18n.t('search.index.created_at')" :value="row.attributes.created_at"/>
-          <CellTemplate :label=" i18n.t('search.index.updated_at')" :value="row.attributes.updated_at"/>
-          <CellTemplate :label="i18n.t(`search.index.${row.attributes.parent.type}`)" :url="row.attributes.parent.url" :value="labelName(row.attributes.parent)"/>
-          <CellTemplate v-if="row.attributes.repository.name" :label="i18n.t(`search.index.repository`)"
-                        :url="row.attributes.repository.url" :value="labelName(row.attributes.repository)"/>
-          <CellTemplate v-else-if="row.attributes.experiment.name" :label="i18n.t(`search.index.experiment`)"
-                        :url="row.attributes.experiment.url" :value="labelName(row.attributes.experiment)"/>
+          <LinkTemplate :url="row.parent.url" :icon="row.icon" :value="row.file_name"/>
+          <CellTemplate :label="i18n.t('search.index.created_at')" :value="row.created_at"/>
+          <CellTemplate :label=" i18n.t('search.index.updated_at')" :value="row.updated_at"/>
+          <CellTemplate :label="i18n.t(`search.index.${row.parent.type}`)" :url="row.parent.url" :value="labelName(row.parent)"/>
+          <CellTemplate v-if="row.repository.name" :label="i18n.t(`search.index.repository`)"
+                        :url="row.repository.url" :value="labelName(row.repository)"/>
+          <CellTemplate v-else-if="row.experiment.name" :label="i18n.t(`search.index.experiment`)"
+                        :url="row.experiment.url" :value="labelName(row.experiment)"/>
           <div v-else></div>
-          <CellTemplate :label="i18n.t('search.index.team')" :url="row.attributes.team.url" :value="row.attributes.team.name"/>
+          <CellTemplate :label="i18n.t('search.index.team')" :url="row.team.url" :value="row.team.name"/>
         </div>
       </div>
       <div v-if="viewAll">
