@@ -5,7 +5,7 @@ module Users
     class TagsController < ApplicationController
       before_action :load_team
       before_action :check_team_permissions
-      before_action :load_vars, only: %i(update destroy)
+      before_action :load_vars, only: %i(update destroy merge)
       before_action :set_breadcrumbs_items, only: %i(index)
 
       def index
@@ -18,6 +18,10 @@ module Users
             render json: tags, each_serializer: Lists::TagSerializer, user: current_user, meta: pagination_dict(tags)
           end
         end
+      end
+
+      def list
+        @tags = @team.tags.order(:name)
       end
 
       def actions_toolbar
@@ -60,6 +64,23 @@ module Users
           render json: { message: :ok }, status: :ok
         else
           render json: { error: @tag.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
+      def merge
+        ActiveRecord::Base.transaction do
+          tags_to_merge = @team.tags.where(id: params[:merge_ids]).where.not(id: @tag.id)
+
+          taggings_to_update = Tagging.where(tag_id: tags_to_merge.select(:id))
+                                      .where.not(id: Tagging.where(tag_id: @tag.id).select(:id))
+
+          taggings_to_update.update!(tag_id: @tag.id)
+          tags_to_merge.each(&:destroy!)
+
+          render json: { message: :ok }, status: :ok
+        rescue ActiveRecord::RecordInvalid => e
+          render json: { error: e.message }, status: :unprocessable_entity
+          raise ActiveRecord::Rollback
         end
       end
 

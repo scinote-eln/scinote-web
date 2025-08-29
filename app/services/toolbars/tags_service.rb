@@ -19,6 +19,7 @@ module Toolbars
       return [] if @tags.none?
 
       [
+        merge_action,
         delete_action
       ].compact
     end
@@ -35,6 +36,17 @@ module Toolbars
         label: I18n.t('tags.index.toolbar.delete'),
         icon: 'sn-icon sn-icon-delete',
         path: users_settings_team_tag_path(@team, @tags.first),
+        type: :emit
+      }
+    end
+
+    def merge_action
+      # return unless can_manage_team?(@team)
+
+      {
+        name: 'merge',
+        label: I18n.t('tags.index.toolbar.merge'),
+        icon: 'sn-icon sn-icon-merge',
         type: :emit
       }
     end
