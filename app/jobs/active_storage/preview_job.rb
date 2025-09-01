@@ -9,14 +9,16 @@ class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
   discard_on StandardError do |job, error|
     blob = ActiveStorage::Blob.find_by(id: job.arguments.first)
     ActiveRecord::Base.no_touching do
-      blob&.attachments&.take&.record&.update(file_processing: false)
+      blob&.attachments&.take&.record&.update!(file_processing: false)
+      blob.metadata['preview_failed'] = true
+      blob.save!
     end
     Rails.logger.error "Couldn't generate preview for Blob with id: #{job.arguments.first}. Error:\n #{error}"
   end
 
   discard_on ActiveRecord::RecordNotFound
 
-  retry_on ActiveStorage::IntegrityError, attempts: 3, wait: :exponentially_longer
+  retry_on ActiveStorage::IntegrityError, attempts: 3, wait: :polynomially_longer
 
   def perform(blob_id)
     blob = ActiveStorage::Blob.find(blob_id)
