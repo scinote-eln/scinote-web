@@ -5,7 +5,7 @@ module Lists
     private
 
     def fetch_records
-      @records = @raw_data.left_joins(:created_by, :taggings)
+      @records = @raw_data.left_joins(:created_by, :taggings).includes(:created_by, :last_modified_by)
                           .select('tags.*')
                           .select('array_agg(users.full_name) AS created_by_user')
                           .select('COUNT(taggings.id) AS taggings_count')
