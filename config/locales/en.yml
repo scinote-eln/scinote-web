@@ -494,6 +494,8 @@ en:
       title: "More search options"
       sub_title: "Refine your search by applying the filters below."
       by_type: "Filter by type"
+      by_tag: "Filter by tag"
+      by_tag_placeholder: "Select tags"
       by_created_date: "Filter by created date"
       by_updated_date: "Filter by updated date"
       by_team: "Filter by workspace"

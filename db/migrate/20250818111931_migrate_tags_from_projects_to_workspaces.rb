@@ -18,6 +18,10 @@ class MigrateTagsFromProjectsToWorkspaces < ActiveRecord::Migration[7.2]
     SQL
 
     execute <<~SQL.squish
+      SELECT setval('taggings_id_seq', (SELECT MAX(id) FROM taggings));
+    SQL
+
+    execute <<~SQL.squish
       UPDATE tags
       SET team_id = projects.team_id
       FROM projects

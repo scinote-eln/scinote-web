@@ -196,8 +196,8 @@ export default {
     },
     tagsRenderer(tag) {
       return `<div class="flex items-center gap-2">
-                <span class="w-4 h-4 rounded-full" style="background-color: ${tag[2]}"></span>
-                <span title="${tag[1]}" class="truncate">${tag[1]}</span>
+                <span class="w-4 h-4 rounded-full" style="background-color: ${escapeHtml(tag[2])}"></span>
+                <span title="${escapeHtml(tag[1])}" class="truncate">${escapeHtml(tag[1])}</span>
               </div>`;
     },
     usersRenderer(user) {

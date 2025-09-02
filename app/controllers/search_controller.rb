@@ -157,7 +157,8 @@ class SearchController < ApplicationController
   def filter_records
     filter_datetime!(:created_at) if @filters[:created_at].present?
     filter_datetime!(:updated_at) if @filters[:updated_at].present?
-    filter_users! if @filters[:users].present?
+    filter_by_users! if @filters[:users].present?
+    filter_by_tags! if @filters[:tags].present? && @model == MyModule
   end
 
   def sort_records
@@ -198,7 +199,7 @@ class SearchController < ApplicationController
     @records = @records.where("#{model_name}.#{attribute} <= ?", to_date) if to_date.present?
   end
 
-  def filter_users!
+  def filter_by_users!
     @records = @records.joins("INNER JOIN activities ON #{@model.model_name.collection}.id = activities.subject_id
                                AND activities.subject_type= '#{@model.name}'")
 
@@ -208,5 +209,10 @@ class SearchController < ApplicationController
                else
                  @records.where('activities.owner_id': user_ids)
                end
+  end
+
+  def filter_by_tags!
+    tag_ids = @filters[:tags]&.values&.collect(&:to_i)
+    @records = @records.joins(:tags).where(tags: { id: tag_ids })
   end
 end

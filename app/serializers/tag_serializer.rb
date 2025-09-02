@@ -7,7 +7,7 @@ class TagSerializer < ActiveModel::Serializer
 
   def urls
     {
-      update: project_tag_path(object.project, object, format: :json)
+      update: users_settings_team_tag_path(object.team, object, format: :json)
     }
   end
 end
