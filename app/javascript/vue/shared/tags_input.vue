@@ -44,7 +44,7 @@
 import axios from '../../packs/custom_axios.js';
 import GeneralDropdown from './general_dropdown.vue';
 import {
-  list_users_settings_team_tags_path,
+  tags_path
 } from '../../routes.js';
 
 export default {
@@ -59,9 +59,6 @@ export default {
     GeneralDropdown,
   },
   computed: {
-    tagsUrl() {
-      return list_users_settings_team_tags_path({team_id: this.subject.attributes.team_id});
-    },
     tagResourceUrl() {
       return this.subject.attributes.urls.tag_resource;
     },
@@ -83,7 +80,7 @@ export default {
   },
   methods: {
     loadAllTags() {
-      axios.get(this.tagsUrl).then((response) => {
+      axios.get(tags_path()).then((response) => {
         this.allTags = response.data.data;
       });
     },
