@@ -128,7 +128,7 @@
           {{ i18n.t('my_modules.details.completed_date') }}
         </span>
       </div>
-      <div class="flex gap-2 mb-6 mt-2.5">
+      <div class="flex gap-2 mt-2.5">
         <span class="sn-icon sn-icon-users"></span>
         <span class="tw-hidden lg:block shrink-0">
           {{ i18n.t('my_modules.details.assigned_users') }}
@@ -148,6 +148,15 @@
           </SelectDropdown>
         </div>
       </div>
+      <div class="flex gap-2 mb-6 mt-2.5">
+        <span class="sn-icon sn-icon-tag"></span>
+        <span class="tw-hidden lg:block shrink-0">
+          {{ i18n.t('my_modules.details.tags') }}
+        </span>
+        <div class="grow -mt-1.5">
+          <TagsInput :subject="myModule" v-if="myModule" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -156,6 +165,7 @@
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import DateTimePicker from '../shared/date_time_picker.vue';
 import SelectDropdown from '../shared/select_dropdown.vue';
+import TagsInput from '../shared/tags_input.vue';
 import axios from '../../packs/custom_axios.js';
 import escapeHtml from '../shared/escape_html.js';
 import {
@@ -175,7 +185,8 @@ export default {
   components: {
     GeneralDropdown,
     DateTimePicker,
-    SelectDropdown
+    SelectDropdown,
+    TagsInput
   },
   data() {
     return {

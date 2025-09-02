@@ -4238,6 +4238,9 @@ en:
       merge: "Merge"
       merge_success: "Tags merged successfully."
       merge_error: "There was an error merging tags."
+    tags_input:
+      add_tag: "Add tag"
+      edit_tags: "Edit tags"
   user_groups:
     promo:
       head_title: 'User groups'

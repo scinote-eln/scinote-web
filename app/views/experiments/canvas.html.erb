@@ -60,7 +60,7 @@
     </span>
   </div>
   <% if @active_modules %>
-    <div id="canvas-container" data-project-id="<%= @project.id %>" data-module-tags-url="<%= my_module_tags_experiment_path(@experiment, format: :json) %>">
+    <div id="canvas-container" data-project-id="<%= @project.id %>" data-module-tags-url="">
       <%= render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @active_modules } %>
     </div>
   <% else %>

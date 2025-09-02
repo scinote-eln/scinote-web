@@ -52,13 +52,5 @@
   </div>
 </div>
 
-<div class="module-tags">
-  <div class="tags-wrapper" id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
-    <span class="sn-icon block-icon sn-icon-tag mr-2.5"></span>
-    <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.details.tags" %></span>
-    <%= render partial: "my_modules/tags", locals: { my_module: @my_module, editable: my_module_editable } %>
-  </div>
-</div>
-
 <!-- Manage tags modal -->
 <%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: @my_module } %>
