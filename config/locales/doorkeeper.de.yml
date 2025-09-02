@@ -1,0 +1,136 @@
+---
+de:
+  activerecord:
+    attributes:
+      doorkeeper/application:
+        name: Name
+        redirect_uri: Weiterleitungs-URI
+    errors:
+      models:
+        doorkeeper/application:
+          attributes:
+            redirect_uri:
+              fragment_present: kann kein Fragment enthalten.
+              invalid_uri: muss eine gültige URI sein.
+              relative_uri: Es muss sich um eine absolute URI handeln.
+              secured_uri: muss eine HTTPS/SSL-URI sein.
+              forbidden_uri: wird vom Server verboten.
+  doorkeeper:
+    applications:
+      confirmations:
+        destroy: Sind Sie sicher?
+      buttons:
+        edit: Bearbeiten
+        destroy: Zerstören
+        submit: Einreichen
+        cancel: Stornieren
+        authorize: Autorisieren
+      form:
+        error: Hoppla! Überprüfen Sie Ihr Formular auf mögliche Fehler.
+      help:
+        confidential: Die Anwendung wird dort verwendet, wo das Client-Geheimnis vertraulich
+          behandelt werden kann. Native mobile Apps und Single Page Apps gelten als
+          nicht vertraulich.
+        redirect_uri: Verwenden Sie pro URI eine Zeile
+        native_redirect_uri: Verwenden Sie %{native_redirect_uri}, wenn Sie lokale
+          URIs für Entwicklungszwecke hinzufügen möchten.
+        scopes: Trennen Sie Bereiche mit Leerzeichen. Leer lassen, um die Standardbereiche
+          zu verwenden.
+      edit:
+        title: Anwendung bearbeiten
+      index:
+        title: Ihre Anwendungen
+        new: Neue Anwendung
+        name: Name
+        callback_url: Rückruf-URL
+        confidential: Vertraulich?
+        confidentiality:
+          'yes': Ja
+          'no': Nein
+      new:
+        title: Neue Anwendung
+      show:
+        title: 'Anwendung: %{name}'
+        application_id: Anwendungs-ID
+        secret: Geheimnis
+        scopes: Bereiche
+        confidential: Vertraulich
+        callback_urls: Callback URLs
+        actions: Aktionen
+    authorizations:
+      buttons:
+        authorize: Autorisieren
+        deny: Ablehnen
+      error:
+        title: Ein Fehler ist aufgetreten
+      new:
+        title: Autorisierung erforderlich
+        prompt: Autorisieren Sie %{client_name}, Ihr Konto zu verwenden?
+        able_to: Diese Anwendung wird in der Lage sein,
+      show:
+        title: Autorisierungscode
+    authorized_applications:
+      confirmations:
+        revoke: Sind Sie sicher?
+      buttons:
+        revoke: Widerrufen
+      index:
+        title: Ihre autorisierten Anwendungen
+        application: Anwendung
+        created_at: Erstellt am
+        date_format: "%Y-%m-%d %H:%M:%S"
+    errors:
+      messages:
+        invalid_request: Die Anfrage fehlt ein erforderlicher Parameter, enthält einen
+          nicht unterstützten Parameterwert oder ist anderweitig fehlerhaft.
+        invalid_redirect_uri: Die angeforderte Weiterleitungs-URI ist fehlerhaft oder
+          stimmt nicht mit der Client-Weiterleitungs-URI überein.
+        unauthorized_client: Der Client ist nicht berechtigt, diese Anfrage mit dieser
+          Methode auszuführen.
+        access_denied: Der Ressourceninhaber oder Autorisierungsserver hat die Anfrage
+          abgelehnt.
+        invalid_scope: Der angeforderte Bereich ist ungültig, unbekannt oder fehlerhaft.
+        server_error: Der Autorisierungsserver hat einen unerwarteten Zustand festgestellt,
+          der ihn daran hinderte, die Anfrage zu erfüllen.
+        temporarily_unavailable: Der Autorisierungsserver kann die Anfrage derzeit
+          aufgrund einer vorübergehenden Überlastung oder Wartung des Servers nicht
+          verarbeiten.
+        credential_flow_not_configured: Die Ressourcenbesitzer-Passwortanmeldeablauf
+          ist aufgrund der Nichtkonfiguration von Doorkeeper.configure.resource_owner_from_credentials
+          fehlgeschlagen.
+        resource_owner_authenticator_not_configured: Die Ressourcenbesitzer-Suche
+          ist aufgrund der Nichtkonfiguration von Doorkeeper.configure.resource_owner_authenticator
+          fehlgeschlagen.
+        unsupported_response_type: Der Autorisierungsserver unterstützt diesen Antworttyp
+          nicht.
+        invalid_client: Die Client-Authentifizierung ist aufgrund eines unbekannten
+          Clients, keiner enthaltenen Client-Authentifizierung oder eines nicht unterstützten
+          Authentifizierungsmethoden fehlgeschlagen.
+        invalid_grant: Der bereitgestellte Autorisierungscode ist ungültig, abgelaufen,
+          widerrufen, entspricht nicht der Weiterleitungs-URI, die bei der Autorisierungsanfrage
+          verwendet wurde, oder wurde an einen anderen Client ausgegeben.
+        unsupported_grant_type: Der Autorisierungs-Grant-Typ wird vom Autorisierungsserver
+          nicht unterstützt.
+        invalid_token:
+          revoked: Das Zugriffstoken wurde widerrufen.
+          expired: Das Zugriffstoken ist abgelaufen
+          unknown: Der Zugriffs-Token ist ungültig
+    flash:
+      applications:
+        create:
+          notice: Anwendung erstellt.
+        destroy:
+          notice: Anwendung gelöscht.
+        update:
+          notice: Anwendung aktualisiert.
+      authorized_applications:
+        destroy:
+          notice: Anwendung widerrufen.
+    layouts:
+      admin:
+        nav:
+          oauth2_provider: OAuth2-Anbieter
+          applications: Anwendungen
+          home: Zuhause
+      application:
+        title: OAuth Autorisierung erforderlich

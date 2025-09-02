@@ -1,0 +1,17 @@
+---
+de:
+  my_module_statuses:
+    dropdown:
+      status_label: Status
+      status_transitioning_label: 'Übergang zu:'
+      move_label: Ziehen Sie um
+      return_label: Zurück zu
+      view_flow_label: Statusfluss anzeigen
+      no_permission_label: Sie haben keine Berechtigung, den Status dieser Aufgabe
+        zu ändern.
+    update_status:
+      error:
+        no_permission: Sie haben keine Berechtigung, den Status zu ändern.
+    conditions:
+      error:
+        my_module_not_active: Die Aufgabe sollte aktiv sein.

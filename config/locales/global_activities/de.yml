@@ -1,0 +1,1320 @@
+---
+de:
+  global_activities:
+    index:
+      teams: Arbeitsbereiche
+      activity: Aktivität erstellt
+      period_label: 'Aktivität erstellt:'
+      today: Heute
+      yesterday: Gestern
+      this_week: Diese Woche
+      last_week: Letzte Woche
+      this_month: Diesen Monat
+      last_month: Letzten Monat
+      from_label: Wählen Sie das Enddatum
+      to_label: Wählen Sie das Startdatum
+      clear: Klar
+      activity_type: Aktivitätstypen
+      user: Benutzer
+      clear_filters: Filter löschen
+      select_teams: Wählen Sie Arbeitsbereiche
+      select_activity_groups: Wählen Sie Aktivitätsgruppen
+      select_activity_types: Wählen Sie Aktivitätstypen
+      select_users: Benutzer auswählen
+      projects_experiments_tasks: Projekte, Experimente, Aufgaben
+      select_projects: Wählen Sie Projekte
+      select_experiments: Wählen Sie Experimente
+      disable_experiments: Wählen Sie Projekte aus, um Experimente zu aktivieren.
+      select_tasks: Wählen Sie Aufgaben
+      disable_tasks: Wählen Sie Experimente aus, um Aufgaben zu aktivieren.
+      inventories: Inventar
+      select_inventories: Wählen Sie Inventare
+      select_inventory_items: Wählen Sie Lagerbestandselemente aus
+      disable_inventory_items: Wählen Sie Inventar, um Inventargegenstände zu aktivieren.
+      protocols: Protokolle
+      select_protocols: Wählen Sie Protokolle
+      reports: Berichte
+      select_reports: Wählen Sie Berichte
+      no_name: "(unnamed)"
+      content_generation_error: 'Fehler beim Rendern des Aktivitätsinhalts mit der
+        ID: %{activity_id}'
+      activity_filter_saved: Filter erfolgreich auf der Webhooks-Seite gespeichert!
+      save_filter: Filter speichern
+      save_filter_modal:
+        title: Filter speichern
+        description: Der gespeicherte Filter wird im Bereich Webhooks der Einstellungen
+          platziert sein. Er kann verwendet werden, um Webhooks auszulösen.
+        filter_name_label: Filtername
+        filter_name_placeholder: Benennen Sie Ihren Filter
+    content:
+      create_project_html: "%{user} hat das Projekt %{project} erstellt."
+      edit_project_html: "%{user} hat das Projekt %{project} bearbeitet."
+      change_project_visibility_html: "%{user} hat die Sichtbarkeit des Projekts %{project}
+        auf %{visibility} geändert."
+      project_grant_access_to_all_team_members_html: "%{user} hat allen Arbeitsbereichsmitgliedern
+        des Arbeitsbereichs %{team} mit der Benutzerrolle %{role} Zugriff auf das
+        Projekt %{project} gewährt."
+      project_remove_access_from_all_team_members_html: "%{user} hat %{team} Arbeitsbereichsmitglieder
+        mit der Benutzerrolle %{role} aus dem Projekt %{project} entfernt."
+      archive_project_html: "%{user} hat das Projekt %{project} archiviert."
+      restore_project_html: "%{user} hat das Projekt %{project} aus dem Archiv wiederhergestellt."
+      add_comment_to_project_html: "%{user} hat das Projekt %{project} kommentiert."
+      edit_project_comment_html: "%{user} hat den Kommentar zum Projekt %{project}
+        bearbeitet."
+      delete_project_comment_html: "%{user} hat den Kommentar zum Projekt %{project}
+        gelöscht."
+      create_report_html: "%{user} hat den Bericht %{report} erstellt."
+      edit_report_html: "%{user} hat den Bericht %{report} bearbeitet."
+      delete_report_html: "%{user} hat den Bericht %{report} gelöscht."
+      add_result_old_html: "%{user} hat das Ergebnis vom Typ %{type_of_result} %{result}
+        hinzugefügt."
+      add_result_html: "%{user} hat das Ergebnis %{result} hinzugefügt."
+      edit_result_old_html: "%{user} hat das Ergebnis des Typs %{type_of_result} bearbeitet:
+        %{result}."
+      edit_result_html: "%{user} hat das Ergebnis %{result} bearbeitet."
+      add_comment_to_result_html: "%{user} hat das Ergebnis %{result} kommentiert."
+      edit_result_comment_html: "%{user} hat den Kommentar zum Ergebnis %{result}
+        bearbeitet."
+      delete_result_comment_html: "%{user} hat den Kommentar zum Ergebnis %{result}
+        gelöscht."
+      archive_result_old_html: "%{user} hat das Ergebnis des Typs %{type_of_result}
+        mit dem Namen %{result} archiviert."
+      archive_result_html: "%{user} hat das Ergebnis %{result} archiviert."
+      destroy_result_old_html: "%{user} hat das Ergebnis vom Typ %{type_of_result}
+        %{result} gelöscht."
+      destroy_result_html: "%{user} hat das Ergebnis %{destroyed_result} gelöscht."
+      result_restored_html: "%{user} hat das Ergebnis %{result} aus dem Archiv wiederhergestellt."
+      result_file_added_html: "%{user} hat die Datei <strong>%{file}</strong> zum
+        Ergebnis <strong>%{result}</strong> hinzugefügt."
+      result_file_deleted_html: "%{user} hat die Datei <strong>%{file}</strong> im
+        Ergebnis <strong>%{result}</strong> gelöscht."
+      sequence_on_result_added_html: "%{user} hat die Sequenz %{file} mit dem Ergebnis
+        %{result} erstellt."
+      sequence_on_result_edited_html: "%{user} hat die Sequenz %{file} auf Ergebnis
+        %{result} bearbeitet."
+      sequence_on_result_deleted_html: "%{user} hat die Sequenz %{file} auf Ergebnis
+        %{result} gelöscht."
+      sequence_on_result_moved_html: "%{user} hat die Sequenz %{file} vom Ergebnis
+        %{result_original} zum Ergebnis %{result_destination} verschoben."
+      result_text_added_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        im Ergebnis <strong>%{result}</strong> erstellt."
+      result_text_edited_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        im Ergebnis <strong>%{result}</strong> bearbeitet."
+      result_text_deleted_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        im Ergebnis <strong>%{result}</strong> gelöscht."
+      result_table_added_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        im Ergebnis <strong>%{result}</strong> erstellt."
+      result_table_edited_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        im Ergebnis <strong>%{result}</strong> bearbeitet."
+      result_table_deleted_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        im Ergebnis <strong>%{result}</strong> gelöscht."
+      result_table_duplicated_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        im Ergebnis <strong>%{result}</strong> dupliziert."
+      result_text_duplicated_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        im Ergebnis <strong>%{result}</strong> dupliziert."
+      result_duplicated_html: "%{user} hat das Ergebnis <strong>%{result}</strong>
+        dupliziert."
+      create_module_html: "%{user} hat die Aufgabe %{my_module} erstellt."
+      clone_module_html: "%{user} hat die Aufgabe %{my_module_new} von der Aufgabe
+        %{my_module_original} als Vorlage dupliziert."
+      restore_module_html: "%{user} hat die Aufgabe %{my_module} aus dem Archiv wiederhergestellt."
+      add_comment_to_module_html: "%{user} hat die Aufgabe %{my_module} kommentiert."
+      edit_module_comment_html: "%{user} hat den Kommentar zur Aufgabe %{my_module}
+        bearbeitet."
+      delete_module_comment_html: "%{user} hat den Kommentar zur Aufgabe %{my_module}
+        gelöscht."
+      change_module_description_html: "%{user} hat die Beschreibung der Aufgabe %{my_module}
+        bearbeitet."
+      create_step_html: "%{user} hat Schritt %{step_position} <strong>%{step}</strong>
+        im Modul %{my_module} erstellt."
+      edit_step_html: "%{user} hat Schritt %{step_position} <strong>%{step}</strong>
+        im Protokoll für Aufgabe %{my_module} bearbeitet."
+      destroy_step_html: "%{user} hat Schritt %{step_position} <strong>%{step}</strong>
+        auf Aufgabe %{my_module} gelöscht."
+      load_protocol_to_task_from_repository_html: "%{user} hat das Protokoll in die
+        Aufgabe %{my_module} aus dem Protokoll-Repository %{protocol_repository} geladen."
+      load_protocol_to_task_from_file_html: "%{user} hat das Protokoll in die Aufgabe
+        %{my_module} aus der Datei geladen."
+      update_protocol_in_task_from_repository_html: "%{user} hat das Protokoll der
+        Aufgabe %{my_module} mit der Version aus dem Protokoll-Repository %{protocol_repository}
+        aktualisiert."
+      update_protocol_in_repository_from_task_html: "%{user} hat das Protokoll %{protocol_repository}
+        im Protokoll-Repository mit der Version aus der Aufgabe %{my_module} aktualisiert."
+      check_step_checklist_item_html: "%{user} hat das Checklisten-Element <strong>%{checkbox}</strong>
+        (%{num_completed}/%{num_all} abgeschlossen) im Schritt %{step_position} <strong>%{step}</strong>
+        des Moduls %{my_module} abgeschlossen."
+      uncheck_step_checklist_item_html: "%{user} unvollständiger Checkliste-Eintrag
+        <strong>%{checkbox}</strong> (%{num_completed}/%{num_all} abgeschlossen) im
+        Schritt %{step_position} %{step} des Protokolls in der Aufgabe %{my_module}."
+      add_comment_to_step_html: "%{user} hat den Schritt %{step_position} <strong>%{step}</strong>
+        im Modul %{my_module} kommentiert."
+      edit_step_comment_html: "%{user} hat den Kommentar zum Schritt %{step_position}
+        <strong>%{step}</strong> im Modul %{my_module} bearbeitet."
+      delete_step_comment_html: "%{user} hat den Kommentar zum Schritt %{step_position}
+        <strong>%{step}</strong> in der Aufgabe %{my_module} gelöscht."
+      complete_step_html: "%{user} hat Schritt %{step_position} <strong>%{step}</strong>
+        im Modul %{my_module} abgeschlossen (%{num_completed}/%{num_all} abgeschlossen)."
+      uncomplete_step_html: "%{user} unvollständiger Protokollschritt %{step_position}
+        <strong>%{step}</strong> in Aufgabe %{my_module} (%{num_completed}/%{num_all}
+        abgeschlossen)."
+      complete_task_html: "%{user} hat die Aufgabe %{my_module} abgeschlossen."
+      uncomplete_task_html: "%{user} unvollendete Aufgabe %{my_module}."
+      assign_repository_record_html: "%{user} hat Inventargegenstand(e) %{record_names}
+        aus Inventar %{repository} der Aufgabe %{my_module} zugewiesen."
+      unassign_repository_record_html: "%{user} hat Inventargegenstand(e) %{record_names}
+        vom Lager %{repository} der Aufgabe %{my_module} zugewiesen."
+      assign_user_to_project_html: "%{user} hat %{user_target} den Zugriff mit der
+        Benutzerrolle %{role} auf das Projekt %{project} gewährt."
+      unassign_user_from_project_html: "%{user} hat %{user_target} mit der Benutzerrolle
+        %{role} aus dem Projekt %{project} entfernt."
+      change_user_role_on_project_html: "%{user} hat %{user_target} die Rolle im Projekt
+        %{project} zu %{role} geändert."
+      change_user_role_on_experiment_html: "%{user} hat %{user_target} Rolle im Experiment
+        %{experiment} zu %{role} geändert."
+      change_user_role_on_my_module_html: "%{user} hat %{user_target} Rolle in Aufgabe
+        %{my_module} zu %{role} geändert."
+      designate_user_to_my_module_html: "%{user} hat Benutzer %{user_target} der Aufgabe
+        %{my_module} zugewiesen."
+      undesignate_user_from_my_module_html: "%{user} hat Benutzer %{user_target} von
+        Aufgabe %{my_module} entfernt."
+      create_experiment_html: "%{user} hat das Experiment %{experiment} erstellt."
+      rename_experiment_html: "%{user} hat das Experiment %{experiment} umbenannt."
+      edit_experiment_html: "%{user} hat das Experiment %{experiment} bearbeitet."
+      move_experiment_html: "%{user} hat das Experiment %{experiment} vom Projekt
+        %{project_original} zum Projekt %{project_new} verschoben."
+      clone_experiment_html: "%{user} hat das Experiment %{experiment_new} aus dem
+        Experiment %{experiment_original} als Vorlage dupliziert."
+      archive_experiment_html: "%{user} hat das Experiment %{experiment} archiviert."
+      edit_wopi_file_on_result_html: "%{user} hat die Microsoft 365 Datei %{asset_name}
+        auf Ergebnis %{result} bearbeitet: %{action}."
+      export_protocol_from_task_html: "%{user} hat das Protokoll aus der Aufgabe %{my_module}
+        exportiert."
+      copy_protocol_in_repository_html: "%{user} hat das Protokoll %{protocol_new}
+        aus dem Protokoll %{protocol_original} als Vorlage dupliziert."
+      user_leave_team_html: "%{user} hat den Arbeitsbereich %{team} verlassen."
+      edit_wopi_file_on_step_html: "%{user} hat die Microsoft 365-Datei %{asset_name}
+        im Protokollschritt %{step_position} %{step} der Aufgabe %{my_module} bearbeitet:
+        %{action}."
+      edit_wopi_file_on_step_in_repository_html: "%{user} hat die Microsoft 365-Datei
+        %{asset_name} im Schritt %{step_position} %{step} des Protokolls %{protocol}
+        im Protokoll-Repository bearbeitet: %{action}."
+      restore_experiment_html: "%{user} hat das Experiment %{experiment} wiederhergestellt."
+      rename_task_html: "%{user} hat die Aufgabe %{my_module} umbenannt."
+      move_task_html: "%{user} hat die Aufgabe %{my_module} vom Experiment %{experiment_original}
+        zum Experiment %{experiment_new} verschoben."
+      archive_module_html: "%{user} hat die Aufgabe %{my_module} archiviert."
+      set_task_start_date_html: "%{user} hat das Startdatum %{my_module_started_on}
+        für die Aufgabe %{my_module} festgelegt."
+      change_task_start_date_html: "%{user} hat das Startdatum %{my_module_started_on}
+        der Aufgabe %{my_module} geändert."
+      remove_task_start_date_html: "%{user} hat das Startdatum %{my_module_started_on}
+        der Aufgabe %{my_module} entfernt."
+      set_task_due_date_html: "%{user} hat das Fälligkeitsdatum %{my_module_duedate}
+        für die Aufgabe %{my_module} festgelegt."
+      change_task_due_date_html: "%{user} hat das Fälligkeitsdatum %{my_module_duedate}
+        der Aufgabe %{my_module} geändert."
+      remove_task_due_date_html: "%{user} hat das Fälligkeitsdatum %{my_module_duedate}
+        der Aufgabe %{my_module} entfernt."
+      add_task_tag_html: "%{user} hat dem Auftrag %{my_module} das Tag <strong>%{tag}</strong>
+        hinzugefügt."
+      remove_task_tag_html: "%{user} hat das Tag <strong>%{tag}</strong> von Aufgabe
+        %{my_module} entfernt."
+      create_inventory_html: "%{user} hat das Inventar %{repository} erstellt."
+      rename_inventory_html: "%{user} hat das Inventar %{repository} umbenannt."
+      archive_inventory_html: "%{user} hat das Inventar %{repository} archiviert."
+      restore_inventory_html: "%{user} hat das Inventar %{repository} wiederhergestellt."
+      delete_inventory_html: "%{user} hat das Inventar %{repository} gelöscht."
+      share_inventory_html: "%{user} hat das Inventar %{repository} mit dem Arbeitsbereich
+        %{team} mit der Berechtigungsstufe %{permission_level} geteilt."
+      unshare_inventory_html: "%{user} hat aufgehört, das Inventar %{repository} mit
+        dem Arbeitsbereich %{team} zu teilen."
+      update_share_inventory_html: "%{user} hat die Berechtigung des freigegebenen
+        Inventars %{repository} mit Arbeitsbereich %{team} auf %{permission_level}
+        geändert."
+      share_inventory_with_all_html: "%{user} hat das Inventar %{repository} mit allen
+        Arbeitsbereichen (aktuellen und zukünftigen) mit der Berechtigungsstufe %{permission_level}
+        geteilt."
+      unshare_inventory_with_all_html: "%{user} hat aufgehört, das Inventar %{repository}
+        mit allen Arbeitsbereichen (aktuellen und zukünftigen) zu teilen."
+      update_share_with_all_permission_level_html: "%{user} hat die Berechtigung des
+        freigegebenen Inventars %{repository} mit allen Arbeitsbereichen auf %{permission_level}
+        geändert."
+      create_item_inventory_html: "%{user} hat das Lagerartikel %{repository_row}
+        erstellt."
+      edit_item_inventory_html: "%{user} hat den Bestandseintrag %{repository_row}
+        bearbeitet."
+      delete_item_inventory_html: "%{user} hat das Inventar-Element %{repository_row}
+        gelöscht."
+      edit_item_field_inventory_html: "%{user} hat %{repository_column} bei Lagerartikel
+        %{repository_row} bearbeitet."
+      inventory_item_relationships_linked_html: "%{user} verknüpft %{repository_row_linked}
+        als %{relationship_type} mit %{repository_row}."
+      inventory_item_relationships_unlinked_html: "%{user} hat %{repository_row} und
+        %{repository_row_unlinked} getrennt."
+      archive_inventory_item_html: "%{user} hat das Lagerobjekt %{repository_row}
+        archiviert."
+      restore_inventory_item_html: "%{user} hat den Lagerbestandselement %{repository_row}
+        wiederhergestellt."
+      create_column_inventory_html: "%{user} hat die Spalte %{repository_column} im
+        Bestand %{repository} erstellt."
+      edit_column_inventory_html: "%{user} hat die Spalte %{repository_column} im
+        Bestand %{repository} bearbeitet."
+      copy_inventory_html: "%{user} hat das Inventar %{repository_new} aus dem Inventar
+        %{repository_original} als Vorlage dupliziert."
+      copy_inventory_item_html: "%{user} hat das Inventarobjekt %{repository_row_new}
+        vom Inventarobjekt %{repository_row_original} dupliziert."
+      delete_column_inventory_html: "%{user} hat die Spalte %{repository_column} im
+        Bestand %{repository} gelöscht."
+      create_protocol_in_repository_html: "%{user} hat das Protokoll %{protocol} im
+        Protokoll-Repository erstellt."
+      edit_protocol_name_in_repository_html: "%{user} hat den Protokollnamen im Protokoll-Repository
+        aktualisiert."
+      add_step_to_protocol_repository_html: "%{user} hat Schritt %{step_position}
+        <strong>%{step}</strong> im Protokoll %{protocol} im Protokoll-Repository
+        erstellt."
+      edit_step_in_protocol_repository_html: "%{user} hat Schritt %{step_position}
+        <strong>%{step}</strong> des Protokolls %{protocol} im Protokoll-Repository
+        bearbeitet."
+      delete_step_in_protocol_repository_html: "%{user} hat Schritt %{step_position}
+        <strong>%{step}</strong> im Protokoll %{protocol} im Protokoll-Repository
+        gelöscht."
+      edit_description_in_protocol_repository_html: "%{user} hat die Beschreibung
+        von Protokoll %{protocol} im Protokoll-Repository bearbeitet."
+      edit_keywords_in_protocol_repository_html: "%{user} hat die Schlüsselwörter
+        des Protokolls %{protocol} im Protokoll-Repository bearbeitet."
+      edit_authors_in_protocol_repository_html: "%{user} hat die Autoren des Protokolls
+        %{protocol} im Protokoll-Repository bearbeitet."
+      archive_protocol_in_repository_html: "%{user} hat das Protokoll %{protocol}
+        im Protokoll-Repository archiviert."
+      restore_protocol_in_repository_html: "%{user} hat das Protokoll %{protocol}
+        aus dem Archiv im Protokoll-Repository wiederhergestellt."
+      move_protocol_in_repository_html: "%{user} hat das Protokoll %{protocol} aus
+        %{storage} im Protokoll-Repository verschoben."
+      import_protocol_in_repository_html: "%{user} hat das Protokoll %{protocol} aus
+        der Datei in das Protokoll-Repository importiert."
+      export_protocol_in_repository_html: "%{user} hat das Protokoll %{protocol} aus
+        dem Protokoll-Repository exportiert."
+      invite_user_to_team_html: "%{user} hat Benutzer %{user_invited} mit der Benutzerrolle
+        %{role} zum Arbeitsbereich %{team} eingeladen."
+      remove_user_from_team_html: "%{user} hat den Benutzer %{user_removed} aus dem
+        Arbeitsbereich %{team} entfernt."
+      change_users_role_on_team_html: "%{user} hat die Rolle des Benutzers %{user_changed}
+        im Arbeitsbereich %{team} zu %{role} geändert."
+      export_projects_html: "%{user} hat Projekt(e) %{projects} als .zip exportiert."
+      export_inventory_items_html: "%{user} hat Inventargegenstand/-gegenstände aus
+        %{repository} exportiert."
+      create_tag_html: "%{user} hat das Tag <strong>%{tag}</strong> im Projekt %{project}
+        erstellt."
+      edit_tag_html: "%{user} hat das Tag <strong>%{tag}</strong> im Projekt %{project}
+        bearbeitet."
+      delete_tag_html: "%{user} hat das Tag <strong>%{tag}</strong> im Projekt %{project}
+        gelöscht."
+      import_inventory_items_legacy_html: "%{user} hat %{num_of_items} Inventargegenstand/-gegenstände
+        nach %{repository} importiert."
+      inventory_items_added_or_updated_with_import_html: "%{user} hat %{created_rows_count}
+        neue(s) Element(e) importiert und %{updated_rows_count} vorhandenes(s) Element(e)
+        in %{repository} aktualisiert."
+      edit_image_on_result_html: "%{user} hat das Bild %{asset_name} im Ergebnis %{result}
+        bearbeitet: %{action}."
+      edit_image_on_step_html: "%{user} hat das Bild %{asset_name} auf Protokollschritt
+        %{step_position} %{step} in der Aufgabe %{my_module} bearbeitet: %{action}."
+      edit_image_on_step_in_repository_html: "%{user} hat das Bild %{asset_name} im
+        Schritt %{step_position} %{step} des Protokolls %{protocol} im Protokoll-Repository
+        bearbeitet: %{action}."
+      edit_chemical_structure_on_step_html: "%{user} hat die chemische Struktur %{asset_name}
+        im Protokollschritt %{step_position} %{step} der Aufgabe %{my_module} bearbeitet:
+        %{action}."
+      edit_chemical_structure_on_result_html: "%{user} hat die chemische Struktur
+        %{asset_name} im Ergebnis %{result} bearbeitet: %{action}."
+      edit_chemical_structure_on_step_in_repository_html: "%{user} hat die chemische
+        Struktur %{asset_name} im Schritt %{step_position} %{step} des Protokolls
+        %{protocol} bearbeitet: %{action}."
+      edit_chemical_structure_on_task_protocol_html: "%{user} hat die chemische Struktur
+        %{asset_name} im Protokoll der Aufgabe %{my_module} bearbeitet: %{action}."
+      edit_chemical_structure_on_protocol_html: "%{user} hat die chemische Struktur
+        %{asset_name} im Protokoll %{protocol} bearbeitet: %{action}."
+      edit_chemical_structure_on_task_html: "%{user} hat die chemische Struktur %{asset_name}
+        in der Aufgabe %{my_module} bearbeitet: %{action}."
+      create_chemical_structure_on_step_html: "%{user} hat die chemische Struktur
+        %{asset_name} im Protokollschritt %{step_position} %{step} in der Aufgabe
+        %{my_module} erstellt."
+      create_chemical_structure_on_result_html: "%{user} hat die chemische Struktur
+        %{asset_name} im Ergebnis %{result} erstellt."
+      create_chemical_structure_on_step_in_repository_html: "%{user} hat die chemische
+        Struktur %{asset_name} im Schritt %{step_position} %{step} des Protokolls
+        %{protocol} erstellt."
+      create_chemical_structure_on_task_protocol_html: "%{user} hat die chemische
+        Struktur %{asset_name} im Protokoll des Auftrags %{my_module} erstellt."
+      create_chemical_structure_on_protocol_html: "%{user} hat die chemische Struktur
+        %{asset_name} im Protokoll %{protocol} erstellt."
+      create_chemical_structure_on_task_html: "%{user} hat die chemische Struktur
+        %{asset_name} in der Aufgabe %{my_module} erstellt."
+      delete_chemical_structure_on_step_html: "%{user} hat die chemische Struktur
+        %{asset_name} im Protokollschritt %{step_position} %{step} der Aufgabe %{my_module}
+        gelöscht."
+      delete_chemical_structure_on_result_html: "%{user} hat die chemische Struktur
+        %{asset_name} im Ergebnis %{result} gelöscht."
+      delete_chemical_structure_on_step_in_repository_html: "%{user} hat die chemische
+        Struktur %{asset_name} auf Schritt %{step_position} %{step} des Protokolls
+        %{protocol} gelöscht."
+      delete_chemical_structure_on_task_protocol_html: "%{user} hat die chemische
+        Struktur %{asset_name} im Protokoll der Aufgabe %{my_module} gelöscht."
+      delete_chemical_structure_on_protocol_html: "%{user} hat die chemische Struktur
+        %{asset_name} im Protokoll %{protocol} gelöscht."
+      delete_chemical_structure_on_task_html: "%{user} hat die chemische Struktur
+        %{asset_name} auf Aufgabe %{my_module} gelöscht."
+      protocol_description_in_task_edited_html: "%{user} hat die Protokollbeschreibung
+        für die Aufgabe %{my_module} bearbeitet."
+      protocol_name_in_task_edited_html: "%{user} hat den Protokollnamen in der Aufgabe
+        %{my_module} aktualisiert."
+      export_inventory_items_assigned_to_task_html: "%{user} hat Inventargegenstand(e)
+        exportiert, die der Aufgabe %{my_module} aus dem Inventar %{repository} zugewiesen
+        sind: Live-Version."
+      export_inventory_snapshot_items_assigned_to_task_html: "%{user} hat Inventargegenstand(e)
+        zugewiesen an Aufgabe %{my_module} aus Inventar %{repository_snapshot} exportiert:
+        Snapshot vom %{created_at}."
+      change_status_on_task_flow_html: "%{user} hat den Status von <strong>%{my_module_status_old}</strong>
+        auf <strong>%{my_module_status_new}</strong> für die Aufgabe %{my_module}
+        geändert."
+      move_project_html: "%{user} hat das Projekt %{project} vom Ordner %{project_folder_from}
+        in den Ordner %{project_folder_to} verschoben."
+      create_project_folder_html: "%{user} hat Projektordner %{project_folder} erstellt."
+      rename_project_folder_html: "%{user} hat den Projektordner %{project_folder}
+        umbenannt."
+      delete_project_folder_html: "%{user} hat den Projektordner %{project_folder}
+        gelöscht."
+      move_project_folder_html: "%{user} hat den Projektordner %{project_folder} vom
+        Ordner %{project_folder_from} in den Ordner %{project_folder_to} verschoben."
+      generate_pdf_report_html: "%{user} hat den PDF-Bericht %{report} generiert."
+      generate_docx_report_html: "%{user} hat den DOCX-Bericht %{report} generiert."
+      inventory_item_stock_set_html: |-
+        %{user} hat den Gesamtbestand für Lagerartikel %{repository_row} auf %{new_amount} %{unit} im Lager %{repository} gesetzt.
+        %{comment}
+      inventory_item_stock_add_html: |-
+        %{user} hat %{change_amount} %{unit} Lagerbestand zum Gesamtbestand von %{new_amount} %{unit} für Lagerartikel %{repository_row} im Lager %{repository} hinzugefügt.
+        %{comment}
+      inventory_item_stock_remove_html: |-
+        %{user} hat %{change_amount} %{unit} Lagerbestand entfernt, insgesamt %{new_amount} %{unit} für Lagerbestand %{repository_row} im Lager %{repository}.
+        %{comment}
+      task_inventory_item_stock_consumed_html: "%{user} hat den Verbrauch des Lagerbestandselements
+        %{repository_row} von %{stock_consumption_was} %{unit} auf %{stock_consumption}
+        %{unit} in der Aufgabe %{my_module} geändert. %{comment}"
+      task_steps_rearranged_html: "%{user} hat die Schritte des Protokolls für die
+        Aufgabe %{my_module} umgestellt."
+      task_step_content_rearranged_html: "%{user} hat den Inhalt des Protokollschritts
+        %{step_position} <strong>%{step}</strong> in der Aufgabe %{my_module} umgestellt."
+      result_content_rearranged_html: "%{user} hat den Inhalt des Ergebnisses für
+        die Aufgabe %{my_module} umgestellt."
+      task_step_file_added_html: "%{user} hat die Datei <strong>%{file}</strong> zum
+        Schritt %{step_position} <strong>%{step}</strong> im Protokoll der Aufgabe
+        %{my_module} hinzugefügt."
+      task_step_file_deleted_html: "%{user} hat die Datei <strong>%{file}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> des Protokolls in der
+        Aufgabe %{my_module} gelöscht."
+      protocol_steps_rearranged_html: "%{user} hat die Schritte des Protokolls im
+        Protokoll %{protocol} im Protokoll-Repository umgestellt."
+      protocol_step_content_rearranged_html: "%{user} hat den Inhalt des Schritts
+        %{step_position} <strong>%{step}</strong> im Protokoll %{protocol} im Protokoll-Repository
+        umgestellt."
+      protocol_step_file_added_html: "%{user} hat die Datei <strong>%{file}</strong>
+        zum Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        hinzugefügt."
+      protocol_step_file_deleted_html: "%{user} hat die Datei <strong>%{file}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        gelöscht."
+      task_step_text_added_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> des Protokolls für die
+        Aufgabe %{my_module} erstellt."
+      task_step_text_edited_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> des Protokolls in der
+        Aufgabe %{my_module} bearbeitet."
+      task_step_text_deleted_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        im Protokollschritt %{step_position} <strong>%{step}</strong> der Aufgabe
+        %{my_module} gelöscht."
+      task_step_table_added_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> der Aufgabe %{my_module}
+        erstellt."
+      task_step_table_edited_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> der Aufgabe %{my_module}
+        bearbeitet."
+      task_step_table_deleted_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> der Aufgabe %{my_module}
+        gelöscht."
+      task_step_checklist_added_html: "%{user} hat die Checkliste <strong>%{checklist_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> des Protokolls in Aufgabe
+        %{my_module} erstellt."
+      task_step_checklist_edited_html: "%{user} hat die Checkliste <strong>%{checklist_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Modul %{my_module}
+        bearbeitet."
+      task_step_checklist_deleted_html: "%{user} hat die Checkliste <strong>%{checklist_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> des Protokolls in der
+        Aufgabe %{my_module} gelöscht."
+      task_step_checklist_item_added_html: "%{user} hat den Checkliste-Punkt <strong>%{checklist_item}</strong>
+        in der Checkliste <strong>%{checklist_name}</strong> im Protokollschritt %{step_position}
+        <strong>%{step}</strong> der Aufgabe %{my_module} erstellt."
+      task_step_checklist_item_edited_html: "%{user} hat den Checkliste-Eintrag <strong>%{checklist_item}</strong>
+        in der Checkliste <strong>%{checklist_name}</strong> im Schritt %{step_position}
+        <strong>%{step}</strong> der Aufgabe %{my_module} bearbeitet."
+      task_step_checklist_item_deleted_html: "%{user} hat den Checklistenpunkt <strong>%{checklist_item}</strong>
+        in der Checkliste <strong>%{checklist_name}</strong> im Schritt %{step_position}
+        <strong>%{step}</strong> der Aufgabe %{my_module} gelöscht."
+      protocol_step_text_added_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        erstellt."
+      protocol_step_text_edited_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        bearbeitet."
+      protocol_step_text_deleted_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        gelöscht."
+      protocol_step_table_added_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        erstellt."
+      protocol_step_table_edited_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        bearbeitet."
+      protocol_step_table_deleted_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        gelöscht."
+      protocol_step_checklist_added_html: "%{user} hat die Checkliste <strong>%{checklist_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        erstellt."
+      protocol_step_checklist_edited_html: "%{user} hat die Checkliste <strong>%{checklist_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        bearbeitet."
+      protocol_step_checklist_deleted_html: "%{user} hat die Checkliste <strong>%{checklist_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        gelöscht."
+      protocol_step_checklist_item_added_html: "%{user} hat den Checkliste-Eintrag
+        <strong>%{checklist_item}</strong> in der Checkliste <strong>%{checklist_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        erstellt."
+      protocol_step_checklist_item_edited_html: "%{user} hat den Checklistenpunkt
+        <strong>%{checklist_item}</strong> in der Checkliste <strong>%{checklist_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        bearbeitet."
+      protocol_step_checklist_item_deleted_html: "%{user} hat das Checklisten-Element
+        <strong>%{checklist_item}</strong> in der Checkliste <strong>%{checklist_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        gelöscht."
+      task_step_duplicated_html: "%{user} hat den Schritt <strong>%{step}</strong>
+        in der Aufgabe %{my_module} dupliziert."
+      protocol_step_duplicated_html: "%{user} hat den Schritt <strong>%{step}</strong>
+        im Protokoll %{protocol} im Protokoll-Repository dupliziert."
+      task_step_text_duplicated_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> des Moduls %{my_module}
+        dupliziert."
+      task_step_table_duplicated_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> der Aufgabe %{my_module}
+        dupliziert."
+      task_step_checklist_duplicated_html: "%{user} hat die Checkliste <strong>%{checklist_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> der Aufgabe %{my_module}
+        dupliziert."
+      protocol_step_text_duplicated_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        dupliziert."
+      protocol_step_table_duplicated_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        dupliziert."
+      protocol_step_checklist_duplicated_html: "%{user} hat die Checkliste <strong>%{checklist_name}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        dupliziert."
+      label_template_created_html: "%{user} hat das %{type} Label-Vorlagendokument
+        %{label_template} in den Label-Vorlagen erstellt."
+      label_template_edited_html: "%{user} hat die Vorlage für das Etikett %{label_template}
+        im Bereich Etikettvorlagen bearbeitet."
+      label_template_deleted_html: "%{user} hat das %{type} Beschriftungsvorlage %{label_template}
+        in Beschriftungsvorlagen gelöscht."
+      label_template_copied_html: "%{user} hat das %{type} Label-Template %{label_template_new}
+        aus %{label_template_original} in den Label-Vorlagen dupliziert."
+      protocol_template_published_html: "%{user} hat das Protokoll-Template %{protocol}
+        Version %{version_number} veröffentlicht."
+      protocol_template_revision_notes_updated_html: "%{user} hat die Überarbeitungshinweise
+        von %{protocol} bearbeitet."
+      protocol_template_draft_deleted_html: "%{user} hat den Entwurf von %{protocol}
+        gelöscht."
+      protocol_template_draft_created_html: "%{user} hat einen Entwurf von %{protocol}
+        erstellt."
+      protocol_template_access_granted_html: "%{user} hat %{user_target} mit der Benutzerrolle
+        %{role} Zugriff auf das Protokollvorlagen %{protocol} gewährt."
+      protocol_template_access_changed_html: "%{user} hat die Rolle von %{user_target}
+        auf Protokollvorlage %{protocol} in %{role} geändert."
+      protocol_template_access_revoked_html: "%{user} hat %{user_target} mit der Benutzerrolle
+        %{role} aus dem Protokollvorlage %{protocol} entfernt."
+      protocol_template_access_granted_all_team_members_html: "%{user} hat allen Arbeitsbereichsmitgliedern
+        des Arbeitsbereichs %{team} mit der Benutzerrolle %{role} Zugriff auf das
+        Protokollvorlage %{protocol} gewährt."
+      protocol_template_access_changed_all_team_members_html: "%{user} hat die Rolle
+        von %{team} im Protokoll-Template %{protocol} zu %{role} geändert."
+      protocol_template_access_revoked_all_team_members_html: "%{user} hat Mitglieder
+        des %{team}-Arbeitsbereichs mit der Benutzerrolle %{role} aus dem Protokolltemplate
+        %{protocol} entfernt."
+      task_protocol_save_to_template_html: "%{user} hat eine neue Protokollvorlage
+        %{protocol} aus einer Aufgabe erstellt."
+      project_access_changed_all_team_members_html: "%{user} hat %{team}s Rolle im
+        Projekt %{project} zu %{role} geändert."
+      team_sharing_tasks_enabled_html: "%{user} hat das Teilen von Aufgaben im Arbeitsbereich
+        %{team} aktiviert."
+      team_sharing_tasks_disabled_html: "%{user} hat das Teilen von Aufgaben im Arbeitsbereich
+        %{team} deaktiviert."
+      task_link_sharing_enabled_html: "%{user} hat die Freigabe von Links für die
+        Aufgabe %{my_module} aktiviert."
+      task_link_sharing_disabled_html: "%{user} hat die Freigabe von Links für die
+        Aufgabe %{my_module} deaktiviert."
+      shared_task_message_edited_html: "%{user} hat die Nachricht für die gemeinsame
+        Aufgabe %{my_module} bearbeitet."
+      task_sequence_asset_added_html: "%{user} hat die Sequenz <strong>%{asset_name}</strong>
+        im Protokollschritt <strong>%{step_position}</strong> <strong>%{step}</strong>
+        in der Aufgabe <strong>%{my_module}</strong> erstellt."
+      task_sequence_asset_edit_started_html: "%{user} hat die Sequenz <strong>%{asset_name}</strong>
+        im Schritt <strong>%{step_position}</strong> <strong>%{step}</strong> der
+        Aufgabe <strong>%{my_module}</strong> bearbeitet: Bearbeitung gestartet."
+      task_sequence_asset_edit_finished_html: "%{user} hat die Sequenz <strong>%{asset_name}</strong>
+        im Schritt <strong>%{step_position}</strong> <strong>%{step}</strong> der
+        Aufgabe <strong>%{my_module}</strong> bearbeitet: Bearbeitung abgeschlossen."
+      task_sequence_asset_deleted_html: "%{user} hat die Sequenz <strong>%{asset_name}</strong>
+        auf Schritt <strong>%{step_position}</strong> <strong>%{step}</strong> der
+        Aufgabe <strong>%{my_module}</strong> gelöscht."
+      protocol_sequence_asset_added_html: "%{user} hat die Sequenz <strong>%{asset_name}</strong>
+        im Schritt <strong>%{step_position}</strong> <strong>%{step}</strong> im Protokoll-Repository
+        erstellt."
+      protocol_sequence_asset_edit_started_html: "%{user} hat die Sequenz <strong>%{asset_name}</strong>
+        auf Schritt <strong>%{step_position}</strong> <strong>%{step}</strong> im
+        Protokoll-Repository bearbeitet: Bearbeitung begonnen."
+      protocol_sequence_asset_edit_finished_html: "%{user} hat die Sequenz <strong>%{asset_name}</strong>
+        im Schritt <strong>%{step_position}</strong> <strong>%{step}</strong> im Protokoll-Repository
+        bearbeitet: Bearbeitung abgeschlossen."
+      protocol_sequence_asset_deleted_html: "%{user} hat die Sequenz <strong>%{asset_name}</strong>
+        im Schritt <strong>%{step_position}</strong> <strong>%{step}</strong> im Protokoll-Repository
+        gelöscht."
+      task_step_file_moved_html: "%{user} hat die Datei <strong>%{file}</strong> von
+        Protokollschritt %{step_position_original} <strong>%{step_original}</strong>
+        auf Schritt %{step_position_destination} <strong>%{step_destination}</strong>
+        der Aufgabe %{my_module} verschoben."
+      task_step_text_moved_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        von Protokollschritt %{step_position_original} <strong>%{step_original}</strong>
+        auf Schritt %{step_position_destination} <strong>%{step_destination}</strong>
+        der Aufgabe %{my_module} verschoben."
+      task_step_table_moved_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        vom Schritt %{step_position_original} <strong>%{step_original}</strong> auf
+        den Schritt %{step_position_destination} <strong>%{step_destination}</strong>
+        der Aufgabe %{my_module} verschoben."
+      task_step_checklist_moved_html: "%{user} hat die Checkliste <strong>%{checklist_name}</strong>
+        vom Schritt %{step_position_original} <strong>%{step_original}</strong> auf
+        den Schritt %{step_position_destination} <strong>%{step_destination}</strong>
+        der Aufgabe %{my_module} verschoben."
+      move_chemical_structure_on_step_html: "%{user} hat die chemische Struktur <strong>%{file}</strong>
+        vom Protokollschritt %{step_position_original} <strong>%{step_original}</strong>
+        auf Schritt %{step_position_destination} <strong>%{step_destination}</strong>
+        der Aufgabe %{my_module} verschoben."
+      protocol_step_file_moved_html: "%{user} hat die Datei <strong>%{file}</strong>
+        von Schritt %{step_position_original} <strong>%{step_original}</strong> auf
+        Schritt %{step_position_destination} <strong>%{step_destination}</strong>
+        im Protokoll-Repository verschoben."
+      protocol_step_text_moved_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        von Schritt %{step_position_original} <strong>%{step_original}</strong> auf
+        Schritt %{step_position_destination} <strong>%{step_destination}</strong>
+        im Protokoll-Repository verschoben."
+      protocol_step_table_moved_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        vom Schritt %{step_position_original} <strong>%{step_original}</strong> auf
+        den Schritt %{step_position_destination} <strong>%{step_destination}</strong>
+        im Protokoll-Repository verschoben."
+      protocol_step_checklist_moved_html: "%{user} hat die Checkliste <strong>%{checklist_name}</strong>
+        vom Schritt %{step_position_original} <strong>%{step_original}</strong> auf
+        den Schritt %{step_position_destination} <strong>%{step_destination}</strong>
+        im Protokoll-Repository verschoben."
+      move_chemical_structure_on_step_in_repository_html: "%{user} hat die chemische
+        Struktur <strong>%{file}</strong> von Schritt %{step_position_original} <strong>%{step_original}</strong>
+        auf Schritt %{step_position_destination} <strong>%{step_destination}</strong>
+        im Protokoll-Repository verschoben."
+      result_file_moved_html: "%{user} hat die Datei <strong>%{file}</strong> von
+        Ergebnis %{result_original} nach Ergebnis %{result_destination} verschoben."
+      result_text_moved_html: "%{user} hat den Text <strong>%{text_name}</strong>
+        vom Ergebnis %{result_original} zum Ergebnis %{result_destination} verschoben."
+      result_table_moved_html: "%{user} hat die Tabelle <strong>%{table_name}</strong>
+        vom Ergebnis %{result_original} zum Ergebnis %{result_destination} verschoben."
+      move_chemical_structure_on_result_html: "%{user} hat die chemische Struktur
+        <strong>%{file}</strong> vom Ergebnis %{result_original} zum Ergebnis %{result_destination}
+        verschoben."
+      edit_task_step_file_locally_html: "%{user} hat die Datei %{file} lokal auf Schritt
+        %{step_position_original} %{step} der Aufgabe %{my_module} bearbeitet."
+      edit_protocol_template_file_locally_html: "%{user} hat die Datei %{file} lokal
+        auf Schritt %{step_position_original} %{step} im Protokoll mit SciNote Edit
+        im Protokoll-Repository bearbeitet."
+      edit_task_result_file_locally_html: "%{user} hat die Datei %{file} lokal bearbeitet,
+        das Ergebnis ist %{result}."
+      export_inventories_html: "%{user} hat das Inventar %{inventories} exportiert."
+      edit_image_on_inventory_item_html: "%{user} hat das Bild %{asset_name} des Lagerobjekts
+        %{repository_row} im Lager %{repository} bearbeitet: %{action}."
+      edit_wopi_file_on_inventory_item_html: "%{user} hat die Microsoft 365 Datei
+        %{asset_name} des Inventargegenstands %{repository_row} im Inventar %{repository}
+        bearbeitet: %{action}."
+      export_inventory_stock_consumption_html: "%{user} hat den Lagerverbrauch für
+        Lagerartikel %{inventory_items} im Lager %{repository} exportiert."
+      task_step_file_duplicated_html: "%{user} hat die Datei <strong>%{file}</strong>
+        im Schritt <strong>%{step}</strong> der Aufgabe <strong>%{my_module}</strong>
+        dupliziert."
+      result_file_duplicated_html: "%{user} hat die Datei <strong>%{file}</strong>
+        im Ergebnis <strong>%{result}</strong> der Aufgabe <strong>%{my_module}</strong>
+        dupliziert."
+      protocol_step_file_duplicated_html: "%{user} hat die Datei <strong>%{file}</strong>
+        im Schritt <strong>%{step}</strong> im Protokoll-Repository dupliziert."
+      task_step_asset_renamed_html: "%{user} hat die Datei %{old_name} in %{new_name}
+        auf Schritt <strong>%{step}</strong> der Aufgabe <strong>%{my_module}</strong>
+        umbenannt."
+      protocol_step_asset_renamed_html: "%{user} hat die Datei %{old_name} in %{new_name}
+        im Schritt <strong>%{step}</strong> im Protokoll-Repository umbenannt."
+      result_asset_renamed_html: "%{user} hat die Datei %{old_name} in %{new_name}
+        umbenannt, Ergebnis <strong>%{result}</strong> in Aufgabe <strong>%{my_module}</strong>."
+      item_added_with_import_html: "%{user} hat %{num_of_items} Inventarartikel in
+        %{repository} bearbeitet."
+      storage_location_created_html: "%{user} hat den Speicherort %{storage_location}
+        erstellt."
+      storage_location_deleted_html: "%{user} hat den Speicherort %{storage_location}
+        gelöscht."
+      storage_location_edited_html: "%{user} hat den Speicherort %{storage_location}
+        bearbeitet."
+      storage_location_moved_html: "%{user} hat den Standort %{storage_location} von
+        %{storage_location_original} nach %{storage_location_destination} verschoben."
+      storage_location_shared_html: "%{user} hat den Speicherort %{storage_location}
+        mit dem Arbeitsbereich %{team} mit Berechtigungsstufe %{permission_level}
+        geteilt."
+      storage_location_unshared_html: "%{user} hat den Speicherort %{storage_location}
+        nicht mit dem Arbeitsbereich %{team} geteilt."
+      storage_location_sharing_updated_html: "%{user} hat die Berechtigung des freigegebenen
+        Speicherorts %{storage_location} mit Arbeitsbereich %{team} auf %{permission_level}
+        geändert."
+      storage_location_duplicated_html: "%{user} hat den Speicherort %{storage_location}
+        dupliziert."
+      container_storage_location_created_html: "%{user} hat das Feld %{storage_location}
+        erstellt."
+      container_storage_location_deleted_html: "%{user} hat das Feld %{storage_location}
+        gelöscht."
+      container_storage_location_edited_html: "%{user} hat Feld %{storage_location}
+        bearbeitet."
+      container_storage_location_moved_html: "%{user} hat die Box %{storage_location}
+        von %{storage_location_original} nach %{storage_location_destination} verschoben."
+      container_storage_location_shared_html: "%{user} hat das Feld %{storage_location}
+        mit dem Arbeitsbereich %{team} mit der Berechtigungsstufe %{permission_level}
+        geteilt."
+      container_storage_location_unshared_html: "%{user} hat das Fach %{storage_location}
+        nicht mit dem Arbeitsbereich %{team} geteilt."
+      container_storage_location_sharing_updated_html: "%{user} hat die Berechtigung
+        des freigegebenen Ordners %{storage_location} im Arbeitsbereich %{team} auf
+        %{permission_level} geändert."
+      container_storage_location_duplicated_html: "%{user} hat den Behälter %{storage_location}
+        dupliziert."
+      storage_location_repository_row_created_html: "%{user} hat %{repository_row}
+        Box %{storage_location} %{position} zugewiesen."
+      storage_location_repository_row_deleted_html: "%{user} hat %{repository_row}
+        aus dem Fach %{storage_location} %{position} entfernt."
+      storage_location_repository_row_moved_html: "%{user} hat den Artikel %{repository_row}
+        von Box %{storage_location_original} %{position_original} nach Box %{storage_location}
+        %{position} verschoben."
+      container_storage_location_imported_html: "%{user} hat %{assigned_count} Artikel
+        zugewiesen und %{unassigned_count} Artikel durch Import nach %{storage_location}
+        nicht zugewiesen."
+      task_step_restore_asset_version_html: "%{user} hat die Version <strong>%{version}</strong>
+        der Datei <strong>%{file}</strong> auf Schritt <strong>%{step}</strong> des
+        Protokolls auf Aufgabe %{my_module} wiederhergestellt."
+      task_result_restore_asset_version_html: "%{user} hat die Version <strong>%{version}</strong>
+        der Datei <strong>%{file}</strong> auf Ergebnis %{result} der Aufgabe %{my_module}
+        wiederhergestellt."
+      repository_column_restore_asset_version_html: "%{user} hat die Version <strong>%{version}</strong>
+        der Datei <strong>%{file}</strong> in Inventarspalte %{repository_column}
+        im Inventar %{repository} wiederhergestellt."
+      protocol_step_restore_asset_version_html: "%{user} hat die Version <strong>%{version}</strong>
+        der Datei <strong>%{file}</strong> auf Schritt <strong>%{step}</strong> im
+        Protokoll-Repository von Protokollvorlage %{protocol} wiederhergestellt."
+      form_access_granted_html: "%{user} hat %{user_target} den Zugriff mit der Benutzerrolle
+        %{role} für das Formular %{form} gewährt."
+      form_access_changed_html: "%{user} hat %{user_target} die Rolle auf Formular
+        %{form} zu %{role} geändert."
+      form_access_revoked_html: "%{user} hat %{user_target} mit der Benutzerrolle
+        %{role} aus dem Formular %{form} entfernt."
+      form_access_granted_all_team_members_html: "%{user} hat allen Arbeitsbereichsmitgliedern
+        des Arbeitsbereichs %{team} mit der Benutzerrolle %{role} Zugriff auf das
+        Formularvorlage %{form} gewährt."
+      form_access_changed_all_team_members_html: "%{user} hat die Rolle von %{team}
+        im Formular-Template %{form} zu %{role} geändert."
+      form_access_revoked_all_team_members_html: "%{user} hat %{team} Arbeitsbereichsmitglieder
+        mit Benutzerrolle %{role} aus dem Formularvorlage %{form} entfernt."
+      form_created_html: "%{user} hat das Formular %{form} in den Formularvorlagen
+        erstellt."
+      form_archived_html: "%{user} hat das Formular %{form} in den Formularvorlagen
+        archiviert."
+      form_restored_html: "%{user} hat das Formular %{form} aus dem Archiv in den
+        Formularvorlagen wiederhergestellt."
+      form_published_html: "%{user} hat das Formular %{form} Version %{version_number}
+        veröffentlicht."
+      form_name_changed_html: "%{user} hat den Formularnamen in den Formularvorlagen
+        bearbeitet."
+      form_block_added_html: "%{user} hat den Formularblock %{block_name} im Formular
+        %{form} in den Formvorlagen erstellt."
+      form_block_edited_html: "%{user} hat den Formularblock %{block_name} im Formular
+        %{form} in den Formvorlagen bearbeitet."
+      form_block_deleted_html: "%{user} hat den Block %{block_name} im Formular %{form}
+        in den Formularvorlagen gelöscht."
+      form_block_rearranged_html: "%{user} hat Formblöcke im Formular %{form} in Formvorlagen
+        umgestellt."
+      export_form_responses_html: "%{user} hat Daten aus dem Formular %{form} in Formvorlagen
+        exportiert."
+      task_step_form_added_html: "%{user} hat das Formular <strong>%{form}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> der Aufgabe %{my_module}
+        hinzugefügt."
+      task_step_form_deleted_html: "%{user} hat das Formular <strong>%{form}</strong>
+        im Protokollschritt %{step_position} <strong>%{step}</strong> der Aufgabe
+        %{my_module} gelöscht."
+      task_step_form_moved_html: "%{user} wechselte von <strong>%{form}</strong> im
+        Protokollschritt %{step_position} <strong>%{step}</strong> zum Schritt %{step_position_destination}
+        <strong>%{step_destination}</strong> in der Aufgabe %{my_module}."
+      task_step_form_field_edited_html: "%{user} hat das Formularfeld <strong>%{form_field_name}</strong>
+        im Formular <strong>%{form}</strong> im Schritt %{step_position} <strong>%{step}</strong>
+        der Aufgabe %{my_module} bearbeitet."
+      task_step_form_field_submitted_html: "%{user} hat das Formular <strong>%{form}</strong>
+        im Protokollschritt %{step_position} <strong>%{step}</strong> der Aufgabe
+        %{my_module} eingereicht."
+      task_step_form_field_reopened_html: "%{user} hat das Formular <strong>%{form}</strong>
+        im Protokollschritt %{step_position} <strong>%{step}</strong> der Aufgabe
+        %{my_module} wieder geöffnet."
+      protocol_step_form_added_html: "%{user} hat das Formular <strong>%{form}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        hinzugefügt."
+      protocol_step_form_deleted_html: "%{user} hat das Formular <strong>%{form}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> im Protokoll-Repository
+        gelöscht."
+      protocol_step_form_moved_html: "%{user} hat das Formular <strong>%{form}</strong>
+        im Schritt %{step_position} <strong>%{step}</strong> in den Schritt %{step_position_destination}
+        <strong>%{step_destination}</strong> im Protokoll-Repository verschoben."
+      form_duplicated_html: "%{user} hat das Formular %{form} von %{form_old} in Formularen
+        dupliziert."
+      form_block_duplicated_html: "%{user} hat den Formularblock %{block_name} im
+        Formular %{form} in den Formvorlagen dupliziert."
+      form_unpublished_html: "%{user} hat das Formular %{form} nicht veröffentlicht."
+      change_experiment_status_html: "%{user} hat den Status von <strong>%{old_status}</strong>
+        auf <strong>%{status}</strong> für das Experiment %{experiment} geändert."
+      set_experiment_due_date_html: "%{user} hat das Fälligkeitsdatum %{due_date}
+        für das Experiment %{experiment} festgelegt."
+      change_experiment_due_date_html: "%{user} hat das Fälligkeitsdatum %{due_date}
+        des Experiments %{experiment} geändert."
+      remove_experiment_due_date_html: "%{user} hat das Fälligkeitsdatum %{due_date}
+        des Experiments %{experiment} entfernt."
+      set_experiment_start_date_html: "%{user} hat das Startdatum %{start_date} für
+        das Experiment %{experiment} festgelegt."
+      change_experiment_start_date_html: "%{user} hat das Startdatum %{start_date}
+        des Experiments %{experiment} geändert."
+      remove_experiment_start_date_html: "%{user} hat das Startdatum %{start_date}
+        des Experiments %{experiment} entfernt."
+      change_project_status_html: "%{user} hat den Status von <strong>%{old_status}</strong>
+        auf <strong>%{status}</strong> für das Projekt %{project} geändert."
+      set_project_due_date_html: "%{user} hat das Fälligkeitsdatum %{due_date} für
+        das Projekt %{project} festgelegt."
+      change_project_due_date_html: "%{user} hat das Fälligkeitsdatum %{due_date}
+        des Projekts %{project} geändert."
+      remove_project_due_date_html: "%{user} hat das Fälligkeitsdatum %{due_date}
+        des Projekts %{project} entfernt."
+      set_project_start_date_html: "%{user} hat das Startdatum %{start_date} für das
+        Projekt %{project} festgelegt."
+      change_project_start_date_html: "%{user} hat das Startdatum %{start_date} für
+        das Projekt %{project} geändert."
+      remove_project_start_date_html: "%{user} hat das Startdatum %{start_date} des
+        Projekts %{project} entfernt."
+      set_head_of_project_html: "%{user} hat den Benutzer %{user_target} als Leiter
+        des Projekts %{project} hinzugefügt."
+      remove_head_of_project_html: "%{user} hat Benutzer %{user_target} als Leiter
+        des Projekts %{project} entfernt."
+      task_steps_loaded_from_template_html: "%{user} hat %{count} Schritte aus Vorlage
+        %{protocol} zu Aufgabe %{my_module} hinzugefügt."
+      protocol_steps_loaded_from_template_html: "%{user} hat %{count} Schritte aus
+        Vorlage %{protocol} hinzugefügt."
+      create_user_group_html: "%{user} hat die Gruppe %{user_group} im Arbeitsbereich
+        %{team} erstellt."
+      update_user_group_html: "%{user} hat die Gruppe %{user_group} im Workspace %{team}
+        aktualisiert."
+      delete_user_group_html: "%{user} hat die Gruppe %{user_group} im Arbeitsbereich
+        %{team} gelöscht."
+      add_group_user_member_html: "%{user} hat %{user_target} zur Gruppe %{user_group}
+        im Arbeitsbereich %{team} hinzugefügt."
+      remove_group_user_member_html: "%{user} hat %{user_target} aus der Gruppe %{user_group}
+        im Workspace %{team} entfernt."
+      form_access_granted_user_group_html: "%{user} hat %{user_group} Zugriff mit
+        Benutzerrolle %{role} auf Formularvorlage %{form} gewährt."
+      form_access_changed_user_group_html: "%{user} hat die Rolle von %{user_group}
+        auf Formularvorlage %{form} zu %{role} geändert."
+      form_access_revoked_user_group_html: "%{user} hat die Gruppe %{user_group} mit
+        der Benutzerrolle %{role} aus dem Formularvorlage %{form} entfernt."
+      protocol_template_access_granted_user_group_html: "%{user} hat %{user_group}
+        Zugriff mit der Benutzerrolle %{role} auf das Protokollvorlage %{protocol}
+        gewährt."
+      protocol_template_access_changed_user_group_html: "%{user} hat die Rolle von
+        %{user_group} auf dem Protokollvorlage %{protocol} in %{role} geändert."
+      protocol_template_access_revoked_user_group_html: "%{user} hat die Gruppe %{user_group}
+        mit der Benutzerrolle %{role} aus dem Protokollvorlage %{protocol} entfernt."
+      project_access_granted_user_group_html: "%{user} hat %{user_group} mit der Benutzerrolle
+        %{role} Zugriff auf das Projekt %{project} gewährt."
+      project_access_changed_user_group_html: "%{user} hat die Rolle von %{user_group}
+        im Projekt %{project} zu %{role} geändert."
+      project_access_revoked_user_group_html: "%{user} hat die Gruppe %{user_group}
+        mit der Benutzerrolle %{role} aus dem Projekt %{project} entfernt."
+      experiment_access_changed_user_group_html: "%{user} hat die Rolle von %{user_group}
+        im Experiment %{experiment} zu %{role} geändert."
+      my_module_access_changed_user_group_html: "%{user} hat die Rolle von %{user_group}
+        in der Aufgabe %{my_module} zu %{role} geändert."
+      step_and_result_linked_html: "%{user} verknüpfte das Ergebnis <strong>%{result}</strong>
+        und den Schritt <strong>%{step_position}</strong> <strong>%{step}</strong>
+        in der Aufgabe <strong>%{my_module}</strong>."
+      step_and_result_unlinked_html: "%{user} hat das Ergebnis <strong>%{result}</strong>
+        und Schritt <strong>%{step_position}</strong> <strong>%{step}</strong> in
+        der Aufgabe <strong>%{my_module}</strong> getrennt."
+      repository_access_granted_html: "%{user} hat %{user_target} mit der Benutzerrolle
+        %{role} Zugriff auf das Inventar %{repository} gewährt."
+      repository_access_changed_html: "%{user} hat die Rolle von %{user_target} im
+        Lager %{repository} in %{role} geändert."
+      repository_access_revoked_html: "%{user} hat %{user_target} mit der Benutzerrolle
+        %{role} aus dem Lager %{repository} entfernt."
+      repository_access_granted_all_team_members_html: "%{user} hat allen Workspace-Mitgliedern
+        des %{team}-Workspace mit der Benutzerrolle %{role} Zugriff auf das Inventar
+        %{repository} gewährt."
+      repository_access_changed_all_team_members_html: "%{user} hat die Rolle von
+        %{team} im Lager %{repository} zu %{role} geändert."
+      repository_access_revoked_all_team_members_html: "%{user} hat Mitglieder des
+        %{team} Arbeitsbereichs mit der Benutzerrolle %{role} aus dem Inventar %{repository}
+        entfernt."
+      repository_access_granted_user_group_html: "%{user} hat Zugriff auf %{user_group}
+        mit Benutzerrolle %{role} zum Bestand %{repository} gewährt."
+      repository_access_changed_user_group_html: "%{user} hat die Rolle von %{user_group}
+        im Lager %{repository} zu %{role} geändert."
+      repository_access_revoked_user_group_html: "%{user} hat die Gruppe %{user_group}
+        mit der Benutzerrolle %{role} aus dem Lager %{repository} entfernt."
+      experiment_access_changed_all_team_members_html: "%{user} hat %{team}s Rolle
+        im Experiment %{experiment} zu %{role} geändert."
+      my_module_access_changed_all_team_members_html: "%{user} hat %{team}s Rolle
+        in Aufgabe %{my_module} zu %{role} geändert."
+    activity_name:
+      create_project: Projekt erstellt
+      edit_project: Projekt bearbeitet
+      change_project_visibility: Projektsichtbarkeit geändert (veraltet)
+      project_grant_access_to_all_team_members: Gewähre Zugriff auf alle Arbeitsbereichsmitglieder
+      project_remove_access_from_all_team_members: Entfernen Sie den Zugriff für alle
+        Arbeitsbereichsmitglieder.
+      archive_project: Projekt archiviert
+      restore_project: Projekt wiederhergestellt
+      add_comment_to_project: Projektkommentar hinzugefügt
+      edit_project_comment: Projektkommentar bearbeitet
+      delete_project_comment: Projektkommentar gelöscht
+      create_report: Bericht erstellt
+      edit_report: Bericht bearbeitet
+      delete_report: Bericht gelöscht
+      add_result_old: Ergebnis hinzugefügt (veraltet)
+      add_result: Ergebnis hinzugefügt
+      edit_result_old: Ergebnis bearbeitet (veraltet)
+      edit_result: Ergebnis bearbeitet
+      add_comment_to_result: Ergebniskommentar hinzugefügt
+      edit_result_comment: Ergebnis Kommentar bearbeitet
+      delete_result_comment: Ergebniskommentar gelöscht
+      archive_result_old: Ergebnis archiviert (veraltet)
+      archive_result: Ergebnis archiviert
+      destroy_result_old: Ergebnis gelöscht (veraltet)
+      destroy_result: Ergebnis gelöscht
+      result_restored: Ergebnis wiederhergestellt
+      result_content_rearranged: Ergebnisinhalt neu angeordnet
+      result_file_added: Ergebnisdatei hinzugefügt
+      result_file_deleted: Ergebnisdatei gelöscht
+      result_text_added: Ergebnistext hinzugefügt
+      result_text_edited: Ergebnistext bearbeitet
+      result_text_deleted: Ergebnistext gelöscht
+      result_table_added: Ergebnistabelle hinzugefügt
+      result_table_edited: Ergebnistabelle bearbeitet
+      result_table_deleted: Ergebnistabelle gelöscht
+      result_duplicated: Ergebnis dupliziert
+      result_text_duplicated: Ergebnistext dupliziert
+      result_table_duplicated: Ergebnistabelle dupliziert
+      create_module: Aufgabe erstellt
+      clone_module: Aufgabe dupliziert
+      archive_module: Aufgabe archiviert
+      restore_module: Aufgabe wiederhergestellt
+      add_comment_to_module: Aufgabe Kommentar hinzugefügt
+      edit_module_comment: Aufgabe Kommentar bearbeitet
+      delete_module_comment: Aufgabe Kommentar gelöscht
+      change_module_description: Aufgabenbeschreibung bearbeitet
+      create_step: Aufgabe Schritt hinzugefügt
+      edit_step: Aufgabe Schritt bearbeitet
+      destroy_step: Aufgabe Schritt gelöscht
+      load_protocol_to_task_from_repository: Aufgabenprotokoll aus Repository geladen
+      load_protocol_to_task_from_file: Aufgabenprotokoll aus Datei geladen (veraltet)
+      update_protocol_in_task_from_repository: Aufgabenprotokoll aus Repository aktualisiert
+      check_step_checklist_item: Aufgabe Schritt Checkliste abgeschlossen
+      uncheck_step_checklist_item: Aufgaben-Schritt-Checkliste unvollständig
+      add_comment_to_step: Aufgabe Schritt Kommentar hinzugefügt
+      edit_step_comment: Aufgabe Schritt Kommentar bearbeitet
+      delete_step_comment: Aufgabe Schritt Kommentar gelöscht
+      complete_step: Aufgabe abgeschlossen
+      uncomplete_step: Aufgabe Schritt unvollständig
+      uncomplete_task: Aufgabe unvollständig (veraltet)
+      complete_task: Aufgabe abgeschlossen (veraltet)
+      assign_repository_record: Aufgabe Inventar zugewiesen
+      unassign_repository_record: Aufgabeninventar nicht zugewiesen
+      assign_user_to_project: Benutzer zugewiesen zu Projekt
+      unassign_user_from_project: Benutzer aus Projekt entfernt
+      change_user_role_on_project: Benutzerrolle auf Projekt geändert
+      change_user_role_on_experiment: Benutzerrolle auf Experiment geändert
+      change_user_role_on_my_module: Benutzerrolle auf Aufgabe geändert
+      designate_user_to_my_module: Benutzer zugewiesen zu Aufgabe
+      undesignate_user_from_my_module: Benutzer aus Aufgabe entfernt
+      create_experiment: Experiment erstellt
+      rename_experiment: Experiment umbenannt
+      edit_experiment: Experiment bearbeitet
+      move_experiment: Experiment verschoben
+      clone_experiment: Experiment dupliziert
+      archive_experiment: Experiment archiviert
+      edit_wopi_file_on_result: Microsoft 365 Datei wurde bearbeitet.
+      edit_wopi_file_on_step: Microsoft 365 Datei auf Aufgabenschritt bearbeitet
+      edit_wopi_file_on_step_in_repository: Microsoft 365 Datei auf Schritt bearbeitet
+      restore_experiment: Experiment wiederhergestellt
+      rename_task: Aufgabe umbenannt
+      move_task: Aufgabe verschoben
+      export_protocol_from_task: Exportprotokoll von Aufgabe
+      set_task_start_date: Aufgabenstartdatum festgelegt
+      change_task_start_date: Aufgabestartdatum geändert
+      remove_task_start_date: Startdatum der Aufgabe entfernt
+      set_task_due_date: Aufgabefrist festgelegt
+      change_task_due_date: Aufgabefrist geändert
+      remove_task_due_date: Aufgabefälligkeitsdatum entfernt
+      add_task_tag: Aufgabe Tag hinzugefügt
+      remove_task_tag: Aufgabe Tag entfernt
+      create_inventory: Inventar erstellt
+      rename_inventory: Inventar umbenannt
+      archive_inventory: Inventar archiviert
+      restore_inventory: Inventar wiederhergestellt
+      delete_inventory: Inventar gelöscht
+      share_inventory: Inventar geteilt
+      unshare_inventory: Inventar nicht geteilt
+      update_share_inventory: Inventarfreigabeberechtigung aktualisiert
+      share_inventory_with_all: Inventar, das mit allen geteilt wird
+      unshare_inventory_with_all: Inventar nicht mit allen geteilt
+      update_share_with_all_permission_level: Inventarfreigabe mit allen Berechtigungen
+        aktualisiert
+      create_item_inventory: Inventargegenstand erstellt
+      edit_item_inventory: Inventargegenstand bearbeitet
+      edit_item_field_inventory: Inventarpositionsfeld bearbeitet
+      inventory_item_relationships_linked: Inventarartikelbeziehungen verknüpft
+      inventory_item_relationships_unlinked: Inventarartikelbeziehungen wurden getrennt.
+      delete_item_inventory: Inventarposition gelöscht
+      archive_inventory_item: Inventarposten archiviert
+      restore_inventory_item: Inventarposition wiederhergestellt
+      create_column_inventory: Inventarspalte erstellt
+      edit_column_inventory: Inventarspalte bearbeitet
+      copy_inventory: Bestand dupliziert
+      copy_inventory_item: Inventargegenstand dupliziert
+      delete_column_inventory: Inventarspalte gelöscht
+      update_protocol_in_repository_from_task: Protokoll aktualisiert von Aufgabe
+        (%{status})
+      create_protocol_in_repository: Protokoll erstellt
+      add_step_to_protocol_repository: Schritt hinzugefügt
+      edit_step_in_protocol_repository: Schritt bearbeitet
+      delete_step_in_protocol_repository: Schritt gelöscht
+      edit_description_in_protocol_repository: Beschreibung bearbeitet
+      edit_keywords_in_protocol_repository: Schlüsselwörter bearbeitet
+      edit_authors_in_protocol_repository: Autoren bearbeitet
+      edit_protocol_name_in_repository: Protokollname bearbeitet
+      archive_protocol_in_repository: Protokoll archiviert
+      restore_protocol_in_repository: Protokoll aus dem Archiv wiederhergestellt
+      move_protocol_in_repository: Protokoll verschoben (veraltet)
+      copy_protocol_in_repository: Protokoll dupliziert
+      import_protocol_in_repository: Protokoll aus Datei importiert
+      export_protocol_in_repository: Protokoll exportiert
+      invite_user_to_team: Benutzer wurde zum Arbeitsbereich eingeladen
+      remove_user_from_team: Benutzer aus Arbeitsbereich entfernt
+      change_users_role_on_team: Benutzerrolle auf Workspace geändert
+      user_leave_team: Benutzer hat den Arbeitsbereich verlassen.
+      export_projects: Projekte exportiert
+      export_inventory_items: Inventargegenstände exportiert
+      create_tag: Tag erstellt
+      edit_tag: Tag bearbeitet
+      delete_tag: Tag gelöscht
+      import_inventory_items_legacy: Inventarartikel importiert (veraltet)
+      inventory_items_added_or_updated_with_import: Elemente hinzugefügt oder aktualisiert
+        durch Import
+      item_added_with_import: Artikel hinzugefügt mit Import
+      edit_image_on_result: Bild auf Ergebnis bearbeitet
+      edit_image_on_step: Bild auf Aufgabenschritt bearbeitet
+      edit_image_on_step_in_repository: Bild auf Schritt bearbeitet
+      edit_chemical_structure_on_step: Chemische Struktur auf Aufgabenschritt bearbeitet
+      edit_chemical_structure_on_result: Chemische Struktur auf Ergebnis bearbeitet
+      edit_chemical_structure_on_step_in_repository: Chemische Struktur auf Schritt
+        bearbeitet
+      edit_chemical_structure_on_task_protocol: Chemische Struktur im Aufgabenprotokoll
+        bearbeitet
+      edit_chemical_structure_on_protocol: Chemische Struktur im Protokoll bearbeitet
+      edit_chemical_structure_on_task: Chemische Struktur auf Aufgabe bearbeitet
+      create_chemical_structure_on_step: Chemische Struktur auf Aufgabenschritt erstellt
+      create_chemical_structure_on_result: Chemische Struktur auf Ergebnis erstellt
+      create_chemical_structure_on_step_in_repository: Chemische Struktur auf Schritt
+        erstellt
+      create_chemical_structure_on_task_protocol: Chemische Struktur auf Aufgabenprotokoll
+        erstellt
+      create_chemical_structure_on_protocol: Chemische Struktur im Protokoll erstellt
+      create_chemical_structure_on_task: Chemische Struktur bei Aufgabenerstellung
+      delete_chemical_structure_on_step: Chemische Struktur auf Aufgabenschritt gelöscht
+      delete_chemical_structure_on_result: Chemische Struktur auf Ergebnis gelöscht
+      delete_chemical_structure_on_step_in_repository: Chemische Struktur auf Schritt
+        gelöscht
+      delete_chemical_structure_on_task_protocol: Chemische Struktur im Aufgabenprotokoll
+        gelöscht
+      delete_chemical_structure_on_protocol: Chemische Struktur im Protokoll gelöscht
+      delete_chemical_structure_on_task: Chemische Struktur zur Aufgabe gelöscht
+      protocol_description_in_task_edited: Protokollbeschreibung in Aufgabe bearbeitet
+      protocol_name_in_task_edited: Protokollname in Aufgabe bearbeitet
+      export_inventory_items_assigned_to_task: Inventargegenstände, die der Aufgabe
+        zugewiesen wurden, exportiert (Live-Version)
+      export_inventory_snapshot_items_assigned_to_task: Aufgabe-zugewiesene Lagerbestände
+        exportiert (Snapshot)
+      change_status_on_task_flow: Aufgabenstatus geändert
+      move_project: Projekt verschoben
+      create_project_folder: Projektordner erstellt
+      rename_project_folder: Projektordner umbenannt
+      delete_project_folder: Projektordner gelöscht
+      move_project_folder: Projektordner verschoben
+      generate_pdf_report: PDF-Bericht generiert
+      generate_docx_report: DOCX Bericht generiert
+      inventory_item_stock_set: Inventarposition Lagerbestand aufgestellt auf
+      inventory_item_stock_add: Inventarartikelbestand hinzugefügt
+      inventory_item_stock_remove: Inventarartikelbestand entfernt
+      task_inventory_item_stock_consumed: Aufgabe zugewiesener Lagerbestand verbraucht
+      task_steps_rearranged: Aufgaben Schritte umsortiert
+      task_step_content_rearranged: Aufgabe Schritt Inhalt umgeordnet
+      task_step_file_added: Aufgabe Schritt Dateien hinzugefügt
+      task_step_file_deleted: Aufgabe Schritt Datei gelöscht
+      protocol_steps_rearranged: Protokollschritte umgeordnet
+      protocol_step_content_rearranged: Protokollschrittinhalt neu angeordnet
+      protocol_step_file_added: Protokoll-Schrittdatei hinzugefügt
+      protocol_step_file_deleted: Protokollschrittdatei gelöscht
+      task_step_text_added: Schritttekst hinzugefügt
+      task_step_text_edited: Aufgabe Schritt Text bearbeitet
+      task_step_text_deleted: Aufgabenschritttext gelöscht
+      task_step_table_added: Aufgabe Schritt Tabelle hinzugefügt
+      task_step_table_edited: Aufgabe Schritt Tabelle bearbeitet
+      task_step_table_deleted: Aufgabe Schritt Tabelle gelöscht
+      task_step_checklist_added: Aufgabe Schritt Checkliste hinzugefügt
+      task_step_checklist_edited: Aufgaben-Schritt-Checkliste bearbeitet
+      task_step_checklist_deleted: Aufgaben-Schritt-Checkliste gelöscht
+      task_step_checklist_item_added: Aufgabe Schritt Checkliste Element hinzugefügt
+      task_step_checklist_item_edited: Aufgabe Schritt Checkliste Element bearbeitet
+      task_step_checklist_item_deleted: Aufgabe Schritt Checkliste Element gelöscht
+      protocol_step_text_added: Protokollschritt Text hinzugefügt
+      protocol_step_text_edited: Protokollschritttext bearbeitet
+      protocol_step_text_deleted: Protokollschritttext gelöscht
+      protocol_step_table_added: Protokoll-Schritt-Tabelle hinzugefügt
+      protocol_step_table_edited: Protokoll Schritt Tabelle bearbeitet
+      protocol_step_table_deleted: Protokollschritt Tabelle gelöscht
+      protocol_step_checklist_added: Protokollschritt-Checkliste hinzugefügt
+      protocol_step_checklist_edited: Protokoll Schritt Checkliste bearbeitet
+      protocol_step_checklist_deleted: Protokollschritt-Checkliste gelöscht
+      protocol_step_checklist_item_added: Protokollschritt Checkliste Element hinzugefügt
+      protocol_step_checklist_item_edited: Protokollschritt Checkliste Element bearbeitet
+      protocol_step_checklist_item_deleted: Protokollschritt Checkliste Element gelöscht
+      task_step_duplicated: Aufgabe Schritt dupliziert
+      protocol_step_duplicated: Schritt dupliziert
+      task_step_text_duplicated: Aufgabe Schritt Text dupliziert
+      task_step_table_duplicated: Aufgabe Schritt Tabelle dupliziert
+      task_step_checklist_duplicated: Aufgaben-Schritt-Checkliste dupliziert
+      protocol_step_text_duplicated: Protokollschritttext dupliziert
+      protocol_step_table_duplicated: Protokollschritt Tabelle dupliziert
+      protocol_step_checklist_duplicated: Protokollschritt-Checkliste dupliziert
+      label_template_created: Etikettenvorlage erstellt
+      label_template_edited: Vorlage bearbeitet
+      label_template_deleted: Vorlage gelöscht
+      label_template_copied: Vorlagenetikett dupliziert
+      protocol_template_published: Protokollvorlage veröffentlicht
+      protocol_template_revision_notes_updated: Überarbeitete Notizen
+      protocol_template_draft_deleted: Löschen des Entwurfs
+      protocol_template_draft_created: Erstelle Entwurf
+      protocol_template_access_granted: Benutzer hat Zugriff auf das Protokollvorlagen-Template
+        gewährt.
+      protocol_template_access_changed: Benutzerrolle auf einem Protokoll geändert
+      protocol_template_access_revoked: Benutzer aus einem Protokoll entfernt
+      task_protocol_save_to_template: Als neue Protokollvorlage speichern
+      protocol_template_access_granted_all_team_members: Gewähre Zugriff auf alle
+        Arbeitsbereichsmitglieder
+      protocol_template_access_changed_all_team_members: Ändern Sie die Rolle aller
+        Arbeitsbereichsmitglieder.
+      protocol_template_access_revoked_all_team_members: Entfernen Sie den Zugriff
+        für alle Workspace-Mitglieder.
+      project_access_changed_all_team_members: Ändere die Rolle aller Workspace-Mitglieder.
+      team_sharing_tasks_enabled: Aufgaben teilen aktiviert
+      team_sharing_tasks_disabled: Aufgaben teilen deaktiviert
+      task_link_sharing_enabled: Aufgabenlinkfreigabe aktiviert
+      task_link_sharing_disabled: Aufgabenlinkfreigabe deaktiviert
+      shared_task_message_edited: Geteilte Aufgabenmeldung bearbeitet
+      task_sequence_asset_added: Aufgabe Sequenz Asset hinzugefügt
+      task_sequence_asset_edit_started: Aufgabe Sequenz Asset-Bearbeitung gestartet
+      task_sequence_asset_edit_finished: Aufgabe Sequenz Asset-Bearbeitung abgeschlossen
+      task_sequence_asset_deleted: Aufgabe Sequenz Asset gelöscht
+      protocol_sequence_asset_added: Protokollsequenz Asset hinzugefügt
+      protocol_sequence_asset_edit_started: Protokollsequenz Asset-Bearbeitung gestartet
+      protocol_sequence_asset_edit_finished: Protokollsequenz Asset-Bearbeitung abgeschlossen
+      protocol_sequence_asset_deleted: Protokollsequenz Asset gelöscht
+      sequence_on_result_added: Sequenz auf Ergebnis hinzugefügt
+      sequence_on_result_edited: Sequenz auf Ergebnis bearbeitet
+      sequence_on_result_moved: Sequenz auf Ergebnis verschoben
+      sequence_on_result_deleted: Sequenz zum Ergebnis gelöscht
+      task_step_file_moved: Aufgabe Schritt Datei verschoben
+      task_step_text_moved: Aufgabe Schritt Text verschoben
+      task_step_table_moved: Aufgabe Schritt Tabelle verschoben
+      task_step_checklist_moved: Aufgabe Schritt Checkliste verschoben
+      move_chemical_structure_on_step: Chemische Struktur auf Aufgabenschritt verschoben
+      protocol_step_file_moved: Protokollschrittdatei verschoben
+      protocol_step_text_moved: Protokollschritttext verschoben
+      protocol_step_table_moved: Protokoll-Schritt-Tabelle verschoben
+      protocol_step_checklist_moved: Protokollschritt-Checkliste verschoben
+      move_chemical_structure_on_step_in_repository: Chemische Struktur auf Protokollvorlage
+        Schritt verschoben
+      result_file_moved: Ergebnisdatei verschoben
+      result_text_moved: Ergebnistext verschoben
+      result_table_moved: Ergebnistabelle verschoben
+      move_chemical_structure_on_result: Chemische Struktur auf Ergebnis verschoben
+      edit_task_step_file_locally: Datei auf Aufgabenschritt lokal bearbeitet
+      edit_protocol_template_file_locally: Datei zu Protokollvorlagen lokal bearbeitet
+      edit_task_result_file_locally: Datei zum Bearbeiten des Aufgabenergebnisses
+        lokal geändert
+      export_inventories: Inventar exportiert
+      edit_image_on_inventory_item: Inventargegenstandsbild bearbeitet
+      edit_wopi_file_on_inventory_item: Inventarposition %{name} Datei bearbeitet
+      export_inventory_stock_consumption: Bestandsverbrauch exportiert
+      task_step_asset_renamed: Dateianhang im Aufgabenschritt umbenannt
+      protocol_step_asset_renamed: Dateianhang im Protokollschritt umbenannt
+      result_asset_renamed: Dateianhang in Task-Ergebnis umbenannt
+      task_step_file_duplicated: Dateianhang im Aufgabenschritt dupliziert
+      result_file_duplicated: Dateianhang im Task-Ergebnis dupliziert
+      protocol_step_file_duplicated: Dateianhang im Protokollschritt dupliziert
+      storage_location_created: Standort erstellt
+      storage_location_deleted: Standort gelöscht
+      storage_location_edited: Ort bearbeitet
+      storage_location_moved: Standort verschoben
+      storage_location_shared: Standort geteilt
+      storage_location_unshared: Ort nicht geteilt
+      storage_location_duplicated: Standort dupliziert
+      storage_location_sharing_updated: Standortfreigabe-Berechtigung aktualisiert
+      container_storage_location_created: Box erstellt
+      container_storage_location_deleted: Box gelöscht
+      container_storage_location_edited: Box bearbeitet
+      container_storage_location_moved: Box bewegt
+      container_storage_location_shared: Geteilte Box
+      container_storage_location_unshared: Box nicht geteilt
+      container_storage_location_sharing_updated: Berechtigung für die Freigabe von
+        Box aktualisiert
+      container_storage_location_duplicated: Box dupliziert
+      storage_location_repository_row_created: Inventarposition zugewiesen
+      storage_location_repository_row_deleted: Inventarposition Standort nicht zugewiesen
+      storage_location_repository_row_moved: Inventargegenstand wurde verschoben
+      container_storage_location_imported: Box import
+      task_step_restore_asset_version: Aufgabe Schritt Datei Version wiederhergestellt
+      task_result_restore_asset_version: Dateiversion wiederhergestellt
+      repository_column_restore_asset_version: Inventar-Artikeldatei-Version wiederhergestellt
+      protocol_step_restore_asset_version: Protokollschrittdatenversion wiederhergestellt
+      form_access_granted: Benutzer hat Zugriff auf ein Formular erhalten.
+      form_access_changed: Benutzerrolle auf einem Formular geändert
+      form_access_revoked: Benutzer aus einem Formular entfernt
+      form_access_granted_all_team_members: Gewähre Zugriff auf alle Arbeitsbereichsmitglieder
+      form_access_changed_all_team_members: Ändere die Rolle aller Arbeitsbereichsmitglieder.
+      form_access_revoked_all_team_members: Entfernen Sie den Zugriff aller Arbeitsbereichsmitglieder.
+      form_created: Formular erstellt
+      form_archived: Form archiviert
+      form_restored: Formular aus dem Archiv wiederhergestellt
+      form_published: Formular veröffentlicht
+      form_name_changed: Formularname bearbeitet
+      form_block_added: Formularblock hinzugefügt
+      form_block_edited: Formblock bearbeitet
+      form_block_deleted: Formularblock gelöscht
+      form_block_rearranged: Formularblock umgeordnet
+      export_form_responses: Formulardaten exportiert
+      task_step_form_added: Aufgabe Schritt Formular hinzugefügt
+      task_step_form_deleted: Aufgabenschrittformular gelöscht
+      task_step_form_moved: Aufgabe Schritt Formular verschoben
+      task_step_form_field_edited: Aufgabe Schritt Formularfeld bearbeitet
+      task_step_form_field_submitted: Aufgabenschrittformular übermittelt
+      task_step_form_field_reopened: Aufgabe Schritt Formular wieder geöffnet
+      protocol_step_form_added: Protokollschrittform hinzugefügt
+      protocol_step_form_deleted: Aufgabe Schritt Formular gelöscht
+      protocol_step_form_moved: Aufgabe Schritt Formular verschoben
+      form_duplicated: Formular dupliziert
+      form_block_duplicated: Formularblock dupliziert
+      form_unpublished: Formular nicht veröffentlicht
+      change_experiment_status: Experimentstatus geändert
+      set_experiment_due_date: Experiment Fälligkeitsdatum festgelegt
+      change_experiment_due_date: Experiment Fälligkeitsdatum geändert
+      remove_experiment_due_date: Experiment Fälligkeitsdatum entfernt
+      set_experiment_start_date: Experiment start date set
+      change_experiment_start_date: Experiment start date changed
+      remove_experiment_start_date: Startdatum des Experiments entfernt
+      change_project_status: Projektstatus geändert
+      set_project_due_date: Projekt-Fälligkeitsdatum festgelegt
+      change_project_due_date: Projekt Fälligkeitsdatum geändert
+      remove_project_due_date: Projektendtermin entfernt
+      set_project_start_date: Projektstartdatum festgelegt
+      change_project_start_date: Projektstartdatum geändert
+      remove_project_start_date: Projektstartdatum entfernt
+      set_head_of_project: Projektleiter hinzugefügt
+      remove_head_of_project: Projektleiter entfernt
+      task_steps_loaded_from_template: Aufgabe Schritt geladen aus Vorlage
+      protocol_steps_loaded_from_template: Schritt aus Vorlage geladen
+      create_user_group: Gruppe erstellt
+      update_user_group: Gruppe aktualisiert
+      delete_user_group: Gruppe gelöscht
+      add_group_user_member: Benutzergruppe hinzugefügt
+      remove_group_user_member: Benutzergruppe entfernt
+      form_access_granted_user_group: Gewähre Zugriff auf Gruppe
+      form_access_changed_user_group: Ändern Sie die Rolle der Gruppe
+      form_access_revoked_user_group: Entfernen Sie den Zugriff auf die Gruppe
+      protocol_template_access_granted_user_group: Gewähre Zugriff auf die Gruppe
+      protocol_template_access_changed_user_group: Ändere die Rolle der Gruppe
+      protocol_template_access_revoked_user_group: Gruppenzugriff entfernen
+      project_access_granted_user_group: Gewähre Zugriff auf Gruppe
+      project_access_changed_user_group: Ändere Rolle der Gruppe
+      project_access_revoked_user_group: Entfernen Sie den Zugriff auf die Gruppe
+      experiment_access_changed_user_group: Ändere Rolle der Gruppe
+      my_module_access_changed_user_group: Ändere die Rolle der Gruppe
+      step_and_result_linked: Aufgabe Ergebnis und Aufgabenprotokollschritt verknüpft
+      step_and_result_unlinked: Aufgabe Ergebnis und Aufgabenprotokoll Schritt nicht
+        verknüpft
+      repository_access_granted: Benutzer hat Zugriff auf das Inventar gewährt.
+      repository_access_changed: Benutzerrolle auf Lagerbestand geändert
+      repository_access_revoked: Benutzer aus dem Inventar entfernt
+      repository_access_granted_all_team_members: Gewähren Sie allen Arbeitsbereichsmitgliedern
+        Zugriff
+      repository_access_changed_all_team_members: Ändere die Rolle aller Arbeitsbereichsmitglieder.
+      repository_access_revoked_all_team_members: Entfernen Sie den Zugriff aller
+        Arbeitsbereichsmitglieder
+      repository_access_granted_user_group: Gewähre Zugriff auf Gruppe
+      repository_access_changed_user_group: Ändere Rolle der Gruppe
+      repository_access_revoked_user_group: Entfernen Sie den Zugriff auf die Gruppe
+      experiment_access_changed_all_team_members: Ändere die Rolle aller Arbeitsbereichsmitglieder.
+      my_module_access_changed_all_team_members: Ändere die Rolle aller Arbeitsbereichsmitglieder.
+    activity_group:
+      projects: Projekte
+      task_results: Aufgabenergebnisse
+      task: Aufgabe
+      task_protocol: Aufgabenprotokoll
+      task_inventory: Aufgabeninventar
+      experiment: Experiment
+      reports: Berichte
+      inventories: Inventar
+      protocol_repository: Protokollvorlagen
+      team: Arbeitsbereich
+      exports: Exporte
+      label_templates: Etikettenvorlagen
+      storage_locations: Inventarstandorte
+      container_storage_locations: Inventar Lagerort Kisten
+      storage_location_repository_rows: Artikelzuweisungen zu Standort
+      forms: Formulare
+    subject_name:
+      repository: Inventar
+      project: Projekt
+      experiment: Experiment
+      mymodule: Aufgabe
+      result: Ergebnis
+      protocol: Protokoll
+      step: Schritt
+      report: Bericht
+      storage_location: Ort
+      form: Formular
