@@ -4,11 +4,12 @@ module TaggableActions
   extend ActiveSupport::Concern
 
   included do
-    before_action :load_taggable_item, only: %i(link_tag unlink_tag)
-    before_action :load_tag, only: %i(link_tag unlink_tag)
+    before_action :load_taggable_item, only: %i(tag_resource untag_resource)
+    before_action :load_tag, only: %i(tag_resource untag_resource)
+    before_action :check_tag_manage_permissions, only: %i(tag_resource untag_resource)
   end
 
-  def link_tag
+  def tag_resource
     tagging = @taggable_item.taggings.new(tag: @tag, created_by: current_user)
     if tagging.save
       render json: { tag: [@tag.id, @tag.name, @tag.color] }
@@ -17,7 +18,7 @@ module TaggableActions
     end
   end
 
-  def unlink_tag
+  def untag_resource
     tagging = @taggable_item.taggings.find_by(tag_id: @tag.id)
     if tagging&.destroy
       render json: { status: :ok }
@@ -33,7 +34,11 @@ module TaggableActions
   end
 
   def load_tag
-    @tag = @taggable_item.team.tags.find_by(id: params[:tag_id])
+    @tag = current_team.tags.find_by(id: params[:tag_id])
     render_404 unless @tag
+  end
+
+  def check_tag_manage_permissions
+    raise NotImplementedError
   end
 end

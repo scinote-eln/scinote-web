@@ -57,8 +57,8 @@ module Lists
       urls_list = {
         show: protocols_my_module_path(object, view_mode: archived ? 'archived' : 'active'),
         results: my_module_results_path(object),
-        assign_tags: my_module_my_module_tags_path(object),
-        assigned_tags: assigned_tags_my_module_my_module_tags_path(object),
+        assign_tags: '',
+        assigned_tags: '',
         users_list: search_my_module_user_my_module_path(object, my_module_id: object.id),
         experiments_to_move: experiments_to_move_experiment_path(object.experiment),
         update: my_module_path(object),

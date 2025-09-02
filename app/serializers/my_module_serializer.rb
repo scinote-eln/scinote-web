@@ -58,8 +58,8 @@ class MyModuleSerializer < ActiveModel::Serializer
     {
       show_access: access_permissions_my_module_path(object),
       show_user_group_assignments_access: show_user_group_assignments_access_permissions_my_module_path(object),
-      link_tag: link_tag_my_module_path(object),
-      unlink_tag: unlink_tag_my_module_path(object)
+      tag_resource: tag_resource_my_module_path(object),
+      untag_resource: untag_resource_my_module_path(object)
     }
   end
 

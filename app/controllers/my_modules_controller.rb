@@ -18,7 +18,6 @@ class MyModulesController < ApplicationController
   before_action :check_manage_permissions, only: %i(
     description due_date update_description update_protocol_description update_protocol
   )
-  before_action :check_tag_manage_permissions, only: %i(link_tag unlink_tag)
   before_action :check_read_permissions, except: %i(create new update update_description
                                                     inventory_assigning_my_module_filter
                                                     update_protocol_description restore_group
@@ -517,7 +516,7 @@ class MyModulesController < ApplicationController
   end
 
   def check_tag_manage_permissions
-    render_403 && return unless can_manage_my_module_tags?(@my_module)
+    render_403 && return unless can_manage_my_module_tags?(@taggable_item)
   end
 
   def set_inline_name_editing

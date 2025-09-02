@@ -62,11 +62,11 @@ export default {
     tagsUrl() {
       return list_users_settings_team_tags_path({team_id: this.subject.attributes.team_id});
     },
-    linkTagUrl() {
-      return this.subject.attributes.urls.link_tag;
+    tagResourceUrl() {
+      return this.subject.attributes.urls.tag_resource;
     },
-    unlinkTagUrl() {
-      return this.subject.attributes.urls.unlink_tag;
+    untagResourceUrl() {
+      return this.subject.attributes.urls.untag_resource;
     },
   },
   created() {
@@ -99,7 +99,7 @@ export default {
 
       this.linkingTag = true;
 
-      axios.post(this.linkTagUrl, {
+      axios.post(this.tagResourceUrl, {
         tag_id: tag[0],
       }).then((response) => {
         this.tags.push(response.data.tag);
@@ -117,7 +117,7 @@ export default {
 
       this.linkingTag = true;
 
-      axios.post(this.unlinkTagUrl, {
+      axios.post(this.untagResourceUrl, {
         tag_id: tag[0],
       }).then((response) => {
         this.tags = this.tags.filter(t => t[0] !== tag[0]);
