@@ -6,6 +6,7 @@
     :search-url="'<%= search_path(format: :json) %>'"
     teams-url="<%= visible_teams_teams_path %>"
     users-url="<%= visible_users_teams_path %>"
+    tags-url="<%= visible_tags_teams_path %>"
     :single-team="<%= current_user.teams.count == 1 %>"
     :current-team="<%= current_team.id %>"
   />
