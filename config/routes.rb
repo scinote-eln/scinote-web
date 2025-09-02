@@ -525,6 +525,8 @@ Rails.application.routes.draw do
         post :favorite
         post :unfavorite
         get :assigned_users
+        post :link_tag
+        post :unlink_tag
       end
       resources :user_my_modules, path: '/users', only: %i(index create destroy) do
         collection do

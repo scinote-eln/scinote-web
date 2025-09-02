@@ -98,87 +98,7 @@
     }
   }
 
-  function initTagsSelector() {
-    var myModuleTagsSelector = '#module-tags-selector';
 
-    dropdownSelector.init($(myModuleTagsSelector), {
-      closeOnSelect: true,
-      tagClass: 'my-module-white-tags sci-tag',
-      labelHTML: true,
-      tagStyle: (data) => {
-        return `background: ${data.params.color}`;
-      },
-      customDropdownIcon: () => {
-        return '';
-      },
-      optionLabel: (data) => {
-        if (data.value > 0) {
-          return `<span class="sci-tag max-w-80 truncate text-sn-white "
-                        style="background:${data.params.color}">${data.label}</span>`;
-        }
-        return `<span class="my-module-tags-color new"><i class="sn-icon sn-icon-new-task"></i></span>
-                  ${data.label + ' '}
-                <span class="my-module-tags-create-new"> ${I18n.t('my_modules.details.create_new_tag')}</span>`;
-      },
-      onOpen: function() {
-        $('.select-container .edit-button-container').removeClass('hidden');
-      },
-      onClose: function() {
-        $('.select-container .edit-button-container').addClass('hidden');
-      },
-      onSelect: function() {
-        var selectElement = $(myModuleTagsSelector);
-        var lastTag = selectElement.next().find('.ds-tags').last();
-        var lastTagId = lastTag.find('.tag-label').data('ds-tag-id');
-        var newTag;
-
-        if (lastTagId > 0) {
-          newTag = { my_module_tag: { tag_id: lastTagId } };
-          $.post(selectElement.data('update-module-tags-url'), newTag)
-            .fail(function(response) {
-              dropdownSelector.removeValue(myModuleTagsSelector, lastTagId, '', true);
-              if (response.status === 403) {
-                HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
-              }
-            });
-        } else if (lastTag.length > 0) {
-          newTag = {
-            tag: {
-              name: lastTag.find('.tag-label').text(),
-              project_id: selectElement.data('project-id'),
-              color: null
-            },
-            my_module_id: selectElement.data('module-id'),
-            simple_creation: true
-          };
-
-          $.post(selectElement.data('tags-create-url'), newTag, function(result) {
-            dropdownSelector.removeValue(myModuleTagsSelector, 0, '', true);
-            dropdownSelector.addValue(myModuleTagsSelector, {
-              value: result.tag.id,
-              label: result.tag.name,
-              params: {
-                color: result.tag.color
-              }
-            }, true);
-          }).fail(function() {
-            dropdownSelector.removeValue(myModuleTagsSelector, lastTagId, '', true);
-          });
-        }
-      },
-      onUnSelect: (id) => {
-        $.post(`${$(myModuleTagsSelector).data('update-module-tags-url')}/${id}/destroy_by_tag_id`)
-          .done(() => {
-            dropdownSelector.closeDropdown(myModuleTagsSelector);
-          })
-          .fail(function(r) {
-            if (r.status === 403) {
-              HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
-            }
-          });
-      }
-    }).getContainer(myModuleTagsSelector).addClass('my-module-tags-container');
-  }
 
 
   function initAssignedUsersSelector() {
@@ -258,7 +178,6 @@
   }
 
   initTaskCollapseState();
-  initTagsSelector();
   initStartDatePicker();
   initDueDatePicker();
   initAssignedUsersSelector();

@@ -97,30 +97,6 @@
 <%= render partial: 'my_modules/repositories/consume_stock_modal'%>
 
 <!-- Tags modal -->
-<div id="tagsModalContainer" class="vue-tags-modal">
-  <div ref="tagsModal" id="tagsModalComponent"></div>
-  <teleport to="body">
-    <tags-modal v-if="tagsModalOpen"
-      :params="<%=
-        {
-          id: @my_module.id,
-          permissions: {
-            manage_tags: can_manage_my_module_tags?(@my_module)
-          },
-          urls: {
-            assigned_tags: assigned_tags_my_module_my_module_tags_path(@my_module),
-            assign_tags: my_module_my_module_tags_path(@my_module)
-          }
-        }.to_json
-      %>"
-      :tags-colors="<%= Constants::TAG_COLORS.to_json %>"
-      project-name="<%= @experiment.project.name  %>"
-      project-tags-url="<%= project_tags_path(@experiment.project) %>"
-      @close="close"
-      @tags-loaded="syncTags"
-    />
-  </teleport>
-</div>
 <div id="accessModalContainer" class="vue-access-modal"
      data-url="<%= my_module_path(@my_module, format: :json) %>"
 >
@@ -137,8 +113,6 @@
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag "handsontable.full" %>
 <%= render partial: "shared/formulas_libraries" %>
-<%= javascript_include_tag("my_modules/protocols") %>
-<%= javascript_include_tag("my_modules/tags") %>
 <%= javascript_include_tag 'emoji_button' %>
 <%= javascript_include_tag("my_modules/repositories") %>
 <%= javascript_include_tag("my_modules/pwa_mobile_app") %>

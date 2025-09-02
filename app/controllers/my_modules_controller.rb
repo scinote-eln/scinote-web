@@ -8,6 +8,7 @@ class MyModulesController < ApplicationController
   include MyModulesHelper
   include Breadcrumbs
   include FavoritesActions
+  include TaggableActions
 
   before_action :load_vars, except: %i(index restore_group create new save_table_state
                                        inventory_assigning_my_module_filter actions_toolbar)
@@ -17,6 +18,7 @@ class MyModulesController < ApplicationController
   before_action :check_manage_permissions, only: %i(
     description due_date update_description update_protocol_description update_protocol
   )
+  before_action :check_tag_manage_permissions, only: %i(link_tag unlink_tag)
   before_action :check_read_permissions, except: %i(create new update update_description
                                                     inventory_assigning_my_module_filter
                                                     update_protocol_description restore_group
@@ -512,6 +514,10 @@ class MyModulesController < ApplicationController
     return render_403 unless can_update_my_module_status?(@my_module)
 
     render_404 unless @my_module.my_module_status
+  end
+
+  def check_tag_manage_permissions
+    render_403 && return unless can_manage_my_module_tags?(@my_module)
   end
 
   def set_inline_name_editing

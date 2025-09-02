@@ -6,7 +6,7 @@ class MyModuleSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :name, :description, :permissions, :description_view, :urls, :last_modified_by_name, :created_at, :updated_at,
+  attributes :name, :description, :permissions, :description_view, :urls, :last_modified_by_name, :created_at, :updated_at, :tags, :team_id,
              :project_name, :experiment_name, :created_by_name, :is_creator_current_user, :code, :designated_user_ids, :due_date_cell, :start_date_cell, :completed_on
 
   def project_name
@@ -15,6 +15,10 @@ class MyModuleSerializer < ActiveModel::Serializer
 
   def experiment_name
     object.experiment.name
+  end
+
+  def team_id
+    object.team.id
   end
 
   def created_by_name
@@ -53,7 +57,9 @@ class MyModuleSerializer < ActiveModel::Serializer
   def urls
     {
       show_access: access_permissions_my_module_path(object),
-      show_user_group_assignments_access: show_user_group_assignments_access_permissions_my_module_path(object)
+      show_user_group_assignments_access: show_user_group_assignments_access_permissions_my_module_path(object),
+      link_tag: link_tag_my_module_path(object),
+      unlink_tag: unlink_tag_my_module_path(object)
     }
   end
 
@@ -99,5 +105,11 @@ class MyModuleSerializer < ActiveModel::Serializer
 
   def description
     sanitize_input(object.tinymce_render('description'))
+  end
+
+  def tags
+    object.tags.map do |tag|
+      [tag.id, tag.name, tag.color]
+    end
   end
 end
