@@ -64,6 +64,7 @@
 /* global HelperModule */
 
 import axios from '../../packs/custom_axios.js';
+import escapeHtml from '../shared/escape_html.js';
 import DataTable from '../shared/datatable/table.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import ExperimentDescriptionModal from '../shared/datatable/modals/description.vue';
@@ -113,6 +114,7 @@ export default {
     canvasUrl: { type: String, required: true },
     tagsColors: { type: Array, required: true },
     projectTagsUrl: { type: String, required: true },
+    teamTagsUrl: { type: String, required: true },
     assignedUsersUrl: { type: String, required: true },
     usersFilterUrl: { type: String, required: true },
     statusesList: { type: Array, required: true },
@@ -288,6 +290,17 @@ export default {
       placeholder: this.i18n.t('experiments.table.filters.status_placeholder')
     });
 
+    filters.push({
+      key: 'tags',
+      type: 'Select',
+      searchable: true,
+      optionsUrl: this.teamTagsUrl,
+      optionRenderer: this.tagsFilterRenderer,
+      labelRenderer: this.tagsFilterRenderer,
+      label: this.i18n.t('experiments.table.filters.tags'),
+      placeholder: this.i18n.t('experiments.table.filters.tags_placeholder')
+    });
+
     this.columnDefs = columns;
     this.filters = filters;
   },
@@ -426,8 +439,11 @@ export default {
     usersFilterRenderer(option) {
       return `<div class="flex items-center gap-2">
                 <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
-                <span title="${option[1]}" class="truncate">${option[1]}</span>
+                <span title="${escapeHtml(option[1])}" class="truncate">${escapeHtml(option[1])}</span>
               </div>`;
+    },
+    tagsFilterRenderer(option) {
+      return `<div class="sci-tag text-white" style="background-color: ${escapeHtml(option[2])};">${escapeHtml(option[1])}</div>`;
     },
     updateFavorite(value, params) {
       const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;

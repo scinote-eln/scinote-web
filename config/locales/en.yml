@@ -1972,6 +1972,8 @@ en:
         due_date: 'Due date'
         status: 'Status'
         status_placeholder: 'Select task status'
+        tags: 'Tags'
+        tags_placeholder: 'Select task tags'
         assigned: 'Assigned to'
         assigned_placeholder: 'Select a person assigned to a task'
       view:
