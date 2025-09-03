@@ -529,6 +529,7 @@ Rails.application.routes.draw do
         get :assigned_users
         post :tag_resource
         post :untag_resource
+        post :tag_resource_with_new_tag
       end
       resources :user_my_modules, path: '/users', only: %i(index create destroy) do
         collection do

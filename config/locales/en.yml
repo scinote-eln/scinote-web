@@ -4243,6 +4243,7 @@ en:
     tags_input:
       add_tag: "Add tag"
       edit_tags: "Edit tags"
+      create_tag: "Create tag"
   user_groups:
     promo:
       head_title: 'User groups'

@@ -46,7 +46,9 @@ class MyModuleSerializer < ActiveModel::Serializer
       manage_description: can_update_my_module_description?(object),
       manage_due_date: can_update_my_module_due_date?(object),
       manage_start_date: can_update_my_module_start_date?(object),
-      manage_designated_users: can_manage_my_module_designated_users?(object)
+      manage_designated_users: can_manage_my_module_designated_users?(object),
+      assign_tags: can_manage_my_module_tags?(object),
+      manage_tags: true # TODO: implement
     }
   end
 
@@ -55,7 +57,8 @@ class MyModuleSerializer < ActiveModel::Serializer
       show_access: access_permissions_my_module_path(object),
       show_user_group_assignments_access: show_user_group_assignments_access_permissions_my_module_path(object),
       tag_resource: tag_resource_my_module_path(object),
-      untag_resource: untag_resource_my_module_path(object)
+      untag_resource: untag_resource_my_module_path(object),
+      tag_resource_with_new_tag: tag_resource_with_new_tag_my_module_path(object)
     }
   end
 

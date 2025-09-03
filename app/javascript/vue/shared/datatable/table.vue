@@ -695,6 +695,7 @@ export default {
     },
     applyFilters(filters) {
       this.activeFilters = filters;
+      console.log(this.activeFilters);
       this.reloadTable();
     },
     switchViewRender(view) {

@@ -72,7 +72,11 @@ module Users
           tags_to_merge = @team.tags.where(id: params[:merge_ids]).where.not(id: @tag.id)
 
           taggings_to_update = Tagging.where(tag_id: tags_to_merge.select(:id))
-                                      .where.not(id: Tagging.where(tag_id: @tag.id).select(:id))
+                                      .where.not(
+                                        Tagging.where(tag_id: @tag.id).map{|i|
+                                          Arel.sql("(taggable_type = '#{i.taggable_type}' AND taggable_id = #{i.taggable_id})")
+                                        }.join(" OR ")
+                                      )
 
           taggings_to_update.update!(tag_id: @tag.id)
           tags_to_merge.each(&:destroy!)
