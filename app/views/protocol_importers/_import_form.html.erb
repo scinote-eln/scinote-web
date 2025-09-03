@@ -1,5 +1,5 @@
-<%= form_for :protocol, url: team_import_external_protocol_path(team_id: current_team.id),
-             method: :post, data: { remote: true }  do |f|%>
+<%= form_with model: protocol, url: team_import_external_protocol_path(team_id: current_team.id),
+              method: :post, data: { remote: true }  do |f|%>
   <div class="general-error has-error" data-e2e="e2e-TX-protocolTemplates-previewProtocolsIo-error">
     <span class="has-error help-block"></span>
   </div>
@@ -48,7 +48,6 @@
   <%= f.hidden_field(:published_on, value: protocol.published_on) %>
   <%= f.hidden_field(:description, value: protocol.description) %>
   <%= f.hidden_field(:protocol_type, value: protocol.protocol_type) %>
-  <%= f.hidden_field(:visibility) %>
   <%= f.hidden_field(:default_public_user_role_id) %>
   <%= hidden_field_tag(:source, source) %>
 

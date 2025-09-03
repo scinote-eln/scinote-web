@@ -11,8 +11,8 @@
               {{ i18n.t('repositories.index.modal_create.title') }}
             </h4>
           </div>
-          <div class="modal-body">
-            <div class="mb-6">
+          <div class="modal-body gap-6 flex flex-col">
+            <div>
               <label class="sci-label" data-e2e="e2e-TX-newInventoryModal-inputLabel">{{ i18n.t("repositories.index.modal_create.name_label") }}</label>
               <div class="sci-input-container-v2" :class="{'error': error}" :data-error="error">
                 <input type="text" v-model="name"
@@ -55,6 +55,24 @@
                 </template>
               </div>
             </div>
+            <div>
+              <div class="flex gap-2 text-xs items-center">
+                <div class="sci-checkbox-container">
+                  <input type="checkbox" class="sci-checkbox" v-model="visible" value="visible" data-e2e="e2e-CB-repositories-newRepositoryModal-access"/>
+                  <span class="sci-checkbox-label"></span>
+                </div>
+                <span v-html="i18n.t('projects.index.modal_new_project.visibility_html')"></span>
+              </div>
+              <div class="mt-6" :class="{'hidden': !visible}">
+                <label class="sci-label">{{ i18n.t("user_assignment.select_default_user_role") }}</label>
+                <SelectDropdown
+                  :options="userRoles"
+                  :value="defaultRole"
+                  @change="changeRole"
+                  :e2eValue="'e2e-DD-repositories-newRepositoryModal-defaultRole'"
+                />
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal" data-e2e="e2e-BT-newInventoryModal-cancel">{{ i18n.t('general.cancel') }}</button>
@@ -78,7 +96,8 @@ import SelectDropdown from '../../shared/select_dropdown.vue';
 
 import {
   repository_templates_path,
-  list_repository_columns_repository_template_path
+  list_repository_columns_repository_template_path,
+  user_roles_repositories_path
 } from '../../../routes.js';
 
 export default {
@@ -99,14 +118,27 @@ export default {
       repositoryTemplate: null,
       showColumnInfo: false,
       hoveredRow: {},
-      loadingHoveredRow: false
+      loadingHoveredRow: false,
+      visible: false,
+      defaultRole: null,
+      userRoles: []
     };
+  },
+  watch: {
+    visible(newValue) {
+      if (newValue) {
+        [this.defaultRole] = this.userRoles.find((role) => role[1] === 'Viewer');
+      } else {
+        this.defaultRole = null;
+      }
+    }
   },
   created() {
     this.fetctRepositoryTemplates();
   },
   mounted() {
     document.addEventListener('mouseover', this.loadColumnsInfo);
+    this.fetchUserRoles();
   },
   beforeUnmount() {
     document.removeEventListener('mouseover', this.loadColumnsInfo);
@@ -132,7 +164,8 @@ export default {
       axios.post(this.createUrl, {
         repository: {
           name: this.name,
-          repository_template_id: this.repositoryTemplate
+          repository_template_id: this.repositoryTemplate,
+          default_public_user_role_id: this.defaultRole
         }
       }).then((response) => {
         this.error = null;
@@ -182,6 +215,18 @@ export default {
 
       e.stopPropagation();
       e.preventDefault();
+    },
+    userRolesUrl() {
+      return user_roles_repositories_path();
+    },
+    changeRole(role) {
+      this.defaultRole = role;
+    },
+    fetchUserRoles() {
+      axios.get(this.userRolesUrl())
+           .then((response) => {
+             this.userRoles = response.data.data;
+           });
     }
   }
 };

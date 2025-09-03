@@ -431,6 +431,7 @@ Rails.application.routes.draw do
         post 'archive_group'
         post 'restore_group'
         post 'actions_toolbar'
+        get :user_roles
         get :head_of_project_users_list
       end
     end
@@ -771,6 +772,7 @@ Rails.application.routes.draw do
         get 'export', to: 'protocols#export'
         get 'protocolsio', to: 'protocols#protocolsio_index'
         post 'actions_toolbar', to: 'protocols#actions_toolbar'
+        get :user_roles
       end
     end
 
@@ -861,6 +863,7 @@ Rails.application.routes.draw do
         get :print_zpl, to: 'repository_rows#print_zpl'
         post :validate_label_template_columns, to: 'repository_rows#validate_label_template_columns'
         post :print, to: 'repository_rows#print'
+        get :user_roles
       end
 
       member do
