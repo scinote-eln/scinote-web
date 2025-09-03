@@ -39,4 +39,11 @@ class StepText < ApplicationRecord
       new_step_text
     end
   end
+
+  private
+
+  # Override for ObservableModel
+  def changed_by
+    step.last_modified_by
+  end
 end
