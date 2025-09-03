@@ -51,6 +51,24 @@
                 :placeholder="i18n.t('projects.index.add_description')"
               ></TinymceEditor>
             </div>
+            <div v-if="createUrl">
+              <div class="flex gap-2 text-xs items-center">
+                <div class="sci-checkbox-container">
+                  <input type="checkbox" class="sci-checkbox" v-model="visible" value="visible" data-e2e="e2e-CB-projects-newProjectModal-access"/>
+                  <span class="sci-checkbox-label"></span>
+                </div>
+                <span v-html="i18n.t('projects.index.modal_new_project.visibility_html')"></span>
+              </div>
+              <div class="mt-6" :class="{'hidden': !visible}">
+                <label class="sci-label">{{ i18n.t("user_assignment.select_default_user_role") }}</label>
+                <SelectDropdown
+                  :options="userRoles"
+                  :value="defaultRole"
+                  @change="changeRole"
+                  :e2eValue="'e2e-DD-projects-newProjectModal-defaultRole'"
+                />
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
             <button
@@ -78,10 +96,15 @@
 
 <script>
 
+import SelectDropdown from '../../shared/select_dropdown.vue';
 import DateTimePicker from '../../shared/date_time_picker.vue';
 import TinymceEditor from '../../shared/tinymce_editor.vue';
 import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
+import defaultPublicUserRoleMixin from '../../shared/default_public_user_role_mixin';
+import {
+  user_roles_projects_path
+} from '../../../routes.js';
 
 export default {
   name: 'ProjectFormModal',
@@ -90,8 +113,9 @@ export default {
     currentFolderId: String,
     createUrl: String
   },
-  mixins: [modalMixin],
+  mixins: [modalMixin, defaultPublicUserRoleMixin],
   components: {
+    SelectDropdown,
     DateTimePicker,
     TinymceEditor
   },
@@ -141,7 +165,8 @@ export default {
         name: this.name,
         start_date: this.startDate,
         due_date: this.dueDate,
-        description: this.description
+        description: this.description,
+        default_public_user_role_id: this.defaultRole
       };
 
       if (this.createUrl) {
@@ -178,6 +203,17 @@ export default {
     },
     updateDueDate(dueDate) {
       this.dueDate = this.stripTime(dueDate);
+    },
+    userRolesUrl() {
+      return user_roles_projects_path();
+    },
+    fetchUserRoles() {
+      if (!this.createUrl) return;
+      
+      axios.get(this.userRolesUrl())
+        .then((response) => {
+          this.userRoles = response.data.data;
+        });
     },
     stripTime(date) {
       if (date) {
