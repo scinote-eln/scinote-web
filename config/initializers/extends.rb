@@ -842,7 +842,7 @@ class Extends
     'Protocol' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'Asset' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'Table' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
-    'StepText' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'Comment' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'ChecklistItem' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'Checklist' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'FormFieldValue' => ['AutomationObservers::TaskProtocolContentChangeObserver'],

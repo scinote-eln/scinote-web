@@ -48,7 +48,7 @@ class ChecklistItem < ApplicationRecord
     if new_record?
       start_position = at_position || 0
       text.split("\n").compact.each do |line|
-        new_item = checklist.checklist_items.create!(text: line)
+        new_item = checklist.checklist_items.create!(text: line, created_by: created_by)
         new_item.insert_at(start_position + 1)
         start_position = new_item.position
         items.push(new_item)
@@ -60,7 +60,7 @@ class ChecklistItem < ApplicationRecord
           update!(text: line)
           items.push(self)
         else
-          new_item = checklist.checklist_items.create!(text: line)
+          new_item = checklist.checklist_items.create!(text: line, created_by: created_by)
           new_item.insert_at(item.position + 1)
           item = new_item
           items.push(new_item)
