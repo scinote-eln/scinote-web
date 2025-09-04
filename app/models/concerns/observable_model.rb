@@ -17,12 +17,16 @@ module ObservableModel
   def notify_observers_on_create
     return if Current.team.blank?
 
-    Extends::TEAM_AUTOMATIONS_OBSERVERS_CONFIG[self.class.base_class.name].each { |observer| observer.constantize.on_create(self, changed_by) }
+    Extends::TEAM_AUTOMATIONS_OBSERVERS_CONFIG[model_base_name].each { |observer| observer.constantize.on_create(self, changed_by) }
   end
 
   def notify_observers_on_update
     return if Current.team.blank?
 
-    Extends::TEAM_AUTOMATIONS_OBSERVERS_CONFIG[self.class.base_class.name].each { |observer| observer.constantize.on_update(self, changed_by) }
+    Extends::TEAM_AUTOMATIONS_OBSERVERS_CONFIG[model_base_name].each { |observer| observer.constantize.on_update(self, changed_by) }
+  end
+
+  def model_base_name
+    self.class.base_class.name
   end
 end
