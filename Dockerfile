@@ -1,7 +1,7 @@
 FROM ruby:3.2-bookworm
 MAINTAINER SciNote <info@scinote.net>
 
-ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/2.9.4/tika-app-2.9.4.jar"
+ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/3.2.2/tika-app-3.2.2.jar"
 ENV TIKA_PATH=/usr/local/bin/tika-app.jar
 
 # additional dependecies
