@@ -6,7 +6,7 @@ class MyModuleSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :name, :description, :permissions, :description_view, :urls, :last_modified_by_name, :created_at, :updated_at, :tags,
+  attributes :name, :description, :permissions, :description_view, :urls, :last_modified_by_name, :created_at, :updated_at, :tags, :updated_at_seconds,
              :project_name, :experiment_name, :created_by_name, :is_creator_current_user, :code, :designated_user_ids, :due_date_cell, :start_date_cell, :completed_on
 
   def project_name
@@ -31,6 +31,10 @@ class MyModuleSerializer < ActiveModel::Serializer
 
   def updated_at
     I18n.l(object.updated_at, format: :full_date)
+  end
+
+  def updated_at_seconds
+    object.updated_at.to_i
   end
 
   def last_modified_by_name

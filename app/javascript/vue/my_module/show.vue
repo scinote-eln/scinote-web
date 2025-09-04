@@ -1,6 +1,6 @@
 <template>
   <div v-if="myModule">
-    <my-module-details :myModule="myModule" @reloadMyModule="fetchMyModule"></my-module-details>
+    <my-module-details :myModule="myModule" :detailsKey="detailsKey" @reloadMyModule="fetchMyModule" @reloadSubject="fetchMyModule"></my-module-details>
     <my-module-description
       :myModule="myModule"
       @reloadMyModule="fetchMyModule" />
@@ -26,7 +26,8 @@ export default {
   },
   data() {
     return {
-      myModule: null
+      myModule: null,
+      detailsKey: 0
     };
   },
   created() {
@@ -37,6 +38,7 @@ export default {
       axios.get(this.myModuleUrl)
         .then(response => {
           this.myModule = response.data.data;
+          this.detailsKey += 1;
         })
     }
   }

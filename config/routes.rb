@@ -225,7 +225,11 @@ Rails.application.routes.draw do
         to: 'zip_exports#file_expired',
         as: 'file_expired'
 
-    resources :tags, only: :index
+    resources :tags, only: :index do
+      collection do
+        get :colors
+      end
+    end
 
     resources :teams do
       resources :repositories, only: %i(index create destroy update) do

@@ -41,7 +41,7 @@ module Users
         @tag.last_modified_by = current_user
 
         if @tag.save
-          #@log_activity(:create_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
+          # @log_activity(:create_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
           render json: @tag, serializer: Lists::TagSerializer, user: current_user
         else
           render json: { errors: @tag.errors.full_messages }, status: :unprocessable_entity
@@ -51,7 +51,7 @@ module Users
       def update
         @tag.last_modified_by = current_user
         if @tag.update(tag_params)
-          #log_activity(:edit_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
+          # log_activity(:edit_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
           render json: @tag, serializer: Lists::TagSerializer, user: current_user
         else
           render json: { errors: @tag.errors.full_messages }, status: :unprocessable_entity
@@ -59,7 +59,7 @@ module Users
       end
 
       def destroy
-        #log_activity(:delete_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
+        # log_activity(:delete_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
         if @tag.destroy
           render json: { message: :ok }, status: :ok
         else
@@ -73,9 +73,9 @@ module Users
 
           taggings_to_update = Tagging.where(tag_id: tags_to_merge.select(:id))
                                       .where.not(
-                                        Tagging.where(tag_id: @tag.id).map{|i|
+                                        Tagging.where(tag_id: @tag.id).map do |i|
                                           Arel.sql("(taggable_type = '#{i.taggable_type}' AND taggable_id = #{i.taggable_id})")
-                                        }.join(" OR ")
+                                        end.join(' OR ')
                                       )
 
           taggings_to_update.update!(tag_id: @tag.id)

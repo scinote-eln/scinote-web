@@ -6,66 +6,196 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <h4 v-if="canManage" class="modal-title truncate !block">
-            {{ i18n.t("experiments.canvas.modal_manage_tags.head_title") }}
-          </h4>
-          <h4 v-else class="modal-title truncate !block">
-            {{ i18n.t("experiments.canvas.modal_manage_tags.head_title_read") }}
+          <h4 class="modal-title truncate !block">
+            {{ i18n.t('tags.manage_modal.title') }}
           </h4>
         </div>
         <div class="modal-body">
-
+          <p>
+            {{ i18n.t('tags.manage_modal.description') }}
+          </p>
+          <div class="flex flex-col gap-2">
+            <div class="grow overflow-auto">
+              <div v-for="tag in allTags" :key="tag[0]" class="rounded py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2" >
+                <div v-if="canAssign" @click="linkTag(tag)">
+                  <div class="sci-checkbox-container pointer-events-none" >
+                    <input type="checkbox" :checked="tags.find(t => t[0] === tag[0])" class="sci-checkbox" />
+                    <span class="sci-checkbox-label"></span>
+                  </div>
+                </div>
+                <GeneralDropdown :canOpen="canManage" >
+                  <template v-slot:field>
+                    <div
+                      class="h-6 w-6 border border-solid border-transparent rounded relative flex items-center justify-center text-sn-white"
+                      :style="{ backgroundColor: tag[2] }"
+                    >
+                      a
+                    </div>
+                  </template>
+                  <template v-slot:flyout>
+                    <div class="grid grid-cols-4 gap-1">
+                      <div v-for="color in colors" :key="color"
+                          class="h-6 w-6 rounded relative flex items-center justify-center text-sn-white cursor-pointer"
+                          @click.stop="changeColor(tag, color)"
+                          :style="{ backgroundColor: color }">
+                        <i v-if="color == tag[2]" class="sn-icon sn-icon-check"></i>
+                        <span v-else>a</span>
+                      </div>
+                    </div>
+                  </template>
+                </GeneralDropdown>
+                <input type="text" :value="tag[1]" @change="changeName(tag, $event.target.value)"
+                  :class="{'pointer-events-none': !canManage }"
+                  class=" text-sm grow outline-none leading-4 border-none bg-transparent p-1" />
+                <i v-if="canManage && newTagsCreated.includes(tag[0])" @click="deleteTag(tag)" class="ml-auto sn-icon sn-icon-delete"></i>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs cursor-pointer px-2 py-2" v-if="canManage && !addingNewTag" @click="startAddingNewTag">
+              <i class="sn-icon sn-icon-new-task"></i>
+              {{ i18n.t('tags.manage_modal.create_tag') }}
+            </div>
+            <div v-if="addingNewTag" class="flex items-center gap-2 bg-sn-super-light-blue py-2 px-3 rounded">
+              <div class="sci-checkbox-container pointer-events-none" >
+                <input type="checkbox" class="sci-checkbox" />
+                <span class="sci-checkbox-label"></span>
+              </div>
+              <div
+                class="h-6 w-6 border border-solid border-transparent rounded relative flex items-center justify-center text-sn-white"
+                :style="{ backgroundColor: newTag[2] }"
+              >
+                a
+              </div>
+              <input type="text" ref="newTagInput" @blur="createTag"  v-model="newTag[1]" :placeholder="i18n.t('tags.manage_modal.type_tag_name')" class="text-sm flex-grow outline-none leading-4 border-none bg-transparent p-1" />
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.close') }}</button>
+          <a :href="tagsManagmentUrl" v-if="canManage" class="btn btn-light mr-auto">
+            {{ i18n.t('tags.manage_modal.manage_tags') }}
+          </a>
+          <button class="btn btn-primary" data-dismiss="modal">{{ i18n.t('general.done') }}</button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
-import modalMixin from '../../shared/modal_mixin';
-import GeneralDropdown from '../../shared/general_dropdown.vue';
+import modalMixin from './modal_mixin';
 import TagsMixin from './mixins/tags_mixin.js';
+import GeneralDropdown from './general_dropdown.vue';
+import axios from '../../packs/custom_axios.js';
+import {
+  colors_tags_path,
+  users_settings_team_tag_path,
+  users_settings_team_tags_path
+} from '../../routes.js';
+
 
 export default {
   name: 'TagsModal',
-  emits: ['close', 'tagsLoaded', 'tagDeleted'],
-  props: {
-    params: {
-      required: true
-    },
-    tagsColors: {
-      required: true
-    },
-    projectTagsUrl: {
-      required: true
-    },
-    projectName: {
-      required: true
-    }
-  },
-  directives: {
-    'click-outside': vOnClickOutside
-  },
+  mixins: [modalMixin, TagsMixin],
   components: {
-    InlineEdit,
-    GeneralDropdown,
-    ConfirmationModal
+    GeneralDropdown
   },
-  mixins: [modalMixin],
   data() {
     return {
-      tags: [],
-      allTags: [],
-      linkingTag: false,
+      colors: [],
+      teamId: null,
+      addingNewTag: false,
+      newTag: [
+        null,
+        '',
+        '#000000'
+      ],
+      newTagsCreated: []
     };
   },
   created() {
-    this.loadAllTags();
-    this.tags = this.subject.attributes.tags || [];
+    this.fetchColors();
+    this.teamId = document.querySelector('body').dataset.currentTeamId;
+  },
+  computed: {
+    validNewTag() {
+      return this.newTag[1].trim() !== '' && !this.allTags.find(t => t[1].toLowerCase() === this.newTag[1].trim().toLowerCase());
+    },
+    tagsManagmentUrl() {
+      return users_settings_team_tags_path({ team_id: this.teamId });
+    }
   },
   methods: {
+    startAddingNewTag() {
+      this.addingNewTag = true;
+      this.newTag[1] = '';
+      this.newTag[2] = this.colors[Math.floor(Math.random() * this.colors.length)];
+      this.$nextTick(() => {
+        this.$refs.newTagInput.focus();
+      });
+    },
+    fetchColors() {
+      axios.get(colors_tags_path())
+        .then((response) => {
+          this.colors = response.data.colors;
+        });
+    },
+    changeColor(tag, color) {
+      axios.patch(users_settings_team_tag_path(tag[0], { team_id: this.teamId }), {
+        tag: {
+          color: color
+        }
+      }).then(() => {
+        this.allTags.find(t => t[0] === tag[0])[2] = color;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    changeName(tag, newName) {
+      axios.patch(users_settings_team_tag_path(tag[0], { team_id: this.teamId }), {
+        tag: {
+          name: newName
+        }
+      }).then(() => {
+        this.allTags.find(t => t[0] === tag[0])[1] = newName;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    createTag() {
+      if (!this.validNewTag) {
+        this.addingNewTag = false;
+        return;
+      }
+      axios.post(users_settings_team_tags_path({ team_id: this.teamId }), {
+        tag: {
+          name: this.newTag[1],
+          color: this.newTag[2]
+        }
+      }).then((response) => {
+        const tag = response.data.data;
+        this.allTags.push([
+          parseInt(tag.id, 10),
+          tag.attributes.name,
+          tag.attributes.color
+        ]);
+        this.newTagsCreated.push(parseInt(tag.id, 10));
+        this.addingNewTag = false;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    deleteTag(tag) {
+      if (!this.newTagsCreated.includes(tag[0])) {
+        return;
+      }
+      axios.delete(users_settings_team_tag_path(tag[0], { team_id: this.teamId }))
+        .then(() => {
+          this.allTags = this.allTags.filter(t => t[0] !== tag[0]);
+          this.tags = this.tags.filter(t => t[0] !== tag[0]);
+          this.subject.attributes.tags = this.tags;
+        }).catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        });
+    }
   }
 };
 </script>

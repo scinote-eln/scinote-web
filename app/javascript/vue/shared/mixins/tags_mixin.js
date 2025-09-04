@@ -61,6 +61,7 @@ export default {
         tag_id: tag[0],
       }).then((response) => {
         this.tags.push(response.data.tag);
+        this.subject.attributes.tags = this.tags;
         this.linkingTag = false;
         this.searchQuery = '';
       }).catch(() => {
@@ -80,6 +81,7 @@ export default {
         tag_id: tag[0],
       }).then((response) => {
         this.tags = this.tags.filter(t => t[0] !== tag[0]);
+        this.subject.attributes.tags = this.tags;
         this.linkingTag = false;
         this.searchQuery = '';
       }).catch(() => {

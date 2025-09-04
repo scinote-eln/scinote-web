@@ -2,7 +2,7 @@
 /* global HelperModule DataTableHelpers GLOBAL_CONSTANTS */
 /* eslint-disable no-use-before-define, no-alert, no-restricted-globals, no-underscore-dangle */
 
-//= require my_modules
+
 //= require protocols/import_export/import
 
 // Currently selected row in "load from protocol" modal

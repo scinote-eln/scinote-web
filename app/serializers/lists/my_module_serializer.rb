@@ -46,8 +46,9 @@ module Lists
     def permissions
       {
         manage_designated_users: can_manage_my_module_designated_users?(object),
-        manage_tags: can_manage_my_module_tags?(object),
-        create_comments: can_create_my_module_comments?(object)
+        create_comments: can_create_my_module_comments?(object),
+        assign_tags: can_manage_my_module_tags?(object),
+        manage_tags: true # TODO: implement
       }
     end
 
@@ -57,8 +58,9 @@ module Lists
       urls_list = {
         show: protocols_my_module_path(object, view_mode: archived ? 'archived' : 'active'),
         results: my_module_results_path(object),
-        assign_tags: '',
-        assigned_tags: '',
+        tag_resource: tag_resource_my_module_path(object),
+        untag_resource: untag_resource_my_module_path(object),
+        tag_resource_with_new_tag: tag_resource_with_new_tag_my_module_path(object),
         users_list: search_my_module_user_my_module_path(object, my_module_id: object.id),
         experiments_to_move: experiments_to_move_experiment_path(object.experiment),
         update: my_module_path(object),
@@ -155,11 +157,7 @@ module Lists
 
     def tags
       object.tags.map do |tag|
-        {
-          id: tag.id,
-          name: tag.name,
-          color: tag.color
-        }
+        [tag.id, tag.name, tag.color]
       end
     end
 
