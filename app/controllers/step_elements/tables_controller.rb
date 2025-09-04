@@ -41,7 +41,7 @@ module StepElements
     def update
       ActiveRecord::Base.transaction do
         old_content = @table.contents
-        @table.assign_attributes(table_params.except(:metadata))
+        @table.assign_attributes(table_params.except(:metadata).merge(last_modified_by: current_user))
         begin
           if table_params[:metadata].present?
 

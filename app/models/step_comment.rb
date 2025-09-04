@@ -21,4 +21,8 @@ class StepComment < Comment
   def changed_by
     last_modified_by || user
   end
+
+  def model_base_name
+    self.class.name
+  end
 end
