@@ -10,6 +10,8 @@
       :placeholder="filter.placeholder"
       :optionRenderer="filter.optionRenderer"
       :labelRenderer="filter.labelRenderer"
+      :tagsView="filter.tagsView"
+      :searchable="filter.searchable"
       @change="change"
     > </SelectDropdown>
   </div>
