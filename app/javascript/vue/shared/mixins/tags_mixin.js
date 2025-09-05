@@ -46,7 +46,7 @@ export default {
       });
     },
     linkTag(tag) {
-      if (this.tags.map(t => t[0]).includes(tag[0])) {
+      if (this.tags.map(t => t.id).includes(tag.id)) {
         this.unlinkTag(tag);
         return;
       }
@@ -58,7 +58,7 @@ export default {
       this.linkingTag = true;
 
       axios.post(this.tagResourceUrl, {
-        tag_id: tag[0],
+        tag_id: tag.id,
       }).then((response) => {
         this.tags.push(response.data.tag);
         this.subject.attributes.tags = this.tags;
@@ -78,9 +78,9 @@ export default {
       this.linkingTag = true;
 
       axios.post(this.untagResourceUrl, {
-        tag_id: tag[0],
+        tag_id: tag.id,
       }).then((response) => {
-        this.tags = this.tags.filter(t => t[0] !== tag[0]);
+        this.tags = this.tags.filter(t => t.id !== tag.id);
         this.subject.attributes.tags = this.tags;
         this.linkingTag = false;
         this.searchQuery = '';

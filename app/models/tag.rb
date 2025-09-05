@@ -16,9 +16,5 @@ class Tag < ApplicationRecord
   belongs_to :last_modified_by, class_name: 'User', optional: true
   has_many :taggings, dependent: :destroy
 
-  before_validation :set_default_color
-
-  def set_default_color
-    self.color ||= Constants::TAG_COLORS.sample
-  end
+  before_validation -> { self.color = Constants::TAG_COLORS.sample.to_s }, if: -> { color.blank? }
 end

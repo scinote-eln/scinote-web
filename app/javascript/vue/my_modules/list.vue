@@ -443,7 +443,7 @@ export default {
               </div>`;
     },
     tagsFilterRenderer(option) {
-      return `<div class="sci-tag text-white" style="background-color: ${escapeHtml(option[2])};">${escapeHtml(option[1])}</div>`;
+      return `<div class="sci-tag text-white" style="background-color: ${escapeHtml(option[2].color)};">${escapeHtml(option[1])}</div>`;
     },
     updateFavorite(value, params) {
       const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;

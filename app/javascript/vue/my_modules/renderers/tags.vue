@@ -6,8 +6,8 @@
           <div class="flex items-center gap-1.5">
             <div
                 class="sci-tag text-white max-w-[150px]"
-                :style="{'background': params.data.tags[0][2]}">
-              <div class="truncate">{{ params.data.tags[0][1] }}</div>
+                :style="{'background': params.data.tags[0].color}">
+              <div class="truncate">{{ params.data.tags[0].name }}</div>
             </div>
             <div v-if="params.data.tags.length > 1"
                 class="flex shrink-0 items-center justify-center w-7 h-7 text-xs rounded-full bg-sn-dark-grey text-sn-white">
@@ -21,10 +21,10 @@
           </div>
           <hr class="my-2" />
           <div class="max-h-[200px] overflow-y-auto flex flex-wrap gap-1.5 max-w-[240px]">
-            <div v-for="tag in params.data.tags" :key="tag[0]"
+            <div v-for="tag in params.data.tags" :key="tag.id"
                 class="sci-tag text-white max-w-[150px]"
-                :style="{'background': tag[2]}">
-              <div class="truncate">{{ tag[1] }}</div>
+                :style="{'background': tag.color}">
+              <div class="truncate">{{ tag.name }}</div>
             </div>
           </div>
         </template>

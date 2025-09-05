@@ -9,8 +9,8 @@
                 '!border-transparent': !canAssign
              }">
           <template  v-if="tags.length > 0">
-            <div v-for="tag in tags" :key="tag[0]" class="sci-tag  text-white" :style="{ backgroundColor: tag[2] }" >
-              {{ tag[1] }}
+            <div v-for="tag in tags" :key="tag.id" class="sci-tag  text-white" :style="{ backgroundColor: tag.color }" >
+              {{ tag.name }}
               <i v-if="canAssign" @click.stop="unlinkTag(tag)" class="sn-icon sn-icon-close"></i>
             </div>
           </template>
@@ -27,13 +27,13 @@
               <i class="sn-icon sn-icon-new-task"></i>
               {{ i18n.t('tags.tags_input.create_tag') }}
             </div>
-            <div v-for="tag in filteredTags" :key="tag[0]" @click="linkTag(tag)" class="py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2" >
+            <div v-for="tag in filteredTags" :key="tag.id" @click="linkTag(tag)" class="py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2" >
               <div class="sci-checkbox-container pointer-events-none" >
-                <input type="checkbox" :checked="tags.map(t => t[0]).includes(tag[0])" class="sci-checkbox" />
+                <input type="checkbox" :checked="tags.map(t => t.id).includes(tag.id)" class="sci-checkbox" />
                 <span class="sci-checkbox-label"></span>
               </div>
-              <div class="sci-tag text-white" :style="{ backgroundColor: tag[2] }" >
-                {{ tag[1] }}
+              <div class="sci-tag text-white" :style="{ backgroundColor: tag.color }" >
+                {{ tag.name }}
               </div>
             </div>
           </div>
@@ -70,11 +70,11 @@ export default {
         return this.allTags;
       }
       const lowerQuery = this.searchQuery.toLowerCase();
-      return this.allTags.filter(tag => tag[1].toLowerCase().includes(lowerQuery));
+      return this.allTags.filter(tag => tag.name.toLowerCase().includes(lowerQuery));
     },
     validTagName() {
       return this.searchQuery.trim().length > GLOBAL_CONSTANTS.NAME_MIN_LENGTH &&
-        !this.allTags.map(t => t[1].toLowerCase()).includes(this.searchQuery.toLowerCase());
+        !this.allTags.map(t => t.name.toLowerCase()).includes(this.searchQuery.toLowerCase());
     }
   },
   data() {

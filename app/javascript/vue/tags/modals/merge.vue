@@ -80,7 +80,7 @@ export default {
       });
     },
     tagRenderer(tag) {
-      return `<div class="sci-tag text-white" style="background-color: ${escapeHtml(tag[2])};">${escapeHtml(tag[1])}</div>`;
+      return `<div class="sci-tag text-white" style="background-color: ${escapeHtml(tag[2].color)};">${escapeHtml(tag[1])}</div>`;
     }
   }
 };

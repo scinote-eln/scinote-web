@@ -69,17 +69,17 @@ module Users
 
       def merge
         ActiveRecord::Base.transaction do
-          tags_to_merge = @team.tags.where(id: params[:merge_ids]).where.not(id: @tag.id)
+          tags_to_remove = @team.tags.where(id: params[:merge_ids]).where.not(id: @tag.id)
 
-          taggings_to_update = Tagging.where(tag_id: tags_to_merge.select(:id))
-                                      .where.not(
-                                        Tagging.where(tag_id: @tag.id).map do |i|
-                                          Arel.sql("(taggable_type = '#{i.taggable_type}' AND taggable_id = #{i.taggable_id})")
-                                        end.join(' OR ')
-                                      )
+          Tagging.where(tag_id: tags_to_remove.select(:id)).find_each do |tagging|
+            if tagging.taggable.taggings.exists?(tag: @tag)
+              tagging.destroy!
+            else
+              tagging.update!(tag_id: @tag.id)
+            end
+          end
 
-          taggings_to_update.update!(tag_id: @tag.id)
-          tags_to_merge.each(&:destroy!)
+          tags_to_remove.each(&:destroy!)
 
           render json: { message: :ok }, status: :ok
         rescue ActiveRecord::RecordInvalid => e
