@@ -78,7 +78,12 @@ export default {
     loadTeam() {
       axios.get(this.teamUrl).then((response) => {
         this.teamObject = response.data;
-        this.teamAutomationSettings = { ...this.emptySettings, ...this.teamObject.teamSettings?.team_automation_settings };
+        this.teamAutomationSettings = Object.fromEntries(
+          Object.keys(this.emptySettings).map(key => [
+            key,
+            { ...this.emptySettings[key], ...this.teamObject.teamSettings?.team_automation_settings[key] }
+          ])
+        );
       });
     },
     setTeamAutomationsSettings() {
