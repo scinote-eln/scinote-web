@@ -9,4 +9,8 @@ class TagsController < ApplicationController
             end
     @tags = @tags.where_attributes_like(['tags.name'], params[:query]) if params[:query].present?
   end
+
+  def colors
+    render json: { colors: Constants::TAG_COLORS }
+  end
 end

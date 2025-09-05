@@ -154,7 +154,7 @@
           {{ i18n.t('my_modules.details.tags') }}
         </span>
         <div class="grow -mt-1.5">
-          <TagsInput :subject="myModule" v-if="myModule" />
+          <TagsInput :subject="myModule" :key="detailsKey" v-if="myModule" @reloadSubject="$emit('reloadMyModule')" />
         </div>
       </div>
     </div>
@@ -179,6 +179,10 @@ export default {
   props: {
     myModule: {
       type: Object,
+      required: true
+    },
+    detailsKey: {
+      type: Number,
       required: true
     }
   },

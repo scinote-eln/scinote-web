@@ -31,10 +31,7 @@
     @updateFavorite="updateFavorite"/>
 
   <TagsModal v-if="tagsModalObject"
-              :params="tagsModalObject"
-              :tagsColors="tagsColors"
-              :projectName="projectName"
-              :projectTagsUrl="projectTagsUrl"
+              :subject="tagsModalObject"
               @close="updateTable" />
   <ExperimentDescriptionModal
     v-if="experiment && showExperimentDescription"
@@ -74,7 +71,7 @@ import StatusRenderer from './renderers/status.vue';
 import DueDateRenderer from '../shared/datatable/renderers/date.vue';
 import StartDateRenderer from '../shared/datatable/renderers/date.vue';
 import DesignatedUsers from './renderers/designated_users.vue';
-import TagsModal from './modals/tags.vue';
+import TagsModal from '../shared/tags_modal.vue';
 import TagsRenderer from './renderers/tags.vue';
 import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
 import NewModal from './modals/new.vue';
@@ -413,7 +410,10 @@ export default {
       });
     },
     editTags(_e, rows) {
-      [this.tagsModalObject] = rows;
+      this.tagsModalObject = {
+        id: rows[0].id,
+        attributes: rows[0]
+      };
     },
     edit(_e, rows) {
       [this.editModalObject] = rows;
@@ -443,7 +443,7 @@ export default {
               </div>`;
     },
     tagsFilterRenderer(option) {
-      return `<div class="sci-tag text-white" style="background-color: ${escapeHtml(option[2])};">${escapeHtml(option[1])}</div>`;
+      return `<div class="sci-tag text-white" style="background-color: ${escapeHtml(option[2].color)};">${escapeHtml(option[1])}</div>`;
     },
     updateFavorite(value, params) {
       const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;

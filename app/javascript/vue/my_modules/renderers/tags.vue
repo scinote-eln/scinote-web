@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center gap-1.5 h-9 mt-0.5">
-    <template v-if="params.data.tags.length > 0 || params.data.permissions.manage_tags">
+    <template v-if="params.data.tags.length > 0 || params.data.permissions.assign_tags">
       <GeneralDropdown v-if="params.data.tags.length > 0">
         <template v-slot:field>
           <div class="flex items-center gap-1.5">
@@ -29,7 +29,7 @@
           </div>
         </template>
       </GeneralDropdown>
-      <div v-if="params.data.permissions.manage_tags" @click.stop="openModal"
+      <div v-if="params.data.permissions.assign_tags" @click.stop="openModal"
         class="flex items-center shrink-0 justify-center w-7 h-7 rounded-full border-dashed bg-sn-white text-sn-sleepy-grey border-sn-sleepy-grey">
         <i class="sn-icon sn-icon-new-task"></i>
     </div>

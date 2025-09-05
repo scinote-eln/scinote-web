@@ -2,6 +2,8 @@
 
 json.data do
   json.array! @tags do |t|
-    json.array! [t.id, t.name, t.color]
+    json.id t.id
+    json.name t.name
+    json.color t.color
   end
 end
