@@ -112,7 +112,7 @@ class MyModuleSerializer < ActiveModel::Serializer
 
   def tags
     object.tags.map do |tag|
-      [tag.id, tag.name, tag.color]
+      { id: tag.id, name: tag.name, color: tag.color }
     end
   end
 end

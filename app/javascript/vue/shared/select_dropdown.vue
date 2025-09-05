@@ -394,11 +394,20 @@ export default {
 
         axios(request)
           .then((response) => {
+            let options = response.data.data;
+
+            // Convert object options to array options
+            options = options.map((option) => {
+              if (Array.isArray(option)) return option;
+
+              return [option.id, option.name, option];
+            });
+
             if (response.data.paginated) {
-              this.fetchedOptions = [...this.fetchedOptions, ...response.data.data];
+              this.fetchedOptions = [...this.fetchedOptions, ...options];
               this.nextPage = response.data.next_page;
             } else {
-              this.fetchedOptions = response.data.data;
+              this.fetchedOptions = options;
             }
 
             if (this.fetchedOptions.length > this.totalOptionsCount) {

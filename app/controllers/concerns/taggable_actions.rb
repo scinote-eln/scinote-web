@@ -13,7 +13,7 @@ module TaggableActions
   def tag_resource
     tagging = @taggable_item.taggings.new(tag: @tag, created_by: current_user)
     if tagging.save
-      render json: { tag: [@tag.id, @tag.name, @tag.color] }
+      render json: { tag: { id: @tag.id, name: @tag.name, color: @tag.color } }
     else
       render json: { status: :error }, status: :unprocessable_entity
     end
@@ -23,7 +23,7 @@ module TaggableActions
     ActiveRecord::Base.transaction do
       tag = current_team.tags.create!(tag_params.merge(created_by: current_user, last_modified_by: current_user))
       @taggable_item.taggings.create!(tag: tag, created_by: current_user)
-      render json: { tag: [tag.id, tag.name, tag.color] }
+      render json: { tag: { id: tag.id, name: tag.name, color: tag.color } }
     rescue ActiveRecord::RecordInvalid => e
       render json: { status: :error, error: e.message }, status: :unprocessable_entity
       raise ActiveRecord::Rollback
