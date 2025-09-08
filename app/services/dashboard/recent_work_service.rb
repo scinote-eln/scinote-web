@@ -23,14 +23,14 @@ module Dashboard
       all_activities = join_step_user_roles(all_activities)
 
       team_activities = all_activities.where(subject_type: %w(Team RepositoryBase ProjectFolder))
-      project_activities = all_activities.where.not(project_subjects_user_roles: { id: nil })
-      report_activities = all_activities.where.not(report_projects_user_roles: { id: nil })
-      experiment_activities = all_activities.where.not(experiment_subjects_user_roles: { id: nil })
-      my_module_activities = all_activities.where.not(my_module_subjects_user_roles: { id: nil })
-      result_activities = all_activities.where.not(result_my_modules_user_roles: { id: nil })
-      protocol_activities = all_activities.where.not(protocol_my_modules_user_roles: { id: nil })
+      project_activities = all_activities.where(role_condition_sql(:project_subjects))
+      report_activities = all_activities.where(role_condition_sql(:report_projects))
+      experiment_activities = all_activities.where(role_condition_sql(:experiment_subjects))
+      my_module_activities = all_activities.where(role_condition_sql(:my_module_subjects))
+      result_activities = all_activities.where(role_condition_sql(:result_my_modules))
+      protocol_activities = all_activities.where(role_condition_sql(:protocol_my_modules))
+      step_activities = all_activities.where(role_condition_sql(:step_my_modules))
       protocol_repository_activities = all_activities.where(project_id: nil, subject_type: 'Protocol')
-      step_activities = all_activities.where.not(step_my_modules_user_roles: { id: nil })
 
       activities = team_activities.or(project_activities)
                                   .or(report_activities)
@@ -128,6 +128,12 @@ module Dashboard
 
     private
 
+    def role_condition_sql(prefix)
+      "#{prefix}_user_roles.id IS NOT NULL OR " \
+        "#{prefix}_user_group_roles.id IS NOT NULL OR " \
+        "#{prefix}_team_user_roles.id IS NOT NULL"
+    end
+
     def join_permitted_subjects(activities, join_alias, permission_model, permission)
       activities.joins("
         LEFT OUTER JOIN user_assignments #{join_alias}_user_assignments
@@ -146,6 +152,7 @@ module Dashboard
         AND #{join_alias}_user_group_memberships.user_id = #{@user.id}
         LEFT OUTER JOIN user_roles #{join_alias}_user_group_roles
         ON #{join_alias}_user_group_roles.id = #{join_alias}_user_group_assignments.user_role_id
+        AND #{join_alias}_user_group_memberships.id IS NOT NULL
         AND #{join_alias}_user_group_roles.permissions @> ARRAY['#{permission}']::varchar[]
 
         LEFT OUTER JOIN team_assignments #{join_alias}_team_assignments
@@ -157,6 +164,7 @@ module Dashboard
         AND #{join_alias}_team_user_assignments.user_id = #{@user.id}
         LEFT OUTER JOIN user_roles #{join_alias}_team_user_roles
         ON #{join_alias}_team_user_roles.id = #{join_alias}_team_user_assignments.user_role_id
+        AND #{join_alias}_team_user_assignments.id IS NOT NULL
         AND #{join_alias}_team_user_roles.permissions @> ARRAY['#{permission}']::varchar[]
       ")
     end
