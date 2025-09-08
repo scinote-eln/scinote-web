@@ -12,6 +12,7 @@ class Team < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
   before_save -> { shareable_links.destroy_all }, if: -> { !shareable_links_enabled? }
+  before_create :init_default_settings
   after_create :generate_template_project
   after_create :create_default_label_templates
   after_create :create_default_repository_templates
@@ -204,5 +205,9 @@ class Team < ApplicationRecord
     RepositoryTemplate.cell_lines.update(team: self)
     RepositoryTemplate.equipment.update(team: self)
     RepositoryTemplate.chemicals_and_reagents.update(team: self)
+  end
+
+  def init_default_settings
+    self.settings = Extends::DEFAULT_TEAM_SETTINGS
   end
 end

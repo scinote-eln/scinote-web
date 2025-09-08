@@ -1335,6 +1335,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_27_145326) do
     t.string "description"
     t.bigint "space_taken", default: 1048576, null: false
     t.boolean "shareable_links_enabled", default: false, null: false
+    t.jsonb "settings", default: {}, null: false
     t.index ["created_by_id"], name: "index_teams_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_teams_on_last_modified_by_id"
     t.index ["name"], name: "index_teams_on_name"

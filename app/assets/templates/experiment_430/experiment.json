@@ -11,8 +11,6 @@
     "archived_on": null,
     "restored_by_id": null,
     "restored_on": null,
-    "created_at": "2018-11-09T08:38:03.789Z",
-    "updated_at": "2019-02-07T14:55:25.517Z",
     "uuid": "f2949887-1f9e-4eb8-b645-ebbdd8808caf"
   },
   "my_modules": [
@@ -25,8 +23,6 @@
         "x": 106,
         "y": 26,
         "my_module_group_id": null,
-        "created_at": "2018-11-09T14:43:02.935Z",
-        "updated_at": "2018-11-09T14:43:31.822Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -66,13 +62,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-09T14:43:02.943Z",
-            "updated_at": "2019-02-07T13:04:03.800Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -88,8 +81,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T14:44:17.342Z",
-                "updated_at": "2019-02-07T13:04:03.745Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3461
               },
@@ -109,8 +100,6 @@
                 {
                   "table": {
                     "id": 600,
-                    "created_at": "2018-11-22T09:34:27.270Z",
-                    "updated_at": "2019-02-07T13:04:03.738Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Table 1",
@@ -138,8 +127,6 @@
         "x": 41,
         "y": 0,
         "my_module_group_id": null,
-        "created_at": "2018-11-09T13:28:22.716Z",
-        "updated_at": "2018-12-19T13:28:00.727Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -179,13 +166,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-09T13:28:22.724Z",
-            "updated_at": "2019-02-19T14:40:36.402Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -201,8 +185,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T13:29:23.180Z",
-                "updated_at": "2018-12-21T12:05:41.321Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3455
               },
@@ -225,8 +207,6 @@
                       "id": 967,
                       "name": "Guidelines:",
                       "step_id": 4375,
-                      "created_at": "2018-12-21T12:05:41.323Z",
-                      "updated_at": "2018-12-21T12:05:41.323Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -236,8 +216,6 @@
                         "text": "Dilute this suspension 1:100 by pipetting 10 µL into sterile capped Eppendorf tubes containing 990 µL nutrient-rich broth or sterile saline solution (10-2)",
                         "checked": false,
                         "checklist_id": 967,
-                        "created_at": "2018-12-21T12:05:41.325Z",
-                        "updated_at": "2018-12-21T12:05:41.325Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -247,8 +225,6 @@
                         "text": "Dilute this solution sequentially 1:10 three times until you reach a dilution of 10–5.",
                         "checked": false,
                         "checklist_id": 967,
-                        "created_at": "2018-12-21T12:05:41.338Z",
-                        "updated_at": "2018-12-21T12:05:41.338Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -258,8 +234,6 @@
                         "text": "Plate 100 mL of the last two 1:10 dilutions (10–4 to 10–5) evenly onto antibiotic-free nutrient-rich agar plates using a sterile cell spreader.",
                         "checked": false,
                         "checklist_id": 967,
-                        "created_at": "2018-12-21T12:05:41.345Z",
-                        "updated_at": "2018-12-21T12:05:41.345Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -278,8 +252,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T13:44:18.697Z",
-                "updated_at": "2019-02-07T10:32:30.551Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3455
               },
@@ -306,8 +278,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T13:41:55.993Z",
-                "updated_at": "2019-02-19T14:40:36.350Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3455
               },
@@ -334,8 +304,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T13:46:56.839Z",
-                "updated_at": "2019-02-07T10:33:29.603Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3455
               },
@@ -370,8 +338,6 @@
         "x": 70,
         "y": 26,
         "my_module_group_id": 1185,
-        "created_at": "2018-11-09T14:35:06.102Z",
-        "updated_at": "2018-12-19T13:28:00.795Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -411,13 +377,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-09T14:35:06.105Z",
-            "updated_at": "2019-02-20T07:38:52.274Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -433,8 +396,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T14:42:15.692Z",
-                "updated_at": "2019-02-20T07:39:28.160Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3460
               },
@@ -445,8 +406,6 @@
                 {
                   "asset": {
                     "id": 3752,
-                    "created_at": "2019-02-20T07:38:52.075Z",
-                    "updated_at": "2019-02-20T07:39:28.152Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 62584,
@@ -486,8 +445,6 @@
         "x": 34,
         "y": 26,
         "my_module_group_id": 1185,
-        "created_at": "2018-11-09T14:20:10.098Z",
-        "updated_at": "2018-12-19T13:28:00.798Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -531,13 +488,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-09T14:20:10.107Z",
-            "updated_at": "2019-02-20T07:38:33.613Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -553,8 +507,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-17T14:27:56.093Z",
-                "updated_at": "2019-02-20T07:39:27.591Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3458
               },
@@ -565,8 +517,6 @@
                 {
                   "asset": {
                     "id": 3751,
-                    "created_at": "2019-02-20T07:38:33.374Z",
-                    "updated_at": "2019-02-20T07:39:27.582Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 12769,
@@ -598,8 +548,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-17T14:06:59.583Z",
-                "updated_at": "2019-02-19T14:45:31.219Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3458
               },
@@ -634,8 +582,6 @@
         "x": 0,
         "y": 35,
         "my_module_group_id": 1185,
-        "created_at": "2018-11-09T14:09:52.226Z",
-        "updated_at": "2018-12-19T13:28:00.800Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -679,13 +625,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-09T14:09:52.235Z",
-            "updated_at": "2019-02-19T14:41:27.828Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -701,8 +644,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T14:16:11.568Z",
-                "updated_at": "2018-12-24T09:07:19.921Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3457
               },
@@ -722,8 +663,6 @@
                 {
                   "table": {
                     "id": 683,
-                    "created_at": "2018-12-21T11:38:45.382Z",
-                    "updated_at": "2018-12-21T11:48:45.258Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Table 1",
@@ -739,8 +678,6 @@
                       "id": 965,
                       "name": "Guideline:",
                       "step_id": 4382,
-                      "created_at": "2018-12-21T11:38:45.338Z",
-                      "updated_at": "2018-12-21T11:38:45.338Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -750,8 +687,6 @@
                         "text": "Prepare antibiotic dilutions in sterile MHB in sterile test tubes according to table.",
                         "checked": false,
                         "checklist_id": 965,
-                        "created_at": "2018-12-21T11:38:45.340Z",
-                        "updated_at": "2018-12-21T11:38:45.340Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -761,8 +696,6 @@
                         "text": "As the antibiotic solution is later inoculated with an equal amount of bacteria in broth, the dilutions are prepared at a concentration twice the desired final concentration.",
                         "checked": false,
                         "checklist_id": 965,
-                        "created_at": "2018-12-21T11:38:45.347Z",
-                        "updated_at": "2018-12-21T11:38:45.347Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -772,8 +705,6 @@
                         "text": "Start by dispensing sterile broth into twelve sterile 13x100 mm tubes closed with metal caps. A single 10 mL pipette can be used to pipette the 9 mL and 3 mL volumes of broth into the respective tubes. Use a single 1 mL pipette for pipetting the 1 mL of broth in stages 2, 5, 8 and 11.",
                         "checked": false,
                         "checklist_id": 965,
-                        "created_at": "2018-12-21T11:38:45.354Z",
-                        "updated_at": "2018-12-21T11:38:45.354Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -783,8 +714,6 @@
                         "text": "It is possible to use the same pipette for pipetting 1 mL of the antibiotic stock solution into the first test tube. Mix thoroughly using a vortex mixer.",
                         "checked": false,
                         "checklist_id": 965,
-                        "created_at": "2018-12-21T11:38:45.361Z",
-                        "updated_at": "2018-12-21T11:38:45.361Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -794,8 +723,6 @@
                         "text": "Use separate pipettes/pipette tips when preparing each of the other antibiotic solutions. Mix thoroughly using a vortex mixer.",
                         "checked": false,
                         "checklist_id": 965,
-                        "created_at": "2018-12-21T11:38:45.371Z",
-                        "updated_at": "2018-12-21T11:38:45.371Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -814,8 +741,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T14:17:30.554Z",
-                "updated_at": "2019-02-19T14:41:27.778Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3457
               },
@@ -850,8 +775,6 @@
         "x": 0,
         "y": 50,
         "my_module_group_id": 1185,
-        "created_at": "2018-11-09T10:47:34.880Z",
-        "updated_at": "2018-12-19T13:28:00.803Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -895,13 +818,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-09T10:47:34.945Z",
-            "updated_at": "2019-02-19T14:43:41.236Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -917,8 +837,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T12:10:09.672Z",
-                "updated_at": "2019-02-19T14:43:41.186Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3453
               },
@@ -945,8 +863,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T12:22:03.852Z",
-                "updated_at": "2018-12-24T09:08:20.489Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3453
               },
@@ -966,8 +882,6 @@
                 {
                   "table": {
                     "id": 682,
-                    "created_at": "2018-12-20T13:07:47.021Z",
-                    "updated_at": "2018-12-24T09:08:20.452Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Table 1",
@@ -983,8 +897,6 @@
                       "id": 966,
                       "name": "Guidelines:",
                       "step_id": 4370,
-                      "created_at": "2018-12-21T11:52:37.302Z",
-                      "updated_at": "2018-12-21T11:52:37.302Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -994,8 +906,6 @@
                         "text": "Dispense appropriate amounts of antibiotic solution into the respective containers. Follow table steps.",
                         "checked": false,
                         "checklist_id": 966,
-                        "created_at": "2018-12-21T11:52:37.304Z",
-                        "updated_at": "2018-12-21T11:52:37.304Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1005,8 +915,6 @@
                         "text": "For each agar plate, add 25 mL agar (now at a temperature of 50°C) into the container, mix well (avoid bubbles) and pour 25 ml into a petri dish labelled with the respective antibiotic concentration.",
                         "checked": false,
                         "checklist_id": 966,
-                        "created_at": "2018-12-21T11:52:37.311Z",
-                        "updated_at": "2018-12-21T11:52:37.311Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1016,8 +924,6 @@
                         "text": "Pour a control agar plate without any antibiotic. Adjust the number if necessary.",
                         "checked": false,
                         "checklist_id": 966,
-                        "created_at": "2018-12-21T11:52:37.317Z",
-                        "updated_at": "2018-12-21T11:52:37.317Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1027,8 +933,6 @@
                         "text": "Allow agar to set.",
                         "checked": false,
                         "checklist_id": 966,
-                        "created_at": "2018-12-21T11:52:37.324Z",
-                        "updated_at": "2018-12-21T11:52:37.324Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1038,8 +942,6 @@
                         "text": "Dry the surface of the agar plates either in an incubator or in a laminar airflow hood for 30 min. Leave the lid ajar.",
                         "checked": false,
                         "checklist_id": 966,
-                        "created_at": "2018-12-21T11:52:37.330Z",
-                        "updated_at": "2018-12-21T11:52:37.330Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -1049,8 +951,6 @@
                         "text": "Mark the bottom of the agar plates to define an orientation.",
                         "checked": false,
                         "checklist_id": 966,
-                        "created_at": "2018-12-21T11:52:37.336Z",
-                        "updated_at": "2018-12-21T11:52:37.336Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 5
@@ -1069,8 +969,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-17T14:00:24.509Z",
-                "updated_at": "2019-02-19T14:42:34.757Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3453
               },
@@ -1097,8 +995,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T11:07:28.842Z",
-                "updated_at": "2019-02-19T14:43:10.090Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3453
               },
@@ -1118,8 +1014,6 @@
                 {
                   "table": {
                     "id": 681,
-                    "created_at": "2018-12-20T13:03:47.611Z",
-                    "updated_at": "2019-02-19T14:43:10.075Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Table 2",
@@ -1147,8 +1041,6 @@
         "x": 0,
         "y": 0,
         "my_module_group_id": 1185,
-        "created_at": "2018-11-09T09:15:09.287Z",
-        "updated_at": "2018-12-19T13:28:00.805Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -1192,13 +1084,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-09T09:15:09.296Z",
-            "updated_at": "2019-02-20T07:38:05.434Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -1214,8 +1103,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-17T14:34:48.930Z",
-                "updated_at": "2018-12-17T14:34:48.930Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3450
               },
@@ -1242,8 +1129,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T09:26:34.638Z",
-                "updated_at": "2018-12-24T08:59:10.687Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3450
               },
@@ -1266,8 +1151,6 @@
                       "id": 962,
                       "name": "Guidelines",
                       "step_id": 4357,
-                      "created_at": "2018-12-21T11:09:29.266Z",
-                      "updated_at": "2018-12-21T11:09:29.266Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1277,8 +1160,6 @@
                         "text": "For each isolate, select three to five morphologically similar colonies from the fresh agar plate from task",
                         "checked": false,
                         "checklist_id": 962,
-                        "created_at": "2018-12-21T11:09:29.268Z",
-                        "updated_at": "2018-12-21T11:09:29.268Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1288,8 +1169,6 @@
                         "text": "Plate preparation",
                         "checked": false,
                         "checklist_id": 962,
-                        "created_at": "2018-12-21T11:09:29.276Z",
-                        "updated_at": "2018-12-21T11:09:29.276Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1299,8 +1178,6 @@
                         "text": "Touch the top of each selected colony using a sterile loop or cotton swab.",
                         "checked": false,
                         "checklist_id": 962,
-                        "created_at": "2018-12-21T11:09:29.287Z",
-                        "updated_at": "2018-12-21T11:09:29.287Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1310,8 +1187,6 @@
                         "text": "Transfer the growth into a sterile capped glass tube containing sterile broth or saline solution.",
                         "checked": false,
                         "checklist_id": 962,
-                        "created_at": "2018-12-21T11:09:29.300Z",
-                        "updated_at": "2019-02-07T09:10:36.760Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1321,8 +1196,6 @@
                         "text": "Mix using a vortex mixer.",
                         "checked": false,
                         "checklist_id": 962,
-                        "created_at": "2018-12-21T11:09:29.307Z",
-                        "updated_at": "2018-12-21T11:09:29.307Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -1341,8 +1214,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-17T13:07:04.214Z",
-                "updated_at": "2019-02-20T07:38:27.031Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3450
               },
@@ -1353,8 +1224,6 @@
                 {
                   "asset": {
                     "id": 3750,
-                    "created_at": "2019-02-20T07:38:05.206Z",
-                    "updated_at": "2019-02-20T07:38:27.023Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 48768,
@@ -1382,8 +1251,6 @@
                       "id": 961,
                       "name": "Guidelines:",
                       "step_id": 5195,
-                      "created_at": "2018-12-21T10:50:36.576Z",
-                      "updated_at": "2018-12-21T10:50:36.576Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1393,8 +1260,6 @@
                         "text": "Prepare media (store at 4°C)",
                         "checked": false,
                         "checklist_id": 961,
-                        "created_at": "2018-12-21T10:50:36.577Z",
-                        "updated_at": "2018-12-21T10:50:36.577Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1404,8 +1269,6 @@
                         "text": "Prepare antibiotic stock solutions",
                         "checked": false,
                         "checklist_id": 961,
-                        "created_at": "2018-12-21T10:50:36.584Z",
-                        "updated_at": "2018-12-21T10:50:36.584Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1415,8 +1278,6 @@
                         "text": "Streak the bacterial isolates to be tested onto nutrient-rich agar plates without inhibitor to obtain single colonies",
                         "checked": false,
                         "checklist_id": 961,
-                        "created_at": "2018-12-21T10:50:36.592Z",
-                        "updated_at": "2018-12-21T10:50:36.592Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1435,8 +1296,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T10:11:24.463Z",
-                "updated_at": "2019-02-07T10:31:21.634Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3450
               },
@@ -1463,8 +1322,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T10:13:32.396Z",
-                "updated_at": "2019-02-07T10:31:41.571Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3450
               },
@@ -1499,8 +1356,6 @@
         "x": 0,
         "y": 17,
         "my_module_group_id": 1185,
-        "created_at": "2018-11-09T10:25:56.551Z",
-        "updated_at": "2018-12-19T13:28:00.808Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -1544,13 +1399,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-09T10:25:56.621Z",
-            "updated_at": "2019-02-20T07:37:48.403Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -1566,8 +1418,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-17T14:33:52.646Z",
-                "updated_at": "2018-12-17T14:33:52.646Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3452
               },
@@ -1594,8 +1444,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T10:25:56.635Z",
-                "updated_at": "2019-02-19T14:44:57.268Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3452
               },
@@ -1622,8 +1470,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T10:25:56.680Z",
-                "updated_at": "2018-12-24T09:01:33.668Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3452
               },
@@ -1646,8 +1492,6 @@
                       "id": 964,
                       "name": "Guidelines:",
                       "step_id": 4362,
-                      "created_at": "2018-12-21T11:14:19.776Z",
-                      "updated_at": "2018-12-21T11:14:19.776Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1657,8 +1501,6 @@
                         "text": "For each isolate, select three to five morphologically similar colonies from the fresh agar plate from task .",
                         "checked": false,
                         "checklist_id": 964,
-                        "created_at": "2018-12-21T11:14:19.778Z",
-                        "updated_at": "2018-12-21T11:14:19.778Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1668,8 +1510,6 @@
                         "text": "Plate preparation.",
                         "checked": false,
                         "checklist_id": 964,
-                        "created_at": "2018-12-21T11:14:19.785Z",
-                        "updated_at": "2018-12-21T11:14:19.785Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1679,8 +1519,6 @@
                         "text": "Touch the top of each selected colony using a sterile loop or cotton swab.",
                         "checked": false,
                         "checklist_id": 964,
-                        "created_at": "2018-12-21T11:14:19.791Z",
-                        "updated_at": "2018-12-21T11:14:19.791Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1690,8 +1528,6 @@
                         "text": "Transfer into a tube containing 3–4 mL of a suitable nutrient-rich medium.",
                         "checked": false,
                         "checklist_id": 964,
-                        "created_at": "2018-12-21T11:14:19.798Z",
-                        "updated_at": "2018-12-21T11:14:19.798Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1701,8 +1537,6 @@
                         "text": "Mix using a vortex mixer.",
                         "checked": false,
                         "checklist_id": 964,
-                        "created_at": "2018-12-21T11:14:19.805Z",
-                        "updated_at": "2018-12-21T11:14:19.805Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -1721,8 +1555,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T10:25:56.700Z",
-                "updated_at": "2019-02-20T07:38:26.679Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3452
               },
@@ -1733,8 +1565,6 @@
                 {
                   "asset": {
                     "id": 3749,
-                    "created_at": "2019-02-20T07:37:48.184Z",
-                    "updated_at": "2019-02-20T07:38:26.671Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 48768,
@@ -1762,8 +1592,6 @@
                       "id": 963,
                       "name": "Guidelines:",
                       "step_id": 4363,
-                      "created_at": "2018-12-21T11:12:20.820Z",
-                      "updated_at": "2018-12-21T11:12:20.820Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1773,8 +1601,6 @@
                         "text": "Prepare media (store at 4°C).",
                         "checked": false,
                         "checklist_id": 963,
-                        "created_at": "2018-12-21T11:12:20.822Z",
-                        "updated_at": "2018-12-21T11:12:20.822Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1784,8 +1610,6 @@
                         "text": "Prepare antibiotic stock solutions.",
                         "checked": false,
                         "checklist_id": 963,
-                        "created_at": "2018-12-21T11:12:20.831Z",
-                        "updated_at": "2018-12-21T11:12:20.831Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1795,8 +1619,6 @@
                         "text": "Streak the bacterial isolates to be tested onto nutrient-rich agar plates without inhibitor to obtain single colonies",
                         "checked": false,
                         "checklist_id": 963,
-                        "created_at": "2018-12-21T11:12:20.838Z",
-                        "updated_at": "2018-12-21T11:12:20.838Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1815,8 +1637,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T10:35:37.405Z",
-                "updated_at": "2019-02-19T14:43:59.634Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3452
               },
@@ -1843,8 +1663,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-09T10:25:56.657Z",
-                "updated_at": "2019-02-19T14:44:41.586Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3452
               },
@@ -1874,8 +1692,6 @@
   "my_module_groups": [
     {
       "id": 1185,
-      "created_at": "2018-12-19T13:28:00.792Z",
-      "updated_at": "2018-12-19T13:28:00.792Z",
       "created_by_id": 3,
       "experiment_id": 430
     }

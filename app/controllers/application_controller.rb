@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception, prepend: true
   before_action :authenticate_user!
   helper_method :current_team
-  before_action :update_current_team, if: :user_signed_in?
+  before_action :set_current_team, if: :user_signed_in?
   around_action :set_date_format, if: :user_signed_in?
   around_action :set_time_zone, if: :current_user
   layout 'main'
@@ -27,11 +27,6 @@ class ApplicationController < ActionController::Base
 
   def is_current_page_root?
     controller_name == 'projects' && action_name == 'index'
-  end
-
-  # Sets current team for all controllers
-  def current_team
-    @current_team ||= current_user.teams.find_by(id: current_user.current_team_id)
   end
 
   def to_user_date_format
@@ -87,14 +82,18 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def update_current_team
-    return if current_team.present? && current_team.id == current_user.current_team_id
+  def current_team
+    @current_team ||= current_user.teams.find_by(id: current_user.current_team_id)
+  end
 
+  def set_current_team
     if current_user.current_team_id
       @current_team = current_user.teams.find_by(id: current_user.current_team_id)
-    elsif current_user.teams.any?
+    elsif current_user.teams.first.present?
+      @current_team = current_user.teams.first
       current_user.update(current_team_id: current_user.teams.first.id)
     end
+    Current.team = @current_team if @current_team.present?
   end
 
   # With this Devise callback user is redirected directly to sign in page instead

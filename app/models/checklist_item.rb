@@ -1,4 +1,5 @@
 class ChecklistItem < ApplicationRecord
+  include ObservableModel
   include SearchableModel
 
   SEARCHABLE_ATTRIBUTES = ['checklist_items.text'].freeze

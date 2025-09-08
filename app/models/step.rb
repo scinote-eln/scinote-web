@@ -3,6 +3,7 @@ class Step < ApplicationRecord
   include SearchableByNameModel
   include TinyMceImages
   include ViewableModel
+  include ObservableModel
 
   SEARCHABLE_ATTRIBUTES = ['steps.name'].freeze
 

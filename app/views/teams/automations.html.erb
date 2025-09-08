@@ -1,0 +1,12 @@
+<% provide(:head_title, t("users.settings.account.preferences.head_title")) %>
+
+<div class="content-pane flexible with-grey-background">
+  <%= render partial: 'users/settings/teams/header' %>
+  <div id="team_automations" class="contents">
+    <team-automations
+      :team-url="'<%= settings_team_path(@team) %>'"
+    />
+  </div>
+</div>
+
+<%= javascript_include_tag "vue_team_automations" %>
