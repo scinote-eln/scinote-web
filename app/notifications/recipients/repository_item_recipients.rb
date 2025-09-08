@@ -7,6 +7,6 @@ class Recipients::RepositoryItemRecipients
 
   def recipients
     repository = RepositoryRow.find(@repository_row_id).repository
-    repository.users_with_permission(RepositoryPermissions::READ, repository.team)
+    repository.users_with_permission(RepositoryPermissions::ROWS_UPDATE, repository.team)
   end
 end
