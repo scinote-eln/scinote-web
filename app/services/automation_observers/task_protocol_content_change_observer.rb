@@ -14,17 +14,19 @@ module AutomationObservers
 
       protocol = nil
 
-      case element.class.name
+      case element.class.base_class.name
       when 'Asset', 'Table'
         return if element.step.blank?
 
         protocol = element.step.protocol
-      when 'Checklist', 'StepText', 'StepComment', 'StepOrderableElement'
+      when 'Checklist', 'StepText', 'Comment', 'StepOrderableElement'
         protocol = element.step.protocol
       when 'ChecklistItem'
         protocol = element.checklist.step.protocol
       when 'FormFieldValue'
-        protocol = element.form_response.step.protocol
+        protocol = element.form_response&.step&.protocol
+      when 'FormResponse'
+        protocol = element&.step&.protocol
       when 'Step'
         protocol = element.protocol
       when 'Protocol'
@@ -34,6 +36,7 @@ module AutomationObservers
       return if protocol.blank?
       return unless protocol.in_module? && protocol.my_module.my_module_status.initial_status?
       return if element.respond_to?(:completed) && element.saved_change_to_completed? && !element.completed
+      return if (element.respond_to?(:view_mode) && element.saved_change_to_view_mode?) || (element.respond_to?(:assets_view_mode) && element.saved_change_to_assets_view_mode?)
 
       my_module = protocol.my_module
       previous_status_id = my_module.my_module_status.id
