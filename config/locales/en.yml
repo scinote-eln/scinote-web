@@ -4243,6 +4243,13 @@ en:
     tags_input:
       add_tag: "Add tag"
       edit_tags: "Edit tags"
+      create_tag: "Create tag"
+    manage_modal:
+      title: "Edit tags"
+      description: "Tags in this workspace are shared by all members. Anyone with permission can create or edit tags, and all changes apply everywhere the tag is used."
+      create_tag: "Create a tag"
+      type_tag_name: "Type a tag name"
+      manage_tags: "Manage tags"
   user_groups:
     promo:
       head_title: 'User groups'
@@ -4757,6 +4764,7 @@ en:
     copy: "Copy"
     duplicate: "Duplicate"
     okay: "Okay"
+    done: "Done"
     back: "Back"
     close: "Close"
     create: 'Create'

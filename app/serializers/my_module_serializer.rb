@@ -6,7 +6,7 @@ class MyModuleSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :name, :description, :permissions, :description_view, :urls, :last_modified_by_name, :created_at, :updated_at, :tags,
+  attributes :name, :description, :permissions, :description_view, :urls, :last_modified_by_name, :created_at, :updated_at, :tags, :updated_at_unix,
              :project_name, :experiment_name, :created_by_name, :is_creator_current_user, :code, :designated_user_ids, :due_date_cell, :start_date_cell, :completed_on
 
   def project_name
@@ -33,6 +33,10 @@ class MyModuleSerializer < ActiveModel::Serializer
     I18n.l(object.updated_at, format: :full_date)
   end
 
+  def updated_at_unix
+    object.updated_at.to_i
+  end
+
   def last_modified_by_name
     object.last_modified_by&.full_name
   end
@@ -46,7 +50,9 @@ class MyModuleSerializer < ActiveModel::Serializer
       manage_description: can_update_my_module_description?(object),
       manage_due_date: can_update_my_module_due_date?(object),
       manage_start_date: can_update_my_module_start_date?(object),
-      manage_designated_users: can_manage_my_module_designated_users?(object)
+      manage_designated_users: can_manage_my_module_designated_users?(object),
+      assign_tags: can_manage_my_module_tags?(object),
+      manage_tags: true # TODO: implement
     }
   end
 
@@ -55,7 +61,8 @@ class MyModuleSerializer < ActiveModel::Serializer
       show_access: access_permissions_my_module_path(object),
       show_user_group_assignments_access: show_user_group_assignments_access_permissions_my_module_path(object),
       tag_resource: tag_resource_my_module_path(object),
-      untag_resource: untag_resource_my_module_path(object)
+      untag_resource: untag_resource_my_module_path(object),
+      tag_resource_with_new_tag: tag_resource_with_new_tag_my_module_path(object)
     }
   end
 
@@ -105,7 +112,7 @@ class MyModuleSerializer < ActiveModel::Serializer
 
   def tags
     object.tags.map do |tag|
-      [tag.id, tag.name, tag.color]
+      { id: tag.id, name: tag.name, color: tag.color }
     end
   end
 end

@@ -23,7 +23,7 @@
           objectType="MyModule"
           :objectId="parseInt(myModule.id, 10)"
           :fieldName="'my_module[description]'"
-          :lastUpdated="myModule.attributes.updated_at"
+          :lastUpdated="myModule.attributes.updated_at_unix"
           :assignableMyModuleId="parseInt(myModule.id, 10)"
           :characterLimit="1000000"
           @update="reloadMyModule"
