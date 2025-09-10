@@ -6,6 +6,7 @@ module AutomationObservers
       return unless Current.team.settings.dig('team_automation_settings', 'experiments', 'experiment_status_in_progress', 'on_task_in_progress')
       return unless my_module.saved_change_to_my_module_status_id? && !my_module.my_module_status.initial_status?
       return unless my_module.experiment.not_started?
+      return unless my_module.my_module_status.previous_status_id == my_module.my_module_status_id_previously_was
 
       experiment = my_module.experiment
       experiment.update!(status: :in_progress, last_modified_by: user)
