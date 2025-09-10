@@ -28,9 +28,11 @@ module SmartAnnotations
           if type == 'rep_item'
             repository_item(value[:name], user, team, type, object, preview_repository)
           else
-            next unless object && SmartAnnotations::PermissionEval.check(user, type, object)
-
-            SmartAnnotations::HtmlPreview.html(nil, type, object)
+            if object && SmartAnnotations::PermissionEval.check(user, type, object)
+              SmartAnnotations::HtmlPreview.html(nil, type, object)
+            else
+              private_placeholder(object)
+            end
           end
         rescue ActiveRecord::RecordNotFound
           next
@@ -40,7 +42,7 @@ module SmartAnnotations
 
     def repository_item(name, user, team, type, object, preview_repository)
       if object&.repository
-        return unless SmartAnnotations::PermissionEval.check(user, type, object)
+        return private_placeholder(object) unless SmartAnnotations::PermissionEval.check(user, type, object)
 
         return SmartAnnotations::HtmlPreview.html(nil, type, object, preview_repository)
       end
@@ -61,6 +63,23 @@ module SmartAnnotations
         raise ActiveRecord::RecordNotFound.new("#{type} does not exist")
       end
       klass.find_by(id: id)
+    end
+
+    def private_placeholder(object = nil)
+      label = case object
+              when Project
+                I18n.t('smart_annotations.private.project')
+              when Experiment
+                I18n.t('smart_annotations.private.experiment')
+              when MyModule
+                I18n.t('smart_annotations.private.my_module')
+              when RepositoryRow
+                I18n.t('smart_annotations.private.repository_row')
+              else
+                I18n.t('smart_annotations.private.object')
+              end
+
+      "<span class=\"text-sn-grey\">#{label}</span>"
     end
   end
 end

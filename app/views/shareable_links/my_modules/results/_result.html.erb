@@ -1,4 +1,4 @@
-<div class="result-container bg-white p-4 mb-4 rounded">
+<div class="result-container bg-white p-4 mb-4 rounded" id="resultContainer<%= result.id %>">
   <div class="result-header flex justify-between">
     <div class="result-head-left flex items-start flex-grow gap-4">
       <a class="result-collapse-link hover:no-underline focus:no-underline text-sn-black" href="#result-panel-<%= result.id %>" data-toggle="collapse">
@@ -22,7 +22,7 @@
             <ul id="StepsMenuDropdown<%= result.id %>" class="dropdown-menu dropdown-menu-right px-4 py-2">
               <% result.steps.each do |step| %>
                 <li class="dropdown-item">
-                  <%= link_to step.label, shared_protocol_url(@shareable_link.uuid), class: "!py-2.5 !px-3 hover:!bg-sn-super-light-grey !cursor-pointer !block hover:!no-underline !text-sn-blue !truncate" %>
+                  <%= link_to step.label, shared_protocol_url(@shareable_link.uuid, anchor: "stepContainer#{step.id}"), class: "!py-2.5 !px-3 hover:!bg-sn-super-light-grey !cursor-pointer !block hover:!no-underline !text-sn-blue !truncate" %>
                 </li>
               <% end %>
             </ul>

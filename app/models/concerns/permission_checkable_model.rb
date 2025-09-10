@@ -49,10 +49,15 @@ module PermissionCheckableModel
                              .exists?(['user_roles.permissions @> ARRAY[?]::varchar[]', [permission]])
     end
 
-    user_roles = UserRole.left_outer_joins(:team_assignments, user_group_assignments: { user_group: :users })
-    user_roles.where(user_group_assignments: { assignable: self, user_groups: { users: user }, team: permission_team })
-              .or(user_roles.where(team_assignments: { assignable: self, team: permission_team }))
-              .exists?(['user_roles.permissions @> ARRAY[?]::varchar[]', [permission]])
+    team_roles = UserRole.joins(:team_assignments)
+                         .where(team_assignments: { assignable: self, team: permission_team })
+    group_roles = UserRole.joins(user_group_assignments: { user_group: :users })
+                          .where(user_group_assignments: { assignable: self, user_groups: { users: user }, team: permission_team })
+
+    UserRole.from(
+      "(#{team_roles.to_sql} UNION #{group_roles.to_sql}) AS user_roles",
+      :user_roles
+    ).exists?(['user_roles.permissions @> ARRAY[?]::varchar[]', [permission]])
   end
 
   def readable_by_user?(user)

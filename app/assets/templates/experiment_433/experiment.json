@@ -11,8 +11,6 @@
     "archived_on": null,
     "restored_by_id": null,
     "restored_on": null,
-    "created_at": "2018-11-12T08:12:09.669Z",
-    "updated_at": "2019-02-07T14:44:00.337Z",
     "uuid": "de7f0d1b-f842-440b-a367-a0333a11430c"
   },
   "my_modules": [
@@ -25,8 +23,6 @@
         "x": 34,
         "y": 0,
         "my_module_group_id": 1167,
-        "created_at": "2018-11-12T08:39:44.221Z",
-        "updated_at": "2018-12-17T07:51:25.145Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -70,13 +66,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-12T08:39:44.225Z",
-            "updated_at": "2019-02-20T07:58:51.770Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -92,8 +85,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-17T07:34:16.845Z",
-                "updated_at": "2019-02-19T14:35:53.498Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3488
               },
@@ -113,8 +104,6 @@
                 {
                   "table": {
                     "id": 668,
-                    "created_at": "2018-12-17T07:35:02.552Z",
-                    "updated_at": "2019-02-19T14:35:53.484Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "PCR Mastermix",
@@ -134,8 +123,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-12T14:41:18.099Z",
-                "updated_at": "2019-02-20T07:37:25.765Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3488
               },
@@ -146,8 +133,6 @@
                 {
                   "asset": {
                     "id": 3746,
-                    "created_at": "2019-02-20T07:36:46.773Z",
-                    "updated_at": "2019-02-20T07:37:25.383Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 19765,
@@ -164,8 +149,6 @@
                 {
                   "asset": {
                     "id": 3747,
-                    "created_at": "2019-02-20T07:36:46.946Z",
-                    "updated_at": "2019-02-20T07:37:25.757Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 16540,
@@ -193,8 +176,6 @@
                       "id": 960,
                       "name": "Guidelines:",
                       "step_id": 4422,
-                      "created_at": "2018-12-21T10:22:55.963Z",
-                      "updated_at": "2018-12-21T10:22:55.963Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -204,8 +185,6 @@
                         "text": "Size selection (100 to 800 bp) by agarose gel electrophoresis.",
                         "checked": false,
                         "checklist_id": 960,
-                        "created_at": "2018-12-21T10:22:55.965Z",
-                        "updated_at": "2018-12-21T10:22:55.965Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -215,8 +194,6 @@
                         "text": "Gel purification, end repair, dA overhang addition, P2 paired-end adapter ligation and library amplification.",
                         "checked": false,
                         "checklist_id": 960,
-                        "created_at": "2018-12-21T10:22:55.972Z",
-                        "updated_at": "2018-12-21T10:22:55.972Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -226,8 +203,6 @@
                         "text": "120 μL of each amplified library is size-selected (about 250 to 500 bp) by gel electrophoresis.",
                         "checked": false,
                         "checklist_id": 960,
-                        "created_at": "2018-12-21T10:22:55.981Z",
-                        "updated_at": "2018-12-21T10:22:55.981Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -237,8 +212,6 @@
                         "text": "Final libraries are put through quality control and high-throughput sequencing.",
                         "checked": false,
                         "checklist_id": 960,
-                        "created_at": "2018-12-21T10:22:55.989Z",
-                        "updated_at": "2018-12-21T10:23:18.774Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -257,8 +230,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-12T14:34:29.463Z",
-                "updated_at": "2019-02-20T07:58:51.732Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3488
               },
@@ -269,8 +240,6 @@
                 {
                   "asset": {
                     "id": 3745,
-                    "created_at": "2019-02-20T07:36:16.089Z",
-                    "updated_at": "2019-02-20T07:58:51.655Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "estimated_size": 16298,
@@ -310,8 +279,6 @@
         "x": 68,
         "y": 0,
         "my_module_group_id": 1167,
-        "created_at": "2018-11-12T08:39:44.243Z",
-        "updated_at": "2018-12-17T07:51:25.147Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -355,13 +322,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-12T08:39:44.247Z",
-            "updated_at": "2018-12-21T10:26:41.366Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -377,8 +341,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-12T14:59:18.147Z",
-                "updated_at": "2018-12-21T10:25:44.853Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3489
               },
@@ -405,8 +367,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-17T07:50:46.898Z",
-                "updated_at": "2018-12-21T10:26:41.233Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3489
               },
@@ -441,8 +401,6 @@
         "x": 102,
         "y": 0,
         "my_module_group_id": 1167,
-        "created_at": "2018-11-12T08:39:44.312Z",
-        "updated_at": "2018-12-17T07:51:25.150Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -482,13 +440,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-12T08:39:44.325Z",
-            "updated_at": "2019-02-20T07:37:09.688Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -504,8 +459,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-12T15:22:18.606Z",
-                "updated_at": "2018-11-12T15:22:18.606Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3492
               },
@@ -532,8 +485,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-12T15:20:06.636Z",
-                "updated_at": "2019-02-20T07:37:26.227Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3492
               },
@@ -544,8 +495,6 @@
                 {
                   "asset": {
                     "id": 3748,
-                    "created_at": "2019-02-20T07:37:09.362Z",
-                    "updated_at": "2019-02-20T07:37:26.219Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 24074,
@@ -570,8 +519,6 @@
                 {
                   "table": {
                     "id": 573,
-                    "created_at": "2018-11-12T15:20:07.148Z",
-                    "updated_at": "2019-02-20T07:37:09.513Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Reaction mastermix",
@@ -599,8 +546,6 @@
         "x": 0,
         "y": 0,
         "my_module_group_id": 1167,
-        "created_at": "2018-11-12T08:39:44.191Z",
-        "updated_at": "2018-12-17T07:51:25.152Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -644,13 +589,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-12T08:39:44.202Z",
-            "updated_at": "2019-02-19T14:34:47.554Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -666,8 +608,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-12T12:00:57.856Z",
-                "updated_at": "2018-12-24T08:46:24.129Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3487
               },
@@ -690,8 +630,6 @@
                       "id": 958,
                       "name": "Guidelines:",
                       "step_id": 4416,
-                      "created_at": "2018-12-21T09:50:59.139Z",
-                      "updated_at": "2018-12-21T09:50:59.139Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -701,8 +639,6 @@
                         "text": "Add 1 volume of chloroform: Isoamyl alcohol to the solution and mix by inversion for 5 min. Centrifuge the sample for 10 min at 5000 × g and pipette the upper aqueous phase into a new Falcon tube.",
                         "checked": false,
                         "checklist_id": 958,
-                        "created_at": "2018-12-21T09:50:59.141Z",
-                        "updated_at": "2018-12-21T09:50:59.141Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -712,8 +648,6 @@
                         "text": "Add 5 μL of RNAse A to the solution and incubate at 37°C for 15 min with periodic, gentle mixing.",
                         "checked": false,
                         "checklist_id": 958,
-                        "created_at": "2018-12-21T09:50:59.149Z",
-                        "updated_at": "2018-12-21T09:50:59.149Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -723,8 +657,6 @@
                         "text": "After incubation, add 1 volume of chloroform: Isoamyl alcohol to the solution and mix by inversion for 5 min.",
                         "checked": false,
                         "checklist_id": 958,
-                        "created_at": "2018-12-21T09:50:59.156Z",
-                        "updated_at": "2018-12-21T09:50:59.156Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -734,8 +666,6 @@
                         "text": "Centrifuge the solution for 10 min at 5000 × g and pipette the aqueous phase into a new Falcon tube.",
                         "checked": false,
                         "checklist_id": 958,
-                        "created_at": "2018-12-21T09:50:59.163Z",
-                        "updated_at": "2018-12-21T09:50:59.163Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -754,8 +684,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-12T12:22:47.725Z",
-                "updated_at": "2019-02-19T14:34:47.503Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3487
               },
@@ -782,8 +710,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-12T11:06:48.312Z",
-                "updated_at": "2018-12-24T08:34:20.404Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3487
               },
@@ -806,8 +732,6 @@
                       "id": 957,
                       "name": "Guidelines",
                       "step_id": 4414,
-                      "created_at": "2018-12-21T09:43:55.386Z",
-                      "updated_at": "2018-12-21T09:43:55.386Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -817,8 +741,6 @@
                         "text": "Samples are stored in 95% ethanol solution at -20°C.",
                         "checked": false,
                         "checklist_id": 957,
-                        "created_at": "2018-12-21T09:43:55.389Z",
-                        "updated_at": "2018-12-21T09:43:55.389Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -828,8 +750,6 @@
                         "text": "Pre-heat water baths (65°C and 37°C).",
                         "checked": false,
                         "checklist_id": 957,
-                        "created_at": "2018-12-21T09:43:55.396Z",
-                        "updated_at": "2018-12-21T09:43:55.396Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -839,8 +759,6 @@
                         "text": "Prepare 10 mL (per 1 g of sample) extraction buffer by adding 0.3% (v/v) β-mercaptoethanol in a 50 mL Falcon tube, and pre-heat in the 65°C water bath.",
                         "checked": false,
                         "checklist_id": 957,
-                        "created_at": "2018-12-21T09:43:55.403Z",
-                        "updated_at": "2018-12-21T09:43:55.403Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -850,8 +768,6 @@
                         "text": "Put the sample into the 65°C water bath and mix by inversion every 10 min for 30-60 minutes.",
                         "checked": false,
                         "checklist_id": 957,
-                        "created_at": "2018-12-21T09:43:55.412Z",
-                        "updated_at": "2018-12-21T09:43:55.412Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -861,8 +777,6 @@
                         "text": "After incubation, centrifuge the sample tube for 5 min at 5000 × g and decant the supernatant into a new 50 mL Falcon tube.",
                         "checked": false,
                         "checklist_id": 957,
-                        "created_at": "2018-12-21T09:43:55.419Z",
-                        "updated_at": "2018-12-21T09:43:55.419Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -881,8 +795,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-12T12:05:42.004Z",
-                "updated_at": "2019-02-07T10:03:24.266Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3487
               },
@@ -905,8 +817,6 @@
                       "id": 959,
                       "name": "Guidelines:",
                       "step_id": 4417,
-                      "created_at": "2018-12-21T09:54:21.494Z",
-                      "updated_at": "2018-12-21T09:54:21.494Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -916,8 +826,6 @@
                         "text": "Add a ½ volume of 5 M NaCl to the sample and mix gently by inversion.",
                         "checked": false,
                         "checklist_id": 959,
-                        "created_at": "2018-12-21T09:54:21.496Z",
-                        "updated_at": "2018-12-21T09:54:21.496Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -927,8 +835,6 @@
                         "text": "Then, add 3 volumes of cold 95% ethanol and mix gently by inversion.",
                         "checked": false,
                         "checklist_id": 959,
-                        "created_at": "2018-12-21T09:54:21.503Z",
-                        "updated_at": "2018-12-21T09:54:21.503Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -938,8 +844,6 @@
                         "text": "Place the tubes into a -20°C freezer and incubate for 1 h.",
                         "checked": false,
                         "checklist_id": 959,
-                        "created_at": "2018-12-21T09:54:21.509Z",
-                        "updated_at": "2018-12-21T09:54:21.509Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -949,8 +853,6 @@
                         "text": "After incubation, centrifuge the Falcon tube for 10 min at 5000 × g to pellet the DNA.",
                         "checked": false,
                         "checklist_id": 959,
-                        "created_at": "2018-12-21T09:54:21.516Z",
-                        "updated_at": "2018-12-21T09:54:21.516Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -960,8 +862,6 @@
                         "text": "Carefully decant away the supernatant and wash the DNA pellet with 3 mL of 70% ethanol.",
                         "checked": false,
                         "checklist_id": 959,
-                        "created_at": "2018-12-21T09:54:21.522Z",
-                        "updated_at": "2018-12-21T09:54:21.522Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -971,8 +871,6 @@
                         "text": "Gently swirl the solution and centrifuge again for 10 min at 5000 × g.",
                         "checked": false,
                         "checklist_id": 959,
-                        "created_at": "2018-12-21T09:54:21.529Z",
-                        "updated_at": "2018-12-21T09:54:21.529Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 5
@@ -982,8 +880,6 @@
                         "text": "Carefully decant the supernatant and air-dry DNA pellet for 15 min at room temperature. Once dried, suspend DNA in 200 μL of TE buffer.",
                         "checked": false,
                         "checklist_id": 959,
-                        "created_at": "2018-12-21T09:54:21.535Z",
-                        "updated_at": "2018-12-21T09:54:21.535Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 6
@@ -1005,8 +901,6 @@
   "my_module_groups": [
     {
       "id": 1167,
-      "created_at": "2018-12-17T07:51:25.142Z",
-      "updated_at": "2018-12-17T07:51:25.142Z",
       "created_by_id": 202,
       "experiment_id": 433
     }

@@ -620,26 +620,30 @@ class Extends
     repository_access_granted_user_group: 403,
     repository_access_changed_user_group: 404,
     repository_access_revoked_user_group: 405,
-    experiment_access_changed_all_team_members: 406,
-    my_module_access_changed_all_team_members: 407
+    automation_task_status_changed: 406,
+    automation_experiment_status_changed: 407,
+    automation_project_status_changed: 408,
+    import_protocol_in_repository_from_protocols_io: 409,
+    experiment_access_changed_all_team_members: 410,
+    my_module_access_changed_all_team_members: 411
   }
 
   ACTIVITY_GROUPS = {
-    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243, *370..378, *390..392],
+    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243, *370..378, *390..392, 408],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, *246..248, *257..273, *284..291, 301, 303, 306, 328],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
-           148, 166, 394, 395, 396, 407],
+           148, 166, 394, 395, 396, 406, 411],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
                     184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327, *347..352, 359],
     task_inventory: [55, 56, 146, 147, 183],
-    experiment: [*27..31, 57, 141, 165, *363..369, 393, 406],
+    experiment: [*27..31, 57, 141, 165, *363..369, 393, 407, 410],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
                   78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329, *397..405],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
-                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389],
+                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409],
     team: [92, 94, 93, 97, 104, 244, 245, *379..383],
     label_templates: [*216..219],
     storage_locations: [*309..315, 361],
@@ -786,6 +790,7 @@ class Extends
     user_groups/index
     user_groups/show
     tags/index
+    teams/automations
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
@@ -802,6 +807,53 @@ class Extends
       in_app: true
     }
   }
+
+  TEAM_AUTOMATIONS_GROUPS = {
+    tasks: {
+      task_status_in_progress: %I[
+        on_protocol_content_change
+        on_step_completion
+        on_added_result
+      ],
+      task_status_completed: %I[
+        on_all_steps_completion
+      ]
+    },
+    experiments: {
+      experiment_status_in_progress: %I[
+        on_task_in_progress
+      ],
+      experiment_status_done: %I[
+        on_all_tasks_done
+      ]
+    },
+    projects: {
+      project_status_in_progress: %I[
+        on_experiment_in_progress
+      ],
+      project_status_done: %I[
+        on_all_experiments_done
+      ]
+    }
+  }
+
+  TEAM_AUTOMATIONS_OBSERVERS_CONFIG = {
+    'Experiment' => ['AutomationObservers::AllExperimentsDoneObserver', 'AutomationObservers::ExperimentStatusChangeObserver'],
+    'MyModule' => ['AutomationObservers::AllTasksDoneObserver', 'AutomationObservers::TaskStatusChangeObserver'],
+    'Protocol' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'Asset' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'Table' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'Comment' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'ChecklistItem' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'Checklist' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'FormFieldValue' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'StepOrderableElement' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'StepComment' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'Step' => ['AutomationObservers::AllStepsCompletionObserver', 'AutomationObservers::StepCompletionObserver', 'AutomationObservers::TaskProtocolContentChangeObserver'],
+    'Result' => ['AutomationObservers::ResultCreateObserver']
+  }
+
+  DEFAULT_TEAM_SETTINGS = {}
 
   WHITELISTED_USER_SETTINGS = %w(
     LabelTemplates_active_state
@@ -824,6 +876,8 @@ class Extends
     StorageLocationsContainer_active_state
     StorageLocationsContainerGrid_active_state
     TagsIndexTable_active_state
+    UserGroups_active_state
+    UserGroup_active_state
     task_step_states
     results_order
     repository_export_file_type

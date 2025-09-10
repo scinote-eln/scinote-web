@@ -11,8 +11,6 @@
     "archived_on": null,
     "restored_by_id": null,
     "restored_on": null,
-    "created_at": "2020-12-21T15:59:04.093Z",
-    "updated_at": "2020-12-21T15:54:04.500Z",
     "uuid": "0bfd6305-8ede-46d9-9d53-df6d6c6c22ec"
   },
   "my_modules": [
@@ -25,8 +23,6 @@
         "x": 0,
         "y": 0,
         "my_module_group_id": 1,
-        "created_at": "2020-12-19T15:31:51.299Z",
-        "updated_at": "2020-12-21T15:54:04.262Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 1,
@@ -62,8 +58,6 @@
           "id": 1,
           "user_id": 1,
           "my_module_id": 1,
-          "created_at": "2020-12-19T15:32:31.060Z",
-          "updated_at": "2020-12-21T15:54:04.259Z",
           "assigned_by_id": 1
         }
       ],
@@ -79,13 +73,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2020-12-21T15:54:04.231Z",
-            "updated_at": "2020-12-21T15:54:04.563Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -101,8 +92,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T17:12:35.961Z",
-                "updated_at": "2020-12-21T15:54:04.550Z",
                 "last_modified_by_id": null,
                 "protocol_id": 1,
                 "assets_view_mode": "thumbnail"
@@ -123,8 +112,6 @@
                 {
                   "table": {
                     "id": 1,
-                    "created_at": "2020-12-21T15:54:04.546Z",
-                    "updated_at": "2020-12-21T15:54:04.546Z",
                     "created_by_id": 1,
                     "last_modified_by_id": null,
                     "name": "Experiment design table",
@@ -152,8 +139,6 @@
         "x": 32,
         "y": 0,
         "my_module_group_id": 1,
-        "created_at": "2020-12-19T15:18:34.579Z",
-        "updated_at": "2020-12-21T15:54:04.303Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 1,
@@ -189,8 +174,6 @@
           "id": 2,
           "user_id": 1,
           "my_module_id": 2,
-          "created_at": "2020-12-19T15:20:30.100Z",
-          "updated_at": "2020-12-21T15:54:04.301Z",
           "assigned_by_id": 1
         }
       ],
@@ -206,13 +189,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2020-12-21T15:54:04.279Z",
-            "updated_at": "2020-12-21T15:54:29.457Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -228,8 +208,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T17:37:03.784Z",
-                "updated_at": "2020-12-21T15:54:29.453Z",
                 "last_modified_by_id": null,
                 "protocol_id": 2,
                 "assets_view_mode": "thumbnail"
@@ -241,8 +219,6 @@
                 {
                   "asset": {
                     "id": 29,
-                    "created_at": "2020-12-21T15:54:25.500Z",
-                    "updated_at": "2020-12-21T15:56:01.790Z",
                     "created_by_id": 1,
                     "last_modified_by_id": 1,
                     "estimated_size": 534404,
@@ -267,7 +243,6 @@
                     },
                     "byte_size": 485822,
                     "checksum": "5gb8tpP/lu8GwheRVvzq9w==",
-                    "created_at": "2020-12-21T15:54:25.518Z",
                     "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzI5P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--30e4eafada7bea0dad5c712624d9163aee60ec42"
                   }
                 }
@@ -282,8 +257,6 @@
                 {
                   "table": {
                     "id": 2,
-                    "created_at": "2020-12-21T15:54:04.580Z",
-                    "updated_at": "2020-12-21T15:54:04.580Z",
                     "created_by_id": 1,
                     "last_modified_by_id": null,
                     "name": "Table 1",
@@ -303,8 +276,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T16:55:32.221Z",
-                "updated_at": "2020-12-21T15:54:04.576Z",
                 "last_modified_by_id": null,
                 "protocol_id": 2,
                 "assets_view_mode": "thumbnail"
@@ -332,8 +303,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T18:26:29.177Z",
-                "updated_at": "2020-12-21T15:54:04.572Z",
                 "last_modified_by_id": null,
                 "protocol_id": 2,
                 "assets_view_mode": "thumbnail"
@@ -369,8 +338,6 @@
         "x": 64,
         "y": 0,
         "my_module_group_id": 1,
-        "created_at": "2020-12-21T06:01:31.860Z",
-        "updated_at": "2020-12-21T15:54:04.341Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 1,
@@ -406,8 +373,6 @@
           "id": 3,
           "user_id": 1,
           "my_module_id": 3,
-          "created_at": "2020-12-21T06:02:59.486Z",
-          "updated_at": "2020-12-21T15:54:04.337Z",
           "assigned_by_id": 1
         }
       ],
@@ -423,13 +388,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2020-12-21T15:54:04.322Z",
-            "updated_at": "2020-12-21T15:54:04.657Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -445,8 +407,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-21T09:20:11.351Z",
-                "updated_at": "2020-12-21T15:54:04.656Z",
                 "last_modified_by_id": null,
                 "protocol_id": 3,
                 "assets_view_mode": "thumbnail"
@@ -474,8 +434,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-21T10:06:12.906Z",
-                "updated_at": "2020-12-21T15:54:04.652Z",
                 "last_modified_by_id": null,
                 "protocol_id": 3,
                 "assets_view_mode": "thumbnail"
@@ -503,8 +461,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-21T10:49:57.729Z",
-                "updated_at": "2020-12-21T15:54:04.648Z",
                 "last_modified_by_id": null,
                 "protocol_id": 3,
                 "assets_view_mode": "thumbnail"
@@ -532,8 +488,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-21T06:12:38.398Z",
-                "updated_at": "2020-12-21T15:54:04.644Z",
                 "last_modified_by_id": null,
                 "protocol_id": 3,
                 "assets_view_mode": "thumbnail"
@@ -561,8 +515,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-21T10:42:31.056Z",
-                "updated_at": "2020-12-21T15:54:04.640Z",
                 "last_modified_by_id": null,
                 "protocol_id": 3,
                 "assets_view_mode": "thumbnail"
@@ -590,8 +542,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-21T08:54:08.994Z",
-                "updated_at": "2020-12-21T15:54:04.636Z",
                 "last_modified_by_id": null,
                 "protocol_id": 3,
                 "assets_view_mode": "thumbnail"
@@ -619,8 +569,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-21T09:50:20.299Z",
-                "updated_at": "2020-12-21T15:54:04.631Z",
                 "last_modified_by_id": null,
                 "protocol_id": 3,
                 "assets_view_mode": "thumbnail"
@@ -648,8 +596,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-21T09:10:51.182Z",
-                "updated_at": "2020-12-21T15:54:04.627Z",
                 "last_modified_by_id": null,
                 "protocol_id": 3,
                 "assets_view_mode": "thumbnail"
@@ -677,8 +623,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-21T07:50:13.585Z",
-                "updated_at": "2020-12-21T15:54:04.620Z",
                 "last_modified_by_id": null,
                 "protocol_id": 3,
                 "assets_view_mode": "thumbnail"
@@ -706,8 +650,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-21T07:46:29.882Z",
-                "updated_at": "2020-12-21T15:54:04.612Z",
                 "last_modified_by_id": null,
                 "protocol_id": 3,
                 "assets_view_mode": "thumbnail"
@@ -735,8 +677,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-21T09:24:02.300Z",
-                "updated_at": "2020-12-21T15:54:04.607Z",
                 "last_modified_by_id": null,
                 "protocol_id": 3,
                 "assets_view_mode": "thumbnail"
@@ -764,8 +704,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-21T06:34:41.820Z",
-                "updated_at": "2020-12-21T15:54:04.598Z",
                 "last_modified_by_id": null,
                 "protocol_id": 3,
                 "assets_view_mode": "thumbnail"
@@ -801,8 +739,6 @@
         "x": 96,
         "y": 0,
         "my_module_group_id": 1,
-        "created_at": "2020-12-19T10:13:41.984Z",
-        "updated_at": "2020-12-21T15:54:04.377Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 1,
@@ -838,8 +774,6 @@
           "id": 4,
           "user_id": 1,
           "my_module_id": 4,
-          "created_at": "2020-12-19T10:14:47.709Z",
-          "updated_at": "2020-12-21T15:54:04.373Z",
           "assigned_by_id": 1
         }
       ],
@@ -855,13 +789,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2020-12-21T15:54:04.359Z",
-            "updated_at": "2020-12-21T15:54:32.134Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -877,8 +808,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T13:10:05.378Z",
-                "updated_at": "2020-12-21T15:54:04.775Z",
                 "last_modified_by_id": null,
                 "protocol_id": 4,
                 "assets_view_mode": "thumbnail"
@@ -902,8 +831,6 @@
                       "id": 3,
                       "name": "Optional",
                       "step_id": 24,
-                      "created_at": "2020-12-21T15:54:04.774Z",
-                      "updated_at": "2020-12-21T15:54:04.774Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -913,8 +840,6 @@
                         "text": "If performing optional on-column DNase digestion (see “Eliminating genomic DNA contamination”, page 21), follow steps D1–D4 (page 67) after performing this step.",
                         "checked": false,
                         "checklist_id": 3,
-                        "created_at": "2020-12-21T15:54:04.775Z",
-                        "updated_at": "2020-12-21T15:54:04.775Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -933,8 +858,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T10:41:12.251Z",
-                "updated_at": "2020-12-21T15:54:04.766Z",
                 "last_modified_by_id": null,
                 "protocol_id": 4,
                 "assets_view_mode": "thumbnail"
@@ -955,8 +878,6 @@
                 {
                   "table": {
                     "id": 3,
-                    "created_at": "2020-12-21T15:54:04.764Z",
-                    "updated_at": "2020-12-21T15:54:04.764Z",
                     "created_by_id": 1,
                     "last_modified_by_id": null,
                     "name": "Volumes of Buffer RLT for tissue disruption and homogenization",
@@ -976,8 +897,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T12:16:40.373Z",
-                "updated_at": "2020-12-21T15:54:32.130Z",
                 "last_modified_by_id": null,
                 "protocol_id": 4,
                 "assets_view_mode": "thumbnail"
@@ -989,8 +908,6 @@
                 {
                   "asset": {
                     "id": 30,
-                    "created_at": "2020-12-21T15:54:25.615Z",
-                    "updated_at": "2020-12-21T15:55:50.580Z",
                     "created_by_id": 1,
                     "last_modified_by_id": 1,
                     "estimated_size": 121482,
@@ -1013,7 +930,6 @@
                     },
                     "byte_size": 110439,
                     "checksum": "2PvyGeD2DKSyxEowMvOcBg==",
-                    "created_at": "2020-12-21T15:54:25.634Z",
                     "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzMwP2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--2cd8ab86a33e914005379c2fe0b63f5d9f2bd43a"
                   }
                 }
@@ -1031,8 +947,6 @@
                       "id": 1,
                       "name": "If using the RNeasy Kit for the first time, read \"Important Notes\" in the attached file",
                       "step_id": 17,
-                      "created_at": "2020-12-21T15:54:04.738Z",
-                      "updated_at": "2020-12-21T15:54:04.738Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1042,8 +956,6 @@
                         "text": "For optimal results, stabilize harvested tissues immediately in RNAlater RNA Stabilization Reagent (see protocol on page 34). Tissues can be stored in the reagent for up to 1 day at 37°C, 7 days at 15–25°C, or 4 weeks at 2–8°C, or archived at –20°C or –80°C.",
                         "checked": false,
                         "checklist_id": 1,
-                        "created_at": "2020-12-21T15:54:04.742Z",
-                        "updated_at": "2020-12-21T15:54:04.742Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1053,8 +965,6 @@
                         "text": "Fresh, frozen, or RNAlater stabilized tissues can be used. Tissues can be stored at –70°C for several months. Flash-freeze tissues in liquid nitrogen, and immediately transfer to –70°C. Do not allow tissues to thaw during weighing or handling prior to disruption in Buffer RLT. Homogenized tissue lysates from step 4 can also be stored at –70°C for several months. Incubate frozen lysates at 37°C in a water bath until completely thawed and salts are dissolved before continuing with step 5. Avoid prolonged incubation, which may compromise RNA integrity.",
                         "checked": false,
                         "checklist_id": 1,
-                        "created_at": "2020-12-21T15:54:04.743Z",
-                        "updated_at": "2020-12-21T15:54:04.743Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1064,8 +974,6 @@
                         "text": "If desired, more than 30 mg tissue can be disrupted and homogenized at the start of the procedure (increase the volume of Buffer RLT proportionately). Use a portion of the homogenate corresponding to no more than 30 mg tissue for RNA purification, and store the rest at –80°C.",
                         "checked": false,
                         "checklist_id": 1,
-                        "created_at": "2020-12-21T15:54:04.745Z",
-                        "updated_at": "2020-12-21T15:54:04.745Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1075,8 +983,6 @@
                         "text": "Buffer RLT may form a precipitate upon storage. If necessary, redissolve by warming, and then place at room temperature (15–25°C).",
                         "checked": false,
                         "checklist_id": 1,
-                        "created_at": "2020-12-21T15:54:04.746Z",
-                        "updated_at": "2020-12-21T15:54:04.746Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1086,8 +992,6 @@
                         "text": "Buffer RLT and Buffer RW1 contain a guanidine salt and are therefore not compatible with disinfecting reagents containing bleach. See page 6 for safety information.",
                         "checked": false,
                         "checklist_id": 1,
-                        "created_at": "2020-12-21T15:54:04.747Z",
-                        "updated_at": "2020-12-21T15:54:04.747Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -1097,8 +1001,6 @@
                         "text": "Perform all steps of the procedure at room temperature. During the procedure, work quickly.",
                         "checked": false,
                         "checklist_id": 1,
-                        "created_at": "2020-12-21T15:54:04.749Z",
-                        "updated_at": "2020-12-21T15:54:04.749Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 5
@@ -1108,8 +1010,6 @@
                         "text": "Perform all centrifugation steps at 20–25°C in a standard microcentrifuge. Ensure that the centrifuge does not cool below 20°C.",
                         "checked": false,
                         "checklist_id": 1,
-                        "created_at": "2020-12-21T15:54:04.750Z",
-                        "updated_at": "2020-12-21T15:54:04.750Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 6
@@ -1124,8 +1024,6 @@
                       "id": 2,
                       "name": "Things to do before starting",
                       "step_id": 17,
-                      "created_at": "2020-12-21T15:54:04.755Z",
-                      "updated_at": "2020-12-21T15:54:04.755Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1135,8 +1033,6 @@
                         "text": "β-Mercaptoethanol (β-ME) must be added to Buffer RLT before use. Add 10 µl β-ME per 1 mL Buffer RLT. Dispense in a fume hood and wear appropriate protective clothing. Buffer RLT containing β-ME can be stored at room temperature (15–25°C) for up to 1 month. Alternatively, add 20 µL of 2 M dithiothreitol (DTT) per 1 mL Buffer RLT. The stock solution of 2 M DTT in water should be prepared fresh or frozen in single-use aliquots. Buffer RLT containing DTT can be stored at room temperature for up to 1 month.",
                         "checked": false,
                         "checklist_id": 2,
-                        "created_at": "2020-12-21T15:54:04.757Z",
-                        "updated_at": "2020-12-21T15:54:04.757Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1146,8 +1042,6 @@
                         "text": "Buffer RPE is supplied as a concentrate. Before using for the first time, add 4 volumes of ethanol (96–100%) as indicated on the bottle to obtain a working solution.",
                         "checked": false,
                         "checklist_id": 2,
-                        "created_at": "2020-12-21T15:54:04.758Z",
-                        "updated_at": "2020-12-21T15:54:04.758Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1157,8 +1051,6 @@
                         "text": "If performing optional on-column DNase digestion, prepare DNase I stock solution as described in Appendix D (page 67).",
                         "checked": false,
                         "checklist_id": 2,
-                        "created_at": "2020-12-21T15:54:04.760Z",
-                        "updated_at": "2020-12-21T15:54:04.760Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1177,8 +1069,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T13:45:09.668Z",
-                "updated_at": "2020-12-21T15:54:04.702Z",
                 "last_modified_by_id": null,
                 "protocol_id": 4,
                 "assets_view_mode": "thumbnail"
@@ -1206,8 +1096,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T10:23:46.825Z",
-                "updated_at": "2020-12-21T15:54:04.698Z",
                 "last_modified_by_id": null,
                 "protocol_id": 4,
                 "assets_view_mode": "thumbnail"
@@ -1235,8 +1123,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T10:30:11.394Z",
-                "updated_at": "2020-12-21T15:54:04.694Z",
                 "last_modified_by_id": null,
                 "protocol_id": 4,
                 "assets_view_mode": "thumbnail"
@@ -1264,8 +1150,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T12:42:04.949Z",
-                "updated_at": "2020-12-21T15:54:04.686Z",
                 "last_modified_by_id": null,
                 "protocol_id": 4,
                 "assets_view_mode": "thumbnail"
@@ -1293,8 +1177,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T11:39:01.368Z",
-                "updated_at": "2020-12-21T15:54:04.682Z",
                 "last_modified_by_id": null,
                 "protocol_id": 4,
                 "assets_view_mode": "thumbnail"
@@ -1322,8 +1204,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T14:42:02.806Z",
-                "updated_at": "2020-12-21T15:54:04.677Z",
                 "last_modified_by_id": null,
                 "protocol_id": 4,
                 "assets_view_mode": "thumbnail"
@@ -1351,8 +1231,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T12:21:19.364Z",
-                "updated_at": "2020-12-21T15:54:04.669Z",
                 "last_modified_by_id": null,
                 "protocol_id": 4,
                 "assets_view_mode": "thumbnail"
@@ -1380,8 +1258,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T11:34:22.317Z",
-                "updated_at": "2020-12-21T15:54:04.665Z",
                 "last_modified_by_id": null,
                 "protocol_id": 4,
                 "assets_view_mode": "thumbnail"
@@ -1417,8 +1293,6 @@
         "x": 96,
         "y": 16,
         "my_module_group_id": 1,
-        "created_at": "2020-12-19T12:12:45.640Z",
-        "updated_at": "2020-12-21T15:54:04.410Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 1,
@@ -1454,8 +1328,6 @@
           "id": 5,
           "user_id": 1,
           "my_module_id": 5,
-          "created_at": "2020-12-19T12:13:11.766Z",
-          "updated_at": "2020-12-21T15:54:04.407Z",
           "assigned_by_id": 1
         }
       ],
@@ -1471,13 +1343,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2020-12-21T15:54:04.395Z",
-            "updated_at": "2020-12-21T15:54:04.806Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -1493,8 +1362,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T13:56:38.158Z",
-                "updated_at": "2020-12-21T15:54:04.806Z",
                 "last_modified_by_id": null,
                 "protocol_id": 5,
                 "assets_view_mode": "thumbnail"
@@ -1518,8 +1385,6 @@
                       "id": 4,
                       "name": "Mastermix",
                       "step_id": 29,
-                      "created_at": "2020-12-21T15:54:04.804Z",
-                      "updated_at": "2020-12-21T15:54:04.804Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1529,8 +1394,6 @@
                         "text": "H2O to 12.5 uL",
                         "checked": false,
                         "checklist_id": 4,
-                        "created_at": "2020-12-21T15:54:04.806Z",
-                        "updated_at": "2020-12-21T15:54:04.806Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1540,8 +1403,6 @@
                         "text": "Optional: Luciferase mRNA (denatured)",
                         "checked": false,
                         "checklist_id": 4,
-                        "created_at": "2020-12-21T15:54:04.807Z",
-                        "updated_at": "2020-12-21T15:54:04.807Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1551,8 +1412,6 @@
                         "text": "Reverse transcriptase",
                         "checked": false,
                         "checklist_id": 4,
-                        "created_at": "2020-12-21T15:54:04.808Z",
-                        "updated_at": "2020-12-21T15:54:04.808Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1562,8 +1421,6 @@
                         "text": "RNase inhibitor",
                         "checked": false,
                         "checklist_id": 4,
-                        "created_at": "2020-12-21T15:54:04.810Z",
-                        "updated_at": "2020-12-21T15:54:04.810Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1573,8 +1430,6 @@
                         "text": "Random Primers",
                         "checked": false,
                         "checklist_id": 4,
-                        "created_at": "2020-12-21T15:54:04.811Z",
-                        "updated_at": "2020-12-21T15:54:04.811Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -1584,8 +1439,6 @@
                         "text": "dNTP mix",
                         "checked": false,
                         "checklist_id": 4,
-                        "created_at": "2020-12-21T15:54:04.812Z",
-                        "updated_at": "2020-12-21T15:54:04.812Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 5
@@ -1595,8 +1448,6 @@
                         "text": "RT buffer",
                         "checked": false,
                         "checklist_id": 4,
-                        "created_at": "2020-12-21T15:54:04.813Z",
-                        "updated_at": "2020-12-21T15:54:04.813Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 6
@@ -1615,8 +1466,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T12:57:28.142Z",
-                "updated_at": "2020-12-21T15:54:04.789Z",
                 "last_modified_by_id": null,
                 "protocol_id": 5,
                 "assets_view_mode": "thumbnail"
@@ -1644,8 +1493,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-19T16:32:33.828Z",
-                "updated_at": "2020-12-21T15:54:04.780Z",
                 "last_modified_by_id": null,
                 "protocol_id": 5,
                 "assets_view_mode": "thumbnail"
@@ -1681,8 +1528,6 @@
         "x": 64,
         "y": 16,
         "my_module_group_id": 1,
-        "created_at": "2020-12-17T01:30:44.268Z",
-        "updated_at": "2020-12-21T15:54:04.464Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 1,
@@ -1718,8 +1563,6 @@
           "id": 6,
           "user_id": 1,
           "my_module_id": 6,
-          "created_at": "2020-12-17T01:31:07.736Z",
-          "updated_at": "2020-12-21T15:54:04.462Z",
           "assigned_by_id": 1
         }
       ],
@@ -1735,13 +1578,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2020-12-21T15:54:04.429Z",
-            "updated_at": "2020-12-21T15:54:33.642Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -1757,8 +1597,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-17T05:10:58.180Z",
-                "updated_at": "2020-12-21T15:54:32.945Z",
                 "last_modified_by_id": null,
                 "protocol_id": 6,
                 "assets_view_mode": "thumbnail"
@@ -1770,8 +1608,6 @@
                 {
                   "asset": {
                     "id": 31,
-                    "created_at": "2020-12-21T15:54:25.696Z",
-                    "updated_at": "2020-12-21T15:55:00.181Z",
                     "created_by_id": 1,
                     "last_modified_by_id": 1,
                     "estimated_size": 39261,
@@ -1794,7 +1630,6 @@
                     },
                     "byte_size": 28994,
                     "checksum": "6zABObZVmyrwpVg4QV7ujQ==",
-                    "created_at": "2020-12-21T15:54:25.711Z",
                     "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzMxP2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--a37538f9251dabb3c50e15b9b20787d7ee53f0f5"
                   }
                 }
@@ -1809,8 +1644,6 @@
                 {
                   "table": {
                     "id": 4,
-                    "created_at": "2020-12-21T15:54:04.830Z",
-                    "updated_at": "2020-12-21T15:54:04.830Z",
                     "created_by_id": 1,
                     "last_modified_by_id": null,
                     "name": "Realtime mastermix preparation - gene expression",
@@ -1826,8 +1659,6 @@
                       "id": 5,
                       "name": "QA checklist",
                       "step_id": 31,
-                      "created_at": "2020-12-21T15:54:04.850Z",
-                      "updated_at": "2020-12-21T15:54:04.850Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1837,8 +1668,6 @@
                         "text": "Make sure the UV light was on at least for 20 minutes before you started working",
                         "checked": false,
                         "checklist_id": 5,
-                        "created_at": "2020-12-21T15:54:04.852Z",
-                        "updated_at": "2020-12-21T15:54:04.852Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1848,8 +1677,6 @@
                         "text": "Write down the LOT numbers of reagents used",
                         "checked": false,
                         "checklist_id": 5,
-                        "created_at": "2020-12-21T15:54:04.854Z",
-                        "updated_at": "2020-12-21T15:54:04.854Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1859,8 +1686,6 @@
                         "text": "Use tips with filters for pipetting samples; use tips without filters for pipetting reagents",
                         "checked": false,
                         "checklist_id": 5,
-                        "created_at": "2020-12-21T15:54:04.855Z",
-                        "updated_at": "2020-12-21T15:54:04.855Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1870,8 +1695,6 @@
                         "text": "Always use designated separate chambers for pipetting samples and reagents",
                         "checked": false,
                         "checklist_id": 5,
-                        "created_at": "2020-12-21T15:54:04.857Z",
-                        "updated_at": "2020-12-21T15:54:04.857Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1881,8 +1704,6 @@
                         "text": "Change lab coats when switching chambers",
                         "checked": false,
                         "checklist_id": 5,
-                        "created_at": "2020-12-21T15:54:04.858Z",
-                        "updated_at": "2020-12-21T15:54:04.858Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -1892,8 +1713,6 @@
                         "text": "Clean surfaces with 70% ethanol or RNA remover",
                         "checked": false,
                         "checklist_id": 5,
-                        "created_at": "2020-12-21T15:54:04.859Z",
-                        "updated_at": "2020-12-21T15:54:04.859Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 5
@@ -1903,8 +1722,6 @@
                         "text": "Turn on the UV light",
                         "checked": false,
                         "checklist_id": 5,
-                        "created_at": "2020-12-21T15:54:04.860Z",
-                        "updated_at": "2020-12-21T15:54:04.860Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 6
@@ -1923,8 +1740,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-17T01:50:44.346Z",
-                "updated_at": "2020-12-21T15:54:33.628Z",
                 "last_modified_by_id": null,
                 "protocol_id": 6,
                 "assets_view_mode": "thumbnail"
@@ -1936,8 +1751,6 @@
                 {
                   "asset": {
                     "id": 34,
-                    "created_at": "2020-12-21T15:54:25.908Z",
-                    "updated_at": "2020-12-21T15:55:00.300Z",
                     "created_by_id": 1,
                     "last_modified_by_id": 1,
                     "estimated_size": 57335,
@@ -1962,15 +1775,12 @@
                     },
                     "byte_size": 52123,
                     "checksum": "3cjp5lQbp4Zsjz+kjq+vpg==",
-                    "created_at": "2020-12-21T15:54:25.959Z",
                     "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzM0P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--5c757507ef70fe28f46aa75848b8c138b0dec88e"
                   }
                 },
                 {
                   "asset": {
                     "id": 35,
-                    "created_at": "2020-12-21T15:54:26.015Z",
-                    "updated_at": "2020-12-21T15:55:01.220Z",
                     "created_by_id": 1,
                     "last_modified_by_id": 1,
                     "estimated_size": 210623,
@@ -1995,7 +1805,6 @@
                     },
                     "byte_size": 191476,
                     "checksum": "dsVECMgNQg1jrYHACtcVnA==",
-                    "created_at": "2020-12-21T15:54:26.028Z",
                     "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzM1P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--23e328e57c6cbe586fab734500658d2bca3f7b19"
                   }
                 }
@@ -2017,8 +1826,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-17T04:41:40.849Z",
-                "updated_at": "2020-12-21T15:54:33.436Z",
                 "last_modified_by_id": null,
                 "protocol_id": 6,
                 "assets_view_mode": "thumbnail"
@@ -2030,8 +1837,6 @@
                 {
                   "asset": {
                     "id": 33,
-                    "created_at": "2020-12-21T15:54:25.841Z",
-                    "updated_at": "2020-12-21T15:55:00.759Z",
                     "created_by_id": 1,
                     "last_modified_by_id": 1,
                     "estimated_size": 15137,
@@ -2054,15 +1859,12 @@
                     },
                     "byte_size": 13041,
                     "checksum": "F3OAkhM6+1pHv97GNEuGPA==",
-                    "created_at": "2020-12-21T15:54:25.853Z",
                     "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzMzP2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--7b66f9f4a7d202e88e6c49303552fe9fb30c6e55"
                   }
                 },
                 {
                   "asset": {
                     "id": 32,
-                    "created_at": "2020-12-21T15:54:25.769Z",
-                    "updated_at": "2020-12-21T15:55:01.030Z",
                     "created_by_id": 1,
                     "last_modified_by_id": 1,
                     "estimated_size": 84197,
@@ -2087,7 +1889,6 @@
                     },
                     "byte_size": 76543,
                     "checksum": "VNaANAfCoJcN8s4DGNV5ww==",
-                    "created_at": "2020-12-21T15:54:25.779Z",
                     "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzMyP2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--6e999432b2e4d870664e20a6fb243be992dbdbdc"
                   }
                 }
@@ -2117,8 +1918,6 @@
         "x": 32,
         "y": 16,
         "my_module_group_id": 1,
-        "created_at": "2020-12-20T01:27:05.163Z",
-        "updated_at": "2020-12-21T15:54:04.484Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 1,
@@ -2154,8 +1953,6 @@
           "id": 7,
           "user_id": 1,
           "my_module_id": 7,
-          "created_at": "2020-12-20T01:27:42.173Z",
-          "updated_at": "2020-12-21T15:54:04.482Z",
           "assigned_by_id": 1
         }
       ],
@@ -2171,13 +1968,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2020-12-21T15:54:04.475Z",
-            "updated_at": "2020-12-21T15:54:34.836Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -2193,8 +1987,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-20T04:41:37.230Z",
-                "updated_at": "2020-12-21T15:54:04.965Z",
                 "last_modified_by_id": null,
                 "protocol_id": 7,
                 "assets_view_mode": "thumbnail"
@@ -2218,8 +2010,6 @@
                       "id": 6,
                       "name": "QA Native PAGE",
                       "step_id": 35,
-                      "created_at": "2020-12-21T15:54:04.964Z",
-                      "updated_at": "2020-12-21T15:54:04.964Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -2229,8 +2019,6 @@
                         "text": "Check buffer stock & prepare new stock if needed.",
                         "checked": false,
                         "checklist_id": 6,
-                        "created_at": "2020-12-21T15:54:04.966Z",
-                        "updated_at": "2020-12-21T15:54:04.966Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -2240,8 +2028,6 @@
                         "text": "Check stock of reagents & order new stock if needed.",
                         "checked": false,
                         "checklist_id": 6,
-                        "created_at": "2020-12-21T15:54:04.967Z",
-                        "updated_at": "2020-12-21T15:54:04.967Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -2251,8 +2037,6 @@
                         "text": "Use gloves at all times.",
                         "checked": false,
                         "checklist_id": 6,
-                        "created_at": "2020-12-21T15:54:04.968Z",
-                        "updated_at": "2020-12-21T15:54:04.968Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -2271,8 +2055,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-20T02:43:21.335Z",
-                "updated_at": "2020-12-21T15:54:34.832Z",
                 "last_modified_by_id": null,
                 "protocol_id": 7,
                 "assets_view_mode": "thumbnail"
@@ -2284,8 +2066,6 @@
                 {
                   "asset": {
                     "id": 38,
-                    "created_at": "2020-12-21T15:54:26.224Z",
-                    "updated_at": "2020-12-21T15:54:48.354Z",
                     "created_by_id": 1,
                     "last_modified_by_id": 1,
                     "estimated_size": 10133,
@@ -2308,7 +2088,6 @@
                     },
                     "byte_size": 8980,
                     "checksum": "yTDAegv4lpmMloLIHSTcKQ==",
-                    "created_at": "2020-12-21T15:54:26.234Z",
                     "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzM4P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--d6b244dd891c3c7df100707b99a781ffb98685f7"
                   }
                 }
@@ -2330,8 +2109,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-20T05:20:16.968Z",
-                "updated_at": "2020-12-21T15:54:34.699Z",
                 "last_modified_by_id": null,
                 "protocol_id": 7,
                 "assets_view_mode": "thumbnail"
@@ -2343,8 +2120,6 @@
                 {
                   "asset": {
                     "id": 37,
-                    "created_at": "2020-12-21T15:54:26.153Z",
-                    "updated_at": "2020-12-21T15:54:47.957Z",
                     "created_by_id": 1,
                     "last_modified_by_id": 1,
                     "estimated_size": 409902,
@@ -2367,7 +2142,6 @@
                     },
                     "byte_size": 261175,
                     "checksum": "WfsLJOLwl+/j4WHQ8ghF5g==",
-                    "created_at": "2020-12-21T15:54:26.163Z",
                     "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzM3P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--1a1d44543d40543100af41adc977e21b19292dbd"
                   }
                 }
@@ -2389,8 +2163,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-20T04:07:35.854Z",
-                "updated_at": "2020-12-21T15:54:04.931Z",
                 "last_modified_by_id": null,
                 "protocol_id": 7,
                 "assets_view_mode": "thumbnail"
@@ -2418,8 +2190,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-20T03:26:13.472Z",
-                "updated_at": "2020-12-21T15:54:04.926Z",
                 "last_modified_by_id": null,
                 "protocol_id": 7,
                 "assets_view_mode": "thumbnail"
@@ -2447,8 +2217,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-20T05:22:32.582Z",
-                "updated_at": "2020-12-21T15:54:33.804Z",
                 "last_modified_by_id": null,
                 "protocol_id": 7,
                 "assets_view_mode": "thumbnail"
@@ -2460,8 +2228,6 @@
                 {
                   "asset": {
                     "id": 36,
-                    "created_at": "2020-12-21T15:54:26.084Z",
-                    "updated_at": "2020-12-21T15:54:48.583Z",
                     "created_by_id": 1,
                     "last_modified_by_id": 1,
                     "estimated_size": 133004,
@@ -2486,7 +2252,6 @@
                     },
                     "byte_size": 120913,
                     "checksum": "P42JviqW216B72OSAkPh6A==",
-                    "created_at": "2020-12-21T15:54:26.097Z",
                     "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzM2P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--98146db3b89a0e6e304c50528cf1eadb3c3ea1ab"
                   }
                 }
@@ -2516,8 +2281,6 @@
         "x": 0,
         "y": 16,
         "my_module_group_id": 1,
-        "created_at": "2020-12-20T05:31:28.280Z",
-        "updated_at": "2020-12-21T15:54:04.500Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 1,
@@ -2549,8 +2312,6 @@
           "id": 8,
           "user_id": 1,
           "my_module_id": 8,
-          "created_at": "2020-12-20T05:32:44.188Z",
-          "updated_at": "2020-12-21T15:54:04.499Z",
           "assigned_by_id": 1
         }
       ],
@@ -2566,13 +2327,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2020-12-21T15:54:04.492Z",
-            "updated_at": "2020-12-21T15:54:35.308Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -2588,8 +2346,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 1,
-                "created_at": "2020-12-20T10:24:40.166Z",
-                "updated_at": "2020-12-21T15:54:35.304Z",
                 "last_modified_by_id": null,
                 "protocol_id": 8,
                 "assets_view_mode": "thumbnail"
@@ -2601,8 +2357,6 @@
                 {
                   "asset": {
                     "id": 40,
-                    "created_at": "2020-12-21T15:54:26.349Z",
-                    "updated_at": "2020-12-21T15:54:41.492Z",
                     "created_by_id": 1,
                     "last_modified_by_id": 1,
                     "estimated_size": 24285,
@@ -2627,15 +2381,12 @@
                     },
                     "byte_size": 22078,
                     "checksum": "FJtWynKu1unHM8fXVE3I7Q==",
-                    "created_at": "2020-12-21T15:54:26.391Z",
                     "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzQwP2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--fdd4792429432e518c2d5cd21efe484b500c4c9a"
                   }
                 },
                 {
                   "asset": {
                     "id": 39,
-                    "created_at": "2020-12-21T15:54:26.286Z",
-                    "updated_at": "2020-12-21T15:54:42.008Z",
                     "created_by_id": 1,
                     "last_modified_by_id": 1,
                     "estimated_size": 54659,
@@ -2658,7 +2409,6 @@
                     },
                     "byte_size": 46592,
                     "checksum": "HrK+ZS3L1R4zE0xexGWj+Q==",
-                    "created_at": "2020-12-21T15:54:26.298Z",
                     "attachable_sgid": "BAh7CEkiCGdpZAY6BkVUSSI0Z2lkOi8vc2Npbm90ZS9BY3RpdmVTdG9yYWdlOjpCbG9iLzM5P2V4cGlyZXNfaW4GOwBUSSIMcHVycG9zZQY7AFRJIg9hdHRhY2hhYmxlBjsAVEkiD2V4cGlyZXNfYXQGOwBUMA==--15fcdb094b4112e277b50fa510aad875df6989d6"
                   }
                 }
@@ -2683,8 +2433,6 @@
   "my_module_groups": [
     {
       "id": 1,
-      "created_at": "2020-12-21T15:54:04.158Z",
-      "updated_at": "2020-12-21T15:54:04.158Z",
       "created_by_id": null,
       "experiment_id": 1
     }

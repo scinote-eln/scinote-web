@@ -11,8 +11,6 @@
     "archived_on": null,
     "restored_by_id": null,
     "restored_on": null,
-    "created_at": "2018-11-15T09:56:28.245Z",
-    "updated_at": "2019-02-19T14:12:34.714Z",
     "uuid": "c35c71c3-2f8b-45fb-8064-f14e5d4cc724"
   },
   "my_modules": [
@@ -25,8 +23,6 @@
         "x": 0,
         "y": 16,
         "my_module_group_id": 1250,
-        "created_at": "2018-11-15T09:56:30.961Z",
-        "updated_at": "2019-02-19T14:12:22.351Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -80,13 +76,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-15T09:56:31.020Z",
-            "updated_at": "2019-01-31T09:33:37.119Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -102,8 +95,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:31.091Z",
-                "updated_at": "2018-12-24T08:23:09.402Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3548
               },
@@ -126,8 +117,6 @@
                       "id": 924,
                       "name": "Guideline:",
                       "step_id": 4533,
-                      "created_at": "2018-12-12T07:16:14.619Z",
-                      "updated_at": "2018-12-24T08:23:09.400Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -137,8 +126,6 @@
                         "text": "Monitor refrigerator temperature and record it in Results.",
                         "checked": false,
                         "checklist_id": 924,
-                        "created_at": "2018-12-12T07:16:14.622Z",
-                        "updated_at": "2018-12-12T07:16:14.622Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -148,8 +135,6 @@
                         "text": "Contact plates and/or Settle plates are taken to the room temperature.  They will be used depending on the surface of the sampling.",
                         "checked": false,
                         "checklist_id": 924,
-                        "created_at": "2018-12-12T07:16:14.634Z",
-                        "updated_at": "2018-12-12T07:16:14.634Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -159,8 +144,6 @@
                         "text": "Examine the plates for contamination prior to use. If any plates are contaminated they should be discarded according to protocol.",
                         "checked": false,
                         "checklist_id": 924,
-                        "created_at": "2018-12-12T07:16:14.641Z",
-                        "updated_at": "2018-12-12T07:16:14.641Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -179,8 +162,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:31.144Z",
-                "updated_at": "2019-01-29T12:33:40.426Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3548
               },
@@ -215,8 +196,6 @@
         "x": 103,
         "y": 16,
         "my_module_group_id": 1250,
-        "created_at": "2018-11-15T09:56:33.039Z",
-        "updated_at": "2019-02-19T14:12:22.361Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -256,13 +235,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-15T09:56:33.091Z",
-            "updated_at": "2019-02-19T14:27:31.527Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -278,8 +254,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-12T11:23:59.242Z",
-                "updated_at": "2018-12-12T11:24:31.752Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3564
               },
@@ -306,8 +280,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-12T11:21:40.888Z",
-                "updated_at": "2019-02-19T14:27:48.440Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3564
               },
@@ -318,8 +290,6 @@
                 {
                   "asset": {
                     "id": 3732,
-                    "created_at": "2019-02-19T14:27:30.838Z",
-                    "updated_at": "2019-02-19T14:27:48.432Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 10556538,
@@ -351,8 +321,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:33.108Z",
-                "updated_at": "2019-01-28T09:02:38.188Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3564
               },
@@ -387,8 +355,6 @@
         "x": 34,
         "y": 33,
         "my_module_group_id": 1250,
-        "created_at": "2018-11-15T09:56:30.349Z",
-        "updated_at": "2019-02-19T14:12:22.366Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -432,13 +398,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-15T09:56:30.402Z",
-            "updated_at": "2019-02-19T14:13:06.697Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -454,8 +417,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-01-25T12:11:53.234Z",
-                "updated_at": "2019-01-25T12:18:18.027Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3544
               },
@@ -482,8 +443,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:30.601Z",
-                "updated_at": "2019-01-25T12:40:08.288Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3544
               },
@@ -510,8 +469,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:30.480Z",
-                "updated_at": "2019-02-19T14:13:06.622Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3544
               },
@@ -534,8 +491,6 @@
                       "id": 809,
                       "name": "Sample locations:",
                       "step_id": 4521,
-                      "created_at": "2018-11-15T09:56:30.495Z",
-                      "updated_at": "2018-11-15T09:56:30.495Z",
                       "created_by_id": 202,
                       "last_modified_by_id": 202
                     },
@@ -545,8 +500,6 @@
                         "text": "Filling needle",
                         "checked": false,
                         "checklist_id": 809,
-                        "created_at": "2018-11-15T09:56:30.509Z",
-                        "updated_at": "2018-11-15T10:08:47.925Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 0
@@ -556,8 +509,6 @@
                         "text": "Interior of the stopper chute",
                         "checked": false,
                         "checklist_id": 809,
-                        "created_at": "2018-11-15T09:56:30.522Z",
-                        "updated_at": "2018-11-15T10:08:47.935Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 1
@@ -567,8 +518,6 @@
                         "text": "Helix/in-fed worm",
                         "checked": false,
                         "checklist_id": 809,
-                        "created_at": "2018-11-15T09:56:30.534Z",
-                        "updated_at": "2018-11-15T10:08:47.944Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 2
@@ -578,8 +527,6 @@
                         "text": "In-feed belt",
                         "checked": false,
                         "checklist_id": 809,
-                        "created_at": "2018-11-15T09:56:30.546Z",
-                        "updated_at": "2018-11-15T10:08:47.954Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 3
@@ -598,8 +545,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-12T11:02:15.588Z",
-                "updated_at": "2019-01-25T12:15:21.953Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3544
               },
@@ -622,8 +567,6 @@
                       "id": 952,
                       "name": "Guidelines:",
                       "step_id": 5172,
-                      "created_at": "2018-12-21T06:58:27.768Z",
-                      "updated_at": "2018-12-21T06:58:27.768Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -633,8 +576,6 @@
                         "text": "Prepare a safe and sterile workspace: Sterilize all instruments, solutions, and media prior to using them for plating procedures. Clear away all materials cluttering your work area on the laboratory bench. Clean work area with disinfectant to minimize possible contamination.",
                         "checked": false,
                         "checklist_id": 952,
-                        "created_at": "2018-12-21T06:58:27.770Z",
-                        "updated_at": "2018-12-21T06:58:27.770Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -644,8 +585,6 @@
                         "text": "Set up a Bunsen burner: Work slowly, carefully, and deliberately within the sterile field area created by the updraft of the flame.",
                         "checked": false,
                         "checklist_id": 952,
-                        "created_at": "2018-12-21T06:58:27.777Z",
-                        "updated_at": "2018-12-21T06:58:27.777Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -655,8 +594,6 @@
                         "text": "Prepare lab equipment and settle plates.",
                         "checked": false,
                         "checklist_id": 952,
-                        "created_at": "2018-12-21T06:58:27.784Z",
-                        "updated_at": "2018-12-21T06:58:27.784Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -666,8 +603,6 @@
                         "text": "Arrange all the supplies needed for the procedure on the laboratory bench near the sterile field. Make sure all the materials are properly labelled.",
                         "checked": false,
                         "checklist_id": 952,
-                        "created_at": "2018-12-21T06:58:27.791Z",
-                        "updated_at": "2018-12-21T06:58:27.791Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -677,8 +612,6 @@
                         "text": "Carefully open the lid of the plate. A standard streaking out method should be used when plating out the swab. The method should ensure that the swab is rotated as it is run over the surface of the media to ensure that any microorganisms recovered from the surface sample are deposited onto the surface of the plate.\r\nReplace the lid.",
                         "checked": false,
                         "checklist_id": 952,
-                        "created_at": "2018-12-21T06:58:27.797Z",
-                        "updated_at": "2018-12-21T06:58:27.797Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -688,8 +621,6 @@
                         "text": "Complete and enclose all the necessary documentation.",
                         "checked": false,
                         "checklist_id": 952,
-                        "created_at": "2018-12-21T06:58:27.804Z",
-                        "updated_at": "2018-12-21T06:58:27.804Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 5
@@ -708,8 +639,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:30.420Z",
-                "updated_at": "2019-01-29T12:36:12.805Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3544
               },
@@ -744,8 +673,6 @@
         "x": 69,
         "y": 16,
         "my_module_group_id": 1250,
-        "created_at": "2018-11-15T09:56:32.117Z",
-        "updated_at": "2019-02-19T14:12:22.372Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -794,13 +721,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-15T09:56:32.169Z",
-            "updated_at": "2019-02-20T07:55:58.620Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -816,8 +740,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:32.215Z",
-                "updated_at": "2019-02-20T07:55:49.222Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3554
               },
@@ -844,8 +766,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:32.186Z",
-                "updated_at": "2019-02-20T07:55:58.540Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3554
               },
@@ -880,8 +800,6 @@
         "x": 106,
         "y": 50,
         "my_module_group_id": 1250,
-        "created_at": "2019-01-31T09:55:55.627Z",
-        "updated_at": "2019-02-19T14:12:22.377Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -921,13 +839,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2019-01-31T09:55:55.631Z",
-            "updated_at": "2019-02-07T12:55:24.307Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -943,8 +858,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-02-04T13:21:21.550Z",
-                "updated_at": "2019-02-04T13:30:56.251Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4196
               },
@@ -967,8 +880,6 @@
                       "id": 1014,
                       "name": "Guidelines:",
                       "step_id": 5496,
-                      "created_at": "2019-02-04T13:30:56.249Z",
-                      "updated_at": "2019-02-04T13:30:56.249Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -978,8 +889,6 @@
                         "text": "Add 4 to 5 drops of 3% H2O2 to in a test tube.",
                         "checked": false,
                         "checklist_id": 1014,
-                        "created_at": "2019-02-04T13:30:56.251Z",
-                        "updated_at": "2019-02-04T13:30:56.251Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -989,8 +898,6 @@
                         "text": "Using a wooden applicator stick, collect a small amount of organism from a well-isolated 18- to 24-hour colony and place into the test tube (Note: Be careful not to pick up any agar).",
                         "checked": false,
                         "checklist_id": 1014,
-                        "created_at": "2019-02-04T13:30:56.260Z",
-                        "updated_at": "2019-02-04T13:30:56.260Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1000,8 +907,6 @@
                         "text": "Place the tube against a dark background and observe for immediate bubble formation at the end of the wooden applicator stick.",
                         "checked": false,
                         "checklist_id": 1014,
-                        "created_at": "2019-02-04T13:30:56.267Z",
-                        "updated_at": "2019-02-04T13:30:56.267Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1020,8 +925,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-02-04T13:18:55.135Z",
-                "updated_at": "2019-02-04T13:18:55.140Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4196
               },
@@ -1044,8 +947,6 @@
                       "id": 1013,
                       "name": "Guidelines:",
                       "step_id": 5495,
-                      "created_at": "2019-02-04T13:18:55.138Z",
-                      "updated_at": "2019-02-04T13:18:55.138Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1055,8 +956,6 @@
                         "text": "Transfer a small amount of bacterial colony to a surface of clean, dry glass slide using a loop",
                         "checked": false,
                         "checklist_id": 1013,
-                        "created_at": "2019-02-04T13:18:55.140Z",
-                        "updated_at": "2019-02-04T13:18:55.140Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1066,8 +965,6 @@
                         "text": "Place a drop of 3% H2O2 on to the slide and mix.",
                         "checked": false,
                         "checklist_id": 1013,
-                        "created_at": "2019-02-04T13:18:55.155Z",
-                        "updated_at": "2019-02-04T13:18:55.155Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1077,8 +974,6 @@
                         "text": "Look for a rapid evolution of oxygen (within 5-10 seconds) as evidenced by bubbling.",
                         "checked": false,
                         "checklist_id": 1013,
-                        "created_at": "2019-02-04T13:18:55.163Z",
-                        "updated_at": "2019-02-04T13:18:55.163Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1088,8 +983,6 @@
                         "text": "Dispose of your slide in the biohazard glass disposal container.",
                         "checked": false,
                         "checklist_id": 1013,
-                        "created_at": "2019-02-04T13:21:32.881Z",
-                        "updated_at": "2019-02-04T13:21:32.881Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1108,8 +1001,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-02-04T13:38:56.063Z",
-                "updated_at": "2019-02-04T13:39:32.375Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4196
               },
@@ -1144,8 +1035,6 @@
         "x": 86,
         "y": 68,
         "my_module_group_id": 1250,
-        "created_at": "2019-01-31T09:55:55.606Z",
-        "updated_at": "2019-02-19T14:12:22.382Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -1185,13 +1074,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2019-01-31T09:55:55.611Z",
-            "updated_at": "2019-02-01T14:54:17.326Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -1207,8 +1093,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-02-01T14:49:04.449Z",
-                "updated_at": "2019-02-01T14:49:04.453Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4195
               },
@@ -1231,8 +1115,6 @@
                       "id": 1012,
                       "name": "Guidelines:",
                       "step_id": 5492,
-                      "created_at": "2019-02-01T14:49:04.452Z",
-                      "updated_at": "2019-02-01T14:49:04.452Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1242,8 +1124,6 @@
                         "text": "Take a filter paper soaked with the substrate tetramethyl-p-phenylenediamine dihydrochloride.",
                         "checked": false,
                         "checklist_id": 1012,
-                        "created_at": "2019-02-01T14:49:04.454Z",
-                        "updated_at": "2019-02-01T14:49:04.454Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1253,8 +1133,6 @@
                         "text": "Moisten the paper with a sterile distilled water.",
                         "checked": false,
                         "checklist_id": 1012,
-                        "created_at": "2019-02-01T14:49:04.462Z",
-                        "updated_at": "2019-02-01T14:49:04.462Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1264,8 +1142,6 @@
                         "text": "Pick the colony to be tested with wooden or platinum loop and smear in the filter paper.",
                         "checked": false,
                         "checklist_id": 1012,
-                        "created_at": "2019-02-01T14:49:04.469Z",
-                        "updated_at": "2019-02-01T14:49:04.469Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1275,8 +1151,6 @@
                         "text": "Observe inoculated area of paper for a color change to deep blue or purple within 10-30 seconds.",
                         "checked": false,
                         "checklist_id": 1012,
-                        "created_at": "2019-02-01T14:49:04.475Z",
-                        "updated_at": "2019-02-01T14:49:04.475Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1295,8 +1169,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-02-01T14:54:17.285Z",
-                "updated_at": "2019-02-01T14:54:17.285Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4195
               },
@@ -1331,8 +1203,6 @@
         "x": 52,
         "y": 68,
         "my_module_group_id": 1250,
-        "created_at": "2019-01-31T09:55:55.586Z",
-        "updated_at": "2019-02-19T14:12:22.386Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -1372,13 +1242,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2019-01-31T09:55:55.591Z",
-            "updated_at": "2019-02-20T07:34:31.114Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -1394,8 +1261,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-02-01T14:22:44.942Z",
-                "updated_at": "2019-02-01T14:22:44.942Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4194
               },
@@ -1422,8 +1287,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-02-01T14:23:09.650Z",
-                "updated_at": "2019-02-01T14:23:09.650Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4194
               },
@@ -1450,8 +1313,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-02-01T14:33:15.222Z",
-                "updated_at": "2019-02-20T07:35:23.526Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4194
               },
@@ -1462,8 +1323,6 @@
                 {
                   "asset": {
                     "id": 3742,
-                    "created_at": "2019-02-20T07:34:30.891Z",
-                    "updated_at": "2019-02-20T07:35:23.517Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 30429,
@@ -1491,8 +1350,6 @@
                       "id": 1011,
                       "name": "Guideline:",
                       "step_id": 5491,
-                      "created_at": "2019-02-01T14:33:15.225Z",
-                      "updated_at": "2019-02-01T14:33:15.225Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1502,8 +1359,6 @@
                         "text": "Cover the smear with carbol fuchsin stain.",
                         "checked": false,
                         "checklist_id": 1011,
-                        "created_at": "2019-02-01T14:33:15.227Z",
-                        "updated_at": "2019-02-01T14:33:15.227Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1513,8 +1368,6 @@
                         "text": "Heat the stain until vapour just begins to rise (i.e. about 60°C). Do not overheat. Allow the heated stain to remain on the slide for 5 minutes.",
                         "checked": false,
                         "checklist_id": 1011,
-                        "created_at": "2019-02-01T14:33:15.235Z",
-                        "updated_at": "2019-02-01T14:33:15.235Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1524,8 +1377,6 @@
                         "text": "Wash off the stain with distilled water.",
                         "checked": false,
                         "checklist_id": 1011,
-                        "created_at": "2019-02-01T14:33:15.244Z",
-                        "updated_at": "2019-02-01T14:41:45.127Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1535,8 +1386,6 @@
                         "text": "Cover the smear with 3% v/v acid alcohol for 5 minutes or until the smear is sufficiently decolorized, i.e. pale pink.",
                         "checked": false,
                         "checklist_id": 1011,
-                        "created_at": "2019-02-01T14:33:15.252Z",
-                        "updated_at": "2019-02-01T14:33:15.252Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1546,8 +1395,6 @@
                         "text": "Wash well with distilled water.",
                         "checked": false,
                         "checklist_id": 1011,
-                        "created_at": "2019-02-01T14:33:15.259Z",
-                        "updated_at": "2019-02-01T14:41:45.136Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -1557,8 +1404,6 @@
                         "text": "Cover the smear with methylene blue dye for 1–2 minutes.",
                         "checked": false,
                         "checklist_id": 1011,
-                        "created_at": "2019-02-01T14:33:15.266Z",
-                        "updated_at": "2019-02-01T14:41:45.144Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 5
@@ -1568,8 +1413,6 @@
                         "text": "Wash off the stain with distilled water.",
                         "checked": false,
                         "checklist_id": 1011,
-                        "created_at": "2019-02-01T14:33:15.273Z",
-                        "updated_at": "2019-02-01T14:41:45.151Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 6
@@ -1579,8 +1422,6 @@
                         "text": "Wipe the back of the slide clean, and place it in a draining rack for the smear to air-dry (do not blot dry).",
                         "checked": false,
                         "checklist_id": 1011,
-                        "created_at": "2019-02-01T14:33:15.280Z",
-                        "updated_at": "2019-02-01T14:33:15.280Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 7
@@ -1590,8 +1431,6 @@
                         "text": "Examine the smear microscopically, using the 100 X oil immersion objective.",
                         "checked": false,
                         "checklist_id": 1011,
-                        "created_at": "2019-02-01T14:33:15.286Z",
-                        "updated_at": "2019-02-01T14:33:15.286Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 8
@@ -1610,8 +1449,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-02-01T15:01:30.991Z",
-                "updated_at": "2019-02-01T15:01:30.991Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4194
               },
@@ -1646,8 +1483,6 @@
         "x": 34,
         "y": 51,
         "my_module_group_id": 1250,
-        "created_at": "2019-01-31T09:55:55.557Z",
-        "updated_at": "2019-02-19T14:12:22.390Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -1687,13 +1522,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2019-01-31T09:55:55.566Z",
-            "updated_at": "2019-02-20T07:56:54.159Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -1709,8 +1541,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-02-01T14:18:22.722Z",
-                "updated_at": "2019-02-20T07:35:23.931Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4193
               },
@@ -1721,8 +1551,6 @@
                 {
                   "asset": {
                     "id": 3743,
-                    "created_at": "2019-02-20T07:34:52.023Z",
-                    "updated_at": "2019-02-20T07:35:23.920Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 21906,
@@ -1750,8 +1578,6 @@
                       "id": 1010,
                       "name": "Guidelines:",
                       "step_id": 5488,
-                      "created_at": "2019-02-01T14:18:22.724Z",
-                      "updated_at": "2019-02-01T14:18:22.724Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1761,8 +1587,6 @@
                         "text": "Flood air-dried, heat-fixed smear of cells for 1 minute with crystal violet staining reagent. Please note that the quality of the smear (too heavy or too light cell concentration) will affect the Gram Stain results.",
                         "checked": false,
                         "checklist_id": 1010,
-                        "created_at": "2019-02-01T14:18:22.727Z",
-                        "updated_at": "2019-02-01T14:18:22.727Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1772,8 +1596,6 @@
                         "text": "Wash slide in a gentle and indirect stream of tap water for 2 seconds.",
                         "checked": false,
                         "checklist_id": 1010,
-                        "created_at": "2019-02-01T14:18:22.742Z",
-                        "updated_at": "2019-02-01T14:18:22.742Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1783,8 +1605,6 @@
                         "text": "Flood slide with the mordant: Gram's iodine. Wait 1 minute.",
                         "checked": false,
                         "checklist_id": 1010,
-                        "created_at": "2019-02-01T14:18:22.753Z",
-                        "updated_at": "2019-02-01T14:18:22.753Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1794,8 +1614,6 @@
                         "text": "Wash slide in a gentle and indirect stream of tap water for 2 seconds.",
                         "checked": false,
                         "checklist_id": 1010,
-                        "created_at": "2019-02-01T14:18:22.764Z",
-                        "updated_at": "2019-02-01T14:18:22.764Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1805,8 +1623,6 @@
                         "text": "Flood slide with decolorizing agent. Wait 15 seconds or add drop by drop to slide until decolorizing agent running from the slide runs clear.",
                         "checked": false,
                         "checklist_id": 1010,
-                        "created_at": "2019-02-01T14:18:22.771Z",
-                        "updated_at": "2019-02-01T14:18:22.771Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -1816,8 +1632,6 @@
                         "text": "Flood slide with counterstain, safranin. Wait 30 seconds to 1 minute.",
                         "checked": false,
                         "checklist_id": 1010,
-                        "created_at": "2019-02-01T14:18:22.779Z",
-                        "updated_at": "2019-02-01T14:18:22.779Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 5
@@ -1827,8 +1641,6 @@
                         "text": "Wash slide in a gentile and indirect stream of tap water until no color appears in the effluent and then blot dry with absorbent paper.",
                         "checked": false,
                         "checklist_id": 1010,
-                        "created_at": "2019-02-01T14:18:22.786Z",
-                        "updated_at": "2019-02-01T14:18:22.786Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 6
@@ -1838,8 +1650,6 @@
                         "text": "Observe the results of the staining procedure under oil immersion using a Brightfield microscope. At the completion of the Gram Stain, gram-negative bacteria will stain pink/red and gram-positive bacteria will stain blue/purple.",
                         "checked": false,
                         "checklist_id": 1010,
-                        "created_at": "2019-02-01T14:18:22.793Z",
-                        "updated_at": "2019-02-01T14:18:22.793Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 7
@@ -1858,8 +1668,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-01-31T10:29:45.535Z",
-                "updated_at": "2019-02-20T07:56:54.105Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4193
               },
@@ -1886,8 +1694,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-01-31T11:56:43.730Z",
-                "updated_at": "2019-02-01T14:10:09.347Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4193
               },
@@ -1914,8 +1720,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-02-01T14:13:27.107Z",
-                "updated_at": "2019-02-01T14:13:27.107Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 4193
               },
@@ -1950,8 +1754,6 @@
         "x": 34,
         "y": 16,
         "my_module_group_id": 1250,
-        "created_at": "2018-11-15T09:56:29.638Z",
-        "updated_at": "2019-02-19T14:12:22.403Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -1995,13 +1797,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-15T09:56:29.693Z",
-            "updated_at": "2019-01-31T09:52:51.146Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -2017,8 +1816,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:29.770Z",
-                "updated_at": "2019-01-25T12:42:42.158Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3540
               },
@@ -2045,8 +1842,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-01-25T12:12:27.694Z",
-                "updated_at": "2019-01-25T12:17:41.431Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3540
               },
@@ -2073,8 +1868,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:29.887Z",
-                "updated_at": "2019-01-29T12:36:43.079Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3540
               },
@@ -2097,8 +1890,6 @@
                       "id": 808,
                       "name": "Sampling locations (examples):",
                       "step_id": 4515,
-                      "created_at": "2018-11-15T09:56:29.965Z",
-                      "updated_at": "2018-12-12T09:33:45.454Z",
                       "created_by_id": 202,
                       "last_modified_by_id": 202
                     },
@@ -2108,8 +1899,6 @@
                         "text": "Door to pass trough",
                         "checked": false,
                         "checklist_id": 808,
-                        "created_at": "2018-11-15T09:56:29.981Z",
-                        "updated_at": "2018-11-15T10:21:48.064Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 0
@@ -2119,8 +1908,6 @@
                         "text": "In front of the door",
                         "checked": false,
                         "checklist_id": 808,
-                        "created_at": "2018-11-15T09:56:30.054Z",
-                        "updated_at": "2019-01-29T12:36:43.082Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 1
@@ -2130,8 +1917,6 @@
                         "text": "Inside the curtain",
                         "checked": false,
                         "checklist_id": 808,
-                        "created_at": "2018-11-15T09:56:30.070Z",
-                        "updated_at": "2019-01-29T12:36:43.092Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 2
@@ -2141,8 +1926,6 @@
                         "text": "Inside the middle of the pass trough",
                         "checked": false,
                         "checklist_id": 808,
-                        "created_at": "2018-11-15T09:56:30.083Z",
-                        "updated_at": "2019-01-29T12:36:43.101Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 3
@@ -2152,8 +1935,6 @@
                         "text": "Behind the fill machine",
                         "checked": false,
                         "checklist_id": 808,
-                        "created_at": "2018-11-15T09:56:30.096Z",
-                        "updated_at": "2019-01-29T12:36:43.107Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 4
@@ -2172,8 +1953,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-12T10:05:21.914Z",
-                "updated_at": "2019-01-29T12:37:19.979Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3540
               },
@@ -2196,8 +1975,6 @@
                       "id": 925,
                       "name": "Sample location (examples):",
                       "step_id": 5167,
-                      "created_at": "2018-12-12T10:08:05.163Z",
-                      "updated_at": "2018-12-12T10:08:05.163Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -2207,8 +1984,6 @@
                         "text": "In front of the door",
                         "checked": false,
                         "checklist_id": 925,
-                        "created_at": "2018-12-12T10:08:05.165Z",
-                        "updated_at": "2018-12-12T10:08:05.165Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -2218,8 +1993,6 @@
                         "text": "Inside the curtain",
                         "checked": false,
                         "checklist_id": 925,
-                        "created_at": "2018-12-12T10:08:05.173Z",
-                        "updated_at": "2018-12-12T10:08:05.173Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -2229,8 +2002,6 @@
                         "text": "Behind the fill machine",
                         "checked": false,
                         "checklist_id": 925,
-                        "created_at": "2018-12-12T10:08:05.179Z",
-                        "updated_at": "2018-12-12T10:08:05.179Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -2240,8 +2011,6 @@
                         "text": "In front of pass trough",
                         "checked": false,
                         "checklist_id": 925,
-                        "created_at": "2018-12-12T10:08:05.185Z",
-                        "updated_at": "2018-12-12T10:08:05.185Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -2268,8 +2037,6 @@
         "x": 69,
         "y": 33,
         "my_module_group_id": 1250,
-        "created_at": "2018-11-15T09:56:32.322Z",
-        "updated_at": "2019-02-19T14:12:22.394Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -2328,13 +2095,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-15T09:56:32.376Z",
-            "updated_at": "2019-02-20T07:33:40.659Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -2350,8 +2114,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-12T11:42:25.451Z",
-                "updated_at": "2018-12-12T11:42:25.451Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3556
               },
@@ -2378,8 +2140,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:32.459Z",
-                "updated_at": "2019-02-20T07:34:22.994Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3556
               },
@@ -2390,8 +2150,6 @@
                 {
                   "asset": {
                     "id": 3741,
-                    "created_at": "2019-02-20T07:33:40.415Z",
-                    "updated_at": "2019-02-20T07:34:22.986Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 48768,
@@ -2419,8 +2177,6 @@
                       "id": 953,
                       "name": "Guidelines:",
                       "step_id": 4558,
-                      "created_at": "2018-12-21T07:19:34.041Z",
-                      "updated_at": "2018-12-21T07:19:34.041Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -2430,8 +2186,6 @@
                         "text": "Label the base of the plate. Open the lids and flame metal loop using a Bunsen burner before obtaining the inoculum for the plate.",
                         "checked": false,
                         "checklist_id": 953,
-                        "created_at": "2018-12-21T07:19:34.043Z",
-                        "updated_at": "2018-12-21T07:19:34.043Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -2441,8 +2195,6 @@
                         "text": "The metal should become red hot. Move the wire so the flame approaches the loop. Spread sample over about one-quarter of the surface of the medium using a rapid, smooth, back-and-forth motion.",
                         "checked": false,
                         "checklist_id": 953,
-                        "created_at": "2018-12-21T07:19:34.053Z",
-                        "updated_at": "2018-12-21T07:19:34.053Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -2452,8 +2204,6 @@
                         "text": "Lift the bottom half of an inverted plate from the bench. Move the loop back and forth many times across the agar surface from the rim to the centre of the plate. Reflame the metal loop. Turn the Petri dish 90 ° to streak the second quadrant. Using the back-and-forth pattern, cross over the last half of the streaks in the first quadrant then move into the empty second quadrant. Repeat until all 4 quadrants are done.",
                         "checked": false,
                         "checklist_id": 953,
-                        "created_at": "2018-12-21T07:19:34.060Z",
-                        "updated_at": "2018-12-21T07:19:34.060Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -2463,8 +2213,6 @@
                         "text": "Cover all the plates with their lids.",
                         "checked": false,
                         "checklist_id": 953,
-                        "created_at": "2018-12-21T07:19:34.067Z",
-                        "updated_at": "2018-12-21T07:19:34.067Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -2474,8 +2222,6 @@
                         "text": "Clean the area with disinfectant.",
                         "checked": false,
                         "checklist_id": 953,
-                        "created_at": "2018-12-21T07:19:34.073Z",
-                        "updated_at": "2018-12-21T07:19:34.073Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -2494,8 +2240,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-12T11:36:16.853Z",
-                "updated_at": "2019-02-19T14:27:45.703Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3556
               },
@@ -2522,8 +2266,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:32.486Z",
-                "updated_at": "2018-12-21T07:17:09.419Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3556
               },
@@ -2550,8 +2292,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-12T11:40:09.563Z",
-                "updated_at": "2019-02-05T12:04:29.307Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3556
               },
@@ -2586,8 +2326,6 @@
         "x": 34,
         "y": 0,
         "my_module_group_id": 1250,
-        "created_at": "2018-11-15T09:56:31.528Z",
-        "updated_at": "2019-02-19T14:12:22.399Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -2631,13 +2369,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-15T09:56:31.582Z",
-            "updated_at": "2019-01-31T09:38:26.038Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -2653,8 +2388,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:31.742Z",
-                "updated_at": "2019-01-25T12:41:23.609Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3552
               },
@@ -2681,8 +2414,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2019-01-25T12:10:43.950Z",
-                "updated_at": "2019-01-25T12:18:51.523Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3552
               },
@@ -2709,8 +2440,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T09:56:31.793Z",
-                "updated_at": "2019-01-29T12:34:02.242Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3552
               },
@@ -2733,8 +2462,6 @@
                       "id": 810,
                       "name": "Sample locations (examples):",
                       "step_id": 4551,
-                      "created_at": "2018-11-15T09:56:31.809Z",
-                      "updated_at": "2018-12-12T07:32:30.595Z",
                       "created_by_id": 202,
                       "last_modified_by_id": 202
                     },
@@ -2744,8 +2471,6 @@
                         "text": "Filling machine control panel",
                         "checked": false,
                         "checklist_id": 810,
-                        "created_at": "2018-11-15T09:56:31.836Z",
-                        "updated_at": "2018-12-12T07:29:55.968Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 0
@@ -2755,8 +2480,6 @@
                         "text": "Surface of Balance Table",
                         "checked": false,
                         "checklist_id": 810,
-                        "created_at": "2018-11-15T09:56:31.847Z",
-                        "updated_at": "2018-12-12T07:29:55.975Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 1
@@ -2766,8 +2489,6 @@
                         "text": "Surface of table",
                         "checked": false,
                         "checklist_id": 810,
-                        "created_at": "2018-11-15T09:56:31.860Z",
-                        "updated_at": "2018-12-12T07:29:55.981Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 2
@@ -2777,8 +2498,6 @@
                         "text": "Surface of door to pass trough",
                         "checked": false,
                         "checklist_id": 810,
-                        "created_at": "2018-11-15T09:56:31.872Z",
-                        "updated_at": "2018-12-12T07:29:55.990Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 3
@@ -2788,8 +2507,6 @@
                         "text": "Surface of door",
                         "checked": false,
                         "checklist_id": 810,
-                        "created_at": "2018-11-15T09:56:31.885Z",
-                        "updated_at": "2018-12-12T07:29:55.997Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 4
@@ -2799,8 +2516,6 @@
                         "text": "Surface of the wall",
                         "checked": false,
                         "checklist_id": 810,
-                        "created_at": "2018-11-15T09:56:31.923Z",
-                        "updated_at": "2018-12-12T07:32:44.480Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 5
@@ -2810,8 +2525,6 @@
                         "text": "Surface of solid curtain",
                         "checked": false,
                         "checklist_id": 810,
-                        "created_at": "2018-11-15T09:56:31.960Z",
-                        "updated_at": "2018-12-12T07:32:44.487Z",
                         "created_by_id": 202,
                         "last_modified_by_id": 202,
                         "position": 6
@@ -2821,8 +2534,6 @@
                         "text": "Stopper bowl",
                         "checked": false,
                         "checklist_id": 810,
-                        "created_at": "2018-12-12T07:32:30.611Z",
-                        "updated_at": "2018-12-12T07:32:44.494Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 7
@@ -2832,8 +2543,6 @@
                         "text": "Plexiglass barrier",
                         "checked": false,
                         "checklist_id": 810,
-                        "created_at": "2018-12-12T07:32:30.618Z",
-                        "updated_at": "2018-12-12T07:32:44.501Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 8
@@ -2852,8 +2561,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-12T07:58:32.639Z",
-                "updated_at": "2019-01-29T12:34:24.814Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3552
               },
@@ -2883,8 +2590,6 @@
   "my_module_groups": [
     {
       "id": 1250,
-      "created_at": "2019-02-19T14:12:22.346Z",
-      "updated_at": "2019-02-19T14:12:22.346Z",
       "created_by_id": 202,
       "experiment_id": 440
     }

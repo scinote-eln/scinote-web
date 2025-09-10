@@ -8,6 +8,7 @@ const { execSync } = require('child_process');
 const { basename, resolve } = require('path');
 const { readdirSync } = require('fs');
 const mode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
+const fs = require('fs');
 
 const entryList = {
   application_pack: './app/javascript/packs/application.js',
@@ -79,6 +80,7 @@ const entryList = {
   vue_user_groups_show: './app/javascript/packs/vue/user_groups_show.js',
   vue_my_module_show: './app/javascript/packs/vue/my_module_show.js',
   vue_tags_table: './app/javascript/packs/vue/tags_table.js',
+  vue_team_automations: './app/javascript/packs/vue/team_automations.js'
 };
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949
@@ -101,6 +103,31 @@ enginePaths.forEach((path) => {
     extraYarnPackages = execSync(`[ -f ${path}/app/javascript/extra_yarn_packages.txt ] && cat ${path}/app/javascript/extra_yarn_packages.txt`).toString().split('\n').filter((p) => !!p);
   } catch {
     extraYarnPackages = [];
+  }
+
+  // --- Load resolutions ---
+  const resolutionsFile = `${path}/app/javascript/extra_yarn_resolutions.json`;
+  let extraResolutions = {};
+  if (fs.existsSync(resolutionsFile)) {
+    console.log(`Found extra Yarn resolutions in ${resolutionsFile}`);
+    try {
+      extraResolutions = JSON.parse(fs.readFileSync(resolutionsFile, 'utf8'));
+    } catch (e) {
+      console.error(`Failed to parse ${resolutionsFile}:`, e.message);
+    }
+  }
+
+  // --- Merge resolutions into package.json ---
+  if (Object.keys(extraResolutions).length > 0) {
+    const packageJsonPath = './package.json';
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+
+    packageJson.resolutions = packageJson.resolutions || {};
+    Object.assign(packageJson.resolutions, extraResolutions);
+
+    // Save updated package.json
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+    console.log("Merged resolutions into root package.json");
   }
 
   if (extraYarnPackages.length > 0) {

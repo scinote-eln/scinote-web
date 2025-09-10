@@ -5,6 +5,7 @@ class Result < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include ViewableModel
+  include ObservableModel
   include Discard::Model
 
   default_scope -> { kept }
@@ -78,6 +79,11 @@ class Result < ApplicationRecord
       ) AS results",
       :results
     )
+  end
+
+  def self.find_page_number(result_id, per_page = Kaminari.config.default_per_page)
+    position = pluck(:id).index(result_id)
+    (position.to_f / per_page).ceil
   end
 
   def duplicate(my_module, user, result_name: nil)
@@ -198,5 +204,12 @@ class Result < ApplicationRecord
 
   def delete_step_results
     step_results.destroy_all
+  end
+
+  private
+
+  # Override for ObservableModel
+  def changed_by
+    last_modified_by || user
   end
 end

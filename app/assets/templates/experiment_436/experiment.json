@@ -11,8 +11,6 @@
     "archived_on": null,
     "restored_by_id": null,
     "restored_on": null,
-    "created_at": "2018-11-13T09:57:55.843Z",
-    "updated_at": "2019-02-07T14:41:26.829Z",
     "uuid": "59b17955-fba6-405a-a6b8-6a78a05af66f"
   },
   "my_modules": [
@@ -25,8 +23,6 @@
         "x": 67,
         "y": 7,
         "my_module_group_id": 1165,
-        "created_at": "2018-11-13T15:51:41.812Z",
-        "updated_at": "2018-12-13T15:38:36.161Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -66,13 +62,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-13T15:51:41.820Z",
-            "updated_at": "2019-02-20T07:58:02.380Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -88,8 +81,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-13T15:04:47.190Z",
-                "updated_at": "2019-02-19T14:21:06.329Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3508
               },
@@ -116,8 +107,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-13T15:24:58.739Z",
-                "updated_at": "2019-02-20T07:58:02.245Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3508
               },
@@ -152,8 +141,6 @@
         "x": 0,
         "y": 0,
         "my_module_group_id": 1165,
-        "created_at": "2018-11-13T10:11:52.799Z",
-        "updated_at": "2018-12-13T15:38:36.163Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -197,13 +184,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-13T10:11:52.850Z",
-            "updated_at": "2019-02-19T14:18:55.343Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -219,8 +203,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-13T10:35:19.862Z",
-                "updated_at": "2019-02-07T12:58:44.529Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3504
               },
@@ -247,8 +229,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-13T10:55:00.370Z",
-                "updated_at": "2018-12-24T08:25:52.273Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3504
               },
@@ -271,8 +251,6 @@
                       "id": 954,
                       "name": "Guidelines:",
                       "step_id": 4438,
-                      "created_at": "2018-12-21T07:49:43.577Z",
-                      "updated_at": "2018-12-21T07:49:43.577Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -282,8 +260,6 @@
                         "text": "Centrifuge samples for 10 min at 5000 r.p.m.",
                         "checked": false,
                         "checklist_id": 954,
-                        "created_at": "2018-12-21T07:49:43.580Z",
-                        "updated_at": "2018-12-21T07:49:43.580Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -293,8 +269,6 @@
                         "text": "Resuspension in a volume of cold 10% sterile glycerol equal to the original culture volume.",
                         "checked": false,
                         "checklist_id": 954,
-                        "created_at": "2018-12-21T07:49:43.588Z",
-                        "updated_at": "2018-12-21T07:49:43.588Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -304,8 +278,6 @@
                         "text": "Cells are collected by spinning for 10 min at 5000 r.p.m. at 4°C.",
                         "checked": false,
                         "checklist_id": 954,
-                        "created_at": "2018-12-21T07:49:43.595Z",
-                        "updated_at": "2018-12-21T07:49:43.595Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -315,8 +287,6 @@
                         "text": "After decanting the supernatant, cells are resuspended in the volume of glycerol remaining in the centrifiuge bottles and spun for 10 min at 7000 r.p.m. in a centrifuge.",
                         "checked": false,
                         "checklist_id": 954,
-                        "created_at": "2018-12-21T07:49:43.604Z",
-                        "updated_at": "2018-12-21T07:49:43.604Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -326,8 +296,6 @@
                         "text": "After decanting the supernatant, cells are resuspended in 10% glycerol, using a volume of between 2 and 2.25 m/L initial culture.",
                         "checked": false,
                         "checklist_id": 954,
-                        "created_at": "2018-12-21T07:49:43.611Z",
-                        "updated_at": "2018-12-21T07:49:43.611Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -346,8 +314,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-13T10:44:55.407Z",
-                "updated_at": "2019-02-19T14:18:55.293Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3504
               },
@@ -374,8 +340,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-13T10:23:13.538Z",
-                "updated_at": "2019-02-19T14:18:20.039Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3504
               },
@@ -410,8 +374,6 @@
         "x": 33,
         "y": 7,
         "my_module_group_id": 1165,
-        "created_at": "2018-11-13T12:54:50.584Z",
-        "updated_at": "2018-12-13T15:38:36.166Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -455,13 +417,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-13T12:54:50.592Z",
-            "updated_at": "2019-02-20T07:35:25.312Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -477,8 +436,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-13T12:56:40.301Z",
-                "updated_at": "2019-02-07T09:34:28.051Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3507
               },
@@ -505,8 +462,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-13T15:48:41.251Z",
-                "updated_at": "2019-02-19T14:20:45.852Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3507
               },
@@ -533,8 +488,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-13T15:19:26.546Z",
-                "updated_at": "2019-02-20T07:36:24.474Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3507
               },
@@ -545,8 +498,6 @@
                 {
                   "asset": {
                     "id": 3744,
-                    "created_at": "2019-02-20T07:35:25.074Z",
-                    "updated_at": "2019-02-20T07:36:24.466Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 46253,
@@ -586,8 +537,6 @@
         "x": 0,
         "y": 16,
         "my_module_group_id": 1165,
-        "created_at": "2018-11-13T11:54:32.038Z",
-        "updated_at": "2018-12-13T15:38:36.168Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -631,13 +580,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-13T11:54:32.112Z",
-            "updated_at": "2019-02-19T14:17:49.489Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -653,8 +599,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-13T12:30:26.870Z",
-                "updated_at": "2019-02-07T09:32:54.981Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3505
               },
@@ -681,8 +625,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-13T09:33:57.218Z",
-                "updated_at": "2019-02-07T12:58:08.799Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3505
               },
@@ -705,8 +647,6 @@
                       "id": 955,
                       "name": "Guidelines:",
                       "step_id": 5186,
-                      "created_at": "2018-12-21T09:14:37.947Z",
-                      "updated_at": "2018-12-21T09:14:37.947Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -716,8 +656,6 @@
                         "text": "Selected clones are grown in 2.5 ml of L-broth containing 100 ug/ml ampicillin in 6-ml vials.",
                         "checked": false,
                         "checklist_id": 955,
-                        "created_at": "2018-12-21T09:14:37.950Z",
-                        "updated_at": "2018-12-21T09:14:37.950Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -727,8 +665,6 @@
                         "text": "After 18 h incubation, 0.5 ml of culture is transferred to a 1.5 ml Eppendorf tube for plasmid extraction.",
                         "checked": false,
                         "checklist_id": 955,
-                        "created_at": "2018-12-21T09:14:37.957Z",
-                        "updated_at": "2018-12-21T09:14:37.957Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -738,8 +674,6 @@
                         "text": "The remainder is stored at -20°C after the addition of glycerol to 40%.",
                         "checked": false,
                         "checklist_id": 955,
-                        "created_at": "2018-12-21T09:14:37.964Z",
-                        "updated_at": "2018-12-21T09:14:37.964Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -758,8 +692,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-13T10:48:53.179Z",
-                "updated_at": "2019-02-19T14:17:49.435Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3505
               },
@@ -782,8 +714,6 @@
                       "id": 956,
                       "name": "Guidelines:",
                       "step_id": 5187,
-                      "created_at": "2018-12-21T09:22:56.932Z",
-                      "updated_at": "2018-12-21T09:22:56.932Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -793,8 +723,6 @@
                         "text": "The tube is centrifuged for 15 seconds. The supernatant is carefully removed with a fine-tip aspirator and the cell pellet is thoroughly suspended in 100 ul of lysozyme solution.",
                         "checked": false,
                         "checklist_id": 956,
-                        "created_at": "2018-12-21T09:22:56.934Z",
-                        "updated_at": "2018-12-21T09:22:56.934Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -804,8 +732,6 @@
                         "text": "After a 30 minute period of incubation at 0°C, 200 ml of alkaline SDS solution is added and the tube is gently vortexed. The suspension should become almost clear and slightly viscous.",
                         "checked": false,
                         "checklist_id": 956,
-                        "created_at": "2018-12-21T09:22:56.942Z",
-                        "updated_at": "2018-12-21T09:22:56.942Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -815,8 +741,6 @@
                         "text": "The tube is maintained for 5 min at 0°C and then 150 ul of high-salt solution added. The contents of the tube are gently mixed by inversion for a few seconds during which time a clot of DNA forms.",
                         "checked": false,
                         "checklist_id": 956,
-                        "created_at": "2018-12-21T09:22:56.949Z",
-                        "updated_at": "2018-12-21T09:22:56.949Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -826,8 +750,6 @@
                         "text": "The tube is maintained at 0°C for 60 min to allow most of the protein, high molecular weight RNA and chromosomal DNA to precipitate.",
                         "checked": false,
                         "checklist_id": 956,
-                        "created_at": "2018-12-21T09:22:56.957Z",
-                        "updated_at": "2018-12-21T09:22:56.957Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -837,8 +759,6 @@
                         "text": "Centrifugation for 5 min yields an almost clear supernatant. Four-tenths of a ml of the supernatant is removed and transferred to a second centrifuge tube. Small amounts of floating material may be carried over at this time.",
                         "checked": false,
                         "checklist_id": 956,
-                        "created_at": "2018-12-21T09:22:56.964Z",
-                        "updated_at": "2018-12-21T09:22:56.964Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -848,8 +768,6 @@
                         "text": "One ml of cold ethanol is added and the tube is held at -20°C for 30 min.",
                         "checked": false,
                         "checklist_id": 956,
-                        "created_at": "2018-12-21T09:22:56.971Z",
-                        "updated_at": "2018-12-21T09:22:56.971Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 5
@@ -859,8 +777,6 @@
                         "text": "The precipitate is collected by centrifugation for 2 min and the supernatant removed by aspiration.",
                         "checked": false,
                         "checklist_id": 956,
-                        "created_at": "2018-12-21T09:22:56.977Z",
-                        "updated_at": "2018-12-21T09:22:56.977Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 6
@@ -870,8 +786,6 @@
                         "text": "The pellet is dissolved in 100 ul of 0.1 M sodium acetate/0.05 M Tris-HCl (pH 8) and reprecipitated with 2 volumes of cold ethanol.",
                         "checked": false,
                         "checklist_id": 956,
-                        "created_at": "2018-12-21T09:22:56.984Z",
-                        "updated_at": "2018-12-21T09:22:56.984Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 7
@@ -881,8 +795,6 @@
                         "text": "Redissolve once more in 100 ul of 0.1 M sodium acetate/0.05 M Tris-HCl (pH 8) and reprecipitated with 2 volumes of cold ethanol.",
                         "checked": false,
                         "checklist_id": 956,
-                        "created_at": "2018-12-21T09:22:56.992Z",
-                        "updated_at": "2018-12-21T09:22:56.992Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 8
@@ -904,8 +816,6 @@
   "my_module_groups": [
     {
       "id": 1165,
-      "created_at": "2018-12-13T15:38:36.158Z",
-      "updated_at": "2018-12-13T15:38:36.158Z",
       "created_by_id": 202,
       "experiment_id": 436
     }

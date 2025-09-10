@@ -141,13 +141,11 @@ export default {
           this.assignedRepositories = response.data.data;
           this.$nextTick(() => {
             this.recalculateContainerSize();
-            if (this.$refs.assignedRepositories) {
-              this.$refs.assignedRepositories.forEach((repository) => {
-                if (repository.sectionOpened) {
-                  repository.getRows();
-                }
-              });
-            }
+            this.$refs.assignedRepositories?.forEach((repository) => {
+              if (repository.sectionOpened) {
+                repository.getRows();
+              }
+            });
           });
         });
     },

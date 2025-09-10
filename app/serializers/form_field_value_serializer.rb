@@ -16,7 +16,7 @@ class FormFieldValueSerializer < ActiveModel::Serializer
 
   def value
     if object.type == 'FormRepositoryRowsFieldValue'
-      object.value.map do |value|
+      object.value&.map do |value|
         row_code = "#{RepositoryRow::ID_PREFIX}#{value['id']}"
         repository = Repository.find_by(id: value['repository_id'])
 
