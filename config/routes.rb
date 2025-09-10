@@ -149,13 +149,9 @@ Rails.application.routes.draw do
         resource :user_settings, only: %i(show update)
 
         resources :teams, only: [] do
-          resources :tags, only: %i(index create update destroy) do
+          resources :tags, only: %i(index) do
             collection do
               post :actions_toolbar
-              get :list
-            end
-            member do
-              post :merge
             end
           end
           resources :user_groups, only: %i(index create update destroy show) do
@@ -231,6 +227,15 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :tags, only: %i(index create update destroy) do
+      collection do
+        get :colors
+      end
+      member do
+        post :merge
+      end
+    end
+
     resources :teams do
       resources :repositories, only: %i(index create destroy update) do
         collection do
@@ -270,6 +275,12 @@ Rails.application.routes.draw do
         get :visible_users
         get :visible_teams
         get :current_team_users
+      end
+
+      resources :tags, only: %i(index create update destroy) do
+        member do
+          post :merge
+        end
       end
 
       member do

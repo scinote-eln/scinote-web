@@ -28,20 +28,19 @@ module Toolbars
 
     def delete_action
       return unless @single
-
-      #return unless can_manage_team?(@team)
+      return unless can_delete_tags?(@team)
 
       {
         name: 'delete',
         label: I18n.t('tags.index.toolbar.delete'),
         icon: 'sn-icon sn-icon-delete',
-        path: users_settings_team_tag_path(@team, @tags.first),
+        path: team_tag_path(@team, @tags.first),
         type: :emit
       }
     end
 
     def merge_action
-      # return unless can_manage_team?(@team)
+      return unless can_delete_tags?(@team) && can_create_tags?(@team)
 
       {
         name: 'merge',

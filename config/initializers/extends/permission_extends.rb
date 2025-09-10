@@ -20,6 +20,9 @@ module PermissionExtends
       STORAGE_LOCATION_CONTAINERS_CREATE
       STORAGE_LOCATION_CONTAINERS_MANAGE
       STORAGE_LOCATION_CONTAINERS_READ
+      TAGS_CREATE
+      TAGS_UPDATE
+      TAGS_DELETE
     ).each { |permission| const_set(permission, "team_#{permission.parameterize}") }
   end
 
@@ -183,6 +186,8 @@ module PermissionExtends
       TeamPermissions::STORAGE_LOCATION_CONTAINERS_READ,
       TeamPermissions::STORAGE_LOCATION_CONTAINERS_CREATE,
       TeamPermissions::STORAGE_LOCATION_CONTAINERS_MANAGE,
+      TeamPermissions::TAGS_CREATE,
+      TeamPermissions::TAGS_UPDATE,
       ProtocolPermissions::READ,
       ProtocolPermissions::READ_ARCHIVED,
       ProtocolPermissions::MANAGE_DRAFT,

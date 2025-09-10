@@ -109,7 +109,6 @@ export default {
         HelperModule.flashAlertMsg(data.data.message, 'success');
         this.$emit('create');
       }).catch((data) => {
-        console.log(data);
         HelperModule.flashAlertMsg(data.response.data.error, 'danger');
       });
       this.submitting = false;

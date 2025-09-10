@@ -41,7 +41,7 @@ import modalMixin from '../../shared/modal_mixin';
 import axios from '../../../packs/custom_axios.js';
 import escapeHtml from '../../shared/escape_html.js';
 import {
-  merge_users_settings_team_tag_path,
+  merge_team_tag_path,
 } from '../../../routes.js';
 
 export default {
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     mergeTags() {
-      axios.post(merge_users_settings_team_tag_path(this.selectedTagId, {team_id: this.teamId}), {
+      axios.post(merge_team_tag_path(this.selectedTagId, {team_id: this.teamId}), {
         merge_ids: this.mergeIds
       }).then(() => {
         HelperModule.flashAlertMsg(this.i18n.t('tags.merge_modal.merge_success'), 'success');
