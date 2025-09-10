@@ -59,6 +59,6 @@ module TaggableActions
   end
 
   def check_tag_create_permissions
-    true # TODO: implement
+    render_403 unless can_create_tags?(current_team)
   end
 end

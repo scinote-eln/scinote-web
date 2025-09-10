@@ -36,7 +36,7 @@ import nameRenderer from './renderers/name.vue';
 import mergeModal from './modals/merge.vue';
 
 import {
-  users_settings_team_tag_path,
+  team_tag_path,
 } from '../../routes.js';
 
 
@@ -144,7 +144,7 @@ export default {
   },
   methods: {
     changeName(name, tag) {
-      axios.patch(users_settings_team_tag_path(tag.id, { team_id: tag.team_id }), {
+      axios.patch(team_tag_path(tag.id, { team_id: tag.team_id }), {
         tag: {
           name
         }
@@ -153,7 +153,7 @@ export default {
       })
     },
     changeColor(color, tag) {
-      axios.patch(users_settings_team_tag_path(tag.id, { team_id: tag.team_id }), {
+      axios.patch(team_tag_path(tag.id, { team_id: tag.team_id }), {
         tag: {
           color
         }

@@ -51,8 +51,7 @@ class MyModuleSerializer < ActiveModel::Serializer
       manage_due_date: can_update_my_module_due_date?(object),
       manage_start_date: can_update_my_module_start_date?(object),
       manage_designated_users: can_manage_my_module_designated_users?(object),
-      assign_tags: can_manage_my_module_tags?(object),
-      manage_tags: true # TODO: implement
+      assign_tags: can_manage_my_module_tags?(object)
     }
   end
 

@@ -23,7 +23,7 @@
                     <span class="sci-checkbox-label"></span>
                   </div>
                 </div>
-                <GeneralDropdown :canOpen="canManage" >
+                <GeneralDropdown :canOpen="canUpdate" >
                   <template v-slot:field>
                     <div
                       class="h-6 w-6 border border-solid border-transparent rounded relative flex items-center justify-center text-sn-white"
@@ -45,12 +45,12 @@
                   </template>
                 </GeneralDropdown>
                 <input type="text" :value="tag.name" @change="changeName(tag, $event.target.value)"
-                  :class="{'pointer-events-none': !canManage }"
+                  :class="{'pointer-events-none': !canUpdate }"
                   class=" text-sm grow outline-none leading-4 border-none bg-transparent p-1" />
-                <i v-if="canManage && newTagsCreated.includes(tag.id)" @click="deleteTag(tag)" class="ml-auto sn-icon sn-icon-delete"></i>
+                <i v-if="canDelete && newTagsCreated.includes(tag.id)" @click="deleteTag(tag)" class="ml-auto sn-icon sn-icon-delete"></i>
               </div>
             </div>
-            <div class="flex items-center gap-2 text-xs cursor-pointer px-2 py-2" v-if="canManage && !addingNewTag" @click="startAddingNewTag">
+            <div class="flex items-center gap-2 text-xs cursor-pointer px-2 py-2" v-if="canCreate && !addingNewTag" @click="startAddingNewTag">
               <i class="sn-icon sn-icon-new-task"></i>
               {{ i18n.t('tags.manage_modal.create_tag') }}
             </div>
@@ -87,7 +87,8 @@ import GeneralDropdown from './general_dropdown.vue';
 import axios from '../../packs/custom_axios.js';
 import {
   colors_tags_path,
-  users_settings_team_tag_path,
+  team_tag_path,
+  team_tags_path,
   users_settings_team_tags_path
 } from '../../routes.js';
 
@@ -139,7 +140,7 @@ export default {
         });
     },
     changeColor(tag, color) {
-      axios.patch(users_settings_team_tag_path(tag.id, { team_id: this.teamId }), {
+      axios.patch(team_tag_path(tag.id, { team_id: this.teamId }), {
         tag: {
           color: color
         }
@@ -150,7 +151,7 @@ export default {
       });
     },
     changeName(tag, newName) {
-      axios.patch(users_settings_team_tag_path(tag.id, { team_id: this.teamId }), {
+      axios.patch(team_tag_path(tag.id, { team_id: this.teamId }), {
         tag: {
           name: newName
         }
@@ -165,7 +166,7 @@ export default {
         this.addingNewTag = false;
         return;
       }
-      axios.post(users_settings_team_tags_path({ team_id: this.teamId }), {
+      axios.post(team_tags_path({ team_id: this.teamId }), {
         tag: {
           name: this.newTag.name,
           color: this.newTag.color
@@ -187,7 +188,7 @@ export default {
       if (!this.newTagsCreated.includes(tag.id)) {
         return;
       }
-      axios.delete(users_settings_team_tag_path(tag.id, { team_id: this.teamId }))
+      axios.delete(team_tag_path(tag.id, { team_id: this.teamId }))
         .then(() => {
           this.allTags = this.allTags.filter(t => t.id !== tag.id);
           this.tags = this.tags.filter(t => t.id !== tag.id);

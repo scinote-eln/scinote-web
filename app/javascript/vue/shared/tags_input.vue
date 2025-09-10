@@ -23,7 +23,7 @@
       <template v-slot:flyout>
         <div class="flex flex-col">
           <div class="max-h-80 overflow-auto">
-            <div v-if="validTagName && canManage" @click="createTag" class="py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2">
+            <div v-if="validTagName && canCreate" @click="createTag" class="py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2">
               <i class="sn-icon sn-icon-new-task"></i>
               {{ i18n.t('tags.tags_input.create_tag') }}
             </div>
@@ -119,7 +119,7 @@ export default {
     handleInputClick() {
     },
     handleInputEnter() {
-      if (this.validTagName && this.canManage) {
+      if (this.validTagName && this.canCreate) {
         this.createTag();
       } else if (this.filteredTags.length > 0 && this.canAssign) {
         this.linkTag(this.filteredTags[0]);
