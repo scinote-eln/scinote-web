@@ -521,6 +521,8 @@ Rails.application.routes.draw do
         post :change_results_state
         post :favorite
         post :unfavorite
+        get :current_status
+        get :status_partial
       end
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do

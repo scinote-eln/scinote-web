@@ -118,6 +118,16 @@ class MyModulesController < ApplicationController
     current_user.save!
   end
 
+  def current_status
+    render json: { my_module_status_id: @my_module.my_module_status_id }
+  end
+
+  def status_partial
+    render json: {
+      html: render_to_string(partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module })
+    }
+  end
+
   def status_state
     if @my_module.last_transition_error && @my_module.last_transition_error['type'] == 'repository_snapshot'
       flash[:repository_snapshot_error] = @my_module.last_transition_error
