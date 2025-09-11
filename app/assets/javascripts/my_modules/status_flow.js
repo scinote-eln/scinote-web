@@ -1,18 +1,20 @@
-/* global animateSpinner */
+/* global animateSpinner $ GLOBAL_CONSTANTS  */
 
 (function() {
-  $('.task-sharing-and-flows').on('click', '#viewTaskFlow', function() {
-    $('#statusFlowModal').off('shown.bs.modal').on('shown.bs.modal', function() {
-      var $modalBody = $(this).find('.modal-body');
-      animateSpinner($modalBody);
-      $.get($(this).data('status-flow-url'), function(result) {
-        animateSpinner($modalBody, false);
-        $modalBody.html(result.html);
+  function initStatusFlowModal() {
+    $('.task-sharing-and-flows').on('click', '#viewTaskFlow', function() {
+      $('#statusFlowModal').off('shown.bs.modal').on('shown.bs.modal', function() {
+        var $modalBody = $(this).find('.modal-body');
+        animateSpinner($modalBody);
+        $.get($(this).data('status-flow-url'), function(result) {
+          animateSpinner($modalBody, false);
+          $modalBody.html(result.html);
+        });
       });
-    });
 
-    $('#statusFlowModal').modal('show');
-  });
+      $('#statusFlowModal').modal('show');
+    });
+  }
 
   function checkStatusState() {
     $.getJSON($('.status-flow-dropdown').data('status-check-url'), (statusData) => {
@@ -60,5 +62,25 @@
     });
   }
 
-  applyTaskStatusChangeCallBack();
+  function checkCurrentStatus() {
+    $.get($('#status-container').data('current-status-url'), (statusData) => {
+      if ($('#status-container').data('current-status-id') !== statusData.my_module_status_id) {
+        $.get($('#status-container').data('status-partial-url'), (partialData) => {
+          $('#status-container').data('current-status-id', statusData.my_module_status_id);
+          $('#status-container').html(partialData.html);
+          initStatus();
+        });
+      } else {
+        setTimeout(() => { checkCurrentStatus(); }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
+      }
+    });
+  }
+
+  function initStatus() {
+    initStatusFlowModal();
+    checkCurrentStatus();
+    applyTaskStatusChangeCallBack();
+  }
+
+  initStatus();
 }());
