@@ -4344,7 +4344,7 @@ en:
     sub_group_element:
       on_protocol_content_change: 'Protocol content is added (including step comments)'
       on_step_completion: 'At least one step is marked as completed'
-      on_added_result: 'Task result is added'
+      on_result_created_or_changed: 'Task result is added or modified (including result comments)'
       on_task_in_progress: 'At least one task moves from "Not started" to "In progress" or other status'
       on_all_tasks_done: 'All tasks inside reach their final status.'
       on_experiment_in_progress: 'At least one experiment moves to "In progress" or "Done"'
