@@ -1,9 +1,23 @@
 # frozen_string_literal: true
 
 module AutomationObservers
-  class ResultCreateObserver < BaseObserver
-    def self.on_create(result, user)
-      return unless Current.team.settings.dig('team_automation_settings', 'tasks', 'task_status_in_progress', 'on_added_result')
+  class ResultContentChangeObserver < BaseObserver
+    def self.on_create(element, user)
+      on_update(element, user)
+    end
+
+    def self.on_update(element, user)
+      return unless Current.team.settings.dig('team_automation_settings', 'tasks', 'task_status_in_progress', 'on_result_created_or_changed')
+
+      result = case element.class.name
+               when 'Result'
+                 element
+               else
+                 element.result
+               end
+
+      return if result.blank?
+      return if result.archived_previously_changed?
       return unless result.my_module.my_module_status.initial_status?
 
       my_module = result.my_module
@@ -21,6 +35,10 @@ module AutomationObservers
                 my_module_status_old: previous_status_id,
                 my_module_status_new: my_module.my_module_status.id
               })
+    end
+
+    def self.on_destroy(element, user)
+      on_update(element, user)
     end
   end
 end

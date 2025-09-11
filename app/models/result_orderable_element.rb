@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ResultOrderableElement < ApplicationRecord
+  include ObservableModel
+
   validates :position, uniqueness: { scope: :result }
   validate :check_result_relations
 
@@ -25,5 +27,10 @@ class ResultOrderableElement < ApplicationRecord
       yield
       result.normalize_elements_position
     end
+  end
+
+  # Override for ObservableModel
+  def changed_by
+    result.last_modified_by || result.user
   end
 end
