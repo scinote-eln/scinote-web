@@ -50,5 +50,9 @@ module AutomationObservers
                 my_module_status_new: my_module.my_module_status.id
               })
     end
+
+    def self.on_destroy(element, user)
+      on_update(element, user)
+    end
   end
 end
