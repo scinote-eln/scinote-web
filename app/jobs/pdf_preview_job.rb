@@ -19,6 +19,8 @@ class PdfPreviewJob < ApplicationJob
 
     PdfPreviewService.new(asset.file.blob, asset.file_pdf_preview).generate!
   ensure
-    asset.update(pdf_preview_processing: false)
+    ActiveRecord::Base.no_touching do
+      asset.update(pdf_preview_processing: false)
+    end
   end
 end

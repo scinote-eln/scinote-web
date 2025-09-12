@@ -15,13 +15,15 @@ module ActiveStorage
     end
 
     def metadata
-      download_blob_to_tempfile do |file|
-        if blob.content_type == 'application/pdf'
-          process_pdf(file)
-        elsif blob.metadata[:asset_type] == 'marvinjs'
-          process_marvinjs(file)
-        else
-          process_other(file)
+      ActiveRecord::Base.no_touching do
+        download_blob_to_tempfile do |file|
+          if blob.content_type == 'application/pdf'
+            process_pdf(file)
+          elsif blob.metadata[:asset_type] == 'marvinjs'
+            process_marvinjs(file)
+          else
+            process_other(file)
+          end
         end
       end
     end
@@ -61,7 +63,10 @@ module ActiveStorage
         )
 
         AssetTextDatum.connection.execute(sql)
-        asset.update_estimated_size
+
+        ActiveRecord::Base.no_touching do
+          asset.update_estimated_size
+        end
 
         Rails.logger.info "Asset #{asset.id}: file text successfully extracted"
       rescue ActiveRecord::RecordInvalid => e
