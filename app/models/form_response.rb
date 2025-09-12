@@ -4,6 +4,7 @@ class InvalidStatusError < StandardError; end
 
 class FormResponse < ApplicationRecord
   include Discard::Model
+  include ObservableModel
 
   default_scope -> { kept }
 
@@ -110,5 +111,12 @@ class FormResponse < ApplicationRecord
 
       new_form_response
     end
+  end
+
+  private
+
+  # Override for ObservableModel
+  def changed_by
+    submitted_by || created_by
   end
 end
