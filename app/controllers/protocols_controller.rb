@@ -8,6 +8,8 @@ class ProtocolsController < ApplicationController
   include TeamsHelper
   include ProtocolsExporterV2
   include FormFieldValuesHelper
+  include UserRolesHelper
+  include TeamAssignmentsActions
 
   before_action :check_create_permissions, only: %i(
     create
@@ -293,6 +295,7 @@ class ProtocolsController < ApplicationController
 
     if @protocol.save
       log_activity(:create_protocol_in_repository, nil, protocol: @protocol.id)
+      create_team_assignment(@protocol, :protocol_template_access_granted_all_team_members)
       redirect_to protocol_path(@protocol)
     else
       render json: { error: @protocol.errors.messages.map { |_k, v| v }.join(', ') }, status: :unprocessable_entity
@@ -352,6 +355,7 @@ class ProtocolsController < ApplicationController
       Protocol.transaction do
         @new_protocol = @protocol.copy_to_repository(Protocol.new(create_params), current_user)
         log_activity(:task_protocol_save_to_template, @my_module.experiment.project, protocol: @new_protocol.id)
+        create_team_assignment(@new_protocol, :protocol_template_access_granted_all_team_members)
       rescue StandardError => e
         transaction_error = true
         Rails.logger.error(e.message)
@@ -881,6 +885,10 @@ class ProtocolsController < ApplicationController
     end
     @job = Protocols::DocxImportJob.perform_later(temp_files_ids, user_id: current_user.id, team_id: current_team.id)
     render json: { job_id: @job.job_id }
+  end
+
+  def user_roles
+    render json: { data: user_roles_collection(Protocol.new).map(&:reverse) }
   end
 
   private

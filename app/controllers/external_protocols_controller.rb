@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ExternalProtocolsController < ApplicationController
+  include TeamAssignmentsActions
+
   before_action :load_vars
   before_action :check_import_permissions, only: [:create]
 
@@ -99,6 +101,7 @@ class ExternalProtocolsController < ApplicationController
                 message_items: {
                   protocol: protocol.id
                 })
+        create_team_assignment(protocol, :protocol_template_access_granted_all_team_members)
       end
       message = t('protocols.index.protocolsio.import.success_flash', name: service_call.protocol.name)
       render json: { protocol: service_call.protocol, message: message }

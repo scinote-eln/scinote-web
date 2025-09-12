@@ -21,6 +21,22 @@
             <%= t("protocols.new_protocol_modal.description") %>
           </p>
           <% end %>
+          <div class="default-role-container">
+            <div class="sci-checkbox-container">
+              <%= f.check_box :visibility, { class: 'sci-checkbox'},:visible, :hidden %>
+              <span class="sci-checkbox-label"></span>
+            </div>
+            <div class="default-role-description">
+              <%= t("protocols.new_protocol_modal.access_label") %>
+            </div>
+          </div>
+          <div class="hidden" id="roleSelectWrapper">
+            <div class="sci-input-container">
+              <%= f.label :default_public_user_role_id, t("protocols.new_protocol_modal.role_label") %>
+              <%= f.hidden_field :default_public_user_role_id, value: nil, disabled: true %>
+              <%= f.select :role_selector, options_for_select(user_roles_collection(Protocol.new), UserRole.find_predefined_viewer_role.id) %>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
