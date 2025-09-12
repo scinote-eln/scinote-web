@@ -69,6 +69,7 @@
           $('#status-container').data('current-status-id', statusData.my_module_status_id);
           $('#status-container').html(partialData.html);
           initStatus();
+          $('#status-container').trigger('statusChanged');
         });
       } else {
         setTimeout(() => { checkCurrentStatus(); }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
