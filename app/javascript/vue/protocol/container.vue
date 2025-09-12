@@ -1,5 +1,5 @@
 <template>
-  <div v-if="protocol.id" class="task-protocol">
+  <div v-if="protocol.id && protocol.attributes.provisioning_status !== 'in_progress'" class="task-protocol">
     <div ref="header" class="task-section-header ml-[-1rem] w-[calc(100%_+_2rem)] px-4 bg-sn-white sticky top-0 transition" v-if="!inRepository">
       <div class="portocol-header-left-part grow" :class="{'overflow-hidden': headerSticked && moduleName}">
         <template v-if="headerSticked && moduleName">
@@ -309,6 +309,9 @@
                          @cancel="showClipboardPasteModal = false"
     />
   </div>
+  <div v-else class="h-40 p-5 flex items-center justify-center">
+    <div class="sci-loader"></div>
+  </div>
 </template>
 
 <script>
@@ -392,19 +395,7 @@ export default {
   },
   mounted() {
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
-    $.get(this.protocolUrl, (result) => {
-      this.protocol = result.data;
-      this.$nextTick(() => {
-        this.refreshProtocolStatus();
-        if (!this.inRepository) {
-          window.addEventListener('scroll', this.initStackableHeaders, false);
-          this.initStackableHeaders();
-        }
-      });
-      $.get(this.urls.steps_url, (result) => {
-        this.steps = result.data;
-      });
-    });
+    this.loadProtocol();
   },
   beforeUnmount() {
     if (!this.inRepository) {
@@ -412,6 +403,33 @@ export default {
     }
   },
   methods: {
+    loadProtocol(){
+      const previousProvisioningStatus = this.protocol.attributes?.provisioning_status;
+
+      axios.get(this.protocolUrl).then((result) => {
+        this.protocol = result.data.data;
+
+        if (this.protocol.attributes.provisioning_status === 'in_progress') {
+          setTimeout(this.loadProtocol, 5000);
+          return;
+        } else if (previousProvisioningStatus === 'in_progress') {
+          // protocol finished provisioning, reload task page
+          window.location.reload();
+          return;
+        }
+
+        this.$nextTick(() => {
+          this.refreshProtocolStatus();
+          if (!this.inRepository) {
+            window.addEventListener('scroll', this.initStackableHeaders, false);
+            this.initStackableHeaders();
+          }
+        });
+        axios.get(this.urls.steps_url).then((result) => {
+          this.steps = result.data.data;
+        });
+      });
+    },
     scrollToStep() {
       if (this.elementsLoaded === this.steps.length && this.attachmentsLoaded === this.steps.length) {
         this.loadingOverlay = false;

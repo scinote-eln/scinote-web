@@ -10,7 +10,12 @@ class ProtocolSerializer < ActiveModel::Serializer
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version,
              :code, :published, :version_comment, :archived, :linked, :has_draft,
-             :published_on_formatted, :published_by, :created_from_version, :assignable_my_module_id, :assignable_my_module_name
+             :published_on_formatted, :published_by, :created_from_version, :assignable_my_module_id, :assignable_my_module_name,
+             :provisioning_status
+
+  def provisioning_status
+    object.my_module&.provisioning_status
+  end
 
   def updated_at
     object.updated_at.to_i
