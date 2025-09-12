@@ -49,6 +49,8 @@ import LinkedMyModulesRenderer from './renderers/linked_my_modules.vue';
 import LinkedMyModulesModal from './modals/linked_my_modules.vue';
 import VersionsRenderer from './renderers/versions.vue';
 import VersionsModal from './modals/versions.vue';
+import UsersDropdownRenderer from '../shared/select_dropdown_renderers/user.vue';
+
 
 export default {
   name: 'ProtocolTemplatesTable',
@@ -62,7 +64,8 @@ export default {
     LinkedMyModulesRenderer,
     LinkedMyModulesModal,
     VersionsRenderer,
-    VersionsModal
+    VersionsModal,
+    UsersDropdownRenderer
   },
   props: {
     dataSource: {
@@ -255,8 +258,8 @@ export default {
           key: 'published_by',
           type: 'Select',
           optionsUrl: this.usersFilterUrl,
-          optionRenderer: this.usersFilterRenderer,
-          labelRenderer: this.usersFilterRenderer,
+          optionRenderer: UsersDropdownRenderer,
+          labelRenderer: UsersDropdownRenderer,
           label: this.i18n.t('protocols.table.filters.published_by.label'),
           placeholder: this.i18n.t('protocols.table.filters.published_by.placeholder')
         },
@@ -264,8 +267,8 @@ export default {
           key: 'members',
           type: 'Select',
           optionsUrl: this.usersFilterUrl,
-          optionRenderer: this.usersFilterRenderer,
-          labelRenderer: this.usersFilterRenderer,
+          optionRenderer: UsersDropdownRenderer,
+          labelRenderer: UsersDropdownRenderer,
           label: this.i18n.t('protocols.table.filters.members.label'),
           placeholder: this.i18n.t('protocols.table.filters.members.placeholder')
         },
@@ -337,12 +340,6 @@ export default {
     },
     linkedMyModules(_event, rows) {
       [this.linkedMyModulesModalObject] = rows;
-    },
-    usersFilterRenderer(option) {
-      return `<div class="flex items-center gap-2">
-                <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
-                <span class="truncate" title="${option[1]}">${option[1]}</span>
-              </div>`;
     }
   }
 };

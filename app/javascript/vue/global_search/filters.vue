@@ -14,15 +14,15 @@
         </template>
       </div>
       <div class="sci-label mb-2">{{ i18n.t('search.filters.by_tag') }}</div>
-      <div class="grow -mt-2.5">
+      <div class="grow mb-6">
         <SelectDropdown :options="tags"
                         @change="selectTags"
-                        :optionRenderer="tagRenderer"
-                        :labelRenderer="tagRenderer"
+                        :optionRenderer="TagsDropdownRenderer"
                         :multiple="true"
                         class="grow"
                         :value="selectedTags"
                         :searchable="true"
+                        :withCheckboxes="true"
                         :placeholder="i18n.t('search.filters.by_tag_placeholder')"
                         :tagsView="true">
         </SelectDropdown>
@@ -63,8 +63,8 @@
       <SelectDropdown :options="users"
                       class="mb-6"
                       :value="selectedUsers"
-                      :optionRenderer="userRenderer"
-                      :labelRenderer="userRenderer"
+                      :optionRenderer="UsersDropdownRenderer"
+                      :labelRenderer="UsersDropdownRenderer"
                       :clearable="true"
                       :searchable="true"
                       :with-checkboxes="true"
@@ -93,8 +93,9 @@
 
 import DateFilter from './filters/date.vue';
 import SelectDropdown from '../shared/select_dropdown.vue';
-import escapeHtml from '../shared/escape_html.js';
 import axios from '../../packs/custom_axios.js';
+import UsersDropdownRenderer from '../shared/select_dropdown_renderers/user.vue';
+import TagsDropdownRenderer from '../shared/select_dropdown_renderers/tag.vue';
 
 export default {
   name: 'SearchFilters',
@@ -162,6 +163,8 @@ export default {
       teams: [],
       users: [],
       tags:[],
+      TagsDropdownRenderer: TagsDropdownRenderer,
+      UsersDropdownRenderer: UsersDropdownRenderer,
       searchGroups: [
         { value: 'FoldersComponent', label: this.i18n.t('search.index.folders') },
         { value: 'ProjectsComponent', label: this.i18n.t('search.index.projects') },
@@ -179,18 +182,11 @@ export default {
   },
   components: {
     DateFilter,
-    SelectDropdown
+    SelectDropdown,
+    UsersDropdownRenderer,
+    TagsDropdownRenderer
   },
   methods: {
-    userRenderer(option) {
-      return `<div class="flex items-center gap-2">
-                <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
-                <div title="${escapeHtml(option[1])}" class="truncate">${escapeHtml(option[1])}</div>
-              </div>`;
-    },
-    tagRenderer(option) {
-      return `<div class="sci-tag text-white" style="background-color: ${escapeHtml(option[2])};">${escapeHtml(option[1])}</div>`;
-    },
     setActiveGroup(group) {
       if (group === this.activeGroup) {
         this.activeGroup = null;
@@ -213,7 +209,7 @@ export default {
     fetchTags() {
       axios.get(this.tagsUrl, { params: { teams: this.selectedTeams } })
         .then((response) => {
-          this.tags = response.data.data.map((tag) => ([parseInt(tag.id, 10), tag.attributes.name, tag.attributes.color]));
+          this.tags = response.data.data.map((tag) => ([parseInt(tag.id, 10), tag.name, { color: tag.color }]));
         });
     },
     selectTeams(teams) {
