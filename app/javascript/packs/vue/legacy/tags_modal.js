@@ -1,7 +1,7 @@
 /* global I18n dropdownSelector */
 
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
-import TagsModal from '../../../vue/my_modules/modals/tags.vue';
+import TagsModal from '../../../vue/shared/tags_modal.vue';
 import { mountWithTurbolinks } from '../helpers/turbolinks.js';
 
 const app = createApp({
@@ -27,7 +27,7 @@ const app = createApp({
         type: 'GET',
         dataType: 'json',
         success: (data) => {
-          this.myModuleParams = { ...data.data.attributes, id: data.data.id };
+          this.myModuleParams = data.data;
           this.tagsModalOpen = true;
         }
       });
@@ -69,6 +69,8 @@ const app = createApp({
           }
         });
       }
+
+      this.close();
     }
   }
 });

@@ -9,8 +9,7 @@
   data-module-x="<%= my_module.x %>"
   data-module-y="<%= my_module.y %>"
   data-module-conns="<%= construct_module_connections(my_module) %>"
-  data-module-users-tab-url="<%=  designated_users_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>"
-  data-module-tags-url=""
+  data-module-users-tab-url="<%= designated_users_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>"
   data-module-url="<%= my_module_path(my_module, format: :json) %>">
 
   <div data-view-mode="active">
