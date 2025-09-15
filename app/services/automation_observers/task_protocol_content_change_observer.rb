@@ -19,8 +19,10 @@ module AutomationObservers
         return if element.step.blank?
 
         protocol = element.step.protocol
-      when 'Checklist', 'StepText', 'Comment', 'StepOrderableElement'
+      when 'Checklist', 'StepText', 'StepOrderableElement'
         protocol = element.step.protocol
+      when 'Comment'
+        protocol = element.step.protocol if element.respond_to?(:step)
       when 'ChecklistItem'
         protocol = element.checklist.step.protocol
       when 'FormFieldValue'
