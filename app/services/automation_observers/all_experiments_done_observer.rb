@@ -4,10 +4,10 @@ module AutomationObservers
   class AllExperimentsDoneObserver < BaseObserver
     def self.on_update(experiment, user)
       return unless Current.team.settings.dig('team_automation_settings', 'projects', 'project_status_done', 'on_all_experiments_done')
-      return unless experiment.status_moved_forward?
 
       project = experiment.project
 
+      return unless project.experiments.active.exists?
       return if project.experiments.active.where.not(id: project.experiments.active.done).exists?
 
       project.update!(status: :done, last_modified_by: user)
