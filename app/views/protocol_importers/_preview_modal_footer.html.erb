@@ -1,4 +1,22 @@
 <div class="footer">
+  <div class="left-section">
+    <div class="default-role-container">
+      <div class="sci-checkbox-container" data-e2e="e2e-CB-protocolTemplates-previewProtocolsIo-grantAccess">
+        <%= check_box_tag "visibility", "visible", false, class: "sci-checkbox" %>
+        <span class="sci-checkbox-label"></span>
+      </div>
+      <div class="default-role-description" data-e2e="e2e-TX-protocolTemplates-previewProtocolsIo-grantAccess">
+        <%= t("protocols.new_protocol_modal.access_label") %>
+      </div>
+    </div>
+    <div class="hidden" id="roleSelectWrapper" data-e2e="e2e-DD-protocolTemplates-previewProtocolsIo-userRole">
+      <div class="sci-input-container">
+        <%= label_tag :default_public_user_role_id, t("protocols.new_protocol_modal.role_label") %>
+        <%= hidden_field_tag :default_public_user_role_id, value: nil, disabled: true %>
+        <%= select_tag :role_selector, options_for_select(user_roles_collection(@protocol), UserRole.find_predefined_viewer_role.id) %>
+      </div>
+    </div>
+  </div>
   <div class="right-section">
     <button type="button" class="btn btn-secondary" data-dismiss="modal" 
             data-e2e="e2e-BT-protocolTemplates-previewProtocolsIo-cancel">
