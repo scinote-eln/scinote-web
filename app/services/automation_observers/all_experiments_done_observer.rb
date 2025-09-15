@@ -8,7 +8,6 @@ module AutomationObservers
 
       project = experiment.project
 
-      return unless project.started?
       return if project.experiments.active.where.not(id: project.experiments.active.done).exists?
 
       project.update!(status: :done, last_modified_by: user)
@@ -20,7 +19,7 @@ module AutomationObservers
               subject: project,
               message_items: {
                 project: project.id,
-                project_status_old: I18n.t('experiments.table.column.status.in_progress'),
+                project_status_old: I18n.t("experiments.table.column.status.#{project.status_was}"),
                 project_status_new: I18n.t("experiments.table.column.status.#{project.status}")
               })
     end
