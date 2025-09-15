@@ -33,6 +33,7 @@ module AutomationObservers
 
       return if protocol.blank?
       return unless protocol.in_module? && protocol.my_module.my_module_status.initial_status?
+      return if element.respond_to?(:completed) && element.saved_change_to_completed? && !element.completed
 
       my_module = protocol.my_module
       previous_status_id = my_module.my_module_status.id
