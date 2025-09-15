@@ -4,7 +4,7 @@ module AutomationObservers
   class AllTasksDoneObserver < BaseObserver
     def self.on_update(my_module, user)
       return unless Current.team.settings.dig('team_automation_settings', 'experiments', 'experiment_status_done', 'on_all_tasks_done')
-      return unless my_module.saved_change_to_my_module_status_id?
+      return unless my_module.experiment.my_modules.active.exists?
       return unless my_module.experiment.my_modules.active.joins(:my_module_status).where.not(my_module_status: MyModuleStatusFlow.first.final_status).none?
 
       experiment = my_module.experiment
