@@ -21,7 +21,7 @@ class ProjectsController < ApplicationController
   before_action :check_read_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
                                                     actions_toolbar users_filter head_of_project_users_list
-                                                    favorite unfavorite)
+                                                    favorite unfavorite projects_to_move)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: :update
   before_action :set_folder_inline_name_editing, only: %i(index)
@@ -277,6 +277,15 @@ class ProjectsController < ApplicationController
           current_user
         ).actions
     }
+  end
+
+  def projects_to_move
+    projects = current_team.projects
+                           .active
+                           .with_granted_permissions(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
+                           .search_by_name(current_user, current_team, params['query'])
+                           .order(name: :asc).map { |p| { id: p.id, name: p.name } }
+    render json: { data: projects }
   end
 
   private

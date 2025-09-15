@@ -442,6 +442,7 @@ Rails.application.routes.draw do
         post 'restore_group'
         post 'actions_toolbar'
         get :head_of_project_users_list
+        get :projects_to_move
       end
     end
 
@@ -467,6 +468,7 @@ Rails.application.routes.draw do
         post 'actions_toolbar'
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
+        get :experiments_to_move
       end
       member do
         get :assigned_users
@@ -497,7 +499,6 @@ Rails.application.routes.draw do
         get :search_tags
         get :projects_to_clone
         get :projects_to_move
-        get :experiments_to_move
         post :favorite
         post :unfavorite
       end
