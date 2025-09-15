@@ -91,6 +91,7 @@ module Reports
       css_files = [
         'application',
         'reports_pdf',
+        'reports_pdf_icons',
         'bootstrap_pack',
         'handsontable.formula',
         'fontawesome'

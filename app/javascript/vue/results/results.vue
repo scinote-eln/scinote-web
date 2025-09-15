@@ -179,6 +179,8 @@ export default {
           this.nextPageUrl = response.data.links.next;
           this.loadingPage = false;
 
+          this.infiniteScrollLoad();
+
           if (this.anchorId) {
             const result = this.results.find((e) => e.id === this.anchorId);
             if (!result) {

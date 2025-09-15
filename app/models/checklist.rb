@@ -1,5 +1,8 @@
 class Checklist < ApplicationRecord
   include SearchableModel
+  include ObservableModel
+
+  SEARCHABLE_ATTRIBUTES = ['checklists.name'].freeze
 
   auto_strip_attributes :name, nullify: false
   validates :name,

@@ -3,6 +3,9 @@
 class Table < ApplicationRecord
   include SearchableModel
   include TableHelper
+  include ObservableModel
+
+  SEARCHABLE_ATTRIBUTES = ['tables.name', 'tables.data_vector'].freeze
 
   auto_strip_attributes :name, nullify: false
   validates :name,

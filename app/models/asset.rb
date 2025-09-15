@@ -8,6 +8,7 @@ class Asset < ApplicationRecord
   include ActiveStorageConcerns
   include ActiveStorageHelper
   include VersionedAttachments
+  include ObservableModel
 
   require 'tempfile'
   # Lock duration set to 30 minutes

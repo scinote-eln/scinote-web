@@ -65,7 +65,8 @@ class ExternalProtocolsController < ApplicationController
           partial: 'protocol_importers/import_form',
           locals: { protocol: @protocol,
                     steps_json: service_call.serialized_steps,
-                    steps_assets: service_call.steps_assets }
+                    steps_assets: service_call.steps_assets,
+                    source: new_params[:protocol_source] }
         ),
         title: t('protocol_importers.new.modal_title', protocol_name: @protocol.name),
         footer: render_to_string(
@@ -88,6 +89,17 @@ class ExternalProtocolsController < ApplicationController
     )
 
     if service_call.succeed?
+      if params[:source] == 'protocolsio/v3'
+        protocol = service_call.protocol
+        Activities::CreateActivityService
+          .call(activity_type: :import_protocol_in_repository_from_protocols_io,
+                owner: current_user,
+                subject: protocol,
+                team: protocol.team,
+                message_items: {
+                  protocol: protocol.id
+                })
+      end
       message = t('protocols.index.protocolsio.import.success_flash', name: service_call.protocol.name)
       render json: { protocol: service_call.protocol, message: message }
     else

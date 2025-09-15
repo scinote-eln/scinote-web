@@ -275,6 +275,9 @@ Rails.application.routes.draw do
         get 'atwho_experiments', to: 'at_who#experiments'
         get 'atwho_my_modules', to: 'at_who#my_modules'
         get 'atwho_menu_items', to: 'at_who#menu_items'
+        get :automations
+        get :settings
+        put :update_settings
       end
 
       # External protocols routes
@@ -518,6 +521,8 @@ Rails.application.routes.draw do
         post :change_results_state
         post :favorite
         post :unfavorite
+        get :current_status
+        get :status_partial
       end
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do

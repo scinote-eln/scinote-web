@@ -29,9 +29,11 @@ module SmartAnnotations
           if type == 'rep_item'
             repository_item(value[:name], user, team, type, object, is_shared_object)
           else
-            next unless object && (is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object))
-
-            SmartAnnotations::TextPreview.text(nil, type, object)
+            if object && (is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object))
+              SmartAnnotations::TextPreview.text(nil, type, object)
+            else
+              private_placeholder(object)
+            end
           end
         rescue ActiveRecord::RecordNotFound
           next
@@ -56,7 +58,7 @@ module SmartAnnotations
 
     def repository_item(name, user, team, type, object, is_shared_object)
       if object
-        return unless is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object)
+        return private_placeholder(object) unless is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object)
 
         return SmartAnnotations::TextPreview.text(nil, type, object)
       end
@@ -77,6 +79,21 @@ module SmartAnnotations
         raise ActiveRecord::RecordNotFound.new("#{type} does not exist")
       end
       klass.find_by_id(id)
+    end
+
+    def private_placeholder(object = nil)
+      case object
+      when Project
+        I18n.t('smart_annotations.private.project')
+      when Experiment
+        I18n.t('smart_annotations.private.experiment')
+      when MyModule
+        I18n.t('smart_annotations.private.my_module')
+      when RepositoryRow
+        I18n.t('smart_annotations.private.repository_row')
+      else
+        I18n.t('smart_annotations.private.object')
+      end
     end
   end
 end

@@ -52,13 +52,13 @@ class ResultsController < ApplicationController
   end
 
   def create
-    result = @my_module.results.create!(user: current_user)
+    result = @my_module.results.create!(user: current_user, last_modified_by: current_user)
     log_activity(:add_result, { result: result })
     render json: result
   end
 
   def update
-    @result.update!(result_params)
+    @result.update!(result_params.merge(last_modified_by: current_user))
     log_activity(:edit_result, { result: @result })
     render json: @result
   end

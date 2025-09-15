@@ -52,7 +52,6 @@ class Repository < RepositoryBase
   scope :appendable_by_user, lambda { |user, teams = user.current_team|
     active.with_granted_permissions(user, RepositoryPermissions::ROWS_CREATE, teams)
           .where(type: Extends::REPOSITORY_APPENDABLE_TYPES)
-          .where(team: teams)
   }
 
   def self.permission_class
@@ -142,7 +141,7 @@ class Repository < RepositoryBase
 
         # Clone columns (only if new_repo was saved)
         repository_columns.find_each do |col|
-          new_col = col.dup
+          new_col = col.deep_dup
           new_col.repository = new_repo
           new_col.created_by = created_by
           new_col.save!

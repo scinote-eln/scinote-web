@@ -141,7 +141,7 @@ export default {
           this.assignedRepositories = response.data.data;
           this.$nextTick(() => {
             this.recalculateContainerSize();
-            this.$refs.assignedRepositories.forEach((repository) => {
+            this.$refs.assignedRepositories?.forEach((repository) => {
               if (repository.sectionOpened) {
                 repository.getRows();
               }

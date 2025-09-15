@@ -5,6 +5,7 @@ class Result < ApplicationRecord
   include SearchableModel
   include SearchableByNameModel
   include ViewableModel
+  include ObservableModel
   include Discard::Model
 
   default_scope -> { kept }
@@ -12,8 +13,7 @@ class Result < ApplicationRecord
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
 
-  SEARCHABLE_ATTRIBUTES = ['results.name', 'result_texts.name', 'result_texts.text',
-                           'tables.name', 'tables.data_vector', 'comments.message'].freeze
+  SEARCHABLE_ATTRIBUTES = ['results.name', :children].freeze
 
   enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
@@ -66,14 +66,24 @@ class Result < ApplicationRecord
                                   projects: { archived: false })
     end
 
-    new_query.where_attributes_like_boolean(
-      SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: new_query }
+    new_query.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
+  end
+
+  def self.where_children_attributes_like(query)
+    from(
+      "(#{joins(:result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION
+      #{joins(result_tables: :table ).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION
+      #{joins(:result_comments).where_attributes_like(ResultComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      ) AS results",
+      :results
     )
   end
 
-  def self.search_subquery(query, raw_input)
-    raw_input.left_joins(:result_comments, :result_texts, result_tables: :table)
-             .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
+  def self.find_page_number(result_id, per_page = Kaminari.config.default_per_page)
+    position = pluck(:id).index(result_id)
+    (position.to_f / per_page).ceil
   end
 
   def duplicate(my_module, user, result_name: nil)
@@ -194,5 +204,12 @@ class Result < ApplicationRecord
 
   def delete_step_results
     step_results.destroy_all
+  end
+
+  private
+
+  # Override for ObservableModel
+  def changed_by
+    last_modified_by || user
   end
 end
