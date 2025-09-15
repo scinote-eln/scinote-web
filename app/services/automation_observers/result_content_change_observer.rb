@@ -9,10 +9,9 @@ module AutomationObservers
     def self.on_update(element, user)
       return unless Current.team.settings.dig('team_automation_settings', 'tasks', 'task_status_in_progress', 'on_result_created_or_changed')
 
-      result = case element.class.name
-               when 'Result'
+      result = if element.is_a?(Result)
                  element
-               else
+               elsif element.respond_to?(:result)
                  element.result
                end
 
