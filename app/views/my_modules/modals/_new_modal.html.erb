@@ -51,8 +51,8 @@
                 <label class="sci-label"><%= t('experiments.canvas.new_my_module_modal.assigned_tags_label') %></label>
                 <%= select_tag 'module-tags-selector', options_for_select([]),
                                       data: {
-                                              'tags-create-url': project_create_tag_path(project_id: @experiment.project_id),
-                                              'ajax-url': search_tags_experiment_path,
+                                              'tags-create-url': ''
+                                              'ajax-url': '',
                                               'placeholder': t('experiments.canvas.new_my_module_modal.assigned_tags_placeholder')
                                       },
                                       multiple: true %>

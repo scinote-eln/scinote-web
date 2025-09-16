@@ -8,42 +8,6 @@
 // Currently selected row in "load from protocol" modal
 var selectedRow = null;
 
-function initEditMyModuleDescription() {
-  var viewObject = $('#my_module_description_view');
-  viewObject.on('click', function(e) {
-    if (e && $(e.target).prop("tagName") === 'A') return;
-    if (e && $(e.target).hasClass('atwho-user-popover')) return;
-    if (e && $(e.target).hasClass('record-info-link')) return;
-    if (e && $(e.target).parent().hasClass('record-info-link')) return;
-    if (e && $(e.target).parent().hasClass('atwho-inserted')) return;
-
-    TinyMCE.init(
-      '#my_module_description_textarea',
-      {
-        onSaveCallback: () => {
-          Prism.highlightAllUnder(viewObject.get(0));
-        },
-        assignableMyModuleId: $('#my_module_description_textarea').data('object-id')
-      }
-    );
-  });
-
-  setTimeout(function() {
-    const notesContainerEl = document.getElementById('notes-container');
-    window.wrapTables(notesContainerEl);
-  }, 100);
-}
-
-function initEditProtocolDescription() {
-  var viewObject = $('#protocol_description_view');
-  viewObject.on('click', function(e) {
-    if ($(e.target).hasClass('record-info-link')) return;
-    TinyMCE.init('#protocol_description_textarea', { afterInitCallback: refreshProtocolStatusBar });
-  }).on('click', 'a', function(e) {
-    if ($(this).hasClass('record-info-link')) return;
-    e.stopPropagation();
-  });
-}
 
 function initLinkUpdate() {
   var modal = $('#confirm-link-update-modal');
@@ -306,39 +270,14 @@ function initProtocolSectionOpenEvent() {
   });
 }
 
-function initAccessModal() {
-  $('#openAccessModal').on('click', (e) => {
-    e.preventDefault();
-    const container = document.getElementById('accessModalContainer');
-    $.get(container.dataset.url, (data) => {
-      const object = {
-        ...data.data.attributes,
-        id: data.data.id,
-        type: data.data.type
-      };
-      const { rolesUrl } = container.dataset;
-      const params = {
-        object: object,
-        roles_path: rolesUrl
-      };
-      const modal = $('#accessModalComponent').data('accessModal');
-      modal.params = params;
-      modal.open();
-    });
-  });
-}
-
 /**
  * Initializes page
  */
 function init() {
-  initEditMyModuleDescription();
-  initEditProtocolDescription();
   initLinkUpdate();
   initLoadFromRepository();
   initProtocolSectionOpenEvent();
   initDetailsDropdown();
-  initAccessModal();
 }
 
 init();

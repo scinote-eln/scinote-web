@@ -40,7 +40,7 @@
     @close="showExperimentDescription = false"/>
   <NewModal v-if="newModalOpen"
             :createUrl="createUrl"
-            :projectTagsUrl="projectTagsUrl"
+            :teamTagsUrl="teamTagsUrl"
             :assignedUsersUrl="assignedUsersUrl"
             :currentUserId="currentUserId"
             @create="updateTable"
@@ -115,7 +115,6 @@ export default {
     userRolesUrl: { type: String, required: true },
     canvasUrl: { type: String, required: true },
     tagsColors: { type: Array, required: true },
-    projectTagsUrl: { type: String, required: true },
     teamTagsUrl: { type: String, required: true },
     assignedUsersUrl: { type: String, required: true },
     usersFilterUrl: { type: String, required: true },

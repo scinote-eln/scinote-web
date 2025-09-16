@@ -74,7 +74,7 @@ class MyModulesController < ApplicationController
     )
     @my_module.transaction do
       if my_module_tags_params[:tag_ids].present?
-        @my_module.tags << @experiment.project.tags.where(id: my_module_tags_params[:tag_ids])
+        @my_module.tags << @experiment.team.tags.where(id: my_module_tags_params[:tag_ids])
       end
       if my_module_designated_users_params[:user_ids].present? && can_designate_users_to_new_task?(@experiment)
         @my_module.designated_users << @experiment.users.where(id: my_module_designated_users_params[:user_ids])
@@ -223,6 +223,7 @@ class MyModulesController < ApplicationController
       if params[:output] == 'object'
         render json: @my_module, serializer: MyModuleSerializer, controller: self, user: current_user
       else
+        # Still used in canvas view
         alerts = []
         alerts << 'alert-green' if @my_module.completed?
         unless @my_module.completed?
@@ -231,34 +232,8 @@ class MyModulesController < ApplicationController
         end
         render json: {
           status: :ok,
-          start_date_label: render_to_string(
-            partial: 'my_modules/start_date_label',
-            formats: :html,
-            locals: { my_module: @my_module, start_date_editable: true }
-          ),
-          due_date_label: render_to_string(
-            partial: 'my_modules/due_date_label',
-            formats: :html,
-            locals: { my_module: @my_module, due_date_editable: true }
-          ),
           card_due_date_label: render_to_string(
             partial: 'my_modules/card_due_date_label',
-            formats: :html,
-            locals: { my_module: @my_module }
-          ),
-          table_due_date_label: {
-            html: render_to_string(partial: 'experiments/table_due_date_label',
-              formats: :html,
-              locals: { my_module: @my_module, user: current_user }),
-            due_status: my_module_due_status(@my_module)
-          },
-          module_header_due_date: render_to_string(
-            partial: 'my_modules/module_header_due_date',
-            formats: :html,
-            locals: { my_module: @my_module }
-          ),
-          description_label: render_to_string(
-            partial: 'my_modules/description_label',
             formats: :html,
             locals: { my_module: @my_module }
           ),

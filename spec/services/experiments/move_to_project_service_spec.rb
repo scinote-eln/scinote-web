@@ -39,24 +39,6 @@ describe Experiments::MoveToProjectService do
       expect(new_project.experiments.pluck(:id)).to include(experiment.id)
     end
 
-    it 'copies tags to new project' do
-      expect { service_call }.to(change { new_project.tags.count })
-    end
-
-    it 'leaves tags on an old project' do
-      experiment # explicit call to create tags
-      expect { service_call }.not_to(change { project.tags.count })
-    end
-
-    it 'sets new project tags to modules' do
-      service_call
-      experiment.reload
-      new_tags = experiment.my_modules.map { |m| m.tags.map { |t| t } }.flatten
-      tags_project_id = new_tags.map(&:project_id).uniq.first
-
-      expect(tags_project_id).to be == new_project.id
-    end
-
     it 'adds Activity record' do
       expect { service_call }.to(change { Activity.all.count })
     end
