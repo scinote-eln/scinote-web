@@ -711,7 +711,7 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rexml (3.4.1)
+    rexml (3.4.2)
     rgl (0.6.3)
       pairing_heap (>= 0.3.0)
       rexml (~> 3.2, >= 3.2.4)
