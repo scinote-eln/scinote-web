@@ -105,7 +105,7 @@ export default {
   name: 'NewModal',
   props: {
     createUrl: String,
-    projectTagsUrl: String,
+    teamTagsUrl: String,
     assignedUsersUrl: String,
     currentUserId: { type: String, required: true }
   },
@@ -132,8 +132,8 @@ export default {
       return this.allTags.map((tag) => (
         [
           tag.id,
-          tag.attributes.name,
-          tag.attributes.color
+          tag.name,
+          {color: tag.color}
         ]
       ));
     },
@@ -182,7 +182,8 @@ export default {
       this.users = users;
     },
     loadTags() {
-      axios.get(this.projectTagsUrl).then((response) => {
+      axios.get(this.teamTagsUrl).then((response) => {
+        console.log(response.data.data);
         this.allTags = response.data.data;
       });
     },
@@ -196,7 +197,7 @@ export default {
     },
     tagsRenderer(tag) {
       return `<div class="flex items-center gap-2">
-                <span class="w-4 h-4 rounded-full" style="background-color: ${escapeHtml(tag[2])}"></span>
+                <span class="w-4 h-4 rounded-full" style="background-color: ${escapeHtml(tag[2].color)}"></span>
                 <span title="${escapeHtml(tag[1])}" class="truncate">${escapeHtml(tag[1])}</span>
               </div>`;
     },

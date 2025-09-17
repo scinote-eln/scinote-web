@@ -37,8 +37,18 @@ describe Tag, type: :model do
     end
 
     describe '#color' do
-      it { is_expected.to validate_presence_of :color }
       it { is_expected.to validate_length_of(:color).is_at_most(Constants::COLOR_MAX_LENGTH) }
     end
   end
+
+  describe 'Callbacks' do
+    it 'should set random color before validation if color is blank' do
+      tag.color = ''
+      expect(tag.color).to be_blank
+      tag.valid?
+      expect(tag.color).to be_present
+    end
+  end
+
+
 end

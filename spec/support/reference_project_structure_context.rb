@@ -49,8 +49,8 @@ RSpec.shared_context 'reference_project_structure' do |config|
     create :my_module_group, experiment: experiment, created_by: user, my_modules: [my_module]
   end if config[:my_module_group]
 
-  let(:tag) { create :tag, project: project} if config[:tag] || config[:my_module_tag]
-  let(:tags) { create_list :tag, config[:tags], project: project} if config[:tags] || config[:my_module_tags]
+  let(:tag) { create :tag, team: team} if config[:tag] || config[:my_module_tag]
+  let(:tags) { create_list :tag, config[:tags], team: team} if config[:tags] || config[:my_module_tags]
 
   let(:project_comment) { create :project_comment, project: project, user: user } if config[:project_comment]
   let(:project_comments) { create_list :project_comment, config[:project_comments], project: project, user: user } if config[:project_comments]
@@ -58,9 +58,9 @@ RSpec.shared_context 'reference_project_structure' do |config|
   let(:my_module_comment) { create :task_comment, my_module: my_module, user: user } if config[:my_module_comment]
   let(:my_module_comments) { create_list :task_comment, config[:my_module_comments], my_module: my_module, user: user } if config[:my_module_comments]
 
-  let(:my_module_tag) { create :my_module_tag, my_module: my_module, tag: tag } if config[:my_module_tag]
+  let(:my_module_tag) { create :tagging, taggable: my_module, tag: tag } if config[:my_module_tag]
   let(:my_module_tags) do
-    tags.map { |t| create(:my_module_tag, my_module: my_module, tag: t) }
+    tags.map { |t| create(:tagging, taggable: my_module, tag: t) }
   end if config[:my_module_tags]
 
   if config[:step]
