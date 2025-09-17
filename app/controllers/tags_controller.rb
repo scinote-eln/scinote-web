@@ -22,7 +22,7 @@ class TagsController < ApplicationController
     @tag.last_modified_by = current_user
 
     if @tag.save
-      #@log_activity(:create_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
+      log_activity(:tag_created, @tag)
       render json: @tag, serializer: Lists::TagSerializer, user: current_user
     else
       render json: { errors: @tag.errors.full_messages }, status: :unprocessable_entity
@@ -32,7 +32,7 @@ class TagsController < ApplicationController
   def update
     @tag.last_modified_by = current_user
     if @tag.update(tag_params)
-      #log_activity(:edit_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
+      log_activity(:tag_edited, @tag)
       render json: @tag, serializer: Lists::TagSerializer, user: current_user
     else
       render json: { errors: @tag.errors.full_messages }, status: :unprocessable_entity
@@ -40,7 +40,7 @@ class TagsController < ApplicationController
   end
 
   def destroy
-    #log_activity(:delete_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
+    log_activity(:tag_deleted, @tag)
     if @tag.destroy
       render json: { message: :ok }, status: :ok
     else
@@ -60,6 +60,7 @@ class TagsController < ApplicationController
         end
       end
 
+      log_activity(:tag_merged, @tag, merged_tags: tags_to_remove.pluck(:name).join(','))
       tags_to_remove.each(&:destroy!)
 
       render json: { message: :ok }, status: :ok
@@ -99,5 +100,14 @@ class TagsController < ApplicationController
 
   def tag_params
     params.require(:tag).permit(:name, :color)
+  end
+
+  def log_activity(type_of, tag, message_items = {})
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: tag.team,
+            team: tag.team,
+            message_items: { tag: tag.id }.merge(message_items))
   end
 end
