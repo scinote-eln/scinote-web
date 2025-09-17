@@ -10,13 +10,22 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
           <h4 class="modal-title" id="print-protocol-modal-label"><%= t("protocols.print.modal.title") %></h5>
         </div>
-        <div class="modal-body">
-          <% if comments_enabled %>
+        <div class="modal-body flex flex-col gap-2">
+          <div>
             <div class="sci-checkbox-container">
-              <%= check_box_tag :include_comments, 1, true, { class: "sci-checkbox" } %>
+              <%= check_box_tag :include_assigned_items, 1, false, { class: "sci-checkbox" } %>
               <span class="sci-checkbox-label"></span>
             </div>
-            <small><%= t("protocols.print.modal.include_comments") %></small>
+            <small><%= t("protocols.print.modal.include_assigned_items") %></small>
+          </div>
+          <% if comments_enabled %>
+            <div>
+              <div class="sci-checkbox-container">
+                <%= check_box_tag :include_comments, 1, true, { class: "sci-checkbox" } %>
+                <span class="sci-checkbox-label"></span>
+              </div>
+              <small><%= t("protocols.print.modal.include_comments") %></small>
+            </div>
           <% end %>
         </div>
         <div class="modal-footer">
