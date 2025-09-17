@@ -146,13 +146,13 @@ class Protocol < ApplicationRecord
                   query = nil,
                   current_team = nil,
                   options = {})
-    teams = options[:teams] || current_team || user.teams.select(:id)
+    team_ids = options[:teams]&.pluck(:id) || current_team&.id || user.teams.pluck(:id)
 
     if options[:options]&.dig(:in_repository)
-      protocols = latest_available_versions(teams)
+      protocols = latest_available_versions(team_ids).readable_by_user(user, team_ids)
       protocols = protocols.active unless include_archived
     else
-      protocols = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, teams) })
+      protocols = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, team_ids) })
       unless include_archived
         protocols = protocols.active
                              .joins(my_module: { experiment: :project })
@@ -165,17 +165,17 @@ class Protocol < ApplicationRecord
 
   def self.where_children_attributes_like(query)
     from(
-      "(#{joins(:steps).where_attributes_like(Step::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{joins(steps: :step_texts).where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{joins(steps: { step_tables: :table }).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{joins(steps: :checklists).where_attributes_like(Checklist::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{joins(steps: { checklists: :checklist_items }).where_attributes_like(ChecklistItem::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{joins(steps: :step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      "(#{unscoped.joins(:steps).where_attributes_like(Step::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped.joins(steps: :step_texts).where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped.joins(steps: { step_tables: :table }).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped.joins(steps: :checklists).where_attributes_like(Checklist::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped.joins(steps: { checklists: :checklist_items }).where_attributes_like(ChecklistItem::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped.joins(steps: :step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
       ) AS protocols",
       :protocols
     )
@@ -191,12 +191,11 @@ class Protocol < ApplicationRecord
   end
 
   def self.latest_available_versions(teams)
-    team_protocols = where(team: teams)
+    team_protocols = where(team_id: teams)
 
     original_without_versions = team_protocols
                                 .where.missing(:published_versions)
                                 .where(protocol_type: Protocol.protocol_types[:in_repository_published_original])
-                                .where(published_versions: { id: nil })
                                 .select(:id)
     published_versions = team_protocols
                          .where(protocol_type: Protocol.protocol_types[:in_repository_published_version])
