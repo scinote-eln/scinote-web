@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -1103,8 +1103,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.string "text"
     t.bigint "result_id", null: false
     t.string "name"
+    t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_result_texts_on_name", using: :gin
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_result_texts_on_text", using: :gin
-    t.index ["name"], name: "index_result_texts_on_name", opclass: :gist_trgm_ops, using: :gist
     t.index ["result_id"], name: "index_result_texts_on_result_id"
   end
 
@@ -1182,6 +1182,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.index ["step_id"], name: "index_step_orderable_elements_on_step_id"
   end
 
+  create_table "step_results", force: :cascade do |t|
+    t.bigint "step_id", null: false
+    t.bigint "result_id", null: false
+    t.bigint "created_by_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_step_results_on_created_by_id"
+    t.index ["result_id"], name: "index_step_results_on_result_id"
+    t.index ["step_id"], name: "index_step_results_on_step_id"
+  end
+
   create_table "step_tables", force: :cascade do |t|
     t.bigint "step_id", null: false
     t.bigint "table_id", null: false
@@ -1194,8 +1205,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_step_texts_on_name", using: :gin
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_step_texts_on_text", using: :gin
-    t.index ["name"], name: "index_step_texts_on_name", opclass: :gist_trgm_ops, using: :gist
     t.index ["step_id"], name: "index_step_texts_on_step_id"
   end
 
@@ -1294,6 +1305,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.bigint "assignable_id", null: false
     t.bigint "user_role_id", null: false
     t.bigint "assigned_by_id"
+    t.integer "assigned", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["assignable_type", "assignable_id", "team_id"], name: "index_team_assignments_on_unique_assignable_in_team", unique: true
@@ -1323,6 +1335,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.string "description"
     t.bigint "space_taken", default: 1048576, null: false
     t.boolean "shareable_links_enabled", default: false, null: false
+    t.jsonb "settings", default: {}, null: false
     t.index ["created_by_id"], name: "index_teams_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_teams_on_last_modified_by_id"
     t.index ["name"], name: "index_teams_on_name"
@@ -1362,7 +1375,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "team_id"
-    t.index ["assignable_type", "assignable_id"], name: "index_user_assignments_on_assignable"
+    t.index ["assignable_type", "assignable_id", "user_id", "team_id"], name: "index_user_assignments_on_unique_assignable_in_team", unique: true
+    t.index ["assignable_type", "team_id", "user_id", "user_role_id"], name: "index_user_assignments_assignable_type_team_user_user_role"
     t.index ["assigned_by_id"], name: "index_user_assignments_on_assigned_by_id"
     t.index ["team_id"], name: "index_user_assignments_on_team_id"
     t.index ["user_id"], name: "index_user_assignments_on_user_id"
@@ -1376,6 +1390,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
     t.bigint "user_group_id", null: false
     t.bigint "user_role_id", null: false
     t.bigint "assigned_by_id"
+    t.integer "assigned", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["assignable_type", "assignable_id"], name: "index_user_group_assignments_on_assignable"
@@ -1729,6 +1744,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_06_082935) do
   add_foreign_key "step_assets", "assets"
   add_foreign_key "step_assets", "steps"
   add_foreign_key "step_orderable_elements", "steps"
+  add_foreign_key "step_results", "results"
+  add_foreign_key "step_results", "steps"
+  add_foreign_key "step_results", "users", column: "created_by_id"
   add_foreign_key "step_tables", "steps"
   add_foreign_key "step_tables", "tables"
   add_foreign_key "step_texts", "steps"

@@ -7,7 +7,8 @@ module StepElements
     before_action :load_checklist, only: %i(update destroy duplicate move)
     def create
       checklist = @step.checklists.build(
-        name: t('protocols.steps.checklist.default_name', position: @step.checklists.length + 1)
+        name: t('protocols.steps.checklist.default_name', position: @step.checklists.length + 1),
+        created_by: current_user
       )
       ActiveRecord::Base.transaction do
         create_in_step!(@step, checklist)
@@ -22,7 +23,7 @@ module StepElements
     def update
       old_name = @checklist.name
       ActiveRecord::Base.transaction do
-        @checklist.update!(checklist_params)
+        @checklist.update!(checklist_params.merge(last_modified_by: current_user))
         log_step_activity(:checklist_edited, { checklist_name: @checklist.name })
         checklist_name_annotation(@step, @checklist, old_name)
       end

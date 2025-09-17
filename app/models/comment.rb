@@ -3,6 +3,8 @@
 class Comment < ApplicationRecord
   include SearchableModel
 
+  SEARCHABLE_ATTRIBUTES = ['comments.message'].freeze
+
   auto_strip_attributes :message, nullify: false
   validates :message,
             presence: true,

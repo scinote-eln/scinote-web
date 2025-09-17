@@ -9,6 +9,8 @@ class ProjectsController < ApplicationController
   include ExperimentsHelper
   include Breadcrumbs
   include FavoritesActions
+  include TeamAssignmentsActions
+  include UserRolesHelper
 
   attr_reader :current_folder
 
@@ -21,7 +23,7 @@ class ProjectsController < ApplicationController
   before_action :check_read_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
                                                     actions_toolbar users_filter head_of_project_users_list
-                                                    favorite unfavorite)
+                                                    favorite unfavorite user_roles)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: :update
   before_action :set_folder_inline_name_editing, only: %i(index)
@@ -77,6 +79,7 @@ class ProjectsController < ApplicationController
     @project.last_modified_by = current_user
     if @project.save
       log_activity(:create_project)
+      create_team_assignment(@project, :project_grant_access_to_all_team_members)
 
       message = t('projects.create.success_flash', name: escape_input(@project.name))
       render json: { message: message }, status: :ok
@@ -277,6 +280,10 @@ class ProjectsController < ApplicationController
           current_user
         ).actions
     }
+  end
+
+  def user_roles
+    render json: { data: user_roles_collection(Project.new).map(&:reverse) }
   end
 
   private

@@ -11,8 +11,6 @@
     "archived_on": null,
     "restored_by_id": null,
     "restored_on": null,
-    "created_at": "2018-11-26T08:55:55.988Z",
-    "updated_at": "2019-01-29T09:46:44.060Z",
     "uuid": "838d4b6a-56d7-4391-8b3c-fa73517de68f"
   },
   "my_modules": [
@@ -25,8 +23,6 @@
         "x": 38,
         "y": 32,
         "my_module_group_id": 1179,
-        "created_at": "2018-11-28T07:52:48.731Z",
-        "updated_at": "2018-12-19T09:02:54.885Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -66,13 +62,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-28T07:52:48.739Z",
-            "updated_at": "2019-02-19T14:11:00.434Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -88,8 +81,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-28T07:54:48.624Z",
-                "updated_at": "2018-12-24T08:08:49.563Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3707
               },
@@ -109,8 +100,6 @@
                 {
                   "table": {
                     "id": 622,
-                    "created_at": "2018-11-28T07:54:48.627Z",
-                    "updated_at": "2018-12-24T08:08:49.543Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Commonly used mass spectrometers and their characteristics",
@@ -130,8 +119,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T14:42:45.887Z",
-                "updated_at": "2019-02-19T14:11:34.126Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3707
               },
@@ -142,8 +129,6 @@
                 {
                   "asset": {
                     "id": 3730,
-                    "created_at": "2019-02-19T14:11:00.182Z",
-                    "updated_at": "2019-02-19T14:11:34.116Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 28736,
@@ -168,8 +153,6 @@
                 {
                   "table": {
                     "id": 663,
-                    "created_at": "2018-12-07T14:42:45.890Z",
-                    "updated_at": "2018-12-07T14:43:49.437Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Commonly used algorithms",
@@ -189,8 +172,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T14:39:49.708Z",
-                "updated_at": "2018-12-07T14:40:36.053Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3707
               },
@@ -210,8 +191,6 @@
                 {
                   "table": {
                     "id": 662,
-                    "created_at": "2018-12-07T14:39:49.711Z",
-                    "updated_at": "2018-12-07T14:40:36.056Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Databases",
@@ -239,8 +218,6 @@
         "x": 0,
         "y": 0,
         "my_module_group_id": 1179,
-        "created_at": "2018-11-26T12:04:02.091Z",
-        "updated_at": "2018-12-19T09:02:54.887Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -284,13 +261,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-26T12:04:02.098Z",
-            "updated_at": "2019-02-20T07:32:07.687Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -306,8 +280,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T11:40:40.624Z",
-                "updated_at": "2018-12-24T06:40:41.505Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3678
               },
@@ -330,8 +302,6 @@
                       "id": 942,
                       "name": "Guidelines:",
                       "step_id": 5146,
-                      "created_at": "2018-12-20T14:15:25.669Z",
-                      "updated_at": "2018-12-20T14:15:25.669Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -341,8 +311,6 @@
                         "text": "Dilute the gel enzyme stock solution ~1:1000 with 25 mM ammonium bicarbonate to obtain a 10 to 20 μg/mL working solution.",
                         "checked": false,
                         "checklist_id": 942,
-                        "created_at": "2018-12-20T14:15:25.671Z",
-                        "updated_at": "2018-12-20T14:15:25.671Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -352,8 +320,6 @@
                         "text": "Add a sufficient amount of the gel enzyme working solution to cover gel pieces and incubate on ice for 1 hr. For a typical gel band/spot, this is ~10 to 20 μL.",
                         "checked": false,
                         "checklist_id": 942,
-                        "created_at": "2018-12-20T14:15:25.679Z",
-                        "updated_at": "2018-12-20T14:15:25.679Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -363,8 +329,6 @@
                         "text": "Remove excess gel enzyme solution, then add sufficient 25 mM NH4HCO3 to cover the gel pieces. This increases the pH and thereby inhibits the enzymatic digestion for those enzymes which have low pH optima.",
                         "checked": false,
                         "checklist_id": 942,
-                        "created_at": "2018-12-20T14:15:25.686Z",
-                        "updated_at": "2018-12-20T14:15:25.686Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -374,8 +338,6 @@
                         "text": "Incubate at 37°C overnight.",
                         "checked": false,
                         "checklist_id": 942,
-                        "created_at": "2018-12-20T14:15:25.693Z",
-                        "updated_at": "2018-12-20T14:15:25.693Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -394,8 +356,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T11:01:14.616Z",
-                "updated_at": "2018-12-20T14:13:35.200Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3678
               },
@@ -418,8 +378,6 @@
                       "id": 941,
                       "name": "Guidelines:",
                       "step_id": 5145,
-                      "created_at": "2018-12-20T14:12:18.059Z",
-                      "updated_at": "2018-12-20T14:12:18.059Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -429,8 +387,6 @@
                         "text": "Add 100 μL of 10 mM dithiothreitol to the gel piece, then incubate 45 min at 55°C.",
                         "checked": false,
                         "checklist_id": 941,
-                        "created_at": "2018-12-20T14:12:18.062Z",
-                        "updated_at": "2018-12-20T14:12:18.062Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -440,8 +396,6 @@
                         "text": "Remove solution, add 100 μl 55 mM iodoacetamide, and incubate 30 min at room temperature in the dark.",
                         "checked": false,
                         "checklist_id": 941,
-                        "created_at": "2018-12-20T14:12:18.070Z",
-                        "updated_at": "2018-12-20T14:12:18.070Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -451,8 +405,6 @@
                         "text": "Remove IAA solution and add 400 μL gel wash solution, incubate at room temperature, and shake for 15 min. Repeat this step twice.",
                         "checked": false,
                         "checklist_id": 941,
-                        "created_at": "2018-12-20T14:12:18.077Z",
-                        "updated_at": "2018-12-20T14:12:18.077Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -462,8 +414,6 @@
                         "text": "Dehydrate gel pieces with 400 μL of 100% acetonitrile for 10 min, then remove supernatant and dry gel pieces using a vacuum centrifuge.",
                         "checked": false,
                         "checklist_id": 941,
-                        "created_at": "2018-12-20T14:12:18.083Z",
-                        "updated_at": "2018-12-20T14:12:18.083Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -482,8 +432,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T11:52:09.928Z",
-                "updated_at": "2018-12-24T06:42:22.727Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3678
               },
@@ -506,8 +454,6 @@
                       "id": 943,
                       "name": "Guidelines:",
                       "step_id": 5147,
-                      "created_at": "2018-12-20T14:17:36.750Z",
-                      "updated_at": "2018-12-20T14:17:36.750Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -517,8 +463,6 @@
                         "text": "Remove supernatant, which now contains peptides, to a new clean microcentrifuge tube.",
                         "checked": false,
                         "checklist_id": 943,
-                        "created_at": "2018-12-20T14:17:36.754Z",
-                        "updated_at": "2018-12-20T14:17:36.754Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -528,8 +472,6 @@
                         "text": "Add 100 μL gel extraction solution to the gel pieces and incubate while shaking for 20 min at room temperature.",
                         "checked": false,
                         "checklist_id": 943,
-                        "created_at": "2018-12-20T14:17:36.761Z",
-                        "updated_at": "2018-12-20T14:17:36.761Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -539,8 +481,6 @@
                         "text": "Remove solution and combine with the solution obtained in step 1.",
                         "checked": false,
                         "checklist_id": 943,
-                        "created_at": "2018-12-20T14:17:36.777Z",
-                        "updated_at": "2018-12-20T14:17:36.777Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -550,8 +490,6 @@
                         "text": "Repeat steps second and third step.",
                         "checked": false,
                         "checklist_id": 943,
-                        "created_at": "2018-12-20T14:17:36.784Z",
-                        "updated_at": "2018-12-20T14:17:36.784Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -561,8 +499,6 @@
                         "text": "Dry combined supernatants using a vacuum centrifuge.",
                         "checked": false,
                         "checklist_id": 943,
-                        "created_at": "2018-12-20T14:17:36.791Z",
-                        "updated_at": "2018-12-20T14:17:36.791Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -581,8 +517,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-26T13:15:06.518Z",
-                "updated_at": "2018-12-24T06:34:58.049Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3678
               },
@@ -605,8 +539,6 @@
                       "id": 917,
                       "name": "Washing:",
                       "step_id": 4826,
-                      "created_at": "2018-12-07T10:52:29.542Z",
-                      "updated_at": "2018-12-07T11:39:18.108Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -616,8 +548,6 @@
                         "text": "Remove destain solution",
                         "checked": false,
                         "checklist_id": 917,
-                        "created_at": "2018-12-07T10:52:29.545Z",
-                        "updated_at": "2018-12-07T10:52:29.545Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -627,8 +557,6 @@
                         "text": "Add 400 μl water.",
                         "checked": false,
                         "checklist_id": 917,
-                        "created_at": "2018-12-07T10:52:29.554Z",
-                        "updated_at": "2018-12-07T10:52:29.554Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -638,8 +566,6 @@
                         "text": "If the gel pieces are still blue, remove the water and repeat until the gel pieces are colourless.",
                         "checked": false,
                         "checklist_id": 917,
-                        "created_at": "2018-12-07T10:52:29.562Z",
-                        "updated_at": "2018-12-07T10:52:29.562Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -654,8 +580,6 @@
                       "id": 919,
                       "name": "Dehydration:",
                       "step_id": 4826,
-                      "created_at": "2018-12-07T11:39:18.116Z",
-                      "updated_at": "2018-12-07T11:39:18.116Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -665,8 +589,6 @@
                         "text": "Dehydrate gel pieces with 400 μl of 100% acetonitrile for 10 min",
                         "checked": false,
                         "checklist_id": 919,
-                        "created_at": "2018-12-07T11:39:18.118Z",
-                        "updated_at": "2018-12-07T11:39:18.118Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -676,8 +598,6 @@
                         "text": "Remove supernatant",
                         "checked": false,
                         "checklist_id": 919,
-                        "created_at": "2018-12-07T11:39:18.126Z",
-                        "updated_at": "2018-12-07T11:39:18.126Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -687,8 +607,6 @@
                         "text": "Dry gel pieces in a vacuum centrifuge",
                         "checked": false,
                         "checklist_id": 919,
-                        "created_at": "2018-12-07T11:39:18.133Z",
-                        "updated_at": "2018-12-07T11:39:18.133Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -707,8 +625,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-26T13:08:09.568Z",
-                "updated_at": "2019-01-31T08:32:58.429Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3678
               },
@@ -731,8 +647,6 @@
                       "id": 940,
                       "name": "Follow:",
                       "step_id": 4824,
-                      "created_at": "2018-12-20T14:03:52.360Z",
-                      "updated_at": "2018-12-20T14:03:52.360Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -742,8 +656,6 @@
                         "text": "Step 3: Glutaraldehyde-free silver stained gels",
                         "checked": false,
                         "checklist_id": 940,
-                        "created_at": "2018-12-20T14:03:52.362Z",
-                        "updated_at": "2018-12-20T14:04:56.749Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -753,8 +665,6 @@
                         "text": "Step 4: Coomassie-stained gels",
                         "checked": false,
                         "checklist_id": 940,
-                        "created_at": "2018-12-20T14:03:52.369Z",
-                        "updated_at": "2018-12-20T14:04:56.761Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -773,8 +683,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-26T13:14:10.347Z",
-                "updated_at": "2018-12-24T06:30:40.360Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3678
               },
@@ -797,8 +705,6 @@
                       "id": 916,
                       "name": "Washing:",
                       "step_id": 4825,
-                      "created_at": "2018-12-07T10:50:00.146Z",
-                      "updated_at": "2018-12-07T11:37:14.463Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -808,8 +714,6 @@
                         "text": "Remove destain solution",
                         "checked": false,
                         "checklist_id": 916,
-                        "created_at": "2018-12-07T10:50:00.148Z",
-                        "updated_at": "2018-12-07T10:50:00.148Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -819,8 +723,6 @@
                         "text": "Wash gel piece with 400 μL water",
                         "checked": false,
                         "checklist_id": 916,
-                        "created_at": "2018-12-07T10:50:00.157Z",
-                        "updated_at": "2018-12-20T12:00:27.604Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -830,8 +732,6 @@
                         "text": "Shake for 15 min at room temperature",
                         "checked": false,
                         "checklist_id": 916,
-                        "created_at": "2018-12-07T10:50:00.166Z",
-                        "updated_at": "2018-12-07T10:50:00.166Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -841,8 +741,6 @@
                         "text": "Repeat wash at least twice or until gel pieces are colourless.",
                         "checked": false,
                         "checklist_id": 916,
-                        "created_at": "2018-12-07T10:50:00.175Z",
-                        "updated_at": "2018-12-07T10:50:00.175Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -857,8 +755,6 @@
                       "id": 918,
                       "name": "Dehydration:",
                       "step_id": 4825,
-                      "created_at": "2018-12-07T11:36:41.173Z",
-                      "updated_at": "2018-12-07T11:37:28.556Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -868,8 +764,6 @@
                         "text": "Dehydrate gel pieces with 400 μL of 100% acetonitrile for 10 min",
                         "checked": false,
                         "checklist_id": 918,
-                        "created_at": "2018-12-07T11:36:41.177Z",
-                        "updated_at": "2018-12-20T12:00:27.594Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -879,8 +773,6 @@
                         "text": "Remove supernatant",
                         "checked": false,
                         "checklist_id": 918,
-                        "created_at": "2018-12-07T11:36:41.204Z",
-                        "updated_at": "2018-12-07T11:36:41.204Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -890,8 +782,6 @@
                         "text": "Dry gel pieces in a vacuum centrifuge",
                         "checked": false,
                         "checklist_id": 918,
-                        "created_at": "2018-12-07T11:36:41.211Z",
-                        "updated_at": "2018-12-07T11:36:41.211Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -910,8 +800,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-26T13:01:32.320Z",
-                "updated_at": "2019-02-20T07:32:22.475Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3678
               },
@@ -922,8 +810,6 @@
                 {
                   "asset": {
                     "id": 3740,
-                    "created_at": "2019-02-20T07:32:07.412Z",
-                    "updated_at": "2019-02-20T07:32:22.467Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 12461,
@@ -963,8 +849,6 @@
         "x": 0,
         "y": 16,
         "my_module_group_id": 1179,
-        "created_at": "2018-11-26T13:45:56.851Z",
-        "updated_at": "2018-12-19T09:02:54.890Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -1008,13 +892,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-26T13:45:56.859Z",
-            "updated_at": "2019-02-20T07:31:56.209Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -1030,8 +911,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-26T13:50:47.141Z",
-                "updated_at": "2019-02-20T07:32:22.048Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3682
               },
@@ -1042,8 +921,6 @@
                 {
                   "asset": {
                     "id": 3739,
-                    "created_at": "2019-02-20T07:31:55.926Z",
-                    "updated_at": "2019-02-20T07:32:22.040Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 12461,
@@ -1071,8 +948,6 @@
                       "id": 944,
                       "name": "To neutralize prior to drying:",
                       "step_id": 4840,
-                      "created_at": "2018-12-20T14:20:33.276Z",
-                      "updated_at": "2018-12-20T14:20:33.276Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1082,8 +957,6 @@
                         "text": "Add sufficient 1 M NH4HCO3, pH8.5.",
                         "checked": false,
                         "checklist_id": 944,
-                        "created_at": "2018-12-20T14:20:33.278Z",
-                        "updated_at": "2018-12-20T14:20:33.278Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1093,8 +966,6 @@
                         "text": "Adjust final pH to ~8.0.",
                         "checked": false,
                         "checklist_id": 944,
-                        "created_at": "2018-12-20T14:20:33.285Z",
-                        "updated_at": "2018-12-20T14:20:33.285Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1104,8 +975,6 @@
                         "text": "Then dry via vacuum centrifugation.",
                         "checked": false,
                         "checklist_id": 944,
-                        "created_at": "2018-12-20T14:20:33.292Z",
-                        "updated_at": "2018-12-20T14:20:33.292Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1120,8 +989,6 @@
                       "id": 945,
                       "name": "To neutralize after drying:",
                       "step_id": 4840,
-                      "created_at": "2018-12-20T14:21:35.471Z",
-                      "updated_at": "2018-12-20T14:21:35.471Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1131,8 +998,6 @@
                         "text": "Resuspend dried protein in 100 mM NH4HCO3, pH 8.5.",
                         "checked": false,
                         "checklist_id": 945,
-                        "created_at": "2018-12-20T14:21:35.474Z",
-                        "updated_at": "2018-12-20T14:21:35.474Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1142,8 +1007,6 @@
                         "text": "Spot an aliquot of the neutralized solution on narrow-range pH paper to validate that neutralization (to pH 8.0) has occurred.",
                         "checked": false,
                         "checklist_id": 945,
-                        "created_at": "2018-12-20T14:21:35.481Z",
-                        "updated_at": "2018-12-20T14:21:35.481Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1162,8 +1025,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T12:46:55.270Z",
-                "updated_at": "2019-01-31T08:30:26.220Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3682
               },
@@ -1186,8 +1047,6 @@
                       "id": 946,
                       "name": "Guidelines:",
                       "step_id": 5148,
-                      "created_at": "2018-12-20T14:24:01.663Z",
-                      "updated_at": "2018-12-20T14:24:01.663Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1197,8 +1056,6 @@
                         "text": "Add DTT to a final concentration of 10 mM or TCEP to a final concentration of 5 mM.",
                         "checked": false,
                         "checklist_id": 946,
-                        "created_at": "2018-12-20T14:24:01.666Z",
-                        "updated_at": "2018-12-20T14:24:01.666Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1208,8 +1065,6 @@
                         "text": "Incubate sample at room temperature with agitation (e.g. vortexing, or shaking), for 30 min with DTT or 10 min with TCEP.",
                         "checked": false,
                         "checklist_id": 946,
-                        "created_at": "2018-12-20T14:24:01.680Z",
-                        "updated_at": "2018-12-20T14:24:01.680Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1219,8 +1074,6 @@
                         "text": "Add iodoacetamide (IAA) to a concentration of 10 mM final and place at room temperature in the dark for 30 min.",
                         "checked": false,
                         "checklist_id": 946,
-                        "created_at": "2018-12-20T14:24:01.690Z",
-                        "updated_at": "2018-12-20T14:24:01.690Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1239,8 +1092,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T12:52:36.364Z",
-                "updated_at": "2019-01-31T08:32:20.691Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3682
               },
@@ -1275,8 +1126,6 @@
         "x": 73,
         "y": 15,
         "my_module_group_id": 1179,
-        "created_at": "2018-12-07T14:01:45.181Z",
-        "updated_at": "2018-12-19T09:02:54.895Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -1320,13 +1169,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-12-07T14:01:45.189Z",
-            "updated_at": "2019-01-31T08:39:24.163Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -1342,8 +1188,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T14:20:38.293Z",
-                "updated_at": "2018-12-24T08:06:13.141Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3837
               },
@@ -1366,8 +1210,6 @@
                       "id": 951,
                       "name": "Guidelines:",
                       "step_id": 5154,
-                      "created_at": "2018-12-20T14:51:18.465Z",
-                      "updated_at": "2018-12-20T14:51:18.465Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1377,8 +1219,6 @@
                         "text": "If samples have been dried, then resuspended in 3 μL 1 of % SDS. Dilute IMAC–1% TFA and IMAC-FT samples each in 5 volumes of TiO2 loading solution.",
                         "checked": false,
                         "checklist_id": 951,
-                        "created_at": "2018-12-20T14:51:18.467Z",
-                        "updated_at": "2018-12-20T14:51:18.467Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1388,8 +1228,6 @@
                         "text": "Load each of the samples onto one TiO2 column (for simple samples) or three to four TiO2 columns (for complex mixtures containing ≥120 μg protein).",
                         "checked": false,
                         "checklist_id": 951,
-                        "created_at": "2018-12-20T14:51:18.476Z",
-                        "updated_at": "2018-12-20T14:51:18.476Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1399,8 +1237,6 @@
                         "text": "Collect TiO2 flow through in microcentrifuge tubes. Do this step slowly using Combi-Syringe to apply the pressure.",
                         "checked": false,
                         "checklist_id": 951,
-                        "created_at": "2018-12-20T14:51:18.483Z",
-                        "updated_at": "2018-12-20T14:51:18.483Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1410,8 +1246,6 @@
                         "text": "Wash the TiO2 columns using 5 μL TiO2 loading solution and pool the eluates with the TIO2FT fraction from the previous step. Do this step slowly using Combi-Syringe to apply the pressure.",
                         "checked": false,
                         "checklist_id": 951,
-                        "created_at": "2018-12-20T14:51:18.491Z",
-                        "updated_at": "2018-12-20T14:51:18.491Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1421,8 +1255,6 @@
                         "text": "Elute the phosphopeptides using 30 μL high-pH elution solution. Use 30 μL per column and pool the eluates from the same sample. This step should be performed slowly using a Combi-Syringe to apply pressure.\r\nAcidify the eluates using 100% TFA to a pH of ~2 to 3.",
                         "checked": false,
                         "checklist_id": 951,
-                        "created_at": "2018-12-20T14:51:18.499Z",
-                        "updated_at": "2018-12-20T14:51:18.499Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -1441,8 +1273,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T14:34:54.225Z",
-                "updated_at": "2018-12-24T08:07:19.825Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3837
               },
@@ -1465,8 +1295,6 @@
                       "id": 920,
                       "name": "For MALDI-TOF-MS/MS:",
                       "step_id": 5156,
-                      "created_at": "2018-12-07T14:34:54.228Z",
-                      "updated_at": "2018-12-07T14:34:54.228Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1476,8 +1304,6 @@
                         "text": "Elute the peptides from Oligo R3 column using 5 μL phosphopeptide RP elution buffer",
                         "checked": false,
                         "checklist_id": 920,
-                        "created_at": "2018-12-07T14:34:54.230Z",
-                        "updated_at": "2018-12-20T12:16:38.311Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1487,8 +1313,6 @@
                         "text": "Spot directly onto MALDI sample plate, using a pipet.",
                         "checked": false,
                         "checklist_id": 920,
-                        "created_at": "2018-12-07T14:34:54.239Z",
-                        "updated_at": "2018-12-07T14:34:54.239Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1498,8 +1322,6 @@
                         "text": "As spot is drying, if matrix crystals are not forming well, spot an additional 0.5 μL phosphopeptide RP elution buffer.",
                         "checked": false,
                         "checklist_id": 920,
-                        "created_at": "2018-12-07T14:34:54.248Z",
-                        "updated_at": "2018-12-20T12:16:38.318Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1514,8 +1336,6 @@
                       "id": 921,
                       "name": "For LC-ESI-MS/MS:",
                       "step_id": 5156,
-                      "created_at": "2018-12-07T14:34:54.261Z",
-                      "updated_at": "2018-12-07T14:34:54.261Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1525,8 +1345,6 @@
                         "text": "Elute the peptides from the Oligo R3 column using 30 μl phosphopeptide RP elution buffer.",
                         "checked": false,
                         "checklist_id": 921,
-                        "created_at": "2018-12-07T14:34:54.263Z",
-                        "updated_at": "2018-12-07T14:34:54.263Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1536,8 +1354,6 @@
                         "text": "Dry pooled eluates by vacuum centrifugation.",
                         "checked": false,
                         "checklist_id": 921,
-                        "created_at": "2018-12-07T14:34:54.271Z",
-                        "updated_at": "2018-12-07T14:34:54.271Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1547,8 +1363,6 @@
                         "text": "Resuspend the monophosphopeptides in 0.5 μL 100% formic acid and add 10 μl of 0.1% formic acid immediately.",
                         "checked": false,
                         "checklist_id": 921,
-                        "created_at": "2018-12-07T14:34:54.278Z",
-                        "updated_at": "2018-12-20T12:16:38.303Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1567,8 +1381,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T14:31:41.630Z",
-                "updated_at": "2019-01-31T08:39:07.689Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3837
               },
@@ -1595,8 +1407,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T14:15:28.126Z",
-                "updated_at": "2019-01-29T10:23:10.142Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3837
               },
@@ -1631,8 +1441,6 @@
         "x": 38,
         "y": 15,
         "my_module_group_id": 1179,
-        "created_at": "2018-12-07T13:34:00.077Z",
-        "updated_at": "2018-12-19T09:02:54.880Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -1676,13 +1484,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-12-07T13:34:00.086Z",
-            "updated_at": "2019-01-25T12:07:01.449Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -1698,8 +1503,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T13:58:12.351Z",
-                "updated_at": "2018-12-20T14:48:45.965Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3836
               },
@@ -1722,8 +1525,6 @@
                       "id": 950,
                       "name": "Guidelines:",
                       "step_id": 5152,
-                      "created_at": "2018-12-20T14:48:32.247Z",
-                      "updated_at": "2018-12-20T14:48:32.247Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1733,8 +1534,6 @@
                         "text": "Collect the column flow through in microcentrifuge tubes.",
                         "checked": false,
                         "checklist_id": 950,
-                        "created_at": "2018-12-20T14:48:32.249Z",
-                        "updated_at": "2018-12-20T14:48:32.249Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1744,8 +1543,6 @@
                         "text": "Wash the IMAC column with 50 μL IMAC wash solution and pool the eluate with the fraction from the previous step. This need to be done slowly using a Combi-Syringe to apply pressure.",
                         "checked": false,
                         "checklist_id": 950,
-                        "created_at": "2018-12-20T14:48:32.256Z",
-                        "updated_at": "2018-12-20T14:48:32.256Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1755,8 +1552,6 @@
                         "text": "Elute and collect the monophosphopeptides using 50 μl low-pH elution solution. This needs to be done quickly using a Combi-Syringe to apply pressure.",
                         "checked": false,
                         "checklist_id": 950,
-                        "created_at": "2018-12-20T14:48:32.263Z",
-                        "updated_at": "2018-12-20T14:48:32.263Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1766,8 +1561,6 @@
                         "text": "Elute and collect the multiply phosphorylated peptides using 70 μL high-pH elution solution. This step should be performed slowly using a Combi-Syringe to apply pressure.",
                         "checked": false,
                         "checklist_id": 950,
-                        "created_at": "2018-12-20T14:48:32.269Z",
-                        "updated_at": "2018-12-20T14:48:32.269Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -1786,8 +1579,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T13:50:12.807Z",
-                "updated_at": "2019-01-25T12:07:01.391Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3836
               },
@@ -1810,8 +1601,6 @@
                       "id": 949,
                       "name": "Guideline:",
                       "step_id": 5151,
-                      "created_at": "2018-12-20T14:47:07.628Z",
-                      "updated_at": "2018-12-20T14:47:07.628Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1821,8 +1610,6 @@
                         "text": "Add protein sample to the IMAC beads in a volume of IMAC wash solution that is 10 times the volume of the packed beads.",
                         "checked": false,
                         "checklist_id": 949,
-                        "created_at": "2018-12-20T14:47:07.630Z",
-                        "updated_at": "2018-12-20T14:47:07.630Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1832,8 +1619,6 @@
                         "text": "Incubate with constant, gentle agitation, at room temperature for 30 to 60 min.",
                         "checked": false,
                         "checklist_id": 949,
-                        "created_at": "2018-12-20T14:47:07.638Z",
-                        "updated_at": "2018-12-20T14:47:07.638Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1843,8 +1628,6 @@
                         "text": "Using a Combi-Syringe and gentle pressure, pack the IMAC beads in a narrow bore tip by gradually adding the bead slurry in 20 μL aliquots.",
                         "checked": false,
                         "checklist_id": 949,
-                        "created_at": "2018-12-20T14:47:07.654Z",
-                        "updated_at": "2018-12-20T14:47:07.654Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1863,8 +1646,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-07T13:34:50.552Z",
-                "updated_at": "2018-12-20T14:44:55.371Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3836
               },
@@ -1887,8 +1668,6 @@
                       "id": 948,
                       "name": "Guideline:",
                       "step_id": 5150,
-                      "created_at": "2018-12-20T14:44:55.374Z",
-                      "updated_at": "2018-12-20T14:44:55.374Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -1898,8 +1677,6 @@
                         "text": "Wash IMAC (immobilized metal affinity chromatography) beads. You will need 5 to 7 μL for simple mixtures and 30 to 50 μL for complex mixtures containing ≥120 μg protein.",
                         "checked": false,
                         "checklist_id": 948,
-                        "created_at": "2018-12-20T14:44:55.376Z",
-                        "updated_at": "2018-12-20T14:44:55.376Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -1909,8 +1686,6 @@
                         "text": "Applying 50 μL IMAC wash solution, vortex and centrifuge at low speed (e.g., 800 rpm in a benchtop microcentrifuge) at room temperature to pellet the beads.",
                         "checked": false,
                         "checklist_id": 948,
-                        "created_at": "2018-12-20T14:44:55.383Z",
-                        "updated_at": "2018-12-20T14:44:55.383Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -1920,8 +1695,6 @@
                         "text": "Remove the supernatant by pipetting.",
                         "checked": false,
                         "checklist_id": 948,
-                        "created_at": "2018-12-20T14:44:55.390Z",
-                        "updated_at": "2018-12-20T14:44:55.390Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -1948,8 +1721,6 @@
         "x": 0,
         "y": 32,
         "my_module_group_id": 1179,
-        "created_at": "2018-11-27T17:13:44.860Z",
-        "updated_at": "2018-12-19T09:02:54.892Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -1993,13 +1764,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-27T17:13:44.867Z",
-            "updated_at": "2019-02-20T07:31:43.409Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -2015,8 +1783,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-27T17:40:37.750Z",
-                "updated_at": "2018-12-24T07:26:44.813Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3704
               },
@@ -2039,8 +1805,6 @@
                       "id": 858,
                       "name": "Guidelines:",
                       "step_id": 4872,
-                      "created_at": "2018-11-27T17:40:37.753Z",
-                      "updated_at": "2018-12-20T14:36:53.748Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -2050,8 +1814,6 @@
                         "text": "Use a 5× volume of 0.1 M glycine, pH 2.5.",
                         "checked": false,
                         "checklist_id": 858,
-                        "created_at": "2018-11-27T17:40:37.755Z",
-                        "updated_at": "2018-11-27T17:40:37.755Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -2061,8 +1823,6 @@
                         "text": "Apply the elution buffer and allow the buffer to thoroughly wet the matrix for 5 to 10 min.",
                         "checked": false,
                         "checklist_id": 858,
-                        "created_at": "2018-11-27T17:40:37.764Z",
-                        "updated_at": "2018-11-27T17:40:37.764Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -2072,8 +1832,6 @@
                         "text": "Collect the eluate.",
                         "checked": false,
                         "checklist_id": 858,
-                        "created_at": "2018-11-27T17:40:37.772Z",
-                        "updated_at": "2018-11-27T17:40:37.772Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -2083,8 +1841,6 @@
                         "text": "To enhance recovery, wash the matrix with an additional 5× volume of 0.1 M glycine, pH 2.5.",
                         "checked": false,
                         "checklist_id": 858,
-                        "created_at": "2018-11-27T17:40:37.780Z",
-                        "updated_at": "2018-11-27T17:40:37.780Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -2094,8 +1850,6 @@
                         "text": "Adjust eluate to neutral pH by addition of an equal volume of 200 mM NH4HCO3.",
                         "checked": false,
                         "checklist_id": 858,
-                        "created_at": "2018-11-27T17:40:37.788Z",
-                        "updated_at": "2018-11-27T17:40:37.788Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -2114,8 +1868,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-27T17:42:41.887Z",
-                "updated_at": "2018-12-24T07:32:38.099Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3704
               },
@@ -2138,8 +1890,6 @@
                       "id": 859,
                       "name": "To do:",
                       "step_id": 4873,
-                      "created_at": "2018-11-27T17:42:41.891Z",
-                      "updated_at": "2018-11-27T17:42:41.891Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -2149,8 +1899,6 @@
                         "text": "Add DTT to a final concentration of 10 mM or TCEP to a final concentration of 5 mM.",
                         "checked": false,
                         "checklist_id": 859,
-                        "created_at": "2018-11-27T17:42:41.894Z",
-                        "updated_at": "2018-11-27T17:42:41.894Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -2160,8 +1908,6 @@
                         "text": "Incubate sample at room temperature with vortexing  for 10 min with TCEP or 30 min with DTT.",
                         "checked": false,
                         "checklist_id": 859,
-                        "created_at": "2018-11-27T17:42:41.915Z",
-                        "updated_at": "2018-11-27T17:42:41.915Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -2171,8 +1917,6 @@
                         "text": "Next, to alkylate free cysteines, add iodoacetamide to a final concentration of 10 mM",
                         "checked": false,
                         "checklist_id": 859,
-                        "created_at": "2018-11-27T17:42:41.923Z",
-                        "updated_at": "2018-11-27T17:42:41.923Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -2182,8 +1926,6 @@
                         "text": "Place at room temperature in the dark for 30 min.",
                         "checked": false,
                         "checklist_id": 859,
-                        "created_at": "2018-11-27T17:42:41.934Z",
-                        "updated_at": "2018-11-27T17:42:41.934Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -2202,8 +1944,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-27T17:43:58.146Z",
-                "updated_at": "2018-12-24T07:33:39.499Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3704
               },
@@ -2226,8 +1966,6 @@
                       "id": 947,
                       "name": "Guidelines:",
                       "step_id": 4874,
-                      "created_at": "2018-12-20T14:41:18.229Z",
-                      "updated_at": "2018-12-20T14:41:18.229Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -2237,8 +1975,6 @@
                         "text": "Use an appropriate enzyme or chemical. If using trypsin, add sufficient enzyme for final trypsin: protein ratio of 1:20 to 1:100 (w/w).",
                         "checked": false,
                         "checklist_id": 947,
-                        "created_at": "2018-12-20T14:41:18.231Z",
-                        "updated_at": "2018-12-20T14:41:18.231Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -2248,8 +1984,6 @@
                         "text": "Vortex briefly.",
                         "checked": false,
                         "checklist_id": 947,
-                        "created_at": "2018-12-20T14:41:18.238Z",
-                        "updated_at": "2018-12-20T14:41:18.238Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -2259,8 +1993,6 @@
                         "text": "Seal the tube with Paraffin.",
                         "checked": false,
                         "checklist_id": 947,
-                        "created_at": "2018-12-20T14:41:18.244Z",
-                        "updated_at": "2018-12-20T14:41:18.244Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -2270,8 +2002,6 @@
                         "text": "Incubate with end-over-end rotation at 37°C for 4 to 18 hours.",
                         "checked": false,
                         "checklist_id": 947,
-                        "created_at": "2018-12-20T14:41:18.250Z",
-                        "updated_at": "2018-12-20T14:41:18.250Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -2281,8 +2011,6 @@
                         "text": "Stop reaction by adding 5 μL of 1.0% trifluoroacetic (TFA) acid.",
                         "checked": false,
                         "checklist_id": 947,
-                        "created_at": "2018-12-20T14:41:18.257Z",
-                        "updated_at": "2018-12-20T14:41:18.257Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 4
@@ -2301,8 +2029,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-27T17:15:38.260Z",
-                "updated_at": "2019-02-20T07:32:21.681Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3704
               },
@@ -2313,8 +2039,6 @@
                 {
                   "asset": {
                     "id": 3738,
-                    "created_at": "2019-02-20T07:31:43.019Z",
-                    "updated_at": "2019-02-20T07:32:21.672Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 12461,
@@ -2354,8 +2078,6 @@
         "x": 73,
         "y": 32,
         "my_module_group_id": 1179,
-        "created_at": "2018-11-27T17:52:31.026Z",
-        "updated_at": "2018-12-19T09:02:54.882Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -2399,13 +2121,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-27T17:52:31.033Z",
-            "updated_at": "2019-01-31T08:40:47.434Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -2421,8 +2140,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-27T17:54:41.488Z",
-                "updated_at": "2018-11-27T17:57:19.111Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3705
               },
@@ -2445,8 +2162,6 @@
                       "id": 860,
                       "name": "To do:",
                       "step_id": 4876,
-                      "created_at": "2018-11-27T17:57:03.419Z",
-                      "updated_at": "2018-11-27T17:57:03.419Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -2456,8 +2171,6 @@
                         "text": "Wash the column three times with 200 μl 100% acetonitrile.",
                         "checked": false,
                         "checklist_id": 860,
-                        "created_at": "2018-11-27T17:57:03.421Z",
-                        "updated_at": "2018-11-27T17:57:03.421Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -2467,8 +2180,6 @@
                         "text": "Discard flow through.",
                         "checked": false,
                         "checklist_id": 860,
-                        "created_at": "2018-11-27T17:57:03.430Z",
-                        "updated_at": "2018-11-27T17:57:03.430Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -2478,8 +2189,6 @@
                         "text": "Rinse the column three times with 200 μL 0.1% TFA.",
                         "checked": false,
                         "checklist_id": 860,
-                        "created_at": "2018-11-27T17:57:03.437Z",
-                        "updated_at": "2018-12-20T12:17:19.310Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -2489,8 +2198,6 @@
                         "text": "Discard flow through.",
                         "checked": false,
                         "checklist_id": 860,
-                        "created_at": "2018-11-27T17:57:03.445Z",
-                        "updated_at": "2018-11-27T17:57:03.445Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -2509,8 +2216,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-27T18:01:53.039Z",
-                "updated_at": "2019-01-31T08:40:47.389Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3705
               },
@@ -2537,8 +2242,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-27T18:00:46.914Z",
-                "updated_at": "2019-01-29T10:24:17.412Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3705
               },
@@ -2565,8 +2268,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-27T17:59:44.389Z",
-                "updated_at": "2018-12-24T08:07:53.994Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3705
               },
@@ -2589,8 +2290,6 @@
                       "id": 861,
                       "name": "Preparation of samples:",
                       "step_id": 4877,
-                      "created_at": "2018-11-27T17:59:44.392Z",
-                      "updated_at": "2018-11-27T17:59:44.392Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -2600,8 +2299,6 @@
                         "text": "Add 10% TFA to bring the final concentration to 0.1% TFA to the peptide sample.",
                         "checked": false,
                         "checklist_id": 861,
-                        "created_at": "2018-11-27T17:59:44.394Z",
-                        "updated_at": "2018-11-27T17:59:44.394Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -2611,8 +2308,6 @@
                         "text": "Apply the sample to the column",
                         "checked": false,
                         "checklist_id": 861,
-                        "created_at": "2018-11-27T17:59:44.403Z",
-                        "updated_at": "2018-11-27T17:59:44.403Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -2622,8 +2317,6 @@
                         "text": "Use a pipette to push sample through slowly",
                         "checked": false,
                         "checklist_id": 861,
-                        "created_at": "2018-11-27T17:59:44.410Z",
-                        "updated_at": "2018-11-27T17:59:44.410Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -2645,8 +2338,6 @@
   "my_module_groups": [
     {
       "id": 1179,
-      "created_at": "2018-12-19T09:02:54.877Z",
-      "updated_at": "2018-12-19T09:02:54.877Z",
       "created_by_id": 202,
       "experiment_id": 454
     }

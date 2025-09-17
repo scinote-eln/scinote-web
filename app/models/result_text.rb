@@ -2,7 +2,11 @@
 
 class ResultText < ApplicationRecord
   include TinyMceImages
+  include SearchableModel
+  include ObservableModel
   include ActionView::Helpers::TextHelper
+
+  SEARCHABLE_ATTRIBUTES = ['result_texts.name', 'result_texts.text'].freeze
 
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
@@ -31,5 +35,12 @@ class ResultText < ApplicationRecord
 
       new_result_text
     end
+  end
+
+  private
+
+  # Override for ObservableModel
+  def changed_by
+    result.last_modified_by || result.user
   end
 end

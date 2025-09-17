@@ -21,4 +21,5 @@
   <%= link_to t("users.settings.teams.navigation.details"), team_path(@team), class: "p-2.5 hover:no-underline #{ 'disabled' unless can_read_team?(@team) } #{ @active_tab == :details ? "text-sn-blue" : "text-sn-grey" }"%>
   <%= link_to t("users.settings.teams.navigation.members"), members_users_settings_team_path(@team), class: "p-2.5 hover:no-underline #{ @active_tab == :members ? "text-sn-blue" : "text-sn-grey" }"%>
   <%= link_to t("users.settings.teams.navigation.groups"), users_settings_team_user_groups_path(@team), class: "p-2.5 hover:no-underline  #{ 'disabled' unless can_manage_team?(@team) } #{ @active_tab == :user_groups ? "text-sn-blue" : "text-sn-grey" }"%>
+  <%= link_to t("users.settings.sidebar.account_nav.automations"), automations_team_path(@team), class: "p-2.5 hover:no-underline #{ 'disabled' unless can_manage_team?(@team) } #{ @active_tab == :automations ? "text-sn-blue" : "text-sn-grey" }"%>
 </div>

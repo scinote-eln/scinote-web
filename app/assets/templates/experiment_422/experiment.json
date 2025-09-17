@@ -11,8 +11,6 @@
     "archived_on": null,
     "restored_by_id": null,
     "restored_on": null,
-    "created_at": "2018-11-08T10:28:00.553Z",
-    "updated_at": "2019-02-07T14:56:54.966Z",
     "uuid": "1a3d39cf-ea51-48a8-b622-d7a9492fd1e7"
   },
   "my_modules": [
@@ -25,8 +23,6 @@
         "x": 0,
         "y": 0,
         "my_module_group_id": 1182,
-        "created_at": "2018-11-08T10:28:01.009Z",
-        "updated_at": "2018-12-19T11:33:27.356Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -70,13 +66,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-08T10:28:01.077Z",
-            "updated_at": "2019-02-20T07:40:35.070Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -92,8 +85,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-08T10:28:01.386Z",
-                "updated_at": "2018-12-21T13:40:38.295Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3391
               },
@@ -120,8 +111,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T13:25:17.662Z",
-                "updated_at": "2019-02-20T07:41:30.052Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3391
               },
@@ -132,8 +121,6 @@
                 {
                   "asset": {
                     "id": 3756,
-                    "created_at": "2019-02-20T07:40:34.833Z",
-                    "updated_at": "2019-02-20T07:41:30.043Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 15033,
@@ -165,8 +152,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T12:25:48.867Z",
-                "updated_at": "2019-02-20T07:40:29.591Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3391
               },
@@ -177,8 +162,6 @@
                 {
                   "asset": {
                     "id": 3755,
-                    "created_at": "2019-02-20T07:40:21.348Z",
-                    "updated_at": "2019-02-20T07:40:29.583Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 15690,
@@ -218,8 +201,6 @@
         "x": 35,
         "y": 0,
         "my_module_group_id": 1182,
-        "created_at": "2018-11-08T10:28:01.476Z",
-        "updated_at": "2018-12-19T11:33:27.359Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -263,13 +244,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-08T10:28:01.537Z",
-            "updated_at": "2019-02-20T07:53:32.436Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -285,8 +263,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T14:54:15.366Z",
-                "updated_at": "2019-02-20T07:53:32.379Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3393
               },
@@ -306,8 +282,6 @@
                 {
                   "table": {
                     "id": 579,
-                    "created_at": "2018-11-15T14:54:15.369Z",
-                    "updated_at": "2019-02-20T07:53:32.362Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Mixture",
@@ -327,8 +301,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T14:38:34.247Z",
-                "updated_at": "2019-02-20T07:53:25.630Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3393
               },
@@ -355,8 +327,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T14:00:37.365Z",
-                "updated_at": "2019-02-07T13:01:07.241Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3393
               },
@@ -376,8 +346,6 @@
                 {
                   "table": {
                     "id": 577,
-                    "created_at": "2018-11-15T14:16:48.703Z",
-                    "updated_at": "2019-02-07T13:01:07.192Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Restriction digest",
@@ -390,8 +358,6 @@
                 {
                   "table": {
                     "id": 677,
-                    "created_at": "2018-12-19T10:48:05.316Z",
-                    "updated_at": "2019-02-07T13:01:07.218Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Ligation",
@@ -411,8 +377,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-15T13:57:43.072Z",
-                "updated_at": "2019-02-19T14:53:00.254Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3393
               },
@@ -447,8 +411,6 @@
         "x": 69,
         "y": 0,
         "my_module_group_id": 1182,
-        "created_at": "2018-11-16T10:48:03.813Z",
-        "updated_at": "2018-12-19T11:33:27.361Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -492,13 +454,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-16T10:48:03.821Z",
-            "updated_at": "2019-02-19T14:55:34.883Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -514,8 +473,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-16T12:34:00.600Z",
-                "updated_at": "2019-02-19T14:54:57.484Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3583
               },
@@ -542,8 +499,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-16T11:50:40.125Z",
-                "updated_at": "2019-02-19T14:54:39.448Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3583
               },
@@ -563,8 +518,6 @@
                 {
                   "table": {
                     "id": 583,
-                    "created_at": "2018-11-16T12:13:30.368Z",
-                    "updated_at": "2019-02-19T14:54:39.422Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Mixture",
@@ -584,8 +537,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-16T12:53:26.057Z",
-                "updated_at": "2019-02-19T14:55:34.834Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3583
               },
@@ -612,8 +563,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-16T10:52:10.517Z",
-                "updated_at": "2019-02-19T14:53:39.075Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3583
               },
@@ -633,8 +582,6 @@
                 {
                   "table": {
                     "id": 582,
-                    "created_at": "2018-11-16T10:52:10.520Z",
-                    "updated_at": "2019-02-19T14:53:39.061Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Digestion mixture",
@@ -654,8 +601,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-16T12:46:27.019Z",
-                "updated_at": "2019-02-19T14:55:10.602Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3583
               },
@@ -675,8 +620,6 @@
                 {
                   "table": {
                     "id": 584,
-                    "created_at": "2018-11-16T12:46:27.024Z",
-                    "updated_at": "2019-02-19T14:55:10.586Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "Table 1",
@@ -704,8 +647,6 @@
         "x": 69,
         "y": 18,
         "my_module_group_id": 1182,
-        "created_at": "2018-11-08T10:28:01.704Z",
-        "updated_at": "2018-12-19T11:33:27.364Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -749,13 +690,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-08T10:28:01.760Z",
-            "updated_at": "2019-02-20T07:53:56.919Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -771,8 +709,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-08T10:28:01.867Z",
-                "updated_at": "2019-02-19T14:56:03.660Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3395
               },
@@ -799,8 +735,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-16T13:23:32.534Z",
-                "updated_at": "2019-02-20T07:53:56.784Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3395
               },
@@ -820,8 +754,6 @@
                 {
                   "table": {
                     "id": 585,
-                    "created_at": "2018-11-16T14:34:51.901Z",
-                    "updated_at": "2019-02-20T07:53:56.770Z",
                     "created_by_id": 202,
                     "last_modified_by_id": 202,
                     "name": "PCR mixture",
@@ -837,8 +769,6 @@
                       "id": 971,
                       "name": "Guideline:",
                       "step_id": 4626,
-                      "created_at": "2018-12-21T14:16:54.698Z",
-                      "updated_at": "2018-12-21T14:16:54.698Z",
                       "created_by_id": null,
                       "last_modified_by_id": null
                     },
@@ -848,8 +778,6 @@
                         "text": "In order to verify colony, pick half of a colony with a pipette tip and suspend cells in a 1.5 mL microcentrifuge tube containing 100 μL ddH2O.",
                         "checked": false,
                         "checklist_id": 971,
-                        "created_at": "2018-12-21T14:16:54.700Z",
-                        "updated_at": "2018-12-21T14:16:54.700Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 0
@@ -859,8 +787,6 @@
                         "text": "Heat to 98 °C for 10 min and use 2 μL as DNA template for the PCR.",
                         "checked": false,
                         "checklist_id": 971,
-                        "created_at": "2018-12-21T14:16:54.707Z",
-                        "updated_at": "2018-12-21T14:16:54.707Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 1
@@ -870,8 +796,6 @@
                         "text": "Streak the other half of the colony on a fresh YEP agar plate supplemented with Rif/Gent/Kan.",
                         "checked": false,
                         "checklist_id": 971,
-                        "created_at": "2018-12-21T14:16:54.715Z",
-                        "updated_at": "2018-12-21T14:16:54.715Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 2
@@ -881,8 +805,6 @@
                         "text": "Grow cells at 30 °C for one day and then store at 4 °C.",
                         "checked": false,
                         "checklist_id": 971,
-                        "created_at": "2018-12-21T14:16:54.721Z",
-                        "updated_at": "2018-12-21T14:16:54.721Z",
                         "created_by_id": null,
                         "last_modified_by_id": null,
                         "position": 3
@@ -901,8 +823,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-16T14:41:33.494Z",
-                "updated_at": "2019-02-20T07:41:30.530Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3395
               },
@@ -913,8 +833,6 @@
                 {
                   "asset": {
                     "id": 3757,
-                    "created_at": "2019-02-20T07:40:57.546Z",
-                    "updated_at": "2019-02-20T07:41:30.518Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 18526,
@@ -954,8 +872,6 @@
         "x": 35,
         "y": 18,
         "my_module_group_id": 1182,
-        "created_at": "2018-11-08T10:28:02.085Z",
-        "updated_at": "2018-12-19T11:33:27.366Z",
         "archived": false,
         "archived_on": null,
         "created_by_id": 202,
@@ -995,13 +911,10 @@
             "team_id": 1,
             "protocol_type": "unlinked",
             "parent_id": null,
-            "parent_updated_at": null,
             "archived_by_id": null,
             "archived_on": null,
             "restored_by_id": null,
             "restored_on": null,
-            "created_at": "2018-11-08T10:28:02.138Z",
-            "updated_at": "2019-02-20T07:41:16.226Z",
             "published_on": null,
             "nr_of_linked_children": 0
           },
@@ -1017,8 +930,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-12-19T11:28:44.151Z",
-                "updated_at": "2018-12-19T11:29:48.670Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3399
               },
@@ -1045,8 +956,6 @@
                 "completed": false,
                 "completed_on": null,
                 "user_id": 202,
-                "created_at": "2018-11-08T10:28:02.155Z",
-                "updated_at": "2019-02-20T07:41:31.063Z",
                 "last_modified_by_id": 202,
                 "protocol_id": 3399
               },
@@ -1057,8 +966,6 @@
                 {
                   "asset": {
                     "id": 3758,
-                    "created_at": "2019-02-20T07:41:15.986Z",
-                    "updated_at": "2019-02-20T07:41:31.054Z",
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 35622,
@@ -1093,8 +1000,6 @@
   "my_module_groups": [
     {
       "id": 1182,
-      "created_at": "2018-12-19T11:33:27.354Z",
-      "updated_at": "2018-12-19T11:33:27.354Z",
       "created_by_id": 202,
       "experiment_id": 422
     }

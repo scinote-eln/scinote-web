@@ -3,6 +3,9 @@ class Step < ApplicationRecord
   include SearchableByNameModel
   include TinyMceImages
   include ViewableModel
+  include ObservableModel
+
+  SEARCHABLE_ATTRIBUTES = ['steps.name'].freeze
 
   attr_accessor :skip_position_adjust # to be used in bulk deletion
 

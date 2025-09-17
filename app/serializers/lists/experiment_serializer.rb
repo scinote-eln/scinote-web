@@ -82,9 +82,7 @@ module Lists
         user_group_members: users_users_settings_team_user_groups_path(team_id: object.team.id)
       }
 
-      if can_manage_project_users?(object.project)
-        urls_list[:update_access] = access_permissions_experiment_path(object)
-      end
+      urls_list[:update_access] = access_permissions_experiment_path(object) if can_manage_experiment_users?(object)
       urls_list
     end
 

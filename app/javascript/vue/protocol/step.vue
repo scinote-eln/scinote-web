@@ -105,9 +105,12 @@
                   :key="result.id"
                   :title="result.name"
                   :href="resultUrl(result.id, result.archived)"
-                  class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer block hover:no-underline text-sn-blue truncate"
+                  class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer hover:no-underline text-sn-blue truncate flex items-center gap-2"
                 >
                   {{ result.name }}
+                  <div v-if="result.archived" class="py-1 px-2 text-xs ml-auto text-white bg-sn-grey rounded-full">
+                    {{ i18n.t('protocols.steps.archived_result') }}
+                  </div>
                 </a>
               </div>
               <template v-if="urls.update_url">

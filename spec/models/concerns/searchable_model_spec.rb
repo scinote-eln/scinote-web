@@ -45,22 +45,22 @@ describe SearchableModel, type: :concern do
 
   it '#where_attributes_like_boolean finds all projects by name' do
     SEARCH_SPECIAL_CHARACTER_TEST_NAMES.each do |name|
-      expect(Project.where_attributes_like_boolean(:name, "#{name} OR something")&.first&.name).to eq name
+      expect(Project.where_attributes_like_boolean(['name'], "#{name} OR something")&.first&.name).to eq name
       puts "Found #{name}"
     end
   end
 
   it '#where_attributes_like_boolean finds all projects by exact name' do
     SEARCH_SPECIAL_CHARACTER_TEST_NAMES.filter { |n| n != 'NameWith"DoubleQuote' }.each do |name|
-      expect(Project.where_attributes_like_boolean(:name, "\"#{name}\"")&.first&.name).to eq name
-      expect(Project.where_attributes_like_boolean(:name, "\"#{name} not exact\"").count).to eq 0
+      expect(Project.where_attributes_like_boolean(['name'], "\"#{name}\"")&.first&.name).to eq name
+      expect(Project.where_attributes_like_boolean(['name'], "\"#{name} not exact\"").count).to eq 0
       puts "Found #{name}"
     end
   end
 
   it '#where_attributes_like finds all projects by name ' do
     SEARCH_SPECIAL_CHARACTER_TEST_NAMES.each do |name|
-      expect(Project.where_attributes_like(:name, name)&.first&.name).to eq name
+      expect(Project.where_attributes_like(['name'], name)&.first&.name).to eq name
       puts "Found #{name}"
     end
   end
