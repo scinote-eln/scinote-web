@@ -682,4 +682,18 @@ class MyModulesController < ApplicationController
       id: @my_module.code
     }
   end
+
+  # implement TaggableActions log activity
+  def log_taggable_activity(type, object, tag)
+    Activities::CreateActivityService
+      .call(activity_type: type == :create ? :add_task_tag : :remove_task_tag,
+            owner: current_user,
+            subject: object,
+            project: object.project,
+            team: object.team,
+            message_items: {
+              my_module: object.id,
+              tag: tag.id
+            })
+  end
 end
