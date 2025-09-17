@@ -12,7 +12,16 @@ export default {
   },
   computed: {
     canManage() {
-      return this.subject.attributes.permissions.manage_tags;
+      return this.permissions.can_create || this.permissions.can_update || this.permissions.can_delete || false;
+    },
+    canCreate() {
+      return this.permissions.can_create || false;
+    },
+    canUpdate() {
+      return this.permissions.can_update || false;
+    },
+    canDelete() {
+      return this.permissions.can_delete || false;
     },
     canAssign() {
       return this.subject.attributes.permissions.assign_tags;
@@ -28,21 +37,23 @@ export default {
     }
   },
   created() {
-    this.loadAllTags();
+    this.loadAllTagsWithPermissions();
     this.tags = this.subject.attributes.tags || [];
   },
   data() {
     return {
       tags: [],
       allTags: [],
+      permissions: {},
       linkingTag: false,
       searchQuery: ''
     };
   },
   methods: {
-    loadAllTags() {
+    loadAllTagsWithPermissions() {
       axios.get(tags_path()).then((response) => {
         this.allTags = response.data.data;
+        this.permissions = response.data.permissions;
       });
     },
     linkTag(tag) {

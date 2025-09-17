@@ -252,7 +252,6 @@ export default {
     openAccessModal() {
       // Legacy part - to be updated
       const container = document.getElementById('accessModalContainer');
-      console.log(this.$refs.myModuleDetailsDropdown);
       this.$refs.myModuleDetailsDropdown.isOpen = false;
       $.get(container.dataset.url, (data) => {
         const object = {

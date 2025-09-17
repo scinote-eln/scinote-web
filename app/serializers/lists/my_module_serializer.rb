@@ -47,8 +47,7 @@ module Lists
       {
         manage_designated_users: can_manage_my_module_designated_users?(object),
         create_comments: can_create_my_module_comments?(object),
-        assign_tags: can_manage_my_module_tags?(object),
-        manage_tags: true # TODO: implement
+        assign_tags: can_manage_my_module_tags?(object)
       }
     end
 

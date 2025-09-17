@@ -66,6 +66,18 @@ Canaid::Permissions.register_for(Team) do
   can :create_forms do |user, team|
     team.permission_granted?(user, TeamPermissions::FORMS_CREATE)
   end
+
+  can :create_tags do |user, team|
+    team.permission_granted?(user, TeamPermissions::TAGS_CREATE)
+  end
+
+  can :update_tags do |user, team|
+    team.permission_granted?(user, TeamPermissions::TAGS_UPDATE)
+  end
+
+  can :delete_tags do |user, team|
+    team.permission_granted?(user, TeamPermissions::TAGS_DELETE)
+  end
 end
 
 Canaid::Permissions.register_for(ProjectFolder) do

@@ -7,8 +7,7 @@ Canaid::Permissions.register_for(Project) do
   %i(manage_project
      archive_project
      create_project_experiments
-     create_project_comments
-     manage_project_tags)
+     create_project_comments)
     .each do |perm|
     can perm do |_, project|
       project.active?
@@ -59,10 +58,6 @@ Canaid::Permissions.register_for(Project) do
 
   can :create_project_comments do |user, project|
     project.permission_granted?(user, ProjectPermissions::COMMENTS_CREATE)
-  end
-
-  can :manage_project_tags do |user, project|
-    project.permission_granted?(user, ProjectPermissions::TAGS_MANAGE)
   end
 
   can :manage_project_my_modules do |user, project|
