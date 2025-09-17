@@ -19,17 +19,17 @@ class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
   retry_on ActiveStorage::IntegrityError, attempts: 3, wait: :exponentially_longer
 
   def perform(blob_id)
-    blob = ActiveStorage::Blob.find(blob_id)
-    asset = blob.attachments.take.record
-    preview = asset.medium_preview.processed
-    Rails.logger.info "Preview for the Blod with id: #{blob.id} - successfully generated.\n" \
-                      "Transformations applied: #{preview.variation.transformations}"
-
-    preview = asset.large_preview.processed
-    Rails.logger.info "Preview for the Blod with id: #{blob.id} - successfully generated.\n" \
-                      "Transformations applied: #{preview.variation.transformations}"
-
     ActiveRecord::Base.no_touching do
+      blob = ActiveStorage::Blob.find(blob_id)
+      asset = blob.attachments.take.record
+      preview = asset.medium_preview.processed
+      Rails.logger.info "Preview for the Blod with id: #{blob.id} - successfully generated.\n" \
+                        "Transformations applied: #{preview.variation.transformations}"
+
+      preview = asset.large_preview.processed
+      Rails.logger.info "Preview for the Blod with id: #{blob.id} - successfully generated.\n" \
+                        "Transformations applied: #{preview.variation.transformations}"
+
       asset.update(file_processing: false)
     end
   end

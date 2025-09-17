@@ -194,6 +194,9 @@ class Step < ApplicationRecord
   end
 
   def touch_protocol
+    # don't touch if in a no_touching block
+    return if ActiveRecord::NoTouching.applied_to?(Protocol)
+
     # if only step completion attributes were changed, do not touch protocol
     return if saved_changes.keys.sort == %w(completed completed_on updated_at)
 
