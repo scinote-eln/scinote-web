@@ -20,7 +20,8 @@
               :searchable="true"
               :placeholder="i18n.t('tags.merge_modal.target_tag_placeholder')"
               @change="selectedTagId = $event"
-              :option-renderer="tagRenderer"
+              :option-renderer="TagsDropdownRenderer"
+              :label-renderer="TagsDropdownRenderer"
             ></SelectDropdown>
           </div>
         </div>
@@ -40,6 +41,7 @@ import SelectDropdown from '../../shared/select_dropdown.vue';
 import modalMixin from '../../shared/modal_mixin';
 import axios from '../../../packs/custom_axios.js';
 import escapeHtml from '../../shared/escape_html.js';
+import TagsDropdownRenderer from '../../shared/select_dropdown_renderers/tag.vue';
 import {
   merge_team_tag_path,
 } from '../../../routes.js';
@@ -60,11 +62,13 @@ export default {
     }
   },
   components: {
-    SelectDropdown
+    SelectDropdown,
+    TagsDropdownRenderer
   },
   mixins: [modalMixin, escapeHtml],
   data() {
     return {
+      TagsDropdownRenderer: TagsDropdownRenderer,
       selectedTagId: null
     };
   },
@@ -78,9 +82,6 @@ export default {
       }).catch((error) => {
         HelperModule.flashAlertMsg(this.i18n.t('tags.merge_modal.merge_error'), 'danger');
       });
-    },
-    tagRenderer(tag) {
-      return `<div class="sci-tag text-white" style="background-color: ${escapeHtml(tag[2].color)};">${escapeHtml(tag[1])}</div>`;
     }
   }
 };

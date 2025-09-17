@@ -97,12 +97,15 @@ import MoveModal from './modals/move.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
 import ExportLimitExceededModal from './modals/export_limit_exceeded_modal.vue';
 import FavoriteRenderer from '../shared/datatable/renderers/favorite.vue';
+import UsersDropdownRenderer from '../shared/select_dropdown_renderers/user.vue';
+
 
 export default {
   name: 'ProjectsList',
   components: {
     DataTable,
     UsersRenderer,
+    UsersDropdownRenderer,
     NameRenderer,
     ProjectCard,
     ConfirmationModal,
@@ -347,8 +350,8 @@ export default {
         key: 'members',
         type: 'Select',
         optionsUrl: this.usersFilterUrl,
-        optionRenderer: this.usersFilterRenderer,
-        labelRenderer: this.usersFilterRenderer,
+        optionRenderer: UsersDropdownRenderer,
+        labelRenderer: UsersDropdownRenderer,
         label: this.i18n.t('projects.index.filters_modal.members.label'),
         placeholder: this.i18n.t('projects.index.filters_modal.members.placeholder')
       });
@@ -357,8 +360,8 @@ export default {
         key: 'head_of_project',
         type: 'Select',
         optionsUrl: this.headOfProjectUsersListUrl,
-        optionRenderer: this.usersFilterRenderer,
-        labelRenderer: this.usersFilterRenderer,
+        optionRenderer: UsersDropdownRenderer,
+        labelRenderer: UsersDropdownRenderer,
         label: this.i18n.t('projects.index.filters_modal.head_of_project.label'),
         placeholder: this.i18n.t('projects.index.filters_modal.head_of_project.placeholder')
       });
@@ -442,12 +445,6 @@ export default {
       const m = date.getMonth() + 1;
       const d = date.getDate();
       return `${y}/${m}/${d}`;
-    },
-    usersFilterRenderer(option) {
-      return `<div class="flex items-center gap-2">
-                <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
-                <span title="${option[1]}" class="truncate">${option[1]}</span>
-              </div>`;
     },
     openComments(_params, rows) {
       $(this.$refs.commentButton).data('objectId', rows[0].id);
