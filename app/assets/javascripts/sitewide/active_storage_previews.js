@@ -9,24 +9,32 @@ var ActiveStoragePreviews = (function() {
       var img = ev.target;
       var src = ev.target.src;
 
-      if (img.length === 0) return;
-
-      if (!img.retryCount) {
-        img.retryCount = 0;
-      }
-
-      if (img.retryCount >= RETRY_COUNT) return;
-
-      $(img).css('opacity', 0);
-
-      if (!$(img).parent().hasClass('processing')) $(img).parent().addClass('processing');
-
-      setTimeout(() => {
-        if (document.body.contains(img)) {
-          img.src = src;
-          img.retryCount += 1;
+      // refetch to check if preview generation failed
+      $.get(src, function(data) {
+        if (data.preview_failed) {
+          ActiveStoragePreviews.showPreview(ev);
+          return;
         }
-      }, RETRY_DELAY);
+
+        if (img.length === 0) return;
+
+        if (!img.retryCount) {
+          img.retryCount = 0;
+        }
+
+        if (img.retryCount >= RETRY_COUNT) return;
+
+        $(img).css('opacity', 0);
+
+        if (!$(img).parent().hasClass('processing')) $(img).parent().addClass('processing');
+
+        setTimeout(() => {
+          if (document.body.contains(img)) {
+            img.src = src;
+            img.retryCount += 1;
+          }
+        }, RETRY_DELAY);
+      });
     },
     showPreview: function(ev) {
       $(ev.target).css('opacity', 1);
@@ -45,7 +53,7 @@ $(document).on('turbolinks:load', function() {
   $('.asset-preview-image')
     .one('load', (event) => ActiveStoragePreviews.showPreview(event))
     .one('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
-    .each(function() { 
+    .each(function() {
       if (this.complete) {
         $(this).trigger('load');
       } else if (this.error) {
