@@ -76,13 +76,12 @@ class Project < ApplicationRecord
     user,
     include_archived,
     query = nil,
-    current_team = nil,
-    options = {}
+    teams = user.teams,
+    _options = {}
   )
-    teams = options[:teams] || current_team || user.teams.select(:id)
     new_query = distinct.readable_by_user(user, teams)
                         .left_joins(:project_comments)
-                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
 
     new_query = new_query.active unless include_archived
 

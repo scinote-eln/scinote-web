@@ -115,7 +115,7 @@ class SearchController < ApplicationController
     query = (params.fetch(:q) { '' }).strip
     @filters = params[:filters]
     @include_archived = @filters.blank? || @filters[:include_archived] == 'true'
-    @teams = (@filters.present? && @filters[:teams]&.values) || current_user.teams
+    @teams = @filters.present? && @filters[:teams]&.values ? current_user.teams.where(id: @filters[:teams].values) : current_user.teams
     @display_query = query
 
     splited_query = query.split
@@ -142,10 +142,8 @@ class SearchController < ApplicationController
     @records = @model.search(current_user,
                              @include_archived,
                              @search_query,
-                             nil,
-                             teams: @teams,
-                             users: @users,
-                             options: options)
+                             @teams,
+                             options)
                      .select("COUNT(\"#{@model.table_name}\".\"id\") OVER() AS filtered_count")
                      .select("\"#{@model.table_name}\".*")
 

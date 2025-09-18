@@ -46,10 +46,8 @@ class Result < ApplicationRecord
   def self.search(user,
                   include_archived,
                   query = nil,
-                  current_team = nil,
-                  options = {})
-    teams = options[:teams] || current_team || user.teams.select(:id)
-
+                  teams = user.teams,
+                  _options = {})
     new_query = joins(:my_module)
                 .where(
                   my_modules: {
