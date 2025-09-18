@@ -27,6 +27,7 @@ module Lists
       default_public_user_role_id
       team
       favorite
+      project_id
     )
 
     def attributes(_options = {})
@@ -61,7 +62,6 @@ module Lists
         untag_resource: untag_resource_my_module_path(object),
         tag_resource_with_new_tag: tag_resource_with_new_tag_my_module_path(object),
         users_list: search_my_module_user_my_module_path(object, my_module_id: object.id),
-        experiments_to_move: experiments_to_move_experiment_path(object.experiment),
         update: my_module_path(object),
         show_access: access_permissions_my_module_path(object),
         show_user_group_assignments_access: show_user_group_assignments_access_permissions_my_module_path(object),
@@ -119,6 +119,10 @@ module Lists
 
     def archived
       object.archived_branch?
+    end
+
+    def project_id
+      object.experiment.project_id
     end
 
     def archived_on
