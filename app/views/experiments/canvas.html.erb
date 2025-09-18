@@ -80,6 +80,20 @@
   </teleport>
 </div>
 
+<div id="newTaskModalContainer" class="vue-new-task-modal">
+    <div ref="newTaskModal" id="newTaskModalComponent"></div>
+    <teleport to="body">
+      <new-task-modal
+        v-if="newTaskModalOpen"
+        create-url="<%= modules_experiment_path(@experiment) %>"
+        team-tags-url="<%= tags_path %>"
+        assigned-users-url="<%= assigned_users_experiment_path(@experiment)%>"
+        current-user-id="<%= current_user.id %>"
+        @create="reloadLocation"
+        @close="newTaskModalOpen = false" />
+    </teleport>
+  </div>
+
 <!-- Manage tags modal -->
 <%= render partial: 'canvas/full_zoom/tags_modal' %>
 
@@ -92,6 +106,7 @@
 
 <%= javascript_include_tag("projects/canvas") %>
 <%= javascript_include_tag 'vue_legacy_access_modal' %>
+<%= javascript_include_tag 'vue_legacy_new_task_modal' %>
 
 <%= render 'shared/tiny_mce_packs' %>
 <%= javascript_include_tag 'vue_experiment_description_modal' %>

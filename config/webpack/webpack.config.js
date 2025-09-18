@@ -65,6 +65,7 @@ const entryList = {
   vue_global_search: './app/javascript/packs/vue/global_search.js',
   vue_legacy_tags_modal: './app/javascript/packs/vue/legacy/tags_modal.js',
   vue_legacy_access_modal: './app/javascript/packs/vue/legacy/access_modal.js',
+  vue_legacy_new_task_modal: './app/javascript/packs/vue/legacy/new_task_modal.js',
   vue_legacy_repository_menu_dropdown: './app/javascript/packs/vue/legacy/repository_menu_dropdown.js',
   vue_dashboard_new_task: './app/javascript/packs/vue/dashboard_new_task.js',
   vue_storage_locations_table: './app/javascript/packs/vue/storage_locations_table.js',
