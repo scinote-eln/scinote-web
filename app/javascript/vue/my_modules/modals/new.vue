@@ -41,8 +41,7 @@
                 class="mb-4"
                 @change="setTags"
                 :options="formattedTags"
-                :option-renderer="tagsRenderer"
-                :label-renderer="tagsRenderer"
+                :option-renderer="TagsDropdownRenderer"
                 :multiple="true"
                 :searchable="true"
                 :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_tags_placeholder')"
@@ -57,8 +56,8 @@
                   <SelectDropdown
                     @change="setUsers"
                     :options="formattedUsers"
-                    :option-renderer="usersRenderer"
-                    :label-renderer="usersRenderer"
+                    :option-renderer="UsersDropdownRenderer"
+                    :label-renderer="UsersDropdownRenderer"
                     :multiple="true"
                     :value="users"
                     :searchable="true"
@@ -100,6 +99,8 @@ import modalMixin from '../../shared/modal_mixin';
 import DateTimePicker from '../../shared/date_time_picker.vue';
 import SelectDropdown from '../../shared/select_dropdown.vue';
 import escapeHtml from '../../shared/escape_html.js';
+import TagsDropdownRenderer from '../../shared/select_dropdown_renderers/tag.vue';
+import UsersDropdownRenderer from '../../shared/select_dropdown_renderers/user.vue';
 
 export default {
   name: 'NewModal',
@@ -121,7 +122,9 @@ export default {
       users: [],
       allTags: [],
       allUsers: [],
-      submitting: false
+      submitting: false,
+      TagsDropdownRenderer,
+      UsersDropdownRenderer
     };
   },
   computed: {
@@ -142,7 +145,7 @@ export default {
         [
           user.id,
           user.attributes.name,
-          user.attributes.avatar_url
+          { avatar_url: user.attributes.avatar_url }
         ]
       ));
     }
@@ -183,7 +186,6 @@ export default {
     },
     loadTags() {
       axios.get(this.teamTagsUrl).then((response) => {
-        console.log(response.data.data);
         this.allTags = response.data.data;
       });
     },
@@ -194,18 +196,6 @@ export default {
         this.allUsers = response.data.data;
         this.users = [this.currentUserId];
       });
-    },
-    tagsRenderer(tag) {
-      return `<div class="flex items-center gap-2">
-                <span class="w-4 h-4 rounded-full" style="background-color: ${escapeHtml(tag[2].color)}"></span>
-                <span title="${escapeHtml(tag[1])}" class="truncate">${escapeHtml(tag[1])}</span>
-              </div>`;
-    },
-    usersRenderer(user) {
-      return `<div class="flex items-center gap-2 truncate">
-                <img class="w-6 h-6 rounded-full" src="${user[2]}">
-                <span title="${escapeHtml(user[1])}" class="truncate">${escapeHtml(user[1])}</span>
-              </div>`;
     }
   }
 };

@@ -91,7 +91,7 @@ class MyModulesController < ApplicationController
         message_items: { my_module: @my_module.id }
       )
       log_user_designation_activity
-      redirect_to canvas_experiment_path(@experiment) if params[:my_module][:view_mode] == 'canvas'
+      render json: @my_module, serializer: MyModuleSerializer, controller: self, user: current_user
     rescue ActiveRecord::RecordInvalid
       render json: @my_module.errors, status: :unprocessable_entity
       raise ActiveRecord::Rollback
