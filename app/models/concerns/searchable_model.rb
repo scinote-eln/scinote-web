@@ -108,7 +108,7 @@ module SearchableModel
       end
     }
 
-    scope :where_attributes_like_boolean, lambda { |attributes, query, options = {}|
+    scope :where_attributes_like_boolean, lambda { |attributes, query|
       return unless query
 
       query_clauses = []

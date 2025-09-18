@@ -39,7 +39,7 @@ module SearchableByNameModel
 
     def self.search_by_search_fields_with_boolean(user, teams = [], query = nil, search_fields = [], options = {})
       readable_by_user(user, teams)
-        .where_attributes_like_boolean(search_fields, query, options)
+        .where_attributes_like_boolean(search_fields, query)
         .limit(options[:limit] || Constants::SEARCH_LIMIT)
     end
   end
