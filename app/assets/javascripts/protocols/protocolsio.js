@@ -198,10 +198,10 @@ var protocolsIO = function() {
       e.stopPropagation();
       animateSpinner(modal, true);
 
-      const modal = $('#protocol-preview-modal');
-      const defaultPublicUserRoleId = modal.find('#default_public_user_role_id').val();
-      const defaultPublicUserRoleIdField = modal.find('#protocol_default_public_user_role_id');
-      const visibility = modal.find('#visibility').is(':checked');
+      const previewModal = $('#protocol-preview-modal');
+      const defaultPublicUserRoleId = previewModal.find('#default_public_user_role_id').val();
+      const defaultPublicUserRoleIdField = previewModal.find('#protocol_default_public_user_role_id');
+      const visibility = previewModal.find('#visibility').is(':checked');
 
       if (visibility) {
         defaultPublicUserRoleIdField.val(defaultPublicUserRoleId);
