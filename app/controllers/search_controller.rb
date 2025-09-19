@@ -46,7 +46,7 @@ class SearchController < ApplicationController
           search_by_name({ in_repository: true })
           @records = @records.preload(:team, :added_by)
         when 'label_templates'
-          return render json: [], meta: { disabled: true }, status: :ok unless LabelTemplate.enabled?
+          return render json: [], meta: { disabled: true, total: 0 } unless LabelTemplate.enabled?
 
           @model = LabelTemplate
           search_by_name
