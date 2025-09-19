@@ -1,10 +1,12 @@
 import axios from "axios";
+import qs from 'qs';
 
 const instance = axios.create({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
+  paramsSerializer: params => qs.stringify(params, { arrayFormat: 'brackets' })
 });
 
 instance.interceptors.request.use(
