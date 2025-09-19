@@ -48,31 +48,31 @@ class Result < ApplicationRecord
                   query = nil,
                   teams = user.teams,
                   _options = {})
-    new_query = joins(:my_module)
-                .where(
-                  my_modules: {
-                    id: MyModule.with_granted_permissions(user, MyModulePermissions::READ, teams).select(:id)
-                  }
-                )
+    readable_results = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, teams).select(:id) })
+    results = joins(:my_module)
 
     unless include_archived
-      new_query = new_query.joins(my_module: { experiment: :project })
-                           .active
-                           .where(my_modules: { archived: false },
-                                  experiments: { archived: false },
-                                  projects: { archived: false })
+      results = results.joins(my_module: { experiment: :project })
+                       .active
+                       .where(my_modules: { archived: false },
+                              experiments: { archived: false },
+                              projects: { archived: false })
     end
 
-    new_query.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
+    results = results.with(readable_results: readable_results)
+                     .joins('INNER JOIN "readable_results" ON "readable_results"."id" = "results"."id"')
+
+    results.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
   def self.where_children_attributes_like(query)
-    from(
-      "(#{joins(:result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    unscoped_readable_results = unscoped.joins('INNER JOIN "readable_results" ON "readable_results"."id" = "results"."id"').select(:id)
+    unscoped.from(
+      "(#{unscoped_readable_results.joins(:result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
       UNION
-      #{joins(result_tables: :table ).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      #{unscoped_readable_results.joins(result_tables: :table).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
       UNION
-      #{joins(:result_comments).where_attributes_like(ResultComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      #{unscoped_readable_results.joins(:result_comments).where_attributes_like(ResultComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
       ) AS results",
       :results
     )

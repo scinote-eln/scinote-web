@@ -173,9 +173,9 @@ class RepositoryRow < ApplicationRecord
   def self.where_children_attributes_like(query)
     query_clauses = []
     Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each_value do |config|
-      query_clauses << joins(config[:includes]).where_attributes_like(config[:field], query).to_sql
+      query_clauses << unscoped.joins(config[:includes]).where_attributes_like(config[:field], query).to_sql
     end
-    from("(#{query_clauses.join(' UNION ')}) AS repository_rows", :repository_rows)
+    unscoped.from("(#{query_clauses.join(' UNION ')}) AS repository_rows", :repository_rows)
   end
 
   def self.filter_by_teams(teams = [])
