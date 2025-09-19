@@ -108,13 +108,14 @@ module SearchableModel
       end
     }
 
-    scope :where_attributes_like_boolean, lambda { |attributes, query, options = {}|
+    scope :where_attributes_like_boolean, lambda { |attributes, query|
       return unless query
 
       query_clauses = []
       query_params = []
+      search_tokens = tokenize_search_query(query)
 
-      tokenize_search_query(query).each_with_index do |token, index|
+      search_tokens.each_with_index do |token, index|
         if token[:type] == :keyword
           exact_match = token[:value].split.size > 1
           like = exact_match ? '~' : 'ILIKE'
@@ -145,6 +146,9 @@ module SearchableModel
                 exact_match ? "(^|\\s)#{Regexp.escape(token[:value])}(\\s|$)" : "%#{sanitize_sql_like(token[:value])}%"
               end
           end
+
+          next_token = search_tokens[index + 1]
+          query_clauses << ' AND ' if next_token && next_token[:type] == :keyword
         elsif token[:type] == :operator
           query_clauses <<
             case token[:value]

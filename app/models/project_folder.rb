@@ -40,11 +40,9 @@ class ProjectFolder < ApplicationRecord
       .where(team: teams)
   end
 
-  def self.search(user, include_archived, query = nil, current_team = nil, options = {})
-    teams = options[:teams] || current_team || user.teams.select(:id)
-
+  def self.search(user, include_archived, query = nil, teams = user.teams, _options = {})
     new_query = distinct.readable_by_user(user, teams)
-                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
     new_query = new_query.active unless include_archived
 
     new_query

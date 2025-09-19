@@ -112,14 +112,12 @@ class MyModule < ApplicationRecord
     user,
     include_archived,
     query = nil,
-    current_team = nil,
-    options = {}
+    teams = user.teams,
+    _options = {}
   )
-    teams = options[:teams] || current_team || user.teams.select(:id)
-
     new_query = distinct.left_joins(:task_comments, my_module_tags: :tag, user_my_modules: :user)
                         .readable_by_user(user, teams)
-                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
 
     unless include_archived
       new_query = new_query.joins(experiment: :project)

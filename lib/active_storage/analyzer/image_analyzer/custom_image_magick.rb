@@ -11,7 +11,7 @@ module ActiveStorage
     def metadata
       read_image do |image|
         quality = image.identify { |b| b.format('%Q') }.to_i
-        blob.attachments.take.record.update(file_image_quality: quality)
+        blob.attachments.take.record.update_column(:file_image_quality, quality)
 
         if rotated_image?(image)
           { width: image.height, height: image.width }

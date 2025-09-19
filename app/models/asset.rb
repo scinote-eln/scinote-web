@@ -60,19 +60,16 @@ class Asset < ApplicationRecord
     user,
     include_archived,
     query = nil,
-    current_team = nil,
-    options = {}
+    teams = user.teams,
+    _options = {}
   )
-
-    teams = options[:teams] || current_team || user.teams.select(:id)
-
     assets_in_steps = Asset.joins(:step)
                            .where(steps: { protocol: Protocol.search(user, include_archived, nil, teams) })
-                           .pluck(:id)
+                           .select(:id)
 
     assets_in_results = Asset.joins(:result)
                              .where(results: { id: Result.search(user, include_archived, nil, teams) })
-                             .pluck(:id)
+                             .select(:id)
 
     assets_in_inventories = Asset.joins(repository_cell: { repository_column: :repository })
                                  .where(repositories: {
@@ -80,7 +77,7 @@ class Asset < ApplicationRecord
                                           team_id: teams
                                         })
                                  .where.not(repositories: { type: 'RepositorySnapshot' })
-                                 .pluck(:id)
+                                 .select(:id)
 
     assets = distinct.where('assets.id IN (?) OR assets.id IN (?) OR assets.id IN (?)',
                             assets_in_steps, assets_in_results, assets_in_inventories)
@@ -88,7 +85,7 @@ class Asset < ApplicationRecord
     Asset.left_outer_joins(:asset_text_datum)
          .joins(file_attachment: :blob)
          .from(assets, 'assets')
-         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
   def blob

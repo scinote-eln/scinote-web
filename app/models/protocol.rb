@@ -144,11 +144,11 @@ class Protocol < ApplicationRecord
   def self.search(user,
                   include_archived,
                   query = nil,
-                  current_team = nil,
+                  teams = user.teams,
                   options = {})
-    team_ids = options[:teams]&.pluck(:id) || current_team&.id || user.teams.pluck(:id)
+    team_ids = teams.is_a?(ActiveRecord::Relation) ? teams.pluck(:id) : teams.id
 
-    if options[:options]&.dig(:in_repository)
+    if options[:in_repository]
       protocols = latest_available_versions(team_ids).readable_by_user(user, team_ids)
       protocols = protocols.active unless include_archived
     else
@@ -186,7 +186,7 @@ class Protocol < ApplicationRecord
     protocol_my_modules = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, teams) })
 
     where('protocols.id IN ((?) UNION (?))', protocol_templates.select(:id), protocol_my_modules.select(:id))
-      .where_attributes_like_boolean(search_fields, query, options)
+      .where_attributes_like_boolean(search_fields, query)
       .limit(options[:limit] || Constants::SEARCH_LIMIT)
   end
 
