@@ -66,6 +66,11 @@ class Asset < ApplicationRecord
                            .where(steps: { protocol: Protocol.search(user, include_archived, nil, teams) })
                            .select(:id)
 
+    assets_in_template_steps =
+      Asset.joins(:step)
+           .where(steps: { protocol: Protocol.search(user, include_archived, nil, teams, { in_repository: true }) })
+           .select(:id)
+
     assets_in_results = Asset.joins(:result)
                              .where(results: { id: Result.search(user, include_archived, nil, teams) })
                              .select(:id)
@@ -78,8 +83,8 @@ class Asset < ApplicationRecord
                                  .where.not(repositories: { type: 'RepositorySnapshot' })
                                  .select(:id)
 
-    assets = distinct.where('assets.id IN (?) OR assets.id IN (?) OR assets.id IN (?)',
-                            assets_in_steps, assets_in_results, assets_in_inventories)
+    assets = distinct.where('assets.id IN (?) OR assets.id IN (?) OR assets.id IN (?) OR assets.id IN (?)',
+                            assets_in_steps, assets_in_results, assets_in_inventories, assets_in_template_steps)
 
     Asset.left_outer_joins(:asset_text_datum)
          .joins(file_attachment: :blob)
