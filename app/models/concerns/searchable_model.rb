@@ -124,13 +124,13 @@ module SearchableModel
             if attribute == :children
               "\"#{table_name}\".\"id\" IN (#{where_children_attributes_like(token[:value]).select(:id).to_sql}) OR "
             elsif SEARCH_NUMBER_ATTRIBUTES.include?(attribute)
-              "(#{attribute}::text #{like} ?) OR "
+              "(#{attribute} IS NOT NULL AND #{attribute}::text #{like} ?) OR "
             elsif defined?(model::PREFIXED_ID_SQL) && attribute == model::PREFIXED_ID_SQL
-              "#{attribute} #{like} ? OR "
+              "(#{attribute} IS NOT NULL AND #{attribute} #{like} ?) OR "
             elsif SEARCH_DATA_VECTOR_ATTRIBUTES.include?(attribute)
-              "#{attribute} @@ plainto_tsquery(?) OR "
+              "(#{attribute} IS NOT NULL AND #{attribute} @@ plainto_tsquery(?)) OR "
             else
-              "trim_html_tags(#{attribute}) #{like} ? OR "
+              "(#{attribute} IS NOT NULL AND trim_html_tags(#{attribute}) #{like} ?) OR "
             end
           end).join[0..-5]
 
