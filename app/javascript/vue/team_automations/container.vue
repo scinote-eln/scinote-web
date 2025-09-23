@@ -4,32 +4,28 @@
   </div>
 
   <div v-if="teamObject?.teamAutomationGroups">
-    <div class="flex flex-col gap-8 mb-4">
-      <template v-for="(_subGroups, group) in teamObject?.teamAutomationGroups" :key="group">
-        <div>
-          <h2 class="mt-0">{{ i18n.t(`team_automations.groups.${group}`) }}</h2>
-          <template v-for="(subGroupElements, subGroup) in teamObject?.teamAutomationGroups[group]" :key="subGroup">
-            <table class="bg-sn-white w-full">
-              <tbody>
-                <tr class="text-base">
-                  <td colspan=2 class="pl-4"><h5>{{ i18n.t(`team_automations.sub_groups.${subGroup}`) }}</h5></td>
-                </tr>
-                <template v-for="(subGroupElement, i) in subGroupElements" :key="subGroupElement">
-                  <tr class="text-base">
-                    <td class="py-3 pl-6">{{ i18n.t(`team_automations.sub_group_element.${subGroupElement}`) }}</td>
-                    <td class="p-3">
-                      <div class="sci-toggle-checkbox-container">
-                        <input v-model="teamAutomationSettings[group][subGroup][subGroupElement]" type="checkbox" class="sci-toggle-checkbox" @change="setTeamAutomationsSettings"/>
-                        <label class="sci-toggle-checkbox-label"></label>
-                      </div>
-                    </td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-          </template>
-        </div>
-      </template>
+    <div class="flex flex-col gap-8 mb-4 rounded">
+      <div v-for="(subGroups, group) in teamObject.teamAutomationGroups" :key="group">
+        <h2 class="mt-0">{{ i18n.t(`team_automations.groups.${group}`) }}</h2>
+        <div class="flex flex-col bg-sn-white gap-4 p-4 w-full">
+          <div v-for="(subGroupElements, subGroup) in subGroups" :key="subGroup">
+            <h5>{{ i18n.t(`team_automations.sub_groups.${subGroup}`) }}</h5>
+            <div v-for="(subGroupElement, i) in subGroupElements" :key="subGroupElement" class="flex w-full">
+              <div class="w-1/2 border-0 border-t border-solid border-sn-super-light-grey">
+                <div class="text-base py-3 pl-2">
+                  {{ i18n.t(`team_automations.sub_group_element.${subGroupElement}`) }}
+                </div>
+              </div>
+              <div class="flex-shrink-0 border-0 border-t border-solid border-sn-super-light-grey flex items-center">
+                <div class="sci-toggle-checkbox-container py-3">
+                  <input v-model="teamAutomationSettings[group][subGroup][subGroupElement]" type="checkbox" class="sci-toggle-checkbox" @change="setTeamAutomationsSettings"/>
+                  <label class="sci-toggle-checkbox-label"></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>  
+      </div>
     </div>
   </div>
 </template>
