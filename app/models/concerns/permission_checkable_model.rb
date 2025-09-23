@@ -22,11 +22,11 @@ module PermissionCheckableModel
                                       .where(team_assignments: { assignable: self, team_id: teams })
                                       .where('user_roles.permissions @> ARRAY[?]::varchar[]', permissions)
 
-      where(id: from("(#{with_granted_user_permissions.to_sql} " \
+      where(id: from("((#{with_granted_user_permissions.to_sql}) " \
                      "UNION " \
-                     "#{with_granted_group_permissions.to_sql} " \
+                     "(#{with_granted_group_permissions.to_sql}) " \
                      "UNION " \
-                     "#{with_granted_team_permissions.to_sql} " \
+                     "(#{with_granted_team_permissions.to_sql}) " \
                      ") AS #{table_name}", table_name)
                     .reselect(:id))
     }
