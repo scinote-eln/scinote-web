@@ -12,8 +12,7 @@ class Result < ApplicationRecord
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
 
-  SEARCHABLE_ATTRIBUTES = ['results.name', 'result_texts.name', 'result_texts.text',
-                           'tables.name', 'tables.data_vector', 'comments.message'].freeze
+  SEARCHABLE_ATTRIBUTES = ['results.name', :children].freeze
 
   enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
@@ -47,33 +46,36 @@ class Result < ApplicationRecord
   def self.search(user,
                   include_archived,
                   query = nil,
-                  current_team = nil,
-                  options = {})
-    teams = options[:teams] || current_team || user.teams.select(:id)
-
-    new_query = joins(:my_module)
-                .where(
-                  my_modules: {
-                    id: MyModule.with_granted_permissions(user, MyModulePermissions::READ, teams).select(:id)
-                  }
-                )
+                  teams = user.teams,
+                  _options = {})
+    readable_results = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, teams).select(:id) })
+    results = joins(:my_module)
 
     unless include_archived
-      new_query = new_query.joins(my_module: { experiment: :project })
-                           .active
-                           .where(my_modules: { archived: false },
-                                  experiments: { archived: false },
-                                  projects: { archived: false })
+      results = results.joins(my_module: { experiment: :project })
+                       .active
+                       .where(my_modules: { archived: false },
+                              experiments: { archived: false },
+                              projects: { archived: false })
     end
 
-    new_query.where_attributes_like_boolean(
-      SEARCHABLE_ATTRIBUTES, query, { with_subquery: true, raw_input: new_query }
-    )
+    results = results.with(readable_results: readable_results)
+                     .joins('INNER JOIN "readable_results" ON "readable_results"."id" = "results"."id"')
+
+    results.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
-  def self.search_subquery(query, raw_input)
-    raw_input.left_joins(:result_comments, :result_texts, result_tables: :table)
-             .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
+  def self.where_children_attributes_like(query)
+    unscoped_readable_results = unscoped.joins('INNER JOIN "readable_results" ON "readable_results"."id" = "results"."id"').select(:id)
+    unscoped.from(
+      "(#{unscoped_readable_results.joins(:result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION
+      #{unscoped_readable_results.joins(result_tables: :table).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION
+      #{unscoped_readable_results.joins(:result_comments).where_attributes_like(ResultComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      ) AS results",
+      :results
+    )
   end
 
   def duplicate(my_module, user, result_name: nil)

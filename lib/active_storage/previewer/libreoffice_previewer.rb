@@ -34,7 +34,9 @@ module ActiveStorage
               raise StandardError, "There was an error generating document preview, blob id: #{blob.id}"
             end
 
-            yield io: File.open(preview_file), filename: "#{blob.filename.base}.png", content_type: 'image/png'
+            ActiveRecord::Base.no_touching do
+              yield io: File.open(preview_file), filename: "#{blob.filename.base}.png", content_type: 'image/png'
+            end
 
             Rails.logger.info "Finished preparing document preview for file #{blob.filename.sanitized}."
           ensure
