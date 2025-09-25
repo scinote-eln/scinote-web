@@ -77,7 +77,7 @@ export default {
         this.teamAutomationSettings = Object.fromEntries(
           Object.keys(this.emptySettings).map(key => [
             key,
-            { ...this.emptySettings[key], ...this.teamObject.teamSettings?.team_automation_settings[key] }
+            { ...this.emptySettings[key], ...(this.teamObject.teamSettings?.team_automation_settings || {})[key] }
           ])
         );
       });
