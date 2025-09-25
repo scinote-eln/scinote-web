@@ -231,6 +231,10 @@ class Protocol < ApplicationRecord
     ENV.fetch('PROTOCOLS_PARSER_URL', nil).present?
   end
 
+  def self.ai_parser_enabled?
+    ENV.fetch('AI_PROTOCOLS_PARSER', nil).present? && ApplicationSettings.instance.values['ai_protocol_parser_enabled'] == true
+  end
+
   def original_code
     # returns linked protocol code, or code of the original version of the linked protocol
     parent&.parent&.code || parent&.code || code
