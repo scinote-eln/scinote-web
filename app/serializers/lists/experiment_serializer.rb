@@ -6,6 +6,7 @@ module Lists
     include Rails.application.routes.url_helpers
     include ApplicationHelper
     include ActionView::Helpers::TextHelper
+    include InputSanitizeHelper
 
     attributes :name, :code, :created_at, :updated_at, :workflow_img, :description, :completed_tasks,
                :total_tasks, :archived_on, :urls, :sa_description, :default_public_user_role_id, :team, :permissions,
@@ -20,7 +21,7 @@ module Lists
       return unless object.description
 
       # if description includes HTML, it is already in the new format.
-      return object.description if object.description.match?(/<(.|\n)*?>/)
+      return sanitize_input(object.description) if object.description.match?(/<(.|\n)*?>/)
 
       simple_format(object.description)
     end

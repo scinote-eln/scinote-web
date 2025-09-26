@@ -4,12 +4,17 @@ class ProjectSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   include Canaid::Helpers::PermissionsHelper
   include CommentHelper
+  include InputSanitizeHelper
 
   attributes :name, :code, :created_at, :archived_on, :users, :urls, :hidden, :default_public_user_role_id, :supervised_by,
              :comments, :updated_at, :due_date_cell, :start_date_cell, :description, :status, :permissions
 
   def hidden
     object.hidden?
+  end
+
+  def description
+    sanitize_input(object.description)
   end
 
   def supervised_by
