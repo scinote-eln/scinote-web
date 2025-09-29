@@ -290,6 +290,12 @@ export default {
     }
   },
   mounted() {
+    if (this.optionsUrl) {
+      this.fetchedOptions = [];
+      this.nextPage = 1;
+      this.fetchOptions();
+    }
+
     this.newValue = this.value;
     if (!this.newValue && this.multiple) {
       this.newValue = [];

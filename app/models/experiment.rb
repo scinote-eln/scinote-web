@@ -333,7 +333,7 @@ class Experiment < ApplicationRecord
   def move_modules(to_move, current_user)
     to_move.each do |id, experiment_id|
       my_module = my_modules.find_by(id: id)
-      experiment = project.experiments.find_by(id: experiment_id)
+      experiment = Experiment.managable_by_user(current_user).find_by(id: experiment_id)
       next unless my_module.present? && experiment.present?
 
       experiment_original = my_module.experiment

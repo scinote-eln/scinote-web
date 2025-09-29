@@ -1933,7 +1933,12 @@ en:
           in_progress: 'In progress'
           done: 'Done'
       modal_move_modules:
-        title: "Move task(s) to experiment"
+        title: "Move task(s)"
+        description: "Moving is possible to projects, where you have permissions to create experiments and tasks."
+        project: "Project"
+        experiment: "Experiment"
+        select_project: "Select project"
+        select_experiment: "Select experiment"
         confirm: "Move"
         no_experiments: "No experiments to move this task to."
         success_flash: "Successfully moved task(s) to experiment %{experiment}."
