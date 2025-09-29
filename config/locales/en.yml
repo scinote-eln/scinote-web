@@ -3292,7 +3292,8 @@ en:
         visit_blog: "Visit blog"
       general_error: "Something went wrong"
     reminder:
-      clear: "Clear"
+      clear_for_me: "Clear for me"
+      clear_for_all: "Clear for everyone"
       low_stock_title: "Item running low"
       stock_low_html: "Only <strong>%{stock_formated}</strong> left."
       stock_empty: "There is no stock left."
