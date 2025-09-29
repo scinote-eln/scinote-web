@@ -109,7 +109,7 @@ function initLoadFromRepository() {
       initLoadFromRepositoryTable(modalBody.find('#load-protocols-datatable'));
 
       loadBtn.on('click', function() {
-        loadFromRepository();
+        loadFromRepositoryWarning();
       });
     });
   modal.on('hidden.bs.modal', function() {
@@ -226,28 +226,32 @@ function destroyLoadFromRepositoryTable(content) {
   tableEl.DataTable().destroy();
   tableEl.find('tbody').html('');
 
-  selectedRow = null;
-
   // Disable load btn
   content.closest('.modal')
     .find(".modal-footer [data-action='submit']")
     .attr('disabled', 'disabled');
 }
 
+function loadFromRepositoryWarning() {
+  var modal = $('#load-from-repository-warning-modal');
+  var loadBtn = modal.find(".modal-footer [data-action='submit']");
+
+  modal.modal('show');
+  $('#load-from-repository-modal').modal('hide');
+
+  loadBtn.on('click', function() {
+    loadFromRepository();
+  });
+
+  modal.on('hidden.bs.modal', function() {
+    loadBtn.off('click');
+  });
+}
+
 function loadFromRepository() {
-  var modal = $('#load-from-repository-modal');
+  var modal = $('#load-from-repository-warning-modal');
 
-  var checkLinked = $("[data-role='protocol-status-bar']")
-    .text();
-
-  var confirmMessage = '';
-  if (checkLinked.trim() !== '(unlinked)') {
-    confirmMessage = I18n.t('my_modules.protocols.load_from_repository_modal.import_to_linked_task_rep');
-  } else {
-    confirmMessage = I18n.t('my_modules.protocols.load_from_repository_modal.confirm_message');
-  }
-
-  if (selectedRow !== null && confirm(confirmMessage)) {
+  if (selectedRow !== null) {
     modal.find(".modal-footer [data-action='submit']").prop('disabled', true);
     // POST via ajax
     $.ajax({
@@ -266,6 +270,7 @@ function loadFromRepository() {
           alert(response.responseJSON.message);
         }
 
+        selectedRow = null;
         modal.modal('hide');
       }
     });

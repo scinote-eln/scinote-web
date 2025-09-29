@@ -1594,6 +1594,11 @@ en:
         confirm_message: "Are you sure you wish to load protocol from templates? This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         import_to_linked_task_rep: "Are you sure you wish to load protocol from templates? This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         load: "Load protocol"
+        confirm_modal:
+          description_p1: "You are about to load a protocol template to this task."
+          description_p2: "This action will overwrite your current protocol, assigned items and results you might have already added to this task. The overwritten content cannot be retrieved."
+          description_p3_html: "<strong>Are you sure you want to load this template?</strong>"
+          load: "Load template"
       copy_to_repository_modal:
         title: "Save to protocol templates"
         name_label: "Templates protocol name"
