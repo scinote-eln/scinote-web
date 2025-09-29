@@ -57,14 +57,16 @@ export default {
         .then((response) => {
           this.reminders = response.data.html;
           this.$nextTick(() => {
-            this.$refs.reminders.querySelector('.row-reminders-footer').addEventListener('click', (e) => {
-              const element = e.currentTarget;
-              const url = element.dataset.rowHideRemindersUrl;
-              axios.post(url)
-                .then(() => {
-                  this.reminders = null;
-                  this.params.dtComponent.getRows();
-                });
+            this.$refs.reminders.querySelectorAll('.clear-reminders').forEach((reminder) => {
+              reminder.addEventListener('click', (e) => {
+                const element = e.currentTarget;
+                const url = element.dataset.rowHideRemindersUrl;
+                axios.post(url)
+                  .then(() => {
+                    this.reminders = null;
+                    this.params.dtComponent.getRows();
+                  });
+              });
             });
           });
         });
