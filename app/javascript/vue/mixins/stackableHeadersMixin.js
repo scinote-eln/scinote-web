@@ -131,6 +131,8 @@ export default {
       target.focus();
     },
     initStackableHeaders() {
+      if (!this.headerRef || !this.secondaryNavigation) return;
+
       const header = this.headerRef;
       const headerHeight = header.offsetHeight;
       const headerTop = header.getBoundingClientRect().top;

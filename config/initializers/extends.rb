@@ -790,6 +790,7 @@ class Extends
     user_groups/index
     user_groups/show
     teams/automations
+    result_templates/index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
@@ -886,6 +887,8 @@ class Extends
     navigator_collapsed
     navigator_width
     result_states
+    result_templates_order
+    result_template_states
   ).freeze
 end
 
