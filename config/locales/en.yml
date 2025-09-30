@@ -3728,6 +3728,8 @@ en:
     draft: "Draft"
     draft_name: "(Draft) %{name}"
     no_text_placeholder: 'No protocol description'
+    protocol: "Protocol"
+    results: "Results [%{count}]"
     table:
       filters:
         label_name_and_keywords: 'Name and keywords'

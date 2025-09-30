@@ -795,6 +795,41 @@ Rails.application.routes.draw do
         post 'actions_toolbar', to: 'protocols#actions_toolbar'
         get :user_roles
       end
+
+      resources :result_templates, only: %i(index show create update destroy) do
+        collection do
+          get :list
+          post :change_results_state
+        end
+        member do
+          get :elements
+          get :assets
+          post :upload_attachment
+          post :update_view_state
+          post :update_asset_view_mode
+          post :duplicate
+        end
+
+        resources :result_template_orderable_elements do
+          post :reorder, on: :collection
+        end
+
+        resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
+          member do
+            get :move_targets
+            post :move
+            post :duplicate
+          end
+        end
+
+        resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
+          member do
+            get :move_targets
+            post :move
+            post :duplicate
+          end
+        end
+      end
     end
 
     resources :comments, only: %i(index create update destroy)

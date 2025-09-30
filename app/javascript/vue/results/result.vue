@@ -121,6 +121,7 @@
             </template>
           </GeneralDropdown>
           <a href="#"
+            v-if="!result.attributes.template"
             ref="comments"
             class="open-comments-sidebar btn icon-btn btn-light"
             data-turbolinks="false"
@@ -273,7 +274,7 @@ export default {
           data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-custom`
         },
         {
-          text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table', 
+          text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table',
           params: [32, 48],
           data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-32`
         },
@@ -490,8 +491,10 @@ export default {
       this.isCollapsed = !this.isCollapsed;
       this.result.attributes.collapsed = this.isCollapsed;
 
+      const stateKey = this.result.attributes.template ? 'result_template_states' : 'result_states';
+
       const settings = {
-        key: 'result_states',
+        key: stateKey,
         data: { [this.result.id]: this.isCollapsed }
       };
 

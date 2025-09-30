@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe ResultText, type: :model do
-  let(:result_text) { build :result_text }
+  let(:result_text) { build :result_text, result: create(:result) }
 
   it 'is valid' do
     expect(result_text).to be_valid
@@ -19,7 +19,8 @@ describe ResultText, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :result }
+    it { should belong_to(:result).optional }
+    it { should belong_to(:result_template).optional}
     it { should have_many :tiny_mce_assets }
   end
 

@@ -138,6 +138,7 @@ class Protocol < ApplicationRecord
            inverse_of: :protocol,
            dependent: :destroy
   has_many :protocol_keywords, through: :protocol_protocol_keywords
+  has_many :results, inverse_of: :protocol, dependent: :destroy, class_name: 'ResultTemplate'
   has_many :steps, inverse_of: :protocol, dependent: :destroy
   has_many :original_steps, class_name: 'Step', foreign_key: :original_protocol_id, inverse_of: :original_protocol, dependent: :nullify
 

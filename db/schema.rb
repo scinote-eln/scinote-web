@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_29_104755) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -1069,34 +1069,53 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
   end
 
   create_table "result_assets", force: :cascade do |t|
-    t.bigint "result_id", null: false
+    t.bigint "result_id"
     t.bigint "asset_id", null: false
+    t.bigint "result_template_id"
     t.index ["result_id", "asset_id"], name: "index_result_assets_on_result_id_and_asset_id"
+    t.index ["result_template_id"], name: "index_result_assets_on_result_template_id"
   end
 
   create_table "result_orderable_elements", force: :cascade do |t|
-    t.bigint "result_id", null: false
+    t.bigint "result_id"
     t.integer "position", null: false
     t.string "orderable_type"
     t.bigint "orderable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "result_template_id"
     t.index ["orderable_type", "orderable_id"], name: "index_result_orderable_elements_on_orderable"
+    t.index ["result_template_id"], name: "index_result_orderable_elements_on_result_template_id"
   end
 
   create_table "result_tables", force: :cascade do |t|
-    t.bigint "result_id", null: false
+    t.bigint "result_id"
     t.bigint "table_id", null: false
+    t.bigint "result_template_id"
     t.index ["result_id", "table_id"], name: "index_result_tables_on_result_id_and_table_id"
+    t.index ["result_template_id"], name: "index_result_tables_on_result_template_id"
+  end
+
+  create_table "result_templates", force: :cascade do |t|
+    t.string "name"
+    t.bigint "protocol_id"
+    t.bigint "user_id"
+    t.bigint "last_modified_by_id"
+    t.integer "assets_view_mode", default: 0
+    t.datetime "discarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "result_texts", force: :cascade do |t|
     t.string "text"
-    t.bigint "result_id", null: false
+    t.bigint "result_id"
     t.string "name"
+    t.bigint "result_template_id"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_result_texts_on_name", using: :gin
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_result_texts_on_text", using: :gin
     t.index ["result_id"], name: "index_result_texts_on_result_id"
+    t.index ["result_template_id"], name: "index_result_texts_on_result_template_id"
   end
 
   create_table "results", force: :cascade do |t|
@@ -1729,10 +1748,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
   add_foreign_key "repository_text_values", "users", column: "created_by_id"
   add_foreign_key "repository_text_values", "users", column: "last_modified_by_id"
   add_foreign_key "result_assets", "assets"
+  add_foreign_key "result_assets", "result_templates"
   add_foreign_key "result_assets", "results"
+  add_foreign_key "result_orderable_elements", "result_templates"
   add_foreign_key "result_orderable_elements", "results"
+  add_foreign_key "result_tables", "result_templates"
   add_foreign_key "result_tables", "results"
   add_foreign_key "result_tables", "tables"
+  add_foreign_key "result_texts", "result_templates"
   add_foreign_key "result_texts", "results"
   add_foreign_key "results", "my_modules"
   add_foreign_key "results", "users"

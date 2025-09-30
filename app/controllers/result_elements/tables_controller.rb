@@ -17,19 +17,25 @@ module ResultElements
                t('protocols.steps.table.default_name',
                  position: @result.result_tables.length + 1)
              end
-      result_table = @result.result_tables.new(table:
+      result_table = ResultTable.new(table:
         Table.new(
           name: name,
           contents: { data: Array.new(predefined_table_dimensions[0],
                                       Array.new(predefined_table_dimensions[1], '')) }.to_json,
           metadata: { plateTemplate: create_table_params[:plateTemplate] == 'true' },
           created_by: current_user,
-          team: @my_module.team
+          team: @object.team
         ))
+
+      if @result.is_a?(ResultTemplate)
+        result_table.result_template = @result
+      else
+        result_table.result = @result
+      end
 
       ActiveRecord::Base.transaction do
         create_in_result!(@result, result_table)
-        log_result_activity(:result_table_added, { table_name: result_table.table.name })
+        log_result_activity(:result_table_added, { table_name: result_table.table.name }) if @object.is_a?(MyModule)
       end
 
       render_result_orderable_element(result_table)
@@ -54,8 +60,8 @@ module ResultElements
           @table.metadata = {}
         end
         @table.save!
-        log_result_activity(:result_table_edited, { table_name: @table.name })
-        result_annotation_notification(old_content)
+        log_result_activity(:result_table_edited, { table_name: @table.name }) if @object.is_a?(MyModule)
+        result_annotation_notification(old_content) if @object.is_a?(MyModule)
       end
 
       render json: @table, serializer: ResultTableSerializer, user: current_user
@@ -64,14 +70,20 @@ module ResultElements
     end
 
     def move
-      target = @my_module.results.active.find_by(id: params[:target_id])
+      target = @object.results.active.find_by(id: params[:target_id])
       return head(:conflict) unless target
 
       result_table = @table.result_table
 
       ActiveRecord::Base.transaction do
-        result_table.update!(result: target)
-        result_table.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
+        case target
+        when ResultTemplate
+          result_table.update!(result_template: target)
+          result_table.result_orderable_element.update!(result_template: target, position: target.result_orderable_elements.size)
+        when Result
+          result_table.update!(result: target)
+          result_table.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
+        end
         @result.normalize_elements_position
 
         log_result_activity(
@@ -82,7 +94,7 @@ module ResultElements
             result_original: @result.id,
             result_destination: target.id
           }
-        )
+        ) if @object.is_a?(MyModule)
 
         render json: @table, serializer: ResultTableSerializer, user: current_user
       rescue ActiveRecord::RecordInvalid
@@ -107,7 +119,7 @@ module ResultElements
         end
         @table.name += ' (1)'
         new_table = @table.duplicate(@result, current_user, position + 1)
-        log_result_activity(:result_table_duplicated, { table_name: new_table.name })
+        log_result_activity(:result_table_duplicated, { table_name: new_table.name }) if @object.is_a?(MyModule)
         render_result_orderable_element(new_table.result_table)
       end
     rescue ActiveRecord::RecordInvalid => e
