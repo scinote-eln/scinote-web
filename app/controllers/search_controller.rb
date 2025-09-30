@@ -15,127 +15,63 @@ class SearchController < ApplicationController
         when 'projects'
           @model = Project
           search_by_name
-
-          render json: @records.includes(:team, :project_folder),
-                 each_serializer: GlobalSearch::ProjectSerializer,
-                 meta: {
-                   total: @records.total_count,
-                   next_page: (@records.next_page if @records.respond_to?(:next_page)),
-                 }
+          @records = @records.preload(:team, :project_folder)
         when 'project_folders'
           @model = ProjectFolder
           search_by_name
-
-          render json: @records.includes(:team, :parent_folder),
-                 each_serializer: GlobalSearch::ProjectFolderSerializer,
-                 meta: {
-                   total: @records.total_count,
-                   next_page: @records.next_page
-                 }
-          return
+          @records = @records.preload(:team, :parent_folder)
         when 'reports'
           @model = Report
           search_by_name
-
-          render json: @records.includes(:team, :project, :user),
-                 each_serializer: GlobalSearch::ReportSerializer,
-                 meta: {
-                   total: @records.total_count,
-                   next_page: @records.next_page
-                 }
-          return
+          @records = @records.preload(:team, :project, :user)
         when 'module_protocols'
           @model = Protocol
+          @serializer = GlobalSearch::MyModuleProtocolSerializer
           search_by_name({ in_repository: false })
-
-          render json: @records.includes({ my_module: :experiment }, :team),
-                 each_serializer: GlobalSearch::MyModuleProtocolSerializer,
-                 meta: {
-                   total: @records.total_count,
-                   next_page: @records.next_page
-                 }
-          return
+          @records = @records.preload({ my_module: :experiment }, :team)
         when 'experiments'
           @model = Experiment
           search_by_name
-
-          render json: @records.includes(project: :team),
-                 each_serializer: GlobalSearch::ExperimentSerializer,
-                 meta: {
-                   total: @records.total_count,
-                   next_page: @records.next_page
-                 }
-          return
+          @records = @records.preload(project: :team)
         when 'tasks'
           @model = MyModule
           search_by_name
-
-          render json: @records.includes(experiment: { project: :team }),
-                 each_serializer: GlobalSearch::MyModuleSerializer,
-                 meta: {
-                   total: @records.total_count,
-                   next_page: @records.next_page
-                 }
-          return
+          @records = @records.preload(experiment: { project: :team })
         when 'results'
           @model = Result
           search_by_name
-
-          render json: @records.includes(my_module: { experiment: { project: :team } }),
-                 each_serializer: GlobalSearch::ResultSerializer,
-                 meta: {
-                   total: @records.total_count,
-                   next_page: @records.next_page
-                 }
-          return
+          @records = @records.preload(my_module: { experiment: { project: :team } })
         when 'protocols'
           @model = Protocol
           search_by_name({ in_repository: true })
-
-          render json: @records.includes(:team, :added_by),
-                 each_serializer: GlobalSearch::ProtocolSerializer,
-                 meta: {
-                   total: @records.total_count,
-                   next_page: @records.next_page
-                 }
-          return
+          @records = @records.preload(:team, :added_by)
         when 'label_templates'
-          return render json: [], meta: { disabled: true }, status: :ok unless LabelTemplate.enabled?
+          return render json: [], meta: { disabled: true, total: 0 } unless LabelTemplate.enabled?
 
           @model = LabelTemplate
           search_by_name
-
-          render json: @records,
-                 each_serializer: GlobalSearch::LabelTemplateSerializer,
-                 meta: {
-                   total: @records.total_count,
-                   next_page: @records.next_page
-                 }
-          return
         when 'repository_rows'
           @model = RepositoryRow
           search_by_name
-
-          render json: @records,
-                 each_serializer: GlobalSearch::RepositoryRowSerializer,
-                 meta: {
-                   total: @records.total_count,
-                   next_page: @records.next_page
-                 }
-          return
+          @records = @records.preload(:created_by, repository: :team)
         when 'assets'
           @model = Asset
           search_by_name
-          includes = [{ step: { protocol: { my_module: :experiment } } }, { result: { my_module: :experiment } }, :team]
-
-          render json: @records.includes(includes),
-                 each_serializer: GlobalSearch::AssetSerializer,
-                 meta: {
-                   total: @records.total_count,
-                   next_page: @records.next_page
-                 }
-          return
+          @records = @records.preload([:team, { step: { protocol: { my_module: :experiment } } }, { result: { my_module: :experiment } }])
+        else
+          return render_404
         end
+
+        @serializer ||= "GlobalSearch::#{@model.name}Serializer".constantize
+
+        render json: @records,
+               each_serializer: @serializer,
+               adapter: :json,
+               root: 'data',
+               meta: {
+                 total: @records.present? ? @records.take.filtered_count : 0,
+                 next_page: @records.next_page
+               }
       end
     end
   end
@@ -179,7 +115,7 @@ class SearchController < ApplicationController
     query = (params.fetch(:q) { '' }).strip
     @filters = params[:filters]
     @include_archived = @filters.blank? || @filters[:include_archived] == 'true'
-    @teams = (@filters.present? && @filters[:teams]&.values) || current_user.teams
+    @teams = @filters.present? && @filters[:teams]&.values ? current_user.teams.where(id: @filters[:teams].values) : current_user.teams
     @display_query = query
 
     splited_query = query.split
@@ -206,10 +142,10 @@ class SearchController < ApplicationController
     @records = @model.search(current_user,
                              @include_archived,
                              @search_query,
-                             nil,
-                             teams: @teams,
-                             users: @users,
-                             options: options)
+                             @teams,
+                             options)
+                     .select("COUNT(\"#{@model.table_name}\".\"id\") OVER() AS filtered_count")
+                     .select("\"#{@model.table_name}\".*")
 
     filter_records if @filters.present?
     sort_records
@@ -243,6 +179,7 @@ class SearchController < ApplicationController
                else
                  @records.page(params[:page]).per(Constants::SEARCH_LIMIT)
                end
+    @records.without_count
   end
 
   def filter_datetime!(attribute)

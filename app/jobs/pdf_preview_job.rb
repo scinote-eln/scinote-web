@@ -7,7 +7,7 @@ class PdfPreviewJob < ApplicationJob
   discard_on StandardError do |job, error|
     asset = Asset.find_by(id: job.arguments.first)
     ActiveRecord::Base.no_touching do
-      asset&.update(pdf_preview_processing: false)
+      asset&.update_column(:pdf_preview_processing, false)
     end
     Rails.logger.error("Couldn't generate PDF preview for Asset with id: #{job.arguments.first}. Error:\n #{error}")
   end
@@ -19,6 +19,6 @@ class PdfPreviewJob < ApplicationJob
 
     PdfPreviewService.new(asset.file.blob, asset.file_pdf_preview).generate!
   ensure
-    asset.update(pdf_preview_processing: false)
+    asset.update_column(:pdf_preview_processing, false)
   end
 end

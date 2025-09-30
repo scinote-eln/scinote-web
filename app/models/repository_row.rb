@@ -9,6 +9,8 @@ class RepositoryRow < ApplicationRecord
   ID_PREFIX = 'IT'
   include PrefixedIdModel
 
+  SEARCHABLE_ATTRIBUTES = ['repository_rows.name', 'users.full_name', RepositoryRow::PREFIXED_ID_SQL, :children].freeze
+
   belongs_to :repository, class_name: 'RepositoryBase', counter_cache: :repository_rows_count
   delegate :team, to: :repository
   belongs_to :parent, class_name: 'RepositoryRow', optional: true
@@ -161,22 +163,19 @@ class RepositoryRow < ApplicationRecord
   def self.search(user,
                   include_archived,
                   query = nil,
-                  current_team = nil,
-                  options = {})
-    teams = options[:teams] || current_team || user.teams.select(:id)
-    searchable_row_fields = [RepositoryRow::PREFIXED_ID_SQL, 'repository_rows.name', 'users.full_name']
+                  teams = user.teams,
+                  _options = {})
+    repository_rows = joins(:repository, :created_by).readable_by_user(user, teams)
+    repository_rows = repository_rows.active unless include_archived
+    repository_rows.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
+  end
 
-    readable_rows = distinct.joins(:repository, :created_by).readable_by_user(user, teams)
-    readable_rows = readable_rows.active unless include_archived
-    repository_rows = readable_rows.where_attributes_like_boolean(searchable_row_fields, query, options)
-
-    Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |_data_type, config|
-      custom_cell_matches = readable_rows.joins(config[:includes])
-                                         .where_attributes_like_boolean(config[:field], query, options)
-      repository_rows = repository_rows.or(readable_rows.where(id: custom_cell_matches))
+  def self.where_children_attributes_like(query)
+    query_clauses = []
+    Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each_value do |config|
+      query_clauses << unscoped.joins(config[:includes]).where_attributes_like(config[:field], query).to_sql
     end
-
-    repository_rows
+    unscoped.from("(#{query_clauses.join(' UNION ')}) AS repository_rows", :repository_rows)
   end
 
   def self.filter_by_teams(teams = [])

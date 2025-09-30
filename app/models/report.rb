@@ -70,13 +70,12 @@ class Report < ApplicationRecord
     user,
     _include_archived,
     query = nil,
-    current_team = nil,
-    options = {}
-  ) 
-    teams = options[:teams] || current_team || user.teams.select(:id)
+    teams = user.teams,
+    _options = {}
+  )
     distinct.with_granted_permissions(user, ReportPermissions::READ)
             .where(team: teams)
-            .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+            .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
   def self.readable_by_user(user, teams)
