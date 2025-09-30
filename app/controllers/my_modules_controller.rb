@@ -384,15 +384,20 @@ class MyModulesController < ApplicationController
   end
 
   def update_state
-    old_status_id = @my_module.my_module_status_id
-    @my_module.status_changed_by = current_user
+    @my_module.with_lock do
+      @my_module.reload
 
-    if @my_module.update(my_module_status_id: update_status_params[:status_id])
+      old_status_id = @my_module.my_module_status_id
+      raise ActiveRecord::RecordInvalid if old_status_id == update_status_params[:status_id]
+
+      @my_module.status_changed_by = current_user
+      @my_module.update!(my_module_status_id: update_status_params[:status_id])
+
       log_activity(:change_status_on_task_flow, @my_module, my_module_status_old: old_status_id,
-                   my_module_status_new: @my_module.my_module_status.id)
+                  my_module_status_new: @my_module.my_module_status.id)
 
       render json: { status: :changed }
-    else
+    rescue StandardError
       render json: { errors: @my_module.errors.messages.values.flatten.join('\n') }, status: :unprocessable_entity
     end
   end
