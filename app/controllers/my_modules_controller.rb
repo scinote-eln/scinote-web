@@ -388,7 +388,7 @@ class MyModulesController < ApplicationController
       @my_module.reload
 
       old_status_id = @my_module.my_module_status_id
-      raise ActiveRecord::RecordInvalid if old_status_id == update_status_params[:status_id]
+      raise ActiveRecord::RecordInvalid if old_status_id == update_status_params[:status_id].to_i
 
       @my_module.status_changed_by = current_user
       @my_module.update!(my_module_status_id: update_status_params[:status_id])
