@@ -68,7 +68,6 @@
         $.get($('#status-container').data('status-partial-url'), (partialData) => {
           $('#status-container').data('current-status-id', statusData.my_module_status_id);
           $('#status-container').html(partialData.html);
-          initStatus();
           $('#status-container').trigger('statusChanged');
         });
       } else {
