@@ -15,8 +15,9 @@ class MyModule < ApplicationRecord
   include Cloneable
   include Favoritable
   include MetadataModel
+  include ObservableModel
 
-  attr_accessor :transition_error_rollback, :my_module_status_created_by
+  attr_accessor :transition_error_rollback, :status_changed_by
 
   enum state: Extends::TASKS_STATES
   enum provisioning_status: { done: 0, in_progress: 1, failed: 2 }
@@ -564,7 +565,7 @@ class MyModule < ApplicationRecord
 
     if status_changing_direction == :forward
       my_module_status.my_module_status_consequences.each do |consequence|
-        consequence.before_forward_call(self, my_module_status_created_by)
+        consequence.before_forward_call(self, status_changed_by)
       end
     end
 

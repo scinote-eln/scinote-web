@@ -20,7 +20,8 @@ class MyModulesController < ApplicationController
   before_action :check_read_permissions, except: %i(create new update update_description
                                                     inventory_assigning_my_module_filter
                                                     update_protocol_description restore_group
-                                                    save_table_state actions_toolbar index)
+                                                    save_table_state actions_toolbar index current_status)
+  before_action :check_current_status_permissions, only: :current_status
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols activities archive index)
   before_action :load_experiment_my_modules, only: %i(protocols activities archive)
@@ -116,6 +117,16 @@ class MyModulesController < ApplicationController
   def save_table_state
     current_user.settings.update(visible_my_module_table_columns: params[:columns])
     current_user.save!
+  end
+
+  def current_status
+    render json: { my_module_status_id: @my_module.my_module_status_id }
+  end
+
+  def status_partial
+    render json: {
+      html: render_to_string(partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module })
+    }
   end
 
   def status_state
@@ -373,15 +384,20 @@ class MyModulesController < ApplicationController
   end
 
   def update_state
-    old_status_id = @my_module.my_module_status_id
-    @my_module.my_module_status_created_by = current_user
+    @my_module.with_lock do
+      @my_module.reload
 
-    if @my_module.update(my_module_status_id: update_status_params[:status_id])
+      old_status_id = @my_module.my_module_status_id
+      raise ActiveRecord::RecordInvalid if old_status_id == update_status_params[:status_id].to_i
+
+      @my_module.status_changed_by = current_user
+      @my_module.update!(my_module_status_id: update_status_params[:status_id])
+
       log_activity(:change_status_on_task_flow, @my_module, my_module_status_old: old_status_id,
-                   my_module_status_new: @my_module.my_module_status.id)
+                  my_module_status_new: @my_module.my_module_status.id)
 
       render json: { status: :changed }
-    else
+    rescue StandardError
       render json: { errors: @my_module.errors.messages.values.flatten.join('\n') }, status: :unprocessable_entity
     end
   end
@@ -497,6 +513,10 @@ class MyModulesController < ApplicationController
   def check_read_permissions
     current_team_switch(@project.team) if current_team != @project.team
     render_403 unless can_read_my_module?(@my_module)
+  end
+
+  def check_current_status_permissions
+    render_403 unless current_team == @project.team && can_read_my_module?(@my_module)
   end
 
   def check_update_state_permissions

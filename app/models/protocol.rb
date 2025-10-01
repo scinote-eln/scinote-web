@@ -14,6 +14,7 @@ class Protocol < ApplicationRecord
   include Assignable
   include PermissionCheckableModel
   include TinyMceImages
+  include ObservableModel
 
   before_create -> { self.skip_user_assignments = true }, if: -> { in_module? }
 
@@ -234,6 +235,10 @@ class Protocol < ApplicationRecord
 
   def self.docx_parser_enabled?
     ENV.fetch('PROTOCOLS_PARSER_URL', nil).present?
+  end
+
+  def self.ai_parser_enabled?
+    ENV.fetch('AI_PROTOCOLS_PARSER', nil).present? && ApplicationSettings.instance.values['ai_protocol_parser_enabled'] == true
   end
 
   def original_code

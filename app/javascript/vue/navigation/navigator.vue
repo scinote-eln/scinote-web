@@ -141,7 +141,7 @@ export default {
       if (window.resetGridColumns) window.resetGridColumns(false);
     },
     onResizeStart() {
-      document.body.style.cursor = 'url(/images/icon_small/Resize.svg) 0 0, auto';
+      document.body.style.cursor = 'col-resize';
       $('.sci--layout-navigation-navigator').addClass('!transition-none');
       $('.sci--layout').addClass('!transition-none');
     },

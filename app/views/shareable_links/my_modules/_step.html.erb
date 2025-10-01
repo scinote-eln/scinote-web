@@ -38,7 +38,14 @@
           <ul id="ResultsMenuDropdown<%= step.id %>" class="dropdown-menu dropdown-menu-right px-4 py-2">
             <% step.results.each do |result| %>
               <li class="dropdown-item">
-                <%= link_to result.name, shared_protocol_results_path(@shareable_link.uuid), class: "!py-2.5 !px-3 hover:!bg-sn-super-light-grey !cursor-pointer !block hover:!no-underline !text-sn-blue !truncate" %>
+                <%= link_to shared_protocol_results_path(@shareable_link.uuid, result_id: result.id, anchor: "resultContainer#{result.id}"), class: "!py-2.5 !px-3 hover:!bg-sn-super-light-grey !cursor-pointer hover:!no-underline !text-sn-blue !truncate !flex items-center gap-4 #{'disabled' if result.archived?}" do %>
+                  <span class="leading-4"><%= result.name %></span>
+                  <% if result.archived? %>
+                    <div class="py-1 px-2 text-xs ml-auto text-white bg-sn-grey rounded-full ">
+                      <%= I18n.t('protocols.steps.archived_result') %>
+                    </div>
+                  <% end %>
+                <% end %>
               </li>
             <% end %>
           </ul>
