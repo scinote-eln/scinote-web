@@ -30,9 +30,14 @@ class Table < ApplicationRecord
 
   has_one :result_table, inverse_of: :table, dependent: :destroy
   has_one :result, through: :result_table, touch: true
+  has_one :result_template, through: :result_table
   has_many :report_elements, inverse_of: :table, dependent: :destroy
 
   after_save :update_ts_index
+
+  def result_or_template
+    result_template || result
+  end
 
   def metadata
     attributes['metadata'].is_a?(String) ? JSON.parse(attributes['metadata']) : attributes['metadata']
@@ -83,6 +88,23 @@ class Table < ApplicationRecord
         parent.step_orderable_elements.create!(
           position: position || parent.step_orderable_elements.length,
           orderable: new_table.step_table
+        )
+
+        new_table
+      end
+    when ResultTemplate
+      ActiveRecord::Base.transaction do
+        new_table = parent.tables.create!(
+          name: name,
+          contents: contents.encode('UTF-8', 'UTF-8'),
+          team: parent.protocol.team,
+          created_by: user,
+          metadata: metadata,
+          last_modified_by: user
+        )
+        parent.result_orderable_elements.create!(
+          position: position || parent.result_orderable_elements.length,
+          orderable: new_table.result_table
         )
 
         new_table
