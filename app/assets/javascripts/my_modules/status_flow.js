@@ -63,6 +63,8 @@
   }
 
   function checkCurrentStatus() {
+    if (!$('#status-container').data('current-status-url')) return;
+
     $.get($('#status-container').data('current-status-url'), (statusData) => {
       if ($('#status-container').data('current-status-id') !== statusData.my_module_status_id) {
         $.get($('#status-container').data('status-partial-url'), (partialData) => {
