@@ -2471,6 +2471,7 @@ en:
       relationships: "Relationships"
       children: "Children"
       parents: "Parents"
+      locations: "Locations"
       row_consumption: "Consumed"
       enter_row_name: "Enter name"
       locked_item: "This is read-only item."

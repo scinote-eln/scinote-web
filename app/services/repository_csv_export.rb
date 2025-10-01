@@ -66,6 +66,8 @@ class RepositoryCsvExport
         when -11
           csv_header << I18n.t('repositories.table.parents')
           csv_header << I18n.t('repositories.table.children')
+        when -12
+          csv_header << I18n.t('repositories.table.locations')
         else
           csv_header << custom_columns.find { |column| column.id == c_id }&.name
         end
@@ -99,6 +101,10 @@ class RepositoryCsvExport
         when -11
           csv_row << row.parent_repository_rows.map(&:code).join(' | ')
           csv_row << row.child_repository_rows.map(&:code).join(' | ')
+        when -12
+          csv_row << row.storage_locations.to_a.uniq
+                        .map { |storage_location| storage_location.storage_location_export_breadcrumb(row) }
+                        .join(', ')
         else
           cell = row.repository_cells.find { |c| c.repository_column_id == c_id }
           csv_row << if cell

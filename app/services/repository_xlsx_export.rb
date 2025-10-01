@@ -94,6 +94,8 @@ class RepositoryXlsxExport
         when -11
           header << I18n.t('repositories.table.parents')
           header << I18n.t('repositories.table.children')
+        when -12
+          header << I18n.t('repositories.table.locations')
         else
           header << custom_columns.find { |column| column.id == c_id }&.name
         end
@@ -127,6 +129,10 @@ class RepositoryXlsxExport
         when -11
           row_data << row.parent_repository_rows.map(&:code).join(' | ')
           row_data << row.child_repository_rows.map(&:code).join(' | ')
+        when -12
+          row_data << row.storage_locations.to_a.uniq
+                         .map { |storage_location| storage_location.storage_location_export_breadcrumb(row) }
+                         .join(', ')
         else
           cell = row.repository_cells.find { |c| c.repository_column_id == c_id }
           row_data << if cell

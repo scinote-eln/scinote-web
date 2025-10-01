@@ -51,6 +51,7 @@ class RepositoriesExportJob < ApplicationJob
     # Define headers and columns IDs
     col_ids = [-3, -4, -5, -6, -7, -8, -9, -10]
     col_ids << -11 if Repository.repository_row_connections_enabled?
+    col_ids << -12 if StorageLocation.storage_locations_enabled?
     col_ids += repository.repository_columns.map(&:id)
 
     # Define callback function for file name
