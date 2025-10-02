@@ -14,12 +14,28 @@
           <div class="modal-body">
             <div class="mb-6">
               <label class="sci-label" data-e2e="e2e-TX-newProtocolModal-inputLabel">{{ i18n.t("protocols.new_protocol_modal.name_label") }}</label>
-              <div class="sci-input-container-v2" :class="{'error': error}" :data-error="error">
+              <div class="sci-input-container-v2 mb-6" :class="{'error': error}" :data-error="error">
                 <input type="text" v-model="name"
                        class="sci-input-field"
                        autofocus="true" ref="input"
                        data-e2e="e2e-IF-newProtocolModal-name"
                        :placeholder="i18n.t('protocols.new_protocol_modal.name_placeholder')" />
+              </div>
+              <div class="flex gap-2 text-xs items-center">
+                <div class="sci-checkbox-container">
+                  <input type="checkbox" class="sci-checkbox" v-model="visible" value="visible" data-e2e="e2e-CB-newProtocolModal-grantAccess"/>
+                  <span class="sci-checkbox-label"></span>
+                </div>
+                <span v-html="i18n.t('protocols.new_protocol_modal.access_label')" data-e2e="e2e-TX-newProtocolModal-grantAccess"></span>
+              </div>
+              <div class="mt-6" :class="{'hidden': !visible}">
+                <label class="sci-label">{{ i18n.t("user_assignment.select_default_user_role") }}</label>
+                <SelectDropdown
+                  :options="userRoles"
+                  :value="defaultRole"
+                  @change="changeRole"
+                  :e2eValue="'e2e-DD-newProtocolModal-defaultUserRole'"
+                />
               </div>
             </div>
           </div>
@@ -38,15 +54,23 @@
 <script>
 /* global GLOBAL_CONSTANTS */
 
+import SelectDropdown from '../../shared/select_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
+import defaultPublicUserRoleMixin from '../../shared/default_public_user_role_mixin';
+import {
+  user_roles_protocols_path
+} from '../../../routes.js';
 
 export default {
   name: 'NewProtocolModal',
   props: {
     createUrl: String
   },
-  mixins: [modalMixin],
+  mixins: [modalMixin, defaultPublicUserRoleMixin],
+  components: {
+    SelectDropdown
+  },
   computed: {
     validName() {
       return this.name.length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH;
@@ -65,7 +89,8 @@ export default {
 
       axios.post(this.createUrl, {
         protocol: {
-          name: this.name
+          name: this.name,
+          default_public_user_role_id: this.defaultRole
         }
       }).then(() => {
         this.error = null;
@@ -75,6 +100,9 @@ export default {
         this.submitting = false;
         this.error = error.response.data.error;
       });
+    },
+    userRolesUrl() {
+      return user_roles_protocols_path();
     }
   }
 };

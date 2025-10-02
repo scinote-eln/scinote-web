@@ -20,6 +20,7 @@
                @import_file="importFile"
                @import_protocols_io="importProtocolsIo"
                @import_docx="importDocx"
+               @import_ai="importWithAI"
                @access="access"
                @linked_my_modules="linkedMyModules"
     />
@@ -84,6 +85,10 @@ export default {
       required: true
     },
     docxParserEnabled: {
+      type: Boolean,
+      required: true
+    },
+    aiParserEnabled: {
       type: Boolean,
       required: true
     },
@@ -197,6 +202,17 @@ export default {
           path: this.createUrl,
           buttonStyle: 'btn btn-primary'
         });
+
+        if (this.aiParserEnabled) {
+          left.push({
+            name: 'import_ai',
+            icon: 'sn-icon sn-icon-ai',
+            label: this.i18n.t('protocols.index.import_with_ai'),
+            type: 'emit',
+            buttonStyle: 'btn btn-rainbow',
+          });
+        }
+
         const importMenu = {
           name: 'import',
           icon: 'sn-icon sn-icon-import',
@@ -331,6 +347,10 @@ export default {
     importDocx() {
       const docxButton = document.querySelector('#importDocx');
       docxButton.click();
+    },
+    importWithAI() {
+      const aiButton = document.querySelector('#importWithAI');
+      aiButton.click();
     },
     access(_event, rows) {
       this.accessModalParams = {

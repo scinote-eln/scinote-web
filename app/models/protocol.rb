@@ -144,15 +144,17 @@ class Protocol < ApplicationRecord
   def self.search(user,
                   include_archived,
                   query = nil,
-                  current_team = nil,
+                  teams = user.teams,
                   options = {})
-    teams = options[:teams] || current_team || user.teams.select(:id)
+    team_ids = teams.is_a?(ActiveRecord::Relation) ? teams.pluck(:id) : teams.id
 
-    if options[:options]&.dig(:in_repository)
-      protocols = latest_available_versions(teams)
+    if options[:in_repository]
+      protocols = latest_available_versions(team_ids)
+      readable_protocols = readable_by_user(user, team_ids)
       protocols = protocols.active unless include_archived
     else
-      protocols = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, teams) })
+      protocols = joins(:my_module)
+      readable_protocols = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, team_ids).select(:id) })
       unless include_archived
         protocols = protocols.active
                              .joins(my_module: { experiment: :project })
@@ -160,22 +162,26 @@ class Protocol < ApplicationRecord
       end
     end
 
+    protocols = protocols.with(readable_protocols: readable_protocols)
+                         .joins('INNER JOIN "readable_protocols" ON "readable_protocols"."id" = "protocols"."id"')
+
     protocols.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
   def self.where_children_attributes_like(query)
-    from(
-      "(#{joins(:steps).where_attributes_like(Step::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{joins(steps: :step_texts).where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{joins(steps: { step_tables: :table }).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{joins(steps: :checklists).where_attributes_like(Checklist::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{joins(steps: { checklists: :checklist_items }).where_attributes_like(ChecklistItem::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{joins(steps: :step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    unscoped_readable_protocols = unscoped.joins('INNER JOIN "readable_protocols" ON "readable_protocols"."id" = "protocols"."id"').select(:id)
+    unscoped.from(
+      "(#{unscoped_readable_protocols.joins(:steps).where_attributes_like(Step::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped_readable_protocols.joins(steps: :step_texts).where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped_readable_protocols.joins(steps: { step_tables: :table }).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped_readable_protocols.joins(steps: :checklists).where_attributes_like(Checklist::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped_readable_protocols.joins(steps: { checklists: :checklist_items }).where_attributes_like(ChecklistItem::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped_readable_protocols.joins(steps: :step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
       ) AS protocols",
       :protocols
     )
@@ -186,17 +192,16 @@ class Protocol < ApplicationRecord
     protocol_my_modules = joins(:my_module).where(my_modules: { id: MyModule.readable_by_user(user, teams) })
 
     where('protocols.id IN ((?) UNION (?))', protocol_templates.select(:id), protocol_my_modules.select(:id))
-      .where_attributes_like_boolean(search_fields, query, options)
+      .where_attributes_like_boolean(search_fields, query)
       .limit(options[:limit] || Constants::SEARCH_LIMIT)
   end
 
   def self.latest_available_versions(teams)
-    team_protocols = where(team: teams)
+    team_protocols = where(team_id: teams)
 
     original_without_versions = team_protocols
                                 .where.missing(:published_versions)
                                 .where(protocol_type: Protocol.protocol_types[:in_repository_published_original])
-                                .where(published_versions: { id: nil })
                                 .select(:id)
     published_versions = team_protocols
                          .where(protocol_type: Protocol.protocol_types[:in_repository_published_version])
@@ -230,6 +235,10 @@ class Protocol < ApplicationRecord
 
   def self.docx_parser_enabled?
     ENV.fetch('PROTOCOLS_PARSER_URL', nil).present?
+  end
+
+  def self.ai_parser_enabled?
+    ENV.fetch('AI_PROTOCOLS_PARSER', nil).present? && ApplicationSettings.instance.values['ai_protocol_parser_enabled'] == true
   end
 
   def original_code

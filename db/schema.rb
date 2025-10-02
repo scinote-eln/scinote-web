@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_04_142232) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -1378,6 +1378,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_04_142232) do
     t.datetime "updated_at", null: false
     t.bigint "team_id"
     t.index ["assignable_type", "assignable_id", "user_id", "team_id"], name: "index_user_assignments_on_unique_assignable_in_team", unique: true
+    t.index ["assignable_type", "team_id", "user_id", "user_role_id"], name: "index_user_assignments_assignable_type_team_user_user_role"
     t.index ["assigned_by_id"], name: "index_user_assignments_on_assigned_by_id"
     t.index ["team_id"], name: "index_user_assignments_on_team_id"
     t.index ["user_id"], name: "index_user_assignments_on_user_id"

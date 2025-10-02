@@ -817,7 +817,7 @@ class Extends
       task_status_in_progress: %I[
         on_protocol_content_change
         on_step_completion
-        on_added_result
+        on_result_created_or_changed
       ],
       task_status_completed: %I[
         on_all_steps_completion
@@ -845,16 +845,20 @@ class Extends
     'Experiment' => ['AutomationObservers::AllExperimentsDoneObserver', 'AutomationObservers::ExperimentStatusChangeObserver'],
     'MyModule' => ['AutomationObservers::AllTasksDoneObserver', 'AutomationObservers::TaskStatusChangeObserver'],
     'Protocol' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
-    'Asset' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
-    'Table' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
-    'Comment' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'Asset' => ['AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::ResultContentChangeObserver'],
+    'Table' => ['AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::ResultContentChangeObserver'],
+    'Comment' => ['AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::ResultContentChangeObserver'],
     'ChecklistItem' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'Checklist' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'FormFieldValue' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'FormResponse' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'StepOrderableElement' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
-    'StepComment' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
-    'Step' => ['AutomationObservers::AllStepsCompletionObserver', 'AutomationObservers::StepCompletionObserver', 'AutomationObservers::TaskProtocolContentChangeObserver'],
-    'Result' => ['AutomationObservers::ResultCreateObserver']
+    'StepText' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'Step' => ['AutomationObservers::StepCompletionObserver', 'AutomationObservers::AllStepsCompletionObserver', 'AutomationObservers::TaskProtocolContentChangeObserver'],
+    'Result' => ['AutomationObservers::ResultContentChangeObserver'],
+    'ResultText' => ['AutomationObservers::ResultContentChangeObserver'],
+    'ResultComment' => ['AutomationObservers::ResultContentChangeObserver'],
+    'ResultOrderableElement' => ['AutomationObservers::ResultContentChangeObserver']
   }
 
   DEFAULT_TEAM_SETTINGS = {}
