@@ -121,7 +121,7 @@ module SearchableModel
           like = exact_match ? '~' : 'ILIKE'
 
           where_str = (attributes.map do |attribute|
-            attribute_key = attribute.to_s.tr('.', '_')
+            attribute_key = attribute.to_s.parameterize(separator: '_')
 
             if attribute == :children
               "\"#{table_name}\".\"id\" IN (#{where_children_attributes_like(token[:value]).select(:id).to_sql}) OR "
@@ -141,7 +141,7 @@ module SearchableModel
           attributes.each do |attribute|
             next if attribute == :children
 
-            query_params[:"#{attribute.to_s.tr('.', '_')}_#{index}_query"] =
+            query_params[:"#{attribute.to_s.parameterize(separator: '_')}_#{index}_query"] =
               if SEARCH_DATA_VECTOR_ATTRIBUTES.include?(attribute) && !exact_match
                 token[:value].split(/\s+/).map! { |t| "#{t}:*" }
               else
