@@ -18,12 +18,13 @@ class ProjectsController < ApplicationController
 
   before_action :switch_team_with_param, only: :index
   before_action :load_projects, only: %i(index actions_toolbar)
-  before_action :load_project, only: %i(update create_tag assigned_users_list show)
+  before_action :load_project, only: %i(update assigned_users_list show)
   before_action :load_current_folder, only: :index
   before_action :check_read_permissions, except: %i(index create update archive_group restore_group
                                                     inventory_assigning_project_filter
                                                     actions_toolbar users_filter head_of_project_users_list
-                                                    favorite unfavorite user_roles)
+                                                    favorite unfavorite projects_to_move user_roles)
+
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: :update
   before_action :set_folder_inline_name_editing, only: %i(index)
@@ -205,24 +206,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def create_tag
-    render_403 unless can_manage_project_tags?(@project)
-
-    @tag = @project.tags.create(tag_params.merge({
-                                                   created_by: current_user,
-                                                   last_modified_by: current_user,
-                                                   color: Constants::TAG_COLORS.sample
-                                                 }))
-
-    render json: {
-      tag: {
-        id: @tag.id,
-        name: @tag.name,
-        color: @tag.color
-      }
-    }
-  end
-
   def restore_group
     projects = current_team.projects.archived.where(id: params[:project_ids])
     counter = 0
@@ -280,6 +263,15 @@ class ProjectsController < ApplicationController
           current_user
         ).actions
     }
+  end
+
+  def projects_to_move
+    projects = current_team.projects
+                           .active
+                           .with_granted_permissions(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
+                           .search_by_name(current_user, current_team, params['query'])
+                           .order(name: :asc).map { |p| { id: p.id, name: p.name } }
+    render json: { data: projects }
   end
 
   def user_roles

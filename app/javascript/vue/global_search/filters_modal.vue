@@ -18,6 +18,7 @@
             <Filters
               :teams-url="teamsUrl"
               :users-url="usersUrl"
+              :tags-url="tagsUrl"
               :filters="filters"
               :currentTeam="currentTeam"
               @search="(newFilters) => { this.$emit('search', newFilters); }"
@@ -38,6 +39,7 @@ export default {
   props: {
     teamsUrl: String,
     usersUrl: String,
+    tagsUrl: String,
     filters: Object,
     currentTeam: Number || String
   },

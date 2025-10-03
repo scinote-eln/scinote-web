@@ -149,6 +149,11 @@ Rails.application.routes.draw do
         resource :user_settings, only: %i(show update)
 
         resources :teams, only: [] do
+          resources :tags, only: %i(index) do
+            collection do
+              post :actions_toolbar
+            end
+          end
           resources :user_groups, only: %i(index create update destroy show) do
             resources :user_group_memberships, only: %i(index create update) do
               collection do
@@ -216,6 +221,21 @@ Rails.application.routes.draw do
         to: 'zip_exports#file_expired',
         as: 'file_expired'
 
+    resources :tags, only: :index do
+      collection do
+        get :colors
+      end
+    end
+
+    resources :tags, only: %i(index create update destroy) do
+      collection do
+        get :colors
+      end
+      member do
+        post :merge
+      end
+    end
+
     resources :teams do
       resources :repositories, only: %i(index create destroy update) do
         collection do
@@ -255,6 +275,12 @@ Rails.application.routes.draw do
         get :visible_users
         get :visible_teams
         get :current_team_users
+      end
+
+      resources :tags, only: %i(index create update destroy) do
+        member do
+          post :merge
+        end
       end
 
       member do
@@ -396,8 +422,6 @@ Rails.application.routes.draw do
       # Activities popup (JSON) for individual project in projects index,
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
-      resources :tags, only: %i(index create update destroy)
-      post :create_tag
 
       resources :reports,
                 path: '/reports',
@@ -433,6 +457,7 @@ Rails.application.routes.draw do
         post 'actions_toolbar'
         get :user_roles
         get :head_of_project_users_list
+        get :projects_to_move
       end
     end
 
@@ -458,6 +483,7 @@ Rails.application.routes.draw do
         post 'actions_toolbar'
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
+        get :experiments_to_move
       end
       member do
         get :assigned_users
@@ -474,7 +500,6 @@ Rails.application.routes.draw do
         get 'canvas/small_zoom', to: 'canvas#small_zoom' # AJAX-loaded canvas zoom
         post 'canvas', to: 'canvas#update' # Save updated canvas action
         get 'module_archive' # Module archive for single experiment
-        get 'my_module_tags', to: 'my_module_tags#canvas_index'
         post 'archive' # archive experiment
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
@@ -489,7 +514,6 @@ Rails.application.routes.draw do
         get :search_tags
         get :projects_to_clone
         get :projects_to_move
-        get :experiments_to_move
         post :favorite
         post :unfavorite
       end
@@ -522,21 +546,17 @@ Rails.application.routes.draw do
         post :change_results_state
         post :favorite
         post :unfavorite
+        get :assigned_users
+        post :tag_resource
+        post :untag_resource
+        post :tag_resource_with_new_tag
         get :current_status
         get :status_partial
-      end
-      resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
-        collection do
-          get :search_tags
-          get :assigned_tags
-        end
-        member do
-          post :destroy_by_tag_id
-        end
       end
       resources :user_my_modules, path: '/users', only: %i(index create destroy) do
         collection do
           get :designated_users
+          post :designate_users
         end
         member do
           get :search
@@ -606,7 +626,6 @@ Rails.application.routes.draw do
 
       # Those routes are defined outside of member block
       # to preserve original id parameters in URL.
-      get 'tags/edit', to: 'my_module_tags#index_edit'
       get 'users/edit', to: 'user_my_modules#index_edit'
 
       resources :results, only: %i(index show create update destroy) do

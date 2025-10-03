@@ -14,8 +14,6 @@ Canaid::Permissions.register_for(Experiment) do
 
   # experiment: create/update/delete
   # canvas: update
-  # module: create, copy, reposition, create/update/delete connection,
-  #         assign/reassign/unassign tags
   can :manage_experiment do |user, experiment|
     experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
   end

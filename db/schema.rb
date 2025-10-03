@@ -453,15 +453,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
     t.index ["previous_status_id"], name: "index_my_module_statuses_on_previous_status_id", unique: true
   end
 
-  create_table "my_module_tags", force: :cascade do |t|
-    t.integer "my_module_id"
-    t.integer "tag_id"
-    t.bigint "created_by_id"
-    t.index ["created_by_id"], name: "index_my_module_tags_on_created_by_id"
-    t.index ["my_module_id"], name: "index_my_module_tags_on_my_module_id"
-    t.index ["tag_id"], name: "index_my_module_tags_on_tag_id"
-  end
-
   create_table "my_modules", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "due_date", precision: nil
@@ -1285,18 +1276,29 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
     t.index ["team_id"], name: "index_tables_on_team_id"
   end
 
+  create_table "taggings", force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.string "taggable_type", null: false
+    t.bigint "taggable_id", null: false
+    t.bigint "created_by_id"
+    t.index ["created_by_id"], name: "index_taggings_on_created_by_id"
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+    t.index ["taggable_type", "taggable_id", "tag_id"], name: "index_taggings_on_taggable_type_and_taggable_id_and_tag_id", unique: true
+    t.index ["taggable_type", "taggable_id"], name: "index_taggings_on_taggable"
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.string "color", default: "#ff0000", null: false
-    t.bigint "project_id", null: false
+    t.string "color", null: false
     t.bigint "created_by_id"
     t.bigint "last_modified_by_id"
+    t.bigint "team_id", null: false
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_tags_on_name", using: :gin
     t.index ["created_by_id"], name: "index_tags_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_tags_on_last_modified_by_id"
-    t.index ["project_id"], name: "index_tags_on_project_id"
+    t.index ["team_id"], name: "index_tags_on_team_id"
   end
 
   create_table "team_assignments", force: :cascade do |t|
@@ -1628,7 +1630,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
   add_foreign_key "my_module_statuses", "my_module_statuses", column: "previous_status_id"
   add_foreign_key "my_module_statuses", "users", column: "created_by_id"
   add_foreign_key "my_module_statuses", "users", column: "last_modified_by_id"
-  add_foreign_key "my_module_tags", "users", column: "created_by_id"
   add_foreign_key "my_modules", "experiments"
   add_foreign_key "my_modules", "my_module_groups"
   add_foreign_key "my_modules", "my_module_statuses", column: "changing_from_my_module_status_id"
@@ -1762,7 +1763,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
   add_foreign_key "storage_locations", "users", column: "created_by_id"
   add_foreign_key "tables", "users", column: "created_by_id"
   add_foreign_key "tables", "users", column: "last_modified_by_id"
-  add_foreign_key "tags", "projects"
+  add_foreign_key "taggings", "tags"
+  add_foreign_key "taggings", "users", column: "created_by_id"
+  add_foreign_key "tags", "teams"
   add_foreign_key "tags", "users", column: "created_by_id"
   add_foreign_key "tags", "users", column: "last_modified_by_id"
   add_foreign_key "team_assignments", "teams"

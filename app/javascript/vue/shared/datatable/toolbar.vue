@@ -3,7 +3,9 @@
     <div class="flex flex-1 items-center gap-4">
       <template v-for="action in toolbarActions.left" :key="action.label">
         <a v-if="action.type === 'emit' || action.type === 'link'"
-           :class="action.buttonStyle"
+           :class="[action.buttonStyle, {
+            'disabled': disabled
+           }]"
            :href="action.path"
            :data-e2e="`e2e-BT-topToolbar-${action.name}`"
            @click="doAction(action, $event)">
@@ -16,6 +18,7 @@
           :btnClasses="action.buttonStyle"
           :btnText="action.label"
           :btnIcon="action.icon"
+          :disabled="disabled"
           :caret="true"
           :position="'right'"
           :data-e2e="`e2e-BT-topToolbar-${action.name}`"
@@ -31,6 +34,7 @@
           :btnClasses="'btn btn-secondary !border-sn-light-grey px-3'"
           :btnText="i18n.t(`toolbar.${currentViewRender}_view`)"
           :caret="true"
+          :disabled="disabled"
           :position="'right'"
           :data-e2e="'e2e-DD-topToolbar-viewDropdown'"
           @setCardsView="$emit('setCardsView')"
@@ -49,13 +53,15 @@
     </div>
     <div class="flex flex-1 justify-end gap-2">
       <a v-for="action in toolbarActions.right" :key="action.label"
-          :class="action.buttonStyle"
+      :class="[action.buttonStyle, {
+            'disabled': disabled
+           }]"
           :href="action.path"
           @click="doAction(action, $event)">
         <i :class="action.icon"></i>
         {{ action.label }}
       </a>
-      <div class="sci-input-container-v2"
+      <div v-if="!disabled" class="sci-input-container-v2"
            :class="{'w-48': showSearch, 'w-11': !showSearch}"
            :data-e2e="'e2e-BT-topToolbar-search'">
         <input
@@ -73,10 +79,11 @@
         <i v-else class="sn-icon sn-icon-close !m-2.5 !ml-auto right-0 cursor-pointer z-10"
                   @click="$emit('search:change', '')"></i>
       </div>
-      <FilterDropdown v-if="filters.length" :filters="filters" @applyFilters="applyFilters" :data-e2e="'e2e-BT-topToolbar-filters'"/>
+      <FilterDropdown v-if="filters.length && !disabled" :filters="filters" @applyFilters="applyFilters" :data-e2e="'e2e-BT-topToolbar-filters'"/>
       <button
         v-if="currentViewRender === 'table'"
         @click="showColumnsModal = true"
+        :disabled="disabled"
         :data-e2e="'e2e-BT-topToolbar-manageColumns'"
         :title="i18n.t('experiments.table.column_display_modal.title')"
         class="btn btn-light icon-btn btn-black"
@@ -85,7 +92,7 @@
       </button>
       <GeneralDropdown v-if="currentViewRender === 'cards'" ref="dropdown" position="right">
         <template v-slot:field>
-          <button class="btn btn-light icon-btn btn-black">
+          <button class="btn btn-light icon-btn btn-black" :disabled="disabled">
             <i class="sn-icon sn-icon-sort-down"></i>
           </button>
         </template>
@@ -178,6 +185,11 @@ export default {
     },
     order: {
       type: Object
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+
     }
   },
   data() {

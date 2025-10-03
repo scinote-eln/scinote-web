@@ -1,5 +1,0 @@
-<% if @my_module.description.blank? %>
-  <em><%=t "experiments.canvas.popups.no_description" %></em>
-<% else %>
-  <%= custom_auto_link(@my_module.description, team: current_team) %>
-<% end %>

@@ -158,5 +158,9 @@ module Lists
     def statuses_filter(statuses)
       @records = @records.where(my_module_status_id: statuses.values)
     end
+
+    def tags_filter(tags)
+      @records = @records.joins(:tags).where(tags: { id: tags.values })
+    end
   end
 end

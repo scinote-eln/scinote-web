@@ -18,17 +18,16 @@ describe Tag, type: :model do
     it { should have_db_column :created_at }
     it { should have_db_column :updated_at }
     it { should have_db_column :color }
-    it { should have_db_column :project_id }
+    it { should have_db_column :team_id }
     it { should have_db_column :created_by_id }
     it { should have_db_column :last_modified_by_id }
   end
 
   describe 'Relations' do
-    it { should belong_to :project }
+    it { should belong_to :team }
     it { should belong_to(:created_by).class_name('User').optional }
     it { should belong_to(:last_modified_by).class_name('User').optional }
-    it { should have_many :my_module_tags }
-    it { should have_many :my_modules }
+    it { should have_many :taggings }
   end
 
   describe 'Validations' do
@@ -38,12 +37,18 @@ describe Tag, type: :model do
     end
 
     describe '#color' do
-      it { is_expected.to validate_presence_of :color }
       it { is_expected.to validate_length_of(:color).is_at_most(Constants::COLOR_MAX_LENGTH) }
     end
+  end
 
-    describe '#projects' do
-      it { is_expected.to validate_presence_of :project }
+  describe 'Callbacks' do
+    it 'should set random color before validation if color is blank' do
+      tag.color = ''
+      expect(tag.color).to be_blank
+      tag.valid?
+      expect(tag.color).to be_present
     end
   end
+
+
 end

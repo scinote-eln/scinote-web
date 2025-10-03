@@ -29,6 +29,7 @@
         v-if="filtersOpened"
         :teamsUrl="teamsUrl"
         :usersUrl="usersUrl"
+        :tagsUrl="tagsUrl"
         :currentTeam="currentTeam"
         :searchUrl="searchUrl"
         :searchQuery="searchQuery"
@@ -148,6 +149,10 @@ export default {
       required: true
     },
     usersUrl: {
+      type: String,
+      required: true
+    },
+    tagsUrl: {
       type: String,
       required: true
     }

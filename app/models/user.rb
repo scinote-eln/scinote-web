@@ -93,8 +93,8 @@ class User < ApplicationRecord
   has_many :created_my_module_groups,
            class_name: 'MyModuleGroup',
            foreign_key: 'created_by_id'
-  has_many :created_my_module_tags,
-           class_name: 'MyModuleTag',
+  has_many :created_taggings,
+           class_name: 'Tagging',
            foreign_key: 'created_by_id'
   has_many :created_my_modules,
            class_name: 'MyModule',
@@ -151,7 +151,11 @@ class User < ApplicationRecord
   has_many :modified_tables,
            class_name: 'Table',
            foreign_key: 'last_modified_by_id'
-  has_many :created_tags, class_name: 'Tag', foreign_key: 'created_by_id'
+  has_many :created_tags,
+           class_name: 'Tag',
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :nullify
 
   has_many :tokens,
            class_name: 'Token',
