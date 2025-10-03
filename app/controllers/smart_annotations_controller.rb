@@ -78,7 +78,7 @@ class SmartAnnotationsController < ApplicationController
   def redirect_path
     case resource
     when Project
-      project_path(resource)
+      experiments_path(project_id: resource.id)
     when Experiment
       my_modules_experiment_path(resource)
     when MyModule
