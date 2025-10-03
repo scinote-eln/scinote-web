@@ -51,7 +51,7 @@ class ProjectsController < ApplicationController
         render json: @project, serializer: ProjectSerializer, user: current_user
       end
       format.html do
-        render 'experiments/index'
+        redirect_to experiments_path(project_id: @project.id)
       end
     end
   end
