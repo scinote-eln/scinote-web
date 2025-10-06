@@ -7,6 +7,7 @@ module AutomationObservers
 
       project = experiment.project
 
+      return if project.done?
       return unless project.experiments.active.exists?
       return if project.experiments.active.where.not(id: project.experiments.active.done).exists?
 

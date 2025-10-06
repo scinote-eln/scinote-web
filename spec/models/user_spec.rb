@@ -62,7 +62,7 @@ describe User, type: :model do
     it { should have_many :modified_checklist_items }
     it { should have_many :modified_comments }
     it { should have_many :created_my_module_groups }
-    it { should have_many :created_my_module_tags }
+    it { should have_many :created_taggings }
     it { should have_many :created_my_modules }
     it { should have_many :modified_my_modules }
     it { should have_many :archived_my_modules }

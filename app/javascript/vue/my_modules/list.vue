@@ -31,10 +31,7 @@
     @updateFavorite="updateFavorite"/>
 
   <TagsModal v-if="tagsModalObject"
-              :params="tagsModalObject"
-              :tagsColors="tagsColors"
-              :projectName="projectName"
-              :projectTagsUrl="projectTagsUrl"
+              :subject="tagsModalObject"
               @close="updateTable" />
   <ExperimentDescriptionModal
     v-if="experiment && showExperimentDescription"
@@ -43,7 +40,7 @@
     @close="showExperimentDescription = false"/>
   <NewModal v-if="newModalOpen"
             :createUrl="createUrl"
-            :projectTagsUrl="projectTagsUrl"
+            :teamTagsUrl="teamTagsUrl"
             :assignedUsersUrl="assignedUsersUrl"
             :currentUserId="currentUserId"
             @create="updateTable"
@@ -64,6 +61,7 @@
 /* global HelperModule */
 
 import axios from '../../packs/custom_axios.js';
+import escapeHtml from '../shared/escape_html.js';
 import DataTable from '../shared/datatable/table.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import ExperimentDescriptionModal from '../shared/datatable/modals/description.vue';
@@ -73,7 +71,7 @@ import StatusRenderer from './renderers/status.vue';
 import DueDateRenderer from '../shared/datatable/renderers/date.vue';
 import StartDateRenderer from '../shared/datatable/renderers/date.vue';
 import DesignatedUsers from './renderers/designated_users.vue';
-import TagsModal from './modals/tags.vue';
+import TagsModal from '../shared/tags_modal.vue';
 import TagsRenderer from './renderers/tags.vue';
 import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
 import NewModal from './modals/new.vue';
@@ -81,6 +79,9 @@ import EditModal from './modals/edit.vue';
 import MoveModal from './modals/move.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
 import FavoriteRenderer from '../shared/datatable/renderers/favorite.vue';
+import UsersDropdownRenderer from '../shared/select_dropdown_renderers/user.vue';
+import TagsDropdownRenderer from '../shared/select_dropdown_renderers/tag.vue';
+
 
 export default {
   name: 'MyModulesList',
@@ -99,7 +100,9 @@ export default {
     NameRenderer,
     ResultsRenderer,
     StatusRenderer,
-    FavoriteRenderer
+    FavoriteRenderer,
+    UsersDropdownRenderer,
+    TagsDropdownRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -112,7 +115,7 @@ export default {
     userRolesUrl: { type: String, required: true },
     canvasUrl: { type: String, required: true },
     tagsColors: { type: Array, required: true },
-    projectTagsUrl: { type: String, required: true },
+    teamTagsUrl: { type: String, required: true },
     assignedUsersUrl: { type: String, required: true },
     usersFilterUrl: { type: String, required: true },
     statusesList: { type: Array, required: true },
@@ -274,8 +277,8 @@ export default {
       key: 'designated_users',
       type: 'Select',
       optionsUrl: this.usersFilterUrl,
-      optionRenderer: this.usersFilterRenderer,
-      labelRenderer: this.usersFilterRenderer,
+      optionRenderer: UsersDropdownRenderer,
+      labelRenderer: UsersDropdownRenderer,
       label: this.i18n.t('experiments.table.filters.assigned'),
       placeholder: this.i18n.t('experiments.table.filters.assigned_placeholder')
     });
@@ -286,6 +289,17 @@ export default {
       options: this.statusesList,
       label: this.i18n.t('experiments.table.filters.status'),
       placeholder: this.i18n.t('experiments.table.filters.status_placeholder')
+    });
+
+    filters.push({
+      key: 'tags',
+      type: 'Select',
+      searchable: true,
+      optionsUrl: this.teamTagsUrl,
+      optionRenderer: TagsDropdownRenderer,
+      labelRenderer: TagsDropdownRenderer,
+      label: this.i18n.t('experiments.table.filters.tags'),
+      placeholder: this.i18n.t('experiments.table.filters.tags_placeholder')
     });
 
     this.columnDefs = columns;
@@ -400,7 +414,10 @@ export default {
       });
     },
     editTags(_e, rows) {
-      [this.tagsModalObject] = rows;
+      this.tagsModalObject = {
+        id: rows[0].id,
+        attributes: rows[0]
+      };
     },
     edit(_e, rows) {
       [this.editModalObject] = rows;
@@ -422,12 +439,6 @@ export default {
         object: rows[0],
         roles_path: this.userRolesUrl
       };
-    },
-    usersFilterRenderer(option) {
-      return `<div class="flex items-center gap-2">
-                <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
-                <span title="${option[1]}" class="truncate">${option[1]}</span>
-              </div>`;
     },
     updateFavorite(value, params) {
       const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;

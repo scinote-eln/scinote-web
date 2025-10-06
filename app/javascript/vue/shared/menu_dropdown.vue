@@ -1,6 +1,6 @@
 <template>
   <div class="relative" v-if="listItems.length > 0 || alwaysShow" v-click-outside="closeMenu" >
-    <button ref="field" :class="btnClasses" :title="title" @click="isOpen = !isOpen" :data-e2e="dataE2e">
+    <button ref="field" :class="btnClasses" :disabled="disabled" :title="title" @click="isOpen = !isOpen" :data-e2e="dataE2e">
       <i v-if="btnIcon" :class="btnIcon"></i>
       <span v-if="btnText" :class="{'tw-hidden xl:inline': smallScreenCollapse}">{{ btnText }}</span>
       <i v-if="caret && isOpen" class="sn-icon sn-icon-up"></i>
@@ -87,7 +87,8 @@ export default {
     title: { type: String, default: '' },
     dataE2e: { type: String, default: '' },
     disableOverflow: { type: Boolean, default: false },
-    smallScreenCollapse: { type: Boolean, default: false }
+    smallScreenCollapse: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false }
   },
   data() {
     return {

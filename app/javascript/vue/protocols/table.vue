@@ -20,6 +20,7 @@
                @import_file="importFile"
                @import_protocols_io="importProtocolsIo"
                @import_docx="importDocx"
+               @import_ai="importWithAI"
                @access="access"
                @linked_my_modules="linkedMyModules"
     />
@@ -49,6 +50,8 @@ import LinkedMyModulesRenderer from './renderers/linked_my_modules.vue';
 import LinkedMyModulesModal from './modals/linked_my_modules.vue';
 import VersionsRenderer from './renderers/versions.vue';
 import VersionsModal from './modals/versions.vue';
+import UsersDropdownRenderer from '../shared/select_dropdown_renderers/user.vue';
+
 
 export default {
   name: 'ProtocolTemplatesTable',
@@ -62,7 +65,8 @@ export default {
     LinkedMyModulesRenderer,
     LinkedMyModulesModal,
     VersionsRenderer,
-    VersionsModal
+    VersionsModal,
+    UsersDropdownRenderer
   },
   props: {
     dataSource: {
@@ -81,6 +85,10 @@ export default {
       required: true
     },
     docxParserEnabled: {
+      type: Boolean,
+      required: true
+    },
+    aiParserEnabled: {
       type: Boolean,
       required: true
     },
@@ -194,6 +202,17 @@ export default {
           path: this.createUrl,
           buttonStyle: 'btn btn-primary'
         });
+
+        if (this.aiParserEnabled) {
+          left.push({
+            name: 'import_ai',
+            icon: 'sn-icon sn-icon-ai',
+            label: this.i18n.t('protocols.index.import_with_ai'),
+            type: 'emit',
+            buttonStyle: 'btn btn-rainbow',
+          });
+        }
+
         const importMenu = {
           name: 'import',
           icon: 'sn-icon sn-icon-import',
@@ -255,8 +274,8 @@ export default {
           key: 'published_by',
           type: 'Select',
           optionsUrl: this.usersFilterUrl,
-          optionRenderer: this.usersFilterRenderer,
-          labelRenderer: this.usersFilterRenderer,
+          optionRenderer: UsersDropdownRenderer,
+          labelRenderer: UsersDropdownRenderer,
           label: this.i18n.t('protocols.table.filters.published_by.label'),
           placeholder: this.i18n.t('protocols.table.filters.published_by.placeholder')
         },
@@ -264,8 +283,8 @@ export default {
           key: 'members',
           type: 'Select',
           optionsUrl: this.usersFilterUrl,
-          optionRenderer: this.usersFilterRenderer,
-          labelRenderer: this.usersFilterRenderer,
+          optionRenderer: UsersDropdownRenderer,
+          labelRenderer: UsersDropdownRenderer,
           label: this.i18n.t('protocols.table.filters.members.label'),
           placeholder: this.i18n.t('protocols.table.filters.members.placeholder')
         },
@@ -329,6 +348,10 @@ export default {
       const docxButton = document.querySelector('#importDocx');
       docxButton.click();
     },
+    importWithAI() {
+      const aiButton = document.querySelector('#importWithAI');
+      aiButton.click();
+    },
     access(_event, rows) {
       this.accessModalParams = {
         object: rows[0],
@@ -337,12 +360,6 @@ export default {
     },
     linkedMyModules(_event, rows) {
       [this.linkedMyModulesModalObject] = rows;
-    },
-    usersFilterRenderer(option) {
-      return `<div class="flex items-center gap-2">
-                <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
-                <span class="truncate" title="${option[1]}">${option[1]}</span>
-              </div>`;
     }
   }
 };

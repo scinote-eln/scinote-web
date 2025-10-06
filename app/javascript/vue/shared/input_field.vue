@@ -30,6 +30,8 @@
         :disabled="disabled"
         :value="modelValue"
         @input="emitValue"
+        @blur="$emit('blur')"
+        @focus="$emit('focus')"
         class="outline-none shadow-none placeholder:text-sn-grey rounded h-full border border-sn-sleepy-grey bg-white w-full px-4 focus:border-sn-science-blue"
         :class="{
           '!bg-sn-super-light-grey ': disabled,
@@ -119,6 +121,9 @@ export default {
     }
   },
   methods: {
+    focus() {
+      this.$refs.input.focus();
+    },
     emitValue(e) {
       let newValue = e.target.value;
       if (this.isNumber) {

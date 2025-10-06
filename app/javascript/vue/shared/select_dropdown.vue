@@ -9,17 +9,26 @@
       ref="field"
       class="px-3 py-1 rounded flex items-center cursor-pointer"
       @click="open"
-      :class="[sizeClass, {
+      :class="[{
         'border border-solid': !borderless,
         '!border-sn-blue': isOpen && !borderless,
         '!border-sn-light-grey': !isOpen && !borderless,
         'bg-sn-super-light-grey': disabled,
         'pl-0': borderless
       }]"
+      :style="sizeStyle"
     >
     <template v-if="!tagsView">
       <template v-if="!isOpen || !searchable">
-        <div class="truncate" v-if="labelRenderer && label" v-html="label"></div>
+        <div v-if="labelRendererType == 'object' && !multiple">
+          <component :is="labelRenderer"
+                     :option="this.rawOptions.find((i) => i[0] === this.newValue)" />
+        </div>
+        <div v-else-if="labelRendererType == 'object' && multiple && this.newValue && this.newValue.length === 1">
+          <component :is="labelRenderer"
+                     :option="this.rawOptions.find((i) => i[0] === this.newValue[0])" />
+        </div>
+        <div class="truncate" v-else-if="labelRendererType == 'function' && label" v-html="label"></div>
         <div class="truncate" v-else-if="label">{{ label }}</div>
         <div class="text-sn-grey truncate" v-else>
           {{ placeholder || this.i18n.t('general.select_dropdown.placeholder') }}
@@ -35,8 +44,12 @@
              class="w-full bg-transparent border-0 outline-none pl-0 placeholder:text-sn-grey" />
       </template>
       <div v-else class="flex items-center gap-1 flex-wrap">
-        <div v-for="tag in tags" class="px-2 py-1 rounded-sm bg-sn-super-light-grey grid grid-cols-[auto_1fr] items-center gap-1">
-          <div class="truncate" v-if="labelRenderer" v-html="tag.label"></div>
+        <div v-for="tag in tags" class="sci-tag bg-sn-super-light-grey" :class="tagTextColor(tag.option[2]?.color)" :style="{ backgroundColor: tag.option[2]?.color }" :key="tag.value">
+          <div v-if="labelRendererType == 'object'">
+            <component :is="labelRenderer"
+                      :option="tag.option" />
+          </div>
+          <div class="truncate" v-else-if="labelRendererType == 'function'" v-html="tag.label"></div>
           <div class="truncate" v-else>{{ tag.label }}</div>
           <i @click="removeTag(tag.value)" class="sn-icon mini ml-auto sn-icon-close cursor-pointer"></i>
         </div>
@@ -64,7 +77,7 @@
           :data-e2e="`${e2eValue}-dropdownOptions`"
         >
           <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
-            <div @click="selectAll" :class="sizeClass"
+            <div @click="selectAll" :style="sizeStyle"
                 class="border border-x-0 !border-transparent border-solid !border-b-sn-light-grey
                         py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
               <div class="sn-checkbox-icon"
@@ -80,10 +93,11 @@
                 ref="options"
                 :title="option[2]?.tooltip || option[1]"
                 class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0 hover:bg-sn-super-light-grey"
-                :class="[sizeClass, {
+                :class="[{
                   '!bg-sn-super-light-blue': valueSelected(option[0]) && focusedOption !== i,
                   '!bg-sn-super-light-grey': focusedOption === i ,
                 }]"
+                :style="sizeStyle"
               >
                 <div v-if="withCheckboxes"
                     class="sn-checkbox-icon shrink-0"
@@ -92,7 +106,11 @@
                       'unchecked': !valueSelected(option[0]),
                     }"
                 ></div>
-                <div class="truncate w-full" v-if="optionRenderer" v-html="optionRenderer(option)"></div>
+                <div v-if="optionRendererType == 'object'" >
+                  <component :is="optionRenderer"
+                             :option="option" />
+                </div>
+                <div class="truncate w-full" v-else-if="optionRendererType == 'function'" v-html="optionRenderer(option)"></div>
                 <div class="truncate" v-else >{{ option[1] }}</div>
               </div>
             </template>
@@ -122,8 +140,8 @@ export default {
     noOptionsPlaceholder: { type: String },
     fewOptionsPlaceholder: { type: String },
     allOptionsPlaceholder: { type: String },
-    optionRenderer: { type: Function },
-    labelRenderer: { type: Function },
+    optionRenderer: { type: [Function, Object] },
+    labelRenderer: { type: [Function, Object] },
     disabled: { type: Boolean, default: false },
     size: { type: String, default: 'md' },
     borderless: { type: Boolean, default: false },
@@ -162,16 +180,16 @@ export default {
 
       return this.label || this.placeholder || this.i18n.t('general.select_dropdown.placeholder');
     },
-    sizeClass() {
+    sizeStyle() {
       switch (this.size) {
         case 'xs':
-          return 'h-[36px]';
+          return 'min-height: 36px';
         case 'sm':
-          return 'h-[40px]';
+          return 'min-height: 40px';
         case 'md':
-          return 'h-[44px]';
+          return 'min-height: 44px';
         default:
-          return 'h-[44px]';
+          return 'min-height: 44px';
       }
     },
     canClear() {
@@ -211,6 +229,7 @@ export default {
         const option = this.rawOptions.find((i) => i[0] === value);
         return {
           value,
+          option,
           label: this.renderLabel(option)
         };
       });
@@ -258,9 +277,25 @@ export default {
       }
 
       return `${(characterCount * 8) + 16}px`;
+    },
+    optionRendererType() {
+      if (!this.optionRenderer) return null;
+
+      return typeof this.optionRenderer;
+    },
+    labelRendererType() {
+      if (!this.labelRenderer) return null;
+
+      return typeof this.labelRenderer;
     }
   },
   mounted() {
+    if (this.optionsUrl) {
+      this.fetchedOptions = [];
+      this.nextPage = 1;
+      this.fetchOptions();
+    }
+
     this.newValue = this.value;
     if (!this.newValue && this.multiple) {
       this.newValue = [];
@@ -303,8 +338,7 @@ export default {
     },
     renderLabel(option) {
       if (!option) return false;
-
-      if (this.labelRenderer) {
+      if (this.labelRendererType == 'function') {
         return this.labelRenderer(option);
       }
       return option[1];
@@ -393,11 +427,20 @@ export default {
 
         axios(request)
           .then((response) => {
+            let options = response.data.data;
+
+            // Convert object options to array options
+            options = options.map((option) => {
+              if (Array.isArray(option)) return option;
+
+              return [option.id, option.name, option];
+            });
+
             if (response.data.paginated) {
-              this.fetchedOptions = [...this.fetchedOptions, ...response.data.data];
+              this.fetchedOptions = [...this.fetchedOptions, ...options];
               this.nextPage = response.data.next_page;
             } else {
-              this.fetchedOptions = response.data.data;
+              this.fetchedOptions = options;
             }
 
             if (this.fetchedOptions.length > this.totalOptionsCount) {
@@ -446,6 +489,25 @@ export default {
         e.stopPropagation();
         this.close();
       }
+    },
+    tagTextColor(color) {
+      if (!color) return 'text-black';
+
+      if (color.startsWith('#')) {
+        color = color.slice(1);
+      }
+
+      if (color.length === 3) {
+        color = color.split('').map((c) => c + c).join('');
+      }
+
+      const r = parseInt(color.substr(0, 2), 16);
+      const g = parseInt(color.substr(2, 2), 16);
+      const b = parseInt(color.substr(4, 2), 16);
+
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+      return brightness > 200 ? 'text-black' : 'text-white';
     }
   }
 };

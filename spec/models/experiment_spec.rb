@@ -148,6 +148,7 @@ describe Experiment, type: :model do
         end
 
         it 'returns true' do
+          user.permission_team = experiment.project.team
           expect(function_call).to be_truthy
         end
       end
@@ -244,6 +245,7 @@ describe Experiment, type: :model do
           .map { |t| { t.id => new_experiment.id } }.reduce({}, :merge)
       end
       let(:function_call) do
+        user.permission_team = new_experiment.project.team
         experiment.update_canvas([], [], [], to_move, [], [], [], {}, user)
       end
 
@@ -252,7 +254,6 @@ describe Experiment, type: :model do
           .to(receive(:call)
                 .with(hash_including(activity_type:
                                        :move_task))).exactly(3).times
-
         function_call
       end
 
@@ -269,10 +270,12 @@ describe Experiment, type: :model do
       let(:function_call) { experiment.update_canvas([], to_add, [], to_move, [], [], [], {}, user) }
 
       it 'returns true' do
+        user.permission_team = experiment.project.team
         expect(function_call).to be_truthy
       end
 
       it 'assigns task to new experiment' do
+        user.permission_team = experiment.project.team
         expect { function_call }.to change { second_experiment.my_modules.count }.by(1)
       end
     end

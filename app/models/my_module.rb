@@ -60,8 +60,8 @@ class MyModule < ApplicationRecord
   delegate :my_module_status_flow, to: :my_module_status, allow_nil: true
   has_many :results, inverse_of: :my_module, dependent: :destroy
   has_many :results_include_discarded, -> { with_discarded }, class_name: 'Result', inverse_of: :my_module
-  has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
-  has_many :tags, through: :my_module_tags, dependent: :destroy
+  has_many :taggings, as: :taggable, dependent: :destroy, inverse_of: :taggable
+  has_many :tags, through: :taggings, dependent: :destroy
   has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :inputs, class_name: 'Connection', foreign_key: 'input_id', inverse_of: :to, dependent: :destroy
   has_many :outputs, class_name: 'Connection', foreign_key: 'output_id', inverse_of: :from, dependent: :destroy
@@ -115,7 +115,9 @@ class MyModule < ApplicationRecord
     teams = user.teams,
     _options = {}
   )
-    new_query = distinct.left_joins(:task_comments, my_module_tags: :tag, user_my_modules: :user)
+    teams = options[:teams] || current_team || user.teams.select(:id)
+
+    new_query = distinct.left_joins(:task_comments, :tags, user_my_modules: :user)
                         .readable_by_user(user, teams)
                         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
 
