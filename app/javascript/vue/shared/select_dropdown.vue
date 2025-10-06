@@ -46,10 +46,8 @@
       <div v-else class="flex items-center gap-1 flex-wrap">
         <div v-for="tag in tags" class="sci-tag bg-sn-super-light-grey" :class="tagTextColor(tag.option[2]?.color)" :style="{ backgroundColor: tag.option[2]?.color }" :key="tag.value">
           <div v-if="labelRendererType == 'object'">
-            <component :is="labelRenderer"
-                      :option="tag.option" />
+            <component :is="labelRenderer" :option="tag.option" />
           </div>
-          <div class="truncate" v-else-if="labelRendererType == 'function'" v-html="tag.label"></div>
           <div class="truncate" v-else>{{ tag.label }}</div>
           <i @click="removeTag(tag.value)" class="sn-icon mini ml-auto sn-icon-close cursor-pointer"></i>
         </div>

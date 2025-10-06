@@ -39,4 +39,8 @@
   input[type="radio"].sci-radio:checked:disabled + .sci-radio-label::after {
     @apply !bg-sn-sleepy-grey;
   }
+
+  input[type="radio"].sci-radio:focus + .sci-radio-label::before {
+    @apply outline outline-4 outline-sn-science-blue-hover;
+  }
 }

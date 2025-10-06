@@ -10,4 +10,16 @@
   .sci-tag .sn-icon.sn-icon-close {
     @apply cursor-pointer;
   }
+
+  .sci-tag.disabled {
+    @apply opacity-40 cursor-not-allowed;
+  }
+
+  .sci-tag .avatar-container {
+    @apply h-5 w-5 rounded-full overflow-hidden flex items-center -ml-1.5 justify-center shrink-0;
+  }
+
+  .sci-tag:hover {
+    @apply outline-4 outline-sn-grey-100 outline;
+  }
 }
