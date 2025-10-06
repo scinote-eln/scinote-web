@@ -239,7 +239,9 @@ class ProtocolsController < ApplicationController
   def show
     respond_to do |format|
       format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
-      format.html
+      format.html do
+        @active_tab = :protocol
+      end
     end
   end
 

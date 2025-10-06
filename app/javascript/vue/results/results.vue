@@ -73,9 +73,9 @@ export default {
   props: {
     url: { type: String, required: true },
     canCreate: { type: String, required: true },
-    archived: { type: String, required: true },
-    active_url: { type: String, required: true },
-    archived_url: { type: String, required: true },
+    archived: { type: String, required: false},
+    active_url: { type: String, required: false },
+    archived_url: { type: String, required: false },
     userSettingsUrl: { type: String, required: false },
     changeStatesUrl: { type: String, required: false },
     protocolId: { type: Number, required: false }

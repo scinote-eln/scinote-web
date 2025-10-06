@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe ResultAsset, type: :model do
-  let(:result_asset) { build :result_asset }
+  let(:result_asset) { build :result_asset, result: create(:result) }
 
   it 'is valid' do
     expect(result_asset).to be_valid
@@ -19,7 +19,8 @@ describe ResultAsset, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to :result }
+    it { should belong_to(:result).optional }
+    it { should belong_to(:result_template).optional}
     it { should belong_to :asset }
   end
 end

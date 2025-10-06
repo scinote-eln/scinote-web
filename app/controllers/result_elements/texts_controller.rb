@@ -10,15 +10,22 @@ module ResultElements
     before_action :load_result_text, only: %i(update destroy duplicate move)
 
     def create
-      result_text = @result.result_texts.build
+      result_text = ResultText.build
+
+      if @result.is_a?(ResultTemplate)
+        result_text.result_template = @result
+      else
+        result_text.result = @result
+      end
 
       ActiveRecord::Base.transaction do
         create_in_result!(@result, result_text)
-        log_result_activity(:result_text_added, { text_name: result_text.name })
+        log_result_activity(:result_text_added, { text_name: result_text.name }) if @object.is_a?(MyModule)
       end
 
       render_result_orderable_element(result_text)
-    rescue ActiveRecord::RecordInvalid
+    rescue ActiveRecord::RecordInvalid => e
+      logger.error "Failed to create ResultText: #{e.message}"
       head :unprocessable_entity
     end
 
@@ -27,8 +34,8 @@ module ResultElements
       ActiveRecord::Base.transaction do
         @result_text.update!(result_text_params)
         TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
-        log_result_activity(:result_text_edited, { text_name: @result_text.name })
-        result_annotation_notification(old_text)
+        log_result_activity(:result_text_edited, { text_name: @result_text.name }) if @object.is_a?(MyModule)
+        result_annotation_notification(old_text) if @object.is_a?(MyModule)
       end
 
       render json: @result_text, serializer: ResultTextSerializer, user: current_user
@@ -37,12 +44,18 @@ module ResultElements
     end
 
     def move
-      target = @my_module.results.active.find_by(id: params[:target_id])
+      target = @object.results.active.find_by(id: params[:target_id])
       return head(:conflict) unless target
 
       ActiveRecord::Base.transaction do
-        @result_text.update!(result: target)
-        @result_text.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
+        case target
+        when ResultTemplate
+          @result_text.update!(result_template: target)
+          @result_text.result_orderable_element.update!(result_template: target, position: target.result_orderable_elements.size)
+        when Result
+          @result_text.update!(result: target)
+          @result_text.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
+        end
         @result.normalize_elements_position
         render json: @result_text, serializer: ResultTextSerializer, user: current_user
 
@@ -54,7 +67,7 @@ module ResultElements
             result_original: @result.id,
             result_destination: target.id
           }
-        )
+        ) if @object.is_a?(MyModule)
       rescue ActiveRecord::RecordInvalid
         render json: @result_text.errors, status: :unprocessable_entity
       end
@@ -76,7 +89,7 @@ module ResultElements
           element.update(position: element.position + 1)
         end
         new_result_text = @result_text.duplicate(@result, position + 1)
-        log_result_activity(:result_text_duplicated, { text_name: new_result_text.name })
+        log_result_activity(:result_text_duplicated, { text_name: new_result_text.name }) if @object.is_a?(MyModule)
         render_result_orderable_element(new_result_text)
       end
     rescue ActiveRecord::RecordInvalid
@@ -96,7 +109,7 @@ module ResultElements
 
     def result_annotation_notification(old_text = nil)
       smart_annotation_notification(
-        old_text: (old_text if old_text),
+        old_text: old_text,
         new_text: @result_text.text,
         subject: @result,
         title: t('notifications.result_annotation_title',

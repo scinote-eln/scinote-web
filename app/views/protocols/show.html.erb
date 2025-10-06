@@ -4,30 +4,7 @@
 <% end %>
  <% provide(:container_class, 'no-second-nav-container') %>
 <div class="content-pane protocols-show flexible with-grey-background pb-4" >
-  <div class="content-header sticky-header">
-    <div class="title-row">
-      <h1 data-e2e="e2e-TX-protocolTemplates-protocol-title">
-        <% if @inline_editable_title_config.present? %>
-          <%= render partial: "shared/inline_editing",
-                      locals: {
-                        initial_value: @protocol.name,
-                        config: @inline_editable_title_config
-                      } %>
-        <% else %>
-          <div class="name-readonly-placeholder">
-            <% if @protocol.archived %>
-              <span class="w-12"><%= t('labels.archived')%></span>&nbsp;
-            <% end %>
-            <% if @protocol.in_repository_draft? %>
-              <span title="<%= t('protocols.draft_name', name: @protocol.name ) %>"><%= t('protocols.draft_name', name: @protocol.name ) %></span>
-            <% else %>
-              <span title="<%= @protocol.name %>"><%= @protocol.name %></span>
-            <% end %>
-          </div>
-        <% end %>
-      </h1>
-    </div>
-  </div>
+  <%= render partial: "protocols/header" %>
   <div
     id="protocolContainer"
     data-protocol-url="<%= protocol_path(@protocol) %>"

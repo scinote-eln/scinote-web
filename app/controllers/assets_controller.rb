@@ -340,7 +340,7 @@ class AssetsController < ApplicationController
   def duplicate
     ActiveRecord::Base.transaction do
       case @asset.parent
-      when Step, Result
+      when Step, Result, ResultTemplate
         new_asset = @asset.duplicate(
           new_name:
             "#{@asset.file.filename.base} (1).#{@asset.file.filename.extension}",
