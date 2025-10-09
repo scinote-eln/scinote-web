@@ -6,6 +6,9 @@ class RepositoryZipExportJob < ZipExportJob
   # Override
   def fill_content(dir, params)
     repository = RepositoryBase.find(params[:repository_id])
+    col_ids = params[:header_ids].map(&:to_i)
+    # Storage locations column is always added if they have enabled feature
+    col_ids << -12 if StorageLocation.storage_locations_enabled?
     # Fetch rows in the same order as in the currently viewed datatable
     if params[:my_module_id]
       rows = if repository.is_a?(RepositorySnapshot)
@@ -22,12 +25,12 @@ class RepositoryZipExportJob < ZipExportJob
                      'my_module_repository_rows.stock_consumption'
                    )
       end
-      service = RepositoryExportService.new(@file_type, rows, params[:header_ids].map(&:to_i),
+      service = RepositoryExportService.new(@file_type, rows, col_ids,
                                             repository, in_module: true)
     else
       ordered_row_ids = params[:row_ids].map(&:to_i)
       rows = repository.repository_rows.where(id: ordered_row_ids)
-      service = RepositoryExportService.new(@file_type, rows, params[:header_ids].map(&:to_i),
+      service = RepositoryExportService.new(@file_type, rows, col_ids,
                                             repository, in_module: false, ordered_row_ids: ordered_row_ids)
     end
     exported_data = service.export!
