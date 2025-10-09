@@ -3069,5 +3069,14 @@ var preventCanvasReloadOnSave = (function() {
     })
   }
 
+  // initialize my_module tab remote loading
+  $('#experiment-canvas')
+    .on('click', '.edit-tags-link', function() {
+      if (window.tagsModal) {
+        const url = $(this).closest('.module-large').data('module-url') || $(this).attr('href');
+        window.tagsModal.open(url);
+      }
+    });
+
   return function() { bindToCanvasSave(preventCanvasReload) };
 })();
