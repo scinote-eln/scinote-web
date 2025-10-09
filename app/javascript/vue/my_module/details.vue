@@ -168,6 +168,7 @@ import SelectDropdown from '../shared/select_dropdown.vue';
 import TagsInput from '../shared/tags_input.vue';
 import axios from '../../packs/custom_axios.js';
 import escapeHtml from '../shared/escape_html.js';
+import usersRenderer from '../shared/select_dropdown_renderers/user.vue';
 import {
   my_module_path,
   assigned_users_my_module_path,
@@ -190,7 +191,8 @@ export default {
     GeneralDropdown,
     DateTimePicker,
     SelectDropdown,
-    TagsInput
+    TagsInput,
+    usersRenderer,
   },
   data() {
     return {
@@ -199,6 +201,7 @@ export default {
       users: [],
       startDate: null,
       dueDate: null,
+      usersRenderer: usersRenderer,
     };
   },
   mixins: [escapeHtml],
@@ -208,7 +211,7 @@ export default {
         [
           parseInt(user.id, 10),
           user.attributes.name,
-          user.attributes.avatar_url
+          { avatar_url: user.attributes.avatar_url }
         ]
       ));
     }
@@ -275,12 +278,6 @@ export default {
         this.allUsers = response.data.data;
         this.users = this.myModule.attributes.designated_user_ids || [];
       });
-    },
-    usersRenderer(user) {
-      return `<div class="flex items-center gap-2 truncate">
-                <img class="w-6 h-6 rounded-full" src="${user[2]}">
-                <span title="${escapeHtml(user[1])}" class="truncate">${escapeHtml(user[1])}</span>
-              </div>`;
     },
     setDueDate(value) {
       const updateUrl = my_module_path(this.myModule.id);
