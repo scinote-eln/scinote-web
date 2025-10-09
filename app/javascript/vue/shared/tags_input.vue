@@ -98,11 +98,12 @@ export default {
       }).then((response) => {
         this.tags.push(response.data.tag);
         this.subject.attributes.tags = this.tags;
-        this.loadAllTags();
+        this.loadAllTagsWithPermissions();
         this.linkingTag = false;
         this.searchQuery = '';
-      }).catch(() => {
+      }).catch((e) => {
         this.linkingTag = false;
+        console.error(e);
         HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
       });
     },
