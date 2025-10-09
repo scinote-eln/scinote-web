@@ -9,7 +9,7 @@
           </h4>
         </div>
         <div class="modal-body">
-          <p v-html="i18n.t('assets.no_predefined_app_modal.body_text_html', { file_name: fileName })"></p>
+          <p v-html="i18n.t('assets.no_predefined_app_modal.body_text_html', { file_name: escapeHtml(fileName) })"></p>
         </div>
         <div class="modal-footer">
           <button class="btn btn-primary" @click="close">{{ this.i18n.t('assets.no_predefined_app_modal.understand_button') }}</button>
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import escapeHtml from '../../escape_html.js';
 import modalMixin from '../../modal_mixin';
 
 export default {
@@ -27,6 +28,11 @@ export default {
   mixins: [modalMixin],
   props: {
     fileName: String
+  },
+  data() {
+    return {
+      escapeHtml: escapeHtml
+    }
   }
 };
 </script>
