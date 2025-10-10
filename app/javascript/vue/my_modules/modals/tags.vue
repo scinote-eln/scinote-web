@@ -42,7 +42,7 @@
                        'cursor-pointer': canManage
                      }"
                      :style="{ backgroundColor: tag.attributes.color }">
-                  {{ tag.attributes.name }}
+                  <div class="text-block" :title="tag.attributes.name">{{ tag.attributes.name }}</div>
                 </div>
                 <template v-else>
                   <GeneralDropdown>

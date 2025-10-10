@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     loadAllTagsWithPermissions() {
-      axios.get(tags_path()).then((response) => {
+      axios.get(tags_path({ mode: this.tagsLoadMode, subject_id: this.subject.id, subject_type: this.subject.type })).then((response) => {
         this.allTags = response.data.data;
         this.permissions = response.data.permissions;
       });
@@ -75,6 +75,7 @@ export default {
         this.subject.attributes.tags = this.tags;
         this.linkingTag = false;
         this.searchQuery = '';
+        this.loadAllTagsWithPermissions();
       }).catch(() => {
         this.linkingTag = false;
         HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
@@ -95,6 +96,7 @@ export default {
         this.subject.attributes.tags = this.tags;
         this.linkingTag = false;
         this.searchQuery = '';
+        this.loadAllTagsWithPermissions();
       }).catch(() => {
         this.linkingTag = false;
         HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
