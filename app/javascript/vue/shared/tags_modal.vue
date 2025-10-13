@@ -15,8 +15,10 @@
             {{ i18n.t('tags.manage_modal.description') }}
           </p>
           <div class="flex flex-col gap-2">
-            <div class="grow overflow-auto">
-              <div v-for="tag in allTags" :key="tag.id" class="rounded py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2" >
+            <div class="grow overflow-auto max-h-[50vh]">
+              <div v-for="tag in allTags" :key="tag.id"
+                   class="rounded py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2"
+                   :class="{'!bg-sn-super-light-blue': tagInEdit == tag.id }">
                 <div v-if="canAssign" @click="linkTag(tag)">
                   <div class="sci-checkbox-container pointer-events-none" >
                     <input type="checkbox" :checked="tags.find(t => t.id === tag.id)" class="sci-checkbox" />
@@ -46,6 +48,8 @@
                 </GeneralDropdown>
                 <input type="text" :value="tag.name" @change="changeName(tag, $event.target.value)"
                   :class="{'pointer-events-none': !canUpdate }"
+                  @focus="tagInEdit = tag.id"
+                  @blur="tagInEdit = null"
                   class=" text-sm grow outline-none leading-4 border-none bg-transparent p-1" />
                 <i v-if="canDelete && newTagsCreated.includes(tag.id)" @click="deleteTag(tag)" class="ml-auto sn-icon sn-icon-delete"></i>
               </div>
@@ -104,6 +108,7 @@ export default {
       colors: [],
       teamId: null,
       addingNewTag: false,
+      tagInEdit: null,
       newTag: {
         id: null,
         name: '',

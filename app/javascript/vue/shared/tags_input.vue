@@ -17,12 +17,20 @@
           <div v-else-if="!opened" class="sci-tag bg-sn-super-light-grey">
             {{ i18n.t('tags.tags_input.add_tag') }}
           </div>
-          <input v-if="opened" @click.stop="handleInputClick" @keydown.delete.stop="handleInputDelete" @keydown.enter.stop="handleInputEnter" type="text" ref="tagSearch" v-model="searchQuery"  class="flex-grow outline-none leading-4 border-none bg-transparent p-1" />
+          <input v-if="opened"
+            @click.stop="handleInputClick"
+            @keydown.delete.stop="handleInputDelete"
+            @keydown.enter.stop="handleInputEnter"
+            :placeholder="tags.length == 0 ? i18n.t('tags.tags_input.placeholder') : ''"
+            type="text"
+            ref="tagSearch"
+            v-model="searchQuery"
+            class="flex-grow outline-none leading-4 border-none bg-transparent p-1 placeholder:text-sn-grey" />
         </div>
       </template>
       <template v-slot:flyout>
         <div class="flex flex-col">
-          <div class="max-h-80 overflow-auto">
+          <div class="max-h-[40vh] overflow-auto">
             <div v-if="validTagName && canCreate" @click="createTag" class="py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2">
               <i class="sn-icon sn-icon-new-task"></i>
               {{ i18n.t('tags.tags_input.create_tag') }}
@@ -38,7 +46,7 @@
             </div>
           </div>
           <template v-if="canManage || canAssign">
-            <hr class="my-0 border-t w-full mb-1">
+            <hr v-if="filteredTags.length > 0 " class="my-0 w-full mb-1 border-t"  />
             <button class="btn btn-light btn-black w-32" @click="openTagsModal">
               <span class="sn-icon sn-icon-edit"></span>
               {{ i18n.t('tags.tags_input.edit_tags') }}

@@ -4257,9 +4257,10 @@ en:
       merge_success: "Tags merged successfully."
       merge_error: "There was an error merging tags."
     tags_input:
-      add_tag: "Add tag"
+      add_tag: "Add a tag"
       edit_tags: "Edit tags"
       create_tag: "Create tag"
+      placeholder: "Type to add a tag"
     manage_modal:
       title: "Edit tags"
       description: "Tags in this workspace are shared by all members. Anyone with permission can create or edit tags, and all changes apply everywhere the tag is used."
