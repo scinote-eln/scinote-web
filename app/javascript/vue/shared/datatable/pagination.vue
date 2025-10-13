@@ -1,5 +1,5 @@
 <template>
-  <div v-if="pages.length > 1" class="flex gap-3 select-none">
+  <div v-if="pages.length > 1" class="flex gap-3 select-none" :class="{ 'opacity-50 pointer-events-none': disabled }">
     <div class="w-9 h-9">
       <div class="w-9 h-9 cursor-pointer flex items-center justify-center" data-e2e="e2e-BT-tableInfo-left"
            @click="$emit('setPage', currentPage - 1)"
@@ -36,6 +36,10 @@ export default {
     currentPage: {
       type: Number,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

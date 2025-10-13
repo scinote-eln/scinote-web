@@ -15,6 +15,8 @@ require 'action_view/railtie'
 # require "rails/test_unit/railtie"
 require 'datadog/auto_instrument' if ENV['DD_TRACE_ENABLED'] == 'true'
 
+require_relative '../lib/rack/x_robots_tag'
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -57,6 +59,9 @@ module Scinote
 
     # Add rack-attack middleware for request rate limiting
     config.middleware.use Rack::Attack
+
+    # Add X-Robots-Tag header to all responses, to prevent search engine indexing
+    config.middleware.use Rack::XRobotsTag
 
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
 

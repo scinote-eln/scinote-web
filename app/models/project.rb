@@ -62,7 +62,6 @@ class Project < ApplicationRecord
            class_name: 'Experiment'
   has_many :project_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :activities, inverse_of: :project
-  has_many :tags, inverse_of: :project
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy
 
@@ -76,13 +75,12 @@ class Project < ApplicationRecord
     user,
     include_archived,
     query = nil,
-    current_team = nil,
-    options = {}
+    teams = user.teams,
+    _options = {}
   )
-    teams = options[:teams] || current_team || user.teams.select(:id)
     new_query = distinct.readable_by_user(user, teams)
                         .left_joins(:project_comments)
-                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
 
     new_query = new_query.active unless include_archived
 

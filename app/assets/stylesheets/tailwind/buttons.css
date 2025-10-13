@@ -74,7 +74,7 @@
   .btn.btn-primary.disabled,
   .btn.btn-success:disabled,
   .btn.btn-success.disabled {
-    @apply bg-sn-super-light-grey text-sn-grey border-sn-grey;
+    @apply bg-sn-blue-disabled ;
   }
 
   .btn.btn-secondary,
@@ -174,5 +174,22 @@
   .btn-text-link.disabled,
   .btn-text-link:disabled {
     @apply text-sn-sleepy-grey
+  }
+
+  .btn-rainbow {
+    @apply relative bg-white border border-solid !border-transparent;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    box-sizing: border-box;
+  }
+
+  .btn-rainbow:before {
+    @apply absolute top-0 right-0 bottom-0 left-0 z-[-1] rounded-[inherit] -m-[1px];
+    background: linear-gradient(to right, #3B99FD, #FB565B);
+    content: '';
+  }
+
+  .btn-rainbow:hover {
+    @apply text-sn-white bg-transparent;
   }
 }

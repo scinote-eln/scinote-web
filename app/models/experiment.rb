@@ -68,13 +68,11 @@ class Experiment < ApplicationRecord
     user,
     include_archived,
     query = nil,
-    current_team = nil,
-    options = {}
+    teams = user.teams,
+    _options = {}
   )
-    teams = options[:teams] || current_team || user.teams.select(:id)
-
     new_query = distinct.readable_by_user(user, teams)
-                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+                        .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
 
     new_query = new_query.joins(:project).active.where(projects: { archived: false }) unless include_archived
 
@@ -333,7 +331,7 @@ class Experiment < ApplicationRecord
   def move_modules(to_move, current_user)
     to_move.each do |id, experiment_id|
       my_module = my_modules.find_by(id: id)
-      experiment = project.experiments.find_by(id: experiment_id)
+      experiment = Experiment.managable_by_user(current_user).find_by(id: experiment_id)
       next unless my_module.present? && experiment.present?
 
       experiment_original = my_module.experiment

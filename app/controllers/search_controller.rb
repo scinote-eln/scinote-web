@@ -46,7 +46,7 @@ class SearchController < ApplicationController
           search_by_name({ in_repository: true })
           @records = @records.preload(:team, :added_by)
         when 'label_templates'
-          return render json: [], meta: { disabled: true }, status: :ok unless LabelTemplate.enabled?
+          return render json: [], meta: { disabled: true, total: 0 } unless LabelTemplate.enabled?
 
           @model = LabelTemplate
           search_by_name
@@ -115,7 +115,7 @@ class SearchController < ApplicationController
     query = (params.fetch(:q) { '' }).strip
     @filters = params[:filters]
     @include_archived = @filters.blank? || @filters[:include_archived] == 'true'
-    @teams = (@filters.present? && @filters[:teams]&.values) || current_user.teams
+    @teams = @filters.present? && @filters[:teams]&.values ? current_user.teams.where(id: @filters[:teams].values) : current_user.teams
     @display_query = query
 
     splited_query = query.split
@@ -142,10 +142,8 @@ class SearchController < ApplicationController
     @records = @model.search(current_user,
                              @include_archived,
                              @search_query,
-                             nil,
-                             teams: @teams,
-                             users: @users,
-                             options: options)
+                             @teams,
+                             options)
                      .select("COUNT(\"#{@model.table_name}\".\"id\") OVER() AS filtered_count")
                      .select("\"#{@model.table_name}\".*")
 
@@ -157,7 +155,8 @@ class SearchController < ApplicationController
   def filter_records
     filter_datetime!(:created_at) if @filters[:created_at].present?
     filter_datetime!(:updated_at) if @filters[:updated_at].present?
-    filter_users! if @filters[:users].present?
+    filter_by_users! if @filters[:users].present?
+    filter_by_tags! if @filters[:tags].present? && @model == MyModule
   end
 
   def sort_records
@@ -198,7 +197,7 @@ class SearchController < ApplicationController
     @records = @records.where("#{model_name}.#{attribute} <= ?", to_date) if to_date.present?
   end
 
-  def filter_users!
+  def filter_by_users!
     @records = @records.joins("INNER JOIN activities ON #{@model.model_name.collection}.id = activities.subject_id
                                AND activities.subject_type= '#{@model.name}'")
 
@@ -208,5 +207,10 @@ class SearchController < ApplicationController
                else
                  @records.where('activities.owner_id': user_ids)
                end
+  end
+
+  def filter_by_tags!
+    tag_ids = @filters[:tags]&.values&.collect(&:to_i)
+    @records = @records.joins(:tags).where(tags: { id: tag_ids })
   end
 end

@@ -22,6 +22,7 @@
       :currentTeam="currentTeam"
       :teamsUrl="teamsUrl"
       :usersUrl="usersUrl"
+      :tagsUrl="tagsUrl"
     ></QuickSearch>
     <MenuDropdown
       class="ml-auto"
@@ -104,6 +105,7 @@ export default {
     quickSearchUrl: String,
     teamsUrl: String,
     usersUrl: String,
+    tagsUrl: String,
     logoUrl: String
   },
   data() {

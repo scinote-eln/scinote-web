@@ -8,20 +8,46 @@
       end
     end
   end
+
+  colors_list = []
+  tailwind_file = File.join(Rails.root, 'config', 'tailwind.config.js')
+  File.open(tailwind_file, 'r') do |f|
+    f.each_line do |line|
+      if line.match(/['"]?(sn-[a-z0-9-]+)['"]?\s*:\s*['"]?([#a-zA-Z0-9]+)['"]?/)
+        colors_list << { name: $1, value: $2 } if $2.include?('#')
+      end
+    end
+  end
 %>
 
-<%= render partial: 'table' %>
+<%= render partial: 'colors', locals: {colors_list: colors_list} %>
+
+<%= render partial: 'tags' %>
+
+<%= render partial: 'checkbox' %>
 
 <%= render partial: 'radio' %>
 
-<%= render partial: 'inputs', locals: {icons_list: icons_list} %>
-
-<%= render partial: 'select' %>
+<%= render partial: 'toggle' %>
 
 <%= render partial: 'breadcrumbs' %>
 
+<%= render partial: 'button', locals: {icons_list: icons_list} %>
+
+<%= render partial: 'inputs', locals: {icons_list: icons_list} %>
+
+<%= render partial: 'input_title'%>
+
+<%= render partial: 'select' %>
+
+<%= render partial: 'datepicker' %>
+
+<%= render partial: 'tabs' %>
+
 <%= render partial: 'modals' %>
+
+<%= render partial: 'table' %>
 
 <%= render partial: 'icons', locals: {icons_list: icons_list} %>
 
-<%= render partial: 'button', locals: {icons_list: icons_list} %>
+<%= render partial: 'misc' %>

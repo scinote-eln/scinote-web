@@ -108,28 +108,31 @@ module SearchableModel
       end
     }
 
-    scope :where_attributes_like_boolean, lambda { |attributes, query, options = {}|
+    scope :where_attributes_like_boolean, lambda { |attributes, query|
       return unless query
 
       query_clauses = []
-      query_params = []
+      query_params = {}
+      search_tokens = tokenize_search_query(query)
 
-      tokenize_search_query(query).each_with_index do |token, index|
+      search_tokens.each_with_index do |token, index|
         if token[:type] == :keyword
           exact_match = token[:value].split.size > 1
           like = exact_match ? '~' : 'ILIKE'
 
           where_str = (attributes.map do |attribute|
+            attribute_key = attribute.to_s.parameterize(separator: '_')
+
             if attribute == :children
               "\"#{table_name}\".\"id\" IN (#{where_children_attributes_like(token[:value]).select(:id).to_sql}) OR "
             elsif SEARCH_NUMBER_ATTRIBUTES.include?(attribute)
-              "(#{attribute}::text #{like} ?) OR "
+              "(#{attribute} IS NOT NULL AND #{attribute}::text #{like} :#{attribute_key}_#{index}_query) OR "
             elsif defined?(model::PREFIXED_ID_SQL) && attribute == model::PREFIXED_ID_SQL
-              "#{attribute} #{like} ? OR "
+              "(#{attribute} IS NOT NULL AND #{attribute} #{like} :#{attribute_key}_#{index}_query) OR "
             elsif SEARCH_DATA_VECTOR_ATTRIBUTES.include?(attribute)
-              "#{attribute} @@ plainto_tsquery(?) OR "
+              "(#{attribute} IS NOT NULL AND #{attribute} @@ plainto_tsquery(:#{attribute_key}_#{index}_query)) OR "
             else
-              "trim_html_tags(#{attribute}) #{like} ? OR "
+              "(#{attribute} IS NOT NULL AND trim_html_tags(#{attribute}) #{like} :#{attribute_key}_#{index}_query) OR "
             end
           end).join[0..-5]
 
@@ -138,13 +141,16 @@ module SearchableModel
           attributes.each do |attribute|
             next if attribute == :children
 
-            query_params <<
+            query_params[:"#{attribute.to_s.parameterize(separator: '_')}_#{index}_query"] =
               if SEARCH_DATA_VECTOR_ATTRIBUTES.include?(attribute) && !exact_match
                 token[:value].split(/\s+/).map! { |t| "#{t}:*" }
               else
                 exact_match ? "(^|\\s)#{Regexp.escape(token[:value])}(\\s|$)" : "%#{sanitize_sql_like(token[:value])}%"
               end
           end
+
+          next_token = search_tokens[index + 1]
+          query_clauses << ' AND ' if next_token && next_token[:type] == :keyword
         elsif token[:type] == :operator
           query_clauses <<
             case token[:value]
@@ -158,7 +164,7 @@ module SearchableModel
         end
       end
 
-      where(query_clauses.join, *query_params)
+      where(query_clauses.join, query_params)
     }
 
     def self.normalized_search_attributes(attributes)

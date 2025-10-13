@@ -9,7 +9,7 @@
           <h2 class="modal-title">{{ i18n.t('assets.delete_file_modal.title') }}</h2>
         </div>
         <div class="modal-body">
-          <p v-html="i18n.t('assets.delete_file_modal.description_1_html', { file_name: fileName })"></p>
+          <p v-html="i18n.t('assets.delete_file_modal.description_1_html', { file_name: escapeHtml(fileName) })"></p>
           <p>{{ i18n.t('assets.delete_file_modal.description_2') }}</p>
         </div>
         <div class="modal-footer">
@@ -25,10 +25,18 @@
   </div>
 </template>
 <script>
+
+import escapeHtml from '../../escape_html.js';
+
 export default {
   name: 'deleteAttachmentModal',
   props: {
     fileName: String
+  },
+  data() {
+    return {
+      escapeHtml: escapeHtml
+    }
   },
   mounted() {
     $(this.$refs.modal).modal('show');

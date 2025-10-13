@@ -5,6 +5,10 @@
 @import "tailwind/radio";
 @import "tailwind/loader.css";
 @import "tailwind/tags.css";
+@import "tailwind/table.css";
+@import "tailwind/checkbox";
+@import "tailwind/toggle";
+@import "tailwind/tabs";
 
 @tailwind base;
 @tailwind components;
@@ -61,6 +65,12 @@ html {
 
 .ag-theme-alpine {
   --ag-font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif !important;
+}
+
+.ag-theme-alpine.adding-new-row .ag-row:not([row-index="0"]) {
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.5;
 }
 
 .animate-skeleton {

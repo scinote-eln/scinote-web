@@ -163,21 +163,19 @@ class RepositoryRow < ApplicationRecord
   def self.search(user,
                   include_archived,
                   query = nil,
-                  current_team = nil,
-                  options = {})
-    teams = options[:teams] || current_team || user.teams.select(:id)
-
+                  teams = user.teams,
+                  _options = {})
     repository_rows = joins(:repository, :created_by).readable_by_user(user, teams)
     repository_rows = repository_rows.active unless include_archived
-    repository_rows.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+    repository_rows.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
   def self.where_children_attributes_like(query)
     query_clauses = []
     Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each_value do |config|
-      query_clauses << joins(config[:includes]).where_attributes_like(config[:field], query).to_sql
+      query_clauses << unscoped.joins(config[:includes]).where_attributes_like(config[:field], query).to_sql
     end
-    from("(#{query_clauses.join(' UNION ')}) AS repository_rows", :repository_rows)
+    unscoped.from("(#{query_clauses.join(' UNION ')}) AS repository_rows", :repository_rows)
   end
 
   def self.filter_by_teams(teams = [])

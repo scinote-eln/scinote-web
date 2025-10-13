@@ -1,0 +1,51 @@
+@layer components {
+  :root {
+    --sci-checkbox-size: 16px;
+  }
+
+  .sci-checkbox-container {
+    @apply inline-block relative w-4 h-4;
+  }
+
+  input[type="checkbox"].sci-checkbox {
+    @apply cursor-pointer shrink-0 m-0 opacity-0 absolute left-0 top-0 z-[2] w-4 h-4;
+  }
+
+  input[type="checkbox"].sci-checkbox + .sci-checkbox-label {
+    @apply inline-block shrink-0 absolute right-0 top-0 w-4 h-4;
+  }
+
+  input[type="checkbox"].sci-checkbox + .sci-checkbox-label::before {
+    @apply bg-transparent border border-solid !border-black rounded-sm inline-block
+    left-0 absolute w-4 h-4 content-[''];
+  }
+
+  input[type="checkbox"].sci-checkbox.hidden + .sci-checkbox-label {
+    display: none;
+  }
+
+  input[type="checkbox"].sci-checkbox:checked + .sci-checkbox-label::before {
+    @apply !border-sn-science-blue bg-center bg-sn-science-blue;
+    background-image: image-url("icon_small/sn-check.svg");
+  }
+
+  input[type="checkbox"].sci-checkbox:indeterminate + .sci-checkbox-label::after {
+    @apply bg-sn-sleepy-grey left-[3px] absolute top-[3px] content-[''] h-2.5 w-2.5;
+  }
+
+  input[type="checkbox"].sci-checkbox:focus {
+    @apply outline-none;
+  }
+
+  input[type="checkbox"].sci-checkbox:focus + .sci-checkbox-label {
+    @apply outline outline-4 outline-sn-science-blue-hover rounded-sm;
+  }
+
+  input[type="checkbox"].sci-checkbox:disabled + .sci-checkbox-label::before {
+    @apply  !border-sn-sleepy-grey;
+  }
+
+  input[type="checkbox"].sci-checkbox:disabled:checked + .sci-checkbox-label::before {
+    @apply bg-sn-sleepy-grey !border-sn-sleepy-grey;
+  }
+}

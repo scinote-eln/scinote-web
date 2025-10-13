@@ -34,7 +34,6 @@ module Experiments
           end
           my_module.reset_all_users_assignments!(@user)
           clean_up_user_my_modules(my_module)
-          move_tags!(my_module)
         end
 
         move_activities!(@exp)
@@ -78,17 +77,6 @@ module Experiments
       end
     end
 
-    def move_tags!(my_module)
-      new_tags = []
-      my_module.tags.each do |tag|
-        new_tag = @project.tags.where.not(id: new_tags).find_by(name: tag.name, color: tag.color)
-        new_tag ||=
-          @project.tags.create!(name: tag.name, color: tag.color, created_by: @user, last_modified_by: @user)
-        new_tags << new_tag
-      end
-      my_module.tags.destroy_all
-      my_module.tags = new_tags
-    end
 
     # recursively move all activities in child associations to new project
     def move_activities!(subject)

@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:  url('fonts/SN-icon-font.eot?gqphqg');
-  src:  url('fonts/SN-icon-font.eot?gqphqg#iefix') format('embedded-opentype'),
-    url('fonts/SN-icon-font.woff2?gqphqg') format('woff2'),
-    url('fonts/SN-icon-font.ttf?gqphqg') format('truetype'),
-    url('fonts/SN-icon-font.woff?gqphqg') format('woff'),
-    url('fonts/SN-icon-font.svg?gqphqg#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?uepbw');
+  src:  url('fonts/SN-icon-font.eot?uepbw#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?uepbw') format('woff2'),
+    url('fonts/SN-icon-font.ttf?uepbw') format('truetype'),
+    url('fonts/SN-icon-font.woff?uepbw') format('woff'),
+    url('fonts/SN-icon-font.svg?uepbw#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -652,4 +652,13 @@
 }
 .sn-icon-cloud-storage:before {
   content: "\e9d0";
+}
+.sn-icon-merge:before {
+  content: "\e9d1";
+}
+.sn-icon-ai:before {
+  content: "\e9d2";
+}
+.sn-icon-close-solid:before {
+  content: "\e9d3";
 }

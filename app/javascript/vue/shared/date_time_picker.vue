@@ -4,6 +4,7 @@
       ref="datetimePicker"
       :class="{
         'only-time': mode == 'time',
+        'no-border': noBorder,
       }"
       @closed="closedHandler"
       @cleared="clearedHandler"
@@ -20,6 +21,7 @@
       :markers="markers"
       :start-time="{ hours: 0, minutes: 0, seconds: 0 }"
       week-start="0"
+      :hide-input-icon="noIcons"
       :enable-time-picker="mode == 'datetime'"
       :time-picker="mode == 'time'"
       :placeholder="placeholder" >
@@ -72,7 +74,9 @@ export default {
     customIcon: { type: String },
     size: { type: String, default: 'xs' },
     dataE2e: { type: String, default: '' },
-    valueType: { type: String, default: 'object' }
+    valueType: { type: String, default: 'object' },
+    noIcons: { type: Boolean, default: false },
+    noBorder: { type: Boolean, default: false }
   },
   data() {
     return {

@@ -4,6 +4,8 @@ class Checklist < ApplicationRecord
 
   SEARCHABLE_ATTRIBUTES = ['checklists.name'].freeze
 
+  SEARCHABLE_ATTRIBUTES = ['checklists.name'].freeze
+
   auto_strip_attributes :name, nullify: false
   validates :name,
             presence: true,

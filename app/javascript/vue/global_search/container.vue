@@ -109,6 +109,7 @@
         v-if="filterModalOpened"
         :teamsUrl="teamsUrl"
         :usersUrl="usersUrl"
+        :tagsUrl="tagsUrl"
         :filters="filters"
         :currentTeam="currentTeam"
         @search="applyFilters"
@@ -154,6 +155,10 @@ export default {
       required: true
     },
     usersUrl: {
+      type: String,
+      required: true
+    },
+    tagsUrl: {
       type: String,
       required: true
     },
@@ -213,7 +218,7 @@ export default {
       return Object.keys(this.filters).filter((key) => {
         if (key === 'created_at' || key === 'updated_at') {
           return this.filters[key].on || this.filters[key].from || this.filters[key].to;
-        } if (key === 'teams' || key === 'users') {
+        } if (key === 'teams' || key === 'users' || key === 'tags') {
           return this.filters[key].length > 0;
         }
         return this.filters[key];
@@ -242,6 +247,7 @@ export default {
       include_archived: urlParams.get('include_archived') === 'true',
       teams: (this.singleTeam ? [] : urlParams.getAll('teams[]').map((team) => parseInt(team, 10))),
       users: urlParams.getAll('users[]').map((user) => parseInt(user, 10)),
+      tags: urlParams.getAll('tags[]').map((tag) => parseInt(tag, 10)),
       group: urlParams.get('group')
     };
     ['created_at', 'updated_at'].forEach((key) => {
@@ -364,6 +370,7 @@ export default {
         include_archived: false,
         teams: [],
         users: [],
+        tags: [],
         group: null
       };
       this.activeGroup = null;
