@@ -9,7 +9,7 @@
                 '!border-transparent': !canAssign
              }">
           <template  v-if="tags.length > 0">
-            <div v-for="tag in tags" :key="tag.id" class="sci-tag  text-white" :style="{ backgroundColor: tag.color }" >
+            <div v-for="tag in tags" :key="tag.id" class="sci-tag" :class="tagTextColor(tag.color)" :style="{ backgroundColor: tag.color }" >
               {{ tag.name }}
               <i v-if="canAssign" @click.stop="unlinkTag(tag)" class="sn-icon sn-icon-close"></i>
             </div>
@@ -32,7 +32,7 @@
                 <input type="checkbox" :checked="tags.map(t => t.id).includes(tag.id)" class="sci-checkbox" />
                 <span class="sci-checkbox-label"></span>
               </div>
-              <div class="sci-tag text-white" :style="{ backgroundColor: tag.color }" >
+              <div class="sci-tag" :class="tagTextColor(tag.color)" :style="{ backgroundColor: tag.color }" >
                 {{ tag.name }}
               </div>
             </div>
@@ -130,6 +130,9 @@ export default {
       if (this.searchQuery.trim() === '' && this.tags.length > 0) {
         this.unlinkTag(this.tags[this.tags.length - 1]);
       }
+    },
+    tagTextColor(color) {
+      return window.isColorBright(color) ? 'text-black' : 'text-white';
     },
     openTagsModal() {
       this.tagsModalOpened = true;
