@@ -150,7 +150,8 @@ export default {
     tagsView: { type: Boolean, default: false },
     urlParams: { type: Object, default: () => ({}) },
     e2eValue: { type: String, default: '' },
-    ajaxMethod: { type: String, default: 'get' }
+    ajaxMethod: { type: String, default: 'get' },
+    oneLineLabel: { type: Boolean, default: false }
   },
   directives: {
     'click-outside': vOnClickOutside
@@ -181,13 +182,13 @@ export default {
     sizeStyle() {
       switch (this.size) {
         case 'xs':
-          return 'min-height: 36px';
+          return this.oneLineLabel ? 'height: 36px' : 'min-height: 36px';
         case 'sm':
-          return 'min-height: 40px';
+          return this.oneLineLabel ? 'height: 40px' : 'min-height: 40px';
         case 'md':
-          return 'min-height: 44px';
+          return this.oneLineLabel ? 'height: 44px' : 'min-height: 44px';
         default:
-          return 'min-height: 44px';
+          return this.oneLineLabel ? 'height: 44px' : 'min-height: 44px';
       }
     },
     canClear() {
