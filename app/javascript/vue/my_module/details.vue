@@ -81,12 +81,13 @@
         <span class="tw-hidden lg:block ml-2">
           {{ i18n.t('my_modules.details.start_date') }}
         </span>
-        <div class="w-48 font-bold">
+        <div class="w-48">
           <DateTimePicker
             v-if="myModule.attributes.permissions.manage_due_date"
-            @change="setDueDate"
+            @change="setStartDate"
             :defaultValue="startDate"
             mode="datetime"
+            :class="{'font-bold': myModule.attributes.start_date_cell.value_formatted}"
             size="mb"
             :noBorder="true"
             :noIcons="true"
@@ -94,9 +95,10 @@
             :placeholder="i18n.t('my_modules.details.no_start_date_placeholder')"
             :clearable="true"
           />
-          <span v-else class="font-bold ml-2">
-            {{ myModule.attributes.start_date_cell.value_formatted || i18n.t('my_modules.details.no_start_date_placeholder') }}
-          </span>
+          <div v-else class="ml-2 py-2">
+            <span v-if="myModule.attributes.start_date_cell.value_formatted" class="font-bold">{{ myModule.attributes.start_date_cell.value_formatted }}</span>
+            <span v-else class="text-sn-grey">{{ i18n.t('my_modules.details.no_due_date') }}</span>
+          </div>
         </div>
       </div>
       <div class="flex items-center">
@@ -104,12 +106,13 @@
         <span class="tw-hidden lg:block ml-2">
           {{ i18n.t('my_modules.details.due_date') }}
         </span>
-        <div class="w-48 font-bold">
+        <div class="w-48">
           <DateTimePicker
             v-if="myModule.attributes.permissions.manage_due_date"
             @change="setDueDate"
             mode="datetime"
             :defaultValue="dueDate"
+            :class="{'font-bold': myModule.attributes.due_date_cell.value_formatted}"
             size="mb"
             :noBorder="true"
             :noIcons="true"
@@ -117,9 +120,10 @@
             :placeholder="i18n.t('my_modules.details.no_due_date_placeholder')"
             :clearable="true"
           />
-          <span v-else class="font-bold ml-2">
-            {{ myModule.attributes.due_date_cell.value_formatted || i18n.t('my_modules.details.no_due_date_placeholder') }}
-          </span>
+          <div v-else class="ml-2 py-2">
+            <span v-if="myModule.attributes.due_date_cell.value_formatted" class="font-bold">{{ myModule.attributes.due_date_cell.value_formatted }}</span>
+            <span v-else class="text-sn-grey">{{ i18n.t('my_modules.details.no_due_date') }}</span>
+          </div>
         </div>
       </div>
       <div v-if="myModule.attributes.completed_on" class="flex items-center gap-2 h-10">
@@ -135,6 +139,7 @@
         </span>
         <div class="grow -mt-2.5">
           <SelectDropdown
+            v-if="myModule.attributes.permissions.manage_designated_users"
             @change="setUsers"
             :options="formattedUsers"
             :option-renderer="usersRenderer"
@@ -146,6 +151,12 @@
             :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')"
             :tagsView="true">
           </SelectDropdown>
+          <div v-else class="flex items-center flex-wrap gap-2 mt-2.5">
+            <div class="sci-tag bg-sn-super-light-grey" v-for="user in selectedUsers" :key="user.id">
+              <img :src="user.attributes.avatar_url" class="rounded-full w-5 h-5" />
+              <span :title="user.attributes.name" class="truncate">{{ user.attributes.name }}</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="flex gap-2 mb-6 mt-2.5">
@@ -214,6 +225,9 @@ export default {
           { avatar_url: user.attributes.avatar_url }
         ]
       ));
+    },
+    selectedUsers() {
+      return this.allUsers.filter(user => this.users.includes(parseInt(user.id, 10)));
     }
   },
   created() {
