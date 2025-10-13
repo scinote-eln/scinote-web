@@ -8,7 +8,7 @@
                 class="sci-tag max-w-[150px]"
                 :class="tagTextColor(params.data.tags[0].color)"
                 :style="{'background': params.data.tags[0].color}">
-              <div class="truncate">{{ params.data.tags[0].name }}</div>
+              <div class="text-block" :title="params.data.tags[0].name">{{ params.data.tags[0].name }}</div>
             </div>
             <div v-if="params.data.tags.length > 1"
                 class="flex shrink-0 items-center justify-center w-7 h-7 text-xs rounded-full bg-sn-dark-grey text-sn-white">
@@ -26,7 +26,7 @@
                 class="sci-tag max-w-[150px]"
                 :class="tagTextColor(tag.color)"
                 :style="{'background': tag.color}">
-              <div class="truncate">{{ tag.name }}</div>
+              <div class="text-block" :title="tag.name">{{ tag.name }}</div>
             </div>
           </div>
         </template>

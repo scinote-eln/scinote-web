@@ -46,11 +46,14 @@
                     </div>
                   </template>
                 </GeneralDropdown>
-                <input type="text" :value="tag.name" @change="changeName(tag, $event.target.value)"
+                <input v-if="canUpdate" type="text" :value="tag.name" @change="changeName(tag, $event.target.value)"
                   :class="{'pointer-events-none': !canUpdate }"
                   @focus="tagInEdit = tag.id"
                   @blur="tagInEdit = null"
                   class=" text-sm grow outline-none leading-4 border-none bg-transparent p-1" />
+                <div v-else class="truncate max-w-[300px] overflow-hidden" :title="tag.name">
+                  {{ tag.name }}
+                </div>
                 <i v-if="canDelete && newTagsCreated.includes(tag.id)" @click="deleteTag(tag)" class="ml-auto sn-icon sn-icon-delete"></i>
               </div>
             </div>
@@ -114,7 +117,8 @@ export default {
         name: '',
         color: '#000000'
       },
-      newTagsCreated: []
+      newTagsCreated: [],
+      tagsLoadMode: 'all'
     };
   },
   created() {
@@ -162,7 +166,11 @@ export default {
         }
       }).then(() => {
         this.allTags.find(t => t.id === tag.id).name = newName;
-      }).catch(() => {
+      }).catch((e) => {
+        if (e.response?.data?.error) {
+          HelperModule.flashAlertMsg(e.response.data.error, 'danger');
+          return;
+        }
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
@@ -185,7 +193,11 @@ export default {
         });
         this.newTagsCreated.push(parseInt(tag.id, 10));
         this.addingNewTag = false;
-      }).catch(() => {
+      }).catch((e) => {
+        if (e.response?.data?.error) {
+          HelperModule.flashAlertMsg(e.response.data.error, 'danger');
+          return;
+        }
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },

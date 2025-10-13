@@ -48,7 +48,7 @@
           <div v-if="labelRendererType == 'object'">
             <component :is="labelRenderer" :option="tag.option" />
           </div>
-          <div class="truncate" v-else>{{ tag.label }}</div>
+          <div class="text-block" v-else>{{ tag.label }}</div>
           <i @click="removeTag(tag.value)" class="sn-icon mini ml-auto sn-icon-close cursor-pointer"></i>
         </div>
         <input type="text"

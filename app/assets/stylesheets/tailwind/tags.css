@@ -3,6 +3,10 @@
     @apply text-xs !rounded-full !pl-2 !pr-1.5 h-6 !py-0.5 inline-flex items-center gap-1;
   }
 
+  .sci-tag .text-block {
+    @apply !max-w-40 truncate overflow-hidden;
+  }
+
   .sci-tag .sn-icon {
     @apply leading-4 !text-base cursor-pointer shrink-0;
   }

@@ -13,6 +13,10 @@ class TagsController < ApplicationController
             else
               current_team.tags.order(:name)
             end
+
+    if params[:mode] == 'unlinked' && (params[:subject_type] == 'my_modules')
+      @tags = @tags.where.not(id: MyModule.readable_by_user(current_user, current_team).find(params[:subject_id]).tags.select(:id))
+    end
     @tags = @tags.where_attributes_like(['tags.name'], params[:query]) if params[:query].present?
   end
 

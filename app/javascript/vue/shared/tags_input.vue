@@ -10,7 +10,7 @@
              }">
           <template  v-if="tags.length > 0">
             <div v-for="tag in tags" :key="tag.id" class="sci-tag" :class="tagTextColor(tag.color)" :style="{ backgroundColor: tag.color }" >
-              {{ tag.name }}
+              <div class="text-block" :title="tag.name">{{ tag.name }}</div>
               <i v-if="canAssign" @click.stop="unlinkTag(tag)" class="sn-icon sn-icon-close"></i>
             </div>
           </template>
@@ -36,12 +36,8 @@
               {{ i18n.t('tags.tags_input.create_tag') }}
             </div>
             <div v-for="tag in filteredTags" :key="tag.id" @click="linkTag(tag)" class="py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2" >
-              <div class="sci-checkbox-container pointer-events-none" >
-                <input type="checkbox" :checked="tags.map(t => t.id).includes(tag.id)" class="sci-checkbox" />
-                <span class="sci-checkbox-label"></span>
-              </div>
-              <div class="sci-tag" :class="tagTextColor(tag.color)" :style="{ backgroundColor: tag.color }" >
-                {{ tag.name }}
+              <div class="sci-tag" :class="tagTextColor(tag.color)"  :style="{ backgroundColor: tag.color }" >
+                <div class="text-block" :title="tag.name">{{ tag.name }}</div>
               </div>
             </div>
           </div>
@@ -89,6 +85,7 @@ export default {
     return {
       opened: false,
       tagsModalOpened: false,
+      tagsLoadMode: 'unlinked'
     };
   },
   methods: {
@@ -112,6 +109,10 @@ export default {
       }).catch((e) => {
         this.linkingTag = false;
         console.error(e);
+        if (e.response?.data?.error) {
+          HelperModule.flashAlertMsg(e.response.data.error, 'danger');
+          return;
+        }
         HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
       });
     },
