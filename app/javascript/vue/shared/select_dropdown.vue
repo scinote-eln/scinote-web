@@ -20,7 +20,7 @@
     >
     <template v-if="!tagsView">
       <template v-if="!isOpen || !searchable">
-        <div v-if="labelRendererType == 'object' && !multiple">
+        <div v-if="labelRendererType == 'object' && !multiple && this.rawOptions && Object.keys(this.rawOptions).length > 0 && this.newValue && Object.keys(this.newValue).length > 0">
           <component :is="labelRenderer"
                      :option="this.rawOptions.find((i) => i[0] === this.newValue)" />
         </div>
