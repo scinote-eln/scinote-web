@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class TagsController < ApplicationController
-  before_action :load_team, exccept: :index
-  before_action :load_tag, only: %i(update destroy merge)
+  before_action :load_team
+  before_action :load_tag, only: %i(update merge)
   before_action :check_create_permissions, only: %i(create merge)
   before_action :check_update_permissions, only: %i(update)
-  before_action :check_delete_permissions, only: %i(destroy merge)
+  before_action :check_delete_permissions, only: %i(destroy_tags merge)
 
   def index
     @tags = if params[:teams].present?
@@ -43,12 +43,17 @@ class TagsController < ApplicationController
     end
   end
 
-  def destroy
-    log_activity(:tag_deleted, @tag)
-    if @tag.destroy
-      render json: { message: :ok }, status: :ok
-    else
-      render json: { error: @tag.errors.full_messages }, status: :unprocessable_entity
+  def destroy_tags
+    ActiveRecord::Base.transaction do
+      tags = @team.tags.where(id: params[:tag_ids])
+      tags.each do |tag|
+        log_activity(:tag_deleted, tag)
+        tag.destroy!
+      end
+      render json: { message: :ok }
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: e.message }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
     end
   end
 
@@ -86,7 +91,7 @@ class TagsController < ApplicationController
   end
 
   def load_tag
-    @tag = current_team.tags.find_by(id: params[:id])
+    @tag = @team.tags.find_by(id: params[:id])
     render_404 unless @tag
   end
 

@@ -6,6 +6,7 @@
       class="sci-table-input"
       :class="{ 'error': error }"
       @keydown.enter="saveName($event, true);"
+      :placeholder="this.i18n.t('tags.index.tag_name_placeholder')"
       v-model="tagName"
       @blur="saveName"
       @change="saveName" />

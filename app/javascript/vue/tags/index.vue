@@ -22,6 +22,13 @@
                  :mergeIds="mergeIds"
                  :list-url="listUrl"
                  @close="mergeIds = null; reloadingTable = true"/>
+    <confirmationModal
+      :title="deleteTitle"
+      :description="deleteDescription"
+      confirmClass="btn btn-danger"
+      :confirmText="i18n.t('tags.delete_modal.confirm')"
+      ref="deleteModal"
+    ></confirmationModal>
   </div>
 </template>
 
@@ -34,6 +41,7 @@ import DataTable from '../shared/datatable/table.vue';
 import colorRenderer from './renderers/color.vue';
 import nameRenderer from './renderers/name.vue';
 import mergeModal from './modals/merge.vue';
+import confirmationModal from '../shared/confirmation_modal.vue';
 
 import {
   team_tag_path,
@@ -46,7 +54,8 @@ export default {
     DataTable,
     colorRenderer,
     nameRenderer,
-    mergeModal
+    mergeModal,
+    confirmationModal
   },
   props: {
     dataSource: {
@@ -77,6 +86,8 @@ export default {
       reloadingTable: false,
       addingNewRow: false,
       mergeIds: null,
+      deleteTitle: null,
+      deleteDescription: null,
       newRowTemplate: {
         name: {
           value: '',
@@ -175,10 +186,22 @@ export default {
         this.reloadingTable = true;
       });
     },
-    deleteTag(event) {
-      axios.delete(event.path).then(() => {
-        this.reloadingTable = true;
-      });
+    async deleteTag(event, rows) {
+      if (rows.length === 1) {
+        this.deleteTitle = this.i18n.t('tags.delete_modal.single_title', { tag: rows[0].name });
+        this.deleteDescription = this.i18n.t('tags.delete_modal.single_description_html', { count: rows[0].taggings_count });
+      } else {
+        this.deleteTitle = this.i18n.t('tags.delete_modal.multiple_title', { count: rows.length });
+        const totalTaggings = rows.reduce((sum, row) => sum + row.taggings_count, 0);
+        this.deleteDescription = this.i18n.t('tags.delete_modal.multiple_description_html', { tags_count: rows.length, count: totalTaggings });
+      }
+
+      const ok = await this.$refs.deleteModal.show();
+      if (ok) {
+        axios.delete(event.path).then(() => {
+          this.reloadingTable = true;
+        });
+      }
     }
   }
 };

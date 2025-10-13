@@ -221,13 +221,7 @@ Rails.application.routes.draw do
         to: 'zip_exports#file_expired',
         as: 'file_expired'
 
-    resources :tags, only: :index do
-      collection do
-        get :colors
-      end
-    end
-
-    resources :tags, only: %i(index create update destroy) do
+    resources :tags, only: %i(index create update) do
       collection do
         get :colors
       end
@@ -277,7 +271,10 @@ Rails.application.routes.draw do
         get :current_team_users
       end
 
-      resources :tags, only: %i(index create update destroy) do
+      resources :tags, only: %i(index create update) do
+        collection do
+          delete :destroy_tags
+        end
         member do
           post :merge
         end

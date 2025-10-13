@@ -61,10 +61,10 @@ describe TagsController, type: :controller do
     end
   end
 
-  describe 'DELETE destroy' do
+  describe 'DELETE destroy_tags' do
     let(:action) do
-      delete :destroy, params: {
-        id: tag.id,
+      delete :destroy_tags, params: {
+        tag_ids: [tag.id],
         team_id: team.id
       }, format: :json
     end
