@@ -1,5 +1,5 @@
 <template>
-  <div v-if="option" class="sci-tag text-white" :style="{
+  <div v-if="option" class="sci-tag" :class="tagTextColor(option[2].color)" :style="{
     'background-color': option[2].color
   }">
     {{ option[1] }}
@@ -13,6 +13,11 @@ export default {
     option: {
       type: Array,
       required: true
+    }
+  },
+  methods: {
+    tagTextColor(color) {
+      return window.isColorBright(color) ? 'text-black' : 'text-white';
     }
   }
 };

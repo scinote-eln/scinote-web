@@ -76,3 +76,23 @@ $(document).on('click', 'a[rel*=external]', function(e) {
   e.preventDefault();
   window.open(this.href, '_blank', 'noopener');
 });
+
+window.isColorBright = function(color) {
+  if (!color) return true;
+
+  if (color.startsWith('#')) {
+    color = color.slice(1);
+  }
+
+  if (color.length === 3) {
+    color = color.split('').map((c) => c + c).join('');
+  }
+
+  const r = parseInt(color.substr(0, 2), 16);
+  const g = parseInt(color.substr(2, 2), 16);
+  const b = parseInt(color.substr(4, 2), 16);
+
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+  return brightness > 180 ? true : false;
+};
