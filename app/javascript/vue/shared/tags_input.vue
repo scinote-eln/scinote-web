@@ -9,7 +9,7 @@
                 '!border-transparent': !canAssign
              }">
           <template  v-if="tags.length > 0">
-            <div v-for="tag in tags" :key="tag.id" class="sci-tag  text-white" :style="{ backgroundColor: tag.color }" >
+            <div v-for="tag in tags" :key="tag.id" class="sci-tag" :class="tagTextColor(tag.color)" :style="{ backgroundColor: tag.color }" >
               <div class="text-block" :title="tag.name">{{ tag.name }}</div>
               <i v-if="canAssign" @click.stop="unlinkTag(tag)" class="sn-icon sn-icon-close"></i>
             </div>
@@ -28,7 +28,7 @@
               {{ i18n.t('tags.tags_input.create_tag') }}
             </div>
             <div v-for="tag in filteredTags" :key="tag.id" @click="linkTag(tag)" class="py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2" >
-              <div class="sci-tag text-white" :style="{ backgroundColor: tag.color }" >
+              <div class="sci-tag" :class="tagTextColor(tag.color)"  :style="{ backgroundColor: tag.color }" >
                 <div class="text-block" :title="tag.name">{{ tag.name }}</div>
               </div>
             </div>
@@ -131,6 +131,9 @@ export default {
       if (this.searchQuery.trim() === '' && this.tags.length > 0) {
         this.unlinkTag(this.tags[this.tags.length - 1]);
       }
+    },
+    tagTextColor(color) {
+      return window.isColorBright(color) ? 'text-black' : 'text-white';
     },
     openTagsModal() {
       this.tagsModalOpened = true;

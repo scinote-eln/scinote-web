@@ -15,7 +15,7 @@ require 'action_view/railtie'
 # require "rails/test_unit/railtie"
 require 'datadog/auto_instrument' if ENV['DD_TRACE_ENABLED'] == 'true'
 
-require_relative '../lib/rack_x_robots_tag'
+require_relative '../lib/rack/x_robots_tag'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.

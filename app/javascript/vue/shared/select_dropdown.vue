@@ -489,23 +489,7 @@ export default {
       }
     },
     tagTextColor(color) {
-      if (!color) return 'text-black';
-
-      if (color.startsWith('#')) {
-        color = color.slice(1);
-      }
-
-      if (color.length === 3) {
-        color = color.split('').map((c) => c + c).join('');
-      }
-
-      const r = parseInt(color.substr(0, 2), 16);
-      const g = parseInt(color.substr(2, 2), 16);
-      const b = parseInt(color.substr(4, 2), 16);
-
-      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-
-      return brightness > 200 ? 'text-black' : 'text-white';
+      return window.isColorBright(color) ? 'text-black' : 'text-white';
     }
   }
 };
