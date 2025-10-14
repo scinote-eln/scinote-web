@@ -31,7 +31,7 @@
       <template v-slot:flyout>
         <div class="flex flex-col">
           <div class="max-h-[40vh] overflow-auto">
-            <div v-if="validTagName && canCreate" @click="createTag" class="py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2">
+            <div v-if="validTagName && canCreate" @click="createTag" class="btn btn-light btn-black w-32">
               <i class="sn-icon sn-icon-new-task"></i>
               {{ i18n.t('tags.tags_input.create_tag') }}
             </div>

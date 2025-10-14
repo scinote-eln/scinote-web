@@ -4246,6 +4246,7 @@ en:
       updated_on: "Updated on"
       tag_name_placeholder: "Add a tag name"
       too_short_name: "too short (minimum is %{count} characters)"
+      too_long_name: "too long (maximum is %{count} characters)"
       toolbar:
         delete: "Delete"
         merge: "Merge into"
