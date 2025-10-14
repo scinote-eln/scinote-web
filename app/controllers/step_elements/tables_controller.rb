@@ -44,11 +44,14 @@ module StepElements
         @table.assign_attributes(table_params.except(:metadata).merge(last_modified_by: current_user))
         begin
           if table_params[:metadata].present?
+            # support for legacy tables
+            normalized_metadata =
+              table_params[:metadata].is_a?(String) ? JSON.parse(table_params[:metadata]) : table_params[:metadata]
 
             @table.metadata = if @table.metadata
-                                @table.metadata.merge(JSON.parse(table_params[:metadata]))
+                                @table.metadata.merge(normalized_metadata)
                               else
-                                JSON.parse(table_params[:metadata])
+                                normalized_metadata
                               end
           end
         rescue JSON::ParserError
@@ -120,7 +123,7 @@ module StepElements
     private
 
     def table_params
-      params.permit(:name, :contents, :metadata)
+      params.permit(:name, :contents, metadata: {})
     end
 
     def create_table_params
