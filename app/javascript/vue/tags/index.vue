@@ -10,7 +10,7 @@
                :addingNewRow="addingNewRow"
                @tableReloaded="reloadingTable = false"
                @startCreate="addingNewRow = true"
-               @cancelCreation="addingNewRow = false;"
+               @cancelCreation="cancelCreation"
                @changeColor="changeColor"
                @changeName="changeName"
                @createRow="createTag"
@@ -163,6 +163,9 @@ export default {
     },
     openMergeModal(event, rows) {
       this.mergeIds = rows.map(row => row.id);
+    },
+    cancelCreation() {
+      this.addingNewRow = false;
     },
     createTag(newTag) {
       this.addingNewRow = false;
