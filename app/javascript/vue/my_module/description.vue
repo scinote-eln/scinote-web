@@ -9,7 +9,7 @@
         {{ i18n.t('my_modules.notes.title') }}
       </h2>
     </div>
-    <div ref="notesContainer" class="overflow-hidden transition-all pr-4 pl-9" style="max-height: 0px;">
+    <div ref="notesContainer" class="my-module-description overflow-hidden transition-all pr-4 pl-9" style="max-height: 0px;">
       <div class="min-h-[2.25rem] w-full inline-block mb-4 relative group/text_container content__text-body"
         :class="{ 'edit': inEditMode, 'component__element--locked': !canEdit }"
         @keyup.enter="enableEditMode($event)" tabindex="0">
