@@ -7,6 +7,7 @@
         ref="nameInput"
         class="sci-table-input"
         :class="{ 'error': error }"
+        :placeholder="this.i18n.t('tags.index.tag_name_placeholder')"
         @keydown.enter="saveName"
         @keydown.escape="cancelEditing"
         @keydown="handleKeydown"
