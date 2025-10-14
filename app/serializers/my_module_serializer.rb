@@ -7,7 +7,12 @@ class MyModuleSerializer < ActiveModel::Serializer
   include ActionView::Helpers::TextHelper
 
   attributes :name, :description, :permissions, :description_view, :urls, :last_modified_by_name, :created_at, :updated_at, :tags, :updated_at_unix, :tags_html,
-             :project_name, :experiment_name, :created_by_name, :is_creator_current_user, :code, :designated_user_ids, :due_date_cell, :start_date_cell, :completed_on
+             :project_name, :experiment_name, :created_by_name, :is_creator_current_user, :code, :designated_user_ids, :due_date_cell, :start_date_cell, :completed_on,
+             :default_public_user_role_id, :team
+
+  def team
+    object.team.name
+  end
 
   def project_name
     object.experiment.project.name
@@ -56,13 +61,19 @@ class MyModuleSerializer < ActiveModel::Serializer
   end
 
   def urls
-    {
+    urls_list = {
       show_access: access_permissions_my_module_path(object),
       show_user_group_assignments_access: show_user_group_assignments_access_permissions_my_module_path(object),
       tag_resource: tag_resource_my_module_path(object),
       untag_resource: untag_resource_my_module_path(object),
-      tag_resource_with_new_tag: tag_resource_with_new_tag_my_module_path(object)
+      tag_resource_with_new_tag: tag_resource_with_new_tag_my_module_path(object),
+      user_roles: user_roles_access_permissions_my_module_path(object),
+      user_group_members: users_users_settings_team_user_groups_path(team_id: object.team.id)
     }
+
+    urls_list[:update_access] = access_permissions_my_module_path(object) if can_manage_my_module_users?(object)
+
+    urls_list
   end
 
   def completed_on
@@ -73,7 +84,12 @@ class MyModuleSerializer < ActiveModel::Serializer
     if object.due_date
       {
         value: I18n.l(object.due_date, format: :default),
-        value_formatted: I18n.l(object.due_date, format: :full_date)
+        value_formatted: I18n.l(object.due_date, format: :full_date),
+        icon: (if object.is_one_day_prior? && !object.completed?
+                 'sn-icon sn-icon-alert-warning text-sn-alert-brittlebush'
+               elsif object.is_overdue? && !object.completed?
+                 'sn-icon sn-icon-alert-warning text-sn-delete-red'
+               end)
       }
     else
       {
