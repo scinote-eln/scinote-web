@@ -4245,6 +4245,7 @@ en:
       created_on: "Created on"
       updated_on: "Updated on"
       too_short_name: "too short (minimum is %{count} characters)"
+      too_long_name: "too long (maximum is %{count} characters)"
       toolbar:
         delete: "Delete"
         merge: "Merge into"
