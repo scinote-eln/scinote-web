@@ -81,7 +81,7 @@
         <span class="tw-hidden lg:block ml-2">
           {{ i18n.t('my_modules.details.start_date') }}
         </span>
-        <div class="w-48">
+        <div class="w-56">
           <DateTimePicker
             v-if="myModule.attributes.permissions.manage_due_date"
             @change="setStartDate"
@@ -106,16 +106,17 @@
         <span class="tw-hidden lg:block ml-2">
           {{ i18n.t('my_modules.details.due_date') }}
         </span>
-        <div class="w-48">
+        <div class="w-56">
           <DateTimePicker
             v-if="myModule.attributes.permissions.manage_due_date"
             @change="setDueDate"
             mode="datetime"
+            :customIcon="myModule.attributes.due_date_cell.icon"
             :defaultValue="dueDate"
             :class="{'font-bold': myModule.attributes.due_date_cell.value_formatted}"
             size="mb"
             :noBorder="true"
-            :noIcons="true"
+            :noIcons="!myModule.attributes.due_date_cell.icon"
             valueType="stringWithoutTimezone"
             :placeholder="i18n.t('my_modules.details.no_due_date_placeholder')"
             :clearable="true"
@@ -131,6 +132,7 @@
         <span class="tw-hidden lg:block">
           {{ i18n.t('my_modules.details.completed_date') }}
         </span>
+        <b>{{ myModule.attributes.completed_on }}</b>
       </div>
       <div class="flex gap-2 mt-2.5">
         <span class="sn-icon sn-icon-users"></span>
