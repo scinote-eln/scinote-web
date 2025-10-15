@@ -84,7 +84,7 @@
         </span>
         <div class="w-56" data-e2e="e2e-DP-task-details-startDate">
           <DateTimePicker
-            v-if="myModule.attributes.permissions.manage_due_date"
+            v-if="myModule.attributes.permissions.manage_start_date"
             @change="setStartDate"
             :defaultValue="startDate"
             mode="datetime"
@@ -98,7 +98,7 @@
           />
           <div v-else class="ml-2 py-2">
             <span v-if="myModule.attributes.start_date_cell.value_formatted" class="font-bold">{{ myModule.attributes.start_date_cell.value_formatted }}</span>
-            <span v-else class="text-sn-grey">{{ i18n.t('my_modules.details.no_due_date') }}</span>
+            <span v-else class="text-sn-grey">{{ i18n.t('my_modules.details.no_start_date') }}</span>
           </div>
         </div>
       </div>
@@ -153,12 +153,13 @@
             :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')"
             :tagsView="true">
           </SelectDropdown>
-          <div v-else class="flex items-center flex-wrap gap-2 mt-2.5">
+          <div v-else-if="selectedUsers.length > 0" class="flex items-center flex-wrap gap-2 mt-2.5">
             <div class="sci-tag bg-sn-super-light-grey" v-for="user in selectedUsers" :key="user.id">
               <img :src="user.attributes.avatar_url" class="rounded-full w-5 h-5" />
               <span :title="user.attributes.name" class="truncate">{{ user.attributes.name }}</span>
             </div>
           </div>
+          <span v-else class="flex items-center flex-wrap gap-2 mt-2.5 text-sn-grey">{{ i18n.t('my_modules.details.no_assigned_users') }}</span>
         </div>
       </div>
       <div class="flex gap-2 mb-6 mt-2.5">
@@ -166,8 +167,11 @@
         <span class="tw-hidden lg:block shrink-0">
           {{ i18n.t('my_modules.details.tags') }}
         </span>
-        <div class="grow -mt-1.5"  data-e2e="e2e-IF-task-details-tags">
-          <TagsInput :subject="myModule" :key="detailsKey" v-if="myModule" @reloadSubject="$emit('reloadMyModule')" />
+        <div class="grow -mt-1.5" data-e2e="e2e-IF-task-details-tags">
+          <TagsInput :subject="myModule" :key="detailsKey" v-if="myModule.attributes.permissions.assign_tags || myModule.attributes.tags.length > 0" @reloadSubject="$emit('reloadMyModule')" />
+          <div v-else class="ml-2 py-2">
+            <span class="text-sn-grey">{{ i18n.t('my_modules.details.no_tags') }}</span>
+          </div>
         </div>
       </div>
     </div>
