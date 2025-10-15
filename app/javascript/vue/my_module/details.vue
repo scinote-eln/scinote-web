@@ -1,17 +1,18 @@
 <template>
-  <div class="bg-white px-4 my-4 task-section">
+  <div class="bg-white px-4 my-4 task-section" data-e2e="e2e-CO-task-details">
     <div class="py-4 flex items-center gap-4">
       <i ref="openHandler"
         @click="toggleContainer"
+        data-e2e="e2e-BT-task-details-visibilityToggle"
         class="sn-icon sn-icon-right cursor-pointer">
       </i>
       <div class="flex items-center gap-2">
-        <h2 class="my-0 flex items-center gap-1">
+        <h2 class="my-0 flex items-center gap-1" data-e2e="e2e-TX-task-details-title">
           {{ i18n.t('my_modules.details.title') }}
         </h2>
         <GeneralDropdown ref="myModuleDetailsDropdown">
           <template v-slot:field>
-            <button class="btn btn-light btn-black icon-btn">
+            <button class="btn btn-light btn-black icon-btn" data-e2e="e2e-DD-task-details-taskDetails">
               <i class="sn-icon sn-icon-info"></i>
             </button>
           </template>
@@ -70,7 +71,7 @@
             </div>
           </template>
         </GeneralDropdown>
-        <span>
+        <span  data-e2e="e2e-TX-task-details-taskId">
           {{ myModule.attributes.code }}
         </span>
       </div>
@@ -81,7 +82,7 @@
         <span class="tw-hidden lg:block ml-2">
           {{ i18n.t('my_modules.details.start_date') }}
         </span>
-        <div class="w-56">
+        <div class="w-56" data-e2e="e2e-DP-task-details-startDate">
           <DateTimePicker
             v-if="myModule.attributes.permissions.manage_due_date"
             @change="setStartDate"
@@ -106,12 +107,11 @@
         <span class="tw-hidden lg:block ml-2">
           {{ i18n.t('my_modules.details.due_date') }}
         </span>
-        <div class="w-56">
+        <div class="w-56" >
           <DateTimePicker
             v-if="myModule.attributes.permissions.manage_due_date"
             @change="setDueDate"
             mode="datetime"
-            :customIcon="myModule.attributes.due_date_cell.icon"
             :defaultValue="dueDate"
             :class="{'font-bold': myModule.attributes.due_date_cell.value_formatted}"
             size="mb"
@@ -132,14 +132,14 @@
         <span class="tw-hidden lg:block">
           {{ i18n.t('my_modules.details.completed_date') }}
         </span>
-        <b>{{ myModule.attributes.completed_on }}</b>
+        <b data-e2e="e2e-TX-task-details-completedOn">{{ myModule.attributes.completed_on }}</b>
       </div>
       <div class="flex gap-2 mt-2.5">
         <span class="sn-icon sn-icon-users"></span>
         <span class="tw-hidden lg:block shrink-0">
           {{ i18n.t('my_modules.details.assigned_users') }}
         </span>
-        <div class="grow -mt-2.5">
+        <div class="grow -mt-2.5" data-e2e="e2e-IF-task-details-designatedUsers">
           <SelectDropdown
             v-if="myModule.attributes.permissions.manage_designated_users"
             @change="setUsers"
@@ -166,7 +166,7 @@
         <span class="tw-hidden lg:block shrink-0">
           {{ i18n.t('my_modules.details.tags') }}
         </span>
-        <div class="grow -mt-1.5">
+        <div class="grow -mt-1.5"  data-e2e="e2e-IF-task-details-tags">
           <TagsInput :subject="myModule" :key="detailsKey" v-if="myModule" @reloadSubject="$emit('reloadMyModule')" />
         </div>
       </div>
