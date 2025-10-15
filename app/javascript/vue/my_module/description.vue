@@ -2,14 +2,15 @@
   <div class="bg-white px-4 my-4 task-section">
     <div class="py-4 flex items-center gap-4">
       <i ref="openHandler"
+        data-e2e="e2e-BT-task-notes-visibilityToggle"
         @click="toggleContainer"
         class="sn-icon sn-icon-right cursor-pointer">
       </i>
-      <h2 class="my-0 flex items-center gap-1">
+      <h2 class="my-0 flex items-center gap-1" data-e2e="e2e-TX-task-notes-title">
         {{ i18n.t('my_modules.notes.title') }}
       </h2>
     </div>
-    <div ref="notesContainer" class="my-module-description overflow-hidden transition-all pr-4 pl-9" style="max-height: 0px;">
+    <div ref="notesContainer" data-e2e="e2e-IF-task-notes" class="my-module-description overflow-hidden transition-all pr-4 pl-9" style="max-height: 0px;">
       <div class="min-h-[2.25rem] w-full inline-block mb-4 relative group/text_container content__text-body"
         :class="{ 'edit': inEditMode, 'component__element--locked': !canEdit }"
         @keyup.enter="enableEditMode($event)" tabindex="0">
