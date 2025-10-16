@@ -477,6 +477,11 @@ export default {
       const { columnsState } = this.tableState;
       this.columnsState = columnsState;
 
+      if (!columnsState) {
+        this.initializing = false;
+        return;
+      }
+
       if (this.order) {
         this.tableState.columnsState.forEach((column) => {
           const updatedColumn = column;
@@ -501,7 +506,14 @@ export default {
       if (this.initializing) {
         return;
       }
-      const columnsState = this.columnApi ? this.columnApi.getColumnState() : this.tableState?.columnsState || [];
+      let columnsState = [];
+
+      if (this.columnApi?.getColumnState()) {
+        columnsState = this.columnApi.getColumnState();
+      } else if (this.tableState?.columnsState) {
+        columnsState = this.tableState.columnsState;
+      }
+
       const tableState = {
         columnsState,
         order: this.order,
