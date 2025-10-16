@@ -364,8 +364,8 @@
       GeneralDropdown
     },
     created() {
-      this.elements = this.step.elements;
-      this.attachments = this.step.attachments;
+      this.loadAttachments();
+      this.loadElements();
     },
     watch: {
       stepToReload() {

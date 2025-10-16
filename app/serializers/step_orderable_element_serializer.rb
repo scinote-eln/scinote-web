@@ -6,7 +6,7 @@ class StepOrderableElementSerializer < ActiveModel::Serializer
   def orderable
     case object.orderable_type
     when 'Checklist'
-      ChecklistSerializer.new(object.orderable, scope: { user: @instance_options[:user] }, include: :checklist_item).as_json
+      ChecklistSerializer.new(object.orderable, scope: { user: @instance_options[:user] }).as_json
     when 'StepTable'
       TableSerializer.new(object.orderable.table, scope: { user: @instance_options[:user] }).as_json
     when 'StepText'

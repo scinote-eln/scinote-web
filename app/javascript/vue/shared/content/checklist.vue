@@ -146,12 +146,7 @@ export default {
     if (this.isNew) {
       this.addItem();
     } else {
-      this.checklistItems = this.element.attributes.orderable.checklist_items.map((item) => ({
-        id: item.id,
-        attributes: {
-          ...item,
-        }
-      }));
+      this.loadChecklistItems();
     }
   },
   watch: {

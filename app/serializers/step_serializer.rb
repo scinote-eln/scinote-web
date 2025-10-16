@@ -7,9 +7,6 @@ class StepSerializer < ActiveModel::Serializer
   include CommentHelper
   include InputSanitizeHelper
 
-  has_many :step_orderable_elements, serializer: StepOrderableElementSerializer
-  has_many :assets, serializer: AssetSerializer
-
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode,
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
              :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
