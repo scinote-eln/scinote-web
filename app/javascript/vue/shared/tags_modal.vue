@@ -15,7 +15,7 @@
             {{ i18n.t('tags.manage_modal.description') }}
           </p>
           <div class="flex flex-col gap-2">
-            <div class="grow overflow-auto max-h-[50vh]">
+            <div ref="tagsContainer" class="grow overflow-auto max-h-[50vh]">
               <div v-for="tag in allTags" :key="tag.id"
                    class="rounded py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2"
                    :class="{'!bg-sn-super-light-blue': tagInEdit == tag.id }">
@@ -77,7 +77,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <a :href="tagsManagmentUrl" v-if="canManage" class="btn btn-light mr-auto">
+          <a :href="tagsManagmentUrl" v-if="canDelete" class="btn btn-light mr-auto">
             {{ i18n.t('tags.manage_modal.manage_tags') }}
           </a>
           <button class="btn btn-primary" data-dismiss="modal">{{ i18n.t('general.done') }}</button>
@@ -193,6 +193,9 @@ export default {
         });
         this.newTagsCreated.push(parseInt(tag.id, 10));
         this.addingNewTag = false;
+        this.$nextTick(() => {
+          this.$refs.tagsContainer.scrollTop = this.$refs.tagsContainer.scrollHeight;
+        });
       }).catch((e) => {
         if (e.response?.data?.error) {
           HelperModule.flashAlertMsg(e.response.data.error, 'danger');
