@@ -14,7 +14,7 @@
               <i v-if="canAssign" @click.stop="unlinkTag(tag)" class="sn-icon sn-icon-close"></i>
             </div>
           </template>
-          <div v-else-if="!opened" class="sci-tag bg-sn-super-light-grey">
+          <div v-else-if="!opened && canAssign" class="sci-tag bg-sn-super-light-grey">
             {{ i18n.t('tags.tags_input.add_tag') }}
           </div>
           <input v-if="opened"

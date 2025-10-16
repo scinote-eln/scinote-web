@@ -651,20 +651,18 @@
           this.elements[index].attributes.orderable = element.attributes.orderable;
           this.$emit('stepUpdated');
         } else {
-          $.ajax({
-            url: element.attributes.orderable.urls.update_url,
-            method: 'PUT',
-            data: element.attributes.orderable,
-            success: (result) => {
-              this.elements[index].attributes.orderable = result.data.attributes;
+          axios.put(
+            element.attributes.orderable.urls.update_url,
+            element.attributes.orderable
+          ).then((result) => {
+              this.elements[index].attributes.orderable = result.data.data.attributes;
               this.$emit('stepUpdated');
 
               // optional callback after successful update
               if(typeof callback === 'function') {
                 callback();
               }
-            }
-          }).fail(() => {
+          }).catch(() => {
             HelperModule.flashAlertMsg(this.i18n.t('errors.general_saving_data'), 'danger');
           })
         }
