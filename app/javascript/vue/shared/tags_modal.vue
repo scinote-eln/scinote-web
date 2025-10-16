@@ -127,7 +127,11 @@ export default {
   },
   computed: {
     validNewTag() {
-      return this.newTag.name.trim() !== '' && !this.allTags.find(t => t.name.toLowerCase() === this.newTag.name.trim().toLowerCase());
+      return this.newTag.name.trim() !== '' &&
+             !this.allTags.find(t =>
+               t.name.toLowerCase() === this.newTag.name.trim().toLowerCase() &&
+               t.color === this.newTag.color
+             );
     },
     tagsManagmentUrl() {
       return users_settings_team_tags_path({ team_id: this.teamId });
