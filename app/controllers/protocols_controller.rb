@@ -192,7 +192,7 @@ class ProtocolsController < ApplicationController
     end
 
     if params[:view] == 'show'
-      redirect_to protocol_path(@protocol)
+      render json: { url: protocol_path(@protocol) }
     else
       redirect_to protocols_path
     end
