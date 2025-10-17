@@ -1,17 +1,18 @@
 <template>
-  <div class="bg-white px-4 my-4 task-section">
+  <div class="bg-white px-4 my-4 task-section" data-e2e="e2e-CO-task-details">
     <div class="py-4 flex items-center gap-4">
       <i ref="openHandler"
         @click="toggleContainer"
+        data-e2e="e2e-BT-task-details-visibilityToggle"
         class="sn-icon sn-icon-right cursor-pointer">
       </i>
       <div class="flex items-center gap-2">
-        <h2 class="my-0 flex items-center gap-1">
+        <h2 class="my-0 flex items-center gap-1" data-e2e="e2e-TX-task-details-title">
           {{ i18n.t('my_modules.details.title') }}
         </h2>
         <GeneralDropdown ref="myModuleDetailsDropdown">
           <template v-slot:field>
-            <button class="btn btn-light btn-black icon-btn">
+            <button class="btn btn-light btn-black icon-btn" data-e2e="e2e-DD-task-details-taskDetails">
               <i class="sn-icon sn-icon-info"></i>
             </button>
           </template>
@@ -70,7 +71,7 @@
             </div>
           </template>
         </GeneralDropdown>
-        <span>
+        <span  data-e2e="e2e-TX-task-details-taskId">
           {{ myModule.attributes.code }}
         </span>
       </div>
@@ -81,12 +82,13 @@
         <span class="tw-hidden lg:block ml-2">
           {{ i18n.t('my_modules.details.start_date') }}
         </span>
-        <div class="w-48 font-bold">
+        <div class="w-56" data-e2e="e2e-DP-task-details-startDate">
           <DateTimePicker
-            v-if="myModule.attributes.permissions.manage_due_date"
-            @change="setDueDate"
+            v-if="myModule.attributes.permissions.manage_start_date"
+            @change="setStartDate"
             :defaultValue="startDate"
             mode="datetime"
+            :class="{'font-bold': myModule.attributes.start_date_cell.value_formatted}"
             size="mb"
             :noBorder="true"
             :noIcons="true"
@@ -94,9 +96,10 @@
             :placeholder="i18n.t('my_modules.details.no_start_date_placeholder')"
             :clearable="true"
           />
-          <span v-else class="font-bold ml-2">
-            {{ myModule.attributes.start_date_cell.value_formatted || i18n.t('my_modules.details.no_start_date_placeholder') }}
-          </span>
+          <div v-else class="ml-2 py-2">
+            <span v-if="myModule.attributes.start_date_cell.value_formatted" class="font-bold">{{ myModule.attributes.start_date_cell.value_formatted }}</span>
+            <span v-else class="text-sn-grey">{{ i18n.t('my_modules.details.no_start_date') }}</span>
+          </div>
         </div>
       </div>
       <div class="flex items-center">
@@ -104,22 +107,24 @@
         <span class="tw-hidden lg:block ml-2">
           {{ i18n.t('my_modules.details.due_date') }}
         </span>
-        <div class="w-48 font-bold">
+        <div class="w-56" >
           <DateTimePicker
             v-if="myModule.attributes.permissions.manage_due_date"
             @change="setDueDate"
             mode="datetime"
             :defaultValue="dueDate"
+            :class="{'font-bold': myModule.attributes.due_date_cell.value_formatted}"
             size="mb"
             :noBorder="true"
-            :noIcons="true"
+            :noIcons="!myModule.attributes.due_date_cell.icon"
             valueType="stringWithoutTimezone"
             :placeholder="i18n.t('my_modules.details.no_due_date_placeholder')"
             :clearable="true"
           />
-          <span v-else class="font-bold ml-2">
-            {{ myModule.attributes.due_date_cell.value_formatted || i18n.t('my_modules.details.no_due_date_placeholder') }}
-          </span>
+          <div v-else class="ml-2 py-2">
+            <span v-if="myModule.attributes.due_date_cell.value_formatted" class="font-bold">{{ myModule.attributes.due_date_cell.value_formatted }}</span>
+            <span v-else class="text-sn-grey">{{ i18n.t('my_modules.details.no_due_date') }}</span>
+          </div>
         </div>
       </div>
       <div v-if="myModule.attributes.completed_on" class="flex items-center gap-2 h-10">
@@ -127,14 +132,16 @@
         <span class="tw-hidden lg:block">
           {{ i18n.t('my_modules.details.completed_date') }}
         </span>
+        <b data-e2e="e2e-TX-task-details-completedOn">{{ myModule.attributes.completed_on }}</b>
       </div>
       <div class="flex gap-2 mt-2.5">
         <span class="sn-icon sn-icon-users"></span>
         <span class="tw-hidden lg:block shrink-0">
           {{ i18n.t('my_modules.details.assigned_users') }}
         </span>
-        <div class="grow -mt-2.5">
+        <div class="grow -mt-2.5" data-e2e="e2e-IF-task-details-designatedUsers">
           <SelectDropdown
+            v-if="myModule.attributes.permissions.manage_designated_users"
             @change="setUsers"
             :options="formattedUsers"
             :option-renderer="usersRenderer"
@@ -146,6 +153,13 @@
             :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')"
             :tagsView="true">
           </SelectDropdown>
+          <div v-else-if="selectedUsers.length > 0" class="flex items-center flex-wrap gap-2 mt-2.5">
+            <div class="sci-tag bg-sn-super-light-grey" v-for="user in selectedUsers" :key="user.id">
+              <img :src="user.attributes.avatar_url" class="rounded-full w-5 h-5" />
+              <span :title="user.attributes.name" class="truncate">{{ user.attributes.name }}</span>
+            </div>
+          </div>
+          <span v-else class="flex items-center flex-wrap gap-2 mt-2.5 text-sn-grey">{{ i18n.t('my_modules.details.no_assigned_users') }}</span>
         </div>
       </div>
       <div class="flex gap-2 mb-6 mt-2.5">
@@ -153,8 +167,11 @@
         <span class="tw-hidden lg:block shrink-0">
           {{ i18n.t('my_modules.details.tags') }}
         </span>
-        <div class="grow -mt-1.5">
-          <TagsInput :subject="myModule" :key="detailsKey" v-if="myModule" @reloadSubject="$emit('reloadMyModule')" />
+        <div class="grow -mt-1.5" data-e2e="e2e-IF-task-details-tags">
+          <TagsInput :subject="myModule" :key="detailsKey" v-if="myModule.attributes.permissions.assign_tags || myModule.attributes.tags.length > 0" @reloadSubject="$emit('reloadMyModule')" />
+          <div v-else class="ml-2 py-2">
+            <span class="text-sn-grey">{{ i18n.t('my_modules.details.no_tags') }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -168,6 +185,7 @@ import SelectDropdown from '../shared/select_dropdown.vue';
 import TagsInput from '../shared/tags_input.vue';
 import axios from '../../packs/custom_axios.js';
 import escapeHtml from '../shared/escape_html.js';
+import usersRenderer from '../shared/select_dropdown_renderers/user.vue';
 import {
   my_module_path,
   assigned_users_my_module_path,
@@ -190,7 +208,8 @@ export default {
     GeneralDropdown,
     DateTimePicker,
     SelectDropdown,
-    TagsInput
+    TagsInput,
+    usersRenderer,
   },
   data() {
     return {
@@ -199,6 +218,7 @@ export default {
       users: [],
       startDate: null,
       dueDate: null,
+      usersRenderer: usersRenderer,
     };
   },
   mixins: [escapeHtml],
@@ -208,9 +228,12 @@ export default {
         [
           parseInt(user.id, 10),
           user.attributes.name,
-          user.attributes.avatar_url
+          { avatar_url: user.attributes.avatar_url }
         ]
       ));
+    },
+    selectedUsers() {
+      return this.allUsers.filter(user => this.users.includes(parseInt(user.id, 10)));
     }
   },
   created() {
@@ -275,12 +298,6 @@ export default {
         this.allUsers = response.data.data;
         this.users = this.myModule.attributes.designated_user_ids || [];
       });
-    },
-    usersRenderer(user) {
-      return `<div class="flex items-center gap-2 truncate">
-                <img class="w-6 h-6 rounded-full" src="${user[2]}">
-                <span title="${escapeHtml(user[1])}" class="truncate">${escapeHtml(user[1])}</span>
-              </div>`;
     },
     setDueDate(value) {
       const updateUrl = my_module_path(this.myModule.id);

@@ -7,6 +7,7 @@
       @change="changeStatus"
       size="xs"
       :borderless="true"
+      :oneLineLabel="true"
       :optionRenderer="optionRenderer"
       :labelRenderer="optionRenderer"
     />

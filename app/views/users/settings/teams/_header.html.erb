@@ -17,10 +17,10 @@
     </h1>
   </div>
 </div>
-<div class="flex items-center gap-4 p-2 mb-4 bg-white rounded-lg">
-  <%= link_to t("users.settings.teams.navigation.details"), team_path(@team), class: "p-2.5 hover:no-underline #{ 'disabled' unless can_read_team?(@team) } #{ @active_tab == :details ? "text-sn-blue" : "text-sn-grey" }"%>
-  <%= link_to t("users.settings.teams.navigation.members"), members_users_settings_team_path(@team), class: "p-2.5 hover:no-underline #{ @active_tab == :members ? "text-sn-blue" : "text-sn-grey" }"%>
-  <%= link_to t("users.settings.teams.navigation.groups"), users_settings_team_user_groups_path(@team), class: "p-2.5 hover:no-underline  #{ 'disabled' unless can_manage_team?(@team) } #{ @active_tab == :user_groups ? "text-sn-blue" : "text-sn-grey" }"%>
-  <%= link_to t("users.settings.teams.navigation.tags"), users_settings_team_tags_path(@team), class: "p-2.5 hover:no-underline #{ 'disabled' unless can_read_team?(@team) } #{ @active_tab == :tags ? "text-sn-blue" : "text-sn-grey" }"%>
-  <%= link_to t("users.settings.sidebar.account_nav.automations"), automations_team_path(@team), class: "p-2.5 hover:no-underline #{ 'disabled' unless can_manage_team?(@team) } #{ @active_tab == :automations ? "text-sn-blue" : "text-sn-grey" }"%>
+<div class="tab-group mb-4">
+  <%= link_to t("users.settings.teams.navigation.details"), team_path(@team), class: "tab-item #{ 'active' if @active_tab == :details } #{ 'disabled' unless can_read_team?(@team) }"%>
+  <%= link_to t("users.settings.teams.navigation.members"), members_users_settings_team_path(@team), class: "tab-item #{ 'active' if @active_tab == :members }"%>
+  <%= link_to t("users.settings.teams.navigation.groups"), users_settings_team_user_groups_path(@team), class: "tab-item #{ 'active' if @active_tab == :user_groups } #{ 'disabled' unless can_manage_team?(@team) }"%>
+  <%= link_to t("users.settings.sidebar.account_nav.automations"), automations_team_path(@team), class: "tab-item #{ 'active' if @active_tab == :automations } #{ 'disabled' unless can_manage_team?(@team) }"%>
+  <%= link_to t("users.settings.teams.navigation.tags"), users_settings_team_tags_path(@team), class: "tab-item #{ 'active' if @active_tab == :tags } #{ 'disabled' unless can_delete_tags?(@team) }"%>
 </div>

@@ -6,6 +6,9 @@
 @import "tailwind/loader.css";
 @import "tailwind/tags.css";
 @import "tailwind/table.css";
+@import "tailwind/checkbox";
+@import "tailwind/toggle";
+@import "tailwind/tabs";
 
 @tailwind base;
 @tailwind components;

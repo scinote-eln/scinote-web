@@ -1,0 +1,11 @@
+<div class="mb-8">
+  <h1>Colors</h1>
+  <div class="grid grid-cols-4 items-center gap-4 flex-wrap">
+    <% colors_list.each do |color| %>
+      <div class="flex items-center gap-2">
+        <div class="w-10 h-10 rounded-xl shadow" style="background-color: <%= color[:value] %>;"></div>
+        <div><%= color[:name] %></div>
+      </div>
+    <% end %>
+  </div>
+</div>

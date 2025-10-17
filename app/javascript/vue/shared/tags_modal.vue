@@ -15,8 +15,10 @@
             {{ i18n.t('tags.manage_modal.description') }}
           </p>
           <div class="flex flex-col gap-2">
-            <div class="grow overflow-auto">
-              <div v-for="tag in allTags" :key="tag.id" class="rounded py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2" >
+            <div ref="tagsContainer" class="grow overflow-auto max-h-[50vh]">
+              <div v-for="tag in allTags" :key="tag.id"
+                   class="rounded py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2"
+                   :class="{'!bg-sn-super-light-blue': tagInEdit == tag.id }">
                 <div v-if="canAssign" @click="linkTag(tag)">
                   <div class="sci-checkbox-container pointer-events-none" >
                     <input type="checkbox" :checked="tags.find(t => t.id === tag.id)" class="sci-checkbox" />
@@ -44,9 +46,14 @@
                     </div>
                   </template>
                 </GeneralDropdown>
-                <input type="text" :value="tag.name" @change="changeName(tag, $event.target.value)"
+                <input v-if="canUpdate" type="text" :value="tag.name" @change="changeName(tag, $event.target.value)"
                   :class="{'pointer-events-none': !canUpdate }"
+                  @focus="tagInEdit = tag.id"
+                  @blur="tagInEdit = null"
                   class=" text-sm grow outline-none leading-4 border-none bg-transparent p-1" />
+                <div v-else class="truncate max-w-[300px] overflow-hidden" :title="tag.name">
+                  {{ tag.name }}
+                </div>
                 <i v-if="canDelete && newTagsCreated.includes(tag.id)" @click="deleteTag(tag)" class="ml-auto sn-icon sn-icon-delete"></i>
               </div>
             </div>
@@ -70,7 +77,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <a :href="tagsManagmentUrl" v-if="canManage" class="btn btn-light mr-auto">
+          <a :href="tagsManagmentUrl" v-if="canDelete" class="btn btn-light mr-auto">
             {{ i18n.t('tags.manage_modal.manage_tags') }}
           </a>
           <button class="btn btn-primary" data-dismiss="modal">{{ i18n.t('general.done') }}</button>
@@ -104,12 +111,14 @@ export default {
       colors: [],
       teamId: null,
       addingNewTag: false,
+      tagInEdit: null,
       newTag: {
         id: null,
         name: '',
         color: '#000000'
       },
-      newTagsCreated: []
+      newTagsCreated: [],
+      tagsLoadMode: 'all'
     };
   },
   created() {
@@ -118,7 +127,11 @@ export default {
   },
   computed: {
     validNewTag() {
-      return this.newTag.name.trim() !== '' && !this.allTags.find(t => t.name.toLowerCase() === this.newTag.name.trim().toLowerCase());
+      return this.newTag.name.trim() !== '' &&
+             !this.allTags.find(t =>
+               t.name.toLowerCase() === this.newTag.name.trim().toLowerCase() &&
+               t.color === this.newTag.color
+             );
     },
     tagsManagmentUrl() {
       return users_settings_team_tags_path({ team_id: this.teamId });
@@ -157,7 +170,11 @@ export default {
         }
       }).then(() => {
         this.allTags.find(t => t.id === tag.id).name = newName;
-      }).catch(() => {
+      }).catch((e) => {
+        if (e.response?.data?.error) {
+          HelperModule.flashAlertMsg(e.response.data.error, 'danger');
+          return;
+        }
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
@@ -180,7 +197,14 @@ export default {
         });
         this.newTagsCreated.push(parseInt(tag.id, 10));
         this.addingNewTag = false;
-      }).catch(() => {
+        this.$nextTick(() => {
+          this.$refs.tagsContainer.scrollTop = this.$refs.tagsContainer.scrollHeight;
+        });
+      }).catch((e) => {
+        if (e.response?.data?.error) {
+          HelperModule.flashAlertMsg(e.response.data.error, 'danger');
+          return;
+        }
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },

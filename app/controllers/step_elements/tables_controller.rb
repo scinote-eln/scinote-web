@@ -56,8 +56,10 @@ module StepElements
         end
         @table.save!
 
-        log_step_activity(:table_edited, { table_name: @table.name })
-        table_content_annotation(@table.step, @table, old_content)
+        if @table.saved_changes?
+          log_step_activity(:table_edited, { table_name: @table.name })
+          table_content_annotation(@table.step, @table, old_content)
+        end
       end
 
       render json: @table, serializer: TableSerializer, user: current_user

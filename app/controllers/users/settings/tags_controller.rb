@@ -38,7 +38,7 @@ module Users
       end
 
       def check_team_permissions
-        render_403 unless can_read_team?(@team)
+        render_403 unless can_delete_tags?(@team) # Only team admin can access tags settings
       end
 
       def set_breadcrumbs_items

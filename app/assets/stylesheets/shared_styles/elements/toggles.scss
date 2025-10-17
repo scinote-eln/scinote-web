@@ -1,9 +1,9 @@
 // scss-lint:disable SelectorDepth QualifyingElement NestingDepth
-
+/*
 .sci-toggle-checkbox-container {
   --sci-toggle-check-size: .625rem;
-  --sci-toggle-container-height: 1.5rem;
-  --sci-toggle-container-width: 2.25rem;
+  --sci-toggle-container-height: .875rem;
+  --sci-toggle-container-width: 1.875rem;
   --sci-toggle-label-border: .0625rem;
   --sci-toggle-label-height: .875rem;
   --sci-toggle-label-width: 1.875rem;
@@ -82,6 +82,7 @@ input[type="checkbox"].sci-toggle-checkbox {
     background-color: var(--sn-super-light-grey);
   }
 }
+  */
 
 .sci-toggles-group {
   align-items: center;

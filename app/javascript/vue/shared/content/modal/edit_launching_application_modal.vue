@@ -11,7 +11,7 @@
         <div class="modal-body">
           <p v-html="i18n.t(
             'assets.edit_launching_application_modal.description',
-            { file_name: fileName, application: application }
+            { file_name: escapeHtml(fileName), application: escapeHtml(application) }
           )"></p>
         </div>
         <div class="modal-footer">
@@ -24,11 +24,18 @@
   </div>
 </template>
 <script>
+import escapeHtml from '../../escape_html.js';
 import modalMixin from '../../modal_mixin';
+
 export default {
   name: 'editLaunchingApplicationModal',
   props: {
     fileName: String, application: String,
+  },
+  data() {
+    return {
+      escapeHtml: escapeHtml
+    }
   },
   mixins: [modalMixin]
 };
