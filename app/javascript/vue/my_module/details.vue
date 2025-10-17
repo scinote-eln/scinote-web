@@ -116,6 +116,7 @@
             :class="{'font-bold': myModule.attributes.due_date_cell.value_formatted}"
             size="mb"
             :noBorder="true"
+            :customIcon="myModule.attributes.due_date_cell.icon"
             :noIcons="!myModule.attributes.due_date_cell.icon"
             valueType="stringWithoutTimezone"
             :placeholder="i18n.t('my_modules.details.no_due_date_placeholder')"
