@@ -115,8 +115,6 @@ class MyModule < ApplicationRecord
     teams = user.teams,
     _options = {}
   )
-    teams = options[:teams] || current_team || user.teams.select(:id)
-
     new_query = distinct.left_joins(:task_comments, :tags, user_my_modules: :user)
                         .readable_by_user(user, teams)
                         .where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)

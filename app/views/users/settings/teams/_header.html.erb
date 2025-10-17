@@ -21,6 +21,6 @@
   <%= link_to t("users.settings.teams.navigation.details"), team_path(@team), class: "tab-item #{ 'active' if @active_tab == :details } #{ 'disabled' unless can_read_team?(@team) }"%>
   <%= link_to t("users.settings.teams.navigation.members"), members_users_settings_team_path(@team), class: "tab-item #{ 'active' if @active_tab == :members }"%>
   <%= link_to t("users.settings.teams.navigation.groups"), users_settings_team_user_groups_path(@team), class: "tab-item #{ 'active' if @active_tab == :user_groups } #{ 'disabled' unless can_manage_team?(@team) }"%>
-  <%= link_to t("users.settings.teams.navigation.tags"), users_settings_team_tags_path(@team), class: "p-2.5 hover:no-underline #{ 'active' if @active_tab == :tags } #{ 'disabled' unless can_read_team?(@team) }"%>
   <%= link_to t("users.settings.sidebar.account_nav.automations"), automations_team_path(@team), class: "tab-item #{ 'active' if @active_tab == :automations } #{ 'disabled' unless can_manage_team?(@team) }"%>
+  <%= link_to t("users.settings.teams.navigation.tags"), users_settings_team_tags_path(@team), class: "tab-item #{ 'active' if @active_tab == :tags } #{ 'disabled' unless can_delete_tags?(@team) }"%>
 </div>
