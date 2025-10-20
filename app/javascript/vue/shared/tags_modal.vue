@@ -16,7 +16,7 @@
           </p>
           <div class="flex flex-col gap-2">
             <div ref="tagsContainer" class="grow overflow-auto max-h-[50vh]">
-              <div v-for="tag in allTags" :key="tag.id"
+              <div v-for="tag in sortedTags" :key="tag.id"
                    class="rounded py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2"
                    :class="{'!bg-sn-super-light-blue': tagInEdit == tag.id }">
                 <div v-if="canAssign" @click="linkTag(tag)" class="h-4">
@@ -140,6 +140,16 @@ export default {
     },
     tagsManagmentUrl() {
       return users_settings_team_tags_path({ team_id: this.teamId });
+    },
+    sortedTags() {
+      return this.allTags.sort((a, b) => {
+        const aChecked = this.tags.find(t => t.id === a.id) ? 1 : 0;
+        const bChecked = this.tags.find(t => t.id === b.id) ? 1 : 0;
+        if (aChecked !== bChecked) {
+          return bChecked - aChecked;
+        }
+        return a.name.localeCompare(b.name)
+      });
     }
   },
   methods: {
