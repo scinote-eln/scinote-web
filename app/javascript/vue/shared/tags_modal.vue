@@ -182,8 +182,8 @@ export default {
       }).then(() => {
         this.allTags.find(t => t.id === tag.id).name = newName;
       }).catch((e) => {
-        if (e.response?.data?.error) {
-          HelperModule.flashAlertMsg(e.response.data.error, 'danger');
+        if (e.response?.data?.errors) {
+          HelperModule.flashAlertMsg(e.response.data.errors, 'danger');
           return;
         }
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
@@ -212,8 +212,8 @@ export default {
           this.$refs.tagsContainer.scrollTop = this.$refs.tagsContainer.scrollHeight;
         });
       }).catch((e) => {
-        if (e.response?.data?.error) {
-          HelperModule.flashAlertMsg(e.response.data.error, 'danger');
+        if (e.response?.data?.errors) {
+          HelperModule.flashAlertMsg(e.response.data.errors, 'danger');
           return;
         }
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
