@@ -46,11 +46,14 @@
                     </div>
                   </template>
                 </GeneralDropdown>
-                <input v-if="canUpdate" type="text" :value="tag.name" @change="changeName(tag, $event.target.value)"
-                  :class="{'pointer-events-none': !canUpdate }"
-                  @focus="tagInEdit = tag.id"
-                  @blur="tagInEdit = null"
-                  class=" text-sm grow outline-none leading-4 border-none bg-transparent p-1" />
+                <template v-if="canUpdate">
+                  <span v-if="tagInEdit != tag.id" @click="startTagEditing(tag.id)" class="truncate grow cursor-pointer pl-1" :title="tag.name">{{ tag.name }}</span>
+                  <input v-else type="text" :value="tag.name" @change="changeName(tag, $event.target.value)"
+                    :class="{'pointer-events-none': !canUpdate }"
+                    :ref="`tagInput${tag.id}`"
+                    @blur="tagInEdit = null"
+                    class=" text-sm grow outline-none leading-4 border-none bg-transparent p-1" />
+                </template>
                 <div v-else class="truncate max-w-[300px] overflow-hidden" :title="tag.name">
                   {{ tag.name }}
                 </div>
@@ -138,6 +141,12 @@ export default {
     }
   },
   methods: {
+    startTagEditing(tagId) {
+      this.tagInEdit = tagId;
+      this.$nextTick(() => {
+        this.$refs[`tagInput${tagId}`][0].focus();
+      });
+    },
     startAddingNewTag() {
       this.addingNewTag = true;
       this.newTag.name = '';
