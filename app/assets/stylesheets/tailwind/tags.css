@@ -15,6 +15,10 @@
     @apply cursor-pointer;
   }
 
+  .sci-tag .sn-icon.sn-icon-close:hover {
+    @apply text-white bg-sn-black rounded-full;
+  }
+
   .sci-tag.disabled {
     @apply opacity-40 cursor-not-allowed;
   }

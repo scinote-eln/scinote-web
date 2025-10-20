@@ -357,6 +357,8 @@ export default {
         this.gridApi.setRowData(
           [values, ...this.rowData]
         );
+
+        document.querySelector('.ag-body-viewport').scrollTop = 0;
       }
     },
     reloadingTable() {

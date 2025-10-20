@@ -19,7 +19,7 @@
               <div v-for="tag in allTags" :key="tag.id"
                    class="rounded py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2"
                    :class="{'!bg-sn-super-light-blue': tagInEdit == tag.id }">
-                <div v-if="canAssign" @click="linkTag(tag)">
+                <div v-if="canAssign" @click="linkTag(tag)" class="h-4">
                   <div class="sci-checkbox-container pointer-events-none" >
                     <input type="checkbox" :checked="tags.find(t => t.id === tag.id)" class="sci-checkbox" />
                     <span class="sci-checkbox-label"></span>
@@ -60,9 +60,11 @@
                 <i v-if="canDelete && newTagsCreated.includes(tag.id)" @click="deleteTag(tag)" class="ml-auto sn-icon sn-icon-delete"></i>
               </div>
             </div>
-            <div class="flex items-center gap-2 text-xs cursor-pointer px-2 py-2" v-if="canCreate && !addingNewTag" @click="startAddingNewTag">
-              <i class="sn-icon sn-icon-new-task"></i>
-              {{ i18n.t('tags.manage_modal.create_tag') }}
+            <div>
+              <div class="btn btn-light btn-black" v-if="canCreate && !addingNewTag" @click="startAddingNewTag">
+                <i class="sn-icon sn-icon-new-task"></i>
+                {{ i18n.t('tags.manage_modal.create_tag') }}
+              </div>
             </div>
             <div v-if="addingNewTag" class="flex items-center gap-2 bg-sn-super-light-blue py-2 px-3 rounded">
               <div class="sci-checkbox-container pointer-events-none" >

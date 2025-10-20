@@ -11,9 +11,7 @@
         @keydown.enter="saveName"
         @keydown.escape="cancelEditing"
         @keydown="handleKeydown"
-        v-model="tagName"
-        @blur="saveName"
-        @change="saveName" />
+        v-model="tagName" />
       <div v-if="error" class="text-xs text-sn-alert-passion">{{ error }}</div>
     </template>
   </div>
