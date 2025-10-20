@@ -63,6 +63,7 @@ export default {
     return {
       sectionOpened: false,
       inEditMode: false,
+      resizeObserver: null
     };
   },
   computed: {
@@ -74,12 +75,25 @@ export default {
     }
   },
   mounted() {
+    this.initResizeObserver();
     if (this.myModule.attributes.description_view) {
       this.sectionOpened = true;
       this.recalculateContainerSize(60);
     }
   },
+  beforeUnmount() {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+  },
   methods: {
+    initResizeObserver() {
+      this.resizeObserver = new ResizeObserver((_entries) => {
+        if (this.sectionOpened && this.inEditMode) {
+          this.recalculateContainerSize(60);
+        }
+      });
+    },
     updateUrl() {
       return my_module_path(this.myModule.id);
     },
@@ -90,7 +104,9 @@ export default {
       if (!this.updateUrl()) return;
       if (this.inEditMode) return;
       this.inEditMode = true;
-      this.recalculateContainerSize(60);
+
+      const editor = document.querySelector('.tiny-mce-editor');
+      this.resizeObserver.observe(editor);
     },
     recalculateContainerSize(offset = 0) {
       const container = this.$refs.notesContainer;
