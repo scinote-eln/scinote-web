@@ -14,24 +14,18 @@ class TinyMceAssetsController < ApplicationController
     response_json = { images: [] }
 
     ActiveRecord::Base.transaction do
+      response_json = { images: [] }
+
       images_params.each_with_index do |image, _i|
-        unless image.content_type.match?(%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}})
-          status = :unprocessable_entity
-          response_json = { errors: I18n.t('tiny_mce.unsupported_image_format') }
-        end
+        tiny_mce_asset =
+          case image
+          when ActionDispatch::Http::UploadedFile
+            create_from_file(image)
+          when ActionController::Parameters
+            create_from_blob(ActiveStorage::Blob.find_signed(image[:blob_id]))
+          end
 
-        if image.size > Rails.configuration.x.file_max_size_mb.megabytes
-          status = :unprocessable_entity
-          response_json = { errors: t('general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb) }
-        end
-
-        raise ActiveRecord::Rollback if response_json[:errors]
-
-        tiny_img = TinyMceAsset.new(team_id: current_team.id, saved: false)
-
-        tiny_img.save!
-        tiny_img.image.attach(io: image, filename: image.original_filename)
-        response_json[:images] << { url: url_for(tiny_img.image), token: Base62.encode(tiny_img.id) }
+        response_json[:images] << { url: rails_representation_url(tiny_mce_asset.image), token: Base62.encode(tiny_mce_asset.id) }
       end
     rescue ActiveRecord::RecordInvalid => e
       response_json = { errors: e.message }
@@ -89,6 +83,36 @@ class TinyMceAssetsController < ApplicationController
   end
 
   private
+
+  def create_from_file(file)
+    response_json = {}
+
+    unless file.content_type.match?(%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}})
+      response_json = { errors: I18n.t('tiny_mce.unsupported_image_format') }
+    end
+
+    if file.size > Rails.configuration.x.file_max_size_mb.megabytes
+      response_json = { errors: t('general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb) }
+    end
+
+    raise ActiveRecord::Rollback if response_json[:errors]
+
+    tiny_mce_asset = TinyMceAsset.new(team_id: current_team.id, saved: false)
+
+    tiny_mce_asset.save!
+    tiny_mce_asset.image.attach(io: file, filename: file.original_filename)
+
+    tiny_mce_asset
+  end
+
+  def create_from_blob(blob)
+    tiny_mce_asset = TinyMceAsset.new(team_id: current_team.id, saved: false)
+
+    tiny_mce_asset.save!
+    tiny_mce_asset.image.attach(blob)
+
+    tiny_mce_asset
+  end
 
   def load_vars
     @asset = current_team.tiny_mce_assets.find_by(id: Base62.decode(params[:id]))

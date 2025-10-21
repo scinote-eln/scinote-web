@@ -40,6 +40,47 @@ import 'raw-loader';
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/tinymce-5/content.min.css';
 
+import axios from '../packs/custom_axios.js';
+import { rails_direct_uploads_path } from '../routes';
+
+window.uploadedTinyMCEImages = [];
+
+const tagUploadedTinyMCEImages = (editor) => {
+  let image;
+
+  while(image = window.uploadedTinyMCEImages.pop()) {
+    const iframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe').contents()[0];
+    let imageElement = iframe.querySelector(`[src='${image.url}']`);
+    imageElement.setAttribute('alt', `description-${image.token}`);
+    imageElement.setAttribute('data-mce-token', image.token);
+  };
+};
+
+const image_upload_handler = (blobInfo, _progress) =>
+  new Promise((resolve, reject) => {
+    if (!blobInfo) resolve();
+
+    const upload = new ActiveStorage.DirectUpload(blobInfo.blob(), rails_direct_uploads_path());
+
+    upload.create((error, blob) => {
+      if (error) {
+        reject(`ActiveStorage upload failed: ${error}`);
+      } else {
+        axios.post('/tiny_mce_assets', {
+          files: [{blob_id: blob.signed_id}]
+        })
+        .then((response) => {
+          resolve(response.data.images[0].url);
+
+          window.uploadedTinyMCEImages.push(response.data.images[0]);
+        })
+        .catch((error) => {
+          reject(`Failed to create TinyMCE asset: ${error}`);
+        });
+      }
+    });
+  });
+
 const contentPStyle = `p { margin: 0; padding: 0;}`;
 const contentBodyStyle = `body { font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif }`;
 const contentStyle = [contentCss, contentUiCss, contentBodyStyle, contentPStyle].map((s) => s.toString()).join('\n');
@@ -161,6 +202,7 @@ window.TinyMCE = (() => {
   }
 
   function saveAction(editor) {
+    tagUploadedTinyMCEImages(editor);
     const editorForm = $(editor.getContainer()).closest('form');
     editorForm.clearFormErrors();
     editor.setProgressState(1);
@@ -466,7 +508,8 @@ window.TinyMCE = (() => {
               }
             });
           },
-          save_onsavecallback: (editor) => { saveAction(editor); }
+          save_onsavecallback: (editor) => { saveAction(editor); },
+          images_upload_handler: image_upload_handler
         });
       }
 
