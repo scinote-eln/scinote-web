@@ -101,6 +101,7 @@ import {
   colors_tags_path,
   team_tag_path,
   team_tags_path,
+  destroy_tags_team_tags_path,
   users_settings_team_tags_path
 } from '../../routes.js';
 
@@ -183,7 +184,10 @@ export default {
         this.allTags.find(t => t.id === tag.id).name = newName;
       }).catch((e) => {
         if (e.response?.data?.errors) {
-          HelperModule.flashAlertMsg(e.response.data.errors, 'danger');
+          HelperModule.flashAlertMsg(
+            this.i18n.t('tags.manage_modal.validation_failed', { errors: e.response.data.errors }),
+            'danger'
+          );
           return;
         }
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
@@ -213,7 +217,10 @@ export default {
         });
       }).catch((e) => {
         if (e.response?.data?.errors) {
-          HelperModule.flashAlertMsg(e.response.data.errors, 'danger');
+          HelperModule.flashAlertMsg(
+            this.i18n.t('tags.manage_modal.validation_failed', { errors: e.response.data.errors }),
+            'danger'
+          );
           return;
         }
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
@@ -223,7 +230,7 @@ export default {
       if (!this.newTagsCreated.includes(tag.id)) {
         return;
       }
-      axios.delete(team_tag_path(tag.id, { team_id: this.teamId }))
+      axios.delete(destroy_tags_team_tags_path({ team_id: this.teamId, tag_ids: [tag.id] }))
         .then(() => {
           this.allTags = this.allTags.filter(t => t.id !== tag.id);
           this.tags = this.tags.filter(t => t.id !== tag.id);

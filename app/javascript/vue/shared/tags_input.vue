@@ -41,8 +41,9 @@
               </div>
             </div>
           </div>
-          <template v-if="canManage || canAssign">
-            <hr v-if="filteredTags.length > 0 " class="my-0 w-full mb-1 border-t"  />
+          <span v-if="noTagsAvailable" class="text-sn-grey pl-3 py-2">{{ i18n.t('tags.tags_input.no_options_found') }}</span>
+          <template v-if="canManage || (canAssign && !noTagsAvailable)">
+            <hr class="my-0 w-full mb-1 border-t"  />
             <button class="btn btn-light btn-black w-32" @click="openTagsModal">
               <span class="sn-icon sn-icon-edit"></span>
               {{ i18n.t('tags.tags_input.edit_tags') }}
@@ -79,6 +80,9 @@ export default {
     validTagName() {
       return this.searchQuery.trim().length > GLOBAL_CONSTANTS.NAME_MIN_LENGTH &&
         !this.allTags.map(t => t.name.toLowerCase()).includes(this.searchQuery.toLowerCase());
+    },
+    noTagsAvailable() {
+      return this.allTags.length === 0;
     }
   },
   data() {

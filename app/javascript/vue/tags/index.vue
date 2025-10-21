@@ -118,6 +118,16 @@ export default {
           field: 'taggings_count',
           headerName: this.i18n.t('tags.index.used_in'),
           sortable: true,
+          cellRenderer: (params) => {
+            const count = params.value;
+
+            if (count === undefined || count === null) {
+              return '';
+            }
+
+            const placeText = count === 1 ? this.i18n.t('tags.index.place') : this.i18n.t('tags.index.places');
+            return `${count} ${placeText}`;
+          },
         }, {
           field: 'created_by',
           headerName: this.i18n.t('user_groups.index.created_by'),
