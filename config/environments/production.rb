@@ -40,8 +40,8 @@ Rails.application.configure do
       domain: ENV.fetch('SMTP_DOMAIN'),
       authentication: ENV.fetch('SMTP_AUTH_METHOD', 'plain'),
       enable_starttls_auto: true,
-      user_name: ENV.fetch('SMTP_USERNAME'),
-      password: ENV.fetch('SMTP_PASSWORD'),
+      user_name: ENV.fetch('SMTP_USERNAME', nil),
+      password: ENV.fetch('SMTP_PASSWORD', nil),
       openssl_verify_mode: ENV.fetch('SMTP_OPENSSL_VERIFY_MODE', 'peer'),
       ca_path: ENV.fetch('SMTP_OPENSSL_CA_PATH', '/etc/ssl/certs'),
       ca_file: ENV.fetch('SMTP_OPENSSL_CA_FILE', '/etc/ssl/certs/ca-certificates.crt')
