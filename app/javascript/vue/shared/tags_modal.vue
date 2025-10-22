@@ -17,6 +17,7 @@
           <div class="flex flex-col gap-2">
             <div ref="tagsContainer" class="grow overflow-auto max-h-[50vh]">
               <div v-for="tag in sortedTags" :key="tag.id"
+                   :id="'tag-' + tag.id"
                    class="rounded py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2"
                    :class="{'!bg-sn-super-light-blue': tagInEdit == tag.id }">
                 <div v-if="canAssign" @click="linkTag(tag)" class="h-4">
@@ -223,7 +224,11 @@ export default {
         this.newTagsCreated.push(parseInt(tag.id, 10));
         this.addingNewTag = false;
         this.$nextTick(() => {
-          this.$refs.tagsContainer.scrollTop = this.$refs.tagsContainer.scrollHeight;
+          const container = this.$refs.tagsContainer;
+          const newTagElement = this.$el.querySelector(`#tag-${tag.id}`);
+          if (newTagElement) {
+            container.scrollTop = newTagElement.offsetTop - container.offsetTop;
+          }
         });
       }).catch((e) => {
         if (e.response?.data?.errors) {
