@@ -3,6 +3,8 @@
 /* eslint no-restricted-syntax: ["off", "BinaryExpression[operator='in']"] */
 /* global tinymce I18n HelperModule validateFileSize */
 
+import { rails_direct_uploads_path } from '../../../routes';
+
 tinymce.PluginManager.add('customimageuploader', (editor) => {
   var iframe;
   var textAreaElement = $('#' + editor.id);
@@ -16,10 +18,7 @@ tinymce.PluginManager.add('customimageuploader', (editor) => {
     $fileInput.click();
 
     $fileInput.change(function() {
-      let formData = new FormData();
       let files = $('#tinymce_current_upload')[0].files;
-
-      Array.from(files).forEach(file => formData.append('files[]', file, file.name));
 
       Array.from(files).every(file => {
         if (!validateFileSize(file, true)) {
@@ -32,19 +31,36 @@ tinymce.PluginManager.add('customimageuploader', (editor) => {
         return;
       }
 
-      $.post({
-        url: textAreaElement.data('tinymce-asset-path'),
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(data) {
-          handleResponse(data);
-          $('#tinymce_current_upload').remove();
-        },
-        error: function(response) {
-          HelperModule.flashAlertMsg(response.responseJSON.errors, 'danger');
-          $('#tinymce_current_upload').remove();
-        }
+      let uploads = Array.from(files).map(file => {
+        const upload = new ActiveStorage.DirectUpload(file, rails_direct_uploads_path());
+
+        return new Promise((resolve, reject) => {
+          upload.create((error, blob) => {
+            if (error) {
+              HelperModule.flashAlertMsg(`Upload failed: ${error}`, 'danger');
+              reject(error);
+            } else {
+              resolve({ blob_id: blob.signed_id });
+            }
+          });
+        });
+      });
+
+      Promise.all(uploads).then(uploadedBlobs => {
+        $.post({
+          url: textAreaElement.data('tinymce-asset-path'),
+          contentType: 'application/json',
+          data: JSON.stringify({ files: uploadedBlobs }),
+          processData: false,
+          success: function(data) {
+            handleResponse(data);
+            $('#tinymce_current_upload').remove();
+          },
+          error: function(response) {
+            HelperModule.flashAlertMsg(response.responseJSON.errors, 'danger');
+            $('#tinymce_current_upload').remove();
+          }
+        });
       });
     });
   }
