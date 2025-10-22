@@ -1,0 +1,44 @@
+<h1><%= I18n.t('protocols.print.assigned_items.title') %></h1>
+
+<% my_module.readable_live_and_snapshot_repositories_list(current_user).each do |repository| %>
+  <%  repository_rows = repository.repository_rows.left_joins(my_module_repository_rows: :repository_stock_unit_item)
+                                                  .select('repository_rows.*', 'my_module_repository_rows.stock_consumption') %>
+  <h3><%= repository.name%></h3>
+
+  <table class="border !border-sn-grey border-collapse">
+    <tr class="h-7 bg-sn-light-grey text-left">
+      <th class="border !border-sn-grey font-normal min-w-24"><%= I18n.t('protocols.print.assigned_items.headers.item_id') %></th>
+      <th class="border !border-sn-grey font-normal min-w-24"><%= I18n.t('protocols.print.assigned_items.headers.name') %></th>
+       <% if repository.has_stock_management? %>
+        <th class="border !border-sn-grey font-normal min-w-24"><%= I18n.t('protocols.print.assigned_items.headers.stock') %></th>
+        <th class="border !border-sn-grey font-normal min-w-24"><%= I18n.t('protocols.print.assigned_items.headers.consumed') %></th>
+      <% end%>
+    </tr>
+    <% repository_rows.order(:name).each do |repository_row| %>
+    <tr class="h-7">
+      <td class="border !border-sn-grey"><%= repository_row.code %></td>
+      <td class="border !border-sn-grey">
+        <%= repository_row.name %>
+
+        <% if repository_row.archived %>
+          [<%= I18n.t("general.archived") %>]
+        <% end %>
+
+        <% if repository_row.output? && my_module.id == repository_row.my_module_id %>
+          [<%= I18n.t("general.output") %>]
+        <% end %>
+      </td>
+      <% if repository.has_stock_management? && repository.has_stock_consumption? %>
+        <td class="border !border-sn-grey"> <%= repository_row&.repository_stock_cell&.value&.formatted %></td>
+        <td class="border !border-sn-grey">
+          <% if repository.is_a?(RepositorySnapshot) %>
+            <%= repository_row.repository_stock_consumption_cell&.value&.formatted || '-' %>
+          <% else %>
+            <%= repository_row&.row_consumption(repository_row&.stock_consumption) %>
+          <% end %>
+        </td>
+      <% end%>
+    </tr>
+    <% end %>
+  </table>
+<% end %>
