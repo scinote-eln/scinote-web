@@ -27,6 +27,8 @@ class ResultTemplate < ApplicationRecord
   has_many :result_tables, inverse_of: :result_template, dependent: :destroy
   has_many :tables, through: :result_tables, dependent: :destroy
   has_many :result_texts, inverse_of: :result_template, dependent: :destroy
+  has_many :step_result_templates, inverse_of: :result_template, dependent: :destroy
+  has_many :steps, through: :step_result_templates
   # has_many :step_results, inverse_of: :result, dependent: :destroy
   # has_many :steps, through: :step_results
 

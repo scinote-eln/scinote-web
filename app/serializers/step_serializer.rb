@@ -10,7 +10,7 @@ class StepSerializer < ActiveModel::Serializer
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode,
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
              :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
-             :type, :open_vector_editor_context, :collapsed, :my_module_id, :results
+             :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id
 
   def collapsed
     step_states = @instance_options[:user].settings.fetch('task_step_states', {})
@@ -22,8 +22,14 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def results
-    object.results.map do |result|
-      { id: result.id, name: result.name, archived: result.archived? }
+    if object.protocol.my_module
+      object.results.map do |result|
+        { id: result.id, name: result.name, archived: result.archived? }
+      end
+    else
+      object.result_templates.map do |result|
+        { id: result.id, name: result.name, archived: false }
+      end
     end
   end
 

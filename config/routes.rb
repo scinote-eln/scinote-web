@@ -531,6 +531,13 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :step_result_templates, only: [] do
+      collection do
+        post :link_results
+        post :link_steps
+      end
+    end
+
     resources :my_modules, path: '/modules', only: [:show, :update] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
 
