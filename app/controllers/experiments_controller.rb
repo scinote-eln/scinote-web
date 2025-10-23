@@ -223,6 +223,7 @@ class ExperimentsController < ApplicationController
     experiments = @project.experiments
                           .managable_by_user(current_user)
                           .active
+                          .where.not(id: params[:exclude_ids])
                           .search_by_name(current_user, current_team, params['query'])
                           .order(name: :asc).map { |e| { id: e.id, name: e.name } }
     render json: { data: experiments }, status: :ok
