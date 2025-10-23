@@ -35,7 +35,12 @@ class ResultTemplatesController < ApplicationController
   end
 
   def list
-    @results = @protocol.results
+    if params[:with_linked_step_id].present?
+      step = @protocol.steps.find_by(id: params[:with_linked_step_id])
+      @results = @protocol.results.or(@protocol.results.where(id: step.results.select(:id)))
+    else
+      @results = @protocol.results
+    end
 
     update_and_apply_user_sort_preference!
   end

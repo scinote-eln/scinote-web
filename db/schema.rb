@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_29_104755) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_22_050951) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -1192,6 +1192,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_29_104755) do
     t.index ["step_id"], name: "index_step_orderable_elements_on_step_id"
   end
 
+  create_table "step_result_templates", force: :cascade do |t|
+    t.bigint "step_id", null: false
+    t.bigint "result_template_id", null: false
+    t.bigint "created_by_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_step_result_templates_on_created_by_id"
+    t.index ["result_template_id"], name: "index_step_result_templates_on_result_template_id"
+    t.index ["step_id"], name: "index_step_result_templates_on_step_id"
+  end
+
   create_table "step_results", force: :cascade do |t|
     t.bigint "step_id", null: false
     t.bigint "result_id", null: false
@@ -1768,6 +1779,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_29_104755) do
   add_foreign_key "step_assets", "assets"
   add_foreign_key "step_assets", "steps"
   add_foreign_key "step_orderable_elements", "steps"
+  add_foreign_key "step_result_templates", "result_templates"
+  add_foreign_key "step_result_templates", "steps"
+  add_foreign_key "step_result_templates", "users", column: "created_by_id"
   add_foreign_key "step_results", "results"
   add_foreign_key "step_results", "steps"
   add_foreign_key "step_results", "users", column: "created_by_id"

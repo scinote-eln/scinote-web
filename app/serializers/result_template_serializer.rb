@@ -8,7 +8,7 @@ class ResultTemplateSerializer < ActiveModel::Serializer
   include InputSanitizeHelper
 
   attributes :name, :id, :urls, :updated_at, :created_at_formatted, :updated_at_formatted, :user, :attachments_manageble, :marvinjs_enabled, :marvinjs_context, :type,
-             :wopi_enabled, :wopi_context, :created_at, :created_by, :assets_order, :template,
+             :wopi_enabled, :wopi_context, :created_at, :created_by, :assets_order, :template, :protocol_id,
              :open_vector_editor_context, :assets_view_mode, :storage_limit, :collapsed, :steps
 
   def collapsed
@@ -25,7 +25,9 @@ class ResultTemplateSerializer < ActiveModel::Serializer
   end
 
   def steps
-    []
+    object.steps.map do |step|
+      { id: step.id, name: step.label }
+    end
   end
 
   def type

@@ -68,7 +68,9 @@ import modalMixin from '../../shared/modal_mixin.js';
 import {
   list_steps_path,
   protocols_my_module_path,
-  link_steps_step_results_path
+  protocol_path,
+  link_steps_step_results_path,
+  link_steps_step_result_templates_path
 } from '../../../routes.js';
 
 export default {
@@ -105,9 +107,15 @@ export default {
       return list_steps_path({ protocol_id: this.protocolId });
     },
     protocolPageUrl() {
+      if (this.result.attributes.protocol_id) {
+        return protocol_path({ id: this.result.attributes.protocol_id });
+      }
       return protocols_my_module_path({ id: this.result.attributes.my_module_id });
     },
     stepsLinkUrl() {
+      if (this.result.attributes.protocol_id) {
+        return link_steps_step_result_templates_path({ format: 'json' });
+      }
       return link_steps_step_results_path({ format: 'json' });
     },
     isSameData() {

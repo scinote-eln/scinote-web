@@ -241,6 +241,7 @@ import UtilsMixin from '../mixins/utils.js';
 import StorageUsage from '../shared/content/attachments/storage_usage.vue';
 import {
   protocols_my_module_path,
+  protocol_path
 } from '../../routes.js';
 
 export default {
@@ -715,6 +716,9 @@ export default {
       this.$nextTick(() => window.initTooltip(this.$refs.linkButton));
     },
     protocolUrl(step_id) {
+      if (this.result.attributes.protocol_id) {
+        return protocol_path({ id: this.result.attributes.protocol_id }, { step_id: step_id });
+      }
       return protocols_my_module_path({ id: this.result.attributes.my_module_id }, { step_id: step_id })
     },
   }
