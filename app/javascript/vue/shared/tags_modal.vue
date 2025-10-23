@@ -16,10 +16,10 @@
           </p>
           <div class="flex flex-col gap-2">
             <div ref="tagsContainer" class="grow overflow-auto max-h-[50vh]">
-              <div v-for="tag in allTags" :key="tag.id"
+              <div v-for="tag in sortedTags" :key="tag.id"
                    class="rounded py-2 cursor-pointer hover:bg-sn-super-light-grey px-3 flex items-center gap-2"
                    :class="{'!bg-sn-super-light-blue': tagInEdit == tag.id }">
-                <div v-if="canAssign" @click="linkTag(tag)">
+                <div v-if="canAssign" @click="linkTag(tag)" class="h-4">
                   <div class="sci-checkbox-container pointer-events-none" >
                     <input type="checkbox" :checked="tags.find(t => t.id === tag.id)" class="sci-checkbox" />
                     <span class="sci-checkbox-label"></span>
@@ -46,20 +46,25 @@
                     </div>
                   </template>
                 </GeneralDropdown>
-                <input v-if="canUpdate" type="text" :value="tag.name" @change="changeName(tag, $event.target.value)"
-                  :class="{'pointer-events-none': !canUpdate }"
-                  @focus="tagInEdit = tag.id"
-                  @blur="tagInEdit = null"
-                  class=" text-sm grow outline-none leading-4 border-none bg-transparent p-1" />
+                <template v-if="canUpdate">
+                  <span v-if="tagInEdit != tag.id" @click="startTagEditing(tag.id)" class="truncate grow cursor-pointer pl-1" :title="tag.name">{{ tag.name }}</span>
+                  <input v-else type="text" :value="tag.name" @change="changeName(tag, $event.target.value)"
+                    :class="{'pointer-events-none': !canUpdate }"
+                    :ref="`tagInput${tag.id}`"
+                    @blur="tagInEdit = null"
+                    class=" text-sm grow outline-none leading-4 border-none bg-transparent p-1" />
+                </template>
                 <div v-else class="truncate max-w-[300px] overflow-hidden" :title="tag.name">
                   {{ tag.name }}
                 </div>
                 <i v-if="canDelete && newTagsCreated.includes(tag.id)" @click="deleteTag(tag)" class="ml-auto sn-icon sn-icon-delete"></i>
               </div>
             </div>
-            <div class="flex items-center gap-2 text-xs cursor-pointer px-2 py-2" v-if="canCreate && !addingNewTag" @click="startAddingNewTag">
-              <i class="sn-icon sn-icon-new-task"></i>
-              {{ i18n.t('tags.manage_modal.create_tag') }}
+            <div>
+              <div class="btn btn-light btn-black" v-if="canCreate && !addingNewTag" @click="startAddingNewTag">
+                <i class="sn-icon sn-icon-new-task"></i>
+                {{ i18n.t('tags.manage_modal.create_tag') }}
+              </div>
             </div>
             <div v-if="addingNewTag" class="flex items-center gap-2 bg-sn-super-light-blue py-2 px-3 rounded">
               <div class="sci-checkbox-container pointer-events-none" >
@@ -96,6 +101,7 @@ import {
   colors_tags_path,
   team_tag_path,
   team_tags_path,
+  destroy_tags_team_tags_path,
   users_settings_team_tags_path
 } from '../../routes.js';
 
@@ -135,9 +141,25 @@ export default {
     },
     tagsManagmentUrl() {
       return users_settings_team_tags_path({ team_id: this.teamId });
+    },
+    sortedTags() {
+      return this.allTags.sort((a, b) => {
+        const aChecked = this.tags.find(t => t.id === a.id) ? 1 : 0;
+        const bChecked = this.tags.find(t => t.id === b.id) ? 1 : 0;
+        if (aChecked !== bChecked) {
+          return bChecked - aChecked;
+        }
+        return a.name.localeCompare(b.name)
+      });
     }
   },
   methods: {
+    startTagEditing(tagId) {
+      this.tagInEdit = tagId;
+      this.$nextTick(() => {
+        this.$refs[`tagInput${tagId}`][0].focus();
+      });
+    },
     startAddingNewTag() {
       this.addingNewTag = true;
       this.newTag.name = '';
@@ -171,8 +193,11 @@ export default {
       }).then(() => {
         this.allTags.find(t => t.id === tag.id).name = newName;
       }).catch((e) => {
-        if (e.response?.data?.error) {
-          HelperModule.flashAlertMsg(e.response.data.error, 'danger');
+        if (e.response?.data?.errors) {
+          HelperModule.flashAlertMsg(
+            this.i18n.t('tags.manage_modal.validation_failed', { errors: e.response.data.errors }),
+            'danger'
+          );
           return;
         }
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
@@ -201,8 +226,11 @@ export default {
           this.$refs.tagsContainer.scrollTop = this.$refs.tagsContainer.scrollHeight;
         });
       }).catch((e) => {
-        if (e.response?.data?.error) {
-          HelperModule.flashAlertMsg(e.response.data.error, 'danger');
+        if (e.response?.data?.errors) {
+          HelperModule.flashAlertMsg(
+            this.i18n.t('tags.manage_modal.validation_failed', { errors: e.response.data.errors }),
+            'danger'
+          );
           return;
         }
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
@@ -212,7 +240,7 @@ export default {
       if (!this.newTagsCreated.includes(tag.id)) {
         return;
       }
-      axios.delete(team_tag_path(tag.id, { team_id: this.teamId }))
+      axios.delete(destroy_tags_team_tags_path({ team_id: this.teamId, tag_ids: [tag.id] }))
         .then(() => {
           this.allTags = this.allTags.filter(t => t.id !== tag.id);
           this.tags = this.tags.filter(t => t.id !== tag.id);

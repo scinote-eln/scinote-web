@@ -79,12 +79,14 @@
           <button class="rounded flex gap-2 items-center text-sn-blue outline-none border-0 py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
                        bg-sn-white color-sn-blue hover:no-underline focus:no-underline cursor-pointer"
             :class="{ 'opacity-50 pointer-events-none': !isValidTemplate }"
+            :title="i18n.t('general.save') "
             @click="createRow">
             <i class="sn-icon sn-icon-save"></i>
             <span class="tw-hidden xl:inline-block">{{ i18n.t('general.save') }}</span>
           </button>
           <button class="rounded flex gap-2 items-center text-sn-blue outline-none border-0 py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
                        bg-sn-white color-sn-blue hover:no-underline focus:no-underline cursor-pointer"
+            :title="i18n.t('general.cancel') "
             @click="cancelCreation">
             <i class="sn-icon sn-icon-close"></i>
             <span class="tw-hidden xl:inline-block">{{ i18n.t('general.cancel') }}</span>
@@ -357,6 +359,8 @@ export default {
         this.gridApi.setRowData(
           [values, ...this.rowData]
         );
+
+        document.querySelector('.ag-body-viewport').scrollTop = 0;
       }
     },
     reloadingTable() {

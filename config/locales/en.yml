@@ -4248,9 +4248,11 @@ en:
       created_by: "Created by"
       created_on: "Created on"
       updated_on: "Updated on"
-      tag_name_placeholder: "Add a tag name"
+      tag_name_placeholder: "Type a tag name"
       too_short_name: "too short (minimum is %{count} characters)"
       too_long_name: "too long (maximum is %{count} characters)"
+      places: "places"
+      place: "place"
       toolbar:
         delete: "Delete"
         merge: "Merge into"
@@ -4273,12 +4275,14 @@ en:
       edit_tags: "Edit tags"
       create_tag: "Create tag"
       placeholder: "Type to add a tag"
+      no_options_found: "No options found"
     manage_modal:
       title: "Edit tags"
       description: "Tags in this workspace are shared by all members. Anyone with permission can create or edit tags, and all changes apply everywhere the tag is used."
       create_tag: "Create a tag"
       type_tag_name: "Type a tag name"
       manage_tags: "Manage tags"
+      validation_failed: "Validation failed: %{errors}"
   user_groups:
     promo:
       head_title: 'User groups'

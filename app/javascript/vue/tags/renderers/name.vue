@@ -1,6 +1,6 @@
 <template>
   <div ref="inputContainer" class="w-full h-10 flex flex-col justify-center">
-    <div v-if="!editing && this.params.data.name.length > 0" class="ml-[3px]" @click="startEditing">{{ tagName }}</div>
+    <div v-if="!editing && this.params.data.name.length > 0" class="ml-[3px] truncate" @click="startEditing">{{ tagName }}</div>
     <template v-else>
       <input
         type="text"
@@ -11,9 +11,7 @@
         @keydown.enter="saveName"
         @keydown.escape="cancelEditing"
         @keydown="handleKeydown"
-        v-model="tagName"
-        @blur="saveName"
-        @change="saveName" />
+        v-model="tagName" />
       <div v-if="error" class="text-xs text-sn-alert-passion">{{ error }}</div>
     </template>
   </div>
