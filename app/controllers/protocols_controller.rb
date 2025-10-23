@@ -538,20 +538,8 @@ class ProtocolsController < ApplicationController
   end
 
   def import
-    protocol = nil
-    transaction_error = false
     Protocol.transaction do
       protocol = @importer.import_new_protocol(@protocol_json)
-    rescue StandardError => e
-      Rails.logger.error e.message
-      Rails.logger.error e.backtrace.join("\n")
-      transaction_error = true
-      raise ActiveRecord::Rollback
-    end
-
-    if transaction_error
-      render json: { status: :bad_request }, status: :bad_request
-    else
       Activities::CreateActivityService
         .call(activity_type: :import_protocol_in_repository,
               owner: current_user,
@@ -561,7 +549,12 @@ class ProtocolsController < ApplicationController
                 protocol: protocol.id
               })
 
-      render json: { status: :ok }, status: :ok
+      render json: { status: :ok }
+    rescue StandardError => e
+      Rails.logger.error e.message
+      Rails.logger.error e.backtrace.join("\n")
+      render json: { status: :bad_request }, status: :bad_request
+      raise ActiveRecord::Rollback
     end
   end
 

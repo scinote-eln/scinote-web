@@ -104,11 +104,9 @@ class ProtocolsImporterV2
         step: step
       )
 
-      # Decode the file bytes
-      asset.attach_file_version(io: StringIO.new(Base64.decode64(asset_json['bytes'])),
-                        filename: asset_json['fileName'],
-                        content_type: asset_json['fileType'],
-                        metadata: JSON.parse(asset_json['fileMetadata'] || '{}').except('created_by_id'))
+      asset.attach_file_version(asset_json['signed_id'])
+      asset.blob.update(metadata: JSON.parse(asset_json['fileMetadata'] || '{}').except('created_by_id'))
+
       if asset_json['preview_image'].present?
         asset.preview_image.attach(io: StringIO.new(Base64.decode64(asset_json.dig('preview_image', 'bytes'))),
                                    filename: asset_json.dig('preview_image', 'fileName'))
@@ -206,16 +204,9 @@ class ProtocolsImporterV2
         saved: true
       )
       tiny_mce_img.save!
+      tiny_mce_img.image.attach(tiny_mce_img_json['signed_id'])
+      tiny_mce_img.image.blob.update(metadata: JSON.parse(tiny_mce_img_json['fileMetadata'] || '{}'))
 
-      # Decode the file bytes
-      file = StringIO.new(Base64.decode64(tiny_mce_img_json['bytes']))
-      to_blob = ActiveStorage::Blob.create_and_upload!(
-        io: file,
-        filename: tiny_mce_img_json['fileName'],
-        content_type: tiny_mce_img_json['fileType'],
-        metadata: JSON.parse(tiny_mce_img_json['fileMetadata'] || '{}')
-      )
-      tiny_mce_img.image.attach(to_blob)
       description.gsub!(
         "data-mce-token=\"#{tiny_mce_img_json['tokenId']}\"",
         "data-mce-token=\"#{Base62.encode(tiny_mce_img.id)}\""
