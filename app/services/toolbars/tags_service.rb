@@ -27,14 +27,13 @@ module Toolbars
     private
 
     def delete_action
-      return unless @single
       return unless can_delete_tags?(@team)
 
       {
         name: 'delete',
         label: I18n.t('tags.index.toolbar.delete'),
         icon: 'sn-icon sn-icon-delete',
-        path: team_tag_path(@team, @tags.first),
+        path: destroy_tags_team_tags_path(@team, tag_ids: @tags.pluck(:id)),
         type: :emit
       }
     end

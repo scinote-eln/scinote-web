@@ -10,14 +10,14 @@ const escapeHtml = (unsafe) => (
     .replaceAll("'", '&#039;')
 );
 
-const isInViewport = (element) => {
+const isInViewport = (element, padding = 0) => {
   const rect = element.getBoundingClientRect();
   const html = document.documentElement;
 
   return (
     rect.top >= 0 && rect.left >= 0
-    && rect.bottom <= (window.innerHeight || html.clientHeight)
-    && rect.right <= (window.innerWidth || html.clientWidth)
+    && rect.bottom <= (window.innerHeight || html.clientHeight) + padding
+    && rect.right <= (window.innerWidth || html.clientWidth) + padding
   );
 };
 
@@ -65,8 +65,11 @@ async function fetchSmartAnnotationData(element) {
   }
 }
 
-window.renderElementSmartAnnotations = (parentElement, selector, scrollElement = null) => {
+window.renderElementSmartAnnotations = (parentElement, selector, scrollElements = null) => {
   if (!parentElement) return true;
+
+  // support for multiple scroll element bindings (convert to array if not array), default to window
+  if (!Array.isArray(scrollElements)) scrollElements = [scrollElements || window];
 
   // Check if it was not initialized yet and contains SA strings
   if (parentElement.classList.contains('sa-initialized' || !parentElement.innerHTML.match(SA_REGEX))) return true;
@@ -75,12 +78,12 @@ window.renderElementSmartAnnotations = (parentElement, selector, scrollElement =
   const renderFunction = () => {
     const elements = Array.from(parentElement.querySelectorAll(selector)).filter((e) => e.innerHTML.match(SA_REGEX));
     if (elements.length === 0) {
-      (scrollElement || window).removeEventListener('scroll', renderFunction);
+      (scrollElements).forEach((e) => e.removeEventListener('scroll', renderFunction));
       return;
     }
 
     elements.forEach((innerElement) => {
-      if (isInViewport(innerElement)) {
+      if (isInViewport(innerElement, 50)) {
         innerElement.innerHTML = window.renderSmartAnnotations(innerElement.innerHTML);
         innerElement.querySelectorAll('.sa-link, .user-tooltip').forEach((el) => {
           fetchSmartAnnotationData(el);
@@ -90,7 +93,7 @@ window.renderElementSmartAnnotations = (parentElement, selector, scrollElement =
   };
 
   renderFunction();
-  (scrollElement || window).addEventListener('scroll', renderFunction);
+  (scrollElements).forEach((e) => e.addEventListener('scroll', renderFunction));
 
   parentElement.classList.add('sa-initialized');
 
