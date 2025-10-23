@@ -236,6 +236,9 @@ module SearchableModel
         end
       end
 
+      # Remove trailing operator if present
+      tokens.pop if tokens.present? && tokens.last[:type] == :operator
+
       tokens
     end
   end
