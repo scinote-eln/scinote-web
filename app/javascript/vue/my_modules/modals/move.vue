@@ -27,7 +27,7 @@
               <label class="sci-label">{{ i18n.t('experiments.table.modal_move_modules.experiment') }}</label>
               <SelectDropdown
                 :optionsUrl="experimentsUrl"
-                :urlParams="{ project_id: selectedProject }"
+                :urlParams="{ project_id: selectedProject, exclude_ids: [my_module.experiment_id] }"
                 :disabled="!(selectedProject != null && selectedProject >= 0)"
                 :searchable="true"
                 :value="selectedExperiment"
