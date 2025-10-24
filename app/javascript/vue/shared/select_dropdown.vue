@@ -11,7 +11,7 @@
       @click="open"
       :class="[{
         'border border-solid': !borderless,
-        '!border-sn-blue': isOpen && !borderless,
+        '!border-sn-science-blue': isOpen && !borderless,
         '!border-sn-light-grey': !isOpen && !borderless,
         'bg-sn-super-light-grey': disabled,
         'pl-0': borderless
