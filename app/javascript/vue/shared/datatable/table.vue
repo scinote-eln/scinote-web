@@ -4,7 +4,7 @@
       class="relative flex flex-col flex-grow z-10"
       :class="{'overflow-y-hidden pb-20': currentViewRender === 'cards'}"
     >
-      <Toolbar
+      <Toolbar v-if="Object.keys(toolbarActions).length"
         :toolbarActions="toolbarActions"
         @toolbar:action="emitAction"
         :searchValue="searchValue"
@@ -177,7 +177,7 @@ export default {
     },
     toolbarActions: {
       type: Object,
-      required: true
+      default: {}
     },
     reloadingTable: {
       type: Boolean,
@@ -199,6 +199,10 @@ export default {
     filters: {
       type: Array,
       default: () => []
+    },
+    filterValues: {
+      type: Object,
+      default: {}
     },
     scrollMode: {
       type: String,
@@ -223,6 +227,14 @@ export default {
       type: Boolean,
       default: false
     },
+    withPinnedColumns: {
+      type: Boolean,
+      default: true
+    },
+    skipSaveTableState: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -242,7 +254,7 @@ export default {
       keepSelection: false,
       searchValue: '',
       initializing: true,
-      activeFilters: {},
+      activeFilters: this.filterValues,
       currentViewRender: 'table',
       cardCheckboxes: [],
       dataLoading: true,
@@ -294,7 +306,7 @@ export default {
         ...column,
         minWidth: column.minWidth || 110,
         cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
-        pinned: (column.field === 'name' || column.field === 'name_hash' ? 'left' : null),
+        pinned: (this.withPinnedColumns && (column.field === 'name' || column.field === 'name_hash') ? 'left' : null),
         comparator: () => null
       }));
 
@@ -385,6 +397,13 @@ export default {
       if (this.currentViewRender === 'cards') {
         this.setGridColsClass();
       }
+    },
+    filterValues: {
+      handler(newVal) {
+        this.activeFilters = newVal;
+        this.reloadTable();
+      },
+      deep: true
     }
   },
   created() {
@@ -507,7 +526,7 @@ export default {
       }, 200);
     },
     saveTableState() {
-      if (this.initializing) {
+      if (this.initializing || this.skipSaveTableState) {
         return;
       }
       let columnsState = [];

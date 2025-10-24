@@ -67,6 +67,10 @@ module LeftMenuBarHelper
                 active: activities_are_selected?
               })
 
+    private_methods.select { |i| i.to_s[/^left_menu_[a-z]*_extension$/] }.each do |method|
+      menu = __send__(method, menu)
+    end
+
     menu
   end
 
