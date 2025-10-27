@@ -35,7 +35,7 @@ module ResultElements
         @result_text.update!(result_text_params)
         TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
         log_result_activity(:result_text_edited, { text_name: @result_text.name }) if @object.is_a?(MyModule)
-        result_annotation_notification(old_text) if @object.is_a?(MyModule)
+        result_annotation_notification(old_text)
       end
 
       render json: @result_text, serializer: ResultTextSerializer, user: current_user
@@ -115,18 +115,6 @@ module ResultElements
         title: t('notifications.result_annotation_title',
                  result: @result.name,
                  user: current_user.full_name),
-        message: t('notifications.result_annotation_message_html',
-                   project: link_to(@result.my_module.experiment.project.name,
-                                    project_url(@result.my_module
-                                                     .experiment
-                                                     .project)),
-                   experiment: link_to(@result.my_module.experiment.name,
-                                       my_modules_experiment_url(@result.my_module
-                                                                        .experiment)),
-                   my_module: link_to(@result.my_module.name,
-                                      protocols_my_module_url(
-                                        @result.my_module
-                                      )))
       )
     end
   end

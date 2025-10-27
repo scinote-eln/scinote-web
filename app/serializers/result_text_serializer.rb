@@ -66,8 +66,8 @@ class ResultTextSerializer < ActiveModel::Serializer
       template = object.result_template
       {
         duplicate_url: duplicate_protocol_result_template_text_path(protcol, template, object),
-        delete_url: protocol_result_template_path(protcol, template, object),
-        update_url: protocol_result_template_path(protcol, template, object),
+        delete_url: protocol_result_template_text_path(protcol, template, object),
+        update_url: protocol_result_template_text_path(protcol, template, object),
         move_targets_url: move_targets_protocol_result_template_text_path(protcol, template, object),
         move_url: move_protocol_result_template_text_path(protcol, template, object)
       }
