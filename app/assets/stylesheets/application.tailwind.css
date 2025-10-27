@@ -5,6 +5,7 @@
 @import "tailwind/radio";
 @import "tailwind/loader.css";
 @import "tailwind/tags.css";
+@import "tailwind/lists.css";
 
 @tailwind base;
 @tailwind components;
