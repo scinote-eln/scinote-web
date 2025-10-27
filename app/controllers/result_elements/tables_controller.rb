@@ -61,7 +61,7 @@ module ResultElements
         end
         @table.save!
         log_result_activity(:result_table_edited, { table_name: @table.name }) if @object.is_a?(MyModule)
-        result_annotation_notification(old_content) if @object.is_a?(MyModule)
+        result_annotation_notification(old_content)
       end
 
       render json: @table, serializer: ResultTableSerializer, user: current_user
@@ -150,19 +150,7 @@ module ResultElements
         subject: @result,
         title: t(@table.metadata['plateTemplate'] ? 'notifications.result_well_plate_annotation_title' : 'notifications.result_table_annotation_title',
                  result: @result.name,
-                 user: current_user.full_name),
-        message: t('notifications.result_annotation_message_html',
-                   project: link_to(@result.my_module.experiment.project.name,
-                                    project_url(@result.my_module
-                                                     .experiment
-                                                     .project)),
-                   experiment: link_to(@result.my_module.experiment.name,
-                                       my_modules_experiment_url(@result.my_module
-                                                                        .experiment)),
-                   my_module: link_to(@result.my_module.name,
-                                      protocols_my_module_url(
-                                        @result.my_module
-                                      )))
+                 user: current_user.full_name)
       )
     end
   end

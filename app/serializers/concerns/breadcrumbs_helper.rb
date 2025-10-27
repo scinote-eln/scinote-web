@@ -39,6 +39,9 @@ module BreadcrumbsHelper
       parent = subject.my_module
       view_mode = subject.archived? ? 'archived' : 'active'
       url = my_module_results_path(subject.my_module, view_mode:, result_id: subject.id)
+    when ResultTemplate
+      parent = subject.protocol
+      url = protocol_result_templates_path(parent, result_id: subject.id)
     when ProjectFolder
       if subject.parent_folder
         parent = subject.parent_folder
