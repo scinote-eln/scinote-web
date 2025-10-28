@@ -23,8 +23,8 @@ Rails.application.routes.draw do
 
     root 'dashboards#show'
 
-    get '/sa', to: 'smart_annotations#show'
-    get '/sa/u', to: 'smart_annotations#user'
+    get '/sa', to: 'smart_annotations#show', defaults: { format: 'json' }
+    get '/sa/u', to: 'smart_annotations#user', defaults: { format: 'json' }
 
     resources :navigations, only: [] do
       collection do
