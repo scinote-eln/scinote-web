@@ -22,11 +22,7 @@ class ResultTextSerializer < ActiveModel::Serializer
 
   def text_view
     @user = scope[:user]
-    team = if object.result_or_template.is_a?(Result)
-             object.result_or_template.my_module.team
-           else
-             object.result_or_template.protocol.team
-           end
+    team = object.result.parent.team
     custom_auto_link(object.tinymce_render('text'),
                      simple_format: false,
                      tags: %w(img),
@@ -46,31 +42,15 @@ class ResultTextSerializer < ActiveModel::Serializer
 
     user = scope[:user] || @instance_options[:user]
 
-    case object.result_or_template
-    when Result
-      return {} unless can_manage_result?(user, object.result)
+    return {} unless can_manage_result?(user, object.result)
 
-      result = object.result
-      object.result.my_module
-      {
-        duplicate_url: duplicate_my_module_result_text_path(result.my_module, result, object),
-        delete_url: my_module_result_text_path(result.my_module, result, object),
-        update_url: my_module_result_text_path(result.my_module, result, object),
-        move_targets_url: move_targets_my_module_result_text_path(result.my_module, result, object),
-        move_url: move_my_module_result_text_path(result.my_module, result, object)
-      }
-    when ResultTemplate
-      return {} unless can_manage_result_template?(user, object.result_template)
-
-      protcol = object.result_template.protocol
-      template = object.result_template
-      {
-        duplicate_url: duplicate_protocol_result_template_text_path(protcol, template, object),
-        delete_url: protocol_result_template_text_path(protcol, template, object),
-        update_url: protocol_result_template_text_path(protcol, template, object),
-        move_targets_url: move_targets_protocol_result_template_text_path(protcol, template, object),
-        move_url: move_protocol_result_template_text_path(protcol, template, object)
-      }
-    end
+    result = object.result
+    {
+      duplicate_url: duplicate_result_text_path(result, object),
+      delete_url: result_text_path(result, object),
+      update_url: result_text_path(result, object),
+      move_targets_url: move_targets_result_text_path(result, object),
+      move_url: move_result_text_path(result, object)
+    }
   end
 end

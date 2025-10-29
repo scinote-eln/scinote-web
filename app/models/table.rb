@@ -29,15 +29,11 @@ class Table < ApplicationRecord
   has_one :step, through: :step_table, touch: true
 
   has_one :result_table, inverse_of: :table, dependent: :destroy
-  has_one :result, through: :result_table, touch: true
-  has_one :result_template, through: :result_table
+  has_one :result, through: :result_table, touch: true, class_name: 'ResultBase'
   has_many :report_elements, inverse_of: :table, dependent: :destroy
 
   after_save :update_ts_index
 
-  def result_or_template
-    result_template || result
-  end
 
   def metadata
     attributes['metadata'].is_a?(String) ? JSON.parse(attributes['metadata']) : attributes['metadata']

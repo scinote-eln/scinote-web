@@ -22,14 +22,8 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def results
-    if object.protocol.my_module
-      object.results.map do |result|
-        { id: result.id, name: result.name, archived: result.archived? }
-      end
-    else
-      object.result_templates.map do |result|
-        { id: result.id, name: result.name, archived: false }
-      end
+    object.results.map do |result|
+      { id: result.id, name: result.name, archived: result.archived? }
     end
   end
 

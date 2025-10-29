@@ -199,7 +199,7 @@ class Extends
   ]
 
   ACTIVITY_SUBJECT_TYPES = %w(
-    Team RepositoryBase Project Experiment MyModule Result Protocol Report RepositoryRow
+    Team RepositoryBase Project Experiment MyModule ResultBase Protocol Report RepositoryRow
     ProjectFolder Asset Step LabelTemplate StorageLocation StorageLocationRepositoryRow Form
   ).freeze
 
@@ -209,7 +209,7 @@ class Extends
     'Project' => 'Api::V1::ProjectSerializer',
     'Experiment' => 'Api::V1::ExperimentSerializer',
     'MyModule' => 'Api::V1::TaskSerializer',
-    'Result' => 'Api::V2::ResultSerializer',
+    'ResultBase' => 'Api::V2::ResultSerializer',
     'Protocol' => 'Api::V1::ProtocolSerializer',
     'Report' => 'Api::V1::ReportSerializer',
     'RepositoryRow' => 'Api::V1::InventoryItemSerializer',
@@ -222,7 +222,7 @@ class Extends
   }
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(
-    RepositoryBase RepositoryRow Project Experiment MyModule Result Protocol Step Report
+    RepositoryBase RepositoryRow Project Experiment MyModule ResultBase Protocol Step Report
   ).freeze
 
   ACTIVITY_SUBJECT_CHILDREN = {
@@ -856,7 +856,7 @@ class Extends
     'StepOrderableElement' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'StepText' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'Step' => ['AutomationObservers::StepCompletionObserver', 'AutomationObservers::AllStepsCompletionObserver', 'AutomationObservers::TaskProtocolContentChangeObserver'],
-    'Result' => ['AutomationObservers::ResultContentChangeObserver'],
+    'ResultBase' => ['AutomationObservers::ResultContentChangeObserver'],
     'ResultText' => ['AutomationObservers::ResultContentChangeObserver'],
     'ResultComment' => ['AutomationObservers::ResultContentChangeObserver'],
     'ResultOrderableElement' => ['AutomationObservers::ResultContentChangeObserver']

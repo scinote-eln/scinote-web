@@ -121,7 +121,7 @@
             </template>
           </GeneralDropdown>
           <a href="#"
-            v-if="!result.attributes.template"
+            v-if="result.attributes.type == 'Result'"
             ref="comments"
             class="open-comments-sidebar btn icon-btn btn-light"
             data-turbolinks="false"
@@ -492,7 +492,7 @@ export default {
       this.isCollapsed = !this.isCollapsed;
       this.result.attributes.collapsed = this.isCollapsed;
 
-      const stateKey = this.result.attributes.template ? 'result_template_states' : 'result_states';
+      const stateKey = this.result.attributes.type == "ResultTemplate" ? 'result_template_states' : 'result_states';
 
       const settings = {
         key: stateKey,

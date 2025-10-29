@@ -19,8 +19,7 @@ describe ResultAsset, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to(:result).optional }
-    it { should belong_to(:result_template).optional}
+    it { should belong_to(:result) }
     it { should belong_to :asset }
   end
 end

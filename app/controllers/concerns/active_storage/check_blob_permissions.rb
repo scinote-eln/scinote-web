@@ -49,8 +49,8 @@ module ActiveStorage
         protocol = asset.step.protocol
         can_read_protocol_in_module?(protocol) || can_read_protocol_in_repository?(protocol)
       elsif asset.result
-        experiment = asset.result.my_module.experiment
-        can_read_experiment?(experiment)
+        result = asset.result
+        can_read_result?(result)
       elsif asset.repository_cell
         repository = asset.repository_cell.repository_column.repository
         can_read_repository?(repository)
