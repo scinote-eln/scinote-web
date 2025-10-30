@@ -66,7 +66,6 @@ class User < ApplicationRecord
   has_many :comments, inverse_of: :user
   has_many :activities, inverse_of: :owner, foreign_key: 'owner_id'
   has_many :results, inverse_of: :user
-  has_many :result_templates, inverse_of: :user
   has_many :repositories, inverse_of: :user
   has_many :repository_table_states, inverse_of: :user, dependent: :destroy
   has_many :repository_table_filters, foreign_key: 'created_by_id', inverse_of: :created_by, dependent: :nullify

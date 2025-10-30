@@ -654,20 +654,6 @@ Rails.application.routes.draw do
           post :reorder, on: :collection
         end
 
-        resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
-          member do
-            get :move_targets
-            post :move
-            post :duplicate
-          end
-        end
-        resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
-          member do
-            get :move_targets
-            post :move
-            post :duplicate
-          end
-        end
       end
     end
     post 'repository/:id/assign_my_modules', to: 'my_module_repositories#assign_my_modules', as: :assign_my_modules
@@ -734,11 +720,9 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :result_texts, only: [:edit, :update, :destroy]
     get 'result_texts/:id/download' => 'result_texts#download',
       as: :result_text_download
     resources :result_assets, only: [:edit, :update, :destroy]
-    resources :result_tables, only: [:edit, :update, :destroy]
     get 'result_tables/:id/download' => 'result_tables#download',
       as: :result_table_download
 
@@ -820,21 +804,22 @@ Rails.application.routes.draw do
         resources :result_template_orderable_elements do
           post :reorder, on: :collection
         end
+      end
+    end
 
-        resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
-          member do
-            get :move_targets
-            post :move
-            post :duplicate
-          end
+    resources :results, only: [] do
+      resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
+        member do
+          get :move_targets
+          post :move
+          post :duplicate
         end
-
-        resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
-          member do
-            get :move_targets
-            post :move
-            post :duplicate
-          end
+      end
+      resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
+        member do
+          get :move_targets
+          post :move
+          post :duplicate
         end
       end
     end

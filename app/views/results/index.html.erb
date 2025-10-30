@@ -1,3 +1,6 @@
+<% @experiment = @my_module.experiment %>
+<% @project = @experiment.project %>
+
 <% provide(:head_title, t("my_modules.results.head_title", project: h(@project.name), module: h(@my_module.name)).html_safe) %>
 <% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
 

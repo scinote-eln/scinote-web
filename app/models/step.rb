@@ -51,8 +51,6 @@ class Step < ApplicationRecord
   has_many :form_responses, as: :parent, inverse_of: :parent, dependent: :destroy
   has_many :step_results, inverse_of: :step, dependent: :destroy
   has_many :results, through: :step_results
-  has_many :step_result_templates, inverse_of: :step, dependent: :destroy
-  has_many :result_templates, through: :step_result_templates
 
   accepts_nested_attributes_for :checklists,
                                 reject_if: :all_blank,
