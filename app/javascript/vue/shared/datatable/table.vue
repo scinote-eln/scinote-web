@@ -4,7 +4,7 @@
       class="relative flex flex-col flex-grow z-10"
       :class="{'overflow-y-hidden pb-20': currentViewRender === 'cards'}"
     >
-      <Toolbar
+      <Toolbar v-if="Object.keys(toolbarActions).length"
         :toolbarActions="toolbarActions"
         @toolbar:action="emitAction"
         :searchValue="searchValue"
@@ -79,12 +79,14 @@
           <button class="rounded flex gap-2 items-center text-sn-blue outline-none border-0 py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
                        bg-sn-white color-sn-blue hover:no-underline focus:no-underline cursor-pointer"
             :class="{ 'opacity-50 pointer-events-none': !isValidTemplate }"
+            :title="i18n.t('general.save') "
             @click="createRow">
             <i class="sn-icon sn-icon-save"></i>
             <span class="tw-hidden xl:inline-block">{{ i18n.t('general.save') }}</span>
           </button>
           <button class="rounded flex gap-2 items-center text-sn-blue outline-none border-0 py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
                        bg-sn-white color-sn-blue hover:no-underline focus:no-underline cursor-pointer"
+            :title="i18n.t('general.cancel') "
             @click="cancelCreation">
             <i class="sn-icon sn-icon-close"></i>
             <span class="tw-hidden xl:inline-block">{{ i18n.t('general.cancel') }}</span>
@@ -175,7 +177,7 @@ export default {
     },
     toolbarActions: {
       type: Object,
-      required: true
+      default: {}
     },
     reloadingTable: {
       type: Boolean,
@@ -197,6 +199,10 @@ export default {
     filters: {
       type: Array,
       default: () => []
+    },
+    filterValues: {
+      type: Object,
+      default: {}
     },
     scrollMode: {
       type: String,
@@ -221,6 +227,14 @@ export default {
       type: Boolean,
       default: false
     },
+    withPinnedColumns: {
+      type: Boolean,
+      default: true
+    },
+    skipSaveTableState: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -240,7 +254,7 @@ export default {
       keepSelection: false,
       searchValue: '',
       initializing: true,
-      activeFilters: {},
+      activeFilters: this.filterValues,
       currentViewRender: 'table',
       cardCheckboxes: [],
       dataLoading: true,
@@ -292,7 +306,7 @@ export default {
         ...column,
         minWidth: column.minWidth || 110,
         cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
-        pinned: (column.field === 'name' || column.field === 'name_hash' ? 'left' : null),
+        pinned: (this.withPinnedColumns && (column.field === 'name' || column.field === 'name_hash') ? 'left' : null),
         comparator: () => null
       }));
 
@@ -357,6 +371,8 @@ export default {
         this.gridApi.setRowData(
           [values, ...this.rowData]
         );
+
+        document.querySelector('.ag-body-viewport').scrollTop = 0;
       }
     },
     reloadingTable() {
@@ -381,6 +397,13 @@ export default {
       if (this.currentViewRender === 'cards') {
         this.setGridColsClass();
       }
+    },
+    filterValues: {
+      handler(newVal) {
+        this.activeFilters = newVal;
+        this.reloadTable();
+      },
+      deep: true
     }
   },
   created() {
@@ -477,6 +500,11 @@ export default {
       const { columnsState } = this.tableState;
       this.columnsState = columnsState;
 
+      if (!columnsState) {
+        this.initializing = false;
+        return;
+      }
+
       if (this.order) {
         this.tableState.columnsState.forEach((column) => {
           const updatedColumn = column;
@@ -498,10 +526,17 @@ export default {
       }, 200);
     },
     saveTableState() {
-      if (this.initializing) {
+      if (this.initializing || this.skipSaveTableState) {
         return;
       }
-      const columnsState = this.columnApi ? this.columnApi.getColumnState() : this.tableState?.columnsState || [];
+      let columnsState = [];
+
+      if (this.columnApi?.getColumnState()) {
+        columnsState = this.columnApi.getColumnState();
+      } else if (this.tableState?.columnsState) {
+        columnsState = this.tableState.columnsState;
+      }
+
       const tableState = {
         columnsState,
         order: this.order,

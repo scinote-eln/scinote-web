@@ -1,15 +1,19 @@
 <template>
-  <div class="w-full h-10 flex flex-col justify-center">
-    <div v-if="!editing && this.params.data.name.length > 0" class="ml-[3px]" @click="startEditing">{{ tagName }}</div>
-    <input v-else
-      ref="nameInput"
-      class="sci-table-input"
-      :class="{ 'error': error }"
-      @keydown.enter="saveName($event, true);"
-      v-model="tagName"
-      @blur="saveName"
-      @change="saveName" />
-    <div v-if="error" class="text-xs text-sn-alert-passion">{{ error }}</div>
+  <div ref="inputContainer" class="w-full h-10 flex flex-col justify-center">
+    <div v-if="!editing && this.params.data.name.length > 0" class="ml-[3px] truncate" @click="startEditing">{{ tagName }}</div>
+    <template v-else>
+      <input
+        type="text"
+        ref="nameInput"
+        class="sci-table-input"
+        :class="{ 'error': error }"
+        :placeholder="this.i18n.t('tags.index.tag_name_placeholder')"
+        @keydown.enter="saveName"
+        @keydown.escape="cancelEditing"
+        @keydown="handleKeydown"
+        v-model="tagName" />
+      <div v-if="error" class="text-xs text-sn-alert-passion">{{ error }}</div>
+    </template>
   </div>
 </template>
 
@@ -23,7 +27,7 @@ export default {
   },
   computed: {
     isValid() {
-      return this.tagName.length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH;
+      return this.tagName.length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH && this.tagName.length <= GLOBAL_CONSTANTS.NAME_MAX_LENGTH;
     }
   },
   data() {
@@ -41,6 +45,13 @@ export default {
       }
     }
   },
+  mounted() {
+    if (this.$refs.nameInput) {
+      this.$nextTick(() => {
+        this.$refs.nameInput.focus();
+      });
+    }
+  },
   methods: {
     startEditing() {
       this.editing = true;
@@ -48,9 +59,35 @@ export default {
         this.$refs.nameInput.focus();
       });
     },
-    saveName(e, withSave = false) {
+    cancelEditing() {
+      this.editing = false;
+      this.tagName = this.params.data.name;
+      this.error = null;
+      this.params.dtComponent.cancelCreation();
+    },
+    handleKeydown(event) {
+      // Prevent arrow keys from moving the table selection
+      if (event.key === 'ArrowLeft') {
+        event.stopPropagation();
+        this.$refs.nameInput.selectionStart -= 1;
+      } else if (event.key === 'ArrowRight') {
+        event.stopPropagation();
+        this.$refs.nameInput.selectionEnd += 1;
+      } else if (event.key === 'Home') {
+        event.stopPropagation();
+        this.$refs.nameInput.selectionStart = 0;
+      } else if (event.key === 'End') {
+        event.stopPropagation();
+        this.$refs.nameInput.selectionEnd = this.tagName.length;
+      }
+    },
+    saveName() {
       if (!this.isValid) {
-        this.error = this.i18n.t('tags.index.too_short_name', { count: GLOBAL_CONSTANTS.NAME_MIN_LENGTH });
+        if (this.tagName.length < GLOBAL_CONSTANTS.NAME_MIN_LENGTH) {
+          this.error = this.i18n.t('tags.index.too_short_name', { count: GLOBAL_CONSTANTS.NAME_MIN_LENGTH });
+        } else if (this.tagName.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
+          this.error = this.i18n.t('tags.index.too_long_name', { count: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
+        }
         this.params.dtComponent.setTemplateValue(this.tagName, 'name', this.isValid);
         return;
       } else {
@@ -69,8 +106,7 @@ export default {
         this.params.dtComponent.$emit('changeName', this.tagName, this.params.data);
       } else {
         this.params.dtComponent.setTemplateValue(this.tagName, 'name', this.isValid);
-
-        if (withSave) this.params.dtComponent.createRow();
+        this.params.dtComponent.createRow();
       }
     }
   }

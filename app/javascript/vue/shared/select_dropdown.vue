@@ -11,7 +11,7 @@
       @click="open"
       :class="[{
         'border border-solid': !borderless,
-        '!border-sn-blue': isOpen && !borderless,
+        '!border-sn-science-blue': isOpen && !borderless,
         '!border-sn-light-grey': !isOpen && !borderless,
         'bg-sn-super-light-grey': disabled,
         'pl-0': borderless
@@ -20,7 +20,7 @@
     >
     <template v-if="!tagsView">
       <template v-if="!isOpen || !searchable">
-        <div v-if="labelRendererType == 'object' && !multiple">
+        <div v-if="labelRendererType == 'object' && !multiple && this.rawOptions && Object.keys(this.rawOptions).length > 0 && this.newValue && Object.keys(this.newValue).length > 0">
           <component :is="labelRenderer"
                      :option="this.rawOptions.find((i) => i[0] === this.newValue)" />
         </div>
@@ -46,11 +46,9 @@
       <div v-else class="flex items-center gap-1 flex-wrap">
         <div v-for="tag in tags" class="sci-tag bg-sn-super-light-grey" :class="tagTextColor(tag.option[2]?.color)" :style="{ backgroundColor: tag.option[2]?.color }" :key="tag.value">
           <div v-if="labelRendererType == 'object'">
-            <component :is="labelRenderer"
-                      :option="tag.option" />
+            <component :is="labelRenderer" :option="tag.option" />
           </div>
-          <div class="truncate" v-else-if="labelRendererType == 'function'" v-html="tag.label"></div>
-          <div class="truncate" v-else>{{ tag.label }}</div>
+          <div class="text-block" v-else>{{ tag.label }}</div>
           <i @click="removeTag(tag.value)" class="sn-icon mini ml-auto sn-icon-close cursor-pointer"></i>
         </div>
         <input type="text"
@@ -152,7 +150,8 @@ export default {
     tagsView: { type: Boolean, default: false },
     urlParams: { type: Object, default: () => ({}) },
     e2eValue: { type: String, default: '' },
-    ajaxMethod: { type: String, default: 'get' }
+    ajaxMethod: { type: String, default: 'get' },
+    oneLineLabel: { type: Boolean, default: false }
   },
   directives: {
     'click-outside': vOnClickOutside
@@ -183,13 +182,13 @@ export default {
     sizeStyle() {
       switch (this.size) {
         case 'xs':
-          return 'min-height: 36px';
+          return this.oneLineLabel ? 'height: 36px' : 'min-height: 36px';
         case 'sm':
-          return 'min-height: 40px';
+          return this.oneLineLabel ? 'height: 40px' : 'min-height: 40px';
         case 'md':
-          return 'min-height: 44px';
+          return this.oneLineLabel ? 'height: 44px' : 'min-height: 44px';
         default:
-          return 'min-height: 44px';
+          return this.oneLineLabel ? 'height: 44px' : 'min-height: 44px';
       }
     },
     canClear() {
@@ -491,23 +490,7 @@ export default {
       }
     },
     tagTextColor(color) {
-      if (!color) return 'text-black';
-
-      if (color.startsWith('#')) {
-        color = color.slice(1);
-      }
-
-      if (color.length === 3) {
-        color = color.split('').map((c) => c + c).join('');
-      }
-
-      const r = parseInt(color.substr(0, 2), 16);
-      const g = parseInt(color.substr(2, 2), 16);
-      const b = parseInt(color.substr(4, 2), 16);
-
-      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-
-      return brightness > 200 ? 'text-black' : 'text-white';
+      return window.isColorBright(color) ? 'text-black' : 'text-white';
     }
   }
 };

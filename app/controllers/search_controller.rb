@@ -139,15 +139,11 @@ class SearchController < ApplicationController
   protected
 
   def search_by_name(options = {})
-    @records = @model.search(current_user,
-                             @include_archived,
-                             @search_query,
-                             @teams,
-                             options)
+    @records = @model.search(current_user, @include_archived, @search_query, @teams, options)
+    filter_records if @filters.present?
+    @records = @model.from(@records, @model.table_name)
                      .select("COUNT(\"#{@model.table_name}\".\"id\") OVER() AS filtered_count")
                      .select("\"#{@model.table_name}\".*")
-
-    filter_records if @filters.present?
     sort_records
     paginate_records
   end

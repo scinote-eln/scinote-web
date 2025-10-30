@@ -14,6 +14,7 @@ module Lists
       due_date_status
       archived
       archived_on
+      experiment_id
       age
       results
       status
@@ -36,7 +37,7 @@ module Lists
       end
     end
 
-    delegate :name, to: :object
+    delegate :name, :experiment_id, to: :object
 
     delegate :provisioning_status, to: :object
 

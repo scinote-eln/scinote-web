@@ -10,7 +10,7 @@
                :addingNewRow="addingNewRow"
                @tableReloaded="reloadingTable = false"
                @startCreate="addingNewRow = true"
-               @cancelCreation="addingNewRow = false;"
+               @cancelCreation="cancelCreation"
                @changeColor="changeColor"
                @changeName="changeName"
                @createRow="createTag"
@@ -22,6 +22,13 @@
                  :mergeIds="mergeIds"
                  :list-url="listUrl"
                  @close="mergeIds = null; reloadingTable = true"/>
+    <confirmationModal
+      :title="deleteTitle"
+      :description="deleteDescription"
+      confirmClass="btn btn-danger"
+      :confirmText="i18n.t('tags.delete_modal.confirm')"
+      ref="deleteModal"
+    ></confirmationModal>
   </div>
 </template>
 
@@ -34,6 +41,7 @@ import DataTable from '../shared/datatable/table.vue';
 import colorRenderer from './renderers/color.vue';
 import nameRenderer from './renderers/name.vue';
 import mergeModal from './modals/merge.vue';
+import confirmationModal from '../shared/confirmation_modal.vue';
 
 import {
   team_tag_path,
@@ -46,7 +54,8 @@ export default {
     DataTable,
     colorRenderer,
     nameRenderer,
-    mergeModal
+    mergeModal,
+    confirmationModal
   },
   props: {
     dataSource: {
@@ -77,6 +86,8 @@ export default {
       reloadingTable: false,
       addingNewRow: false,
       mergeIds: null,
+      deleteTitle: null,
+      deleteDescription: null,
       newRowTemplate: {
         name: {
           value: '',
@@ -107,6 +118,16 @@ export default {
           field: 'taggings_count',
           headerName: this.i18n.t('tags.index.used_in'),
           sortable: true,
+          cellRenderer: (params) => {
+            const count = params.value;
+
+            if (count === undefined || count === null) {
+              return '';
+            }
+
+            const placeText = count === 1 ? this.i18n.t('tags.index.place') : this.i18n.t('tags.index.places');
+            return `${count} ${placeText}`;
+          },
         }, {
           field: 'created_by',
           headerName: this.i18n.t('user_groups.index.created_by'),
@@ -164,6 +185,9 @@ export default {
     openMergeModal(event, rows) {
       this.mergeIds = rows.map(row => row.id);
     },
+    cancelCreation() {
+      this.addingNewRow = false;
+    },
     createTag(newTag) {
       this.addingNewRow = false;
       axios.post(this.createUrl, {
@@ -175,10 +199,22 @@ export default {
         this.reloadingTable = true;
       });
     },
-    deleteTag(event) {
-      axios.delete(event.path).then(() => {
-        this.reloadingTable = true;
-      });
+    async deleteTag(event, rows) {
+      if (rows.length === 1) {
+        this.deleteTitle = this.i18n.t('tags.delete_modal.single_title', { tag: rows[0].name });
+        this.deleteDescription = this.i18n.t('tags.delete_modal.single_description_html', { count: rows[0].taggings_count });
+      } else {
+        this.deleteTitle = this.i18n.t('tags.delete_modal.multiple_title', { count: rows.length });
+        const totalTaggings = rows.reduce((sum, row) => sum + row.taggings_count, 0);
+        this.deleteDescription = this.i18n.t('tags.delete_modal.multiple_description_html', { tags_count: rows.length, count: totalTaggings });
+      }
+
+      const ok = await this.$refs.deleteModal.show();
+      if (ok) {
+        axios.delete(event.path).then(() => {
+          this.reloadingTable = true;
+        });
+      }
     }
   }
 };

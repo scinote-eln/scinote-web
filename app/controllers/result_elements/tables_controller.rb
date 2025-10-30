@@ -56,8 +56,11 @@ module ResultElements
           @table.metadata = {}
         end
         @table.save!
-        log_result_activity(:result_table_edited, { table_name: @table.name })
-        result_annotation_notification(old_content)
+
+        if @table.saved_changes?
+          log_result_activity(:result_table_edited, { table_name: @table.name })
+          result_annotation_notification(old_content)
+        end
       end
 
       render json: @table, serializer: ResultTableSerializer, user: current_user
