@@ -285,7 +285,7 @@ export default {
       });
 
       this.selectedTags.forEach((tag) => {
-        searchParams.append('tags[]', tag.id);
+        searchParams.append('tags[]', tag);
       });
 
       window.location.href = `${this.searchUrl}?${searchParams.toString()}`;
