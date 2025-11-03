@@ -22,20 +22,4 @@ class StepResultsController < StepResultsBaseController
 
     render_403 and return unless (@results + @steps).map(&:my_module).uniq.one?
   end
-
-  def log_activity(type_of, my_module, step, result)
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            subject: my_module,
-            team: my_module.team,
-            project: my_module.experiment.project,
-            message_items: {
-              my_module: my_module.id,
-              step: step.id,
-              result: result.id,
-              step_position: { id: step.id,
-                               value_for: 'position_plus_one' }
-            })
-  end
 end

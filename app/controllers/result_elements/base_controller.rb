@@ -48,22 +48,17 @@ module ResultElements
     end
 
     def log_result_activity(element_type_of, message_items)
-      if @parent.is_a?(MyModule)
-        message_items[:my_module] = @parent.id
-        project = @parent.experiment.project
-      else
-        return # TODO: - SCI-12365
-      end
-
+      model_key = @result.class.model_name.param_key
+      key = @parent.is_a?(MyModule) ? :my_module : :protocol
+      message_items[key] = @parent.id
+      message_items[model_key] = @result.id
       Activities::CreateActivityService.call(
-        activity_type: element_type_of,
+        activity_type: :"#{model_key}_#{element_type_of}",
         owner: current_user,
         team: @parent.team,
         subject: @result,
-        project: project,
-        message_items: {
-          result: @result.id
-        }.merge(message_items)
+        project: @parent.is_a?(MyModule) ? @parent.experiment.project : nil,
+        message_items: message_items
       )
     end
   end

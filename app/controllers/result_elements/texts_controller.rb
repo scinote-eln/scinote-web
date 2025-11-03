@@ -15,7 +15,7 @@ module ResultElements
 
       ActiveRecord::Base.transaction do
         create_in_result!(@result, result_text)
-        log_result_activity(:result_text_added, { text_name: result_text.name })
+        log_result_activity(:text_added, { text_name: result_text.name })
       end
 
       render_result_orderable_element(result_text)
@@ -29,7 +29,7 @@ module ResultElements
       ActiveRecord::Base.transaction do
         @result_text.update!(result_text_params)
         TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
-        log_result_activity(:result_text_edited, { text_name: @result_text.name })
+        log_result_activity(:text_edited, { text_name: @result_text.name })
         result_annotation_notification(old_text)
       end
 
@@ -48,14 +48,14 @@ module ResultElements
         @result.normalize_elements_position
         render json: @result_text, serializer: ResultTextSerializer, user: current_user
 
+        model_key = @result.class.model_name.param_key
+
         log_result_activity(
-          :result_text_moved,
+          :text_moved,
           {
             user: current_user.id,
-            text_name: @result_text.name,
-            result_original: @result.id,
-            result_destination: target.id
-          }
+            text_name: @result_text.name
+          }.merge({ "#{model_key}_original": @result.id, "#{model_key}_destination": target.id })
         )
       rescue ActiveRecord::RecordInvalid
         render json: @result_text.errors, status: :unprocessable_entity
@@ -64,7 +64,7 @@ module ResultElements
 
     def destroy
       if @result_text.destroy
-        log_result_activity(:result_text_deleted, { text_name: @result_text.name })
+        log_result_activity(:text_deleted, { text_name: @result_text.name })
         head :ok
       else
         head :unprocessable_entity
@@ -78,7 +78,7 @@ module ResultElements
           element.update(position: element.position + 1)
         end
         new_result_text = @result_text.duplicate(@result, position + 1)
-        log_result_activity(:result_text_duplicated, { text_name: new_result_text.name })
+        log_result_activity(:text_duplicated, { text_name: new_result_text.name })
         render_result_orderable_element(new_result_text)
       end
     rescue ActiveRecord::RecordInvalid

@@ -130,6 +130,8 @@ module GlobalActivitiesHelper
              end
     when Form
       path = form_path(obj, team: obj.team.id)
+    when ResultTemplate
+      path = protocol_result_templates_path(obj.protocol)
     else
       return current_value
     end

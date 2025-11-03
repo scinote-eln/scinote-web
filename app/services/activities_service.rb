@@ -37,6 +37,9 @@ class ActivitiesService
     visible_my_modules = MyModule.readable_by_user(user, teams)
     visible_forms = Form.readable_by_user(user, teams)
     visible_repositories = Repository.readable_by_user(user, teams)
+    visible_protocol_templates = Protocol.readable_by_user(user, teams)
+    visible_results = Result.with_discarded.where(my_module: visible_my_modules)
+    visible_result_templates = ResultTemplate.with_discarded.where(protocol: visible_protocol_templates)
 
     deleted_repository_activities =
       activities.where(subject_type: %w(RepositoryBase RepositoryRow))
@@ -46,19 +49,19 @@ class ActivitiesService
                         (activities.subject_type = 'RepositoryRow' AND repository_rows.id IS NULL)")
 
     activities = Activity.from(activities, 'activities')
-    activities = activities.where(project: nil, team_id: teams).where.not(subject_type: %w(RepositoryBase RepositoryRow Protocol Form))
+    activities = activities.where(project: nil, team_id: teams).where.not(subject_type: %w(RepositoryBase RepositoryRow Protocol ResultBase Form))
                            .or(activities.where(id: deleted_repository_activities.select(:id)))
-                           .or(activities.where(subject_type: 'Protocol', subject_id: Protocol.readable_by_user(user, teams).select(:id)))
-                           .or(activities.where(project_id: visible_projects.select(:id)).where.not(subject_type: %w(Experiment MyModule Result Protocol)))
+                           .or(activities.where(subject_type: 'Protocol', subject_id: visible_protocol_templates.select(:id)))
+                           .or(activities.where(project_id: visible_projects.select(:id)).where.not(subject_type: %w(Experiment MyModule ResultBase Result Protocol)))
                            .or(activities.where(subject_type: 'Experiment', subject_id: Experiment.readable_by_user(user, teams).select(:id)))
                            .or(activities.where("subject_id IN (?) AND subject_type = 'MyModule' OR " \
-                                                "subject_id IN (?) AND subject_type = 'Result' OR " \
+                                                "subject_id IN (?) AND subject_type = 'ResultBase' OR " \
                                                 "subject_id IN (?) AND subject_type = 'Protocol' OR " \
                                                 "subject_id IN (?) AND subject_type = 'Form' OR " \
                                                 "subject_id IN (?) AND subject_type = 'RepositoryBase' OR " \
                                                 "subject_id IN (?) AND subject_type = 'RepositoryRow'",
                                                 visible_my_modules.select(:id),
-                                                Result.with_discarded.where(my_module: visible_my_modules).select(:id),
+                                                ResultBase.with_discarded.where(id: visible_results).or(ResultBase.with_discarded.where(id: visible_result_templates)).select(:id),
                                                 Protocol.where(my_module: visible_my_modules).select(:id),
                                                 visible_forms.select(:id),
                                                 visible_repositories.select(:id),
