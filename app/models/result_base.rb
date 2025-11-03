@@ -41,7 +41,13 @@ class ResultBase < ApplicationRecord
 
   def duplicate(object, user, result_name: nil)
     ActiveRecord::Base.transaction do
-      new_result = object.results.new(
+      target_object = if object.is_a?(Protocol) && object.in_module?
+                        object.my_module
+                      else
+                        object
+                      end
+
+      new_result = target_object.results.new(
         name: result_name || name,
         user: user
       )

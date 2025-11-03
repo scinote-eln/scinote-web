@@ -361,6 +361,11 @@ class Protocol < ApplicationRecord
     src.steps.each do |step|
       clone_step(dest, current_user, step, include_file_versions)
     end
+
+    # Copy results
+    src.results.each do |result|
+      result.duplicate(dest, current_user)
+    end
   end
 
   def self.clone_step(protocol_dest, current_user, step, include_file_versions)
@@ -541,10 +546,10 @@ class Protocol < ApplicationRecord
 
   def load_from_repository(source, current_user)
     ActiveRecord::Base.no_touching do
-      # First, destroy step contents
+      # First, destroy step and results contents
       destroy_contents
 
-      # Now, clone source's step contents
+      # Now, clone source's step and result contents
       Protocol.clone_contents(source, self, current_user, false)
     end
 
@@ -665,6 +670,12 @@ class Protocol < ApplicationRecord
     # Calculate total space taken by the protocol
     st = space_taken
     steps.order(position: :desc).destroy_all
+
+    if in_module?
+      my_module.results.destroy_all
+    else
+      results.destroy_all
+    end
 
     # Release space taken by the step
     team.release_space(st)
