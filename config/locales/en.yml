@@ -3891,11 +3891,12 @@ en:
       title_copy: "Save as new protocol template"
       name_label: "Protocol template name"
       name_placeholder: "Enter a protocol template name…"
-      description: "You will create a copy of a protocol and save it to Protocol templates."
+      description: "A copy of this protocol will be create and saved to Protocol templates."
       access_label: "Grant access to all workspace members"
       role_label: "Default user role"
       create_new: "Create"
       create_copy: "Save"
+      include_results: "Include results"
     header:
       details: 'Details'
       versions: 'Versions'

@@ -355,7 +355,7 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       transaction_error = false
       Protocol.transaction do
-        @new_protocol = @protocol.copy_to_repository(Protocol.new(create_params), current_user)
+        @new_protocol = @protocol.copy_to_repository(Protocol.new(create_params), current_user, include_results: copy_to_repository_params[:results])
         log_activity(:task_protocol_save_to_template, @my_module.experiment.project, protocol: @new_protocol.id)
         create_team_assignment(@new_protocol, :protocol_template_access_granted_all_team_members)
       rescue StandardError => e
@@ -1091,7 +1091,7 @@ class ProtocolsController < ApplicationController
   end
 
   def copy_to_repository_params
-    params.require(:protocol).permit(:name, :protocol_type)
+    params.require(:protocol).permit(:results)
   end
 
   def create_params
