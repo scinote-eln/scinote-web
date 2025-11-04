@@ -13,8 +13,6 @@ class ResultBase < ApplicationRecord
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
 
-  SEARCHABLE_ATTRIBUTES = ['results.name', :children].freeze
-
   enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
   belongs_to :user, inverse_of: :results
