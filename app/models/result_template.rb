@@ -6,6 +6,8 @@ class ResultTemplate < ResultBase
 
   scope :active, -> { self } # Template can't be archived
 
+  SEARCHABLE_ATTRIBUTES = ['results.name'].freeze
+
   def self.search(user,
                   _include_archived,
                   query = nil,

@@ -10,6 +10,8 @@ class Result < ResultBase
   has_many :result_comments, inverse_of: :result, foreign_key: :associated_id, dependent: :destroy
   has_many :report_elements, inverse_of: :result, dependent: :destroy
 
+  SEARCHABLE_ATTRIBUTES = ['results.name', :children].freeze
+
   delegate :team, to: :my_module
 
   def self.search(user,
@@ -35,7 +37,7 @@ class Result < ResultBase
   end
 
   def self.where_children_attributes_like(query)
-    unscoped_readable_results = unscoped.joins('INNER JOIN "readable_results" ON "readable_results"."id" = "results"."id"').select(:id)
+    unscoped_readable_results = unscoped.joins('INNER JOIN "readable_results" ON "readable_results"."id" = "results"."id"').select(:id, :type)
     unscoped.from(
       "(#{unscoped_readable_results.joins(:result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
       UNION
