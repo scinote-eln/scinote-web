@@ -20,7 +20,7 @@
     </label>
     <div v-if="subLabel">{{ subLabel }}</div>
     <div class="relative h-11 my-2">
-      <div v-if="leftIcon" class="absolute left-2 top-1/2 transform -translate-y-1/2">
+      <div v-if="leftIcon" class="absolute top-0 left-2 h-full flex items-center justify-center">
         <i :class="leftIcon" class="sn-icon"></i>
       </div>
       <input
@@ -30,6 +30,8 @@
         :disabled="disabled"
         :value="modelValue"
         @input="emitValue"
+        @blur="$emit('blur')"
+        @focus="$emit('focus')"
         class="outline-none shadow-none placeholder:text-sn-grey rounded h-full border border-sn-sleepy-grey bg-white w-full px-4 focus:border-sn-science-blue"
         :class="{
           '!bg-sn-super-light-grey ': disabled,
@@ -39,7 +41,7 @@
           'pr-10': rightIcon
         }"
       />
-      <div v-if="rightIcon" class="absolute right-2 top-1/2 transform -translate-y-1/2">
+      <div v-if="rightIcon" class="absolute top-0 right-2 h-full flex items-center justify-center">
         <i :class="rightIcon" class="sn-icon"></i>
       </div>
     </div>
@@ -119,6 +121,9 @@ export default {
     }
   },
   methods: {
+    focus() {
+      this.$refs.input.focus();
+    },
     emitValue(e) {
       let newValue = e.target.value;
       if (this.isNumber) {

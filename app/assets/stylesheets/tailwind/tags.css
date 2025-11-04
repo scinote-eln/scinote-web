@@ -1,9 +1,33 @@
 @layer components {
   .sci-tag {
-    @apply text-xs !rounded-full !px-2 !py-1 inline-flex items-center gap-1;
+    @apply text-xs !rounded-full !pl-2 !pr-1.5 h-6 !py-0.5 inline-flex items-center gap-1;
+  }
+
+  .sci-tag .text-block {
+    @apply !max-w-40 truncate overflow-hidden;
   }
 
   .sci-tag .sn-icon {
-    @apply -ml-2;
+    @apply leading-4 !text-base cursor-pointer shrink-0;
+  }
+
+  .sci-tag .sn-icon.sn-icon-close {
+    @apply cursor-pointer;
+  }
+
+  .sci-tag .sn-icon.sn-icon-close:hover {
+    @apply text-white bg-sn-black rounded-full;
+  }
+
+  .sci-tag.disabled {
+    @apply opacity-40 cursor-not-allowed;
+  }
+
+  .sci-tag .avatar-container {
+    @apply h-5 w-5 rounded-full overflow-hidden flex items-center -ml-1.5 justify-center shrink-0;
+  }
+
+  .sci-tag:hover {
+    @apply outline-4 outline-sn-grey-100 outline;
   }
 }

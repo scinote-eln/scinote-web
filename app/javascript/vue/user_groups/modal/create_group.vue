@@ -65,6 +65,7 @@
 import SelectDropdown from '../../shared/select_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
+import escapeHtml from '../../shared/escape_html.js';
 
 export default {
   name: 'ProjectFormModal',
@@ -72,7 +73,7 @@ export default {
     usersUrl: String,
     createUrl: String
   },
-  mixins: [modalMixin],
+  mixins: [modalMixin, escapeHtml],
   components: {
     SelectDropdown,
   },
@@ -108,7 +109,6 @@ export default {
         HelperModule.flashAlertMsg(data.data.message, 'success');
         this.$emit('create');
       }).catch((data) => {
-        console.log(data);
         HelperModule.flashAlertMsg(data.response.data.error, 'danger');
       });
       this.submitting = false;
@@ -116,7 +116,7 @@ export default {
     usersRenderer(user) {
       return `<div class="flex items-center gap-2 truncate">
                 <img class="w-6 h-6 rounded-full" src="${user[2].avatar}">
-                <span title="${user[1]}" class="truncate">${user[1]}</span>
+                <span title="${escapeHtml(user[1])}" class="truncate">${escapeHtml(user[1])}</span>
               </div>`;
     }
   }

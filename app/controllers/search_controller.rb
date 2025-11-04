@@ -139,15 +139,11 @@ class SearchController < ApplicationController
   protected
 
   def search_by_name(options = {})
-    @records = @model.search(current_user,
-                             @include_archived,
-                             @search_query,
-                             @teams,
-                             options)
+    @records = @model.search(current_user, @include_archived, @search_query, @teams, options)
+    filter_records if @filters.present?
+    @records = @model.from(@records, @model.table_name)
                      .select("COUNT(\"#{@model.table_name}\".\"id\") OVER() AS filtered_count")
                      .select("\"#{@model.table_name}\".*")
-
-    filter_records if @filters.present?
     sort_records
     paginate_records
   end
@@ -155,7 +151,8 @@ class SearchController < ApplicationController
   def filter_records
     filter_datetime!(:created_at) if @filters[:created_at].present?
     filter_datetime!(:updated_at) if @filters[:updated_at].present?
-    filter_users! if @filters[:users].present?
+    filter_by_users! if @filters[:users].present?
+    filter_by_tags! if @filters[:tags].present? && @model == MyModule
   end
 
   def sort_records
@@ -196,7 +193,7 @@ class SearchController < ApplicationController
     @records = @records.where("#{model_name}.#{attribute} <= ?", to_date) if to_date.present?
   end
 
-  def filter_users!
+  def filter_by_users!
     @records = @records.joins("INNER JOIN activities ON #{@model.model_name.collection}.id = activities.subject_id
                                AND activities.subject_type= '#{@model.name}'")
 
@@ -206,5 +203,10 @@ class SearchController < ApplicationController
                else
                  @records.where('activities.owner_id': user_ids)
                end
+  end
+
+  def filter_by_tags!
+    tag_ids = @filters[:tags]&.values&.collect(&:to_i)
+    @records = @records.joins(:tags).where(tags: { id: tag_ids })
   end
 end

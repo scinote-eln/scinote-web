@@ -12,7 +12,7 @@ describe ProjectsController, type: :controller do
     create: { id: 1 },
     update: { id: 1 },
     permissions: { id: 1 },
-  }, [:current_folder, :set_breadcrumbs_items, :create_tag]
+  }, [:current_folder, :set_breadcrumbs_items]
 
   login_user
 

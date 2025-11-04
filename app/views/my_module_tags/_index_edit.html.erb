@@ -1,7 +1,7 @@
 <%= hidden_field_tag :tags_modal_my_module_id, @my_module.id %>
 <h5><%=t "experiments.canvas.modal_manage_tags.subtitle", module: @my_module.name %></h5>
 <% if @my_module_tags.size == 0 then %>
-  <div class="row"><div class="col-xs-4"><em><%= t 'experiments.canvas.modal_manage_tags.no_tags' %></em></div></div>
+  <div class="row"><div class="col-xs-4"><em><%= t 'experiments.canvas.modal_manage_tags.add_tags' %></em></div></div>
 <% else %>
   <ul class="list-group">
     <% @my_module_tags.each_with_index do |mmt, i| tag = mmt.tag %>

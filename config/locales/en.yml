@@ -502,6 +502,8 @@ en:
       title: "More search options"
       sub_title: "Refine your search by applying the filters below."
       by_type: "Filter by type"
+      by_tag: "Filter by tag"
+      by_tag_placeholder: "Select tags"
       by_created_date: "Filter by created date"
       by_updated_date: "Filter by updated date"
       by_team: "Filter by workspace"
@@ -1438,17 +1440,19 @@ en:
         modified_value_without_user: "%{date}"
         view_task_access: "Access"
       start_date: "Start date:"
+      no_start_date: "No start date"
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
       completed_date: "Completed date:"
       no_due_date_placeholder: "+ Add due date"
       overdue: "Overdue"
       due_soon: "Due soon"
-      no_due_date: "not set"
+      no_due_date: "No due date"
       assigned_users: "Assigned to:"
-      no_assigned_users: "+ Assign task to a project member"
+      no_assigned_users: "No assigned project member"
       tags: "Tags:"
-      no_tags: "+ Add tags"
+      add_tags: "+ Add tags"
+      no_tags: "No tags"
       manage_tags: "Manage tags"
       create_new_tag: "→ Create new"
       recent_protocols_from_repository: "Recent protocols from the Repository"
@@ -1931,7 +1935,12 @@ en:
           in_progress: 'In progress'
           done: 'Done'
       modal_move_modules:
-        title: "Move task(s) to experiment"
+        title: "Move task(s)"
+        description: "Moving is possible to projects, where you have permissions to create experiments and tasks."
+        project: "Project"
+        experiment: "Experiment"
+        select_project: "Select project"
+        select_experiment: "Select experiment"
         confirm: "Move"
         no_experiments: "No experiments to move this task to."
         success_flash: "Successfully moved task(s) to experiment %{experiment}."
@@ -1978,6 +1987,8 @@ en:
         due_date: 'Due date'
         status: 'Status'
         status_placeholder: 'Select task status'
+        tags: 'Tags'
+        tags_placeholder: 'Select task tags'
         assigned: 'Assigned to'
         assigned_placeholder: 'Select a person assigned to a task'
       view:
@@ -3624,6 +3635,7 @@ en:
           details: "Details"
           members: "Members"
           groups: "Groups"
+          tags: "Tags"
         show:
           enter_description: "Enter Workspace description"
           tasks_share:
@@ -4225,6 +4237,50 @@ en:
     edit:
       head_title: "Edit protocol"
     no_keywords: "—"
+  tags:
+    index:
+      new_tag: "New tag"
+      tag_name: "Tag name"
+      color: "Color"
+      used_in: "Used in"
+      created_by: "Created by"
+      created_on: "Created on"
+      updated_on: "Updated on"
+      tag_name_placeholder: "Type a tag name"
+      too_short_name: "too short (minimum is %{count} characters)"
+      too_long_name: "too long (maximum is %{count} characters)"
+      places: "places"
+      place: "place"
+      toolbar:
+        delete: "Delete"
+        merge: "Merge into"
+    merge_modal:
+      title: "Merge tags"
+      description_html: "Selected tags will be merged into the target tag you choose below. They will be replaced wherever they were used, and then deleted."
+      target_tag: "Target tag"
+      target_tag_placeholder: "Search for tag to merge into"
+      merge: "Merge"
+      merge_success: "Tags merged successfully."
+      merge_error: "There was an error merging tags."
+    delete_modal:
+      single_title: "Delete tag %{tag}"
+      multiple_title: "Delete %{count} tags"
+      single_description_html: "Deleting a tag will also remove it from all places (%{count}) it has been used.<br><br>This action cannot be undone.<br><br><b>Are you sure you want to delete this tag?</b>"
+      multiple_description_html: "Deleting %{tags_count} tags will also remove them from all places (%{count}) it has been used.<br><br>This action cannot be undone.<br><br><b>Are you sure you want to delete tags?</b>"
+      confirm: "Delete"
+    tags_input:
+      add_tag: "Add a tag"
+      edit_tags: "Edit tags"
+      create_tag: "Create tag"
+      placeholder: "Type to add a tag"
+      no_options_found: "No options found"
+    manage_modal:
+      title: "Edit tags"
+      description: "Tags in this workspace are shared by all members. Anyone with permission can create or edit tags, and all changes apply everywhere the tag is used."
+      create_tag: "Create a tag"
+      type_tag_name: "Type a tag name"
+      manage_tags: "Manage tags"
+      validation_failed: "Validation failed: %{errors}"
   user_groups:
     promo:
       head_title: 'User groups'
@@ -4763,6 +4819,7 @@ en:
     copy: "Copy"
     duplicate: "Duplicate"
     okay: "Okay"
+    done: "Done"
     back: "Back"
     close: "Close"
     create: 'Create'

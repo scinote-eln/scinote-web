@@ -7,6 +7,7 @@
       size="xs"
       :borderless="true"
       :optionRenderer="optionRenderer"
+      :oneLineLabel="true"
       :labelRenderer="optionRenderer"
     />
   </div>

@@ -10,7 +10,7 @@
         </div>
         <div class="modal-body">
             <p class="description-p1 mb-6" v-html="i18n.t('repositories.index.modal_export.description_p1_html', {
-                team_name: rows[0].team,
+                team_name: escapeHtml(rows[0].team),
                 count: rows.length})"></p>
             <p class="bg-sn-super-light-blue p-3 mb-6"> {{ this.i18n.t('repositories.index.modal_export.description_alert') }} </p>
             <p class="mb-6"> {{ this.i18n.t('repositories.index.modal_export.description_p2') }} </p>
@@ -36,6 +36,7 @@
 <script>
 /* global HelperModule */
 
+import escapeHtml from '../../shared/escape_html.js';
 import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
 
@@ -49,7 +50,8 @@ export default {
   data() {
     return {
       selectedOption: this.exportAction.export_file_type,
-      submitting: false
+      submitting: false,
+      escapeHtml: escapeHtml
     };
   },
   methods: {

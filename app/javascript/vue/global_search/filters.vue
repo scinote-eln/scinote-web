@@ -13,6 +13,20 @@
           </button>
         </template>
       </div>
+      <div class="sci-label mb-2">{{ i18n.t('search.filters.by_tag') }}</div>
+      <div class="grow mb-6">
+        <SelectDropdown :options="tags"
+                        @change="selectTags"
+                        :optionRenderer="TagsDropdownRenderer"
+                        :multiple="true"
+                        class="grow"
+                        :value="selectedTags"
+                        :searchable="true"
+                        :withCheckboxes="true"
+                        :placeholder="i18n.t('search.filters.by_tag_placeholder')"
+                        :tagsView="true">
+        </SelectDropdown>
+      </div>
       <div class="sci-label mb-2" data-e2e="e2e-TX-globalSearch-filters-filterByCreated">{{ i18n.t('search.filters.by_created_date') }}</div>
       <DateFilter
         :date="createdAt"
@@ -49,8 +63,8 @@
       <SelectDropdown :options="users"
                       class="mb-6"
                       :value="selectedUsers"
-                      :optionRenderer="userRenderer"
-                      :labelRenderer="userRenderer"
+                      :optionRenderer="UsersDropdownRenderer"
+                      :labelRenderer="UsersDropdownRenderer"
                       :clearable="true"
                       :searchable="true"
                       :with-checkboxes="true"
@@ -80,6 +94,8 @@
 import DateFilter from './filters/date.vue';
 import SelectDropdown from '../shared/select_dropdown.vue';
 import axios from '../../packs/custom_axios.js';
+import UsersDropdownRenderer from '../shared/select_dropdown_renderers/user.vue';
+import TagsDropdownRenderer from '../shared/select_dropdown_renderers/tag.vue';
 
 export default {
   name: 'SearchFilters',
@@ -89,6 +105,10 @@ export default {
       required: true
     },
     usersUrl: {
+      type: String,
+      required: true
+    },
+    tagsUrl: {
       type: String,
       required: true
     },
@@ -109,6 +129,7 @@ export default {
       this.selectedTeams = this.filters.teams;
       this.$nextTick(() => {
         this.selectedUsers = this.filters.users;
+        this.selectedTags = this.filters.tags;
       });
       this.includeArchived = this.filters.include_archived;
       this.activeGroup = this.filters.group;
@@ -118,6 +139,8 @@ export default {
     selectedTeams() {
       this.selectedUsers = [];
       this.fetchUsers();
+      this.selectedTags = [];
+      this.fetchTags();
     }
   },
   data() {
@@ -135,9 +158,13 @@ export default {
       },
       selectedTeams: [],
       selectedUsers: [],
+      selectedTags: [],
       includeArchived: true,
       teams: [],
       users: [],
+      tags:[],
+      TagsDropdownRenderer: TagsDropdownRenderer,
+      UsersDropdownRenderer: UsersDropdownRenderer,
       searchGroups: [
         { value: 'FoldersComponent', label: this.i18n.t('search.index.folders') },
         { value: 'ProjectsComponent', label: this.i18n.t('search.index.projects') },
@@ -155,15 +182,11 @@ export default {
   },
   components: {
     DateFilter,
-    SelectDropdown
+    SelectDropdown,
+    UsersDropdownRenderer,
+    TagsDropdownRenderer
   },
   methods: {
-    userRenderer(option) {
-      return `<div class="flex items-center gap-2">
-                <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
-                <div title="${option[1]}" class="truncate">${option[1]}</div>
-              </div>`;
-    },
     setActiveGroup(group) {
       if (group === this.activeGroup) {
         this.activeGroup = null;
@@ -183,6 +206,12 @@ export default {
           this.users = response.data.data.map((user) => ([parseInt(user.id, 10), user.attributes.name, { avatar_url: user.attributes.avatar_url }]));
         });
     },
+    fetchTags() {
+      axios.get(this.tagsUrl, { params: { teams: this.selectedTeams } })
+        .then((response) => {
+          this.tags = response.data.data.map((tag) => ([parseInt(tag.id, 10), tag.name, { color: tag.color }]));
+        });
+    },
     selectTeams(teams) {
       if (Array.isArray(teams)) {
         this.selectedTeams = teams;
@@ -191,6 +220,11 @@ export default {
     selectUsers(users) {
       if (Array.isArray(users)) {
         this.selectedUsers = users;
+      }
+    },
+    selectTags(tags) {
+      if (Array.isArray(tags)) {
+        this.selectedTags = tags;
       }
     },
     clearFilters() {
@@ -220,6 +254,7 @@ export default {
           updated_at: this.updatedAt,
           teams: this.selectedTeams,
           users: this.selectedUsers,
+          tags: this.selectedTags,
           include_archived: this.includeArchived,
           group: this.activeGroup
         });
@@ -247,6 +282,10 @@ export default {
 
       this.selectedUsers.forEach((user) => {
         searchParams.append('users[]', user);
+      });
+
+      this.selectedTags.forEach((tag) => {
+        searchParams.append('tags[]', tag);
       });
 
       window.location.href = `${this.searchUrl}?${searchParams.toString()}`;

@@ -331,7 +331,7 @@ class Experiment < ApplicationRecord
   def move_modules(to_move, current_user)
     to_move.each do |id, experiment_id|
       my_module = my_modules.find_by(id: id)
-      experiment = project.experiments.find_by(id: experiment_id)
+      experiment = Experiment.managable_by_user(current_user).find_by(id: experiment_id)
       next unless my_module.present? && experiment.present?
 
       experiment_original = my_module.experiment
@@ -348,6 +348,8 @@ class Experiment < ApplicationRecord
 
       # regenerate user assignments
       my_module.reset_all_users_assignments!(current_user)
+
+      my_module.user_my_modules.destroy_all unless experiment_original.project == experiment.project
 
       Activities::CreateActivityService.call(activity_type: :move_task,
                                              owner: current_user,

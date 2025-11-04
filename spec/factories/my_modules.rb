@@ -13,7 +13,7 @@ FactoryBot.define do
     created_by { experiment.created_by }
     my_module_group { create :my_module_group, experiment: experiment }
     trait :with_tag do
-      tags { create_list :tag, 3, project: experiment.project }
+      tags { create_list :tag, 3, team: experiment.project.team }
     end
     trait :with_due_date do
       due_date { Faker::Time.between(from: Date.today, to: Date.today + 10.days) }

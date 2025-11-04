@@ -13,7 +13,7 @@ module BreadcrumbsHelper
       else
         parent = subject.team
       end
-      url = project_path(subject)
+      url = experiments_path(project_id: subject.id)
     when Experiment
       parent = subject.project
       url = my_modules_experiment_path(subject)

@@ -625,7 +625,11 @@ class Extends
     automation_project_status_changed: 408,
     import_protocol_in_repository_from_protocols_io: 409,
     experiment_access_changed_all_team_members: 410,
-    my_module_access_changed_all_team_members: 411
+    my_module_access_changed_all_team_members: 411,
+    tag_created: 412,
+    tag_edited: 413,
+    tag_deleted: 414,
+    tag_merged: 415
   }
 
   ACTIVITY_GROUPS = {
@@ -644,7 +648,7 @@ class Extends
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
                           *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409],
-    team: [92, 94, 93, 97, 104, 244, 245, *379..383],
+    team: [92, 94, 93, 97, 104, 244, 245, *379..383, *412..415],
     label_templates: [*216..219],
     storage_locations: [*309..315, 361],
     container_storage_locations: [*316..322, 326, 362],
@@ -789,6 +793,7 @@ class Extends
     teams/members
     user_groups/index
     user_groups/show
+    tags/index
     teams/automations
   )
 
@@ -878,6 +883,7 @@ class Extends
     StorageLocationsTable_active_state
     StorageLocationsContainer_active_state
     StorageLocationsContainerGrid_active_state
+    TagsIndexTable_active_state
     UserGroups_active_state
     UserGroup_active_state
     task_step_states

@@ -2,13 +2,8 @@
   <div ref="tagsModal" class="tags-modal-component" id="tagsModalComponent"></div>
   <teleport to="body">
     <tags-modal v-if="tagsModalOpen"
-      :tags-colors="<%= Constants::TAG_COLORS.to_json %>"
-      :params="myModuleParams"
-      project-name="<%= @project.name  %>"
-      project-tags-url="<%= project_tags_path(@project) %>"
-      @close="close"
-      @tags-loaded="syncTags"
-      @tag-deleted="tagDeleted = true"
+      :subject="myModuleParams"
+      @close="syncTags"
     />
   </teleport>
 </div>

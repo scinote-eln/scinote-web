@@ -4,7 +4,7 @@
     <div class="sci-tag text-sn-white select-none"
          title="<%= escape_input(tag[:name]) %>"
          style="background-color: <%= color %>;">
-      <%= escape_input(tag[:name]) %>
+      <div class="text-block" :title="<%= escape_input(tag[:name]) %>"><%= escape_input(tag[:name]) %></div>
     </div>
   <% end %>
 </div>

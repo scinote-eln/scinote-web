@@ -112,7 +112,7 @@ module SearchableModel
       return unless query
 
       query_clauses = []
-      query_params = []
+      query_params = {}
       search_tokens = tokenize_search_query(query)
 
       search_tokens.each_with_index do |token, index|
@@ -121,16 +121,18 @@ module SearchableModel
           like = exact_match ? '~' : 'ILIKE'
 
           where_str = (attributes.map do |attribute|
+            attribute_key = attribute.to_s.parameterize(separator: '_')
+
             if attribute == :children
               "\"#{table_name}\".\"id\" IN (#{where_children_attributes_like(token[:value]).select(:id).to_sql}) OR "
             elsif SEARCH_NUMBER_ATTRIBUTES.include?(attribute)
-              "(#{attribute} IS NOT NULL AND #{attribute}::text #{like} ?) OR "
+              "(#{attribute} IS NOT NULL AND #{attribute}::text #{like} :#{attribute_key}_#{index}_query) OR "
             elsif defined?(model::PREFIXED_ID_SQL) && attribute == model::PREFIXED_ID_SQL
-              "(#{attribute} IS NOT NULL AND #{attribute} #{like} ?) OR "
+              "(#{attribute} IS NOT NULL AND #{attribute} #{like} :#{attribute_key}_#{index}_query) OR "
             elsif SEARCH_DATA_VECTOR_ATTRIBUTES.include?(attribute)
-              "(#{attribute} IS NOT NULL AND #{attribute} @@ plainto_tsquery(?)) OR "
+              "(#{attribute} IS NOT NULL AND #{attribute} @@ plainto_tsquery(:#{attribute_key}_#{index}_query)) OR "
             else
-              "(#{attribute} IS NOT NULL AND trim_html_tags(#{attribute}) #{like} ?) OR "
+              "(#{attribute} IS NOT NULL AND trim_html_tags(#{attribute}) #{like} :#{attribute_key}_#{index}_query) OR "
             end
           end).join[0..-5]
 
@@ -139,7 +141,7 @@ module SearchableModel
           attributes.each do |attribute|
             next if attribute == :children
 
-            query_params <<
+            query_params[:"#{attribute.to_s.parameterize(separator: '_')}_#{index}_query"] =
               if SEARCH_DATA_VECTOR_ATTRIBUTES.include?(attribute) && !exact_match
                 token[:value].split(/\s+/).map! { |t| "#{t}:*" }
               else
@@ -162,7 +164,7 @@ module SearchableModel
         end
       end
 
-      where(query_clauses.join, *query_params)
+      where(query_clauses.join, query_params)
     }
 
     def self.normalized_search_attributes(attributes)
@@ -233,6 +235,9 @@ module SearchableModel
           end
         end
       end
+
+      # Remove trailing operator if present
+      tokens.pop if tokens.present? && tokens.last[:type] == :operator
 
       tokens
     end

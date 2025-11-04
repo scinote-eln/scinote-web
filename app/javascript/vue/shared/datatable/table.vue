@@ -4,7 +4,7 @@
       class="relative flex flex-col flex-grow z-10"
       :class="{'overflow-y-hidden pb-20': currentViewRender === 'cards'}"
     >
-      <Toolbar
+      <Toolbar v-if="Object.keys(toolbarActions).length"
         :toolbarActions="toolbarActions"
         @toolbar:action="emitAction"
         :searchValue="searchValue"
@@ -16,6 +16,7 @@
         :viewRenders="viewRenders"
         :filters="filters"
         :columnDefs="columnDefs"
+        :disabled="addingNewRow"
         :tableState="tableState"
         :order="order"
         @applyFilters="applyFilters"
@@ -32,7 +33,7 @@
       <div v-if="this.objectArchived && this.currentViewMode === 'active'" class="pt-6" >
         <em> {{ hiddenDataMessage }} </em>
       </div>
-      <div v-else class="w-full h-full" :class="{ '!h-[calc(100%-68px)]': selectedRows.length > 0 && actionsUrl }">
+      <div v-else class="w-full h-full" :class="{ '!h-[calc(100%-68px)]': selectedRows.length > 0 && actionsUrl || addingNewRow }">
         <div v-if="currentViewRender === 'cards'" ref="cardsContainer" @scroll="handleScroll"
             class="flex-grow basis-64 overflow-y-auto h-full overflow-x-visible p-2 -ml-2">
           <div class="grid gap-4" :class="gridColsClass">
@@ -42,7 +43,10 @@
         <ag-grid-vue
           v-if="currentViewRender === 'table'"
           class="ag-theme-alpine w-full flex-grow h-full z-10"
-          :class="{'opacity-0': initializing }"
+          :class="{
+            'opacity-0': initializing,
+            'adding-new-row': addingNewRow
+          }"
           :columnDefs="extendedColumnDefs"
           :rowData="rowData"
           :defaultColDef="defaultColDef"
@@ -65,12 +69,32 @@
           :CheckboxSelectionCallback="withCheckboxes"
         >
         </ag-grid-vue>
+        <div v-if="addingNewRow" class=" absolute top-0 w-full h-[110px] bg-white opacity-40"></div>
         <div v-if="dataLoading" class="flex absolute top-0 items-center justify-center w-full flex-grow h-full z-10">
           <img src="/images/medium/loading.svg" alt="Loading" class="p-16 rounded-xl bg-sn-white" />
         </div>
       </div>
+      <div v-if="addingNewRow" class="p-4 w-full rounded bg-sn-light-grey min-h-[68px]">
+        <div class="flex gap-4 items-center h-full">
+          <button class="rounded flex gap-2 items-center text-sn-blue outline-none border-0 py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
+                       bg-sn-white color-sn-blue hover:no-underline focus:no-underline cursor-pointer"
+            :class="{ 'opacity-50 pointer-events-none': !isValidTemplate }"
+            :title="i18n.t('general.save') "
+            @click="createRow">
+            <i class="sn-icon sn-icon-save"></i>
+            <span class="tw-hidden xl:inline-block">{{ i18n.t('general.save') }}</span>
+          </button>
+          <button class="rounded flex gap-2 items-center text-sn-blue outline-none border-0 py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
+                       bg-sn-white color-sn-blue hover:no-underline focus:no-underline cursor-pointer"
+            :title="i18n.t('general.cancel') "
+            @click="cancelCreation">
+            <i class="sn-icon sn-icon-close"></i>
+            <span class="tw-hidden xl:inline-block">{{ i18n.t('general.cancel') }}</span>
+          </button>
+        </div>
+      </div>
       <ActionToolbar
-        v-if="selectedRows.length > 0 && actionsUrl"
+        v-if="selectedRows.length > 0 && actionsUrl && !addingNewRow"
         :actionsUrl="actionsUrl"
         :actionsMethod="actionsMethod"
         :params="actionsParams"
@@ -82,6 +106,7 @@
         <div class="w-36">
           <SelectDropdown
             :value="perPage"
+            :disabled="addingNewRow"
             :options="perPageOptions"
             :data-e2e="'e2e-DD-tableInfo-rows'"
             @change="setPerPage"
@@ -100,6 +125,7 @@
         <Pagination
           :totalPage="totalPage"
           :currentPage="page"
+          :disabled="addingNewRow"
           @setPage="setPage"
         ></Pagination>
       </div>
@@ -151,7 +177,7 @@ export default {
     },
     toolbarActions: {
       type: Object,
-      required: true
+      default: {}
     },
     reloadingTable: {
       type: Boolean,
@@ -174,6 +200,10 @@ export default {
       type: Array,
       default: () => []
     },
+    filterValues: {
+      type: Object,
+      default: {}
+    },
     scrollMode: {
       type: String,
       default: 'pages'
@@ -188,6 +218,22 @@ export default {
     tableOnly: {
       type: Boolean,
       default: false
+    },
+    newRowTemplate: {
+      type: Object,
+      default: () => ({})
+    },
+    addingNewRow: {
+      type: Boolean,
+      default: false
+    },
+    withPinnedColumns: {
+      type: Boolean,
+      default: true
+    },
+    skipSaveTableState: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -198,6 +244,7 @@ export default {
       defaultColDef: {
         resizable: true
       },
+      filledRowTemplate: {},
       perPage: 20,
       page: 1,
       order: null,
@@ -207,7 +254,7 @@ export default {
       keepSelection: false,
       searchValue: '',
       initializing: true,
-      activeFilters: {},
+      activeFilters: this.filterValues,
       currentViewRender: 'table',
       cardCheckboxes: [],
       dataLoading: true,
@@ -233,6 +280,11 @@ export default {
     RowMenuRenderer
   },
   computed: {
+    isValidTemplate() {
+      if (!this.filledRowTemplate) return false;
+
+      return Object.keys(this.filledRowTemplate).every((key) => this.filledRowTemplate[key].isValid);
+    },
     perPageOptions() {
       return [10, 20, 50, 100].map((value) => ([value, `${value} ${this.i18n.t('datatable.rows')}`]));
     },
@@ -254,7 +306,7 @@ export default {
         ...column,
         minWidth: column.minWidth || 110,
         cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
-        pinned: (column.field === 'name' || column.field === 'name_hash' ? 'left' : null),
+        pinned: (this.withPinnedColumns && (column.field === 'name' || column.field === 'name_hash') ? 'left' : null),
         comparator: () => null
       }));
 
@@ -305,6 +357,24 @@ export default {
     }
   },
   watch: {
+    addingNewRow() {
+      if (!this.addingNewRow) return;
+
+      this.filledRowTemplate = JSON.parse(JSON.stringify(this.newRowTemplate));
+
+      if (this.gridApi) {
+        const values = {};
+        Object.keys(this.filledRowTemplate).forEach((key) => {
+          values[key] = this.filledRowTemplate[key].value;
+        });
+
+        this.gridApi.setRowData(
+          [values, ...this.rowData]
+        );
+
+        document.querySelector('.ag-body-viewport').scrollTop = 0;
+      }
+    },
     reloadingTable() {
       if (this.reloadingTable) {
         this.updateTable();
@@ -327,6 +397,13 @@ export default {
       if (this.currentViewRender === 'cards') {
         this.setGridColsClass();
       }
+    },
+    filterValues: {
+      handler(newVal) {
+        this.activeFilters = newVal;
+        this.reloadTable();
+      },
+      deep: true
     }
   },
   created() {
@@ -423,6 +500,11 @@ export default {
       const { columnsState } = this.tableState;
       this.columnsState = columnsState;
 
+      if (!columnsState) {
+        this.initializing = false;
+        return;
+      }
+
       if (this.order) {
         this.tableState.columnsState.forEach((column) => {
           const updatedColumn = column;
@@ -444,10 +526,17 @@ export default {
       }, 200);
     },
     saveTableState() {
-      if (this.initializing) {
+      if (this.initializing || this.skipSaveTableState) {
         return;
       }
-      const columnsState = this.columnApi ? this.columnApi.getColumnState() : this.tableState?.columnsState || [];
+      let columnsState = [];
+
+      if (this.columnApi?.getColumnState()) {
+        columnsState = this.columnApi.getColumnState();
+      } else if (this.tableState?.columnsState) {
+        columnsState = this.tableState.columnsState;
+      }
+
       const tableState = {
         columnsState,
         order: this.order,
@@ -713,6 +802,25 @@ export default {
         if (colIndex > lastPinnedColIndex) lastPinnedColIndex = colIndex;
       });
       $(`.ag-pinned-left-header .ag-header-cell[aria-colindex="${lastPinnedColIndex}"] .ag-header-cell-resize`).css('opacity', 0);
+    },
+    setTemplateValue(value, field, isValid) {
+      if (this.filledRowTemplate && Object.prototype.hasOwnProperty.call(this.filledRowTemplate, field)) {
+        this.filledRowTemplate[field].value = value;
+        this.filledRowTemplate[field].isValid = isValid;
+      }
+    },
+    createRow() {
+      this.$emit('createRow', this.filledRowTemplate);
+      this.filledRowTemplate = this.newRowTemplate;
+    },
+    cancelCreation() {
+      this.filledRowTemplate = this.newRowTemplate;
+      this.$emit('cancelCreation');
+      this.updateTable();
+      this.$nextTick(() => {
+        this.selectedRows = [];
+        this.gridApi?.deselectAll();
+      });
     }
   }
 };

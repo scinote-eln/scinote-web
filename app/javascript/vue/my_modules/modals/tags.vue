@@ -37,12 +37,12 @@
                   <label class="sci-checkbox-label"></label>
                 </div>
                 <div v-if="!tag.editing" @click="startEditMode(tag)"
-                     class="sci-tag max-w-80  text-sn-white cursor-text"
-                     :class="{
+                     class="sci-tag max-w-80  cursor-text"
+                     :class="[tagTextColor(tag.color),{
                        'cursor-pointer': canManage
-                     }"
+                     }]"
                      :style="{ backgroundColor: tag.attributes.color }">
-                  {{ tag.attributes.name }}
+                  <div class="text-block" :title="tag.attributes.name">{{ tag.attributes.name }}</div>
                 </div>
                 <template v-else>
                   <GeneralDropdown>
@@ -324,6 +324,9 @@ export default {
         this.$refs.newTagNameInput.focus();
         this.setRandomColor();
       });
+    },
+    tagTextColor(color) {
+      return window.isColorBright(color) ? 'text-black' : 'text-white';
     },
     cancelCreating(e) {
       if (e && e.target.closest('.sn-dropdown')) return;

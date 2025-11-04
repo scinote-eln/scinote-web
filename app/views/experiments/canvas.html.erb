@@ -60,7 +60,7 @@
     </span>
   </div>
   <% if @active_modules %>
-    <div id="canvas-container" data-project-id="<%= @project.id %>" data-module-tags-url="<%= my_module_tags_experiment_path(@experiment, format: :json) %>">
+    <div id="canvas-container" data-project-id="<%= @project.id %>" data-module-tags-url="">
       <%= render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @active_modules } %>
     </div>
   <% else %>
@@ -80,10 +80,22 @@
   </teleport>
 </div>
 
+<div id="newTaskModalContainer" class="vue-new-task-modal">
+    <div ref="newTaskModal" id="newTaskModalComponent"></div>
+    <teleport to="body">
+      <new-task-modal
+        v-if="newTaskModalOpen"
+        create-url="<%= modules_experiment_path(@experiment) %>"
+        team-tags-url="<%= tags_path %>"
+        assigned-users-url="<%= assigned_users_experiment_path(@experiment)%>"
+        current-user-id="<%= current_user.id %>"
+        @create="reloadLocation"
+        @close="newTaskModalOpen = false" />
+    </teleport>
+  </div>
+
 <!-- Manage tags modal -->
 <%= render partial: 'canvas/full_zoom/tags_modal' %>
-<%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: nil } %>
-<%= javascript_include_tag("my_modules/tags") %>
 
 <!-- Initialize dropdown actions -->
 
@@ -94,6 +106,7 @@
 
 <%= javascript_include_tag("projects/canvas") %>
 <%= javascript_include_tag 'vue_legacy_access_modal' %>
+<%= javascript_include_tag 'vue_legacy_new_task_modal' %>
 
 <%= render 'shared/tiny_mce_packs' %>
 <%= javascript_include_tag 'vue_experiment_description_modal' %>

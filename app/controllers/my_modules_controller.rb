@@ -8,6 +8,7 @@ class MyModulesController < ApplicationController
   include MyModulesHelper
   include Breadcrumbs
   include FavoritesActions
+  include TaggableActions
 
   before_action :load_vars, except: %i(index restore_group create new save_table_state
                                        inventory_assigning_my_module_filter actions_toolbar)
@@ -36,8 +37,7 @@ class MyModulesController < ApplicationController
         my_modules = Lists::MyModulesService.new(@experiment.my_modules.readable_by_user(current_user),
                                                  params.merge(experiment: @experiment),
                                                  user: current_user).call
-        render json: my_modules, each_serializer: Lists::MyModuleSerializer, user: current_user,
-               meta: pagination_dict(my_modules)
+        render json: my_modules, each_serializer: Lists::MyModuleSerializer, user: current_user, meta: pagination_dict(my_modules)
       end
       format.html do
         save_view_type('table')
@@ -58,6 +58,12 @@ class MyModulesController < ApplicationController
     }
   end
 
+  def assigned_users
+    render json: @my_module.users,
+           each_serializer: UserSerializer,
+           user: current_user
+  end
+
   def create
     @my_module = @experiment.my_modules.new(my_module_params)
     new_pos = @my_module.get_new_position
@@ -69,7 +75,7 @@ class MyModulesController < ApplicationController
     )
     @my_module.transaction do
       if my_module_tags_params[:tag_ids].present?
-        @my_module.tags << @experiment.project.tags.where(id: my_module_tags_params[:tag_ids])
+        @my_module.tags << @experiment.team.tags.where(id: my_module_tags_params[:tag_ids])
       end
       if my_module_designated_users_params[:user_ids].present? && can_designate_users_to_new_task?(@experiment)
         @my_module.designated_users << @experiment.users.where(id: my_module_designated_users_params[:user_ids])
@@ -86,7 +92,7 @@ class MyModulesController < ApplicationController
         message_items: { my_module: @my_module.id }
       )
       log_user_designation_activity
-      redirect_to canvas_experiment_path(@experiment) if params[:my_module][:view_mode] == 'canvas'
+      render json: @my_module, serializer: MyModuleSerializer, controller: self, user: current_user
     rescue ActiveRecord::RecordInvalid
       render json: @my_module.errors, status: :unprocessable_entity
       raise ActiveRecord::Rollback
@@ -101,7 +107,7 @@ class MyModulesController < ApplicationController
         }
       end
       format.json do
-        render json: @my_module, serializer: Lists::MyModuleSerializer, controller: self, user: current_user
+        render json: @my_module, serializer: MyModuleSerializer, controller: self, user: current_user
       end
     end
   end
@@ -225,47 +231,26 @@ class MyModulesController < ApplicationController
       end
     end
     if saved
-      alerts = []
-      alerts << 'alert-green' if @my_module.completed?
-      unless @my_module.completed?
-        alerts << 'alert-red' if @my_module.is_overdue?
-        alerts << 'alert-yellow' if @my_module.is_one_day_prior?
+      if params[:output] == 'object'
+        render json: @my_module, serializer: MyModuleSerializer, controller: self, user: current_user
+      else
+        # Still used in canvas view
+        alerts = []
+        alerts << 'alert-green' if @my_module.completed?
+        unless @my_module.completed?
+          alerts << 'alert-red' if @my_module.is_overdue?
+          alerts << 'alert-yellow' if @my_module.is_one_day_prior?
+        end
+        render json: {
+          status: :ok,
+          card_due_date_label: render_to_string(
+            partial: 'my_modules/card_due_date_label',
+            formats: :html,
+            locals: { my_module: @my_module }
+          ),
+          alerts: alerts
+        }
       end
-      render json: {
-        status: :ok,
-        start_date_label: render_to_string(
-          partial: 'my_modules/start_date_label',
-          formats: :html,
-          locals: { my_module: @my_module, start_date_editable: true }
-        ),
-        due_date_label: render_to_string(
-          partial: 'my_modules/due_date_label',
-          formats: :html,
-          locals: { my_module: @my_module, due_date_editable: true }
-        ),
-        card_due_date_label: render_to_string(
-          partial: 'my_modules/card_due_date_label',
-          formats: :html,
-          locals: { my_module: @my_module }
-        ),
-        table_due_date_label: {
-          html: render_to_string(partial: 'experiments/table_due_date_label',
-                                 formats: :html,
-                                 locals: { my_module: @my_module, user: current_user }),
-          due_status: my_module_due_status(@my_module)
-        },
-        module_header_due_date: render_to_string(
-          partial: 'my_modules/module_header_due_date',
-          formats: :html,
-          locals: { my_module: @my_module }
-        ),
-        description_label: render_to_string(
-          partial: 'my_modules/description_label',
-          formats: :html,
-          locals: { my_module: @my_module }
-        ),
-        alerts: alerts
-      }
     else
       render json: @my_module.errors, status: :unprocessable_entity
     end
@@ -525,6 +510,10 @@ class MyModulesController < ApplicationController
     render_404 unless @my_module.my_module_status
   end
 
+  def check_tag_manage_permissions
+    render_403 && return unless can_manage_my_module_tags?(@taggable_item)
+  end
+
   def set_inline_name_editing
     if action_name == 'index'
       return unless can_manage_experiment?(@experiment)
@@ -687,5 +676,19 @@ class MyModulesController < ApplicationController
       archived: @my_module.archived_branch? || params[:view_mode] == 'archived',
       id: @my_module.code
     }
+  end
+
+  # implement TaggableActions log activity
+  def log_taggable_activity(type, object, tag)
+    Activities::CreateActivityService
+      .call(activity_type: type == :create ? :add_task_tag : :remove_task_tag,
+            owner: current_user,
+            subject: object,
+            project: object.project,
+            team: object.team,
+            message_items: {
+              my_module: object.id,
+              tag: tag.id
+            })
   end
 end

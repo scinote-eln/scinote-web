@@ -1,6 +1,6 @@
 <template>
   <div class="relative" v-click-outside="closeMenu" >
-    <div ref="field" class="cursor-pointer" @click.stop="toggleMenu">
+    <div ref="field" :class="{ 'cursor-pointer': canOpen }" @click.stop="toggleMenu">
       <slot name="field"></slot>
     </div>
     <template v-if="isOpen">

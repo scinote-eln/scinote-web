@@ -9,12 +9,12 @@ class ExperimentsController < ApplicationController
   include Breadcrumbs
   include FavoritesActions
 
-  before_action :load_project, only: %i(index create archive_group restore_group move)
-  before_action :load_experiment, except: %i(create archive_group restore_group
+  before_action :load_project, only: %i(index create archive_group restore_group move experiments_to_move)
+  before_action :load_experiment, except: %i(create archive_group restore_group experiments_to_move
                                              inventory_assigning_experiment_filter actions_toolbar index move)
   before_action :load_experiments, only: :move
   before_action :check_read_permissions, except: %i(index archive clone move create archive_group restore_group
-                                                    inventory_assigning_experiment_filter actions_toolbar)
+                                                    inventory_assigning_experiment_filter actions_toolbar experiments_to_move)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(create move)
   before_action :check_manage_permissions, only: :batch_clone_my_modules
@@ -214,15 +214,18 @@ class ExperimentsController < ApplicationController
 
   def projects_to_move
     projects = @experiment.movable_projects(current_user)
-                          .where('trim_html_tags(projects.name) ILIKE ?',
-                                 "%#{ActiveRecord::Base.sanitize_sql_like(params['query'])}%")
+                          .search_by_name(current_user, current_team, params['query'])
                           .map { |p| [p.id, p.name] }
     render json: { data: projects }, status: :ok
   end
 
   def experiments_to_move
-    experiments = @experiment.project.experiments.active.where.not(id: @experiment)
-                             .managable_by_user(current_user).order(name: :asc).map { |e| [e.id, e.name] }
+    experiments = @project.experiments
+                          .managable_by_user(current_user)
+                          .active
+                          .where.not(id: params[:exclude_ids])
+                          .search_by_name(current_user, current_team, params['query'])
+                          .order(name: :asc).map { |e| { id: e.id, name: e.name } }
     render json: { data: experiments }, status: :ok
   end
 
@@ -300,8 +303,8 @@ class ExperimentsController < ApplicationController
 
   def move_modules
     modules_to_move = {}
-    dst_experiment = @experiment.project.experiments.find(params[:to_experiment_id])
-    return render_403 unless can_manage_experiment?(dst_experiment)
+    dst_experiment = Experiment.managable_by_user(current_user).find_by(id: params[:to_experiment_id])
+    return render_403 unless dst_experiment
 
     @experiment.transaction do
       params[:my_module_ids].each do |id|
