@@ -805,6 +805,16 @@
       },
       duplicateStep() {
         $.post(this.urls.duplicate_step_url, (result) => {
+          let step = result.data;
+          step.attachments = [];
+          step.elements = [];
+          result.included.forEach((included) => {
+            if (included.type === 'assets') {
+              step.attachments.push(included);
+            } else if (included.type === 'step_orderable_elements') {
+              step.elements.push(included);
+            }
+          });
           this.$emit('step:insert', result.data);
           HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplicated'), 'success');
         }).fail(() => {

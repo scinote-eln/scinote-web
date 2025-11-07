@@ -159,7 +159,7 @@ class StepsController < ApplicationController
         )
       end
 
-      render json: new_step, serializer: StepSerializer, user: current_user
+      render json: new_step, serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
     end
   rescue ActiveRecord::RecordInvalid
     head :unprocessable_entity
