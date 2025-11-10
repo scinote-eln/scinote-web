@@ -1,8 +1,13 @@
 <h1><%= I18n.t('protocols.print.assigned_items.title') %></h1>
 
 <% my_module.readable_live_and_snapshot_repositories_list(current_user).each do |repository| %>
-  <%  repository_rows = repository.repository_rows.left_joins(my_module_repository_rows: :repository_stock_unit_item)
-                                                  .select('repository_rows.*', 'my_module_repository_rows.stock_consumption') %>
+  <%  repository_rows = if repository.is_a?(RepositorySnapshot)
+                          repository.repository_rows
+                        else
+                          repository.repository_rows.left_joins(my_module_repository_rows: :repository_stock_unit_item)
+                                                    .where(my_module_repository_rows: { my_module: my_module })
+                                                    .select('repository_rows.*', 'my_module_repository_rows.stock_consumption') 
+                        end %>
   <h3><%= repository.name%></h3>
 
   <table class="border !border-sn-grey border-collapse">
