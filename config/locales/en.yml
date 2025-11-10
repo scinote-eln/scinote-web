@@ -4609,6 +4609,8 @@ en:
       form_tooltip_inherit: "This role was inherited from the form."
       repository_tooltip: "This role was set on this inventory."
       repository_tooltip_inherit: "This role was inherited from the inventory."
+      softlockedrepository_tooltip: "This role was set on this inventory."
+      softlockedrepository_tooltip_inherit: "This role was inherited from the inventory."
       public_members_dropdown:
         title: "Members of workspace %{team}"
 
@@ -4625,6 +4627,12 @@ en:
         edit_modal:
           title: "Manage access for %{resource_name}"
     repositories:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
+    soft_locked_repositories:
       modals:
         show_modal:
           title: "Access to %{resource_name}"
