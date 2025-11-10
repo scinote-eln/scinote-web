@@ -26,23 +26,22 @@ module TinyMceImages
         html_description = Nokogiri::HTML(description)
         tm_asset_to_update = html_description.css(
           "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"
-        )[0]
+        )
         next unless tm_asset_to_update
 
         begin
           variant = tm_asset.image.variant(resize_to_limit: Constants::LARGE_PIC_FORMAT)
           resized_asset = ActiveStorage::Variant.new(variant.blob, variant.variation).processed
 
-          width_attr = tm_asset_to_update.attributes['width']
-          height_attr = tm_asset_to_update.attributes['height']
+          width_attr = tm_asset_to_update[0].attributes['width']
+          height_attr = tm_asset_to_update[0].attributes['height']
 
           if width_attr && height_attr && (width_attr.value.to_i >= Constants::LARGE_PIC_FORMAT[0] ||
                                           height_attr.value.to_i >= Constants::LARGE_PIC_FORMAT[1])
             width_attr.value = resized_asset.image.blob.metadata['width'].to_s
             height_attr.value = resized_asset.image.blob.metadata['height'].to_s
           end
-
-          tm_asset_to_update.attributes['src'].value = convert_to_base64(resized_asset)
+          tm_asset_to_update.each { |asset| asset.attributes['src'].value = convert_to_base64(resized_asset) }
         rescue StandardError => e
           Rails.logger.error(e)
         end
