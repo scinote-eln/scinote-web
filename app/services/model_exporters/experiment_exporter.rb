@@ -84,43 +84,12 @@ module ModelExporters
         end,
         my_module_status_name: my_module.my_module_status&.name,
         outputs: my_module.outputs,
-        my_module_tags: my_module.my_module_tags,
+        taggings: my_module.taggings,
         task_comments: my_module.task_comments,
         my_module_repository_rows: my_module.my_module_repository_rows,
         user_my_modules: my_module.user_my_modules,
         protocols: my_module.protocols.map { |pr| protocol(pr) },
         results: my_module.results.map { |res| result(res) }
-      }
-    end
-
-    def result(result)
-      @assets_to_copy.push(result.assets.to_a) if result.assets.present?
-      {
-        result: result,
-        result_orderable_elements: result.result_orderable_elements.map { |e| result_orderable_element(e) },
-        result_comments: result.result_comments,
-        result_assets: result.result_assets,
-        assets: result.assets.map { |a| assets_data(a) }
-      }
-    end
-
-    def result_orderable_element(element)
-      element_json = element.as_json
-      case element.orderable_type
-      when 'ResultText'
-        element_json['result_text'] = element.orderable.as_json
-      when 'ResultTable'
-        element_json['table'] = table(element.orderable.table)
-      end
-      element_json
-    end
-
-    def result_assets_data(asset)
-      return unless asset&.file&.attached?
-
-      {
-        asset: asset,
-        asset_blob: asset.file.blob
       }
     end
   end
