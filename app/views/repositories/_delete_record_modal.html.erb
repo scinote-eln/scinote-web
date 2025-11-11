@@ -6,7 +6,8 @@
         <h4 class="modal-title"><%= t("repositories.modal_delete_record.title") %></h4>
       </div>
       <div class="modal-body">
-        <%= t("repositories.modal_delete_record.notice") %>
+        <p><%= t("repositories.modal_delete_record.notice") %></p>
+        <p><%= t("repositories.modal_delete_record.notice_warning_html") %></p>
       </div>
       <div class="modal-footer">
         <button type="button" data-e2e="e2e-BT-invInventoryDeleteMD-cancel" class="btn btn-secondary" data-dismiss="modal"><%= t("general.cancel")%></button>
