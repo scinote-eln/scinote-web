@@ -373,22 +373,7 @@ export default {
   created() {
     const urlParams = new URLSearchParams(window.location.search);
     this.anchorId = urlParams.get('step_id');
-
-    if (this.anchorId) {
-      this.loadingOverlay = true;
-    }
-  },
-  watch: {
-    elementsLoaded() {
-      if (this.anchorId) {
-        this.scrollToStep();
-      }
-    },
-    attachmentsLoaded() {
-      if (this.anchorId) {
-        this.scrollToStep();
-      }
-    }
+    this.loadingOverlay = true;
   },
   mounted() {
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
@@ -403,6 +388,23 @@ export default {
       });
       $.get(this.urls.steps_url, (result) => {
         this.steps = result.data;
+        this.steps.forEach((step) => {
+          step.attachments = []
+          step.relationships.assets.data.forEach((asset) => {
+            step.attachments.push(result.included.find((a) => a.id === asset.id && a.type === 'assets'));
+          });
+
+          step.elements = [];
+          step.relationships.step_orderable_elements.data.forEach((element) => {
+            step.elements.push(result.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
+          });
+        });
+
+        this.loadingOverlay = false;
+
+        if (this.anchorId) {
+          this.scrollToStep();
+        }
       });
     });
   },
@@ -413,18 +415,15 @@ export default {
   },
   methods: {
     scrollToStep() {
-      if (this.elementsLoaded === this.steps.length && this.attachmentsLoaded === this.steps.length) {
-        this.loadingOverlay = false;
-        this.$nextTick(() => {
-          if (this.anchorId) {
-            const step = this.$refs.steps.find((child) => child.step?.id === this.anchorId);
-            if (step) {
-              step.$refs.stepContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-            this.anchorId = null;
+      this.$nextTick(() => {
+        if (this.anchorId) {
+          const step = this.$refs.steps.find((child) => child.step?.id === this.anchorId);
+          if (step) {
+            step.$refs.stepContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
-        });
-      }
+          this.anchorId = null;
+        }
+      });
     },
     getHeader() {
       return this.$refs.header;
@@ -515,8 +514,19 @@ export default {
     },
     addStep(position) {
       $.post(this.urls.add_step_url, { position }, (result) => {
-        result.data.newStep = true;
-        this.updateStepsPosition(result.data);
+        const step = result.data;
+        step.newStep = true;
+
+        step.attachments = []
+        step.relationships.assets.data.forEach((asset) => {
+          step.attachments.push(result.included.find((a) => a.id === asset.id && a.type === 'assets'));
+        });
+
+        step.elements = [];
+        step.relationships.step_orderable_elements.data.forEach((element) => {
+          step.elements.push(result.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
+        });
+        this.updateStepsPosition(step);
 
         // scroll to bottom if step was appended at the end
         if (position === this.steps.length - 1) {

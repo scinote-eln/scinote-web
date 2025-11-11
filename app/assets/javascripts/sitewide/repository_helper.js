@@ -85,7 +85,7 @@ function initReminderDropdown(table) {
     }
   });
 
-  $(table).on('keyup', '.row-reminders-footer', function(e) {
+  $(table).on('keyup', '.clear-reminder', function(e) {
     if (e.key === ' ') {
       $(this).click();
     }
@@ -111,8 +111,8 @@ function initReminderDropdown(table) {
     });
   });
 
-  $(table).on('click', '.row-reminders-footer', function(e) {
-    var dropdownMenuLength = $(this).closest('.dropdown-menu').children().length;
+  $(table).on('click', '.clear-reminders', function(e) {
+    var dropdownMenuLength = $(this).closest('.dropdown-menu .reminder-list').children().length;
     var bellIcon = $(this).closest('.row-reminders-dropdown');
     $.ajax({
       url: $(this).attr('data-row-hide-reminders-url'),
