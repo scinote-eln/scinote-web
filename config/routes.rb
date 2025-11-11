@@ -784,6 +784,13 @@ Rails.application.routes.draw do
         get :user_roles
       end
 
+      resources :repository_rows, controller: 'protocol_repository_rows', only: %i(index create destroy) do
+        collection do
+          get :repositories
+          get :repository_rows
+        end
+      end
+
       resources :result_templates, only: %i(index show create update destroy) do
         collection do
           get :list

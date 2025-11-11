@@ -23,8 +23,9 @@
   </div>
 </div>
 <div class="flex items-center gap-4 p-2 mb-4 bg-white rounded-lg">
-  <%= link_to t('protocols.protocol'), protocol_path(@protocol), class: "p-2.5 hover:no-underline #{ @active_tab == :protocol ? "text-sn-blue" : "text-sn-grey" }"%>
-  <%= link_to t('protocols.results', count: @protocol.results.count), protocol_result_templates_path(@protocol), class: "p-2.5 hover:no-underline #{ @active_tab == :results ? "text-sn-blue" : "text-sn-grey" }"%>
+  <%= link_to t('protocols.header.protocol'), protocol_path(@protocol), class: "p-2.5 hover:no-underline #{ @active_tab == :protocol ? "text-sn-blue" : "text-sn-grey" }"%>
+  <%= link_to t('protocols.header.results', count: @protocol.results.count), protocol_result_templates_path(@protocol), class: "p-2.5 hover:no-underline #{ @active_tab == :results ? "text-sn-blue" : "text-sn-grey" }"%>
+  <%= link_to t('protocols.header.repository_rows', count: @protocol.protocol_repository_rows.count), protocol_repository_rows_path(@protocol), class: "p-2.5 hover:no-underline #{ @active_tab == :repository_rows ? "text-sn-blue" : "text-sn-grey" }"%>
   <div class="ml-auto" id="protocolVersionsBlock">
     <protocol-versions protocol-url="<%= protocol_path(@protocol) %>"></protocol-versions>
   </div>

@@ -3900,6 +3900,9 @@ en:
     header:
       details: 'Details'
       versions: 'Versions'
+      protocol: "Protocol"
+      results: "Results [%{count}]"
+      repository_rows: "Items [%{count}]"
       draft_with_from_version: 'Draft (from Version %{nr})'
       protocol_description: 'Protocol description'
       protocol_steps: 'Protocol steps'
@@ -4053,6 +4056,11 @@ en:
           old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Oldest first"
           atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
           ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
+    repository_rows:
+      table:
+        id: 'Item ID'
+        name: 'Name'
+        repository: 'Inventory'
 
     steps:
       label: "Step %{position} - %{name}"

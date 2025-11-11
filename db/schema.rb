@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_29_104755) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_30_135441) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -619,6 +619,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_29_104755) do
     t.bigint "protocol_keyword_id", null: false
     t.index ["protocol_id"], name: "index_protocol_protocol_keywords_on_protocol_id"
     t.index ["protocol_keyword_id"], name: "index_protocol_protocol_keywords_on_protocol_keyword_id"
+  end
+
+  create_table "protocol_repository_rows", force: :cascade do |t|
+    t.bigint "protocol_id", null: false
+    t.bigint "repository_row_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["protocol_id", "repository_row_id"], name: "idx_on_protocol_id_repository_row_id_8e60521e65", unique: true
+    t.index ["repository_row_id"], name: "index_protocol_repository_rows_on_repository_row_id"
   end
 
   create_table "protocols", force: :cascade do |t|
@@ -1659,6 +1668,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_29_104755) do
   add_foreign_key "protocol_keywords", "teams"
   add_foreign_key "protocol_protocol_keywords", "protocol_keywords"
   add_foreign_key "protocol_protocol_keywords", "protocols"
+  add_foreign_key "protocol_repository_rows", "protocols"
+  add_foreign_key "protocol_repository_rows", "repository_rows"
   add_foreign_key "protocols", "my_modules"
   add_foreign_key "protocols", "protocols", column: "parent_id"
   add_foreign_key "protocols", "protocols", column: "previous_version_id"
