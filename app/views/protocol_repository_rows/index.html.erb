@@ -1,0 +1,9 @@
+<div class="content-pane flexible protocol-content protocol-results with-grey-background" >
+  <%= render partial: "protocols/header" %>
+
+  <div class="ml-auto" id="protocolRepositoryRows">
+    <protocol-repository-rows data-url="<%= table_protocol_repository_rows_path(@protocol) %>"></protocol-repository-rows>
+  </div>
+</div>
+
+<%= javascript_include_tag 'vue_protocol_repository_rows' %>
