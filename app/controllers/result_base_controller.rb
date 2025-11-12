@@ -31,12 +31,15 @@ class ResultBaseController < ApplicationController
   end
 
   def create
-    result = @parent.results.create!(user: current_user, last_modified_by: current_user)
-    render json: result
+    @result = @parent.results.create!(user: current_user, last_modified_by: current_user)
+    log_activity(:"add_#{model_parameter}", { "#{model_parameter}": @result })
+
+    render json: @result
   end
 
   def update
     @result.update!(result_params.merge(last_modified_by: current_user))
+    log_activity(:"edit_#{model_parameter}", { "#{model_parameter}": @result })
     render json: @result
   end
 
@@ -56,6 +59,8 @@ class ResultBaseController < ApplicationController
       )
       @asset.attach_file_version(params[:signed_blob_id])
       @asset.post_process_file
+
+      log_activity(:"#{model_parameter}_file_added", { file: @asset.file_name, "#{model_parameter}": @result })
     end
 
     render json: @asset,
@@ -86,7 +91,9 @@ class ResultBaseController < ApplicationController
   def destroy
     name = @result.name
     if @result.discard
-      log_activity(:destroy_result, { destroyed_result: name })
+      message_items = { "destroyed_#{model_parameter}": name }
+      message_items[:protocol] = @parent.id if model_parameter == 'result_template'
+      log_activity(:"destroy_#{model_parameter}", message_items)
       render json: {}, status: :ok
     else
       render json: { errors: @result.errors.full_messages }, status: :unprocessable_entity
@@ -99,6 +106,7 @@ class ResultBaseController < ApplicationController
         @parent, current_user, result_name: "#{@result.name} (1)"
       )
 
+      log_activity(:"#{model_parameter}_duplicated", { "#{model_parameter}": @result })
       render json: new_result, serializer: result_serializer, user: current_user
     end
   end
@@ -115,6 +123,10 @@ class ResultBaseController < ApplicationController
 
   def result_params
     params.require(:result).permit(:name)
+  end
+
+  def model_parameter
+    @result.class.model_name.param_key
   end
 
   def update_and_apply_user_sort_preference!
@@ -155,6 +167,28 @@ class ResultBaseController < ApplicationController
     @results = @results.where('results.created_at <= ?', params[:created_at_to]) if params[:created_at_to]
     @results = @results.where('results.updated_at >= ?', params[:updated_at_from]) if params[:updated_at_from]
     @results = @results.where('results.updated_at <= ?', params[:updated_at_to]) if params[:updated_at_to]
+  end
+
+  def log_activity(element_type_of, message_items = {})
+    subject = if (result = message_items[:result])
+                message_items[:result] = result.id
+                result
+              elsif (template = message_items[:result_template])
+                message_items[:result_template] = template.id
+                message_items[:protocol] = @parent.id
+                template
+              else
+                @parent
+              end
+
+    Activities::CreateActivityService.call(
+      activity_type: element_type_of,
+      owner: current_user,
+      team: @parent.team,
+      subject: subject,
+      project: @parent.is_a?(Protocol) ? nil : @parent&.experiment&.project,
+      message_items: message_items
+    )
   end
 
   def check_destroy_permissions

@@ -31,7 +31,7 @@ module ResultElements
 
       ActiveRecord::Base.transaction do
         create_in_result!(@result, result_table)
-        log_result_activity(:result_table_added, { table_name: result_table.table.name })
+        log_result_activity(:table_added, { table_name: result_table.table.name })
       end
 
       render_result_orderable_element(result_table)
@@ -43,13 +43,17 @@ module ResultElements
       ActiveRecord::Base.transaction do
         old_content = @table.contents
         @table.assign_attributes(table_params.except(:metadata))
+
         begin
           if table_params[:metadata].present?
+            # support for legacy tables
+            normalized_metadata =
+              table_params[:metadata].is_a?(String) ? JSON.parse(table_params[:metadata]) : table_params[:metadata]
 
             @table.metadata = if @table.metadata
-                                @table.metadata.merge(JSON.parse(table_params[:metadata]))
+                                @table.metadata.merge(normalized_metadata)
                               else
-                                JSON.parse(table_params[:metadata])
+                                normalized_metadata
                               end
           end
         rescue JSON::ParserError
@@ -58,7 +62,7 @@ module ResultElements
         @table.save!
 
         if @table.saved_changes?
-          log_result_activity(:result_table_edited, { table_name: @table.name })
+          log_result_activity(:table_edited, { table_name: @table.name })
           result_annotation_notification(old_content)
         end
       end
@@ -79,14 +83,14 @@ module ResultElements
         result_table.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
         @result.normalize_elements_position
 
+        model_key = @result.class.model_name.param_key
+
         log_result_activity(
-          :result_table_moved,
+          :table_moved,
           {
             user: current_user.id,
-            table_name: @table.name,
-            result_original: @result.id,
-            result_destination: target.id
-          }
+            table_name: @table.name
+          }.merge({ "#{model_key}_original": @result.id, "#{model_key}_destination": target.id })
         )
 
         render json: @table, serializer: ResultTableSerializer, user: current_user
@@ -97,7 +101,7 @@ module ResultElements
 
     def destroy
       if @table.destroy
-        log_result_activity(:result_table_deleted, { table_name: @table.name })
+        log_result_activity(:table_deleted, { table_name: @table.name })
         head :ok
       else
         head :unprocessable_entity
@@ -112,7 +116,7 @@ module ResultElements
         end
         @table.name += ' (1)'
         new_table = @table.duplicate(@result, current_user, position + 1)
-        log_result_activity(:result_table_duplicated, { table_name: new_table.name })
+        log_result_activity(:table_duplicated, { table_name: new_table.name })
         render_result_orderable_element(new_table.result_table)
       end
     rescue ActiveRecord::RecordInvalid => e
@@ -124,7 +128,7 @@ module ResultElements
     private
 
     def table_params
-      params.permit(:name, :contents, :metadata)
+      params.permit(:name, :contents, metadata: {})
     end
 
     def create_table_params

@@ -69,26 +69,6 @@ class ResultsController < ResultBaseController
     }
   end
 
-  def log_activity(element_type_of, message_items = {})
-    message_items[:my_module] = @parent.id
-    subject = if message_items.key?(:result)
-                result = message_items[:result]
-                message_items[:result] = result.id
-                result
-              else
-                @parent
-              end
-
-    Activities::CreateActivityService.call(
-      activity_type: element_type_of,
-      owner: current_user,
-      team: @parent.team,
-      subject: subject,
-      project: @parent.experiment.project,
-      message_items: message_items
-    )
-  end
-
   def set_inline_name_editing
     return unless can_manage_my_module?(@parent)
 

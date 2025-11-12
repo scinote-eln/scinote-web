@@ -12,14 +12,10 @@
   <div class="toolbar-row" id="diagram-buttons" data-width-breakpoint="750">
     <span class="left" id="toolbar-left-block">
       <% if can_manage_experiment?(@experiment) %>
-        <%= link_to modules_new_experiment_path(@experiment, view_mode: 'canvas'),
-                    class: 'btn btn-primary new-my-module-button',
-                    title: t('experiments.canvas.new_my_module_tooltip'),
-                    data: { view_mode: 'active' },
-                    remote: true do %>
-                <span class="sn-icon sn-icon-new-task" data-e2e="e2e-BT-canvasToolbar-createTask"></span>
-                <span class="2xl:inline tw-hidden"><%= t('experiments.canvas.new_my_module') %></span>
-        <% end %>
+        <button class="btn btn-primary new-my-module-button" title="<%= t('experiments.canvas.new_my_module_tooltip') %>" data-view-mode="active">
+          <span class="sn-icon sn-icon-new-task" data-e2e="e2e-BT-canvasToolbar-createTask"></span>
+          <span class="2xl:inline tw-hidden"><%= t('experiments.canvas.new_my_module') %></span>
+        </button>
         <%=link_to canvas_edit_experiment_url(@experiment),
               remote: true,
               type: 'button',

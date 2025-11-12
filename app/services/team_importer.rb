@@ -71,6 +71,7 @@ class TeamImporter
       # Find new id of the first admin in the team
       @admin_id = @user_mappings[team_json['default_admin_id']]
 
+      create_tags(team_json['tags'], team)
       create_protocol_keywords(team_json['protocol_keywords'], team)
       create_protocols(team_json['protocols'], nil, team)
       create_project_folders(team_json['project_folders'], team)
@@ -326,6 +327,8 @@ class TeamImporter
           activity.subject_id = team.id
         elsif activity.subject_type == 'RepositoryBase'
           activity.subject_id = @repository_mappings[activity.subject_id]
+        elsif activity.subject_type == 'ResultBase'
+          activity.subject_id = @result_mappings[activity.subject_id]
         else
           mappings = instance_variable_get("@#{activity.subject_type.underscore}_mappings")
           activity.subject_id = mappings[activity.subject_id]
@@ -377,6 +380,20 @@ class TeamImporter
       object.public_send(object_field).sub!("[~tiny_mce_id:#{orig_tmce_id}]",
                                             new_asset_format)
       object.save!
+    end
+  end
+
+  def create_tags(tags_json, team)
+    puts 'Creating tags...'
+    tags_json.each do |tag_json|
+      tag = Tag.new(tag_json)
+      orig_tag_id = tag.id
+      tag.id = nil
+      tag.team = team
+      tag.created_by_id = find_user(tag.created_by_id)
+      tag.last_modified_by_id = find_user(tag.last_modified_by_id)
+      tag.save!
+      @tag_mappings[orig_tag_id] = tag.id
     end
   end
 
@@ -599,17 +616,6 @@ class TeamImporter
         project_comment.project = project
         project_comment.save!
       end
-      puts 'Creating tags...'
-      project_json['tags'].each do |tag_json|
-        tag = Tag.new(tag_json)
-        orig_tag_id = tag.id
-        tag.id = nil
-        tag.project = project
-        tag.created_by_id = find_user(tag.created_by_id)
-        tag.last_modified_by_id = find_user(tag.last_modified_by_id)
-        tag.save!
-        @tag_mappings[orig_tag_id] = tag.id
-      end
 
       create_experiments(project_json['experiments'], project)
     end
@@ -688,14 +694,14 @@ class TeamImporter
       create_team_assignments(my_module_json['team_assignments'], my_module)
 
       unless @is_template
-        my_module_json['my_module_tags'].each do |my_module_tag_json|
-          my_module_tag = MyModuleTag.new(my_module_tag_json)
-          my_module_tag.id = nil
-          my_module_tag.my_module = my_module
-          my_module_tag.tag_id = @tag_mappings[my_module_tag.tag_id]
-          my_module_tag.created_by_id =
-            user_id || find_user(my_module_tag.created_by_id)
-          my_module_tag.save!
+        my_module_json['taggings'].each do |tagging_json|
+          tagging = Tagging.new(tagging_json)
+          tagging.id = nil
+          tagging.taggable = my_module
+          tagging.tag_id = @tag_mappings[tagging_json['tag_id']]
+          tagging.created_by_id =
+            user_id || find_user(tagging.created_by_id)
+          tagging.save!
         end
       end
 
@@ -790,6 +796,7 @@ class TeamImporter
         pp_keyword.save!
       end
       create_steps(protocol_json['steps'], protocol, user_id)
+      create_results(protocol_json['results'], protocol, user_id) if protocol_json['results']
     end
   end
 
@@ -856,31 +863,39 @@ class TeamImporter
     end
   end
 
-  def create_results(results_json, my_module, user_id = nil)
+  def create_results(results_json, parent, user_id = nil)
     puts('Creating results...')
     results_json.each do |result_json|
-      result = Result.new(result_json['result'])
+      if parent.is_a?(Protocol)
+        result = ResultTemplate.new(result_json['result'])
+        result.protocol = parent
+      else
+        result = Result.new(result_json['result'])
+        result.my_module = parent
+        result.archived_by_id = find_user(result.archived_by_id)
+        result.restored_by_id = find_user(result.restored_by_id)
+      end
+
       orig_result_id = result.id
       result.id = nil
-      result.my_module = my_module
       result.user_id = user_id || find_user(result.user_id)
       result.last_modified_by_id =
         user_id || find_user(result.last_modified_by_id)
-      result.archived_by_id = find_user(result.archived_by_id)
-      result.restored_by_id = find_user(result.restored_by_id)
       result.save!
       @result_mappings[orig_result_id] = result.id
       @result_counter += 1
 
-      result_json['result_comments'].each do |result_comment_json|
-        result_comment = ResultComment.new(result_comment_json)
-        result_comment.id = nil
-        result_comment.user_id =
-          user_id || find_user(result_comment.user_id)
-        result_comment.last_modified_by_id =
-          user_id || find_user(result_comment.last_modified_by_id)
-        result_comment.result = result
-        result_comment.save!
+      if result_json['result_comments']
+        result_json['result_comments'].each do |result_comment_json|
+          result_comment = ResultComment.new(result_comment_json)
+          result_comment.id = nil
+          result_comment.user_id =
+            user_id || find_user(result_comment.user_id)
+          result_comment.last_modified_by_id =
+            user_id || find_user(result_comment.last_modified_by_id)
+          result_comment.result = result
+          result_comment.save!
+        end
       end
 
       result_json['result_orderable_elements'].each do |element_json|
@@ -898,7 +913,7 @@ class TeamImporter
           table.created_by_id = user_id || find_user(table.created_by_id)
           table.last_modified_by_id =
             user_id || find_user(table.last_modified_by_id)
-          table.team = my_module.experiment.project.team
+          table.team = parent.team
           table.contents = Base64.decode64(table.contents)
           table.data_vector = Base64.decode64(table.data_vector)
           table.save!
@@ -914,7 +929,7 @@ class TeamImporter
 
       result_json['assets'].each do |asset_json|
         asset = create_asset(asset_json,
-                             my_module.experiment.project.team,
+                             parent.team,
                              user_id)
         ResultAsset.create!(result: result, asset: asset)
       end

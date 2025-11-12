@@ -65,7 +65,8 @@ module ModelExporters
         project_folders: team.project_folders,
         projects: team.projects.map { |p| project(p) },
         activities: team.activities.where(project_id: nil),
-        label_templates: label_templates(team.label_templates)
+        label_templates: label_templates(team.label_templates),
+        tags: team.tags
       }
     end
 
@@ -113,8 +114,7 @@ module ModelExporters
         activities: project.activities,
         project_comments: project.project_comments,
         reports: project.reports.map { |r| report(r) },
-        experiments: experiments,
-        tags: project.tags
+        experiments: experiments
       }
     end
 

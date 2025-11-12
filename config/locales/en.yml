@@ -2487,6 +2487,7 @@ en:
       relationships: "Relationships"
       children: "Children"
       parents: "Parents"
+      locations: "Locations"
       row_consumption: "Consumed"
       enter_row_name: "Enter name"
       locked_item: "This is read-only item."
@@ -3308,7 +3309,8 @@ en:
         visit_blog: "Visit blog"
       general_error: "Something went wrong"
     reminder:
-      clear: "Clear"
+      clear_for_me: "Clear for me"
+      clear_for_all: "Clear for everyone"
       low_stock_title: "Item running low"
       stock_low_html: "Only <strong>%{stock_formated}</strong> left."
       stock_empty: "There is no stock left."
@@ -3773,12 +3775,20 @@ en:
       modal:
         title: "Print options"
         include_comments: "Include comments when printing"
+        include_assigned_items: "Include Task assigned items when printing"
       header:
         printed_from: "Printed from"
         print_info: "on %{datetime} by %{full_name}"
       forms:
         single_choice_html: "<em>(Select one)</em>"
         multiple_choice_html: "<em>(Select multiple)</em>"
+      assigned_items:
+        title: 'Assigned items'
+        headers:
+          item_id: "Item ID"
+          name: "Name"
+          stock: "Stock"
+          consumed: "Consumed"
     protocols_io_import:
       title_too_long: "... Text is too long so we had to cut it off."
       too_long: "... <span class='label label-warning'>Text is too long so we had to cut it off.</span>"
@@ -4716,6 +4726,8 @@ en:
       form_tooltip_inherit: "This role was inherited from the form."
       repository_tooltip: "This role was set on this inventory."
       repository_tooltip_inherit: "This role was inherited from the inventory."
+      softlockedrepository_tooltip: "This role was set on this inventory."
+      softlockedrepository_tooltip_inherit: "This role was inherited from the inventory."
       public_members_dropdown:
         title: "Members of workspace %{team}"
 
@@ -4732,6 +4744,12 @@ en:
         edit_modal:
           title: "Manage access for %{resource_name}"
     repositories:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
+    soft_locked_repositories:
       modals:
         show_modal:
           title: "Access to %{resource_name}"

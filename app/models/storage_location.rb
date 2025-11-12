@@ -30,7 +30,7 @@ class StorageLocation < ApplicationRecord
   scope :readable_by_user, (lambda do |user, team = user.current_team|
     next StorageLocation.none unless team.permission_granted?(user, TeamPermissions::STORAGE_LOCATIONS_READ)
 
-    where(team: team)
+    where(team: team).or(StorageLocation.shared_with_team(team))
   end)
 
   after_discard do
@@ -91,6 +91,18 @@ class StorageLocation < ApplicationRecord
     return [{ name: (readable ? name : code), url: url }] if root?
 
     parent.breadcrumbs(readable: readable) + [{ name: (readable ? name : code), url: url }]
+  end
+
+  def storage_location_export_breadcrumb(repository_row)
+    export_name = if with_grid?
+                    "#{name} (#{code}) / #{storage_location_repository_rows.where(repository_row: repository_row).map(&:human_readable_position).join(', ')}"
+                  else
+                    "#{name} (#{code})"
+                  end
+
+    return export_name if root?
+
+    "#{parent.storage_location_export_breadcrumb(repository_row)} / #{export_name}"
   end
 
   def with_grid?
@@ -188,14 +200,14 @@ class StorageLocation < ApplicationRecord
     end
   end
 
-  def self.inner_storage_locations(team, storage_location = nil)
-    entry_point_condition = storage_location ? 'parent_id = ?' : 'parent_id IS NULL'
+  def self.inner_storage_locations(parent_location = nil)
+    entry_point_condition = parent_location ? 'parent_id = ?' : 'parent_id IS NULL'
 
     inner_storage_locations_sql =
       "WITH RECURSIVE inner_storage_locations(id, selected_storage_locations_ids) AS (
         SELECT id, ARRAY[id]
         FROM storage_locations
-        WHERE team_id = ? AND #{entry_point_condition}
+        WHERE #{entry_point_condition}
         UNION ALL
         SELECT storage_locations.id, selected_storage_locations_ids || storage_locations.id
         FROM inner_storage_locations
@@ -204,17 +216,17 @@ class StorageLocation < ApplicationRecord
       )
       SELECT id FROM inner_storage_locations ORDER BY selected_storage_locations_ids".gsub(/\n|\t/, ' ').squeeze(' ')
 
-    if storage_location.present?
-      where("storage_locations.id IN (#{inner_storage_locations_sql})", team.id, storage_location.id)
+    if parent_location.present?
+      where("storage_locations.id IN (#{inner_storage_locations_sql})", parent_location.id)
     else
-      where("storage_locations.id IN (#{inner_storage_locations_sql})", team.id)
+      where("storage_locations.id IN (#{inner_storage_locations_sql})")
     end
   end
 
   def parent_validation
     if parent.id == id
       errors.add(:parent, I18n.t('activerecord.errors.models.storage_location.attributes.parent_storage_location'))
-    elsif StorageLocation.inner_storage_locations(team, self).exists?(id: parent_id)
+    elsif StorageLocation.inner_storage_locations(self).exists?(id: parent_id)
       errors.add(:parent, I18n.t('activerecord.errors.models.project_folder.attributes.parent_storage_location_child'))
     end
   end

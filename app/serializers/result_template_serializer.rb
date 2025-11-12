@@ -38,4 +38,13 @@ class ResultTemplateSerializer < ResultBaseSerializer
 
     urls_list
   end
+
+  def open_vector_editor_context
+    if can_manage_result?(object)
+      {
+        new_sequence_asset_url: new_gene_sequence_asset_url(parent_type: 'ResultTemplate', parent_id: object.id),
+        icon: image_path('icon_small/sequence-editor.svg')
+      }
+    end
+  end
 end

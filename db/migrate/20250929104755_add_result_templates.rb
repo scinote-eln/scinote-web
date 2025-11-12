@@ -10,6 +10,12 @@ class AddResultTemplates < ActiveRecord::Migration[7.2]
     change_column_null :results, :my_module_id, true
 
     execute "UPDATE \"results\" SET \"type\" = 'Result'"
+
+    execute <<~SQL.squish
+      UPDATE activities
+      SET subject_type = 'ResultBase'
+      WHERE subject_type = 'Result'
+    SQL
   end
 
   def down
@@ -19,5 +25,13 @@ class AddResultTemplates < ActiveRecord::Migration[7.2]
     end
 
     change_column_null :results, :my_module_id, false
+
+    # rubocop:disable Rails/SkipsModelValidations
+    Activity.where(subject_type: 'ResultBase').find_each do |activity|
+      next if activity.project.blank?
+
+      activity.update_columns(subject_type: 'Result')
+    end
+    # rubocop:enable Rails/SkipsModelValidations
   end
 end
