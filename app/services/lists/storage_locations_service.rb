@@ -4,13 +4,12 @@ module Lists
   class StorageLocationsService < BaseService
     include Canaid::Helpers::PermissionsHelper
 
-    def fetch_records
-      parent_id = @params[:parent_id]
-      if parent_id && !can_read_storage_location?(@user, StorageLocation.find(parent_id))
-        @records = StorageLocation.none
-        return
-      end
+    def initialize(raw_data, params, user: nil, parent: nil)
+      super(raw_data, params, user: user)
+      @parent = parent
+    end
 
+    def fetch_records
       @records =
         @raw_data.joins('LEFT JOIN storage_locations AS sub_locations ' \
                         'ON storage_locations.id = sub_locations.parent_id AND sub_locations.discarded_at IS NULL')
@@ -25,14 +24,13 @@ module Lists
     end
 
     def filter_records
-      parent_id = @params[:parent_id]
       if @filters[:search_tree].present?
-        if parent_id.present?
-          storage_location = @records.find_by(id: parent_id)
-          @records = @records.where(id: StorageLocation.inner_storage_locations(@user.current_team, storage_location))
-        end
-      else
-        @records = @records.where(parent_id: parent_id)
+        @records =
+          if @parent.present?
+            StorageLocation.inner_storage_locations(@parent)
+          else
+            @records.unscope(where: :parent_id).inner_storage_locations
+          end
       end
 
       if @filters[:query].present?

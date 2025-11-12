@@ -62,7 +62,7 @@ function importProtocolFromFile(
   function getAssetBytes(folder, stepGuid, fileRef) {
     const stepPath = stepGuid ? stepGuid + '/' : '';
     const filePath = folder + stepPath + fileRef;
-    const assetBytes = zipFiles.files[cleanFilePath(filePath)].asBinary();
+    const assetBytes = zipFiles.files[cleanFilePath(filePath)]?.asBinary();
     return window.btoa(assetBytes);
   }
 

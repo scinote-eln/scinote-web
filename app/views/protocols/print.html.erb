@@ -5,6 +5,9 @@
   </span>
   <span><%= t('.header.print_info', datetime: l(DateTime.current, format: :full), full_name: current_user.full_name) %></span>
 </p>
+<% if params[:include_assigned_items] %>
+  <%= render partial: 'protocols/print/element/my_module_repositories_element', locals: { my_module:  @protocol.my_module }%>
+<% end %>
 
 <h1><%= @protocol.name || @protocol.my_module&.name %></h1>
 <div>
@@ -68,7 +71,7 @@
           <% end %>
         </div>
       <% when 'FormResponse' %>
-        <%= render partial: 'protocols/print/form_response_element', locals: { form_response: step_element.orderable }%>
+        <%= render partial: 'protocols/print/element/form_response_element', locals: { form_response: step_element.orderable }%>
       <% end %>
     <% end %>
 

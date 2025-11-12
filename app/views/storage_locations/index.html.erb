@@ -23,7 +23,7 @@
     <div class="content-body " data-e2e="e2e-CO-storageLocations">
       <div id="storageLocationsTable" class="fixed-content-body">
         <storage-locations
-          actions-url="<%= actions_toolbar_storage_locations_path(current_team) %>"
+          actions-url="<%= actions_toolbar_storage_locations_path(parent_id: @parent_location) %>"
           :can-create-location="<%= can_create_storage_locations?(current_team) %>"
           :can-create-container="<%= can_create_storage_location_containers?(current_team) %>"
           :can-manage-parent="<%= can_manage_storage_location?(@parent_location) if @parent_location %>"

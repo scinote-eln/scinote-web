@@ -9,6 +9,7 @@
 @import "tailwind/checkbox";
 @import "tailwind/toggle";
 @import "tailwind/tabs";
+@import "tailwind/lists.css";
 
 @tailwind base;
 @tailwind components;

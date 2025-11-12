@@ -363,8 +363,8 @@
       GeneralDropdown
     },
     created() {
-      this.loadAttachments();
-      this.loadElements();
+      this.elements = this.step.elements;
+      this.attachments = this.step.attachments;
     },
     watch: {
       stepToReload() {
@@ -650,20 +650,18 @@
           this.elements[index].attributes.orderable = element.attributes.orderable;
           this.$emit('stepUpdated');
         } else {
-          $.ajax({
-            url: element.attributes.orderable.urls.update_url,
-            method: 'PUT',
-            data: element.attributes.orderable,
-            success: (result) => {
-              this.elements[index].attributes.orderable = result.data.attributes;
+          axios.put(
+            element.attributes.orderable.urls.update_url,
+            element.attributes.orderable
+          ).then((result) => {
+              this.elements[index].attributes.orderable = result.data.data.attributes;
               this.$emit('stepUpdated');
 
               // optional callback after successful update
               if(typeof callback === 'function') {
                 callback();
               }
-            }
-          }).fail(() => {
+          }).catch(() => {
             HelperModule.flashAlertMsg(this.i18n.t('errors.general_saving_data'), 'danger');
           })
         }
@@ -806,6 +804,16 @@
       },
       duplicateStep() {
         $.post(this.urls.duplicate_step_url, (result) => {
+          let step = result.data;
+          step.attachments = [];
+          step.elements = [];
+          result.included.forEach((included) => {
+            if (included.type === 'assets') {
+              step.attachments.push(included);
+            } else if (included.type === 'step_orderable_elements') {
+              step.elements.push(included);
+            }
+          });
           this.$emit('step:insert', result.data);
           HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplicated'), 'success');
         }).fail(() => {
