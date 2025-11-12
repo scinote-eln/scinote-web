@@ -3768,12 +3768,20 @@ en:
       modal:
         title: "Print options"
         include_comments: "Include comments when printing"
+        include_assigned_items: "Include Task assigned items when printing"
       header:
         printed_from: "Printed from"
         print_info: "on %{datetime} by %{full_name}"
       forms:
         single_choice_html: "<em>(Select one)</em>"
         multiple_choice_html: "<em>(Select multiple)</em>"
+      assigned_items:
+        title: 'Assigned items'
+        headers:
+          item_id: "Item ID"
+          name: "Name"
+          stock: "Stock"
+          consumed: "Consumed"
     protocols_io_import:
       title_too_long: "... Text is too long so we had to cut it off."
       too_long: "... <span class='label label-warning'>Text is too long so we had to cut it off.</span>"

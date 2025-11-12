@@ -273,7 +273,7 @@ export default {
           data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-custom`
         },
         {
-          text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table', 
+          text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table',
           params: [32, 48],
           data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-32`
         },
@@ -555,29 +555,30 @@ export default {
       this.$emit('resultUpdated');
     },
     updateElement(element, skipRequest = false, callback) {
-      const index = this.elements.findIndex((e) => e.id === element.id);
+      let index = this.elements.findIndex((e) => e.id === element.id);
+
+      if (!this.elements[index]) return;
+
       this.elements[index].isNew = false;
 
       if (skipRequest || !element.attributes.orderable?.urls?.update_url) {
         this.elements[index].attributes.orderable = element.attributes.orderable;
         this.$emit('resultUpdated');
       } else {
-        $.ajax({
-          url: element.attributes.orderable.urls.update_url,
-          method: 'PUT',
-          data: element.attributes.orderable,
-          success: (result) => {
-            this.elements[index].attributes.orderable = result.data.attributes;
+        axios.put(
+          element.attributes.orderable.urls.update_url,
+          element.attributes.orderable
+        ).then((result) => {
+            this.elements[index].attributes.orderable = result.data.data.attributes;
             this.$emit('resultUpdated');
 
             // optional callback after successful update
-            if (typeof callback === 'function') {
+            if(typeof callback === 'function') {
               callback();
             }
-          }
-        }).fail(() => {
-          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        });
+        }).catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general_saving_data'), 'danger');
+        })
       }
     },
     insertElement(element) {

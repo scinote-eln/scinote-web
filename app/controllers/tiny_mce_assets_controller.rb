@@ -14,9 +14,9 @@ class TinyMceAssetsController < ApplicationController
     response_json = { images: [] }
 
     ActiveRecord::Base.transaction do
-      images_params.each_with_index do |image, _i|
-        response_json = { images: [] }
+      response_json = { images: [] }
 
+      images_params.each_with_index do |image, _i|
         tiny_mce_asset =
           case image
           when ActionDispatch::Http::UploadedFile
@@ -25,7 +25,7 @@ class TinyMceAssetsController < ApplicationController
             create_from_blob(ActiveStorage::Blob.find_signed(image[:blob_id]))
           end
 
-        response_json[:images] << { url: rails_representation_url(TinyMceAsset.last.image), token: Base62.encode(tiny_mce_asset.id) }
+        response_json[:images] << { url: rails_representation_url(tiny_mce_asset.image), token: Base62.encode(tiny_mce_asset.id) }
       end
     rescue ActiveRecord::RecordInvalid => e
       response_json = { errors: e.message }
