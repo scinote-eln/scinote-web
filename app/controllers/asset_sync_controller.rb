@@ -190,7 +190,16 @@ class AssetSyncController < ApplicationController
         assoc,
         file: @asset.file_name,
         user: current_user.id,
-        result: Result.first.id
+        result: assoc.id
+      )
+    when ResultTemplate
+      log_result_edit_activity(
+        :edit_result_template_file_locally,
+        assoc,
+        file: @asset.file_name,
+        user: current_user.id,
+        result_template: assoc.id,
+        protocol: assoc.protocol.id
       )
     end
   end
@@ -214,11 +223,9 @@ class AssetSyncController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: result,
-            team: result.my_module.team,
-            project: result.my_module.project,
-            message_items: {
-              result: result.id
-            }.merge(message_items))
+            team: result.team,
+            project: result.instance_of?(Result) ? result.my_module.project : nil,
+            message_items: message_items)
   end
 
   def check_asset_sync

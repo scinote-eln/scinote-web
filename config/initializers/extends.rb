@@ -242,7 +242,7 @@ class Extends
   ACTIVITY_MESSAGE_ITEMS_TYPES =
     ACTIVITY_SUBJECT_TYPES + %w(
       User Tag RepositoryColumn RepositoryRow Step Result Asset TinyMceAsset
-      Repository MyModuleStatus RepositorySnapshot UserGroup
+      Repository MyModuleStatus RepositorySnapshot UserGroup ResultTemplate
     ).freeze
 
   ACTIVITY_TYPES = {
@@ -629,7 +629,40 @@ class Extends
     tag_created: 412,
     tag_edited: 413,
     tag_deleted: 414,
-    tag_merged: 415
+    tag_merged: 415,
+    add_result_template: 416,
+    edit_result_template: 417,
+    destroy_result_template: 418,
+    result_template_duplicated: 419,
+    result_template_text_added: 420,
+    result_template_text_edited: 421,
+    result_template_text_deleted: 422,
+    result_template_text_duplicated: 423,
+    result_template_text_moved: 424,
+    result_template_table_added: 425,
+    result_template_table_edited: 426,
+    result_template_table_deleted: 427,
+    result_template_table_duplicated: 428,
+    result_template_table_moved: 429,
+    result_template_file_added: 430,
+    edit_result_template_file_locally: 431,
+    result_template_file_deleted: 432,
+    result_template_file_duplicated: 433,
+    result_template_file_moved: 434,
+    result_template_asset_renamed: 435,
+    edit_wopi_file_on_result_template: 436,
+    sequence_on_result_template_added: 437,
+    sequence_on_result_template_edited: 438,
+    sequence_on_result_template_deleted: 439,
+    sequence_on_result_template_moved: 440,
+    create_chemical_structure_on_result_template: 441,
+    edit_chemical_structure_on_result_template: 442,
+    delete_chemical_structure_on_result_template: 443,
+    move_chemical_structure_on_result_template: 444,
+    edit_image_on_result_template: 445,
+    step_and_result_template_linked: 446,
+    step_and_result_template_unlinked: 447,
+    result_template_restore_asset_version: 448
   }
 
   ACTIVITY_GROUPS = {
@@ -647,7 +680,7 @@ class Extends
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
-                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409],
+                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409, *416..448],
     team: [92, 94, 93, 97, 104, 244, 245, *379..383, *412..415],
     label_templates: [*216..219],
     storage_locations: [*309..315, 361],

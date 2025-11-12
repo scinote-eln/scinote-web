@@ -16,7 +16,7 @@ class MarvinJsAssetsController < ApplicationController
     create_create_marvinjs_activity(result[:asset], current_user)
 
     if result[:asset]
-      if marvin_params[:object_type] == 'Step' || marvin_params[:object_type] == 'Result'
+      if %w(Step Result ResultTemplate).include?(marvin_params[:object_type])
         render json: {
           html: render_to_string(partial: 'assets/asset', locals: {
                                    asset: result[:asset],
@@ -68,6 +68,7 @@ class MarvinJsAssetsController < ApplicationController
   def load_create_vars
     @assoc = Step.find_by(id: marvin_params[:object_id]) if marvin_params[:object_type] == 'Step'
     @assoc = Result.find_by(id: params[:object_id]) if marvin_params[:object_type] == 'Result'
+    @assoc = ResultTemplate.find_by(id: marvin_params[:object_id]) if marvin_params[:object_type] == 'ResultTemplate'
 
     if @assoc.class == Step
       @protocol = @assoc.protocol
@@ -77,21 +78,23 @@ class MarvinJsAssetsController < ApplicationController
   end
 
   def check_read_permission
-    if @assoc.class == Step
-      return render_403 unless can_read_protocol_in_module?(@protocol) ||
-                               can_read_protocol_in_repository?(@protocol)
-    elsif @assoc.class == Result
-      return render_403 unless can_read_experiment?(@my_module.experiment)
+    case @assoc
+    when Step
+      render_403 unless can_read_protocol_in_module?(@protocol) ||
+                        can_read_protocol_in_repository?(@protocol)
+    when ResultBase
+      render_403 unless can_read_result?(@assoc)
     else
       render_403
     end
   end
 
   def check_manage_permission
-    if @assoc.class == Step
-      return render_403 unless can_manage_step?(@assoc)
-    elsif @assoc.class == Result
-      return render_403 unless can_manage_my_module?(@assoc.my_module)
+    case @assoc
+    when Step
+      render_403 unless can_manage_step?(@assoc)
+    when ResultBase
+      render_403 unless can_manage_result?(@assoc)
     else
       render_403
     end

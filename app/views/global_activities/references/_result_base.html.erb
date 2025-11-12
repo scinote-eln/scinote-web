@@ -1,0 +1,23 @@
+<% if defined? subject.protocol %>
+   <%= render partial: "global_activities/references/protocol",
+            locals: { team: team, subject: subject.protocol, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
+<% else %>
+  <%= render partial: "global_activities/references/my_module",
+            locals: { team: team, subject: subject&.my_module, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
+  <div class="ga-breadcrumb">
+
+    <span class="<%=result_icon_class(subject)%>"></span>
+    <% if subject&.navigable? %>
+      <% path = subject.archived? ? my_module_results_path(subject.my_module, result_id: subject.id, view_mode: :archived) : my_module_results_path(subject.my_module, result_id: subject.id) %>
+      <%= route_to_other_team(path,
+                              team,
+                              subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                              title: subject.name) %>
+    <% else %>
+      <% name = subject&.name || breadcrumbs['result'] %>
+      <span title="<%= name %>">
+        <%= name&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+      </span>
+    <% end %>
+  </div>
+<% end %>
