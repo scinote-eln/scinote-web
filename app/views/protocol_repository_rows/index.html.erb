@@ -1,8 +1,12 @@
 <div class="content-pane flexible protocol-content protocol-results with-grey-background" >
   <%= render partial: "protocols/header" %>
 
-  <div class="ml-auto" id="protocolRepositoryRows">
-    <protocol-repository-rows data-url="<%= table_protocol_repository_rows_path(@protocol) %>"></protocol-repository-rows>
+  <div id="protocolRepositoryRows" class="fixed-content-body protocol-repository-rows-table-container">
+    <protocol-repository-rows
+      data-url="<%= protocol_repository_rows_path(@protocol) %>"
+      actions-url="<%= actions_toolbar_protocol_repository_rows_path(@protocol) %>"
+      create-url="<%= protocol_repository_rows_path(@protocol) if can_manage_protocol_draft_in_repository?(@protocol) %>"
+    ></protocol-repository-rows>
   </div>
 </div>
 

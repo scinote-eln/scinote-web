@@ -2,14 +2,14 @@
 
 class ProtocolRepositoryRowsController < ApplicationController
   before_action :load_protocol
-  before_action :load_protocol_repository_row, only: %i(destroy)
-  before_action :check_read_permissions, except: %i(create destroy)
-  before_action :check_manage_permissions, only: %i(create destroy)
+  before_action :check_read_permissions, except: %i(create batch_destroy)
+  before_action :check_manage_permissions, only: %i(create batch_destroy)
 
   def index
     respond_to do |format|
       format.json do
-        @protocol_repository_rows = @protocol.protocol_repository_rows.preload(repository_row: :repository)
+        rows = Lists::ProtocolRepositoryRowsService.new(@protocol.protocol_repository_rows.preload(repository_row: :repository), params).call
+        render json: rows, each_serializer: Lists::ProtocolRepositoryRowSerializer, user: current_user, meta: pagination_dict(rows)
       end
       format.html do
         @active_tab = :repository_rows
@@ -19,20 +19,22 @@ class ProtocolRepositoryRowsController < ApplicationController
 
   def create
     @protocol.transaction do
-      @protocol_repository_row = @protocol.protocol_repository_rows.create!
+      @protocol_repository_row = @protocol.protocol_repository_rows.create!(protocol_repository_row_params)
       render json: {}
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error e.message
+      render json: { errors: e.message }, status: :unprocessable_entity
     end
-  rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error e.message
-    render json: { errors: @protocol_repository_row.errors.full_messages }, status: :unprocessable_entity
   end
 
-  def destroy
+  def batch_destroy
     @protocol.transaction do
-      @protocol_repository_row.destroy!
+      @protocol.protocol_repository_rows.where(id: params[:row_ids]).find_each do |protocol_repository_row|
+        protocol_repository_row.destroy!
+      end
       head :no_content
     end
-  rescue StandardError
+  rescue StandardError => e
     Rails.logger.error e.message
     head :unprocessable_entity
   end
@@ -68,16 +70,22 @@ class ProtocolRepositoryRowsController < ApplicationController
     }
   end
 
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::ProtocolRepositoryRowsService.new(
+          current_user,
+          @protocol,
+          row_ids: JSON.parse(params[:items]).pluck('id')
+        ).actions
+    }
+  end
+
   private
 
   def load_protocol
     @protocol = current_team.protocols.readable_by_user(current_user).find_by(id: params[:protocol_id])
     render_404 unless @protocol
-  end
-
-  def load_protocol_repository_row
-    @protocol_repository_row = @protocol.protocol_repository_rows.find_by(id: params[:id])
-    render_404 unless @protocol_repository_row
   end
 
   def check_read_permissions

@@ -1,142 +1,139 @@
 <template>
-  <div ref="container" class="border rounded transition-all" :style="{height: '448px'}">
-    <div style="height: 400px">
-      <ag-grid-vue
-          class="ag-theme-alpine w-full flex-grow h-[340px] z-10"
-          :columnDefs="columnDefs"
-          :rowData="preparedRows"
-          :rowSelection="false"
-          :suppressRowTransform="true"
-          :suppressRowClickSelection="true"
-          :enableCellTextSelection="true"
-          @grid-ready="onGridReady"
-          @sortChanged="setOrder"
-        >
-      </ag-grid-vue>
-      <div class="h-[60px] flex items-center border-transparent border-t border-t-sn-light-grey border-solid grey px-6">
-        <div class="ml-auto">
-          <Pagination
-            :totalPage="Math.ceil(protocolRepositoryRows.recordsTotal / perPage)"
-            :currentPage="page"
-            @setPage="setPage"
-          ></Pagination>
-        </div>
-      </div>
+  <div class="h-full flex flex-col">
+    <div class="py-4 px-6 flex items-center gap-3 bg-sn-super-light-blue
+                border-transparent border-[1px] border-solid border-b-sn-alert-science-blue-disabled">
+      <i class="sn-icon sn-icon-alert-success text-sn-science-blue"></i>
+      <span>{{ this.i18n.t('protocols.repository_rows.index.disclaimer') }}</span>
     </div>
+    <div class="h-full flex-grow">
+      <DataTable :columnDefs="columnDefs"
+                tableId="ProtocolRepositoryRowsTable"
+                :dataUrl="dataUrl"
+                :reloadingTable="reloadingTable"
+                :toolbarActions="toolbarActions"
+                :actionsUrl="actionsUrl"
+                :hideColumnsManagment="true"
+                @assignRow="showAssignModal = true"
+                @tableReloaded="reloadingTable = false"
+                @delete="deleteRows"
+          />
+    </div>
+    <AssignRowModal
+    v-if="showAssignModal"
+    @close="showAssignModal = false;"
+    @assign="assignRow" />
+    <ConfirmationModal
+      :title="i18n.t('protocols.repository_rows.delete_modal.title')"
+      :description="deleteDescription"
+      confirmClass="btn btn-danger"
+      :confirmText="i18n.t('protocols.repository_rows.delete_modal.confirm')"
+      ref="deleteModal"
+    ></ConfirmationModal>
   </div>
 </template>
 <script>
-import { AgGridVue } from 'ag-grid-vue3';
+
+
 import axios from '../../packs/custom_axios.js';
-import CustomHeader from '../shared/datatable/tableHeader';
-import Pagination from '../shared/datatable/pagination.vue';
+import AssignRowModal from './modals/assign_row_modal.vue';
+import DataTable from '../shared/datatable/table.vue';
+import ConfirmationModal from '../shared/confirmation_modal.vue';
+import RowNameRenderer from './repository_row_renderers/row_name.vue';
+import RepositoryNameRenderer from './repository_row_renderers/repository_name.vue';
+
 
 export default {
-  name: 'ProtocolRepositoryRows',
+  name: 'TagsTable',
+  components: {
+    DataTable,
+    AssignRowModal,
+    ConfirmationModal,
+    RowNameRenderer,
+    RepositoryNameRenderer
+  },
   props: {
     dataUrl: {
       type: String,
       required: true
+    },
+    actionsUrl: {
+      type: String,
+      required: true
+    },
+    createUrl: {
+      type: String
     }
   },
-  components: {
-    AgGridVue,
-    agColumnHeader: CustomHeader,
-    Pagination
-  },
-  data: () => ({
-    protocolRepositoryRows: {
-      data: [],
-      recordsTotal: 0
-    },
-    order: { column: 0, dir: 'asc' },
-    sectionOpened: false,
-    page: 1,
-    perPage: 20,
-    gridApi: null,
-    columnApi: null,
-    gridReady: false
-  }),
-  created() {
-    this.loadData();
-  },
-  computed: {
-    preparedRows() {
-      return this.protocolRepositoryRows.data;
-    },
-    columnDefs() {
-      const columns = [
+  data() {
+    return {
+      reloadingTable: false,
+      showAssignModal: false,
+      deleteDescription: '',
+      columnDefs: [
         {
-          field: '0',
-          flex: 1,
-          headerName: this.i18n.t('protocols.repository_rows.table.id'),
-          sortable: true,
-          comparator: () => null,
-          cellRendererParams: {
-            dtComponent: this
-          }
-        },
-        {
-          field: '1',
-          flex: 1,
+          field: 'name',
           headerName: this.i18n.t('protocols.repository_rows.table.name'),
           sortable: true,
-          comparator: () => null,
-          cellRendererParams: {
-            dtComponent: this
-          }
-        },
-        {
-          field: '2',
-          flex: 1,
+          suppressMovable: true,
+          cellRenderer: 'RowNameRenderer'
+        }, {
+          field: 'row_code',
+          headerName: this.i18n.t('protocols.repository_rows.table.id'),
+          sortable: true,
+          suppressMovable: true
+        }, {
+          field: 'repository_name',
           headerName: this.i18n.t('protocols.repository_rows.table.repository'),
           sortable: true,
-          comparator: () => null,
-          cellRendererParams: {
-            dtComponent: this
-          }
+          suppressMovable: true,
+          cellRenderer: 'RepositoryNameRenderer'
         }
-    ];
-
-      return columns;
+      ]
+    };
+  },
+  computed: {
+    toolbarActions() {
+      const left = [];
+      if (this.createUrl) {
+        left.push({
+          name: 'assignRow',
+          icon: 'sn-icon sn-icon-new-task',
+          label: this.i18n.t('protocols.repository_rows.index.assign_item'),
+          type: 'emit',
+          path: '',
+          buttonStyle: 'btn btn-primary'
+        });
+      }
+      return {
+        left,
+        right: []
+      };
     }
   },
   methods: {
-    setOrder() {
-      const orderState = this.getOrder(this.columnApi.getColumnState());
-      const [order] = orderState;
-      order.column = 0;
-      this.order = order;
-
-      this.loadData();
-    },
-    getOrder(columnsState) {
-      if (!columnsState) return null;
-
-      return columnsState.filter((column) => column.sort)
-        .map((column) => ({
-          column: column.colId,
-          dir: column.sort
-        }));
-    },
-    onGridReady(params) {
-      this.gridApi = params.api;
-      this.columnApi = params.columnApi;
-      this.gridReady = true;
-    },
-    loadData() {
-      axios.post(this.dataUrl, {
-        length: this.perPage,
-        order: [this.order],
-        start: (this.page - 1) * this.perPage
-      }).then((response) => {
-        this.protocolRepositoryRows = response.data;
+    assignRow(rowId) {
+      this.showAssignModal = false;
+      axios.post(this.createUrl, {
+        protocol_repository_row: {
+          repository_row_id: rowId
+        }
+      }).then(() => {
+        this.reloadingTable = true;
+      }).catch((e) => {
+        HelperModule.flashAlertMsg(e.response.data.errors, 'danger');
       });
     },
-    setPage(page) {
-      this.page = page;
-      this.loadData();
-    },
+    async deleteRows(event, rows) {
+      this.deleteDescription = this.i18n.t('protocols.repository_rows.delete_modal.description_html', { count: rows.length });
+
+      const ok = await this.$refs.deleteModal.show();
+      if (ok) {
+        axios.delete(event.path).then(() => {
+          this.reloadingTable = true;
+        });
+      }
+    }
   }
 };
+
 </script>

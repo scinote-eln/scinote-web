@@ -796,6 +796,7 @@ class Extends
     tags/index
     teams/automations
     result_templates/index
+    protocol_repository_rows/index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
