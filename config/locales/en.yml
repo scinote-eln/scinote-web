@@ -2748,7 +2748,8 @@ en:
         flash_assignments_failure: "Failed to assign item(s) to task(s)."
     modal_delete_record:
       title: "Delete items"
-      notice: "Are you sure you want to delete the selected item(s)?"
+      notice: "Deleting an item will remove it from all linked objects, including item relationships, storage locations, task-assigned items, protocol templates, and smart annotations. Task inventory snapshots will retain a record of the deleted item."
+      notice_warning_html: "<b>Are you sure you want to delete selected item(s)?</b>"
       delete: "Delete"
     modal_delete_asset_value:
       title: "Confirm file deletion?"
