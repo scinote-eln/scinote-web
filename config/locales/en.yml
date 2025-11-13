@@ -3743,25 +3743,6 @@ en:
         button: "Rearrange steps"
         modal:
           title: "Rearrange protocol steps"
-    import_modal:
-      confirm:
-        title: "Import protocol"
-        body_html: "You will start importing selected .docx file into SciNote. The import time may vary according to the size of a file and internet connection."
-      in_progress:
-        title: "Importing in progress"
-        body_html: "The process of importing has started. Please wait..."
-      not_yet_done:
-        title: "Importing in progress"
-        body_html: "The import is taking longer than expected. You'll get a notice in Notifications when your protocol template is ready. You can close the window and continue with your work."
-      done:
-        title: "Importing finished"
-        body_html: 'The protocol has been successfully imported. You can access protocol template in Notifications. You can also find it in the table of <a href="%{url}">protocol templates.</a>'
-      failed:
-        title: "Import failed"
-        body_html: "We're sorry but the file import process has encountered an error. Please make another attempt, and if the issue persists, please contact support for further assistance."
-      import: "Import"
-      cancel: "Cancel"
-      close: "Close"
     print:
       title: "Print protocol"
       button: "Print"
@@ -3960,7 +3941,6 @@ en:
       clone_btn: "Copy"
       import: "Import"
       import_eln: "SciNote file (.eln)"
-      import_docx: "Microsoft Word (.docx)"
       import_with_ai: "Import with AI"
       beta: "BETA"
       import_protocols_io: "From Protocols.io"

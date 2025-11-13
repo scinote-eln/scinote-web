@@ -19,7 +19,6 @@
                @tableReloaded="reloadingTable = false"
                @import_file="importFile"
                @import_protocols_io="importProtocolsIo"
-               @import_docx="importDocx"
                @import_ai="importWithAI"
                @access="access"
                @linked_my_modules="linkedMyModules"
@@ -328,10 +327,6 @@ export default {
     importProtocolsIo() {
       const protocolIoButton = document.querySelector('#importProtocolsIo');
       protocolIoButton.click();
-    },
-    importDocx() {
-      const docxButton = document.querySelector('#importDocx');
-      docxButton.click();
     },
     importWithAI() {
       const aiButton = document.querySelector('#importWithAI');
