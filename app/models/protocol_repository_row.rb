@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ProtocolRepositoryRow < ApplicationRecord
+  include SearchableModel
+
   belongs_to :protocol
   belongs_to :repository_row, optional: true
 

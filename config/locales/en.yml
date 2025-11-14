@@ -4068,10 +4068,22 @@ en:
           atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
           ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
     repository_rows:
+      index:
+        disclaimer: "Users must have access to all items when loading this template to task; otherwise, some items may not appear."
+        assign_item: "Assign item"
+      assign_modal:
+        description: "Select which item you want to assign"
       table:
         id: 'Item ID'
         name: 'Name'
         repository: 'Inventory'
+        private_inventory: 'Private inventory'
+        private_item: 'Private item'
+        deleted_item: 'This item has been deleted'
+      delete_modal:
+        title: "Remove assigned items"
+        description_html: "You are about to remove %{count} item(s) from this protocol template.<br></br>You can always add items back to this template."
+        confirm: "Remove"
 
     steps:
       label: "Step %{position} - %{name}"

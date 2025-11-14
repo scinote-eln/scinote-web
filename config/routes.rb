@@ -788,6 +788,8 @@ Rails.application.routes.draw do
         collection do
           get :repositories
           get :repository_rows
+          post :actions_toolbar
+          delete :batch_destroy
         end
       end
 

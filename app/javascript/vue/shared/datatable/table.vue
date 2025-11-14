@@ -17,8 +17,9 @@
         :filters="filters"
         :columnDefs="columnDefs"
         :disabled="addingNewRow"
-        :tableState="tableState"
         :order="order"
+        :tableState="tableState"
+        :hideColumnsManagment="hideColumnsManagment"
         @applyFilters="applyFilters"
         @setTableView="switchViewRender('table')"
         @setCardsView="switchViewRender('cards')"
@@ -232,6 +233,10 @@ export default {
       default: true
     },
     skipSaveTableState: {
+      type: Boolean,
+      default: false
+    },
+    hideColumnsManagment: {
       type: Boolean,
       default: false
     }
