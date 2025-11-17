@@ -117,11 +117,21 @@ module TinyMceImages
 
       image_changed = false
       parsed_description = Nokogiri::HTML(read_attribute(object_field))
+
+      # we track duplicates (if pasted as HTML), so we can create copies for each image
+      parsed_asset_ids = []
+
       parsed_description.css('img').each do |image|
         asset = image['data-mce-token'].presence && TinyMceAsset.find_by(id: Base62.decode(image['data-mce-token']))
 
         if asset
-          next if asset.object == self
+          if asset.object == self && parsed_asset_ids.exclude?(asset.id)
+            parsed_asset_ids << asset.id
+            next
+          end
+
+          user.permission_team = asset.team
+
           next unless asset.can_read?(user)
         else
           image_type = nil
