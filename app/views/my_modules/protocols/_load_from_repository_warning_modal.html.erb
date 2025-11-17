@@ -20,9 +20,23 @@
         </h2>
       </div>
       <div class="modal-body">
-        <p><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.description_p1") %></p>
-        <p><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.description_p2") %></p>
-        <p><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.description_p3_html") %></p>
+        <p><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.description", steps_count: @my_module.steps.count, results_count: @my_module.results.count, rows_count: @my_module.my_module_repository_rows.count) %></p>
+        <p><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.load_description") %></p>
+        <div class="flex gap-2 mb-2">
+          <div class="sci-radio-container shrink-0 mt-0.5">
+            <input type="radio" name="load_option" value="merge" class="sci-radio" checked>
+            <span class="sci-radio-label"></span>
+          </div>
+          <label class="sci-label !my-0"><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.option_merge_html") %></label>
+        </div>
+        <div class="flex gap-2 mb-6">
+          <div class="sci-radio-container shrink-0 mt-0.5">
+            <input type="radio" name="load_option" value="replace" class="sci-radio">
+            <span class="sci-radio-label"></span>
+          </div>
+          <label class="sci-label !my-0"><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.option_replace_html") %></label>
+        </div>
+        <p><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.confirmation_description_html") %></p>
       </div>
       <div class="modal-footer">
         <button

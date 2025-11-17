@@ -1,5 +1,5 @@
 /* global TinyMCE Prism I18n animateSpinner importProtocolFromFile */
-/* global HelperModule DataTableHelpers GLOBAL_CONSTANTS */
+/* global HelperModule DataTableHelpers $ */
 /* eslint-disable no-use-before-define, no-alert, no-restricted-globals, no-underscore-dangle */
 
 
@@ -13,15 +13,32 @@ function initLinkUpdate() {
   var modal = $('#confirm-link-update-modal');
   var modalTitle = modal.find('.modal-title');
   var modalMessage = modal.find('.modal-body .message');
+  var modalMergeLabel = modal.find('.modal-body .merge-label');
+  var modalReplaceLabel = modal.find('.modal-body .replace-label');
   var updateBtn = modal.find(".modal-footer [data-action='submit']");
   $('.protocol-options-dropdown')
-    .on('ajax:success', "[data-action='unlink'], [data-action='revert'], [data-action='update-parent'],"
-        + "[data-action='update-self']", function(e, data) {
+    .on('ajax:success', "[data-action='unlink'], [data-action='update-parent']", function(e, data) {
+      modal.find(".modal-body .load-options-container").hide();
       modalTitle.text(data.title);
-      modalMessage.text(data.message);
+      modalMessage.html(data.message);
       updateBtn.text(data.btn_text);
       modal.attr('data-url', data.url);
       modal.modal('show');
+
+    });
+
+  $('.protocol-options-dropdown')
+    .on('ajax:success', "[data-action='revert'], [data-action='update-self']", function(e, data) {
+      modal.find(".modal-body .load-options-container").show();
+      modalTitle.text(data.title);
+      modalMessage.html(data.message);
+      modalMergeLabel.html(data.merge_text);
+      modalReplaceLabel.html(data.replace_text);
+      updateBtn.text(data.btn_text);
+      modal.find("input[name='load_option'][value='merge']").prop("checked", true)
+      modal.attr('data-url', data.url);
+      modal.modal('show');
+
     });
 
   modal.on('hidden.bs.modal', function() {
@@ -30,11 +47,14 @@ function initLinkUpdate() {
 
   if (!$._data(updateBtn[0], 'events')) {
     updateBtn.on('click', function() {
+      let selectedOption = modal.find("input[name='load_option']:checked").val();
+
       // POST via ajax
       $.ajax({
         url: modal.attr('data-url'),
         type: 'POST',
         dataType: 'json',
+        data: { load_mode: selectedOption },
         success: function() {
           // Simply reload page
           location.reload();
@@ -73,7 +93,17 @@ function initLoadFromRepository() {
       initLoadFromRepositoryTable(modalBody.find('#load-protocols-datatable'));
 
       loadBtn.on('click', function() {
-        loadFromRepositoryWarning();
+        let isEmpty = $('#my_module_is_empty').val() === 'true';
+        if (!isEmpty) {
+          // Show warning modal
+          loadFromRepositoryWarning();
+          return;
+        }
+
+        $("#load-from-repository-warning-modal input[name='load_option'][value=replace]").prop('checked', true);
+        modal.modal('hide');
+        loadFromRepository();
+
       });
     });
   modal.on('hidden.bs.modal', function() {
@@ -200,6 +230,7 @@ function loadFromRepositoryWarning() {
   var modal = $('#load-from-repository-warning-modal');
   var loadBtn = modal.find(".modal-footer [data-action='submit']");
 
+
   modal.modal('show');
   $('#load-from-repository-modal').modal('hide');
 
@@ -217,12 +248,16 @@ function loadFromRepository() {
 
   if (selectedRow !== null) {
     modal.find(".modal-footer [data-action='submit']").prop('disabled', true);
+    let loadMode = $("#load-from-repository-warning-modal input[name='load_option']:checked").val();
     // POST via ajax
     $.ajax({
       url: modal.attr('data-url'),
       type: 'POST',
       dataType: 'json',
-      data: { source_id: selectedRow },
+      data: {
+        source_id: selectedRow,
+        load_mode: loadMode
+      },
       success: function() {
         // Simply reload page
         location.reload();

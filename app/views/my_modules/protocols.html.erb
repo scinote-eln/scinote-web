@@ -24,6 +24,8 @@
   </span>
 <% end %>
 
+<%= hidden_field_tag :my_module_is_empty, !@my_module.not_empty? %>
+
 
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <div class="content-pane flexible my-module-content my-modules-protocols-index with-grey-background" data-task-id="<%= @my_module.id %>">
