@@ -350,7 +350,8 @@ class Protocol < ApplicationRecord
     end
   end
 
-  def self.clone_contents(src, dest, current_user, clone_keywords, only_contents: false, include_file_versions: false, include_results: false)
+  def self.clone_contents(src, dest, current_user, clone_keywords, only_contents: false, include_file_versions: false, include_results: false, include_assigned_rows: false)
+    # Update metadata
     dest.update(description: src.description, name: src.name) unless only_contents
 
     src.clone_tinymce_assets(dest, dest.team)
@@ -373,20 +374,30 @@ class Protocol < ApplicationRecord
       steps_map[step.id] = new_step.id if include_results
     end
 
-    return unless include_results
+    if include_results
+      results_map = {}
+      results_scope = src.in_repository? ? src.results : src.my_module.results
 
-    results_map = {}
-    results_scope = src.in_repository? ? src.results : src.my_module.results
+      # Copy results
+      results_scope.order(:created_at).each do |result|
+        new_result = result.duplicate(dest, current_user)
+        results_map[result.id] = new_result.id
+      end
 
-    # Copy results
-    results_scope.order(:created_at).each do |result|
-      new_result = result.duplicate(dest, current_user)
-      results_map[result.id] = new_result.id
+      # Copy stepResults
+      StepResult.where(step_id: steps_map.keys, result_id: results_map.keys).find_each do |sr|
+        StepResult.create!(step_id: steps_map[sr.step_id], result_id: results_map[sr.result_id], created_by: current_user)
+      end
     end
 
-    # Copy stepResults
-    StepResult.where(step_id: steps_map.keys, result_id: results_map.keys).find_each do |sr|
-      StepResult.create!(step_id: steps_map[sr.step_id], result_id: results_map[sr.result_id], created_by: current_user)
+    if include_assigned_rows
+      # Copy assigned repository rows
+      src.protocol_repository_rows.find_each do |protocol_row|
+        ProtocolRepositoryRow.create!(
+          protocol: dest,
+          repository_row: protocol_row.repository_row
+        )
+      end
     end
   end
 
@@ -588,7 +599,7 @@ class Protocol < ApplicationRecord
     save!
   end
 
-  def copy_to_repository(clone, current_user, include_results: false)
+  def copy_to_repository(clone, current_user, include_results: false, include_assigned_rows: false)
     clone.team = team
     clone.protocol_type = :in_repository_draft
     clone.added_by = current_user
@@ -599,7 +610,7 @@ class Protocol < ApplicationRecord
 
     ActiveRecord::Base.no_touching do
       # Okay, clone seems to be valid: let's clone it
-      clone = deep_clone(clone, current_user, include_results: include_results)
+      clone = deep_clone(clone, current_user, include_results: include_results, include_assigned_rows: include_assigned_rows)
     end
 
     clone
@@ -623,7 +634,7 @@ class Protocol < ApplicationRecord
     return draft if draft.invalid?
 
     ActiveRecord::Base.no_touching do
-      draft = deep_clone(draft, current_user, include_file_versions: true, include_results: true)
+      draft = deep_clone(draft, current_user, include_file_versions: true, include_results: true, include_assigned_rows: true)
     end
 
     parent_protocol.user_assignments.each do |parent_user_assignment|
@@ -671,7 +682,7 @@ class Protocol < ApplicationRecord
       protocol_type: :in_repository_draft
     )
 
-    cloned = deep_clone(clone, current_user)
+    cloned = deep_clone(clone, current_user, include_results: true, include_assigned_rows: true)
 
     if cloned
       Activities::CreateActivityService
@@ -769,7 +780,7 @@ class Protocol < ApplicationRecord
     sync_child_protocol_assignment(user_group_assignment)
   end
 
-  def deep_clone(clone, current_user, include_file_versions: false, include_results: false)
+  def deep_clone(clone, current_user, include_file_versions: false, include_results: false, include_assigned_rows: false)
     # Save cloned protocol first
     success = clone.save
 
@@ -781,7 +792,16 @@ class Protocol < ApplicationRecord
 
     raise ActiveRecord::RecordNotSaved unless success
 
-    Protocol.clone_contents(self, clone, current_user, true, only_contents: true, include_file_versions: include_file_versions, include_results: include_results)
+    Protocol.clone_contents(
+      self,
+      clone,
+      current_user,
+      true,
+      only_contents: true,
+      include_file_versions: include_file_versions,
+      include_results: include_results,
+      include_assigned_rows: include_assigned_rows
+    )
 
     clone.reload
     clone
