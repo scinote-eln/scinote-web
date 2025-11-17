@@ -68,7 +68,7 @@ module ActiveStorage
       when 'Protocol'
         can_read_protocol_in_module?(asset.object) || can_read_protocol_in_repository?(asset.object)
       when 'ResultText'
-        can_read_my_module?(asset.object.result.my_module)
+        can_read_result?(asset.object.result)
       when 'StepText'
         can_read_protocol_in_module?(asset.object.step.protocol) ||
           can_read_protocol_in_repository?(asset.object.step.protocol)
