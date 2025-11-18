@@ -87,6 +87,10 @@ export default {
       type: Boolean,
       required: true
     },
+    protocolsIoEnabled: {
+      type: Boolean,
+      required: true
+    },
     activePageUrl: {
       type: String,
       required: true
@@ -224,11 +228,13 @@ export default {
           ]
         };
 
-        importMenu.menuItems.push({
-          emit: 'import_protocols_io',
-          text: this.i18n.t('protocols.index.import_protocols_io'),
-          data_e2e: 'e2e-BT-topToolbar-importProtocolsIo'
-        });
+        if (this.protocolsIoEnabled) {
+          importMenu.menuItems.push({
+            emit: 'import_protocols_io',
+            text: this.i18n.t('protocols.index.import_protocols_io'),
+            data_e2e: 'e2e-BT-topToolbar-importProtocolsIo'
+          });
+        }
 
         left.push(importMenu);
       }
