@@ -18,9 +18,24 @@
         ></h4>
       </div>
       <div class="modal-body">
+        <p><%= t("my_modules.protocols.confirm_link_update_modal.description", steps_count: @my_module.steps.count, results_count: @my_module.results.count, rows_count: @my_module.my_module_repository_rows.count) %></p>
         <p class="message" data-e2e="e2e-TX-task-protocol-updateRevertFromTemplates-description"></p>
+        <div class="flex gap-2 mb-2 load-options-container">
+          <div class="sci-radio-container shrink-0 mt-0.5">
+            <input type="radio" name="load_option" value="merge" class="sci-radio" checked>
+            <span class="sci-radio-label"></span>
+          </div>
+          <label class="merge-label sci-label !my-0"></label>
+        </div>
+        <div class="flex gap-2 mb-6 load-options-container">
+          <div class="sci-radio-container shrink-0 mt-0.5">
+            <input type="radio" name="load_option" value="replace" class="sci-radio">
+            <span class="sci-radio-label"></span>
+          </div>
+          <label class="replace-label sci-label !my-0"></label>
+        </div>
         <p class="warning" data-e2e="e2e-TX-task-protocol-updateRevertFromTemplates-warning">
-          <%= t('my_modules.protocols.confirm_link_update_modal.warning') %>
+          <%= t('my_modules.protocols.confirm_link_update_modal.warning_html') %>
         </p>
       </div>
       <div class="modal-footer">
@@ -33,7 +48,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-success"
+          class="btn btn-danger"
           data-action="submit"
           data-e2e="e2e-BT-task-protocol-updateRevertFromTemplatesModal-confirm"
         ></button>

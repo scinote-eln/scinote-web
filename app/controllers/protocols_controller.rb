@@ -432,9 +432,10 @@ class ProtocolsController < ApplicationController
   def revert
     if @protocol.can_destroy?
       transaction_error = false
+      parent = @protocol.parent
       Protocol.transaction do
         # Revert is basically update from parent
-        @protocol.update_from_parent(current_user, @protocol.parent)
+        @protocol.load_from_repository(parent, current_user, params[:load_mode])
       rescue StandardError
         transaction_error = true
         raise ActiveRecord::Rollback
@@ -451,7 +452,7 @@ class ProtocolsController < ApplicationController
         log_activity(:update_protocol_in_task_from_repository,
                      @protocol.my_module.experiment.project,
                      my_module: @protocol.my_module.id,
-                     protocol_repository: @protocol.parent.id)
+                     protocol_repository: parent.id)
         flash[:success] = t(
           'my_modules.protocols.revert_flash'
         )
@@ -467,6 +468,7 @@ class ProtocolsController < ApplicationController
 
   def update_from_parent
     protocol_can_destroy = @protocol.can_destroy?
+    source_parent = nil
     if protocol_can_destroy
       transaction_error = false
       Protocol.transaction do
@@ -476,7 +478,7 @@ class ProtocolsController < ApplicationController
                         else
                           @protocol.parent.parent
                         end
-        @protocol.update_from_parent(current_user, source_parent.latest_published_version_or_self)
+        @protocol.load_from_repository(source_parent.latest_published_version_or_self, current_user, params[:load_mode])
       rescue StandardError
         transaction_error = true
         raise ActiveRecord::Rollback
@@ -491,7 +493,7 @@ class ProtocolsController < ApplicationController
       log_activity(:update_protocol_in_task_from_repository,
                    @protocol.my_module.experiment.project,
                    my_module: @protocol.my_module.id,
-                   protocol_repository: @protocol.parent.id)
+                   protocol_repository: source_parent.latest_published_version_or_self.id)
 
       flash[:success] = t('my_modules.protocols.update_from_parent_flash')
       flash.keep(:success)
@@ -503,7 +505,7 @@ class ProtocolsController < ApplicationController
     if @protocol.can_destroy?
       transaction_error = false
       Protocol.transaction do
-        @protocol.load_from_repository(@source, current_user)
+        @protocol.load_from_repository(@source, current_user, params[:load_mode])
       rescue StandardError => e
         Rails.logger.error(e.message)
         Rails.logger.error(e.backtrace.join("\n"))
@@ -519,7 +521,7 @@ class ProtocolsController < ApplicationController
         log_activity(:load_protocol_to_task_from_repository,
                      @protocol.my_module.experiment.project,
                      my_module: @protocol.my_module.id,
-                     protocol_repository: @protocol.parent.id)
+                     protocol_repository: @source.id)
         flash[:success] = t('my_modules.protocols.load_from_repository_flash')
         flash.keep(:success)
         render json: {}
@@ -774,8 +776,10 @@ class ProtocolsController < ApplicationController
   def revert_modal
     render json: {
       title: t('my_modules.protocols.confirm_link_update_modal.revert_title'),
-      message: t('my_modules.protocols.confirm_link_update_modal.revert_message'),
+      message: t('my_modules.protocols.confirm_link_update_modal.revert_message_html'),
       btn_text: t('my_modules.protocols.confirm_link_update_modal.revert_btn_text'),
+      merge_text: t('my_modules.protocols.confirm_link_update_modal.revert_option_merge_html'),
+      replace_text: t('my_modules.protocols.confirm_link_update_modal.revert_option_replace_html'),
       url: revert_protocol_path(@protocol)
     }
   end
@@ -783,8 +787,10 @@ class ProtocolsController < ApplicationController
   def update_from_parent_modal
     render json: {
       title: t('my_modules.protocols.confirm_link_update_modal.update_self_title'),
-      message: t('my_modules.protocols.confirm_link_update_modal.update_self_message'),
+      message: t('my_modules.protocols.confirm_link_update_modal.update_self_message_html'),
       btn_text: t('my_modules.protocols.confirm_link_update_modal.update_self_btn_text'),
+      merge_text: t('my_modules.protocols.confirm_link_update_modal.update_self_option_merge_html'),
+      replace_text: t('my_modules.protocols.confirm_link_update_modal.update_self_option_replace_html'),
       url: update_from_parent_protocol_path(@protocol)
     }
   end
