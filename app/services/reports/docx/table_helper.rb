@@ -4,7 +4,9 @@ module Reports
   class Docx
     module TableHelper
       def render_table(table, table_type, color)
-        table_data = JSON.parse(table.contents_utf_8)['data']
+        table_data = JSON.parse(
+          Class.new.extend(InputSanitizeHelper).smart_annotation_text(table.contents_utf_8, sanitize_text: false)
+        )['data']
         table_data = add_headers_to_table(table_data, table_type == 'well_plates_table')
 
         if table.metadata.present? && table.metadata['cells'].is_a?(Array)

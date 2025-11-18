@@ -240,10 +240,6 @@ class Protocol < ApplicationRecord
     teams.blank? ? self : where(team: teams)
   end
 
-  def self.docx_parser_enabled?
-    ENV.fetch('PROTOCOLS_PARSER_URL', nil).present?
-  end
-
   def self.ai_parser_enabled?
     ENV.fetch('AI_PROTOCOLS_PARSER', nil).present? && ApplicationSettings.instance.values['ai_protocol_parser_enabled'] == true
   end
