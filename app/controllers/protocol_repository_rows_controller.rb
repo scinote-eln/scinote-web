@@ -20,6 +20,7 @@ class ProtocolRepositoryRowsController < ApplicationController
   def create
     @protocol.transaction do
       @protocol_repository_row = @protocol.protocol_repository_rows.create!(protocol_repository_row_params)
+      log_activitiy(:protocol_repository_item_added, @protocol_repository_row)
       render json: {}
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error e.message
@@ -30,6 +31,7 @@ class ProtocolRepositoryRowsController < ApplicationController
   def batch_destroy
     @protocol.transaction do
       @protocol.protocol_repository_rows.where(id: params[:row_ids]).find_each do |protocol_repository_row|
+        log_activitiy(:protocol_repository_item_removed, protocol_repository_row)
         protocol_repository_row.destroy!
       end
       head :no_content
@@ -98,5 +100,24 @@ class ProtocolRepositoryRowsController < ApplicationController
 
   def protocol_repository_row_params
     params.require(:protocol_repository_row).permit(:repository_row_id)
+  end
+
+  def log_activitiy(type_of, protocol_repository_row)
+    protocol = protocol_repository_row.protocol
+    repository_row = protocol_repository_row.repository_row
+    message_items = {
+      protocol: protocol.id,
+      repository_row: repository_row.id,
+      repository: repository_row.repository.id
+    }
+
+    Activities::CreateActivityService.call(
+      activity_type: type_of,
+      owner: current_user,
+      subject: protocol,
+      team: protocol.team,
+      project: nil,
+      message_items: message_items
+    )
   end
 end

@@ -467,6 +467,8 @@ en:
       step_and_result_template_linked_html: "%{user} linked result %{result_template} and step %{step} on protocol %{protocol} in Protocol repository."
       step_and_result_template_unlinked_html: "%{user} unlinked result %{result_template} and step %{step} on protocol %{protocol} in Protocol repository."
       result_template_restore_asset_version_html: "%{user} restored version %{version} of the file <strong>%{file}</strong> on result %{result_template} in protocol %{protocol} in Protocol repository."
+      protocol_repository_item_added_html: "%{user} linked item %{repository_row} from inventory %{repository} to protocol %{protocol} in Protocol repository."
+      protocol_repository_item_removed_html: "%{user} unlinked item %{repository_row} from inventory %{repository} to protocol %{protocol} in Protocol repository."
     activity_name:
       create_project: "Project created"
       edit_project: "Project edited"
@@ -887,6 +889,8 @@ en:
       destroy_result_template: "Protocol result deleted"
       result_template_duplicated: "Protocol result duplicated"
       result_template_restore_asset_version: "Protocol result file version restored"
+      protocol_repository_item_added: "Protocol item linked"
+      protocol_repository_item_removed: "Protocol item unlinked "
     activity_group:
       projects: "Projects"
       task_results: "Task results"
