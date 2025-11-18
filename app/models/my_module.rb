@@ -429,7 +429,9 @@ class MyModule < ApplicationRecord
       description: description,
       x: x,
       y: y,
-      created_by: current_user
+      created_by: current_user,
+      provisioning_status: :in_progress,
+      state: 'uncompleted',
     )
 
     # set new position if cloning in the same experiment
@@ -439,7 +441,7 @@ class MyModule < ApplicationRecord
 
     clone.assign_user(current_user)
 
-    copy_content(current_user, clone)
+    MyModules::CopyContentJob.perform_later(current_user.id, id, clone.id, skip_activities: true)
 
     clone
   end

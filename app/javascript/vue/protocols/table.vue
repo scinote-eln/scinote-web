@@ -19,7 +19,6 @@
                @tableReloaded="reloadingTable = false"
                @import_file="importFile"
                @import_protocols_io="importProtocolsIo"
-               @import_docx="importDocx"
                @import_ai="importWithAI"
                @access="access"
                @linked_my_modules="linkedMyModules"
@@ -82,10 +81,6 @@ export default {
     },
     currentViewMode: {
       type: String,
-      required: true
-    },
-    docxParserEnabled: {
-      type: Boolean,
       required: true
     },
     aiParserEnabled: {
@@ -229,17 +224,6 @@ export default {
           ]
         };
 
-        if (this.docxParserEnabled) {
-          importMenu.menuItems.push({
-            emit: 'import_docx',
-            text: `<span>${this.i18n.t('protocols.index.import_docx')}</span>
-                   <span class="bg-sn-coral text-sn-white text-[8px] absolute leading-none p-1 top-px rounded-[1px] right-px">
-                     ${this.i18n.t('protocols.index.beta')}
-                   </span>`,
-            data_e2e: 'e2e-BT-topToolbar-importDocx'
-          });
-        }
-
         importMenu.menuItems.push({
           emit: 'import_protocols_io',
           text: this.i18n.t('protocols.index.import_protocols_io'),
@@ -343,10 +327,6 @@ export default {
     importProtocolsIo() {
       const protocolIoButton = document.querySelector('#importProtocolsIo');
       protocolIoButton.click();
-    },
-    importDocx() {
-      const docxButton = document.querySelector('#importDocx');
-      docxButton.click();
     },
     importWithAI() {
       const aiButton = document.querySelector('#importWithAI');
