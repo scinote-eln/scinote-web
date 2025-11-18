@@ -344,18 +344,21 @@ class Protocol < ApplicationRecord
     end
   end
 
-  def self.clone_contents(src, dest, current_user, clone_keywords, only_contents: false, include_file_versions: false, include_results: false)
-    dest.update(description: src.description, name: src.name) unless only_contents
+  def self.clone_contents(src, dest, current_user, clone_keywords, only_contents: false, include_file_versions: false, include_results: false, load_mode: 'replace')
+    # Update metadata
+    if load_mode == 'replace'
+      dest.update(description: src.description, name: src.name) unless only_contents
 
-    src.clone_tinymce_assets(dest, dest.team)
+      src.clone_tinymce_assets(dest, dest.team)
 
-    # Update keywords
-    if clone_keywords
-      src.protocol_keywords.each do |keyword|
-        ProtocolProtocolKeyword.create(
-          protocol: dest,
-          protocol_keyword: keyword
-        )
+      # Update keywords
+      if clone_keywords
+        src.protocol_keywords.each do |keyword|
+          ProtocolProtocolKeyword.create(
+            protocol: dest,
+            protocol_keyword: keyword
+          )
+        end
       end
     end
 
@@ -540,45 +543,34 @@ class Protocol < ApplicationRecord
     save!
   end
 
-  def update_from_parent(current_user, source)
-    ActiveRecord::Base.no_touching do
-      # First, destroy step contents
-      destroy_contents
-
-      # Now, clone parent's step contents
-      Protocol.clone_contents(source, self, current_user, false, include_results: true)
-    end
-
-    # Lastly, update the metadata
-    reload
-    self.record_timestamps = false
-    self.added_by = current_user
-    self.last_modified_by = current_user
-    self.parent = source
-    self.updated_at = Time.zone.now
-    self.linked_at = updated_at
-    save!
-  end
-
-  def load_from_repository(source, current_user)
+  def load_from_repository(source, current_user, mode = 'replace')
     ActiveRecord::Base.no_touching do
       # First, destroy step and results contents
-      destroy_contents
+      destroy_contents if mode == 'replace'
 
       # Now, clone source's step and result contents
-      Protocol.clone_contents(source, self, current_user, false, include_results: true)
+      Protocol.clone_contents(source, self, current_user, false, include_results: true, load_mode: mode)
     end
 
-    # Lastly, update the metadata
     reload
-    self.name = source.name
-    self.record_timestamps = false
-    self.parent = source
-    self.added_by = current_user
-    self.last_modified_by = current_user
-    self.protocol_type = Protocol.protocol_types[:linked]
-    self.updated_at = Time.zone.now
-    self.linked_at = updated_at
+
+    if mode == 'merge'
+      self.last_modified_by = current_user
+      self.parent = nil
+      self.linked_at = nil
+      self.protocol_type = Protocol.protocol_types[:unlinked]
+    else
+      # Lastly, update the metadata only if in 'replace' mode
+      self.name = source.name
+      self.record_timestamps = false
+      self.parent = source
+      self.added_by = current_user
+      self.last_modified_by = current_user
+      self.protocol_type = Protocol.protocol_types[:linked]
+      self.updated_at = Time.zone.now
+      self.linked_at = updated_at
+    end
+
     save!
   end
 
