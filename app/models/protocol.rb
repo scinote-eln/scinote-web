@@ -391,12 +391,27 @@ class Protocol < ApplicationRecord
     end
 
     if include_assigned_rows
+      repository_row_ids = if src.my_module.present?
+                             src.my_module.repository_rows.select('COALESCE(repository_rows.parent_id, repository_rows.id)')
+                           else
+                             src.protocol_repository_rows.select('repository_row_id')
+                           end
+      repository_rows = RepositoryRow.active.readable_by_user(current_user, current_user.teams).where(id: repository_row_ids)
       # Copy assigned repository rows
-      src.protocol_repository_rows.find_each do |protocol_row|
-        ProtocolRepositoryRow.create!(
-          protocol: dest,
-          repository_row: protocol_row.repository_row
-        )
+
+      if dest.my_module.present?
+        repository_rows.find_each do |row|
+          dest.my_module.my_module_repository_rows.create!(
+            repository_row: row,
+            assigned_by: current_user
+          )
+        end
+      else
+        repository_rows.find_each do |row|
+          dest.protocol_repository_rows.create!(
+            repository_row: row
+          )
+        end
       end
     end
   end
