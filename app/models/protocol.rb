@@ -389,29 +389,21 @@ class Protocol < ApplicationRecord
     end
 
     if include_assigned_rows
-      repository_row_ids = if src.my_module.present?
-                             src.my_module.repository_rows.select('COALESCE(repository_rows.parent_id, repository_rows.id)')
-                           else
-                             src.protocol_repository_rows.select('repository_row_id')
-                           end
-      repository_rows = RepositoryRow.active.readable_by_user(current_user, current_user.teams).where(id: repository_row_ids)
-      # Copy assigned repository rows
+      repository_rows_source = src.in_repository? ? src.protocol_repository_rows.select(:repository_row_id) : src.my_module.repository_rows
+      repository_rows = RepositoryRow.active.readable_by_user(current_user, current_user.current_team).where(id: repository_rows_source)
 
-      if dest.my_module.present?
-        # we need exclude existing assigned rows to avoid unique constraint violation
-        existing_row_ids = dest.my_module.my_module_repository_rows.select('COALESCE(repository_rows.parent_id, repository_rows.id)')
-        repository_rows.where.not(id: existing_row_ids).find_each do |row|
-          dest.my_module.my_module_repository_rows.create!(
-            repository_row: row,
-            assigned_by: current_user
-          )
-        end
+      if dest.in_repository?
+        dest_scope = dest.protocol_repository_rows
       else
-        repository_rows.find_each do |row|
-          dest.protocol_repository_rows.create!(
-            repository_row: row
-          )
-        end
+        dest_scope = dest.my_module.my_module_repository_rows
+        # we need exclude existing assigned rows to avoid unique constraint violation
+        repository_rows = repository_rows.where.not(id: dest_scope.select(:repository_row_id))
+      end
+
+      repository_rows.find_each do |row|
+        attrs = { repository_row: row }
+        attrs[:assigned_by] = current_user unless dest.in_repository?
+        dest_scope.create!(attrs)
       end
     end
   end
