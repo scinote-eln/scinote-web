@@ -398,7 +398,9 @@ class Protocol < ApplicationRecord
       # Copy assigned repository rows
 
       if dest.my_module.present?
-        repository_rows.find_each do |row|
+        # we need exclude existing assigned rows to avoid unique constraint violation
+        existing_row_ids = dest.my_module.my_module_repository_rows.select('COALESCE(repository_rows.parent_id, repository_rows.id)')
+        repository_rows.where.not(id: existing_row_ids).find_each do |row|
           dest.my_module.my_module_repository_rows.create!(
             repository_row: row,
             assigned_by: current_user
@@ -576,7 +578,15 @@ class Protocol < ApplicationRecord
       destroy_contents if mode == 'replace'
 
       # Now, clone source's step and result contents
-      Protocol.clone_contents(source, self, current_user, false, include_results: true, load_mode: mode)
+      Protocol.clone_contents(
+        source,
+        self,
+        current_user,
+        false,
+        include_results: true,
+        include_assigned_rows: true,
+        load_mode: mode
+      )
     end
 
     reload
@@ -708,8 +718,10 @@ class Protocol < ApplicationRecord
 
     if in_module?
       my_module.results.destroy_all
+      my_module.my_module_repository_rows.destroy_all
     else
       results.destroy_all
+      protocol_repository_rows.destroy_all
     end
 
     # Release space taken by the step
