@@ -657,7 +657,7 @@ class Protocol < ApplicationRecord
       protocol_type: :in_repository_draft
     )
 
-    cloned = deep_clone(clone, current_user)
+    cloned = deep_clone(clone, current_user, include_results: true)
 
     if cloned
       Activities::CreateActivityService

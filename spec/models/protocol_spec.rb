@@ -60,7 +60,7 @@ describe Protocol, type: :model do
   describe '.archive(user)' do
     let(:user) { create :user }
     let(:team) { create :team, created_by: user }
-    let(:protocol) { create :protocol, :in_public_repository, team: team, added_by: user }
+    let(:protocol) { create :protocol, :in_repository_published_original, team: team, added_by: user }
 
     it 'calls create activity for archiving protocol' do
       expect(Activities::CreateActivityService)
@@ -79,7 +79,7 @@ describe Protocol, type: :model do
   describe '.restore(user)' do
     let(:user) { create :user }
     let(:team) { create :team, created_by: user }
-    let(:protocol) { create :protocol, :in_public_repository, team: team, added_by: user }
+    let(:protocol) { create :protocol, :in_repository_published_original, team: team, added_by: user, archived: true, archived_by: user, archived_on: Time.zone.now }
 
     it 'calls create activity for restoring protocol' do
       expect(Activities::CreateActivityService)
@@ -98,7 +98,7 @@ describe Protocol, type: :model do
   describe '.deep_clone_repository' do
     let(:user) { create :user }
     let(:team) { create :team, created_by: user }
-    let(:protocol) { create :protocol, :in_public_repository, team: team, added_by: user }
+    let(:protocol) { create :protocol, :in_repository_published_original, team: team, added_by: user }
 
     it 'calls create activity for protocol copy to repository' do
       expect(Activities::CreateActivityService)
