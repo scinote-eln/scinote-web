@@ -358,8 +358,8 @@ class ProtocolsController < ApplicationController
         @new_protocol = @protocol.copy_to_repository(
           Protocol.new(create_params),
           current_user,
-          include_results: copy_to_repository_params[:results],
-          include_assigned_rows: copy_to_repository_params[:assigned_rows]
+          include_results: copy_to_repository_params[:results] == 'true',
+          include_assigned_rows: copy_to_repository_params[:assigned_rows] == 'true'
         )
         log_activity(:task_protocol_save_to_template, @my_module.experiment.project, protocol: @new_protocol.id)
         create_team_assignment(@new_protocol, :protocol_template_access_granted_all_team_members)
