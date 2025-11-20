@@ -14,8 +14,8 @@
               <div class="text-base py-3 pl-2">
                 {{ i18n.t(`team_automations.sub_group_element.${subGroupElement}`) }}
               </div>
-              <div class="flex-shrink-0 flex items-center">
-                <div class="sci-toggle-checkbox-container py-3">
+              <div class="flex-shrink-0 flex items-center py-3">
+                <div class="sci-toggle-checkbox-container">
                   <input v-model="teamAutomationSettings[group][subGroup][subGroupElement]" type="checkbox" class="sci-toggle-checkbox" @change="setTeamAutomationsSettings"/>
                   <label class="sci-toggle-checkbox-label"></label>
                 </div>
