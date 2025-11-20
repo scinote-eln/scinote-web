@@ -3,6 +3,7 @@
 class ExternalProtocolsController < ApplicationController
   include TeamAssignmentsActions
 
+  before_action :check_protocols_io_enabled
   before_action :load_vars
   before_action :check_import_permissions, only: [:create]
 
@@ -139,6 +140,10 @@ class ExternalProtocolsController < ApplicationController
 
   def create_steps_params
     params.require(:protocol).permit(:steps)
+  end
+
+  def check_protocols_io_enabled
+    render_403 unless Protocol.protocols_io_enabled?
   end
 
   def check_import_permissions
