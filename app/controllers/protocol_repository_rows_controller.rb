@@ -22,10 +22,10 @@ class ProtocolRepositoryRowsController < ApplicationController
       @protocol_repository_row = @protocol.protocol_repository_rows.create!(protocol_repository_row_params)
       log_activitiy(:protocol_repository_item_added, @protocol_repository_row)
       render json: {}
-    rescue ActiveRecord::RecordInvalid => e
-      Rails.logger.error e.message
-      render json: { errors: e.message }, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error e.message
+    render json: { errors: e.message }, status: :unprocessable_entity
   end
 
   def batch_destroy
