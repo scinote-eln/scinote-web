@@ -631,10 +631,10 @@ class ExperimentsController < ApplicationController
       when 'canvas'
         module_archive_experiment_path(@experiment)
       else
-        my_modules_path(experiment_id: @experiment, view_mode: :archived)
+        experiment_my_modules_path(experiment_id: @experiment, view_mode: :archived)
       end
     else
-      view_type == 'canvas' ? canvas_experiment_path(@experiment) : my_modules_path(experiment_id: @experiment)
+      view_type == 'canvas' ? canvas_experiment_path(@experiment) : experiment_my_modules_path(experiment_id: @experiment)
     end
   end
 

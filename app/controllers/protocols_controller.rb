@@ -143,7 +143,7 @@ class ProtocolsController < ApplicationController
           experiment_name: record.my_module.experiment.name_with_label,
           project_name: record.my_module.experiment.project.name_with_label,
           my_module_url: protocols_my_module_path(record.my_module),
-          experiment_url: my_modules_path(experiment_id: record.my_module.experiment.id),
+          experiment_url: experiment_my_modules_path(experiment_id: record.my_module.experiment.id),
           project_url: experiments_path(project_id: record.my_module.experiment.project.id),
           project_folder_name: project_folder.present? ? project_folder.name_with_label : nil,
           project_folder_url: project_folder.present? ? project_folder_projects_url(project_folder) : nil
