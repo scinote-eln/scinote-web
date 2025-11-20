@@ -7,7 +7,7 @@
       <% elsif reminder.value_type == 'RepositoryDateTimeValueBase' %>
         <%= render partial: 'shared/reminder/date_reminder', locals: { reminder: reminder } %>
       <% end %>
-      <div class="row-reminders-footer">
+      <div class="row-reminders-footer text-nowrap">
         <% if can_manage_repository_rows?(reminder.repository_row.repository) %>
           <button class="btn btn-light btn-sm clear-reminders" data-row-hide-reminders-url="
             <%= repository_repository_row_repository_cell_hide_reminders_url(reminder.repository_row.repository,
