@@ -63,7 +63,7 @@ class RepositoryRowsController < ApplicationController
                                              .joins(:my_module_repository_rows)
                                              .select('my_module_repository_rows.created_at, my_modules.*')
                                              .order(my_module_repository_rows: { created_at: :desc })
-        @reminders_present = @repository_row.repository_cells.with_active_reminder(@current_user).any?
+        @reminders_present = Repository.reminders_enabled?
       end
     end
   end
@@ -216,7 +216,7 @@ class RepositoryRowsController < ApplicationController
 
         record_annotation_notification(@repository_row, row_cell_update.cell) if row_cell_update.cell && row_cell_update.cell.value_type == 'RepositoryTextValue'
       end
-      @reminders_present = @repository_row.repository_cells.with_active_reminder(@current_user).any?
+      @reminders_present = Repository.reminders_enabled?
 
       return render json: { name: @repository_row.name } if update_params['repository_row'].present?
 
