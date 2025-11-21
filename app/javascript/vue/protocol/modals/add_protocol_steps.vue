@@ -131,11 +131,23 @@ export default {
       axios.post(this.protocol.attributes.urls.add_protocol_steps_url, {
         selected_protocol: this.selectedProtocol,
         steps: this.selectedSteps
-      }).then((data) => {
+      }).then((response) => {
         this.submitting = false;
-        this.$emit('confirm', data.data.data);
+        const steps = response.data.data;
+        steps.forEach((step) => {
+          step.attachments = [];
+          step.elements = [];
+          response.data.included.forEach((included) => {
+            if (included.type === 'assets') {
+              step.attachments.push(included);
+            } else if (included.type === 'step_orderable_elements') {
+              step.elements.push(included);
+            }
+          });
+        });
+        this.$emit('confirm', steps);
         this.close();
-        HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.add_protocol_steps.success_flash', { count: data.data.data.length }), 'success');
+        HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.add_protocol_steps.success_flash', { count: steps.length }), 'success');
       }).catch(() => {
         this.submitting = false;
         HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.add_protocol_steps.error_flash'), 'danger');

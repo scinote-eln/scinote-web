@@ -313,7 +313,7 @@ class StepsController < ApplicationController
         log_activity(:protocol_steps_loaded_from_template, nil, message_items)
       end
 
-      render json: steps, each_serializer: StepSerializer, user: current_user
+      render json: steps, each_serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
     end
   end
 
