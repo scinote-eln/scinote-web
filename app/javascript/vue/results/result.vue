@@ -484,8 +484,8 @@ export default {
     }
   },
   created() {
-    this.loadAttachments();
-    this.loadElements();
+    this.elements = this.result.elements;
+    this.attachments = this.result.attachments;
   },
   methods: {
     toggleCollapsed() {
