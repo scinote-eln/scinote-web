@@ -262,6 +262,9 @@ class AssetsController < ApplicationController
     elsif params[:element_type] == 'Result'
       @assoc = Result.find(params[:element_id])
       return render_403 unless can_manage_result?(@assoc)
+    elsif params[:element_type] == 'ResultTemplate'
+      @assoc = ResultTemplate.find(params[:element_id])
+      return render_403 unless can_manage_result?(@assoc)
     else
       return render_403
     end
