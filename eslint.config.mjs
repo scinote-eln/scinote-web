@@ -3,6 +3,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import globals from 'globals';
 import { defineConfig, globalIgnores } from 'eslint/config';
+import vueParser from 'vue-eslint-parser';
+import vue from 'eslint-plugin-vue';
 
 // eslint-disable-next-line no-underscore-dangle
 const __filename = fileURLToPath(import.meta.url);
@@ -28,9 +30,22 @@ export default defineConfig([
       }
     }
   },
+  {
+    files: ['**/*.vue'],
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        ecmaVersion: 2021,
+        sourceType: 'module'
+      }
+    }
+  },
   // Migrate extends and plugins using FlatCompat
   ...compat.extends('airbnb', 'plugin:vue/base'),
   {
+    plugins: {
+      vue
+    },
     rules: {
       'import/extensions': 'off',
       'import/no-unresolved': 'off',
@@ -61,7 +76,8 @@ export default defineConfig([
           tabWidth: 2
         }
       ],
-      'comma-dangle': ['error', 'never']
+      'comma-dangle': ['error', 'never'],
+      'vue/no-v-html': 'warn'
     }
   }
 ]);
