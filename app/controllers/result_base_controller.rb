@@ -17,7 +17,7 @@ class ResultBaseController < ApplicationController
         update_and_apply_user_sort_preference!
         apply_filters!
 
-        @results = @results.page(params.dig(:page, :number) || 1)
+        @results = @results.includes(:assets, result_orderable_elements: :orderable).page(params.dig(:page, :number) || 1)
         render json: @results,
                each_serializer: result_serializer,
                include: %i(result_orderable_elements assets),

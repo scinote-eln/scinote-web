@@ -800,7 +800,8 @@ class ProtocolsController < ApplicationController
     render json: ::LoadFromRepositoryProtocolsDatatable.new(
       view_context,
       @protocol.team,
-      current_user
+      current_user,
+      @protocol.my_module
     )
   end
 
