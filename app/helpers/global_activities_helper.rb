@@ -11,7 +11,7 @@ module GlobalActivitiesHelper
     activity.message_items.each do |key, value|
       parameters[key] =
         if value.is_a? String
-          value
+          escape_input(value)
         elsif value['type'] == 'Time' # use saved date for printing
           I18n.l(Time.zone.at(value['value']), format: :full)
         elsif value['type'] == 'Date'
