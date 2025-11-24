@@ -501,8 +501,6 @@ Rails.application.routes.draw do
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
         get 'fetch_workflow_img' # Get updated workflow img
-        get 'modules/new', to: 'my_modules#new'
-        post 'modules', to: 'my_modules#create'
         post 'restore_my_modules', to: 'my_modules#restore_group'
         get 'sidebar'
         get :assigned_users_to_tasks
@@ -514,12 +512,14 @@ Rails.application.routes.draw do
         post :favorite
         post :unfavorite
       end
+
+      resources :my_modules, path: '/modules', only: [:index, :create]
     end
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
     # as well as 'module info' page for single module (HTML)
     get 'experiments/:experiment_id/table', to: 'my_modules#index'
-    get 'experiments/:experiment_id/modules', to: 'my_modules#index', as: :my_modules
+
 
     resources :step_results, only: [] do
       collection do
@@ -536,7 +536,6 @@ Rails.application.routes.draw do
     end
 
     resources :my_modules, path: '/modules', only: [:show, :update] do
-      post 'save_table_state', on: :collection, defaults: { format: 'json' }
 
       collection do
         post 'actions_toolbar'
