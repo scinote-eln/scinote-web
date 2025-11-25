@@ -1138,7 +1138,7 @@ Rails.application.routes.draw do
               end
             end
             resources :project_folders, only: %i(index show create update)
-            resources :users, only: %i(index)
+            resources :team_users, only: %i(index), as: :users, path: 'users'
             resources :protocol_templates, only: %i(index show)
           end
           resources :users, only: %i(show) do

@@ -47,6 +47,7 @@ RSpec.describe 'Api::V1::UsersController', type: :request do
     it 'When valid request, requested user is member of the same teams' do
       hash_body = nil
       get api_v1_user_path(id: @user2.id), headers: @valid_headers
+      expect(response).to have_http_status(200)
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
         JSON.parse(
