@@ -738,8 +738,6 @@ Rails.application.routes.draw do
         get 'version_comment', to: 'protocols#version_comment'
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
-        post 'linked_children_datatable',
-             to: 'protocols#linked_children_datatable'
         get 'versions_modal', to: 'protocols#versions_modal'
         patch 'description', to: 'protocols#update_description'
         put 'name', to: 'protocols#update_name'
