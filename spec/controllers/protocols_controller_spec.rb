@@ -108,6 +108,44 @@ describe ProtocolsController, type: :controller do
     end
   end
 
+  describe 'POST update_name' do
+    let(:params) do
+      { id: repository_protocol.id,
+        protocol: { name: 'Updated Protocol Name' } }
+    end
+    let(:action) { post :update_name, params: params, format: :json }
+    it 'calls create activity for updating protocol name' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :edit_protocol_name_in_repository)))
+      action
+    end
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
+  describe 'POST update_authors' do
+    let(:params) do
+      { id: repository_protocol.id,
+        protocol: { authors: 'New Author' } }
+    end
+    let(:action) { post :update_authors, params: params, format: :json }
+    it 'calls create activity for updating protocol authors' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :edit_authors_in_protocol_repository)))
+      action
+    end
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
   describe 'POST archive' do
     let(:params) { { protocol_ids: [published_protocol.id] } }
     let(:action) { post :archive, params: params, format: :json }
@@ -299,6 +337,8 @@ describe ProtocolsController, type: :controller do
 
   describe 'GET export from MyModule' do
     let(:params) { { protocol_ids: [repository_protocol.id], my_module_id: my_module.id } }
+    let!(:step1) { create :step, protocol: repository_protocol, position: 1 }
+    let!(:step2) { create :step, protocol: repository_protocol, position: 2 }
     let(:action) { get :export, params: params }
 
     it 'calls create activity for exporting protocols' do
@@ -449,4 +489,167 @@ describe ProtocolsController, type: :controller do
         .to(change { Activity.count })
     end
   end
+
+  describe 'POST unlink' do
+    let(:protocol_repo) do
+      create :protocol, :in_repository_published_original, name: ' test protocol',
+                                               team: team,
+                                               added_by: user
+    end
+    let(:protocol) do
+      create :protocol, :linked_to_repository, name: ' test protocol',
+                                               my_module: my_module,
+                                               parent: protocol_repo,
+                                               team: team,
+                                               added_by: user
+    end
+    let(:params) { { id: protocol.id } }
+    let(:action) { post :unlink, params: params, format: :json }
+
+    it 'unlinks the protocol correctly' do
+      action
+      expect(protocol.reload.parent_id).to be_nil
+    end
+  end
+
+  describe 'POST update_from_parent' do
+   let(:protocol_repo) do
+      create :protocol, :in_repository_published_original, name: ' test protocol',
+                                               team: team,
+                                               added_by: user
+    end
+    let(:protocol) do
+      create :protocol, :linked_to_repository, name: ' test protocol',
+                                               my_module: my_module,
+                                               parent: protocol_repo,
+                                               team: team,
+                                               added_by: user
+    end
+    let(:params) { { id: protocol.id } }
+    let(:action) { post :update_from_parent, params: params, format: :json }
+
+    it 'calls create activity for updating protocol in task from repository' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :update_protocol_in_task_from_repository)))
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+
+  end
+
+  describe 'GET unlink_modal' do
+    let(:protocol_repo) do
+      create :protocol, :in_repository_published_original, name: ' test protocol',
+                                               team: team,
+                                               added_by: user
+    end
+    let(:protocol) do
+      create :protocol, :linked_to_repository, name: ' test protocol',
+                                               my_module: my_module,
+                                               parent: protocol_repo,
+                                               team: team,
+                                               added_by: user
+    end
+    let(:params) { { id: protocol.id } }
+    let(:action) { get :unlink_modal, params: params, format: :json }
+
+    it 'returns a successful response' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+    end
+  end
+
+  describe 'GET revert_modal' do
+    let(:protocol_repo) do
+      create :protocol, :in_repository_published_original, name: ' test protocol',
+                                               team: team,
+                                               added_by: user
+    end
+    let(:protocol) do
+      create :protocol, :linked_to_repository, name: ' test protocol',
+                                               my_module: my_module,
+                                               parent: protocol_repo,
+                                               team: team,
+                                               added_by: user
+    end
+    let(:params) { { id: protocol.id } }
+    let(:action) { get :revert_modal, params: params, format: :json }
+
+    it 'returns a successful response' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+    end
+  end
+
+  describe 'GET update_from_parent_modal' do
+    let(:protocol_repo) do
+      create :protocol, :in_repository_published_original, name: ' test protocol',
+                                               team: team,
+                                               added_by: user
+    end
+    let(:protocol) do
+      create :protocol, :linked_to_repository, name: ' test protocol',
+                                               my_module: my_module,
+                                               parent: protocol_repo,
+                                               team: team,
+                                               added_by: user
+    end
+    let(:params) { { id: protocol.id } }
+    let(:action) { get :update_from_parent_modal, params: params, format: :json }
+
+    it 'returns a successful response' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+    end
+  end
+
+  describe 'GET load_from_repository_modal' do
+    let(:params) { { id: my_module.protocol.id } }
+    let(:action) { get :load_from_repository_modal, params: params, format: :json }
+
+    it 'returns a successful response' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+    end
+  end
+
+  describe 'GET list_published_protocol_templates' do
+    let(:params) { { id: my_module.protocol.id } }
+    let(:action) { get :list_published_protocol_templates, params: params, format: :json }
+
+    it 'returns a successful response' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+    end
+  end
+
+  describe 'GET protocol_status_bar' do
+    let(:params) { { id: published_protocol.id } }
+    let(:action) { get :protocol_status_bar, params: params, format: :json }
+
+    it 'returns a successful response' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+    end
+  end
+
+
 end
