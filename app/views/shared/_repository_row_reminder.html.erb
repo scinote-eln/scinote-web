@@ -1,20 +1,31 @@
-<% reminders.each_with_index do |reminder, index| %>
-  <li class="row-reminders-notification">
-    <% if reminder.value_type == 'RepositoryStockValue' %>
-      <%= render partial: 'shared/reminder/stock_reminder', locals: { reminder: reminder } %>
-    <% elsif reminder.value_type == 'RepositoryDateTimeValueBase' %>
-      <%= render partial: 'shared/reminder/date_reminder', locals: { reminder: reminder } %>
-    <% end %>
-    <button class="row-reminders-footer btn btn-light" data-row-hide-reminders-url="
-      <%= repository_repository_row_repository_cell_hide_reminder_url(reminder.repository_row.repository,
-                                                                      reminder.repository_row,
-                                                                      reminder) %> " tabindex="<%= index + 1 %>">
-      <i class="sn-icon sn-icon-close"></i>
-      <%= t('repository_row.reminder.clear') %>
-    </button>
-    <%if index + 1 < reminders.length %>
-        <hr>
-    <%end%>
-  </li>
-<% end %>
+
+<div class="reminder-list flex flex-col gap-4 m-3">
+  <% reminders.each_with_index do |reminder, index| %>
+    <li class="flex flex-col gap-3 row-reminders-notification">
+      <% if reminder.value_type == 'RepositoryStockValue' %>
+        <%= render partial: 'shared/reminder/stock_reminder', locals: { reminder: reminder } %>
+      <% elsif reminder.value_type == 'RepositoryDateTimeValueBase' %>
+        <%= render partial: 'shared/reminder/date_reminder', locals: { reminder: reminder } %>
+      <% end %>
+      <div class="row-reminders-footer text-nowrap">
+        <% if can_manage_repository_rows?(reminder.repository_row.repository) %>
+          <button class="btn btn-light btn-sm clear-reminders" data-row-hide-reminders-url="
+            <%= repository_repository_row_repository_cell_hide_reminders_url(reminder.repository_row.repository,
+                                                                            reminder.repository_row,
+                                                                            reminder) %> " tabindex="<%= index + 1 %>">
+            <i class="sn-icon sn-icon-close"></i>
+            <%= t('repository_row.reminder.clear_for_all') %>
+          </button>
+        <% end %>
+        <button class="btn btn-light btn-sm clear-reminders" data-row-hide-reminders-url="
+          <%= repository_repository_row_repository_cell_hide_reminder_url(reminder.repository_row.repository,
+                                                                          reminder.repository_row,
+                                                                          reminder) %> " tabindex="<%= index + 1 %>">
+          <i class="sn-icon sn-icon-close"></i>
+          <%= t('repository_row.reminder.clear_for_me') %>
+        </button>
+      </div>
+    </li>
+  <% end %>
+</div>
 

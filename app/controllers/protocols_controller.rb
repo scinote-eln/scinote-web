@@ -23,6 +23,11 @@ class ProtocolsController < ApplicationController
     versions_list
     permissions
   )
+  before_action :check_protocols_io_enabled, only: %i(
+    protocolsio_index
+    protocolsio_import_create
+    protocolsio_import_save
+  )
   before_action :check_linked_protocol_view_permissions, only: %i(
     linked_children
     linked_children_datatable
@@ -871,22 +876,6 @@ class ProtocolsController < ApplicationController
     }
   end
 
-  def import_docx
-    return render_403 unless Protocol.docx_parser_enabled?
-
-    temp_files_ids = []
-    params[:files].each do |file|
-      temp_file = TempFile.new(session_id: request.session_options[:id], file: file)
-
-      if temp_file.save
-        TempFile.destroy_obsolete(temp_file.id)
-        temp_files_ids << temp_file.id
-      end
-    end
-    @job = Protocols::DocxImportJob.perform_later(temp_files_ids, user_id: current_user.id, team_id: current_team.id)
-    render json: { job_id: @job.job_id }
-  end
-
   def user_roles
     render json: { data: user_roles_collection(Protocol.new).map(&:reverse) }
   end
@@ -1101,6 +1090,10 @@ class ProtocolsController < ApplicationController
 
   def create_params
     params.require(:protocol).permit(:name)
+  end
+
+  def check_protocols_io_enabled
+    render_403 unless Protocol.protocols_io_enabled?
   end
 
   def check_protocolsio_import_permissions

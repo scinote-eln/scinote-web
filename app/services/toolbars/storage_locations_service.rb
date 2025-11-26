@@ -70,7 +70,7 @@ module Toolbars
       storage_location = @storage_locations.first
 
       number_of_items = storage_location.storage_location_repository_rows.count +
-                        StorageLocation.inner_storage_locations(current_user.current_team, storage_location)
+                        StorageLocation.inner_storage_locations(storage_location)
                                        .where(container: true)
                                        .joins(:storage_location_repository_rows)
                                        .count

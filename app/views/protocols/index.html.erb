@@ -33,8 +33,8 @@
           :active-page-url="'<%= protocols_path %>'"
           :archived-page-url="'<%= protocols_path(view_mode: :archived) %>'"
           current-view-mode="<%= params[:view_mode] || :active %>"
-          :docx-parser-enabled="<%= Protocol.docx_parser_enabled? %>"
           :ai-parser-enabled="<%= Protocol.ai_parser_enabled? %>"
+          :protocols-io-enabled="<%= Protocol.protocols_io_enabled? %>"
           :create-url="'<%= protocols_path if can_create_protocols_in_repository?(current_team) %>'"
           users-filter-url="<%= users_filter_projects_path %>"
         />
@@ -50,10 +50,6 @@
   <input type="file" ref="importFileBtn" value="" id="importFileInput" accept=".eln" data-role="import-file-input"
          data-team-id="<%= current_team.id %>" data-import-url="<%= import_protocols_path %>">
 </a>
-<a class="btn-open-file tw-hidden" data-action='import' >
-  <input type="file" value="" id="importDocx"  accept=".docx" data-role="import-file-input"
-  data-team-id="<%= @current_team.id %>" data-import-url="<%= import_protocols_path %>">
-</a>
 <%= link_to t("protocols.index.import_protocols_io"), '',
             id: "importProtocolsIo",
             class: 'tw-hidden',
@@ -66,15 +62,7 @@
 <%= javascript_include_tag "handsontable.full" %>
 <%= render partial: "shared/formulas_libraries" %>
 
-<div id="protocolFileImportModal">
-  <protocol-file-import-modal
-    import-url="<%= import_docx_protocols_path %>"
-    protocol-template-table-url="<%= protocols_path %>"
-  />
-</div>
-
 <%= render partial: "protocols/import_export/import_elements" %>
-<%= javascript_include_tag 'vue_protocol_file_import_modal' %>
 <%= javascript_include_tag "assets/wopi/create_wopi_file" %>
 <%= javascript_include_tag 'pdf_js' %>
 <%= stylesheet_link_tag 'pdf_js_styles' %>

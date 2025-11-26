@@ -32,7 +32,7 @@
           @editingEnabled="enableEditMode"
           @input="recalculateContainerSize(60)"
         />
-        <div class="view-text-element mb-4" v-else-if="myModule.attributes.description_view" v-html="wrappedTables"></div>
+        <div class="view-text-element mb-4 numerical-nested-list" v-else-if="myModule.attributes.description_view" v-html="wrappedTables"></div>
         <div v-else class="text-sn-grey mb-4">
           {{ i18n.t("my_modules.notes.no_description") }}
         </div>

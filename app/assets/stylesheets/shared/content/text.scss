@@ -21,6 +21,19 @@
     p {
       margin: 0;
     }
+
+    ol:not([style*="list-style-type"]) {
+      counter-reset: item;
+
+      li {
+        display: block;
+
+        &::before {
+          content: counters(item, ".") ". ";
+          counter-increment: item;
+        }
+      }
+    }
   }
 
   img {

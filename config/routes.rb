@@ -783,7 +783,6 @@ Rails.application.routes.draw do
         post 'restore', to: 'protocols#restore'
         post 'clone', to: 'protocols#clone'
         post 'import', to: 'protocols#import'
-        post 'import_docx', to: 'protocols#import_docx'
         post 'protocolsio_import_create',
              to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
@@ -871,6 +870,7 @@ Rails.application.routes.draw do
         resources :repository_stock_values, only: %i(new create edit update)
         resources :repository_cells, only: :hide_reminder do
           post :hide_reminder, to: 'hidden_repository_cell_reminders#create'
+          post :hide_reminders, to: 'hidden_repository_cell_reminders#create_all'
         end
       end
 
