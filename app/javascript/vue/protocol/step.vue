@@ -297,7 +297,7 @@
       return {
         elements: [],
         attachments: [],
-        attachmentsReady: false,
+        attachmentsReady: true,
         confirmingDelete: false,
         addingContent: false,
         showFileModal: false,
