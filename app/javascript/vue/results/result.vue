@@ -262,7 +262,7 @@ export default {
       reordering: false,
       elements: [],
       attachments: [],
-      attachmentsReady: false,
+      attachmentsReady: true,
       addingContent: false,
       showFileModal: false,
       dragingFile: false,
