@@ -25,7 +25,6 @@ class ProtocolsController < ApplicationController
   )
   before_action :check_linked_protocol_view_permissions, only: %i(
     linked_children
-    linked_children_datatable
   )
   before_action :switch_team_with_param, only: %i(index protocolsio_index)
   before_action :check_view_all_permissions, only: %i(
@@ -158,15 +157,6 @@ class ProtocolsController < ApplicationController
     render json: { versions: (@protocol.parent || @protocol).published_versions_with_original
                                                             .order(version_number: :desc)
                                                             .map(&:version_number) }
-  end
-
-  def linked_children_datatable
-    render json: ::ProtocolLinkedChildrenDatatable.new(
-      view_context,
-      @protocol,
-      current_user,
-      self
-    )
   end
 
   def publish
