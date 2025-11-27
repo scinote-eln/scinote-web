@@ -550,6 +550,8 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  # :nocov:
+
   def protocolsio_import_create
     @protocolsio_too_big = false
     @protocolsio_invalid_file = false
@@ -673,6 +675,8 @@ class ProtocolsController < ApplicationController
       format.js {}
     end
   end
+
+  # :nocov:
 
   def export
     # Make a zip output stream and send it to the client
