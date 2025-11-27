@@ -506,7 +506,6 @@ Rails.application.routes.draw do
         get :assigned_users_to_tasks
         post :archive_my_modules
         post :batch_clone_my_modules
-        get :search_tags
         get :projects_to_clone
         get :projects_to_move
         post :favorite
