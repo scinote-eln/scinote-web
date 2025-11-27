@@ -280,7 +280,7 @@ class TeamZipExportJob < ZipExportJob
     end
 
     # Generate CSV
-    csv_data = RepositoryCsvExport.to_csv(repo.repository_rows, col_ids, repo, handle_name_func, false)
+    csv_data = RepositoryCsvExport.to_csv(repo.repository_rows, col_ids, repo, handle_name_func, false, @user)
     File.binwrite(csv_file_path, csv_data.encode('UTF-8', invalid: :replace, undef: :replace))
 
     # Save all attachments (it doesn't work directly in callback function

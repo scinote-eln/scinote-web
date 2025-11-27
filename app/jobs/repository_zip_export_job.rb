@@ -26,12 +26,12 @@ class RepositoryZipExportJob < ZipExportJob
                    )
       end
       service = RepositoryExportService.new(@file_type, rows, col_ids,
-                                            repository, in_module: true)
+                                            repository, @user, in_module: true)
     else
       ordered_row_ids = params[:row_ids].map(&:to_i)
       rows = repository.repository_rows.where(id: ordered_row_ids)
       service = RepositoryExportService.new(@file_type, rows, col_ids,
-                                            repository, in_module: false, ordered_row_ids: ordered_row_ids)
+                                            repository, @user, in_module: false, ordered_row_ids: ordered_row_ids)
     end
     exported_data = service.export!
     File.binwrite("#{dir}/export.#{@file_type}", exported_data)
