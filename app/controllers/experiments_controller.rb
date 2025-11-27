@@ -250,21 +250,6 @@ class ExperimentsController < ApplicationController
     end
   end
 
-  def search_tags
-    tags = @experiment.project.tags.where.not(id: JSON.parse(params[:selected_tags]))
-                      .where_attributes_like(:name, params[:query])
-                      .select(:id, :name, :color)
-
-    tags = tags.map do |tag|
-      { value: tag.id, label: escape_input(tag.name), params: { color: escape_input(tag.color) } }
-    end
-
-    if params[:query].present? && tags.select { |tag| tag[:label] == params[:query] }.blank?
-      tags << { value: 0, label: escape_input(params[:query]), params: { color: nil } }
-    end
-    render json: tags
-  end
-
   # POST: move_experiments(ids)
   def move
     return render_403 unless @experiments.all? { |e| can_move_experiment?(e) }
