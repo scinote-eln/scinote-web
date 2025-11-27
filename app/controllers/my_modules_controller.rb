@@ -10,18 +10,18 @@ class MyModulesController < ApplicationController
   include FavoritesActions
   include TaggableActions
 
-  before_action :load_vars, except: %i(index restore_group create new save_table_state
+  before_action :load_vars, except: %i(index restore_group create
                                        inventory_assigning_my_module_filter actions_toolbar)
-  before_action :load_experiment, only: %i(create new index)
-  before_action :check_create_permissions, only: %i(new create)
+  before_action :load_experiment, only: %i(create index)
+  before_action :check_create_permissions, only: %i(create)
   before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(
     description due_date update_description update_protocol_description update_protocol
   )
-  before_action :check_read_permissions, except: %i(create new update update_description
+  before_action :check_read_permissions, except: %i(create update update_description
                                                     inventory_assigning_my_module_filter
                                                     update_protocol_description restore_group
-                                                    save_table_state actions_toolbar index current_status)
+                                                    actions_toolbar index current_status)
   before_action :check_current_status_permissions, only: :current_status
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols activities archive index)
@@ -44,18 +44,6 @@ class MyModulesController < ApplicationController
         render 'my_modules/index'
       end
     end
-  end
-
-  def new
-    @my_module = @experiment.my_modules.new
-    assigned_users = @experiment.users
-
-    render json: {
-      html: render_to_string(
-        partial: 'my_modules/modals/new_modal', locals: { view_mode: params[:view_mode],
-                                                                   users: assigned_users }
-      )
-    }
   end
 
   def assigned_users
@@ -118,11 +106,6 @@ class MyModulesController < ApplicationController
       html: render_to_string(partial: 'description'),
       title: t('my_modules.description.title', module: escape_input(@my_module.name))
     }
-  end
-
-  def save_table_state
-    current_user.settings.update(visible_my_module_table_columns: params[:columns])
-    current_user.save!
   end
 
   def current_status
@@ -394,17 +377,6 @@ class MyModulesController < ApplicationController
         moveable: can_move_my_module?(@my_module),
         archivable: can_archive_my_module?(@my_module),
         restorable: can_restore_my_module?(@my_module)
-      }
-    end
-  end
-
-  def actions_dropdown
-    if stale?(@my_module)
-      render json: {
-        html: render_to_string(
-          partial: 'experiments/table_row_actions',
-          locals: { my_module: @my_module }
-        )
       }
     end
   end

@@ -34,7 +34,7 @@ class Asset < ApplicationRecord
   has_one :step_asset, inverse_of: :asset, dependent: :destroy
   has_one :step, through: :step_asset, touch: true
   has_one :result_asset, inverse_of: :asset, dependent: :destroy
-  has_one :result, through: :result_asset, touch: true
+  has_one :result, through: :result_asset, touch: true, class_name: 'ResultBase'
   has_one :repository_asset_value, inverse_of: :asset, dependent: :destroy
   has_one :repository_cell, through: :repository_asset_value, touch: true
   has_many :report_elements, inverse_of: :asset, dependent: :destroy

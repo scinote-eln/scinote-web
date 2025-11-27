@@ -35,19 +35,24 @@ module AssetsActions
               team: team,
               project: project,
               message_items: message_items)
-    elsif asset.result.class == Result
-      my_module = asset.result.my_module
+    elsif asset.result.class.base_class.name == 'ResultBase'
+      result = asset.result
+      parent = result.parent
+      model_key = result.class.model_name.param_key
+
+      message_items = { "#{model_key}": result.id,
+                        asset_name: { id: asset.id, value_for: 'file_name' },
+                        action: action }
+
+      message_items[:protocol] = parent.id if parent.is_a?(Protocol)
+
       Activities::CreateActivityService
-        .call(activity_type: :edit_image_on_result,
+        .call(activity_type: :"edit_image_on_#{model_key}",
               owner: current_user,
-              subject: asset.result,
-              team: my_module.team,
-              project: my_module.project,
-              message_items: {
-                result: asset.result.id,
-                asset_name: { id: asset.id, value_for: 'file_name' },
-                action: action
-              })
+              subject: result,
+              team: parent.team,
+              project: parent.is_a?(MyModule) ? parent.project : nil,
+              message_items: message_items)
     elsif asset.repository_cell.present?
       repository = asset.repository_cell.repository_row.repository
       Activities::CreateActivityService

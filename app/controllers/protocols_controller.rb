@@ -30,7 +30,6 @@ class ProtocolsController < ApplicationController
   )
   before_action :check_linked_protocol_view_permissions, only: %i(
     linked_children
-    linked_children_datatable
   )
   before_action :switch_team_with_param, only: %i(index protocolsio_index)
   before_action :check_view_all_permissions, only: %i(
@@ -148,7 +147,7 @@ class ProtocolsController < ApplicationController
           experiment_name: record.my_module.experiment.name_with_label,
           project_name: record.my_module.experiment.project.name_with_label,
           my_module_url: protocols_my_module_path(record.my_module),
-          experiment_url: my_modules_path(experiment_id: record.my_module.experiment.id),
+          experiment_url: experiment_my_modules_path(experiment_id: record.my_module.experiment.id),
           project_url: experiments_path(project_id: record.my_module.experiment.project.id),
           project_folder_name: project_folder.present? ? project_folder.name_with_label : nil,
           project_folder_url: project_folder.present? ? project_folder_projects_url(project_folder) : nil
@@ -163,15 +162,6 @@ class ProtocolsController < ApplicationController
     render json: { versions: (@protocol.parent || @protocol).published_versions_with_original
                                                             .order(version_number: :desc)
                                                             .map(&:version_number) }
-  end
-
-  def linked_children_datatable
-    render json: ::ProtocolLinkedChildrenDatatable.new(
-      view_context,
-      @protocol,
-      current_user,
-      self
-    )
   end
 
   def publish
@@ -197,7 +187,7 @@ class ProtocolsController < ApplicationController
     end
 
     if params[:view] == 'show'
-      redirect_to protocol_path(@protocol)
+      render json: { url: protocol_path(@protocol) }
     else
       redirect_to protocols_path
     end
@@ -244,7 +234,9 @@ class ProtocolsController < ApplicationController
   def show
     respond_to do |format|
       format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
-      format.html
+      format.html do
+        @active_tab = :protocol
+      end
     end
   end
 
@@ -358,7 +350,7 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       transaction_error = false
       Protocol.transaction do
-        @new_protocol = @protocol.copy_to_repository(Protocol.new(create_params), current_user)
+        @new_protocol = @protocol.copy_to_repository(Protocol.new(create_params), current_user, include_results: copy_to_repository_params[:results])
         log_activity(:task_protocol_save_to_template, @my_module.experiment.project, protocol: @new_protocol.id)
         create_team_assignment(@new_protocol, :protocol_template_access_granted_all_team_members)
       rescue StandardError => e
@@ -435,9 +427,10 @@ class ProtocolsController < ApplicationController
   def revert
     if @protocol.can_destroy?
       transaction_error = false
+      parent = @protocol.parent
       Protocol.transaction do
         # Revert is basically update from parent
-        @protocol.update_from_parent(current_user, @protocol.parent)
+        @protocol.load_from_repository(parent, current_user, params[:load_mode])
       rescue StandardError
         transaction_error = true
         raise ActiveRecord::Rollback
@@ -454,7 +447,7 @@ class ProtocolsController < ApplicationController
         log_activity(:update_protocol_in_task_from_repository,
                      @protocol.my_module.experiment.project,
                      my_module: @protocol.my_module.id,
-                     protocol_repository: @protocol.parent.id)
+                     protocol_repository: parent.id)
         flash[:success] = t(
           'my_modules.protocols.revert_flash'
         )
@@ -470,6 +463,7 @@ class ProtocolsController < ApplicationController
 
   def update_from_parent
     protocol_can_destroy = @protocol.can_destroy?
+    source_parent = nil
     if protocol_can_destroy
       transaction_error = false
       Protocol.transaction do
@@ -479,7 +473,7 @@ class ProtocolsController < ApplicationController
                         else
                           @protocol.parent.parent
                         end
-        @protocol.update_from_parent(current_user, source_parent.latest_published_version_or_self)
+        @protocol.load_from_repository(source_parent.latest_published_version_or_self, current_user, params[:load_mode])
       rescue StandardError
         transaction_error = true
         raise ActiveRecord::Rollback
@@ -494,7 +488,7 @@ class ProtocolsController < ApplicationController
       log_activity(:update_protocol_in_task_from_repository,
                    @protocol.my_module.experiment.project,
                    my_module: @protocol.my_module.id,
-                   protocol_repository: @protocol.parent.id)
+                   protocol_repository: source_parent.latest_published_version_or_self.id)
 
       flash[:success] = t('my_modules.protocols.update_from_parent_flash')
       flash.keep(:success)
@@ -506,7 +500,7 @@ class ProtocolsController < ApplicationController
     if @protocol.can_destroy?
       transaction_error = false
       Protocol.transaction do
-        @protocol.load_from_repository(@source, current_user)
+        @protocol.load_from_repository(@source, current_user, params[:load_mode])
       rescue StandardError => e
         Rails.logger.error(e.message)
         Rails.logger.error(e.backtrace.join("\n"))
@@ -522,7 +516,7 @@ class ProtocolsController < ApplicationController
         log_activity(:load_protocol_to_task_from_repository,
                      @protocol.my_module.experiment.project,
                      my_module: @protocol.my_module.id,
-                     protocol_repository: @protocol.parent.id)
+                     protocol_repository: @source.id)
         flash[:success] = t('my_modules.protocols.load_from_repository_flash')
         flash.keep(:success)
         render json: {}
@@ -541,20 +535,8 @@ class ProtocolsController < ApplicationController
   end
 
   def import
-    protocol = nil
-    transaction_error = false
     Protocol.transaction do
       protocol = @importer.import_new_protocol(@protocol_json)
-    rescue StandardError => e
-      Rails.logger.error e.message
-      Rails.logger.error e.backtrace.join("\n")
-      transaction_error = true
-      raise ActiveRecord::Rollback
-    end
-
-    if transaction_error
-      render json: { status: :bad_request }, status: :bad_request
-    else
       Activities::CreateActivityService
         .call(activity_type: :import_protocol_in_repository,
               owner: current_user,
@@ -564,9 +546,16 @@ class ProtocolsController < ApplicationController
                 protocol: protocol.id
               })
 
-      render json: { status: :ok }, status: :ok
+      render json: { status: :ok }
+    rescue StandardError => e
+      Rails.logger.error e.message
+      Rails.logger.error e.backtrace.join("\n")
+      render json: { status: :bad_request }, status: :bad_request
+      raise ActiveRecord::Rollback
     end
   end
+
+  # :nocov:
 
   def protocolsio_import_create
     @protocolsio_too_big = false
@@ -692,6 +681,8 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  # :nocov:
+
   def export
     # Make a zip output stream and send it to the client
     # rubocop:disable Metrics/BlockLength
@@ -784,8 +775,10 @@ class ProtocolsController < ApplicationController
   def revert_modal
     render json: {
       title: t('my_modules.protocols.confirm_link_update_modal.revert_title'),
-      message: t('my_modules.protocols.confirm_link_update_modal.revert_message'),
+      message: t('my_modules.protocols.confirm_link_update_modal.revert_message_html'),
       btn_text: t('my_modules.protocols.confirm_link_update_modal.revert_btn_text'),
+      merge_text: t('my_modules.protocols.confirm_link_update_modal.revert_option_merge_html'),
+      replace_text: t('my_modules.protocols.confirm_link_update_modal.revert_option_replace_html'),
       url: revert_protocol_path(@protocol)
     }
   end
@@ -793,8 +786,10 @@ class ProtocolsController < ApplicationController
   def update_from_parent_modal
     render json: {
       title: t('my_modules.protocols.confirm_link_update_modal.update_self_title'),
-      message: t('my_modules.protocols.confirm_link_update_modal.update_self_message'),
+      message: t('my_modules.protocols.confirm_link_update_modal.update_self_message_html'),
       btn_text: t('my_modules.protocols.confirm_link_update_modal.update_self_btn_text'),
+      merge_text: t('my_modules.protocols.confirm_link_update_modal.update_self_option_merge_html'),
+      replace_text: t('my_modules.protocols.confirm_link_update_modal.update_self_option_replace_html'),
       url: update_from_parent_protocol_path(@protocol)
     }
   end
@@ -804,7 +799,8 @@ class ProtocolsController < ApplicationController
     render json: ::LoadFromRepositoryProtocolsDatatable.new(
       view_context,
       @protocol.team,
-      current_user
+      current_user,
+      @protocol.my_module
     )
   end
 
@@ -1085,7 +1081,7 @@ class ProtocolsController < ApplicationController
   end
 
   def copy_to_repository_params
-    params.require(:protocol).permit(:name, :protocol_type)
+    params.require(:protocol).permit(:results)
   end
 
   def create_params

@@ -138,6 +138,7 @@ class Protocol < ApplicationRecord
            inverse_of: :protocol,
            dependent: :destroy
   has_many :protocol_keywords, through: :protocol_protocol_keywords
+  has_many :results, inverse_of: :protocol, dependent: :destroy, class_name: 'ResultTemplate'
   has_many :steps, inverse_of: :protocol, dependent: :destroy
   has_many :original_steps, class_name: 'Step', foreign_key: :original_protocol_id, inverse_of: :original_protocol, dependent: :nullify
 
@@ -182,6 +183,12 @@ class Protocol < ApplicationRecord
       #{unscoped_readable_protocols.joins(steps: { checklists: :checklist_items }).where_attributes_like(ChecklistItem::SEARCHABLE_ATTRIBUTES, query).to_sql}
       UNION ALL
       #{unscoped_readable_protocols.joins(steps: :step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped_readable_protocols.joins(:results).where_attributes_like(ResultTemplate::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped_readable_protocols.joins(results: :result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped_readable_protocols.joins(results: { result_tables: :table }).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
       ) AS protocols",
       :protocols
     )
@@ -341,29 +348,52 @@ class Protocol < ApplicationRecord
     end
   end
 
-  def self.clone_contents(src, dest, current_user, clone_keywords, only_contents: false, include_file_versions: false)
-    dest.update(description: src.description, name: src.name) unless only_contents
+  def self.clone_contents(src, dest, current_user, clone_keywords, only_contents: false, include_file_versions: false, include_results: false, load_mode: 'replace')
+    # Update metadata
+    if load_mode == 'replace'
+      dest.update(description: src.description, name: src.name) unless only_contents
 
-    src.clone_tinymce_assets(dest, dest.team)
+      src.clone_tinymce_assets(dest, dest.team)
 
-    # Update keywords
-    if clone_keywords
-      src.protocol_keywords.each do |keyword|
-        ProtocolProtocolKeyword.create(
-          protocol: dest,
-          protocol_keyword: keyword
-        )
+      # Update keywords
+      if clone_keywords
+        src.protocol_keywords.each do |keyword|
+          ProtocolProtocolKeyword.create(
+            protocol: dest,
+            protocol_keyword: keyword
+          )
+        end
       end
     end
 
+    steps_map = {}
+
     # Copy steps
-    src.steps.each do |step|
-      clone_step(dest, current_user, step, include_file_versions)
+    src.steps.find_each do |step|
+      new_step = clone_step(dest, current_user, step, include_file_versions, load_mode: load_mode)
+      steps_map[step.id] = new_step.id if include_results
+    end
+
+    return unless include_results
+
+    results_map = {}
+    results_scope = src.in_repository? ? src.results : src.my_module.results
+
+    # Copy results
+    results_scope.order(:created_at).each do |result|
+      new_result = result.duplicate(dest, current_user)
+      results_map[result.id] = new_result.id
+    end
+
+    # Copy stepResults
+    StepResult.where(step_id: steps_map.keys, result_id: results_map.keys).find_each do |sr|
+      StepResult.create!(step_id: steps_map[sr.step_id], result_id: results_map[sr.result_id], created_by: current_user)
     end
   end
 
-  def self.clone_step(protocol_dest, current_user, step, include_file_versions)
-    step.duplicate(protocol_dest, current_user, step_position: step.position, include_file_versions: include_file_versions)
+  def self.clone_step(protocol_dest, current_user, step, include_file_versions, load_mode: 'replace')
+    position = load_mode == 'replace' ? step.position : nil
+    step.duplicate(protocol_dest, current_user, step_position: position, include_file_versions: include_file_versions)
   end
 
   def in_repository_active?
@@ -518,49 +548,38 @@ class Protocol < ApplicationRecord
     save!
   end
 
-  def update_from_parent(current_user, source)
+  def load_from_repository(source, current_user, mode = 'replace')
     ActiveRecord::Base.no_touching do
-      # First, destroy step contents
-      destroy_contents
+      # First, destroy step and results contents
+      destroy_contents if mode == 'replace'
 
-      # Now, clone parent's step contents
-      Protocol.clone_contents(source, self, current_user, false)
+      # Now, clone source's step and result contents
+      Protocol.clone_contents(source, self, current_user, false, include_results: true, load_mode: mode)
     end
 
-    # Lastly, update the metadata
     reload
-    self.record_timestamps = false
-    self.added_by = current_user
-    self.last_modified_by = current_user
-    self.parent = source
-    self.updated_at = Time.zone.now
-    self.linked_at = updated_at
+
+    if mode == 'merge'
+      self.last_modified_by = current_user
+      self.parent = nil
+      self.linked_at = nil
+      self.protocol_type = Protocol.protocol_types[:unlinked]
+    else
+      # Lastly, update the metadata only if in 'replace' mode
+      self.name = source.name
+      self.record_timestamps = false
+      self.parent = source
+      self.added_by = current_user
+      self.last_modified_by = current_user
+      self.protocol_type = Protocol.protocol_types[:linked]
+      self.updated_at = Time.zone.now
+      self.linked_at = updated_at
+    end
+
     save!
   end
 
-  def load_from_repository(source, current_user)
-    ActiveRecord::Base.no_touching do
-      # First, destroy step contents
-      destroy_contents
-
-      # Now, clone source's step contents
-      Protocol.clone_contents(source, self, current_user, false)
-    end
-
-    # Lastly, update the metadata
-    reload
-    self.name = source.name
-    self.record_timestamps = false
-    self.parent = source
-    self.added_by = current_user
-    self.last_modified_by = current_user
-    self.protocol_type = Protocol.protocol_types[:linked]
-    self.updated_at = Time.zone.now
-    self.linked_at = updated_at
-    save!
-  end
-
-  def copy_to_repository(clone, current_user)
+  def copy_to_repository(clone, current_user, include_results: false)
     clone.team = team
     clone.protocol_type = :in_repository_draft
     clone.added_by = current_user
@@ -571,7 +590,7 @@ class Protocol < ApplicationRecord
 
     ActiveRecord::Base.no_touching do
       # Okay, clone seems to be valid: let's clone it
-      clone = deep_clone(clone, current_user)
+      clone = deep_clone(clone, current_user, include_results: include_results)
     end
 
     clone
@@ -595,7 +614,7 @@ class Protocol < ApplicationRecord
     return draft if draft.invalid?
 
     ActiveRecord::Base.no_touching do
-      draft = deep_clone(draft, current_user, include_file_versions: true)
+      draft = deep_clone(draft, current_user, include_file_versions: true, include_results: true)
     end
 
     parent_protocol.user_assignments.each do |parent_user_assignment|
@@ -643,7 +662,7 @@ class Protocol < ApplicationRecord
       protocol_type: :in_repository_draft
     )
 
-    cloned = deep_clone(clone, current_user)
+    cloned = deep_clone(clone, current_user, include_results: true)
 
     if cloned
       Activities::CreateActivityService
@@ -664,6 +683,12 @@ class Protocol < ApplicationRecord
     # Calculate total space taken by the protocol
     st = space_taken
     steps.order(position: :desc).destroy_all
+
+    if in_module?
+      my_module.results.destroy_all
+    else
+      results.destroy_all
+    end
 
     # Release space taken by the step
     team.release_space(st)
@@ -735,7 +760,7 @@ class Protocol < ApplicationRecord
     sync_child_protocol_assignment(user_group_assignment)
   end
 
-  def deep_clone(clone, current_user, include_file_versions: false)
+  def deep_clone(clone, current_user, include_file_versions: false, include_results: false)
     # Save cloned protocol first
     success = clone.save
 
@@ -747,7 +772,7 @@ class Protocol < ApplicationRecord
 
     raise ActiveRecord::RecordNotSaved unless success
 
-    Protocol.clone_contents(self, clone, current_user, true, only_contents: true, include_file_versions: include_file_versions)
+    Protocol.clone_contents(self, clone, current_user, true, only_contents: true, include_file_versions: include_file_versions, include_results: include_results)
 
     clone.reload
     clone

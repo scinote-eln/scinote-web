@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_29_104755) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -1101,7 +1101,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
 
   create_table "results", force: :cascade do |t|
     t.string "name"
-    t.bigint "my_module_id", null: false
+    t.bigint "my_module_id"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -1113,6 +1113,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
     t.datetime "restored_on", precision: nil
     t.integer "assets_view_mode", default: 0
     t.datetime "discarded_at"
+    t.string "type"
+    t.bigint "protocol_id"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_results_on_name", using: :gin
     t.index ["archived"], name: "index_results_on_archived"
     t.index ["archived_by_id"], name: "index_results_on_archived_by_id"
@@ -1120,6 +1122,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_15_171235) do
     t.index ["discarded_at"], name: "index_results_on_discarded_at"
     t.index ["last_modified_by_id"], name: "index_results_on_last_modified_by_id"
     t.index ["my_module_id"], name: "index_results_on_my_module_id"
+    t.index ["protocol_id"], name: "index_results_on_protocol_id"
     t.index ["restored_by_id"], name: "index_results_on_restored_by_id"
     t.index ["user_id"], name: "index_results_on_user_id"
   end

@@ -73,9 +73,9 @@ export default {
   props: {
     url: { type: String, required: true },
     canCreate: { type: String, required: true },
-    archived: { type: String, required: true },
-    active_url: { type: String, required: true },
-    archived_url: { type: String, required: true },
+    archived: { type: String, required: false},
+    active_url: { type: String, required: false },
+    archived_url: { type: String, required: false },
     userSettingsUrl: { type: String, required: false },
     changeStatesUrl: { type: String, required: false },
     protocolId: { type: Number, required: false }
@@ -105,18 +105,6 @@ export default {
       this.loadingOverlay = true;
     }
   },
-  watch: {
-    elementsLoaded() {
-      if (this.anchorId) {
-        this.scrollToResult();
-      }
-    },
-    attachmentsLoaded() {
-      if (this.anchorId) {
-        this.scrollToResult();
-      }
-    }
-  },
   mounted() {
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     window.addEventListener('scroll', this.infiniteScrollLoad, false);
@@ -131,22 +119,20 @@ export default {
   },
   methods: {
     scrollToResult() {
-      if (this.elementsLoaded === this.results.length && this.attachmentsLoaded === this.results.length) {
-        if (this.anchorId) {
-          const result = this.$refs.results.find((child) => child.result?.id === this.anchorId);
-          if (result) {
-            this.loadingOverlay = false;
-            this.$nextTick(() => {
-              result.$refs.resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              this.anchorId = null;
-            });
-          }
-        }
-
-        if (!this.nextPageUrl) {
+      if (this.anchorId) {
+        const result = this.$refs.results.find((child) => child.result?.id === this.anchorId);
+        if (result) {
           this.loadingOverlay = false;
-          this.anchorId = null;
+          this.$nextTick(() => {
+            result.$refs.resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            this.anchorId = null;
+          });
         }
+      }
+
+      if (!this.nextPageUrl) {
+        this.loadingOverlay = false;
+        this.anchorId = null;
       }
     },
     getHeader() {
@@ -175,18 +161,33 @@ export default {
         const params = this.sort ? { ...this.filters, sort: this.sort } : { ...this.filters };
         axios.get(this.nextPageUrl, { params }).then((response) => {
           this.results = this.results.concat(response.data.data);
+          this.results.forEach(result => {
+            result.attachments = []
+            result.relationships.assets.data.forEach((asset) => {
+              result.attachments.push(response.data.included.find((a) => a.id === asset.id && a.type === 'assets'));
+            });
+
+            result.elements = [];
+            result.relationships.result_orderable_elements.data.forEach((element) => {
+              result.elements.push(response.data.included.find((e) => e.id === element.id && e.type === 'result_orderable_elements'));
+            });
+          });
           this.sort = response.data.meta.sort;
           this.nextPageUrl = response.data.links.next;
           this.loadingPage = false;
 
           this.infiniteScrollLoad();
 
-          if (this.anchorId) {
-            const result = this.results.find((e) => e.id === this.anchorId);
-            if (!result) {
-              this.loadResults();
+          this.$nextTick(() => {
+            if (this.anchorId) {
+              const result = this.results.find((e) => e.id === this.anchorId);
+              if (!result) {
+                this.loadResults();
+              } else {
+                this.scrollToResult();
+              }
             }
-          }
+          });
         });
       }
     },
@@ -208,7 +209,10 @@ export default {
         }
       ).then(
         (response) => {
-          this.results = [{ newResult: true, ...response.data.data }, ...this.results];
+          const result = response.data.data;
+          result.attachments = [];
+          result.elements = [];
+          this.results = [{ newResult: true, ...result }, ...this.results];
           window.scrollTo(0, 0);
         }
       );

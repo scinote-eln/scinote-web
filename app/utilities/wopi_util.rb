@@ -112,7 +112,8 @@ module WopiUtil
              else
                t('activities.wopi_file_editing.finished')
              end
-    if @assoc.class == Step
+    case @assoc
+    when Step
       default_step_items =
         { step: @asset.step.id,
           step_position: { id: @asset.step.id, value_for: 'position_plus_one' },
@@ -137,7 +138,7 @@ module WopiUtil
               team: team,
               project: project,
               message_items: message_items)
-    elsif @assoc.class == Result
+    when Result
       Activities::CreateActivityService
         .call(activity_type: :edit_wopi_file_on_result,
               owner: current_user,
@@ -149,7 +150,20 @@ module WopiUtil
                 asset_name: { id: @asset.id, value_for: 'file_name' },
                 action: action
               })
-    elsif @assoc.is_a?(RepositoryCell)
+    when ResultTemplate
+      Activities::CreateActivityService
+        .call(activity_type: :edit_wopi_file_on_result_template,
+              owner: current_user,
+              subject: @asset.result,
+              team: @asset.result.team,
+              project: nil,
+              message_items: {
+                result_template: @asset.result.id,
+                asset_name: { id: @asset.id, value_for: 'file_name' },
+                protocol: @asset.result.protocol.id,
+                action: action
+              })
+    when RepositoryCell
       repository = @assoc.repository_row.repository
       Activities::CreateActivityService
         .call(activity_type: :edit_wopi_file_on_inventory_item,

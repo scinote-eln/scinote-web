@@ -40,8 +40,8 @@ RSpec.shared_context 'reference_project_structure' do |config|
   let!(:experiment) { create :experiment, project: project, created_by: project.created_by } unless config[:skip_experiment]
   let!(:experiments) { create_list :experiment, config[:experiments], project: project, created_by: project.created_by } if config[:experiments]
 
-  let!(:my_module) { create :my_module, experiment: experiment, created_by: experiment.created_by } unless config[:skip_my_module]
-  let!(:my_modules) { create_list :my_module, config[:my_modules], experiment: experiment, created_by: experiment.created_by } if config[:my_modules]
+  let!(:my_module) { create :my_module, experiment: experiment, created_by: experiment.created_by, my_module_status: MyModuleStatus.first } unless config[:skip_my_module]
+  let!(:my_modules) { create_list :my_module, config[:my_modules], experiment: experiment, created_by: experiment.created_by, my_module_status: MyModuleStatus.first } if config[:my_modules]
 
   let!(:connection) { create :connection, input_id: my_modules.first.id, output_id: my_modules.last.id } if config[:connection]
 

@@ -16,6 +16,8 @@ module AutomationObservers
                end
 
       return if result.blank?
+      return if result.is_a?(ResultTemplate)
+
       return if result.archived_previously_changed?
       return unless result.my_module.my_module_status.initial_status?
 

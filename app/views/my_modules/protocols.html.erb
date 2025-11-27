@@ -24,6 +24,8 @@
   </span>
 <% end %>
 
+<%= hidden_field_tag :my_module_is_empty, !@my_module.not_empty? %>
+
 
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <div class="content-pane flexible my-module-content my-modules-protocols-index with-grey-background" data-task-id="<%= @my_module.id %>">
@@ -80,6 +82,8 @@
 
 <!-- Load from repository modal -->
 <%= render partial: "my_modules/protocols/load_from_repository_modal" %>
+
+<%= render partial: "my_modules/protocols/load_from_repository_warning_modal" %>
 
 <!-- Copy to repository protocol modal -->
 <%= render partial: "protocols/index/new_protocol_modal", locals: {type: 'copy'} %>

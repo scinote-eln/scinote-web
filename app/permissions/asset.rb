@@ -8,7 +8,7 @@ Canaid::Permissions.register_for(Asset) do
     when Step
       protocol = object.protocol
       can_read_protocol_in_module?(user, protocol) || can_read_protocol_in_repository?(user, protocol)
-    when Result
+    when ResultBase
       can_read_result?(user, object)
     when RepositoryCell
       can_read_repository?(user, object.repository_column.repository)
@@ -21,7 +21,7 @@ Canaid::Permissions.register_for(Asset) do
     case object
     when Step
       can_manage_step?(user, object)
-    when Result
+    when ResultBase
       can_manage_result?(user, object)
     when RepositoryCell
       if object.repository_column.repository.is_a?(RepositorySnapshot)

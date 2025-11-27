@@ -56,12 +56,13 @@ class AssetsController < ApplicationController
   end
 
   def move_targets
-    if @assoc.is_a?(Step)
+    case @assoc
+    when Step
       protocol = @assoc.protocol
       render json: { targets: protocol.steps.order(:position).where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
-    elsif @assoc.is_a?(Result)
-      my_module = @assoc.my_module
-      render json: { targets: my_module.results.active.where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
+    when ResultBase
+      parent = @assoc.parent
+      render json: { targets: parent.results.active.where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
     else
       render json: { targets: [] }
     end
@@ -71,8 +72,8 @@ class AssetsController < ApplicationController
     case @assoc
     when Step
       target = @assoc.protocol.steps.find_by(id: params[:target_id])
-    when Result
-      target = @assoc.my_module.results.active.find_by(id: params[:target_id])
+    when ResultBase
+      target = @assoc.parent.results.active.find_by(id: params[:target_id])
       return render_404 unless target
     end
 
@@ -126,6 +127,26 @@ class AssetsController < ApplicationController
           user: current_user.id,
           result_original: @assoc.id,
           result_destination: target.id
+        )
+
+        render json: {}
+      elsif @assoc.is_a?(ResultTemplate)
+        object_to_update = @asset.result_asset
+        object_to_update.update!(result: target)
+
+        type_of = {
+          'marvinjs' => :move_chemical_structure_on_result_template,
+          'gene_sequence' => :sequence_on_result_template_moved
+        }.fetch(@asset.file.metadata[:asset_type], :result_template_file_moved)
+
+        log_result_activity(
+          type_of,
+          @assoc,
+          file: @asset.file_name,
+          user: current_user.id,
+          result_template_original: @assoc.id,
+          result_template_destination: target.id,
+          protocol: @assoc.protocol.id
         )
 
         render json: {}
@@ -241,6 +262,9 @@ class AssetsController < ApplicationController
     elsif params[:element_type] == 'Result'
       @assoc = Result.find(params[:element_id])
       return render_403 unless can_manage_result?(@assoc)
+    elsif params[:element_type] == 'ResultTemplate'
+      @assoc = ResultTemplate.find(params[:element_id])
+      return render_403 unless can_manage_result?(@assoc)
     else
       return render_403
     end
@@ -285,6 +309,9 @@ class AssetsController < ApplicationController
           message_items
         )
       when Result
+        log_result_activity(activity_type, @assoc, message_items)
+      when ResultTemplate
+        message_items[:protocol] = @assoc.protocol.id
         log_result_activity(activity_type, @assoc, message_items)
       end
 
@@ -331,6 +358,15 @@ class AssetsController < ApplicationController
           user: current_user.id,
           my_module: @assoc.my_module.id
         )
+      when ResultTemplate
+        log_result_activity(
+          :result_template_asset_renamed,
+          @assoc,
+          old_name:,
+          new_name:,
+          user: current_user.id,
+          protocol: @assoc.protocol.id
+        )
       end
     end
 
@@ -340,7 +376,7 @@ class AssetsController < ApplicationController
   def duplicate
     ActiveRecord::Base.transaction do
       case @asset.parent
-      when Step, Result
+      when Step, Result, ResultTemplate
         new_asset = @asset.duplicate(
           new_name:
             "#{@asset.file.filename.base} (1).#{@asset.file.filename.extension}",
@@ -368,6 +404,14 @@ class AssetsController < ApplicationController
           file: @asset.file_name,
           user: current_user.id,
           my_module: @assoc.my_module.id
+        )
+      when ResultTemplate
+        log_result_activity(
+          :result_template_file_duplicated,
+          @assoc,
+          file: @asset.file_name,
+          user: current_user.id,
+          protocol: @assoc.protocol.id
         )
       end
 
@@ -424,6 +468,10 @@ class AssetsController < ApplicationController
       message_items.merge!({ result: @assoc.id, my_module: @assoc.my_module.id })
       log_restore_activity(:task_result_restore_asset_version, @assoc,
                            @assoc.my_module.team, @assoc.my_module.project, message_items)
+    when ResultTemplate
+      message_items[:result_template] = @assoc.id
+      message_items[:protocol] = @assoc.protocol.id
+      log_restore_activity(:result_template_restore_asset_version, @assoc, @assoc.team, nil, message_items)
     when RepositoryCell
       message_items.merge!({ repository_column: @assoc.repository_column.id, repository: @repository.id })
       log_restore_activity(:repository_column_restore_asset_version, @repository,
@@ -509,10 +557,10 @@ class AssetsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: result,
-            team: result.my_module.team,
-            project: result.my_module.project,
+            team: result.team,
+            project: @assoc.instance_of?(Result) ? result.my_module.project : nil,
             message_items: {
-              result: result.id
+              "#{result.class.model_name.param_key}": result.id
             }.merge(message_items))
   end
 
@@ -545,6 +593,15 @@ class AssetsController < ApplicationController
         :delete_chemical_structure_on_result
       else
         :result_file_deleted
+      end
+    when ResultTemplate
+      case @asset.file.metadata[:asset_type]
+      when 'gene_sequence'
+        :sequence_on_result_template_deleted
+      when 'marvinjs'
+        :delete_chemical_structure_on_result_template
+      else
+        :result_template_file_deleted
       end
     end
   end

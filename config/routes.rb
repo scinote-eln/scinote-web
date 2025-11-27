@@ -501,25 +501,24 @@ Rails.application.routes.draw do
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
         get 'fetch_workflow_img' # Get updated workflow img
-        get 'modules/new', to: 'my_modules#new'
-        post 'modules', to: 'my_modules#create'
         post 'restore_my_modules', to: 'my_modules#restore_group'
         get 'sidebar'
         get :assigned_users_to_tasks
         post :archive_my_modules
         post :batch_clone_my_modules
-        get :search_tags
         get :projects_to_clone
         get :projects_to_move
         post :favorite
         post :unfavorite
       end
+
+      resources :my_modules, path: '/modules', only: [:index, :create]
     end
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
     # as well as 'module info' page for single module (HTML)
     get 'experiments/:experiment_id/table', to: 'my_modules#index'
-    get 'experiments/:experiment_id/modules', to: 'my_modules#index', as: :my_modules
+
 
     resources :step_results, only: [] do
       collection do
@@ -528,8 +527,14 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :step_result_templates, only: [] do
+      collection do
+        post :link_results
+        post :link_steps
+      end
+    end
+
     resources :my_modules, path: '/modules', only: [:show, :update] do
-      post 'save_table_state', on: :collection, defaults: { format: 'json' }
 
       collection do
         post 'actions_toolbar'
@@ -644,20 +649,6 @@ Rails.application.routes.draw do
           post :reorder, on: :collection
         end
 
-        resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
-          member do
-            get :move_targets
-            post :move
-            post :duplicate
-          end
-        end
-        resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
-          member do
-            get :move_targets
-            post :move
-            post :duplicate
-          end
-        end
       end
     end
     post 'repository/:id/assign_my_modules', to: 'my_module_repositories#assign_my_modules', as: :assign_my_modules
@@ -724,11 +715,9 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :result_texts, only: [:edit, :update, :destroy]
     get 'result_texts/:id/download' => 'result_texts#download',
       as: :result_text_download
     resources :result_assets, only: [:edit, :update, :destroy]
-    resources :result_tables, only: [:edit, :update, :destroy]
     get 'result_tables/:id/download' => 'result_tables#download',
       as: :result_table_download
 
@@ -748,8 +737,6 @@ Rails.application.routes.draw do
         get 'version_comment', to: 'protocols#version_comment'
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
-        post 'linked_children_datatable',
-             to: 'protocols#linked_children_datatable'
         get 'versions_modal', to: 'protocols#versions_modal'
         patch 'description', to: 'protocols#update_description'
         put 'name', to: 'protocols#update_name'
@@ -790,6 +777,42 @@ Rails.application.routes.draw do
         get 'protocolsio', to: 'protocols#protocolsio_index'
         post 'actions_toolbar', to: 'protocols#actions_toolbar'
         get :user_roles
+      end
+
+      resources :result_templates, only: %i(index show create update destroy) do
+        collection do
+          get :list
+          post :change_results_state
+        end
+        member do
+          get :elements
+          get :assets
+          post :upload_attachment
+          post :update_view_state
+          post :update_asset_view_mode
+          post :duplicate
+        end
+
+        resources :result_template_orderable_elements do
+          post :reorder, on: :collection
+        end
+      end
+    end
+
+    resources :results, only: [] do
+      resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
+        member do
+          get :move_targets
+          post :move
+          post :duplicate
+        end
+      end
+      resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
+        member do
+          get :move_targets
+          post :move
+          post :duplicate
+        end
       end
     end
 
