@@ -93,16 +93,13 @@ class StorageLocation < ApplicationRecord
     parent.breadcrumbs(readable: readable) + [{ name: (readable ? name : code), url: url }]
   end
 
-  def storage_location_export_breadcrumb(repository_row)
-    export_name = if with_grid?
-                    "#{name} (#{code}) / #{storage_location_repository_rows.where(repository_row: repository_row).map(&:human_readable_position).join(', ')}"
-                  else
-                    "#{name} (#{code})"
-                  end
+  def storage_location_export_breadcrumb(repository_row, readable: false)
+    export_name = readable ? "#{name} (#{code})" : code
+    export_name = "#{export_name} / #{storage_location_repository_rows.where(repository_row: repository_row).map(&:human_readable_position).join(', ')}" if with_grid?
 
-    return export_name if root?
+    return "#{team.name} / #{export_name}" if root?
 
-    "#{parent.storage_location_export_breadcrumb(repository_row)} / #{export_name}"
+    "#{parent.storage_location_export_breadcrumb(repository_row, readable: readable)} / #{export_name}"
   end
 
   def with_grid?
