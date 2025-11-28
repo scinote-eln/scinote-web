@@ -4,10 +4,11 @@ module Api
   module V2
     module ResultElements
       class AssetsController < ::Api::V2::BaseController
+        include ::Api::V1::BlobCreation
+
         before_action :load_team, :load_project, :load_experiment, :load_task, :load_result
         before_action :check_manage_permission, only: %i(create destroy)
         before_action :load_asset, only: %i(show destroy)
-        before_action :check_upload_type, only: :create
 
         def index
           result_assets =
@@ -22,20 +23,7 @@ module Api
         end
 
         def create
-          asset = if @form_multipart_upload
-                    @result.assets.new(asset_params.merge({ team_id: @team.id }))
-                  else
-                    blob = ActiveStorage::Blob.create_and_upload!(
-                      io: StringIO.new(Base64.decode64(asset_params[:file_data])),
-                      filename: asset_params[:file_name],
-                      content_type: asset_params[:file_type],
-                      metadata: { created_by_id: current_user.id }
-                    )
-                    @result.assets.new(file: blob, team: @team)
-                  end
-
-          asset.save!(context: :on_api_upload)
-          asset.post_process_file
+          asset = attach_blob!(@result)
 
           render jsonapi: asset,
                  serializer: Api::V2::AssetSerializer,
@@ -52,20 +40,15 @@ module Api
         def asset_params
           raise TypeError unless params.require(:data).require(:type) == 'attachments'
 
-          return params.require(:data).require(:attributes).permit(:file) if @form_multipart_upload
+          return params.require(:data).require(:attributes).permit(:file) if params.dig(:data, :attributes, :file)
 
-          attr_list = %i(file_data file_type file_name)
-          params.require(:data).require(:attributes).require(attr_list)
+          attr_list = %i(file_data file_type file_name signed_blob_id)
           params.require(:data).require(:attributes).permit(attr_list)
         end
 
         def load_asset
           @asset = @result.assets.find(params.require(:id))
           raise PermissionError.new(Result, :read) unless can_read_result?(@result)
-        end
-
-        def check_upload_type
-          @form_multipart_upload = true if params.dig(:data, :attributes, :file)
         end
 
         def check_manage_permission

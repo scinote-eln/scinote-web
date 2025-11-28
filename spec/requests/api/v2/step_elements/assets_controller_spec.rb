@@ -183,6 +183,32 @@ RSpec.describe 'Api::V2::StepElements::AssetsController', type: :request do
           action
         end
       end
+
+      context 'with direct upload' do
+        let(:signed_blob_id) do
+          ActiveStorage::Blob.create_and_upload!(
+            io: File.open(Rails.root.join('spec/fixtures/files/test.jpg')), filename: 'test.jpg'
+          ).signed_id
+        end
+        let(:attributes) { { signed_blob_id: signed_blob_id } }
+        let(:request_body) { super().to_json }
+
+        it 'creates new asset' do
+          expect { action }.to change { Asset.count }.by(1)
+        end
+
+        it 'returns status 201' do
+          action
+
+          expect(response).to have_http_status 201
+        end
+
+        it 'calls post_process_file function for text extraction' do
+          expect_any_instance_of(Asset).to receive(:post_process_file)
+
+          action
+        end
+      end
     end
 
     context 'when has missing param' do
