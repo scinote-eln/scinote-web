@@ -74,6 +74,21 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
       )
     end
 
+    it 'Response with correct experiments, filtered by name' do
+      hash_body = nil
+      experiment = @valid_project.experiments.take
+      get api_v1_team_project_experiments_path(team_id: @team1.id,
+        project_id: @valid_project, filter: { name: experiment.name }), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_project.experiments.where_attributes_like(:name, experiment.name), each_serializer: Api::V1::ExperimentSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
     it 'When invalid request, project from another team' do
       hash_body = nil
       get api_v1_team_project_experiments_path(team_id: @team2.id,

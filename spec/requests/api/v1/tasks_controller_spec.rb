@@ -68,6 +68,25 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       )
     end
 
+    it 'Response with correct tasks, filtered by name' do
+      hash_body = nil
+      task = @valid_experiment.my_modules.take
+      get api_v1_team_project_experiment_tasks_path(
+        team_id: @team1.id,
+        project_id: @valid_project,
+        experiment_id: @valid_experiment,
+        filter: { name: task.name }
+      ), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_experiment.my_modules.where_attributes_like(:name, task.name), each_serializer: Api::V1::TaskSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
     it 'Response with correct tasks, only archived' do
       hash_body = nil
       get api_v1_team_project_experiment_tasks_path(

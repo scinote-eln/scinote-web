@@ -243,6 +243,12 @@ module Api
         @workflow = MyModuleStatusFlow.find(params.require(key))
       end
 
+      def name_filter(named_collection)
+        return named_collection if params.dig(:filter, :name).blank?
+
+        named_collection.where_attributes_like(:name, params.dig(:filter, :name))
+      end
+
       def archived_filter(archivable_collection)
         return archivable_collection if params.dig(:filter, :archived).blank?
 
