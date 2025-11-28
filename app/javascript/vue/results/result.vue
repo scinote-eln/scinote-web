@@ -262,7 +262,7 @@ export default {
       reordering: false,
       elements: [],
       attachments: [],
-      attachmentsReady: false,
+      attachmentsReady: true,
       addingContent: false,
       showFileModal: false,
       dragingFile: false,
@@ -484,8 +484,8 @@ export default {
     }
   },
   created() {
-    this.loadAttachments();
-    this.loadElements();
+    this.elements = this.result.elements;
+    this.attachments = this.result.attachments;
   },
   methods: {
     toggleCollapsed() {

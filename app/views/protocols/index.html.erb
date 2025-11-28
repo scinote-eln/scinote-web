@@ -34,6 +34,7 @@
           :archived-page-url="'<%= protocols_path(view_mode: :archived) %>'"
           current-view-mode="<%= params[:view_mode] || :active %>"
           :ai-parser-enabled="<%= Protocol.ai_parser_enabled? %>"
+          :protocols-io-enabled="<%= Protocol.protocols_io_enabled? %>"
           :create-url="'<%= protocols_path if can_create_protocols_in_repository?(current_team) %>'"
           users-filter-url="<%= users_filter_projects_path %>"
         />

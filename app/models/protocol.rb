@@ -246,6 +246,10 @@ class Protocol < ApplicationRecord
     ENV.fetch('AI_PROTOCOLS_PARSER', nil).present? && ApplicationSettings.instance.values['ai_protocol_parser_enabled'] == true
   end
 
+  def self.protocols_io_enabled?
+    ENV['PROTOCOLS_IO_ACCESS_TOKEN'].present?
+  end
+
   def original_code
     # returns linked protocol code, or code of the original version of the linked protocol
     parent&.parent&.code || parent&.code || code
@@ -368,7 +372,7 @@ class Protocol < ApplicationRecord
 
     # Copy steps
     src.steps.find_each do |step|
-      new_step = clone_step(dest, current_user, step, include_file_versions)
+      new_step = clone_step(dest, current_user, step, include_file_versions, load_mode: load_mode)
       steps_map[step.id] = new_step.id if include_results
     end
 
@@ -408,8 +412,9 @@ class Protocol < ApplicationRecord
     end
   end
 
-  def self.clone_step(protocol_dest, current_user, step, include_file_versions)
-    step.duplicate(protocol_dest, current_user, step_position: step.position, include_file_versions: include_file_versions)
+  def self.clone_step(protocol_dest, current_user, step, include_file_versions, load_mode: 'replace')
+    position = load_mode == 'replace' ? step.position : nil
+    step.duplicate(protocol_dest, current_user, step_position: position, include_file_versions: include_file_versions)
   end
 
   def in_repository_active?

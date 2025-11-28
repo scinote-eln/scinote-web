@@ -18,7 +18,7 @@ class StepsController < ApplicationController
   before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state)
 
   def index
-    render json: @protocol.steps.in_order,
+    render json: @protocol.steps.includes(:assets, step_orderable_elements: :orderable).in_order,
            each_serializer: StepSerializer,
            include: %i(step_orderable_elements assets),
            user: current_user
@@ -313,7 +313,7 @@ class StepsController < ApplicationController
         log_activity(:protocol_steps_loaded_from_template, nil, message_items)
       end
 
-      render json: steps, each_serializer: StepSerializer, user: current_user
+      render json: steps, each_serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
     end
   end
 

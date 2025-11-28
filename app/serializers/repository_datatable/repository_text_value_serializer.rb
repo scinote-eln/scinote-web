@@ -11,7 +11,7 @@ module RepositoryDatatable
       {
         view:
             auto_link(
-              sanitize_input(value_object.data),
+              escape_input(value_object.data),
               html: { target: '_blank' },
               link: :urls
             ),

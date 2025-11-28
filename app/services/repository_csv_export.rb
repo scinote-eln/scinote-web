@@ -3,7 +3,7 @@
 require 'csv'
 
 class RepositoryCsvExport
-  def self.to_csv(rows, column_ids, repository, handle_file_name_func, in_module, ordered_row_ids = nil)
+  def self.to_csv(rows, column_ids, repository, handle_file_name_func, in_module, user, ordered_row_ids = nil)
     add_consumption = in_module && !repository.is_a?(RepositorySnapshot) && repository.has_stock_management?
     csv_header = build_header(repository, column_ids, add_consumption)
 
@@ -26,17 +26,19 @@ class RepositoryCsvExport
       if ordered_row_ids.present?
         rows = rows.order(RepositoryRow.sanitize_sql_for_order([Arel.sql('array_position(ARRAY[?], repository_rows.id)'), ordered_row_ids]))
         rows.each do |row|
-          csv << build_row(row, column_ids, repository, handle_file_name_func, add_consumption)
+          csv << build_row(user, row, column_ids, handle_file_name_func, add_consumption)
         end
       else
         rows.find_each(batch_size: 100) do |row|
-          csv << build_row(row, column_ids, repository, handle_file_name_func, add_consumption)
+          csv << build_row(user, row, column_ids, handle_file_name_func, add_consumption)
         end
       end
     end.encode('UTF-8', invalid: :replace, undef: :replace)
   end
 
   class << self
+    include Canaid::Helpers::PermissionsHelper
+
     private
 
     def build_header(repository, column_ids, add_consumption)
@@ -76,7 +78,7 @@ class RepositoryCsvExport
       csv_header
     end
 
-    def build_row(row, column_ids, repository, handle_file_name_func, add_consumption)
+    def build_row(user, row, column_ids, handle_file_name_func, add_consumption)
       csv_row = []
       column_ids.each do |c_id|
         case c_id
@@ -103,7 +105,7 @@ class RepositoryCsvExport
           csv_row << row.child_repository_rows.map(&:code).join(' | ')
         when -12
           csv_row << row.storage_locations.to_a.uniq
-                        .map { |storage_location| storage_location.storage_location_export_breadcrumb(row) }
+                        .map { |storage_location| storage_location.storage_location_export_breadcrumb(row, readable: can_read_storage_location?(user, storage_location)) }
                         .join(', ')
         else
           cell = row.repository_cells.find { |c| c.repository_column_id == c_id }

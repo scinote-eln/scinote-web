@@ -81,7 +81,7 @@
     <teleport to="body">
       <new-task-modal
         v-if="newTaskModalOpen"
-        create-url="<%= modules_experiment_path(@experiment) %>"
+        create-url="<%= experiment_my_modules_path(@experiment) %>"
         team-tags-url="<%= tags_path %>"
         assigned-users-url="<%= assigned_users_experiment_path(@experiment)%>"
         current-user-id="<%= current_user.id %>"

@@ -51,6 +51,9 @@ const tagUploadedTinyMCEImages = (editor) => {
   while(image = window.uploadedTinyMCEImages.pop()) {
     const iframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe').contents()[0];
     let imageElement = iframe.querySelector(`[src='${image.url}']`);
+
+    if (!imageElement) continue;
+
     imageElement.setAttribute('alt', `description-${image.token}`);
     imageElement.setAttribute('data-mce-token', image.token);
   };
@@ -60,7 +63,12 @@ const image_upload_handler = (blobInfo, _progress) =>
   new Promise((resolve, reject) => {
     if (!blobInfo) resolve();
 
-    const upload = new ActiveStorage.DirectUpload(blobInfo.blob(), rails_direct_uploads_path());
+    let blob = blobInfo.blob();
+
+    // ensure blob has filename, for direct uploads
+    if (blob.name === undefined) blob.name = blobInfo.filename();
+
+    const upload = new ActiveStorage.DirectUpload(blob, rails_direct_uploads_path());
 
     upload.create((error, blob) => {
       if (error) {

@@ -7,6 +7,9 @@ class ResultBaseSerializer < ActiveModel::Serializer
   include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
 
+  has_many :result_orderable_elements, serializer: ResultOrderableElementSerializer
+  has_many :assets, serializer: AssetSerializer
+
   attributes :name, :id, :urls, :updated_at, :created_at_formatted, :updated_at_formatted, :user,
              :attachments_manageble, :marvinjs_enabled, :marvinjs_context, :type,
              :wopi_enabled, :wopi_context, :created_at, :created_by, :assets_order,

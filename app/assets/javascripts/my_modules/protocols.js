@@ -170,6 +170,7 @@ function initLoadFromRepositoryTable(content) {
     fnInitComplete: function(e) {
       var dataTableWrapper = $(e.nTableWrapper);
       DataTableHelpers.initLengthAppearance(dataTableWrapper);
+      $('#my_module_is_empty').val(e.json.my_module_is_empty ? 'true' : 'false');
       DataTableHelpers.initSearchField(
         dataTableWrapper,
         I18n.t('my_modules.protocols.load_from_repository_modal.filter_protocols')

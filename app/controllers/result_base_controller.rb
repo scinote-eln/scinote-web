@@ -17,8 +17,11 @@ class ResultBaseController < ApplicationController
         update_and_apply_user_sort_preference!
         apply_filters!
 
-        @results = @results.page(params.dig(:page, :number) || 1)
-        render json: @results, each_serializer: result_serializer, scope: current_user,
+        @results = @results.includes(:assets, result_orderable_elements: :orderable).page(params.dig(:page, :number) || 1)
+        render json: @results,
+               each_serializer: result_serializer,
+               include: %i(result_orderable_elements assets),
+               user: current_user,
                meta: { sort: @sort_preference }
       end
 
@@ -34,13 +37,19 @@ class ResultBaseController < ApplicationController
     @result = @parent.results.create!(user: current_user, last_modified_by: current_user)
     log_activity(:"add_#{model_parameter}", { "#{model_parameter}": @result })
 
-    render json: @result
+    render json: @result,
+           serializer: result_serializer,
+           include: %i(result_orderable_elements assets),
+           user: current_user
   end
 
   def update
     @result.update!(result_params.merge(last_modified_by: current_user))
     log_activity(:"edit_#{model_parameter}", { "#{model_parameter}": @result })
-    render json: @result
+    render json: @result,
+           serializer: result_serializer,
+           include: %i(result_orderable_elements assets),
+           user: current_user
   end
 
   def elements
@@ -107,7 +116,10 @@ class ResultBaseController < ApplicationController
       )
 
       log_activity(:"#{model_parameter}_duplicated", { "#{model_parameter}": @result })
-      render json: new_result, serializer: result_serializer, user: current_user
+      render json: new_result,
+             serializer: result_serializer,
+             include: %i(result_orderable_elements assets),
+             user: current_user
     end
   end
 

@@ -5,10 +5,11 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
 
   PREFIXED_ID_SQL = "('#{Protocol::ID_PREFIX}' || COALESCE(\"protocols\".\"parent_id\", \"protocols\".\"id\"))".freeze
 
-  def initialize(view, team, user)
+  def initialize(view, team, user, my_module)
     super(view)
     @team = team
     @user = user
+    @my_module = my_module
   end
 
   def sortable_columns
@@ -37,6 +38,7 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
       draw: dt_params[:draw].to_i,
       recordsTotal: get_raw_records_base.distinct.count,
       recordsFiltered: records.present? ? records.first.filtered_count : 0,
+      my_module_is_empty: !@my_module.not_empty?,
       data: data
     }
   end

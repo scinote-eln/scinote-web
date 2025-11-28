@@ -16,7 +16,7 @@ class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
 
   discard_on ActiveRecord::RecordNotFound
 
-  retry_on ActiveStorage::IntegrityError, attempts: 3, wait: :exponentially_longer
+  retry_on ActiveStorage::IntegrityError, attempts: 3, wait: :polynomially_longer
 
   def perform(blob_id)
     ActiveRecord::Base.no_touching do

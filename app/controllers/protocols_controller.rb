@@ -23,9 +23,13 @@ class ProtocolsController < ApplicationController
     versions_list
     permissions
   )
+  before_action :check_protocols_io_enabled, only: %i(
+    protocolsio_index
+    protocolsio_import_create
+    protocolsio_import_save
+  )
   before_action :check_linked_protocol_view_permissions, only: %i(
     linked_children
-    linked_children_datatable
   )
   before_action :switch_team_with_param, only: %i(index protocolsio_index)
   before_action :check_view_all_permissions, only: %i(
@@ -143,7 +147,7 @@ class ProtocolsController < ApplicationController
           experiment_name: record.my_module.experiment.name_with_label,
           project_name: record.my_module.experiment.project.name_with_label,
           my_module_url: protocols_my_module_path(record.my_module),
-          experiment_url: my_modules_path(experiment_id: record.my_module.experiment.id),
+          experiment_url: experiment_my_modules_path(experiment_id: record.my_module.experiment.id),
           project_url: experiments_path(project_id: record.my_module.experiment.project.id),
           project_folder_name: project_folder.present? ? project_folder.name_with_label : nil,
           project_folder_url: project_folder.present? ? project_folder_projects_url(project_folder) : nil
@@ -158,15 +162,6 @@ class ProtocolsController < ApplicationController
     render json: { versions: (@protocol.parent || @protocol).published_versions_with_original
                                                             .order(version_number: :desc)
                                                             .map(&:version_number) }
-  end
-
-  def linked_children_datatable
-    render json: ::ProtocolLinkedChildrenDatatable.new(
-      view_context,
-      @protocol,
-      current_user,
-      self
-    )
   end
 
   def publish
@@ -565,6 +560,8 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  # :nocov:
+
   def protocolsio_import_create
     @protocolsio_too_big = false
     @protocolsio_invalid_file = false
@@ -689,6 +686,8 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  # :nocov:
+
   def export
     # Make a zip output stream and send it to the client
     # rubocop:disable Metrics/BlockLength
@@ -805,7 +804,8 @@ class ProtocolsController < ApplicationController
     render json: ::LoadFromRepositoryProtocolsDatatable.new(
       view_context,
       @protocol.team,
-      current_user
+      current_user,
+      @protocol.my_module
     )
   end
 
@@ -1091,6 +1091,10 @@ class ProtocolsController < ApplicationController
 
   def create_params
     params.require(:protocol).permit(:name)
+  end
+
+  def check_protocols_io_enabled
+    render_403 unless Protocol.protocols_io_enabled?
   end
 
   def check_protocolsio_import_permissions

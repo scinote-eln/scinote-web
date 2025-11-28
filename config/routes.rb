@@ -23,8 +23,8 @@ Rails.application.routes.draw do
 
     root 'dashboards#show'
 
-    get '/sa', to: 'smart_annotations#show'
-    get '/sa/u', to: 'smart_annotations#user'
+    get '/sa', to: 'smart_annotations#show', defaults: { format: 'json' }
+    get '/sa/u', to: 'smart_annotations#user', defaults: { format: 'json' }
 
     resources :navigations, only: [] do
       collection do
@@ -501,25 +501,24 @@ Rails.application.routes.draw do
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
         get 'fetch_workflow_img' # Get updated workflow img
-        get 'modules/new', to: 'my_modules#new'
-        post 'modules', to: 'my_modules#create'
         post 'restore_my_modules', to: 'my_modules#restore_group'
         get 'sidebar'
         get :assigned_users_to_tasks
         post :archive_my_modules
         post :batch_clone_my_modules
-        get :search_tags
         get :projects_to_clone
         get :projects_to_move
         post :favorite
         post :unfavorite
       end
+
+      resources :my_modules, path: '/modules', only: [:index, :create]
     end
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
     # as well as 'module info' page for single module (HTML)
     get 'experiments/:experiment_id/table', to: 'my_modules#index'
-    get 'experiments/:experiment_id/modules', to: 'my_modules#index', as: :my_modules
+
 
     resources :step_results, only: [] do
       collection do
@@ -536,7 +535,6 @@ Rails.application.routes.draw do
     end
 
     resources :my_modules, path: '/modules', only: [:show, :update] do
-      post 'save_table_state', on: :collection, defaults: { format: 'json' }
 
       collection do
         post 'actions_toolbar'
@@ -739,8 +737,6 @@ Rails.application.routes.draw do
         get 'version_comment', to: 'protocols#version_comment'
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
-        post 'linked_children_datatable',
-             to: 'protocols#linked_children_datatable'
         get 'versions_modal', to: 'protocols#versions_modal'
         patch 'description', to: 'protocols#update_description'
         put 'name', to: 'protocols#update_name'
