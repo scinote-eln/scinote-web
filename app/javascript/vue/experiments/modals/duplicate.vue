@@ -15,8 +15,6 @@
             <SelectDropdown :optionsUrl="experiment.urls.projects_to_clone"
                             :value="targetProject"
                             :searchable="true"
-                            :labelRenderer="optionRenderer"
-                            :optionRenderer="optionRenderer"
                             @change="changeProject" />
           </div>
           <div class="modal-footer">
@@ -74,13 +72,6 @@ export default {
     },
     changeProject(project) {
       this.targetProject = project;
-    },
-    optionRenderer(option) {
-      if (option[0] === this.experiment.project_id) {
-        return `${option[1]} ${I18n.t('experiments.clone.current_project')}`;
-      }
-
-      return option[1];
     }
   },
 };
