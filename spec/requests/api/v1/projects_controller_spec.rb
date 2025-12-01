@@ -57,6 +57,20 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
       )
     end
 
+    it 'Response with correct projects, filtered by name' do
+      hash_body = nil
+      project = @team1.projects.take
+      get api_v1_team_projects_path(team_id: @team1.id, filter: { name:  project.name }), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@team1.projects.where_attributes_like(:name, project.name), each_serializer: Api::V1::ProjectSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
     it 'Response with correct projects, only archived' do
       hash_body = nil
       get api_v1_team_projects_path(team_id: @team1.id, filter: { archived: true }),

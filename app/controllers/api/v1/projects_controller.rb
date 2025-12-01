@@ -18,7 +18,7 @@ module Api
           else
             @team.projects.readable_by_user(current_user, @team)
           end
-        projects = metadata_filter(timestamps_filter(archived_filter(projects)))
+        projects = metadata_filter(timestamps_filter(archived_filter(name_filter(projects))))
                    .page(params.dig(:page, :number))
                    .per(params.dig(:page, :size))
 
