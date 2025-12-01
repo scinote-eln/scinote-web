@@ -18,10 +18,13 @@ class StepsController < ApplicationController
   before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state)
 
   def index
-    render json: @protocol.steps.includes(:assets, step_orderable_elements: :orderable).in_order,
+    render json: @protocol.steps.preload(:assets, :user, :results, step_orderable_elements: { orderable: [:table, { checklist: :checklist_items }] }).in_order,
            each_serializer: StepSerializer,
            include: %i(step_orderable_elements assets),
-           user: current_user
+           user: current_user,
+           managable_step: @protocol.in_repository? ? can_manage_protocol_draft_in_repository?(@protocol) : can_manage_my_module_steps?(@protocol.my_module),
+           managable_protocol: @protocol.in_repository? ? can_manage_protocol_draft_in_repository?(@protocol) : can_manage_protocol_in_module?(@protocol),
+           completable_steps: @protocol.in_repository? ? false : can_complete_my_module_steps?(@protocol.my_module)
   end
 
   def list

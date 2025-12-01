@@ -59,9 +59,9 @@ module ResultElements
         rescue JSON::ParserError
           @table.metadata = {}
         end
-        @table.save!
 
-        if @table.saved_changes?
+        if @table.changed?
+          @table.save!
           log_result_activity(:table_edited, { table_name: @table.name })
           result_annotation_notification(old_content)
         end
