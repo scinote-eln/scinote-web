@@ -11,7 +11,7 @@ class SmartAnnotationsController < ApplicationController
   def show
     if params[:data]
       render json: {
-        name: resource_readable? && resource.name,
+        name: resource_readable? && @resource.name,
         type: resource_tag
       }
     else
