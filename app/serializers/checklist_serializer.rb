@@ -19,27 +19,33 @@ class ChecklistSerializer < ActiveModel::Serializer
   end
 
   def sa_name
-    @user = scope[:user] || @instance_options[:user]
+    user = scope[:user] || @instance_options[:user]
     custom_auto_link(object.name,
                      simple_format: false,
                      tags: %w(img),
-                     team: object.step.protocol.team)
+                     team: user.current_team)
   end
 
   def urls
-    if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
-      return { checklist_items_url: step_checklist_checklist_items_path(object.step, object) }
-    end
+    return { checklist_items_url: step_checklist_checklist_items_path(object.step, object) } if object.destroyed? || !managable?
 
+    step = @instance_options[:step] || object.step_orderable_element.step
     {
-      checklist_items_url: step_checklist_checklist_items_path(object.step, object),
-      duplicate_url: duplicate_step_checklist_path(object.step, object),
-      delete_url: step_checklist_path(object.step, object),
-      update_url: step_checklist_path(object.step, object),
-      reorder_url: reorder_step_checklist_checklist_items_path(object.step, object),
-      create_item_url: step_checklist_checklist_items_path(object.step, object),
-      move_targets_url: move_targets_step_checklist_path(object.step, object),
-      move_url: move_step_checklist_path(object.step, object)
+      checklist_items_url: step_checklist_checklist_items_path(step, object),
+      duplicate_url: duplicate_step_checklist_path(step, object),
+      delete_url: step_checklist_path(step, object),
+      update_url: step_checklist_path(step, object),
+      reorder_url: reorder_step_checklist_checklist_items_path(step, object),
+      create_item_url: step_checklist_checklist_items_path(step, object),
+      move_targets_url: move_targets_step_checklist_path(step, object),
+      move_url: move_step_checklist_path(step, object)
     }
+  end
+
+  def managable?
+    return @instance_options[:managable_step] unless @instance_options[:managable_step].nil?
+
+    step = @instance_options[:step] || object.step_orderable_element.step
+    can_manage_step?(scope[:user] || @instance_options[:user], step)
   end
 end
