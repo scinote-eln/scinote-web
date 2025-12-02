@@ -807,7 +807,7 @@
           let step = result.data;
           step.attachments = [];
           step.elements = [];
-          result.included.forEach((included) => {
+          result.included?.forEach((included) => {
             if (included.type === 'assets') {
               step.attachments.push(included);
             } else if (included.type === 'step_orderable_elements') {
