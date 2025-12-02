@@ -62,7 +62,7 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def comments_count
-    object.comments_count
+    defined?(object.comments_count) ? object.comments_count : object.comments.count
   end
 
   def unseen_comments
