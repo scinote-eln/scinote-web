@@ -708,31 +708,32 @@ class ProtocolsController < ApplicationController
         ostream.print(generate_protocol_xml(protocol))
         ostream = protocol.tiny_mce_assets.save_to_eln(ostream, protocol_dir)
         # Add assets to protocol folder
-        next if protocol.steps.count <= 0
 
         protocol.steps.order(:id).each do |step|
           step_guid = get_guid(step.id)
-          step_dir = "#{protocol_dir}/#{step_guid}"
+          step_dir = "#{protocol_dir}/steps/#{step_guid}"
           if step.assets.exists?
             step.assets.order(:id).each do |asset|
-              next unless asset.file.attached?
-
-              asset_guid = get_guid(asset.id)
-              asset_file_name = asset_guid.to_s + File.extname(asset.file_name).to_s
-              ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
-              ostream.print(asset.file.download)
-
-              next unless asset.preview_image.attached?
-
-              asset_preview_image_name = asset_guid.to_s + File.extname(asset.preview_image_file_name).to_s
-              ostream.put_next_entry("#{step_dir}/previews/#{asset_preview_image_name}")
-              ostream.print(asset.preview_image.download)
+              prepare_asset_for_export(ostream, asset, step_dir)
             end
           end
           ostream = step.tiny_mce_assets.save_to_eln(ostream, step_dir)
 
           step.step_texts.each do |step_text|
             ostream = step_text.tiny_mce_assets.save_to_eln(ostream, step_dir)
+          end
+        end
+
+        results = protocol.in_module? ? protocol.my_module.results : protocol.results
+        results.each do |result|
+          result_guid = get_guid(result.id)
+          result_dir = "#{protocol_dir}/results/#{result_guid}"
+          result.assets.each do |asset|
+            prepare_asset_for_export(ostream, asset, result_dir)
+          end
+
+          result.result_texts.each do |result_text|
+            ostream = result_text.tiny_mce_assets.save_to_eln(ostream, result_dir)
           end
         end
       end
@@ -887,7 +888,7 @@ class ProtocolsController < ApplicationController
     case params.dig('protocol', 'elnVersion')
     when '1.0'
       @importer = ProtocolsImporter.new(current_user, current_team)
-    when '1.1'
+    when '1.1', '1.2'
       @importer = ProtocolsImporterV2.new(current_user, current_team)
     end
   end

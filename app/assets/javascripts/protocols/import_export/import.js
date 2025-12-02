@@ -26,6 +26,7 @@ function importProtocolFromFile(
   var fileReader;
   var dataJson;
   var roughSize;
+  var elnVersion;
 
   /** *******************************************/
   /* INNER FUNCTIONS                           */
@@ -36,6 +37,7 @@ function importProtocolFromFile(
     protocolXmls = [];
     currentProtocol = 0;
 
+    elnVersion = $(envelope).attr('version');
     // Iterate through protocols in the envelope
     $(envelope).find('protocol').each(function() {
       var folder = $(this).attr('guid') + '/';
@@ -59,16 +61,18 @@ function importProtocolFromFile(
     return filePath;
   }
 
-  function getAssetBytes(folder, stepGuid, fileRef) {
-    const stepPath = stepGuid ? stepGuid + '/' : '';
-    const filePath = folder + stepPath + fileRef;
+  function getAssetBytes(folder, guid, fileRef, folderName = '') {
+    let prefix = elnVersion == 1.2 ? folderName + '/' : '';
+    const path = guid ? prefix + guid + '/' : '';
+    const filePath = folder + path + fileRef;
     const assetBytes = zipFiles.files[cleanFilePath(filePath)]?.asBinary();
     return window.btoa(assetBytes);
   }
 
-  function getAssetBlob(folder, stepGuid, fileRef) {
-    const stepPath = stepGuid ? stepGuid + '/' : '';
-    const filePath = folder + stepPath + fileRef;
+  function getAssetBlob(folder, guid, fileRef, folderName = '') {
+    let prefix = elnVersion == 1.2 ? folderName + '/' : '';
+    const path = guid ? prefix + guid + '/' : '';
+    const filePath = folder + path + fileRef;
     return zipFiles.files[cleanFilePath(filePath)].asUint8Array();
   }
 
@@ -86,20 +90,21 @@ function importProtocolFromFile(
     });
   }
 
-  function getAssetPreview(folder, stepGuid, fileRef, fileName, fileType) {
+  function getAssetPreview(folder, guid, fileRef, fileName, fileType, folderName = '') {
+    let prefix = elnVersion == 1.2 ? folderName + '/' : '';
     if ($.inArray(fileType, ['image/png', 'image/jpeg', 'image/gif', 'image/bmp']) > 0) {
       return {
         fileName: fileName,
         fileType: fileType,
-        bytes: getAssetBytes(folder, stepGuid, fileRef)
+        bytes: getAssetBytes(folder, guid, fileRef, folderName)
       };
     } else {
-      const stepPath = stepGuid ? folder + stepGuid + '/' : folder;
+      const path = guid ? prefix + guid + '/' : folder;
       let baseName;
       baseName = fileRef.split('.');
       baseName.pop();
       baseName.join('.');
-      let previewFileRef = zipFiles.file(new RegExp(stepPath + 'previews/' + baseName));
+      let previewFileRef = zipFiles.file(new RegExp(path + 'previews/' + baseName));
       if (previewFileRef.length > 0) {
         const previewFileExt = previewFileRef[0].name.split('.').at(-1);
         let previewFileName = fileName.split('.');
@@ -132,9 +137,9 @@ function importProtocolFromFile(
     return template;
   }
 
-  function newAssetElement(folder, stepGuid, fileRef, fileName, fileType) {
+  function newAssetElement(folder, guid, fileRef, fileName, fileType, folderName = '') {
     let html = '<li class="col-xs-12">';
-    let assetPreview = getAssetPreview(folder, stepGuid, fileRef, fileName, fileType);
+    let assetPreview = getAssetPreview(folder, guid, fileRef, fileName, fileType, folderName);
 
     if (assetPreview) {
       html += '<img style="max-width:300px; max-height:300px;" src="data:' + assetPreview.fileType + ';base64,' + assetPreview.bytes + '" />';
@@ -297,7 +302,8 @@ function importProtocolFromFile(
             stepGuid,
             fileRef,
             fileName,
-            fileType
+            fileType,
+            'steps'
           );
 
           // Append asset element to step
@@ -308,6 +314,78 @@ function importProtocolFromFile(
       // Append step element to preview container
       previewContainer.append(stepEl);
     });
+
+    if (elnVersion == 1.2) {
+      previewContainer.append(
+        `<div><h2>Results preview</h2></div> `
+      );
+
+      results = $(protocolXmls[position]).find('protocol > resultTemplates > resultTemplate');
+
+      results.each(function(i, nodeEl) {
+        var node = $(nodeEl);
+        var resultGuid = node.attr('guid');
+        var resultName = node.children('name').text();
+        var tableNodes;
+        var assetNodes;
+        var fileHeader;
+        // Generate result element
+        var resultEl = newPreviewElement(
+          'result',
+          {
+            name: resultName
+          }
+        );
+
+        // Parse result elements
+        $(this).find('resultElements > resultElement').each(function() {
+          $element = $(this);
+
+          switch ($(this).attr('type')) {
+            case 'ResultTable':
+              addTablePreview(resultEl, $(this).find('elnTable'));
+              break;
+            case 'ResultText':
+              addResultTextPreview(resultEl, $(this).find('stepText'), protocolFolders[position], resultGuid);
+              break;
+            default:
+              // nothing to do
+              break;
+          }
+        });
+
+        // Iterate through result assets
+        assetNodes = node.find('assets > asset');
+        if (assetNodes.length > 0) {
+          fileHeader = newPreviewElement('asset-file-name', null);
+
+          resultEl.append(fileHeader);
+
+          assetNodes.each(function() {
+            var fileRef = $(this).attr('fileRef');
+            var fileName = $(this).children('fileName').text();
+            var fileType = $(this).children('fileType').text();
+            var assetEl;
+
+            assetEl = newAssetElement(
+              protocolFolders[position],
+              resultGuid,
+              fileRef,
+              fileName,
+              fileType,
+              'results'
+            );
+
+            // Append asset element to result
+            resultEl.append(assetEl);
+          });
+        }
+
+        // Append result element to preview container
+        previewContainer.append(resultEl);
+      });
+    }
+
   }
 
   function addTablePreview(stepEl, tableNode) {
@@ -363,6 +441,18 @@ function importProtocolFromFile(
     );
 
     stepEl.append(textEl);
+  }
+
+  function addResultTextPreview(resultEl, resultTextNode, folder, stepGuid) {
+    const itemName = $(resultTextNode).children('name').text();
+    const itemText = displayTinyMceAssetInDescription(resultTextNode, folder, stepGuid);
+
+    const textEl = newPreviewElement(
+      'result-text',
+      { name: itemName, text: itemText }
+    );
+
+    resultEl.append(textEl);
   }
 
   function addStepFormPreview(stepEl, stepFormNode) {
@@ -628,7 +718,7 @@ function importProtocolFromFile(
   }
 
 
-  function prepareTinyMceAssets(object, index, stepGuid) {
+  function prepareTinyMceAssets(object, index, guid, object) {
     var result = [];
     $(object).find('> descriptionAssets > tinyMceAsset').each(function() {
       var tinyMceAsset = {};
@@ -646,7 +736,7 @@ function importProtocolFromFile(
 
       uploadPromises.push(
         createUploadPromise(
-          new File([getAssetBlob(protocolFolders[index], stepGuid, fileRef)], fileName, { type: fileType }),
+          new File([getAssetBlob(protocolFolders[index], guid, fileRef, object)], fileName, { type: fileType }),
           tinyMceAsset
         )
       );
@@ -656,23 +746,23 @@ function importProtocolFromFile(
     return result;
   }
 
-  function stepTextJson(stepTextNode, folderIndex, stepGuid) {
+  function textJson(textNode, folderIndex, guid, object) {
     var json = {};
-    json.name = stepTextNode.children('name').text();
+    json.name = textNode.children('name').text();
     json.contents = $('<div></div>').html(
-      stepTextNode.children('contents')
+      textNode.children('contents')
         .html()
         .replace('<!--[CDATA[', '')
         .replace('  ]]-->', '')
         .replace(']]&gt;', '')
     ).html();
 
-    json.descriptionAssets = prepareTinyMceAssets(stepTextNode, folderIndex, stepGuid);
+    json.descriptionAssets = prepareTinyMceAssets(textNode, folderIndex, guid, object);
 
     return json;
   }
 
-  function stepTableJson(tableNode) {
+  function tableJson(tableNode) {
     var json = {};
     var contents = tableNode.children('contents').text();
     json.id = tableNode.attr('id');
@@ -720,13 +810,33 @@ function importProtocolFromFile(
         json.checklist = checklistJson(stepElementNode.find('checklist'));
         break;
       case 'StepTable':
-        json.elnTable = stepTableJson(stepElementNode.find('elnTable'));
+        json.elnTable = tableJson(stepElementNode.find('elnTable'));
         break;
       case 'StepText':
-        json.stepText = stepTextJson(stepElementNode.find('stepText'), folderIndex, stepGuid);
+        json.stepText = textJson(stepElementNode.find('stepText'), folderIndex, stepGuid, 'steps');
         break;
       case 'FormResponse':
         json.form = formJson(stepElementNode.find('form'));
+        break;
+      default:
+        // nothing to do
+        break;
+    }
+
+    return json;
+  }
+
+  function resultElementJson(stepElementNode, folderIndex, resultGuid) {
+    var json = {
+      type: stepElementNode.attr('type')
+    };
+
+    switch (json.type) {
+      case 'ResultTable':
+        json.elnTable = tableJson(stepElementNode.find('elnTable'));
+        break;
+      case 'ResultText':
+        json.resultText = textJson(stepElementNode.find('resultText'), folderIndex, resultGuid, 'results');
         break;
       default:
         // nothing to do
@@ -747,6 +857,7 @@ function importProtocolFromFile(
     var protocolJson = {};
     var steps;
     var stepsJson = [];
+    var resultTemplatesJson = [];
 
     previewProtocol(index, replaceVals);
 
@@ -800,7 +911,7 @@ function importProtocolFromFile(
           .html();
       }
       // Iterate through tiny_mce_assets
-      stepJson.descriptionAssets = prepareTinyMceAssets(this, index, stepGuid);
+      stepJson.descriptionAssets = prepareTinyMceAssets(this, index, stepGuid, '');
       // Iterate through assets
 
       $(this).find('assets > asset').each(function() {
@@ -830,7 +941,8 @@ function importProtocolFromFile(
           stepGuid,
           fileRef,
           fileName,
-          null
+          null,
+          'steps'
         );
 
         stepAssetsJson.push(stepAssetJson);
@@ -839,7 +951,7 @@ function importProtocolFromFile(
 
       // Iterate through step tables
       $(this).find('elnTables > elnTable').each(function() {
-        stepTablesJson.push(stepTableJson($(this)));
+        stepTablesJson.push(tableJson($(this)));
       });
       stepJson.tables = stepTablesJson;
 
@@ -859,6 +971,66 @@ function importProtocolFromFile(
       stepsJson.push(stepJson);
     });
     protocolJson.steps = stepsJson;
+
+    if (elnVersion == 1.2) {
+      resultTemplates = $(protocolXmls[index]).find('protocol > resultTemplates > resultTemplate');
+
+      resultTemplates.each(function() {
+        var resultJson = {};
+        var resultAssetsJson = [];
+        var resultId = $(this).attr('id');
+        var resultGuid = $(this).attr('guid');
+        var resultTablesJson = [];
+        resultJson.id = resultId;
+        resultJson.name = $(this).children('name').text();
+
+        $(this).find('assets > asset').each(function() {
+          var resultAssetJson = {};
+          var assetId = $(this).attr('id');
+          var fileRef = $(this).attr('fileRef');
+          var fileName = $(this).children('fileName').text();
+          var fileType = $(this).children('fileType').text();
+
+          resultAssetJson.id = assetId;
+          if ($(this).children('fileMetadata').html() !== undefined) {
+            resultAssetJson.fileMetadata = $(this).children('fileMetadata').html()
+              .replace('<!--[CDATA[', '')
+              .replace('  ]]-->', '')
+              .replace(']]&gt;', '');
+          }
+
+          uploadPromises.push(
+            createUploadPromise(
+              new File([getAssetBlob(protocolFolders[index], resultGuid, fileRef, 'results')], fileName, { type: fileType }),
+              resultAssetJson
+            )
+          );
+
+          resultAssetJson.preview_image = getAssetPreview(
+            protocolFolders[index],
+            resultGuid,
+            fileRef,
+            fileName,
+            null,
+            'results'
+          );
+
+          resultAssetsJson.push(resultAssetJson);
+        });
+        resultJson.assets = resultAssetsJson;
+
+        // Parse step elements
+        resultJson.resultElements = [];
+
+        $(this).find('resultElements > resultElement').each(function() {
+          resultJson.resultElements.push(resultElementJson($(this), index, resultGuid));
+        });
+
+        resultTemplatesJson.push(resultJson);
+      });
+    }
+
+    protocolJson.resultTemplates = resultTemplatesJson;
 
     dataJson = { protocol: protocolJson };
     $.extend(dataJson, params);
