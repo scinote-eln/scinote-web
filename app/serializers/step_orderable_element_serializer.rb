@@ -12,7 +12,7 @@ class StepOrderableElementSerializer < ActiveModel::Serializer
     when 'StepText'
       StepTextSerializer.new(object.step_text, @instance_options).as_json
     when 'FormResponse'
-      StepFormResponseSerializer.new(object.step_form_response, @instance_options).as_json
+      StepFormResponseSerializer.new(object.form_response, @instance_options).as_json
     end
   end
 end
