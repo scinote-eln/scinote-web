@@ -15,6 +15,11 @@ class StepSerializer < ActiveModel::Serializer
              :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
              :type, :open_vector_editor_context, :collapsed, :my_module_id, :results
 
+  def initialize(object, options = {})
+    super
+    @instance_options[:step] = object
+  end
+
   def collapsed
     step_states = @instance_options[:user].settings.fetch('task_step_states', {})
     step_states[object.id.to_s] == true
@@ -48,7 +53,7 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def open_vector_editor_context
-    if can_manage_step?(object)
+    if managable?
       {
         new_sequence_asset_url: new_gene_sequence_asset_url(parent_type: 'Step', parent_id: object.id),
         icon: image_path('icon_small/sequence-editor.svg')
@@ -57,7 +62,7 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def comments_count
-    object.comments.count
+    object.comments_count
   end
 
   def unseen_comments
@@ -86,7 +91,7 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def attachments_manageble
-    can_manage_step?(object)
+    managable?
   end
 
   def urls
@@ -95,15 +100,10 @@ class StepSerializer < ActiveModel::Serializer
       attachments_url: attachments_step_path(object)
     }
 
-    if object.my_module && can_complete_my_module_steps?(object.my_module)
-      urls_list[:state_url] = toggle_step_state_step_path(object)
-    end
+    urls_list[:state_url] = toggle_step_state_step_path(object) if completable?
+    urls_list[:duplicate_step_url] = duplicate_step_path(object) if managable_protocol?
 
-    if can_manage_protocol_in_module?(object.protocol) || can_manage_protocol_draft_in_repository?(object.protocol)
-      urls_list[:duplicate_step_url] = duplicate_step_path(object)
-    end
-
-    if can_manage_step?(object)
+    if managable?
       urls_list.merge!({
         delete_url: step_path(object),
         update_url: step_path(object),
@@ -129,5 +129,23 @@ class StepSerializer < ActiveModel::Serializer
 
   def created_by
     object.user.full_name
+  end
+
+  def managable?
+    return @instance_options[:managable_step] unless @instance_options[:managable_step].nil?
+
+    can_manage_step?(object)
+  end
+
+  def managable_protocol?
+    return @instance_options[:managable_protocol] unless @instance_options[:managable_protocol].nil?
+
+    can_manage_protocol_in_module?(object.protocol) || can_manage_protocol_draft_in_repository?(object.protocol)
+  end
+
+  def completable?
+    return @instance_options[:completable_step] unless @instance_options[:completable_step].nil?
+
+    object.my_module && can_complete_my_module_steps?(object.my_module)
   end
 end

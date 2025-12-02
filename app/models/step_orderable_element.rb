@@ -8,6 +8,18 @@ class StepOrderableElement < ApplicationRecord
 
   belongs_to :step, inverse_of: :step_orderable_elements, touch: true
   belongs_to :orderable, polymorphic: true, inverse_of: :step_orderable_element
+  {
+    step_text: 'StepText',
+    step_table: 'StepTable',
+    checklist: 'Checklist',
+    form_response: 'FormResponse'
+  }.each do |relation, class_name|
+    belongs_to :"#{relation}",
+               (lambda do |step_orderable_element|
+                 step_orderable_element.orderable_type == class_name ? self : none
+               end),
+               optional: true, foreign_key: :orderable_id, inverse_of: :step_orderable_element, class_name: class_name
+  end
 
   around_destroy :decrement_following_elements_positions
 

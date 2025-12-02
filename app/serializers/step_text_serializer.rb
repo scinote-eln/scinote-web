@@ -21,11 +21,11 @@ class StepTextSerializer < ActiveModel::Serializer
   end
 
   def text_view
-    @user = scope[:user]
+    user = scope[:user] || @instance_options[:user]
     custom_auto_link(object.tinymce_render('text'),
                      simple_format: false,
                      tags: %w(img),
-                     team: object.step.protocol.team)
+                     team: user.current_team)
   end
 
   def text
@@ -39,12 +39,13 @@ class StepTextSerializer < ActiveModel::Serializer
   def urls
     return {} if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
 
+    step = @instance_options[:step] || object.step_orderable_element.step
     {
-      duplicate_url: duplicate_step_text_path(object.step, object),
-      delete_url: step_text_path(object.step, object),
-      update_url: step_text_path(object.step, object),
-      move_url: move_step_text_path(object.step, object),
-      move_targets_url: move_targets_step_text_path(object.step, object)
+      duplicate_url: duplicate_step_text_path(step, object),
+      delete_url: step_text_path(step, object),
+      update_url: step_text_path(step, object),
+      move_url: move_step_text_path(step, object),
+      move_targets_url: move_targets_step_text_path(step, object)
     }
   end
 end
