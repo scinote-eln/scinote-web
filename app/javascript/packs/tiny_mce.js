@@ -92,17 +92,17 @@ const image_upload_handler = (blobInfo, _progress) =>
 const contentPStyle = `p { margin: 0; padding: 0;}`;
 const contentBodyStyle = `body { font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif }`;
 const contentListStyle = `
-  ol:not([style*="list-style-type"]) {
+ ol:not([style*="list-style-type"]) {
     counter-reset: item;
-  }
 
-  ol:not([style*="list-style-type"]) li {
-    display: block;
-  }
+    > li {
+      display: block;
 
-  ol:not([style*="list-style-type"]) li:before {
-    content: counters(item, ".") ". ";
-    counter-increment: item;
+      &::before {
+        content: counters(item, ".") ". ";
+        counter-increment: item;
+      }
+    }
   }
 `;
 const contentStyle = [contentCss, contentUiCss, contentBodyStyle, contentPStyle, contentListStyle].map((s) => s.toString()).join('\n');
