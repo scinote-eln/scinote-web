@@ -1,6 +1,7 @@
 <template>
   <div class="results-wrapper">
     <ResultsToolbar
+      v-if="results.length > 0 || canCreate == 'true'"
       ref="resultsToolbar"
       :sort="sort"
       :results="results"
@@ -40,6 +41,9 @@
         @result:drag_enter="dragEnter"
         @result:collapsed="checkResultsState"
       />
+      <div v-if="!loadingOverlay && results.length === 0 && emptyPlaceholder" class="px-4 py-6 bg-white my-4 text-gray-500">
+        {{ emptyPlaceholder }}
+      </div>
     </div>
     <div v-if="loadingOverlay" class="text-center h-20 flex items-center justify-center">
       <div class="sci-loader"></div>
@@ -78,7 +82,8 @@ export default {
     archived_url: { type: String, required: false },
     userSettingsUrl: { type: String, required: false },
     changeStatesUrl: { type: String, required: false },
-    protocolId: { type: Number, required: false }
+    protocolId: { type: Number, required: false },
+    emptyPlaceholder: { type: String, required: false }
   },
   data() {
     return {

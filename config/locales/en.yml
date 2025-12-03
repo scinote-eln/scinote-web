@@ -3741,6 +3741,7 @@ en:
     no_text_placeholder: 'No protocol description'
     protocol: "Protocol"
     results: "Results [%{count}]"
+    empty_results_placeholder: "No results added to this template. Create new draft to add them."
     table:
       filters:
         label_name_and_keywords: 'Name and keywords'
