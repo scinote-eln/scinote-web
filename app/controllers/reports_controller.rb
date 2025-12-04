@@ -317,9 +317,8 @@ class ReportsController < ApplicationController
 
   def load_repositories_vars
     live_repositories = Repository.readable_by_user(current_user).sort_by { |r| r.name.downcase }
-    snapshots_of_deleted = RepositorySnapshot.left_outer_joins(:original_repository)
+    snapshots_of_deleted = RepositorySnapshot.where.missing(:original_repository)
                                              .where(team: current_team)
-                                             .where.not(original_repository: current_team.repositories)
                                              .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
                                              .sort_by { |r| r.name.downcase }
     @repositories = live_repositories + snapshots_of_deleted
