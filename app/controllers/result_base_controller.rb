@@ -87,9 +87,10 @@ class ResultBaseController < ApplicationController
 
   def update_asset_view_mode
     ActiveRecord::Base.transaction do
-      @result.assets_view_mode = params[:assets_view_mode]
-      @result.save!(touch: false)
-      @result.assets.update_all(view_mode: @result.assets_view_mode)
+      ActiveRecord::Base.no_touching do
+        @result.update!(assets_view_mode: params[:assets_view_mode])
+        @result.assets.update_all(view_mode: @result.assets_view_mode)
+      end
     end
     render json: { view_mode: @result.assets_view_mode }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
