@@ -176,9 +176,11 @@ class StepsController < ApplicationController
   def update_asset_view_mode
     html = ''
     ActiveRecord::Base.transaction do
-      @step.assets_view_mode = params[:assets_view_mode]
-      @step.save!(touch: false)
-      @step.assets.update_all(view_mode: @step.assets_view_mode)
+      ActiveRecord::Base.no_touching do
+        @step.assets_view_mode = params[:assets_view_mode]
+        @step.save!
+        @step.assets.update_all(view_mode: @step.assets_view_mode)
+      end
     end
     render json: { view_mode: @step.assets_view_mode }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
