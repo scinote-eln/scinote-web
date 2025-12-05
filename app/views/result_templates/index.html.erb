@@ -9,6 +9,7 @@
   <div id="results" data-behaviour="vue" data-e2e="e2e-CO-task-results">
       <results url="<%= protocol_result_templates_url(@protocol, view_mode: params[:view_mode]) %>"
              :protocol-id="<%= @protocol.id %>"
+             empty-placeholder="<%= (t('protocols.empty_results_placeholder') if @protocol.in_repository_published?) %>"
              change-states-url="<%= change_results_state_protocol_result_templates_path(@protocol) %>"
              can-create="<%= can_create_result_templates?(@protocol) %>">
   </div>

@@ -53,7 +53,7 @@ class ResultBase < ApplicationRecord
 
       # Copy texts
       result_texts.each do |result_text|
-        result_text.duplicate(new_result)
+        result_text.duplicate(new_result, result_text.result_orderable_element.position)
       end
 
       # Copy assets
@@ -67,7 +67,7 @@ class ResultBase < ApplicationRecord
 
       # Copy tables
       tables.each do |table|
-        table.duplicate(new_result, user)
+        table.duplicate(new_result, user, table.result_table.result_orderable_element.position)
       end
 
       ResultBase.delay(queue: :assets).deep_clone_assets(assets_to_clone)

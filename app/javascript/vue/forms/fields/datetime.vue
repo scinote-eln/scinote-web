@@ -107,6 +107,7 @@ export default {
       }
     },
     stripTimeIfDate(date) {
+      if (!date) return date;
       if (this.mode !== 'date') return date;
 
       return new Date(Date.UTC(

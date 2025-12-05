@@ -25,7 +25,7 @@
     ol:not([style*="list-style-type"]) {
       counter-reset: item;
 
-      li {
+      > li {
         display: block;
 
         &::before {

@@ -170,7 +170,7 @@ class ResultBaseController < ApplicationController
 
   def apply_filters!
     if params[:query].present?
-      @results = @results.search(current_user, params[:query])
+      @results = @results.search(current_user, params[:view_mode] == 'archived', params[:query])
                          .page(params[:page] || 1)
                          .per(Constants::SEARCH_LIMIT)
     end
