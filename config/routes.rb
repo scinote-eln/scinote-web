@@ -242,6 +242,7 @@ Rails.application.routes.draw do
           post 'actions_toolbar'
           get :list
           post :rows_list
+          post :export_repositories
         end
         member do
           get :export_empty_repository
@@ -283,7 +284,6 @@ Rails.application.routes.draw do
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
-        post 'export_repositories', to: 'repositories#export_repositories'
         post 'export_repository_stock_items', to: 'repositories#export_repository_stock_items'
         post 'export_projects'
         get 'sidebar'
