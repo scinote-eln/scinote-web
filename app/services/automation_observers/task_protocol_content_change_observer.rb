@@ -2,6 +2,21 @@
 
 module AutomationObservers
   class TaskProtocolContentChangeObserver < BaseObserver
+    OBJECT_ATTRIBUTES = {
+      Protocol: %w(name description),
+      Step: %w(created_at completed name position),
+      StepText: %w(name text step_id),
+      Checklist: %w(name step_id),
+      ChecklistItem: %w(text position checked),
+      Table: %w(name contents metadata),
+      Asset: %w(file_file_name current_blob_id),
+      StepAsset: %w(step_id asset_id),
+      StepOrderableElement: %w(step_id position),
+      Comment: %w(message),
+      FormFieldValue: %w(not_applicable datetime datetime_to number number_to unit text selection flag data latest),
+      FormResponse: %w(status discarded_at)
+    }.freeze
+
     def self.on_create(element, user)
       # Handle creation of an empty protocol alongside with a task
       return if element.is_a?(Protocol)
@@ -9,13 +24,13 @@ module AutomationObservers
       on_update(element, user)
     end
 
-    def self.on_update(element, user)
+    def self.on_update(element, user, ignore_attributes: false)
       return unless Current.team.settings.dig('team_automation_settings', 'tasks', 'task_status_in_progress', 'on_protocol_content_change')
 
       protocol = nil
 
       case element.class.base_class.name
-      when 'Asset', 'Table'
+      when 'Table', 'StepAsset', 'Asset'
         return if element.step.blank?
 
         protocol = element.step.protocol
@@ -36,8 +51,9 @@ module AutomationObservers
       end
 
       return if protocol.blank?
+      return unless ignore_attributes || OBJECT_ATTRIBUTES[:"#{element.class.base_class.name}"]&.any? { |attr| element.public_send("saved_change_to_#{attr}?") }
       return unless protocol.in_module? && protocol.my_module.my_module_status.initial_status?
-      return if element.respond_to?(:completed) && element.saved_change_to_completed? && !element.completed
+      return if element.respond_to?(:completed) && element.saved_change_to_completed? && !element.saved_change_to_created_at? && !element.completed
 
       my_module = protocol.my_module
       previous_status_id = my_module.my_module_status.id
@@ -57,7 +73,7 @@ module AutomationObservers
     end
 
     def self.on_destroy(element, user)
-      on_update(element, user)
+      on_update(element, user, ignore_attributes: true)
     end
   end
 end

@@ -880,6 +880,8 @@ class Extends
     'MyModule' => ['AutomationObservers::AllTasksDoneObserver', 'AutomationObservers::TaskStatusChangeObserver'],
     'Protocol' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'Asset' => ['AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::ResultContentChangeObserver'],
+    'StepAsset' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
+    'ResultAsset' => ['AutomationObservers::ResultContentChangeObserver'],
     'Table' => ['AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::ResultContentChangeObserver'],
     'Comment' => ['AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::ResultContentChangeObserver'],
     'ChecklistItem' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
