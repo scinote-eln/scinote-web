@@ -2,6 +2,14 @@
 
 class FormFieldValue < ApplicationRecord
   include ObservableModel
+  include SearchableModel
+
+  SEARCHABLE_ATTRIBUTES = [
+    'form_field_values.text',
+    'array_to_string(form_field_values.selection, \' \')',
+    'form_field_values.number::text',
+    'form_field_values.number_to::text'
+  ].freeze
 
   belongs_to :form_response
   belongs_to :form_field

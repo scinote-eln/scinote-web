@@ -2,6 +2,9 @@
 
 class FormField < ApplicationRecord
   include Cloneable
+  include SearchableModel
+
+  SEARCHABLE_ATTRIBUTES = ['form_fields.name', 'form_fields.description'].freeze
 
   belongs_to :form
   belongs_to :created_by, class_name: 'User'

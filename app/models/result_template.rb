@@ -22,7 +22,7 @@ class ResultTemplate < ResultBase
     new_query.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
-  def self.where_children_attributes_like(query)
+  def self.where_children_attributes_like(query, _options = {})
     from(
       "(#{joins(:result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
       UNION

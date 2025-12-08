@@ -36,7 +36,7 @@ class Result < ResultBase
     results.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
-  def self.where_children_attributes_like(query)
+  def self.where_children_attributes_like(query, _options = {})
     unscoped_readable_results = unscoped.joins('INNER JOIN "readable_results" ON "readable_results"."id" = "results"."id"').select(:id, :type)
     unscoped.from(
       "(#{unscoped_readable_results.joins(:result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}

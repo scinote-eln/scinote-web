@@ -10,7 +10,7 @@ class Form < ApplicationRecord
   include SearchableByNameModel
   include Cloneable
 
-  SEARCHABLE_ATTRIBUTES = ['forms.name'].freeze
+  SEARCHABLE_ATTRIBUTES = ['forms.name', 'forms.description'].freeze
 
   belongs_to :team
   belongs_to :parent, class_name: 'Form', optional: true
