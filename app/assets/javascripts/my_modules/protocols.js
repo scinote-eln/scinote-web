@@ -48,6 +48,7 @@ function initLinkUpdate() {
   if (!$._data(updateBtn[0], 'events')) {
     updateBtn.on('click', function() {
       let selectedOption = modal.find("input[name='load_option']:checked").val();
+      modal.find(".modal-footer [data-action='submit']").prop('disabled', true);
 
       // POST via ajax
       $.ajax({
@@ -62,7 +63,7 @@ function initLinkUpdate() {
         error: function(ev) {
           // Display error message in alert()
           alert(ev.responseJSON.message);
-
+          modal.find(".modal-footer [data-action='submit']").prop('disabled', false);
           // Hide modal
           modal.modal('hide');
         }
@@ -270,6 +271,7 @@ function loadFromRepository() {
           alert(response.responseJSON.message);
         }
 
+        modal.find(".modal-footer [data-action='submit']").prop('disabled', false);
         selectedRow = null;
         modal.modal('hide');
       }
