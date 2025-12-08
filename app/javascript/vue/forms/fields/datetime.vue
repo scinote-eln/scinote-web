@@ -58,12 +58,17 @@ export default {
     };
   },
   created() {
-    if (this.field.field_value?.datetime) {
-      this.value = new Date(this.field.field_value.datetime);
-      this.fromValue = new Date(this.field.field_value.datetime);
+    const field_value = this.field.field_value;
+    const mainDateStr = field_value?.datetime || field_value?.date;
+    if (mainDateStr) {
+      const parsedDate = this.parseDate(mainDateStr);
+      this.value = parsedDate;
+      this.fromValue = parsedDate;
     }
-    if (this.field.field_value?.datetime_to) {
-      this.toValue = new Date(this.field.field_value.datetime_to);
+  
+    const toDateStr = field_value?.datetime_to || field_value?.date_to;
+    if (toDateStr) {
+      this.toValue = this.parseDate(toDateStr);
     }
   },
   computed: {
@@ -107,15 +112,15 @@ export default {
       }
     },
     stripTimeIfDate(date) {
-      if (!date) return date;
-      if (this.mode !== 'date') return date;
+      if (!date || this.mode !== 'date') return date;
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-      return new Date(Date.UTC(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        0, 0, 0, 0
-      ));
+    },
+    parseDate(date) {
+      if (!date || this.mode !== 'date') return new Date(date);
+
+      const [year, month, day] = date.split('-').map(Number);
+      return new Date(year, month - 1, day);
     }
   }
 };
