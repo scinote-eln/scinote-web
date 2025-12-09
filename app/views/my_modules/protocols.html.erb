@@ -25,6 +25,7 @@
 <% end %>
 
 <%= hidden_field_tag :my_module_is_empty, !@my_module.not_empty? %>
+<%= hidden_field_tag :scinote_local_url, Constants::ASSET_SYNC_URL %>
 
 
 <%= render partial: 'shared/drag_n_drop_overlay' %>
