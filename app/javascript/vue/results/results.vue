@@ -1,7 +1,6 @@
 <template>
   <div class="results-wrapper">
     <ResultsToolbar
-      v-if="results.length > 0 || canCreate == 'true'"
       ref="resultsToolbar"
       :sort="sort"
       :results="results"
