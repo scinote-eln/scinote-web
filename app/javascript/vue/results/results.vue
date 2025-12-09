@@ -44,8 +44,21 @@
         {{ emptyPlaceholder }}
       </div>
     </div>
-    <div v-if="loadingOverlay" class="text-center h-20 flex items-center justify-center">
-      <div class="sci-loader"></div>
+    <div v-if="loadingOverlay">
+      <div class="flex flex-col gap-8">
+        <div v-for="_count in loaderResults"
+            class="flex flex-col no-wrap gap-4 py-2"
+          >
+          <div class="h-10 w-full max-w-40 animate-skeleton rounded mr-auto"></div>
+          <div class="w-full animate-skeleton rounded h-64"></div>
+          <div class="flex items-center gap-6 flex-wrap">
+            <div class="w-48 h-64 animate-skeleton rounded"></div>
+            <div class="w-48 h-64 animate-skeleton rounded"></div>
+            <div class="w-48 h-64 animate-skeleton rounded"></div>
+            <div class="w-48 h-64 animate-skeleton rounded"></div>
+          </div>
+        </div>
+      </div>
     </div>
     <clipboardPasteModal v-if="showClipboardPasteModal"
                          :image="pasteImages"
@@ -98,16 +111,15 @@ export default {
       anchorId: null,
       elementsLoaded: 0,
       attachmentsLoaded: 0,
-      loadingOverlay: false
+      loadingOverlay: false,
+      loaderResults: 3
     };
   },
   created() {
     const urlParams = new URLSearchParams(window.location.search);
     this.anchorId = urlParams.get('result_id');
 
-    if (this.anchorId) {
-      this.loadingOverlay = true;
-    }
+    this.loadingOverlay = true;
   },
   mounted() {
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
@@ -140,6 +152,8 @@ export default {
       }
     },
     getHeader() {
+      if (!this.$refs.resultsToolbar) return null;
+
       return this.$refs.resultsToolbar.$refs.resultsHeaderToolbar;
     },
     reloadResult(result) {
@@ -160,7 +174,7 @@ export default {
     loadResults() {
       if (this.nextPageUrl === null || this.loadingPage) return;
 
-      if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
+      if ((window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) || this.loadingOverlay) {
         this.loadingPage = true;
         const params = this.sort ? { ...this.filters, sort: this.sort } : { ...this.filters };
         axios.get(this.nextPageUrl, { params }).then((response) => {
@@ -190,6 +204,8 @@ export default {
               } else {
                 this.scrollToResult();
               }
+            } else {
+              this.loadingOverlay = false;
             }
           });
         });
