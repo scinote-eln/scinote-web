@@ -12,7 +12,7 @@ module ActiveStorage
       end
 
       def show
-        if @blob.attachments.take.record_type == 'Asset'
+        if @blob.attachments.take.record_type == 'Asset' && @blob.byte_size > Constants::INLINE_PREVIEW_MAX_FILE_SIZE
           return render plain: '', status: :accepted unless preview_ready?
         end
 
