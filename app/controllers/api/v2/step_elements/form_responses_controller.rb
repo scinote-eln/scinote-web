@@ -25,7 +25,7 @@ module Api
         end
 
         def permitted_includes
-          %w(form_field_values)
+          %w(form_field_values form_field_values.form_field)
         end
       end
     end
