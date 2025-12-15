@@ -420,6 +420,12 @@ export default {
     };
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     this.fetchTableState();
+
+    this.filters.forEach((filter) => {
+      if (filter.defaultValue) {
+        this.activeFilters[filter.key] = filter.defaultValue;
+      }
+    });
   },
   mounted() {
     this.navigatorCollapsed = document.querySelector('.sci--layout').getAttribute('data-navigator-collapsed') === 'true';
