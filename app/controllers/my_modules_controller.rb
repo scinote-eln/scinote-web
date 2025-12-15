@@ -206,6 +206,7 @@ class MyModulesController < ApplicationController
         if description_changed
           log_activity(:change_module_description)
           TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
+          my_module_annotation_notification(@my_module.description_before_last_save)
         end
 
         log_activity(:rename_task) if name_changed
