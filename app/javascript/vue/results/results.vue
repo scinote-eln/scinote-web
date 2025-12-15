@@ -40,8 +40,13 @@
         @result:drag_enter="dragEnter"
         @result:collapsed="checkResultsState"
       />
-      <div v-if="!loadingOverlay && results.length === 0 && emptyPlaceholder" class="px-4 py-6 bg-white my-4 text-gray-500">
-        {{ emptyPlaceholder }}
+      <div v-if="!loadingOverlay && results.length === 0" class="px-4 py-6 bg-white my-4 text-gray-500">
+        <span v-if="emptyPlaceholder && !filtersIsActive">
+          {{ emptyPlaceholder }}
+        </span>
+        <span>
+          {{ i18n.t('my_modules.results.no_results_placeholder') }}
+        </span>
       </div>
     </div>
     <div v-if="loadingOverlay">
@@ -128,6 +133,11 @@ export default {
     this.nextPageUrl = this.url;
     this.loadResults();
     this.initStackableHeaders();
+  },
+  computed: {
+    filtersIsActive() {
+      return Object.keys(this.filters).length > 0;
+    }
   },
   beforeUnmount() {
     window.removeEventListener('scroll', this.infiniteScrollLoad, false);
@@ -217,6 +227,7 @@ export default {
     },
     setFilters(filters) {
       this.filters = filters;
+      this.loadingOverlay = true;
       this.resetPageAndReload();
     },
     createResult() {
