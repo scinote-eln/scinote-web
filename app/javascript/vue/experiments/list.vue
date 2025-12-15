@@ -114,7 +114,8 @@ export default {
     createUrl: { type: String, required: true },
     userRolesUrl: { type: String, required: true },
     archived: { type: Boolean },
-    projectUrl: { type: String, required: true }
+    projectUrl: { type: String, required: true },
+    statusFilter: { type: String, required: false }
   },
   data() {
     return {
@@ -307,6 +308,7 @@ export default {
         key: 'statuses',
         type: 'Select',
         options: this.statusesList,
+        defaultValue: this.statusFilter,
         label: this.i18n.t('experiments.index.filters.status'),
         placeholder: this.i18n.t('experiments.index.filters.status_placeholder')
       });
