@@ -252,6 +252,7 @@ function loadFromRepository() {
     modal.find(".modal-footer [data-action='submit']").prop('disabled', true);
     let loadMode = $("#load-from-repository-warning-modal input[name='load_option']:checked").val();
     // POST via ajax
+    $('#loadingOverlay').removeClass('tw-hidden');
     $.ajax({
       url: modal.attr('data-url'),
       type: 'POST',
@@ -262,9 +263,11 @@ function loadFromRepository() {
       },
       success: function() {
         // Simply reload page
+        $('#loadingOverlay').addClass('tw-hidden');
         location.reload();
       },
       error: function(response) {
+        $('#loadingOverlay').addClass('tw-hidden');
         if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
         } else {
