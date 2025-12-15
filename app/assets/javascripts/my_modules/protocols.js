@@ -48,6 +48,7 @@ function initLinkUpdate() {
   if (!$._data(updateBtn[0], 'events')) {
     updateBtn.on('click', function() {
       let selectedOption = modal.find("input[name='load_option']:checked").val();
+      modal.find(".modal-footer [data-action='submit']").prop('disabled', true);
 
       // POST via ajax
       $.ajax({
@@ -62,7 +63,7 @@ function initLinkUpdate() {
         error: function(ev) {
           // Display error message in alert()
           alert(ev.responseJSON.message);
-
+          modal.find(".modal-footer [data-action='submit']").prop('disabled', false);
           // Hide modal
           modal.modal('hide');
         }
@@ -251,6 +252,7 @@ function loadFromRepository() {
     modal.find(".modal-footer [data-action='submit']").prop('disabled', true);
     let loadMode = $("#load-from-repository-warning-modal input[name='load_option']:checked").val();
     // POST via ajax
+    $('#loadingOverlay').removeClass('tw-hidden');
     $.ajax({
       url: modal.attr('data-url'),
       type: 'POST',
@@ -261,15 +263,18 @@ function loadFromRepository() {
       },
       success: function() {
         // Simply reload page
+        $('#loadingOverlay').addClass('tw-hidden');
         location.reload();
       },
       error: function(response) {
+        $('#loadingOverlay').addClass('tw-hidden');
         if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
         } else {
           alert(response.responseJSON.message);
         }
 
+        modal.find(".modal-footer [data-action='submit']").prop('disabled', false);
         selectedRow = null;
         modal.modal('hide');
       }

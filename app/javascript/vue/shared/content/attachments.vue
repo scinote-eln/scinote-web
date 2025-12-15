@@ -175,6 +175,11 @@ export default {
     },
     initMarvinJS() {
       // legacy logic from app/assets/javascripts/sitewide/marvinjs_editor.js
+      if (!window.MarvinJsEditor) {
+        setTimeout(() => this.initMarvinJS(), 300);
+        return;
+      }
+
       MarvinJsEditor.initNewButton(
         `#content__attachments-${this.parent.id} .new-marvinjs-upload-button`,
         () => this.$emit('attachment:uploaded')

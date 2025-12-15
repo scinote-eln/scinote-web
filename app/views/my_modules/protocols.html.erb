@@ -25,10 +25,14 @@
 <% end %>
 
 <%= hidden_field_tag :my_module_is_empty, !@my_module.not_empty? %>
+<%= hidden_field_tag :scinote_local_url, Constants::ASSET_SYNC_URL %>
 
 
 <%= render partial: 'shared/drag_n_drop_overlay' %>
-<div class="content-pane flexible my-module-content my-modules-protocols-index with-grey-background" data-task-id="<%= @my_module.id %>">
+<div class="content-pane flexible my-module-content my-modules-protocols-index with-grey-background relative" data-task-id="<%= @my_module.id %>">
+  <div id="loadingOverlay" class="tw-hidden absolute top-0 left-0 w-full h-full bg-white bg-opacity-75 flex items-center justify-center z-[500]">
+    <div class="sci-loader"></div>
+  </div>
   <%= render partial: 'my_modules/header' %>
   <div class="my-module-position-container">
     <!-- Header Actions -->

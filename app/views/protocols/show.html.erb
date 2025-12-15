@@ -3,6 +3,9 @@
   <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :protocol} %>
 <% end %>
  <% provide(:container_class, 'no-second-nav-container') %>
+
+ <%= hidden_field_tag :scinote_local_url, Constants::ASSET_SYNC_URL %>
+
 <div class="content-pane protocols-show flexible with-grey-background pb-4" >
   <%= render partial: "protocols/header" %>
   <div

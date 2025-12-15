@@ -6,6 +6,8 @@
 <div class="content-pane flexible protocol-content protocol-results with-grey-background" >
   <%= render partial: "protocols/header" %>
 
+  <%= hidden_field_tag :scinote_local_url, Constants::ASSET_SYNC_URL %>
+
   <div id="results" data-behaviour="vue" data-e2e="e2e-CO-task-results">
       <results url="<%= protocol_result_templates_url(@protocol, view_mode: params[:view_mode]) %>"
              :protocol-id="<%= @protocol.id %>"

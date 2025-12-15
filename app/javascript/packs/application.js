@@ -14,6 +14,7 @@ import 'bootstrap';
 require('bootstrap-select/js/bootstrap-select');
 import '@vuepic/vue-datepicker/dist/main.css';
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
+import axios from './custom_axios.js';
 
 window.bwipjs = require('bwip-js');
 window.Decimal = require('decimal.js');
@@ -96,3 +97,16 @@ window.isColorBright = function(color) {
 
   return brightness > 180 ? true : false;
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+  let scinoteLocalUrl = document.querySelector('#scinote_local_url').value;
+  if (scinoteLocalUrl) {
+    axios.get(`${scinoteLocalUrl}/status`).then((response) => {
+      window.scinoteEditRunning = true;
+      window.scinoteEditVersion = response.data.version;
+    }).catch(() => {
+      window.scinoteEditRunning = false;
+      console.warn('Scinote Edit: unable to fetch status');
+    });
+  }
+});

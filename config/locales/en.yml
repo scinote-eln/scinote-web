@@ -4498,6 +4498,7 @@ en:
     storage_location_annotation_message_html: "Storage location: %{storage_location}"
     project_comment_annotation_title: "%{user} mentioned you in a comment on project %{project}."
     project_annotation_message_html: "Project: %{project}"
+    project_description_annotation_title: "%{user} mentioned you in project %{project} description."
     my_module_description_annotation_title: "%{user} mentioned you in notes on task %{my_module}."
     my_module_description_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     my_module_comment_annotation_title: "%{user} mentioned you in a comment on task %{my_module}."

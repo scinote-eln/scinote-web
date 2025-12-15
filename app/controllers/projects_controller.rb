@@ -11,6 +11,7 @@ class ProjectsController < ApplicationController
   include FavoritesActions
   include TeamAssignmentsActions
   include UserRolesHelper
+  include ApplicationHelper
 
   attr_reader :current_folder
 
@@ -121,6 +122,8 @@ class ProjectsController < ApplicationController
 
     @project.last_modified_by = current_user
     if !return_error && @project.save
+
+      project_annotation_notification(@project.description_before_last_save) if @project.saved_change_to_description?
 
       # Add activities if needed
       log_activity(:edit_project) if message_edited.present?
@@ -388,6 +391,17 @@ class ProjectsController < ApplicationController
                 :change_project_due_date
               end
     log_activity(type_of, @project, message_items)
+  end
+
+  def project_annotation_notification(old_text = nil)
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: @project.description,
+      subject: @project,
+      title: t('notifications.project_description_annotation_title',
+               project: @project.name,
+               user: current_user.full_name)
+    )
   end
 
   def log_activity(type_of, project = nil, message_items = {})
