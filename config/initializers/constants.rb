@@ -337,6 +337,8 @@ class Constants
 
   PREVIEW_MAX_FILE_SIZE = ENV.fetch('PREVIEW_MAX_FILE_SIZE_MB', 50).to_i.megabytes
 
+  INLINE_PREVIEW_MAX_FILE_SIZE = ENV.fetch('INLINE_PREVIEW_MAX_FILE_SIZE_MB', 5).to_i.megabytes
+
   WHITELISTED_IMAGE_TYPES = [
     'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff', 'jpg'
   ].freeze
