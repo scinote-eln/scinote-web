@@ -224,7 +224,11 @@ var MyModuleRepositories = (function() {
     let tags = '';
 
     row.DT_RowAttr['data-state'].forEach((state) => {
-      tags += `<span class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1 text-nowrap">${state}</span>`;
+      if (state == 'archived') {
+        tags += '<i class="sn-icon sn-icon-archive text-sn-grey" title="' + I18n.t('general.archived') + '"></i>';
+      } else {
+        tags += `<span class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1 text-nowrap">${state}</span>`;
+      }
     });
 
     return `<div class='flex items-center gap-2 w-full flex-wrap'><a href='${row.recordInfoUrl}' class='record-info-link wrap'>${data}</a> ${tags}</div>`;
