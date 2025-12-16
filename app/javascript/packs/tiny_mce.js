@@ -92,16 +92,15 @@ const image_upload_handler = (blobInfo, _progress) =>
 const contentPStyle = `p { margin: 0; padding: 0;}`;
 const contentBodyStyle = `body { font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif }`;
 const contentListStyle = `
- ol:not([style*="list-style-type"]) {
+ ol {
     counter-reset: item;
 
     > li {
-      display: block;
+      counter-increment: item;
+    }
 
-      &::before {
-        content: counters(item, ".") ". ";
-        counter-increment: item;
-      }
+    &:not([style*="list-style-type"]) > li::marker {
+      content: counters(item, ".") ". ";
     }
   }
 `;
