@@ -326,6 +326,7 @@ Rails.application.routes.draw do
         get :document_preview
         get :save_pdf_to_inventory_modal, defaults: { format: 'json' }
         post :save_pdf_to_inventory_item, defaults: { format: 'json' }
+        get :download
       end
       collection do
         get :project_contents

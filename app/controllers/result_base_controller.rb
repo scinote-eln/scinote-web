@@ -203,6 +203,14 @@ class ResultBaseController < ApplicationController
     )
   end
 
+  def check_read_permissions
+    render_403 unless can_read_result?(@result)
+  end
+
+  def check_manage_permissions
+    render_403 unless can_manage_result?(@result)
+  end
+
   def check_destroy_permissions
     render_403 unless can_delete_result?(@result)
   end
