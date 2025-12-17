@@ -184,7 +184,7 @@ class Protocol < ApplicationRecord
       UNION ALL
       #{unscoped_readable_protocols.joins(steps: :step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
       UNION ALL
-      #{unscoped_readable_protocols.joins(:results).where_attributes_like(ResultTemplate::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      #{unscoped_readable_protocols.joins(:results).where_attributes_like(ResultTemplate::SEARCHABLE_IN_PROTOCOL_ATTRIBUTES, query).to_sql}
       UNION ALL
       #{unscoped_readable_protocols.joins(results: :result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
       UNION ALL
