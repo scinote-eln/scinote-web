@@ -304,7 +304,7 @@ module RepositoryDatatableHelper
 
   def row_style(row, my_module)
     style = []
-    style << I18n.t('general.archived') if row.archived
+    style << :archived if row.archived
     style << I18n.t('general.output') if row.output? && row.my_module.id == my_module&.id
 
     style
