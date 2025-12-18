@@ -3,10 +3,12 @@
 class Result < ResultBase
   include ArchivableModel
   include ObservableModel
+  include PinningModel
 
   belongs_to :archived_by, class_name: 'User', optional: true
   belongs_to :restored_by, class_name: 'User', optional: true
   belongs_to :my_module, inverse_of: :results
+  belongs_to :pinned_by, class_name: 'User', optional: true
   has_many :result_comments, inverse_of: :result, foreign_key: :associated_id, dependent: :destroy
   has_many :report_elements, inverse_of: :result, dependent: :destroy
 

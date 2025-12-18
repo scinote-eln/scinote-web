@@ -4,13 +4,13 @@ class ResultsController < ResultBaseController
   # rubocop:disable Rails/LexicallyScopedActionFilter
   before_action :load_parent
   before_action :load_vars, only: %i(destroy elements assets upload_attachment archive restore
-                                     update_view_state update_asset_view_mode update duplicate)
+                                     update_view_state update_asset_view_mode update duplicate pin unpin)
   before_action :set_breadcrumbs_items, only: %i(index)
   before_action :set_navigator, only: %i(index)
   before_action :set_inline_name_editing, only: %i(index)
   before_action :check_create_permissions, only: %i(create)
   before_action :check_read_permissions, only: %i(elements assets)
-  before_action :check_manage_permissions, only: %i(upload_attachment archive update_view_state update_asset_view_mode update duplicate)
+  before_action :check_manage_permissions, only: %i(upload_attachment archive update_view_state update_asset_view_mode update duplicate pin unpin)
   before_action :check_restore_permissions, only: :restore
   before_action :check_destroy_permissions, only: :destroy
   # rubocop:enable Rails/LexicallyScopedActionFilter
@@ -24,6 +24,16 @@ class ResultsController < ResultBaseController
     end
 
     update_and_apply_user_sort_preference!
+  end
+
+  def pin
+    @result.pin!(current_user)
+    render json: {}, status: :ok
+  end
+
+  def unpin
+    @result.unpin!
+    render json: {}, status: :ok
   end
 
   def archive

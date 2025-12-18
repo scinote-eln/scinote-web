@@ -644,6 +644,8 @@ Rails.application.routes.draw do
           post :duplicate
           post :archive
           post :restore
+          post :pin
+          post :unpin
         end
 
         resources :result_orderable_elements do
