@@ -369,7 +369,7 @@ class Protocol < ApplicationRecord
     steps_map = {}
 
     # Copy steps
-    src.steps.find_each do |step|
+    src.steps.order(position: :asc).each do |step|
       new_step = clone_step(dest, current_user, step, include_file_versions, load_mode: load_mode)
       steps_map[step.id] = new_step.id if include_results
     end
