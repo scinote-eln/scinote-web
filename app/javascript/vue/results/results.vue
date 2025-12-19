@@ -223,6 +223,7 @@ export default {
     },
     setSort(sort) {
       this.sort = sort;
+      this.loadingOverlay = true;
       this.resetPageAndReload();
     },
     setFilters(filters) {
