@@ -486,6 +486,12 @@ export default {
   created() {
     this.elements = this.result.elements;
     this.attachments = this.result.attachments;
+
+    if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
+      setTimeout(() => {
+        this.loadAttachments();
+      }, 10000);
+    }
   },
   methods: {
     toggleCollapsed() {
