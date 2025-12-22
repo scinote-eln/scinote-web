@@ -241,7 +241,7 @@ class ExperimentsController < ApplicationController
     if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',
                           experiment: @experiment.name)
-      render json: { url: canvas_experiment_path(service.cloned_experiment) }
+      render json: { url: experiment_my_modules_path(service.cloned_experiment) }
     else
       render json: {
         message: t('experiments.clone.error_flash',
