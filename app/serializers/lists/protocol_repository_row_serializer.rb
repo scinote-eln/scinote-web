@@ -16,11 +16,11 @@ module Lists
     end
 
     def row_code
-      object.repository_row.code
+      object.repository_row&.code
     end
 
     def archived
-      repository&.archived || object.repository_row.archived
+      repository&.archived || object.repository_row&.archived
     end
 
     def row_url

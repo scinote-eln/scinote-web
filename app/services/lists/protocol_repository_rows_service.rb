@@ -9,7 +9,7 @@ module Lists
     end
 
     def filter_records
-      return unless @params[:search]
+      return if @params[:search].blank?
 
       @records = @records.where_attributes_like(
         ['repositories.name', 'repository_rows.name', RepositoryRow::PREFIXED_ID_SQL],
