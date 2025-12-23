@@ -104,7 +104,7 @@
                       'unchecked': !valueSelected(option[0]),
                     }"
                 ></div>
-                <div v-if="optionRendererType == 'object'" >
+                <div v-if="optionRendererType == 'object'" class="overflow-hidden" >
                   <component :is="optionRenderer"
                              :option="option" />
                 </div>
