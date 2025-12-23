@@ -378,7 +378,7 @@ class Protocol < ApplicationRecord
 
     if include_results
       results_map = {}
-      results_scope = src.in_repository? ? src.results : src.my_module.results
+      results_scope = src.in_repository? ? src.results : src.my_module.results.active
 
       # Copy results
       results_scope.order(:created_at).each do |result|
