@@ -10,14 +10,6 @@ class FormFieldValueSerializer < ActiveModel::Serializer
     object.submitted_by.full_name
   end
 
-  def datetime
-    I18n.l(object.datetime, format: :default) if object.datetime
-  end
-
-  def datetime_to
-    I18n.l(object.datetime_to, format: :default) if object.datetime_to
-  end
-
   def submitted_at
     I18n.l(object.submitted_at, format: :full) if object.submitted_at
   end
