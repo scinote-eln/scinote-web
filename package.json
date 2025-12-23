@@ -31,7 +31,7 @@
     "@babel/preset-env": "^7.27.2",
     "@fortawesome/fontawesome-free": "^5.2.0",
     "@joeattardi/emoji-button": "^4.6.4",
-    "@vuepic/vue-datepicker": "^7.4.1",
+    "@vuepic/vue-datepicker": "12.1.0",
     "@vueuse/components": "^13.3.0",
     "@vueuse/core": "^13.3.0",
     "ag-grid-community": "^31.3.4",

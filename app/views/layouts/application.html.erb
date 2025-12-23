@@ -78,6 +78,7 @@
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
     data-datetime-picker-format="<%= datetime_picker_format_date_only %>"
+    data-datetime-picker-timezone="<%= @current_user&.time_zone %>"
     data-datetime-picker-format-vue="<%= datetime_picker_format_date_only_vue %>"
     <% end %>
   >
