@@ -171,6 +171,7 @@ export default {
     },
     resetPageAndReload() {
       this.nextPageUrl = this.url;
+      this.loadingOverlay = true;
       this.results = [];
       this.$nextTick(() => {
         this.loadResults();
