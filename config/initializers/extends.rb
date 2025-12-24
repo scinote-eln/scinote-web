@@ -88,6 +88,26 @@ class Extends
     }
   }
 
+  AG_REPOSITORY_EXTRA_SEARCH_ATTR = {
+    RepositoryTextValue: {
+      field: 'repository_text_values.data', includes: nil
+    }, RepositoryNumberValue: {
+      field: 'repository_number_values.data', includes: nil
+    }, RepositoryListValue: {
+      field: 'repository_list_items.data',
+      includes: :repository_list_item
+    }, RepositoryChecklistValue: {
+      field: 'repository_checklist_items.data',
+      includes: { repository_checklist_items_values: :repository_checklist_item }
+    }, RepositoryStatusValue: {
+      field: 'repository_status_items.status',
+      includes: :repository_status_item
+    }, RepositoryAssetValue: {
+      field: 'active_storage_blobs.filename',
+      includes: { asset: { file_attachment: :blob } }
+    }
+  }
+
   # Extra attributes used for advanced search in repositories
   REPOSITORY_ADVANCED_SEARCH_ATTR = {
     RepositoryTextValue: {

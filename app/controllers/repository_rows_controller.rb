@@ -9,7 +9,7 @@ class RepositoryRowsController < ApplicationController
   before_action :load_repository, except: %i(show print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(show print rows_to_print print_zpl
                                                        validate_label_template_columns)
-  before_action :load_repository_row, only: %i(show update update_cell assigned_task_list
+  before_action :load_repository_row, only: %i(show update update_cell assigned_task_list assigned_counters
                                                active_reminder_repository_cells relationships)
   before_action :load_repository_rows, only: %i(print rows_to_print print_zpl validate_label_template_columns)
 
@@ -19,6 +19,26 @@ class RepositoryRowsController < ApplicationController
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
   before_action :check_manage_permissions, only: %i(update update_cell copy_records)
+
+  def index_ag
+    repository_rows = Lists::RepositoryRowsService.new(@repository, params, user: current_user).call.load
+    render json: repository_rows,
+           adapter: :json,
+           root: 'data',
+           each_serializer: Lists::RepositoryRowSerializer,
+           user: current_user,
+           with_reminders: Repository.reminders_enabled?,
+           with_stock_management: @repository.has_stock_management?,
+           can_manage_stock: can_manage_repository_stock?(@repository),
+           meta:  {
+             total_count: @repository.repository_rows_count,
+             filtered_count: repository_rows.take&.filtered_count.to_i
+           }
+  rescue Lists::RepositoryFilters::ColumnNotFoundException
+    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }
+  rescue Lists::RepositoryFilters::ValueNotFoundException
+    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.value_not_found') }
+  end
 
   def index
     @draw = params[:draw].to_i
@@ -66,6 +86,20 @@ class RepositoryRowsController < ApplicationController
         @reminders_present = Repository.reminders_enabled?
       end
     end
+  end
+
+  def assigned_counters
+    assigned_my_modules_count, assigned_experiments_count, assigned_projects_count =
+      @repository_row.my_module_repository_rows
+                     .joins(my_module: :experiment)
+                     .pick(Arel.sql('COUNT(DISTINCT my_module_repository_rows.id) AS "assigned_my_modules_count"'),
+                           Arel.sql('COUNT(DISTINCT my_modules.experiment_id) AS "assigned_experiments_count"'),
+                           Arel.sql('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"'))
+    render json: {
+      tasks: assigned_my_modules_count,
+      experiments: assigned_experiments_count,
+      projects: assigned_projects_count
+    }
   end
 
   def create
@@ -372,9 +406,8 @@ class RepositoryRowsController < ApplicationController
   AvailableRepositoryRow = Struct.new(:id, :name, :has_file_attached)
 
   def load_repository
-    @repository = Repository.readable_by_user(current_user)
-                            .eager_load(:repository_columns)
-                            .find_by(id: params[:repository_id])
+    @repository = Repository.readable_by_user(current_user).find_by(id: params[:repository_id])
+
     render_404 unless @repository
   end
 
@@ -394,14 +427,14 @@ class RepositoryRowsController < ApplicationController
     @repository_row = if @form_repository_rows_field_value
                         @form_repository_rows_field_value.reified_repository_row_by_id(params[:id])
                       else
-                        @repository.repository_rows.eager_load(:repository_columns).find_by(id: params[:id])
+                        @repository.repository_rows.preload(:repository_columns).find_by(id: params[:id])
                       end
 
     render_404 unless @repository_row
   end
 
   def load_repository_rows
-    @repository_rows = @repository.repository_rows.eager_load(:repository_columns).where(id: params[:row_ids])
+    @repository_rows = @repository.repository_rows.preload(:repository_columns).where(id: params[:row_ids])
 
     render_404 if @repository_rows.blank?
   end
