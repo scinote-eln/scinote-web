@@ -81,7 +81,8 @@ export default {
     return {
       initialized: false,
       manualUpdate: false,
-      datetime: this.defaultValue,
+      isDirty: false,
+      datetime: typeof(this.defaultValue) === 'string' ? new TZDate(this.defaultValue, document.body.dataset.datetimePickerTimezone) : this.defaultValue,
       time: null,
       timezone: document.body.dataset.datetimePickerTimezone,
       markers: [
@@ -97,19 +98,18 @@ export default {
     VueDatePicker
   },
   watch: {
-    datetime() {
+    datetime(oldValue, newValue) {
       if (!this.initialized) return;
+      this.isDirty = true;
 
-      this.$emit('change', this.mode === 'time' ? this.timeToDate() : this.datetime);
+      // reset time if date changes
+      if (this.mode !== 'time' && oldValue && newValue && oldValue.getDate() !== newValue.getDate()) {
+        newValue.setHours(0, 0, 0, 0);
+      }
     }
   },
   created() {
     this.$nextTick(() => {
-      if (this.mode === 'date' && this.datetime) {
-        // set date to date in users' timezone
-        this.datetime = new TZDate(`${this.datetime.getMonth() + 1}-${this.datetime.getDate()}-${this.datetime.getFullYear()}`, this.timezone);
-      }
-
       if (this.mode === 'time' && this.datetime) {
         this.datetime =  {
           hours: this.datetime.getHours(),
@@ -139,19 +139,27 @@ export default {
       this.$refs.datetimePicker.closeMenu();
     },
     closedHandler() {
-      this.$emit('closed');
+      this.emitChange();
+      this.$nextTick(() =>  this.$emit('closed'));
     },
     clearedHandler() {
+      this.emitChange();
       this.$emit('cleared');
     },
     timeToDate() {
       if (!this.datetime || this.mode !== 'time') return;
 
-      let timeDate = new Date();
       timeDate.setHours(this.datetime.hours);
       timeDate.setMinutes(this.datetime.minutes);
 
       return timeDate;
+    },
+    emitChange() {
+      this.$nextTick(() => {
+        if (!this.isDirty) return;
+        this.$emit('change', this.mode === 'time' ? this.timeToDate() : this.datetime);
+        this.isDirty = false;
+      });
     }
   }
 };
