@@ -65,7 +65,7 @@ export default {
       this.value = parsedDate;
       this.fromValue = parsedDate;
     }
-  
+
     const toDateStr = field_value?.datetime_to || field_value?.date_to;
     if (toDateStr) {
       this.toValue = this.parseDate(toDateStr);
@@ -97,18 +97,18 @@ export default {
   methods: {
     updateDate(date) {
       this.value = this.stripTimeIfDate(date);
-      this.$emit('save', this.value);
+      this.$emit('save', this.normalizedValue(this.value));
     },
     updateFromDate(date) {
       this.fromValue = this.stripTimeIfDate(date);
       if (this.validValue) {
-        this.$emit('save', [this.fromValue, this.toValue]);
+        this.$emit('save', [this.normalizedValue(this.fromValue), this.normalizedValue(this.toValue)]);
       }
     },
     updateToDate(date) {
       this.toValue = this.stripTimeIfDate(date);
       if (this.validValue) {
-        this.$emit('save', [this.fromValue, this.toValue]);
+        this.$emit('save', [this.normalizedValue(this.fromValue), this.normalizedValue(this.toValue)]);
       }
     },
     stripTimeIfDate(date) {
@@ -121,6 +121,17 @@ export default {
 
       const [year, month, day] = date.split('-').map(Number);
       return new Date(year, month - 1, day);
+    },
+    normalizedValue(value) {
+      const date = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
+      const time = ` ${value.getHours().toString().padStart(2, '0')}:${value.getMinutes().toString().padStart(2, '0')}`
+
+      if (this.mode === 'date') {
+        return `${date}`
+      } else {
+
+        return `${date} ${time}`;
+      }
     }
   }
 };
