@@ -91,7 +91,7 @@ module LeftMenuBarHelper
   end
 
   def protocols_are_selected?
-    controller_name == 'protocols'
+    controller_name.in? %w(protocols result_templates protocol_repository_rows)
   end
 
   def forms_are_selected?
