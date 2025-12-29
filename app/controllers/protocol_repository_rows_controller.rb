@@ -4,6 +4,8 @@ class ProtocolRepositoryRowsController < ApplicationController
   before_action :load_protocol
   before_action :check_read_permissions, except: %i(create batch_destroy)
   before_action :check_manage_permissions, only: %i(create batch_destroy)
+  before_action :set_inline_name_editing, only: :index
+  before_action :set_breadcrumbs_items, only: :index
 
   def index
     respond_to do |format|
@@ -119,5 +121,36 @@ class ProtocolRepositoryRowsController < ApplicationController
       project: nil,
       message_items: message_items
     )
+  end
+
+  def set_breadcrumbs_items
+    archived = params[:view_mode] || (@protocol&.archived? && 'archived')
+
+    @breadcrumbs_items = []
+    @breadcrumbs_items.push(
+      { label: t('breadcrumbs.protocols'), url: protocols_path(view_mode: archived ? 'archived' : nil) }
+    )
+
+    if @protocol
+      @breadcrumbs_items.push(
+        { label: @protocol.name, url: protocol_path(@protocol) }
+      )
+    end
+
+    @breadcrumbs_items.each do |item|
+      item[:label] = "#{t('labels.archived')} #{item[:label]}" if archived
+    end
+  end
+
+  def set_inline_name_editing
+    return unless can_manage_protocol_draft_in_repository?(@protocol)
+
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'protocol',
+      item_id: @protocol.id,
+      field_to_udpate: 'name',
+      path_to_update: name_protocol_path(@protocol)
+    }
   end
 end
