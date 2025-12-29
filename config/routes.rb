@@ -577,6 +577,7 @@ Rails.application.routes.draw do
         member do
           get :full_view_table
           post :index_dt, defaults: { format: 'json' }
+          get :index_ag, defaults: { format: 'json' }
           post :export_repository
           post :assign_repository_records_modal, as: :assign_modal
           post :update_repository_records_modal, as: :update_modal
@@ -823,6 +824,10 @@ Rails.application.routes.draw do
            to: 'repository_rows#index',
            as: 'table_index',
            defaults: { format: 'json' }
+      get 'repository_index_ag',
+           to: 'repository_rows#index_ag',
+           as: 'table_index_ag',
+           defaults: { format: 'json' }
       member do
         get :assigned_my_modules
         get :repository_users
@@ -874,6 +879,7 @@ Rails.application.routes.draw do
           get :assigned_task_list
           get :active_reminder_repository_cells
           put :update_cell
+          get :assigned_counters
         end
 
         collection do

@@ -6,7 +6,7 @@ class MyModuleRepositoriesController < ApplicationController
   before_action :load_my_module, except: :assign_my_modules
   before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html repositories_list create)
   before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption assign_my_modules)
-  before_action :check_repository_view_permissions, except: %i(index_dt repositories_dropdown_list repositories_list_html repositories_list create)
+  before_action :check_repository_view_permissions, except: %i(index_dt index_ag repositories_dropdown_list repositories_list_html repositories_list create)
   before_action :check_repository_row_consumption_permissions, only: %i(consume_modal update_consumption)
   before_action :check_assign_repository_records_permissions, only: %i(update create)
   before_action :load_my_modules, only: :assign_my_modules
@@ -39,6 +39,32 @@ class MyModuleRepositoriesController < ApplicationController
     repository_rows = datatable_service.repository_rows
     @repository_rows = repository_rows.page(page).per(per_page)
     render rows_view
+  end
+
+  def index_ag
+    repository_rows = Lists::RepositoryRowsService.new(@repository,
+                                                       params,
+                                                       user: current_user,
+                                                       my_module: @my_module,
+                                                       assigned_view: true,
+                                                       preload_cells: !params[:simple_view]).call.load
+
+    render json: repository_rows,
+           adapter: :json,
+           root: 'data',
+           each_serializer: params[:simple_view] ? Lists::RepositoryRowSimplifiedSerializer : Lists::RepositoryRowSerializer,
+           user: current_user,
+           my_module: @my_module,
+           assigned_view: true,
+           can_read_repository: can_read_repository?(@repository),
+           with_reminders: Repository.reminders_enabled?,
+           with_stock_management: @repository.has_stock_management?,
+           can_manage_stock: false,
+           can_consume_stock: can_update_my_module_stock_consumption?(@my_module),
+           meta:  {
+             total_count: @my_module.repository_rows.where(repository: @repository).count,
+             filtered_count: repository_rows.take&.filtered_count.to_i
+           }
   end
 
   def assign_my_modules

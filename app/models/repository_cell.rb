@@ -21,7 +21,7 @@ class RepositoryCell < ApplicationRecord
     repository_time_range: 'RepositoryDateTimeRangeValueBase',
     repository_date_range: 'RepositoryDateTimeRangeValueBase',
     repository_stock: 'RepositoryStockValue',
-    repository_stock_consumption_snapshot: 'RepositoryStockConsumptionValue'
+    repository_stock_consumption: 'RepositoryStockConsumptionValue'
   }.each do |relation, class_name|
     belongs_to "#{relation}_value".to_sym,
                (lambda do |repository_cell|
