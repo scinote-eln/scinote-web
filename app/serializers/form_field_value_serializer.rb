@@ -4,10 +4,18 @@ class FormFieldValueSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
 
   attributes :id, :form_field_id, :type, :value, :submitted_at, :submitted_by_full_name,
-             :unit, :not_applicable, :selection, :datetime, :datetime_to
+             :unit, :not_applicable, :selection, :datetime, :datetime_to, :date, :date_to
 
   def submitted_by_full_name
     object.submitted_by.full_name
+  end
+
+  def datetime
+    I18n.l(object.datetime, format: :default) if object.datetime
+  end
+
+  def datetime_to
+    I18n.l(object.datetime_to, format: :default) if object.datetime_to
   end
 
   def submitted_at

@@ -862,7 +862,7 @@ en:
       result_template_text_moved: "Protocol result text moved"
       result_template_table_added: "Protocol result table added"
       result_template_table_edited: "Protocol result table edited"
-      result_template_table_deleted: "Protocol result table edited"
+      result_template_table_deleted: "Protocol result table deleted"
       result_template_table_duplicated: "Protocol result table duplicated"
       result_template_table_moved: "Protocol result table moved"
       result_template_file_added: "Protocol result file added"

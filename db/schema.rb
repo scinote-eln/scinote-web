@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.2].define(version: 2025_10_30_135441) do
+=======
+ActiveRecord::Schema[7.2].define(version: 2025_12_08_124138) do
+>>>>>>> develop
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -262,6 +266,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_30_135441) do
     t.datetime "updated_at", null: false
     t.boolean "flag"
     t.jsonb "data"
+    t.date "date"
+    t.date "date_to"
     t.index ["created_by_id"], name: "index_form_field_values_on_created_by_id"
     t.index ["form_field_id"], name: "index_form_field_values_on_form_field_id"
     t.index ["form_response_id"], name: "index_form_field_values_on_form_response_id"

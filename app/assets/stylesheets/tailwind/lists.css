@@ -1,14 +1,13 @@
 @layer components {
-  .numerical-nested-list ol:not([style*="list-style-type"]) {
+  .numerical-nested-list ol {
     counter-reset: item;
   }
 
-  .numerical-nested-list ol:not([style*="list-style-type"]) > li {
-    @apply block
+  .numerical-nested-list ol > li {
+    counter-increment: item;
   }
 
-  .numerical-nested-list ol:not([style*="list-style-type"]) > li::before {
+  .numerical-nested-list ol:not([style*="list-style-type"]) > li::marker {
     content: counters(item, ".") ". ";
-    counter-increment: item;
   }
 }

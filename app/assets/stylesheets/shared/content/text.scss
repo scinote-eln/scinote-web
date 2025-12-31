@@ -22,16 +22,15 @@
       margin: 0;
     }
 
-    ol:not([style*="list-style-type"]) {
+    ol {
       counter-reset: item;
 
       > li {
-        display: block;
+        counter-increment: item;
+      }
 
-        &::before {
-          content: counters(item, ".") ". ";
-          counter-increment: item;
-        }
+      &:not([style*="list-style-type"]) > li::marker {
+        content: counters(item, ".") ". ";
       }
     }
   }

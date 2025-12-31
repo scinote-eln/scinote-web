@@ -35,8 +35,9 @@ class AssetsController < ApplicationController
   end
 
   def toggle_view_mode
-    @asset.view_mode = toggle_view_mode_params[:view_mode]
-    @asset.save!(touch: false)
+    ActiveRecord::Base.no_touching do
+      @asset.update!(view_mode: toggle_view_mode_params[:view_mode])
+    end
 
     render json: AssetSerializer.new(@asset, scope: { user: current_user }).as_json
   end
