@@ -16,7 +16,7 @@
             <p class="mb-4">
               {{ this.i18n.t('protocols.repository_rows.assign_modal.description') }}
             </p>
-            <RowSelector @change="this.rowId = $event" class="mb-4"></RowSelector>
+            <RowSelector @change="this.rowIds = $event" :multiple="true" class="mb-4"></RowSelector>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
@@ -43,7 +43,7 @@ export default {
   },
   data() {
     return {
-      rowId: null
+      rowIds: []
     };
   },
   components: {
@@ -51,12 +51,12 @@ export default {
   },
   computed: {
     validObject() {
-      return this.rowId && this.rowId > 0;
+      return this.rowIds && this.rowIds.length > 0;
     },
   },
   methods: {
     submit() {
-      this.$emit('assign', this.rowId);
+      this.$emit('assign', this.rowIds);
     }
   }
 };
