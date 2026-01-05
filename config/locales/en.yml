@@ -4063,6 +4063,7 @@ en:
       index:
         disclaimer: "Users must have access to all items when loading this template to task; otherwise, some items may not appear."
         assign_item: "Assign item"
+        unassign_item: "Unassign"
       assign_modal:
         description: "Select which item you want to assign"
       table:

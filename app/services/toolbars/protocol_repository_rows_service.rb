@@ -30,8 +30,8 @@ module Toolbars
 
       {
         name: 'delete',
-        label: 'Delete',
-        icon: 'sn-icon sn-icon-delete',
+        label: I18n.t('protocols.repository_rows.index.unassign_item'),
+        icon: 'sn-icon sn-icon-close',
         path: batch_destroy_protocol_repository_rows_path(@protocol, row_ids: @rows.pluck(:id)),
         type: :emit
       }
