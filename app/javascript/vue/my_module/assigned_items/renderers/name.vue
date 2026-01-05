@@ -26,7 +26,7 @@
     </span>
 
     <template v-if="params.data.DT_RowAttr" v-for="state in params.data.DT_RowAttr['data-state']" :key="state">
-      <i v-if="state == 'archived'" class="sn-icon sn-icon-archive text-sn-grey" :title="i18n.t('general.archived')"></i>
+      <i v-if="state == 'archived'" class="sn-icon sn-icon-archived text-sn-grey" :title="i18n.t('general.archived')"></i>
       <span v-else class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1 ">
         {{ state }}
       </span>
