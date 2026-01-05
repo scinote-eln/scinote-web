@@ -21,8 +21,10 @@ class ProtocolRepositoryRowsController < ApplicationController
 
   def create
     @protocol.transaction do
-      @protocol_repository_row = @protocol.protocol_repository_rows.create!(protocol_repository_row_params)
-      log_activitiy(:protocol_repository_item_added, @protocol_repository_row)
+      RepositoryRow.readable_by_user(current_user, current_user.teams).where(id: params[:repository_row_ids]).each do |repository_row|
+        @protocol_repository_row = @protocol.protocol_repository_rows.create!(repository_row: repository_row)
+        log_activitiy(:protocol_repository_item_added, @protocol_repository_row)
+      end
       render json: {}
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -98,10 +100,6 @@ class ProtocolRepositoryRowsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_protocol_draft_in_repository?(@protocol)
-  end
-
-  def protocol_repository_row_params
-    params.require(:protocol_repository_row).permit(:repository_row_id)
   end
 
   def log_activitiy(type_of, protocol_repository_row)

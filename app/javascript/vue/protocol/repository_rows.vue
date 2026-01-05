@@ -111,12 +111,10 @@ export default {
     }
   },
   methods: {
-    assignRow(rowId) {
+    assignRow(rowIds) {
       this.showAssignModal = false;
       axios.post(this.createUrl, {
-        protocol_repository_row: {
-          repository_row_id: rowId
-        }
+        repository_row_ids: rowIds
       }).then(() => {
         this.reloadingTable = true;
       }).catch((e) => {
