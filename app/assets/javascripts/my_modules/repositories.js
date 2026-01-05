@@ -225,7 +225,7 @@ var MyModuleRepositories = (function() {
 
     row.DT_RowAttr['data-state'].forEach((state) => {
       if (state == 'archived') {
-        tags += '<i class="sn-icon sn-icon-archive text-sn-grey" title="' + I18n.t('general.archived') + '"></i>';
+        tags += '<i class="sn-icon sn-icon-archived text-sn-grey" title="' + I18n.t('general.archived') + '"></i>';
       } else {
         tags += `<span class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1 text-nowrap">${state}</span>`;
       }
