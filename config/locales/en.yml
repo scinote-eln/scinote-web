@@ -1637,6 +1637,7 @@ en:
       placeholder: "Enter result name"
       add_label: "New result"
       add_title: "Create new result"
+      no_results_placeholder: "No results here"
       new_text_result: "Text"
       new_table_result: "Table"
       new_asset_result: "File"
@@ -1714,6 +1715,8 @@ en:
         duplicate: "Duplicate"
         restore: "Restore"
         delete: "Delete"
+        pin: "Pin to top"
+        unpin: "Unpin from top"
       move_modal:
         search_placeholder: "Enter result name"
         step:

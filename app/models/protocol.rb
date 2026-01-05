@@ -186,7 +186,7 @@ class Protocol < ApplicationRecord
       UNION ALL
       #{unscoped_readable_protocols.joins(steps: :step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
       UNION ALL
-      #{unscoped_readable_protocols.joins(:results).where_attributes_like(ResultTemplate::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      #{unscoped_readable_protocols.joins(:results).where_attributes_like(ResultTemplate::SEARCHABLE_IN_PROTOCOL_ATTRIBUTES, query).to_sql}
       UNION ALL
       #{unscoped_readable_protocols.joins(results: :result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
       UNION ALL
@@ -371,7 +371,7 @@ class Protocol < ApplicationRecord
     steps_map = {}
 
     # Copy steps
-    src.steps.find_each do |step|
+    src.steps.order(position: :asc).each do |step|
       new_step = clone_step(dest, current_user, step, include_file_versions, load_mode: load_mode)
       steps_map[step.id] = new_step.id if include_results
     end

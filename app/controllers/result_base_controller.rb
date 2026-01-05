@@ -87,9 +87,10 @@ class ResultBaseController < ApplicationController
 
   def update_asset_view_mode
     ActiveRecord::Base.transaction do
-      @result.assets_view_mode = params[:assets_view_mode]
-      @result.save!(touch: false)
-      @result.assets.update_all(view_mode: @result.assets_view_mode)
+      ActiveRecord::Base.no_touching do
+        @result.update!(assets_view_mode: params[:assets_view_mode])
+        @result.assets.update_all(view_mode: @result.assets_view_mode)
+      end
     end
     render json: { view_mode: @result.assets_view_mode }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
@@ -152,6 +153,8 @@ class ResultBaseController < ApplicationController
   end
 
   def apply_sort!(sort_order)
+    @results = @results.order(pinned_at: :asc)
+
     case sort_order
     when 'updated_at_asc'
       @results = @results.order('results.updated_at' => :asc)

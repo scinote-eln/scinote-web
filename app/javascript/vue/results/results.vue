@@ -34,14 +34,20 @@
         @result:attachments:loaded="resultToReload = null; attachmentsLoaded++"
         @result:move_attachment="reloadResult"
         @result:duplicated="resetPageAndReload"
+        @result:pin_changed="resetPageAndReload"
         @result:archived="removeResult"
         @result:deleted="removeResult"
         @result:restored="removeResult"
         @result:drag_enter="dragEnter"
         @result:collapsed="checkResultsState"
       />
-      <div v-if="!loadingOverlay && results.length === 0 && emptyPlaceholder" class="px-4 py-6 bg-white my-4 text-gray-500">
-        {{ emptyPlaceholder }}
+      <div v-if="!loadingOverlay && results.length === 0" class="px-4 py-6 bg-white my-4 text-gray-500">
+        <span v-if="emptyPlaceholder && !filtersIsActive">
+          {{ emptyPlaceholder }}
+        </span>
+        <span>
+          {{ i18n.t('my_modules.results.no_results_placeholder') }}
+        </span>
       </div>
     </div>
     <div v-if="loadingOverlay">
@@ -129,6 +135,11 @@ export default {
     this.loadResults();
     this.initStackableHeaders();
   },
+  computed: {
+    filtersIsActive() {
+      return Object.keys(this.filters).length > 0;
+    }
+  },
   beforeUnmount() {
     window.removeEventListener('scroll', this.infiniteScrollLoad, false);
     window.removeEventListener('scroll', this.initStackableHeaders, false);
@@ -161,6 +172,7 @@ export default {
     },
     resetPageAndReload() {
       this.nextPageUrl = this.url;
+      this.loadingOverlay = true;
       this.results = [];
       this.$nextTick(() => {
         this.loadResults();
@@ -213,10 +225,12 @@ export default {
     },
     setSort(sort) {
       this.sort = sort;
+      this.loadingOverlay = true;
       this.resetPageAndReload();
     },
     setFilters(filters) {
       this.filters = filters;
+      this.loadingOverlay = true;
       this.resetPageAndReload();
     },
     createResult() {

@@ -40,28 +40,20 @@ module StepElements
 
     def update
       ActiveRecord::Base.transaction do
-        old_content = @table.contents
         @table.assign_attributes(table_params.except(:metadata).merge(last_modified_by: current_user))
-        begin
-          if table_params[:metadata].present?
-            # support for legacy tables
-            normalized_metadata =
-              table_params[:metadata].is_a?(String) ? JSON.parse(table_params[:metadata]) : table_params[:metadata]
 
-            @table.metadata = if @table.metadata
-                                @table.metadata.merge(normalized_metadata)
-                              else
-                                normalized_metadata
-                              end
-          end
-        rescue JSON::ParserError
-          @table.metadata = {}
+        if table_params[:metadata].present?
+          normalized_metadata =
+            table_params[:metadata].is_a?(String) ? JSON.parse(table_params[:metadata]) : table_params[:metadata]
+
+          @table.update_metadata!(@table.metadata ? @table.metadata.merge(normalized_metadata) : normalized_metadata)
         end
-        @table.save!
+
+        @table.save! unless @table.saved_changes? # don't save again if changes were saved as part of metadata update
 
         if @table.saved_changes?
           log_step_activity(:table_edited, { table_name: @table.name })
-          table_content_annotation(@table.step, @table, old_content)
+          table_content_annotation(@table.step, @table, @table.contents_was)
         end
       end
 

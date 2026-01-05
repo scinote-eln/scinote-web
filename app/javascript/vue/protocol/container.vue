@@ -187,8 +187,9 @@
         </div>
         <div class="sci-divider my-4" v-if="!inRepository"></div>
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
-          <div v-if="urls.add_step_url && inRepository" class="py-5 flex flex-row gap-8 justify-between">
+          <div v-if="inRepository" class="py-5 flex flex-row gap-8 justify-between">
             <a
+              v-if="urls.add_step_url"
               class="btn btn-secondary"
               :title="i18n.t('protocols.steps.new_step_title')"
               data-e2e="e2e-BT-protocol-templateSteps-newStepTop"
@@ -198,7 +199,7 @@
                 <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
                 <span>{{ i18n.t("protocols.steps.new_step") }}</span>
             </a>
-            <div v-if="steps.length > 0" class="flex justify-between items-center gap-4">
+            <div v-if="steps.length > 0" class="ml-auto flex justify-between items-center gap-4">
               <button
                 :title="i18n.t('protocols.steps.collapse_label')"
                 v-if="!stepCollapsed"
