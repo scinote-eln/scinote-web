@@ -48,20 +48,7 @@ import contentUiCss from '!!raw-loader!tinymce/skins/ui/tinymce-5/content.min.cs
 
 const contentPStyle = 'p { margin: 0; padding: 0;}';
 const contentBodyStyle = 'body { font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif }';
-const contentListStyle = `
-  ol {
-    counter-reset: item;
-
-    > li {
-      counter-increment: item;
-    }
-
-    &:not([style*="list-style-type"]) > li::marker {
-      content: counters(item, ".") ". ";
-    }
-  }
-`;
-const contentStyle = [contentCss, contentUiCss, contentBodyStyle, contentPStyle, contentListStyle].map((s) => s.toString()).join('\n');
+const contentStyle = [contentCss, contentUiCss, contentBodyStyle, contentPStyle].map((s) => s.toString()).join('\n');
 
 export default {
   name: 'TinemcyEditor',

@@ -18,7 +18,7 @@
               textareaId="descriptionModelInput"
             ></TinymceEditor>
           </div>
-          <span v-else v-html="description" class="numerical-nested-list"></span>
+          <span v-else v-html="description"></span>
         </div>
         <div class="modal-footer">
           <button v-if="editMode" type="button" @click="cancelEdit" class="btn btn-secondary">{{ i18n.t('general.cancel') }}</button>
