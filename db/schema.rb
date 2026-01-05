@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[7.2].define(version: 2025_10_30_135441) do
-=======
-ActiveRecord::Schema[7.2].define(version: 2025_12_08_124138) do
->>>>>>> develop
+ActiveRecord::Schema[7.2].define(version: 2025_12_17_180316) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -1130,6 +1126,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_08_124138) do
     t.datetime "discarded_at"
     t.string "type"
     t.bigint "protocol_id"
+    t.datetime "pinned_at"
+    t.bigint "pinned_by_id"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_results_on_name", using: :gin
     t.index ["archived"], name: "index_results_on_archived"
     t.index ["archived_by_id"], name: "index_results_on_archived_by_id"
@@ -1137,6 +1135,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_08_124138) do
     t.index ["discarded_at"], name: "index_results_on_discarded_at"
     t.index ["last_modified_by_id"], name: "index_results_on_last_modified_by_id"
     t.index ["my_module_id"], name: "index_results_on_my_module_id"
+    t.index ["pinned_by_id"], name: "index_results_on_pinned_by_id"
     t.index ["protocol_id"], name: "index_results_on_protocol_id"
     t.index ["restored_by_id"], name: "index_results_on_restored_by_id"
     t.index ["user_id"], name: "index_results_on_user_id"
@@ -1758,6 +1757,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_08_124138) do
   add_foreign_key "results", "users"
   add_foreign_key "results", "users", column: "archived_by_id"
   add_foreign_key "results", "users", column: "last_modified_by_id"
+  add_foreign_key "results", "users", column: "pinned_by_id"
   add_foreign_key "results", "users", column: "restored_by_id"
   add_foreign_key "shareable_links", "teams"
   add_foreign_key "shareable_links", "users", column: "created_by_id"

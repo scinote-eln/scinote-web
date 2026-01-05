@@ -153,6 +153,8 @@ class ResultBaseController < ApplicationController
   end
 
   def apply_sort!(sort_order)
+    @results = @results.order(pinned_at: :asc)
+
     case sort_order
     when 'updated_at_asc'
       @results = @results.order('results.updated_at' => :asc)

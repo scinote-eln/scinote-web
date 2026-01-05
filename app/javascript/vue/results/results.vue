@@ -34,6 +34,7 @@
         @result:attachments:loaded="resultToReload = null; attachmentsLoaded++"
         @result:move_attachment="reloadResult"
         @result:duplicated="resetPageAndReload"
+        @result:pin_changed="resetPageAndReload"
         @result:archived="removeResult"
         @result:deleted="removeResult"
         @result:restored="removeResult"

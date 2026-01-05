@@ -1715,6 +1715,8 @@ en:
         duplicate: "Duplicate"
         restore: "Restore"
         delete: "Delete"
+        pin: "Pin to top"
+        unpin: "Unpin from top"
       move_modal:
         search_placeholder: "Enter result name"
         step:
