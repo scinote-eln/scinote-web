@@ -11,7 +11,7 @@ class UserAssignment < ApplicationRecord
   after_destroy :remove_user_group_memberships, if: -> { assignable.is_a?(Team) }
   after_save :call_user_assignment_changed_hook
 
-  belongs_to :assignable, polymorphic: true, touch: true
+  belongs_to :assignable, polymorphic: true
   belongs_to :user_role
   belongs_to :user
   belongs_to :team
