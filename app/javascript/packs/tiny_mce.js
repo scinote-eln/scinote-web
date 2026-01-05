@@ -91,20 +91,7 @@ const image_upload_handler = (blobInfo, _progress) =>
 
 const contentPStyle = `p { margin: 0; padding: 0;}`;
 const contentBodyStyle = `body { font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif }`;
-const contentListStyle = `
- ol {
-    counter-reset: item;
-
-    > li {
-      counter-increment: item;
-    }
-
-    &:not([style*="list-style-type"]) > li::marker {
-      content: counters(item, ".") ". ";
-    }
-  }
-`;
-const contentStyle = [contentCss, contentUiCss, contentBodyStyle, contentPStyle, contentListStyle].map((s) => s.toString()).join('\n');
+const contentStyle = [contentCss, contentUiCss, contentBodyStyle, contentPStyle].map((s) => s.toString()).join('\n');
 
 // Optional pre-initialization method
 if (typeof(window.preTinyMceInit) === 'function') {
