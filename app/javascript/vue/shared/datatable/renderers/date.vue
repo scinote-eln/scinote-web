@@ -42,12 +42,17 @@ export default {
     };
   },
   created() {
-    this.date = new Date(this.params.data[this.params.field]?.value?.replace(/([^!\s])-/g, '$1/'));
+    this.date = this.parseDateString(this.params.data[this.params.field]?.value)
   },
   methods: {
     updateDate(value) {
       this.params.dtComponent.$emit(this.params.emitAction, value, this.params);
-      this.date = value;
+      this.date = this.parseDateString(value);
+    },
+    parseDateString(dateString) {
+      if (!dateString) return;
+
+      return new Date(dateString.replace(/([^!\s])-/g, '$1/'));
     }
   }
 };
