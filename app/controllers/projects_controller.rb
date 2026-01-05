@@ -299,10 +299,6 @@ class ProjectsController < ApplicationController
           .permit(:name, :archived, :due_date, :start_date, :description, :status, :supervised_by_id)
   end
 
-  def view_type_params
-    params.require(:project).require(:view_type)
-  end
-
   def load_projects
     @projects = if can_manage_team?(current_team)
                   # Team owners see all projects in the team
@@ -316,10 +312,6 @@ class ProjectsController < ApplicationController
     @project = Project.find_by(id: params[:id] || params[:project_id])
 
     render_404 unless @project
-  end
-
-  def tag_params
-    params.require(:tag).permit(:name)
   end
 
   def load_current_folder
@@ -341,16 +333,6 @@ class ProjectsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_project?(@project)
-  end
-
-  def set_inline_name_editing
-    @inline_editable_title_config = {
-      name: 'title',
-      params_group: 'project',
-      item_id: @project.id,
-      field_to_udpate: 'name',
-      path_to_update: project_path(@project)
-    }
   end
 
   def set_folder_inline_name_editing
