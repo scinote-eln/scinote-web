@@ -1,4 +1,4 @@
-<template>
+<template v-if="this.initialized">
   <div class="date-time-picker grow" :class="`size-${size}`" :data-e2e="dataE2e">
     <VueDatePicker
       ref="datetimePicker"
@@ -8,22 +8,21 @@
       }"
       @closed="closedHandler"
       @cleared="clearedHandler"
-      v-model="compDatetime"
+      v-model="datetime"
       :teleport="teleport"
-      :no-today="true"
       :clearable="clearable"
-      :format="format"
-      :month-change-on-scroll="false"
-      :six-weeks="true"
+      :monthChangeOnScroll="false"
+      :sixWeeks="true"
       :disabled="disabled"
-      :auto-apply="true"
-      :partial-flow="true"
+      :autoApply="true"
+      :partialFlow="true"
       :markers="markers"
-      :start-time="{ hours: 0, minutes: 0, seconds: 0 }"
-      week-start="0"
-      :hide-input-icon="noIcons"
-      :enable-time-picker="mode == 'datetime'"
-      :time-picker="mode == 'time'"
+      :time-picker="mode === 'time'"
+      :timezone="timezone"
+      :weekStart="0"
+      :hideInputIcon="noIcons"
+      :time-config="{ enableTimePicker: mode !== 'date', startTime: { hours: 0, minutes: 0, seconds: 0 } }"
+      :formats="{ input: format }"
       :placeholder="placeholder" >
         <template #arrow-right>
             <img class="slot-icon" src="/images/calendar/navigate_next.svg"/>
@@ -57,7 +56,7 @@
 </template>
 
 <script>
-import VueDatePicker from '@vuepic/vue-datepicker';
+import { VueDatePicker, TZDate } from '@vuepic/vue-datepicker';
 
 export default {
   name: 'DateTimePicker',
@@ -80,9 +79,11 @@ export default {
   },
   data() {
     return {
+      initialized: false,
       manualUpdate: false,
       datetime: this.defaultValue,
       time: null,
+      timezone: document.body.dataset.datetimePickerTimezone,
       markers: [
         {
           date: new Date(),
@@ -92,104 +93,35 @@ export default {
       ]
     };
   },
-  created() {
-    if (this.defaultValue) {
-      this.time = {
-        hours: this.defaultValue.getHours(),
-        minutes: this.defaultValue.getMinutes()
-      };
-    }
-  },
   components: {
     VueDatePicker
   },
   watch: {
-    defaultValue() {
-      this.datetime = this.defaultValue;
-      if (this.defaultValue instanceof Date) {
-        this.time = {
-          hours: this.defaultValue.getHours(),
-          minutes: this.defaultValue.getMinutes()
-        };
-      }
-    },
     datetime() {
-      if (this.mode === 'time') {
-        this.time = null;
+      if (!this.initialized) return;
 
-        if (this.datetime instanceof Date) {
-          this.time = {
-            hours: this.datetime.getHours(),
-            minutes: this.datetime.getMinutes()
-          };
-        }
-
-        return;
-      }
-
-      if (this.manualUpdate) {
-        this.manualUpdate = false;
-        return;
-      }
-
-      if (this.datetime == null) {
-        this.$emit('cleared');
-      }
-
-      if (this.defaultValue !== this.datetime) {
-        this.$emit('change', this.emitValue(this.datetime));
-
-        if (this.mode === 'date') this.close();
-      }
-    },
-    time() {
-      if (this.manualUpdate) {
-        this.manualUpdate = false;
-        return;
-      }
-
-      if (this.mode !== 'time') return;
-
-      let newDate;
-
-      if (this.time) {
-        newDate = new Date();
-        newDate.setHours(this.time.hours);
-        newDate.setMinutes(this.time.minutes);
-      } else {
-        newDate = {
-          hours: null,
-          minutes: null
-        };
-        this.$emit('cleared');
-      }
-
-      if (this.defaultValue !== newDate) {
-        this.$emit('change', this.emitValue(newDate));
-      }
+      this.$emit('change', this.mode === 'time' ? this.timeToDate() : this.datetime);
     }
   },
-  computed: {
-    compDatetime: {
-      get() {
-        if (this.mode === 'time') {
-          return this.time;
-        }
-        return this.datetime;
-      },
-      set(val) {
-        if (this.mode === 'time') {
-          this.time = val;
-        } else {
-          // If new value has different date then previous date, reset time
-          if (val && this.datetime && this.datetime.getDate() !== val.getDate()) {
-            val.setHours(0, 0, 0, 0);
-          }
+  created() {
+    this.$nextTick(() => {
+      if (this.mode === 'date' && this.datetime) {
+        // set date to date in users' timezone
+        this.datetime = new TZDate(`${this.datetime.getMonth() + 1}-${this.datetime.getDate()}-${this.datetime.getFullYear()}`, this.timezone);
+      }
 
-          this.datetime = val;
+      if (this.mode === 'time' && this.datetime) {
+        this.datetime =  {
+          hours: this.datetime.getHours(),
+          minutes: this.datetime.getMinutes(),
+          seconds: this.datetime.getSeconds()
         }
       }
-    },
+
+      this.$nextTick(() => this.initialized = true);
+    });
+  },
+  computed: {
     format() {
       if (this.mode === 'time') return 'HH:mm';
       if (this.mode === 'date') return document.body.dataset.datetimePickerFormatVue;
@@ -203,21 +135,6 @@ export default {
     window.removeEventListener('resize', this.close);
   },
   methods: {
-    stringValue(date) {
-      let time_str = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
-      let date_str = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
-      if (this.mode === 'time') return time_str;
-      if (this.mode === 'date') return date_str;
-      return `${date_str} ${time_str}`;
-    },
-    emitValue(date) {
-      if (date == null) {
-        this.$emit('cleared');
-        return null;
-      }
-
-      return this.valueType === 'stringWithoutTimezone' ? this.stringValue(date) : date;
-    },
     close() {
       this.$refs.datetimePicker.closeMenu();
     },
@@ -226,6 +143,15 @@ export default {
     },
     clearedHandler() {
       this.$emit('cleared');
+    },
+    timeToDate() {
+      if (!this.datetime || this.mode !== 'time') return;
+
+      let timeDate = new Date();
+      timeDate.setHours(this.datetime.hours);
+      timeDate.setMinutes(this.datetime.minutes);
+
+      return timeDate;
     }
   }
 };
