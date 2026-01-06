@@ -189,6 +189,7 @@ export default {
       if ((window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) || this.loadingOverlay) {
         this.loadingPage = true;
         const params = this.sort ? { ...this.filters, sort: this.sort } : { ...this.filters };
+        params['format'] = 'json';
         axios.get(this.nextPageUrl, { params }).then((response) => {
           this.results = this.results.concat(response.data.data);
           this.results.forEach(result => {
