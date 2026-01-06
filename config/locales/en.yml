@@ -4072,6 +4072,7 @@ en:
         repository: 'Inventory'
         private_inventory: 'Private inventory'
         private_item: 'Private item'
+        archived: 'Archived'
         deleted_item: 'This item has been deleted'
       delete_modal:
         title: "Remove assigned items"

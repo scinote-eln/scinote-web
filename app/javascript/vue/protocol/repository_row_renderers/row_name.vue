@@ -11,7 +11,7 @@
     class="record-info-link hover:no-underline"
     :title="params.data.name"
   >
-    <i v-if="params.data.archived" class="sn-icon sn-icon-archived mr-1"></i>
+    <i v-if="params.data.archived" :title="this.i18n.t('protocols.repository_rows.table.archived') " class="sn-icon sn-icon-archived mr-1"></i>
     {{ params.data.name }}
   </a>
 </template>

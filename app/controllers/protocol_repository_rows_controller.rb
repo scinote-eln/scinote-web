@@ -21,7 +21,9 @@ class ProtocolRepositoryRowsController < ApplicationController
 
   def create
     @protocol.transaction do
-      RepositoryRow.readable_by_user(current_user, current_user.teams).where(id: params[:repository_row_ids]).each do |repository_row|
+      RepositoryRow.readable_by_user(current_user, current_user.teams)
+                   .where.not(id: @protocol.protocol_repository_rows.where.not(repository_row_id: nil).select(:repository_row_id))
+                   .where(id: params[:repository_row_ids]).each do |repository_row|
         @protocol_repository_row = @protocol.protocol_repository_rows.create!(repository_row: repository_row)
         log_activitiy(:protocol_repository_item_added, @protocol_repository_row)
       end
