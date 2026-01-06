@@ -28,30 +28,17 @@
       </button>
     </div>
     <div style="height: 400px">
-      <ag-grid-vue
-          class="ag-theme-alpine w-full flex-grow h-[340px] z-10"
-          :columnDefs="columnDefs"
-          :rowData="preparedAssignedItems"
-          :rowSelection="false"
-          :suppressRowTransform="true"
-          :suppressRowClickSelection="true"
-          :enableCellTextSelection="true"
-          @grid-ready="onGridReady"
-          @sortChanged="setOrder"
-        >
-      </ag-grid-vue>
-      <div class="h-[60px] flex items-center border-transparent border-t border-t-sn-light-grey border-solid grey px-6">
-        <div>
-          {{ repository.attributes.footer_label }}
-        </div>
-        <div class="ml-auto">
-          <Pagination
-            :totalPage="Math.ceil(assignedItems.recordsTotal / perPage)"
-            :currentPage="page"
-            @setPage="setPage"
-          ></Pagination>
-        </div>
-      </div>
+      <DataTable
+        :columnDefs="columnDefs"
+        tableId="RepositoryRows"
+        :dataUrl="dataSource"
+        :reloadingTable="reloadingTable"
+        :toolbarActions="[]"
+        :actionsUrl="''"
+        :filters="[]"
+        :tableOnly="true"
+        @tableReloaded="reloadingTable = false"
+      ></DataTable>
     </div>
     <ConsumeModal v-if="openConsumeModal" @updateConsume="updateConsume" @close="openConsumeModal = false" :row="selectedRow" />
     <ConfirmationModal
@@ -64,25 +51,26 @@
   </div>
 </template>
 <script>
-import { AgGridVue } from 'ag-grid-vue3';
+import DataTable from '../../shared/datatable/table.vue';
 import axios from '../../../packs/custom_axios.js';
-import CustomHeader from '../../shared/datatable/tableHeader';
-import Pagination from '../../shared/datatable/pagination.vue';
 import NameRenderer from './renderers/name.vue';
 import StockRenderer from './renderers/stock.vue';
 import ConsumeRenderer from './renderers/consume.vue';
 import ConsumeModal from './modals/consume.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
 
+import {
+  index_ag_my_module_repository_path
+} from '../../../routes.js';
+
 export default {
   name: 'AssignedRepository',
   props: {
-    repository: Object
+    repository: Object,
+    myModuleId: String
   },
   components: {
-    AgGridVue,
-    agColumnHeader: CustomHeader,
-    Pagination,
+    DataTable,
     NameRenderer,
     StockRenderer,
     ConsumeRenderer,
@@ -90,25 +78,15 @@ export default {
     ConfirmationModal
   },
   data: () => ({
-    assignedItems: {
-      data: [],
-      recordsTotal: 0
-    },
-    order: { column: 0, dir: 'asc' },
     sectionOpened: false,
-    page: 1,
-    perPage: 20,
-    gridApi: null,
-    columnApi: null,
-    gridReady: false,
-    openConsumeModal: false,
-    selectedRow: null,
     warningModalDescription: '',
-    submitting: false
+    submitting: false,
+    reloadingTable: false
   }),
   computed: {
-    preparedAssignedItems() {
-      return this.assignedItems.data;
+    dataSource() {
+      console.log(this.myModuleId, this.repository.id )
+      return index_ag_my_module_repository_path(this.myModuleId, this.repository.id);
     },
     fullViewUrl() {
       let url = this.repository.attributes.urls.full_view;

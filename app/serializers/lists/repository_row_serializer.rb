@@ -6,10 +6,24 @@ module Lists
     include RepositoryDatatableHelper
 
     attributes :code, :name, :created_at, :created_by, :updated_at, :last_modified_by, :archived, :archived_on, :archived_by,
-               :assigned_tasks_count, :connections_count, :custom_cells
+               :assigned_tasks_count, :connections_count
     attribute :has_active_reminders, if: -> { instance_options[:with_reminders] }
     attribute :assigned, if: -> { instance_options[:my_module] && !instance_options[:assigned_view] }
     attribute :stock, if: -> { instance_options[:with_stock_management] }
+
+    def attributes(requested_attrs = nil, reload = false)
+      data = super(requested_attrs, reload)
+      repository = object.repository
+      reminders_enabled = instance_options[:reminders_enabled]
+      custom_cells = object.repository_cells
+      custom_cells = custom_cells.filter { |cell| cell.value_type != 'RepositoryStockValue' } if instance_options[:with_stock_management]
+
+      custom_cells.each do |cell|
+        data["col_#{cell.repository_column.id}"] = serialize_repository_cell_value(cell, repository.team, repository, reminders_enabled: reminders_enabled)
+      end
+
+      data
+    end
 
     def created_at
       I18n.l(object.created_at, format: :full)
@@ -81,19 +95,6 @@ module Lists
         }
       end
       stock_object
-    end
-
-    def custom_cells
-      repository = object.repository
-      reminders_enabled = instance_options[:reminders_enabled]
-      custom_cells = object.repository_cells
-      custom_cells = custom_cells.filter { |cell| cell.value_type != 'RepositoryStockValue' } if instance_options[:with_stock_management]
-
-      custom_cells.collect do |cell|
-        serialized_cell = serialize_repository_cell_value(cell, repository.team, repository, reminders_enabled: reminders_enabled)
-        serialized_cell[:column_id] = cell.repository_column_id
-        serialized_cell
-      end
     end
   end
 end

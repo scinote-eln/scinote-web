@@ -47,12 +47,13 @@ class MyModuleRepositoriesController < ApplicationController
                                                        user: current_user,
                                                        my_module: @my_module,
                                                        assigned_view: true,
-                                                       preload_cells: !params[:simple_view]).call.load
+                                                       page: params[:page],
+                                                       preload_cells: true).call.load
 
     render json: repository_rows,
            adapter: :json,
            root: 'data',
-           each_serializer: params[:simple_view] ? Lists::RepositoryRowSimplifiedSerializer : Lists::RepositoryRowSerializer,
+           each_serializer: Lists::RepositoryRowSerializer,
            user: current_user,
            my_module: @my_module,
            assigned_view: true,
@@ -61,10 +62,7 @@ class MyModuleRepositoriesController < ApplicationController
            with_stock_management: @repository.has_stock_management?,
            can_manage_stock: false,
            can_consume_stock: can_update_my_module_stock_consumption?(@my_module),
-           meta:  {
-             total_count: @my_module.repository_rows.where(repository: @repository).count,
-             filtered_count: repository_rows.take&.filtered_count.to_i
-           }
+           meta: pagination_dict(repository_rows)
   end
 
   def assign_my_modules

@@ -63,6 +63,7 @@
           :key="repository.id"
           ref="assignedRepositories"
           :repository="repository"
+          :myModuleId="myModuleId"
           @recalculateContainerSize="recalculateContainerSize"
         />
       </div>
