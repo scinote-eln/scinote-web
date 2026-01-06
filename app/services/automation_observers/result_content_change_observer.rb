@@ -7,7 +7,6 @@ module AutomationObservers
       ResultBase: %w(created_at name discarded_at),
       ResultText: %w(name text result_id),
       Table: %w(name contents metadata),
-      Asset: %w(file_file_name current_blob_id),
       ResultAsset: %w(result_id asset_id),
       ResultOrderableElement: %w(result_id position),
       Comment: %w(message)

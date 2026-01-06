@@ -9,7 +9,6 @@ module AutomationObservers
       Checklist: %w(name step_id),
       ChecklistItem: %w(text position checked),
       Table: %w(name contents metadata),
-      Asset: %w(file_file_name current_blob_id),
       StepAsset: %w(step_id asset_id),
       StepOrderableElement: %w(step_id position),
       Comment: %w(message),
@@ -30,7 +29,7 @@ module AutomationObservers
       protocol = nil
 
       case element.class.base_class.name
-      when 'Table', 'StepAsset', 'Asset'
+      when 'Table', 'StepAsset'
         return if element.step.blank?
 
         protocol = element.step.protocol
