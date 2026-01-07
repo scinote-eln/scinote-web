@@ -121,6 +121,7 @@
             </template>
           </GeneralDropdown>
           <a href="#"
+            v-if="result.attributes.type == 'Result'"
             ref="comments"
             class="open-comments-sidebar btn icon-btn btn-light"
             data-turbolinks="false"
@@ -240,6 +241,7 @@ import UtilsMixin from '../mixins/utils.js';
 import StorageUsage from '../shared/content/attachments/storage_usage.vue';
 import {
   protocols_my_module_path,
+  protocol_path
 } from '../../routes.js';
 
 export default {
@@ -260,7 +262,7 @@ export default {
       reordering: false,
       elements: [],
       attachments: [],
-      attachmentsReady: false,
+      attachmentsReady: true,
       addingContent: false,
       showFileModal: false,
       dragingFile: false,
@@ -482,16 +484,18 @@ export default {
     }
   },
   created() {
-    this.loadAttachments();
-    this.loadElements();
+    this.elements = this.result.elements;
+    this.attachments = this.result.attachments;
   },
   methods: {
     toggleCollapsed() {
       this.isCollapsed = !this.isCollapsed;
       this.result.attributes.collapsed = this.isCollapsed;
 
+      const stateKey = this.result.attributes.type == "ResultTemplate" ? 'result_template_states' : 'result_states';
+
       const settings = {
-        key: 'result_states',
+        key: stateKey,
         data: { [this.result.id]: this.isCollapsed }
       };
 
@@ -713,6 +717,9 @@ export default {
       this.$nextTick(() => window.initTooltip(this.$refs.linkButton));
     },
     protocolUrl(step_id) {
+      if (this.result.attributes.protocol_id) {
+        return protocol_path({ id: this.result.attributes.protocol_id }, { step_id: step_id });
+      }
       return protocols_my_module_path({ id: this.result.attributes.my_module_id }, { step_id: step_id })
     },
   }

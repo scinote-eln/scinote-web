@@ -226,6 +226,14 @@ class MyModule < ApplicationRecord
     report_elements.where(repository_id: ids).update(repository: repository)
   end
 
+  def not_empty?
+    protocol.description.present? ||
+      protocol.name.present? ||
+      protocol.steps.any? ||
+      results.any? ||
+      my_module_repository_rows.any?
+  end
+
   def undesignated_users
     User.joins(:user_assignments)
         .joins(

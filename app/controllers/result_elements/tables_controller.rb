@@ -17,19 +17,21 @@ module ResultElements
                t('protocols.steps.table.default_name',
                  position: @result.result_tables.length + 1)
              end
-      result_table = @result.result_tables.new(table:
+      result_table = ResultTable.new(table:
         Table.new(
           name: name,
           contents: { data: Array.new(predefined_table_dimensions[0],
                                       Array.new(predefined_table_dimensions[1], '')) }.to_json,
           metadata: { plateTemplate: create_table_params[:plateTemplate] == 'true' },
           created_by: current_user,
-          team: @my_module.team
+          team: @parent.team
         ))
+
+      result_table.result = @result
 
       ActiveRecord::Base.transaction do
         create_in_result!(@result, result_table)
-        log_result_activity(:result_table_added, { table_name: result_table.table.name })
+        log_result_activity(:table_added, { table_name: result_table.table.name })
       end
 
       render_result_orderable_element(result_table)
@@ -60,7 +62,7 @@ module ResultElements
         @table.save!
 
         if @table.saved_changes?
-          log_result_activity(:result_table_edited, { table_name: @table.name })
+          log_result_activity(:table_edited, { table_name: @table.name })
           result_annotation_notification(old_content)
         end
       end
@@ -71,7 +73,7 @@ module ResultElements
     end
 
     def move
-      target = @my_module.results.active.find_by(id: params[:target_id])
+      target = @parent.results.active.find_by(id: params[:target_id])
       return head(:conflict) unless target
 
       result_table = @table.result_table
@@ -81,14 +83,14 @@ module ResultElements
         result_table.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
         @result.normalize_elements_position
 
+        model_key = @result.class.model_name.param_key
+
         log_result_activity(
-          :result_table_moved,
+          :table_moved,
           {
             user: current_user.id,
-            table_name: @table.name,
-            result_original: @result.id,
-            result_destination: target.id
-          }
+            table_name: @table.name
+          }.merge({ "#{model_key}_original": @result.id, "#{model_key}_destination": target.id })
         )
 
         render json: @table, serializer: ResultTableSerializer, user: current_user
@@ -99,7 +101,7 @@ module ResultElements
 
     def destroy
       if @table.destroy
-        log_result_activity(:result_table_deleted, { table_name: @table.name })
+        log_result_activity(:table_deleted, { table_name: @table.name })
         head :ok
       else
         head :unprocessable_entity
@@ -114,7 +116,7 @@ module ResultElements
         end
         @table.name += ' (1)'
         new_table = @table.duplicate(@result, current_user, position + 1)
-        log_result_activity(:result_table_duplicated, { table_name: new_table.name })
+        log_result_activity(:table_duplicated, { table_name: new_table.name })
         render_result_orderable_element(new_table.result_table)
       end
     rescue ActiveRecord::RecordInvalid => e
@@ -145,19 +147,7 @@ module ResultElements
         subject: @result,
         title: t(@table.metadata['plateTemplate'] ? 'notifications.result_well_plate_annotation_title' : 'notifications.result_table_annotation_title',
                  result: @result.name,
-                 user: current_user.full_name),
-        message: t('notifications.result_annotation_message_html',
-                   project: link_to(@result.my_module.experiment.project.name,
-                                    project_url(@result.my_module
-                                                     .experiment
-                                                     .project)),
-                   experiment: link_to(@result.my_module.experiment.name,
-                                       my_modules_experiment_url(@result.my_module
-                                                                        .experiment)),
-                   my_module: link_to(@result.my_module.name,
-                                      protocols_my_module_url(
-                                        @result.my_module
-                                      )))
+                 user: current_user.full_name)
       )
     end
   end

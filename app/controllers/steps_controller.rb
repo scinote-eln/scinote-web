@@ -18,7 +18,7 @@ class StepsController < ApplicationController
   before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state)
 
   def index
-    render json: @protocol.steps.in_order,
+    render json: @protocol.steps.includes(:assets, step_orderable_elements: :orderable).in_order,
            each_serializer: StepSerializer,
            include: %i(step_orderable_elements assets),
            user: current_user
@@ -176,9 +176,10 @@ class StepsController < ApplicationController
   def update_asset_view_mode
     html = ''
     ActiveRecord::Base.transaction do
-      @step.assets_view_mode = params[:assets_view_mode]
-      @step.save!(touch: false)
-      @step.assets.update_all(view_mode: @step.assets_view_mode)
+      ActiveRecord::Base.no_touching do
+        @step.update!(assets_view_mode: params[:assets_view_mode])
+        @step.assets.update_all(view_mode: @step.assets_view_mode)
+      end
     end
     render json: { view_mode: @step.assets_view_mode }, status: :ok
   rescue ActiveRecord::RecordInvalid => e

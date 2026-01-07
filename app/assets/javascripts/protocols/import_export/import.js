@@ -3,6 +3,7 @@
 /* eslint-disable no-use-before-define, no-restricted-globals */
 //= require protocols/import_export/eln_table.js
 //= require jszip.min.js
+//= require activestorage
 
 function importProtocolFromFile(
   fileHandle,
@@ -15,7 +16,8 @@ function importProtocolFromFile(
   /* GLOBAL VARIABLES                          */
   /** *******************************************/
   var importModal = $('#import-protocol-modal');
-  var xml = '';
+  var directUploadUrl = importModal.data('direct-upload-url');
+  var uploadPromises = [];
   var protocolFolders = [];
   var protocolXmls = [];
   var zipFiles = '';
@@ -62,6 +64,26 @@ function importProtocolFromFile(
     const filePath = folder + stepPath + fileRef;
     const assetBytes = zipFiles.files[cleanFilePath(filePath)]?.asBinary();
     return window.btoa(assetBytes);
+  }
+
+  function getAssetBlob(folder, stepGuid, fileRef) {
+    const stepPath = stepGuid ? stepGuid + '/' : '';
+    const filePath = folder + stepPath + fileRef;
+    return zipFiles.files[cleanFilePath(filePath)].asUint8Array();
+  }
+
+  function createUploadPromise(file, assetJson) {
+    return new Promise((resolve, reject) => {
+      const upload = new ActiveStorage.DirectUpload(file, directUploadUrl);
+      upload.create((error, blob) => {
+        if (error) {
+          reject(error);
+        } else {
+          assetJson.signed_id = blob.signed_id;
+          resolve(blob);
+        }
+      });
+    });
   }
 
   function getAssetPreview(folder, stepGuid, fileRef, fileName, fileType) {
@@ -611,20 +633,24 @@ function importProtocolFromFile(
     $(object).find('> descriptionAssets > tinyMceAsset').each(function() {
       var tinyMceAsset = {};
       var fileRef = $(this).attr('fileRef');
+      var fileName = $(this).children('fileName').text();
+      var fileType = $(this).children('fileType').text();
       tinyMceAsset.tokenId = $(this).attr('tokenId');
-      tinyMceAsset.fileName = $(this).children('fileName').text();
-      tinyMceAsset.fileType = $(this).children('fileType').text();
+
       if ($(this).children('fileMetadata').html() !== undefined) {
         tinyMceAsset.fileMetadata = $(this).children('fileMetadata').html()
           .replace('<!--[CDATA[', '')
           .replace('  ]]-->', '')
           .replace(']]&gt;', '');
       }
-      tinyMceAsset.bytes = getAssetBytes(
-        protocolFolders[index],
-        stepGuid,
-        fileRef
+
+      uploadPromises.push(
+        createUploadPromise(
+          new File([getAssetBlob(protocolFolders[index], stepGuid, fileRef)], fileName, { type: fileType }),
+          tinyMceAsset
+        )
       );
+
       result.push(tinyMceAsset);
     });
     return result;
@@ -782,20 +808,21 @@ function importProtocolFromFile(
         var assetId = $(this).attr('id');
         var fileRef = $(this).attr('fileRef');
         var fileName = $(this).children('fileName').text();
+        var fileType = $(this).children('fileType').text();
 
         stepAssetJson.id = assetId;
-        stepAssetJson.fileName = fileName;
-        stepAssetJson.fileType = $(this).children('fileType').text();
         if ($(this).children('fileMetadata').html() !== undefined) {
           stepAssetJson.fileMetadata = $(this).children('fileMetadata').html()
             .replace('<!--[CDATA[', '')
             .replace('  ]]-->', '')
             .replace(']]&gt;', '');
         }
-        stepAssetJson.bytes = getAssetBytes(
-          protocolFolders[index],
-          stepGuid,
-          fileRef
+
+        uploadPromises.push(
+          createUploadPromise(
+            new File([getAssetBlob(protocolFolders[index], stepGuid, fileRef)], fileName, { type: fileType }),
+            stepAssetJson
+          )
         );
 
         stepAssetJson.preview_image = getAssetPreview(
@@ -843,23 +870,27 @@ function importProtocolFromFile(
       return;
     }
 
-    // Do a POST onto the server
-    $.ajax({
-      type: 'POST',
-      url: importUrl,
-      dataType: 'json',
-      data: dataJson,
-      success: function(data) {
-        resultCallback(data);
-      },
-      error: function(ev) {
-        var path = new RegExp('modules');
-        resultCallback(ev.responseJSON);
+    Promise.all(uploadPromises).then(() => {
+      // Do a POST onto the server
+      $.ajax({
+        type: 'POST',
+        url: importUrl,
+        dataType: 'json',
+        data: dataJson,
+        success: function(data) {
+          resultCallback(data);
+        },
+        error: function(ev) {
+          var path = new RegExp('modules');
+          resultCallback(ev.responseJSON);
 
-        if (path.test(window.location.href)) {
-          animateSpinner(null, false);
+          if (path.test(window.location.href)) {
+            animateSpinner(null, false);
+          }
         }
-      }
+      });
+    }).catch(() => {
+      HelperModule.flashAlertMsg(I18n.t('protocols.import_export.load_file_error'));
     });
   }
 
@@ -873,7 +904,6 @@ function importProtocolFromFile(
 
   fileReader = new FileReader();
   fileReader.onload = function(e) {
-    var zipContent = new JSZip(e.target.result);
     var envelope;
     zipFiles = new JSZip();
     zipFiles.load(e.target.result);

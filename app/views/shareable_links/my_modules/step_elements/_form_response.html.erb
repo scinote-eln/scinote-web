@@ -38,11 +38,11 @@
             <% elsif field_value&.formatted.present? %>
               <% if field_value.is_a?(FormDatetimeFieldValue)%>
                 <% if field_value.range? %>
-                  <span class='iso-formatted-date <%= 'only-date' unless field.data['time'] %>'><%=  field_value.datetime&.iso8601 %></span>
+                  <span class='iso-formatted-date <%= 'only-date' unless field.data['time'] %>'><%=  (field.data['time'] ? field_value.datetime : field_value.date)&.iso8601 %></span>
                   -
-                  <span class='iso-formatted-date <%= 'only-date' unless field.data['time'] %>'><%= field_value.datetime_to&.iso8601 %></span>
+                  <span class='iso-formatted-date <%= 'only-date' unless field.data['time'] %>'><%= (field.data['time'] ? field_value.datetime_to : field_value.date_to)&.iso8601 %></span>
                 <% else %>
-                  <span class='iso-formatted-date <%= 'only-date' unless field.data['time'] %>'><%= field_value.datetime&.iso8601  %></span>
+                  <span class='iso-formatted-date <%= 'only-date' unless field.data['time'] %>'><%= (field.data['time'] ? field_value.datetime : field_value.date)&.iso8601  %></span>
                 <% end %>
               <% elsif field_value.is_a?(FormTextFieldValue)%>
                 <%= smart_annotation_text(field_value.formatted) %>

@@ -22,10 +22,11 @@ class ResultTextSerializer < ActiveModel::Serializer
 
   def text_view
     @user = scope[:user]
+    team = object.result.parent.team
     custom_auto_link(object.tinymce_render('text'),
                      simple_format: false,
                      tags: %w(img),
-                     team: object.result.my_module.team)
+                     team: team)
   end
 
   def text
@@ -37,16 +38,19 @@ class ResultTextSerializer < ActiveModel::Serializer
   end
 
   def urls
+    return {} if object.destroyed?
+
+    user = scope[:user] || @instance_options[:user]
+
+    return {} unless can_manage_result?(user, object.result)
+
     result = object.result
-
-    return {} if object.destroyed? || !can_manage_result?(scope[:user] || @instance_options[:user], result)
-
     {
-      duplicate_url: duplicate_my_module_result_text_path(result.my_module, result, object),
-      delete_url: my_module_result_text_path(result.my_module, result, object),
-      update_url: my_module_result_text_path(result.my_module, result, object),
-      move_targets_url: move_targets_my_module_result_text_path(result.my_module, result, object),
-      move_url: move_my_module_result_text_path(result.my_module, result, object)
+      duplicate_url: duplicate_result_text_path(result, object),
+      delete_url: result_text_path(result, object),
+      update_url: result_text_path(result, object),
+      move_targets_url: move_targets_result_text_path(result, object),
+      move_url: move_result_text_path(result, object)
     }
   end
 end

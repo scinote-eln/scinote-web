@@ -11,7 +11,7 @@ module GlobalActivitiesHelper
     activity.message_items.each do |key, value|
       parameters[key] =
         if value.is_a? String
-          value
+          escape_input(value)
         elsif value['type'] == 'Time' # use saved date for printing
           I18n.l(Time.zone.at(value['value']), format: :full)
         elsif value['type'] == 'Date'
@@ -110,9 +110,13 @@ module GlobalActivitiesHelper
 
       path = obj.archived? ? my_module_results_path(obj.my_module, result_id: obj.id, view_mode: :archived) : my_module_results_path(obj.my_module, result_id: obj.id)
     when Step
-      return current_value unless obj.navigable?
-
-      path = protocols_my_module_path(obj.my_module, step_id: obj.id)
+      if obj.protocol.in_repository?
+        path = protocol_path(obj.protocol, step_id: obj.id)
+      elsif obj.my_module.navigable?
+        path = protocols_my_module_path(obj.my_module, step_id: obj.id)
+      else
+        return current_value
+      end
     when Report
       preview_type = activity.type_of == 'generate_docx_report' ? :docx : :pdf
       path = reports_path(team: obj.team.id, preview_report_id: obj.id, preview_type: preview_type)
@@ -130,6 +134,8 @@ module GlobalActivitiesHelper
              end
     when Form
       path = form_path(obj, team: obj.team.id)
+    when ResultTemplate
+      path = protocol_result_templates_path(obj.protocol)
     else
       return current_value
     end

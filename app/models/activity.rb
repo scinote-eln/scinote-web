@@ -41,11 +41,13 @@ class Activity < ApplicationRecord
                                         allow_blank: true }
 
   scope :results_joins, lambda {
-    joins("LEFT JOIN results ON subject_type = 'Result' AND subject_id = results.id")
+    joins("LEFT JOIN results ON subject_type = 'ResultBase' AND subject_id = results.id")
   }
 
-  scope :protocols_joins, lambda {
-    joins("LEFT JOIN protocols ON subject_type = 'Protocol' AND subject_id = protocols.id")
+  scope :protocols_joins, lambda { |*params|
+    joins_query = "LEFT JOIN protocols ON subject_type = 'Protocol' AND subject_id = protocols.id"
+    joins_query += ' OR results.protocol_id = protocols.id' if params.include? :from_result_templates
+    joins(joins_query)
   }
 
   scope :my_modules_joins, lambda { |*params|

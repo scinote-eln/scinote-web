@@ -67,8 +67,11 @@ import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin.js';
 import {
   list_my_module_results_path,
+  list_protocol_result_templates_path,
   my_module_results_path,
-  link_results_step_results_path
+  protocol_result_templates_path,
+  link_results_step_results_path,
+  link_results_step_result_templates_path
 } from '../../../routes.js';
 
 export default {
@@ -98,13 +101,22 @@ export default {
   },
   computed: {
     resultsListUrl() {
-      return list_my_module_results_path({ my_module_id: this.step.attributes.my_module_id, with_linked_step_id: this.step.id });
+      if (this.step.attributes.my_module_id) {
+        return list_my_module_results_path({ my_module_id: this.step.attributes.my_module_id, with_linked_step_id: this.step.id });
+      }
+      return list_protocol_result_templates_path({ protocol_id: this.step.attributes.protocol_id, with_linked_step_id: this.step.id });
     },
     resultsPageUrl() {
-      return my_module_results_path({ my_module_id: this.step.attributes.my_module_id });
+      if (this.step.attributes.my_module_id) {
+        return my_module_results_path({ my_module_id: this.step.attributes.my_module_id });
+      }
+      return protocol_result_templates_path({ protocol_id: this.step.attributes.protocol_id });
     },
     resultsLinkUrl() {
-      return link_results_step_results_path({ format: 'json' });
+      if (this.step.attributes.my_module_id){
+        return link_results_step_results_path({ format: 'json' });
+      }
+      return link_results_step_result_templates_path({ format: 'json' });
     },
     isSameData() {
       return this.selectedResults.length === this.initialResults.length &&

@@ -241,28 +241,13 @@ class ExperimentsController < ApplicationController
     if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',
                           experiment: @experiment.name)
-      render json: { url: canvas_experiment_path(service.cloned_experiment) }
+      render json: { url: experiment_my_modules_path(service.cloned_experiment) }
     else
       render json: {
         message: t('experiments.clone.error_flash',
         experiment: @experiment.name)
       }, status: :unprocessable_entity
     end
-  end
-
-  def search_tags
-    tags = @experiment.project.tags.where.not(id: JSON.parse(params[:selected_tags]))
-                      .where_attributes_like(:name, params[:query])
-                      .select(:id, :name, :color)
-
-    tags = tags.map do |tag|
-      { value: tag.id, label: escape_input(tag.name), params: { color: escape_input(tag.color) } }
-    end
-
-    if params[:query].present? && tags.select { |tag| tag[:label] == params[:query] }.blank?
-      tags << { value: 0, label: escape_input(params[:query]), params: { color: nil } }
-    end
-    render json: tags
   end
 
   # POST: move_experiments(ids)
@@ -631,10 +616,10 @@ class ExperimentsController < ApplicationController
       when 'canvas'
         module_archive_experiment_path(@experiment)
       else
-        my_modules_path(experiment_id: @experiment, view_mode: :archived)
+        experiment_my_modules_path(experiment_id: @experiment, view_mode: :archived)
       end
     else
-      view_type == 'canvas' ? canvas_experiment_path(@experiment) : my_modules_path(experiment_id: @experiment)
+      view_type == 'canvas' ? canvas_experiment_path(@experiment) : experiment_my_modules_path(experiment_id: @experiment)
     end
   end
 

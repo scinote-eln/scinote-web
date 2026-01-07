@@ -57,8 +57,8 @@ class MarvinJsService
       object = case params[:object_type]
                when 'Step'
                  Step.find(params[:object_id])
-               when 'Result'
-                 Result.find(params[:object_id])
+               when 'Result', 'ResultTemplate'
+                 ResultBase.find(params[:object_id])
                end
       asset.update!(view_mode: object.assets_view_mode)
       object.assets << asset

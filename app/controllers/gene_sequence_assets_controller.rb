@@ -17,7 +17,21 @@ class GeneSequenceAssetsController < ApplicationController
   def edit
     @file_url = rails_representation_url(@asset.file)
     @file_name = @asset.render_file_name
-    log_activity('sequence_asset_edit_started')
+
+    case @parent
+    when ResultTemplate
+      log_result_activity(
+        :sequence_on_result_template_edited,
+        @parent,
+        file: @asset.file_name,
+        user: current_user.id,
+        result_template: @parent.id,
+        protocol: @parent.protocol.id,
+        action: t('activities.file_editing.started')
+      )
+    else
+      log_activity('sequence_asset_edit_started')
+    end
     render :edit, layout: false
   end
 
@@ -32,7 +46,17 @@ class GeneSequenceAssetsController < ApplicationController
         :sequence_on_result_added,
         @parent,
         file: @asset.file_name,
-        user: current_user.id
+        user: current_user.id,
+        result: @parent.id
+      )
+    when ResultTemplate
+      log_result_activity(
+        :sequence_on_result_template_added,
+        @parent,
+        file: @asset.file_name,
+        user: current_user.id,
+        result_template: @parent.id,
+        protocol: @parent.protocol.id
       )
     end
 
@@ -50,7 +74,18 @@ class GeneSequenceAssetsController < ApplicationController
         :sequence_on_result_edited,
         @parent,
         file: @asset.file_name,
-        user: current_user.id
+        user: current_user.id,
+        result: @parent.id
+      )
+    when ResultTemplate
+      log_result_activity(
+        :sequence_on_result_template_edited,
+        @parent,
+        file: @asset.file_name,
+        user: current_user.id,
+        result_template: @parent.id,
+        protocol: @parent.protocol.id,
+        action: t('activities.file_editing.finished')
       )
     end
 
@@ -114,7 +149,7 @@ class GeneSequenceAssetsController < ApplicationController
     @parent ||= @asset.result
 
     case @parent
-    when Step
+    when Step, ResultTemplate
       @protocol = @parent.protocol
     when Result
       @my_module = @parent.my_module
@@ -128,12 +163,14 @@ class GeneSequenceAssetsController < ApplicationController
                 Step.find_by(id: params[:parent_id])
               when 'Result'
                 Result.find_by(id: params[:parent_id])
+              when 'ResultTemplate'
+                ResultTemplate.find_by(id: params[:parent_id])
               end
 
     case @parent
     when Step
       @protocol = @parent.protocol
-    when Result
+    when ResultBase
       @result = @parent
     end
   end
@@ -143,7 +180,7 @@ class GeneSequenceAssetsController < ApplicationController
     when Step
       return render_403 unless can_read_protocol_in_module?(@protocol) ||
                                can_read_protocol_in_repository?(@protocol)
-    when Result
+    when ResultBase
       return render_403 unless can_read_result?(@parent)
     else
       render_403
@@ -163,7 +200,7 @@ class GeneSequenceAssetsController < ApplicationController
     case @parent
     when Step
       can_manage_step?(@parent)
-    when Result
+    when ResultBase
       can_manage_result?(@parent)
     else
       false
@@ -206,10 +243,8 @@ class GeneSequenceAssetsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: result,
-            team: result.my_module.team,
-            project: result.my_module.project,
-            message_items: {
-              result: result.id
-            }.merge(message_items))
+            team: result.team,
+            project: result.is_a?(Result) ? result.my_module.project : nil,
+            message_items: message_items)
   end
 end

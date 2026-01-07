@@ -68,7 +68,6 @@ module ApplicationHelper
 
   def smart_annotation_notification(options = {})
     title = options.fetch(:title) { :title_must_be_present }
-    message = options.fetch(:message) { :message_must_be_present }
     old_text = options[:old_text] || ''
     new_text = options[:new_text]
     subject = options[:subject]

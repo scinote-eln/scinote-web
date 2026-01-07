@@ -1,5 +1,5 @@
 /* global TinyMCE Prism I18n animateSpinner importProtocolFromFile */
-/* global HelperModule DataTableHelpers GLOBAL_CONSTANTS */
+/* global HelperModule DataTableHelpers $ */
 /* eslint-disable no-use-before-define, no-alert, no-restricted-globals, no-underscore-dangle */
 
 
@@ -13,15 +13,32 @@ function initLinkUpdate() {
   var modal = $('#confirm-link-update-modal');
   var modalTitle = modal.find('.modal-title');
   var modalMessage = modal.find('.modal-body .message');
+  var modalMergeLabel = modal.find('.modal-body .merge-label');
+  var modalReplaceLabel = modal.find('.modal-body .replace-label');
   var updateBtn = modal.find(".modal-footer [data-action='submit']");
   $('.protocol-options-dropdown')
-    .on('ajax:success', "[data-action='unlink'], [data-action='revert'], [data-action='update-parent'],"
-        + "[data-action='update-self']", function(e, data) {
+    .on('ajax:success', "[data-action='unlink'], [data-action='update-parent']", function(e, data) {
+      modal.find(".modal-body .load-options-container").hide();
       modalTitle.text(data.title);
-      modalMessage.text(data.message);
+      modalMessage.html(data.message);
       updateBtn.text(data.btn_text);
       modal.attr('data-url', data.url);
       modal.modal('show');
+
+    });
+
+  $('.protocol-options-dropdown')
+    .on('ajax:success', "[data-action='revert'], [data-action='update-self']", function(e, data) {
+      modal.find(".modal-body .load-options-container").show();
+      modalTitle.text(data.title);
+      modalMessage.html(data.message);
+      modalMergeLabel.html(data.merge_text);
+      modalReplaceLabel.html(data.replace_text);
+      updateBtn.text(data.btn_text);
+      modal.find("input[name='load_option'][value='merge']").prop("checked", true)
+      modal.attr('data-url', data.url);
+      modal.modal('show');
+
     });
 
   modal.on('hidden.bs.modal', function() {
@@ -30,11 +47,15 @@ function initLinkUpdate() {
 
   if (!$._data(updateBtn[0], 'events')) {
     updateBtn.on('click', function() {
+      let selectedOption = modal.find("input[name='load_option']:checked").val();
+      modal.find(".modal-footer [data-action='submit']").prop('disabled', true);
+
       // POST via ajax
       $.ajax({
         url: modal.attr('data-url'),
         type: 'POST',
         dataType: 'json',
+        data: { load_mode: selectedOption },
         success: function() {
           // Simply reload page
           location.reload();
@@ -42,7 +63,7 @@ function initLinkUpdate() {
         error: function(ev) {
           // Display error message in alert()
           alert(ev.responseJSON.message);
-
+          modal.find(".modal-footer [data-action='submit']").prop('disabled', false);
           // Hide modal
           modal.modal('hide');
         }
@@ -73,7 +94,17 @@ function initLoadFromRepository() {
       initLoadFromRepositoryTable(modalBody.find('#load-protocols-datatable'));
 
       loadBtn.on('click', function() {
+        let isEmpty = $('#my_module_is_empty').val() === 'true';
+        if (!isEmpty) {
+          // Show warning modal
+          loadFromRepositoryWarning();
+          return;
+        }
+
+        $("#load-from-repository-warning-modal input[name='load_option'][value=replace]").prop('checked', true);
+        modal.modal('hide');
         loadFromRepository();
+
       });
     });
   modal.on('hidden.bs.modal', function() {
@@ -140,6 +171,7 @@ function initLoadFromRepositoryTable(content) {
     fnInitComplete: function(e) {
       var dataTableWrapper = $(e.nTableWrapper);
       DataTableHelpers.initLengthAppearance(dataTableWrapper);
+      $('#my_module_is_empty').val(e.json.my_module_is_empty ? 'true' : 'false');
       DataTableHelpers.initSearchField(
         dataTableWrapper,
         I18n.t('my_modules.protocols.load_from_repository_modal.filter_protocols')
@@ -190,46 +222,60 @@ function destroyLoadFromRepositoryTable(content) {
   tableEl.DataTable().destroy();
   tableEl.find('tbody').html('');
 
-  selectedRow = null;
-
   // Disable load btn
   content.closest('.modal')
     .find(".modal-footer [data-action='submit']")
     .attr('disabled', 'disabled');
 }
 
+function loadFromRepositoryWarning() {
+  var modal = $('#load-from-repository-warning-modal');
+  var loadBtn = modal.find(".modal-footer [data-action='submit']");
+
+
+  modal.modal('show');
+  $('#load-from-repository-modal').modal('hide');
+
+  loadBtn.on('click', function() {
+    loadFromRepository();
+  });
+
+  modal.on('hidden.bs.modal', function() {
+    loadBtn.off('click');
+  });
+}
+
 function loadFromRepository() {
-  var modal = $('#load-from-repository-modal');
+  var modal = $('#load-from-repository-warning-modal');
 
-  var checkLinked = $("[data-role='protocol-status-bar']")
-    .text();
-
-  var confirmMessage = '';
-  if (checkLinked.trim() !== '(unlinked)') {
-    confirmMessage = I18n.t('my_modules.protocols.load_from_repository_modal.import_to_linked_task_rep');
-  } else {
-    confirmMessage = I18n.t('my_modules.protocols.load_from_repository_modal.confirm_message');
-  }
-
-  if (selectedRow !== null && confirm(confirmMessage)) {
+  if (selectedRow !== null) {
     modal.find(".modal-footer [data-action='submit']").prop('disabled', true);
+    let loadMode = $("#load-from-repository-warning-modal input[name='load_option']:checked").val();
     // POST via ajax
+    $('#loadingOverlay').removeClass('tw-hidden');
     $.ajax({
       url: modal.attr('data-url'),
       type: 'POST',
       dataType: 'json',
-      data: { source_id: selectedRow },
+      data: {
+        source_id: selectedRow,
+        load_mode: loadMode
+      },
       success: function() {
         // Simply reload page
+        $('#loadingOverlay').addClass('tw-hidden');
         location.reload();
       },
       error: function(response) {
+        $('#loadingOverlay').addClass('tw-hidden');
         if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
         } else {
           alert(response.responseJSON.message);
         }
 
+        modal.find(".modal-footer [data-action='submit']").prop('disabled', false);
+        selectedRow = null;
         modal.modal('hide');
       }
     });

@@ -12,14 +12,23 @@
           </h4>
         </div>
         <div class="modal-body">
+          <% if type == 'copy' %>
+            <p><%= t("protocols.new_protocol_modal.description") %></p>
+          <% end %>
           <div class="sci-input-container">
             <%= f.label :name, t("protocols.new_protocol_modal.name_label") %>
             <%= f.text_field :name, placeholder: t("protocols.new_protocol_modal.name_placeholder"), class: 'sci-input-field' %>
           </div>
           <% if type == 'copy' %>
-          <p class="description">
-            <%= t("protocols.new_protocol_modal.description") %>
-          </p>
+            <div class="default-role-container">
+              <div class="sci-checkbox-container">
+                <%= f.check_box :results, { class: 'sci-checkbox'}, true, false %>
+                <span class="sci-checkbox-label"></span>
+              </div>
+              <div class="default-role-description">
+                <%= t("protocols.new_protocol_modal.include_results") %>
+              </div>
+            </div>
           <% end %>
           <div class="default-role-container">
             <div class="sci-checkbox-container">

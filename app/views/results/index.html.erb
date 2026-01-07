@@ -1,3 +1,6 @@
+<% @experiment = @my_module.experiment %>
+<% @project = @experiment.project %>
+
 <% provide(:head_title, t("my_modules.results.head_title", project: h(@project.name), module: h(@my_module.name)).html_safe) %>
 <% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
 
@@ -12,6 +15,7 @@
 <% end %>
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <%= render partial: 'assets/wopi/create_wopi_file_modal' %>
+<%= hidden_field_tag :scinote_local_url, Constants::ASSET_SYNC_URL %>
 
 <div class="content-pane flexible my-module-content my-modules-results with-grey-background" data-task-id="<%= @my_module.id %>">
   <%= render partial: 'my_modules/header' %>
