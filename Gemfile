@@ -52,7 +52,7 @@ gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
 gem 'grover'
-gem 'httparty', '~> 0.23.1'
+gem 'httparty', '~> 0.24.0'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
