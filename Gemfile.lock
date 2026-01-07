@@ -196,7 +196,7 @@ GEM
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
       rouge (>= 1.0.0)
-    bigdecimal (3.2.2)
+    bigdecimal (4.0.1)
     bindata (2.5.0)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
@@ -247,7 +247,7 @@ GEM
     crass (1.0.6)
     cssbundling-rails (1.1.2)
       railties (>= 6.0.0)
-    csv (3.3.4)
+    csv (3.3.5)
     cucumber (8.0.0)
       builder (~> 3.2, >= 3.2.4)
       cucumber-ci-environment (~> 9.0, >= 9.0.4)
@@ -371,7 +371,7 @@ GEM
     http-cookie (1.0.5)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
-    httparty (0.23.1)
+    httparty (0.24.0)
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
@@ -456,8 +456,8 @@ GEM
     msgpack (1.8.0)
     multi_json (1.15.0)
     multi_test (1.1.0)
-    multi_xml (0.7.2)
-      bigdecimal (~> 3.1)
+    multi_xml (0.8.0)
+      bigdecimal (>= 3.1, < 5)
     nested_form_fields (0.8.4)
       coffee-rails (>= 3.2.1)
       jquery-rails
@@ -914,7 +914,7 @@ DEPENDENCIES
   figaro
   graphviz
   grover
-  httparty (~> 0.23.1)
+  httparty (~> 0.24.0)
   i18n-js (~> 3.6)
   image_processing
   img2zpl!
