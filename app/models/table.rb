@@ -7,15 +7,6 @@ class Table < ApplicationRecord
 
   SEARCHABLE_ATTRIBUTES = ['tables.name', 'tables.data_vector'].freeze
 
-  SIGNIFICANT_METADATA_KEYS = %w(
-    sheet_name
-    cells_merge
-    cells_style
-    plateTemplate
-    cells_properties
-    columns_properties
-  ).freeze
-
   auto_strip_attributes :name, nullify: false
   validates :name,
             length: { maximum: Constants::NAME_MAX_LENGTH }
@@ -46,41 +37,7 @@ class Table < ApplicationRecord
   end
 
   def update_metadata!(new_metadata)
-    ActiveRecord::Base.transaction do
-      # support for legacy tables
-      self.metadata ||= {}
-
-      # ignore column and cell width changes within columns_properties and cells_properties
-      metadata.merge!(
-        new_metadata.slice(*SIGNIFICANT_METADATA_KEYS - %w(columns_properties cells_properties))
-      )
-
-      self.metadata['columns_properties'] = new_metadata['columns_properties'].map do |column|
-        current_column_width = metadata['columns_properties']&.find { |c| c['x'] == column['x'] }&.dig('properties', 'width')
-
-        column.merge(
-          'properties' =>
-            column['properties'].merge('width' => current_column_width || column['properties']['width'])
-        )
-      end
-
-      self.metadata['cells_properties'] = new_metadata['cells_properties'].map do |row|
-        current_cell_width = metadata['cells_properties']&.find { |c| [c['x'], c['y']] == [row['x'], row['y']] }&.dig('properties', 'width')
-
-        row.merge(
-          'properties' =>
-            row['properties'].merge('width' => current_cell_width || row['properties']['width'])
-        )
-      end
-
-      save! if metadata_changed?
-
-      # update non-significant metadata fields directly, without callbacks
-      # rubocop:disable Rails/SkipsModelValidations
-      new_metadata = metadata.deep_merge(new_metadata.except(*(SIGNIFICANT_METADATA_KEYS - %w(columns_properties))))
-      update_column(:metadata, new_metadata) if metadata != new_metadata
-      # rubocop:enable Rails/SkipsModelValidations
-    end
+    update!(metadata: new_metadata)
   end
 
   def contents_utf_8
