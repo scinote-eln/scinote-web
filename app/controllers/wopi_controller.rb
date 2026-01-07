@@ -256,6 +256,9 @@ class WopiController < ActionController::Base
       elsif @assoc.instance_of?(Result)
         @my_module = @assoc.my_module
         @team = @my_module.experiment.project.team
+      elsif @assoc.instance_of?(ResultTemplate)
+        @protocol = @assoc.protocol
+        @team = @assoc.team
       elsif @assoc.instance_of?(RepositoryCell)
         @repository = @assoc.repository_column.repository
         @team = @repository.team
@@ -313,6 +316,14 @@ class WopiController < ActionController::Base
                                             host: ENV['WOPI_USER_HOST'])
       @breadcrumb_folder_name = @my_module.name
       @breadcrumb_folder_url  = @close_url
+    elsif @assoc.instance_of?(ResultTemplate)
+      @can_read = can_read_protocol_in_repository?(@protocol)
+      @can_write = can_manage_protocol_draft_in_repository?(@protocol)
+      @close_url = protocols_url(only_path: false, host: ENV['WOPI_USER_HOST'])
+
+      @breadcrumb_brand_name = @protocol.name
+      @breadcrumb_brand_url = root_url(only_path: false, host: ENV['WOPI_USER_HOST'])
+      @breadcrumb_folder_name = 'Protocol management'
     elsif @assoc.instance_of?(RepositoryCell)
       @can_read = can_read_repository?(@repository)
       @can_write = !@repository.is_a?(RepositorySnapshot) && can_edit_wopi_file_in_repository_rows?

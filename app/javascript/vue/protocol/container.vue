@@ -119,7 +119,7 @@
             {{ protocol.attributes.name }}
           </span>
         </div>
-        <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol" @publish="startPublish"/>
+        <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol"/>
         <div :class="inRepository ? 'protocol-section protocol-information' : ''">
           <div v-if="inRepository" id="protocol-description" class="protocol-section-header">
             <div class="protocol-description-container">
@@ -187,8 +187,9 @@
         </div>
         <div class="sci-divider my-4" v-if="!inRepository"></div>
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
-          <div v-if="urls.add_step_url && inRepository" class="py-5 flex flex-row gap-8 justify-between">
+          <div v-if="inRepository" class="py-5 flex flex-row gap-8 justify-between">
             <a
+              v-if="urls.add_step_url"
               class="btn btn-secondary"
               :title="i18n.t('protocols.steps.new_step_title')"
               data-e2e="e2e-BT-protocol-templateSteps-newStepTop"
@@ -198,7 +199,7 @@
                 <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
                 <span>{{ i18n.t("protocols.steps.new_step") }}</span>
             </a>
-            <div v-if="steps.length > 0" class="flex justify-between items-center gap-4">
+            <div v-if="steps.length > 0" class="ml-auto flex justify-between items-center gap-4">
               <button
                 :title="i18n.t('protocols.steps.collapse_label')"
                 v-if="!stepCollapsed"
@@ -295,11 +296,6 @@
       @reorder="updateStepOrder"
       @close="closeStepReorderModal"
     />
-    <PublishProtocol v-if="publishing"
-      :protocol="protocol"
-      @publish="publishProtocol"
-      @cancel="closePublishModal"
-    />
     <clipboardPasteModal v-if="showClipboardPasteModal"
                          :image="pasteImages"
                          :objects="steps"
@@ -318,7 +314,6 @@ import ProtocolMetadata from './protocolMetadata';
 import ProtocolOptions from './protocolOptions';
 import Tinymce from '../shared/tinymce.vue';
 import ReorderableItemsModal from '../shared/reorderable_items_modal.vue';
-import PublishProtocol from './modals/publish_protocol.vue';
 import clipboardPasteModal from '../shared/content/attachments/clipboard_paste_modal.vue';
 import AssetPasteMixin from '../shared/content/attachments/mixins/paste.js';
 import axios from '../../packs/custom_axios';
@@ -335,7 +330,7 @@ export default {
     }
   },
   components: {
-    Step, InlineEdit, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol, clipboardPasteModal
+    Step, InlineEdit, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, clipboardPasteModal
   },
   mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin],
   computed: {
@@ -359,7 +354,6 @@ export default {
       },
       steps: [],
       reordering: false,
-      publishing: false,
       stepToReload: null,
       activeDragStep: null,
       userSettingsUrl: null,
@@ -596,27 +590,8 @@ export default {
     closeStepReorderModal() {
       this.reordering = false;
     },
-    startPublish() {
-      $.ajax({
-        type: 'GET',
-        url: this.urls.version_comment_url,
-        contentType: 'application/json',
-        dataType: 'json',
-        success: (result) => {
-          this.protocol.attributes.version_comment = result.version_comment;
-          this.publishing = true;
-        }
-      });
-    },
-    closePublishModal() {
-      this.publishing = false;
-    },
     scrollToBottom() {
       window.scrollTo(0, document.body.scrollHeight);
-    },
-    publishProtocol(comment) {
-      this.protocol.attributes.version_comment = comment;
-      $.post(this.urls.publish_url, { version_comment: comment, view: 'show' });
     },
     scrollTop() {
       window.scrollTo(0, 0);

@@ -10,6 +10,167 @@ describe MyModulesController, type: :controller do
   let!(:repository_row) do
     create :repository_row, created_by: user, repository: repository
   end
+  let!(:tag) { create :tag, team: team }
+
+  before(:all) do
+    MyModuleStatusFlow.ensure_default
+  end
+
+  describe 'GET index' do
+    let(:action) { get :index, params: { experiment_id: experiment.id }, format: :json }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+      expect(JSON.parse(response.body)["data"]).to be_an(Array)
+    end
+  end
+
+  describe 'GET assigned_users' do
+    let(:action) { get :assigned_users, params: { id: my_module.id }, format: :json }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+      expect(JSON.parse(response.body)["data"]).to be_an(Array)
+    end
+  end
+
+  describe 'POST create' do
+    let(:action) do
+      # I need custom route for create
+      post :create, params: {
+        experiment_id: experiment.id,
+        my_module: {
+          name: 'New Task',
+          tag_ids: [tag.id],
+          user_ids: [user.id]
+        }
+      }, format: :json
+    end
+
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+      expect(JSON.parse(response.body)["data"]).to include("id")
+    end
+
+    it 'creates a new my_module' do
+      expect { action }.to change(MyModule, :count).by(1)
+    end
+  end
+
+  describe 'GET show' do
+    let(:action) { get :show, params: { id: my_module.id }, format: :json }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+      expect(JSON.parse(response.body)["data"]).to include("id" => my_module.id.to_s)
+    end
+  end
+
+  describe 'GET protocol' do
+    let(:action) { get :protocol, params: { id: my_module.id }, format: :json }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+      expect(JSON.parse(response.body)["data"]).to include("id" => my_module.protocol.id.to_s)
+    end
+  end
+
+  describe 'GET actions_toolbar' do
+    let(:action) { get :actions_toolbar, params: { items: [{ id: my_module.id }].to_json }, format: :json }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+      expect(JSON.parse(response.body)["actions"]).to be_an(Array)
+    end
+  end
+
+  describe 'GET current_status' do
+    let(:action) { get :current_status, params: { id: my_module.id }, format: :json }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+      expect(JSON.parse(response.body)["my_module_status_id"])
+        .to be_eql(my_module.my_module_status_id)
+    end
+  end
+
+  describe 'GET status_state' do
+    let(:action) { get :status_state, params: { id: my_module.id }, format: :json }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+      expect(JSON.parse(response.body)["status_changing"]).to be_eql(false)
+    end
+  end
+
+  describe 'POST change_results_state' do
+    let(:action) do
+      post :change_results_state, params: { id: my_module.id, collapsed: true }, format: :json
+    end
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+    end
+  end
+
+  describe 'PATCH update_description' do
+    let(:action) { patch :update_description, params: params, format: :json }
+    let(:params) do
+      { id: my_module.id, my_module: { description: 'description changed' } }
+    end
+
+    it 'calls create activity for changing task description' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :change_module_description)))
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
+
+  describe 'PATCH update_protocol_description' do
+    let(:action) { patch :update_protocol_description, params: params, format: :json }
+    let(:params) do
+      { id: my_module.id, protocol: { description: 'protocol description changed' } }
+    end
+
+    it 'calls create activity for changing task protocol description' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call)
+              .with(hash_including(activity_type:
+                                     :protocol_description_in_task_edited)))
+      action
+    end
+
+    it 'adds activity in DB' do
+      expect { action }
+        .to(change { Activity.count })
+    end
+  end
 
   describe 'PUT update' do
     let(:action) { put :update, params: params, format: :json }

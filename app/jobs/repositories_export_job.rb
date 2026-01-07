@@ -70,7 +70,7 @@ class RepositoriesExportJob < ApplicationJob
 
     # Generate CSV / XLSX
     service = RepositoryExportService
-              .new(@file_type, repository.repository_rows, col_ids, repository, handle_name_func)
+              .new(@file_type, repository.repository_rows, col_ids, repository, @user, handle_name_func)
     exported_data = service.export!
 
     File.binwrite(repository_items_file_name, exported_data)

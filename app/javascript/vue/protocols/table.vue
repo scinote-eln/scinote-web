@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full">
+  <div class="h-full relative">
     <DataTable :columnDefs="columnDefs"
                :tableId="'ProtocolTemplates'"
                :dataUrl="dataSource"
@@ -23,6 +23,9 @@
                @access="access"
                @linked_my_modules="linkedMyModules"
     />
+    <div v-if="showLoadingOverlay" class="absolute top-0 left-0 w-full h-full bg-white bg-opacity-75 flex items-center justify-center z-50">
+      <div class="sci-loader"></div>
+    </div>
   </div>
   <NewProtocolModal v-if="newProtocol" :createUrl="createUrl"
                    @close="newProtocol = false" @create="updateTable" />
@@ -114,7 +117,8 @@ export default {
       newProtocol: false,
       accessModalParams: null,
       linkedMyModulesModalObject: null,
-      VersionsModalObject: null
+      VersionsModalObject: null,
+      showLoadingOverlay: false
     };
   },
   computed: {
@@ -295,30 +299,39 @@ export default {
       this.newProtocol = true;
     },
     duplicate(event, rows) {
+      this.showLoadingOverlay = true;
       axios.post(event.path, { protocol_ids: rows.map((row) => row.id) }).then((response) => {
         this.updateTable();
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      }).finally(() => {
+        this.showLoadingOverlay = false;
       });
     },
     versions(_event, rows) {
       [this.VersionsModalObject] = rows;
     },
     archive(event, rows) {
+      this.showLoadingOverlay = true;
       axios.post(event.path, { protocol_ids: rows.map((row) => row.id) }).then((response) => {
         this.updateTable();
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      }).finally(() => {
+        this.showLoadingOverlay = false;
       });
     },
     restore(event, rows) {
+      this.showLoadingOverlay = true;
       axios.post(event.path, { protocol_ids: rows.map((row) => row.id) }).then((response) => {
         this.updateTable();
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      }).finally(() => {
+        this.showLoadingOverlay = false;
       });
     },
     exportProtocol(event) {

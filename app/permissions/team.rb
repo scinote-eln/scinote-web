@@ -153,6 +153,10 @@ Canaid::Permissions.register_for(Protocol) do
 
     protocol.permission_granted?(user, ProtocolPermissions::MANAGE_DRAFT)
   end
+
+  can :create_result_templates do |user, protocol|
+    can_manage_protocol_draft_in_repository?(user, protocol)
+  end
 end
 
 Canaid::Permissions.register_for(Report) do

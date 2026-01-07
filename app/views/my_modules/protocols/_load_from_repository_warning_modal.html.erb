@@ -1,0 +1,61 @@
+<div class="modal" id="load-from-repository-warning-modal" tabindex="-1" role="dialog" aria-labelledby="load-from-repository-modal-warning-label" data-url="<%= load_from_repository_protocol_path(@protocol) %>">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          data-e2e="e2e-BT-task-protocol-loadTemplateWarningModal-close"
+        >
+          <i class="sn-icon sn-icon-close"></i>
+        </button>
+        <h2
+          class="modal-title"
+          id="load-from-repository-modal-warning-label"
+          data-e2e="e2e-TX-task-protocol-loadTemplateWarningModal-title"
+        >
+          <%= t("my_modules.protocols.load_from_repository_modal.title") %>
+        </h2>
+      </div>
+      <div class="modal-body">
+        <p><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.description", steps_count: @my_module.steps.count, results_count: @my_module.results.count, rows_count: @my_module.my_module_repository_rows.count) %></p>
+        <p><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.load_description") %></p>
+        <div class="flex gap-2 mb-2">
+          <div class="sci-radio-container shrink-0 mt-0.5">
+            <input type="radio" name="load_option" value="merge" class="sci-radio" checked>
+            <span class="sci-radio-label"></span>
+          </div>
+          <label class="sci-label !my-0"><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.option_merge_html") %></label>
+        </div>
+        <div class="flex gap-2 mb-6">
+          <div class="sci-radio-container shrink-0 mt-0.5">
+            <input type="radio" name="load_option" value="replace" class="sci-radio">
+            <span class="sci-radio-label"></span>
+          </div>
+          <label class="sci-label !my-0"><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.option_replace_html") %></label>
+        </div>
+        <p><%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.confirmation_description_html") %></p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          data-e2e="e2e-BT-task-protocol-loadTemplateWarningModal-cancel"
+        >
+          <%= t("general.cancel") %>
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-action="submit"
+          data-e2e="e2e-BT-task-protocol-loadTemplateWarningModal-load"
+        >
+          <%= t("my_modules.protocols.load_from_repository_modal.confirm_modal.load") %>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

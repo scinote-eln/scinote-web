@@ -24,7 +24,6 @@ describe ExperimentsController, type: :controller do
     permissions: { id: 1 },
     assigned_users_to_tasks: { id: 1 },
     batch_clone_my_modules: { id: 1 },
-    search_tags: { id: 1 },
     actions_dropdown: { id: 1 },
     archive_my_modules: { id: 1 },
     table: { id: 1 },

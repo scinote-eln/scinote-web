@@ -49,7 +49,7 @@ module MarvinJsActions
   def marvinjs_find_target_object(asset, current_user, activity_type, action = nil)
     if marvinjs_asset_type(asset, Step) || marvinjs_asset_type(asset, StepText)
       marvinjs_step_activity(asset, current_user, activity_type, action)
-    elsif marvinjs_asset_type(asset, Result) || marvinjs_asset_type(asset, ResultText)
+    elsif marvinjs_asset_type(asset, Result) || marvinjs_asset_type(asset, ResultTemplate) || marvinjs_asset_type(asset, ResultText)
       marvinjs_result_activity(asset, current_user, activity_type, action)
     elsif marvinjs_asset_type(asset, MyModule)
       marvinjs_my_module_activity(asset, current_user, activity_type, action)
@@ -105,21 +105,24 @@ module MarvinJsActions
       asset_type = 'tiny_mce_asset_name'
     end
 
-    my_module = result&.my_module
+    parent = result&.parent
 
-    return unless result && my_module
+    return unless result && parent
+
+    result_key = result.class.model_name.param_key
 
     message_items = {
-      result: result.id,
-      asset_type => { id: asset.id, value_for: 'file_name' }
+      "#{result_key}": result.id,
+      asset_type => { id: asset.id, value_for: 'file_name' },
+      "#{parent.class.model_name.param_key}": parent.id
     }
     message_items[:action] = action if action
     Activities::CreateActivityService
-      .call(activity_type: (activity + '_chemical_structure_on_result').to_sym,
+      .call(activity_type: :"#{activity}_chemical_structure_on_#{result_key}",
             owner: current_user,
             subject: result,
-            team: my_module.team,
-            project: my_module.project,
+            team: parent.team,
+            project: parent.instance_of?(Result) ? parent.project : nil,
             message_items: message_items)
   end
 

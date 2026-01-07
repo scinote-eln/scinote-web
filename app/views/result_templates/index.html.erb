@@ -1,0 +1,25 @@
+
+
+<%= render partial: 'shared/drag_n_drop_overlay' %>
+<%= render partial: 'assets/wopi/create_wopi_file_modal' %>
+
+<div class="content-pane flexible protocol-content protocol-results with-grey-background" >
+  <%= render partial: "protocols/header" %>
+
+  <%= hidden_field_tag :scinote_local_url, Constants::ASSET_SYNC_URL %>
+
+  <div id="results" data-behaviour="vue" data-e2e="e2e-CO-task-results">
+      <results url="<%= protocol_result_templates_url(@protocol, view_mode: params[:view_mode]) %>"
+             :protocol-id="<%= @protocol.id %>"
+             empty-placeholder="<%= (t('protocols.empty_results_placeholder') if @protocol.in_repository_published?) %>"
+             change-states-url="<%= change_results_state_protocol_result_templates_path(@protocol) %>"
+             can-create="<%= can_create_result_templates?(@protocol) %>">
+  </div>
+</div>
+
+<%= javascript_include_tag "handsontable.full" %>
+<%= render partial: "shared/formulas_libraries" %>
+<%= render 'shared/tiny_mce_packs' %>
+<%= javascript_include_tag 'pdf_js' %>
+<%= stylesheet_link_tag 'pdf_js_styles' %>
+<%= javascript_include_tag 'vue_results' %>

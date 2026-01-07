@@ -1,14 +1,22 @@
 # frozen_string_literal: true
 
-Canaid::Permissions.register_for(Result) do
+Canaid::Permissions.register_for(ResultBase) do
   can :read_result do |user, result|
-    can_read_my_module?(user, result.my_module)
+    if result.is_a?(ResultTemplate)
+      can_read_protocol_in_repository?(user, result.protocol)
+    else
+      can_read_my_module?(user, result.my_module)
+    end
   end
 
   can :manage_result do |user, result|
-    !result.archived? &&
-      !result.my_module.archived_branch? &&
-      result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_MANAGE)
+    if result.is_a?(ResultTemplate)
+      can_manage_protocol_draft_in_repository?(user, result.protocol)
+    else
+      !result.archived? &&
+        !result.my_module.archived_branch? &&
+        result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_MANAGE)
+    end
   end
 
   can :restore_result do |user, result|
@@ -18,10 +26,14 @@ Canaid::Permissions.register_for(Result) do
   end
 
   can :delete_result do |user, result|
-    result.archived? &&
-      !result.my_module.archived_branch? &&
-      result.unlocked?(result) &&
-      result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_DELETE_ARCHIVED)
+    if result.is_a?(ResultTemplate)
+      can_manage_protocol_draft_in_repository?(user, result.protocol)
+    else
+      result.archived? &&
+        !result.my_module.archived_branch? &&
+        result.unlocked?(result) &&
+        result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_DELETE_ARCHIVED)
+    end
   end
 end
 

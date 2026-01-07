@@ -21,6 +21,7 @@ module Dashboard
       all_activities = join_result_user_roles(all_activities)
       all_activities = join_protocol_user_roles(all_activities)
       all_activities = join_step_user_roles(all_activities)
+      all_activities = join_result_template_user_roles(all_activities)
 
       team_activities = all_activities.where(subject_type: %w(Team RepositoryBase ProjectFolder))
       project_activities = all_activities.where(role_condition_sql(:project_subjects))
@@ -30,6 +31,7 @@ module Dashboard
       result_activities = all_activities.where(role_condition_sql(:result_my_modules))
       protocol_activities = all_activities.where(role_condition_sql(:protocol_my_modules))
       step_activities = all_activities.where(role_condition_sql(:step_my_modules))
+      result_template_activities = all_activities.where(role_condition_sql(:result_template_protocols))
       protocol_repository_activities = all_activities.where(project_id: nil, subject_type: 'Protocol')
 
       activities = team_activities.or(project_activities)
@@ -39,6 +41,7 @@ module Dashboard
                                   .or(result_activities)
                                   .or(protocol_activities)
                                   .or(step_activities)
+                                  .or(result_template_activities)
                                   .or(protocol_repository_activities)
 
       activities = activities.where.not(type_of: Extends::DASHBOARD_BLACKLIST_ACTIVITY_TYPES)
@@ -48,7 +51,7 @@ module Dashboard
 
       query = Activity.from("(#{activities.to_sql}) AS activities")
                       .results_joins
-                      .protocols_joins
+                      .protocols_joins(:from_result_templates)
                       .my_modules_joins(:from_results, :from_protocols)
                       .experiments_joins(:from_my_modules)
                       .projects_joins(:from_experiments)
@@ -221,13 +224,27 @@ module Dashboard
       join_permitted_subjects(
         activities.joins(
           "LEFT OUTER JOIN results result_subjects
-          ON result_subjects.id = activities.subject_id AND activities.subject_type='Result'
+          ON result_subjects.id = activities.subject_id AND activities.subject_type='ResultBase'
           LEFT OUTER JOIN my_modules result_my_modules
           ON result_subjects.my_module_id = result_my_modules.id"
         ),
         :result_my_modules,
         MyModule,
         MyModulePermissions::ACTIVITIES_READ
+      )
+    end
+
+    def join_result_template_user_roles(activities)
+      join_permitted_subjects(
+        activities.joins(
+          "LEFT OUTER JOIN results result_template_subjects
+          ON result_template_subjects.id = activities.subject_id AND activities.subject_type='ResultBase'
+          LEFT OUTER JOIN protocols result_template_protocols
+          ON result_template_subjects.protocol_id = result_template_protocols.id"
+        ),
+        :result_template_protocols,
+        Protocol,
+        ProtocolPermissions::READ
       )
     end
 

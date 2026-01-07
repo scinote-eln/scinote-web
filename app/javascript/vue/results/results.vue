@@ -40,9 +40,30 @@
         @result:drag_enter="dragEnter"
         @result:collapsed="checkResultsState"
       />
+      <div v-if="!loadingOverlay && results.length === 0" class="px-4 py-6 bg-white my-4 text-gray-500">
+        <span v-if="emptyPlaceholder && !filtersIsActive">
+          {{ emptyPlaceholder }}
+        </span>
+        <span>
+          {{ i18n.t('my_modules.results.no_results_placeholder') }}
+        </span>
+      </div>
     </div>
-    <div v-if="loadingOverlay" class="text-center h-20 flex items-center justify-center">
-      <div class="sci-loader"></div>
+    <div v-if="loadingOverlay">
+      <div class="flex flex-col gap-8">
+        <div v-for="_count in loaderResults"
+            class="flex flex-col no-wrap gap-4 py-2"
+          >
+          <div class="h-10 w-full max-w-40 animate-skeleton rounded mr-auto"></div>
+          <div class="w-full animate-skeleton rounded h-64"></div>
+          <div class="flex items-center gap-6 flex-wrap">
+            <div class="w-48 h-64 animate-skeleton rounded"></div>
+            <div class="w-48 h-64 animate-skeleton rounded"></div>
+            <div class="w-48 h-64 animate-skeleton rounded"></div>
+            <div class="w-48 h-64 animate-skeleton rounded"></div>
+          </div>
+        </div>
+      </div>
     </div>
     <clipboardPasteModal v-if="showClipboardPasteModal"
                          :image="pasteImages"
@@ -73,12 +94,13 @@ export default {
   props: {
     url: { type: String, required: true },
     canCreate: { type: String, required: true },
-    archived: { type: String, required: true },
-    active_url: { type: String, required: true },
-    archived_url: { type: String, required: true },
+    archived: { type: String, required: false},
+    active_url: { type: String, required: false },
+    archived_url: { type: String, required: false },
     userSettingsUrl: { type: String, required: false },
     changeStatesUrl: { type: String, required: false },
-    protocolId: { type: Number, required: false }
+    protocolId: { type: Number, required: false },
+    emptyPlaceholder: { type: String, required: false }
   },
   data() {
     return {
@@ -94,28 +116,15 @@ export default {
       anchorId: null,
       elementsLoaded: 0,
       attachmentsLoaded: 0,
-      loadingOverlay: false
+      loadingOverlay: false,
+      loaderResults: 3
     };
   },
   created() {
     const urlParams = new URLSearchParams(window.location.search);
     this.anchorId = urlParams.get('result_id');
 
-    if (this.anchorId) {
-      this.loadingOverlay = true;
-    }
-  },
-  watch: {
-    elementsLoaded() {
-      if (this.anchorId) {
-        this.scrollToResult();
-      }
-    },
-    attachmentsLoaded() {
-      if (this.anchorId) {
-        this.scrollToResult();
-      }
-    }
+    this.loadingOverlay = true;
   },
   mounted() {
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
@@ -125,31 +134,36 @@ export default {
     this.loadResults();
     this.initStackableHeaders();
   },
+  computed: {
+    filtersIsActive() {
+      return Object.keys(this.filters).length > 0;
+    }
+  },
   beforeUnmount() {
     window.removeEventListener('scroll', this.infiniteScrollLoad, false);
     window.removeEventListener('scroll', this.initStackableHeaders, false);
   },
   methods: {
     scrollToResult() {
-      if (this.elementsLoaded === this.results.length && this.attachmentsLoaded === this.results.length) {
-        if (this.anchorId) {
-          const result = this.$refs.results.find((child) => child.result?.id === this.anchorId);
-          if (result) {
-            this.loadingOverlay = false;
-            this.$nextTick(() => {
-              result.$refs.resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              this.anchorId = null;
-            });
-          }
-        }
-
-        if (!this.nextPageUrl) {
+      if (this.anchorId) {
+        const result = this.$refs.results.find((child) => child.result?.id === this.anchorId);
+        if (result) {
           this.loadingOverlay = false;
-          this.anchorId = null;
+          this.$nextTick(() => {
+            result.$refs.resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            this.anchorId = null;
+          });
         }
+      }
+
+      if (!this.nextPageUrl) {
+        this.loadingOverlay = false;
+        this.anchorId = null;
       }
     },
     getHeader() {
+      if (!this.$refs.resultsToolbar) return null;
+
       return this.$refs.resultsToolbar.$refs.resultsHeaderToolbar;
     },
     reloadResult(result) {
@@ -157,6 +171,7 @@ export default {
     },
     resetPageAndReload() {
       this.nextPageUrl = this.url;
+      this.loadingOverlay = true;
       this.results = [];
       this.$nextTick(() => {
         this.loadResults();
@@ -170,32 +185,51 @@ export default {
     loadResults() {
       if (this.nextPageUrl === null || this.loadingPage) return;
 
-      if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
+      if ((window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) || this.loadingOverlay) {
         this.loadingPage = true;
         const params = this.sort ? { ...this.filters, sort: this.sort } : { ...this.filters };
         axios.get(this.nextPageUrl, { params }).then((response) => {
           this.results = this.results.concat(response.data.data);
+          this.results.forEach(result => {
+            result.attachments = []
+            result.relationships.assets.data.forEach((asset) => {
+              result.attachments.push(response.data.included.find((a) => a.id === asset.id && a.type === 'assets'));
+            });
+
+            result.elements = [];
+            result.relationships.result_orderable_elements.data.forEach((element) => {
+              result.elements.push(response.data.included.find((e) => e.id === element.id && e.type === 'result_orderable_elements'));
+            });
+          });
           this.sort = response.data.meta.sort;
           this.nextPageUrl = response.data.links.next;
           this.loadingPage = false;
 
           this.infiniteScrollLoad();
 
-          if (this.anchorId) {
-            const result = this.results.find((e) => e.id === this.anchorId);
-            if (!result) {
-              this.loadResults();
+          this.$nextTick(() => {
+            if (this.anchorId) {
+              const result = this.results.find((e) => e.id === this.anchorId);
+              if (!result) {
+                this.loadResults();
+              } else {
+                this.scrollToResult();
+              }
+            } else {
+              this.loadingOverlay = false;
             }
-          }
+          });
         });
       }
     },
     setSort(sort) {
       this.sort = sort;
+      this.loadingOverlay = true;
       this.resetPageAndReload();
     },
     setFilters(filters) {
       this.filters = filters;
+      this.loadingOverlay = true;
       this.resetPageAndReload();
     },
     createResult() {
@@ -208,7 +242,10 @@ export default {
         }
       ).then(
         (response) => {
-          this.results = [{ newResult: true, ...response.data.data }, ...this.results];
+          const result = response.data.data;
+          result.attachments = [];
+          result.elements = [];
+          this.results = [{ newResult: true, ...result }, ...this.results];
           window.scrollTo(0, 0);
         }
       );

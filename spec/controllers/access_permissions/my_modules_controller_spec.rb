@@ -77,6 +77,25 @@ describe AccessPermissions::MyModulesController, type: :controller do
     end
   end
 
+  describe 'GET #show_user_group_assignments' do
+    it 'returns a http success response' do
+      get :show_user_group_assignments, params: { id: my_module.id }, format: :json
+      expect(response).to have_http_status :success
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+
+    end
+  end
+
+  describe 'GET #user_roles' do
+    it 'returns a http success response' do
+      get :user_roles, params: { id: my_module.id }, format: :json
+      expect(response).to have_http_status :success
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+    end
+  end
+
   def sign_in_viewer_user
     sign_out user
     sign_in viewer_user

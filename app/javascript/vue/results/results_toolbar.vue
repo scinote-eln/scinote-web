@@ -9,7 +9,7 @@
 
     <div class="result-toolbar__left flex items-center">
       <button
-        v-if="canCreate" 
+        v-if="canCreate"
         :title="i18n.t('my_modules.results.add_title')"
         class="btn btn-secondary"
         :class="{'mr-3': headerSticked}"
@@ -21,7 +21,7 @@
       </button>
     </div>
 
-    <div class="dropdown view-switch flex items-center">
+    <div v-if="archived_url && active_url" class="dropdown view-switch flex items-center">
       <div class="btn btn-secondary view-switch-button prevent-shrink" :class="{'mr-3': headerSticked}" id="viewSwitchButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <span v-if="archived" class="state-view-switch-btn-name">{{ i18n.t('my_modules.results.archived_results') }}</span>
         <span v-else class="state-view-switch-btn-name">{{ i18n.t('my_modules.results.active_results') }}</span>
@@ -82,10 +82,10 @@ export default {
   props: {
     sort: { type: String, required: true },
     canCreate: { type: Boolean, required: true },
-    archived: { type: Boolean, required: true },
+    archived: { type: Boolean, required: false},
     headerSticked: { type: Boolean, required: true },
-    active_url: { type: String, required: true },
-    archived_url: { type: String, required: true },
+    active_url: { type: String, required: false},
+    archived_url: { type: String, required: false},
     moduleName: { type: String, required: true },
     results: { type: Array, required: true },
     resultsCollapsed: { type: Boolean, required: true }

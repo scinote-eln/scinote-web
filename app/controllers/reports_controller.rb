@@ -250,60 +250,6 @@ class ReportsController < ApplicationController
     render json: { message: e.message }, status: :internal_server_error
   end
 
-  # Modal for adding contents into module element
-  def module_contents_modal
-    my_module = MyModule.find_by_id(params[:my_module_id])
-    return render_403 unless my_module.experiment.project == @project
-
-    if my_module.blank?
-      render json: {}, status: :not_found
-    else
-      render json: {
-        html: render_to_string(
-          partial: 'reports/new/modal/module_contents',
-          locals: { project: @project, my_module: my_module },
-          formats: :html
-        )
-      }
-    end
-  end
-
-  # Modal for adding contents into step element
-  def step_contents_modal
-    step = Step.find_by_id(params[:step_id])
-    return render_403 unless step.my_module.experiment.project == @project
-
-    if step.blank?
-      render json: {}, status: :not_found
-    else
-      render json: {
-        html: render_to_string(
-          partial: 'reports/new/modal/step_contents',
-          locals: { project: @project, step: step },
-          formats: :html
-        )
-      }
-    end
-  end
-
-  # Modal for adding contents into result element
-  def result_contents_modal
-    result = Result.find_by_id(params[:result_id])
-    return render_403 unless result.experiment.project == @project
-
-    if result.blank?
-      render json: {}, status: :not_found
-    else
-      render json: {
-        html: render_to_string(
-          partial: 'reports/new/modal/result_contents',
-          locals: { project: @project, result: result },
-          formats: :html
-        )
-      }
-    end
-  end
-
   def project_contents
     render json: {
       html: render_to_string(
@@ -371,9 +317,8 @@ class ReportsController < ApplicationController
 
   def load_repositories_vars
     live_repositories = Repository.readable_by_user(current_user).sort_by { |r| r.name.downcase }
-    snapshots_of_deleted = RepositorySnapshot.left_outer_joins(:original_repository)
+    snapshots_of_deleted = RepositorySnapshot.where.missing(:original_repository)
                                              .where(team: current_team)
-                                             .where.not(original_repository: current_team.repositories)
                                              .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
                                              .sort_by { |r| r.name.downcase }
     @repositories = live_repositories + snapshots_of_deleted

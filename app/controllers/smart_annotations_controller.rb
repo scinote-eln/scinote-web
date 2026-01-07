@@ -5,10 +5,13 @@ class SmartAnnotationsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
 
+  before_action :load_sa_tag
+  before_action :load_resource
+
   def show
     if params[:data]
       render json: {
-        name: resource_readable? && resource.name,
+        name: resource_readable? && @resource.name,
         type: resource_tag
       }
     else
@@ -17,11 +20,11 @@ class SmartAnnotationsController < ApplicationController
   end
 
   def user
-    user_team_assignment = resource.user_assignments.find_by(assignable: current_team)
+    user_team_assignment = @resource.user_assignments.find_by(assignable: current_team)
     render json: {
-      name: resource.name,
-      email: resource.email,
-      avatar_url: user_avatar_absolute_url(resource, :thumb),
+      name: @resource.name,
+      email: @resource.email,
+      avatar_url: user_avatar_absolute_url(@resource, :thumb),
       info: I18n.t(
         'atwho.users.popover_html',
         role: user_team_assignment ? user_team_assignment.user_role.name.capitalize : '/',
@@ -33,58 +36,59 @@ class SmartAnnotationsController < ApplicationController
 
   private
 
-  def sa_tag
-    @sa_tag ||= params[:tag][1..].split('~')[1]
+  def load_sa_tag
+    @sa_tag = params.require(:tag)[1..].split('~')[1]
+    render_404 if @sa_tag.blank?
+  end
+
+  def load_resource
+    @resource =
+      if params[:tag][0] == '@'
+        User.find_by(id: @sa_tag.base62_decode)
+      else
+        resource_id = params[:tag][1..].split('~').last&.base62_decode
+        resource_class =
+          case @sa_tag
+          when 'prj'
+            Project
+          when 'exp'
+            Experiment
+          when 'tsk'
+            MyModule
+          when 'rep_item'
+            RepositoryRow
+          end
+        return render_404 unless resource_class && resource_id
+
+        resource_class.find_by(id: resource_id)
+      end
+
+    render_404 if @resource.blank?
   end
 
   def resource_tag
-    @resource_tag ||= resource.is_a?(RepositoryRow) ? repository_acronym(resource.repository) : sa_tag
-  end
-
-  def resource
-    return @resource_class ||= User.find(sa_tag.base62_decode) if params[:tag][0] == '@'
-
-    resource_id = params[:tag][1..].split('~').last
-
-    resource_id = resource_id.base62_decode
-
-    resource_class =
-      case sa_tag
-      when 'prj'
-        Project
-      when 'exp'
-        Experiment
-      when 'tsk'
-        MyModule
-      when 'rep_item'
-        RepositoryRow
-      end
-
-    @resource ||= resource_class.find_by(id: resource_id)
+    @resource.is_a?(RepositoryRow) ? repository_acronym(@resource.repository) : @sa_tag
   end
 
   def resource_readable?
-    return false unless resource
-
-    @resource_readable ||=
-      case resource
-      when RepositoryRow
-        resource.repository.readable_by_user?(current_user)
-      else
-        resource.readable_by_user?(current_user)
-      end
+    case @resource
+    when RepositoryRow
+      @resource.repository.readable_by_user?(current_user)
+    else
+      @resource.readable_by_user?(current_user)
+    end
   end
 
   def redirect_path
-    case resource
+    case @resource
     when Project
-      experiments_path(project_id: resource.id)
+      experiments_path(project_id: @resource.id)
     when Experiment
-      my_modules_experiment_path(resource)
+      my_modules_experiment_path(@resource)
     when MyModule
-      protocols_my_module_path(resource)
+      protocols_my_module_path(@resource)
     when RepositoryRow
-      repository_repository_row_path(resource.repository, resource, my_module_id: params[:my_module_id])
+      repository_repository_row_path(@resource.repository, @resource, my_module_id: params[:my_module_id])
     end
   end
 
