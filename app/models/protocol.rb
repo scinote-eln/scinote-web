@@ -393,19 +393,18 @@ class Protocol < ApplicationRecord
     end
 
     if include_assigned_rows
-      repository_rows_source = src.in_repository? ? src.protocol_repository_rows.select(:repository_row_id) : src.my_module.repository_rows
-      repository_rows = RepositoryRow.active.readable_by_user(current_user, current_user.current_team).where(id: repository_rows_source)
+      repository_row_ids = src.in_repository? ? src.protocol_repository_rows.pluck(:repository_row_id) : src.my_module.repository_rows.pluck(:id)
 
       if dest.in_repository?
         dest_scope = dest.protocol_repository_rows
       else
         dest_scope = dest.my_module.my_module_repository_rows
         # we need exclude existing assigned rows to avoid unique constraint violation
-        repository_rows = repository_rows.where.not(id: dest_scope.select(:repository_row_id))
+        repository_row_ids = RepositoryRow.where(id: repository_row_ids).where.not(id: dest_scope.select(:repository_row_id)).pluck(:id)
       end
 
-      repository_rows.find_each do |row|
-        attrs = { repository_row: row }
+      repository_row_ids.each do |row_id|
+        attrs = { repository_row_id: row_id }
         attrs[:assigned_by] = current_user unless dest.in_repository?
         dest_scope.create!(attrs)
       end
