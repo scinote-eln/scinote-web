@@ -83,9 +83,7 @@ import RowSelector from '../../shared/repository_row_selector.vue';
 import ContainerSelector from './assign/container_selector.vue';
 import PositionSelector from './assign/position_selector.vue';
 import {
-  storage_location_storage_location_repository_rows_path,
-  move_storage_location_storage_location_repository_row_path,
-
+  index_new_repository_repository_columns_path,
 } from '../../../routes.js';
 
 export default {

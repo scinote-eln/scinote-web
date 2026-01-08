@@ -63,6 +63,7 @@
           :key="repository.id"
           ref="assignedRepositories"
           :repository="repository"
+          :myModuleId="myModuleId"
           @recalculateContainerSize="recalculateContainerSize"
         />
       </div>
@@ -141,11 +142,6 @@ export default {
           this.assignedRepositories = response.data.data;
           this.$nextTick(() => {
             this.recalculateContainerSize();
-            this.$refs.assignedRepositories?.forEach((repository) => {
-              if (repository.sectionOpened) {
-                repository.getRows();
-              }
-            });
           });
         });
     },

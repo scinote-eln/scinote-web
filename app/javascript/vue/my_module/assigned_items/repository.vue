@@ -28,30 +28,19 @@
       </button>
     </div>
     <div style="height: 400px">
-      <ag-grid-vue
-          class="ag-theme-alpine w-full flex-grow h-[340px] z-10"
-          :columnDefs="columnDefs"
-          :rowData="preparedAssignedItems"
-          :rowSelection="false"
-          :suppressRowTransform="true"
-          :suppressRowClickSelection="true"
-          :enableCellTextSelection="true"
-          @grid-ready="onGridReady"
-          @sortChanged="setOrder"
-        >
-      </ag-grid-vue>
-      <div class="h-[60px] flex items-center border-transparent border-t border-t-sn-light-grey border-solid grey px-6">
-        <div>
-          {{ repository.attributes.footer_label }}
-        </div>
-        <div class="ml-auto">
-          <Pagination
-            :totalPage="Math.ceil(assignedItems.recordsTotal / perPage)"
-            :currentPage="page"
-            @setPage="setPage"
-          ></Pagination>
-        </div>
-      </div>
+      <DataTable
+        v-if="repositoryColumnsDef.length > 0"
+        :columnDefs="repositoryColumnsDef"
+        tableId="MyModuleRepositoryRows"
+        :dataUrl="dataSource"
+        :reloadingTable="reloadingTable"
+        :toolbarActions="toolbarActions"
+        :actionsUrl="''"
+        :filters="[]"
+        :tableOnly="true"
+        @openConsumeModal="consume"
+        @tableReloaded="reloadingTable = false"
+      ></DataTable>
     </div>
     <ConsumeModal v-if="openConsumeModal" @updateConsume="updateConsume" @close="openConsumeModal = false" :row="selectedRow" />
     <ConfirmationModal
@@ -64,51 +53,44 @@
   </div>
 </template>
 <script>
-import { AgGridVue } from 'ag-grid-vue3';
+import DataTable from '../../shared/datatable/table.vue';
 import axios from '../../../packs/custom_axios.js';
-import CustomHeader from '../../shared/datatable/tableHeader';
-import Pagination from '../../shared/datatable/pagination.vue';
-import NameRenderer from './renderers/name.vue';
-import StockRenderer from './renderers/stock.vue';
-import ConsumeRenderer from './renderers/consume.vue';
 import ConsumeModal from './modals/consume.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
+import ColumnsMixin from '../../repository/columns_mixin.js';
+
+import {
+  index_ag_my_module_repository_path
+} from '../../../routes.js';
 
 export default {
   name: 'AssignedRepository',
   props: {
-    repository: Object
+    repository: Object,
+    myModuleId: String
   },
   components: {
-    AgGridVue,
-    agColumnHeader: CustomHeader,
-    Pagination,
-    NameRenderer,
-    StockRenderer,
-    ConsumeRenderer,
+    DataTable,
     ConsumeModal,
     ConfirmationModal
   },
+  mixins: [ColumnsMixin],
   data: () => ({
-    assignedItems: {
-      data: [],
-      recordsTotal: 0
-    },
-    order: { column: 0, dir: 'asc' },
     sectionOpened: false,
-    page: 1,
-    perPage: 20,
-    gridApi: null,
-    columnApi: null,
-    gridReady: false,
-    openConsumeModal: false,
-    selectedRow: null,
     warningModalDescription: '',
-    submitting: false
+    submitting: false,
+    reloadingTable: false,
+    openConsumeModal: false,
   }),
   computed: {
-    preparedAssignedItems() {
-      return this.assignedItems.data;
+    toolbarActions() {
+      return {
+        left: [],
+        right: []
+      };
+    },
+    dataSource() {
+      return index_ag_my_module_repository_path(this.myModuleId, this.repository.id);
     },
     fullViewUrl() {
       let url = this.repository.attributes.urls.full_view;
@@ -116,40 +98,6 @@ export default {
         url += '?include_stock_consumption=true';
       }
       return url;
-    },
-    columnDefs() {
-      const columns = [{
-        field: '0',
-        flex: 1,
-        headerName: this.i18n.t('repositories.table.row_name'),
-        sortable: true,
-        cellRenderer: 'NameRenderer',
-        comparator: () => null,
-        cellRendererParams: {
-          dtComponent: this
-        }
-      }];
-
-      if (this.repository.attributes.has_stock && this.repository.attributes.has_stock_consumption) {
-        columns.push({
-          field: 'stock',
-          headerName: this.repository.attributes.stock_column_name,
-          sortable: true,
-          cellRenderer: 'StockRenderer',
-          comparator: () => null
-        });
-        columns.push({
-          field: 'consumedStock',
-          headerName: this.i18n.t('repositories.table.row_consumption'),
-          sortable: true,
-          comparator: () => null,
-          cellRendererParams: {
-            dtComponent: this
-          },
-          cellRenderer: 'ConsumeRenderer'
-        });
-      }
-      return columns;
     }
   },
   methods: {
@@ -161,8 +109,6 @@ export default {
         openHandler.classList.remove('sn-icon-right');
         openHandler.classList.add('sn-icon-down');
         this.$emit('recalculateContainerSize', 400);
-
-        if (this.assignedItems.data.length === 0) this.getRows();
       } else {
         container.style.height = '48px';
         openHandler.classList.remove('sn-icon-down');
@@ -173,52 +119,6 @@ export default {
     toggleContainer() {
       this.sectionOpened = !this.sectionOpened;
       this.recalculateContainerSize();
-    },
-    setOrder() {
-      const orderState = this.getOrder(this.columnApi.getColumnState());
-      const [order] = orderState;
-      if (order.column === 'stock') {
-        order.column = 1;
-      } else if (order.column === 'consumedStock') {
-        order.column = 2;
-      } else if (order.column === '0') {
-        order.column = 0;
-      }
-      this.order = order;
-
-      this.getRows();
-    },
-    getOrder(columnsState) {
-      if (!columnsState) return null;
-
-      return columnsState.filter((column) => column.sort)
-        .map((column) => ({
-          column: column.colId,
-          dir: column.sort
-        }));
-    },
-    onGridReady(params) {
-      this.gridApi = params.api;
-      this.columnApi = params.columnApi;
-      this.gridReady = true;
-    },
-    getRows() {
-      axios.post(this.repository.attributes.urls.assigned_rows, {
-        assigned: 'assigned_simple',
-        draw: this.page,
-        length: this.perPage,
-        order: [this.order],
-        search: { value: '', regex: false },
-        simple_view: true,
-        start: (this.page - 1) * this.perPage,
-        view_mode: true
-      }).then((response) => {
-        this.assignedItems = response.data;
-      });
-    },
-    setPage(page) {
-      this.page = page;
-      this.getRows();
     },
     consume(row) {
       this.selectedRow = row;
@@ -249,7 +149,7 @@ export default {
           stock_consumption: consume,
           comment
         }).then(() => {
-          this.getRows();
+          this.reloadingTable = true;
           this.submitting = false;
         });
       }

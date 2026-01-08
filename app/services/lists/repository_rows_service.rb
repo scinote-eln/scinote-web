@@ -10,13 +10,14 @@ module Lists
   class RepositoryRowsService < BaseService
     PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned relationships updated_on updated_by).freeze
 
-    def initialize(raw_data, params, user: nil, my_module: nil, assigned_view: false, disable_reminders: false, preload_cells: true)
+    def initialize(raw_data, params, user: nil, my_module: nil, assigned_view: false, disable_reminders: false, preload_cells: true, page: nil)
       super(raw_data, params, user: user)
       @repository = @raw_data
       @my_module = my_module
       @assigned_view = assigned_view
       @disable_reminders = disable_reminders
       @preload_cells = preload_cells
+      @page = page
     end
 
     def call
@@ -25,6 +26,7 @@ module Lists
       sort_records
       paginate_records
       add_extra_fields
+      paginate_records
       @records
     end
 

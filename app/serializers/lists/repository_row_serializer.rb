@@ -5,11 +5,27 @@ module Lists
     include ActionView::Helpers::NumberHelper
     include RepositoryDatatableHelper
 
-    attributes :code, :name, :created_at, :created_by, :updated_at, :last_modified_by, :archived, :archived_on, :archived_by,
-               :assigned_tasks_count, :connections_count, :custom_cells
+    attributes :code, :created_at, :created_by, :updated_at, :last_modified_by, :archived, :archived_on, :archived_by,
+               :assigned_tasks_count, :connections_count, :repository_id
     attribute :has_active_reminders, if: -> { instance_options[:with_reminders] }
     attribute :assigned, if: -> { instance_options[:my_module] && !instance_options[:assigned_view] }
+    attribute :name, if: -> { instance_options[:can_read_repository] }
     attribute :stock, if: -> { instance_options[:with_stock_management] }
+    attribute :consumed_stock, if: -> { instance_options[:with_stock_management] && instance_options[:can_consume_stock] }
+
+    def attributes(requested_attrs = nil, reload = false)
+      data = super(requested_attrs, reload)
+      repository = object.repository
+      reminders_enabled = instance_options[:reminders_enabled]
+      custom_cells = object.repository_cells
+      custom_cells = custom_cells.filter { |cell| cell.value_type != 'RepositoryStockValue' } if instance_options[:with_stock_management]
+
+      custom_cells.each do |cell|
+        data["col_#{cell.repository_column.id}"] = serialize_repository_cell_value(cell, repository.team, repository, reminders_enabled: reminders_enabled)
+      end
+
+      data
+    end
 
     def created_at
       I18n.l(object.created_at, format: :full)
@@ -65,35 +81,25 @@ module Lists
       stock_object[:stock_status] = object.repository_stock_cell&.value&.status
       stock_object[:stock_managable] = instance_options[:can_manage_stock]
 
-      if instance_options[:can_consume_stock]
-        consumed_stock_formatted = number_with_precision(object.consumed_stock,
-                                                         precision: repository.repository_stock_column.metadata['decimals'].to_i,
-                                                         strip_insignificant_zeros: true)
-        stock_object[:consumed_stock] = {
-          stock_present: stock_cell.present?,
-          consumption_permitted: object.active? && instance_options[:can_consume_stock],
-          updateStockConsumptionUrl:
-            Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(instance_options[:my_module], repository, row_id: object.id),
-          value: {
-            consumed_stock: object.consumed_stock,
-            consumed_stock_formatted: "#{consumed_stock_formatted || 0} #{object.repository_stock_value&.repository_stock_unit_item&.data}"
-          }
-        }
-      end
       stock_object
     end
 
-    def custom_cells
+    def consumed_stock
       repository = object.repository
-      reminders_enabled = instance_options[:reminders_enabled]
-      custom_cells = object.repository_cells
-      custom_cells = custom_cells.filter { |cell| cell.value_type != 'RepositoryStockValue' } if instance_options[:with_stock_management]
-
-      custom_cells.collect do |cell|
-        serialized_cell = serialize_repository_cell_value(cell, repository.team, repository, reminders_enabled: reminders_enabled)
-        serialized_cell[:column_id] = cell.repository_column_id
-        serialized_cell
-      end
+      stock_cell = object.repository_stock_cell
+      consumed_stock_formatted = number_with_precision(object.consumed_stock,
+                                                        precision: repository.repository_stock_column.metadata['decimals'].to_i,
+                                                        strip_insignificant_zeros: true)
+      {
+        stock_present: stock_cell.present?,
+        consumption_permitted: object.active? && instance_options[:can_consume_stock],
+        update_stock_consumption_url:
+          Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(instance_options[:my_module], repository, row_id: object.id),
+        value: {
+          consumed_stock: object.consumed_stock,
+          consumed_stock_formatted: "#{consumed_stock_formatted || 0} #{object.repository_stock_value&.repository_stock_unit_item&.data}"
+        }
+      }
     end
   end
 end
