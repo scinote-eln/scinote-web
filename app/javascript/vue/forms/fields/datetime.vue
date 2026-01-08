@@ -123,6 +123,8 @@ export default {
       return new Date(year, month - 1, day);
     },
     normalizedValue(value) {
+      if (!value) return value;
+
       const date = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
       const time = ` ${value.getHours().toString().padStart(2, '0')}:${value.getMinutes().toString().padStart(2, '0')}`
 
