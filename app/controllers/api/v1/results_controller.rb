@@ -3,6 +3,8 @@
 module Api
   module V1
     class ResultsController < BaseController
+      include ::Api::V1::BlobCreation
+
       before_action :load_team, :load_project, :load_experiment, :load_task
       before_action :load_result, only: %i(show update)
       before_action :check_manage_permissions, only: %i(create update)
@@ -16,7 +18,7 @@ module Api
 
       def create
         create_text_result if result_text_params.present?
-        create_file_result if !@result && result_file_params.present?
+        create_file_result if !@result && asset_params.present?
 
         render jsonapi: @result,
                serializer: ResultSerializer,
@@ -26,8 +28,7 @@ module Api
 
       def update
         @result.attributes = result_params
-
-        update_file_result if result_file_params.present? && @result.assets.any?
+        update_file_result if asset_params.present? && @result.assets.any?
         update_text_result if result_text_params.present? && @result.result_texts.any?
 
         if (@result.changed? && @result.save!) || @asset_result_updated
@@ -107,14 +108,7 @@ module Api
       def create_file_result
         Result.transaction do
           @result = @task.results.create!(result_params.merge(user_id: current_user.id))
-          if @form_multipart_upload
-            asset = Asset.create!(result_file_params.merge({ team_id: @team.id }))
-          else
-            blob = create_blob_from_params
-            asset = Asset.create!(file: blob, team: @team)
-          end
-          asset.post_process_file
-          ResultAsset.create!(asset: asset, result: @result)
+          attach_blob!(@result)
         end
       end
 
@@ -123,26 +117,12 @@ module Api
         asset = @result.assets.order(created_at: :asc).first
         Result.transaction do
           old_checksum = asset.file.blob.checksum
-          if @form_multipart_upload
-            asset.attach_file_version(result_file_params[:file])
-          else
-            blob = create_blob_from_params
-            asset.update!(file: blob)
-          end
-          asset.post_process_file
+
+          attach_blob!(@result, asset)
+
           new_checksum = asset.file.blob.checksum
         end
         @asset_result_updated = old_checksum != new_checksum
-      end
-
-      def create_blob_from_params
-        blob = ActiveStorage::Blob.create_and_upload!(
-          io: StringIO.new(Base64.decode64(result_file_params[:file_data])),
-          filename: result_file_params[:file_name],
-          content_type: result_file_params[:file_type],
-          metadata: { created_by_id: current_user.id }
-        )
-        blob
       end
 
       def result_params
@@ -162,18 +142,13 @@ module Api
         prms.dig(:attributes).permit(:text)
       end
 
-      def result_file_params
+      def asset_params
         prms = params[:included]&.select { |el| el[:type] == 'result_files' }&.first
-        return nil unless prms
+        return {} unless prms
 
-        if prms.require(:attributes)[:file]
-          @form_multipart_upload = true
-          return prms.dig(:attributes).permit(:file)
-        end
-        attr_list = %i(file_data file_type file_name)
+        attr_list = %i(file_data file_type file_name file signed_blob_id)
 
-        prms.require(:attributes).require(attr_list)
-        prms.dig(:attributes).permit(attr_list)
+        prms.require(:attributes).permit(attr_list)
       end
 
       def tiny_mce_asset_params

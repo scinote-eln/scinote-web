@@ -29,6 +29,15 @@
                 <%= t("protocols.new_protocol_modal.include_results") %>
               </div>
             </div>
+            <div class="default-role-container">
+              <div class="sci-checkbox-container">
+                <%= f.check_box :assigned_rows, { class: 'sci-checkbox'}, true, false %>
+                <span class="sci-checkbox-label"></span>
+              </div>
+              <div class="default-role-description">
+                <%= t("protocols.new_protocol_modal.include_assigned_items") %>
+              </div>
+            </div>
           <% end %>
           <div class="default-role-container">
             <div class="sci-checkbox-container">

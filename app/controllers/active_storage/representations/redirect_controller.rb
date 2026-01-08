@@ -12,9 +12,7 @@ module ActiveStorage
       end
 
       def show
-        if @blob.attachments.take.record_type == 'Asset'
-          return render plain: '', status: :accepted unless preview_ready?
-        end
+        return render plain: '', status: :accepted if @blob.attachments.take.record_type == 'Asset' && !inline_previewable_image? && !preview_ready?
 
         expires_in ActiveStorage.service_urls_expire_in
         redirect_to @blob.representation(params[:variation_key]).processed.url(disposition: params[:disposition]),
@@ -22,6 +20,10 @@ module ActiveStorage
       end
 
       private
+
+      def inline_previewable_image?
+        @blob.content_type.match?(%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}) && @blob.byte_size <= Constants::INLINE_PREVIEW_MAX_FILE_SIZE
+      end
 
       def preview_ready?
         processing = @blob.attachments.take.record.file_processing

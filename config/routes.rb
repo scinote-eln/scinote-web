@@ -242,6 +242,7 @@ Rails.application.routes.draw do
           post 'actions_toolbar'
           get :list
           post :rows_list
+          post :export_repositories
         end
         member do
           get :export_empty_repository
@@ -283,7 +284,6 @@ Rails.application.routes.draw do
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
-        post 'export_repositories', to: 'repositories#export_repositories'
         post 'export_repository_stock_items', to: 'repositories#export_repository_stock_items'
         post 'export_projects'
         get 'sidebar'
@@ -326,6 +326,7 @@ Rails.application.routes.draw do
         get :document_preview
         get :save_pdf_to_inventory_modal, defaults: { format: 'json' }
         post :save_pdf_to_inventory_item, defaults: { format: 'json' }
+        get :download
       end
       collection do
         get :project_contents
@@ -643,6 +644,8 @@ Rails.application.routes.draw do
           post :duplicate
           post :archive
           post :restore
+          post :pin
+          post :unpin
         end
 
         resources :result_orderable_elements do
@@ -777,6 +780,15 @@ Rails.application.routes.draw do
         get 'protocolsio', to: 'protocols#protocolsio_index'
         post 'actions_toolbar', to: 'protocols#actions_toolbar'
         get :user_roles
+      end
+
+      resources :repository_rows, controller: 'protocol_repository_rows', only: %i(index create destroy) do
+        collection do
+          get :repositories
+          get :repository_rows
+          post :actions_toolbar
+          delete :batch_destroy
+        end
       end
 
       resources :result_templates, only: %i(index show create update destroy) do

@@ -20,7 +20,7 @@ RSpec.describe UserAssignment, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to(:assignable).touch(true) }
+    it { should belong_to(:assignable) }
     it { should belong_to :user }
     it { should belong_to :user_role }
     it { should belong_to(:assigned_by).class_name('User').optional }

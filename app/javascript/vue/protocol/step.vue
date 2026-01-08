@@ -365,6 +365,12 @@
     created() {
       this.elements = this.step.elements;
       this.attachments = this.step.attachments;
+
+      if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
+        setTimeout(() => {
+          this.loadAttachments();
+        }, 10000);
+      }
     },
     watch: {
       stepToReload() {

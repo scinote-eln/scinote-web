@@ -1715,6 +1715,8 @@ en:
         duplicate: "Duplicate"
         restore: "Restore"
         delete: "Delete"
+        pin: "Pin to top"
+        unpin: "Unpin from top"
       move_modal:
         search_placeholder: "Enter result name"
         step:
@@ -2756,7 +2758,8 @@ en:
         flash_assignments_failure: "Failed to assign item(s) to task(s)."
     modal_delete_record:
       title: "Delete items"
-      notice: "Are you sure you want to delete the selected item(s)?"
+      notice: "Deleting an item will remove it from all linked objects, including item relationships, storage locations, task-assigned items, protocol templates, and smart annotations. Task inventory snapshots will retain a record of the deleted item."
+      notice_warning_html: "<b>Are you sure you want to delete selected item(s)?</b>"
       delete: "Delete"
     modal_delete_asset_value:
       title: "Confirm file deletion?"
@@ -3897,9 +3900,13 @@ en:
       create_new: "Create"
       create_copy: "Save"
       include_results: "Include results"
+      include_assigned_items: "Include assigned items"
     header:
       details: 'Details'
       versions: 'Versions'
+      protocol: "Protocol"
+      results: "Results [%{count}]"
+      repository_rows: "Items [%{count}]"
       draft_with_from_version: 'Draft (from Version %{nr})'
       protocol_description: 'Protocol description'
       protocol_steps: 'Protocol steps'
@@ -4052,6 +4059,25 @@ en:
           old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Oldest first"
           atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
           ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
+    repository_rows:
+      index:
+        disclaimer: "Users must have access to all items when loading this template to task; otherwise, some items may not appear."
+        assign_item: "Assign item"
+        unassign_item: "Unassign"
+      assign_modal:
+        description: "Select which item you want to assign"
+      table:
+        id: 'Item ID'
+        name: 'Name'
+        repository: 'Inventory'
+        private_inventory: 'Private inventory'
+        private_item: 'Private item'
+        archived: 'Archived'
+        deleted_item: 'This item has been deleted'
+      delete_modal:
+        title: "Remove assigned items"
+        description_html: "You are about to remove %{count} item(s) from this protocol template.<br></br>You can always add items back to this template."
+        confirm: "Remove"
 
     steps:
       label: "Step %{position} - %{name}"

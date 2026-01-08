@@ -1,0 +1,51 @@
+.sci-toast {
+  @apply px-6 py-4 flex items-center gap-4 border !border-transparent text-sm;
+}
+
+.sci-toast.sci-toast-info {
+  @apply !border-b-sn-science-blue bg-sn-super-light-blue;
+}
+
+.sci-toast.sci-toast-info::before {
+  @apply text-sn-science-blue;
+  content: "\e970";
+  font-family: "SN-icon-font";
+  font-size: 24px !important;
+  line-height: 24px !important;
+}
+
+.sci-toast.sci-toast-success {
+  @apply !border-b-sn-alert-green bg-sn-background-green;
+}
+
+.sci-toast.sci-toast-success::before {
+  @apply text-sn-alert-green;
+  content: "\e970";
+  font-family: "SN-icon-font";
+  font-size: 24px !important;
+  line-height: 24px !important;
+}
+
+.sci-toast.sci-toast-warning {
+  @apply !border-b-sn-alert-brittlebush bg-sn-background-brittlebush;
+}
+
+.sci-toast.sci-toast-warning::before {
+  @apply text-sn-alert-brittlebush;
+  content: "\e971";
+  font-family: "SN-icon-font";
+  font-size: 24px !important;
+  line-height: 24px !important;
+}
+
+.sci-toast.sci-toast-error {
+  @apply !border-b-sn-alert-passion bg-sn-background-passion;
+}
+
+.sci-toast.sci-toast-error::before {
+  @apply text-sn-alert-passion;
+  content: "\e972";
+  font-family: "SN-icon-font";
+  font-size: 24px !important;
+  line-height: 24px !important;
+}

@@ -9,6 +9,11 @@ describe RepositoriesController, type: :controller do
   let!(:team) { create :team, created_by: user }
   let(:action) { post :create, params: params, format: :json }
   let(:repository_template) { create :repository_template, team: team }
+  let(:repository) { create :repository, team: team, created_by: user }
+  let(:repository_row) { create :repository_row, repository: repository }
+  let(:archied_repository) do
+    create :repository, :archived, team: team, created_by: user
+  end
 
   describe 'index' do
     let(:repository) { create :repository, team: team, created_by: user }
@@ -29,6 +34,146 @@ describe RepositoriesController, type: :controller do
         'shared_write', 'shareable_write', 'assigned_users', 'default_public_user_role_id',
         'permissions', 'top_level_assignable', 'current_team'
       )
+    end
+  end
+
+  describe 'GET list' do
+    let(:action) { get :list, format: :json, params: { team_id: team.id } }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+    end
+  end
+
+  describe 'GET rows_list' do
+    let(:action) { get :rows_list, format: :json, params: { id: repository.id, team_id: team.id } }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+    end
+  end
+
+  describe 'GET show' do
+    let(:action) { get :show, format: :json, params: { id: repository.id, team_id: team.id } }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(response.body).not_to be_empty
+    end
+  end
+
+  describe 'GET show HTML' do
+    let(:action) { get :show, format: :html, params: { id: repository.id, team_id: team.id } }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('text/html; charset=utf-8')
+    end
+  end
+
+  describe 'POST archive' do
+    let(:action) { post :archive, format: :json, params: {
+      repository_ids: repository.id,
+      team_id: team.id
+    } }
+    it 'repository is archived successfully' do
+      action
+      p response.body
+      expect(response).to have_http_status(:success)
+      repository.reload
+      expect(repository.archived?).to be true
+    end
+  end
+
+  describe 'POST restore' do
+    let(:action) { post :restore, format: :json, params: {
+      repository_ids: archied_repository.id,
+      team_id: team.id
+    } }
+    it 'repository is restored successfully' do
+      action
+      expect(response).to have_http_status(:success)
+      archied_repository.reload
+      expect(archied_repository.archived?).to be false
+    end
+  end
+
+  describe 'POST copy' do
+    let(:action) { post :copy, format: :json, params: {
+      repository_id: repository.id,
+      team_id: team.id,
+      repository: { name: 'Copied Repository' }
+    } }
+    it 'repository is copied successfully' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(Repository.where(name: 'Copied Repository').exists?).to be true
+    end
+  end
+
+  describe 'POST hide_reminders' do
+    let(:action) { post :hide_reminders, format: :json, params: {
+      visible_reminder_repository_row_ids: [repository_row.id],
+      repository_id: repository.id,
+      team_id: team.id
+    } }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'POST export_repositories' do
+    let(:params) { { repository_ids: [repository.id], team_id: team.id, file_type: 'csv' } }
+    let(:action) { post :export_repositories, params: params, format: :json }
+
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'POST export_repository_stock_items' do
+    let(:params) { { id: repository.id, team_id: team.id, row_ids: [repository_row.id] } }
+    let(:action) { post :export_repository_stock_items, params: params, format: :json }
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'POST export_empty_repository' do
+    let(:params) { { team_id: team.id, id: repository.id } }
+    let(:action) { post :export_empty_repository, format: :json, params: params }
+
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'GET assigned_my_modules' do
+    let(:params) { { team_id: team.id, id: repository.id } }
+    let(:action) { get :assigned_my_modules, format: :json, params: params }
+
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'GET repository_users' do
+    let(:params) { { team_id: team.id, id: repository.id } }
+    let(:action) { get :repository_users, format: :json, params: params }
+
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
     end
   end
 

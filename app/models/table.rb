@@ -7,8 +7,6 @@ class Table < ApplicationRecord
 
   SEARCHABLE_ATTRIBUTES = ['tables.name', 'tables.data_vector'].freeze
 
-  SEARCHABLE_ATTRIBUTES = ['tables.name', 'tables.data_vector'].freeze
-
   auto_strip_attributes :name, nullify: false
   validates :name,
             length: { maximum: Constants::NAME_MAX_LENGTH }
@@ -34,9 +32,12 @@ class Table < ApplicationRecord
 
   after_save :update_ts_index
 
-
   def metadata
     attributes['metadata'].is_a?(String) ? JSON.parse(attributes['metadata']) : attributes['metadata']
+  end
+
+  def update_metadata!(new_metadata)
+    update!(metadata: new_metadata)
   end
 
   def contents_utf_8

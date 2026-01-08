@@ -148,6 +148,8 @@
             @archive="archiveResult"
             @restore="restoreResult"
             @delete="showDeleteModal"
+            @pin="pinResult"
+            @unpin="unpinResult"
           ></MenuDropdown>
         </div>
       </div>
@@ -445,6 +447,20 @@ export default {
     },
     actionsMenu() {
       let menu = [];
+      if (this.urls.pin_url) {
+        menu = menu.concat([{
+          text: this.i18n.t('my_modules.results.actions.pin'),
+          emit: 'pin',
+          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-pin`
+        }]);
+      }
+      if (this.urls.unpin_url) {
+        menu = menu.concat([{
+          text: this.i18n.t('my_modules.results.actions.unpin'),
+          emit: 'unpin',
+          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-unpin`
+        }]);
+      }
       if (this.urls.reorder_elements_url && this.elements.length > 1) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.rearrange'),
@@ -486,6 +502,12 @@ export default {
   created() {
     this.elements = this.result.elements;
     this.attachments = this.result.attachments;
+
+    if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
+      setTimeout(() => {
+        this.loadAttachments();
+      }, 10000);
+    }
   },
   methods: {
     toggleCollapsed() {
@@ -684,6 +706,16 @@ export default {
     duplicateResult() {
       axios.post(this.urls.duplicate_url).then((_) => {
         this.$emit('result:duplicated');
+      });
+    },
+    pinResult() {
+      axios.post(this.urls.pin_url).then((_) => {
+        this.$emit('result:pin_changed');
+      });
+    },
+    unpinResult() {
+      axios.post(this.urls.unpin_url).then((_) => {
+        this.$emit('result:pin_changed');
       });
     },
     moveElement(position, target_id) {

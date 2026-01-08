@@ -55,6 +55,14 @@ class ProtocolsImporterV2
     )
   end
 
+  def create_in_result!(result, new_orderable)
+    new_orderable.save!
+    result.result_orderable_elements.create!(
+      position: result.result_orderable_elements.size,
+      orderable: new_orderable
+    )
+  end
+
   def populate_protocol(protocol, protocol_json)
     protocol.reload
     protocol.description = populate_rte(protocol_json, protocol)
@@ -93,17 +101,46 @@ class ProtocolsImporterV2
 
       create_assets(step_json, step)
     end
-  end
 
-  def create_assets(step_json, step)
-    step_json['assets']&.values&.each do |asset_json|
-      asset = Asset.create!(
-        created_by: @user,
-        last_modified_by: @user,
-        team: @team,
-        step: step
+    # Check if protocol has result templates
+    protocol_json['resultTemplates']&.values&.each do |result_json|
+      result_template = ResultTemplate.create!(
+        name: result_json['name'],
+        protocol: protocol,
+        user: @user
       )
 
+      result_json['resultElements']&.values&.each do |element_params|
+        case element_params['type']
+        when 'ResultText'
+          create_result_text(result_template, element_params['resultText'])
+        when 'ResultTable'
+          create_result_table(result_template, element_params['elnTable'])
+        end
+      end
+
+      next unless result_json['assets']
+
+      create_assets(result_json, result_template)
+    end
+  end
+
+  def create_assets(json, parent)
+    json['assets']&.values&.each do |asset_json|
+      asset = Asset.new(
+        created_by: @user,
+        last_modified_by: @user,
+        team: @team
+      )
+
+      case parent
+      when Step
+        asset.step = parent
+      when ResultTemplate
+        asset.result = parent
+      end
+
+      asset.save!
       asset.attach_file_version(asset_json['signed_id'])
       asset.blob.update(metadata: JSON.parse(asset_json['fileMetadata'] || '{}').except('created_by_id'))
 
@@ -126,6 +163,16 @@ class ProtocolsImporterV2
     create_in_step!(step, step_text)
   end
 
+  def create_result_text(result, params)
+    result_text = ResultText.create!(
+      result: result
+    )
+
+    result_text.update!(text: populate_rte(params, result_text), name: params[:name])
+
+    create_in_result!(result, result_text)
+  end
+
   def create_step_table(step, params)
     step_table = StepTable.new(
       step: step,
@@ -140,6 +187,22 @@ class ProtocolsImporterV2
     )
 
     create_in_step!(step, step_table)
+  end
+
+  def create_result_table(result, params)
+    result_table = ResultTable.new(
+      result: result,
+      table: Table.new(
+        name: params['name'],
+        contents: Base64.decode64(params['contents']),
+        metadata: table_metadata(params),
+        created_by: @user,
+        last_modified_by: @user,
+        team: @team
+      )
+    )
+
+    create_in_result!(result, result_table)
   end
 
   def create_checklist(step, params)

@@ -5,7 +5,7 @@ class ReportsController < ApplicationController
   include StringUtility
 
   before_action :load_vars, only: %i(edit update document_preview generate_pdf generate_docx status
-                                     save_pdf_to_inventory_modal save_pdf_to_inventory_item)
+                                     save_pdf_to_inventory_modal save_pdf_to_inventory_item download)
   before_action :load_vars_nested, only: %i(create edit update generate_pdf
                                             generate_docx new_template_values new_docx_template_values project_contents)
   before_action :load_wizard_vars, only: %i(new edit)
@@ -34,6 +34,10 @@ class ReportsController < ApplicationController
         render 'index'
       end
     end
+  end
+
+  def download
+    redirect_to rails_blob_path(params[:report_type] == 'docx' ? @report.docx_file : @report.pdf_file, disposition: 'attachment')
   end
 
   # Report grouped by modules

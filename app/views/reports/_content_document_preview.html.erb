@@ -1,9 +1,10 @@
 <div class="modal-header">
   <span class="file-name"><%= report.name %></span>
   <div class="sci-btn-group">
-     <a class="btn btn-light file-download-link" href="<%= rails_blob_path(report_type == 'docx' ? report.docx_file : report.pdf_file, disposition: 'attachment') %>" data-turbolinks="false">
-      <span class="sn-icon sn-icon-export"></span> <%= t('Download')%>
-    </a>
+    <%= link_to download_report_path(report, report_type: report_type), class: 'btn btn-light file-download-link', data: { turbolinks: false } do %>
+      <span class="sn-icon sn-icon-export"></span>
+      <%= t('Download') %>
+    <% end %>
     <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="sn-icon sn-icon-close"></span></button>
   </div>
 </div>
