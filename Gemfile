@@ -8,10 +8,8 @@ gem 'activerecord-session_store'
 gem 'bootsnap', require: false
 gem 'devise', '~> 4.9.4'
 gem 'devise_invitable'
-gem 'figaro'
 gem 'pg', '~> 1.5'
-gem 'pg_search' # PostgreSQL full text search
-gem 'psych', '< 4.0'
+gem 'puma'
 gem 'rails', '~> 7.2.2'
 gem 'recaptcha'
 gem 'sanitize'
@@ -36,8 +34,6 @@ gem 'kaminari'
 gem 'rack-attack'
 gem 'rack-cors'
 
-gem 'uglifier', '>= 1.3.0'
-
 gem 'activerecord-import', '~> 2.2.0'
 gem 'acts_as_list'
 gem 'ajax-datatables-rails', '~> 0.3.1'
@@ -49,13 +45,11 @@ gem 'caracal', git: 'https://github.com/scinote-eln/caracal.git', branch: 'custo
 gem 'caxlsx' # Build XLSX files
 gem 'deface', '~> 1.9'
 gem 'down', '~> 5.0'
-gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
 gem 'grover'
 gem 'httparty', '~> 0.24.0'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
-gem 'logging', '~> 2.0.0'
 gem 'mime-types', '~> 3.4'
 gem 'nested_form_fields'
 gem 'nokogiri', '~> 1.18.9' # HTML/XML parser
@@ -67,16 +61,14 @@ gem 'roo', '~> 2.10.0' # Spreadsheet parser
 gem 'rotp'
 gem 'rqrcode', '~> 2.0' # QR code generator
 gem 'rubyzip', '>= 2.3.0' # will load new rubyzip version
-gem 'scenic', '~> 1.4'
-gem 'sdoc', '~> 1.0', group: :doc
 gem 'silencer' # Silence certain Rails logs
 gem 'turbolinks', '~> 5.2.0'
 gem 'underscore-rails'
 gem 'wicked_pdf'
 gem 'zip-zip' # will load compatibility for old rubyzip API.
 
-gem 'aws-sdk-lambda'
-gem 'aws-sdk-rails', '~> 4'
+gem 'aws-actionmailer-ses', '~> 1'
+gem 'aws-sdk-rails', '~> 5'
 gem 'aws-sdk-s3'
 gem 'delayed_job_active_record'
 gem 'image_processing'
@@ -112,6 +104,8 @@ group :development, :test do
   gem 'bullet'
   gem 'byebug'
   gem 'factory_bot_rails'
+  gem 'faker' # Generate fake data
+  gem 'figaro'
   gem 'listen'
   gem 'overcommit'
   gem 'pry'
@@ -122,6 +116,7 @@ group :development, :test do
   gem 'rubocop', require: false
   gem 'rubocop-performance'
   gem 'rubocop-rails'
+  gem 'sdoc', '~> 1.0', group: :doc
   gem 'timecop'
 end
 
@@ -135,10 +130,6 @@ group :test do
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
   gem 'webmock'
-end
-
-group :production do
-  gem 'puma'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
