@@ -97,7 +97,7 @@ export default {
   },
   methods: {
     getConsumeData() {
-      axios.get(this.row.consumedStock.updateStockConsumptionUrl)
+      axios.get(this.row.consumed_stock.update_stock_consumption_url)
         .then((response) => {
           this.consumeData = response.data;
           if (this.consumeData.formatted_stock_consumption) {

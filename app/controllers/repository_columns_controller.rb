@@ -18,6 +18,11 @@ class RepositoryColumnsController < ApplicationController
     }
   end
 
+  def index_new
+    columns = @repository.repository_columns
+    render json: columns, each_serializer: RepositoryColumnSerializer
+  end
+
   def new
     @repository_column = RepositoryColumn.new
     render json: {

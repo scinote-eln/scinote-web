@@ -29,14 +29,16 @@
     </div>
     <div style="height: 400px">
       <DataTable
-        :columnDefs="columnDefs"
-        tableId="RepositoryRows"
+        v-if="repositoryColumnsDef.length > 0"
+        :columnDefs="repositoryColumnsDef"
+        tableId="MyModuleRepositoryRows"
         :dataUrl="dataSource"
         :reloadingTable="reloadingTable"
-        :toolbarActions="[]"
+        :toolbarActions="toolbarActions"
         :actionsUrl="''"
         :filters="[]"
         :tableOnly="true"
+        @openConsumeModal="consume"
         @tableReloaded="reloadingTable = false"
       ></DataTable>
     </div>
@@ -53,11 +55,9 @@
 <script>
 import DataTable from '../../shared/datatable/table.vue';
 import axios from '../../../packs/custom_axios.js';
-import NameRenderer from './renderers/name.vue';
-import StockRenderer from './renderers/stock.vue';
-import ConsumeRenderer from './renderers/consume.vue';
 import ConsumeModal from './modals/consume.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
+import ColumnsMixin from '../../repository/columns_mixin.js';
 
 import {
   index_ag_my_module_repository_path
@@ -71,21 +71,25 @@ export default {
   },
   components: {
     DataTable,
-    NameRenderer,
-    StockRenderer,
-    ConsumeRenderer,
     ConsumeModal,
     ConfirmationModal
   },
+  mixins: [ColumnsMixin],
   data: () => ({
     sectionOpened: false,
     warningModalDescription: '',
     submitting: false,
-    reloadingTable: false
+    reloadingTable: false,
+    openConsumeModal: false,
   }),
   computed: {
+    toolbarActions() {
+      return {
+        left: [],
+        right: []
+      };
+    },
     dataSource() {
-      console.log(this.myModuleId, this.repository.id )
       return index_ag_my_module_repository_path(this.myModuleId, this.repository.id);
     },
     fullViewUrl() {
@@ -94,40 +98,6 @@ export default {
         url += '?include_stock_consumption=true';
       }
       return url;
-    },
-    columnDefs() {
-      const columns = [{
-        field: '0',
-        flex: 1,
-        headerName: this.i18n.t('repositories.table.row_name'),
-        sortable: true,
-        cellRenderer: 'NameRenderer',
-        comparator: () => null,
-        cellRendererParams: {
-          dtComponent: this
-        }
-      }];
-
-      if (this.repository.attributes.has_stock && this.repository.attributes.has_stock_consumption) {
-        columns.push({
-          field: 'stock',
-          headerName: this.repository.attributes.stock_column_name,
-          sortable: true,
-          cellRenderer: 'StockRenderer',
-          comparator: () => null
-        });
-        columns.push({
-          field: 'consumedStock',
-          headerName: this.i18n.t('repositories.table.row_consumption'),
-          sortable: true,
-          comparator: () => null,
-          cellRendererParams: {
-            dtComponent: this
-          },
-          cellRenderer: 'ConsumeRenderer'
-        });
-      }
-      return columns;
     }
   },
   methods: {
@@ -139,8 +109,6 @@ export default {
         openHandler.classList.remove('sn-icon-right');
         openHandler.classList.add('sn-icon-down');
         this.$emit('recalculateContainerSize', 400);
-
-        if (this.assignedItems.data.length === 0) this.getRows();
       } else {
         container.style.height = '48px';
         openHandler.classList.remove('sn-icon-down');
@@ -151,52 +119,6 @@ export default {
     toggleContainer() {
       this.sectionOpened = !this.sectionOpened;
       this.recalculateContainerSize();
-    },
-    setOrder() {
-      const orderState = this.getOrder(this.columnApi.getColumnState());
-      const [order] = orderState;
-      if (order.column === 'stock') {
-        order.column = 1;
-      } else if (order.column === 'consumedStock') {
-        order.column = 2;
-      } else if (order.column === '0') {
-        order.column = 0;
-      }
-      this.order = order;
-
-      this.getRows();
-    },
-    getOrder(columnsState) {
-      if (!columnsState) return null;
-
-      return columnsState.filter((column) => column.sort)
-        .map((column) => ({
-          column: column.colId,
-          dir: column.sort
-        }));
-    },
-    onGridReady(params) {
-      this.gridApi = params.api;
-      this.columnApi = params.columnApi;
-      this.gridReady = true;
-    },
-    getRows() {
-      axios.post(this.repository.attributes.urls.assigned_rows, {
-        assigned: 'assigned_simple',
-        draw: this.page,
-        length: this.perPage,
-        order: [this.order],
-        search: { value: '', regex: false },
-        simple_view: true,
-        start: (this.page - 1) * this.perPage,
-        view_mode: true
-      }).then((response) => {
-        this.assignedItems = response.data;
-      });
-    },
-    setPage(page) {
-      this.page = page;
-      this.getRows();
     },
     consume(row) {
       this.selectedRow = row;
@@ -227,7 +149,7 @@ export default {
           stock_consumption: consume,
           comment
         }).then(() => {
-          this.getRows();
+          this.reloadingTable = true;
           this.submitting = false;
         });
       }
