@@ -13,7 +13,7 @@ module UserAssignments
       @remove_from_team = remove_from_team
       @type = assignment.class.model_name.param_key.gsub('_assignment', '').to_sym
 
-      ActiveRecord::Base.transaction do
+      @assignment.with_lock do
         @assignment.destroy! if destroy && !@assignment.destroyed?
         cleanup!(@assignment)
         sync_resource_user_associations(@resource)
