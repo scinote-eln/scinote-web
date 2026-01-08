@@ -51,8 +51,6 @@ class MyModuleRepositoriesController < ApplicationController
                                                        preload_cells: true).call.load
 
     render json: repository_rows,
-           adapter: :json,
-           root: 'data',
            each_serializer: Lists::RepositoryRowSerializer,
            user: current_user,
            my_module: @my_module,

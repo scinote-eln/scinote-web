@@ -869,6 +869,7 @@ Rails.application.routes.draw do
 
       resources :repository_columns, only: %i(index new edit destroy) do
         collection do
+          get :index_new
           get :describe_all
         end
       end
