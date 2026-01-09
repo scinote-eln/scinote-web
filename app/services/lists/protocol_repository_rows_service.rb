@@ -20,7 +20,7 @@ module Lists
     def sortable_columns
       @sortable_columns ||= {
         name: 'repository_rows.name',
-        row_id: 'repository_rows.id',
+        row_code: 'repository_rows.id',
         repository_name: 'repositories.name'
       }
     end
