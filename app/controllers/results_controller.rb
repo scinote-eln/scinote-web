@@ -64,7 +64,7 @@ class ResultsController < ResultBaseController
   private
 
   def load_parent
-    @parent = MyModule.readable_by_user(current_user).find(params[:my_module_id])
+    @parent = MyModule.readable_by_user(current_user, current_user.teams).find(params[:my_module_id])
     current_team_switch(@parent.team) if current_team != @parent.team
 
     @my_module = @parent # For header partial
