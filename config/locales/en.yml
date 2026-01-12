@@ -333,7 +333,7 @@ en:
       none: "No activities!"
     label:
       scinote: "SciNote"
-      dashboard: "Overview"
+      dashboard: "Dashboard"
       projects: "Projects"
       protocols: "Protocols"
       calendar: "Calendar"
@@ -472,7 +472,15 @@ en:
       inline_html: "Large"
       thumbnail_html: "Thumbnail"
       list_html: "List"
-
+  seo:
+    titles:
+      projects_index: "Projects"
+      forms_index: "Forms"
+      forms_show: "Form template"
+      protocols_show: "Protocol template"
+      label_templates_index: "Label templates"
+      label_templates_show: "Label template"
+      reports_index: "Reports"
   search:
     quick_search:
       experiments: "Experiments"
