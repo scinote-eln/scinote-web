@@ -931,7 +931,7 @@ function importProtocolFromFile(
 
         uploadPromises.push(
           createUploadPromise(
-            new File([getAssetBlob(protocolFolders[index], stepGuid, fileRef)], fileName, { type: fileType }),
+            new File([getAssetBlob(protocolFolders[index], stepGuid, fileRef, 'steps')], fileName, { type: fileType }),
             stepAssetJson
           )
         );
