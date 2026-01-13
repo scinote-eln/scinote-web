@@ -1,4 +1,4 @@
-FROM ruby:3.3-bookworm
+FROM ruby:3.3-trixie
 MAINTAINER SciNote <info@scinote.net>
 
 ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/3.2.3/tika-app-3.2.3.jar"
@@ -25,15 +25,14 @@ RUN apt-get update -qq && \
   libfile-mimeinfo-perl \
   chromium \
   chromium-sandbox \
+  npm \
   yarnpkg && \
   wget -O $TIKA_PATH $TIKA_DIST_URL && \
   chmod +x $TIKA_PATH && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
   rm -rf /var/lib/apt/lists/*
 
-ENV PATH=/usr/share/nodejs/yarn/bin:$PATH
-
-RUN yarn add npm:puppeteer-core@24.10.0
+RUN npm install -g npm:puppeteer-core@24.10.0
 
 ENV BUNDLE_PATH /usr/local/bundle/
 

@@ -1,5 +1,5 @@
 # Building stage
-FROM ruby:3.3-bookworm AS builder
+FROM ruby:3.3-trixie AS builder
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN \
@@ -9,14 +9,15 @@ RUN \
   apt-get install -y --no-install-recommends \
   libssl-dev \
   nodejs \
+  npm \
   yarnpkg \
   postgresql-client
 
 ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
-ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
-ENV PATH=$APP_HOME/bin:$GEM_HOME/bin:/usr/share/nodejs/yarn/bin:$PATH
+ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.3.0
+ENV PATH=$APP_HOME/bin:$GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
 ENV BUNDLE_BUILD__SASSC=--disable-march-tune-native
 
@@ -29,9 +30,10 @@ RUN \
   bundle config set path '/usr/src/app/tmp/bundle' && \
   bundle install --jobs `nproc` && \
   cp -r tmp/bundle/ vendor && \
-  rm -rf vendor/bundle/ruby/3.2.0/cache && \
+  rm -rf vendor/bundle/ruby/3.3.0/cache && \
   find vendor/bundle/ruby -type d -name '.git' -exec rm -rf {} + && \
-  bundle config --local path vendor/bundle
+  bundle config --local path vendor/bundle && \
+  ln -s /usr/bin/yarnpkg /usr/bin/yarn
 
 RUN \
   --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
@@ -42,7 +44,7 @@ RUN \
   bash -c "rails assets:precompile && rails deface:precompile && rm -rf ./tmp/cache"
 
 # Final stage
-FROM ruby:3.3-bookworm AS runner
+FROM ruby:3.3-trixie AS runner
 MAINTAINER SciNote <info@scinote.net>
 
 ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/3.2.3/tika-app-3.2.3.jar"
@@ -82,10 +84,11 @@ RUN \
   chromium \
   chromium-sandbox \
   libfile-mimeinfo-perl \
+  npm \
   yarnpkg && \
   wget -O $TIKA_PATH $TIKA_DIST_URL && \
   chmod +x $TIKA_PATH && \
-  /usr/share/nodejs/yarn/bin/yarn add npm:puppeteer-core@24.10.0 && \
+  npm install -g npm:puppeteer-core@24.10.0 && \
   apt-get install -y libreoffice && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
 
@@ -104,7 +107,7 @@ RUN \
 ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
-ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
+ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.3.0
 ENV PATH=$APP_HOME/bin:$GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
 
