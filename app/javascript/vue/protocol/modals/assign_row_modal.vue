@@ -22,7 +22,12 @@
             <p class="mb-4">
               {{ this.i18n.t('protocols.repository_rows.assign_modal.description') }}
             </p>
-            <RowSelector @change="this.rowIds = $event" :multiple="true" class="mb-4"></RowSelector>
+            <RowSelector
+              @change="this.rowIds = $event"
+              :multiple="true"
+              class="mb-4"
+              dataE2e="protocol-assignItemModal"
+            ></RowSelector>
           </div>
           <div class="modal-footer">
             <button

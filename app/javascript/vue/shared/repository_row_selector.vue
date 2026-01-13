@@ -8,7 +8,7 @@
         :searchable="true"
         :value="selectedRepository"
         @change="selectedRepository = $event"
-        :e2eValue="'e2e-DD-protocol-assignItemModal-selectInventory'"
+        :e2eValue="`e2e-DD-${dataE2e}-selectInventory`"
       ></SelectDropdown>
     </div>
     <div class="relative">
@@ -27,7 +27,7 @@
         :value="selectedRow"
         @close="showItemInfo = false"
         @change="selectedRow= $event"
-        :e2eValue="'e2e-DD-protocol-assignItemModal-selectItems'"
+        :e2eValue="`e2e-DD-${dataE2e}-selectItems`"
       ></SelectDropdown>
       <div v-if="showItemInfo" class="absolute -right-64 w-60 bg-white border border-radius p-4 min-h-[10rem]">
         <div v-if="loadingHoveredRow" class="flex absolute top-0 left-0 items-center justify-center w-full flex-grow h-full z-10">
@@ -85,6 +85,10 @@ export default {
     manageableRepositoriesOnly: {
       type: Boolean,
       default: false
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   created() {
