@@ -12,7 +12,7 @@ module Api
 
       def index
         experiments = @project.experiments
-        experiments = metadata_filter(archived_filter(timestamps_filter(experiments)))
+        experiments = metadata_filter(archived_filter(timestamps_filter(name_filter(experiments))))
                       .page(params.dig(:page, :number))
                       .per(params.dig(:page, :size))
         render jsonapi: experiments, each_serializer: ExperimentSerializer, scope: { metadata: params['with-metadata'] == 'true' }

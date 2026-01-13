@@ -38,6 +38,7 @@ en:
         azure_ad_submit: "Sign in with Azure AD"
         openid_connect_submit: "Sign in with OpenID Connect"
         saml_submit: "Sign in with SAML"
+        okta_submit: "Sign in with Okta"
       2fa:
         title: "Two-factor authentication"
         description: "Enter the one-time code found in your authenticator app to log in to SciNote."
@@ -97,14 +98,12 @@ en:
         failed_to_save: "Failed to create new user"
     okta:
       provider_name: "Okta"
-      sign_in_label: "Sign in with Okta"
       errors:
         generic: "Failed to sign in user"
         no_local_user_map: "No local user record found"
         failed_to_save: "Failed to create new user"
     saml:
       provider_name: "SAML"
-      sign_in_label: "Sign in with SAML"
       errors:
         generic: "Failed to sign in user"
         no_local_user_map: "No local user record found"
