@@ -23,7 +23,9 @@
 <% @protocol.steps.order(position: :asc).each do |step| %>
   <div class="print-step">
     <h2 class="step-check-circle-checked">
-      <% if step.completed_on %>
+      <% if step.skipped_at %>
+        <%= image_tag "skip-circle-solid.svg" %>
+      <% elsif step.completed_on %>
         <%= image_tag "check-circle-solid.svg" %>
       <% else %>
         <div class="step-check-circle"></div>
