@@ -87,7 +87,13 @@ describe Api::V1::ExperimentsController, type: :controller do
         {
           team_id: team.id,
           project_id: project.id,
-          id: experiment.id
+          id: experiment.id,
+          data: {
+            type: "experiments",
+            attributes: {
+              name: "test"
+            }
+          }
         }
       }
     end

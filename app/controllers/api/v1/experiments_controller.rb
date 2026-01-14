@@ -47,6 +47,7 @@ module Api
         end
         @experiment.last_modified_by = current_user
         @experiment.save!
+
         render jsonapi: @experiment, serializer: ExperimentSerializer, scope: { metadata: params['with-metadata'] == 'true' }, status: :ok
       end
 
@@ -60,7 +61,12 @@ module Api
 
       def load_experiment_for_managing
         @experiment = @project.experiments.find(params.require(:id))
-        raise PermissionError.new(Experiment, :manage) unless can_manage_experiment?(@experiment)
+
+        if experiment_params.keys == %w(archived) && !experiment_params[:archived]
+          raise PermissionError.new(Experiment, :restore) unless can_restore_experiment?(@experiment)
+        else
+          raise PermissionError.new(Experiment, :manage) unless can_manage_experiment?(@experiment)
+        end
       end
     end
   end
