@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:  url('fonts/SN-icon-font.eot?5ib14o');
-  src:  url('fonts/SN-icon-font.eot?5ib14o#iefix') format('embedded-opentype'),
-    url('fonts/SN-icon-font.woff2?5ib14o') format('woff2'),
-    url('fonts/SN-icon-font.ttf?5ib14o') format('truetype'),
-    url('fonts/SN-icon-font.woff?5ib14o') format('woff'),
-    url('fonts/SN-icon-font.svg?5ib14o#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?29axtm');
+  src:  url('fonts/SN-icon-font.eot?29axtm#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?29axtm') format('woff2'),
+    url('fonts/SN-icon-font.ttf?29axtm') format('truetype'),
+    url('fonts/SN-icon-font.woff?29axtm') format('woff'),
+    url('fonts/SN-icon-font.svg?29axtm#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -673,4 +673,13 @@
 }
 .sn-icon-Relationships:before {
   content: "\e9d7";
+}
+.sn-icon-create-item:before {
+  content: "\e9d8";
+}
+.sn-icon-task-status-uncompleted:before {
+  content: "\e9d9";
+}
+.sn-icon-task-status-completed:before {
+  content: "\e9da";
 }

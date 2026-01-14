@@ -6,7 +6,7 @@ class StepsController < ApplicationController
 
   before_action :load_vars, only: %i(update destroy show toggle_step_state update_view_state
                                      update_asset_view_mode elements
-                                     attachments upload_attachment duplicate)
+                                     attachments upload_attachment duplicate toggle_step_skip_state)
   before_action :load_vars_nested, only: %i(create index list reorder list_protocol_steps add_protocol_steps)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
@@ -15,7 +15,7 @@ class StepsController < ApplicationController
   before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: %i(update destroy
                                                     update_view_state update_asset_view_mode upload_attachment)
-  before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state)
+  before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state toggle_step_skip_state)
 
   def index
     render json: @protocol.steps.includes(:assets, step_orderable_elements: :orderable).in_order,
@@ -219,6 +219,7 @@ class StepsController < ApplicationController
   # Complete/uncomplete step
   def toggle_step_state
     @step.completed = params[:completed] == 'true'
+    @step.skipped_at = nil
     @step.last_modified_by = current_user
 
     if @step.save
@@ -243,6 +244,18 @@ class StepsController < ApplicationController
           )
         end
       end
+      render json: @step, serializer: StepSerializer, user: current_user
+    else
+      render json: {}, status: :unprocessable_entity
+    end
+  end
+
+  def toggle_step_skip_state
+    @step.skipped_at = params[:skipped] == 'true' && DateTime.now
+    @step.completed = false
+    @step.last_modified_by = current_user
+
+    if @step.save
       render json: @step, serializer: StepSerializer, user: current_user
     else
       render json: {}, status: :unprocessable_entity
