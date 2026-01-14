@@ -13,7 +13,7 @@ class StepSerializer < ActiveModel::Serializer
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode,
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
              :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
-             :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id
+             :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id, :skipped_at
 
   def collapsed
     step_states = @instance_options[:user].settings.fetch('task_step_states', {})
@@ -97,6 +97,7 @@ class StepSerializer < ActiveModel::Serializer
 
     if object.my_module && can_complete_my_module_steps?(object.my_module)
       urls_list[:state_url] = toggle_step_state_step_path(object)
+      urls_list[:skip_url] = toggle_step_skip_state_step_path(object)
     end
 
     if can_manage_protocol_in_module?(object.protocol) || can_manage_protocol_draft_in_repository?(object.protocol)
