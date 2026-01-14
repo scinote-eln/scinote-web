@@ -718,7 +718,7 @@ function importProtocolFromFile(
   }
 
 
-  function prepareTinyMceAssets(object, index, guid, object) {
+  function prepareTinyMceAssets(object, index, guid, object_type) {
     var result = [];
     $(object).find('> descriptionAssets > tinyMceAsset').each(function() {
       var tinyMceAsset = {};
@@ -736,11 +736,10 @@ function importProtocolFromFile(
 
       uploadPromises.push(
         createUploadPromise(
-          new File([getAssetBlob(protocolFolders[index], guid, fileRef, object)], fileName, { type: fileType }),
+          new File([getAssetBlob(protocolFolders[index], guid, fileRef, object_type)], fileName, { type: fileType }),
           tinyMceAsset
         )
       );
-
       result.push(tinyMceAsset);
     });
     return result;
