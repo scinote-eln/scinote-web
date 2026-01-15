@@ -664,7 +664,9 @@ class Extends
     step_and_result_template_unlinked: 447,
     result_template_restore_asset_version: 448,
     protocol_repository_item_added: 449,
-    protocol_repository_item_removed: 450
+    protocol_repository_item_removed: 450,
+    skip_step: 451,
+    unskip_step: 452
   }
 
   ACTIVITY_GROUPS = {
@@ -673,7 +675,7 @@ class Extends
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            148, 166, 394, 395, 396, 406, 411],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
-                    184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327, *347..352, 359],
+                    184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327, *347..352, 359, 451, 452],
     task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165, *363..369, 393, 407, 410],
     reports: [48, 50, 49, 163, 164],

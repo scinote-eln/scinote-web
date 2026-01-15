@@ -67,10 +67,12 @@ module Api
           if @step.saved_change_to_attribute?(:completed)
             completed_steps = @protocol.steps.where(completed: true).count
             all_steps = @protocol.steps.count
+            num_skipped = @protocol.steps.where.not(skipped_at: nil).count
             type_of = @step.saved_change_to_attribute(:completed).last ? :complete_step : :uncomplete_step
             log_activity(type_of, my_module: @task.id,
                                   num_completed: completed_steps.to_s,
-                                  num_all: all_steps.to_s)
+                                  num_all: all_steps.to_s,
+                                  num_skipped: num_skipped.to_s)
           end
           render jsonapi: @step, serializer: StepSerializer, status: :ok
         else

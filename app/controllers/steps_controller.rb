@@ -227,6 +227,7 @@ class StepsController < ApplicationController
       if @step.saved_change_to_completed
         completed_steps = @protocol.steps.where(completed: true).count
         all_steps = @protocol.steps.count
+        num_skipped = @protocol.steps.where.not(skipped_at: nil).count
 
         type_of = @step.completed ? :complete_step : :uncomplete_step
         # Toggling step state can only occur in
@@ -239,7 +240,8 @@ class StepsController < ApplicationController
             {
               my_module: @my_module.id,
               num_completed: completed_steps.to_s,
-              num_all: all_steps.to_s
+              num_all: all_steps.to_s,
+              num_skipped: num_skipped.to_s
             }.merge(step_message_items)
           )
         end
@@ -256,6 +258,19 @@ class StepsController < ApplicationController
     @step.last_modified_by = current_user
 
     if @step.save
+      type_of = @step.skipped_at ? :skip_step : :unskip_step
+      if @protocol.in_module?
+        log_activity(
+          type_of,
+          @protocol.my_module.experiment.project,
+          {
+            my_module: @my_module.id,
+            num_completed: @protocol.steps.where(completed: true).count.to_s,
+            num_all: @protocol.steps.count.to_s,
+            num_skipped: @protocol.steps.where.not(skipped_at: nil).count.to_s
+          }.merge(step_message_items)
+        )
+      end
       render json: @step, serializer: StepSerializer, user: current_user
     else
       render json: {}, status: :unprocessable_entity
