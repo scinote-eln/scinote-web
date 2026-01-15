@@ -49,11 +49,21 @@ module Api
       def update
         @task.assign_attributes(task_params_update)
 
-        if @task.changed? && @task.save!
-          render jsonapi: @task, serializer: TaskSerializer, scope: { metadata: params['with-metadata'] == 'true' }, status: :ok
-        else
-          render body: nil, status: :no_content
+        return render body: nil, status: :no_content unless @task.changed?
+
+        if @task.archived_changed?
+          if @task.archived?
+            @task.archived_by = current_user
+            @task.archived_on = DateTime.now
+          else
+            @task.restored_by = current_user
+            @task.restored_on = DateTime.now
+          end
         end
+        @task.last_modified_by = current_user
+        @task.save!
+
+        render jsonapi: @task, serializer: TaskSerializer, scope: { metadata: params['with-metadata'] == 'true' }, status: :ok
       end
 
       def activities
@@ -74,7 +84,8 @@ module Api
 
       def task_params_update
         raise TypeError unless params.require(:data).require(:type) == 'tasks'
-        params.require(:data).require(:attributes).permit(:name, :x, :y, :description, :my_module_status_id, metadata: {})
+
+        params.require(:data).require(:attributes).permit(:name, :x, :y, :description, :archived, :my_module_status_id, metadata: {})
       end
 
       def permitted_includes
@@ -83,7 +94,12 @@ module Api
 
       def load_task_for_managing
         @task = @experiment.my_modules.find(params.require(:id))
-        raise PermissionError.new(MyModule, :manage) unless can_manage_my_module?(@task)
+
+        if task_params_update.keys == %w(archived) && !task_params_update[:archived]
+          raise PermissionError.new(MyModule, :restore) unless can_restore_my_module?(@task)
+        else
+          raise PermissionError.new(MyModule, :manage) unless can_manage_my_module?(@task)
+        end
       end
     end
   end

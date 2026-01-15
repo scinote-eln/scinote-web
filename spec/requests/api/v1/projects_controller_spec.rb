@@ -320,28 +320,85 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
           )
         )
       end
+    end
 
-      context 'when includes project_folder relation' do
-        let(:request_body) do
-          {
-            data: {
-              type: 'projects',
-              attributes: {
-                project_folder_id: project_folder.id
-              }
+    context 'archiving with valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'projects',
+            attributes: {
+              archived: true
             }
           }
-        end
-        let(:project_folder) { create :project_folder, team: @team1 }
+        }
+      end
 
-        it 'renders 201' do
-          action
+      it 'returns well formated response' do
+        action
 
-          expect(response).to have_http_status(200)
-          expect(JSON.parse(response.body).dig('data', 'relationships', 'project_folder', 'data')).to be_truthy
-        end
+        expect(response).to have_http_status 200
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'projects',
+              attributes: hash_including(archived: true)
+            )
+          )
+        )
       end
     end
+
+    context 'restoring with valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'projects',
+            attributes: {
+              archived: false
+            }
+          }
+        }
+      end
+
+      it 'returns well formated response' do
+        @project.update(archived: true)
+
+        action
+        
+        expect(response).to have_http_status 200
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'projects',
+              attributes: hash_including(archived: false)
+            )
+          )
+        )
+      end
+    end
+
+    context 'when includes project_folder relation' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'projects',
+            attributes: {
+              project_folder_id: project_folder.id
+            }
+          }
+        }
+      end
+      let(:project_folder) { create :project_folder, team: @team1 }
+
+      it 'renders 201' do
+        action
+
+        expect(response).to have_http_status(200)
+        expect(JSON.parse(response.body).dig('data', 'relationships', 'project_folder', 'data')).to be_truthy
+      end
+    end
+    
 
     context 'when has missing param' do
       let(:request_body) do
