@@ -346,7 +346,7 @@ function importProtocolFromFile(
               addTablePreview(resultEl, $(this).find('elnTable'));
               break;
             case 'ResultText':
-              addResultTextPreview(resultEl, $(this).find('stepText'), protocolFolders[position], resultGuid);
+              addResultTextPreview(resultEl, $(this).find('resultText'), protocolFolders[position], resultGuid);
               break;
             default:
               // nothing to do
@@ -433,7 +433,7 @@ function importProtocolFromFile(
 
   function addStepTextPreview(stepEl, stepTextNode, folder, stepGuid) {
     const itemName = $(stepTextNode).children('name').text();
-    const itemText = displayTinyMceAssetInDescription(stepTextNode, folder, stepGuid);
+    const itemText = displayTinyMceAssetInDescription(stepTextNode, folder, stepGuid, 'steps');
 
     const textEl = newPreviewElement(
       'step-text',
@@ -443,9 +443,9 @@ function importProtocolFromFile(
     stepEl.append(textEl);
   }
 
-  function addResultTextPreview(resultEl, resultTextNode, folder, stepGuid) {
+  function addResultTextPreview(resultEl, resultTextNode, folder, resultGuid) {
     const itemName = $(resultTextNode).children('name').text();
-    const itemText = displayTinyMceAssetInDescription(resultTextNode, folder, stepGuid);
+    const itemText = displayTinyMceAssetInDescription(resultTextNode, folder, resultGuid, 'results');
 
     const textEl = newPreviewElement(
       'result-text',
@@ -482,7 +482,7 @@ function importProtocolFromFile(
   }
 
   // display tiny_mce_assets in step description
-  function displayTinyMceAssetInDescription(node, folder, stepGuid) {
+  function displayTinyMceAssetInDescription(node, folder, guid, objectType = '') {
     var description = node.children('description').html() || node.children('contents').html();
 
     if (!description) return '';
@@ -506,8 +506,9 @@ function importProtocolFromFile(
       var imageTag;
       var match = '[~tiny_mce_id:' + element.getAttribute('tokenId') + ']';
       var assetBytes = getAssetBytes(folder,
-        stepGuid,
-        element.getAttribute('fileref'));
+        guid,
+        element.getAttribute('fileref'),
+        objectType);
 
       // new format load
       description = $('<div>' + description + '</div>');
