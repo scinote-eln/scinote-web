@@ -555,7 +555,10 @@ export default {
         perPage: this.perPage
       };
 
-      columnsState.find((column) => column.colId === 'checkbox').pinned = 'left';
+      let checkboxColumn = columnsState.find((column) => column.colId === 'checkbox');
+      if (checkboxColumn) {
+        checkboxColumn.pinned = 'left';
+      }
 
       const settings = {
         key: this.stateKey,
