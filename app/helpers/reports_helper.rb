@@ -57,7 +57,10 @@ module ReportsHelper
   end
 
   def step_status_label(step)
-    if step.completed
+    if step.skipped_at
+      style = 'default'
+      text = t('protocols.steps.skipped')
+    elsif step.completed
       style = 'success'
       text = t('protocols.steps.completed')
     else
