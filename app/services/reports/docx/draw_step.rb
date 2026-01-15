@@ -15,7 +15,9 @@ module Reports::Docx::DrawStep
     unless settings['exclude_task_metadata'] || settings['exclude_timestamps']
       @docx.p do
         unless settings['exclude_task_metadata']
-          if step.completed
+          if step.skipped_at
+            text I18n.t('protocols.steps.skipped'), color: color[:gray], bold: true
+          elsif step.completed
             text I18n.t('protocols.steps.completed'), color: color[:green], bold: true
           else
             text I18n.t('protocols.steps.uncompleted'), color: color[:gray], bold: true
