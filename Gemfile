@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '~> 3.3.8'
+ruby '~> 3.4.8'
 
 gem 'activerecord-session_store'
 gem 'bootsnap', require: false
@@ -37,7 +37,6 @@ gem 'rack-cors'
 gem 'activerecord-import', '~> 2.2.0'
 gem 'acts_as_list'
 gem 'ajax-datatables-rails', '~> 0.3.1'
-gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
 # gem 'caracal'

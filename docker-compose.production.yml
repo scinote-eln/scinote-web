@@ -26,7 +26,6 @@ services:
     environment:
       - RAILS_ENV=production
     volumes:
-      - scinote_production_files:/usr/src/app/public/system
       - scinote_production_storage:/usr/src/app/storage
 
   jobs:
@@ -40,10 +39,8 @@ services:
     environment:
       - RAILS_ENV=production
     volumes:
-      - scinote_production_files:/usr/src/app/public/system
       - scinote_production_storage:/usr/src/app/storage
 
 volumes:
   scinote_production_postgres:
-  scinote_production_files:
   scinote_production_storage:
