@@ -1,18 +1,26 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="document" data-e2e="e2e-MD-storageLocations-createEdit">
       <form @submit.prevent="submit">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              data-e2e="e2e-BT-storageLocations-createEditModal-close"
+            >
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 class="modal-title truncate !block" >
+            <h4 class="modal-title truncate !block" data-e2e="e2e-TX-storageLocations-createEditModal-title">
               {{ i18n.t(`storage_locations.index.edit_modal.title_${mode}_${editModalMode}`) }}
             </h4>
           </div>
           <div class="modal-body">
-            <p v-if="mode == 'create'" class="mb-6">{{ i18n.t(`storage_locations.index.edit_modal.description_create_${editModalMode}`) }}</p>
+            <p v-if="mode == 'create'" class="mb-6" data-e2e="e2e-TX-storageLocations-createEditModal-description">
+              {{ i18n.t(`storage_locations.index.edit_modal.description_create_${editModalMode}`) }}
+            </p>
             <div class="mb-6">
               <label class="sci-label">
                 {{ i18n.t(`storage_locations.index.edit_modal.name_label_${editModalMode}`) }}
@@ -22,6 +30,7 @@
                   type="text"
                   v-model="object.name"
                   :placeholder="i18n.t(`storage_locations.index.edit_modal.name_placeholder_${editModalMode}`)"
+                  data-e2e="e2e-IF-storageLocations-createEditModal-name"
                 >
               </div>
               <span v-if="this.errors.name" class="text-sn-coral text-xs">{{ this.errors.name }}</span>
@@ -32,7 +41,15 @@
               </label>
               <div class="flex items-center gap-2 mb-4">
                 <div class="sci-radio-container">
-                  <input type="radio" class="sci-radio" :disabled="!canChangeGrid" v-model="object.metadata.display_type" name="display_type" value="no_grid" >
+                  <input
+                    type="radio"
+                    class="sci-radio"
+                    :disabled="!canChangeGrid"
+                    v-model="object.metadata.display_type"
+                    name="display_type"
+                    value="no_grid"
+                    data-e2e="e2e-CB-storageLocations-createEditModal-noGrid"
+                  >
                   <span class="sci-radio-label"></span>
                 </div>
                 <span>{{ i18n.t('storage_locations.index.edit_modal.no_grid') }}</span>
@@ -40,16 +57,38 @@
               </div>
               <div class="flex items-center gap-2 mb-4">
                 <div class="sci-radio-container">
-                  <input type="radio" class="sci-radio" :disabled="!canChangeGrid"  v-model="object.metadata.display_type" name="display_type" value="grid" >
+                  <input
+                    type="radio"
+                    class="sci-radio"
+                    :disabled="!canChangeGrid"
+                    v-model="object.metadata.display_type"
+                    name="display_type"
+                    value="grid"
+                    data-e2e="e2e-CB-storageLocations-createEditModal-grid"
+                  >
                   <span class="sci-radio-label"></span>
                 </div>
                 <span>{{ i18n.t('storage_locations.index.edit_modal.grid') }}</span>
                 <div class="sci-input-container-v2 !w-28" v-if="object.metadata.dimensions">
-                  <input type="number" :disabled="!canChangeGrid"  v-model="object.metadata.dimensions[0]" min="1" max="24">
+                  <input
+                    type="number"
+                    :disabled="!canChangeGrid"
+                    v-model="object.metadata.dimensions[0]"
+                    min="1"
+                    max="24"
+                    data-e2e="e2e-IF-storageLocations-createEditModal-gridRows"
+                  >
                 </div>
                 <i class="sn-icon sn-icon-close-small"></i>
                 <div class="sci-input-container-v2 !w-28" v-if="object.metadata.dimensions">
-                  <input type="number" :disabled="!canChangeGrid"  v-model="object.metadata.dimensions[1]" min="1" max="24">
+                  <input
+                    type="number"
+                    :disabled="!canChangeGrid"
+                    v-model="object.metadata.dimensions[1]"
+                    min="1"
+                    max="24"
+                    data-e2e="e2e-IF-storageLocations-createEditModal-gridColumns"
+                  >
                 </div>
               </div>
             </div>
@@ -81,15 +120,25 @@
                   ref="description"
                   v-model="object.description"
                   :placeholder="i18n.t(`storage_locations.index.edit_modal.description_placeholder`)"
+                  data-e2e="e2e-IF-storageLocations-createEditModal-description"
                 ></textarea>
               </div>
               <span v-if="this.errors.description" class="text-sn-coral text-xs">{{ this.errors.description }}</span>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" :disabled="submitting || !validObject" type="submit">
-              {{ mode == 'create' ? i18n.t('general.create') : i18n.t('general.save') }}
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              data-e2e="e2e-BT-storageLocations-createEditModal-cancel"
+            >{{ i18n.t('general.cancel') }}</button>
+            <button
+              class="btn btn-primary"
+              :disabled="submitting || !validObject"
+              type="submit"
+              data-e2e="e2e-BT-storageLocations-createEditModal-createSave"
+            >{{ mode == 'create' ? i18n.t('general.create') : i18n.t('general.save') }}
             </button>
           </div>
         </div>
