@@ -8,6 +8,7 @@
       :warning="!isValidValue"
       :warningMessage="warningMessage"
       :isNumber="true"
+      :data-e2e="`e2e-IF-${dataE2e}-value`"
     ></InputField>
   </div>
 </template>
@@ -19,6 +20,12 @@ import InputField from '../../shared/input_field.vue';
 export default {
   name: 'NumberField',
   mixins: [fieldMixin],
+  props: {
+    dataE2e: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     InputField
   },
