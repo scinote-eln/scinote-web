@@ -1,7 +1,7 @@
 <template>
 <div class="p-4 rounded bg-white text-sm mb-2">
   <div class="grow">
-      <div class="font-bold" :data-e2e="`e2e-TX-${dataE2e}-fieldName`">
+    <div class="font-bold" :data-e2e="`e2e-TX-${dataE2e}-fieldName`">
       {{ field.attributes.name }}
       <span v-if="unit">({{ unit }})</span>
       <span v-if="field.attributes.required" class="text-sn-delete-red">*</span>
