@@ -1,70 +1,142 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="document" data-e2e="e2e-MD-storageLocations-assignMoveItem">
       <form @submit.prevent="submit">
         <div v-if="overrideWarning" class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              data-e2e="e2e-BT-storageLocations-assignItemModal-override-close"
+            >
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 class="modal-title truncate !block">
+            <h4 class="modal-title truncate !block" data-e2e="e2e-TX-storageLocations-assignItemModal-override-title">
               {{ i18n.t(`storage_locations.show.assign_modal.override.title`) }}
             </h4>
           </div>
           <div class="modal-body">
-            <p v-html="i18n.t(`storage_locations.show.assign_modal.override.p_1_html`, {count: this.selectedPositions.filter((p) => p[2].occupied).length})"></p>
-            <p>
+            <p
+              v-html="i18n.t(`storage_locations.show.assign_modal.override.p_1_html`, {count: this.selectedPositions.filter((p) => p[2].occupied).length})"
+              data-e2e="e2e-TX-storageLocations-assignItemModal-override-description"
+            ></p>
+            <p data-e2e="e2e-TX-storageLocations-assignItemModal-override-confirmQuestion">
               {{ i18n.t(`storage_locations.show.assign_modal.override.p_2`) }}
             </p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="removeOverride = true; submit()">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="removeOverride = true; submit()"
+              data-e2e="e2e-BT-storageLocations-assignItemModal-override-skip"
+            >
               {{ i18n.t(`storage_locations.show.assign_modal.override.skip`) }}
             </button>
-            <button class="btn btn-danger" @click="confirmOverride = true; submit()">
+            <button
+              class="btn btn-danger"
+              @click="confirmOverride = true; submit()"
+              data-e2e="e2e-BT-storageLocations-assignItemModal-override-confirm"
+            >
               {{ i18n.t(`storage_locations.show.assign_modal.override.cta`) }}
             </button>
           </div>
         </div>
         <div v-else class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              data-e2e="e2e-BT-storageLocations-assignMoveItemModal-close"
+            >
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 v-if="selectedPositions.length > 0" class="modal-title truncate !block">
+            <h4
+              v-if="selectedPositions.length > 0"
+              class="modal-title truncate !block"
+              data-e2e="e2e-TX-storageLocations-assignItemModal-title"
+            >
               {{ i18n.t(`storage_locations.show.assign_modal.selected_position_title`, { position: formattedPosition }) }}
             </h4>
-            <h4 v-else-if="assignMode === 'assign' && selectedRow && selectedRowName" class="modal-title truncate !block">
+            <h4
+              v-else-if="assignMode === 'assign' && selectedRow && selectedRowName"
+              class="modal-title truncate !block"
+              data-e2e="e2e-TX-storageLocations-assignItemModal-title"
+            >
               {{ i18n.t(`storage_locations.show.assign_modal.selected_row_title`) }}
             </h4>
-            <h4 v-else-if="assignMode === 'move'" class="modal-title truncate !block">
+            <h4
+              v-else-if="assignMode === 'move'"
+              class="modal-title truncate !block"
+              data-e2e="e2e-TX-storageLocations-moveItemModal-title"
+            >
               {{ i18n.t(`storage_locations.show.assign_modal.move_title`, { name: selectedRowName }) }}
             </h4>
-            <h4 v-else class="modal-title truncate !block">
+            <h4
+              v-else class="modal-title truncate !block"
+              data-e2e="e2e-TX-storageLocations-assignItemModal-title"
+            >
               {{ i18n.t(`storage_locations.show.assign_modal.assign_title`) }}
             </h4>
           </div>
           <div class="modal-body">
-            <p v-if="selectedRow && selectedRowName" class="mb-4">
+            <p
+              v-if="selectedRow && selectedRowName"
+              class="mb-4"
+              data-e2e="e2e-TX-storageLocations-assignItemModal-description"
+            >
               {{ i18n.t(`storage_locations.show.assign_modal.selected_row_description`, { name: selectedRowName }) }}
             </p>
-            <h4 v-else-if="assignMode === 'move'" class="modal-title truncate !block">
+            <h4
+              v-else-if="assignMode === 'move'"
+              class="modal-title truncate !block"
+              data-e2e="e2e-TX-storageLocations-moveItemModal-description"
+            >
               {{ i18n.t(`storage_locations.show.assign_modal.move_description`, { name: selectedRowName }) }}
             </h4>
-            <p v-else class="mb-4">
+            <p
+              v-else class="mb-4"
+              data-e2e="e2e-TX-storageLocations-assignItemModal-description"
+            >
               {{ i18n.t(`storage_locations.show.assign_modal.assign_description`, { number: selectedPositions.length } )}}
             </p>
-            <RowSelector v-if="!selectedRow" @change="this.rowId = $event" class="mb-4"></RowSelector>
-            <ContainerSelector v-if="!selectedContainer" @change="this.containerId = $event"></ContainerSelector>
+            <RowSelector
+              v-if="!selectedRow"
+              @change="this.rowId = $event"
+              class="mb-4"
+              dataE2e="storageLocations-assignItemModal"
+            ></RowSelector>
+            <ContainerSelector
+              v-if="!selectedContainer"
+              @change="this.containerId = $event"
+              dataE2e="storageLocations-moveItemModal"
+            ></ContainerSelector>
             <PositionSelector
               v-if="containerId && containerId > 0 && !(selectedPositions.length > 0)"
               :key="containerId"
               :selectedContainerId="containerId"
-              @change="this.positions = [$event]"></PositionSelector>
+              @change="this.positions = [$event]"
+              dataE2e="e2e-DD-storageLocations-assignItemModal"
+            ></PositionSelector>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="submitting || !validObject">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              data-e2e="e2e-BT-storageLocations-assignMoveItemModal-cancel"
+            >
+              {{ i18n.t('general.cancel') }}
+            </button>
+            <button
+              class="btn btn-primary"
+              type="submit" :disabled="submitting || !validObject"
+              data-e2e="e2e-BT-storageLocations-assignMoveItemModal-confirm"
+            >
               {{ i18n.t(`storage_locations.show.assign_modal.${assignMode}_action`) }}
             </button>
           </div>
