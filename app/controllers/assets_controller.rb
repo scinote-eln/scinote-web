@@ -524,19 +524,8 @@ class AssetsController < ApplicationController
     url + '&' + wd_params
   end
 
-  def asset_params
-    params.permit(:file)
-  end
-
   def toggle_view_mode_params
     params.require(:asset).permit(:view_mode)
-  end
-
-  def asset_data_type(asset)
-    return 'wopi' if wopi_file?(asset)
-    return 'image' if asset.image?
-
-    'file'
   end
 
   def log_step_activity(type_of, step, project = nil, message_items = {})
