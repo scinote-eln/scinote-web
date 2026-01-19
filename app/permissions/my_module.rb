@@ -120,6 +120,14 @@ Canaid::Permissions.register_for(MyModule) do
     my_module.permission_granted?(user, MyModulePermissions::STEPS_UNCOMPLETE)
   end
 
+  can :skip_my_module_steps do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_SKIP)
+  end
+
+  can :unskip_my_module_steps do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::STEPS_UNSKIP)
+  end
+
   can :check_my_module_steps do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::STEPS_CHECKLIST_CHECK)
   end

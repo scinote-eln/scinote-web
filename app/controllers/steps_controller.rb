@@ -15,7 +15,8 @@ class StepsController < ApplicationController
   before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: %i(update destroy
                                                     update_view_state update_asset_view_mode upload_attachment)
-  before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state toggle_step_skip_state)
+  before_action :check_complete_and_checkbox_permissions, only: :toggle_step_state
+  before_action :check_skip_pemissions, only: :toggle_step_skip_state
 
   def index
     render json: @protocol.steps.includes(:assets, step_orderable_elements: :orderable).in_order,
@@ -382,6 +383,10 @@ class StepsController < ApplicationController
 
   def check_complete_and_checkbox_permissions
     render_403 unless can_complete_or_checkbox_step?(@protocol)
+  end
+
+  def check_skip_pemissions
+    render_403 unless @step.skipped_at ? can_unskip_my_module_steps?(@my_module) : can_skip_my_module_steps?(@my_module)
   end
 
   def step_params
