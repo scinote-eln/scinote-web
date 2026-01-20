@@ -35,7 +35,7 @@ module AssetsActions
               team: team,
               project: project,
               message_items: message_items)
-    elsif asset.result.class.base_class.name == 'ResultBase'
+    elsif asset.result
       result = asset.result
       parent = result.parent
       model_key = result.class.model_name.param_key
