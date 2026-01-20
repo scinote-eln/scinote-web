@@ -47,12 +47,14 @@ class MyModuleRepositoriesController < ApplicationController
                                                        user: current_user,
                                                        my_module: @my_module,
                                                        assigned_view: true,
-                                                       preload_cells: !params[:simple_view]).call.load
+                                                       preload_cells: true).call.load
+
+    # In new tables we don't using unfiltered_count, so total count is equal to filtered count
+    total_count = repository_rows.take&.filtered_count.to_i
+    total_pages = (total_count.to_f / params[:per_page].to_i).ceil
 
     render json: repository_rows,
-           adapter: :json,
-           root: 'data',
-           each_serializer: params[:simple_view] ? Lists::RepositoryRowSimplifiedSerializer : Lists::RepositoryRowSerializer,
+           each_serializer: Lists::RepositoryRowSerializer,
            user: current_user,
            my_module: @my_module,
            assigned_view: true,
@@ -61,10 +63,10 @@ class MyModuleRepositoriesController < ApplicationController
            with_stock_management: @repository.has_stock_management?,
            can_manage_stock: false,
            can_consume_stock: can_update_my_module_stock_consumption?(@my_module),
-           meta:  {
-             total_count: @my_module.repository_rows.where(repository: @repository).count,
-             filtered_count: repository_rows.take&.filtered_count.to_i
-           }
+           meta: {
+            total_pages: total_pages,
+            total_count: total_count
+          }
   end
 
   def assign_my_modules
