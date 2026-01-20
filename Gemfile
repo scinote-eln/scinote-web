@@ -68,6 +68,7 @@ gem 'wicked_pdf'
 gem 'zip-zip' # will load compatibility for old rubyzip API.
 
 gem 'aws-actionmailer-ses', '~> 1'
+gem 'aws-sdk-lambda'
 gem 'aws-sdk-rails', '~> 5'
 gem 'aws-sdk-s3'
 gem 'delayed_job_active_record'
