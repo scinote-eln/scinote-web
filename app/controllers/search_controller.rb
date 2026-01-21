@@ -115,7 +115,7 @@ class SearchController < ApplicationController
     query = (params.fetch(:q) { '' }).strip
     @filters = params[:filters]
     @include_archived = @filters.blank? || @filters[:include_archived] == 'true'
-    @teams = @filters.present? && @filters[:teams]&.values ? current_user.teams.where(id: @filters[:teams].values) : current_user.teams
+    @teams = @filters.present? && @filters[:teams] ? current_user.teams.where(id: @filters[:teams]) : current_user.teams
     @display_query = query
 
     splited_query = query.split
@@ -197,7 +197,7 @@ class SearchController < ApplicationController
     @records = @records.joins("INNER JOIN activities ON #{@model.model_name.collection}.id = activities.subject_id
                                AND activities.subject_type= '#{@model.name}'")
 
-    user_ids = @filters[:users]&.values
+    user_ids = @filters[:users]
     @records = if @model.name == 'MyModule'
                  @records.where('activities.owner_id IN (?) OR users.id IN (?)', user_ids, user_ids)
                else
@@ -206,7 +206,6 @@ class SearchController < ApplicationController
   end
 
   def filter_by_tags!
-    tag_ids = @filters[:tags]&.values&.collect(&:to_i)
-    @records = @records.joins(:tags).where(tags: { id: tag_ids })
+    @records = @records.joins(:tags).where(tags: { id: @filters[:tags] })
   end
 end
