@@ -17,3 +17,14 @@ Rails.application.config.active_storage.variable_content_types << 'image/svg+xml
 
 Rails.application.config.active_storage.variant_processor = :vips if ENV['ACTIVESTORAGE_ENABLE_VIPS'] == 'true'
 
+Rails.application.config.to_prepare do
+  ActiveStorage::Blob.class_eval do
+    include ObservableModel
+
+    private
+
+    def changed_by
+      Current.user
+    end
+  end
+end
