@@ -6,9 +6,16 @@ class PdfPreviewJob < ApplicationJob
 
   discard_on StandardError do |job, error|
     asset = Asset.find_by(id: job.arguments.first)
-    ActiveRecord::Base.no_touching do
-      asset&.update_column(:pdf_preview_processing, false)
+
+    if asset
+      ActiveRecord::Base.no_touching do
+        asset.update(pdf_preview_processing: false)
+        blob = asset.blob
+        blob.metadata['preview_failed'] = true
+        blob.save!
+      end
     end
+
     Rails.logger.error("Couldn't generate PDF preview for Asset with id: #{job.arguments.first}. Error:\n #{error}")
   end
 
