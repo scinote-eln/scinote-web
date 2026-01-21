@@ -6,6 +6,9 @@ class RepositoryRow < ApplicationRecord
   include SearchableByNameModel
   include ArchivableModel
 
+  include Discard::Model
+  default_scope -> { kept }
+
   ID_PREFIX = 'IT'
   include PrefixedIdModel
 

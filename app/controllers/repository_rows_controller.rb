@@ -238,33 +238,36 @@ class RepositoryRowsController < ApplicationController
   end
 
   def delete_records
-    deleted_count = 0
-    if selected_params
-      selected_params.each do |row_id|
-        row = @repository.repository_rows.find_by(id: row_id)
-        next unless row && can_manage_repository_rows?(@repository)
+    ActiveRecord::Base.transaction do
+      deleted_count = 0
+      if selected_params
+        selected_params.each do |row_id|
+          row = @repository.repository_rows.find_by(id: row_id)
+          next unless row && can_manage_repository_rows?(@repository)
 
-        log_activity(:delete_item_inventory, row, { repository_row: row.id, repository: @repository.id })
-        row.destroy && deleted_count += 1
-      end
-      if deleted_count.zero?
-        flash = t('repositories.destroy.no_deleted_records_flash',
-                  other_records_number: selected_params.count)
-      elsif deleted_count != selected_params.count
-        not_deleted_count = selected_params.count - deleted_count
-        flash = t('repositories.destroy.contains_other_records_flash',
-                  records_number: deleted_count,
-                  other_records_number: not_deleted_count)
+          log_activity(:delete_item_inventory, row, { repository_row: row.id, repository: @repository.id })
+
+          row.discard && deleted_count += 1
+        end
+        if deleted_count.zero?
+          flash = t('repositories.destroy.no_deleted_records_flash',
+                    other_records_number: selected_params.count)
+        elsif deleted_count != selected_params.count
+          not_deleted_count = selected_params.count - deleted_count
+          flash = t('repositories.destroy.contains_other_records_flash',
+                    records_number: deleted_count,
+                    other_records_number: not_deleted_count)
+        else
+          flash = t('repositories.destroy.success_flash',
+                    records_number: deleted_count)
+        end
+        color = deleted_count.zero? ? 'info' : 'success'
+        render json: { flash: flash, color: color }, status: :ok
       else
-        flash = t('repositories.destroy.success_flash',
-                  records_number: deleted_count)
+        render json: {
+          flash: t('repositories.destroy.no_records_selected_flash')
+        }, status: :bad_request
       end
-      color = deleted_count.zero? ? 'info' : 'success'
-      render json: { flash: flash, color: color }, status: :ok
-    else
-      render json: {
-        flash: t('repositories.destroy.no_records_selected_flash')
-      }, status: :bad_request
     end
   end
 

@@ -212,10 +212,11 @@ class RepositoriesController < ApplicationController
   end
 
   def destroy
-    log_activity(:delete_inventory) # Log before delete id
+    ActiveRecord::Base.transaction do
+      log_activity(:delete_inventory) # Log before delete id
 
-    @repository.discard
-    @repository.destroy_discarded(current_user.id)
+      @repository.discard
+    end
 
     render json: {
       message: t('repositories.index.delete_flash', name: @repository.name)
