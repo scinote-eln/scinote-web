@@ -36,22 +36,26 @@ module Api
 
       def update
         @step.assign_attributes(
-          step_params.merge!(last_modified_by_id: current_user.id)
+          step_params.merge!(last_modified_by_id: current_user.id).merge!(parse_completed_attribute(step_params[:completed]))
         )
 
-        if @step.changed? && @step.save!
-          if @step.saved_change_to_attribute?(:completed)
-            completed_steps = @protocol.steps.where(completed: true).count
-            all_steps = @protocol.steps.count
-            type_of = @step.saved_change_to_attribute(:completed).last ? :complete_step : :uncomplete_step
-            log_activity(type_of, my_module: @task.id,
-                                  num_completed: completed_steps.to_s,
-                                  num_all: all_steps.to_s)
-          end
-          render jsonapi: @step, serializer: Api::V2::StepSerializer, status: :ok
-        else
-          render body: nil, status: :no_content
+        return render body: nil, status: :no_content unless @step.changed?
+
+        @step.save!
+        if @step.saved_change_to_attribute?(:completed) || @step.saved_change_to_attribute?(:skipped_at)
+          type_of = if step_params[:completed] == 'skipped'
+                      :skip_step
+                    else
+                      @step.saved_change_to_attribute(:completed).last ? :complete_step : :uncomplete_step
+                    end
+
+          log_activity(type_of, my_module: @task.id,
+                                num_completed: @protocol.steps.where(completed: true).count.to_s,
+                                num_all: @protocol.steps.count.to_s,
+                                num_skipped: @protocol.steps.where.not(skipped_at: nil).count.to_s)
         end
+
+        render jsonapi: @step, serializer: Api::V2::StepSerializer, status: :ok
       end
 
       private
@@ -82,6 +86,22 @@ module Api
           raise PermissionError.new(Step, :toggle_completion) unless permission
         else
           raise PermissionError.new(Step, :manage) unless can_manage_step?(@step)
+        end
+      end
+
+      def parse_completed_attribute(completed)
+        return if completed.nil?
+
+        if completed == 'skipped'
+          {
+            completed: false,
+            skipped_at: DateTime.now
+          }
+        else
+          {
+            completed: completed,
+            skipped_at: nil
+          }
         end
       end
     end

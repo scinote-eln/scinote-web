@@ -8,7 +8,7 @@ module Api
       include InputSanitizeHelper
 
       type :steps
-      attributes :id, :name, :position, :completed
+      attributes :id, :name, :position, :completed, :skipped_at
       attribute :completed_on, if: -> { object.completed? }
       belongs_to :user, serializer: Api::V1::UserSerializer
       belongs_to :protocol, serializer: Api::V1::ProtocolSerializer
