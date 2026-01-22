@@ -8,7 +8,8 @@
       }"
       @closed="closedHandler"
       @cleared="clearedHandler"
-      v-model="compDatetime"
+      @update:model-value="changeHandler"
+      v-model="value"
       :teleport="teleport"
       :no-today="true"
       :clearable="clearable"
@@ -65,7 +66,7 @@ export default {
     mode: { type: String, default: 'datetime' },
     clearable: { type: Boolean, default: false },
     teleport: { type: Boolean, default: true },
-    defaultValue: { type: Date, required: false },
+    defaultValue: { type: String, required: false },
     placeholder: { type: String },
     standAlone: { type: Boolean, default: false, required: false },
     dateClassName: { type: String, default: '' },
@@ -81,8 +82,7 @@ export default {
   data() {
     return {
       manualUpdate: false,
-      datetime: this.defaultValue,
-      time: null,
+      value: null,
       markers: [
         {
           date: new Date(),
@@ -93,108 +93,35 @@ export default {
     };
   },
   created() {
-    if (this.defaultValue) {
-      this.time = {
-        hours: this.defaultValue.getHours(),
-        minutes: this.defaultValue.getMinutes()
-      };
-    }
+    this.initializeValue();
   },
   components: {
     VueDatePicker
   },
   watch: {
     defaultValue() {
-      this.datetime = this.defaultValue;
-      if (this.defaultValue instanceof Date) {
-        this.time = {
-          hours: this.defaultValue.getHours(),
-          minutes: this.defaultValue.getMinutes()
-        };
-      }
-    },
-    datetime() {
-      if (this.mode === 'time') {
-        this.time = null;
-
-        if (this.datetime instanceof Date) {
-          this.time = {
-            hours: this.datetime.getHours(),
-            minutes: this.datetime.getMinutes()
-          };
-        }
-
-        return;
-      }
-
-      if (this.manualUpdate) {
-        this.manualUpdate = false;
-        return;
-      }
-
-      if (this.datetime == null) {
-        this.$emit('cleared');
-      }
-
-      if (this.defaultValue !== this.datetime) {
-        this.$emit('change', this.emitValue(this.datetime));
-
-        if (this.mode === 'date') this.close();
-      }
-    },
-    time() {
-      if (this.manualUpdate) {
-        this.manualUpdate = false;
-        return;
-      }
-
-      if (this.mode !== 'time') return;
-
-      let newDate;
-
-      if (this.time) {
-        newDate = new Date();
-        newDate.setHours(this.time.hours);
-        newDate.setMinutes(this.time.minutes);
-      } else {
-        newDate = {
-          hours: null,
-          minutes: null
-        };
-        this.$emit('cleared');
-      }
-
-      if (this.defaultValue !== newDate) {
-        this.$emit('change', this.emitValue(newDate));
-      }
+      this.initializeValue();
     }
   },
   computed: {
-    compDatetime: {
-      get() {
-        if (this.mode === 'time') {
-          return this.time;
-        }
-        return this.datetime;
-      },
-      set(val) {
-        if (this.mode === 'time') {
-          this.time = val;
-        } else {
-          // If new value has different date then previous date, reset time
-          if (val && this.datetime && this.datetime.getDate() !== val.getDate()) {
-            val.setHours(0, 0, 0, 0);
-          }
-
-          this.datetime = val;
-        }
-      }
-    },
     format() {
       if (this.mode === 'time') return 'HH:mm';
       if (this.mode === 'date') return document.body.dataset.datetimePickerFormatVue;
       return `${document.body.dataset.datetimePickerFormatVue} HH:mm`;
     },
+    stringValue() {
+      if (this.value === null) return '';
+
+      const date = `${this.value.getFullYear()}-${this.value.getMonth() + 1}-${this.value.getDate()}`;
+      const time = ` ${this.value.getHours().toString().padStart(2, '0')}:${this.value.getMinutes().toString().padStart(2, '0')}`
+
+      if (this.mode === 'date') {
+        return `${date}`
+      } else {
+
+        return `${date} ${time}`;
+      }
+    }
   },
   mounted() {
     window.addEventListener('resize', this.close);
@@ -203,23 +130,17 @@ export default {
     window.removeEventListener('resize', this.close);
   },
   methods: {
-    stringValue(date) {
-      let time_str = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
-      let date_str = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
-      if (this.mode === 'time') return time_str;
-      if (this.mode === 'date') return date_str;
-      return `${date_str} ${time_str}`;
-    },
-    emitValue(date) {
-      if (date == null) {
-        this.$emit('cleared');
-        return null;
-      }
+    initializeValue() {
+      if (!this.defaultValue) return;
 
-      return this.valueType === 'stringWithoutTimezone' ? this.stringValue(date) : date;
+      this.value = new Date(this.defaultValue.replace(/([^!\s])-/g, '$1/'));
     },
     close() {
       this.$refs.datetimePicker.closeMenu();
+    },
+    changeHandler(value) {
+      this.value = value;
+      this.$emit('change', this.stringValue);
     },
     closedHandler() {
       this.$emit('closed');
