@@ -99,7 +99,16 @@ module Api
 
       def check_manage_permissions
         if step_params.key?(:completed) && step_params.except(:completed).blank?
-          raise PermissionError.new(Step, :toggle_completion) unless can_complete_or_checkbox_step?(@step.protocol)
+          completed_bool = ActiveModel::Type::Boolean.new.cast(step_params[:completed])
+          permission = if completed_bool
+                         can_complete_my_module_steps?(@step.my_module)
+                       elsif !completed_bool
+                         can_uncomplete_my_module_steps?(@step.my_module)
+                       else
+                         false
+                       end
+
+          raise PermissionError.new(Step, :toggle_completion) unless permission
         else
           raise PermissionError.new(Step, :manage) unless can_manage_step?(@step)
         end
