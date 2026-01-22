@@ -42,8 +42,10 @@
                  @click="changeSkipped"
                  @keyup.enter="changeSkipped"
                  tabindex="0"
-                 :title="step.attributes.skipped_at ? i18n.t('protocols.steps.status.unskip') : i18n.t('protocols.steps.status.skip')">
-              <i :class="['sn-icon', step.attributes.skipped_at ? 'sn-icon-skip-fill' : 'sn-icon-skip-outline']"></i>
+                 :title="step.attributes.skipped_at ? i18n.t('protocols.steps.status.unskip') : i18n.t('protocols.steps.status.skip')"
+                 data-e2e="e2e-BT-protocol-toggleSkipped"
+            >
+              <i :class="['sn-icon', step.attributes.skipped_at ? 'sn-icon-skip-fill' : 'sn-icon-skip-outline']" :data-e2e="`e2e-BT-protocol-step${step.id}-toggleSkipped`"></i>
             </div>
           </div>
           <div class="step-position leading-5 self-start" :data-e2e="`e2e-TX-protocol-step${step.id}-position`">
