@@ -19,35 +19,11 @@ class AssignedRepositorySerializer < ActiveModel::Serializer
     object.is_a?(RepositorySnapshot)
   end
 
-  attribute :has_stock do
-    can_read? && object.has_stock_management?
-  end
-
-  attribute :has_stock_consumption do
-    can_read? && object.has_stock_consumption?
-  end
-
-  attribute :can_manage_consumption do
-    can_read? && can_update_my_module_stock_consumption?(scope[:user], scope[:my_module])
-  end
-
-  attribute :stock_column_name do
-    object.repository_stock_column.name if can_read? && object.has_stock_management?
-  end
-
-  attribute :footer_label do
-    assigned_repository_simple_view_footer_label(object)
-  end
-
-  attribute :name_column_id do
-    assigned_repository_simple_view_name_column_id(object)
-  end
-
-  attribute :urls do
-    list = { assigned_rows: assigned_repository_simple_view_index_path(scope[:my_module], object) }
-    list[:full_view] = assigned_repository_full_view_table_path(scope[:my_module], object) if can_read?
-
-    list
+  attribute :permissions do
+    {
+      can_assign: can_assign_my_module_repository_rows?(scope[:user], scope[:my_module]),
+      can_read: can_read?
+    }
   end
 
   def can_read?

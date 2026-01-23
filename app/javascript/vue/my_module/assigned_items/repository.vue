@@ -1,33 +1,30 @@
 <template>
-  <div ref="container" class="border rounded transition-all overflow-hidden" :style="{height: (sectionOpened ? '448px' : '48px')}">
-    <div class="flex items-center h-12 px-4 gap-4 assigned-repository-title">
+  <div ref="container" class="p-4 bg-white rounded transition-all overflow-hidden" :style="{height: (sectionOpened ? '600px' : '60px')}">
+    <div class="flex items-center h-6 gap-4 assigned-repository-title mb-1">
       <div
         @click="toggleContainer"
-        class="flex items-center grow overflow-hidden cursor-pointer"
+        class="flex items-center gap-4 grow overflow-hidden cursor-pointer"
         :data-e2e="`e2e-BT-task-assignedItems-inventory${ repository.id }-toggle`"
       >
-        <i ref="openHandler" class="sn-icon sn-icon-right cursor-pointer"></i>
-        <h3 class="my-0 flex items-center gap-1 overflow-hidden">
+        <i ref="openHandler" class="sn-icon sn-icon-down cursor-pointer"></i>
+        <h3 class="my-0 flex items-center gap-4 overflow-hidden">
           <span :title="repository.attributes.name" class="assigned-repository-title truncate">{{ repository.attributes.name }}</span>
           <span class="text-sn-grey-500 font-normal text-base shrink-0">
             [{{ repository.attributes.assigned_rows_count }}]
           </span>
-          <span v-if="repository.attributes.is_snapshot"
-                class="bg-sn-light-grey text-sn-grey-500 font-normal  px-1.5 py-1 rounded shrink-0 text-sm">
-            {{  i18n.t('my_modules.repository.snapshots.simple_view.snapshot_tag') }}
+          <span class="bg-sn-light-grey  font-normal  px-1.5 py-1 rounded-full shrink-0 text-xs">
+            <template v-if="repository.attributes.is_snapshot">
+              {{  i18n.t('my_modules.repository.snapshots.simple_view.snapshot_tag') }}
+            </template>
+            <template v-else>
+              {{  i18n.t('my_modules.repository.snapshots.simple_view.live_tag') }}
+            </template>
           </span>
+
         </h3>
       </div>
-      <button
-        v-if="repository.attributes.urls.full_view"
-        class="btn btn-light icon-btn ml-auto full-screen"
-        :data-table-url="fullViewUrl"
-        :data-e2e="`e2e-BT-task-assignedItems-inventory${ repository.id }-expand`"
-      >
-        <i class="sn-icon sn-icon-expand"></i>
-      </button>
     </div>
-    <div style="height: 400px">
+    <div style="height: 540px">
       <DataTable
         v-if="repositoryColumnsDef.length > 0"
         :columnDefs="repositoryColumnsDef"
@@ -76,7 +73,7 @@ export default {
   },
   mixins: [ColumnsMixin],
   data: () => ({
-    sectionOpened: false,
+    sectionOpened: true,
     warningModalDescription: '',
     submitting: false,
     reloadingTable: false,
@@ -84,20 +81,30 @@ export default {
   }),
   computed: {
     toolbarActions() {
+      const left = [];
+      if (this.repository.attributes.permissions.can_assign) {
+        left.push({
+          name: 'assign',
+          icon: 'sn-icon sn-icon-new-task',
+          label: this.i18n.t('my_modules.repository.assign_items'),
+          type: 'emit',
+          buttonStyle: 'btn btn-primary'
+        });
+        left.push({
+          name: 'create',
+          icon: 'sn-icon sn-icon-create-item',
+          label: this.i18n.t('my_modules.repository.create_item'),
+          type: 'emit',
+          buttonStyle: 'btn btn-secondary'
+        });
+      }
       return {
-        left: [],
+        left: left,
         right: []
       };
     },
     dataSource() {
       return index_ag_my_module_repository_path(this.myModuleId, this.repository.id);
-    },
-    fullViewUrl() {
-      let url = this.repository.attributes.urls.full_view;
-      if (this.repository.attributes.has_stock && this.repository.attributes.has_stock_consumption) {
-        url += '?include_stock_consumption=true';
-      }
-      return url;
     }
   },
   methods: {
@@ -105,15 +112,13 @@ export default {
       const { container, openHandler } = this.$refs;
 
       if (this.sectionOpened) {
-        container.style.height = '448px';
+        container.style.height = '600px';
         openHandler.classList.remove('sn-icon-right');
         openHandler.classList.add('sn-icon-down');
-        this.$emit('recalculateContainerSize', 400);
       } else {
-        container.style.height = '48px';
+        container.style.height = '60px';
         openHandler.classList.remove('sn-icon-down');
         openHandler.classList.add('sn-icon-right');
-        this.$emit('recalculateContainerSize', 0);
       }
     },
     toggleContainer() {

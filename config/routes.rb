@@ -573,7 +573,7 @@ Rails.application.routes.draw do
       get :repositories_list_html, controller: :my_module_repositories
       get :repositories_list, controller: :my_module_repositories
 
-      resources :repositories, controller: :my_module_repositories, only: %i(update create) do
+      resources :repositories, controller: :my_module_repositories, only: %i(index update create) do
         member do
           get :full_view_table
           post :index_dt, defaults: { format: 'json' }
