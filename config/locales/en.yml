@@ -426,6 +426,7 @@ en:
       steps: "Protocol"
       results: "Results"
       activities: "Activity"
+      assigned_items: "Assigned items"
       archive: "Archived results"
 
   smart_annotations:
@@ -1734,6 +1735,10 @@ en:
       more_activities: "More activities"
     repository:
       export: 'Export'
+      no_assigned_items: 'No items assigned to this task.'
+      no_assigned_items_can_assign: 'No items assigned to this task. Use the buttons on the right to start assigning.'
+      assign_items: 'Assign items'
+      create_item: 'Create item'
       full_view:
         modal_live_header: ': Live version'
         modal_snapshot_header: ': Snapshot of %{snapshot_date}'
@@ -1744,6 +1749,7 @@ en:
           live_bottom_label: 'Live version'
           snapshot_bottom_label: 'Snapshot version %{date_time}'
           snapshot_tag: 'Snapshot'
+          live_tag: 'Live version'
         full_view:
           header: 'Versions'
           live: 'Live version'

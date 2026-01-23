@@ -849,6 +849,7 @@ class Extends
     tags/index
     teams/automations
     result_templates/index
+    my_module_repositories/index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
