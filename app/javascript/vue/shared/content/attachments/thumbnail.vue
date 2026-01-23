@@ -20,7 +20,9 @@
         <img v-if="attachment.attributes.medium_preview !== null"
             class="rounded-sm"
             :src="attachment.attributes.medium_preview"
-            style='opacity: 0' />
+            style='opacity: 0'
+            @error="ActiveStoragePreviews.reCheckPreview"
+            @load="ActiveStoragePreviews.showPreview">
         <div v-else class="w-[186px] h-[186px] bg-sn-super-light-grey rounded-sm"></div>
       </div>
       <div class="attachment-label"
@@ -138,25 +140,6 @@ export default {
   },
   directives: {
     'click-outside': vOnClickOutside
-  },
-  mounted() {
-    $(this.$nextTick(() => {
-      $('.attachment-preview img')
-        .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
-        .on('load', (event) => ActiveStoragePreviews.showPreview(event));
-    }));
-  },
-  watch: {
-    showOptions(newValue) {
-      // reload thumbnail on mouse out
-      if (newValue) return;
-
-      $(this.$nextTick(() => {
-        $('.attachment-preview img')
-          .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
-          .on('load', (event) => ActiveStoragePreviews.showPreview(event));
-      }));
-    }
   },
   methods: {
     openOVEditor(url) {
