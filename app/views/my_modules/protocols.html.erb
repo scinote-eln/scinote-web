@@ -43,19 +43,6 @@
         my-module-url="<%= my_module_path(@my_module, format: :json) %>"
       />
     </div>
-    <div id="assignedItems" data-e2e="e2e-CO-task-assignedItems">
-      <assigned-items
-        ref="assignedItems"
-        avaialable-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>"
-        assigned-repositories-url="<%= my_module_repositories_list_path(@my_module) %>"
-        repositories-url="<%= list_team_repositories_path(current_team, appendable: true) %>"
-        my-module-id="<%= @my_module.id%>"
-        :can-assign="<%= can_assign_my_module_repository_rows?(@my_module) %>"
-      />
-    </div>
-    <div class="task-section">
-      <%= render partial: "my_modules/repositories/full_view_modal" %>
-    </div>
     <!-- Protocol -->
     <div class="task-section">
       <div

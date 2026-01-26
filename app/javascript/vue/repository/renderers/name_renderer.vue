@@ -18,11 +18,11 @@
       {{ params.data.name }}
     </a>
     <span v-else
-      :title="i18n.t('my_modules.assigned_items.repository.private_repository_row_name', {repository_row_code: params.data.code })"
+      :title="i18n.t('my_modules.assigned_items.repository.private_repository_row_name')"
       class="text-sn-grey truncate"
     >
       <i class="sn-icon sn-icon-locked-task"></i>
-      {{ i18n.t('my_modules.assigned_items.repository.private_repository_row_name', {repository_row_code: params.data.code }) }}
+      {{ i18n.t('my_modules.assigned_items.repository.private_repository_row_name') }}
     </span>
   </div>
 </template>
