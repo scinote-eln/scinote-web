@@ -5,7 +5,9 @@
             :class="{
               '!bg-sn-super-light-blue !border-sn-blue': value && !fieldDisabled
             }"
-            @click="saveValue">
+            @click="saveValue"
+            :data-e2e="`e2e-BT-${dataE2e}-action`"
+    >
       <div class="w-4 h-4  border rounded-sm flex items-center justify-center"
         :class="{
           'bg-sn-blue': value && !fieldDisabled,
@@ -26,6 +28,12 @@ import fieldMixin from './field_mixin';
 export default {
   name: 'ActionField',
   mixins: [fieldMixin],
+  props: {
+    dataE2e: {
+      type: String,
+      default: ''
+    }
+  },
   watch: {
     marked_as_na() {
       if (this.marked_as_na) {

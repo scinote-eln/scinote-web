@@ -5,6 +5,7 @@
 @import "tailwind/radio";
 @import "tailwind/loader.css";
 @import "tailwind/tags.css";
+@import "tailwind/toast";
 @import "tailwind/table.css";
 @import "tailwind/checkbox";
 @import "tailwind/toggle";

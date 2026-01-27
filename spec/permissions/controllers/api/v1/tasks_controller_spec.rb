@@ -79,7 +79,7 @@ describe Api::V1::TasksController, type: :controller do
           project_id: project.id,
           experiment_id: experiment.id,
           data: {
-            type: "experiments",
+            type: "tasks",
             attributes: {
               name: "test"
             }
@@ -96,7 +96,13 @@ describe Api::V1::TasksController, type: :controller do
           team_id: team.id,
           project_id: project.id,
           experiment_id: experiment.id,
-          id: my_module.id
+          id: my_module.id,
+          data: {
+            type: "tasks",
+            attributes: {
+              name: "test"
+            }
+          }
         }
       }
     end

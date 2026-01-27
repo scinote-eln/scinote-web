@@ -2,6 +2,11 @@
 
 class FormFieldValue < ApplicationRecord
   include ObservableModel
+  include SearchableModel
+
+  SEARCHABLE_ATTRIBUTES = [
+    'form_field_values.search_data'
+  ].freeze
 
   belongs_to :form_response
   belongs_to :form_field
@@ -10,6 +15,8 @@ class FormFieldValue < ApplicationRecord
 
   validate :not_applicable_values
   validate :uniqueness_latest, if: :latest?
+
+  before_create :set_search_data
 
   scope :latest, -> { where(latest: true) }
 
@@ -31,6 +38,16 @@ class FormFieldValue < ApplicationRecord
 
   def name
     form_field&.name
+  end
+
+  def set_search_data
+    self.search_data = [
+      text,
+      selection&.join(' '),
+      number,
+      number_to,
+      data&.map { |i| "IT#{i['id']} #{i['name']}" }&.join(' ')
+    ].compact.join(' ')
   end
 
   private

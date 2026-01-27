@@ -216,7 +216,6 @@ window.TinyMCE = (() => {
     editor.setProgressState(1);
     editor.save();
     editorForm.submit();
-    updateScrollPosition(editorForm);
   }
 
   // returns a public API for TinyMCE editor
@@ -437,7 +436,6 @@ window.TinyMCE = (() => {
                 editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
 
-                updateScrollPosition(editorForm);
                 if (options.onSaveCallback) { options.onSaveCallback($(selector).val()); }
 
                 SmartAnnotation.closePopup();

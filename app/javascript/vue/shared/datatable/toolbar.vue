@@ -81,7 +81,7 @@
       </div>
       <FilterDropdown v-if="filters.length && !disabled" :filters="filters" @applyFilters="applyFilters" :data-e2e="'e2e-BT-topToolbar-filters'"/>
       <button
-        v-if="currentViewRender === 'table'"
+        v-if="currentViewRender === 'table' && !hideColumnsManagment"
         @click="showColumnsModal = true"
         :disabled="disabled"
         :data-e2e="'e2e-BT-topToolbar-manageColumns'"
@@ -189,7 +189,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
-
+    },
+    hideColumnsManagment: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

@@ -18,7 +18,7 @@ module Api
           else
             @team.projects.readable_by_user(current_user, @team)
           end
-        projects = metadata_filter(timestamps_filter(archived_filter(projects)))
+        projects = metadata_filter(timestamps_filter(archived_filter(name_filter(projects))))
                    .page(params.dig(:page, :number))
                    .per(params.dig(:page, :size))
 
@@ -109,7 +109,12 @@ module Api
 
       def load_project_for_managing
         @project = @team.projects.find(params.require(:id))
-        raise PermissionError.new(Project, :manage) unless can_manage_project?(@project)
+
+        if project_params.keys == %w(archived) && !project_params[:archived]
+          raise PermissionError.new(Project, :restore) unless can_restore_project?(@project)
+        else
+          raise PermissionError.new(Project, :manage) unless can_manage_project?(@project)
+        end
       end
     end
   end

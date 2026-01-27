@@ -3,7 +3,7 @@
 class UserGroupAssignment < ApplicationRecord
   before_validation :set_assignable_team
 
-  belongs_to :assignable, polymorphic: true, touch: true
+  belongs_to :assignable, polymorphic: true
   belongs_to :team
   belongs_to :user_group
   belongs_to :user_role

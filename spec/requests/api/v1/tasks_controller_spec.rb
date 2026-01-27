@@ -68,6 +68,25 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       )
     end
 
+    it 'Response with correct tasks, filtered by name' do
+      hash_body = nil
+      task = @valid_experiment.my_modules.take
+      get api_v1_team_project_experiment_tasks_path(
+        team_id: @team1.id,
+        project_id: @valid_project,
+        experiment_id: @valid_experiment,
+        filter: { name: task.name }
+      ), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_experiment.my_modules.where_attributes_like(:name, task.name), each_serializer: Api::V1::TaskSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
     it 'Response with correct tasks, only archived' do
       hash_body = nil
       get api_v1_team_project_experiment_tasks_path(
@@ -423,6 +442,62 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
         action
         expect { hash_body = json }.not_to raise_exception
         expect(hash_body.dig(:data, 'attributes', 'metadata')).to be_nil
+      end
+    end
+
+    context 'archiving with valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'tasks',
+            attributes: {
+              archived: true
+            }
+          }
+        }
+      end
+
+      it 'returns well formated response' do
+        action
+
+        expect(response).to have_http_status 200
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'tasks',
+              attributes: hash_including(archived: true)
+            )
+          )
+        )
+      end
+    end
+
+    context 'restoring with valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'tasks',
+            attributes: {
+              archived: false
+            }
+          }
+        }
+      end
+
+      it 'returns well formated response' do
+        task.update(archived: true)
+
+        action
+
+        expect(response).to have_http_status 200
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'tasks',
+              attributes: hash_including(archived: false)
+            )
+          )
+        )
       end
     end
 

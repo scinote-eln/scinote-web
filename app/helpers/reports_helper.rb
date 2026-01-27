@@ -82,6 +82,8 @@ module ReportsHelper
   end
 
   def order_results_for_report(results, order)
+    results = results.order(pinned_at: :asc)
+
     case order
     when 'atoz'
       results.order(name: :asc)

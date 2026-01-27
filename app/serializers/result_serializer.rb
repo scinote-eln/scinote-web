@@ -54,6 +54,14 @@ class ResultSerializer < ResultBaseSerializer
         duplicate_my_module_result_url(object.my_module, object)
     end
 
+    if can_manage_result?(object)
+      if object.pinned?
+        urls_list[:unpin_url] = unpin_my_module_result_path(object.my_module, object)
+      else
+        urls_list[:pin_url] = pin_my_module_result_path(object.my_module, object)
+      end
+    end
+
     urls_list
   end
 end

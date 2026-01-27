@@ -43,6 +43,7 @@ class MyModuleShareableLinksController < ApplicationController
     @results_order = params[:order] || 'new'
 
     @results = @my_module.results.active
+    @results = @results.order(pinned_at: :asc)
     @results = case @results_order
                when 'old' then @results.order(created_at: :asc)
                when 'old_updated' then @results.order(updated_at: :asc)

@@ -8,6 +8,8 @@
   <meta id="cache-directive" name="turbolinks-cache-control" content="no-cache">
 <% end %>
 
+<% provide(:head_title, t('seo.titles.reports_index')) %>
+
 <div class="content-pane flexible reports-index">
   <%= render partial: 'reports/index_header' %>
   <div id="reportsTable" class="fixed-content-body">

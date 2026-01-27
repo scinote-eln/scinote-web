@@ -107,6 +107,7 @@ class RepositoryRow < ApplicationRecord
            dependent: :destroy
   has_many :storage_location_repository_rows, inverse_of: :repository_row, dependent: :destroy
   has_many :storage_locations, through: :storage_location_repository_rows
+  has_many :protocol_repository_rows, dependent: :nullify
 
   auto_strip_attributes :name, nullify: false
   validates :name,
@@ -170,7 +171,7 @@ class RepositoryRow < ApplicationRecord
     repository_rows.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
-  def self.where_children_attributes_like(query)
+  def self.where_children_attributes_like(query, _options = {})
     query_clauses = []
     Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each_value do |config|
       query_clauses << unscoped.joins(config[:includes]).where_attributes_like(config[:field], query).to_sql

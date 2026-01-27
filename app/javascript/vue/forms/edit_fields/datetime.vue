@@ -6,7 +6,9 @@
       <input type="checkbox"
               class="sci-checkbox"
               @change="$emit('updateField')"
-              v-model="editField.attributes.data.time" />
+              v-model="editField.attributes.data.time"
+              data-e2e="e2e-CB-forms-builder-editField-dateTime-includeTime"
+        />
       <span class="sci-checkbox-label"></span>
     </span>
     {{ i18n.t('forms.show.time_label') }}
@@ -16,7 +18,9 @@
       <input type="checkbox"
               class="sci-checkbox"
               @change="$emit('updateField')"
-              v-model="editField.attributes.data.range" />
+              v-model="editField.attributes.data.range"
+              data-e2e="e2e-CB-forms-builder-editField-dateTime-includeRange"
+        />
       <span class="sci-checkbox-label"></span>
     </span>
     {{ i18n.t('forms.show.range_label') }}

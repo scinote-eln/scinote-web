@@ -11,6 +11,7 @@
           :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.from')"
           class="grow"
           :class="{'error': !validValue}"
+          :dataE2e="`e2e-TP-${dataE2e}-dateTimeFrom`"
         />
         <span class="tw-hidden lg:block">-</span>
         <DateTimePicker
@@ -22,6 +23,7 @@
           :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.to')"
           class="grow"
           :class="{'error': !validValue}"
+          :dataE2e="`e2e-TP-${dataE2e}-dateTimeTo`"
         />
       </div>
       <span v-if="!validValue" class="text-xs text-sn-delete-red block absolute -bottom-3.5">
@@ -36,6 +38,7 @@
       :disabled="fieldDisabled"
       :clearable="true"
       :placeholder="fieldDisabled ? '' : i18n.t(`forms.fields.add_${mode}`)"
+      :dataE2e="`e2e-TP-${dataE2e}-dateTime`"
     />
   </div>
 </template>
@@ -47,6 +50,12 @@ import DateTimePicker from '../../shared/date_time_picker.vue';
 export default {
   name: 'DatetimeField',
   mixins: [fieldMixin],
+  props: {
+    dataE2e: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     DateTimePicker
   },
@@ -123,6 +132,8 @@ export default {
       return new Date(year, month - 1, day);
     },
     normalizedValue(value) {
+      if (!value) return value;
+
       const date = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
       const time = ` ${value.getHours().toString().padStart(2, '0')}:${value.getMinutes().toString().padStart(2, '0')}`
 

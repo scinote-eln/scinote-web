@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_08_124138) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_13_114232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -264,6 +264,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_08_124138) do
     t.jsonb "data"
     t.date "date"
     t.date "date_to"
+    t.text "search_data"
+    t.index "trim_html_tags(search_data) gin_trgm_ops", name: "index_form_field_values_on_search_data", using: :gin
     t.index ["created_by_id"], name: "index_form_field_values_on_created_by_id"
     t.index ["form_field_id"], name: "index_form_field_values_on_form_field_id"
     t.index ["form_response_id"], name: "index_form_field_values_on_form_response_id"
@@ -621,6 +623,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_08_124138) do
     t.bigint "protocol_keyword_id", null: false
     t.index ["protocol_id"], name: "index_protocol_protocol_keywords_on_protocol_id"
     t.index ["protocol_keyword_id"], name: "index_protocol_protocol_keywords_on_protocol_keyword_id"
+  end
+
+  create_table "protocol_repository_rows", force: :cascade do |t|
+    t.bigint "protocol_id", null: false
+    t.bigint "repository_row_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["protocol_id", "repository_row_id"], name: "idx_on_protocol_id_repository_row_id_8e60521e65", unique: true
+    t.index ["repository_row_id"], name: "index_protocol_repository_rows_on_repository_row_id"
   end
 
   create_table "protocols", force: :cascade do |t|
@@ -1117,6 +1128,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_08_124138) do
     t.datetime "discarded_at"
     t.string "type"
     t.bigint "protocol_id"
+    t.datetime "pinned_at"
+    t.bigint "pinned_by_id"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_results_on_name", using: :gin
     t.index ["archived"], name: "index_results_on_archived"
     t.index ["archived_by_id"], name: "index_results_on_archived_by_id"
@@ -1124,6 +1137,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_08_124138) do
     t.index ["discarded_at"], name: "index_results_on_discarded_at"
     t.index ["last_modified_by_id"], name: "index_results_on_last_modified_by_id"
     t.index ["my_module_id"], name: "index_results_on_my_module_id"
+    t.index ["pinned_by_id"], name: "index_results_on_pinned_by_id"
     t.index ["protocol_id"], name: "index_results_on_protocol_id"
     t.index ["restored_by_id"], name: "index_results_on_restored_by_id"
     t.index ["user_id"], name: "index_results_on_user_id"
@@ -1661,6 +1675,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_08_124138) do
   add_foreign_key "protocol_keywords", "teams"
   add_foreign_key "protocol_protocol_keywords", "protocol_keywords"
   add_foreign_key "protocol_protocol_keywords", "protocols"
+  add_foreign_key "protocol_repository_rows", "protocols"
+  add_foreign_key "protocol_repository_rows", "repository_rows"
   add_foreign_key "protocols", "my_modules"
   add_foreign_key "protocols", "protocols", column: "parent_id"
   add_foreign_key "protocols", "protocols", column: "previous_version_id"
@@ -1743,6 +1759,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_08_124138) do
   add_foreign_key "results", "users"
   add_foreign_key "results", "users", column: "archived_by_id"
   add_foreign_key "results", "users", column: "last_modified_by_id"
+  add_foreign_key "results", "users", column: "pinned_by_id"
   add_foreign_key "results", "users", column: "restored_by_id"
   add_foreign_key "shareable_links", "teams"
   add_foreign_key "shareable_links", "users", column: "created_by_id"

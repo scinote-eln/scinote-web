@@ -9,7 +9,7 @@
     </a>
     <GeneralDropdown v-if="params.data.img_url" ref="imagePreview" >
       <template v-slot:flyout>
-        <img class="w-48 h-48 object-cover" :src="params.data.img_url" @mouseenter="openPreview" @mouseleave="hidePreview">
+        <img class="max-w-[30vw] max-h-[30vh]" :src="params.data.img_url" @mouseenter="openPreview" @mouseleave="hidePreview">
       </template>
     </GeneralDropdown>
   </div>

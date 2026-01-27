@@ -108,7 +108,7 @@ module ApplicationHelper
         subject_id: subject.id,
         subject_class: subject.class.name,
         subject_name: subject.respond_to?(:name) && subject.name,
-        user: target_user
+        user_id: target_user.id
       }
     )
   end

@@ -29,7 +29,7 @@ module FailedDeliveryNotifiableJob
         title: failed_notification_title,
         message: failed_notification_message,
         error: true,
-        user: @user
+        user_id: @user.id
       }
     )
   end

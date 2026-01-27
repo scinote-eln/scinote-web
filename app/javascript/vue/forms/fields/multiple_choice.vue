@@ -10,6 +10,7 @@
       :withCheckboxes="true"
       :clearable="true"
       :placeholder="fieldDisabled ? ' ' : null"
+      :e2eValue="`e2e-DD-${dataE2e}`"
     />
     <span v-else-if="value && value.length > 0">
       {{ value.join(' | ') }}
@@ -27,6 +28,12 @@ import SelectDropdown from '../../shared/select_dropdown.vue';
 export default {
   name: 'MultipleChoiceField',
   mixins: [fieldMixin],
+  props: {
+    dataE2e: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     SelectDropdown
   },

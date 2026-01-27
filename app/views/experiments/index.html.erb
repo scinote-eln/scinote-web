@@ -12,6 +12,7 @@
       archived-page-url="<%= experiments_path(project_id: @project, view_mode: :archived) %>"
       current-view-mode="<%= params[:view_mode] || :active %>"
       :archived="<%= @project.archived?%>"
+      :status-filter="<%= params[:status_filter]&.to_json %>"
     />
   </div>
   <%= render 'shared/tiny_mce_packs' %>

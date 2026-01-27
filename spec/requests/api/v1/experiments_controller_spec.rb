@@ -74,6 +74,21 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
       )
     end
 
+    it 'Response with correct experiments, filtered by name' do
+      hash_body = nil
+      experiment = @valid_project.experiments.take
+      get api_v1_team_project_experiments_path(team_id: @team1.id,
+        project_id: @valid_project, filter: { name: experiment.name }), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_project.experiments.where_attributes_like(:name, experiment.name), each_serializer: Api::V1::ExperimentSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
     it 'When invalid request, project from another team' do
       hash_body = nil
       get api_v1_team_project_experiments_path(team_id: @team2.id,
@@ -381,6 +396,62 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
         action
         expect { hash_body = json }.not_to raise_exception
         expect(hash_body.dig(:data, 'attributes', 'metadata')).to be_nil
+      end
+    end
+
+    context 'archiving with valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'experiments',
+            attributes: {
+              archived: true
+            }
+          }
+        }
+      end
+
+      it 'returns well formated response' do
+        action
+
+        expect(response).to have_http_status 200
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'experiments',
+              attributes: hash_including(archived: true)
+            )
+          )
+        )
+      end
+    end
+
+    context 'restoring with valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'experiments',
+            attributes: {
+              archived: false
+            }
+          }
+        }
+      end
+
+      it 'returns well formated response' do
+        @experiment.update(archived: true)
+
+        action
+
+        expect(response).to have_http_status 200
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'experiments',
+              attributes: hash_including(archived: false)
+            )
+          )
+        )
       end
     end
 

@@ -66,6 +66,14 @@ export default {
       resetFilters: false
     };
   },
+  created() {
+    this.filters.forEach((filter) => {
+      if (filter.defaultValue) {
+        this.filterValues[filter.key] = filter.defaultValue;
+        this.filtersApplied = true;
+      }
+    });
+  },
   computed: {
     appliedDotIsShown() {
       return Object.keys(this.filterValues).length !== 0;

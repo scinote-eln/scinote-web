@@ -2,7 +2,11 @@
 
 FactoryBot.define do
   factory :result_asset do
-    asset
+    transient do
+      team { result.team }
+    end
+
+    asset { association :asset, team: team }
     result
   end
 end

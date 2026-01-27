@@ -40,12 +40,13 @@ module Api
       private
 
       def load_user
-        @user = current_user if current_user.id == params[:user_id].to_i
-        raise PermissionError.new(User, :read) unless @user
+        raise PermissionError.new(User, :read) unless current_user.id == params[:user_id].to_i
+
+        @user = current_user
       end
 
       def load_user_identity
-        @identity = @user.user_identities.find(params[:id].to_i)
+        @identity = @user.user_identities.find(params[:id])
       end
 
       def user_identity_params

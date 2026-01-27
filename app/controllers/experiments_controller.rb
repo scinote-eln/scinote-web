@@ -208,7 +208,12 @@ class ExperimentsController < ApplicationController
                           .with_granted_permissions(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
                           .where('trim_html_tags(projects.name) ILIKE ?',
                                  "%#{ActiveRecord::Base.sanitize_sql_like(params['query'])}%")
-                          .map { |p| [p.id, p.name] }
+                          .map do |p|
+                            [
+                              p.id,
+                              p.id == @experiment.project_id ? "#{p.name} #{I18n.t('experiments.clone.current_project')}" : p.name
+                            ]
+                          end
     render json: { data: projects }, status: :ok
   end
 
