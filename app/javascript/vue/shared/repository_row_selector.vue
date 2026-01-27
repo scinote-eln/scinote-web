@@ -53,7 +53,7 @@ import escapeHtml from '../shared/escape_html.js';
 import SelectDropdown from './select_dropdown.vue';
 import axios from '../../packs/custom_axios.js';
 import {
-  list_team_repositories_path,
+  list_repositories_path,
   rows_list_team_repositories_path,
   repository_repository_row_path
 } from '../../routes.js';
@@ -120,7 +120,7 @@ export default {
   },
   computed: {
     repositoriesUrl() {
-      return list_team_repositories_path(this.teamId, { non_empty: true, active: true, manageable: this.manageableRepositoriesOnly });
+      return list_repositories_path({ non_empty: true, active: true, manageable: this.manageableRepositoriesOnly });
     },
     rowsUrl() {
       if (!this.selectedRepository) {

@@ -20,6 +20,7 @@
         <button
           v-if="canAssign"
           class="btn btn-secondary"
+          @click="openCreateItemModal=true"
         >
           <i class="sn-icon sn-icon-create-item"></i>
           {{ i18n.t('my_modules.repository.create_item') }}
@@ -43,12 +44,12 @@
         ref="assignedRepositories"
         :repository="repository"
         :myModuleId="myModuleId"
+        :reloadKey="reloadKeys[repository.id]"
       />
     </div>
     <Teleport to="body">
       <CreateItemModal
         v-if="openCreateItemModal"
-        :repositoriesUrl="repositoriesUrl"
         :myModuleId="myModuleId"
         @tableReloaded="newCreatedRow"
         @close="openCreateItemModal = false"/>
@@ -67,7 +68,6 @@ export default {
   props: {
     avaialableRepositoriesUrl: String,
     assignedRepositoriesUrl: String,
-    repositoriesUrl: String,
     myModuleId: String,
     canAssign: Boolean
   },
@@ -84,7 +84,8 @@ export default {
       assignedRepositories: [],
       openCreateItemModal: false,
       repositoriesCollapsed: false,
-      loadingRepositories: true
+      loadingRepositories: true,
+      reloadKeys: {}
     };
   },
   methods: {
@@ -95,8 +96,8 @@ export default {
           this.loadingRepositories = false;
         });
     },
-    newCreatedRow(repositoryRowSidebarUrl) {
-      this.loadAssingedRepositories();
+    newCreatedRow(repositoryRowSidebarUrl, repositoryId) {
+      this.reloadKeys[repositoryId] = Date.now();
       window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
     },
     collapseRepositories() {
