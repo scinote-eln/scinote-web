@@ -5,9 +5,9 @@ class MyModuleRepositoriesController < ApplicationController
   include Breadcrumbs
 
   before_action :load_my_module, except: :assign_my_modules
-  before_action :load_repository, except: %i(index repositories_dropdown_list repositories_list_html repositories_list create)
+  before_action :load_repository, except: %i(index actions_toolbar repositories_dropdown_list repositories_list_html repositories_list create)
   before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption assign_my_modules)
-  before_action :check_repository_view_permissions, except: %i(index index_dt index_ag repositories_dropdown_list repositories_list_html repositories_list create)
+  before_action :check_repository_view_permissions, except: %i(index actions_toolbar index_dt index_ag repositories_dropdown_list repositories_list_html repositories_list create)
   before_action :check_repository_row_consumption_permissions, only: %i(consume_modal update_consumption)
   before_action :check_assign_repository_records_permissions, only: %i(update create)
   before_action :load_my_modules, only: :assign_my_modules
@@ -278,6 +278,17 @@ class MyModuleRepositoriesController < ApplicationController
     end
 
     render json: {}, status: :ok
+  end
+
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::MyModuleRepositoriesService.new(
+          current_user,
+          @my_module,
+          ids: JSON.parse(params[:items]).map { |i| i['id'] }
+        ).actions
+    }
   end
 
   private

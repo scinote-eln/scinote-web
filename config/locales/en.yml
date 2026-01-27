@@ -1471,6 +1471,8 @@ en:
       title: "Assigned items"
       assign_from: "Assign from"
       create_item: "Create item"
+      toolbar:
+        print: "Print label"
       create_modal:
         modal_title: 'Create a new item'
         description: 'Choose an inventory and name the new item'
