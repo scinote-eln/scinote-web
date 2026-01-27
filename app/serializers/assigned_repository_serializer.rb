@@ -29,4 +29,10 @@ class AssignedRepositorySerializer < ActiveModel::Serializer
   def can_read?
     @can_read ||= can_read_repository?(scope[:user], object)
   end
+
+  attribute :urls do
+    {
+      export: export_repository_my_module_repository_path(scope[:my_module], object)
+    }
+  end
 end
