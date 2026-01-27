@@ -81,7 +81,6 @@ export default {
   },
   data() {
     return {
-      manualUpdate: false,
       value: null,
       markers: [
         {
@@ -112,13 +111,16 @@ export default {
     stringValue() {
       if (this.value === null) return '';
 
-      const date = `${this.value.getFullYear()}-${this.value.getMonth() + 1}-${this.value.getDate()}`;
+      if (this.mode === 'time') {
+        return `${this.value.hours.toString().padStart(2, '0')}:${this.value.minutes.toString().padStart(2, '0')}`
+      }
+
       const time = ` ${this.value.getHours().toString().padStart(2, '0')}:${this.value.getMinutes().toString().padStart(2, '0')}`
+      const date = `${this.value.getFullYear()}-${this.value.getMonth() + 1}-${this.value.getDate()}`;
 
       if (this.mode === 'date') {
-        return `${date}`
+        return date;
       } else {
-
         return `${date} ${time}`;
       }
     }
@@ -133,7 +135,14 @@ export default {
     initializeValue() {
       if (!this.defaultValue) return;
 
-      this.value = new Date(this.defaultValue.replace(/([^!\s])-/g, '$1/'));
+      if (this.mode === 'time') {
+        // expects time in format of "[date] HH:mm"
+        const [hours, minutes] = this.defaultValue.split(' ')[1].split(":").map(Number);
+
+        this.value = { hours: hours, minutes: minutes, seconds: 0 }
+      } else {
+        this.value = new Date(this.defaultValue.replace(/([^!\s])-/g, '$1/'));
+      }
     },
     close() {
       this.$refs.datetimePicker.closeMenu();

@@ -24,13 +24,9 @@ window.initDateTimePickerComponent = (id) => {
     },
     mounted() {
       if (this.$refs.input.dataset.default) {
-        const defaultDate = new Date(this.$refs.input.dataset.default.replace(/([^!\s])-/g, '$1/')); // Safari fix
+        const defaultDate = this.$refs.input.dataset.default.replace(/([^!\s])-/g, '$1/');
         this.date = defaultDate;
-        this.$refs.vueDateTime.manualUpdate = true;
-        this.$refs.vueDateTime.datetime = defaultDate;
-      } else if (this.date) {
-        this.$refs.vueDateTime.manualUpdate = true;
-        this.$refs.vueDateTime.datetime = new Date(this.date);
+      } else if (this.date) {;
       }
 
       $(this.$refs.input).data('dateTimePicker', this);
@@ -46,16 +42,12 @@ window.initDateTimePickerComponent = (id) => {
       },
       setDate(date) {
         this.date = date;
-        this.$refs.vueDateTime.manualUpdate = true;
-        this.$refs.vueDateTime.datetime = date;
         this.$nextTick(() => {
           if (this.onChange) this.onChange(date);
         });
       },
       clearDate() {
         this.date = null;
-        this.$refs.vueDateTime.manualUpdate = true;
-        this.$refs.vueDateTime.datetime = null;
         this.$nextTick(() => {
           if (this.onChange) this.onChange(null);
         });
