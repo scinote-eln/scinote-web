@@ -113,6 +113,10 @@ export default {
           });
           this.repositoryColumnsDef = columns;
         })
+        .catch(() => {
+          // For private repositories we can't load the columns
+          this.repositoryColumnsDef = [...this.defaultRepositoryColumnsDef];
+        });
     }
   }
 };

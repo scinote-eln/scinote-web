@@ -1483,7 +1483,7 @@ en:
         success: "Successfully assigned an item to the task."
       repository:
         private_repository_name: "Private inventory"
-        private_repository_row_name: "Private item (%{repository_row_code})"
+        private_repository_row_name: "Private item"
     protocol:
       title: "Protocol"
       options_dropdown:

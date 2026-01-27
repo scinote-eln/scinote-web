@@ -15,7 +15,8 @@ class MyModuleRepositoriesController < ApplicationController
   before_action :set_navigator, only: %i(index)
   before_action :set_inline_name_editing, only: %i(index)
 
-  def index; end
+  def index
+  end
 
   def index_dt
     @draw = params[:draw].to_i
@@ -59,8 +60,10 @@ class MyModuleRepositoriesController < ApplicationController
     total_count = repository_rows.take&.filtered_count.to_i
     total_pages = (total_count.to_f / params[:per_page].to_i).ceil
 
+    serializer = can_read_repository?(@repository) ? Lists::RepositoryRowSerializer : Lists::PrivateRepositoryRowSerializer
+
     render json: repository_rows,
-           each_serializer: Lists::RepositoryRowSerializer,
+           each_serializer: serializer,
            user: current_user,
            my_module: @my_module,
            assigned_view: true,

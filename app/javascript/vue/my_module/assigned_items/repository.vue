@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" class="p-4 bg-white rounded transition-all overflow-hidden" :style="{height: (sectionOpened ? '600px' : '60px')}">
+  <div ref="container" class="p-4 bg-white rounded transition-all overflow-hidden mb-4" :style="{height: (sectionOpened ? '600px' : '60px')}">
     <div class="flex items-center h-6 gap-4 assigned-repository-title mb-1">
       <div
         @click="toggleContainer"
@@ -84,6 +84,10 @@ export default {
     toolbarActions() {
       const left = [];
       const right = [];
+
+      if (!this.repository.attributes.permissions.can_read) {
+        return {};
+      }
 
       if (this.repository.attributes.permissions.can_assign) {
         left.push({
