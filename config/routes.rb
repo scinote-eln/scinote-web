@@ -584,6 +584,10 @@ Rails.application.routes.draw do
           get :consume_modal
           post :update_consumption
         end
+
+        collection do
+          post :actions_toolbar
+        end
       end
 
       resources :repository_snapshots, controller: :my_module_repository_snapshots, only: %i(destroy show) do

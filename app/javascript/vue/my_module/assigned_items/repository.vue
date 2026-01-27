@@ -32,11 +32,12 @@
         :dataUrl="dataSource"
         :reloadingTable="reloadingTable"
         :toolbarActions="toolbarActions"
-        :actionsUrl="''"
+        :actionsUrl="toolbarActionsUrl"
         :filters="[]"
         :tableOnly="true"
         @openConsumeModal="consume"
         @export="exportRows"
+        @print="printRows"
         @tableReloaded="reloadingTable = false"
       ></DataTable>
     </div>
@@ -58,7 +59,8 @@ import ConfirmationModal from '../../shared/confirmation_modal.vue';
 import ColumnsMixin from '../../repository/columns_mixin.js';
 
 import {
-  index_ag_my_module_repository_path
+  index_ag_my_module_repository_path,
+  actions_toolbar_my_module_repositories_path
 } from '../../../routes.js';
 
 export default {
@@ -119,6 +121,9 @@ export default {
     },
     dataSource() {
       return index_ag_my_module_repository_path(this.myModuleId, this.repository.id);
+    },
+    toolbarActionsUrl() {
+      return actions_toolbar_my_module_repositories_path(this.myModuleId);
     }
   },
   methods: {
@@ -138,6 +143,13 @@ export default {
     toggleContainer() {
       this.sectionOpened = !this.sectionOpened;
       this.recalculateContainerSize();
+    },
+    printRows(_e, rows) {
+      if (typeof PrintModalComponent !== 'undefined') {
+        PrintModalComponent.openModal();
+        PrintModalComponent.repository_id = this.repository.id;
+        PrintModalComponent.row_ids = rows.map(row => row.id);
+      }
     },
     exportRows() {
       let headerIDs = [];
