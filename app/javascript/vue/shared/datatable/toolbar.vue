@@ -52,15 +52,6 @@
       </div>
     </div>
     <div class="flex flex-1 justify-end gap-2">
-      <a v-for="action in toolbarActions.right" :key="action.label"
-      :class="[action.buttonStyle, {
-            'disabled': disabled
-           }]"
-          :href="action.path"
-          @click="doAction(action, $event)">
-        <i :class="action.icon"></i>
-        {{ action.label }}
-      </a>
       <div v-if="!disabled" class="sci-input-container-v2"
            :class="{'w-48': showSearch, 'w-11': !showSearch}"
            :data-e2e="'e2e-BT-topToolbar-search'">
@@ -79,6 +70,15 @@
         <i v-else class="sn-icon sn-icon-close !m-2.5 !ml-auto right-0 cursor-pointer z-10"
                   @click="$emit('search:change', '')"></i>
       </div>
+      <a v-for="action in toolbarActions.right" :key="action.label"
+      :class="[action.buttonStyle, {
+            'disabled': disabled
+           }]"
+          :href="action.path"
+          @click="doAction(action, $event)">
+        <i :class="action.icon"></i>
+        {{ action.label }}
+      </a>
       <FilterDropdown v-if="filters.length && !disabled" :filters="filters" @applyFilters="applyFilters" :data-e2e="'e2e-BT-topToolbar-filters'"/>
       <button
         v-if="currentViewRender === 'table'"

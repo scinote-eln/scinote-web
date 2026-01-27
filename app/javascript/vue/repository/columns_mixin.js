@@ -26,13 +26,17 @@ export default {
         notSelectable: true,
         cellRenderer: 'nameRenderer',
         cellRendererParams: {
-          repositoryId: this.repository.id
+          repositoryId: this.repository.id,
+          legacyId: -4
         }
       },
       {
         field: 'code',
         headerName: this.i18n.t('repositories.table.id'),
         sortable: true,
+        cellRendererParams: {
+          legacyId: -3
+        }
       },
       {
         field: 'assigned',
@@ -41,17 +45,26 @@ export default {
       },
       {
         field: 'connections',
-        headerName: this.i18n.t('repositories.table.relationships')
+        headerName: this.i18n.t('repositories.table.relationships'),
+        cellRendererParams: {
+          legacyId: -11
+        }
       },
       {
         field: 'created_at',
         headerName: this.i18n.t('repositories.table.added_on'),
-        sortable: true
+        sortable: true,
+        cellRendererParams: {
+          legacyId: -6
+        },
       },
       {
         field: 'created_by',
         headerName: this.i18n.t('repositories.table.added_by'),
-        sortable: true
+        sortable: true,
+        cellRendererParams: {
+          legacyId: -5
+        },
       }];
       return columns;
     }
@@ -79,7 +92,8 @@ export default {
               cellRendererParams: {
                 repositoryId: this.repository.id,
                 columnId: column.id,
-                columnDataType: column.attributes.data_type
+                columnDataType: column.attributes.data_type,
+                legacyId: parseInt(column.id, 10)
               },
               notSelectable: true
             });

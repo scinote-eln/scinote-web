@@ -36,6 +36,7 @@
         :filters="[]"
         :tableOnly="true"
         @openConsumeModal="consume"
+        @export="exportRows"
         @tableReloaded="reloadingTable = false"
       ></DataTable>
     </div>
@@ -82,6 +83,8 @@ export default {
   computed: {
     toolbarActions() {
       const left = [];
+      const right = [];
+
       if (this.repository.attributes.permissions.can_assign) {
         left.push({
           name: 'assign',
@@ -98,9 +101,16 @@ export default {
           buttonStyle: 'btn btn-secondary'
         });
       }
+
+      right.push({
+        name: 'export',
+        icon: 'sn-icon sn-icon-export',
+        type: 'emit',
+        buttonStyle: 'btn btn-light icon-btn btn-black',
+      })
       return {
         left: left,
-        right: []
+        right: right
       };
     },
     dataSource() {
@@ -124,6 +134,24 @@ export default {
     toggleContainer() {
       this.sectionOpened = !this.sectionOpened;
       this.recalculateContainerSize();
+    },
+    exportRows() {
+      let headerIDs = [];
+      this.repositoryColumnsDef.forEach((column) => {
+        if (column.cellRendererParams?.legacyId) {
+          headerIDs.push(column.cellRendererParams.legacyId);
+        }
+      });
+
+      axios.post(this.repository.attributes.urls.export, {
+        header_ids: headerIDs
+      })
+        .then((response) => {
+          HelperModule.flashAlertMsg(response.data.message, 'success');
+        })
+        .catch((error) => {
+          HelperModule.flashAlertMsg(error.response.data.message, 'danger');
+        });
     },
     consume(row) {
       this.selectedRow = row;
