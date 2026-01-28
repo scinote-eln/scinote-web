@@ -41,11 +41,13 @@ export default {
       {
         field: 'assigned_tasks_count',
         headerName: this.i18n.t('repositories.table.assigned'),
-        sortable: true
+        sortable: true,
+        hide: this.columnHidden
       },
       {
         field: 'connections_count',
         headerName: this.i18n.t('repositories.table.relationships'),
+        hide: this.columnHidden,
         cellRendererParams: {
           legacyId: -11
         }
@@ -54,6 +56,7 @@ export default {
         field: 'created_at',
         headerName: this.i18n.t('repositories.table.added_on'),
         sortable: true,
+        hide: this.columnHidden,
         cellRendererParams: {
           legacyId: -6
         },
@@ -62,11 +65,15 @@ export default {
         field: 'created_by',
         headerName: this.i18n.t('repositories.table.added_by'),
         sortable: true,
+        hide: this.columnHidden,
         cellRendererParams: {
           legacyId: -5
         },
       }];
       return columns;
+    },
+    columnHidden() {
+      return !this.repository.is_snapshot;
     }
   },
   mounted() {
@@ -89,6 +96,7 @@ export default {
               headerName: column.attributes.name,
               sortable: true,
               cellRenderer: 'cellRenderer',
+              hide: !(field == 'stock') && this.columnHidden,
               cellRendererParams: {
                 repositoryId: this.repository.id,
                 columnId: column.id,

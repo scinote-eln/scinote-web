@@ -4,7 +4,9 @@ module Users
   module Settings
     class UserSettingsController < ApplicationController
       def show
-        render json: { data: current_user.settings[params[:key]] }
+        settings = current_user.settings[params[:key]]
+        settings = settings&.[](params[:subKey]) if params[:subKey]
+        render json: { data: settings }
       end
 
       def update

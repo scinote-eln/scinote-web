@@ -951,6 +951,7 @@ class Extends
     result_states
     result_templates_order
     result_template_states
+    MyModuleRepositoryRows_active_state
   ).freeze
 end
 
