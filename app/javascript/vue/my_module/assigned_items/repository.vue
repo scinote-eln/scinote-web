@@ -38,6 +38,7 @@
         @openConsumeModal="consume"
         @export="exportRows"
         @print="printRows"
+        @create="openCreateItemModal = true"
         @tableReloaded="reloadingTable = false"
       ></DataTable>
     </div>
@@ -49,6 +50,12 @@
       :confirmText="i18n.t('my_modules.repository.stock_warning_modal.consume_anyway')"
       ref="warningModal"
     ></ConfirmationModal>
+    <CreateItemModal 
+      v-if="openCreateItemModal"
+      :myModuleId="myModuleId"
+      :selectedRepositoryValue="repository.id"
+      @tableReloaded="newCreatedRow"
+      @close="openCreateItemModal = false"></CreateItemModal>
   </div>
 </template>
 <script>
@@ -57,6 +64,7 @@ import axios from '../../../packs/custom_axios.js';
 import ConsumeModal from './modals/consume.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
 import ColumnsMixin from '../../repository/columns_mixin.js';
+import CreateItemModal from '../assigned_items/modals/new_item.vue';
 
 import {
   index_ag_my_module_repository_path,
@@ -67,12 +75,14 @@ export default {
   name: 'AssignedRepository',
   props: {
     repository: Object,
-    myModuleId: String
+    myModuleId: String,
+    reloadKey: Number
   },
   components: {
     DataTable,
     ConsumeModal,
-    ConfirmationModal
+    ConfirmationModal,
+    CreateItemModal
   },
   mixins: [ColumnsMixin],
   data: () => ({
@@ -81,7 +91,13 @@ export default {
     submitting: false,
     reloadingTable: false,
     openConsumeModal: false,
+    openCreateItemModal: false
   }),
+  watch: {
+    reloadKey() {
+      this.reloadingTable = true;
+    }
+  },
   computed: {
     toolbarActions() {
       const left = [];
@@ -168,6 +184,10 @@ export default {
         .catch((error) => {
           HelperModule.flashAlertMsg(error.response.data.message, 'danger');
         });
+    },
+    newCreatedRow(repositoryRowSidebarUrl){
+      this.reloadingTable = true
+      window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
     },
     consume(row) {
       this.selectedRow = row;

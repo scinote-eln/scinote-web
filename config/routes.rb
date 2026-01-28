@@ -240,7 +240,6 @@ Rails.application.routes.draw do
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
           post 'actions_toolbar'
-          get :list
           post :rows_list
         end
         member do
@@ -916,6 +915,7 @@ Rails.application.routes.draw do
         post :validate_label_template_columns, to: 'repository_rows#validate_label_template_columns'
         post :print, to: 'repository_rows#print'
         get :user_roles
+        get :list
       end
 
       member do

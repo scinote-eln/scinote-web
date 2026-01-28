@@ -17,7 +17,7 @@
               <label class="sci-label">
                 {{ i18n.t('my_modules.assigned_items.create_modal.inventory_label') }}
               </label>
-              <SelectDropdown :optionsUrl="repositoriesUrl" @change="changeRepository" :searchable="true" />
+              <SelectDropdown :optionsUrl="repositoriesUrl" :value="selectedRepository" @change="changeRepository" :searchable="true" />
             </div>
             <div class="mb-6">
               <label class="sci-label">
@@ -59,14 +59,15 @@ import axios from '../../../../packs/custom_axios.js';
 import SelectDropdown from '../../../shared/select_dropdown.vue';
 import modalMixin from '../../../shared/modal_mixin.js';
 import {
-  repository_repository_rows_path
+  repository_repository_rows_path,
+  list_repositories_path
 } from '../../../../routes.js';
 
 export default {
   name: 'CreateItemModal',
   props: {
-    repositoriesUrl: String,
-    myModuleId: String
+    myModuleId: String,
+    selectedRepositoryValue: String
   },
   mixins: [modalMixin],
   components: {
@@ -83,11 +84,14 @@ export default {
   computed: {
     validObject() {
       return this.selectedRepository && this.inventoryItemName;
+    },
+    repositoriesUrl() {
+      return list_repositories_path({ appendable: true });
     }
   },
   created() {
-  },
-  mounted() {
+    this.teamId = document.body.dataset.currentTeamId;
+    this.selectedRepository = parseInt(this.selectedRepositoryValue);
   },
   methods: {
     changeRepository(repository) {
@@ -100,7 +104,7 @@ export default {
         my_module_id: this.myModuleId,
         is_output: this.outputMarked
       }).then((data) => {
-        this.$emit('tableReloaded', data.data.repository_row_url);
+        this.$emit('tableReloaded', data.data.repository_row_url, this.selectedRepository);
         this.submitting = false;
         this.close();
       }).catch(() => {

@@ -15,8 +15,7 @@ class MyModuleRepositoriesController < ApplicationController
   before_action :set_navigator, only: %i(index)
   before_action :set_inline_name_editing, only: %i(index)
 
-  def index
-  end
+  def index; end
 
   def index_dt
     @draw = params[:draw].to_i
