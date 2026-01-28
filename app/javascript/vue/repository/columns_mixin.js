@@ -39,12 +39,12 @@ export default {
         }
       },
       {
-        field: 'assigned',
+        field: 'assigned_tasks_count',
         headerName: this.i18n.t('repositories.table.assigned'),
         sortable: true
       },
       {
-        field: 'connections',
+        field: 'connections_count',
         headerName: this.i18n.t('repositories.table.relationships'),
         cellRendererParams: {
           legacyId: -11

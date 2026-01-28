@@ -52,7 +52,6 @@ class MyModuleRepositoriesController < ApplicationController
                                                        params,
                                                        user: current_user,
                                                        my_module: @my_module,
-                                                       assigned_view: true,
                                                        preload_cells: true).call.load
 
     # In new tables we don't using unfiltered_count, so total count is equal to filtered count

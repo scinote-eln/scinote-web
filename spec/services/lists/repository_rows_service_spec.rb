@@ -95,7 +95,7 @@ RSpec.describe Lists::RepositoryRowsService do
       it 'filters repository_rows by row id containing search query' do
         params[:advanced_search]= {
           filter_elements: [
-            repository_column_id: 'row_id',
+            repository_column_id: 'row_name',
             operator: 'contains',
             parameters: { text: '1' }
           ]
@@ -109,7 +109,7 @@ RSpec.describe Lists::RepositoryRowsService do
       it 'filters repository_rows by row id not containing search query' do
         params[:advanced_search]= {
           filter_elements: [
-            repository_column_id: 'row_id',
+            repository_column_id: 'row_name',
             operator: 'doesnt_contain',
             parameters: { text: '1' }
           ]

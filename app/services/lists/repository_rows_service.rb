@@ -10,21 +10,20 @@ module Lists
   class RepositoryRowsService < BaseService
     PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned relationships updated_on updated_by).freeze
 
-    def initialize(raw_data, params, user: nil, my_module: nil, assigned_view: false, disable_reminders: false, preload_cells: true)
+    def initialize(raw_data, params, user: nil, my_module: nil, disable_reminders: false, preload_cells: true)
       super(raw_data, params, user: user)
       @repository = @raw_data
       @my_module = my_module
-      @assigned_view = assigned_view
       @disable_reminders = disable_reminders
       @preload_cells = preload_cells
     end
 
     def call
       fetch_records
+      add_extra_fields
       filter_records
       sort_records
       paginate_records
-      add_extra_fields
       @records
     end
 
@@ -32,7 +31,7 @@ module Lists
 
     def fetch_records
       @records = @repository.repository_rows
-      @records = @records.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: @my_module }) if @my_module && @assigned_view
+      @records = @records.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: @my_module }) if @my_module
     end
 
     def add_extra_fields
@@ -43,16 +42,8 @@ module Lists
 
       # Adding assigned counters
       if @my_module
-        if @assigned_view
-          @records = @records.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: @my_module })
-          @records = @records.select('SUM(DISTINCT my_module_repository_rows.stock_consumption) AS "consumed_stock"') if @repository.has_stock_management?
-        else
-          @records = @records.left_outer_joins(:my_module_repository_rows)
-          @records = @records.where(my_module_repository_rows: { my_module: @my_module }).or(@records.active)
-          @records = @records.select("EXISTS (SELECT 1 FROM my_module_repository_rows " \
-                                     "WHERE my_module_repository_rows.repository_row_id = repository_rows.id " \
-                                     "AND my_module_repository_rows.my_module_id = #{@my_module.id}) AS assigned")
-        end
+        @records = @records.joins(:my_module_repository_rows)
+        @records = @records.select('SUM(DISTINCT my_module_repository_rows.stock_consumption) AS "consumed_stock"') if @repository.has_stock_management?
       else
         @records = @records.left_outer_joins(:my_module_repository_rows)
       end
@@ -488,40 +479,31 @@ module Lists
       direction = direction == 'desc' ? :desc : :asc
 
       case column
-      when 'assigned'
-        return if @my_module && @assigned_view
-
+      when 'assigned_tasks_count'
         @records = @records.order(assigned_my_modules_count: direction)
-      when /^column_[1-9]\d*\z/
+      when 'created_by'
+        @records = @records.group('created_by.full_name').order('created_by.full_name' => direction)
+      when 'created_at'
+        @records = @records.order('created_at' => direction)
+      when 'connections_count'
+        @records = @records.order(relationships_count: direction)
+      when 'name'
+        @records = @records.order(name: direction)
+      when 'code'
+        @records = @records.order(id: direction)
+      when 'consumed_stock'
+        @records = @records.order('consumed_stock' => direction)
+      when /^col_[1-9]\d*\z/
         column_id = column[/\d+\z/].to_i
         sorting_column = @repository.repository_columns.find_by(id: column_id)
         return unless sorting_column
 
-        sorting_data_type = sorting_column.data_type.constantize
-        cells = sorting_data_type.joins(
-          "INNER JOIN repository_cells AS repository_sort_cells " \
-          "ON repository_sort_cells.value_id = #{sorting_data_type.table_name}.id " \
-          "AND repository_sort_cells.value_type = '#{sorting_data_type.base_class.name}'"
-        ).where('repository_sort_cells.repository_column_id': sorting_column.id)
+        @records = sort_by_custom_repository_column(sorting_column, direction)
+      when 'stock'
+        sorting_column = @repository.repository_columns.find_by(data_type: 'RepositoryStockValue')
+        return unless sorting_column
 
-        cells = cells.joins(sorting_data_type::EXTRA_SORTABLE_VALUE_INCLUDE) if sorting_data_type.const_defined?('EXTRA_SORTABLE_VALUE_INCLUDE')
-
-        cells = if sorting_column.repository_checklist_value?
-                  cells.select("repository_sort_cells.repository_row_id, \
-                               STRING_AGG(#{sorting_data_type::SORTABLE_COLUMN_NAME}, ' ' \
-                               ORDER BY #{sorting_data_type::SORTABLE_COLUMN_NAME}) AS value")
-                       .group('repository_sort_cells.repository_row_id')
-                else
-                  cells.select("repository_sort_cells.repository_row_id, #{sorting_data_type::SORTABLE_COLUMN_NAME} AS value")
-                end
-
-        @records = @records.joins("LEFT OUTER JOIN (#{cells.to_sql}) AS values ON values.repository_row_id = repository_rows.id")
-                           .group('values.value')
-                           .order('values.value' => direction)
-      when 'users.full_name'
-        @records = @records.group('created_by.full_name').order('created_by.full_name' => direction)
-      when 'relationships'
-        @records = @records.order(relationships_count: direction)
+        @records = sort_by_custom_repository_column(sorting_column, direction)
       else
         return unless sortable_columns.include?(column)
 
@@ -535,8 +517,31 @@ module Lists
 
     def build_sortable_columns
       sortable_columns = @repository.default_sortable_columns
-      sortable_columns << 'consumed_stock' if @repository.has_stock_management? && @assigned_view
+      sortable_columns << 'consumed_stock' if @repository.has_stock_management? && @my_module
       sortable_columns
+    end
+
+    def sort_by_custom_repository_column(sorting_column, direction)
+      sorting_data_type = sorting_column.data_type.constantize
+      cells = sorting_data_type.joins(
+        "INNER JOIN repository_cells AS repository_sort_cells " \
+        "ON repository_sort_cells.value_id = #{sorting_data_type.table_name}.id " \
+        "AND repository_sort_cells.value_type = '#{sorting_data_type.base_class.name}'"
+      ).where('repository_sort_cells.repository_column_id': sorting_column.id)
+
+      cells = cells.joins(sorting_data_type::EXTRA_SORTABLE_VALUE_INCLUDE) if sorting_data_type.const_defined?('EXTRA_SORTABLE_VALUE_INCLUDE')
+
+      cells = if sorting_column.repository_checklist_value?
+                cells.select("repository_sort_cells.repository_row_id, \
+                             STRING_AGG(#{sorting_data_type::SORTABLE_COLUMN_NAME}, ' ' \
+                             ORDER BY #{sorting_data_type::SORTABLE_COLUMN_NAME}) AS value")
+                     .group('repository_sort_cells.repository_row_id')
+              else
+                cells.select("repository_sort_cells.repository_row_id, #{sorting_data_type::SORTABLE_COLUMN_NAME} AS value")
+              end
+      @records.joins("LEFT OUTER JOIN (#{cells.to_sql}) AS values ON values.repository_row_id = repository_rows.id")
+              .group('repository_rows.id', 'values.value')
+              .order('values.value' => direction)
     end
   end
 end
