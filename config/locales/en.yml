@@ -1473,6 +1473,7 @@ en:
       create_item: "Create item"
       toolbar:
         print: "Print label"
+        export_consumption: "Export consumption"
       create_modal:
         modal_title: 'Create a new item'
         description: 'Choose an inventory and name the new item'
