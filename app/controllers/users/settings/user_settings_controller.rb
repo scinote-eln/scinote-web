@@ -4,9 +4,7 @@ module Users
   module Settings
     class UserSettingsController < ApplicationController
       def show
-        settings = current_user.settings[params[:key]]
-        settings = settings&.[](params[:subKey]) if params[:subKey]
-        render json: { data: settings }
+        render json: { data: current_user.settings[params[:key]] }
       end
 
       def update
@@ -16,7 +14,7 @@ module Users
           key = setting[:key]
           data = setting[:data]
 
-          next unless Extends::WHITELISTED_USER_SETTINGS.include?(key.to_s)
+          next unless Extends::WHITELISTED_USER_SETTINGS.any? { |el| el.match?(key.to_s) }
 
           case key.to_s
           when 'task_step_states', 'result_states'

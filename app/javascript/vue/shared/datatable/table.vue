@@ -162,9 +162,6 @@ export default {
       type: String,
       required: true
     },
-    tableSubId: {
-      type: String
-    },
     columnDefs: {
       type: Array,
       default: () => []
@@ -485,7 +482,7 @@ export default {
     },
     // Table states
     fetchTableState() {
-      axios.get(this.userSettingsUrl, { params: { key: this.stateKey, subKey: this.tableSubId } })
+      axios.get(this.userSettingsUrl, { params: { key: this.stateKey } })
         .then((response) => {
           if (response.data.data) {
             this.tableState = response.data.data;
@@ -552,7 +549,7 @@ export default {
 
       const settings = {
         key: this.stateKey,
-        data: (this.tableSubId ? { [this.tableSubId]: tableState } : tableState)
+        data: tableState
       };
       axios.put(this.userSettingsUrl, { settings: [settings] });
       this.tableState = tableState;

@@ -951,8 +951,9 @@ class Extends
     result_states
     result_templates_order
     result_template_states
-    MyModuleRepositoryRows_active_state
   ).freeze
+
+  WHITELISTED_USER_SETTINGS += [/MyModuleRepositoryRows_my_module_\d+_repository_row_\d+_active_state/]
 end
 
 # rubocop:enable Style/MutableConstant
