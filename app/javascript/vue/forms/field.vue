@@ -1,33 +1,52 @@
 <template>
 <div class="p-4 rounded bg-white text-sm mb-2">
   <div class="grow">
-    <div class="font-bold">
+    <div class="font-bold" :data-e2e="`e2e-TX-${dataE2e}-fieldName`">
       {{ field.attributes.name }}
       <span v-if="unit">({{ unit }})</span>
       <span v-if="field.attributes.required" class="text-sn-delete-red">*</span>
     </div>
-    <div ref="description" v-if="field.attributes.description">
+    <div
+      ref="description"
+      v-if="field.attributes.description"
+      :data-e2e="`e2e-TX-${dataE2e}-fieldDescription`"
+    >
       <span>{{ field.attributes.description }}</span>
     </div>
     <div class="mt-2">
-      <component :is="field.attributes.data.type" ref="formField" :disabled="disabled"
-                 :field="field" :marked_as_na="markAsNa" @save="saveValue" @validChanged="checkValidField" />
+      <component
+        :is="field.attributes.data.type"
+        ref="formField"
+        :disabled="disabled"
+        :field="field"
+        :marked_as_na="markAsNa"
+        @save="saveValue"
+        @validChanged="checkValidField"
+        :dataE2e="dataE2e"
+      />
     </div>
   </div>
   <div class="flex items-center justify-end mt-4 gap-4">
-    <span class="text-sn-grey-700 text-xs" v-if="field.field_value && field.field_value.submitted_at">
+    <span
+      v-if="field.field_value && field.field_value.submitted_at"
+      class="text-sn-grey-700 text-xs"
+      :data-e2e="`e2e-TX-${dataE2e}-submittedInfo`"
+    >
       {{  i18n.t('forms.fields.submitted_by', { date: field.field_value.submitted_at, user: field.field_value.submitted_by_full_name}) }}
     </span>
-    <button class="btn btn-secondary mb-0.5"
-            :title="i18n.t('forms.fields.mark_as_na_tooltip')"
-            data-toggle="tooltip"
-            data-placement="top"
-            :disabled="disabled"
-            v-if="field.attributes.allow_not_applicable"
-            :class="{
-              '!bg-sn-super-light-blue !border-sn-blue': markAsNa && !disabled
-            }"
-            @click="markAsNa = !markAsNa">
+    <button
+      v-if="field.attributes.allow_not_applicable"
+      class="btn btn-secondary mb-0.5"
+      :title="i18n.t('forms.fields.mark_as_na_tooltip')"
+      data-toggle="tooltip"
+      data-placement="top"
+      :disabled="disabled"
+      :class="{
+        '!bg-sn-super-light-blue !border-sn-blue': markAsNa && !disabled
+      }"
+      @click="markAsNa = !markAsNa"
+      :data-e2e="`e2e-CB-${dataE2e}-markAsNa`"
+    >
       <div class="w-4 h-4  border rounded-sm flex items-center justify-center"
         :class="{
           'bg-sn-blue': markAsNa && !disabled,
@@ -60,6 +79,10 @@ export default {
     formResponse: {
       type: Object,
       default: null
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   components: {

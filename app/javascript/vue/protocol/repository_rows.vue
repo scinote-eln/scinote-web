@@ -10,6 +10,7 @@
                 tableId="ProtocolRepositoryRowsTable"
                 :dataUrl="dataUrl"
                 :reloadingTable="reloadingTable"
+                :withCheckboxes="!published"
                 :toolbarActions="toolbarActions"
                 :actionsUrl="actionsUrl"
                 :hideColumnsManagment="true"
@@ -62,6 +63,10 @@ export default {
     },
     createUrl: {
       type: String
+    },
+    published: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

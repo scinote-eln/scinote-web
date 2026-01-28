@@ -1,13 +1,19 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="document" :data-e2e="`e2e-MD-${dataE2e}-assignItems`">
       <form @submit.prevent="submit">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              :data-e2e="`e2e-BT-${dataE2e}-assignItemsModal-close`"
+            >
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 class="modal-title truncate !block" >
+            <h4 class="modal-title truncate !block" :data-e2e="`e2e-TX-${dataE2e}-assignItemsModal-title`">
               {{  i18n.t('forms.show.select_items') }}
             </h4>
           </div>
@@ -17,11 +23,26 @@
               @change="selectedRows = $event"
               @repositoryChange="changeSelectedInventory"
               :excludeRows="excludeRows"
+              :dataE2e="`${dataE2e}-assignItemsModal`"
             />
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button type="button" class="btn btn-primary" @click="save"> {{  i18n.t('forms.show.add') }}</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              :data-e2e="`e2e-BT-${dataE2e}-assignItemsModal-cancel`"
+            >
+              {{ i18n.t('general.cancel') }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="save"
+              :data-e2e="`e2e-BT-${dataE2e}-assignItemsModal-add`"
+            >
+              {{  i18n.t('forms.show.add') }}
+            </button>
           </div>
         </div>
       </form>
@@ -40,6 +61,10 @@ export default {
     excludeRows: {
       type: Array,
       default: () => []
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   mixins: [modalMixin],

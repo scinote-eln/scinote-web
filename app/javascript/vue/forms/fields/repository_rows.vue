@@ -10,10 +10,12 @@
     <RowSelectorModal v-if="rowSelectorOpened"
                       :excludeRows="assignedIds"
                       @close="rowSelectorOpened = false"
-                      @save="addValue" />
+                      @save="addValue"
+                      :dataE2e="dataE2e"
+    />
     <div v-if="field.field_value" class="flex items-center gap-2 mt-4 flex-wrap">
       <template v-for="(row, index) in field.field_value.value" :key="row.id">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2" :data-e2e="`e2e-BT-${dataE2e}-item${row.id}`">
           <span v-if="index > 0">|</span>
           <a v-if="row.has_access"
             class="cursor-pointer text-sn-blue record-info-link"
@@ -40,6 +42,12 @@ import {
 export default {
   name: 'RepositoryRowsField',
   mixins: [fieldMixin],
+  props: {
+    dataE2e: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     RowSelectorModal
   },

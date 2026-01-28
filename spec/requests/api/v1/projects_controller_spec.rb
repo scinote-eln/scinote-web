@@ -57,6 +57,20 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
       )
     end
 
+    it 'Response with correct projects, filtered by name' do
+      hash_body = nil
+      project = @team1.projects.take
+      get api_v1_team_projects_path(team_id: @team1.id, filter: { name:  project.name }), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@team1.projects.where_attributes_like(:name, project.name), each_serializer: Api::V1::ProjectSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
     it 'Response with correct projects, only archived' do
       hash_body = nil
       get api_v1_team_projects_path(team_id: @team1.id, filter: { archived: true }),
@@ -306,28 +320,85 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
           )
         )
       end
+    end
 
-      context 'when includes project_folder relation' do
-        let(:request_body) do
-          {
-            data: {
-              type: 'projects',
-              attributes: {
-                project_folder_id: project_folder.id
-              }
+    context 'archiving with valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'projects',
+            attributes: {
+              archived: true
             }
           }
-        end
-        let(:project_folder) { create :project_folder, team: @team1 }
+        }
+      end
 
-        it 'renders 201' do
-          action
+      it 'returns well formated response' do
+        action
 
-          expect(response).to have_http_status(200)
-          expect(JSON.parse(response.body).dig('data', 'relationships', 'project_folder', 'data')).to be_truthy
-        end
+        expect(response).to have_http_status 200
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'projects',
+              attributes: hash_including(archived: true)
+            )
+          )
+        )
       end
     end
+
+    context 'restoring with valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'projects',
+            attributes: {
+              archived: false
+            }
+          }
+        }
+      end
+
+      it 'returns well formated response' do
+        @project.update(archived: true)
+
+        action
+        
+        expect(response).to have_http_status 200
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'projects',
+              attributes: hash_including(archived: false)
+            )
+          )
+        )
+      end
+    end
+
+    context 'when includes project_folder relation' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'projects',
+            attributes: {
+              project_folder_id: project_folder.id
+            }
+          }
+        }
+      end
+      let(:project_folder) { create :project_folder, team: @team1 }
+
+      it 'renders 201' do
+        action
+
+        expect(response).to have_http_status(200)
+        expect(JSON.parse(response.body).dig('data', 'relationships', 'project_folder', 'data')).to be_truthy
+      end
+    end
+    
 
     context 'when has missing param' do
       let(:request_body) do

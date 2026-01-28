@@ -7,6 +7,7 @@
       @change="saveValue"
       :clearable="true"
       :placeholder="fieldDisabled ? ' ' : null"
+      :e2eValue="`e2e-DD-${dataE2e}`"
     />
   </div>
 </template>
@@ -18,6 +19,12 @@ import SelectDropdown from '../../shared/select_dropdown.vue';
 export default {
   name: 'SingleChoiceField',
   mixins: [fieldMixin],
+  props: {
+    dataE2e: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     SelectDropdown
   },

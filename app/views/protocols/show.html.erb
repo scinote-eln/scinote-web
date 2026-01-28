@@ -1,3 +1,4 @@
+ <% provide(:head_title, @protocol.name) %>
 <% provide(:sidebar_title, t('sidebar.templates.sidebar_title')) %>
 <%= content_for :sidebar do %>
   <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :protocol} %>

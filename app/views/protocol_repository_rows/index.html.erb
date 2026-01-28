@@ -6,6 +6,7 @@
       data-url="<%= protocol_repository_rows_path(@protocol) %>"
       actions-url="<%= actions_toolbar_protocol_repository_rows_path(@protocol) %>"
       create-url="<%= protocol_repository_rows_path(@protocol) if can_manage_protocol_draft_in_repository?(@protocol) %>"
+      :published="<%= @protocol.in_repository_published? %>"
     ></protocol-repository-rows>
   </div>
 </div>

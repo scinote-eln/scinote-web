@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_12_141129) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_13_114232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -264,6 +264,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_12_141129) do
     t.jsonb "data"
     t.date "date"
     t.date "date_to"
+    t.text "search_data"
+    t.index "trim_html_tags(search_data) gin_trgm_ops", name: "index_form_field_values_on_search_data", using: :gin
     t.index ["created_by_id"], name: "index_form_field_values_on_created_by_id"
     t.index ["form_field_id"], name: "index_form_field_values_on_form_field_id"
     t.index ["form_response_id"], name: "index_form_field_values_on_form_response_id"

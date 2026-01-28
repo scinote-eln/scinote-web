@@ -6,6 +6,7 @@
         :options="availableRows"
         :value="selectedRow"
         @change="selectedRow = $event"
+        :e2eValue="`${dataE2e}-row`"
       ></SelectDropdown>
     </div>
     <div>
@@ -15,6 +16,7 @@
         :options="availableColumns"
         :value="selectedColumn"
         @change="selectedColumn= $event"
+        :e2eValue="`${dataE2e}-column`"
       ></SelectDropdown>
     </div>
   </div>
@@ -33,7 +35,11 @@ export default {
     SelectDropdown
   },
   props: {
-    selectedContainerId: Number
+    selectedContainerId: Number,
+    dataE2e: {
+      type: String,
+      default: ''
+    }
   },
   created() {
     axios.get(this.positionsUrl)

@@ -8,7 +8,9 @@
           class="sci-input"
           v-model="options"
           @change="$emit('updateField')"
-          :placeholder="i18n.t('forms.show.dropdown_options_placeholder_html')" />
+          :placeholder="i18n.t('forms.show.dropdown_options_placeholder_html')"
+          data-e2e="e2e-IF-forms-builder-editField-singleChoice-dropdownOptions"
+        />
       </div>
     </div>
     <hr class="my-4 w-full">

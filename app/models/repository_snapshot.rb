@@ -48,6 +48,8 @@ class RepositorySnapshot < RepositoryBase
       original_repository: repository,
       team: my_module.experiment.project.team,
       status: :provisioning,
+      archived: repository.archived,
+      archived_on: repository.archived_on,
       my_module:,
       created_by:
     )
