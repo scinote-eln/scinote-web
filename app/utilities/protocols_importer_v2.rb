@@ -140,7 +140,6 @@ class ProtocolsImporterV2
         asset.result = parent
       end
 
-      asset.save!
       asset.attach_file_version(asset_json['signed_id'])
       asset.blob.update(metadata: JSON.parse(asset_json['fileMetadata'] || '{}').except('created_by_id'))
 
