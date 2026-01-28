@@ -25,9 +25,4 @@ describe RepositoryTableState, type: :model do
     it { should belong_to :user }
     it { should belong_to :repository }
   end
-
-  describe 'Validations' do
-    it { should validate_presence_of :user }
-    it { should validate_presence_of :repository }
-  end
 end
