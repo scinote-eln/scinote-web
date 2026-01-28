@@ -19,6 +19,7 @@ module Toolbars
       return [] if @rows.none?
 
       [
+        export_consumption,
         print_action
       ].compact
     end
@@ -30,6 +31,15 @@ module Toolbars
         name: 'print',
         label: I18n.t('my_modules.assigned_items.toolbar.print'),
         icon: 'sn-icon sn-icon-printer',
+        type: :emit
+      }
+    end
+
+    def export_consumption
+      {
+        name: 'export_consumption',
+        label: I18n.t('my_modules.assigned_items.toolbar.export_consumption'),
+        icon: 'sn-icon sn-icon-export',
         type: :emit
       }
     end

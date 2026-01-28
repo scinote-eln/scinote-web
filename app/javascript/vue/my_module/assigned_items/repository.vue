@@ -37,6 +37,7 @@
         :tableOnly="true"
         @openConsumeModal="consume"
         @export="exportRows"
+        @export_consumption="exportConsumption"
         @print="printRows"
         @create="openCreateItemModal = true"
         @tableReloaded="reloadingTable = false"
@@ -50,7 +51,7 @@
       :confirmText="i18n.t('my_modules.repository.stock_warning_modal.consume_anyway')"
       ref="warningModal"
     ></ConfirmationModal>
-    <CreateItemModal 
+    <CreateItemModal
       v-if="openCreateItemModal"
       :myModuleId="myModuleId"
       :selectedRepositoryValue="repository.id"
@@ -185,6 +186,17 @@ export default {
           HelperModule.flashAlertMsg(error.response.data.message, 'danger');
         });
     },
+    exportConsumption(_e, rows) {
+      window.initExportStockConsumptionModal();
+
+      if (window.exportStockConsumptionModalComponent) {
+        window.exportStockConsumptionModalComponent.fetchRepositoryData(
+          rows.map(row => row.id),
+          { repository_id: this.repository.id }
+        );
+      }
+    },
+
     newCreatedRow(repositoryRowSidebarUrl){
       this.reloadingTable = true
       window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
