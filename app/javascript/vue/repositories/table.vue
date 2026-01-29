@@ -27,7 +27,7 @@
     confirmClass="btn btn-danger"
     :confirmText="i18n.t('repositories.index.modal_delete.delete')"
     ref="deleteModal"
-    :e2eAttributes="deleteModal.e2eAttributes"
+    :e2eValue="'inventories-deleteInventoryModal'"
   ></ConfirmationModal>
   <ExportRepositoryModal
     v-if="exportRepository"
@@ -67,14 +67,7 @@
     `"
     :confirmClass="'btn btn-danger'"
     :confirmText="i18n.t('repositories.index.modal_confirm_sharing.confirm')"
-    :e2eAttributes="{
-          modalName: 'e2e-MD-confirmSharingChanges',
-          title: 'e2e-TX-confirmSharingChangesModal-title',
-          content: 'e2e-TX-confirmSharingChangesModal-content',
-          close: 'e2e-BT-confirmSharingChangesModal-close',
-          cancel: 'e2e-BT-confirmSharingChangesModal-cancel',
-          confirm: 'e2e-BT-confirmSharingChangesModal-delete'
-    }"
+    :e2eValue="'confirmSharingChangesModal'"
   ></ConfirmationModal>
   <AccessModal v-if="accessModalParams" :params="accessModalParams"
               @close="accessModalParams = null" @refresh="reloadingTable = true" />

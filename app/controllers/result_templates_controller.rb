@@ -1,13 +1,17 @@
 # frozen_string_literal: true
 
 class ResultTemplatesController < ResultBaseController
-
+  # rubocop:disable Rails/LexicallyScopedActionFilter
   before_action :load_parent
-  before_action :load_vars, only: %i(destroy elements assets upload_attachment destroy
+  before_action :load_vars, only: %i(destroy elements assets upload_attachment
                                      update_view_state update_asset_view_mode update duplicate)
   before_action :set_inline_name_editing, only: :index
   before_action :set_breadcrumbs_items, only: %i(index)
+  before_action :check_create_permissions, only: %i(create)
+  before_action :check_read_permissions, only: %i(elements assets)
+  before_action :check_manage_permissions, only: %i(upload_attachment update_view_state update_asset_view_mode update duplicate)
   before_action :check_destroy_permissions, only: :destroy
+  # rubocop:enable Rails/LexicallyScopedActionFilter
 
   def list
     if params[:with_linked_step_id].present?
@@ -75,6 +79,10 @@ class ResultTemplatesController < ResultBaseController
 
   def result_serializer
     ResultTemplateSerializer
+  end
+
+  def check_create_permissions
+    render_403 unless can_create_result_templates?(@parent)
   end
 
   def result_sorting_preference_key

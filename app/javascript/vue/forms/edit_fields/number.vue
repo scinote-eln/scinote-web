@@ -7,7 +7,9 @@
               class="sci-input"
               v-model="editField.attributes.data.unit"
               @change="updateField"
-              :placeholder="i18n.t('forms.show.unit_placeholder')" />
+              :placeholder="i18n.t('forms.show.unit_placeholder')"
+              data-e2e="e2e-IF-forms-builder-editField-number-unit"
+        />
       </div>
     </div>
     <hr class="my-4 w-full">

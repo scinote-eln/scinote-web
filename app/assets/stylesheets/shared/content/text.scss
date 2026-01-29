@@ -21,18 +21,6 @@
     p {
       margin: 0;
     }
-
-    ol {
-      counter-reset: item;
-
-      > li {
-        counter-increment: item;
-      }
-
-      &:not([style*="list-style-type"]) > li::marker {
-        content: counters(item, ".") ". ";
-      }
-    }
   }
 
   img {

@@ -1,17 +1,17 @@
 <template>
   <div ref="modal" @keydown.esc="cancel" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document" :data-e2e="e2eAttributes.modalName">
+    <div class="modal-dialog" role="document" :data-e2e="`e2e-CO-${e2eValue}`">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" :data-e2e="e2eAttributes.close"><i class="sn-icon sn-icon-close"></i></button>
-          <h4 class="modal-title" :data-e2e="e2eAttributes.title">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" :data-e2e="`e2e-BT-${e2eValue}-close`"><i class="sn-icon sn-icon-close"></i></button>
+          <h4 class="modal-title" :data-e2e="`e2e-BT-${e2eValue}-title`">
             {{ title }}
           </h4>
         </div>
-        <div class="modal-body" v-html="description" :data-e2e="e2eAttributes.content"></div>
+        <div class="modal-body" v-html="description" :data-e2e="`e2e-BT-${e2eValue}-description`"></div>
         <div class="modal-footer">
-          <button :class="cancelClass" @click="cancel" :data-e2e="e2eAttributes.cancel">{{ cancelText || i18n.t('general.cancel') }}</button>
-          <button :class="confirmClass" @click="confirm" :data-e2e="e2eAttributes.confirm">{{ confirmText || i18n.t('general.confirm') }}</button>
+          <button :class="cancelClass" @click="cancel" :data-e2e="`e2e-BT-${e2eValue}-cancel`">{{ cancelText || i18n.t('general.cancel') }}</button>
+          <button :class="confirmClass" @click="confirm" :data-e2e="`e2e-BT-${e2eValue}-confirm`">{{ confirmText || i18n.t('general.confirm') }}</button>
         </div>
       </div>
     </div>
@@ -43,9 +43,9 @@ export default {
       type: String,
       default: 'btn btn-primary'
     },
-    e2eAttributes: {
-      type: Object,
-      default: () => ({})
+    e2eValue: {
+      type: String,
+      default: ''
     }
   },
   mounted() {

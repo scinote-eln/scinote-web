@@ -1,4 +1,4 @@
-FROM ruby:3.3-bookworm
+FROM ruby:3.4-trixie
 MAINTAINER SciNote <info@scinote.net>
 
 ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/3.2.3/tika-app-3.2.3.jar"
@@ -25,23 +25,25 @@ RUN apt-get update -qq && \
   libfile-mimeinfo-perl \
   chromium \
   chromium-sandbox \
+  npm \
   yarnpkg && \
   wget -O $TIKA_PATH $TIKA_DIST_URL && \
   chmod +x $TIKA_PATH && \
+  ln -s /usr/bin/yarnpkg /usr/bin/yarn && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
   rm -rf /var/lib/apt/lists/*
 
 ENV PATH=/usr/share/nodejs/yarn/bin:$PATH
 
-RUN yarn add npm:puppeteer-core@24.10.0
+RUN npm install -g npm:puppeteer-core@24.10.0
 
-ENV BUNDLE_PATH /usr/local/bundle/
+ENV BUNDLE_PATH=/usr/local/bundle/
 
 # create app directory
-ENV APP_HOME /usr/src/app
-ENV PATH $APP_HOME/bin:$PATH
+ENV APP_HOME=/usr/src/app
+ENV PATH=$APP_HOME/bin:$PATH
 RUN mkdir $APP_HOME
-RUN adduser --uid 1000 scinote
+RUN useradd --uid 1000 scinote
 RUN chown scinote:scinote $APP_HOME
 USER scinote
 ENV CHROMIUM_PATH=$APP_HOME/bin/chromium

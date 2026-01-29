@@ -167,7 +167,7 @@ module Reports
           subject_class: 'Report',
           subject_name: @report.name,
           report_type: 'pdf',
-          user: @user
+          user_id: @user.id
         }
       )
     end

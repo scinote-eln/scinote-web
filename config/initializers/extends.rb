@@ -175,7 +175,7 @@ class Extends
   REPOSITORY_ROWS_PRELOAD_RELATIONS = []
 
   # List of implemented core API versions
-  API_VERSIONS = ['v1']
+  API_VERSIONS = %w(v1)
 
   # Array used for injecting names of additional authentication methods for API
   API_PLUGABLE_AUTH_METHODS = []
@@ -682,7 +682,9 @@ class Extends
     edit_image_on_result_template: 445,
     step_and_result_template_linked: 446,
     step_and_result_template_unlinked: 447,
-    result_template_restore_asset_version: 448
+    result_template_restore_asset_version: 448,
+    protocol_repository_item_added: 449,
+    protocol_repository_item_removed: 450
   }
 
   ACTIVITY_GROUPS = {
@@ -700,7 +702,7 @@ class Extends
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
-                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409, *416..448],
+                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409, *416..450],
     team: [92, 94, 93, 97, 104, 244, 245, *379..383, *412..415],
     label_templates: [*216..219],
     storage_locations: [*309..315, 361],
@@ -850,6 +852,7 @@ class Extends
     teams/automations
     result_templates/index
     my_module_repositories/index
+    protocol_repository_rows/index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
@@ -901,6 +904,7 @@ class Extends
     'MyModule' => ['AutomationObservers::AllTasksDoneObserver', 'AutomationObservers::TaskStatusChangeObserver'],
     'Protocol' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'Asset' => ['AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::ResultContentChangeObserver'],
+    'ActiveStorage::Blob' => ['AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::ResultContentChangeObserver'],
     'StepAsset' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'ResultAsset' => ['AutomationObservers::ResultContentChangeObserver'],
     'Table' => ['AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::ResultContentChangeObserver'],

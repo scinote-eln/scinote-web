@@ -15,7 +15,7 @@ class RepositorySerializer < ActiveModel::Serializer
 
   def export_actions
     {
-      path: export_repositories_team_path(object.team),
+      path: export_repositories_team_repositories_path(object.team),
       export_file_type: current_user.settings[:repository_export_file_type] || 'xlsx'
     }
   end

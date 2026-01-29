@@ -1,3 +1,4 @@
+ <% provide(:head_title, @form.name || t('seo.titles.forms_show')) %>
  <div id="formShow" >
   <form-show
     form-url="<%= form_path(@form) %>"

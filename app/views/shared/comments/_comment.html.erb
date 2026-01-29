@@ -10,7 +10,7 @@
   <% end %>
   <div class="comment-body">
     <div class="comment-message">
-      <%= custom_auto_link(comment.message, team: current_team, simple_format: false) %>
+      <%= custom_auto_link(escape_input(comment.message), team: current_team, simple_format: false) %>
     </div>
     <div class="comment-footer">
       <div class="comment-create-date">

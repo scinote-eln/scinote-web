@@ -3,10 +3,12 @@
 class Result < ResultBase
   include ArchivableModel
   include ObservableModel
+  include PinningModel
 
   belongs_to :archived_by, class_name: 'User', optional: true
   belongs_to :restored_by, class_name: 'User', optional: true
   belongs_to :my_module, inverse_of: :results
+  belongs_to :pinned_by, class_name: 'User', optional: true
   has_many :result_comments, inverse_of: :result, foreign_key: :associated_id, dependent: :destroy
   has_many :report_elements, inverse_of: :result, dependent: :destroy
 
@@ -36,7 +38,7 @@ class Result < ResultBase
     results.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
-  def self.where_children_attributes_like(query)
+  def self.where_children_attributes_like(query, _options = {})
     unscoped_readable_results = unscoped.joins('INNER JOIN "readable_results" ON "readable_results"."id" = "results"."id"').select(:id, :type)
     unscoped.from(
       "(#{unscoped_readable_results.joins(:result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}

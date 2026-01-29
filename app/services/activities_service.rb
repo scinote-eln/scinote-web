@@ -103,7 +103,10 @@ class ActivitiesService
       end
     end
 
-    subjects.each { |_sub, children| children.uniq! }
+    # also handles special case for Result and ResultBase STI
+    subjects.to_h do |subject, children|
+      [subject == 'Result' ? 'ResultBase' : subject, children.uniq]
+    end
   end
 
   def self.my_module_activities(my_module)

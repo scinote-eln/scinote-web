@@ -84,6 +84,8 @@
 import { AgGridVue } from 'ag-grid-vue3';
 import modalMixin from '../../../shared/modal_mixin';
 import Loading from '../../../shared/loading.vue';
+import HighlightRenderer from './renderers/highlight_renderer.vue';
+import StatusRenderer from './renderers/status_renderer.vue';
 
 export default {
   name: 'PreviewStep',
@@ -122,12 +124,12 @@ export default {
         {
           field: 'code',
           headerName: this.i18n.t('repositories.import_records.steps.step3.code'),
-          cellRenderer: this.highlightRenderer
+          cellRenderer: HighlightRenderer
         },
         {
           field: 'name',
           headerName: this.i18n.t('repositories.import_records.steps.step3.name'),
-          cellRenderer: this.highlightRenderer
+          cellRenderer: HighlightRenderer
         }
       ];
 
@@ -135,14 +137,14 @@ export default {
         columns.push({
           field: `col_${col[0]}`,
           headerName: col[1],
-          cellRenderer: this.highlightRenderer
+          cellRenderer: HighlightRenderer
         });
       });
 
       columns.push({
         field: 'import_status',
         headerName: this.i18n.t('repositories.import_records.steps.step3.status'),
-        cellRenderer: this.statusRenderer,
+        cellRenderer: StatusRenderer,
         pinned: 'right'
       });
 
@@ -165,50 +167,6 @@ export default {
   methods: {
     filterRows(status) {
       return this.params.preview.data.filter((r) => r.attributes.import_status === status);
-    },
-    highlightRenderer(params) {
-      const { import_status: importStatus } = params.data;
-
-      let color = '';
-
-      if (importStatus === 'created' || importStatus === 'updated') {
-        color = 'text-sn-alert-green';
-      } else if (importStatus === 'duplicated' || importStatus === 'invalid') {
-        color = 'text-sn-alert-passion';
-      }
-
-      return `<span class="${color}">${params.value || ''}</span>`;
-    },
-    statusRenderer(params) {
-      const { import_status: importStatus, import_message: importMessage } = params.data;
-
-      let message = '';
-      let color = '';
-      let icon = '';
-
-      if (importStatus === 'created' || importStatus === 'updated') {
-        message = this.i18n.t(`repositories.import_records.steps.step3.status_message.${importStatus}`);
-        color = 'text-sn-alert-green';
-        icon = 'check';
-      } else if (importStatus === 'unchanged' || importStatus === 'archived') {
-        message = this.i18n.t(`repositories.import_records.steps.step3.status_message.${importStatus}`);
-        icon = 'hamburger';
-      } else if (importStatus === 'duplicated' || importStatus === 'invalid') {
-        message = this.i18n.t(`repositories.import_records.steps.step3.status_message.${importStatus}`);
-        color = 'text-sn-alert-passion';
-        icon = 'close';
-      }
-
-      if (importMessage) {
-        message = importMessage;
-      }
-
-      return `
-        <div title="${message}" class="flex items-center ${color} gap-2.5">
-          <i class="sn-icon sn-icon-${icon} "></i>
-          <span class="truncate">${message}</span>
-        </div>
-      `;
     }
   }
 };

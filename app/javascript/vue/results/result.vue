@@ -135,7 +135,12 @@
                 {{ result.attributes.comments_count }}
             </span>
           </a>
-
+          <button v-if="urls.pin_url" class="btn btn-light icon-btn" :title="i18n.t('my_modules.results.actions.pin')" @click="pinResult" :data-e2e="`e2e-BT-task-result${result.id}-pin`">
+            <i class="sn-icon sn-icon-pin"></i>
+          </button>
+          <button v-if="urls.unpin_url" class="btn btn-light icon-btn" :title="i18n.t('my_modules.results.actions.unpin')" @click="unpinResult" :data-e2e="`e2e-BT-task-result${result.id}-unpin`">
+            <i class="sn-icon sn-icon-pinned"></i>
+          </button>
           <MenuDropdown
             v-if="!locked"
             :listItems="this.actionsMenu"
@@ -148,6 +153,8 @@
             @archive="archiveResult"
             @restore="restoreResult"
             @delete="showDeleteModal"
+            @pin="pinResult"
+            @unpin="unpinResult"
           ></MenuDropdown>
         </div>
       </div>
@@ -486,6 +493,12 @@ export default {
   created() {
     this.elements = this.result.elements;
     this.attachments = this.result.attachments;
+
+    if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
+      setTimeout(() => {
+        this.loadAttachments();
+      }, 10000);
+    }
   },
   methods: {
     toggleCollapsed() {
@@ -684,6 +697,16 @@ export default {
     duplicateResult() {
       axios.post(this.urls.duplicate_url).then((_) => {
         this.$emit('result:duplicated');
+      });
+    },
+    pinResult() {
+      axios.post(this.urls.pin_url).then((_) => {
+        this.$emit('result:pin_changed');
+      });
+    },
+    unpinResult() {
+      axios.post(this.urls.unpin_url).then((_) => {
+        this.$emit('result:pin_changed');
       });
     },
     moveElement(position, target_id) {

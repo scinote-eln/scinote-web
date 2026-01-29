@@ -14,6 +14,7 @@
             @editingEnabled="editingName = true"
             @editingDisabled="editingName = false"
             @update="updateName"
+            :dataE2e="'forms-builder-formTitle'"
           />
           <template v-else>
             {{ form.attributes.name }}
@@ -54,7 +55,7 @@
     <div class="content-body">
       <Preview v-if="preview" :form="form" :fields="savedFields" />
       <div v-else class="bg-white rounded-xl grid grid-cols-[360px_auto] min-h-[calc(100vh_-_200px)]">
-        <div class="p-6 border-transparent border-r-sn-sleepy-grey border-solid border-r">
+        <div class="p-6 border-transparent border-r-sn-sleepy-grey border-solid border-r" data-e2e="e2e-CO-forms-addBlocks">
           <h3 class="m-0">{{  i18n.t('forms.show.build_form') }}</h3>
           <div class="my-3 flex flex-col gap-3">
           <Draggable
@@ -71,6 +72,7 @@
                     :key="element.id"
                     class="font-bold relative grow p-2 rounded-lg overflow-hidden flex items-center gap-2 border-sn-grey-100 cursor-pointer border"
                     :class="{ '!border-sn-blue bg-sn-super-light-blue': activeField.id === element.id }"
+                    :data-e2e="`e2e-BT-forms-builder-addBlock-${element.attributes.name.replace(/[\s\W_]+/g, '')}`"
                 >
                   <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="fieldIcon[element.attributes.data.type]"></i>
                   <span :title="element.attributes.name" class="truncate">{{ element.attributes.name }}</span>
@@ -90,7 +92,13 @@
             <template v-slot:flyout>
               <div class="flex flex-col -m-2.5 py-2.5 max-h-[inherit]">
                 <div class="overflow-y-auto">
-                  <div v-for="e in newFields" :key="e.type" @click="addField(e.type)" class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer flex items-center gap-2">
+                  <div
+                    v-for="e in newFields"
+                    :key="e.type"
+                    @click="addField(e.type)"
+                    class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer flex items-center gap-2"
+                    :data-e2e="`e2e-DO-forms-builder-addBlock-${e.name.replace(/[\s\W_]+/g, '')}`"
+                  >
                     <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="fieldIcon[e.type]"></i>
                     {{ e.name }}
                   </div>
@@ -110,8 +118,10 @@
             @delete="deleteField"
             @duplicate="duplicateField"
             @validChanged="isValidChanged"
+            data-e2e="e2e-CO-forms-builder-editField"
           />
           <div v-if="!activeField.id"
+               data-e2e="e2e-TX-forms-builder-editField-emptyFieldMessage"
                class="text-xl font-semibold text-sn-grey font-inter flex items-center justify-center w-full h-full">
             {{ i18n.t('forms.show.no_block') }}
           </div>
@@ -123,7 +133,9 @@
       :description="i18n.t('forms.publish.description_html')"
       confirmClass="btn btn-primary"
       :confirmText="i18n.t('forms.show.publish')"
-      ref="publishModal">
+      ref="publishModal"
+      :e2eValue="'forms-publishFormModal'"
+    >
     </ConfirmationModal>
   </div>
 </template>

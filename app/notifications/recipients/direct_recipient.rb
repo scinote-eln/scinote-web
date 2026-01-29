@@ -6,6 +6,6 @@ class Recipients::DirectRecipient
   end
 
   def recipients
-    [@params[:user]]
+    [(@params[:user] || User.find_by(id: @params[:user_id]))].compact
   end
 end

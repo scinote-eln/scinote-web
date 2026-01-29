@@ -134,10 +134,10 @@ export default {
   },
   created() {
     if (this.experiment?.start_date_cell?.value) {
-      this.startDate = new Date(this.experiment.start_date_cell?.value);
+      this.startDate = this.parseDate(this.experiment.start_date_cell?.value);
     }
     if (this.experiment?.due_date_cell?.value) {
-      this.dueDate = new Date(this.experiment.due_date_cell?.value);
+      this.dueDate = this.parseDate(this.experiment.due_date_cell?.value);
     }
   },
   mixins: [modalMixin],
@@ -148,8 +148,8 @@ export default {
       const experimentData = {
         name: this.name,
         description: this.description,
-        start_date: this.startDate,
-        due_date: this.dueDate
+        start_date: this.normalizedValue(this.startDate),
+        due_date: this.normalizedValue(this.dueDate)
       };
       if (this.createUrl) {
         this.createExperiment(experimentData);
@@ -181,22 +181,28 @@ export default {
       });
     },
     updateStartDate(startDate) {
-      this.startDate = this.stripTime(startDate);
+      this.startDate = startDate;
     },
     updateDueDate(dueDate) {
-      this.dueDate = this.stripTime(dueDate);
+      this.dueDate = dueDate;
     },
-    stripTime(date) {
-      if (date) {
-        return new Date(Date.UTC(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          0, 0, 0, 0
-        ));
-      }
+    parseDate(date) {
+      if (!date) return date;
 
-      return date;
+      return new Date(date.replace(/([^!\s])-/g, '$1/'));
+    },
+    normalizedValue(value) {
+      if (!value) return value;
+
+      const date = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
+      const time = ` ${value.getHours().toString().padStart(2, '0')}:${value.getMinutes().toString().padStart(2, '0')}`
+
+      if (this.mode === 'date') {
+        return `${date}`
+      } else {
+
+        return `${date} ${time}`;
+      }
     },
     handleAtWhoModalClose() {
       $('.atwho-view.old').css('display', 'none');

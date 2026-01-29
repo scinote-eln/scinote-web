@@ -9,6 +9,7 @@ module Users
     before_action :sign_up_with_provider_enabled?,
                   only: :linkedin
     before_action :check_sso_status, only: %i(customazureactivedirectory okta openid_connect saml)
+    before_action :check_existing_session, only: %i(customazureactivedirectory okta openid_connect saml)
 
     # You should configure your model like this:
     # devise :omniauthable, omniauth_providers: [:twitter]
@@ -25,17 +26,14 @@ module Users
       raise StandardError, 'No matching Azure AD provider config found' if provider_conf.blank?
 
       auth.provider = provider_conf['provider_name']
-
-      return redirect_to connected_accounts_path if current_user
-
-      email = auth.info.email
-      email ||= auth.dig(:extra, :raw_info, :id_token_claims, :emails)&.first
       auth.uid ||= auth.dig(:extra, :raw_info, :sub)
       user = User.from_omniauth(auth)
 
       # User found in database so just signing in
       return sign_in_and_redirect(user, event: :authentication) if user.present?
 
+      email = auth.info.email
+      email ||= auth.dig(:extra, :raw_info, :id_token_claims, :emails)&.first
       if email.blank?
         # No email in the token so can not link or create user
         missing_attribute = 'Email'
@@ -44,7 +42,7 @@ module Users
 
       user = User.find_by(email: email.downcase)
 
-      if user.blank?
+      if user.blank? && !provider_conf['no_new_user_creation']
         # Create new user and identity
         user = create_user_from_auth(email, auth)
         if user.errors.present?
@@ -64,7 +62,6 @@ module Users
       end
     rescue StandardError => e
       Rails.logger.error e.message
-      Rails.logger.error e.backtrace.join("\n")
       error_message = I18n.t('devise.azure.errors.failed_to_save') if e.is_a?(ActiveRecord::RecordInvalid)
       error_message ||= I18n.t('devise.azure.errors.generic')
       redirect_to after_omniauth_failure_path_for(resource_name)
@@ -134,13 +131,17 @@ module Users
 
     def okta
       auth = request.env['omniauth.auth']
+      settings = ApplicationSettings.instance
+      provider_conf = settings.values['okta']
+      raise StandardError, 'No matching Okta provider config found' if provider_conf.blank?
+
       user = User.from_omniauth(auth)
       # User found in database so just signing in
       return sign_in_and_redirect(user, event: :authentication) if user.present?
 
       user = User.find_by(email: auth.info.email.downcase)
 
-      if user.blank?
+      if user.blank? && !provider_conf['no_new_user_creation']
         user = create_user_from_auth(auth.info.email.downcase, auth)
         if user.errors.present?
           redirect_to after_omniauth_failure_path_for(resource_name)
@@ -155,7 +156,6 @@ module Users
       end
     rescue StandardError => e
       Rails.logger.error e.message
-      Rails.logger.error e.backtrace.join("\n")
       error_message = I18n.t('devise.okta.errors.failed_to_save') if e.is_a?(ActiveRecord::RecordInvalid)
       error_message ||= I18n.t('devise.okta.errors.generic')
       redirect_to after_omniauth_failure_path_for(resource_name)
@@ -175,15 +175,13 @@ module Users
       provider_conf = settings.values['openid_connect']
       raise StandardError, 'No matching OpenID Connect AD provider config found' if provider_conf.blank?
 
-      return redirect_to connected_accounts_path if current_user
-
-      email = auth.info.email
-      email ||= auth.dig(:extra, :raw_info, :id_token_claims, :emails)&.first
       user = User.from_omniauth(auth)
 
       # User found in database so just signing in
       return sign_in_and_redirect(user, event: :authentication) if user.present?
 
+      email = auth.info.email
+      email ||= auth.dig(:extra, :raw_info, :id_token_claims, :emails)&.first
       if email.blank?
         # No email in the token so can not link or create user
         missing_attribute = 'Email'
@@ -192,7 +190,7 @@ module Users
 
       user = User.find_by(email: email.downcase)
 
-      if user.blank?
+      if user.blank? && !provider_conf['no_new_user_creation']
         # Create new user and identity
         user = create_user_from_auth(email, auth)
         if user.errors.present?
@@ -212,7 +210,6 @@ module Users
       end
     rescue StandardError => e
       Rails.logger.error e.message
-      Rails.logger.error e.backtrace.join("\n")
       error_message = I18n.t('devise.openid_connect.errors.failed_to_save') if e.is_a?(ActiveRecord::RecordInvalid)
       error_message ||= I18n.t('devise.openid_connect.errors.generic')
       redirect_to after_omniauth_failure_path_for(resource_name)
@@ -229,19 +226,16 @@ module Users
 
     def saml
       auth = request.env['omniauth.auth']
-
       settings = ApplicationSettings.instance
       provider_conf = settings.values['saml']
       raise StandardError, 'No matching SAML provider config found' if provider_conf.blank?
 
-      return redirect_to connected_accounts_path if current_user
-
-      email = auth.info.email
       user = User.from_omniauth(auth)
 
       # User found in database so just signing in
       return sign_in_and_redirect(user, event: :authentication) if user.present?
 
+      email = auth.info.email
       if email.blank?
         # No email in the token so can not link or create user
         missing_attribute = 'Email'
@@ -250,7 +244,7 @@ module Users
 
       user = User.find_by(email: email.downcase)
 
-      if user.blank?
+      if user.blank? && !provider_conf['no_new_user_creation']
         user = create_user_from_auth(email, auth)
         if user.errors.present?
           redirect_to after_omniauth_failure_path_for(resource_name)
@@ -269,7 +263,6 @@ module Users
       end
     rescue StandardError => e
       Rails.logger.error e.message
-      Rails.logger.error e.backtrace.join("\n")
       error_message = I18n.t('devise.saml.errors.failed_to_save') if e.is_a?(ActiveRecord::RecordInvalid)
       error_message ||= I18n.t('devise.saml.errors.generic')
       redirect_to after_omniauth_failure_path_for(resource_name)
@@ -315,6 +308,10 @@ module Users
       render_403 unless sso_enabled?
     end
 
+    def check_existing_session
+      redirect_to connected_accounts_path if current_user
+    end
+
     def generate_initials(full_name)
       initials = full_name.titleize.scan(/[A-Z]+/).join
       initials = initials.strip.blank? ? 'PLCH' : initials[0..3]
@@ -331,10 +328,6 @@ module Users
         user.save!
         user.user_identities.create!(provider: auth.provider, uid: auth.uid)
         user.update!(confirmed_at: user.created_at)
-      rescue StandardError => e
-        Rails.logger.error e.message
-        Rails.logger.error e.backtrace.join("\n")
-        raise ActiveRecord::Rollback
       end
       user
     end

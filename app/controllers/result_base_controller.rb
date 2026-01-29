@@ -153,6 +153,8 @@ class ResultBaseController < ApplicationController
   end
 
   def apply_sort!(sort_order)
+    @results = @results.order(pinned_at: :asc)
+
     case sort_order
     when 'updated_at_asc'
       @results = @results.order('results.updated_at' => :asc)
@@ -202,6 +204,14 @@ class ResultBaseController < ApplicationController
       project: @parent.is_a?(Protocol) ? nil : @parent&.experiment&.project,
       message_items: message_items
     )
+  end
+
+  def check_read_permissions
+    render_403 unless can_read_result?(@result)
+  end
+
+  def check_manage_permissions
+    render_403 unless can_manage_result?(@result)
   end
 
   def check_destroy_permissions

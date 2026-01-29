@@ -20,11 +20,11 @@
     >
     <template v-if="!tagsView">
       <template v-if="!isOpen || !searchable">
-        <div v-if="labelRendererType == 'object' && !multiple && this.rawOptions && Object.keys(this.rawOptions).length > 0 && this.newValue && Object.keys(this.newValue).length > 0">
+        <div class="overflow-hidden" v-if="labelRendererType == 'object' && !multiple && this.rawOptions && Object.keys(this.rawOptions).length > 0 && this.newValue && Object.keys(this.newValue).length > 0">
           <component :is="labelRenderer"
                      :option="this.rawOptions.find((i) => i[0] === this.newValue)" />
         </div>
-        <div v-else-if="labelRendererType == 'object' && multiple && this.newValue && this.newValue.length === 1">
+        <div class="overflow-hidden" v-else-if="labelRendererType == 'object' && multiple && this.newValue && this.newValue.length === 1">
           <component :is="labelRenderer"
                      :option="this.rawOptions.find((i) => i[0] === this.newValue[0])" />
         </div>
@@ -104,7 +104,7 @@
                       'unchecked': !valueSelected(option[0]),
                     }"
                 ></div>
-                <div v-if="optionRendererType == 'object'" >
+                <div v-if="optionRendererType == 'object'" class="overflow-hidden" >
                   <component :is="optionRenderer"
                              :option="option" />
                 </div>

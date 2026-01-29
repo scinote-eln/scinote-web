@@ -12,16 +12,26 @@ module ActiveStorage
       end
 
       def show
-        if @blob.attachments.take.record_type == 'Asset'
-          return render plain: '', status: :accepted unless preview_ready?
-        end
+        return head :unprocessable_entity if @blob.metadata['preview_failed']
+        return head :accepted if @blob.attachments.take.record_type == 'Asset' && !inline_previewable_image? && !preview_ready?
 
         expires_in ActiveStorage.service_urls_expire_in
         redirect_to @blob.representation(params[:variation_key]).processed.url(disposition: params[:disposition]),
                     allow_other_host: true
+      rescue Vips::Error
+        ActiveRecord::Base.no_touching do
+          @blob.metadata['preview_failed'] = true
+          @blob.save!
+        end
+
+        head :unprocessable_entity
       end
 
       private
+
+      def inline_previewable_image?
+        @blob.content_type.match?(%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}) && @blob.byte_size <= Constants::INLINE_PREVIEW_MAX_FILE_SIZE
+      end
 
       def preview_ready?
         processing = @blob.attachments.take.record.file_processing

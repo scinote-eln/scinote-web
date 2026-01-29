@@ -1,12 +1,19 @@
 <template>
   <div>
-    <div v-if="!fieldDisabled && editing" class="sci-input-container-v2 h-24 mb-1" :class="{'error': !validValue}" :data-error="valueFieldError">
+    <div
+      v-if="!fieldDisabled && editing"
+      class="sci-input-container-v2 h-24 mb-1"
+      :class="{'error': !validValue}"
+      :data-error="valueFieldError"
+      :data-e2e="`e2e-IF-${dataE2e}-value`"
+    >
       <textarea
         class="sci-input"
         :value="value"
         ref="input"
         @blur="saveValue"
-        :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.add_text')"></textarea>
+        :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.add_text')"
+      ></textarea>
     </div>
     <div v-else
       :key="value"
@@ -17,6 +24,7 @@
         'cursor-pointer': !fieldDisabled,
         'bg-sn-super-light-grey': fieldDisabled
       }"
+      :data-e2e="`e2e-TX-${dataE2e}`"
     >
       <span>
         {{ value }}
@@ -36,6 +44,12 @@ import fieldMixin from './field_mixin';
 export default {
   name: 'TextField',
   mixins: [fieldMixin],
+  props: {
+    dataE2e: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       value: this.field.field_value?.value,

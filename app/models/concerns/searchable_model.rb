@@ -108,7 +108,7 @@ module SearchableModel
       end
     }
 
-    scope :where_attributes_like_boolean, lambda { |attributes, query|
+    scope :where_attributes_like_boolean, lambda { |attributes, query, options = {}|
       return unless query
 
       query_clauses = []
@@ -124,7 +124,7 @@ module SearchableModel
             attribute_key = attribute.to_s.parameterize(separator: '_')
 
             if attribute == :children
-              "\"#{table_name}\".\"id\" IN (#{where_children_attributes_like(token[:value]).select(:id).to_sql}) OR "
+              "\"#{table_name}\".\"id\" IN (#{where_children_attributes_like(token[:value], options).select(:id).to_sql}) OR "
             elsif SEARCH_NUMBER_ATTRIBUTES.include?(attribute)
               "(#{attribute} IS NOT NULL AND #{attribute}::text #{like} :#{attribute_key}_#{index}_query) OR "
             elsif defined?(model::PREFIXED_ID_SQL) && attribute == model::PREFIXED_ID_SQL

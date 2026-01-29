@@ -17,8 +17,9 @@
         :filters="filters"
         :columnDefs="columnDefs"
         :disabled="addingNewRow"
-        :tableState="tableState"
         :order="order"
+        :tableState="tableState"
+        :hideColumnsManagment="hideColumnsManagment"
         @applyFilters="applyFilters"
         @setTableView="switchViewRender('table')"
         @setCardsView="switchViewRender('cards')"
@@ -235,6 +236,10 @@ export default {
     skipSaveTableState: {
       type: Boolean,
       default: false
+    },
+    hideColumnsManagment: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -416,6 +421,12 @@ export default {
     };
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     this.fetchTableState();
+
+    this.filters.forEach((filter) => {
+      if (filter.defaultValue) {
+        this.activeFilters[filter.key] = filter.defaultValue;
+      }
+    });
   },
   mounted() {
     this.navigatorCollapsed = document.querySelector('.sci--layout').getAttribute('data-navigator-collapsed') === 'true';
@@ -545,7 +556,10 @@ export default {
         perPage: this.perPage
       };
 
-      columnsState.find((column) => column.colId === 'checkbox').pinned = 'left';
+      let checkboxColumn = columnsState.find((column) => column.colId === 'checkbox');
+      if (checkboxColumn) {
+        checkboxColumn.pinned = 'left';
+      }
 
       const settings = {
         key: this.stateKey,
