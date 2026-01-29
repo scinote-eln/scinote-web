@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   helper_method :current_team
   before_action :set_current_team, if: :user_signed_in?
+  before_action :set_current_user, if: :user_signed_in?
   around_action :set_date_format, if: :user_signed_in?
   around_action :set_time_zone, if: :current_user
   layout 'main'
@@ -84,6 +85,10 @@ class ApplicationController < ActionController::Base
 
   def current_team
     @current_team ||= current_user.teams.find_by(id: current_user.current_team_id)
+  end
+
+  def set_current_user
+    Current.user = current_user
   end
 
   def set_current_team
