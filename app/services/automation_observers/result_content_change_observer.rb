@@ -9,6 +9,7 @@ module AutomationObservers
       Table: %w(name contents metadata),
       ResultAsset: %w(result_id asset_id),
       ResultOrderableElement: %w(result_id position),
+      'ActiveStorage::Blob': %w(filename checksum),
       Comment: %w(message)
     }.freeze
 
@@ -21,6 +22,11 @@ module AutomationObservers
 
       result = if element.is_a?(Result)
                  element
+               elsif element.is_a?(ActiveStorage::Blob)
+                 record = element.attachments.first&.record
+                 return unless record.is_a?(Asset)
+
+                 record.result
                elsif element.respond_to?(:result_asset)
                  element.result_asset&.result
                elsif element.respond_to?(:result)

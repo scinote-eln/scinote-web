@@ -155,7 +155,7 @@ class Extends
   REPOSITORY_ROWS_PRELOAD_RELATIONS = []
 
   # List of implemented core API versions
-  API_VERSIONS = ['v1']
+  API_VERSIONS = %w(v1)
 
   # Array used for injecting names of additional authentication methods for API
   API_PLUGABLE_AUTH_METHODS = []
@@ -883,6 +883,7 @@ class Extends
     'MyModule' => ['AutomationObservers::AllTasksDoneObserver', 'AutomationObservers::TaskStatusChangeObserver'],
     'Protocol' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'Asset' => ['AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::ResultContentChangeObserver'],
+    'ActiveStorage::Blob' => ['AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::ResultContentChangeObserver'],
     'StepAsset' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'ResultAsset' => ['AutomationObservers::ResultContentChangeObserver'],
     'Table' => ['AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::ResultContentChangeObserver'],

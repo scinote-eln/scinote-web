@@ -11,6 +11,7 @@ module AutomationObservers
       Table: %w(name contents metadata),
       StepAsset: %w(step_id asset_id),
       StepOrderableElement: %w(step_id position),
+      'ActiveStorage::Blob': %w(filename checksum),
       Comment: %w(message),
       FormFieldValue: %w(not_applicable datetime datetime_to number number_to unit text selection flag data latest),
       FormResponse: %w(status discarded_at)
@@ -47,10 +48,15 @@ module AutomationObservers
         protocol = element.protocol
       when 'Protocol'
         protocol = element
+      when 'ActiveStorage::Blob'
+        record = element.attachments.first&.record
+        return unless record.is_a?(Asset)
+
+        protocol = record.step&.protocol
       end
 
       return if protocol.blank?
-      return unless ignore_attributes || OBJECT_ATTRIBUTES[:"#{element.class.base_class.name}"]&.any? { |attr| element.public_send("saved_change_to_#{attr}?") }
+      return unless ignore_attributes || OBJECT_ATTRIBUTES[:"#{element.class.base_class.name}"]&.any? { |attr| element.public_send(:"saved_change_to_#{attr}?") }
       return unless protocol.in_module? && protocol.my_module.my_module_status.initial_status?
       return if element.respond_to?(:completed) && element.saved_change_to_completed? && !element.saved_change_to_created_at? && !element.completed
 
