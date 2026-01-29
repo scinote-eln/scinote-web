@@ -8,11 +8,13 @@
                   class="sci-input-field"
                   ref="input"
                   autofocus="true"
-                  :placeholder=" i18n.t('storage_locations.index.move_modal.placeholder.find_storage_locations')" />
+                  :placeholder=" i18n.t('storage_locations.index.move_modal.placeholder.find_storage_locations')"
+                  :data-e2e="`e2e-IF-${dataE2e}-findLocation`"
+          />
           <i class="sn-icon sn-icon-search"></i>
         </div>
       </div>
-      <div class="max-h-80 overflow-y-auto">
+      <div class="max-h-80 overflow-y-auto" :data-e2e="`e2e-CO-${dataE2e}-locationTree`">
         <div class="p-2 flex items-center gap-2 cursor-pointer text-sn-blue hover:bg-sn-super-light-grey"
               @click="selectStorageLocation(null)"
               :class="{'!bg-sn-super-light-blue': selectedStorageLocationId == null}">
@@ -37,6 +39,12 @@ import MoveTreeMixin from '../move_tree_mixin';
 export default {
   name: 'ContainerSelector',
   mixins: [MoveTreeMixin],
+  props: {
+    dataE2e: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       container: true,

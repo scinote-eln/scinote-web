@@ -399,6 +399,62 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
       end
     end
 
+    context 'archiving with valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'experiments',
+            attributes: {
+              archived: true
+            }
+          }
+        }
+      end
+
+      it 'returns well formated response' do
+        action
+
+        expect(response).to have_http_status 200
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'experiments',
+              attributes: hash_including(archived: true)
+            )
+          )
+        )
+      end
+    end
+
+    context 'restoring with valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'experiments',
+            attributes: {
+              archived: false
+            }
+          }
+        }
+      end
+
+      it 'returns well formated response' do
+        @experiment.update(archived: true)
+
+        action
+
+        expect(response).to have_http_status 200
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'experiments',
+              attributes: hash_including(archived: false)
+            )
+          )
+        )
+      end
+    end
+
     context 'when has missing param' do
       let(:request_body) do
         {

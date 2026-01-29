@@ -68,7 +68,13 @@ describe Api::V1::ProjectsController, type: :controller do
       let(:action_params) {
         {
           team_id: team.id,
-          id: project.id
+          id: project.id,
+          data: {
+            type: 'projects',
+            attributes: {
+              name: 'test'
+            }
+          }
         }
       }
     end

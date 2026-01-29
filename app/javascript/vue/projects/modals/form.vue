@@ -150,11 +150,11 @@ export default {
   },
   created() {
     if (this.project?.start_date_cell?.value) {
-      this.startDate = new Date(this.project.start_date_cell?.value);
+      this.startDate = this.parseDate(this.project.start_date_cell?.value);
     }
 
     if (this.project?.due_date_cell?.value) {
-      this.dueDate = new Date(this.project.due_date_cell?.value);
+      this.dueDate = this.parseDate(this.project.due_date_cell?.value);
     }
   },
   methods: {
@@ -163,8 +163,8 @@ export default {
 
       const projectData = {
         name: this.name,
-        start_date: this.startDate,
-        due_date: this.dueDate,
+        start_date: this.normalizedValue(this.startDate),
+        due_date: this.normalizedValue(this.dueDate),
         description: this.description,
         default_public_user_role_id: this.defaultRole
       };
@@ -199,10 +199,10 @@ export default {
       this.submitting = false;
     },
     updateStartDate(startDate) {
-      this.startDate = this.stripTime(startDate);
+      this.startDate = startDate;
     },
     updateDueDate(dueDate) {
-      this.dueDate = this.stripTime(dueDate);
+      this.dueDate = dueDate;
     },
     userRolesUrl() {
       return user_roles_projects_path();
@@ -215,17 +215,23 @@ export default {
           this.userRoles = response.data.data;
         });
     },
-    stripTime(date) {
-      if (date) {
-        return new Date(Date.UTC(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          0, 0, 0, 0
-        ));
-      }
+    parseDate(date) {
+      if (!date) return date;
 
-      return date;
+      return new Date(date.replace(/([^!\s])-/g, '$1/'));
+    },
+    normalizedValue(value) {
+      if (!value) return value;
+
+      const date = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
+      const time = ` ${value.getHours().toString().padStart(2, '0')}:${value.getMinutes().toString().padStart(2, '0')}`
+
+      if (this.mode === 'date') {
+        return `${date}`
+      } else {
+
+        return `${date} ${time}`;
+      }
     }
   }
 };

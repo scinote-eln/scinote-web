@@ -28,7 +28,7 @@ module NotificationsHelper
         subject_id: team.id,
         subject_class: team.class.name,
         subject_name: team.respond_to?(:name) && team.name,
-        user: target_user
+        user_id: target_user.id
       }
     )
   end

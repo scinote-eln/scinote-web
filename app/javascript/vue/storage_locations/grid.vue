@@ -13,7 +13,7 @@
         <span>{{ row }}</span>
       </div>
     </div>
-    <div ref="cellsContainer" class="overflow-hidden max-h-[70vh] relative">
+    <div ref="cellsContainer" class="overflow-hidden max-h-[70vh] relative" data-e2e="e2e-CO-storageLocations-box-grid">
       <div class="grid" :style="{
         'grid-template-columns': `repeat(${columnsList.length}, 1fr)`,
         'width': `${columnsList.length * 54}px`

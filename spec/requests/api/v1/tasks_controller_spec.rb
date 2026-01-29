@@ -445,6 +445,62 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       end
     end
 
+    context 'archiving with valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'tasks',
+            attributes: {
+              archived: true
+            }
+          }
+        }
+      end
+
+      it 'returns well formated response' do
+        action
+
+        expect(response).to have_http_status 200
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'tasks',
+              attributes: hash_including(archived: true)
+            )
+          )
+        )
+      end
+    end
+
+    context 'restoring with valid params' do
+      let(:request_body) do
+        {
+          data: {
+            type: 'tasks',
+            attributes: {
+              archived: false
+            }
+          }
+        }
+      end
+
+      it 'returns well formated response' do
+        task.update(archived: true)
+
+        action
+
+        expect(response).to have_http_status 200
+        expect(json).to match(
+          hash_including(
+            data: hash_including(
+              type: 'tasks',
+              attributes: hash_including(archived: false)
+            )
+          )
+        )
+      end
+    end
+
     context 'direct task completion disabled, when has valid params' do
       let(:request_body) do
         {

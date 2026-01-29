@@ -135,7 +135,12 @@
                 {{ result.attributes.comments_count }}
             </span>
           </a>
-
+          <button v-if="urls.pin_url" class="btn btn-light icon-btn" :title="i18n.t('my_modules.results.actions.pin')" @click="pinResult" :data-e2e="`e2e-BT-task-result${result.id}-pin`">
+            <i class="sn-icon sn-icon-pin"></i>
+          </button>
+          <button v-if="urls.unpin_url" class="btn btn-light icon-btn" :title="i18n.t('my_modules.results.actions.unpin')" @click="unpinResult" :data-e2e="`e2e-BT-task-result${result.id}-unpin`">
+            <i class="sn-icon sn-icon-pinned"></i>
+          </button>
           <MenuDropdown
             v-if="!locked"
             :listItems="this.actionsMenu"
@@ -447,20 +452,6 @@ export default {
     },
     actionsMenu() {
       let menu = [];
-      if (this.urls.pin_url) {
-        menu = menu.concat([{
-          text: this.i18n.t('my_modules.results.actions.pin'),
-          emit: 'pin',
-          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-pin`
-        }]);
-      }
-      if (this.urls.unpin_url) {
-        menu = menu.concat([{
-          text: this.i18n.t('my_modules.results.actions.unpin'),
-          emit: 'unpin',
-          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-unpin`
-        }]);
-      }
       if (this.urls.reorder_elements_url && this.elements.length > 1) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.rearrange'),

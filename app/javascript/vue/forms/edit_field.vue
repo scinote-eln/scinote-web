@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-4">
     <div class="flex items-center gap-4">
       <div class="flex items-center grow flex-wrap gap-4 ">
-        <h3 class="flex items-center gap-2 m-0 mr-auto">
+        <h3 class="flex items-center gap-2 m-0 mr-auto" data-e2e="e2e-TX-forms-builder-editField-fieldType">
           <i class="sn-icon rounded text-sn-blue bg-sn-super-light-blue p-1" :class="icon"></i>
           {{ i18n.t(`forms.show.blocks.${editField.attributes.type}`) }}
         </h3>
@@ -23,15 +23,23 @@
       <div>
         <GeneralDropdown  position="right">
           <template v-slot:field>
-            <button class="btn btn-secondary icon-btn">
+            <button class="btn btn-secondary icon-btn" data-e2e="e2e-DD-forms-builder-editField-options">
               <i class="sn-icon sn-icon-more-hori"></i>
             </button>
           </template>
           <template v-slot:flyout>
-            <div @click="duplicateField" class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer ">
+            <div
+              @click="duplicateField"
+              class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer "
+              data-e2e="e2e-DO-forms-builder-editField-optionsDropdown-duplicate"
+            >
               {{ i18n.t('forms.show.duplicate') }}
             </div>
-            <div @click="deleteField" class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-delete-red">
+            <div
+              @click="deleteField"
+              class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-delete-red"
+              data-e2e="e2e-DO-forms-builder-editField-optionsDropdown-delete"
+            >
               {{ i18n.t('forms.show.delete') }}
             </div>
           </template>
@@ -43,7 +51,14 @@
       <div>
         <label class="sci-label">{{ i18n.t('forms.show.title_label') }}</label>
         <div class="sci-input-container-v2" :class="{ 'error': !nameValid }" :data-error="nameFieldError"  >
-          <input type="text" class="sci-input" v-model="editField.attributes.name" @change="updateField" :placeholder="i18n.t('forms.show.title_placeholder')" />
+          <input
+            type="text"
+            class="sci-input"
+            v-model="editField.attributes.name"
+            @change="updateField"
+            :placeholder="i18n.t('forms.show.title_placeholder')"
+            data-e2e="e2e-IF-forms-builder-editField-title"
+          />
         </div>
       </div>
       <div>
@@ -53,7 +68,9 @@
                     class="sci-input"
                     v-model="editField.attributes.description"
                     @blur="updateField"
-                    :placeholder="i18n.t('forms.show.description_placeholder')" />
+                    :placeholder="i18n.t('forms.show.description_placeholder')"
+                    data-e2e="e2e-IF-forms-builder-editField-description"
+          />
         </div>
       </div>
       <component :is="this.editField.attributes.type" ref="editField" :field="editField" @updateField="updateField()" @syncField="syncField" @validChanged="checkValidField" />

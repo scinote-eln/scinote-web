@@ -109,7 +109,12 @@ module Api
 
       def load_project_for_managing
         @project = @team.projects.find(params.require(:id))
-        raise PermissionError.new(Project, :manage) unless can_manage_project?(@project)
+
+        if project_params.keys == %w(archived) && !project_params[:archived]
+          raise PermissionError.new(Project, :restore) unless can_restore_project?(@project)
+        else
+          raise PermissionError.new(Project, :manage) unless can_manage_project?(@project)
+        end
       end
     end
   end
