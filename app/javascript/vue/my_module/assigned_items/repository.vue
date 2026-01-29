@@ -39,6 +39,9 @@
         @export="exportRows"
         @export_consumption="exportConsumption"
         @print="printRows"
+        @assign="openAssignItemModal = true"
+        @unassign="unassignRows"
+        @unassign_downstream="unassignDownstreamRows"
         @create="openCreateItemModal = true"
         @tableReloaded="reloadingTable = false"
       ></DataTable>
@@ -51,12 +54,25 @@
       :confirmText="i18n.t('my_modules.repository.stock_warning_modal.consume_anyway')"
       ref="warningModal"
     ></ConfirmationModal>
+    <ConfirmationModal
+      :title="i18n.t('my_modules.repository.unassign_modal.title')"
+      :description="unassignConfirmationModalDescription"
+      confirmClass="btn btn-primary"
+      :confirmText="unassignConfirmationModalActionText"
+      ref="unassignConfirmationModal"
+    ></ConfirmationModal>
     <CreateItemModal
       v-if="openCreateItemModal"
       :myModuleId="myModuleId"
       :selectedRepositoryValue="repository.id"
       @tableReloaded="newCreatedRow"
       @close="openCreateItemModal = false"></CreateItemModal>
+    <AssignItemModal
+        v-if="openAssignItemModal"
+        :myModuleId="myModuleId"
+        :selectedRepositoryValue="repository.id"
+        @assignRows="assignRows"
+        @close="openAssignItemModal = false"/>
   </div>
 </template>
 <script>
@@ -66,10 +82,12 @@ import ConsumeModal from './modals/consume.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
 import ColumnsMixin from '../../repository/columns_mixin.js';
 import CreateItemModal from '../assigned_items/modals/new_item.vue';
+import AssignItemModal from './modals/assign_item.vue';
 
 import {
   index_ag_my_module_repository_path,
-  actions_toolbar_my_module_repositories_path
+  actions_toolbar_my_module_repositories_path,
+  my_module_repository_path
 } from '../../../routes.js';
 
 export default {
@@ -83,12 +101,16 @@ export default {
     DataTable,
     ConsumeModal,
     ConfirmationModal,
-    CreateItemModal
+    CreateItemModal,
+    AssignItemModal
   },
   mixins: [ColumnsMixin],
   data: () => ({
+    openAssignItemModal: false,
     sectionOpened: true,
     warningModalDescription: '',
+    unassignConfirmationModalDescription: '',
+    unassignConfirmationModalActionText: '',
     submitting: false,
     reloadingTable: false,
     openConsumeModal: false,
@@ -144,6 +166,34 @@ export default {
     }
   },
   methods: {
+    assignRows(rowIds, repositoryId, assignToDownstream = false) {
+      this.openAssignItemModal = false;
+      this.$emit('assignRows', rowIds, repositoryId, assignToDownstream);
+    },
+    async unassignRows(_e, rows, downstream = false) {
+      const rowIds = rows.map(row => row.id);
+
+      if (downstream) {
+        this.unassignConfirmationModalDescription = this.i18n.t('my_modules.repository.unassign_modal.message_downstream', { number: rowIds.length });
+        this.unassignConfirmationModalActionText = this.i18n.t('my_modules.repository.unassign_modal.action_downstream');
+      } else {
+        this.unassignConfirmationModalDescription = this.i18n.t('my_modules.repository.unassign_modal.message', { number: rowIds.length });
+        this.unassignConfirmationModalActionText = this.i18n.t('my_modules.repository.unassign_modal.action');
+      }
+      const ok = await this.$refs.unassignConfirmationModal.show();
+      if (ok) {
+        axios.patch(my_module_repository_path(this.myModuleId, this.repository.id), {
+          rows_to_unassign: rowIds,
+          downstream: downstream
+        }).then((response) => {
+          HelperModule.flashAlertMsg(response.data.flash, 'success');
+          this.reloadingTable = true;
+        });
+      }
+    },
+    unassignDownstreamRows(e, rows) {
+      this.unassignRows(e, rows, true);
+    },
     recalculateContainerSize() {
       const { container, openHandler } = this.$refs;
 

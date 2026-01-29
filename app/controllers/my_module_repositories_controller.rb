@@ -165,16 +165,16 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def assign_repository_records_modal
-    modal = render_to_string(
-      partial: 'my_modules/modals/assign_repository_records_modal_content',
-      locals: { my_module: @my_module,
-                repository: @repository,
-                selected_rows: params[:selected_rows],
-                downstream: params[:downstream] }
-    )
+    my_modules = []
+
+    @my_module.downstream_modules.each do |my_module|
+      if can_assign_my_module_repository_rows?(my_module)
+        my_modules.push(my_module.name)
+      end
+    end
+
     render json: {
-      html: modal,
-      update_url: my_module_repository_path(@my_module, @repository)
+      my_modules: my_modules
     }, status: :ok
   end
 
@@ -328,25 +328,17 @@ class MyModuleRepositoriesController < ApplicationController
     unassigned_count = service.unassigned_rows_count
 
     if params[:downstream] == 'true'
-      if assigned_count && unassigned_count
-        t('my_modules.repository.flash.assign_and_unassign_from_task_and_downstream_html',
-          assigned_items: assigned_count,
-          unassigned_items: unassigned_count)
-      elsif assigned_count
+      if assigned_count&.positive?
         t('my_modules.repository.flash.assign_to_task_and_downstream_html',
           assigned_items: assigned_count)
-      elsif unassigned_count
+      elsif unassigned_count&.positive?
         t('my_modules.repository.flash.unassign_from_task_and_downstream_html',
           unassigned_items: unassigned_count)
       end
-    elsif assigned_count && unassigned_count
-      t('my_modules.repository.flash.assign_and_unassign_from_task_html',
-        assigned_items: assigned_count,
-        unassigned_items: unassigned_count)
-    elsif assigned_count
+    elsif assigned_count&.positive?
       t('my_modules.repository.flash.assign_to_task_html',
         assigned_items: assigned_count)
-    elsif unassigned_count
+    elsif unassigned_count&.positive?
       t('my_modules.repository.flash.unassign_from_task_html',
         unassigned_items: unassigned_count)
     end

@@ -13,6 +13,7 @@
         <button
           v-if="canAssign"
           class="btn btn-secondary"
+          @click="openAssignItemModal=true"
         >
          <i class="sn-icon sn-icon-new-task"></i>
          {{ i18n.t('my_modules.repository.assign_items') }}
@@ -44,6 +45,7 @@
         ref="assignedRepositories"
         :repository="repository"
         :myModuleId="myModuleId"
+        @assignRows="assignRows"
         :reloadKey="reloadKeys[repository.id]"
       />
     </div>
@@ -53,6 +55,11 @@
         :myModuleId="myModuleId"
         @tableReloaded="newCreatedRow"
         @close="openCreateItemModal = false"/>
+      <AssignItemModal
+        v-if="openAssignItemModal"
+        :myModuleId="myModuleId"
+        @assignRows="assignRows"
+        @close="openAssignItemModal = false"/>
     </Teleport>
   </div>
 </template>
@@ -62,6 +69,11 @@ import axios from '../../packs/custom_axios.js';
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import AssignedRepository from './assigned_items/repository.vue';
 import CreateItemModal from './assigned_items/modals/new_item.vue';
+import AssignItemModal from './assigned_items/modals/assign_item.vue';
+
+import {
+  my_module_repository_path
+} from '../../routes.js';
 
 export default {
   name: 'AssignedItems',
@@ -74,7 +86,8 @@ export default {
   components: {
     GeneralDropdown,
     AssignedRepository,
-    CreateItemModal
+    CreateItemModal,
+    AssignItemModal
   },
   created() {
     this.loadAssingedRepositories();
@@ -83,6 +96,7 @@ export default {
     return {
       assignedRepositories: [],
       openCreateItemModal: false,
+      openAssignItemModal: false,
       repositoriesCollapsed: false,
       loadingRepositories: true,
       reloadKeys: {}
@@ -95,6 +109,16 @@ export default {
           this.assignedRepositories = response.data.data;
           this.loadingRepositories = false;
         });
+    },
+    assignRows(rowIds, repositoryId, assignToDownstream = false) {
+      axios.patch(my_module_repository_path(this.myModuleId, repositoryId), {
+        rows_to_assign: rowIds,
+        downstream: assignToDownstream
+      }).then((response) => {
+        this.openAssignItemModal = false;
+        HelperModule.flashAlertMsg(response.data.flash, 'success');
+        this.reloadKeys[repositoryId] = Date.now();
+      });
     },
     newCreatedRow(repositoryRowSidebarUrl, repositoryId) {
       this.reloadKeys[repositoryId] = Date.now();

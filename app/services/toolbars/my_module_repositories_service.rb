@@ -19,12 +19,37 @@ module Toolbars
       return [] if @rows.none?
 
       [
+        unassign_action,
+        unassign_downstream_action,
         export_consumption,
         print_action
       ].compact
     end
 
     private
+
+    def unassign_action
+      return unless can_assign_my_module_repository_rows?(@current_user, @my_module)
+
+      {
+        name: 'unassign',
+        label: I18n.t('my_modules.assigned_items.toolbar.unassign'),
+        icon: 'sn-icon sn-icon-close',
+        type: :emit
+      }
+    end
+
+    def unassign_downstream_action
+      return unless can_assign_my_module_repository_rows?(@current_user, @my_module)
+
+      {
+        name: 'unassign_downstream',
+        label: I18n.t('my_modules.assigned_items.toolbar.unassign_downstream'),
+        icon: 'sn-icon sn-icon-close',
+        type: :emit
+      }
+    end
+
 
     def print_action
       {

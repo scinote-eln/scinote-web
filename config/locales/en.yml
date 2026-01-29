@@ -1474,6 +1474,8 @@ en:
       toolbar:
         print: "Print label"
         export_consumption: "Export consumption"
+        unassign: "Unassign"
+        unassign_downstream: "Unassign from task & downstream"
       create_modal:
         modal_title: 'Create a new item'
         description: 'Choose an inventory and name the new item'
@@ -1778,6 +1780,21 @@ en:
         title: 'Out of stock!'
         description_html: 'By consuming <strong>%{value}</strong> you will use more than you currently have in stock. This will result in negative stock.'
         consume_anyway: 'Consume anyway'
+      assign_modal:
+        title: 'Assign items'
+        title_downstream: 'Assign items to this task & downstream'
+        description: 'You will assign %{number} items to the following tasks:'
+        current: '(current task)'
+        description_2: 'Are you ready to assign them?'
+        action: 'Assign'
+        action_task: 'Assign to task'
+        action_task_and_downstream: 'Assign to task & downstream'
+      unassign_modal:
+        title: 'Unassign item(s)'
+        message: 'You are about to unassign <b>%{number} of items</b> from this task and all the tasks downstream.<br><br>You can always assign items back to a task.<br><br>Do you want to continue?'
+        message_downstream: 'You are about to unassign <b>%{number} of items</b> from this task.<br><br>You can always assign items back to a task.<br><br>Do you want to continue?'
+        action: 'Unassign'
+        action_downstream: 'Unassign from task & downstream'
       flash:
         assign_to_task_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task."
         assign_to_task_and_downstream_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task and downstream tasks."
