@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:  url('fonts/SN-icon-font.eot?29axtm');
-  src:  url('fonts/SN-icon-font.eot?29axtm#iefix') format('embedded-opentype'),
-    url('fonts/SN-icon-font.woff2?29axtm') format('woff2'),
-    url('fonts/SN-icon-font.ttf?29axtm') format('truetype'),
-    url('fonts/SN-icon-font.woff?29axtm') format('woff'),
-    url('fonts/SN-icon-font.svg?29axtm#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?569f8c');
+  src:  url('fonts/SN-icon-font.eot?569f8c#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?569f8c') format('woff2'),
+    url('fonts/SN-icon-font.ttf?569f8c') format('truetype'),
+    url('fonts/SN-icon-font.woff?569f8c') format('woff'),
+    url('fonts/SN-icon-font.svg?569f8c#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -682,4 +682,13 @@
 }
 .sn-icon-task-status-completed:before {
   content: "\e9da";
+}
+.sn-icon-reset-cell:before {
+  content: "\e9db";
+}
+.sn-icon-decimal-decrease:before {
+  content: "\e9dc";
+}
+.sn-icon-decimal-increase:before {
+  content: "\e9dd";
 }
