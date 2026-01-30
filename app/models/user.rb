@@ -57,6 +57,7 @@ class User < ApplicationRecord
   )
 
   # Relations
+  has_many :user_settings, dependent: :destroy
   has_many :user_identities, inverse_of: :user
   has_many :user_assignments, dependent: :destroy
   has_many :user_group_memberships, dependent: :destroy

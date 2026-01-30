@@ -1,7 +1,7 @@
 <template>
   <DataTable
     :columnDefs="columnDefs"
-    tableId="ExperimentList"
+    tableId="experiments"
     :dataUrl="dataSource"
     :reloadingTable="reloadingTable"
     :toolbarActions="toolbarActions"

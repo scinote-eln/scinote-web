@@ -28,7 +28,7 @@
       <DataTable
         v-if="repositoryColumnsDef.length > 0"
         :columnDefs="repositoryColumnsDef"
-        :tableId="`MyModuleRepositoryRows_my_module_${myModuleId}_repository_row_${repository.id}`"
+        :tableId="`my_module_repository_rows_my_module_${myModuleId}_repository_${repository.id}`"
         :dataUrl="dataSource"
         :reloadingTable="reloadingTable"
         :toolbarActions="toolbarActions"
