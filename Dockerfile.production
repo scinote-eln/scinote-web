@@ -112,7 +112,7 @@ ENV PATH=$APP_HOME/bin:$GEM_HOME/bin:$PATH
 ENV NODE_PATH=/usr/local/lib/node_modules
 ENV BUNDLE_APP_CONFIG=.bundle
 
-RUN useradd --uid 1000 scinote
+RUN useradd --uid 1000 -m scinote
 USER scinote
 
 COPY --from=builder --chown=scinote:scinote $APP_HOME $APP_HOME
