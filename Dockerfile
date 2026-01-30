@@ -43,7 +43,7 @@ ENV BUNDLE_PATH=/usr/local/bundle/
 ENV APP_HOME=/usr/src/app
 ENV PATH=$APP_HOME/bin:$PATH
 RUN mkdir $APP_HOME
-RUN useradd --uid 1000 scinote
+RUN useradd --uid 1000 -m scinote
 RUN chown scinote:scinote $APP_HOME
 USER scinote
 ENV CHROMIUM_PATH=$APP_HOME/bin/chromium
