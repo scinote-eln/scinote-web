@@ -139,6 +139,10 @@ en:
       report: "Report"
     errors:
       models:
+        user_setting:
+          attributes:
+            key:
+              invalid: "must be in alphanumeric snake_case (lowercase with underscores)"
         project:
           attributes:
             name:

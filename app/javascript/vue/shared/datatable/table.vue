@@ -147,6 +147,7 @@ import CustomHeader from './tableHeader';
 import ActionToolbar from './action_toolbar.vue';
 import Toolbar from './toolbar.vue';
 import RowMenuRenderer from './row_menu_renderer.vue';
+import { user_setting_path } from '../../../routes.js';
 
 export default {
   name: 'App',
@@ -267,7 +268,6 @@ export default {
       stateLoading: true,
       lastPage: false,
       tableState: null,
-      userSettingsUrl: null,
       gridReady: false,
       windowScrollerSeen: false,
       resetGridCols: false,
@@ -359,7 +359,7 @@ export default {
       return columns;
     },
     stateKey() {
-      return `${this.tableId}_${this.currentViewMode}_state`;
+      return `${this.tableId}_${this.currentViewMode}_table_state`;
     }
   },
   watch: {
@@ -419,7 +419,6 @@ export default {
         this.setGridColsClass();
       }, 400);
     };
-    this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     this.fetchTableState();
 
     this.filters.forEach((filter) => {
@@ -493,10 +492,10 @@ export default {
     },
     // Table states
     fetchTableState() {
-      axios.get(this.userSettingsUrl, { params: { key: this.stateKey } })
+      axios.get(user_setting_path(this.stateKey))
         .then((response) => {
-          if (response.data.data) {
-            this.tableState = response.data.data;
+          if (response.data.value) {
+            this.tableState = response.data.value;
             this.currentViewRender = this.tableOnly ? 'table' : this.tableState.currentViewRender;
             this.perPage = this.tableState.perPage;
             this.order = this.tableState.order;
@@ -504,6 +503,10 @@ export default {
               this.initializing = false;
             }
           }
+          this.stateLoading = false;
+          this.loadData();
+        }).catch(() => {
+          this.initializing = false;
           this.stateLoading = false;
           this.loadData();
         });
@@ -561,11 +564,7 @@ export default {
         checkboxColumn.pinned = 'left';
       }
 
-      const settings = {
-        key: this.stateKey,
-        data: tableState
-      };
-      axios.put(this.userSettingsUrl, { settings: [settings] });
+      axios.put(user_setting_path(this.stateKey), { user_setting: { value: tableState } });
       this.tableState = tableState;
     },
     getRowClass() {

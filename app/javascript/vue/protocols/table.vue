@@ -1,7 +1,7 @@
 <template>
   <div class="h-full relative">
     <DataTable :columnDefs="columnDefs"
-               :tableId="'ProtocolTemplates'"
+               :tableId="'protocol_templates'"
                :dataUrl="dataSource"
                :reloadingTable="reloadingTable"
                :currentViewMode="currentViewMode"

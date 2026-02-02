@@ -1265,6 +1265,8 @@ Rails.application.routes.draw do
 
   resources :gene_sequence_assets, only: %i(new create edit update)
 
+  resources :user_settings, only: %i(show update), param: :key
+
   if Rails.env.development? || ENV['ENABLE_DESIGN_ELEMENTS'] == 'true'
     resources :design_elements, only: %i(index) do
       collection do
