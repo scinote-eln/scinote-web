@@ -150,11 +150,11 @@ export default {
   },
   created() {
     if (this.project?.start_date_cell?.value) {
-      this.startDate = this.parseDate(this.project.start_date_cell?.value);
+      this.startDate = this.project.start_date_cell?.value;
     }
 
     if (this.project?.due_date_cell?.value) {
-      this.dueDate = this.parseDate(this.project.due_date_cell?.value);
+      this.dueDate = this.project.due_date_cell?.value;
     }
   },
   methods: {
@@ -163,8 +163,8 @@ export default {
 
       const projectData = {
         name: this.name,
-        start_date: this.normalizedValue(this.startDate),
-        due_date: this.normalizedValue(this.dueDate),
+        start_date: this.startDate,
+        due_date: this.dueDate,
         description: this.description,
         default_public_user_role_id: this.defaultRole
       };
@@ -209,30 +209,12 @@ export default {
     },
     fetchUserRoles() {
       if (!this.createUrl) return;
-      
+
       axios.get(this.userRolesUrl())
         .then((response) => {
           this.userRoles = response.data.data;
         });
     },
-    parseDate(date) {
-      if (!date) return date;
-
-      return new Date(date.replace(/([^!\s])-/g, '$1/'));
-    },
-    normalizedValue(value) {
-      if (!value) return value;
-
-      const date = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
-      const time = ` ${value.getHours().toString().padStart(2, '0')}:${value.getMinutes().toString().padStart(2, '0')}`
-
-      if (this.mode === 'date') {
-        return `${date}`
-      } else {
-
-        return `${date} ${time}`;
-      }
-    }
   }
 };
 </script>

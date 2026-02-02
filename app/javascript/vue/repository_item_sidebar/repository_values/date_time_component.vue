@@ -69,28 +69,24 @@ export default {
   },
   created() {
     if (this.range) {
-      if (this.colVal.start_time?.datetime) this.startDate = new Date(this.colVal.start_time.datetime);
-      if (this.colVal.end_time?.datetime) this.endDate = new Date(this.colVal.end_time.datetime);
-    } else if (this.colVal.datetime) this.startDate = new Date(this.colVal.datetime);
+      if (this.colVal.start_time?.datetime) this.startDate = this.colVal.start_time.datetime;
+      if (this.colVal.end_time?.datetime) this.endDate = this.colVal.end_time.datetime;
+    } else if (this.colVal.datetime) this.startDate = this.colVal.datetime;
 
     this.defaultStartDate = this.startDate;
     this.defaultEndDate = this.endDate;
   },
   computed: {
-    value: {
-      get() {
-        if (this.range) {
-          if (!(this.startDate instanceof Date) && !(this.endDate instanceof Date)) return null;
-
-          return {
-            start_time: this.formatDate(this.startDate),
-            end_time: this.formatDate(this.endDate)
-          };
-        }
-        if (!(this.startDate instanceof Date)) return null;
-
-        return this.formatDate(this.startDate);
+    value() {
+      if (this.range) {
+        return {
+          start_time: this.startDate,
+          end_time: this.endDate
+        };
       }
+      if (!this.startDate) return null;
+
+      return this.startDate;
     },
     placeholder() {
       switch (this.mode) {
@@ -129,28 +125,16 @@ export default {
   methods: {
     updateStartDate(date) {
       this.startDate = date;
-      if (!(this.startDate instanceof Date)) this.update();
     },
     updateEndDate(date) {
       this.endDate = date;
-      if (!(this.endDate instanceof Date)) this.update();
-    },
-    trimSecondsAndMilliseconds(date) {
-      if (!date) return null;
-      if (!(date instanceof Date)) return null;
-
-      if (this.mode === 'time') {
-        return new Date().setHours(date.getHours(), date.getMinutes(), 0, 0);
-      }
-
-      return date.setSeconds(0, 0);
     },
     validateValue() {
       this.error = null;
-      const oldStart = this.trimSecondsAndMilliseconds(this.defaultStartDate);
-      const oldEnd = this.trimSecondsAndMilliseconds(this.defaultEndDate);
-      const newStart = this.trimSecondsAndMilliseconds(this.startDate);
-      const newEnd = this.trimSecondsAndMilliseconds(this.endDate);
+      const oldStart = this.defaultStartDate;
+      const oldEnd = this.defaultEndDate;
+      const newStart = this.startDate;
+      const newEnd = this.endDate;
       // Date is not changed
       if (oldEnd) {
         if (oldStart === newStart && oldEnd === newEnd) return false;
@@ -158,10 +142,10 @@ export default {
 
       if (this.range) {
         // Both empty
-        if (!(this.startDate instanceof Date) && !(this.endDate instanceof Date)) return true;
+        if (!(this.startDate )&& !this.endDate) return true;
 
         // One empty
-        if (!(this.startDate instanceof Date) || !(this.endDate instanceof Date)) {
+        if (!(this.startDate )|| !this.endDate) {
           this.error = this.i18n.t('repositories.item_card.date_time.errors.not_valid_range');
           return false;
         }
@@ -195,16 +179,6 @@ export default {
           this.reloadRepoItemSidebar();
         }
       });
-    },
-    formatDate(date) {
-      if (!(date instanceof Date)) return null;
-
-      const y = date.getFullYear();
-      const m = date.getMonth() + 1;
-      const d = date.getDate();
-      const hours = date.getHours();
-      const mins = date.getMinutes();
-      return `${y}/${m}/${d} ${hours}:${mins}`;
     }
   }
 };

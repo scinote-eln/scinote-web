@@ -27,6 +27,7 @@ var DateTimeHelper = (function() {
           <date-time-picker class="w-full" @cleared="clearDate"
                             :teleport="false"
                             :clearable="true"
+                            :default-value="'${dateTime}'"
                             ref="vueDateTime" @change="updateDate" mode="${mode}"
                             placeholder="${placeholder(mode)}"></date-time-picker>
         </div>
@@ -62,6 +63,7 @@ var DateTimeHelper = (function() {
           <date-time-picker class="w-full" @cleared="clearDate"
                             :teleport="false"
                             :clearable="true"
+                            :default-value="'${startDateTime}'"
                             ref="vueDateTime" @change="updateDate"
                             mode="${mode}" placeholder="${placeholder(mode)}"></date-time-picker>
         </div>
@@ -79,6 +81,7 @@ var DateTimeHelper = (function() {
           <date-time-picker class="w-full" @cleared="clearDate"
                             :teleport="false"
                             :clearable="true"
+                            :default-value="'${endDateTime}'"
                             ref="vueDateTime" @change="updateDate" mode="${mode}"
                             placeholder="${placeholder(mode)}"></date-time-picker>
         </div>
