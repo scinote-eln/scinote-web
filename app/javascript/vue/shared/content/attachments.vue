@@ -104,7 +104,7 @@ export default {
       if (this.attachments.some((attachment) => attachment.attributes.uploading)) {
         return this.attachments;
       }
-      return this.attachments.sort((a, b) => {
+      return this.attachments.toSorted((a, b) => {
         if (a.attributes.asset_order == b.attributes.asset_order) {
           switch (this.parent.attributes.assets_order) {
             case 'new':
