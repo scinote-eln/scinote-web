@@ -505,6 +505,10 @@ export default {
           }
           this.stateLoading = false;
           this.loadData();
+        }).catch(() => {
+          this.initializing = false;
+          this.stateLoading = false;
+          this.loadData();
         });
     },
     applyTableState() {
