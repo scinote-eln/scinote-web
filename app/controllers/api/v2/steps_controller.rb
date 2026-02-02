@@ -65,6 +65,25 @@ module Api
       def permitted_includes
         %w(tables assets checklists checklists.checklist_items comments user form_responses)
       end
+
+      def check_manage_permissions
+        if step_params.key?(:completed) && step_params.except(:completed).blank?
+          completed_bool = ActiveModel::Type::Boolean.new.cast(step_params[:completed])
+          permission = if step_parms[:completed] == 'skipped'
+                         can_skip_my_module_steps(@step.my_module)
+                       elsif completed_bool
+                         can_complete_my_module_steps?(@step.my_module)
+                       elsif !completed_bool
+                         can_uncomplete_my_module_steps?(@step.my_module)
+                       else
+                         false
+                       end
+
+          raise PermissionError.new(Step, :toggle_completion) unless permission
+        else
+          raise PermissionError.new(Step, :manage) unless can_manage_step?(@step)
+        end
+      end
     end
   end
 end

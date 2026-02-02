@@ -397,7 +397,7 @@ class StepsController < ApplicationController
   end
 
   def check_complete_and_checkbox_permissions
-    render_403 unless can_complete_or_checkbox_step?(@protocol)
+    render_403 unless @step.completed ? can_complete_my_module_steps?(@my_module) : can_uncomplete_my_module_steps?(@my_module)
   end
 
   def check_skip_pemissions

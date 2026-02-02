@@ -99,7 +99,9 @@ class StepSerializer < ActiveModel::Serializer
       urls_list[:skip_url] = toggle_step_skip_state_step_path(object)
     end
 
-    urls_list[:state_url] = toggle_step_state_step_path(object) if object.my_module && can_complete_my_module_steps?(object.my_module)
+    if object.my_module && (object.completed ? can_uncomplete_my_module_steps?(object.my_module) : can_complete_my_module_steps?(object.my_module))
+      urls_list[:state_url] = toggle_step_state_step_path(object)
+    end
 
     if can_manage_protocol_in_module?(object.protocol) || can_manage_protocol_draft_in_repository?(object.protocol)
       urls_list[:duplicate_step_url] = duplicate_step_path(object)
