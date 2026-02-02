@@ -23,11 +23,7 @@ window.initDateTimePickerComponent = (id) => {
       };
     },
     mounted() {
-      if (this.$refs.input.dataset.default) {
-        const defaultDate = this.$refs.input.dataset.default.replace(/([^!\s])-/g, '$1/');
-        this.date = defaultDate;
-      } else if (this.date) {;
-      }
+      this.date = this.$refs.input.dataset.default.replace(/([^!\s])-/g, '$1/');
 
       $(this.$refs.input).data('dateTimePicker', this);
       $(this.$el.parentElement).parent().trigger('dp:ready');
