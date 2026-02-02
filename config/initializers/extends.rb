@@ -925,28 +925,6 @@ class Extends
   DEFAULT_TEAM_SETTINGS = {}
 
   WHITELISTED_USER_SETTINGS = %w(
-    LabelTemplates_active_state
-    LabelTemplates_archived_state
-    ExperimentList_active_state
-    ExperimentList_archived_state
-    MyModuleList_active_state
-    MyModuleList_archived_state
-    ProjectList_active_state
-    ProjectList_archived_state
-    ProtocolTemplates_active_state
-    ProtocolTemplates_archived_state
-    FormsTable_active_state
-    FormsTable_archived_state
-    ReportTemplates_active_state
-    ReportTemplates_archived_state
-    Repositories_active_state
-    Repositories_archived_state
-    StorageLocationsTable_active_state
-    StorageLocationsContainer_active_state
-    StorageLocationsContainerGrid_active_state
-    TagsIndexTable_active_state
-    UserGroups_active_state
-    UserGroup_active_state
     task_step_states
     results_order
     repository_export_file_type
@@ -956,8 +934,6 @@ class Extends
     result_templates_order
     result_template_states
   ).freeze
-
-  WHITELISTED_USER_SETTINGS += [/MyModuleRepositoryRows_my_module_\d+_repository_row_\d+_active_state/]
 end
 
 # rubocop:enable Style/MutableConstant
