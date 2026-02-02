@@ -15,7 +15,7 @@ describe SearchController, type: :controller do
       let(:params) {{ q: project.name, group: 'projects' }}
       it 'correct JSON format' do
 
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -28,7 +28,7 @@ describe SearchController, type: :controller do
       let(:params) {{ q: project_folder.name, group: 'project_folders' }}
       it 'correct JSON format' do
 
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -44,7 +44,7 @@ describe SearchController, type: :controller do
       let(:params) {{ q: report.name, group: 'reports' }}
       it 'correct JSON format' do
 
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -56,7 +56,7 @@ describe SearchController, type: :controller do
       let(:protocol) { my_module.protocol }
       let(:params) {{ q: 'test protocol', group: 'module_protocols' }}
       it 'correct JSON format' do
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -68,7 +68,7 @@ describe SearchController, type: :controller do
       let(:params) {{ q: experiment.name, group: 'experiments' }}
       it 'correct JSON format' do
 
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -80,7 +80,7 @@ describe SearchController, type: :controller do
       let(:params) {{ q: my_module.name, group: 'tasks' }}
       it 'correct JSON format' do
 
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -93,7 +93,7 @@ describe SearchController, type: :controller do
       let(:params) {{ q: result.name, group: 'results' }}
       it 'correct JSON format' do
 
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -105,7 +105,7 @@ describe SearchController, type: :controller do
       let(:protocol) { create :protocol, :in_repository_draft, team: team, added_by: user }
       let(:params) {{ q: protocol.name, group: 'protocols' }}
       it 'correct JSON format' do
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -116,7 +116,7 @@ describe SearchController, type: :controller do
     context 'search label_templates' do
       let(:params) {{ q: 'random name', group: 'label_templates' }}
       it 'correct JSON format' do
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -131,7 +131,7 @@ describe SearchController, type: :controller do
 
       it 'correct JSON format' do
 
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -143,7 +143,7 @@ describe SearchController, type: :controller do
       let(:params) {{ q: 'random name', group: 'assets' }}
       it 'correct JSON format' do
 
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -154,7 +154,7 @@ describe SearchController, type: :controller do
     context 'filter by user projects' do
       let(:params) { { q: project.name, group: 'projects', filters: { users: { 0 => user.id } } } }
       it 'correct JSON format' do
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -163,9 +163,9 @@ describe SearchController, type: :controller do
     end
 
     context 'filter by user tasks' do
-      let(:params) { { q: project.name, group: 'tasks', filters: { users: { 0 => user.id } } } }
+      let(:params) { { q: project.name, group: 'tasks', filters: { users: [user.id] } } }
       it 'correct JSON format' do
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -176,7 +176,7 @@ describe SearchController, type: :controller do
     context 'filter by created_at on projects' do
       let(:params) { { q: project.name, group: 'projects', filters: { created_at: { 'on' => Time.current.utc.beginning_of_day } } } }
       it 'correct JSON format' do
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -192,7 +192,7 @@ describe SearchController, type: :controller do
       let(:params) { { query: project.name } }
       it 'correct JSON format' do
 
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
@@ -203,7 +203,7 @@ describe SearchController, type: :controller do
     context 'with filter param' do
       let(:params) { {  query: project.name, filter: 'project' } }
       it 'correct JSON format with params' do
-        action  
+        action
         expect(response).to have_http_status(:success)
         expect(response.media_type).to eq 'application/json'
         parsed_response = JSON.parse(response.body)
