@@ -252,7 +252,7 @@ export default {
       filledRowTemplate: {},
       perPage: 20,
       page: 1,
-      order: null,
+      order: { column: 'name', dir: 'asc' },
       totalPage: 0,
       totalEntries: null,
       selectedRows: [],
