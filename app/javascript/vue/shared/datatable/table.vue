@@ -116,10 +116,13 @@
         </div>
         <div v-show="!dataLoading" data-e2e="e2e-TX-tableInfo-entries">
           <span v-if="selectedRows.length">
-            {{ i18n.t('datatable.entries.selected', { count: totalEntries, selected: selectedRows.length }) }}
+            {{ i18n.t('datatable.entries.selected', { count: (filteredEntries || totalEntries), selected: selectedRows.length }) }}
           </span>
           <span v-else>
-            {{ i18n.t('datatable.entries.total', { count: totalEntries, selected: selectedRows.length }) }}
+            {{ i18n.t('datatable.entries.filtered', { count: (filteredEntries || totalEntries), selected: selectedRows.length }) }}
+          </span>
+          <span v-if="filteredEntries !== null && filteredEntries < totalEntries">
+            ({{ i18n.t('datatable.entries.total', { count: totalEntries }) }})
           </span>
         </div>
       </div>
@@ -257,6 +260,7 @@ export default {
       order: null,
       totalPage: 0,
       totalEntries: null,
+      filteredEntries: null,
       selectedRows: [],
       keepSelection: false,
       searchValue: '',
@@ -633,6 +637,7 @@ export default {
           if (this.scrollMode !== 'none') {
             this.totalPage = response.data.meta.total_pages;
             this.totalEntries = response.data.meta.total_count;
+            this.filteredEntries = response.data.meta.filtered_count;
           }
           this.$emit('tableReloaded', this.rowData, { filtered: this.searchValue.length > 0 });
           this.dataLoading = false;

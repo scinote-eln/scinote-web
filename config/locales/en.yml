@@ -4866,10 +4866,11 @@ en:
   # application.
   datatable:
     entries:
-      total:
+      filtered:
         one: "%{count} entry"
         other: "%{count} entries"
       selected: "%{selected} of %{count} selected"
+      total: "%{count} total"
     show: 'Show:'
     rows: 'rows'
   tiny_mce:
