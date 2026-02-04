@@ -178,10 +178,9 @@ class TeamImporter
         update_smart_annotations_in_project(project)
 
         # handle the permissions for newly created experiment
-        user = User.find(user_id)
-        UserAssignments::GenerateUserAssignmentsJob.perform_now(experiment, user.id)
+        UserAssignments::InheritUserAssignmentsJob.perform_now(experiment, assigner_id: user_id)
         experiment.my_modules.find_each do |my_module|
-          UserAssignments::GenerateUserAssignmentsJob.perform_now(my_module, user.id)
+          UserAssignments::InheritUserAssignmentsJob.perform_now(my_module, assigner_id: user_id)
         end
         puts "Imported experiment: #{experiment.id}"
       end

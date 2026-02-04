@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 module UserAssignments
-  class GenerateUserAssignmentsJob < ApplicationJob
-    queue_as :high_priority
+  class InheritUserAssignmentsJob < BaseJob
+    def perform(object, assigner_id:)
+      @assigned_by = User.find_by(id: assigner_id)
 
-    def perform(object, assigned_by_id)
-      @assigned_by = User.find_by(id: assigned_by_id)
+      Rails.logger.info "Enqueued by User(#{assigner_id}) for #{object.class.name}(#{object.id})\n"
+
       ActiveRecord::Base.transaction do
         case object
         when Experiment

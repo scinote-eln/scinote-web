@@ -111,6 +111,7 @@ module Api
       def propagate_job(user_assignment, destroy: false)
         UserAssignments::PropagateAssignmentJob.perform_later(
           user_assignment,
+          assigner_id: current_user.id,
           destroy: destroy
         )
       end

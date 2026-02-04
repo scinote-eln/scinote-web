@@ -35,7 +35,7 @@ module Api
 
           @user_assignment.update!(user_assignment_params.merge(assigned: :manually))
 
-          UserAssignments::PropagateAssignmentJob.perform_later(@user_assignment)
+          UserAssignments::PropagateAssignmentJob.perform_later(@user_assignment, assigner_id: current_user.id)
 
           log_change_activity
 

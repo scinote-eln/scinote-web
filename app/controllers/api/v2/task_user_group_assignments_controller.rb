@@ -41,7 +41,7 @@ module Api
       private
 
       def propagate_job
-        UserAssignments::PropagateAssignmentJob.perform_later(@user_group_assignment)
+        UserAssignments::PropagateAssignmentJob.perform_later(@user_group_assignment, assigner_id: current_user.id)
       end
 
       def log_activity(type_of)
