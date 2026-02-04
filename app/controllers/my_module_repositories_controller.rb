@@ -71,6 +71,7 @@ class MyModuleRepositoriesController < ApplicationController
            with_stock_management: @repository.has_stock_management?,
            can_manage_stock: false,
            can_consume_stock: can_update_my_module_stock_consumption?(@my_module),
+           is_snapshot: @repository.is_a?(RepositorySnapshot),
            meta: {
             total_pages: total_pages,
             total_count: total_count,
@@ -101,6 +102,11 @@ class MyModuleRepositoriesController < ApplicationController
     end
 
     render json: { assigned_count:, skipped_count: }, status:
+  end
+
+  def show
+    assigned_rows_count = @repository.is_a?(RepositorySnapshot) ? @repository.repository_rows.count : @my_module.my_module_repository_rows.count
+    render json: @repository, serializer: AssignedRepositorySerializer, scope: { user: current_user, my_module: @my_module, assigned_rows_count: assigned_rows_count }
   end
 
   def create
@@ -298,7 +304,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def load_repository
-    @repository = Repository.find_by(id: params[:id])
+    @repository = RepositoryBase.find_by(id: params[:id])
     render_404 unless @repository
   end
 

@@ -16,6 +16,7 @@ module Lists
       @my_module = my_module
       @disable_reminders = disable_reminders
       @preload_cells = preload_cells
+      @is_snapshot = @repository.is_a?(RepositorySnapshot)
     end
 
     def call
@@ -31,7 +32,7 @@ module Lists
 
     def fetch_records
       @records = @repository.repository_rows
-      @records = @records.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: @my_module }) if @my_module
+      @records = @records.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: @my_module }) if @my_module && !@is_snapshot
     end
 
     def add_extra_fields
@@ -41,7 +42,7 @@ module Lists
                               .joins('JOIN paginated_repository_rows ON paginated_repository_rows.id = repository_rows.id')
 
       # Adding assigned counters
-      if @my_module
+      if @my_module && !@is_snapshot
         @records = @records.joins(:my_module_repository_rows)
         @records = @records.select('SUM(DISTINCT my_module_repository_rows.stock_consumption) AS "consumed_stock"') if @repository.has_stock_management?
       else
@@ -50,7 +51,7 @@ module Lists
 
       if Repository.reminders_enabled? && !@disable_reminders
         @records =
-          if @repository.archived? || @repository.is_a?(RepositorySnapshot)
+          if @repository.archived? || @is_snapshot
             # don't load reminders for archived repositories or snapshots
             @records.select('FALSE AS has_active_reminders')
           else

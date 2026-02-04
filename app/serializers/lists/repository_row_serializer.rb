@@ -86,17 +86,23 @@ module Lists
     def consumed_stock
       repository = object.repository
       stock_cell = object.repository_stock_cell
-      consumed_stock_formatted = number_with_precision(object.consumed_stock,
-                                                        precision: repository.repository_stock_column.metadata['decimals'].to_i,
-                                                        strip_insignificant_zeros: true)
+      consumed_stock_formatted = if instance_options[:is_snapshot]
+                                   object.repository_stock_consumption_cell&.value&.formatted
+                                 else
+                                   value = number_with_precision(object.consumed_stock,
+                                                                 precision: repository.repository_stock_column.metadata['decimals'].to_i,
+                                                                 strip_insignificant_zeros: true)
+                                   "#{value || 0} #{object.repository_stock_value&.repository_stock_unit_item&.data}"
+                                 end
+      consumed_stock = instance_options[:is_snapshot] ? object.repository_stock_consumption_cell&.value&.data : object.consumed_stock
       {
         stock_present: stock_cell.present?,
-        consumption_permitted: object.active? && instance_options[:can_consume_stock],
+        consumption_permitted: object.active? && instance_options[:can_consume_stock] && !instance_options[:is_snapshot],
         update_stock_consumption_url:
           Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(instance_options[:my_module], repository, row_id: object.id),
         value: {
-          consumed_stock: object.consumed_stock,
-          consumed_stock_formatted: "#{consumed_stock_formatted || 0} #{object.repository_stock_value&.repository_stock_unit_item&.data}"
+          consumed_stock: consumed_stock,
+          consumed_stock_formatted: consumed_stock_formatted
         }
       }
     end
