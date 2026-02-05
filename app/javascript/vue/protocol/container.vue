@@ -42,6 +42,15 @@
               <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
               <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
+          <button
+            v-if="!inRepository && urls.add_step_url"
+            class="btn btn-secondary icon-btn xl:!px-4"
+            @click="showRepositoriesModal = true"
+            :title="i18n.t('protocols.steps.show_repositories')"
+          >
+            <span class="sn-icon sn-icon-inventory" aria-hidden="true"></span>
+            <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.show_repositories") }}</span>
+          </button>
           <template v-if="steps.length > 0">
             <button
               :title="i18n.t('protocols.steps.collapse_label')"
@@ -304,6 +313,11 @@
                          @files="uploadFilesToStep"
                          @cancel="showClipboardPasteModal = false"
     />
+    <AssignedItemsModal
+      v-if="showRepositoriesModal"
+      :myModuleId="protocol.attributes.assignable_my_module_id"
+      @close="showRepositoriesModal = false"
+    />
   </div>
 </template>
 
@@ -320,6 +334,7 @@ import axios from '../../packs/custom_axios';
 import UtilsMixin from '../mixins/utils.js';
 import stackableHeadersMixin from '../mixins/stackableHeadersMixin';
 import moduleNameObserver from '../mixins/moduleNameObserver';
+import AssignedItemsModal from './modals/assigned_items.vue';
 
 export default {
   name: 'ProtocolContainer',
@@ -330,7 +345,9 @@ export default {
     }
   },
   components: {
-    Step, InlineEdit, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, clipboardPasteModal
+    Step, InlineEdit, ProtocolOptions, Tinymce,
+    ReorderableItemsModal, ProtocolMetadata, clipboardPasteModal,
+    AssignedItemsModal
   },
   mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin],
   computed: {
@@ -358,6 +375,7 @@ export default {
       activeDragStep: null,
       userSettingsUrl: null,
       stepCollapsed: false,
+      showRepositoriesModal: false,
       anchorId: null,
       elementsLoaded: 0,
       attachmentsLoaded: 0,

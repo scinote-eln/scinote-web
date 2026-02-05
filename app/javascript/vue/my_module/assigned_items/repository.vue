@@ -1,6 +1,8 @@
 <template>
-  <div ref="container" class="p-4 bg-white rounded transition-all overflow-hidden mb-4" :style="{height: (sectionOpened ? '600px' : '60px')}">
-    <div class="flex items-center h-6 gap-4 assigned-repository-title mb-1">
+  <div ref="container"
+       :class="{'p-4 bg-white rounded transition-all overflow-hidden mb-4': !onlyRepository}"
+       :style="{height: (sectionOpened ? openSize : '60px')}">
+    <div v-if="!onlyRepository" class="flex items-center h-6 gap-4 assigned-repository-title mb-1">
       <div
         @click="toggleContainer"
         class="flex items-center gap-4 grow overflow-hidden cursor-pointer"
@@ -46,33 +48,35 @@
         @tableReloaded="reloadingTable = false"
       ></DataTable>
     </div>
-    <ConsumeModal v-if="openConsumeModal" @updateConsume="updateConsume" @close="openConsumeModal = false" :row="selectedRow" />
-    <ConfirmationModal
-      :title="i18n.t('my_modules.repository.stock_warning_modal.title')"
-      :description="warningModalDescription"
-      confirmClass="btn btn-primary"
-      :confirmText="i18n.t('my_modules.repository.stock_warning_modal.consume_anyway')"
-      ref="warningModal"
-    ></ConfirmationModal>
-    <ConfirmationModal
-      :title="i18n.t('my_modules.repository.unassign_modal.title')"
-      :description="unassignConfirmationModalDescription"
-      confirmClass="btn btn-primary"
-      :confirmText="unassignConfirmationModalActionText"
-      ref="unassignConfirmationModal"
-    ></ConfirmationModal>
-    <CreateItemModal
-      v-if="openCreateItemModal"
-      :myModuleId="myModuleId"
-      :selectedRepositoryValue="repository.id"
-      @tableReloaded="newCreatedRow"
-      @close="openCreateItemModal = false"></CreateItemModal>
-    <AssignItemModal
-        v-if="openAssignItemModal"
+    <Teleport to="body">
+      <ConsumeModal v-if="openConsumeModal" @updateConsume="updateConsume" @close="openConsumeModal = false" :row="selectedRow" />
+      <ConfirmationModal
+        :title="i18n.t('my_modules.repository.stock_warning_modal.title')"
+        :description="warningModalDescription"
+        confirmClass="btn btn-primary"
+        :confirmText="i18n.t('my_modules.repository.stock_warning_modal.consume_anyway')"
+        ref="warningModal"
+      ></ConfirmationModal>
+      <ConfirmationModal
+        :title="i18n.t('my_modules.repository.unassign_modal.title')"
+        :description="unassignConfirmationModalDescription"
+        confirmClass="btn btn-primary"
+        :confirmText="unassignConfirmationModalActionText"
+        ref="unassignConfirmationModal"
+      ></ConfirmationModal>
+      <CreateItemModal
+        v-if="openCreateItemModal"
         :myModuleId="myModuleId"
         :selectedRepositoryValue="repository.id"
-        @assignRows="assignRows"
-        @close="openAssignItemModal = false"/>
+        @tableReloaded="newCreatedRow"
+        @close="openCreateItemModal = false"></CreateItemModal>
+      <AssignItemModal
+          v-if="openAssignItemModal"
+          :myModuleId="myModuleId"
+          :selectedRepositoryValue="repository.id"
+          @assignRows="assignRows"
+          @close="openAssignItemModal = false"/>
+    </Teleport>
   </div>
 </template>
 <script>
@@ -95,7 +99,11 @@ export default {
   props: {
     repository: Object,
     myModuleId: String,
-    reloadKey: Number
+    reloadKey: Number,
+    onlyRepository: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     DataTable,
@@ -122,6 +130,9 @@ export default {
     }
   },
   computed: {
+    openSize() {
+      return this.onlyRepository ? '540px' : '600px';
+    },
     toolbarActions() {
       const left = [];
       const right = [];
