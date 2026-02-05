@@ -117,6 +117,9 @@ export default {
       }).then((response) => {
         this.openAssignItemModal = false;
         HelperModule.flashAlertMsg(response.data.flash, 'success');
+        if (!this.reloadKeys[repositoryId]) {
+          this.loadAssingedRepositories();
+        }
         this.reloadKeys[repositoryId] = Date.now();
       });
     },

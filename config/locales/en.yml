@@ -1757,6 +1757,10 @@ en:
       no_assigned_items_can_assign: 'No items assigned to this task. Use the buttons on the right to start assigning.'
       assign_items: 'Assign items'
       create_item: 'Create item'
+      assigned_items_modal:
+        title: 'Assigned items'
+        assign_new_row: '+ Assign from different inventory'
+        inventory: 'Inventory:'
       full_view:
         modal_live_header: ': Live version'
         modal_snapshot_header: ': Snapshot of %{snapshot_date}'
@@ -4125,6 +4129,7 @@ en:
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       new_step: "New step"
+      show_repositories: "Assigned items"
       add_step: "Add step"
       new_step_title: "Create new step"
       subtitle: "Protocol Steps"

@@ -7,7 +7,7 @@ class UserSettingsController < ApplicationController
 
   def update
     current_user.user_settings
-                .find_or_create_by!(key: params[:key])
+                .find_or_initialize_by(key: params[:key])
                 .update!(value: user_setting_params[:value])
 
     head :ok
