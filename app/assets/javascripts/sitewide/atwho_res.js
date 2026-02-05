@@ -1,4 +1,4 @@
-/* global PerfectScrollbar MyModuleRepositories HelperModule _ */
+/* global PerfectScrollbar HelperModule _ */
 
 var SmartAnnotation = (function() {
   'use strict';
@@ -174,9 +174,6 @@ var SmartAnnotation = (function() {
             data: { repository_row_id: el.data('repository-row-id') },
             dataType: 'json',
             success: function(data) {
-              if (typeof MyModuleRepositories !== 'undefined') {
-                MyModuleRepositories.reloadRepositoriesList(el.data('repository-id'));
-              }
               HelperModule.flashAlertMsg(data.flash, 'success');
             },
             error: function(response) {
