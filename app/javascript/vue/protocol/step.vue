@@ -23,25 +23,27 @@
             :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCollapsed`">
               <span class="sn-icon sn-icon-right "></span>
           </a>
-          <div v-if="!inRepository" class="flex flex-col gap-2">
-            <div class="flex items-center justify-center cursor-pointer 
+          <div v-if="!inRepository" class="flex flex-col gap-1">
+            <div class="flex items-center justify-center cursor-pointer
                         hover:text-sn-alert-green-disabled"
                  :class="[step.attributes.completed ? 'text-sn-alert-green' : 'text-sn-grey-700', { 'step-element--locked': !urls.state_url }]"
                  @click="changeState"
                  @keyup.enter="changeState"
                  tabindex="0"
+                 data-toggle="tooltip"
                  :title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
                  :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCompleted`">
               <i :class="['sn-icon', step.attributes.completed ? 'sn-icon-task-status-completed' : 'sn-icon-task-status-uncompleted']"></i>
             </div>
             <div class="flex items-center justify-center cursor-pointer"
                  :class="[
-                   step.attributes.skipped_at ? 'text-sn-science-blue hover:text-sn-blue-click' : 'text-sn-grey-700 hover:text-sn-science-blue', 
+                   step.attributes.skipped_at ? 'text-sn-science-blue hover:text-sn-blue-click' : 'text-sn-grey-700 hover:text-sn-science-blue',
                    { 'step-element--locked': !urls.skip_url }
                  ]"
                  @click="changeSkipped"
                  @keyup.enter="changeSkipped"
                  tabindex="0"
+                 data-toggle="tooltip"
                  :title="step.attributes.skipped_at ? i18n.t('protocols.steps.status.unskip') : i18n.t('protocols.steps.status.skip')"
                  data-e2e="e2e-BT-protocol-toggleSkipped"
             >
@@ -430,6 +432,7 @@
       });
 
       window.initTooltip(this.$refs.linkButton);
+      $('[data-toggle="tooltip"]').tooltip();
     },
     beforeUnmount() {
       window.destroyTooltip(this.$refs.linkButton);
