@@ -48,7 +48,7 @@
     </div>
 
     <div
-      class="mt-2 whitespace-nowrap truncate text-xs font-normal absolute bottom-[-1rem] w-full"
+      class="mt-3 whitespace-nowrap truncate text-xs font-normal absolute bottom-[-1rem] w-full"
       :title="editing && error ? error : timestamp"
       :class="{'text-sn-delete-red': editing && error}"
       :data-e2e="`e2e-TX-${dataE2e}-timestampError`"
