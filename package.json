@@ -83,7 +83,7 @@
     "vue3-draggable-resizable": "^1.6.5",
     "vue3-perfect-scrollbar": "^2.0.0",
     "vuedraggable": "^4.1.0",
-    "webpack": "^5.99.9",
+    "webpack": "^5.104.1",
     "webpack-cli": "^4.10.0",
     "webpack-remove-empty-scripts": "^1.1.1"
   },
