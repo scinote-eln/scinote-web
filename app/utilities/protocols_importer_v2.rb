@@ -148,6 +148,7 @@ class ProtocolsImporterV2
                                    filename: asset_json.dig('preview_image', 'fileName'))
       end
 
+      asset.save!
       asset.post_process_file
     end
   end
