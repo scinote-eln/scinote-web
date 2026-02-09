@@ -263,8 +263,6 @@ class WopiController < ActionController::Base
         @repository = @assoc.repository_column.repository
         @team = @repository.team
       end
-
-      Current.team = @team
     end
   end
 
