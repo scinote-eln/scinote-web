@@ -20,10 +20,10 @@ module Lists
 
     def call
       fetch_records
-      add_extra_fields
       filter_records
-      sort_records
       paginate_records
+      add_sort_joins
+      add_extra_fields
       @records
     end
 
@@ -37,6 +37,9 @@ module Lists
     def add_extra_fields
       @records = @records.select('repository_rows.id')
                          .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
+
+      @records = @records.select("row_number() OVER (ORDER BY #{sort_column} #{sort_direction(@params[:order])}) AS row_number") if @params[:order].present?
+
       @records = RepositoryRow.with(paginated_repository_rows: @records)
                               .joins('JOIN paginated_repository_rows ON paginated_repository_rows.id = repository_rows.id')
 
@@ -76,6 +79,7 @@ module Lists
                          .group('repository_rows.id')
                          .preload(:repository)
 
+      @records = @records.group('paginated_repository_rows.row_number').order('paginated_repository_rows.row_number') if @params[:order].present?
       @records = @records.preload(:repository_columns, repository_cells: { value: @repository.cell_preload_includes }) if @preload_cells
       @records = @records.preload(:repository_stock_cell, :repository_stock_value) if @repository.has_stock_management?
     end
@@ -471,43 +475,62 @@ module Lists
 
     # Sorting logic
 
-    def sort_records
+    def sort_column
+      default_sortable_column = 'repository_rows.id'
       column = @params.dig(:order, :column)
-      direction = @params.dig(:order, :dir)
-      return unless column.present? && direction.present?
-
-      direction = direction == 'desc' ? :desc : :asc
+      return default_sortable_column if column.blank?
 
       case column
       when 'assigned_tasks_count'
-        @records = @records.order(assigned_my_modules_count: direction)
+        'COUNT(DISTINCT assigned_my_modules.id)'
       when 'created_by'
-        @records = @records.group('created_by.full_name').order('created_by.full_name' => direction)
+        'created_by.full_name'
       when 'created_at'
-        @records = @records.order('created_at' => direction)
+        'repository_rows.created_at'
       when 'connections_count'
-        @records = @records.order(relationships_count: direction)
+        '(COALESCE(repository_rows.parent_connections_count, 0) + COALESCE(repository_rows.child_connections_count, 0))'
       when 'name'
-        @records = @records.order(name: direction)
+        'repository_rows.name'
       when 'code'
-        @records = @records.order(id: direction)
+        'repository_rows.id'
       when 'consumed_stock'
-        @records = @records.order('consumed_stock' => direction)
+        'SUM(DISTINCT my_module_repository_rows.stock_consumption)'
+      when /^col_[1-9]\d*\z/, 'stock'
+        'values.value'
+      else
+        sortable_columns.include?(column) ? column : default_sortable_column
+      end
+    end
+
+    def add_sort_joins
+      column = @params.dig(:order, :column)
+      return if column.blank?
+
+      case column
+      when 'assigned_tasks_count'
+        @records = @records.joins('INNER JOIN "my_module_repository_rows" AS assigned_my_modules
+                                   ON "assigned_my_modules"."repository_row_id" = "repository_rows"."id"')
+                           .group('repository_rows.id')
+      when 'created_by'
+        @records = @records.joins('LEFT OUTER JOIN "users" "created_by" ON "created_by"."id" = "repository_rows"."created_by_id"')
+
+      when 'consumed_stock'
+        @records = @records.group('repository_rows.id')
       when /^col_[1-9]\d*\z/
         column_id = column[/\d+\z/].to_i
         sorting_column = @repository.repository_columns.find_by(id: column_id)
         return unless sorting_column
 
-        @records = sort_by_custom_repository_column(sorting_column, direction)
+        sort_by_custom_repository_column(sorting_column)
       when 'stock'
         sorting_column = @repository.repository_columns.find_by(data_type: 'RepositoryStockValue')
         return unless sorting_column
 
-        @records = sort_by_custom_repository_column(sorting_column, direction)
+        sort_by_custom_repository_column(sorting_column)
       else
         return unless sortable_columns.include?(column)
 
-        @records = @records.group(:id).group(column).order(column => direction)
+        @records = @records.group(:id).group(column)
       end
     end
 
@@ -521,7 +544,7 @@ module Lists
       sortable_columns
     end
 
-    def sort_by_custom_repository_column(sorting_column, direction)
+    def sort_by_custom_repository_column(sorting_column)
       sorting_data_type = sorting_column.data_type.constantize
       cells = sorting_data_type.joins(
         "INNER JOIN repository_cells AS repository_sort_cells " \
@@ -539,9 +562,7 @@ module Lists
               else
                 cells.select("repository_sort_cells.repository_row_id, #{sorting_data_type::SORTABLE_COLUMN_NAME} AS value")
               end
-      @records.joins("LEFT OUTER JOIN (#{cells.to_sql}) AS values ON values.repository_row_id = repository_rows.id")
-              .group('repository_rows.id', 'values.value')
-              .order('values.value' => direction)
+      @records = @records.joins("LEFT OUTER JOIN (#{cells.to_sql}) AS values ON values.repository_row_id = repository_rows.id")
     end
   end
 end
