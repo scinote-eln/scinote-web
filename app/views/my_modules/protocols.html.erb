@@ -60,8 +60,6 @@
   </div>
 </div>
 
-<%= render partial: "my_modules/modals/update_repository_records_modal" %>
-
 
 <%= render partial: "my_modules/protocols/print_protocol_modal", locals: { protocol: @protocol, comments_enabled: true} %>
 
@@ -88,8 +86,6 @@
 <!-- Delete file modal -->
 <%= render partial: 'assets/asset_delete_modal' %>
 
-<!-- Consume Stock Modal -->
-<%= render partial: 'my_modules/repositories/consume_stock_modal'%>
 
 <div id="accessModalContainer" class="vue-access-modal"
      data-url="<%= my_module_path(@my_module, format: :json) %>"
@@ -109,13 +105,11 @@
 <%= render partial: "shared/formulas_libraries" %>
 <%= javascript_include_tag("my_modules/protocols") %>
 <%= javascript_include_tag 'emoji_button' %>
-<%= javascript_include_tag("my_modules/repositories") %>
 <%= javascript_include_tag("my_modules/pwa_mobile_app") %>
 <%= javascript_include_tag 'pdf_js' %>
 <%= stylesheet_link_tag 'pdf_js_styles' %>
 <%= javascript_include_tag "protocols/new_protocol" %>
 
 <%= javascript_include_tag 'vue_protocol' %>
-<%= javascript_include_tag 'vue_my_module_assigned_items' %>
 <%= javascript_include_tag 'vue_my_module_show' %>
 <%= javascript_include_tag 'vue_legacy_access_modal' %>
