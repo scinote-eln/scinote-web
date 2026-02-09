@@ -12,7 +12,7 @@ def schedule_task(scheduler, interval, &block)
   end
 end
 
-if ENV['WORKER'].present?
+if ENV['SCINOTE_SCHEDULER_ENABLED'] == 'true'
   scheduler = Rufus::Scheduler.singleton
 
   if ENV['ENABLE_TEMPLATES_SYNC'] == 'true'
