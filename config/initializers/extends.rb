@@ -218,7 +218,7 @@ class Extends
     'Step' => 'Api::V2::StepSerializer',
     'LabelTemplate' => 'Api::V1::LabelTemplateSerializer',
     'StorageLocation' => 'Api::V1::StorageLocationSerializer',
-    'Form' => 'Api::V2::FormSerialize'
+    'Form' => 'Api::V2::FormSerializer'
   }
 
   SEARCHABLE_ACTIVITY_SUBJECT_TYPES = %w(

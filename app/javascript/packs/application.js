@@ -99,7 +99,7 @@ window.isColorBright = function(color) {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  let scinoteLocalUrl = document.querySelector('#scinote_local_url').value;
+  let scinoteLocalUrl = document.querySelector('#scinote_local_url')?.value;
   if (scinoteLocalUrl) {
     axios.get(`${scinoteLocalUrl}/status`).then((response) => {
       window.scinoteEditRunning = true;
