@@ -42,8 +42,8 @@
         @export_consumption="exportConsumption"
         @print="printRows"
         @assign="openAssignItemModal = true"
-        @unassign="unassignRows"
-        @unassign_downstream="unassignDownstreamRows"
+        @unassign="unassignModalShow"
+        @unassign_downstream="unassignModalDownstreamShow"
         @create="openCreateItemModal = true"
         @tableReloaded="reloadingTable = false"
       ></DataTable>
@@ -57,13 +57,15 @@
         :confirmText="i18n.t('my_modules.repository.stock_warning_modal.consume_anyway')"
         ref="warningModal"
       ></ConfirmationModal>
-      <ConfirmationModal
-        :title="i18n.t('my_modules.repository.unassign_modal.title')"
-        :description="unassignConfirmationModalDescription"
-        confirmClass="btn btn-primary"
-        :confirmText="unassignConfirmationModalActionText"
-        ref="unassignConfirmationModal"
-      ></ConfirmationModal>
+      <UnassignItemModal
+        v-if="showUnassignModal"
+        :myModuleId="myModuleId"
+        :selected-RepositoryId="repository.id"
+        :rowIds="selectedUnassignRow"
+        :downstreamMode="unassignDownstreamMode"
+        @unassignRows="unassignRows"
+        @close="showUnassignModal = false"
+      ></UnassignItemModal>
       <CreateItemModal
         v-if="openCreateItemModal"
         :myModuleId="myModuleId"
@@ -87,6 +89,7 @@ import ConfirmationModal from '../../shared/confirmation_modal.vue';
 import ColumnsMixin from '../../repository/columns_mixin.js';
 import CreateItemModal from '../assigned_items/modals/new_item.vue';
 import AssignItemModal from './modals/assign_item.vue';
+import UnassignItemModal from './modals/unassign_item.vue';
 
 import {
   index_ag_my_module_repository_path,
@@ -110,15 +113,17 @@ export default {
     ConsumeModal,
     ConfirmationModal,
     CreateItemModal,
-    AssignItemModal
+    AssignItemModal,
+    UnassignItemModal
   },
   mixins: [ColumnsMixin],
   data: () => ({
     openAssignItemModal: false,
     sectionOpened: true,
     warningModalDescription: '',
-    unassignConfirmationModalDescription: '',
-    unassignConfirmationModalActionText: '',
+    showUnassignModal: false,
+    selectedUnassignRow: null,
+    unassignDownstreamMode: false,
     submitting: false,
     reloadingTable: false,
     openConsumeModal: false,
@@ -181,29 +186,25 @@ export default {
       this.openAssignItemModal = false;
       this.$emit('assignRows', rowIds, repositoryId, assignToDownstream);
     },
-    async unassignRows(_e, rows, downstream = false) {
-      const rowIds = rows.map(row => row.id);
-
-      if (downstream) {
-        this.unassignConfirmationModalDescription = this.i18n.t('my_modules.repository.unassign_modal.message_downstream', { number: rowIds.length });
-        this.unassignConfirmationModalActionText = this.i18n.t('my_modules.repository.unassign_modal.action_downstream');
-      } else {
-        this.unassignConfirmationModalDescription = this.i18n.t('my_modules.repository.unassign_modal.message', { number: rowIds.length });
-        this.unassignConfirmationModalActionText = this.i18n.t('my_modules.repository.unassign_modal.action');
-      }
-      const ok = await this.$refs.unassignConfirmationModal.show();
-      if (ok) {
-        axios.patch(my_module_repository_path(this.myModuleId, this.repository.id), {
-          rows_to_unassign: rowIds,
-          downstream: downstream
-        }).then((response) => {
-          HelperModule.flashAlertMsg(response.data.flash, 'success');
-          this.reloadingTable = true;
-        });
-      }
+    unassignRows(rowIds, downstream = false) {
+      this.showUnassignModal = false;
+      axios.patch(my_module_repository_path(this.myModuleId, this.repository.id), {
+        rows_to_unassign: rowIds,
+        downstream: downstream
+      }).then((response) => {
+        HelperModule.flashAlertMsg(response.data.flash, 'success');
+        this.reloadingTable = true;
+      });
     },
-    unassignDownstreamRows(e, rows) {
-      this.unassignRows(e, rows, true);
+    unassignModalShow(_e, rows) {
+      this.selectedUnassignRow = rows.map(row => row.id);
+      this.showUnassignModal = true;
+      this.unassignDownstreamMode = false;
+    },
+    unassignModalDownstreamShow(_e, rows) {
+      this.selectedUnassignRow = rows.map(row => row.id);
+      this.unassignDownstreamMode = true;
+      this.showUnassignModal = true;
     },
     recalculateContainerSize() {
       const { container, openHandler } = this.$refs;

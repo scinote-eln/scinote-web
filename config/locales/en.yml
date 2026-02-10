@@ -1808,8 +1808,11 @@ en:
         action_task_and_downstream: 'Assign to task & downstream'
       unassign_modal:
         title: 'Unassign item(s)'
-        message: 'You are about to unassign <b>%{number} of items</b> from this task and all the tasks downstream.<br><br>You can always assign items back to a task.<br><br>Do you want to continue?'
-        message_downstream: 'You are about to unassign <b>%{number} of items</b> from this task.<br><br>You can always assign items back to a task.<br><br>Do you want to continue?'
+        message: 'You are about to unassign <b>%{number} of items</b> from this task.'
+        message_2: 'You can always assign items back to a task.'
+        message_downstream: 'You are about to unassign <b>%{number} of items</b> from the following tasks:'
+        current: '(current task)'
+        confirmation: 'Do you want to continue?'
         action: 'Unassign'
         action_downstream: 'Unassign from task & downstream'
       flash:
