@@ -10,7 +10,7 @@ module Toolbars
     def initialize(current_user, my_module, ids: [])
       @current_user = current_user
       @my_module = my_module
-      @rows = my_module.my_module_repository_rows.where(id: ids)
+      @rows = my_module.my_module_repository_rows.where(repository_row_id: ids)
 
       @single = @rows.length == 1
     end
@@ -45,7 +45,7 @@ module Toolbars
       {
         name: 'unassign_downstream',
         label: I18n.t('my_modules.assigned_items.toolbar.unassign_downstream'),
-        icon: 'sn-icon sn-icon-close',
+        icon: 'sn-icon sn-icon-unassign-downstream',
         type: :emit
       }
     end
