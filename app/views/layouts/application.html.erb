@@ -10,7 +10,6 @@
     <% if user_signed_in? %>
       <meta name="expiration-url" content="<%= users_expire_in_path %>">
       <meta name="revive-url" content="<%= users_revive_session_path %>">
-      <meta name="user-settings-url" content="<%= users_settings_user_settings_path %>">
     <% end %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'bootstrap_pack', media: 'all' %>
@@ -63,10 +62,14 @@
     <%= javascript_include_tag 'vue_navigation_top_menu' %>
     <%= javascript_include_tag 'vue_legacy_datetime_picker' %>
 
-    <style> :root { --navigator-navigation-width: <%= (user_signed_in? && current_user.settings[:navigator_width]) || Constants::DEFAULT_NAV_WIDTH %>px; } </style>
+    <%
+      navigator_state = current_user.user_settings.find_or_initialize_by(key: :navigator_state) if user_signed_in?
+      navigator_state.value ||= {}
+    %>
+    <style> :root { --navigator-navigation-width: <%= (user_signed_in? && navigator_state.value["width"]) || Constants::DEFAULT_NAV_WIDTH %>px; } </style>
   </head>
   <body
-    class="<%= yield :body_class %> <%= 'navigator-collapsed' if !@navigator || (user_signed_in? && current_user.settings[:navigator_collapsed]) %> <%= 'w-[98%]' if params[:controller] == 'label_templates' && params[:action] == 'show'%>"
+    class="<%= yield :body_class %> <%= 'navigator-collapsed' if !@navigator || (user_signed_in? && navigator_state.value["collapsed"]) %> <%= 'w-[98%]' if params[:controller] == 'label_templates' && params[:action] == 'show'%>"
     <% if user_signed_in? && current_team.present? %>
     data-current-team-id="<%= current_team.id %>"
     data-current-team-name="<%= current_team.name %>"
@@ -87,7 +90,7 @@
     <div class="sci--layout"
          data-grey-background="<%= show_grey_background? %>"
          data-breadcrumbs-collapsed="<%= !@breadcrumbs_items.present? %>"
-         data-navigator-collapsed="<%= !@navigator || current_user.settings[:navigator_collapsed] %>"
+         data-navigator-collapsed="<%= !@navigator || navigator_state.value["collapsed"] %>"
          data-left-navigation-collapsed=<%= !user_signed_in? %>
     >
       <div class="sci--layout-navigation-top" >

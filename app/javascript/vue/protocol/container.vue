@@ -270,7 +270,6 @@
                 @step:drag_enter="dragEnter"
                 @step:collapsed="checkStepsState"
                 :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
-                :userSettingsUrl="userSettingsUrl"
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
               />
               <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step" @click="addStep(index + 1)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
@@ -335,6 +334,9 @@ import UtilsMixin from '../mixins/utils.js';
 import stackableHeadersMixin from '../mixins/stackableHeadersMixin';
 import moduleNameObserver from '../mixins/moduleNameObserver';
 import AssignedItemsModal from './modals/assigned_items.vue';
+import {
+    user_setting_path
+  } from '../../routes.js';
 
 export default {
   name: 'ProtocolContainer',
@@ -373,7 +375,6 @@ export default {
       reordering: false,
       stepToReload: null,
       activeDragStep: null,
-      userSettingsUrl: null,
       stepCollapsed: false,
       showRepositoriesModal: false,
       anchorId: null,
@@ -388,7 +389,6 @@ export default {
     this.loadingOverlay = true;
   },
   mounted() {
-    this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     $.get(this.protocolUrl, (result) => {
       this.protocol = result.data;
       this.$nextTick(() => {
@@ -473,11 +473,10 @@ export default {
       }));
 
       const settings = {
-        key: 'task_step_states',
-        data: updatedData
+        value: updatedData
       };
 
-      axios.put(this.userSettingsUrl, { settings: [settings] });
+      axios.put(user_setting_path('task_step_states'), {user_setting: settings});
     },
     deleteSteps() {
       $.post(this.urls.delete_steps_url, () => {

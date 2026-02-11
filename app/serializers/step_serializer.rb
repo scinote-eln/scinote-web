@@ -16,7 +16,7 @@ class StepSerializer < ActiveModel::Serializer
              :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id
 
   def collapsed
-    step_states = @instance_options[:user].settings.fetch('task_step_states', {})
+    step_states = @instance_options[:user].user_settings.find_by(key: 'task_step_states')&.value || {}
     step_states[object.id.to_s] == true
   end
 

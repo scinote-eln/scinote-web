@@ -925,14 +925,7 @@ class Extends
   DEFAULT_TEAM_SETTINGS = {}
 
   WHITELISTED_USER_SETTINGS = %w(
-    task_step_states
-    results_order
     repository_export_file_type
-    navigator_collapsed
-    navigator_width
-    result_states
-    result_templates_order
-    result_template_states
   ).freeze
 end
 
