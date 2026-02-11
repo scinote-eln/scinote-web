@@ -67,7 +67,7 @@ class ResultBase < ApplicationRecord
 
       # Copy tables
       tables.each do |table|
-        table.duplicate(new_result, user, table.result_table.result_orderable_element.position)
+        duplicate_table(new_result, user, table)
       end
 
       ResultBase.delay(queue: :assets).deep_clone_assets(assets_to_clone)
@@ -119,5 +119,11 @@ class ResultBase < ApplicationRecord
 
   def delete_step_results
     step_results.destroy_all
+  end
+
+  private
+
+  def duplicate_table(new_result, user, table)
+    table.duplicate(new_result, user, table.result_table.result_orderable_element.position)
   end
 end

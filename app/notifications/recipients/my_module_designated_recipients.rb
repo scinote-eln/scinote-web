@@ -20,7 +20,7 @@ class Recipients::MyModuleDesignatedRecipients
     case activity.subject_type
     when 'MyModule'
       users = activity.subject.designated_users
-    when 'Protocol', 'Result'
+    when 'Protocol', 'ResultBase'
       users = activity.subject.my_module.designated_users
     when 'Step'
       users = activity.subject.protocol.my_module.designated_users

@@ -12,20 +12,25 @@ module ActiveStorage
     end
 
     def delete_prefixed(prefix)
-      prefix = subfolder.present? ? File.join(subfolder, prefix) : prefix
+      prefix = File.join(subfolder, prefix) if subfolder.present?
       instrument :delete_prefixed, prefix: prefix do
         bucket.objects(prefix: prefix).batch_delete!
       end
     end
 
-    def path_for(key)
-      subfolder.present? ? File.join(subfolder, key) : key
-    end
-
     private
 
+    def upload_stream(key:, **options, &block)
+      if @transfer_manager
+        key = File.join(subfolder, key) if subfolder.present?
+        @transfer_manager.upload_stream(key: key, bucket: bucket.name, **options, &block)
+      else
+        object_for(key).upload_stream(**options, &block)
+      end
+    end
+
     def object_for(key)
-      key = subfolder.present? ? File.join(subfolder, key) : key
+      key = File.join(subfolder, key) if subfolder.present?
       bucket.object(key)
     end
   end
