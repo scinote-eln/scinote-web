@@ -775,7 +775,7 @@
       },
       createElement(elementType, tableDimensions = null, name = '', formId = null) {
         let plateTemplate = tableDimensions != null;
-        tableDimensions ||= [5, 5];
+        tableDimensions ||= [5, 8];
         $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate, name: name, form_id: formId }, (result) => {
           result.data.isNew = true;
           this.elements.push(result.data)
