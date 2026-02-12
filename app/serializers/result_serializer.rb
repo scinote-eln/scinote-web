@@ -4,7 +4,7 @@ class ResultSerializer < ResultBaseSerializer
   attributes :my_module_id, :archived, :comments_count
 
   def collapsed
-    result_states = current_user.settings.fetch('result_states', {})
+    result_states = current_user.user_settings.find_by(key: 'result_states')&.value || {}
     result_states[object.id.to_s] == true
   end
 
