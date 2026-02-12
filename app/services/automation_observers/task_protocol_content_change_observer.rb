@@ -4,7 +4,7 @@ module AutomationObservers
   class TaskProtocolContentChangeObserver < BaseObserver
     OBJECT_ATTRIBUTES = {
       Protocol: %w(name description),
-      Step: %w(created_at completed name position),
+      Step: %w(created_at completed name position skipped_at),
       StepText: %w(name text step_id),
       Checklist: %w(name step_id),
       ChecklistItem: %w(text position checked),
@@ -59,6 +59,7 @@ module AutomationObservers
       return unless ignore_attributes || OBJECT_ATTRIBUTES[:"#{element.class.base_class.name}"]&.any? { |attr| element.public_send(:"saved_change_to_#{attr}?") }
       return unless protocol.in_module? && protocol.my_module.my_module_status.initial_status?
       return if element.respond_to?(:completed) && element.saved_change_to_completed? && !element.saved_change_to_created_at? && !element.completed
+      return if element.respond_to?(:skipped_at) && element.saved_change_to_skipped_at? && !element.saved_change_to_created_at? && !element.skipped_at
 
       my_module = protocol.my_module
       previous_status_id = my_module.my_module_status.id

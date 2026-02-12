@@ -88,9 +88,9 @@ module Lists
       search_query = @params[:search].presence || @filters[:query]
       records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL, 'projects.description'], search_query) if search_query.present?
 
-      records = records.joins(:user_assignments).where(user_assignments: { user_id: @filters[:members].values }) if @filters[:members].present?
+      records = records.joins(:user_assignments).where(user_assignments: { user_id: @filters[:members] }) if @filters[:members].present?
 
-      records = records.where(supervised_by_id: @filters[:head_of_project].values) if @filters[:head_of_project].present?
+      records = records.where(supervised_by_id: @filters[:head_of_project]) if @filters[:head_of_project].present?
 
       records = records.where(projects: { start_date: (@filters[:start_date_from]).. }) if @filters[:start_date_from].present?
 
@@ -110,7 +110,7 @@ module Lists
           'done' => records.done
         }
 
-        selected_scopes = @filters[:statuses].values.filter_map { |status| scopes[status] }
+        selected_scopes = @filters[:statuses].filter_map { |status| scopes[status] }
 
         records = selected_scopes.reduce(records.none, :or) if selected_scopes.any?
       end

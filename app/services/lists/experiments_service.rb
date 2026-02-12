@@ -82,7 +82,7 @@ module Lists
           'done' => @records.done
         }
 
-        selected_scopes = @filters[:statuses].values.filter_map { |status| scopes[status] }
+        selected_scopes = @filters[:statuses].filter_map { |status| scopes[status] }
 
         @records = selected_scopes.reduce(@records.none, :or) if selected_scopes.any?
       end

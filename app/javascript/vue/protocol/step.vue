@@ -15,7 +15,7 @@
     <div class="step-header">
       <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
         <div class="flex items-center gap-4 py-0.5 border-0 border-y border-transparent border-solid">
-          <a ref="toggleElement" class="step-collapse-link hover:no-underline focus:no-underline"
+          <a ref="toggleElement" class="step-collapse-link hover:no-underline focus:no-underline self-start"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
             data-remote="true"
@@ -23,20 +23,38 @@
             :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCollapsed`">
               <span class="sn-icon sn-icon-right "></span>
           </a>
-          <div v-if="!inRepository" class="step-complete-container" :class="{ 'step-element--locked': !urls.state_url }">
-            <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`"
+          <div v-if="!inRepository" class="flex flex-col gap-1">
+            <div class="flex items-center justify-center cursor-pointer
+                        hover:text-sn-alert-green-disabled"
+                 :class="[step.attributes.completed ? 'text-sn-alert-green' : 'text-sn-grey-700', { 'step-element--locked': !urls.state_url }]"
                  @click="changeState"
                  @keyup.enter="changeState"
                  tabindex="0"
+                 data-toggle="tooltip"
                  :title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
-                 :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCompleted`"
-            ></div>
+                 :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCompleted`">
+              <i :class="['sn-icon', step.attributes.completed ? 'sn-icon-task-status-completed' : 'sn-icon-task-status-uncompleted']"></i>
+            </div>
+            <div class="flex items-center justify-center cursor-pointer"
+                 :class="[
+                   step.attributes.skipped_at ? 'text-sn-science-blue hover:text-sn-blue-click' : 'text-sn-grey-700 hover:text-sn-science-blue',
+                   { 'step-element--locked': !urls.skip_url }
+                 ]"
+                 @click="changeSkipped"
+                 @keyup.enter="changeSkipped"
+                 tabindex="0"
+                 data-toggle="tooltip"
+                 :title="step.attributes.skipped_at ? i18n.t('protocols.steps.status.unskip') : i18n.t('protocols.steps.status.skip')"
+                 data-e2e="e2e-BT-protocol-toggleSkipped"
+            >
+              <i :class="['sn-icon', step.attributes.skipped_at ? 'sn-icon-skip-fill' : 'sn-icon-skip-outline']" :data-e2e="`e2e-BT-protocol-step${step.id}-toggleSkipped`"></i>
+            </div>
           </div>
-          <div class="step-position leading-5" :data-e2e="`e2e-TX-protocol-step${step.id}-position`">
+          <div class="step-position leading-5 self-start" :data-e2e="`e2e-TX-protocol-step${step.id}-position`">
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
-        <div class="step-name-container basis-[calc(100%_-_100px)]" :class="{'step-element--locked': !urls.update_url}">
+        <div class="step-name-container basis-[calc(100%_-_100px)]" :class="{'step-element--locked': !urls.update_url, 'opacity-30': step.attributes.skipped_at}">
           <InlineEdit
             :value="step.attributes.name"
             :class="{ 'step-element--locked': !urls.update_url }"
@@ -414,6 +432,7 @@
       });
 
       window.initTooltip(this.$refs.linkButton);
+      $('[data-toggle="tooltip"]').tooltip();
     },
     beforeUnmount() {
       window.destroyTooltip(this.$refs.linkButton);
@@ -618,19 +637,61 @@
           }
         });
       },
+      clickToggleButton() {
+        this.$refs.toggleElement.click();
+      },
       changeState() {
         if (!this.urls.state_url) return;
 
+        const currentSkipStatus = this.step.attributes.skipped_at;
+
         this.step.attributes.completed = !this.step.attributes.completed;
+
+        if (this.step.attributes.skipped_at && this.isCollapsed) {
+          this.clickToggleButton();
+        }
+
+        this.step.attributes.skipped_at = null;
         this.$emit('step:update', {
           completed: this.step.attributes.completed,
-          position: this.step.attributes.position
+          position: this.step.attributes.position,
+          skipped_at: this.step.attributes.skipped_at
         });
         $.post(this.urls.state_url, {completed: this.step.attributes.completed}).fail(() => {
           this.step.attributes.completed = !this.step.attributes.completed;
+          this.step.attributes.skipped_at = currentSkipStatus;
           this.$emit('step:update', {
             completed: this.step.attributes.completed,
-            position: this.step.attributes.position
+            position: this.step.attributes.position,
+            skipped_at: this.step.attributes.skipped_at
+          });
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        })
+      },
+      changeSkipped() {
+        if (!this.urls.skip_url) return;
+
+        const currentCompleteStatus = this.step.attributes.completed;
+
+        this.step.attributes.skipped_at = !this.step.attributes.skipped_at;
+        this.step.attributes.completed = false;
+        this.$emit('step:update', {
+          completed: this.step.attributes.completed,
+          position: this.step.attributes.position,
+          skipped_at: this.step.attributes.skipped_at
+        });
+
+        if (this.step.attributes.skipped_at && !this.isCollapsed || !this.step.attributes.skipped_at && this.isCollapsed) {
+          this.clickToggleButton();
+        }
+
+        $.post(this.urls.skip_url, {skipped: this.step.attributes.skipped_at}).fail(() => {
+          this.step.attributes.skipped_at = !this.step.attributes.skipped_at;
+          this.step.attributes.completed = currentCompleteStatus;
+          this.$emit('step:update', {
+            completed: this.step.attributes.completed,
+            position: this.step.attributes.position,
+            skipped_at: this.step.attributes.skipped_at
           });
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         })
@@ -720,7 +781,7 @@
           this.elements.push(result.data)
 
           if (this.isCollapsed) {
-            this.$refs.toggleElement.click();
+            this.clickToggleButton();
           }
           this.$emit('stepUpdated')
         }).fail(() => {

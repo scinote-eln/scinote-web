@@ -108,10 +108,10 @@ module Lists
       end
 
       if @filters[:published_by].present?
-        @records = @records.where(protocols: { published_by_id: @filters[:published_by].values })
+        @records = @records.where(protocols: { published_by_id: @filters[:published_by] })
       end
 
-      @records = @records.where(all_assigned_users: { user_id: @filters[:members].values }) if @filters[:members].present?
+      @records = @records.where(all_assigned_users: { user_id: @filters[:members] }) if @filters[:members].present?
 
       if @filters[:has_draft].present?
         @records =

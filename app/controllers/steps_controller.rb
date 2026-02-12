@@ -6,7 +6,7 @@ class StepsController < ApplicationController
 
   before_action :load_vars, only: %i(update destroy show toggle_step_state update_view_state
                                      update_asset_view_mode elements
-                                     attachments upload_attachment duplicate)
+                                     attachments upload_attachment duplicate toggle_step_skip_state)
   before_action :load_vars_nested, only: %i(create index list reorder list_protocol_steps add_protocol_steps)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
@@ -15,7 +15,8 @@ class StepsController < ApplicationController
   before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: %i(update destroy
                                                     update_view_state update_asset_view_mode upload_attachment)
-  before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state)
+  before_action :check_complete_and_checkbox_permissions, only: :toggle_step_state
+  before_action :check_skip_pemissions, only: :toggle_step_skip_state
 
   def index
     render json: @protocol.steps.includes(:assets, step_orderable_elements: :orderable).in_order,
@@ -219,6 +220,7 @@ class StepsController < ApplicationController
   # Complete/uncomplete step
   def toggle_step_state
     @step.completed = params[:completed] == 'true'
+    @step.skipped_at = nil
     @step.last_modified_by = current_user
 
     if @step.save
@@ -226,6 +228,7 @@ class StepsController < ApplicationController
       if @step.saved_change_to_completed
         completed_steps = @protocol.steps.where(completed: true).count
         all_steps = @protocol.steps.count
+        num_skipped = @protocol.steps.where.not(skipped_at: nil).count
 
         type_of = @step.completed ? :complete_step : :uncomplete_step
         # Toggling step state can only occur in
@@ -238,10 +241,36 @@ class StepsController < ApplicationController
             {
               my_module: @my_module.id,
               num_completed: completed_steps.to_s,
-              num_all: all_steps.to_s
+              num_all: all_steps.to_s,
+              num_skipped: num_skipped.to_s
             }.merge(step_message_items)
           )
         end
+      end
+      render json: @step, serializer: StepSerializer, user: current_user
+    else
+      render json: {}, status: :unprocessable_entity
+    end
+  end
+
+  def toggle_step_skip_state
+    @step.skipped_at = params[:skipped] == 'true' && DateTime.now
+    @step.completed = false
+    @step.last_modified_by = current_user
+
+    if @step.save
+      type_of = @step.skipped_at ? :skip_step : :unskip_step
+      if @protocol.in_module?
+        log_activity(
+          type_of,
+          @protocol.my_module.experiment.project,
+          {
+            my_module: @my_module.id,
+            num_completed: @protocol.steps.where(completed: true).count.to_s,
+            num_all: @protocol.steps.count.to_s,
+            num_skipped: @protocol.steps.where.not(skipped_at: nil).count.to_s
+          }.merge(step_message_items)
+        )
       end
       render json: @step, serializer: StepSerializer, user: current_user
     else
@@ -368,7 +397,11 @@ class StepsController < ApplicationController
   end
 
   def check_complete_and_checkbox_permissions
-    render_403 unless can_complete_or_checkbox_step?(@protocol)
+    render_403 unless @step.completed ? can_complete_my_module_steps?(@my_module) : can_uncomplete_my_module_steps?(@my_module)
+  end
+
+  def check_skip_pemissions
+    render_403 unless @step.skipped_at ? can_unskip_my_module_steps?(@my_module) : can_skip_my_module_steps?(@my_module)
   end
 
   def step_params

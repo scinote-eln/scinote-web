@@ -57,7 +57,10 @@ module ReportsHelper
   end
 
   def step_status_label(step)
-    if step.completed
+    if step.skipped_at
+      style = 'default'
+      text = t('protocols.steps.skipped')
+    elsif step.completed
       style = 'success'
       text = t('protocols.steps.completed')
     else
@@ -68,17 +71,13 @@ module ReportsHelper
   end
 
   def filter_steps_for_report(steps, settings)
-    include_completed_steps = settings.dig('task', 'protocol', 'completed_steps')
-    include_uncompleted_steps = settings.dig('task', 'protocol', 'uncompleted_steps')
-    if include_completed_steps && include_uncompleted_steps
-      steps
-    elsif include_completed_steps
-      steps.where(completed: true)
-    elsif include_uncompleted_steps
-      steps.where(completed: false)
-    else
-      steps.none
-    end
+    relations = []
+
+    relations << steps.where(completed: true) if settings.dig('task', 'protocol', 'completed_steps')
+    relations << steps.where(completed: false, skipped_at: nil) if settings.dig('task', 'protocol', 'uncompleted_steps')
+    relations << steps.where.not(skipped_at: nil) if settings.dig('task', 'protocol', 'skipped_steps')
+
+    relations.reduce(steps.none, :or)
   end
 
   def order_results_for_report(results, order)

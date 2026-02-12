@@ -697,6 +697,7 @@ Rails.application.routes.draw do
         get 'attachments'
         post 'upload_attachment'
         post 'toggle_step_state'
+        post 'toggle_step_skip_state'
         post 'update_view_state'
         post 'update_asset_view_mode'
         post 'duplicate'

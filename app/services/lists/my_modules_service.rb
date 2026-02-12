@@ -152,15 +152,15 @@ module Lists
     end
 
     def designated_users_filter(users)
-      @records = @records.joins(:user_my_modules).where(user_my_modules: { user_id: users.values })
+      @records = @records.joins(:user_my_modules).where(user_my_modules: { user_id: users })
     end
 
     def statuses_filter(statuses)
-      @records = @records.where(my_module_status_id: statuses.values)
+      @records = @records.where(my_module_status_id: statuses)
     end
 
     def tags_filter(tags)
-      @records = @records.joins(:tags).where(tags: { id: tags.values })
+      @records = @records.joins(:tags).where(tags: { id: tags })
     end
   end
 end

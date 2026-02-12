@@ -888,6 +888,7 @@ en:
           protocol_step: "Protocol steps"
           completed_steps: "Completed steps"
           uncompleted_steps: "Uncompleted steps"
+          skipped_steps: "Skipped steps"
           step_texts: "Step texts"
           step_checklists: "Step checklists"
           step_files: "Step files"
@@ -4092,6 +4093,7 @@ en:
       default_name: 'Untitled step'
       completed: 'Completed'
       uncompleted: 'Uncompleted'
+      skipped: 'Skipped'
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       new_step: "New step"
@@ -4122,8 +4124,10 @@ en:
       link_results: "Link results to this step"
       linked_results: "Linked results"
       status:
-        complete: "Mark as done"
-        uncomplete: "Unmark as done"
+        complete: "Mark as complete"
+        uncomplete: "Unmark as complete"
+        skip: "Skip step"
+        unskip: "Unskip step"
       options_dropdown:
         title: 'Step options'
         rearrange: 'Rearrange content'
@@ -4440,13 +4444,13 @@ en:
       project_status_done: 'Automatically update project status to "Done" when:'
     sub_group_element:
       on_protocol_content_change: 'Protocol content is added or modified (including step comments)'
-      on_step_completion: 'At least one step is marked as completed'
+      on_step_completion: 'At least one step is marked as completed or skipped'
       on_result_created_or_changed: 'Task result is added or modified (including result comments)'
       on_task_in_progress: 'At least one task moves from "Not started" to "In progress" or other status'
       on_all_tasks_done: 'All tasks inside reach their final status.'
       on_experiment_in_progress: 'At least one experiment moves to "In progress" or "Done"'
       on_all_experiments_done: 'All experiments inside are marked as "Done"'
-      on_all_steps_completion: 'All steps are marked as done'
+      on_all_steps_completion: 'All steps are marked as done or skipped'
 
   notifications:
     title: "Notifications"
