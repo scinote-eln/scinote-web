@@ -22,7 +22,7 @@
                   "xlsx",
                   id: 'file_type_radio',
                   class: 'sci-radio',
-                  checked: current_user.settings[:repository_export_file_type].nil? || current_user.settings[:repository_export_file_type] == "xlsx"
+                  checked: current_user.repository_export_file_type.nil? || current_user.repository_export_file_type == "xlsx"
                 ) %>
             <span class="sci-radio-label"></span>
           </div>
@@ -34,7 +34,7 @@
                   "csv",
                   id: 'file_type_radio',
                   class: 'sci-radio',
-                  checked: current_user.settings[:repository_export_file_type] == "csv"
+                  checked: current_user.repository_export_file_type == "csv"
                 ) %>
             <span class="sci-radio-label"></span>
           </div>

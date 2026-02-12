@@ -924,9 +924,7 @@ class Extends
 
   DEFAULT_TEAM_SETTINGS = {}
 
-  WHITELISTED_USER_SETTINGS = %w(
-    repository_export_file_type
-  ).freeze
+  WHITELISTED_USER_SETTINGS = [].freeze
 end
 
 # rubocop:enable Style/MutableConstant
