@@ -31,7 +31,7 @@
                  @keyup.enter="changeState"
                  tabindex="0"
                  data-toggle="tooltip"
-                 :title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
+                 :data-original-title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
                  :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCompleted`">
               <i :class="['sn-icon', step.attributes.completed ? 'sn-icon-task-status-completed' : 'sn-icon-task-status-uncompleted']"></i>
             </div>
@@ -44,7 +44,7 @@
                  @keyup.enter="changeSkipped"
                  tabindex="0"
                  data-toggle="tooltip"
-                 :title="step.attributes.skipped_at ? i18n.t('protocols.steps.status.unskip') : i18n.t('protocols.steps.status.skip')"
+                 :data-original-title="step.attributes.skipped_at ? i18n.t('protocols.steps.status.unskip') : i18n.t('protocols.steps.status.skip')"
                  data-e2e="e2e-BT-protocol-toggleSkipped"
             >
               <i :class="['sn-icon', step.attributes.skipped_at ? 'sn-icon-skip-fill' : 'sn-icon-skip-outline']" :data-e2e="`e2e-BT-protocol-step${step.id}-toggleSkipped`"></i>
@@ -432,10 +432,11 @@
       });
 
       window.initTooltip(this.$refs.linkButton);
-      $('[data-toggle="tooltip"]').tooltip();
+      window.initTooltip('[data-toggle="tooltip"]');
     },
     beforeUnmount() {
       window.destroyTooltip(this.$refs.linkButton);
+      window.destroyTooltip('[data-toggle="tooltip"]');
     },
     computed: {
       reorderableElements() {
