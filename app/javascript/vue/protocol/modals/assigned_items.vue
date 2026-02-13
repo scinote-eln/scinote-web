@@ -50,6 +50,20 @@
             @assignRows="assignRows"
             :reloadKey="reloadKey"
           />
+          <div
+            v-else
+            class="flex flex-col min-h-[540px] items-center justify-center gap-1 ">
+            <h2 class="text-sn-grey ">
+              {{ i18n.t('my_modules.repository.assigned_items_modal.empty_placeholder') }}
+            </h2>
+            <button
+              @click="openAssignItemModal = true"
+              class="btn btn-primary"
+            >
+              <i class="sn-icon sn-icon-new-task"></i>
+              {{ i18n.t('my_modules.repository.assign_items') }}
+            </button>
+          </div>
         </div>
       </div>
     </div>

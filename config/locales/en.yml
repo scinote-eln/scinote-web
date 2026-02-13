@@ -1761,6 +1761,7 @@ en:
         title: 'Assigned items'
         assign_new_row: '+ Assign from different inventory'
         inventory: 'Inventory:'
+        empty_placeholder: 'No items assigned yet'
       full_view:
         modal_live_header: ': Live version'
         modal_snapshot_header: ': Snapshot of %{snapshot_date}'
