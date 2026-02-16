@@ -28,9 +28,9 @@
                         hover:text-sn-alert-green-disabled"
                  :class="[step.attributes.completed ? 'text-sn-alert-green' : 'text-sn-grey-700', { 'step-element--locked': !urls.state_url }]"
                  @click="changeState"
+                 ref="completeState"
                  @keyup.enter="changeState"
                  tabindex="0"
-                 data-toggle="tooltip"
                  :data-original-title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
                  :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCompleted`">
               <i :class="['sn-icon', step.attributes.completed ? 'sn-icon-task-status-completed' : 'sn-icon-task-status-uncompleted']"></i>
@@ -40,10 +40,10 @@
                    step.attributes.skipped_at ? 'text-sn-science-blue hover:text-sn-blue-click' : 'text-sn-grey-700 hover:text-sn-science-blue',
                    { 'step-element--locked': !urls.skip_url }
                  ]"
+                 ref="skipState"
                  @click="changeSkipped"
                  @keyup.enter="changeSkipped"
                  tabindex="0"
-                 data-toggle="tooltip"
                  :data-original-title="step.attributes.skipped_at ? i18n.t('protocols.steps.status.unskip') : i18n.t('protocols.steps.status.skip')"
                  data-e2e="e2e-BT-protocol-toggleSkipped"
             >
@@ -432,11 +432,13 @@
       });
 
       window.initTooltip(this.$refs.linkButton);
-      window.initTooltip('[data-toggle="tooltip"]');
+      window.initTooltip(this.$refs.completeState);
+      window.initTooltip(this.$refs.skipState);
     },
     beforeUnmount() {
-      window.destroyTooltip(this.$refs.linkButton);
-      window.destroyTooltip('[data-toggle="tooltip"]');
+      window.destroyTooltip(this.$refs.skipState);
+      window.destroyTooltip(this.$refs.completeState);
+      window.destroyTooltip(this.$refs.skipState);
     },
     computed: {
       reorderableElements() {
@@ -644,6 +646,7 @@
       changeState() {
         if (!this.urls.state_url) return;
 
+        $('.tooltip').remove();
         const currentSkipStatus = this.step.attributes.skipped_at;
 
         this.step.attributes.completed = !this.step.attributes.completed;
@@ -667,11 +670,12 @@
             skipped_at: this.step.attributes.skipped_at
           });
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        })
+        });
       },
       changeSkipped() {
         if (!this.urls.skip_url) return;
 
+        $('.tooltip').remove();
         const currentCompleteStatus = this.step.attributes.completed;
 
         this.step.attributes.skipped_at = !this.step.attributes.skipped_at;
@@ -695,7 +699,7 @@
             skipped_at: this.step.attributes.skipped_at
           });
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        })
+        });
       },
       deleteElement(position) {
         this.elements.splice(position, 1)
