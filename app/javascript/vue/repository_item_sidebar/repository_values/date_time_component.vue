@@ -145,7 +145,7 @@ export default {
 
       if (this.range) {
         // Both empty
-        if (!(this.startDate )&& !this.endDate) return true;
+        if (!this.startDate && !this.endDate) return true;
 
         // One empty
         if (!this.startDate || !this.endDate) {
@@ -154,13 +154,17 @@ export default {
         }
 
         // Start date is after end date (need to check internal component value)
-        if (this.$refs.startDatepicker.value > this.$refs.endDatepicker.value) {
+        if (this.mode === 'time' && this.timeToInt(this.$refs.startDatepicker.value) > this.timeToInt(this.$refs.endDatepicker.value) ||
+           this.$refs.startDatepicker.value > this.$refs.endDatepicker.value) {
           this.error = this.i18n.t('repositories.item_card.date_time.errors.not_valid_range');
           return false;
         }
       }
 
       return true;
+    },
+    timeToInt(t) {
+      return (t['hours'] * 60 * 60 + t['minutes'] * 60 + t['seconds'])
     },
     update() {
       const params = {};
