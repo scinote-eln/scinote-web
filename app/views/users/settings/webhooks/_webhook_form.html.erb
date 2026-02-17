@@ -20,7 +20,7 @@
   <span class="form-text"><%= t("webhooks.index.include_serialized_subject") %></span>
   <div class="sci-input-container form-group">
     <span class="sci-checkbox-container ml-3">
-      <input type="checkbox" class="sci-checkbox" name="webhook[include_serialized_subject]" <%= 'checked' if f.object.include_serialized_subject %>/>
+      <%= f.check_box :include_serialized_subject, class: 'sci-checkbox' %>
       <span class="sci-checkbox-label"></span>
     </span>
     <small><%= t("webhooks.index.include_serialized_subject_hint") %></small>
