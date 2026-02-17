@@ -1,6 +1,6 @@
 <template>
   <div class="content__form-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-stepForm${element.id}`">
-    <div class="sci-divider my-6" v-if="!inRepository"></div>
+    <div class="sci-divider mb-6 mt-4" v-if="!inRepository"></div>
     <div class="flex items-center gap-4">
       <MenuDropdown
         class="ml-auto"
