@@ -1,6 +1,6 @@
 <template>
   <div class="content__text-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-stepText${element.id}`">
-    <div class="sci-divider my-6" v-if="!inRepository"></div>
+    <div class="sci-divider mb-6 mt-4" v-if="!inRepository"></div>
     <div class="text-header h-9 flex rounded mb-1 items-center relative w-full group/text-header"
       :class="{ 'editing-name': editingName,
       'locked': !element.attributes.orderable.urls.update_url }">
