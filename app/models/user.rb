@@ -550,6 +550,10 @@ class User < ApplicationRecord
     TeamZipExport.exports_limit - export_vars[:num_of_export_all_last_24_hours]
   end
 
+  def repository_export_file_type
+    user_settings.find_by(key: 'repository_export_file_type')&.value
+  end
+
   def global_activity_filter(filters, search_query)
     query_teams = teams
     query_teams = query_teams.where(id: filters[:teams].map(&:to_i)) if filters[:teams].present?

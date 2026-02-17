@@ -396,7 +396,7 @@ class RepositoriesController < ApplicationController
         },
         file_type: params[:file_type]
       )
-      update_user_export_file_type if current_user.settings[:repository_export_file_type] != params[:file_type]
+      update_user_export_file_type if current_user.repository_export_file_type != params[:file_type]
       log_activity(:export_inventory_items)
       render json: { message: t('zip_export.export_request_success') }
     else
@@ -409,7 +409,7 @@ class RepositoriesController < ApplicationController
     if repositories.present?
       RepositoriesExportJob
         .perform_later(params[:file_type], repositories.pluck(:id), user_id: current_user.id, team_id: current_team.id)
-      update_user_export_file_type if current_user.settings[:repository_export_file_type] != params[:file_type]
+      update_user_export_file_type if current_user.repository_export_file_type != params[:file_type]
       log_activity(:export_inventories, inventories: repositories.pluck(:name).join(', '))
       render json: { message: t('zip_export.export_request_success') }
     else
@@ -634,6 +634,7 @@ class RepositoriesController < ApplicationController
   end
 
   def update_user_export_file_type
-    current_user.update_simple_setting(key: 'repository_export_file_type', value: params[:file_type])
+    state = current_user.user_settings.find_or_initialize_by(key: 'repository_export_file_type')
+    state.update!(value: params[:file_type])
   end
 end
