@@ -540,6 +540,8 @@ module Lists
     end
 
     def build_sortable_columns
+      return [] unless @repository.respond_to?(:default_sortable_columns)
+
       sortable_columns = @repository.default_sortable_columns
       sortable_columns << 'consumed_stock' if @repository.has_stock_management? && @my_module
       sortable_columns
