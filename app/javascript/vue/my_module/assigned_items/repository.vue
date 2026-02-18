@@ -6,16 +6,16 @@
       <div
         @click="toggleContainer"
         class="flex items-center gap-4 grow overflow-hidden cursor-pointer"
-        :data-e2e="`e2e-BT-task-assignedItems-inventory${ repository.id }-toggle`"
+        :data-e2e="`e2e-BT-task-assignedItems-inventory${ repositoryVersion.id }-toggle`"
       >
         <i ref="openHandler" class="sn-icon sn-icon-down cursor-pointer"></i>
         <h3 class="my-0 flex items-center gap-4 overflow-hidden">
-          <span :title="repository.attributes.name" class="assigned-repository-title truncate">{{ repository.attributes.name }}</span>
+          <span :title="repositoryVersion.attributes.name" class="assigned-repository-title truncate">{{ repositoryVersion.attributes.name }}</span>
           <span class="text-sn-grey-500 font-normal text-base shrink-0">
-            [{{ repository.attributes.assigned_rows_count }}]
+            [{{ repositoryVersion.attributes.assigned_rows_count }}]
           </span>
           <span class="bg-sn-light-grey  font-normal  px-1.5 py-1 rounded-full shrink-0 text-xs">
-            <template v-if="repository.attributes.is_snapshot">
+            <template v-if="repositoryVersion.attributes.is_snapshot">
               {{  i18n.t('my_modules.repository.snapshots.simple_view.snapshot_tag') }}
             </template>
             <template v-else>
@@ -30,7 +30,7 @@
       <DataTable
         v-if="repositoryColumnsDef.length > 0"
         :columnDefs="repositoryColumnsDef"
-        :tableId="`my_module_repository_rows_my_module_${myModuleId}_repository_${repository.id}`"
+        :tableId="`my_module_repository_rows_my_module_${myModuleId}_repository_${repositoryVersion.id}`"
         :dataUrl="dataSource"
         :reloadingTable="reloadingTable"
         :toolbarActions="toolbarActions"
@@ -46,6 +46,8 @@
         @unassign_downstream="unassignModalDownstreamShow"
         @create="openCreateItemModal = true"
         @tableReloaded="reloadingTable = false"
+        @selectVersion="loadVersion"
+        @pinVersion="pinVersion"
       ></DataTable>
     </div>
     <Teleport to="body">
@@ -60,7 +62,7 @@
       <UnassignItemModal
         v-if="showUnassignModal"
         :myModuleId="myModuleId"
-        :selected-RepositoryId="repository.id"
+        :selected-RepositoryId="repositoryVersion.id"
         :rowIds="selectedUnassignRow"
         :downstreamMode="unassignDownstreamMode"
         @unassignRows="unassignRows"
@@ -69,13 +71,13 @@
       <CreateItemModal
         v-if="openCreateItemModal"
         :myModuleId="myModuleId"
-        :selectedRepositoryValue="repository.id"
+        :selectedRepositoryValue="repositoryVersion.id"
         @tableReloaded="newCreatedRow"
         @close="openCreateItemModal = false"></CreateItemModal>
       <AssignItemModal
           v-if="openAssignItemModal"
           :myModuleId="myModuleId"
-          :selectedRepositoryValue="repository.id"
+          :selectedRepositoryValue="repositoryVersion.id"
           @assignRows="assignRows"
           @close="openAssignItemModal = false"/>
     </Teleport>
@@ -90,11 +92,14 @@ import ColumnsMixin from '../../repository/columns_mixin.js';
 import CreateItemModal from '../assigned_items/modals/new_item.vue';
 import AssignItemModal from './modals/assign_item.vue';
 import UnassignItemModal from './modals/unassign_item.vue';
+import VersionDropdown from './version_dropdown.vue'
 
 import {
   index_ag_my_module_repository_path,
   actions_toolbar_my_module_repositories_path,
-  my_module_repository_path
+  my_module_repository_path,
+  snapshot_list_my_module_repository_snapshots_path,
+  my_module_select_default_snapshot_path
 } from '../../../routes.js';
 
 export default {
@@ -114,7 +119,8 @@ export default {
     ConfirmationModal,
     CreateItemModal,
     AssignItemModal,
-    UnassignItemModal
+    UnassignItemModal,
+    VersionDropdown
   },
   mixins: [ColumnsMixin],
   data: () => ({
@@ -127,12 +133,16 @@ export default {
     submitting: false,
     reloadingTable: false,
     openConsumeModal: false,
-    openCreateItemModal: false
+    openCreateItemModal: false,
+    repositoryVersion: null
   }),
   watch: {
     reloadKey() {
       this.reloadingTable = true;
     }
+  },
+  created() {
+    this.repositoryVersion = this.repository;
   },
   computed: {
     openSize() {
@@ -142,11 +152,11 @@ export default {
       const left = [];
       const right = [];
 
-      if (!this.repository.attributes.permissions.can_read) {
+      if (!this.repositoryVersion.attributes.permissions.can_read) {
         return {};
       }
 
-      if (this.repository.attributes.permissions.can_assign) {
+      if (this.repositoryVersion.attributes.permissions.can_assign) {
         left.push({
           name: 'assign',
           icon: 'sn-icon sn-icon-new-task',
@@ -163,6 +173,22 @@ export default {
         });
       }
 
+      left.push({
+        name: 'version',
+        type: 'component',
+        params: {
+          componentRenderer: VersionDropdown,
+          sourceUrl: this.snapshotListSource,
+          btnText: this.i18n.t('my_modules.repository.version.view_version'),
+          defaultVersion: this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id,
+          selectedVersion: this.repositoryVersion.id,
+          myModuleId: this.myModuleId,
+          canCreateSnapshots: this.repositoryVersion.attributes.permissions.can_create_snapshots,
+          canManageSnapshots: this.repositoryVersion.attributes.permissions.can_manage_snapshots,
+          hasLiveVersion: this.repositoryVersion.attributes.has_live_version
+        }
+      });
+
       right.push({
         name: 'export',
         icon: 'sn-icon sn-icon-export',
@@ -175,10 +201,16 @@ export default {
       };
     },
     dataSource() {
-      return index_ag_my_module_repository_path(this.myModuleId, this.repository.id);
+      return index_ag_my_module_repository_path(this.myModuleId, this.repositoryVersion.id);
     },
     toolbarActionsUrl() {
       return actions_toolbar_my_module_repositories_path(this.myModuleId);
+    },
+    snapshotListSource() {
+      return snapshot_list_my_module_repository_snapshots_path(this.myModuleId, this.repositoryVersion.id);
+    },
+    pinVersionUrl() {
+      return my_module_select_default_snapshot_path(this.myModuleId);
     }
   },
   methods: {
@@ -188,7 +220,7 @@ export default {
     },
     unassignRows(rowIds, downstream = false) {
       this.showUnassignModal = false;
-      axios.patch(my_module_repository_path(this.myModuleId, this.repository.id), {
+      axios.patch(my_module_repository_path(this.myModuleId, this.repositoryVersion.id), {
         rows_to_unassign: rowIds,
         downstream: downstream
       }).then((response) => {
@@ -226,7 +258,7 @@ export default {
     printRows(_e, rows) {
       if (typeof PrintModalComponent !== 'undefined') {
         PrintModalComponent.openModal();
-        PrintModalComponent.repository_id = this.repository.id;
+        PrintModalComponent.repository_id = this.repositoryVersion.id;
         PrintModalComponent.row_ids = rows.map(row => row.id);
       }
     },
@@ -238,7 +270,7 @@ export default {
         }
       });
 
-      axios.post(this.repository.attributes.urls.export, {
+      axios.post(this.repositoryVersion.attributes.urls.export, {
         header_ids: headerIDs
       })
         .then((response) => {
@@ -254,13 +286,27 @@ export default {
       if (window.exportStockConsumptionModalComponent) {
         window.exportStockConsumptionModalComponent.fetchRepositoryData(
           rows.map(row => row.id),
-          { repository_id: this.repository.id }
+          { repository_id: this.repositoryVersion.id }
         );
       }
     },
-
+    loadVersion(data){
+      const repositoryId = data.data ? data.data : (this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id);
+      axios.get(my_module_repository_path(this.myModuleId, repositoryId))
+        .then((response) => {
+          this.repositoryVersion = response.data.data;
+          this.reloadingTable = true;
+        });
+    },
+    pinVersion(data) {
+      const params = data.data ? { repository_snapshot_id : data.data } : { repository_id: (this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id) };
+      axios.post(this.pinVersionUrl, params).then((response) => {
+        this.repositoryVersion = response.data.data;
+        this.reloadingTable = true;
+      });
+    },
     newCreatedRow(repositoryRowSidebarUrl){
-      this.reloadingTable = true
+      this.reloadingTable = true;
       window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
     },
     consume(row) {

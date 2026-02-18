@@ -573,7 +573,7 @@ Rails.application.routes.draw do
       get :repositories_list_html, controller: :my_module_repositories
       get :repositories_list, controller: :my_module_repositories
 
-      resources :repositories, controller: :my_module_repositories, only: %i(index update create) do
+      resources :repositories, controller: :my_module_repositories, only: %i(index show update create) do
         member do
           get :full_view_table
           post :index_dt, defaults: { format: 'json' }
@@ -602,6 +602,9 @@ Rails.application.routes.draw do
           get ':repository_id/full_view_sidebar',
               to: 'my_module_repository_snapshots#full_view_sidebar',
               as: :full_view_sidebar
+          get ':repository_id/snapshot_list',
+              to: 'my_module_repository_snapshots#snapshot_list',
+              as: :snapshot_list
           post ':repository_id', to: 'my_module_repository_snapshots#create', as: ''
         end
       end

@@ -4,6 +4,7 @@ class RepositoryColumnsController < ApplicationController
 
   before_action :load_repository
   before_action :load_column, only: %i(edit update destroy_html destroy items)
+  before_action :check_read_permissions, except: %i(new create edit update destroy_html destroy)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit update)
   before_action :check_delete_permissions, only: %i(destroy_html destroy)
@@ -113,7 +114,7 @@ class RepositoryColumnsController < ApplicationController
   AvailableRepositoryColumn = Struct.new(:id, :name)
 
   def load_repository
-    @repository = Repository.readable_by_user(current_user).find_by(id: params[:repository_id])
+    @repository = RepositoryBase.find_by(id: params[:repository_id])
     render_404 unless @repository
   end
 
@@ -126,6 +127,10 @@ class RepositoryColumnsController < ApplicationController
     render_403 && return unless can_read_repository?(@repository)
 
     @asset_columns = load_asset_columns(search_params[:q])
+  end
+
+  def check_read_permissions
+    render_403 unless can_read_repository?(@repository)
   end
 
   def check_create_permissions

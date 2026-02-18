@@ -24,6 +24,12 @@
           :data-e2e="`e2e-BT-topToolbar-${action.name}`"
           @dtEvent="handleEvent"
         ></MenuDropdown>
+        <component v-if="action.type === 'component'"
+                    :is="action.params.componentRenderer"
+                    :params="action.params"
+                    :disabled="disabled"
+                    :data-e2e="`e2e-BT-topToolbar-${action.name}`"
+                    @dtEvent="handleEvent" />
       </template>
     </div>
     <div class="flex-none">
@@ -193,6 +199,9 @@ export default {
     hideColumnsManagment: {
       type: Boolean,
       default: false
+    },
+    componentRenderer: {
+      type: [Function, Object]
     }
   },
   data() {
@@ -291,8 +300,8 @@ export default {
     applyFilters(filters) {
       this.$emit('applyFilters', filters);
     },
-    handleEvent(event) {
-      this.$emit('toolbar:action', { name: event });
+    handleEvent(event, data) {
+      this.$emit('toolbar:action', { name: event, data: data });
     },
     async resetToDefault() {
       const ok = await this.$refs.resetColumnModal.show();
