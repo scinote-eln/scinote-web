@@ -3973,7 +3973,7 @@ en:
       clone_btn: "Copy"
       import: "Import"
       import_eln: "SciNote file (.eln)"
-      import_with_ai: "Import with AI"
+      import_with_ai: "Create with AI"
       beta: "BETA"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"

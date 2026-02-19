@@ -179,6 +179,7 @@
               v-if="protocol.attributes && protocol.attributes.urls"
               :protocol="protocol"
               :inRepository="inRepository"
+              :aiParserEnabled="aiParserEnabled"
               @protocol:delete_steps="deleteSteps"
               @protocol:add_protocol_steps="addSteps"
               :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
@@ -326,6 +327,10 @@ export default {
   props: {
     protocolUrl: {
       type: String,
+      required: true
+    },
+    aiParserEnabled: {
+      type: Boolean,
       required: true
     }
   },
