@@ -63,8 +63,10 @@
     <%= javascript_include_tag 'vue_legacy_datetime_picker' %>
 
     <%
-      navigator_state = current_user.user_settings.find_or_initialize_by(key: :navigator_state) if user_signed_in?
-      navigator_state.value ||= {}
+      if user_signed_in?
+        navigator_state = current_user.user_settings.find_or_initialize_by(key: :navigator_state)
+        navigator_state.value ||= {}
+      end
     %>
     <style> :root { --navigator-navigation-width: <%= (user_signed_in? && navigator_state.value["width"]) || Constants::DEFAULT_NAV_WIDTH %>px; } </style>
   </head>
