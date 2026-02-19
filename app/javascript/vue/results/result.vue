@@ -639,7 +639,7 @@ export default {
     },
     createElement(elementType, tableDimensions = null, name = '') {
       let plateTemplate = tableDimensions != null;
-      tableDimensions ||= [5, 5];
+      tableDimensions ||= [5, 8];
 
       $.post(this.urls[`create_${elementType}_url`], { tableDimensions, plateTemplate, name }, (result) => {
         result.data.isNew = true;

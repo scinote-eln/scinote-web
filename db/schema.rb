@@ -1233,6 +1233,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_12_112723) do
     t.bigint "protocol_id", null: false
     t.integer "assets_view_mode", default: 0, null: false
     t.bigint "original_protocol_id"
+    t.datetime "skipped_at"
     t.index "trim_html_tags((description)::text) gin_trgm_ops", name: "index_steps_on_description", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_steps_on_name", using: :gin
     t.index ["created_at"], name: "index_steps_on_created_at"

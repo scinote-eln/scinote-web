@@ -79,8 +79,7 @@ Canaid::Permissions.register_for(Protocol) do
   # Protocol needs to be in a module for all Protocol permissions below
   # experiment level
   %i(read_protocol_in_module
-     manage_protocol_in_module
-     complete_or_checkbox_step)
+     manage_protocol_in_module)
     .each do |perm|
     can perm do |_, protocol|
       protocol.in_module?
@@ -89,8 +88,7 @@ Canaid::Permissions.register_for(Protocol) do
 
   # Module, its experiment and its project must be active for all the specified
   # permissions
-  %i(manage_protocol_in_module
-     complete_or_checkbox_step)
+  %i(manage_protocol_in_module)
     .each do |perm|
     can perm do |_, protocol|
       my_module = protocol.my_module
@@ -111,10 +109,5 @@ Canaid::Permissions.register_for(Protocol) do
   # step in module: create/update/delete, reorder
   can :manage_protocol_in_module do |user, protocol|
     can_manage_my_module_protocol?(user, protocol.my_module)
-  end
-
-  # step: complete/uncomplete
-  can :complete_or_checkbox_step do |user, protocol|
-    can_update_my_module_status?(user, protocol.my_module)
   end
 end

@@ -70,14 +70,13 @@ export default {
     const field_value = this.field.field_value;
     const mainDateStr = field_value?.datetime || field_value?.date;
     if (mainDateStr) {
-      const parsedDate = this.parseDate(mainDateStr);
-      this.value = parsedDate;
-      this.fromValue = parsedDate;
+      this.value = mainDateStr;
+      this.fromValue = mainDateStr;
     }
 
     const toDateStr = field_value?.datetime_to || field_value?.date_to;
     if (toDateStr) {
-      this.toValue = this.parseDate(toDateStr);
+      this.toValue = toDateStr;
     }
   },
   computed: {
@@ -105,43 +104,19 @@ export default {
   },
   methods: {
     updateDate(date) {
-      this.value = this.stripTimeIfDate(date);
-      this.$emit('save', this.normalizedValue(this.value));
+      this.value = date;
+      this.$emit('save', this.value);
     },
     updateFromDate(date) {
-      this.fromValue = this.stripTimeIfDate(date);
+      this.fromValue = date;
       if (this.validValue) {
-        this.$emit('save', [this.normalizedValue(this.fromValue), this.normalizedValue(this.toValue)]);
+        this.$emit('save', [this.fromValue, this.toValue]);
       }
     },
     updateToDate(date) {
-      this.toValue = this.stripTimeIfDate(date);
+      this.toValue = date;
       if (this.validValue) {
-        this.$emit('save', [this.normalizedValue(this.fromValue), this.normalizedValue(this.toValue)]);
-      }
-    },
-    stripTimeIfDate(date) {
-      if (!date || this.mode !== 'date') return date;
-      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-    },
-    parseDate(date) {
-      if (!date || this.mode !== 'date') return new Date(date);
-
-      const [year, month, day] = date.split('-').map(Number);
-      return new Date(year, month - 1, day);
-    },
-    normalizedValue(value) {
-      if (!value) return value;
-
-      const date = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
-      const time = ` ${value.getHours().toString().padStart(2, '0')}:${value.getMinutes().toString().padStart(2, '0')}`
-
-      if (this.mode === 'date') {
-        return `${date}`
-      } else {
-
-        return `${date} ${time}`;
+        this.$emit('save', [this.fromValue, this.toValue]);
       }
     }
   }

@@ -13,7 +13,7 @@ class StepSerializer < ActiveModel::Serializer
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode,
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
              :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
-             :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id
+             :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id, :skipped_at
 
   def collapsed
     step_states = @instance_options[:user].user_settings.find_by(key: 'task_step_states')&.value || {}
@@ -95,7 +95,11 @@ class StepSerializer < ActiveModel::Serializer
       attachments_url: attachments_step_path(object)
     }
 
-    if object.my_module && can_complete_my_module_steps?(object.my_module)
+    if object.my_module && (object.skipped_at ? can_unskip_my_module_steps?(object.my_module) : can_skip_my_module_steps?(object.my_module))
+      urls_list[:skip_url] = toggle_step_skip_state_step_path(object)
+    end
+
+    if object.my_module && (object.completed ? can_uncomplete_my_module_steps?(object.my_module) : can_complete_my_module_steps?(object.my_module))
       urls_list[:state_url] = toggle_step_state_step_path(object)
     end
 

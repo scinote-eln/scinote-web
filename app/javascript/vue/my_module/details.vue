@@ -239,10 +239,10 @@ export default {
   },
   created() {
     if (this.myModule.attributes.start_date_cell.value) {
-      this.startDate = new Date(this.myModule.attributes.start_date_cell.value);
+      this.startDate = this.myModule.attributes.start_date_cell.value;
     }
     if (this.myModule.attributes.due_date_cell.value) {
-      this.dueDate = new Date(this.myModule.attributes.due_date_cell.value);
+      this.dueDate = this.myModule.attributes.due_date_cell.value;
     }
   },
   mounted() {

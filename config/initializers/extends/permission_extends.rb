@@ -124,6 +124,8 @@ module PermissionExtends
       COMPLETE
       STEPS_COMPLETE
       STEPS_UNCOMPLETE
+      STEPS_SKIP
+      STEPS_UNSKIP
       STEPS_CHECKLIST_CHECK
       STEPS_CHECKLIST_UNCHECK
       STEPS_COMMENTS_CREATE
@@ -233,6 +235,8 @@ module PermissionExtends
       MyModulePermissions::UPDATE_STATUS,
       MyModulePermissions::STEPS_COMPLETE,
       MyModulePermissions::STEPS_UNCOMPLETE,
+      MyModulePermissions::STEPS_SKIP,
+      MyModulePermissions::STEPS_UNSKIP,
       MyModulePermissions::STEPS_CHECKLIST_CHECK,
       MyModulePermissions::STEPS_CHECKLIST_UNCHECK,
       MyModulePermissions::STEPS_COMMENTS_CREATE,
@@ -274,6 +278,8 @@ module PermissionExtends
       MyModulePermissions::UPDATE_STATUS,
       MyModulePermissions::STEPS_COMPLETE,
       MyModulePermissions::STEPS_UNCOMPLETE,
+      MyModulePermissions::STEPS_SKIP,
+      MyModulePermissions::STEPS_UNSKIP,
       MyModulePermissions::STEPS_CHECKLIST_CHECK,
       MyModulePermissions::STEPS_CHECKLIST_UNCHECK,
       MyModulePermissions::STEPS_COMMENTS_CREATE,

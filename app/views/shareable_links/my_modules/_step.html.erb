@@ -2,23 +2,29 @@
   <div class="step-header">
     <div class="step-element-header no-hover">
       <div class="flex items-center gap-4">
-        <a class="step-collapse-link hover:no-underline focus:no-underline"
+        <a class="step-collapse-link hover:no-underline focus:no-underline  <%= 'collapsed' if step.skipped_at %>"
           href="#stepBody<%= step.id %>"
           data-toggle="collapse"
           data-remote="true">
             <span class="sn-icon sn-icon-right "></span>
         </a>
-        <div class="step-complete-container step-element--locked">
-          <div class="step-state <%= step.completed ? 'completed' : '' %>"
-               tabindex="0"
-          ></div>
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-center cursor-pointer 
+                      step-element--locked <%= step.completed ? 'text-sn-alert-green' : 'text-sn-grey-700' %>"
+               tabindex="0">
+            <i class="sn-icon <%= step.completed ? 'sn-icon-task-status-completed' : 'sn-icon-task-status-uncompleted' %>"></i>
+          </div>
+          <div class="flex items-center justify-center cursor-pointer step-element--locked <%= step.skipped_at ? 'text-sn-science-blue' : 'text-sn-grey-700' %>"
+               tabindex="0">
+            <i class="sn-icon <%= step.skipped_at ? 'sn-icon-skip-fill' : 'sn-icon-skip-outline' %>"></i>
+          </div>
         </div>
-        <div class="step-position">
+        <div class="step-position self-start">
           <%= step.position + 1 %>.
         </div>
       </div>
 
-      <div class="step-name-container basis-[calc(100%_-_100px)] relative">
+      <div class="step-name-container basis-[calc(100%_-_100px)] relative <%= 'opacity-30' if step.skipped_at %>">
         <%= render partial: "shareable_links/my_modules/inline_view", locals: { text: step.name, smart_annotation_enabled: false } %>
         <span class="mt-2 whitespace-nowrap truncate text-xs font-normal w-full absolute -bottom-5"><%= t('protocols.steps.timestamp_iso_html', date: step.created_at.iso8601, user: step.user.full_name) %></span>
       </div>
@@ -67,7 +73,7 @@
     </div>
   </div>
 
-  <div class="collapse in" id="stepBody<%= step.id %>">
+  <div class="collapse <%= 'in' unless step.skipped_at %>" id="stepBody<%= step.id %>">
     <div class="step-elements">
       <% step.step_orderable_elements.sort_by(&:position).each do |element| %>
         <% if element.orderable_type == 'StepText' %>
