@@ -12,6 +12,7 @@
           class="grow"
           :class="{'error': !validValue}"
           :dataE2e="`e2e-TP-${dataE2e}-dateTimeFrom`"
+          ref="startDatepicker"
         />
         <span class="tw-hidden lg:block">-</span>
         <DateTimePicker
@@ -24,6 +25,7 @@
           class="grow"
           :class="{'error': !validValue}"
           :dataE2e="`e2e-TP-${dataE2e}-dateTimeTo`"
+          ref="endDatepicker"
         />
       </div>
       <span v-if="!validValue" class="text-xs text-sn-delete-red block absolute -bottom-3.5">
@@ -88,9 +90,14 @@ export default {
     },
     validValue() {
       if (this.range) {
-        return Boolean(this.fromValue) === Boolean(this.toValue) && (!this.fromValue || !this.toValue || this.fromValue <= this.toValue);
+        return Boolean(this.fromValue) === Boolean(this.toValue) &&
+          (
+            // rangeIsValid needs to be an outside method, as using $refs breaks computed value reactivity
+            !this.fromValue || !this.toValue || this.rangeIsValid()
+          );
       }
-      return this.value;
+
+      return !!this.value;
     }
   },
   watch: {
@@ -118,6 +125,9 @@ export default {
       if (this.validValue) {
         this.$emit('save', [this.fromValue, this.toValue]);
       }
+    },
+    rangeIsValid() {
+      return this.$refs.endDatepicker?.value >= this.$refs.startDatepicker?.value
     }
   }
 };
