@@ -105,12 +105,6 @@ export default {
       this.parameters = this.value;
       this.updateFilter();
     }
-  },
-  methods: {
-    formattedDate(date) {
-      if (!date) return null;
-      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-    }
   }
 };
 </script>

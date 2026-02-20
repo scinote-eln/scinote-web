@@ -137,7 +137,7 @@ export default {
 
       if (this.mode === 'time') {
         // expects time in format of "[date] HH:mm"
-        const [hours, minutes] = this.defaultValue.split(' ')[1].split(":").map(Number);
+        const [hours, minutes] = this.defaultValue.match(/(\d{2}:\d{2})/)[0].split(":").map(Number);
 
         this.value = { hours: hours, minutes: minutes, seconds: 0 }
       } else {

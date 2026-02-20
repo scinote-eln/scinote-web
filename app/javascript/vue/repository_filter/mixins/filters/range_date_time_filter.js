@@ -23,8 +23,8 @@ export default {
     rangeObject(start, end) {
       const range = {};
 
-      range[`start_${this.timeType}`] = this.formattedDate(start);
-      range[`end_${this.timeType}`] = this.formattedDate(end);
+      range[`start_${this.timeType}`] = start;
+      range[`end_${this.timeType}`] = end;
 
       return range;
     },
@@ -38,14 +38,14 @@ export default {
     },
     initDateTimeFromParameters() {
       if (this.parameters && this.parameters[`start_${this.timeType}`]) {
-        this.date = new Date(this.parameters[`start_${this.timeType}`]);
-        this.dateTo = new Date(this.parameters[`end_${this.timeType}`]);
+        this.date = this.parameters[`start_${this.timeType}`];
+        this.dateTo = this.parameters[`end_${this.timeType}`];
       }
     },
     initTimeFromParameters() {
       if (this.parameters && this.parameters.start_time) {
-        this.date = this.dateTimeFromTimeString(this.parameters.start_time);
-        this.dateTo = this.dateTimeFromTimeString(this.parameters.end_time);
+        this.date = this.parameters.start_time;
+        this.dateTo = this.parameters.end_time;
       }
     },
     updateDate(date) {
