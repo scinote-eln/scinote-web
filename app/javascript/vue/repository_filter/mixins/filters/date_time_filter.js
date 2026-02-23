@@ -45,39 +45,28 @@ export default {
     rangeObject(start, end) {
       const range = {};
 
-      range[`start_${this.timeType}`] = this.formattedDate(start);
-      range[`end_${this.timeType}`] = this.formattedDate(end);
+      range[`start_${this.timeType}`] = start;
+      range[`end_${this.timeType}`] = end;
 
       return range;
     },
-    dateTimeFromTimeString(timeString) {
-      let dateTime = new Date();
-
-      dateTime.setHours(timeString.split(':')[0]);
-      dateTime.setMinutes(timeString.split(':')[1]);
-
-      return dateTime;
-    },
     initDateTimeFromParameters() {
       if (this.parameters && this.parameters[`${this.timeType}`]) {
-        this.date = new Date(this.parameters[`${this.timeType}`]);
+        this.date = this.parameters[`${this.timeType}`];
       } else if (this.parameters && this.parameters[`start_${this.timeType}`]) {
-        this.date = new Date(this.parameters[`start_${this.timeType}`]);
-        this.dateTo = new Date(this.parameters[`end_${this.timeType}`]);
+        this.date = this.parameters[`start_${this.timeType}`];
+        this.dateTo = this.parameters[`end_${this.timeType}`];
       }
     },
     initTimeFromParameters() {
       if (this.parameters && this.parameters.time) {
-        this.date = this.dateTimeFromTimeString(this.parameters.time);
+        this.date = this.parameters.time;
       } else if (this.parameters && this.parameters.start_time) {
-        this.date = this.dateTimeFromTimeString(this.parameters.start_time);
-        this.dateTo = this.dateTimeFromTimeString(this.parameters.end_time);
+        this.date = this.parameters.start_time;
+        this.dateTo = this.parameters.end_time;
       }
     },
     updateDate(date) {
-      if (this.date && date && (this.date.setSeconds(0, 0) === date.setSeconds(0, 0))) {
-        return;
-      }
       this.date = date;
       this.updateValue();
     },
@@ -90,7 +79,7 @@ export default {
         this.value = this.rangeObject(this.date, this.dateTo);
       } else {
         const valueObject = {};
-        valueObject[this.timeType] = this.formattedDate(this.date);
+        valueObject[this.timeType] = this.date;
         this.value = valueObject;
       }
     }
