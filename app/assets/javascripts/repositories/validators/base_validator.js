@@ -182,8 +182,8 @@ $.fn.dataTable.render.RepositoryTimeRangeValueValidator = function($input) {
   let endTime;
 
   if ($input.val()) {
-    startTime = new Date($dateS.val());
-    endTime = new Date($dateE.val());
+    startTime = $dateS.val();
+    endTime = $dateE.val();
   }
 
   if (($dateS.val() === '') !== ($dateE.val() === '')) {
