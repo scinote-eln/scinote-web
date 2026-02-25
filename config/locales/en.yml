@@ -1753,6 +1753,7 @@ en:
       no_activities: "There are no activities for this task."
       more_activities: "More activities"
     repository:
+      head_title: "%{project} | %{module} | Assigned Items"
       export: 'Export'
       no_assigned_items: 'No items assigned to this task.'
       no_assigned_items_can_assign: 'No items assigned to this task. Use the buttons on the right to start assigning.'
