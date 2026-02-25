@@ -26,7 +26,6 @@ export default {
         notSelectable: true,
         cellRenderer: 'nameRenderer',
         cellRendererParams: {
-          repositoryId: this.repository.id,
           legacyId: -4
         }
       },
