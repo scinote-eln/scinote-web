@@ -24,6 +24,7 @@
       <i class="sn-icon sn-icon-locked-task"></i>
       {{ i18n.t('my_modules.assigned_items.repository.private_repository_row_name', {repository_row_code: params.data.code }) }}
     </span>
+    <i v-if="params.data.archived" class="sn-icon sn-icon-archived text-sn-grey" :title="i18n.t('general.archived')"></i>
 
     <span v-if="params.data.output" class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1 ">
       {{ i18n.t('general.output') }}
@@ -50,13 +51,13 @@ export default {
   computed: {
     rowRemindersUrl() {
       return active_reminder_repository_cells_repository_repository_row_path(
-        this.params.repositoryId,
+        this.params.data.repository_id,
         this.params.data.id
       );
     },
     recordInfoUrl() {
       return repository_repository_row_path(
-        this.params.repositoryId,
+        this.params.data.repository_id,
         this.params.data.id
       );
     }

@@ -6,7 +6,7 @@ module Lists
     include RepositoryDatatableHelper
 
     attributes :code, :created_at, :name, :created_by, :updated_at, :last_modified_by, :archived, :archived_on, :archived_by,
-               :assigned_tasks_count, :connections_count, :output
+               :assigned_tasks_count, :connections_count, :repository_id, :output
     attribute :has_active_reminders, if: -> { instance_options[:with_reminders] }
     attribute :assigned, if: -> { instance_options[:my_module] && !instance_options[:assigned_view] }
     attribute :stock, if: -> { instance_options[:with_stock_management] }
@@ -47,7 +47,7 @@ module Lists
     end
 
     def archived
-      object.attributes[:archived]
+      object.attributes[:archived] || object.repository.archived
     end
 
     def archived_on
