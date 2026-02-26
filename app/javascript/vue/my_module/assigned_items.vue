@@ -124,6 +124,9 @@ export default {
       });
     },
     newCreatedRow(repositoryRowSidebarUrl, repositoryId) {
+      if (!this.reloadKeys[repositoryId]) {
+        this.loadAssingedRepositories();
+      }
       this.reloadKeys[repositoryId] = Date.now();
       window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
     },
