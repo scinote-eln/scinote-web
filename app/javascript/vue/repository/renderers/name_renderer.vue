@@ -26,11 +26,9 @@
     </span>
     <i v-if="params.data.archived" class="sn-icon sn-icon-archived text-sn-grey" :title="i18n.t('general.archived')"></i>
 
-    <template v-if="params.data.DT_RowAttr" v-for="state in params.data.DT_RowAttr['data-state']" :key="state">
-      <span class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1 ">
-        {{ state }}
-      </span>
-    </template>
+    <span v-if="params.data.output" class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1 ">
+      {{ i18n.t('general.output') }}
+    </span>
   </div>
 </template>
 
