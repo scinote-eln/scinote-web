@@ -25,12 +25,9 @@
       {{ i18n.t('my_modules.assigned_items.repository.private_repository_row_name', {repository_row_code: params.data.code }) }}
     </span>
 
-    <template v-if="params.data.DT_RowAttr" v-for="state in params.data.DT_RowAttr['data-state']" :key="state">
-      <i v-if="state == 'archived'" class="sn-icon sn-icon-archived text-sn-grey" :title="i18n.t('general.archived')"></i>
-      <span v-else class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1 ">
-        {{ state }}
-      </span>
-    </template>
+    <span v-if="params.data.output" class="text-sn-grey bg-sn-light-grey text-xs px-1.5 py-1 ">
+      {{ i18n.t('general.output') }}
+    </span>
   </div>
 </template>
 
