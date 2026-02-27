@@ -11,23 +11,24 @@
           <div class="mx-auto flex items-center gap-2">
             <template v-if="selectedRepository">
               {{ i18n.t('my_modules.repository.assigned_items_modal.inventory') }}
-              <GeneralDropdown  ref="addFieldDropdown">
+              <GeneralDropdown  ref="addFieldDropdown" class="max-w-64 overflow-hidden" :closeOnClick="true">
                 <template v-slot:field>
-                  <button class="btn btn-secondary">
-                    {{ selectedRepository.attributes.name}}
+                  <button class="btn btn-secondary ">
+                    <div class="max-w-40 overflow-hidden truncate" :title="selectedRepository.attributes.name">{{ selectedRepository.attributes.name}}</div>
                     <i class="sn-icon sn-icon-down" aria-hidden="true"></i>
                   </button>
                 </template>
                 <template v-slot:flyout>
-                  <div>
+                  <div class="max-w-64 overflow-hidden">
                     <div @click="openAssignItemModal = true" class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative">
                       {{ i18n.t('my_modules.repository.assigned_items_modal.assign_new_row') }}
                     </div>
                     <hr class="my-0">
                     <div v-for="(repository, index) in assignedRepositories" :key="repository.id"
                       @click="selectedRepository = repository"
+                      :title="repository.attributes.name"
                       :class="{'bg-sn-super-light-blue': selectedRepository && selectedRepository.id === repository.id }"
-                      class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative"
+                      class="block truncate whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative"
                     >
                       {{ repository.attributes.name }}
                     </div>
@@ -51,7 +52,7 @@
             :reloadKey="reloadKey"
           />
           <div
-            v-else
+            v-else-if="!initialLoading"
             class="flex flex-col min-h-[540px] items-center justify-center gap-1 ">
             <h2 class="text-sn-grey ">
               {{ i18n.t('my_modules.repository.assigned_items_modal.empty_placeholder') }}
@@ -109,6 +110,7 @@ export default {
       assignedRepositories: [],
       selectedRepository: null,
       openAssignItemModal: false,
+      initialLoading: true,
       reloadKey: 0
     };
   },
@@ -128,6 +130,7 @@ export default {
           if (this.assignedRepositories.length > 0 && !this.selectedRepository ) {
             this.selectedRepository = this.assignedRepositories[0];
           }
+          this.initialLoading = false;
         });
     },
     assignRows(rowIds, repositoryId, assignToDownstream = false) {
