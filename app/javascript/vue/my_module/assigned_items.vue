@@ -119,6 +119,11 @@ export default {
         HelperModule.flashAlertMsg(response.data.flash, 'success');
         if (!this.reloadKeys[repositoryId]) {
           this.loadAssingedRepositories();
+          setTimeout(
+            () => document.getElementById(`assigned-repository-container-${repositoryId}`)
+                          .scrollIntoView({ behavior: 'smooth' }),
+            300
+          );
         }
         this.reloadKeys[repositoryId] = Date.now();
       });
