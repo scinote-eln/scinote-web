@@ -44,6 +44,7 @@
         </div>
         <ag-grid-vue
           v-if="currentViewRender === 'table'"
+          ref="agGrid"
           class="ag-theme-alpine w-full flex-grow h-full z-10"
           :class="{
             'opacity-0': initializing,
@@ -382,7 +383,10 @@ export default {
           [values, ...this.rowData]
         );
 
-        document.querySelector('.ag-body-viewport').scrollTop = 0;
+        const viewport = this.$refs.agGrid?.$el.querySelector('.ag-body-viewport');
+        if (viewport) {
+          viewport.scrollTop = 0;
+        }
       }
     },
     reloadingTable() {
@@ -469,7 +473,7 @@ export default {
       if (this.currentViewRender === 'cards') {
         target = this.$refs.cardsContainer;
       } else {
-        target = document.querySelector('.ag-body-viewport');
+        target = this.$refs.agGrid?.$el.querySelector('.ag-body-viewport');
       }
 
       if (!target) return;
@@ -610,6 +614,15 @@ export default {
       this.loadData(true);
     },
     loadData(reload = false) {
+      if (window.agGridDataLoading) {
+        setTimeout(() => {
+          this.loadData(reload);
+        }, 300);
+        return;
+      }
+
+      window.agGridDataLoading = true;
+
       axios
         .get(this.dataUrl, {
           params: {
@@ -648,12 +661,14 @@ export default {
           });
 
           this.handleScroll();
+          window.agGridDataLoading = false;
         })
         .catch((e) => {
           this.dataLoading = false;
           this.$emit('tableReloaded', [], { filtered: this.searchValue.length > 0 });
           console.error(e);
           window.HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
+          window.agGridDataLoading = false;
         });
     },
     handleInfiniteScroll(response) {
@@ -666,7 +681,7 @@ export default {
       });
       this.rowData = newRows;
       if (this.gridApi) {
-        const viewport = document.querySelector('.ag-body-viewport');
+        const viewport = this.$refs.agGrid?.$el.querySelector('.ag-body-viewport');
 
         if (!viewport) return;
 

@@ -110,3 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+document.addEventListener('turbolinks:before-cache', () => {
+  window.agGridDataLoading = false;
+});
