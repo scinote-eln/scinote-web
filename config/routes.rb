@@ -199,7 +199,6 @@ Rails.application.routes.draw do
     resources :user_notifications, only: :index do
       collection do
         get :filter_groups
-        get :unseen_counter
         post :mark_all_read
       end
       member do

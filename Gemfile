@@ -13,6 +13,7 @@ gem 'puma'
 gem 'rails', '~> 7.2.2'
 gem 'recaptcha'
 gem 'sanitize'
+gem 'solid_cable', '~> 3.0'
 gem 'sprockets-rails'
 gem 'view_component'
 

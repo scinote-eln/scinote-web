@@ -781,6 +781,11 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
+    solid_cable (3.0.12)
+      actioncable (>= 7.2)
+      activejob (>= 7.2)
+      activerecord (>= 7.2)
+      railties (>= 7.2)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -957,6 +962,7 @@ DEPENDENCIES
   shoulda-matchers
   silencer
   simplecov
+  solid_cable (~> 3.0)
   sprockets-rails
   tailwindcss-rails (~> 2.4)
   timecop

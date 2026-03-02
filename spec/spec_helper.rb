@@ -3,6 +3,7 @@
 require 'capybara/rspec'
 require 'simplecov'
 require 'faker'
+require 'action_cable'
 require 'active_record'
 require 'bullet'
 require 'json_matchers/rspec'

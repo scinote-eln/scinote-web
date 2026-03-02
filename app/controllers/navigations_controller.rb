@@ -14,7 +14,8 @@ class NavigationsController < ApplicationController
       help_menu: help_menu_links,
       settings_menu: settings_menu_links,
       user_menu: user_menu_links,
-      user: user
+      user: user,
+      unseen_notifications_count: unseen_notifications_count
     }
   end
 
@@ -60,7 +61,6 @@ class NavigationsController < ApplicationController
   end
 
   def settings_menu_links
-
     links = [{ name: I18n.t('users.settings.sidebar.teams'), url: teams_path }]
     if current_team && can_manage_team?(current_team)
       links << { name: I18n.t('users.settings.sidebar.account_nav.automations'), url: automations_team_path(current_team) }
@@ -93,5 +93,9 @@ class NavigationsController < ApplicationController
     end
 
     links
+  end
+
+  def unseen_notifications_count
+    current_user.notifications.in_app.order(created_at: :desc).where(read_at: nil).count
   end
 end
