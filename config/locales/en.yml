@@ -1765,7 +1765,7 @@ en:
         inventory: 'Inventory:'
         empty_placeholder: 'No items assigned yet'
       version:
-        view_version: 'View versions'
+        view_version: 'Version: Live version'
         live_version: 'Live version'
         snapshot_version: 'Version: %{snapshot_date}'
         snapshot_name: '%{snapshot_date}'
