@@ -1,8 +1,8 @@
 <template>
   <GeneralDropdown>
     <template v-slot:field>
-      <button ref="field" class="btn btn-light" @click="isOpen = !isOpen" :data-e2e="dataE2e">
-        <span v-if="text">{{ text }}</span>
+      <button ref="field" class="btn btn-light" @click="isOpen = !isOpen">
+        <span v-if="text" :data-e2e="`e2e-DD-${dataE2e}-viewVersions`">{{ text }}</span>
         <i v-if="isOpen" class="sn-icon sn-icon-up"></i>
         <i v-else class="sn-icon sn-icon-down"></i>
       </button>
@@ -13,7 +13,9 @@
               '!bg-sn-super-light-blue':selectedId == params.defaultVersion,
               'text-sn-grey pointer-events-none': !params.hasLiveVersion
             }"
-            @click="selectVersion(null)"> 
+            @click="selectVersion(null)"
+            :data-e2e="`e2e-BT-${dataE2e}-liveVersion`"
+        > 
         <div>{{ i18n.t('my_modules.repository.version.live_version') }}</div>
         <div v-if="params.hasLiveVersion" class="flex gap-2">
           <i v-if="pinnedId == params.defaultVersion" class="flex sn-icon sn-icon-pinned text-sn-grey items-center justify-center w-10"></i>
@@ -35,12 +37,16 @@
         @deleteVersion="deleteVersion"
         @selectVersion="selectVersion"
         @pinVersion="pinVersion"
+        :e2eValue="dataE2e"
       ></SnapshotItem>
       </div>
       <div v-if="params.canCreateSnapshots" class="border-0 border-t border-solid border-sn-light-grey"></div>
-      <span v-if="params.canCreateSnapshots" 
-            class="flex justify-between items-center rounded relative whitespace-nowrap px-3 py-2 cursor-pointer hover:!bg-sn-super-light-grey group min-h-14"
-            @click="createVersion"> 
+      <span
+        v-if="params.canCreateSnapshots" 
+        class="flex justify-between items-center rounded relative whitespace-nowrap px-3 py-2 cursor-pointer hover:!bg-sn-super-light-grey group min-h-14"
+        @click="createVersion"
+        :data-e2e="`e2e-BT-${dataE2e}-createSnapshot`"
+      > 
         <div>{{ i18n.t('my_modules.repository.version.create_snapshot') }}</div>
       </span>
     </template>

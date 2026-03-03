@@ -1,20 +1,28 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content" v-if="consumeData">
+      <div class="modal-content" v-if="consumeData" :data-e2e="`e2e-MD-${e2eValue}`">
         <div class="modal-header">
-            <button type="button" class="close self-start" data-dismiss="modal" aria-label="<%= t('general.close') %>">
+            <button
+              type="button"
+              class="close self-start"
+              data-dismiss="modal"
+              aria-label="<%= t('general.close') %>"
+              :data-e2e="`e2e-BT-${e2eValue}-close`"
+            >
               <i class="sn-icon sn-icon-close"></i>
             </button>
-            <h4 class="modal-title">
+          <h4 class="modal-title" :data-e2e="`e2e-TX-${e2eValue}-title`">
               <span v-if="consumeData.consumed_stock">{{ i18n.t('my_modules.repository.stock_modal.title_edit', { name: consumeData.name  }) }}</span>
               <span v-else>{{ i18n.t('my_modules.repository.stock_modal.title', { name: consumeData.name }) }}</span>
             </h4>
           </div>
           <div class="modal-body">
-            <p class="mb-6">{{ i18n.t('my_modules.repository.stock_modal.description') }}</p>
+            <p class="mb-6" :data-e2e="`e2e-TX-${e2eValue}-description`">
+              {{ i18n.t('my_modules.repository.stock_modal.description') }}
+            </p>
             <div class="mb-6">
-              <label>{{ i18n.t('my_modules.repository.stock_modal.amount') }}</label>
+              <label :data-e2e="`e2e-TX-${e2eValue}-amount`">{{ i18n.t('my_modules.repository.stock_modal.amount') }}</label>
               <div class="sci-input-container-v2 flex"
                    :class="{'error': newConsume.consume < 0}"
                    :data-error-text="i18n.t('repository_stock_values.manage_modal.amount_error')">
@@ -23,14 +31,16 @@
                        :value="newConsume.consume"
                        @input="changeConsume"
                        :placeholder="i18n.t('my_modules.repository.stock_modal.consumed')"
-                       tabindex="1" />
+                       tabindex="1"
+                       :data-e2e="`e2e-IF-${e2eValue}-amount`"
+                />
                 <span class="units relative left-32 ml-1">{{ consumeData.unit }}</span>
               </div>
             </div>
             <div class="items-center grid grid-cols-[1fr,auto,1fr] gap-2 mb-6">
               <div class="py-2 bg-sn-super-light-grey flex rounder items-center flex-col gap-2" :class="{'text-sn-alert-passion': consumeData.initial_stock < 0}">
                 <span class="text-xs text-sn-grey-500">{{ i18n.t('repository_stock_values.manage_modal.current_stock') }}</span>
-                <h1 class="my-0">{{ consumeData.formatted_stock }}</h1>
+              <h1 class="my-0" :data-e2e="`e2e-TX-${e2eValue}-currentStock`">{{ consumeData.formatted_stock }}</h1>
                 <span class="text-xs">{{ consumeData.unit }}</span>
               </div>
               <div class="p-4">
@@ -40,21 +50,39 @@
                    :class="{'text-sn-alert-passion': finalStock < 0}"
               >
                 <span class="text-sm text-sn-grey-500">{{ i18n.t('repository_stock_values.manage_modal.new_stock') }}</span>
-                <h1 class="my-0">{{ finalStock || '-' }}</h1>
+                <h1 class="my-0" :data-e2e="`e2e-TX-${e2eValue}-newStock`">{{ finalStock || '-' }}</h1>
                 <span class="text-xs">{{ consumeData.unit }}</span>
               </div>
             </div>
             <label>{{ i18n.t('my_modules.repository.stock_modal.comment') }}</label>
             <div class="sci-input-container-v2 comments-container"  data-error-text="<%= t('repository_stock_values.manage_modal.comment_limit') %>">
-              <input type="text" class="sci-input-field"
-                     v-model="newConsume.comment" :placeholder="i18n.t('my_modules.repository.stock_modal.enter_comment')" tabindex="1" />
+              <input
+                type="text"
+                class="sci-input-field"
+                v-model="newConsume.comment" :placeholder="i18n.t('my_modules.repository.stock_modal.enter_comment')"
+                tabindex="1"
+                :data-e2e="`e2e-IF-${e2eValue}-comment`"
+              />
             </div>
           </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-          <button type="button" class="btn btn-primary"
-                  @click="$emit('updateConsume', {newConsume: newConsume, finalStock: finalStock})"
-                  :disabled="!validConsume">{{ i18n.t('general.save') }}</button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+            :data-e2e="`e2e-BT-${e2eValue}-cancel`"
+          >
+            {{ i18n.t('general.cancel') }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="$emit('updateConsume', {newConsume: newConsume, finalStock: finalStock})"
+            :disabled="!validConsume"
+            :data-e2e="`e2e-BT-${e2eValue}-save`"
+          >
+            {{ i18n.t('general.save') }}
+          </button>
         </div>
       </div>
     </div>
@@ -70,7 +98,11 @@ import modalMixin from '../../../shared/modal_mixin';
 export default {
   name: 'EditModal',
   props: {
-    row: Object
+    row: Object,
+    e2eValue: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {

@@ -30,6 +30,7 @@
         @unPinColumn="unPinColumn"
         @reorderColumns="reorderColumns"
         @resetColumnsToDefault="resetColumnsToDefault"
+        :e2eValue="dataE2e"
       />
       <div v-else class="h-4 w-full"></div>
       <div v-if="this.objectArchived && this.currentViewMode === 'active'" class="pt-6" >
@@ -244,6 +245,10 @@ export default {
     hideColumnsManagment: {
       type: Boolean,
       default: false
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {

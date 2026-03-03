@@ -29,7 +29,9 @@
                     :params="action.params"
                     :disabled="disabled"
                     :data-e2e="`e2e-BT-topToolbar-${action.name}`"
-                    @dtEvent="handleEvent" />
+                    @dtEvent="handleEvent"
+                    :dataE2e="`topToolbar-${action.name}`"
+        />
       </template>
     </div>
     <div class="flex-none">
@@ -76,12 +78,16 @@
         <i v-else class="sn-icon sn-icon-close !m-2.5 !ml-auto right-0 cursor-pointer z-10"
                   @click="$emit('search:change', '')"></i>
       </div>
-      <a v-for="action in toolbarActions.right" :key="action.label"
-      :class="[action.buttonStyle, {
-            'disabled': disabled
-           }]"
-          :href="action.path"
-          @click="doAction(action, $event)">
+      <a
+        v-for="action in toolbarActions.right"
+        :key="action.label"
+        :class="[action.buttonStyle, {
+          'disabled': disabled
+         }]"
+        :href="action.path"
+        @click="doAction(action, $event)"
+        :data-e2e="`e2e-BT-topToolbar-${action.name}`"
+      >
         <i :class="action.icon"></i>
         {{ action.label }}
       </a>
