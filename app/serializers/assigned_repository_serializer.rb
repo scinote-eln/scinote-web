@@ -23,6 +23,10 @@ class AssignedRepositorySerializer < ActiveModel::Serializer
     object.is_a?(RepositorySnapshot)
   end
 
+  attribute :opened do
+    scope[:user].user_settings.find_by(key: "my_module_repository_rows_my_module_#{scope[:my_module].id}_repository_#{object.id}_section_opened")&.value&.dig('opened') || false
+  end
+
   attribute :permissions do
     {
       can_assign: can_assign_my_module_repository_rows?(scope[:user], scope[:my_module]),

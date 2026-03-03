@@ -1,5 +1,6 @@
 <template>
   <div ref="container"
+       :id="'assigned-repository-container-' + repositoryVersion.id"
        :class="{'p-4 bg-white rounded transition-all overflow-hidden mb-4': !onlyRepository}"
        :style="{height: (sectionOpened ? openSize : '60px')}">
     <div v-if="!onlyRepository" class="flex items-center h-6 gap-4 assigned-repository-title mb-1">
@@ -8,7 +9,7 @@
         class="flex items-center gap-4 grow overflow-hidden cursor-pointer"
         :data-e2e="`e2e-BT-task-assignedItems-inventory${ repositoryVersion.id }-toggle`"
       >
-        <i ref="openHandler" class="sn-icon sn-icon-down cursor-pointer"></i>
+        <i ref="openHandler" class="sn-icon sn-icon-right cursor-pointer"></i>
         <h3 class="my-0 flex items-center gap-4 overflow-hidden">
           <span :title="repositoryVersion.attributes.name" class="assigned-repository-title truncate">{{ repositoryVersion.attributes.name }}</span>
           <span class="text-sn-grey-500 font-normal text-base shrink-0">
@@ -89,6 +90,7 @@ import axios from '../../../packs/custom_axios.js';
 import ConsumeModal from './modals/consume.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
 import ColumnsMixin from '../../repository/columns_mixin.js';
+import UserStateMixin from '../../mixins/user_state_mixin.js';
 import CreateItemModal from '../assigned_items/modals/new_item.vue';
 import AssignItemModal from './modals/assign_item.vue';
 import UnassignItemModal from './modals/unassign_item.vue';
@@ -122,10 +124,10 @@ export default {
     UnassignItemModal,
     VersionDropdown
   },
-  mixins: [ColumnsMixin],
+  mixins: [ColumnsMixin, UserStateMixin],
   data: () => ({
     openAssignItemModal: false,
-    sectionOpened: true,
+    sectionOpened: false,
     warningModalDescription: '',
     showUnassignModal: false,
     selectedUnassignRow: null,
@@ -139,10 +141,20 @@ export default {
   watch: {
     reloadKey() {
       this.reloadingTable = true;
+    },
+    sectionOpened() {
+      this.setUserState(
+        `my_module_repository_rows_my_module_${this.myModuleId}_repository_${this.repositoryVersion.id}_section_opened`,
+        { opened: this.sectionOpened }
+      );
     }
   },
   created() {
     this.repositoryVersion = this.repository;
+    this.sectionOpened = this.repositoryVersion.attributes.opened;
+  },
+  mounted() {
+    this.recalculateContainerSize();
   },
   computed: {
     openSize() {
@@ -253,6 +265,7 @@ export default {
     },
     toggleContainer() {
       this.sectionOpened = !this.sectionOpened;
+
       this.recalculateContainerSize();
     },
     printRows(_e, rows) {
