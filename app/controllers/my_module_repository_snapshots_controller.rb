@@ -2,8 +2,8 @@
 
 class MyModuleRepositorySnapshotsController < ApplicationController
   before_action :load_my_module
-  before_action :load_repository, only: :create
-  before_action :load_repository_snapshot, except: %i(create full_view_sidebar select)
+  before_action :load_repository, only: %i(create snapshot_list select)
+  before_action :load_repository_snapshot, except: %i(create full_view_sidebar snapshot_list select)
   before_action :check_view_permissions, except: %i(create destroy select)
   before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: %i(destroy select)
@@ -33,11 +33,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     repository_snapshot = RepositorySnapshot.create_preliminary!(@repository, @my_module, current_user)
     RepositorySnapshotProvisioningJob.perform_later(repository_snapshot)
 
-    render json: {
-      html: render_to_string(partial: 'my_modules/repositories/full_view_version',
-                             locals: { repository_snapshot: repository_snapshot,
-                                       can_delete_snapshot: can_manage_my_module_repository_snapshots?(@my_module) })
-    }
+    render json: repository_snapshot, serializer: AssignedSnapshotRepositorySerializer
   end
 
   def status
@@ -64,6 +60,13 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     render json: {
       html: render_to_string(partial: 'my_modules/repositories/full_view_snapshot_table')
     }
+  end
+
+  def snapshot_list
+    repository_snapshots = @my_module.repository_snapshots
+                                     .where(parent_id: @repository.parent_id || @repository.id)
+                                     .order(created_at: :desc)
+    render json: repository_snapshots, each_serializer: AssignedSnapshotRepositorySerializer
   end
 
   def full_view_sidebar
@@ -94,7 +97,8 @@ class MyModuleRepositorySnapshotsController < ApplicationController
       repository_snapshot.update!(selected: true)
     end
 
-    render json: {}
+    assigned_rows_count = @repository.is_a?(RepositorySnapshot) ? @repository.repository_rows.count : @my_module.repository_rows_count(@repository)
+    render json: @repository, serializer: AssignedRepositorySerializer, scope: { user: current_user, my_module: @my_module, assigned_rows_count: assigned_rows_count }
   end
 
   def export_repository_snapshot
@@ -134,7 +138,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def load_repository
-    @repository = Repository.find_by(id: params[:repository_id])
+    @repository = RepositoryBase.find_by(id: params[:repository_id] || params[:repository_snapshot_id])
     render_404 unless @repository
     render_403 unless can_read_repository?(@repository)
   end

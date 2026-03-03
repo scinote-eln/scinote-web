@@ -419,10 +419,12 @@ class MyModulesController < ApplicationController
   end
 
   def change_results_state
+    state = current_user.user_settings.find_or_initialize_by(key: 'result_states')
+    state.value ||= {}
     @my_module.results.find_each do |result|
-      current_user.settings['result_states'][result.id.to_s] = params[:collapsed].present?
+      state.value[result.id.to_s] = params[:collapsed].present?
     end
-    current_user.save!
+    state.save!
     render json: { status: :ok }
   end
 

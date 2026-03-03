@@ -42,6 +42,15 @@
               <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
               <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
+          <button
+            v-if="!inRepository && urls.add_step_url"
+            class="btn btn-secondary icon-btn xl:!px-4"
+            @click="showRepositoriesModal = true"
+            :title="i18n.t('protocols.steps.show_repositories')"
+          >
+            <span class="sn-icon sn-icon-inventory" aria-hidden="true"></span>
+            <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.show_repositories") }}</span>
+          </button>
           <template v-if="steps.length > 0">
             <button
               :title="i18n.t('protocols.steps.collapse_label')"
@@ -261,7 +270,6 @@
                 @step:drag_enter="dragEnter"
                 @step:collapsed="checkStepsState"
                 :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
-                :userSettingsUrl="userSettingsUrl"
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
               />
               <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step" @click="addStep(index + 1)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
@@ -304,6 +312,11 @@
                          @files="uploadFilesToStep"
                          @cancel="showClipboardPasteModal = false"
     />
+    <AssignedItemsModal
+      v-if="showRepositoriesModal"
+      :myModuleId="protocol.attributes.assignable_my_module_id"
+      @close="showRepositoriesModal = false"
+    />
   </div>
 </template>
 
@@ -320,6 +333,10 @@ import axios from '../../packs/custom_axios';
 import UtilsMixin from '../mixins/utils.js';
 import stackableHeadersMixin from '../mixins/stackableHeadersMixin';
 import moduleNameObserver from '../mixins/moduleNameObserver';
+import AssignedItemsModal from './modals/assigned_items.vue';
+import {
+    user_setting_path
+  } from '../../routes.js';
 
 export default {
   name: 'ProtocolContainer',
@@ -330,7 +347,9 @@ export default {
     }
   },
   components: {
-    Step, InlineEdit, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, clipboardPasteModal
+    Step, InlineEdit, ProtocolOptions, Tinymce,
+    ReorderableItemsModal, ProtocolMetadata, clipboardPasteModal,
+    AssignedItemsModal
   },
   mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin],
   computed: {
@@ -356,8 +375,8 @@ export default {
       reordering: false,
       stepToReload: null,
       activeDragStep: null,
-      userSettingsUrl: null,
       stepCollapsed: false,
+      showRepositoriesModal: false,
       anchorId: null,
       elementsLoaded: 0,
       attachmentsLoaded: 0,
@@ -370,7 +389,6 @@ export default {
     this.loadingOverlay = true;
   },
   mounted() {
-    this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     $.get(this.protocolUrl, (result) => {
       this.protocol = result.data;
       this.$nextTick(() => {
@@ -455,11 +473,10 @@ export default {
       }));
 
       const settings = {
-        key: 'task_step_states',
-        data: updatedData
+        value: updatedData
       };
 
-      axios.put(this.userSettingsUrl, { settings: [settings] });
+      axios.put(user_setting_path('task_step_states'), {user_setting: settings});
     },
     deleteSteps() {
       $.post(this.urls.delete_steps_url, () => {

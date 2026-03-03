@@ -5,52 +5,44 @@ class AssignedRepositorySerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   include MyModulesHelper
 
-  attributes :id
+  attributes :id, :parent_id
 
   attribute :name do
     can_read? ? object.name : I18n.t('my_modules.assigned_items.repository.private_repository_name')
   end
 
   attribute :assigned_rows_count do
-    object['assigned_rows_count']
+    object['assigned_rows_count'] || scope[:assigned_rows_count]
+  end
+
+  attribute :has_live_version do
+    scope[:my_module].my_module_repository_rows.count.positive?
   end
 
   attribute :is_snapshot do
     object.is_a?(RepositorySnapshot)
   end
 
-  attribute :has_stock do
-    can_read? && object.has_stock_management?
+  attribute :opened do
+    scope[:user].user_settings.find_by(key: "my_module_repository_rows_my_module_#{scope[:my_module].id}_repository_#{object.id}_section_opened")&.value&.dig('opened') || false
   end
 
-  attribute :has_stock_consumption do
-    can_read? && object.has_stock_consumption?
-  end
-
-  attribute :can_manage_consumption do
-    can_read? && can_update_my_module_stock_consumption?(scope[:user], scope[:my_module])
-  end
-
-  attribute :stock_column_name do
-    object.repository_stock_column.name if can_read? && object.has_stock_management?
-  end
-
-  attribute :footer_label do
-    assigned_repository_simple_view_footer_label(object)
-  end
-
-  attribute :name_column_id do
-    assigned_repository_simple_view_name_column_id(object)
-  end
-
-  attribute :urls do
-    list = { assigned_rows: assigned_repository_simple_view_index_path(scope[:my_module], object) }
-    list[:full_view] = assigned_repository_full_view_table_path(scope[:my_module], object) if can_read?
-
-    list
+  attribute :permissions do
+    {
+      can_assign: can_assign_my_module_repository_rows?(scope[:user], scope[:my_module]),
+      can_read: can_read?,
+      can_create_snapshots: can_create_my_module_repository_snapshots?(scope[:user], scope[:my_module]),
+      can_manage_snapshots: can_manage_my_module_repository_snapshots?(scope[:user], scope[:my_module])
+    }
   end
 
   def can_read?
     @can_read ||= can_read_repository?(scope[:user], object)
+  end
+
+  attribute :urls do
+    {
+      export: export_repository_my_module_repository_path(scope[:my_module], object)
+    }
   end
 end

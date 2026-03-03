@@ -11,6 +11,7 @@ class RepositorySnapshot < RepositoryBase
              inverse_of: :repository_snapshots,
              optional: true
   belongs_to :my_module, optional: true, touch: true
+  belongs_to :archived_by, class_name: 'User', optional: true
   has_one :repository_stock_consumption_column,
           -> { where(data_type: 'RepositoryStockConsumptionValue') },
           class_name: 'RepositoryColumn',
@@ -20,6 +21,7 @@ class RepositorySnapshot < RepositoryBase
 
   validates :name, presence: true, length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :status, presence: true
+
   validate :only_one_selected_for_my_module, if: ->(obj) { obj.changed.include? 'selected' }
 
   scope :of_unassigned_from_project, lambda { |project|
@@ -50,6 +52,7 @@ class RepositorySnapshot < RepositoryBase
       status: :provisioning,
       archived: repository.archived,
       archived_on: repository.archived_on,
+      archived_by: repository.archived_by,
       my_module:,
       created_by:
     )

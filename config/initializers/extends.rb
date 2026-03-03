@@ -88,6 +88,26 @@ class Extends
     }
   }
 
+  AG_REPOSITORY_EXTRA_SEARCH_ATTR = {
+    RepositoryTextValue: {
+      field: 'repository_text_values.data', includes: nil
+    }, RepositoryNumberValue: {
+      field: 'repository_number_values.data', includes: nil
+    }, RepositoryListValue: {
+      field: 'repository_list_items.data',
+      includes: :repository_list_item
+    }, RepositoryChecklistValue: {
+      field: 'repository_checklist_items.data',
+      includes: { repository_checklist_items_values: :repository_checklist_item }
+    }, RepositoryStatusValue: {
+      field: 'repository_status_items.status',
+      includes: :repository_status_item
+    }, RepositoryAssetValue: {
+      field: 'active_storage_blobs.filename',
+      includes: { asset: { file_attachment: :blob } }
+    }
+  }
+
   # Extra attributes used for advanced search in repositories
   REPOSITORY_ADVANCED_SEARCH_ATTR = {
     RepositoryTextValue: {
@@ -831,6 +851,7 @@ class Extends
     tags/index
     teams/automations
     result_templates/index
+    my_module_repositories/index
     protocol_repository_rows/index
   )
 
@@ -903,38 +924,7 @@ class Extends
 
   DEFAULT_TEAM_SETTINGS = {}
 
-  WHITELISTED_USER_SETTINGS = %w(
-    LabelTemplates_active_state
-    LabelTemplates_archived_state
-    ExperimentList_active_state
-    ExperimentList_archived_state
-    MyModuleList_active_state
-    MyModuleList_archived_state
-    ProjectList_active_state
-    ProjectList_archived_state
-    ProtocolTemplates_active_state
-    ProtocolTemplates_archived_state
-    FormsTable_active_state
-    FormsTable_archived_state
-    ReportTemplates_active_state
-    ReportTemplates_archived_state
-    Repositories_active_state
-    Repositories_archived_state
-    StorageLocationsTable_active_state
-    StorageLocationsContainer_active_state
-    StorageLocationsContainerGrid_active_state
-    TagsIndexTable_active_state
-    UserGroups_active_state
-    UserGroup_active_state
-    task_step_states
-    results_order
-    repository_export_file_type
-    navigator_collapsed
-    navigator_width
-    result_states
-    result_templates_order
-    result_template_states
-  ).freeze
+  WHITELISTED_USER_SETTINGS = [].freeze
 end
 
 # rubocop:enable Style/MutableConstant

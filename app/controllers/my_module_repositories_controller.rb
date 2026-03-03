@@ -2,14 +2,20 @@
 
 class MyModuleRepositoriesController < ApplicationController
   include ApplicationHelper
+  include Breadcrumbs
 
   before_action :load_my_module, except: :assign_my_modules
-  before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html repositories_list create)
+  before_action :load_repository, except: %i(index actions_toolbar repositories_dropdown_list repositories_list_html repositories_list create)
   before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption assign_my_modules)
-  before_action :check_repository_view_permissions, except: %i(index_dt repositories_dropdown_list repositories_list_html repositories_list create)
+  before_action :check_repository_view_permissions, except: %i(index actions_toolbar index_dt index_ag repositories_dropdown_list repositories_list_html repositories_list create)
   before_action :check_repository_row_consumption_permissions, only: %i(consume_modal update_consumption)
   before_action :check_assign_repository_records_permissions, only: %i(update create)
   before_action :load_my_modules, only: :assign_my_modules
+  before_action :set_breadcrumbs_items, only: %i(index)
+  before_action :set_navigator, only: %i(index)
+  before_action :set_inline_name_editing, only: %i(index)
+
+  def index; end
 
   def index_dt
     @draw = params[:draw].to_i
@@ -41,6 +47,38 @@ class MyModuleRepositoriesController < ApplicationController
     render rows_view
   end
 
+  def index_ag
+    repository_rows = Lists::RepositoryRowsService.new(@repository,
+                                                       params,
+                                                       user: current_user,
+                                                       my_module: @my_module,
+                                                       preload_cells: true).call.load
+
+    # In new tables we don't using unfiltered_count, so total count is equal to filtered count
+    total_count = @my_module.repository_rows_count(@repository)
+    filtered_count = repository_rows.take&.filtered_count.to_i
+    total_pages = (total_count.to_f / params[:per_page].to_i).ceil
+
+    serializer = can_read_repository?(@repository) ? Lists::RepositoryRowSerializer : Lists::PrivateRepositoryRowSerializer
+
+    render json: repository_rows,
+           each_serializer: serializer,
+           user: current_user,
+           my_module: @my_module,
+           assigned_view: true,
+           can_read_repository: can_read_repository?(@repository),
+           with_reminders: Repository.reminders_enabled?,
+           with_stock_management: @repository.has_stock_management?,
+           can_manage_stock: false,
+           can_consume_stock: can_update_my_module_stock_consumption?(@my_module),
+           is_snapshot: @repository.is_a?(RepositorySnapshot),
+           meta: {
+            total_pages: total_pages,
+            total_count: total_count,
+            filtered_count: filtered_count
+          }
+  end
+
   def assign_my_modules
     assigned_count = 0
     skipped_count = 0
@@ -64,6 +102,11 @@ class MyModuleRepositoriesController < ApplicationController
     end
 
     render json: { assigned_count:, skipped_count: }, status:
+  end
+
+  def show
+    assigned_rows_count = @repository.is_a?(RepositorySnapshot) ? @repository.repository_rows.count : @my_module.my_module_repository_rows.count
+    render json: @repository, serializer: AssignedRepositorySerializer, scope: { user: current_user, my_module: @my_module, assigned_rows_count: assigned_rows_count }
   end
 
   def create
@@ -130,16 +173,16 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def assign_repository_records_modal
-    modal = render_to_string(
-      partial: 'my_modules/modals/assign_repository_records_modal_content',
-      locals: { my_module: @my_module,
-                repository: @repository,
-                selected_rows: params[:selected_rows],
-                downstream: params[:downstream] }
-    )
+    my_modules = []
+
+    @my_module.downstream_modules.each do |my_module|
+      if can_assign_my_module_repository_rows?(my_module)
+        my_modules.push(my_module.name)
+      end
+    end
+
     render json: {
-      html: modal,
-      update_url: my_module_repository_path(@my_module, @repository)
+      my_modules: my_modules
     }, status: :ok
   end
 
@@ -225,7 +268,6 @@ class MyModuleRepositoriesController < ApplicationController
     @repository_row = @repository.repository_rows.find(params[:row_id])
     @module_repository_row = @my_module.my_module_repository_rows.find_by(repository_row: @repository_row)
     @stock_value = @module_repository_row.repository_row.repository_stock_value
-    @html_modal = render_to_string(partial: 'my_modules/repositories/consume_stock_modal_content', formats: [:html])
     render 'my_modules/repositories/consume_modal', formats: [:json]
   end
 
@@ -243,6 +285,17 @@ class MyModuleRepositoriesController < ApplicationController
     render json: {}, status: :ok
   end
 
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::MyModuleRepositoriesService.new(
+          current_user,
+          @my_module,
+          ids: JSON.parse(params[:items]).map { |i| i['id'] }
+        ).actions
+    }
+  end
+
   private
 
   def load_my_module
@@ -251,7 +304,7 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def load_repository
-    @repository = Repository.find_by(id: params[:id])
+    @repository = RepositoryBase.find_by(id: params[:id])
     render_404 unless @repository
   end
 
@@ -282,25 +335,17 @@ class MyModuleRepositoriesController < ApplicationController
     unassigned_count = service.unassigned_rows_count
 
     if params[:downstream] == 'true'
-      if assigned_count && unassigned_count
-        t('my_modules.repository.flash.assign_and_unassign_from_task_and_downstream_html',
-          assigned_items: assigned_count,
-          unassigned_items: unassigned_count)
-      elsif assigned_count
+      if assigned_count&.positive?
         t('my_modules.repository.flash.assign_to_task_and_downstream_html',
           assigned_items: assigned_count)
-      elsif unassigned_count
+      elsif unassigned_count&.positive?
         t('my_modules.repository.flash.unassign_from_task_and_downstream_html',
           unassigned_items: unassigned_count)
       end
-    elsif assigned_count && unassigned_count
-      t('my_modules.repository.flash.assign_and_unassign_from_task_html',
-        assigned_items: assigned_count,
-        unassigned_items: unassigned_count)
-    elsif assigned_count
+    elsif assigned_count&.positive?
       t('my_modules.repository.flash.assign_to_task_html',
         assigned_items: assigned_count)
-    elsif unassigned_count
+    elsif unassigned_count&.positive?
       t('my_modules.repository.flash.unassign_from_task_html',
         unassigned_items: unassigned_count)
     end
@@ -338,5 +383,25 @@ class MyModuleRepositoriesController < ApplicationController
               my_module: @my_module.id,
               comment: comment
             })
+  end
+
+  def set_navigator
+    @navigator = {
+      url: tree_navigator_my_module_path(@my_module),
+      archived: @my_module.archived_branch?,
+      id: @my_module.code
+    }
+  end
+
+  def set_inline_name_editing
+    return unless can_manage_my_module?(@my_module)
+
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'my_module',
+      item_id: @my_module.id,
+      field_to_udpate: 'name',
+      path_to_update: my_module_path(@my_module)
+    }
   end
 end

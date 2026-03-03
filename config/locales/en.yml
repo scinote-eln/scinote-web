@@ -139,6 +139,10 @@ en:
       report: "Report"
     errors:
       models:
+        user_setting:
+          attributes:
+            key:
+              invalid: "must be in alphanumeric snake_case (lowercase with underscores)"
         project:
           attributes:
             name:
@@ -425,6 +429,7 @@ en:
       steps: "Protocol"
       results: "Results"
       activities: "Activity"
+      assigned_items: "Assigned items"
       archive: "Archived results"
 
   smart_annotations:
@@ -1478,6 +1483,11 @@ en:
       title: "Assigned items"
       assign_from: "Assign from"
       create_item: "Create item"
+      toolbar:
+        print: "Print label"
+        export_consumption: "Export consumption"
+        unassign: "Unassign"
+        unassign_downstream: "Unassign from task & downstream"
       create_modal:
         modal_title: 'Create a new item'
         description: 'Choose an inventory and name the new item'
@@ -1490,7 +1500,7 @@ en:
         success: "Successfully assigned an item to the task."
       repository:
         private_repository_name: "Private inventory"
-        private_repository_row_name: "Private item (%{repository_row_code})"
+        private_repository_row_name: "Private item"
     protocol:
       title: "Protocol"
       options_dropdown:
@@ -1743,7 +1753,27 @@ en:
       no_activities: "There are no activities for this task."
       more_activities: "More activities"
     repository:
+      head_title: "%{project} | %{module} | Assigned Items"
       export: 'Export'
+      no_assigned_items: 'No items assigned to this task.'
+      no_assigned_items_can_assign: 'No items assigned to this task. Use the buttons on the right to start assigning.'
+      assign_items: 'Assign items'
+      create_item: 'Create item'
+      assigned_items_modal:
+        title: 'Assigned items'
+        assign_new_row: '+ Assign from different inventory'
+        inventory: 'Inventory:'
+        empty_placeholder: 'No items assigned yet'
+      version:
+        view_version: 'View versions'
+        live_version: 'Live version'
+        snapshot_version: 'Version: %{snapshot_date}'
+        snapshot_name: '%{snapshot_date}'
+        snapshot_created_by: "by %{user}"
+        pin: 'Make default view'
+        delete: 'Delete snapshot'
+        create_snapshot: '+ Create a snapshot'
+        creating_snapshot: 'Creating snapshot...'
       full_view:
         modal_live_header: ': Live version'
         modal_snapshot_header: ': Snapshot of %{snapshot_date}'
@@ -1754,6 +1784,7 @@ en:
           live_bottom_label: 'Live version'
           snapshot_bottom_label: 'Snapshot version %{date_time}'
           snapshot_tag: 'Snapshot'
+          live_tag: 'Live version'
         full_view:
           header: 'Versions'
           live: 'Live version'
@@ -1779,6 +1810,24 @@ en:
         title: 'Out of stock!'
         description_html: 'By consuming <strong>%{value}</strong> you will use more than you currently have in stock. This will result in negative stock.'
         consume_anyway: 'Consume anyway'
+      assign_modal:
+        title: 'Assign items'
+        title_downstream: 'Assign items to this task & downstream'
+        description: 'You will assign %{number} items to the following tasks:'
+        current: '(current task)'
+        description_2: 'Are you ready to assign them?'
+        action: 'Assign'
+        action_task: 'Assign to task'
+        action_task_and_downstream: 'Assign to task & downstream'
+      unassign_modal:
+        title: 'Unassign item(s)'
+        message: 'You are about to unassign <b>%{number} of items</b> from this task.'
+        message_2: 'You can always assign items back to a task.'
+        message_downstream: 'You are about to unassign <b>%{number} of items</b> from the following tasks:'
+        current: '(current task)'
+        confirmation: 'Do you want to continue?'
+        action: 'Unassign'
+        action_downstream: 'Unassign from task & downstream'
       flash:
         assign_to_task_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task."
         assign_to_task_and_downstream_html: "Successfully assigned <strong>%{assigned_items}</strong> item(s) to the task and downstream tasks."
@@ -4097,6 +4146,7 @@ en:
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       new_step: "New step"
+      show_repositories: "Assigned items"
       add_step: "Add step"
       new_step_title: "Create new step"
       subtitle: "Protocol Steps"
@@ -4840,10 +4890,11 @@ en:
   # application.
   datatable:
     entries:
-      total:
+      filtered:
         one: "%{count} entry"
         other: "%{count} entries"
       selected: "%{selected} of %{count} selected"
+      total: "%{count} total"
     show: 'Show:'
     rows: 'rows'
   tiny_mce:

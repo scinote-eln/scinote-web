@@ -31,6 +31,7 @@
         @reorderColumns="reorderColumns"
         @resetColumnsToDefault="resetColumnsToDefault"
       />
+      <div v-else class="h-4 w-full"></div>
       <div v-if="this.objectArchived && this.currentViewMode === 'active'" class="pt-6" >
         <em> {{ hiddenDataMessage }} </em>
       </div>
@@ -115,10 +116,13 @@
         </div>
         <div v-show="!dataLoading" data-e2e="e2e-TX-tableInfo-entries">
           <span v-if="selectedRows.length">
-            {{ i18n.t('datatable.entries.selected', { count: totalEntries, selected: selectedRows.length }) }}
+            {{ i18n.t('datatable.entries.selected', { count: (filteredEntries || totalEntries), selected: selectedRows.length }) }}
           </span>
           <span v-else>
-            {{ i18n.t('datatable.entries.total', { count: totalEntries, selected: selectedRows.length }) }}
+            {{ i18n.t('datatable.entries.filtered', { count: (filteredEntries || totalEntries), selected: selectedRows.length }) }}
+          </span>
+          <span v-if="filteredEntries !== null && filteredEntries < totalEntries">
+            ({{ i18n.t('datatable.entries.total', { count: totalEntries }) }})
           </span>
         </div>
       </div>
@@ -146,6 +150,7 @@ import CustomHeader from './tableHeader';
 import ActionToolbar from './action_toolbar.vue';
 import Toolbar from './toolbar.vue';
 import RowMenuRenderer from './row_menu_renderer.vue';
+import { user_setting_path } from '../../../routes.js';
 
 export default {
   name: 'App',
@@ -255,6 +260,7 @@ export default {
       order: null,
       totalPage: 0,
       totalEntries: null,
+      filteredEntries: null,
       selectedRows: [],
       keepSelection: false,
       searchValue: '',
@@ -266,7 +272,6 @@ export default {
       stateLoading: true,
       lastPage: false,
       tableState: null,
-      userSettingsUrl: null,
       gridReady: false,
       windowScrollerSeen: false,
       resetGridCols: false,
@@ -358,7 +363,7 @@ export default {
       return columns;
     },
     stateKey() {
-      return `${this.tableId}_${this.currentViewMode}_state`;
+      return `${this.tableId}_${this.currentViewMode}_table_state`;
     }
   },
   watch: {
@@ -418,7 +423,6 @@ export default {
         this.setGridColsClass();
       }, 400);
     };
-    this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     this.fetchTableState();
 
     this.filters.forEach((filter) => {
@@ -492,10 +496,10 @@ export default {
     },
     // Table states
     fetchTableState() {
-      axios.get(this.userSettingsUrl, { params: { key: this.stateKey } })
+      axios.get(user_setting_path(this.stateKey))
         .then((response) => {
-          if (response.data.data) {
-            this.tableState = response.data.data;
+          if (response.data.value) {
+            this.tableState = response.data.value;
             this.currentViewRender = this.tableOnly ? 'table' : this.tableState.currentViewRender;
             this.perPage = this.tableState.perPage;
             this.order = this.tableState.order;
@@ -503,6 +507,10 @@ export default {
               this.initializing = false;
             }
           }
+          this.stateLoading = false;
+          this.loadData();
+        }).catch(() => {
+          this.initializing = false;
           this.stateLoading = false;
           this.loadData();
         });
@@ -560,11 +568,7 @@ export default {
         checkboxColumn.pinned = 'left';
       }
 
-      const settings = {
-        key: this.stateKey,
-        data: tableState
-      };
-      axios.put(this.userSettingsUrl, { settings: [settings] });
+      axios.put(user_setting_path(this.stateKey), { user_setting: { value: tableState } });
       this.tableState = tableState;
     },
     getRowClass() {
@@ -633,6 +637,7 @@ export default {
           if (this.scrollMode !== 'none') {
             this.totalPage = response.data.meta.total_pages;
             this.totalEntries = response.data.meta.total_count;
+            this.filteredEntries = response.data.meta.filtered_count;
           }
           this.$emit('tableReloaded', this.rowData, { filtered: this.searchValue.length > 0 });
           this.dataLoading = false;

@@ -4,6 +4,7 @@
   <user-preferences
     :update-url = "'<%= update_preferences_path(format: :json) %>'"
     :user-settings = "<%= @user.settings.to_json %>"
+    :user-notifications-settings = "<%= @user.notifications_settings.to_json %>"
     :time-zones = "<%= ActiveSupport::TimeZone.all.map{ |tz|
                                 [ tz.tzinfo.name, tz.formatted_offset + " " + tz.name]
                               }.to_json %>"

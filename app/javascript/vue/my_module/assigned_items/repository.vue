@@ -1,224 +1,326 @@
 <template>
-  <div ref="container" class="border rounded transition-all overflow-hidden" :style="{height: (sectionOpened ? '448px' : '48px')}">
-    <div class="flex items-center h-12 px-4 gap-4 assigned-repository-title">
+  <div ref="container"
+       :id="'assigned-repository-container-' + repositoryVersion.id"
+       :class="{'p-4 bg-white rounded transition-all overflow-hidden mb-4': !onlyRepository}"
+       :style="{height: (sectionOpened ? openSize : '60px')}">
+    <div v-if="!onlyRepository" class="flex items-center h-6 gap-4 assigned-repository-title mb-1">
       <div
         @click="toggleContainer"
-        class="flex items-center grow overflow-hidden cursor-pointer"
-        :data-e2e="`e2e-BT-task-assignedItems-inventory${ repository.id }-toggle`"
+        class="flex items-center gap-4 grow overflow-hidden cursor-pointer"
+        :data-e2e="`e2e-BT-task-assignedItems-inventory${ repositoryVersion.id }-toggle`"
       >
         <i ref="openHandler" class="sn-icon sn-icon-right cursor-pointer"></i>
-        <h3 class="my-0 flex items-center gap-1 overflow-hidden">
-          <span :title="repository.attributes.name" class="assigned-repository-title truncate">{{ repository.attributes.name }}</span>
+        <h3 class="my-0 flex items-center gap-4 overflow-hidden">
+          <span :title="repositoryVersion.attributes.name" class="assigned-repository-title truncate">{{ repositoryVersion.attributes.name }}</span>
           <span class="text-sn-grey-500 font-normal text-base shrink-0">
-            [{{ repository.attributes.assigned_rows_count }}]
+            [{{ repositoryVersion.attributes.assigned_rows_count }}]
           </span>
-          <span v-if="repository.attributes.is_snapshot"
-                class="bg-sn-light-grey text-sn-grey-500 font-normal  px-1.5 py-1 rounded shrink-0 text-sm">
-            {{  i18n.t('my_modules.repository.snapshots.simple_view.snapshot_tag') }}
+          <span class="bg-sn-light-grey  font-normal  px-1.5 py-1 rounded-full shrink-0 text-xs">
+            <template v-if="repositoryVersion.attributes.is_snapshot">
+              {{  i18n.t('my_modules.repository.snapshots.simple_view.snapshot_tag') }}
+            </template>
+            <template v-else>
+              {{  i18n.t('my_modules.repository.snapshots.simple_view.live_tag') }}
+            </template>
           </span>
+
         </h3>
       </div>
-      <button
-        v-if="repository.attributes.urls.full_view"
-        class="btn btn-light icon-btn ml-auto full-screen"
-        :data-table-url="fullViewUrl"
-        :data-e2e="`e2e-BT-task-assignedItems-inventory${ repository.id }-expand`"
-      >
-        <i class="sn-icon sn-icon-expand"></i>
-      </button>
     </div>
-    <div style="height: 400px">
-      <ag-grid-vue
-          class="ag-theme-alpine w-full flex-grow h-[340px] z-10"
-          :columnDefs="columnDefs"
-          :rowData="preparedAssignedItems"
-          :rowSelection="false"
-          :suppressRowTransform="true"
-          :suppressRowClickSelection="true"
-          :enableCellTextSelection="true"
-          @grid-ready="onGridReady"
-          @sortChanged="setOrder"
-        >
-      </ag-grid-vue>
-      <div class="h-[60px] flex items-center border-transparent border-t border-t-sn-light-grey border-solid grey px-6">
-        <div>
-          {{ repository.attributes.footer_label }}
-        </div>
-        <div class="ml-auto">
-          <Pagination
-            :totalPage="Math.ceil(assignedItems.recordsTotal / perPage)"
-            :currentPage="page"
-            @setPage="setPage"
-          ></Pagination>
-        </div>
-      </div>
+    <div style="height: 540px">
+      <DataTable
+        v-if="repositoryColumnsDef.length > 0"
+        :columnDefs="repositoryColumnsDef"
+        :tableId="`my_module_repository_rows_my_module_${myModuleId}_repository_${repositoryVersion.id}`"
+        :dataUrl="dataSource"
+        :reloadingTable="reloadingTable"
+        :toolbarActions="toolbarActions"
+        :actionsUrl="toolbarActionsUrl"
+        :filters="[]"
+        :tableOnly="true"
+        @openConsumeModal="consume"
+        @export="exportRows"
+        @export_consumption="exportConsumption"
+        @print="printRows"
+        @assign="openAssignItemModal = true"
+        @unassign="unassignModalShow"
+        @unassign_downstream="unassignModalDownstreamShow"
+        @create="openCreateItemModal = true"
+        @tableReloaded="reloadingTable = false"
+        @selectVersion="loadVersion"
+        @pinVersion="pinVersion"
+      ></DataTable>
     </div>
-    <ConsumeModal v-if="openConsumeModal" @updateConsume="updateConsume" @close="openConsumeModal = false" :row="selectedRow" />
-    <ConfirmationModal
-      :title="i18n.t('my_modules.repository.stock_warning_modal.title')"
-      :description="warningModalDescription"
-      confirmClass="btn btn-primary"
-      :confirmText="i18n.t('my_modules.repository.stock_warning_modal.consume_anyway')"
-      ref="warningModal"
-    ></ConfirmationModal>
+    <Teleport to="body">
+      <ConsumeModal v-if="openConsumeModal" @updateConsume="updateConsume" @close="openConsumeModal = false" :row="selectedRow" />
+      <ConfirmationModal
+        :title="i18n.t('my_modules.repository.stock_warning_modal.title')"
+        :description="warningModalDescription"
+        confirmClass="btn btn-primary"
+        :confirmText="i18n.t('my_modules.repository.stock_warning_modal.consume_anyway')"
+        ref="warningModal"
+      ></ConfirmationModal>
+      <UnassignItemModal
+        v-if="showUnassignModal"
+        :myModuleId="myModuleId"
+        :selected-RepositoryId="repositoryVersion.id"
+        :rowIds="selectedUnassignRow"
+        :downstreamMode="unassignDownstreamMode"
+        @unassignRows="unassignRows"
+        @close="showUnassignModal = false"
+      ></UnassignItemModal>
+      <CreateItemModal
+        v-if="openCreateItemModal"
+        :myModuleId="myModuleId"
+        :selectedRepositoryValue="repositoryVersion.id"
+        @tableReloaded="newCreatedRow"
+        @close="openCreateItemModal = false"></CreateItemModal>
+      <AssignItemModal
+          v-if="openAssignItemModal"
+          :myModuleId="myModuleId"
+          :selectedRepositoryValue="repositoryVersion.id"
+          @assignRows="assignRows"
+          @close="openAssignItemModal = false"/>
+    </Teleport>
   </div>
 </template>
 <script>
-import { AgGridVue } from 'ag-grid-vue3';
+import DataTable from '../../shared/datatable/table.vue';
 import axios from '../../../packs/custom_axios.js';
-import CustomHeader from '../../shared/datatable/tableHeader';
-import Pagination from '../../shared/datatable/pagination.vue';
-import NameRenderer from './renderers/name.vue';
-import StockRenderer from './renderers/stock.vue';
-import ConsumeRenderer from './renderers/consume.vue';
 import ConsumeModal from './modals/consume.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
+import ColumnsMixin from '../../repository/columns_mixin.js';
+import UserStateMixin from '../../mixins/user_state_mixin.js';
+import CreateItemModal from '../assigned_items/modals/new_item.vue';
+import AssignItemModal from './modals/assign_item.vue';
+import UnassignItemModal from './modals/unassign_item.vue';
+import VersionDropdown from './version_dropdown.vue'
+
+import {
+  index_ag_my_module_repository_path,
+  actions_toolbar_my_module_repositories_path,
+  my_module_repository_path,
+  snapshot_list_my_module_repository_snapshots_path,
+  my_module_select_default_snapshot_path
+} from '../../../routes.js';
 
 export default {
   name: 'AssignedRepository',
   props: {
-    repository: Object
+    repository: Object,
+    myModuleId: String,
+    reloadKey: Number,
+    onlyRepository: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
-    AgGridVue,
-    agColumnHeader: CustomHeader,
-    Pagination,
-    NameRenderer,
-    StockRenderer,
-    ConsumeRenderer,
+    DataTable,
     ConsumeModal,
-    ConfirmationModal
+    ConfirmationModal,
+    CreateItemModal,
+    AssignItemModal,
+    UnassignItemModal,
+    VersionDropdown
   },
+  mixins: [ColumnsMixin, UserStateMixin],
   data: () => ({
-    assignedItems: {
-      data: [],
-      recordsTotal: 0
-    },
-    order: { column: 0, dir: 'asc' },
+    openAssignItemModal: false,
     sectionOpened: false,
-    page: 1,
-    perPage: 20,
-    gridApi: null,
-    columnApi: null,
-    gridReady: false,
-    openConsumeModal: false,
-    selectedRow: null,
     warningModalDescription: '',
-    submitting: false
+    showUnassignModal: false,
+    selectedUnassignRow: null,
+    unassignDownstreamMode: false,
+    submitting: false,
+    reloadingTable: false,
+    openConsumeModal: false,
+    openCreateItemModal: false,
+    repositoryVersion: null
   }),
+  watch: {
+    reloadKey() {
+      this.reloadingTable = true;
+    },
+    sectionOpened() {
+      this.setUserState(
+        `my_module_repository_rows_my_module_${this.myModuleId}_repository_${this.repositoryVersion.id}_section_opened`,
+        { opened: this.sectionOpened }
+      );
+    }
+  },
+  created() {
+    this.repositoryVersion = this.repository;
+    this.sectionOpened = this.repositoryVersion.attributes.opened;
+  },
+  mounted() {
+    this.recalculateContainerSize();
+  },
   computed: {
-    preparedAssignedItems() {
-      return this.assignedItems.data;
+    openSize() {
+      return this.onlyRepository ? '540px' : '600px';
     },
-    fullViewUrl() {
-      let url = this.repository.attributes.urls.full_view;
-      if (this.repository.attributes.has_stock && this.repository.attributes.has_stock_consumption) {
-        url += '?include_stock_consumption=true';
-      }
-      return url;
-    },
-    columnDefs() {
-      const columns = [{
-        field: '0',
-        flex: 1,
-        headerName: this.i18n.t('repositories.table.row_name'),
-        sortable: true,
-        cellRenderer: 'NameRenderer',
-        comparator: () => null,
-        cellRendererParams: {
-          dtComponent: this
-        }
-      }];
+    toolbarActions() {
+      const left = [];
+      const right = [];
 
-      if (this.repository.attributes.has_stock && this.repository.attributes.has_stock_consumption) {
-        columns.push({
-          field: 'stock',
-          headerName: this.repository.attributes.stock_column_name,
-          sortable: true,
-          cellRenderer: 'StockRenderer',
-          comparator: () => null
+      if (!this.repositoryVersion.attributes.permissions.can_read) {
+        return {};
+      }
+
+      if (this.repositoryVersion.attributes.permissions.can_assign) {
+        left.push({
+          name: 'assign',
+          icon: 'sn-icon sn-icon-new-task',
+          label: this.i18n.t('my_modules.repository.assign_items'),
+          type: 'emit',
+          buttonStyle: 'btn btn-primary'
         });
-        columns.push({
-          field: 'consumedStock',
-          headerName: this.i18n.t('repositories.table.row_consumption'),
-          sortable: true,
-          comparator: () => null,
-          cellRendererParams: {
-            dtComponent: this
-          },
-          cellRenderer: 'ConsumeRenderer'
+        left.push({
+          name: 'create',
+          icon: 'sn-icon sn-icon-create-item',
+          label: this.i18n.t('my_modules.repository.create_item'),
+          type: 'emit',
+          buttonStyle: 'btn btn-secondary'
         });
       }
-      return columns;
+
+      left.push({
+        name: 'version',
+        type: 'component',
+        params: {
+          componentRenderer: VersionDropdown,
+          sourceUrl: this.snapshotListSource,
+          btnText: this.i18n.t('my_modules.repository.version.view_version'),
+          defaultVersion: this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id,
+          selectedVersion: this.repositoryVersion.id,
+          myModuleId: this.myModuleId,
+          canCreateSnapshots: this.repositoryVersion.attributes.permissions.can_create_snapshots,
+          canManageSnapshots: this.repositoryVersion.attributes.permissions.can_manage_snapshots,
+          hasLiveVersion: this.repositoryVersion.attributes.has_live_version
+        }
+      });
+
+      right.push({
+        name: 'export',
+        icon: 'sn-icon sn-icon-export',
+        type: 'emit',
+        buttonStyle: 'btn btn-light icon-btn btn-black',
+      })
+      return {
+        left: left,
+        right: right
+      };
+    },
+    dataSource() {
+      return index_ag_my_module_repository_path(this.myModuleId, this.repositoryVersion.id);
+    },
+    toolbarActionsUrl() {
+      return actions_toolbar_my_module_repositories_path(this.myModuleId);
+    },
+    snapshotListSource() {
+      return snapshot_list_my_module_repository_snapshots_path(this.myModuleId, this.repositoryVersion.id);
+    },
+    pinVersionUrl() {
+      return my_module_select_default_snapshot_path(this.myModuleId);
     }
   },
   methods: {
+    assignRows(rowIds, repositoryId, assignToDownstream = false) {
+      this.openAssignItemModal = false;
+      this.$emit('assignRows', rowIds, repositoryId, assignToDownstream);
+    },
+    unassignRows(rowIds, downstream = false) {
+      this.showUnassignModal = false;
+      axios.patch(my_module_repository_path(this.myModuleId, this.repositoryVersion.id), {
+        rows_to_unassign: rowIds,
+        downstream: downstream
+      }).then((response) => {
+        HelperModule.flashAlertMsg(response.data.flash, 'success');
+        this.reloadingTable = true;
+      });
+    },
+    unassignModalShow(_e, rows) {
+      this.selectedUnassignRow = rows.map(row => row.id);
+      this.showUnassignModal = true;
+      this.unassignDownstreamMode = false;
+    },
+    unassignModalDownstreamShow(_e, rows) {
+      this.selectedUnassignRow = rows.map(row => row.id);
+      this.unassignDownstreamMode = true;
+      this.showUnassignModal = true;
+    },
     recalculateContainerSize() {
       const { container, openHandler } = this.$refs;
 
       if (this.sectionOpened) {
-        container.style.height = '448px';
+        container.style.height = '600px';
         openHandler.classList.remove('sn-icon-right');
         openHandler.classList.add('sn-icon-down');
-        this.$emit('recalculateContainerSize', 400);
-
-        if (this.assignedItems.data.length === 0) this.getRows();
       } else {
-        container.style.height = '48px';
+        container.style.height = '60px';
         openHandler.classList.remove('sn-icon-down');
         openHandler.classList.add('sn-icon-right');
-        this.$emit('recalculateContainerSize', 0);
       }
     },
     toggleContainer() {
       this.sectionOpened = !this.sectionOpened;
+
       this.recalculateContainerSize();
     },
-    setOrder() {
-      const orderState = this.getOrder(this.columnApi.getColumnState());
-      const [order] = orderState;
-      if (order.column === 'stock') {
-        order.column = 1;
-      } else if (order.column === 'consumedStock') {
-        order.column = 2;
-      } else if (order.column === '0') {
-        order.column = 0;
+    printRows(_e, rows) {
+      if (typeof PrintModalComponent !== 'undefined') {
+        PrintModalComponent.openModal();
+        PrintModalComponent.repository_id = this.repositoryVersion.id;
+        PrintModalComponent.row_ids = rows.map(row => row.id);
       }
-      this.order = order;
+    },
+    exportRows() {
+      let headerIDs = [];
+      this.repositoryColumnsDef.forEach((column) => {
+        if (column.cellRendererParams?.legacyId) {
+          headerIDs.push(column.cellRendererParams.legacyId);
+        }
+      });
 
-      this.getRows();
+      axios.post(this.repositoryVersion.attributes.urls.export, {
+        header_ids: headerIDs
+      })
+        .then((response) => {
+          HelperModule.flashAlertMsg(response.data.message, 'success');
+        })
+        .catch((error) => {
+          HelperModule.flashAlertMsg(error.response.data.message, 'danger');
+        });
     },
-    getOrder(columnsState) {
-      if (!columnsState) return null;
+    exportConsumption(_e, rows) {
+      window.initExportStockConsumptionModal();
 
-      return columnsState.filter((column) => column.sort)
-        .map((column) => ({
-          column: column.colId,
-          dir: column.sort
-        }));
+      if (window.exportStockConsumptionModalComponent) {
+        window.exportStockConsumptionModalComponent.fetchRepositoryData(
+          rows.map(row => row.id),
+          { repository_id: this.repositoryVersion.id }
+        );
+      }
     },
-    onGridReady(params) {
-      this.gridApi = params.api;
-      this.columnApi = params.columnApi;
-      this.gridReady = true;
+    loadVersion(data){
+      const repositoryId = data.data ? data.data : (this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id);
+      axios.get(my_module_repository_path(this.myModuleId, repositoryId))
+        .then((response) => {
+          this.repositoryVersion = response.data.data;
+          this.reloadingTable = true;
+        });
     },
-    getRows() {
-      axios.post(this.repository.attributes.urls.assigned_rows, {
-        assigned: 'assigned_simple',
-        draw: this.page,
-        length: this.perPage,
-        order: [this.order],
-        search: { value: '', regex: false },
-        simple_view: true,
-        start: (this.page - 1) * this.perPage,
-        view_mode: true
-      }).then((response) => {
-        this.assignedItems = response.data;
+    pinVersion(data) {
+      const params = data.data ? { repository_snapshot_id : data.data } : { repository_id: (this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id) };
+      axios.post(this.pinVersionUrl, params).then((response) => {
+        this.repositoryVersion = response.data.data;
+        this.reloadingTable = true;
       });
     },
-    setPage(page) {
-      this.page = page;
-      this.getRows();
+    newCreatedRow(repositoryRowSidebarUrl){
+      this.reloadingTable = true;
+      window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
     },
     consume(row) {
       this.selectedRow = row;
@@ -249,7 +351,7 @@ export default {
           stock_consumption: consume,
           comment
         }).then(() => {
-          this.getRows();
+          this.reloadingTable = true;
           this.submitting = false;
         });
       }

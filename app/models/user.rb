@@ -31,18 +31,19 @@ class User < ApplicationRecord
   validates :external_id, length: { maximum: Constants::EMAIL_MAX_LENGTH }
   validates :job_title, length: { maximum: Constants::NAME_MAX_LENGTH }
 
-  store_accessor :settings, :time_zone, :notifications_settings, :external_id, :job_title
+  store_accessor :settings, :time_zone, :external_id, :job_title
 
   DEFAULT_SETTINGS = {
     time_zone: 'UTC',
-    date_format: Constants::DEFAULT_DATE_FORMAT,
-    notifications_settings: {
-      assignments: true,
-      assignments_email: false,
-      recent: true,
-      recent_email: false,
-      system_message_email: false
-    }.merge(Extends::DEFAULT_USER_NOTIFICATION_SETTINGS)
+    date_format: Constants::DEFAULT_DATE_FORMAT
+  }.freeze
+
+  DEFAULT_NOTIFICATION_SETTINGS = {
+    assignments: true,
+    assignments_email: false,
+    recent: true,
+    recent_email: false,
+    system_message_email: false
   }.freeze
 
   DEFAULT_OTP_DRIFT_TIME_SECONDS = 10
@@ -57,6 +58,7 @@ class User < ApplicationRecord
   )
 
   # Relations
+  has_many :user_settings, dependent: :destroy
   has_many :user_identities, inverse_of: :user
   has_many :user_assignments, dependent: :destroy
   has_many :user_group_memberships, dependent: :destroy
@@ -330,6 +332,7 @@ class User < ApplicationRecord
   has_many :favorites, dependent: :destroy
 
   before_validation :downcase_email!
+  after_create :create_default_notifications_settings
 
   def name
     full_name
@@ -535,12 +538,20 @@ class User < ApplicationRecord
     exports_left.positive?
   end
 
+  def notifications_settings
+    user_settings.find_by(key: 'notifications_settings')&.value
+  end
+
   def exports_left
     if (export_vars[:last_export_timestamp] || 0) < Time.now.utc.beginning_of_day.to_i
       return TeamZipExport.exports_limit
     end
 
     TeamZipExport.exports_limit - export_vars[:num_of_export_all_last_24_hours]
+  end
+
+  def repository_export_file_type
+    user_settings.find_by(key: 'repository_export_file_type')&.value
   end
 
   def global_activity_filter(filters, search_query)
@@ -644,5 +655,12 @@ class User < ApplicationRecord
 
   def clear_view_cache
     Rails.cache.delete_matched(%r{^views\/users\/#{id}-})
+  end
+
+  def create_default_notifications_settings
+    user_settings.create(
+      key: 'notifications_settings',
+      value: DEFAULT_NOTIFICATION_SETTINGS.merge(Extends::DEFAULT_USER_NOTIFICATION_SETTINGS)
+    )
   end
 end

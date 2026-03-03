@@ -26,7 +26,6 @@
         :result="result"
         :resultToReload="resultToReload"
         :activeDragResult="activeDragResult"
-        :userSettingsUrl="userSettingsUrl"
         :protocolId="protocolId"
         @result:update="updateResult"
         @result:elements:loaded="resultToReload = null; elementsLoaded++"
@@ -98,7 +97,6 @@ export default {
     archived: { type: String, required: false},
     active_url: { type: String, required: false },
     archived_url: { type: String, required: false },
-    userSettingsUrl: { type: String, required: false },
     changeStatesUrl: { type: String, required: false },
     protocolId: { type: Number, required: false },
     emptyPlaceholder: { type: String, required: false }
@@ -112,7 +110,6 @@ export default {
       nextPageUrl: null,
       loadingPage: false,
       activeDragResult: null,
-      userSettingsUrl: null,
       resultsCollapsed: false,
       anchorId: null,
       elementsLoaded: 0,
@@ -128,7 +125,6 @@ export default {
     this.loadingOverlay = true;
   },
   mounted() {
-    this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     window.addEventListener('scroll', this.infiniteScrollLoad, false);
     window.addEventListener('scroll', this.initStackableHeaders, false);
     this.nextPageUrl = this.url;

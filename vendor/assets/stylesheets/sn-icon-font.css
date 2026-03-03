@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:  url('fonts/SN-icon-font.eot?569f8c');
-  src:  url('fonts/SN-icon-font.eot?569f8c#iefix') format('embedded-opentype'),
-    url('fonts/SN-icon-font.woff2?569f8c') format('woff2'),
-    url('fonts/SN-icon-font.ttf?569f8c') format('truetype'),
-    url('fonts/SN-icon-font.woff?569f8c') format('woff'),
-    url('fonts/SN-icon-font.svg?569f8c#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?p496vr');
+  src:  url('fonts/SN-icon-font.eot?p496vr#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?p496vr') format('woff2'),
+    url('fonts/SN-icon-font.ttf?p496vr') format('truetype'),
+    url('fonts/SN-icon-font.woff?p496vr') format('woff'),
+    url('fonts/SN-icon-font.svg?p496vr#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -691,4 +691,10 @@
 }
 .sn-icon-decimal-increase:before {
   content: "\e9dd";
+}
+.sn-icon-unlocked:before {
+  content: "\e9de";
+}
+.sn-icon-unassign-downstream:before {
+  content: "\e9df";
 }

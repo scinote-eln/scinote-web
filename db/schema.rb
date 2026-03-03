@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_13_114232) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_12_112723) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -1482,6 +1482,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_13_114232) do
     t.index ["last_modified_by_id"], name: "index_user_roles_on_last_modified_by_id"
   end
 
+  create_table "user_settings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "key", null: false
+    t.json "value", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_settings_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "full_name", null: false
     t.string "initials", null: false
@@ -1817,6 +1826,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_13_114232) do
   add_foreign_key "user_my_modules", "users", column: "assigned_by_id"
   add_foreign_key "user_roles", "users", column: "created_by_id"
   add_foreign_key "user_roles", "users", column: "last_modified_by_id"
+  add_foreign_key "user_settings", "users"
   add_foreign_key "users", "teams", column: "current_team_id"
   add_foreign_key "view_states", "users"
   add_foreign_key "webhooks", "activity_filters"
