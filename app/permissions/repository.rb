@@ -55,6 +55,12 @@ Canaid::Permissions.register_for(Repository) do
     end
   end
 
+  %i(delete_repository delete_repository_rows).each do |perm|
+    can perm do |_user, repository|
+      repository.team.settings['repository_deletion_enabled']
+    end
+  end
+
   # repository: update, delete
   can :manage_repository do |user, repository|
     !repository.shared_with?(user.current_team) && repository.permission_granted?(user, RepositoryPermissions::MANAGE)

@@ -936,7 +936,7 @@ class Extends
       }
     },
     deletion: {
-      inventory_deletion_enabled: {
+      repository_deletion_enabled: {
         permission_helper: :can_manage_team?
       },
       result_deletion_enabled: {

@@ -17,8 +17,8 @@ class RepositoryRowsController < ApplicationController
                                                     copy_records archive_records restore_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
-  before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
-  before_action :check_manage_permissions, only: %i(update update_cell copy_records)
+  before_action :check_delete_permissions, only: :delete_records
+  before_action :check_manage_permissions, only: %i(update update_cell archive_records restore_records copy_records)
 
   def index_ag
     repository_rows = Lists::RepositoryRowsService.new(@repository, params, user: current_user).call.load
