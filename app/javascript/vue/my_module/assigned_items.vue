@@ -54,11 +54,13 @@
         v-if="openCreateItemModal"
         :myModuleId="myModuleId"
         @tableReloaded="newCreatedRow"
+        :e2eValue="'task-assignedItems-createItemModal'"
         @close="openCreateItemModal = false"/>
       <AssignItemModal
         v-if="openAssignItemModal"
         :myModuleId="myModuleId"
         @assignRows="assignRows"
+        :e2eValue="'task-assignedItems-assignItemModal'"
         @close="openAssignItemModal = false"/>
     </Teleport>
   </div>
