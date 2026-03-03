@@ -44,6 +44,10 @@ module SecondaryNavigationHelper
     (%w(index).include?(action_name) && controller_name == 'results') || action_name == 'results_show'
   end
 
+  def is_module_assigned_items?
+    controller_name == 'my_module_repositories' && action_name == 'index'
+  end
+
   def is_module_activities?
     action_name == 'activities'
   end

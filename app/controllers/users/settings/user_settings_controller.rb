@@ -14,7 +14,7 @@ module Users
           key = setting[:key]
           data = setting[:data]
 
-          next unless Extends::WHITELISTED_USER_SETTINGS.include?(key.to_s)
+          next unless Extends::WHITELISTED_USER_SETTINGS.any? { |el| el.match?(key.to_s) }
 
           case key.to_s
           when 'task_step_states', 'result_states'

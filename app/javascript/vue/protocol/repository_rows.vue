@@ -7,7 +7,7 @@
     </div>
     <div class="h-full flex-grow">
       <DataTable :columnDefs="columnDefs"
-                tableId="ProtocolRepositoryRowsTable"
+                tableId="protocol_repository_rows"
                 :dataUrl="dataUrl"
                 :reloadingTable="reloadingTable"
                 :withCheckboxes="!published"

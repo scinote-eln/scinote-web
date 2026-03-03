@@ -1,6 +1,6 @@
 <template>
   <DataTable :columnDefs="columnDefs"
-             tableId="ProjectList"
+             tableId="projects"
              :dataUrl="dataSource"
              :reloadingTable="reloadingTable"
              :toolbarActions="toolbarActions"

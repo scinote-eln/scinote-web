@@ -4,7 +4,7 @@ class ResultTemplateSerializer < ResultBaseSerializer
   attributes :protocol_id
 
   def collapsed
-    result_template_states = current_user.settings.fetch('result_template_states', {})
+    result_template_states = current_user.user_settings.find_by(key: 'result_template_states')&.value || {}
     result_template_states[object.id.to_s] == true
   end
 

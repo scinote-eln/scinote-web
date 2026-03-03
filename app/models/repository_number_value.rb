@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RepositoryNumberValue < ApplicationRecord
+  include SearchableModel
+
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User',
              inverse_of: :created_repository_number_values
   belongs_to :last_modified_by, foreign_key: :last_modified_by_id, class_name: 'User',

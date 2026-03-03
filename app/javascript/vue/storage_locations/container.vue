@@ -142,7 +142,7 @@ export default {
       return Array.from({ length: this.gridSize[0] }, (v, i) => String.fromCharCode(97 + i));
     },
     tableId() {
-      return this.withGrid ? 'StorageLocationsContainerGrid' : 'StorageLocationsContainer';
+      return this.withGrid ? 'storage_locations_container_grid' : 'storage_locations_container';
     },
     columnDefs() {
       let columns = [];

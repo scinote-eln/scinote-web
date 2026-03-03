@@ -79,11 +79,15 @@
 
 import SelectDropdown from '../shared/select_dropdown.vue';
 import axios from '../../packs/custom_axios.js';
+import {
+    user_setting_path
+  } from '../../routes.js';
 
 export default {
   name: 'UserPreferences',
   props: {
     userSettings: Object,
+    userNotificationsSettings: Object,
     timeZones: Array,
     dateFormats: Array,
     updateUrl: String,
@@ -99,7 +103,7 @@ export default {
   created() {
     this.selectedTimeZone = this.userSettings.time_zone;
     this.selectedDateFormat = this.userSettings.date_format;
-    this.notificationsSettings = { ...this.emptySettings, ...this.userSettings.notifications_settings };
+    this.notificationsSettings = { ...this.emptySettings, ...this.userNotificationsSettings };
   },
   computed: {
     emptySettings() {
@@ -129,8 +133,10 @@ export default {
       });
     },
     setNotificationsSettings() {
-      axios.put(this.updateUrl, {
-        user: { notifications_settings: this.notificationsSettings }
+      axios.put(user_setting_path('notifications_settings'), {
+        user_setting: {
+          value: this.notificationsSettings
+        }
       });
     }
   }

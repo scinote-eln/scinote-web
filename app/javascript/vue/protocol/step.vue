@@ -279,6 +279,7 @@
   import {
     my_module_results_path,
     protocol_result_templates_path,
+    user_setting_path
   } from '../../routes.js';
 
   export default {
@@ -293,9 +294,6 @@
         required: true
       },
       reorderStepUrl: {
-        required: false
-      },
-      userSettingsUrl: {
         required: false
       },
       assignableMyModuleId: {
@@ -614,12 +612,11 @@
         this.step.attributes.collapsed = this.isCollapsed;
 
         const settings = {
-          key: 'task_step_states',
-          data: { [this.step.id]: this.isCollapsed }
+          value: { [this.step.id]: this.isCollapsed }
         };
 
         this.$emit('step:collapsed');
-        axios.put(this.userSettingsUrl, { settings: [settings] });
+        axios.put(user_setting_path('task_step_states'), {user_setting: settings});
       },
       showDeleteModal() {
         this.confirmingDelete = true;

@@ -248,7 +248,8 @@ import UtilsMixin from '../mixins/utils.js';
 import StorageUsage from '../shared/content/attachments/storage_usage.vue';
 import {
   protocols_my_module_path,
-  protocol_path
+  protocol_path,
+  user_setting_path
 } from '../../routes.js';
 
 export default {
@@ -260,9 +261,6 @@ export default {
     activeDragResult: {
       required: false
     },
-    userSettingsUrl: {
-      required: false
-    }
   },
   data() {
     return {
@@ -508,11 +506,10 @@ export default {
       const stateKey = this.result.attributes.type == "ResultTemplate" ? 'result_template_states' : 'result_states';
 
       const settings = {
-        key: stateKey,
-        data: { [this.result.id]: this.isCollapsed }
+        value: { [this.result.id]: this.isCollapsed }
       };
 
-      axios.put(this.userSettingsUrl, { settings: [settings] });
+      axios.put(user_setting_path(stateKey), {user_setting: settings});
 
       this.$emit('result:collapsed');
     },

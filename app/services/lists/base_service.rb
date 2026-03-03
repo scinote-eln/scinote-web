@@ -24,6 +24,10 @@ module Lists
       raise NotImplementedError
     end
 
+    def filter_records
+      raise NotImplementedError
+    end
+
     def order_params
       @order_params ||= @params.require(:order).permit(:column, :dir).to_h
     end
@@ -37,9 +41,12 @@ module Lists
     end
 
     def sort_records
-      return unless @params[:order] && sortable_columns[order_params[:column].to_sym].present?
+      return if @params[:order].blank?
 
-      sort_by = "#{sortable_columns[order_params[:column].to_sym]} #{sort_direction(order_params)}"
+      sort_column = sortable_columns[order_params[:column].to_sym]
+      return if sort_column.blank?
+
+      sort_by = { sort_column => sort_direction(order_params).downcase.to_sym }
       @records = @records.order(sort_by).order(:id)
     end
   end

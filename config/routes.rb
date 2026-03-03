@@ -240,7 +240,6 @@ Rails.application.routes.draw do
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
           post 'actions_toolbar'
-          get :list
           post :rows_list
           post :export_repositories
         end
@@ -574,15 +573,20 @@ Rails.application.routes.draw do
       get :repositories_list_html, controller: :my_module_repositories
       get :repositories_list, controller: :my_module_repositories
 
-      resources :repositories, controller: :my_module_repositories, only: %i(update create) do
+      resources :repositories, controller: :my_module_repositories, only: %i(index show update create) do
         member do
           get :full_view_table
           post :index_dt, defaults: { format: 'json' }
+          get :index_ag, defaults: { format: 'json' }
           post :export_repository
-          post :assign_repository_records_modal, as: :assign_modal
+          get :assign_repository_records_modal, as: :assign_modal
           post :update_repository_records_modal, as: :update_modal
           get :consume_modal
           post :update_consumption
+        end
+
+        collection do
+          post :actions_toolbar
         end
       end
 
@@ -598,6 +602,9 @@ Rails.application.routes.draw do
           get ':repository_id/full_view_sidebar',
               to: 'my_module_repository_snapshots#full_view_sidebar',
               as: :full_view_sidebar
+          get ':repository_id/snapshot_list',
+              to: 'my_module_repository_snapshots#snapshot_list',
+              as: :snapshot_list
           post ':repository_id', to: 'my_module_repository_snapshots#create', as: ''
         end
       end
@@ -836,6 +843,10 @@ Rails.application.routes.draw do
            to: 'repository_rows#index',
            as: 'table_index',
            defaults: { format: 'json' }
+      get 'repository_index_ag',
+           to: 'repository_rows#index_ag',
+           as: 'table_index_ag',
+           defaults: { format: 'json' }
       member do
         get :assigned_my_modules
         get :repository_users
@@ -877,6 +888,7 @@ Rails.application.routes.draw do
 
       resources :repository_columns, only: %i(index new edit destroy) do
         collection do
+          get :index_new
           get :describe_all
         end
       end
@@ -887,6 +899,7 @@ Rails.application.routes.draw do
           get :assigned_task_list
           get :active_reminder_repository_cells
           put :update_cell
+          get :assigned_counters
         end
 
         collection do
@@ -918,6 +931,7 @@ Rails.application.routes.draw do
         post :validate_label_template_columns, to: 'repository_rows#validate_label_template_columns'
         post :print, to: 'repository_rows#print'
         get :user_roles
+        get :list
       end
 
       member do
@@ -1254,6 +1268,8 @@ Rails.application.routes.draw do
   end
 
   resources :gene_sequence_assets, only: %i(new create edit update)
+
+  resources :user_settings, only: %i(show update), param: :key
 
   if Rails.env.development? || ENV['ENABLE_DESIGN_ELEMENTS'] == 'true'
     resources :design_elements, only: %i(index) do

@@ -125,10 +125,12 @@ class ResultBaseController < ApplicationController
   end
 
   def change_results_state
+    state = current_user.user_settings.find_or_initialize_by(key: result_state_preference_key)
+    state.value ||= {}
     @parent.results.find_each do |result|
-      current_user.settings[result_state_preference_key][result.id.to_s] = params[:collapsed].present?
+      state.value[result.id.to_s] = params[:collapsed].present?
     end
-    current_user.save!
+    state.save!
     render json: { status: :ok }
   end
 
@@ -143,11 +145,15 @@ class ResultBaseController < ApplicationController
   end
 
   def update_and_apply_user_sort_preference!
+    state = current_user.user_settings.find_or_initialize_by(key: result_sorting_preference_key)
+    state.value ||= {}
+
     if params[:sort].present?
-      current_user.update_nested_setting(key: result_sorting_preference_key, id: @parent.id.to_s, value: params[:sort])
+      state.value[@parent.id.to_s] = params[:sort]
+      state.save!
       @sort_preference = params[:sort]
     else
-      @sort_preference = current_user.settings.fetch(result_sorting_preference_key, {})[@parent.id.to_s] || 'created_at_desc'
+      @sort_preference = state.value[@parent.id.to_s] || 'created_at_desc'
     end
     apply_sort!(@sort_preference)
   end

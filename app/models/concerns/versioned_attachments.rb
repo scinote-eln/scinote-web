@@ -24,6 +24,8 @@ module VersionedAttachments
           end
 
           new_blob.persisted? ? new_blob.update_column(:metadata, metadata) : new_blob.metadata = metadata
+
+          new_blob
         end
       end
 
@@ -33,14 +35,21 @@ module VersionedAttachments
             (b.metadata['version'] || 1) == version
           end
 
-          blob.open do |tmp_file|
-            new_blob = ActiveStorage::Blob.create_and_upload!(
-              io: tmp_file,
+          blob.open do |file|
+            new_blob = __send__(
+              :"attach_#{name}_version",
+              io: File.open(file),
               filename: blob.filename,
-              metadata: blob.metadata.merge({ 'restored_from_version' => version, 'created_by_id' => last_modified_by_id })
+              content_type: blob.content_type,
+              metadata: blob.metadata.merge(
+                {
+                  restored_from_version: version,
+                  created_by_id: last_modified_by_id
+                }
+              )
             )
 
-            __send__(:"attach_#{name}_version", new_blob)
+            new_blob
           end
         end
       end

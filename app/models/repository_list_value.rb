@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RepositoryListValue < ApplicationRecord
+  include SearchableModel
+
   belongs_to :repository_list_item
   belongs_to :created_by,
              foreign_key: :created_by_id,

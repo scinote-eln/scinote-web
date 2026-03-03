@@ -19,10 +19,14 @@ class NavigationsController < ApplicationController
   end
 
   def navigator_state
-    current_user.update_simple_setting(key: 'navigator_collapsed', value: params[:state] == 'collapsed')
+    state = current_user.user_settings.find_or_initialize_by(
+      key: 'navigator_state'
+    )
+    state.value ||= {}
 
-    width = params[:width].to_i
-    current_user.update_simple_setting(key: 'navigator_width', value: width) if width.positive?
+    state.value['collapsed'] = params[:state] == 'collapsed'
+    state.value['width'] = params[:width].to_i if params[:width].to_i.positive?
+    state.save!
   end
 
   private
