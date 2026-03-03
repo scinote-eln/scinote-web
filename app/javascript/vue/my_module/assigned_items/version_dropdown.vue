@@ -11,11 +11,11 @@
       <span class="flex justify-between items-center rounded relative whitespace-nowrap px-3 py-2.5 cursor-pointer hover:!bg-sn-super-light-grey group min-h-14 !min-w-72"
             :class="{
               '!bg-sn-super-light-blue':selectedId == params.defaultVersion,
-              'text-sn-grey pointer-events-none': !params.hasLiveVersion
+              'text-sn-grey pointer-events-none': !hasLiveVersion
             }"
-            @click="selectVersion(null)"> 
+            @click="selectVersion(null)">
         <div>{{ i18n.t('my_modules.repository.version.live_version') }}</div>
-        <div v-if="params.hasLiveVersion" class="flex gap-2">
+        <div v-if="hasLiveVersion" class="flex gap-2">
           <i v-if="pinnedId == params.defaultVersion" class="flex sn-icon sn-icon-pinned text-sn-grey items-center justify-center w-10"></i>
           <button v-else-if="params.canManageSnapshots" class="btn btn-light icon-btn" data-toggle="tooltip" :title="i18n.t('my_modules.repository.version.pin')" @click.stop="pinVersion(null)">
             <i class="sn-icon sn-icon-pin"></i>
@@ -38,9 +38,9 @@
       ></SnapshotItem>
       </div>
       <div v-if="params.canCreateSnapshots" class="border-0 border-t border-solid border-sn-light-grey"></div>
-      <span v-if="params.canCreateSnapshots" 
+      <span v-if="params.canCreateSnapshots"
             class="flex justify-between items-center rounded relative whitespace-nowrap px-3 py-2 cursor-pointer hover:!bg-sn-super-light-grey group min-h-14"
-            @click="createVersion"> 
+            @click="createVersion">
         <div>{{ i18n.t('my_modules.repository.version.create_snapshot') }}</div>
       </span>
     </template>
@@ -69,6 +69,7 @@ export default {
       versions: [],
       selectedId: '',
       pinnedId: '',
+      hasLiveVersion: false,
       text: this.params.btnText
     };
   },
@@ -86,6 +87,7 @@ export default {
   created() {
     this.selectedId = this.params.selectedVersion;
     this.pinnedId = this.params.selectedVersion;
+    this.loadVersions();
   },
   mounted() {
     window.initTooltip('[data-toggle="tooltip"]');
@@ -103,6 +105,8 @@ export default {
       axios.get(this.params.sourceUrl)
         .then((response) => {
           this.versions = response.data.data;
+          this.hasLiveVersion = response.data.meta.has_live_version;
+          this.setText(this.versions.find(v => v.id === this.selectedId));
         });
     },
     selectVersion(item) {
@@ -125,14 +129,21 @@ export default {
       this.versions = this.versions.filter(v => v.id !== item.id);
       axios.delete(my_module_repository_snapshots_path(this.params.myModuleId, item.id));
     },
+    setText(item) {
+      if(item) {
+        this.text = this.i18n.t('my_modules.repository.version.snapshot_version', { snapshot_date: item.attributes.name });
+      } else {
+        this.text = this.i18n.t('my_modules.repository.version.view_version');
+      }
+    },
     emitAction(action, item) {
       $('.tooltip').remove();
       if(item) {
-        this.text = this.i18n.t('my_modules.repository.version.snapshot_version', { snapshot_date: item.attributes.name });
+        this.setText(item);
         this.selectedId = item.id;
         this.$emit('dtEvent', action, item.id);
       } else {
-        this.text = this.i18n.t('my_modules.repository.version.view_version');
+        this.setText(null);
         this.selectedId = this.params.defaultVersion;
         this.$emit('dtEvent', action);
       }

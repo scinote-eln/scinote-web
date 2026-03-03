@@ -81,6 +81,7 @@
             'disabled': disabled
            }]"
           :href="action.path"
+          :title="action.tooltip || action.label"
           @click="doAction(action, $event)">
         <i :class="action.icon"></i>
         {{ action.label }}
