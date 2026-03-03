@@ -19,7 +19,7 @@
         <div>{{ i18n.t('my_modules.repository.version.live_version') }}</div>
         <div v-if="params.hasLiveVersion" class="flex gap-2">
           <i v-if="pinnedId == params.defaultVersion" class="flex sn-icon sn-icon-pinned text-sn-grey items-center justify-center w-10"></i>
-          <button v-else-if="params.canManageSnapshots" class="btn btn-light icon-btn" data-toggle="tooltip" :title="i18n.t('my_modules.repository.version.pin')" @click.stop="pinVersion(null)">
+          <button v-else-if="params.canManageSnapshots" class="btn btn-light icon-btn" :title="i18n.t('my_modules.repository.version.pin')" @click.stop="pinVersion(null)">
             <i class="sn-icon sn-icon-pin"></i>
           </button>
         </div>
@@ -58,6 +58,7 @@
 import axios from '../../../packs/custom_axios.js';
 import SnapshotItem from './renderers/snapshot_item.vue'
 import GeneralDropdown from '../../shared/general_dropdown.vue';
+import tooltipMixin from '../../mixins/tooltipMixin.js';
 
 import {
   my_module_repository_snapshots_path
@@ -82,6 +83,7 @@ export default {
     SnapshotItem,
     GeneralDropdown
   },
+  mixins: [tooltipMixin],
   watch: {
     isOpen() {
       if(this.isOpen) {
@@ -92,12 +94,6 @@ export default {
   created() {
     this.selectedId = this.params.selectedVersion;
     this.pinnedId = this.params.selectedVersion;
-  },
-  mounted() {
-    window.initTooltip('[data-toggle="tooltip"]');
-  },
-  beforeUnmount() {
-    window.destroyTooltip('[data-toggle="tooltip"]');
   },
   computed: {
     createVersionUrl(){
@@ -132,7 +128,6 @@ export default {
       axios.delete(my_module_repository_snapshots_path(this.params.myModuleId, item.id));
     },
     emitAction(action, item) {
-      $('.tooltip').remove();
       if(item) {
         this.text = this.i18n.t('my_modules.repository.version.snapshot_version', { snapshot_date: item.attributes.name });
         this.selectedId = item.id;
@@ -142,10 +137,6 @@ export default {
         this.selectedId = this.params.defaultVersion;
         this.$emit('dtEvent', action);
       }
-
-      this.$nextTick(() => {
-        window.initTooltip('[data-toggle="tooltip"]');
-      });
     }
   }
 };

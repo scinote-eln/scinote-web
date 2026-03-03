@@ -57,9 +57,11 @@ export default {
         this.$emit('open');
         this.$nextTick(() => {
           this.setPosition();
+          this.registerFlyoutForTooltips();
         });
       } else {
         this.$emit('close');
+        this.unregisterFlyoutFromTooltips();
       }
     }
   },
@@ -74,6 +76,16 @@ export default {
     closeMenu(e) {
       if (e && e.target.closest(`.sn-dropdown#${this.randomId}, .sn-select-dropdown, .sn-menu-dropdown, .dp__instance_calendar`)) return;
       this.isOpen = false;
+    },
+    registerFlyoutForTooltips() {
+      if (this.$refs.flyout && this.$parent && this.$parent.tooltip_registerTooltipContainer) {
+        this.$parent.tooltip_registerTooltipContainer(this.$refs.flyout);
+      }
+    },
+    unregisterFlyoutFromTooltips() {
+      if (this.$refs.flyout && this.$parent && this.$parent.tooltip_unregisterTooltipContainer) {
+        this.$parent.tooltip_unregisterTooltipContainer(this.$refs.flyout);
+      }
     }
   }
 };
