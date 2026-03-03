@@ -903,6 +903,25 @@ class Extends
 
   DEFAULT_TEAM_SETTINGS = {}
 
+  AVAILABLE_TEAM_SETTINGS = {
+    sharing: {
+      task_sharing_enabled: {
+        permission_helper: :can_manage_team?,
+        confirm: {
+          description_params: %i(name shared_task_count)
+        }
+      }
+    },
+    deletion: {
+      inventory_deletion_enabled: {
+        permission_helper: :can_manage_team?
+      },
+      result_deletion_enabled: {
+        permission_helper: :can_manage_team?
+      }
+    }
+  }
+
   WHITELISTED_USER_SETTINGS = %w(
     LabelTemplates_active_state
     LabelTemplates_archived_state
