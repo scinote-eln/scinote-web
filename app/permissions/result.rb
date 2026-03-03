@@ -30,6 +30,7 @@ Canaid::Permissions.register_for(ResultBase) do
       can_manage_protocol_draft_in_repository?(user, result.protocol)
     else
       result.archived? &&
+        result.team.settings['result_deletion_enabled'] &&
         !result.my_module.archived_branch? &&
         result.unlocked?(result) &&
         result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_DELETE_ARCHIVED)
