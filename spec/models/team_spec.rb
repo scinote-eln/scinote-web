@@ -21,7 +21,6 @@ describe Team, type: :model do
     it { should have_db_column :last_modified_by_id }
     it { should have_db_column :description }
     it { should have_db_column :space_taken }
-    it { should have_db_column :shareable_links_enabled }
   end
 
   describe 'Relations' do
@@ -61,7 +60,7 @@ describe Team, type: :model do
 
     context 'when shareable_links_enabled is true' do
       it 'does not destroy shareable_links before saving' do
-        team.shareable_links_enabled = true
+        allow(team).to receive(:shareable_links_enabled?).and_return(true)
         create_list(:shareable_link, 3, team: team)
         team.save
 
@@ -77,10 +76,10 @@ describe Team, type: :model do
       end
 
       it 'destroys all shareable_links before saving' do
-        team.shareable_links_enabled = true
+        allow(team).to receive(:shareable_links_enabled?).and_return(true)
         create_list(:shareable_link, 3, team: team)
         team.save
-        team.shareable_links_enabled = false
+        allow(team).to receive(:shareable_links_enabled?).and_return(false)
         create_list(:shareable_link, 3, team: team)
 
         team.save

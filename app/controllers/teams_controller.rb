@@ -4,11 +4,12 @@ class TeamsController < ApplicationController
   include ProjectsHelper
   include CardsViewHelper
   attr_reader :current_folder
+
   helper_method :current_folder
 
   before_action :load_vars, only: %i(sidebar export_projects export_projects_modal
-                                     disable_tasks_sharing_modal shared_tasks_toggle
-                                     settings update_settings automations)
+                                     automation_settings update_automation_settings automations
+                                     available_settings update_setting)
   before_action :load_current_folder, only: :sidebar
   before_action :check_read_permissions, except: %i(view_type visible_teams visible_users current_team_users)
   before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
@@ -21,9 +22,7 @@ class TeamsController < ApplicationController
 
   def visible_users
     teams = current_user.teams
-    if params[:teams].present?
-      teams = teams.where(id: params[:teams])
-    end
+    teams = teams.where(id: params[:teams]) if params[:teams].present?
     users = User.where(id: UserAssignment.where(assignable: teams).select(:user_id)).order(:full_name)
     render json: users, each_serializer: UserSerializer, user: current_user
   end
@@ -90,31 +89,7 @@ class TeamsController < ApplicationController
     end
   end
 
-  def disable_tasks_sharing_modal
-    render json: {
-      html: render_to_string(
-        partial: 'users/settings/teams/destroy_tasks_sharing_modal',
-        locals: {},
-        formats: :html
-      )
-    }
-  end
-
-  def shared_tasks_toggle
-    @team.toggle!(:shareable_links_enabled)
-
-    if @team.shareable_links_enabled?
-      log_activity(:team_sharing_tasks_enabled,
-                   team: @team.id,
-                   user: current_user.id)
-    else
-      log_activity(:team_sharing_tasks_disabled,
-                   team: @team.id,
-                   user: current_user.id)
-    end
-  end
-
-  def routing_error(error = 'Routing error', status = :not_found, exception=nil)
+  def routing_error(_error = 'Routing error', _status = :not_found, _exception = nil)
     redirect_to root_path
   end
 
@@ -130,22 +105,50 @@ class TeamsController < ApplicationController
     @active_tab = :automations
   end
 
-  def settings
+  def automation_settings
     render json: {
       teamName: @team.name,
       teamAutomationGroups: Extends::TEAM_AUTOMATIONS_GROUPS,
-      teamSettings: @team.settings,
-      updateUrl: update_settings_team_path(@team)
+      teamSettings: @team.settings.slice('team_automation_settings'),
+      updateUrl: update_automation_settings_team_path(@team)
     }
   end
 
-  def update_settings
-    @team.settings.merge!(update_settings_params)
+  def update_automation_settings
+    @team.settings.merge!(update_automation_settings_params)
     if @team.save
       render json: {}
     else
       render json: @team.errors, status: :unprocessable_entity
     end
+  end
+
+  def available_settings
+    render json: TeamSettingsService.new(@team, current_user).available_settings
+  end
+
+  def update_setting
+    ActiveRecord::Base.transaction do
+      TeamSettingsService.new(@team, current_user).update_setting!(params[:section], params[:key], params[:value])
+
+      if params[:key] == 'task_sharing_enabled' && params[:value] == true
+        log_activity(
+          :team_sharing_tasks_enabled,
+          team: @team.id,
+          user: current_user.id
+        )
+      elsif params[:key] == 'task_sharing_enabled'
+        log_activity(
+          :team_sharing_tasks_disabled,
+          team: @team.id,
+          user: current_user.id
+        )
+      end
+    end
+
+    head :ok
+  rescue TeamSettingPermissionError
+    render_403
   end
 
   private
@@ -172,16 +175,12 @@ class TeamsController < ApplicationController
   end
 
   def load_current_folder
-    if current_team && params[:project_folder_id].present?
-      @current_folder = current_team.project_folders.find_by(id: params[:project_folder_id])
-    end
+    @current_folder = current_team.project_folders.find_by(id: params[:project_folder_id]) if current_team && params[:project_folder_id].present?
   end
 
   def check_export_projects_permissions
     @exp_projects = []
-    if export_projects_params[:project_ids]
-      @exp_projects = @team.projects.where(id: export_projects_params[:project_ids]).to_a
-    end
+    @exp_projects = @team.projects.where(id: export_projects_params[:project_ids]).to_a if export_projects_params[:project_ids]
     if export_projects_params[:project_folder_ids]
       folders = @team.project_folders.where(id: export_projects_params[:project_folder_ids])
       folders.each do |folder|
@@ -194,7 +193,7 @@ class TeamsController < ApplicationController
     end
   end
 
-  def update_settings_params
+  def update_automation_settings_params
     params.require(:team).permit(team_automation_settings: {})
   end
 

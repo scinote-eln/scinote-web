@@ -3662,18 +3662,36 @@ en:
           members: "Members"
           groups: "Groups"
           tags: "Tags"
+        preferences:
+          title: "Workspace preferences"
+          sections:
+            sharing:
+              title: "Sharing"
+              items:
+                task_sharing_enabled:
+                  label: "Enable task sharing"
+                  enable_success_message: "Task sharing is enabled."
+                  disable_success_message: "Task sharing is disabled."
+                  failure_message: "Something went wrong."
+                  confirm:
+                    title: "Disable task sharing"
+                    description: "Are you sure to disable task sharing in %{name}? This action will deactivate sharing tasks and permanently deactivate all shared links for %{shared_task_count} task(s). Any user who has shared links will no longer be able to access the shared tasks."
+                    button: "Disable"
+            deletion:
+              title: "Allow deleting"
+              items:
+                inventory_deletion_enabled:
+                  label: "Allow deleting inventories and inventory items from Archive"
+                  enable_success_message: "Inventory deleting is enabled."
+                  disable_success_message: "Inventory deleting is disabled."
+                result_deletion_enabled:
+                  label: "Allow deleting results from Archive"
+                  enable_success_message: "Result deleting is enabled."
+                  disable_success_message: "Result deleting is disabled."
+
+
         show:
           enter_description: "Enter Workspace description"
-          tasks_share:
-            enable_label: "Enable task sharing"
-            enable_success_message: "Task sharing is enabled."
-            disable_success_message: "Task sharing is disabled."
-            failure_message: "Something went wrong."
-            disable_modal:
-              title: "Disable task sharing"
-              description_p1: "Are you sure to disable task sharing in %{team_name}?"
-              description_p2: "This action will deactivate sharing tasks and permanently deactivate all shared links for %{counter} task(s). Any user who has shared links will no longer be able to access the shared tasks."
-              disable_button: "Disable"
         index:
           description_label: "Workspace is a group of SciNote users who are working on the same projects and share the inventories."
           member_of:
