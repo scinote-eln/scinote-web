@@ -45,19 +45,16 @@ export default {
     myModuleId: { type: String, required: true },
     canManageSnapshots: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      provisioning: false
-    };
-  },
   mixins: [tooltipMixin],
   computed: {
     statusUrl() {
       return status_my_module_repository_snapshot_path(this.myModuleId, this.item.id);
+    },
+    provisioning() {
+      return this.item.attributes.status === 'provisioning';
     }
   },
   created() {
-    this.provisioning = this.item.attributes.status == 'provisioning';
     this.statusVersion();
   },
   watch: {
@@ -81,11 +78,9 @@ export default {
       setTimeout(() => {
         axios.get(this.statusUrl)
         .then((response) => {
-          this.provisioning = response.data.status === 'provisioning';
-          if (this.provisioning) {
+          this.$emit('updateStatus', this.item, response.data.status);
+          if (response.data.status === 'provisioning') {
             this.statusVersion();
-          } else {
-            this.applyTooltips();
           }
         })
       }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
