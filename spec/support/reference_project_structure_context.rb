@@ -16,7 +16,7 @@ RSpec.shared_context 'reference_project_structure' do |config|
   config ||= {}
 
   let!(:user) { subject.current_user }
-  let!(:team) { config[:team] || (create :team, created_by: user, skip_user_assignments: true) }
+  let!(:team) { config[:team] || (create :team, config[:record_deletion_enabled] && :record_deletion_enabled, created_by: user, skip_user_assignments: true) }
   let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
   let!(:normal_user_role) { create :normal_user_role }
   let!(:viewer_role) { create :viewer_role }

@@ -6,7 +6,8 @@ describe ResultsController, type: :controller do
   login_user
 
   include_context 'reference_project_structure', {
-    result_text: true
+    result_text: true,
+    record_deletion_enabled: true
   }
 
   describe 'DELETE destroy' do
