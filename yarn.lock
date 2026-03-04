@@ -1392,17 +1392,19 @@ acorn@^8.14.0, acorn@^8.2.4:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.15.0.tgz#a360898bc415edaac46c8241f6383975b930b816"
   integrity sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==
 
-ag-grid-community@31.3.4, ag-grid-community@^31.3.4:
-  version "31.3.4"
-  resolved "https://registry.yarnpkg.com/ag-grid-community/-/ag-grid-community-31.3.4.tgz#d9397672d6941aebc633a37b2b32e3637aa05642"
-  integrity sha512-jOxQO86C6eLnk1GdP24HB6aqaouFzMWizgfUwNY5MnetiWzz9ZaAmOGSnW/XBvdjXvC5Fpk3gSbvVKKQ7h9kBw==
-
-ag-grid-vue3@^31.3.4:
-  version "31.3.4"
-  resolved "https://registry.yarnpkg.com/ag-grid-vue3/-/ag-grid-vue3-31.3.4.tgz#9ec4ad5d58f7899339c6832d72c166ef7874076b"
-  integrity sha512-MFsWKeWBuzexc3hkOtDsZw4xkXfVT6B267DcUmZGy92otgGfd/I8qMKhGr1qnUnel9Jy5OKeBS+jQusfmO2/SA==
+ag-grid-community@^32.3.9, ag-grid-community@32.3.9:
+  version "32.3.9"
+  resolved "https://registry.npmjs.org/ag-grid-community/-/ag-grid-community-32.3.9.tgz"
+  integrity sha512-l07SB0mCbGPkC1R8rQQFgBtI5+1FoXBi3RUk1+dHKV/UPeorMEFAzCokcsOhz0qwcWCPrHauUsbRa1SIxfVEJQ==
   dependencies:
-    ag-grid-community "31.3.4"
+    ag-charts-types "10.3.9"
+
+ag-grid-vue3@^32.3.9:
+  version "32.3.9"
+  resolved "https://registry.npmjs.org/ag-grid-vue3/-/ag-grid-vue3-32.3.9.tgz"
+  integrity sha512-86Xynbfg8bq/tGW0Yfl2O8HSUgT7nDtNzioMs4r8hNfPiqOfKUUWrTveP5S4Acs8Astr495ZdKKFDIcQVLx3Yg==
+  dependencies:
+    ag-grid-community "32.3.9"
     vue "^3.0.0"
 
 agent-base@6:

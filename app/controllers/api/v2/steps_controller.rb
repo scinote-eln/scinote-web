@@ -73,7 +73,7 @@ module Api
       def check_manage_permissions
         if step_params.key?(:completed) && step_params.except(:completed).blank?
           completed_bool = ActiveModel::Type::Boolean.new.cast(step_params[:completed])
-          permission = if step_parms[:completed] == 'skipped'
+          permission = if step_params[:completed] == 'skipped'
                          can_skip_my_module_steps(@step.my_module)
                        elsif completed_bool
                          can_complete_my_module_steps?(@step.my_module)

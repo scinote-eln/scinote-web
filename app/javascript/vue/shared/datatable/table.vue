@@ -44,6 +44,7 @@
         </div>
         <ag-grid-vue
           v-if="currentViewRender === 'table'"
+          ref="agGrid"
           class="ag-theme-alpine w-full flex-grow h-full z-10"
           :class="{
             'opacity-0': initializing,
@@ -250,7 +251,6 @@ export default {
     return {
       rowData: [],
       gridApi: null,
-      columnApi: null,
       defaultColDef: {
         resizable: true
       },
@@ -378,11 +378,15 @@ export default {
           values[key] = this.filledRowTemplate[key].value;
         });
 
-        this.gridApi.setRowData(
+        this.gridApi.setGridOption(
+          'rowData',
           [values, ...this.rowData]
         );
 
-        document.querySelector('.ag-body-viewport').scrollTop = 0;
+        const viewport = this.$refs.agGrid?.$el.querySelector('.ag-body-viewport');
+        if (viewport) {
+          viewport.scrollTop = 0;
+        }
       }
     },
     reloadingTable() {
@@ -469,7 +473,7 @@ export default {
       if (this.currentViewRender === 'cards') {
         target = this.$refs.cardsContainer;
       } else {
-        target = document.querySelector('.ag-body-viewport');
+        target = this.$refs.agGrid?.$el.querySelector('.ag-body-viewport');
       }
 
       if (!target) return;
@@ -484,13 +488,13 @@ export default {
     },
     handlePin(event) {
       if (event.pinned === 'right') {
-        this.columnApi.setColumnPinned(event.column.colId, null);
+        this.gridApi.setColumnPinned(event.column.colId, null);
       }
       this.saveTableState();
     },
     handleVisibility(event) {
       if (!event.visible && event.source !== 'api') {
-        this.columnApi.setColumnVisible(event.column.colId, true);
+        this.gridApi.setColumnVisible(event.column.colId, true);
       }
       this.saveTableState();
     },
@@ -531,7 +535,7 @@ export default {
           return updatedColumn;
         });
       }
-      this.columnApi.applyColumnState({
+      this.gridApi?.applyColumnState({
         state: this.tableState.columnsState,
         applyOrder: true
       });
@@ -550,8 +554,8 @@ export default {
       }
       let columnsState = [];
 
-      if (this.columnApi?.getColumnState()) {
-        columnsState = this.columnApi.getColumnState();
+      if (this.gridApi?.getColumnState()) {
+        columnsState = this.gridApi?.getColumnState();
       } else if (this.tableState?.columnsState) {
         columnsState = this.tableState.columnsState;
       }
@@ -589,7 +593,7 @@ export default {
       this.setGridColsClass();
       if (this.tableState) return;
 
-      this.columnApi?.autoSizeAllColumns();
+      this.gridApi?.autoSizeAllColumns();
     },
     updateTable() {
       if (this.scrollMode === 'pages') {
@@ -623,12 +627,12 @@ export default {
         })
         .then((response) => {
           if (reload) {
-            if (this.gridApi) this.gridApi.setRowData([]);
+            if (this.gridApi) this.gridApi.setGridOption('rowData', []);
             this.rowData = [];
           }
 
           if (this.scrollMode === 'pages' || this.scrollMode === 'none') {
-            if (this.gridApi) this.gridApi.setRowData(this.formatData(response.data.data));
+            if (this.gridApi) this.gridApi.setGridOption('rowData', this.formatData(response.data.data));
             this.rowData = this.formatData(response.data.data);
           } else {
             this.handleInfiniteScroll(response);
@@ -643,7 +647,7 @@ export default {
           this.dataLoading = false;
           this.restoreSelection();
 
-          this.gridApi.refreshCells({
+          this.gridApi?.refreshCells({
             force: true
           });
 
@@ -666,12 +670,12 @@ export default {
       });
       this.rowData = newRows;
       if (this.gridApi) {
-        const viewport = document.querySelector('.ag-body-viewport');
+        const viewport = this.$refs.agGrid?.$el.querySelector('.ag-body-viewport');
 
         if (!viewport) return;
 
         const { scrollTop } = viewport;
-        this.gridApi.setRowData(this.rowData);
+        this.gridApi.setGridOption('rowData', this.rowData);
         this.$nextTick(() => {
           viewport.scrollTop = scrollTop;
         });
@@ -680,7 +684,6 @@ export default {
     },
     onGridReady(params) {
       this.gridApi = params.api;
-      this.columnApi = params.columnApi;
       this.gridReady = true;
       if (this.tableState) {
         this.applyTableState();
@@ -704,7 +707,7 @@ export default {
       this.loadData(false);
     },
     setOrder() {
-      const orderState = this.getOrder(this.columnApi.getColumnState());
+      const orderState = this.getOrder(this.gridApi?.getColumnState());
       const [order] = orderState;
       this.order = order;
       this.saveTableState();
@@ -754,7 +757,6 @@ export default {
     switchViewRender(view) {
       if (this.currentViewRender === view) return;
       this.currentViewRender = view;
-      this.columnApi = null;
       this.gridApi?.deselectAll();
       this.gridApi = null;
       this.saveTableState();
@@ -762,25 +764,25 @@ export default {
       this.selectedRows = [];
     },
     hideColumn(column) {
-      this.columnApi.setColumnVisible(column.field, false);
+      this.gridApi.setColumnVisible(column.field, false);
     },
     showColumn(column) {
-      this.columnApi.setColumnVisible(column.field, true);
+      this.gridApi.setColumnVisible(column.field, true);
     },
     pinColumn(column) {
-      this.columnApi.setColumnPinned(column.field, 'left');
+      this.gridApi.setColumnPinned(column.field, 'left');
       this.hideLastPinnedResizeCell();
     },
     unPinColumn(column) {
-      this.columnApi.setColumnPinned(column.field, null);
+      this.gridApi.setColumnPinned(column.field, null);
       this.hideLastPinnedResizeCell();
     },
     reorderColumns(columns) {
-      this.columnApi.moveColumns(columns, 1);
+      this.gridApi.moveColumns(columns, 1);
       this.saveTableState();
     },
     resetColumnsToDefault() {
-      this.columnApi.resetColumnState();
+      this.gridApi.resetColumnState();
       this.gridApi.sizeColumnsToFit();
       this.hideLastPinnedResizeCell();
     },

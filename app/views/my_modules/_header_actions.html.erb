@@ -25,7 +25,7 @@
         data-e2e="e2e-BT-taskTabs-assignedItems"
     >
       <%= t("nav2.modules.assigned_items") %>
-      <%= "[#{@my_module.my_module_repository_rows.count}]" %>
+      <%= "[#{@my_module.total_repository_rows_count}]" %>
     </a>
     <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_activities? ? "text-sn-blue" : "text-sn-grey" %>"
         href="<%= activities_my_module_url(@my_module, view_mode: params[:view_mode]) %>"
