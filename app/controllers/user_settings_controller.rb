@@ -2,7 +2,12 @@
 
 class UserSettingsController < ApplicationController
   def show
-    render json: { value: current_user.user_settings.select(:value).find_by!(key: params[:key]).value }
+    setting = current_user.user_settings.find_by(key: params[:key])
+    if setting
+      render json: { value: setting.value }
+    else
+      render json: { value: nil }, status: :not_found
+    end
   end
 
   def update
