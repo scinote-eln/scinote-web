@@ -1392,7 +1392,12 @@ acorn@^8.14.0, acorn@^8.2.4:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.15.0.tgz#a360898bc415edaac46c8241f6383975b930b816"
   integrity sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==
 
-ag-grid-community@^32.3.9, ag-grid-community@32.3.9:
+ag-charts-types@10.3.9:
+  version "10.3.9"
+  resolved "https://registry.yarnpkg.com/ag-charts-types/-/ag-charts-types-10.3.9.tgz#427ea2961153789594709c2d7372fd2163ac46d1"
+  integrity sha512-drcRiJVencliC8LnRwk4MmeQDNNBg5GzmOoLFihO3/k0CUK0VF/N+2nc7iFozwaNG0btSB9vAhYuJLjqHMtRrQ==
+
+ag-grid-community@32.3.9, ag-grid-community@^32.3.9:
   version "32.3.9"
   resolved "https://registry.npmjs.org/ag-grid-community/-/ag-grid-community-32.3.9.tgz"
   integrity sha512-l07SB0mCbGPkC1R8rQQFgBtI5+1FoXBi3RUk1+dHKV/UPeorMEFAzCokcsOhz0qwcWCPrHauUsbRa1SIxfVEJQ==
@@ -2895,9 +2900,9 @@ image-size@~0.5.0:
   integrity sha512-6TDAlDPZxUFCv+fuOkIoXT/V/f3Qbq8e37p+YOiYrUv3v9cc3/6x78VdfPgFVaB9dZYeLUfKgHRebpkm/oP2VQ==
 
 immutable@^5.0.2:
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/immutable/-/immutable-5.1.2.tgz#e8169476414505e5a4fa650107b65e1227d16d4b"
-  integrity sha512-qHKXW1q6liAk1Oys6umoaZbDRqjcjgSrbnrifHsfsttza7zcvRAsL7mMV6xWcyhwQy7Xj5v4hhbr6b+iDYwlmQ==
+  version "5.1.5"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-5.1.5.tgz#93ee4db5c2a9ab42a4a783069f3c5d8847d40165"
+  integrity sha512-t7xcm2siw+hlUM68I+UEOK+z84RzmN59as9DZ7P1l0994DKUWV7UXBMQZVxaoMSRQ+PBZbHCOoBt7a2wxOMt+A==
 
 import-fresh@^3.2.1:
   version "3.3.1"
