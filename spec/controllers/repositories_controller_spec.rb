@@ -6,7 +6,7 @@ describe RepositoriesController, type: :controller do
   login_user
 
   let!(:user) { controller.current_user }
-  let!(:team) { create :team, created_by: user }
+  let!(:team) { create :team, :record_deletion_enabled, created_by: user }
   let(:action) { post :create, params: params, format: :json }
   let(:repository_template) { create :repository_template, team: team }
   let(:repository) { create :repository, team: team, created_by: user }

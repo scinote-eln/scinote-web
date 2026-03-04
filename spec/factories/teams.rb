@@ -15,8 +15,18 @@ FactoryBot.define do
     trait :with_members do
       users { create_list :user, 3 }
     end
-    trait :shareable_links_enabled do
-      shareable_links_enabled { true }
+    trait :record_deletion_enabled do
+      after(:create) do |team|
+        team.update!(
+          settings:
+            team.settings.merge(
+              {
+                'repository_deletion_enabled' => true,
+                'result_deletion_enabled' => true
+              }
+            )
+        )
+      end
     end
   end
 end

@@ -7,8 +7,8 @@ require 'rails_helper'
 RSpec.describe 'Api::V2::ResultsController', type: :request do
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }
-  let(:team1) { create(:team, created_by: user) }
-  let(:team2) { create(:team, created_by: another_user) }
+  let(:team1) { create(:team, :record_deletion_enabled, created_by: user) }
+  let(:team2) { create(:team, :record_deletion_enabled, created_by: another_user) }
 
   let(:valid_project) { create(:project, name: Faker::Name.unique.name, created_by: user, team: team1) }
   let(:unaccessible_project) { create(:project, name: Faker::Name.unique.name, created_by: user, team: team2) }

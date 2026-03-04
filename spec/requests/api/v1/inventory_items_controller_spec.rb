@@ -6,8 +6,8 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
   before :all do
     @user = create(:user)
     @another_user = create(:user)
-    @team1 = create(:team, created_by: @user)
-    @team2 = create(:team, created_by: @another_user)
+    @team1 = create(:team, :record_deletion_enabled, created_by: @user)
+    @team2 = create(:team, :record_deletion_enabled, created_by: @another_user)
 
     # valid_inventory
     @valid_inventory = create(:repository, name: Faker::Name.unique.name,
