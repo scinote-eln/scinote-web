@@ -66,7 +66,11 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     repository_snapshots = @my_module.repository_snapshots
                                      .where(parent_id: @repository.parent_id || @repository.id)
                                      .order(created_at: :desc)
-    render json: repository_snapshots, each_serializer: AssignedSnapshotRepositorySerializer
+    render json: repository_snapshots,
+           each_serializer: AssignedSnapshotRepositorySerializer,
+           meta: {
+             has_live_version: @my_module.repository_rows_count(@repository).positive?
+           }
   end
 
   def full_view_sidebar

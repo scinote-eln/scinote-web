@@ -97,7 +97,7 @@ export default {
       assignedRepositories: [],
       openCreateItemModal: false,
       openAssignItemModal: false,
-      repositoriesCollapsed: false,
+      repositoriesCollapsed: true,
       loadingRepositories: true,
       reloadKeys: {}
     };

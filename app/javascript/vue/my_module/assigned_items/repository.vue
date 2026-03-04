@@ -196,8 +196,7 @@ export default {
           selectedVersion: this.repositoryVersion.id,
           myModuleId: this.myModuleId,
           canCreateSnapshots: this.repositoryVersion.attributes.permissions.can_create_snapshots,
-          canManageSnapshots: this.repositoryVersion.attributes.permissions.can_manage_snapshots,
-          hasLiveVersion: this.repositoryVersion.attributes.has_live_version
+          canManageSnapshots: this.repositoryVersion.attributes.permissions.can_manage_snapshots
         }
       });
 
@@ -205,6 +204,7 @@ export default {
         name: 'export',
         icon: 'sn-icon sn-icon-export',
         type: 'emit',
+        tooltip: this.i18n.t('my_modules.repository.export'),
         buttonStyle: 'btn btn-light icon-btn btn-black',
       })
       return {

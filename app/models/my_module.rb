@@ -164,6 +164,10 @@ class MyModule < ApplicationRecord
     archived? || experiment.archived_branch?
   end
 
+  def total_repository_rows_count
+    live_and_snapshot_repositories_list.sum { |repository| repository['assigned_rows_count'] }
+  end
+
   def repository_rows_count(repository)
     my_module_repository_rows.joins(repository_row: :repository)
                              .where('repositories.id': repository.id)
