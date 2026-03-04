@@ -3729,7 +3729,7 @@ en:
             deletion:
               title: "Allow deleting"
               items:
-                inventory_deletion_enabled:
+                repository_deletion_enabled:
                   label: "Allow deleting inventories and inventory items from Archive"
                   enable_success_message: "Inventory deleting is enabled."
                   disable_success_message: "Inventory deleting is disabled."
