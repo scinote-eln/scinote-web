@@ -34,6 +34,7 @@
         :canManageSnapshots="params.canManageSnapshots"
         @deleteVersion="deleteVersion"
         @selectVersion="selectVersion"
+        @updateStatus="statusVersion"
         @pinVersion="pinVersion"
       ></SnapshotItem>
       </div>
@@ -120,6 +121,14 @@ export default {
 
       this.versions = this.versions.filter(v => v.id !== item.id);
       axios.delete(my_module_repository_snapshots_path(this.params.myModuleId, item.id));
+    },
+    statusVersion(item, status) {
+      this.versions = this.versions.map(v => {
+        if (v.id === item.id) {
+          v.attributes.status = status;
+        }
+        return v;
+      });
     },
     emitAction(action, item) {
       if(item) {
