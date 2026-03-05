@@ -47,6 +47,7 @@
             class="btn btn-secondary icon-btn xl:!px-4"
             @click="showRepositoriesModal = true"
             :title="i18n.t('protocols.steps.show_repositories')"
+            data-e2e="e2e-BT-task-protocol-assignedItems"
           >
             <span class="sn-icon sn-icon-inventory" aria-hidden="true"></span>
             <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.show_repositories") }}</span>
