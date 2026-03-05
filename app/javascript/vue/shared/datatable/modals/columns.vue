@@ -14,7 +14,7 @@
           <div class="max-h-90 overflow-y-auto">
             <Draggable
               v-model="columnsList"
-              :forceFallback="true"
+              :forceAutoScrollFallback="true"
               :handle="'.element-grip'"
               item-key="field"
               @start="startReorder"
