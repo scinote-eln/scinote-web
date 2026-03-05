@@ -12,7 +12,7 @@
             >
               <i class="sn-icon sn-icon-close"></i>
             </button>
-          <h4 class="modal-title" :data-e2e="`e2e-TX-${e2eValue}-title`">
+            <h4 class="modal-title" :data-e2e="`e2e-TX-${e2eValue}-title`">
               <span v-if="consumeData.consumed_stock">{{ i18n.t('my_modules.repository.stock_modal.title_edit', { name: consumeData.name  }) }}</span>
               <span v-else>{{ i18n.t('my_modules.repository.stock_modal.title', { name: consumeData.name }) }}</span>
             </h4>
@@ -40,7 +40,7 @@
             <div class="items-center grid grid-cols-[1fr,auto,1fr] gap-2 mb-6">
               <div class="py-2 bg-sn-super-light-grey flex rounder items-center flex-col gap-2" :class="{'text-sn-alert-passion': consumeData.initial_stock < 0}">
                 <span class="text-xs text-sn-grey-500">{{ i18n.t('repository_stock_values.manage_modal.current_stock') }}</span>
-              <h1 class="my-0" :data-e2e="`e2e-TX-${e2eValue}-currentStock`">{{ consumeData.formatted_stock }}</h1>
+                <h1 class="my-0" :data-e2e="`e2e-TX-${e2eValue}-currentStock`">{{ consumeData.formatted_stock }}</h1>
                 <span class="text-xs">{{ consumeData.unit }}</span>
               </div>
               <div class="p-4">
