@@ -72,7 +72,7 @@ export default {
       return columns;
     },
     columnHidden() {
-      return !this.repository.is_snapshot;
+      return !this.repository.attributes.is_snapshot;
     }
   },
   mounted() {

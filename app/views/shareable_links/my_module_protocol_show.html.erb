@@ -1,11 +1,4 @@
-<div class="text-3xl font-semibold flex flex-row flex-nowrap">
-  <span class="inline-block whitespace-nowrap mr-1">
-    <%= t "labels.archived" if @my_module.archived? %>
-  </span>
-  <span class="inline-block truncate module-name" title="<%= @my_module.name %>">
-    <%= @my_module.name %>
-  </span>
-</div>
+<%= render partial: "shareable_links/my_modules/protocol_name" %>
 
 <div class="my-5 flex-1">
   <div class="my-module-position-container">
@@ -56,24 +49,6 @@
         </div>
       </div>
     </div>
-    <!-- Assigned items -->
-    <% assigned_repositories = @my_module.live_and_snapshot_repositories_list %>
-    <div class="task-section">
-      <div class="task-section-header">
-        <a class="task-section-caret" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="true" aria-controls="assigned-items-container">
-          <i class="sn-icon sn-icon-right"></i>
-          <span class="task-section-title ">
-            <h2 class="assigned-items-title" data-assigned-items-count="<%= assigned_repositories.map(&:assigned_rows_count).sum %>">
-              <%= t('my_modules.assigned_items.title') %>
-            </h2>
-          </span>
-        </a>
-      </div>
-      <div class="collapse in panel-group" id="assigned-items-container" aria-expanded="true"
-          data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
-        <%= render partial: "shareable_links/my_modules/repositories_list", locals: { assigned_repositories: assigned_repositories } %>
-      </div>
-    </div>
 
     <!-- Protocol -->
     <div class="task-section">
@@ -88,4 +63,3 @@
 <%= javascript_include_tag "handsontable.full" %>
 <%= render 'shared/formulas_libraries' %>
 <%= javascript_include_tag 'shareable_links/my_module_protocol_show' %>
-<%= javascript_include_tag 'shareable_links/repositories' %>

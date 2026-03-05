@@ -46,6 +46,8 @@ class RepositoryCell < ApplicationRecord
   after_touch :update_repository_row_last_modified_by
 
   scope :with_active_reminder, lambda { |user|
+    return if user.blank?
+
     from(
       "((#{with_active_stock_reminder(user).to_sql}) UNION ALL " \
       "(#{with_active_datetime_reminder(user).to_sql})) AS repository_cells"

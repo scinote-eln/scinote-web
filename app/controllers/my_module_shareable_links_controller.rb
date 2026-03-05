@@ -2,32 +2,35 @@
 
 class MyModuleShareableLinksController < ApplicationController
   before_action :load_my_module, except: %i(protocol_show
-                                            repository_index_dt
-                                            repository_snapshot_index_dt
+                                            repository_index_ag
+                                            repository_columns
                                             download_asset
-                                            results_show)
+                                            results_show
+                                            repositories_show)
   before_action :check_view_permissions, only: :show
   before_action :check_manage_permissions, except: %i(protocol_show
                                                       show
-                                                      repository_index_dt
-                                                      repository_snapshot_index_dt
+                                                      repository_index_ag
+                                                      repository_columns
                                                       download_asset
-                                                      results_show)
+                                                      results_show
+                                                      repositories_show)
   before_action :shareable_link_load_my_module, only: %i(protocol_show
-                                                         repository_index_dt
-                                                         repository_snapshot_index_dt
+                                                         repository_index_ag
+                                                         repository_columns
                                                          download_asset
-                                                         results_show)
-  before_action :load_repository, only: :repository_index_dt
-  before_action :load_repository_snapshot, only: :repository_snapshot_index_dt
+                                                         results_show
+                                                         repositories_show)
+  before_action :load_repository, only: %i(repository_index_ag repository_columns)
   skip_before_action :authenticate_user!, only: %i(protocol_show
-                                                   repository_index_dt
-                                                   repository_snapshot_index_dt
+                                                   repository_index_ag
+                                                   repository_columns
                                                    download_asset
-                                                   results_show)
+                                                   results_show
+                                                   repositories_show)
   skip_before_action :verify_authenticity_token, only: %i(protocol_show
-                                                          repository_index_dt
-                                                          repository_snapshot_index_dt)
+                                                          repository_index_ag
+                                                          repository_columns)
   after_action -> { request.session_options[:skip] = true }
 
   def show
@@ -68,31 +71,51 @@ class MyModuleShareableLinksController < ApplicationController
     render 'shareable_links/my_module_results_show', layout: 'shareable_links'
   end
 
-  def repository_index_dt
-    @draw = params[:draw].to_i
-    per_page = params[:length].to_i < 1 ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
-    page = (params[:start].to_i / per_page) + 1
-    datatable_service = RepositoryDatatableService.new(@repository, params, nil, @my_module, preload_cells: false, disable_reminders: true)
-
-    @datatable_params = {
-      view_mode: params[:view_mode],
-      my_module: @my_module,
-      include_stock_consumption: @repository.has_stock_management? && params[:assigned].present?,
-      disable_reminders: true, # reminders are always disabled for shareable links
-      disable_stock_management: true, # stock management is always disabled in MyModule context
-      shareable_link_view: true
-    }
-
-    @all_rows_count = datatable_service.all_count
-    @filtered_rows_count = datatable_service.filtered_count
-    @columns_mappings = datatable_service.mappings
-
-    @repository_rows = datatable_service.repository_rows.page(page).per(per_page)
-
-    render 'repository_rows/simple_view_index'
+  def repositories_show
+    @assigned_repositories = @my_module.live_and_snapshot_repositories_list.map do |repository|
+      {
+        id: repository.id,
+        name: repository.name,
+        assigned_rows_count: repository['assigned_rows_count'],
+        is_snapshot: repository.is_a?(RepositorySnapshot)
+      }
+    end
+    render 'shareable_links/my_module_repositories_show', layout: 'shareable_links'
   end
 
-  def repository_snapshot_index_dt
+  def repository_columns
+    columns = @repository.repository_columns
+    render json: columns, each_serializer: RepositoryColumnSerializer
+  end
+
+  def repository_index_ag
+    repository_rows = Lists::RepositoryRowsService.new(@repository,
+                                                       params,
+                                                       user: current_user,
+                                                       my_module: @my_module,
+                                                       preload_cells: true).call.load
+
+    total_count = repository_rows.take&.filtered_count.to_i
+    total_pages = (total_count.to_f / params[:per_page].to_i).ceil
+
+    render json: repository_rows,
+           each_serializer: Lists::RepositoryRowSerializer,
+           user: current_user,
+           my_module: @my_module,
+           assigned_view: true,
+           can_read_repository: true,
+           with_reminders: false,
+           with_stock_management: @repository.has_stock_management?,
+           can_manage_stock: false,
+           can_consume_stock: false,
+           is_snapshot: @repository.is_a?(RepositorySnapshot),
+           meta: {
+             total_pages: total_pages,
+             total_count: total_count
+           }
+  end
+
+  def repository_snapshot_index_ag
     @draw = params[:draw].to_i
     per_page = params[:length].to_i < 1 ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
     page = (params[:start].to_i / per_page) + 1
@@ -167,7 +190,7 @@ class MyModuleShareableLinksController < ApplicationController
   end
 
   def load_repository
-    @repository = @my_module.assigned_repositories.find_by(id: params[:id])
+    @repository = @my_module.assigned_repositories.find_by(id: params[:id]) || @my_module.repository_snapshots.find_by(id: params[:id])
     render_404 unless @repository
   end
 
