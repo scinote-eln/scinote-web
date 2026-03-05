@@ -29,7 +29,7 @@ gem 'omniauth-saml'
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.15'
 gem 'json-jwt'
-gem 'jwt', '~> 1.5'
+gem 'jwt'
 gem 'kaminari'
 gem 'rack-attack'
 gem 'rack-cors'
