@@ -69,7 +69,9 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     render json: repository_snapshots,
            each_serializer: AssignedSnapshotRepositorySerializer,
            meta: {
-             has_live_version: @my_module.repository_rows_count(@repository).positive?
+             has_live_version: @my_module.repository_rows_count(
+               @repository.parent_id.present? ? @repository.original_repository : @repository
+             ).positive?
            }
   end
 
