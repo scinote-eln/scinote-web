@@ -20,6 +20,7 @@
         :order="order"
         :tableState="tableState"
         :hideColumnsManagment="hideColumnsManagment"
+        :enableBarcodeSearch="enableBarcodeSearch"
         @applyFilters="applyFilters"
         @setTableView="switchViewRender('table')"
         @setCardsView="switchViewRender('cards')"
@@ -250,6 +251,10 @@ export default {
     dataE2e: {
       type: String,
       default: ''
+    },
+    enableBarcodeSearch: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

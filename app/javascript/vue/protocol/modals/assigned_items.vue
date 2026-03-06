@@ -38,10 +38,12 @@
                       @click="selectedRepository = repository"
                       :title="repository.attributes.name"
                       :class="{'bg-sn-super-light-blue': selectedRepository && selectedRepository.id === repository.id }"
-                      class="block truncate whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative"
-                      :data-e2e="`e2e-DO-protocol-assignedItems-selectInventory-inventory${repository.id}`"
+                      class="flex items-center gap-2 truncate whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative"
                     >
-                      {{ repository.attributes.name }}
+                      <div class="max-overflow-hidden truncate" :title="repository.attributes.name">
+                        {{ repository.attributes.name }}
+                      </div>
+                      <div v-if="repository.attributes.shared" class="flex sn-icon sn-icon-teams-small ml-auto"></div>
                     </div>
                   </div>
                 </template>

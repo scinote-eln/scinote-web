@@ -47,11 +47,11 @@ module Lists
     end
 
     def archived
-      object.attributes[:archived] || object.repository.archived
+      object[:archived] || object.repository.archived
     end
 
     def archived_on
-      I18n.l(object.attributes[:archived_on], format: :full) if object.attributes[:archived_on]
+      I18n.l(object[:archived_on], format: :full) if object[:archived_on]
     end
 
     def archived_by

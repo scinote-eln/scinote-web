@@ -44,6 +44,7 @@
         :actionsUrl="toolbarActionsUrl"
         :filters="[]"
         :tableOnly="true"
+        :enableBarcodeSearch="true"
         @openConsumeModal="consume"
         @export="exportRows"
         @export_consumption="exportConsumption"
@@ -172,7 +173,9 @@ export default {
     this.sectionOpened = this.repositoryVersion.attributes.opened;
   },
   mounted() {
-    this.recalculateContainerSize();
+    if (!this.onlyRepository) {
+      this.recalculateContainerSize();
+    }
   },
   computed: {
     openSize() {
