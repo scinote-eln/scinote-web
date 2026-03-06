@@ -172,7 +172,9 @@ export default {
     this.sectionOpened = this.repositoryVersion.attributes.opened;
   },
   mounted() {
-    this.recalculateContainerSize();
+    if (!this.onlyRepository) {
+      this.recalculateContainerSize();
+    }
   },
   computed: {
     openSize() {

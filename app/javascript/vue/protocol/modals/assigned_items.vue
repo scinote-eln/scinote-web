@@ -134,12 +134,18 @@ export default {
     this.loadAssignedRepositories();
   },
   methods: {
-    loadAssignedRepositories() {
+    loadAssignedRepositories(repositoryId = null) {
       axios.get(this.assignedRepositoriesUrl)
         .then((response) => {
           this.assignedRepositories = response.data.data;
           if (this.assignedRepositories.length > 0 && !this.selectedRepository ) {
             this.selectedRepository = this.assignedRepositories[0];
+          }
+          if (repositoryId) {
+            const repository = this.assignedRepositories.find(repo => repo.id == repositoryId);
+            if (repository) {
+              this.selectedRepository = repository;
+            }
           }
           this.initialLoading = false;
         });
@@ -152,7 +158,7 @@ export default {
         this.openAssignItemModal = false;
         HelperModule.flashAlertMsg(response.data.flash, 'success');
         this.reloadKey = this.reloadKey + 1;
-        this.loadAssignedRepositories();
+        this.loadAssignedRepositories(repositoryId);
       });
     },
   }
