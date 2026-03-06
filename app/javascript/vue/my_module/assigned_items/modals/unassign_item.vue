@@ -1,36 +1,70 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content" :data-e2e="`e2e-MD-${e2eValue}`">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            :data-e2e="`e2e-BT-${e2eValue}-close`"
+          >
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <h4 class="modal-title truncate !block" >
+          <h4 class="modal-title truncate !block" :data-e2e="`e2e-TX-${e2eValue}-title`">
             {{ i18n.t('my_modules.repository.unassign_modal.title') }}
           </h4>
         </div>
         <div v-if="downstreamMode" class="modal-body">
-          <p v-html="i18n.t('my_modules.repository.unassign_modal.message_downstream', { number: rowIds.length })"></p>
-          <ul>
+          <p
+            v-html="i18n.t('my_modules.repository.unassign_modal.message_downstream', { number: rowIds.length })"
+            :data-e2e="`e2e-TX-${e2eValue}-downstreamMessage`"
+          ></p>
+          <ul :data-e2e="`e2e-TX-${e2eValue}-downstreamTasks`">
             <li v-for="(module, index) in downstreamModules" :key="index">
               {{ module }}
               <span v-if="index == 0">{{ i18n.t('my_modules.repository.unassign_modal.current') }}</span>
             </li>
           </ul>
-          <p>{{ i18n.t('my_modules.repository.unassign_modal.confirmation') }}</p>
+          <p :data-e2e="`e2e-TX-${e2eValue}-confirmation`">
+            {{ i18n.t('my_modules.repository.unassign_modal.confirmation') }}
+          </p>
         </div>
         <div v-else class="modal-body">
-          <p v-html="i18n.t('my_modules.repository.unassign_modal.message', { number: rowIds.length })"></p>
-          <p>{{ i18n.t('my_modules.repository.unassign_modal.message_2') }}</p>
-          <p>{{ i18n.t('my_modules.repository.unassign_modal.confirmation') }}</p>
+          <p
+            v-html="i18n.t('my_modules.repository.unassign_modal.message', { number: rowIds.length })"
+            :data-e2e="`e2e-TX-${e2eValue}-message1`"
+          ></p>
+          <p :data-e2e="`e2e-TX-${e2eValue}-message2`">
+            {{ i18n.t('my_modules.repository.unassign_modal.message_2') }}
+          </p>
+          <p :data-e2e="`e2e-TX-${e2eValue}-confirmation`">
+            {{ i18n.t('my_modules.repository.unassign_modal.confirmation') }}
+          </p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-          <button v-if="downstreamMode" class="btn btn-primary" @click="unassignRows" >
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+            :data-e2e="`e2e-BT-${e2eValue}-cancel`"
+          >
+            {{ i18n.t('general.cancel') }}
+          </button>
+          <button
+            v-if="downstreamMode"
+            class="btn btn-primary"
+            @click="unassignRows"
+            :data-e2e="`e2e-BT-${e2eValue}-unassignDownstream`"
+          >
             {{ i18n.t('my_modules.repository.unassign_modal.action_downstream') }}
           </button>
-          <button v-else class="btn btn-primary" @click="unassignRows" >
+          <button
+            v-else class="btn btn-primary"
+            @click="unassignRows"
+            :data-e2e="`e2e-BT-${e2eValue}-unassign`"
+          >
             {{ i18n.t('my_modules.repository.unassign_modal.action') }}
           </button>
         </div>
@@ -52,7 +86,11 @@ export default {
     myModuleId: String,
     rowIds: Array,
     downstreamMode: Boolean,
-    selectedRepositoryId: String
+    selectedRepositoryId: String,
+    e2eValue: {
+      type: String,
+      default: ''
+    }
   },
   mixins: [modalMixin],
   data() {

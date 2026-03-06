@@ -1,8 +1,11 @@
 <template>
-  <div ref="container"
-       :id="'assigned-repository-container-' + repositoryVersion.id"
-       :class="{'p-4 bg-white rounded transition-all overflow-hidden mb-4': !onlyRepository}"
-       :style="{height: (sectionOpened ? openSize : '60px')}">
+  <div
+    ref="container"
+    :id="'assigned-repository-container-' + repositoryVersion.id"
+    :class="{'p-4 bg-white rounded transition-all overflow-hidden mb-4': !onlyRepository}"
+    :style="{height: (sectionOpened ? openSize : '60px')}"
+    :data-e2e="`e2e-CO-task-assignedItems-inventory${repository.id}`"
+  >
     <div v-if="!onlyRepository" class="flex items-center h-6 gap-4 assigned-repository-title mb-1">
       <div
         @click="toggleContainer"
@@ -15,7 +18,10 @@
           <span class="text-sn-grey-500 font-normal text-base shrink-0">
             [{{ repositoryVersion.attributes.assigned_rows_count }}]
           </span>
-          <span class="bg-sn-light-grey  font-normal  px-1.5 py-1 rounded-full shrink-0 text-xs">
+          <span
+            class="bg-sn-light-grey  font-normal  px-1.5 py-1 rounded-full shrink-0 text-xs"
+            data-e2e="e2e-LB-task-assignedItems-liveSnapshotTag"
+          >
             <template v-if="repositoryVersion.attributes.is_snapshot">
               {{  i18n.t('my_modules.repository.snapshots.simple_view.snapshot_tag') }}
             </template>
@@ -52,13 +58,20 @@
       ></DataTable>
     </div>
     <Teleport to="body">
-      <ConsumeModal v-if="openConsumeModal" @updateConsume="updateConsume" @close="openConsumeModal = false" :row="selectedRow" />
+      <ConsumeModal
+        v-if="openConsumeModal"
+        @updateConsume="updateConsume"
+        @close="openConsumeModal = false"
+        :row="selectedRow"
+        :e2eValue="'task-assignedItems-consumeModal'"
+      />
       <ConfirmationModal
         :title="i18n.t('my_modules.repository.stock_warning_modal.title')"
         :description="warningModalDescription"
         confirmClass="btn btn-primary"
         :confirmText="i18n.t('my_modules.repository.stock_warning_modal.consume_anyway')"
         ref="warningModal"
+        :e2eValue="'task-assignedItems-outOfStockModal'"
       ></ConfirmationModal>
       <UnassignItemModal
         v-if="showUnassignModal"
@@ -68,19 +81,24 @@
         :downstreamMode="unassignDownstreamMode"
         @unassignRows="unassignRows"
         @close="showUnassignModal = false"
+        :e2eValue="'task-assignedItems-unassignItemModal'"
       ></UnassignItemModal>
       <CreateItemModal
         v-if="openCreateItemModal"
         :myModuleId="myModuleId"
         :selectedRepositoryValue="repositoryVersion.id"
         @tableReloaded="newCreatedRow"
-        @close="openCreateItemModal = false"></CreateItemModal>
+        @close="openCreateItemModal = false"
+        :e2eValue="'task-assignedItems-createItemModal'"
+      ></CreateItemModal>
       <AssignItemModal
           v-if="openAssignItemModal"
           :myModuleId="myModuleId"
           :selectedRepositoryValue="repositoryVersion.id"
           @assignRows="assignRows"
-          @close="openAssignItemModal = false"/>
+          @close="openAssignItemModal = false"
+          :e2eValue="'task-assignedItems-assignItemModal'"
+      />
     </Teleport>
   </div>
 </template>

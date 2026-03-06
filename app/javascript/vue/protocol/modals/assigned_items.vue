@@ -1,10 +1,16 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document" style="width: 90vw;">
-      <div class="modal-content">
+      <div class="modal-content" data-e2e="e2e-MD-protocol-assignedItems">
         <div class="modal-header">
           <div class="w-48 flex justify-end">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              data-e2e="e2e-BT-protocol-assignedItemsModal-close"
+            >
               <i class="sn-icon sn-icon-close"></i>
             </button>
           </div>
@@ -13,14 +19,18 @@
               {{ i18n.t('my_modules.repository.assigned_items_modal.inventory') }}
               <GeneralDropdown  ref="addFieldDropdown" class="max-w-64 overflow-hidden" :closeOnClick="true">
                 <template v-slot:field>
-                  <button class="btn btn-secondary ">
+                  <button class="btn btn-secondary " data-e2e="e2e-DD-protocol-assignedItems-selectInventory">
                     <div class="max-w-40 overflow-hidden truncate" :title="selectedRepository.attributes.name">{{ selectedRepository.attributes.name}}</div>
                     <i class="sn-icon sn-icon-down" aria-hidden="true"></i>
                   </button>
                 </template>
                 <template v-slot:flyout>
                   <div class="max-w-64 overflow-hidden">
-                    <div @click="openAssignItemModal = true" class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative">
+                    <div
+                      @click="openAssignItemModal = true"
+                      class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative"
+                      data-e2e="e2e-BT-protocol-assignedItemsModal-assignFromAnotherInventory"
+                    >
                       {{ i18n.t('my_modules.repository.assigned_items_modal.assign_new_row') }}
                     </div>
                     <hr class="my-0">
@@ -29,6 +39,7 @@
                       :title="repository.attributes.name"
                       :class="{'bg-sn-super-light-blue': selectedRepository && selectedRepository.id === repository.id }"
                       class="block truncate whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative"
+                      :data-e2e="`e2e-DO-protocol-assignedItems-selectInventory-inventory${repository.id}`"
                     >
                       {{ repository.attributes.name }}
                     </div>
@@ -37,7 +48,7 @@
               </GeneralDropdown>
             </template>
           </div>
-          <h4 class="modal-title truncate !block !w-48 !mr-0">
+          <h4 class="modal-title truncate !block !w-48 !mr-0" data-e2e="e2e-TX-protocol-assignedItems-title">
             {{ i18n.t('my_modules.repository.assigned_items_modal.title') }}
           </h4>
         </div>
