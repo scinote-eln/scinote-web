@@ -11,6 +11,7 @@
     </span>
     <span
       class="flex justify-between items-center rounded relative whitespace-nowrap px-3 py-2 cursor-pointer hover:!bg-sn-super-light-grey group"
+      v-else
       :class="{'!bg-sn-super-light-blue': selected}"
       @click="selectVersion"
       :data-e2e="`e2e-DO-${e2eValue}-snapshot${item.id}`"
