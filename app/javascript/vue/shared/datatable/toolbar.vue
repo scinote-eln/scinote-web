@@ -4,7 +4,7 @@
       <template v-for="action in toolbarActions.left" :key="action.label">
         <a v-if="action.type === 'emit' || action.type === 'link'"
            :class="[action.buttonStyle, {
-            'disabled': disabled
+            'disabled': disabled || action.disabled
            }]"
            :href="action.path"
            :data-e2e="`e2e-BT-topToolbar-${action.name}`"
@@ -18,7 +18,7 @@
           :btnClasses="action.buttonStyle"
           :btnText="action.label"
           :btnIcon="action.icon"
-          :disabled="disabled"
+          :disabled="disabled || action.disabled"
           :caret="true"
           :position="'right'"
           :data-e2e="`e2e-BT-topToolbar-${action.name}`"
@@ -27,7 +27,7 @@
         <component v-if="action.type === 'component'"
                     :is="action.params.componentRenderer"
                     :params="action.params"
-                    :disabled="disabled"
+                    :disabled="disabled || action.disabled"
                     :data-e2e="`e2e-BT-topToolbar-${action.name}`"
                     @dtEvent="handleEvent"
                     :dataE2e="`topToolbar-${action.name}`"

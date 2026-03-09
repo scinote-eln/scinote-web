@@ -194,6 +194,7 @@ export default {
           icon: 'sn-icon sn-icon-new-task',
           label: this.i18n.t('my_modules.repository.assign_items'),
           type: 'emit',
+          disabled: this.repositoryVersion.attributes.is_snapshot,
           buttonStyle: 'btn btn-primary'
         });
         left.push({
@@ -201,6 +202,7 @@ export default {
           icon: 'sn-icon sn-icon-create-item',
           label: this.i18n.t('my_modules.repository.create_item'),
           type: 'emit',
+          disabled: this.repositoryVersion.attributes.is_snapshot,
           buttonStyle: 'btn btn-secondary'
         });
       }
