@@ -170,6 +170,10 @@ export default {
       type: String,
       required: true
     },
+    fetchColumnsOnReload: {
+      type: Boolean,
+      default: false
+    },
     columnDefs: {
       type: Array,
       default: () => []
@@ -503,7 +507,7 @@ export default {
       this.saveTableState();
     },
     handleVisibility(event) {
-      if (!event.visible && event.source !== 'api') {
+      if (!event.visible && event.source !== 'api' && event.column) {
         this.gridApi.setColumnVisible(event.column.colId, true);
       }
       this.saveTableState();
@@ -606,7 +610,10 @@ export default {
       this.gridApi?.autoSizeAllColumns();
     },
     updateTable() {
-      if (this.scrollMode === 'pages') {
+      if (this.fetchColumnsOnReload) {
+        this.initializing = true;
+        this.fetchTableState();
+      } else if (this.scrollMode === 'pages') {
         this.loadData();
       } else {
         this.reloadTable();
@@ -646,6 +653,11 @@ export default {
             this.rowData = this.formatData(response.data.data);
           } else {
             this.handleInfiniteScroll(response);
+          }
+
+          if (!this.dataLoading && this.fetchColumnsOnReload) {
+            this.gridApi.setGridOption('columnDefs', this.extendedColumnDefs);
+            this.applyTableState();
           }
 
           if (this.scrollMode !== 'none') {
