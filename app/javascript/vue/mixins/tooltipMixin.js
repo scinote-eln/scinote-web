@@ -187,7 +187,7 @@ export default {
 
     tooltip_initTooltips() {
       // Check if $el exists before querying it
-      if (!this.$el) {
+      if (!this.$el || !(this.$el instanceof HTMLElement)) {
         return;
       }
 

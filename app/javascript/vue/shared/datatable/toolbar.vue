@@ -142,6 +142,7 @@ import FilterDropdown from '../filters/filter_dropdown.vue';
 import ColumnsModal from './modals/columns.vue';
 import ConfirmationModal from '../confirmation_modal.vue';
 import Search from './search.vue';
+import tooltipMixin from '../../mixins/tooltipMixin.js';
 
 export default {
   name: 'Toolbar',
@@ -214,6 +215,7 @@ export default {
     ConfirmationModal,
     Search
   },
+  mixins: [tooltipMixin],
   computed: {
     viewModesMenu() {
       return [
