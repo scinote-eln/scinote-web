@@ -45,6 +45,7 @@
         :filters="[]"
         :tableOnly="true"
         :enableBarcodeSearch="true"
+        :fetchColumnsOnReload="true"
         @openConsumeModal="consume"
         @export="exportRows"
         @export_consumption="exportConsumption"
@@ -332,16 +333,19 @@ export default {
       const repositoryId = data.data ? data.data : (this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id);
       axios.get(my_module_repository_path(this.myModuleId, repositoryId))
         .then((response) => {
-          this.repositoryVersion = response.data.data;
-          this.reloadingTable = true;
+          this.versionLoaded(response.data.data);
         });
     },
     pinVersion(data) {
       const params = data.data ? { repository_snapshot_id : data.data } : { repository_id: (this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id) };
       axios.post(this.pinVersionUrl, params).then((response) => {
-        this.repositoryVersion = response.data.data;
-        this.reloadingTable = true;
+        this.versionLoaded(response.data.data);
       });
+    },
+    versionLoaded(data){
+      this.repositoryVersion = data;
+      this.loadRepositoryColumns();
+      this.reloadingTable = true;
     },
     newCreatedRow(repositoryRowSidebarUrl){
       this.reloadingTable = true;
