@@ -44,6 +44,7 @@
         :actionsUrl="toolbarActionsUrl"
         :filters="[]"
         :tableOnly="true"
+        :enableBarcodeSearch="true"
         @openConsumeModal="consume"
         @export="exportRows"
         @export_consumption="exportConsumption"
