@@ -287,8 +287,10 @@ export default {
     },
     toggleContainer() {
       this.sectionOpened = !this.sectionOpened;
-
       this.recalculateContainerSize();
+      this.$nextTick(() => {
+        this.$emit('toggled');
+      });
     },
     printRows(_e, rows) {
       if (typeof PrintModalComponent !== 'undefined') {
