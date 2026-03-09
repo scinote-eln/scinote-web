@@ -29,7 +29,7 @@
           {{ i18n.t('my_modules.repository.create_item') }}
         </button>
         <template v-if="assignedRepositories.length > 0">
-          <button v-if="!repositoriesCollapsed" 
+          <button v-if="!repositoriesCollapsed"
             :title="i18n.t('protocols.steps.collapse_label')"
             class="btn btn-secondary icon-btn xl:!px-4"
             @click="collapseRepositories"
@@ -60,6 +60,7 @@
         :repository="repository"
         :myModuleId="myModuleId"
         @assignRows="assignRows"
+        @toggled="repositoryToggled"
         :reloadKey="reloadKeys[repository.id]"
       />
     </div>
@@ -124,6 +125,9 @@ export default {
         .then((response) => {
           this.assignedRepositories = response.data.data;
           this.loadingRepositories = false;
+          this.$nextTick(() => {
+            this.repositoryToggled();
+          });
         });
     },
     assignRows(rowIds, repositoryId, assignToDownstream = false) {
@@ -133,23 +137,29 @@ export default {
       }).then((response) => {
         this.openAssignItemModal = false;
         HelperModule.flashAlertMsg(response.data.flash, 'success');
-        if (!this.reloadKeys[repositoryId]) {
-          this.loadAssingedRepositories();
-          setTimeout(
-            () => document.getElementById(`assigned-repository-container-${repositoryId}`)
-                          .scrollIntoView({ behavior: 'smooth' }),
-            300
-          );
-        }
-        this.reloadKeys[repositoryId] = Date.now();
+        this.focusOnNewRepository(repositoryId);
       });
     },
     newCreatedRow(repositoryRowSidebarUrl, repositoryId) {
+      this.focusOnNewRepository(repositoryId);
+      window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
+    },
+    focusOnNewRepository(repositoryId) {
       if (!this.reloadKeys[repositoryId]) {
         this.loadAssingedRepositories();
+        setTimeout(
+          () => {
+            this.$refs.assignedRepositories.forEach((repositoryComponent) => {
+              if (repositoryComponent.repository.id === repositoryId) {
+                repositoryComponent.toggleContainer();
+              }
+            });
+            document.getElementById(`assigned-repository-container-${repositoryId}`)
+                        .scrollIntoView({ behavior: 'smooth' });
+          }, 300
+        );
       }
       this.reloadKeys[repositoryId] = Date.now();
-      window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
     },
     collapseRepositories() {
       this.repositoriesCollapsed = true;
@@ -164,6 +174,13 @@ export default {
         repositoryComponent.sectionOpened = true;
         repositoryComponent.recalculateContainerSize();
       });
+    },
+    repositoryToggled() {
+      if (this.$refs.assignedRepositories.every((repository) => repository.sectionOpened === false)) {
+        this.repositoriesCollapsed = true;
+      } else {
+        this.repositoriesCollapsed = false;
+      }
     }
   }
 };
