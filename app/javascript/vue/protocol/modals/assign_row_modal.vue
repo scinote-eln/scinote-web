@@ -25,6 +25,7 @@
             <RowSelector
               @change="this.rowIds = $event"
               :multiple="true"
+              :params="{ protocol_id: protocolId }"
               class="mb-4"
               dataE2e="protocol-assignItemModal"
             ></RowSelector>
@@ -62,7 +63,10 @@ import RowSelector from '../../shared/repository_row_selector.vue';
 export default {
   name: 'RowAssignModal',
   mixins: [modalMixin],
-  computed: {
+  props: {
+    protocolId: {
+      required: true
+    }
   },
   data() {
     return {

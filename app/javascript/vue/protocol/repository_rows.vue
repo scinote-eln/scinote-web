@@ -21,6 +21,7 @@
     </div>
     <AssignRowModal
     v-if="showAssignModal"
+    :protocolId="protocolId"
     @close="showAssignModal = false;"
     @assign="assignRow" />
     <ConfirmationModal
@@ -67,6 +68,9 @@ export default {
     published: {
       type: Boolean,
       default: false
+    },
+    protocolId: {
+      required: true
     }
   },
   data() {

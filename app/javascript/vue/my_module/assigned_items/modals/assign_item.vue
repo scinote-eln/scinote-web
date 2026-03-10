@@ -66,6 +66,7 @@
             :multiple="true"
             :preSelectedRepository="selectedRepositoryId"
             class="mb-4"
+            :params="{ my_module_id: myModuleId }"
             :dataE2e="`${e2eValue}`"
           ></RowSelector>
         </div>

@@ -71,6 +71,16 @@ class RepositoriesController < ApplicationController
     end
     results = results.active if params[:active].present?
 
+    if params[:my_module_id].present?
+      my_module = MyModule.readable_by_user(current_user).find_by(id: params[:my_module_id])
+      results = results.where.not(id: my_module.repository_rows.select(:id)) if my_module
+    end
+
+    if params[:protocol_id].present?
+      protocol = Protocol.readable_by_user(current_user).find_by(id: params[:protocol_id])
+      results = results.where.not(id: protocol.repository_rows.select(:id)) if protocol
+    end
+
     results = results.order('LOWER(repository_rows.name) asc').page(params[:page])
 
     results = results.where.not(id: params[:excluded_ids]) if params[:excluded_ids].present?
