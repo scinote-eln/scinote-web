@@ -46,7 +46,7 @@ module Lists
 
       # Adding assigned counters
       if @my_module && !@is_snapshot
-        @records = @records.joins(:my_module_repository_rows)
+        @records = @records.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: @my_module })
         @records = @records.select('SUM(DISTINCT my_module_repository_rows.stock_consumption) AS "consumed_stock"') if @repository.has_stock_management?
       else
         @records = @records.left_outer_joins(:my_module_repository_rows)
@@ -516,7 +516,14 @@ module Lists
         @records = @records.joins('LEFT OUTER JOIN "users" "created_by" ON "created_by"."id" = "repository_rows"."created_by_id"')
 
       when 'consumed_stock'
-        @records = @records.group('repository_rows.id')
+        if @my_module && !@is_snapshot
+          @records = @records.joins(:my_module_repository_rows)
+                             .where(my_module_repository_rows: { my_module_id: @my_module })
+                             .group('repository_rows.id')
+        else
+          @records = @records.left_outer_joins(:my_module_repository_rows)
+                             .group('repository_rows.id')
+        end
       when /^col_[1-9]\d*\z/
         column_id = column[/\d+\z/].to_i
         sorting_column = @repository.repository_columns.find_by(id: column_id)

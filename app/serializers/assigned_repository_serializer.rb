@@ -11,6 +11,14 @@ class AssignedRepositorySerializer < ActiveModel::Serializer
     can_read? ? object.name : I18n.t('my_modules.assigned_items.repository.private_repository_name')
   end
 
+  attribute :shared do
+    if object.is_a?(RepositorySnapshot)
+      false
+    else
+      object.shared_with?(scope[:user].current_team)
+    end
+  end
+
   attribute :assigned_rows_count do
     object['assigned_rows_count'] || scope[:assigned_rows_count]
   end

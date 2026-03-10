@@ -5,13 +5,14 @@
     </span>
     <div class="flex items-center gap-2 flex-wrap">
       <template v-for="item in insertMenu">
-        <button v-if="!item.submenu" @click="$emit(item.emit)" class="btn btn-light">
+        <button v-if="!item.submenu" @click="$emit(item.emit)" :title="item.text" class="btn btn-light">
           <i :class="item.icon"></i>
           <span class="tw-hidden xl:inline">{{ item.text }}</span>
         </button>
         <MenuDropdown
           :listItems="item.submenu"
           :btnText="item.text"
+          :title="item.text"
           :disableOverflow="true"
           :btnClasses="'btn btn-light'"
           :smallScreenCollapse="true"
@@ -26,6 +27,7 @@
 </template>
 <script>
 import MenuDropdown from '../menu_dropdown.vue';
+import tooltipMixin from '../../mixins/tooltipMixin.js';
 
 export default {
   components: {
@@ -35,6 +37,7 @@ export default {
   props: {
     insertMenu: Array
   },
+  mixins: [tooltipMixin],
   methods: {
     handleEvents(event, option) {
       this.$emit(event, option.params);

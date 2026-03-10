@@ -334,7 +334,7 @@ class MyModuleRepositoriesController < ApplicationController
     assigned_count = service.assigned_rows_count
     unassigned_count = service.unassigned_rows_count
 
-    if params[:downstream] == 'true'
+    if params[:downstream]
       if assigned_count&.positive?
         t('my_modules.repository.flash.assign_to_task_and_downstream_html',
           assigned_items: assigned_count)

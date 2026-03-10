@@ -31,7 +31,7 @@
                  ref="completeState"
                  @keyup.enter="changeState"
                  tabindex="0"
-                 :data-original-title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
+                 :data-tooltip="completeStateTooltip"
                  :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCompleted`">
               <i :class="['sn-icon', step.attributes.completed ? 'sn-icon-task-status-completed' : 'sn-icon-task-status-uncompleted']"></i>
             </div>
@@ -44,7 +44,7 @@
                  @click="changeSkipped"
                  @keyup.enter="changeSkipped"
                  tabindex="0"
-                 :data-original-title="step.attributes.skipped_at ? i18n.t('protocols.steps.status.unskip') : i18n.t('protocols.steps.status.skip')"
+                 :data-tooltip="skipStateTooltip"
                  data-e2e="e2e-BT-protocol-toggleSkipped"
             >
               <i :class="['sn-icon', step.attributes.skipped_at ? 'sn-icon-skip-fill' : 'sn-icon-skip-outline']" :data-e2e="`e2e-BT-protocol-step${step.id}-toggleSkipped`"></i>
@@ -145,6 +145,7 @@
            class="open-comments-sidebar btn icon-btn btn-light"
            data-turbolinks="false"
            data-object-type="Step"
+           :title="i18n.t('protocols.steps.comments')"
            @click="openCommentsSidebar"
            :data-object-id="step.id">
           <i class="sn-icon sn-icon-comments"></i>
@@ -275,6 +276,7 @@
   import OveMixin from '../shared/content/attachments/mixins/ove.js'
   import StorageUsage from '../shared/content/attachments/storage_usage.vue'
   import axios from '../../packs/custom_axios';
+  import tooltipMixin from '../mixins/tooltipMixin.js';
 
   import {
     my_module_results_path,
@@ -360,7 +362,7 @@
         ]
       }
     },
-    mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin],
+    mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, tooltipMixin],
     components: {
       InlineEdit,
       StepTable,
@@ -428,15 +430,6 @@
       $(this.$refs.elementsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
         this.handleDropdownPosition(this.$refs.elementsDropdownButton, this.$refs.elementsDropdown)
       });
-
-      window.initTooltip(this.$refs.linkButton);
-      window.initTooltip(this.$refs.completeState);
-      window.initTooltip(this.$refs.skipState);
-    },
-    beforeUnmount() {
-      window.destroyTooltip(this.$refs.skipState);
-      window.destroyTooltip(this.$refs.completeState);
-      window.destroyTooltip(this.$refs.skipState);
     },
     computed: {
       reorderableElements() {
@@ -447,6 +440,16 @@
       },
       urls() {
         return this.step.attributes.urls || {}
+      },
+      completeStateTooltip() {
+        return this.step.attributes.completed
+          ? this.i18n.t('protocols.steps.status.uncomplete')
+          : this.i18n.t('protocols.steps.status.complete');
+      },
+      skipStateTooltip() {
+        return this.step.attributes.skipped_at
+          ? this.i18n.t('protocols.steps.status.unskip')
+          : this.i18n.t('protocols.steps.status.skip');
       },
       filesMenu() {
         let menu = [];
@@ -643,7 +646,6 @@
       changeState() {
         if (!this.urls.state_url) return;
 
-        $('.tooltip').remove();
         const currentSkipStatus = this.step.attributes.skipped_at;
 
         this.step.attributes.completed = !this.step.attributes.completed;
@@ -672,7 +674,6 @@
       changeSkipped() {
         if (!this.urls.skip_url) return;
 
-        $('.tooltip').remove();
         const currentCompleteStatus = this.step.attributes.completed;
 
         this.step.attributes.skipped_at = !this.step.attributes.skipped_at;
@@ -890,14 +891,10 @@
         });
       },
       updateLinkedResults(results) {
-        window.destroyTooltip(this.$refs.linkButton);
-
         this.$emit('step:update', {
           results: results,
           position: this.step.attributes.position
         });
-
-        this.$nextTick(() => window.initTooltip(this.$refs.linkButton));
       },
       resultUrl(result_id, archived) {
         if (!this.step.attributes.my_module_id) {

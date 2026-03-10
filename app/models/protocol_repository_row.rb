@@ -6,5 +6,5 @@ class ProtocolRepositoryRow < ApplicationRecord
   belongs_to :protocol
   belongs_to :repository_row, optional: true
 
-  validates :repository_row, uniqueness: { scope: :protocol }
+  validates :repository_row, uniqueness: { scope: :protocol }, allow_nil: true
 end

@@ -37,7 +37,6 @@ class UserDataDeletion
             my_module.inputs.destroy_all
             my_module.outputs.destroy_all
             my_module.results.destroy_all
-            my_module.my_module_tags.destroy_all
             my_module.task_comments.destroy_all
             my_module.my_module_repository_rows.destroy_all
             my_module.user_my_modules.destroy_all
@@ -59,7 +58,6 @@ class UserDataDeletion
           experiment.user_assignments.destroy_all
           experiment.destroy!
         end
-        project.tags.destroy_all
         project.project_comments.destroy_all
         project.report_elements.destroy_all
         project.user_assignments.destroy_all
@@ -75,6 +73,7 @@ class UserDataDeletion
       end
       team.reports.destroy_all
       team.user_assignments.destroy_all
+      team.tags.destroy_all
       team.destroy!
     end
   end

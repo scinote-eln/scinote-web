@@ -14,6 +14,8 @@
           v-if="canAssign"
           class="btn btn-secondary"
           @click="openAssignItemModal=true"
+          :title="i18n.t('my_modules.repository.assign_items')"
+          data-e2e="e2e-BT-task-assignedItemsTab-assignItems"
         >
          <i class="sn-icon sn-icon-new-task"></i>
          {{ i18n.t('my_modules.repository.assign_items') }}
@@ -22,16 +24,30 @@
           v-if="canAssign"
           class="btn btn-secondary"
           @click="openCreateItemModal=true"
+          :title="i18n.t('my_modules.repository.create_item')"
+          data-e2e="e2e-BT-task-assignedItemsTab-createItem"
         >
           <i class="sn-icon sn-icon-create-item"></i>
           {{ i18n.t('my_modules.repository.create_item') }}
         </button>
         <template v-if="assignedRepositories.length > 0">
-          <button :title="i18n.t('protocols.steps.collapse_label')" v-if="!repositoriesCollapsed" class="btn btn-secondary icon-btn xl:!px-4" @click="collapseRepositories" tabindex="0">
+          <button v-if="!repositoriesCollapsed"
+            :title="i18n.t('protocols.steps.collapse_label')"
+            class="btn btn-secondary icon-btn xl:!px-4"
+            @click="collapseRepositories"
+            tabindex="0"
+            data-e2e="e2e-BT-task-assignedItemsTab-collapseAll"
+          >
             <i class="sn-icon sn-icon-collapse-all"></i>
             <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.collapse_label") }}</span>
           </button>
-          <button v-else  :title="i18n.t('protocols.steps.expand_label')" class="btn btn-secondary icon-btn xl:!px-4" @click="expandRepositories" tabindex="0">
+          <button v-else
+            :title="i18n.t('protocols.steps.expand_label')"
+            class="btn btn-secondary icon-btn xl:!px-4"
+            @click="expandRepositories"
+            tabindex="0"
+            data-e2e="e2e-BT-task-assignedItemsTab-expandAll"
+          >
             <i class="sn-icon sn-icon-expand-all"></i>
             <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.expand_label") }}</span>
           </button>
@@ -46,6 +62,7 @@
         :repository="repository"
         :myModuleId="myModuleId"
         @assignRows="assignRows"
+        @toggled="repositoryToggled"
         :reloadKey="reloadKeys[repository.id]"
       />
     </div>
@@ -54,11 +71,13 @@
         v-if="openCreateItemModal"
         :myModuleId="myModuleId"
         @tableReloaded="newCreatedRow"
+        :e2eValue="'task-assignedItems-createItemModal'"
         @close="openCreateItemModal = false"/>
       <AssignItemModal
         v-if="openAssignItemModal"
         :myModuleId="myModuleId"
         @assignRows="assignRows"
+        :e2eValue="'task-assignedItems-assignItemModal'"
         @close="openAssignItemModal = false"/>
     </Teleport>
   </div>
@@ -70,6 +89,7 @@ import GeneralDropdown from '../shared/general_dropdown.vue';
 import AssignedRepository from './assigned_items/repository.vue';
 import CreateItemModal from './assigned_items/modals/new_item.vue';
 import AssignItemModal from './assigned_items/modals/assign_item.vue';
+import tooltipMixin from '../mixins/tooltipMixin.js';
 
 import {
   my_module_repository_path
@@ -102,12 +122,16 @@ export default {
       reloadKeys: {}
     };
   },
+  mixins: [tooltipMixin],
   methods: {
     loadAssingedRepositories() {
       axios.get(this.assignedRepositoriesUrl)
         .then((response) => {
           this.assignedRepositories = response.data.data;
           this.loadingRepositories = false;
+          this.$nextTick(() => {
+            this.repositoryToggled();
+          });
         });
     },
     assignRows(rowIds, repositoryId, assignToDownstream = false) {
@@ -117,20 +141,29 @@ export default {
       }).then((response) => {
         this.openAssignItemModal = false;
         HelperModule.flashAlertMsg(response.data.flash, 'success');
-        if (!this.reloadKeys[repositoryId]) {
-          this.loadAssingedRepositories();
-          setTimeout(
-            () => document.getElementById(`assigned-repository-container-${repositoryId}`)
-                          .scrollIntoView({ behavior: 'smooth' }),
-            300
-          );
-        }
-        this.reloadKeys[repositoryId] = Date.now();
+        this.focusOnNewRepository(repositoryId);
       });
     },
     newCreatedRow(repositoryRowSidebarUrl, repositoryId) {
-      this.reloadKeys[repositoryId] = Date.now();
+      this.focusOnNewRepository(repositoryId);
       window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
+    },
+    focusOnNewRepository(repositoryId) {
+      if (!this.reloadKeys[repositoryId]) {
+        this.loadAssingedRepositories();
+        setTimeout(
+          () => {
+            this.$refs.assignedRepositories.forEach((repositoryComponent) => {
+              if (repositoryComponent.repository.id === repositoryId) {
+                repositoryComponent.toggleContainer();
+              }
+            });
+            document.getElementById(`assigned-repository-container-${repositoryId}`)
+                        .scrollIntoView({ behavior: 'smooth' });
+          }, 300
+        );
+      }
+      this.reloadKeys[repositoryId] = Date.now();
     },
     collapseRepositories() {
       this.repositoriesCollapsed = true;
@@ -145,6 +178,13 @@ export default {
         repositoryComponent.sectionOpened = true;
         repositoryComponent.recalculateContainerSize();
       });
+    },
+    repositoryToggled() {
+      if (this.$refs.assignedRepositories.every((repository) => repository.sectionOpened === false)) {
+        this.repositoriesCollapsed = true;
+      } else {
+        this.repositoriesCollapsed = false;
+      }
     }
   }
 };

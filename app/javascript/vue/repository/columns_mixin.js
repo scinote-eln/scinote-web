@@ -72,19 +72,19 @@ export default {
       return columns;
     },
     columnHidden() {
-      return !this.repository.attributes.is_snapshot;
+      return !this.repositoryVersion.attributes.is_snapshot;
     }
   },
   mounted() {
-    if (this.repository) {
+    if (this.repositoryVersion) {
       this.loadRepositoryColumns();
     }
   },
   methods: {
     loadRepositoryColumns() {
-      axios.get(index_new_repository_repository_columns_path(this.repository.id))
+      axios.get(index_new_repository_repository_columns_path(this.repositoryVersion.id))
         .then((response) => {
-          let columns = this.defaultRepositoryColumnsDef;
+          let columns = [...this.defaultRepositoryColumnsDef];
           response.data.data.forEach((column) => {
             let field = `col_${column.id}`;
             if (column.attributes.data_type == 'RepositoryStockValue') {
@@ -97,7 +97,7 @@ export default {
               cellRenderer: 'cellRenderer',
               hide: !(field == 'stock') && this.columnHidden,
               cellRendererParams: {
-                repositoryId: this.repository.id,
+                repositoryId: this.repositoryVersion.id,
                 columnId: column.id,
                 columnDataType: column.attributes.data_type,
                 legacyId: parseInt(column.id, 10)
