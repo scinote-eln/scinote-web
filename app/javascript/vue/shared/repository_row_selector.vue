@@ -7,6 +7,7 @@
         placeholder="Select inventory"
         :searchable="true"
         :value="selectedRepository"
+        :disabled="preSelectedRepository"
         @change="selectedRepository = $event"
         :e2eValue="`e2e-DD-${dataE2e}-selectInventory`"
       ></SelectDropdown>
