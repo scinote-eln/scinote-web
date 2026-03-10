@@ -29,7 +29,7 @@
                     <div
                       @click="openAssignItemModal = true"
                       class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative"
-                      data-e2e="e2e-BT-protocol-assignedItemsModal-assignFromAnotherInventory"
+                      data-e2e="e2e-DO-protocol-assignedItemsModal-assignFromAnotherInventory"
                     >
                       {{ i18n.t('my_modules.repository.assigned_items_modal.assign_new_row') }}
                     </div>
@@ -67,12 +67,13 @@
           <div
             v-else-if="!initialLoading"
             class="flex flex-col min-h-[540px] items-center justify-center gap-1 ">
-            <h2 class="text-sn-grey ">
+            <h2 class="text-sn-grey" data-e2e="e2e-TX-protocol-assignedItems-empty">
               {{ i18n.t('my_modules.repository.assigned_items_modal.empty_placeholder') }}
             </h2>
             <button
               @click="openAssignItemModal = true"
               class="btn btn-primary"
+              data-e2e="e2e-BT-protocol-assignedItemsModal-empty-assignItems"
             >
               <i class="sn-icon sn-icon-new-task"></i>
               {{ i18n.t('my_modules.repository.assign_items') }}
@@ -86,7 +87,8 @@
         v-if="openAssignItemModal"
         :myModuleId="myModuleId"
         @assignRows="assignRows"
-        @close="openAssignItemModal = false"/>
+        @close="openAssignItemModal = false"
+        :e2eValue="'task-assignedItems-assignItemModal'"/>
     </Teleport>
   </div>
 </template>
