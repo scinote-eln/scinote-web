@@ -14,6 +14,7 @@
           v-if="canAssign"
           class="btn btn-secondary"
           @click="openAssignItemModal=true"
+          :title="i18n.t('my_modules.repository.assign_items')"
           data-e2e="e2e-BT-task-assignedItemsTab-assignItems"
         >
          <i class="sn-icon sn-icon-new-task"></i>
@@ -23,6 +24,7 @@
           v-if="canAssign"
           class="btn btn-secondary"
           @click="openCreateItemModal=true"
+          :title="i18n.t('my_modules.repository.create_item')"
           data-e2e="e2e-BT-task-assignedItemsTab-createItem"
         >
           <i class="sn-icon sn-icon-create-item"></i>
@@ -87,6 +89,7 @@ import GeneralDropdown from '../shared/general_dropdown.vue';
 import AssignedRepository from './assigned_items/repository.vue';
 import CreateItemModal from './assigned_items/modals/new_item.vue';
 import AssignItemModal from './assigned_items/modals/assign_item.vue';
+import tooltipMixin from '../mixins/tooltipMixin.js';
 
 import {
   my_module_repository_path
@@ -119,6 +122,7 @@ export default {
       reloadKeys: {}
     };
   },
+  mixins: [tooltipMixin],
   methods: {
     loadAssingedRepositories() {
       axios.get(this.assignedRepositoriesUrl)

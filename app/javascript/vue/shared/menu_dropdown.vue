@@ -73,6 +73,7 @@
 
 import { vOnClickOutside } from '@vueuse/components';
 import FixedFlyoutMixin from './mixins/fixed_flyout.js';
+import tooltipMixin from '../mixins/tooltipMixin.js';
 
 export default {
   name: 'DropdownMenu',
@@ -98,7 +99,7 @@ export default {
   directives: {
     'click-outside': vOnClickOutside
   },
-  mixins: [FixedFlyoutMixin],
+  mixins: [FixedFlyoutMixin, tooltipMixin],
   watch: {
     isOpen(newValue) {
       this.$emit('menu-toggle', newValue);

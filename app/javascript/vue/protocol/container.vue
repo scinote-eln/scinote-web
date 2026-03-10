@@ -1,215 +1,59 @@
 <template>
-  <div v-if="protocol.id" class="task-protocol">
-    <div ref="header" class="task-section-header ml-[-1rem] w-[calc(100%_+_2rem)] px-4 bg-sn-white sticky top-0 transition" v-if="!inRepository">
-      <div class="portocol-header-left-part grow" :class="{'overflow-hidden': headerSticked && moduleName}">
-        <template v-if="headerSticked && moduleName">
-          <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
-          <div @click="scrollTop" class="task-section-title  min-w-[5rem] cursor-pointer" :title="moduleName">
-            <h2 class="truncate leading-6">{{ moduleName }}</h2>
-          </div>
-        </template>
-        <template v-else>
-          <a class="task-section-caret"
-            tabindex="0"
-            role="button"
-            data-toggle="collapse"
-            href="#protocol-content"
-            aria-expanded="true"
-            aria-controls="protocol-content"
-            data-e2e="e2e-IC-task-protocol-visibilityToggle"
-          >
-            <i class="sn-icon sn-icon-right"></i>
-            <div class="task-section-title truncate">
-              <h2 data-e2e="e2e-TX-task-protocol-sectionTitle">{{ i18n.t('Protocol') }}</h2>
+  <div>
+    <div v-if="protocol.id" class="task-protocol">
+      <div ref="header" class="task-section-header ml-[-1rem] w-[calc(100%_+_2rem)] px-4 bg-sn-white sticky top-0 transition" v-if="!inRepository">
+        <div class="portocol-header-left-part grow" :class="{'overflow-hidden': headerSticked && moduleName}">
+          <template v-if="headerSticked && moduleName">
+            <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
+            <div @click="scrollTop" class="task-section-title  min-w-[5rem] cursor-pointer" :title="moduleName">
+              <h2 class="truncate leading-6">{{ moduleName }}</h2>
             </div>
-          </a>
-        </template>
-        <div :class="{'hidden': headerSticked}">
-          <div class="my-module-protocol-status">
-            <!-- protocol status dropdown gets mounted here -->
-          </div>
-        </div>
-      </div>
-      <div class="actions-block">
-        <div class="protocol-buttons-group shrink-0 bg-sn-white">
-          <a v-if="urls.add_step_url"
-             class="btn btn-secondary icon-btn xl:!px-4"
-             :title="i18n.t('protocols.steps.new_step_title')"
-             @keyup.enter="addStep(steps.length)"
-             @click="addStep(steps.length)"
-             tabindex="0"
-             data-e2e="e2e-BT-task-protocol-newStep">
-              <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
-              <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.new_step") }}</span>
-          </a>
-          <button
-            v-if="!inRepository && urls.add_step_url"
-            class="btn btn-secondary icon-btn xl:!px-4"
-            @click="showRepositoriesModal = true"
-            :title="i18n.t('protocols.steps.show_repositories')"
-            data-e2e="e2e-BT-task-protocol-assignedItems"
-          >
-            <span class="sn-icon sn-icon-inventory" aria-hidden="true"></span>
-            <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.show_repositories") }}</span>
-          </button>
-          <template v-if="steps.length > 0">
-            <button
-              :title="i18n.t('protocols.steps.collapse_label')"
-              v-if="!stepCollapsed"
-              class="btn btn-secondary icon-btn xl:!px-4"
-              @click="collapseSteps"
-              tabindex="0"
-              data-e2e="e2e-BT-task-protocol-collapseAll"
-            >
-              <i class="sn-icon sn-icon-collapse-all"></i>
-              <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.collapse_label") }}</span>
-            </button>
-            <button v-else
-              :title="i18n.t('protocols.steps.expand_label')"
-              class="btn btn-secondary icon-btn xl:!px-4"
-              @click="expandSteps"
-              tabindex="0"
-              data-e2e="e2e-BT-task-protocol-expandAll"
-            >
-              <i class="sn-icon sn-icon-expand-all"></i>
-              <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.expand_label") }}</span>
-            </button>
           </template>
-          <ProtocolOptions
-            v-if="protocol.attributes && protocol.attributes.urls"
-            :protocol="protocol"
-            :inRepository="inRepository"
-            @protocol:delete_steps="deleteSteps"
-            @protocol:add_protocol_steps="addSteps"
-            :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
-          />
-          <button
-            class="btn btn-light icon-btn"
-            data-toggle="modal"
-            data-target="#print-protocol-modal"
-            tabindex="0"
-            data-e2e="e2e-BT-task-protocol-print"
-          >
-            <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
-          </button>
-          <a v-if="steps.length > 0 && urls.reorder_steps_url"
-            class="btn btn-light icon-btn"
-            data-toggle="modal"
-            @click="startStepReorder"
-            @keyup.enter="startStepReorder"
-            :class="{'disabled': steps.length == 1}"
-            tabindex="0"
-            data-e2e="e2e-BT-task-protocol-reorderSteps"
-          >
-              <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-    <div
-      id="protocol-content"
-      class="protocol-content collapse in"
-      aria-expanded="true"
-      data-e2e="e2e-CO-task-protocol-content"
-    >
-      <div class="sci-divider" v-if="!inRepository"></div>
-      <div class="mb-4">
-        <div class="protocol-name mt-4" v-if="!inRepository">
-          <InlineEdit
-            v-if="urls.update_protocol_name_url"
-            :value="protocol.attributes.name"
-            :characterLimit="255"
-            :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
-            :allowBlank="!inRepository"
-            :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
-            @update="updateName"
-            :dataE2e="'task-protocol-title'"
-          />
-          <span v-else>
-            {{ protocol.attributes.name }}
-          </span>
-        </div>
-        <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol"/>
-        <div :class="inRepository ? 'protocol-section protocol-information' : ''">
-          <div v-if="inRepository" id="protocol-description" class="protocol-section-header">
-            <div class="protocol-description-container">
-              <a class="protocol-section-caret"
-                role="button"
-                data-toggle="collapse"
-                href="#protocol-description-container"
-                aria-expanded="false"
-                aria-controls="protocol-description-container">
-                <i class="sn-icon sn-icon-right"></i>
-                <span id="protocolDescriptionLabel" class="protocol-section-title" data-e2e="e2e-TX-protocolTemplates-protocolDescription-title">
-                  <h2>
-                    {{ i18n.t("protocols.header.protocol_description") }}
-                  </h2>
-                </span>
-              </a>
-            </div>
-          </div>
-          <div id="protocol-description-container"
-            class="text-base content__text-container"
-            :class=" inRepository ? 'protocol-description collapse in' : ''"
-            data-e2e="e2e-IF-protocolTemplates-protocolDescription-content">
-            <div v-if="urls.update_protocol_description_url">
-              <Tinymce
-                :value="protocol.attributes.description"
-                :value_html="protocol.attributes.description_view"
-                :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.empty_description_edit_label')"
-                :updateUrl="urls.update_protocol_description_url"
-                :objectType="'Protocol'"
-                :objectId="parseInt(protocol.id)"
-                :fieldName="'protocol[description]'"
-                :lastUpdated="protocol.attributes.updated_at"
-                :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
-                :characterLimit="1000000"
-                @update="updateDescription"
-              />
-            </div>
-            <div v-else-if="protocol.attributes.description_view" v-html="wrappedTables" class="view-text-element"></div>
-            <div v-else class="empty-protocol-description">
-              {{ i18n.t("protocols.no_text_placeholder") }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div :class="inRepository ? 'protocol-section protocol-steps-section protocol-information' : ''">
-        <div v-if="inRepository" id="protocol-steps" class="protocol-section-header">
-          <div class="protocol-steps-container w-full flex flex-row items-center justify-between">
-            <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#protocol-steps-container" aria-expanded="false" aria-controls="protocol-steps-container">
+          <template v-else>
+            <a class="task-section-caret"
+              tabindex="0"
+              role="button"
+              data-toggle="collapse"
+              href="#protocol-content"
+              aria-expanded="true"
+              aria-controls="protocol-content"
+              data-e2e="e2e-IC-task-protocol-visibilityToggle"
+            >
               <i class="sn-icon sn-icon-right"></i>
-              <span id="protocolStepsLabel" class="protocol-section-title" data-e2e="e2e-TX-protocol-templateSteps-title">
-                <h2>
-                  {{ i18n.t("protocols.header.protocol_steps") }}
-                </h2>
-              </span>
+              <div class="task-section-title truncate">
+                <h2 data-e2e="e2e-TX-task-protocol-sectionTitle">{{ i18n.t('Protocol') }}</h2>
+              </div>
             </a>
-            <ProtocolOptions
-              v-if="protocol.attributes && protocol.attributes.urls"
-              :protocol="protocol"
-              :inRepository="inRepository"
-              @protocol:delete_steps="deleteSteps"
-              @protocol:add_protocol_steps="addSteps"
-              :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
-            />
+          </template>
+          <div :class="{'hidden': headerSticked}">
+            <div class="my-module-protocol-status">
+              <!-- protocol status dropdown gets mounted here -->
+            </div>
           </div>
         </div>
-        <div class="sci-divider my-4" v-if="!inRepository"></div>
-        <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
-          <div v-if="inRepository" class="py-5 flex flex-row gap-8 justify-between">
-            <a
-              v-if="urls.add_step_url"
-              class="btn btn-secondary"
+        <div class="actions-block">
+          <div class="protocol-buttons-group shrink-0 bg-sn-white">
+            <a v-if="urls.add_step_url"
+              class="btn btn-secondary icon-btn xl:!px-4"
               :title="i18n.t('protocols.steps.new_step_title')"
-              data-e2e="e2e-BT-protocol-templateSteps-newStepTop"
               @keyup.enter="addStep(steps.length)"
               @click="addStep(steps.length)"
-              tabindex="0">
+              tabindex="0"
+              data-e2e="e2e-BT-task-protocol-newStep">
                 <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
-                <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+                <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.new_step") }}</span>
             </a>
-            <div v-if="steps.length > 0" class="ml-auto flex justify-between items-center gap-4">
+            <button
+              v-if="!inRepository && urls.add_step_url"
+              class="btn btn-secondary icon-btn xl:!px-4"
+              @click="showRepositoriesModal = true"
+              :title="i18n.t('protocols.steps.show_repositories')"
+              data-e2e="e2e-BT-task-protocol-assignedItems"
+            >
+              <span class="sn-icon sn-icon-inventory" aria-hidden="true"></span>
+              <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.show_repositories") }}</span>
+            </button>
+            <template v-if="steps.length > 0">
               <button
                 :title="i18n.t('protocols.steps.collapse_label')"
                 v-if="!stepCollapsed"
@@ -231,93 +75,254 @@
                 <i class="sn-icon sn-icon-expand-all"></i>
                 <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.expand_label") }}</span>
               </button>
-              <a v-if="steps.length > 0 && urls.reorder_steps_url"
-                class="btn btn-light icon-btn"
-                data-toggle="modal"
-                data-e2e="e2e-BT-protocol-templateSteps-reorder"
-                @click="startStepReorder"
-                @keyup.enter="startStepReorder"
-                :class="{'disabled': steps.length == 1}"
-                tabindex="0" >
-              <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
-          </a>
+            </template>
+            <ProtocolOptions
+              v-if="protocol.attributes && protocol.attributes.urls"
+              :protocol="protocol"
+              :inRepository="inRepository"
+              @protocol:delete_steps="deleteSteps"
+              @protocol:add_protocol_steps="addSteps"
+              :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
+            />
+            <button
+              class="btn btn-light icon-btn"
+              data-toggle="modal"
+              data-target="#print-protocol-modal"
+              :title="i18n.t('protocols.print_label')"
+              tabindex="0"
+              data-e2e="e2e-BT-task-protocol-print"
+            >
+              <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
+            </button>
+            <a v-if="steps.length > 0 && urls.reorder_steps_url"
+              class="btn btn-light icon-btn"
+              data-toggle="modal"
+              @click="startStepReorder"
+              @keyup.enter="startStepReorder"
+              :title="i18n.t('protocols.rearrange_steps_label')"
+              :class="{'disabled': steps.length == 1}"
+              tabindex="0"
+              data-e2e="e2e-BT-task-protocol-reorderSteps"
+            >
+                <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
+            </a>
           </div>
+        </div>
+      </div>
+      <div
+        id="protocol-content"
+        class="protocol-content collapse in"
+        aria-expanded="true"
+        data-e2e="e2e-CO-task-protocol-content"
+      >
+        <div class="sci-divider" v-if="!inRepository"></div>
+        <div class="mb-4">
+          <div class="protocol-name mt-4" v-if="!inRepository">
+            <InlineEdit
+              v-if="urls.update_protocol_name_url"
+              :value="protocol.attributes.name"
+              :characterLimit="255"
+              :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
+              :allowBlank="!inRepository"
+              :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
+              @update="updateName"
+              :dataE2e="'task-protocol-title'"
+            />
+            <span v-else>
+              {{ protocol.attributes.name }}
+            </span>
           </div>
-          <div :class="{
-              'tw-hidden': loadingOverlay
-            }"
-            class="protocol-steps pb-8"
-          >
-            <div v-for="(step, index) in steps" :key="step.id" class="step-block">
-              <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
-                <i class="sn-icon sn-icon-new-task"></i>
-                <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
-              </div>
-              <Step
-                ref="steps"
-                :step.sync="steps[index]"
-                @reorder="startStepReorder"
-                :inRepository="inRepository"
-                :stepToReload="stepToReload"
-                :activeDragStep="activeDragStep"
-                @step:delete="updateStepsPosition"
-                @step:update="updateStep"
-                @stepUpdated="refreshProtocolStatus"
-                @step:insert="updateStepsPosition"
-                @step:elements:loaded="stepToReload = null; elementsLoaded++"
-                @step:move_element="reloadStep"
-                @step:attachments:loaded="stepToReload = null; attachmentsLoaded++"
-                @step:move_attachment="reloadStep"
-                @step:drag_enter="dragEnter"
-                @step:collapsed="checkStepsState"
-                :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
-                :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
-              />
-              <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step" @click="addStep(index + 1)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
-                <i class="sn-icon sn-icon-new-task"></i>
-                <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
+          <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol"/>
+          <div :class="inRepository ? 'protocol-section protocol-information' : ''">
+            <div v-if="inRepository" id="protocol-description" class="protocol-section-header">
+              <div class="protocol-description-container">
+                <a class="protocol-section-caret"
+                  role="button"
+                  data-toggle="collapse"
+                  href="#protocol-description-container"
+                  aria-expanded="false"
+                  aria-controls="protocol-description-container">
+                  <i class="sn-icon sn-icon-right"></i>
+                  <span id="protocolDescriptionLabel" class="protocol-section-title" data-e2e="e2e-TX-protocolTemplates-protocolDescription-title">
+                    <h2>
+                      {{ i18n.t("protocols.header.protocol_description") }}
+                    </h2>
+                  </span>
+                </a>
               </div>
             </div>
-            <div v-if="steps.length > 0 && urls.add_step_url && inRepository" class="py-5">
+            <div id="protocol-description-container"
+              class="text-base content__text-container"
+              :class=" inRepository ? 'protocol-description collapse in' : ''"
+              data-e2e="e2e-IF-protocolTemplates-protocolDescription-content">
+              <div v-if="urls.update_protocol_description_url">
+                <Tinymce
+                  :value="protocol.attributes.description"
+                  :value_html="protocol.attributes.description_view"
+                  :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.empty_description_edit_label')"
+                  :updateUrl="urls.update_protocol_description_url"
+                  :objectType="'Protocol'"
+                  :objectId="parseInt(protocol.id)"
+                  :fieldName="'protocol[description]'"
+                  :lastUpdated="protocol.attributes.updated_at"
+                  :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
+                  :characterLimit="1000000"
+                  @update="updateDescription"
+                />
+              </div>
+              <div v-else-if="protocol.attributes.description_view" v-html="wrappedTables" class="view-text-element"></div>
+              <div v-else class="empty-protocol-description">
+                {{ i18n.t("protocols.no_text_placeholder") }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div :class="inRepository ? 'protocol-section protocol-steps-section protocol-information' : ''">
+          <div v-if="inRepository" id="protocol-steps" class="protocol-section-header">
+            <div class="protocol-steps-container w-full flex flex-row items-center justify-between">
+              <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#protocol-steps-container" aria-expanded="false" aria-controls="protocol-steps-container">
+                <i class="sn-icon sn-icon-right"></i>
+                <span id="protocolStepsLabel" class="protocol-section-title" data-e2e="e2e-TX-protocol-templateSteps-title">
+                  <h2>
+                    {{ i18n.t("protocols.header.protocol_steps") }}
+                  </h2>
+                </span>
+              </a>
+              <ProtocolOptions
+                v-if="protocol.attributes && protocol.attributes.urls"
+                :protocol="protocol"
+                :inRepository="inRepository"
+                @protocol:delete_steps="deleteSteps"
+                @protocol:add_protocol_steps="addSteps"
+                :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
+              />
+            </div>
+          </div>
+          <div class="sci-divider my-4" v-if="!inRepository"></div>
+          <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
+            <div v-if="inRepository" class="py-5 flex flex-row gap-8 justify-between">
               <a
+                v-if="urls.add_step_url"
                 class="btn btn-secondary"
                 :title="i18n.t('protocols.steps.new_step_title')"
-                data-e2e="e2e-BT-protocol-templateSteps-newStepBottom"
+                data-e2e="e2e-BT-protocol-templateSteps-newStepTop"
                 @keyup.enter="addStep(steps.length)"
                 @click="addStep(steps.length)"
                 tabindex="0">
                   <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
                   <span>{{ i18n.t("protocols.steps.new_step") }}</span>
               </a>
+              <div v-if="steps.length > 0" class="ml-auto flex justify-between items-center gap-4">
+                <button
+                  :title="i18n.t('protocols.steps.collapse_label')"
+                  v-if="!stepCollapsed"
+                  class="btn btn-secondary icon-btn xl:!px-4"
+                  @click="collapseSteps"
+                  tabindex="0"
+                  data-e2e="e2e-BT-task-protocol-collapseAll"
+                >
+                  <i class="sn-icon sn-icon-collapse-all"></i>
+                  <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.collapse_label") }}</span>
+                </button>
+                <button v-else
+                  :title="i18n.t('protocols.steps.expand_label')"
+                  class="btn btn-secondary icon-btn xl:!px-4"
+                  @click="expandSteps"
+                  tabindex="0"
+                  data-e2e="e2e-BT-task-protocol-expandAll"
+                >
+                  <i class="sn-icon sn-icon-expand-all"></i>
+                  <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.expand_label") }}</span>
+                </button>
+                <a v-if="steps.length > 0 && urls.reorder_steps_url"
+                  class="btn btn-light icon-btn"
+                  data-toggle="modal"
+                  data-e2e="e2e-BT-protocol-templateSteps-reorder"
+                  :title="i18n.t('protocols.rearrange_steps_label')"
+                  @click="startStepReorder"
+                  @keyup.enter="startStepReorder"
+                  :class="{'disabled': steps.length == 1}"
+                  tabindex="0" >
+                <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
+            </a>
             </div>
-          </div>
-          <div v-if="loadingOverlay" class="text-center h-20 flex items-center justify-center">
-            <div class="sci-loader"></div>
+            </div>
+            <div :class="{
+                'tw-hidden': loadingOverlay
+              }"
+              class="protocol-steps pb-8"
+            >
+              <div v-for="(step, index) in steps" :key="step.id" class="step-block">
+                <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
+                  <i class="sn-icon sn-icon-new-task"></i>
+                  <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
+                </div>
+                <Step
+                  ref="steps"
+                  :step.sync="steps[index]"
+                  @reorder="startStepReorder"
+                  :inRepository="inRepository"
+                  :stepToReload="stepToReload"
+                  :activeDragStep="activeDragStep"
+                  @step:delete="updateStepsPosition"
+                  @step:update="updateStep"
+                  @stepUpdated="refreshProtocolStatus"
+                  @step:insert="updateStepsPosition"
+                  @step:elements:loaded="stepToReload = null; elementsLoaded++"
+                  @step:move_element="reloadStep"
+                  @step:attachments:loaded="stepToReload = null; attachmentsLoaded++"
+                  @step:move_attachment="reloadStep"
+                  @step:drag_enter="dragEnter"
+                  @step:collapsed="checkStepsState"
+                  :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
+                  :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
+                />
+                <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step" @click="addStep(index + 1)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
+                  <i class="sn-icon sn-icon-new-task"></i>
+                  <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
+                </div>
+              </div>
+              <div v-if="steps.length > 0 && urls.add_step_url && inRepository" class="py-5">
+                <a
+                  class="btn btn-secondary"
+                  :title="i18n.t('protocols.steps.new_step_title')"
+                  data-e2e="e2e-BT-protocol-templateSteps-newStepBottom"
+                  @keyup.enter="addStep(steps.length)"
+                  @click="addStep(steps.length)"
+                  tabindex="0">
+                    <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
+                    <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+                </a>
+              </div>
+            </div>
+            <div v-if="loadingOverlay" class="text-center h-20 flex items-center justify-center">
+              <div class="sci-loader"></div>
+            </div>
           </div>
         </div>
       </div>
+      <ReorderableItemsModal v-if="reordering"
+        :title="i18n.t('protocols.reorder_steps.modal.title')"
+        :items="steps"
+        :includeNumbers="true"
+        dataE2e="protocol-reorderSteps"
+        @reorder="updateStepOrder"
+        @close="closeStepReorderModal"
+      />
+      <clipboardPasteModal v-if="showClipboardPasteModal"
+                          :image="pasteImages"
+                          :objects="steps"
+                          :objectType="'step'"
+                          :selectedObjectId="firstObjectInViewport()"
+                          @files="uploadFilesToStep"
+                          @cancel="showClipboardPasteModal = false"
+      />
+      <AssignedItemsModal
+        v-if="showRepositoriesModal"
+        :myModuleId="protocol.attributes.assignable_my_module_id"
+        @close="showRepositoriesModal = false"
+      />
     </div>
-    <ReorderableItemsModal v-if="reordering"
-      :title="i18n.t('protocols.reorder_steps.modal.title')"
-      :items="steps"
-      :includeNumbers="true"
-      dataE2e="protocol-reorderSteps"
-      @reorder="updateStepOrder"
-      @close="closeStepReorderModal"
-    />
-    <clipboardPasteModal v-if="showClipboardPasteModal"
-                         :image="pasteImages"
-                         :objects="steps"
-                         :objectType="'step'"
-                         :selectedObjectId="firstObjectInViewport()"
-                         @files="uploadFilesToStep"
-                         @cancel="showClipboardPasteModal = false"
-    />
-    <AssignedItemsModal
-      v-if="showRepositoriesModal"
-      :myModuleId="protocol.attributes.assignable_my_module_id"
-      @close="showRepositoriesModal = false"
-    />
   </div>
 </template>
 
@@ -335,6 +340,7 @@ import UtilsMixin from '../mixins/utils.js';
 import stackableHeadersMixin from '../mixins/stackableHeadersMixin';
 import moduleNameObserver from '../mixins/moduleNameObserver';
 import AssignedItemsModal from './modals/assigned_items.vue';
+import tooltipMixin from '../mixins/tooltipMixin.js';
 import {
     user_setting_path
   } from '../../routes.js';
@@ -352,7 +358,7 @@ export default {
     ReorderableItemsModal, ProtocolMetadata, clipboardPasteModal,
     AssignedItemsModal
   },
-  mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin],
+  mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin, tooltipMixin],
   computed: {
     wrappedTables() {
       return window.wrapTables(this.protocol.attributes.description_view);
