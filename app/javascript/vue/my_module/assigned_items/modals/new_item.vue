@@ -28,6 +28,7 @@
               <SelectDropdown
                 :optionsUrl="repositoriesUrl"
                 :value="selectedRepository"
+                :disabled="selectedRepositoryValue"
                 @change="changeRepository"
                 :searchable="true"
                 :e2eValue="`e2e-DD-${e2eValue}-selectInventory`"
