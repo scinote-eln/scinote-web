@@ -90,6 +90,10 @@ export default {
     dataE2e: {
       type: String,
       default: ''
+    },
+    params: {
+      type: Object,
+      default: () => ({})
     }
   },
   created() {
@@ -127,14 +131,14 @@ export default {
   },
   computed: {
     repositoriesUrl() {
-      return list_repositories_path({ non_empty: true, active: true, manageable: this.manageableRepositoriesOnly });
+      return list_repositories_path({ non_empty: true, active: true, manageable: this.manageableRepositoriesOnly, ...this.params });
     },
     rowsUrl() {
       if (!this.selectedRepository) {
         return null;
       }
 
-      return rows_list_team_repositories_path(this.teamId, { active: true });
+      return rows_list_team_repositories_path(this.teamId, { active: true, ...this.params });
     }
   },
   data() {
