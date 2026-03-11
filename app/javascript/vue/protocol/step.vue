@@ -31,7 +31,7 @@
                  ref="completeState"
                  @keyup.enter="changeState"
                  tabindex="0"
-                 :data-tooltip="completeStateTooltip"
+                 :data-sn-tooltip="completeStateTooltip"
                  :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCompleted`">
               <i :class="['sn-icon', step.attributes.completed ? 'sn-icon-task-status-completed' : 'sn-icon-task-status-uncompleted']"></i>
             </div>
@@ -44,7 +44,7 @@
                  @click="changeSkipped"
                  @keyup.enter="changeSkipped"
                  tabindex="0"
-                 :data-tooltip="skipStateTooltip"
+                 :data-sn-tooltip="skipStateTooltip"
                  data-e2e="e2e-BT-protocol-toggleSkipped"
             >
               <i :class="['sn-icon', step.attributes.skipped_at ? 'sn-icon-skip-fill' : 'sn-icon-skip-outline']" :data-e2e="`e2e-BT-protocol-step${step.id}-toggleSkipped`"></i>
