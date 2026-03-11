@@ -23,7 +23,6 @@ module Lists
       fetch_records
       filter_records
       paginate_records
-      add_sort_joins
       add_extra_fields
       @records
     end
@@ -36,10 +35,11 @@ module Lists
     end
 
     def add_extra_fields
+      sort_records = add_sort_joins
       @records = @records.select('repository_rows.id')
                          .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
 
-      @records = @records.select("row_number() OVER (ORDER BY #{sort_column} #{sort_direction(@params[:order])}) AS row_number") if @params[:order].present?
+      @records = @records.select("row_number() OVER (ORDER BY #{sort_column} #{sort_direction(@params[:order])}) AS row_number") if sort_records
 
       @records = RepositoryRow.with(paginated_repository_rows: @records)
                               .joins('JOIN paginated_repository_rows ON paginated_repository_rows.id = repository_rows.id')
@@ -80,7 +80,7 @@ module Lists
                          .group('repository_rows.id')
                          .preload(:repository)
 
-      @records = @records.group('paginated_repository_rows.row_number').order('paginated_repository_rows.row_number') if @params[:order].present?
+      @records = @records.group('paginated_repository_rows.row_number').order('paginated_repository_rows.row_number') if sort_records
       @records = @records.preload(:repository_columns, repository_cells: { value: @repository.cell_preload_includes }) if @preload_cells
       @records = @records.preload(:repository_stock_cell, :repository_stock_value) if @repository.has_stock_management?
     end
