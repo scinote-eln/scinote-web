@@ -255,7 +255,7 @@ class MyModuleRepositoriesController < ApplicationController
         team: @repository.team,
         message_items: {
           my_module: @my_module.id,
-          repository: @repository.id
+          repository: @repository.parent_id || @repository.id
         }
       )
 
