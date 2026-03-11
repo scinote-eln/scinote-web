@@ -18,7 +18,7 @@
             </h4>
           </div>
           <div class="modal-body">
-            <p v-if="mode == 'create'" class="mb-6" data-e2e="e2e-TX-storageLocations-createEditModal-description">
+            <p v-if="mode == 'create'" class="mb-6" data-e2e="e2e-TX-storageLocations-createEditModal-instructions">
               {{ i18n.t(`storage_locations.index.edit_modal.description_create_${editModalMode}`) }}
             </p>
             <div class="mb-6">

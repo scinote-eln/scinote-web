@@ -18,7 +18,7 @@
                      v-model="name"
                      autofocus ref="input"
                     :placeholder="i18n.t('experiments.canvas.new_my_module_modal.name_placeholder')"
-                    data-e2e="'e2e-IF-tasks-newTaskModal-name'">
+                    data-e2e="e2e-IF-tasks-newTaskModal-name">
             </div>
 
             <label class="sci-label">
