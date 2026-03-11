@@ -158,11 +158,17 @@ export default {
                 repositoryComponent.toggleContainer();
               }
             });
-            document.getElementById(`assigned-repository-container-${repositoryId}`)
-                        .scrollIntoView({ behavior: 'smooth' });
           }, 300
         );
       }
+
+      setTimeout(
+        () => {
+          document.getElementById(`assigned-repository-container-${repositoryId}`)
+                  .scrollIntoView({ behavior: 'smooth' });
+        }, 300
+      );
+
       this.reloadKeys[repositoryId] = Date.now();
     },
     collapseRepositories() {
