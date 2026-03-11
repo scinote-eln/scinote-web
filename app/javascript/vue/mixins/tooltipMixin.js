@@ -40,7 +40,7 @@ export default {
             this.tooltip_cleanupTooltipForElement(removedNode);
 
             const childElements = removedNode.querySelectorAll ?
-              removedNode.querySelectorAll('[data-tooltip-initialized]') : [];
+              removedNode.querySelectorAll('[data-sn-tooltip-initialized]') : [];
 
             childElements.forEach((childElement) => {
               this.tooltip_cleanupTooltipForElement(childElement);
@@ -56,7 +56,7 @@ export default {
             this.tooltip_initializeElement(addedNode);
 
             const childElements = addedNode.querySelectorAll ?
-              addedNode.querySelectorAll('[title], [data-tooltip]') : [];
+              addedNode.querySelectorAll('[title], [data-sn-tooltip]') : [];
 
             childElements.forEach((childElement) => {
               this.tooltip_initializeElement(childElement);
@@ -68,17 +68,17 @@ export default {
 
     tooltip_handleAttributeMutation(mutation) {
       const target = mutation.target;
-      if (mutation.attributeName === 'title' || mutation.attributeName === 'data-tooltip') {
+      if (mutation.attributeName === 'title' || mutation.attributeName === 'data-sn-tooltip') {
         const existingInstance = this.tooltip_instances.find(inst => inst.element === target);
 
         if (existingInstance) {
-          const newContent = target.getAttribute('data-tooltip') || target.getAttribute('title');
+          const newContent = target.getAttribute('data-sn-tooltip') || target.getAttribute('title');
 
           if (newContent) {
             existingInstance.content = newContent;
 
             if (target.hasAttribute('title')) {
-              target.setAttribute('data-tooltip', newContent);
+              target.setAttribute('data-sn-tooltip', newContent);
               target.removeAttribute('title');
             }
 
@@ -119,10 +119,10 @@ export default {
       }
 
       // Initialize existing tooltips
-      const tooltipElements = element.querySelectorAll('[title], [data-tooltip]');
+      const tooltipElements = element.querySelectorAll('[title], [data-sn-tooltip]');
       tooltipElements.forEach((el) => this.tooltip_initializeElement(el));
 
-      if (element.hasAttribute('title') || element.hasAttribute('data-tooltip')) {
+      if (element.hasAttribute('title') || element.hasAttribute('data-sn-tooltip')) {
         this.tooltip_initializeElement(element);
       }
 
@@ -136,7 +136,7 @@ export default {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ['title', 'data-tooltip']
+        attributeFilter: ['title', 'data-sn-tooltip']
       });
 
       this.tooltip_additionalObservers.push({ element, observer });
@@ -174,7 +174,7 @@ export default {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ['title', 'data-tooltip']
+        attributeFilter: ['title', 'data-sn-tooltip']
       });
     },
 
@@ -191,25 +191,25 @@ export default {
         return;
       }
 
-      const tooltipElements = this.$el.querySelectorAll('[title], [data-tooltip]');
+      const tooltipElements = this.$el.querySelectorAll('[title], [data-sn-tooltip]');
       tooltipElements.forEach((el) => this.tooltip_initializeElement(el));
     },
 
     tooltip_initializeElement(element) {
-      if (element.hasAttribute('data-tooltip-initialized')) {
+      if (element.hasAttribute('data-sn-tooltip-initialized')) {
         return;
       }
 
-      const tooltipContent = element.getAttribute('data-tooltip') || element.getAttribute('title');
+      const tooltipContent = element.getAttribute('data-sn-tooltip') || element.getAttribute('title');
 
       if (!tooltipContent) {
         return;
       }
 
-      element.setAttribute('data-tooltip-initialized', 'true');
+      element.setAttribute('data-sn-tooltip-initialized', 'true');
 
       if (element.hasAttribute('title')) {
-        element.setAttribute('data-tooltip', tooltipContent);
+        element.setAttribute('data-sn-tooltip', tooltipContent);
         element.removeAttribute('title');
       }
 
@@ -231,7 +231,7 @@ export default {
         element.removeEventListener('mouseenter', showTooltip);
         element.removeEventListener('mouseleave', hideTooltip);
         element.removeEventListener('mousemove', updatePosition);
-        element.removeAttribute('data-tooltip-initialized');
+        element.removeAttribute('data-sn-tooltip-initialized');
         this.tooltip_hideTooltip(instance);
       };
 
