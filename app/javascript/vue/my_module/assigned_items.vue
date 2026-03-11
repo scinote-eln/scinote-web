@@ -63,7 +63,6 @@
         :myModuleId="myModuleId"
         @assignRows="assignRows"
         @toggled="repositoryToggled"
-        :reloadKey="reloadKeys[repository.id]"
       />
     </div>
     <Teleport to="body">
@@ -118,8 +117,7 @@ export default {
       openCreateItemModal: false,
       openAssignItemModal: false,
       repositoriesCollapsed: true,
-      loadingRepositories: true,
-      reloadKeys: {}
+      loadingRepositories: true
     };
   },
   mixins: [tooltipMixin],
@@ -149,7 +147,8 @@ export default {
       window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
     },
     focusOnNewRepository(repositoryId) {
-      if (!this.reloadKeys[repositoryId]) {
+      let assignedRepository = this.$refs.assignedRepositories.find((repositoryComponent) => repositoryComponent.repositoryVersion.id == repositoryId);
+      if (!assignedRepository) {
         this.loadAssingedRepositories();
         setTimeout(
           () => {
@@ -160,6 +159,8 @@ export default {
             });
           }, 300
         );
+      } else {
+        assignedRepository.reloadingTable = true;
       }
 
       setTimeout(
@@ -168,8 +169,6 @@ export default {
                   .scrollIntoView({ behavior: 'smooth' });
         }, 300
       );
-
-      this.reloadKeys[repositoryId] = Date.now();
     },
     collapseRepositories() {
       this.repositoriesCollapsed = true;
