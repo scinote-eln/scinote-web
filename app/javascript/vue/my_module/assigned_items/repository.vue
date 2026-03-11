@@ -120,6 +120,7 @@ import {
   index_ag_my_module_repository_path,
   actions_toolbar_my_module_repositories_path,
   my_module_repository_path,
+  batch_destroy_my_module_repository_path,
   snapshot_list_my_module_repository_snapshots_path,
   my_module_select_default_snapshot_path
 } from '../../../routes.js';
@@ -256,9 +257,11 @@ export default {
     },
     unassignRows(rowIds, downstream = false) {
       this.showUnassignModal = false;
-      axios.patch(my_module_repository_path(this.myModuleId, this.repositoryVersion.id), {
-        rows_to_unassign: rowIds,
-        downstream: downstream
+      axios.delete(batch_destroy_my_module_repository_path(this.myModuleId, this.repositoryVersion.id), { 
+        params: {
+          rows_to_unassign: rowIds,
+          downstream: downstream
+        }
       }).then((response) => {
         HelperModule.flashAlertMsg(response.data.flash, 'success');
         this.reloadingTable = true;
