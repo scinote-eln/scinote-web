@@ -130,7 +130,6 @@ export default {
   props: {
     repository: Object,
     myModuleId: String,
-    reloadKey: Number,
     onlyRepository: {
       type: Boolean,
       default: false
@@ -160,9 +159,6 @@ export default {
     repositoryVersion: null
   }),
   watch: {
-    reloadKey() {
-      this.reloadingTable = true;
-    },
     sectionOpened() {
       this.setUserState(
         `my_module_repository_rows_my_module_${this.myModuleId}_repository_${this.repositoryVersion.id}_section_opened`,
