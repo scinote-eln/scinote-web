@@ -25,11 +25,11 @@
                   </button>
                 </template>
                 <template v-slot:flyout>
-                  <div class="max-w-64 overflow-hidden">
+                  <div class="max-w-64 overflow-hidden" data-e2e="e2e-DO-protocol-assignedItemsModal-selectInventory">
                     <div
                       @click="openAssignItemModal = true"
                       class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative"
-                      data-e2e="e2e-DO-protocol-assignedItemsModal-assignFromAnotherInventory"
+                      data-e2e="e2e-DO-protocol-assignedItemsModal-selectInventory-assignFromAnotherInventory"
                     >
                       {{ i18n.t('my_modules.repository.assigned_items_modal.assign_new_row') }}
                     </div>
