@@ -3,7 +3,7 @@
     class="flex items-center flex-nowrap relative"
     v-click-outside="closeSearchInputs"
   >
-    <button :class="{hidden: searchOpened}" ref='searchInputBtn' class="btn btn-light btn-black icon-btn" data-e2e="e2e-BT-invInventoryRT-search" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
+    <button :class="{hidden: searchOpened}" ref='searchInputBtn' class="btn btn-light btn-black icon-btn" data-e2e="e2e-BT-topToolbar-search" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
       <i class="sn-icon sn-icon-search"></i>
     </button>
     <div v-if="searchOpened || barcodeSearchOpened" class="w-52 flex">
@@ -30,7 +30,7 @@
         </div>
       </template>
     </div>
-    <button v-if="enableBarcodeSearch" :class="{hidden: barcodeSearchOpened}" ref='barcodeSearchInputBtn' class="btn btn-light btn-black icon-btn ml-2" data-e2e="e2e-BT-invInventoryRT-barcode" :title="i18n.t('repositories.show.ean_search_button_tooltip')" @click="openBarcodeSearch">
+    <button v-if="enableBarcodeSearch" :class="{hidden: barcodeSearchOpened}" ref='barcodeSearchInputBtn' class="btn btn-light btn-black icon-btn ml-2" data-e2e="e2e-BT-topToolbar-barcode" :title="i18n.t('repositories.show.ean_search_button_tooltip')" @click="openBarcodeSearch">
       <i class='sn-icon sn-icon-barcode barcode-scanner'></i>
     </button>
   </div>
