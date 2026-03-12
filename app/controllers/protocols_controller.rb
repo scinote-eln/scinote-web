@@ -518,7 +518,15 @@ class ProtocolsController < ApplicationController
         render json: { message: t('my_modules.protocols.load_from_repository_error') }, status: :bad_request
       else
         # Everything good, record activity, display flash & render 200
-        log_activity(:load_protocol_to_task_from_repository,
+        load_mode = params[:load_mode] || 'replace'
+
+        activity_type = if load_mode == 'replace'
+                          :load_protocol_to_task_from_repository_replace
+                        else
+                          :load_protocol_to_task_from_repository_merge
+                        end
+
+        log_activity(activity_type,
                      @protocol.my_module.experiment.project,
                      my_module: @protocol.my_module.id,
                      protocol_repository: @source.id)
