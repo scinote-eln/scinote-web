@@ -19,7 +19,8 @@ export default {
   },
   computed: {
     defaultRepositoryColumnsDef() {
-      let columns = [{
+      let columns = [];
+      columns.push({
         field: 'name',
         headerName: this.i18n.t('repositories.table.row_name'),
         sortable: true,
@@ -28,30 +29,34 @@ export default {
         cellRendererParams: {
           legacyId: -4
         }
-      },
-      {
+      });
+      columns.push({
         field: 'code',
         headerName: this.i18n.t('repositories.table.id'),
         sortable: true,
         cellRendererParams: {
           legacyId: -3
         }
-      },
-      {
-        field: 'assigned_tasks_count',
-        headerName: this.i18n.t('repositories.table.assigned'),
-        sortable: true,
-        hide: this.columnHidden
-      },
-      {
+      });
+
+      if (!this.repositoryVersion.attributes.is_snapshot) {
+        columns.push({
+          field: 'assigned_tasks_count',
+          headerName: this.i18n.t('repositories.table.assigned'),
+          sortable: true,
+          hide: this.columnHidden
+        });
+      }
+
+      columns.push({
         field: 'connections_count',
         headerName: this.i18n.t('repositories.table.relationships'),
         hide: this.columnHidden,
         cellRendererParams: {
           legacyId: -11
         }
-      },
-      {
+      });
+      columns.push({
         field: 'created_at',
         headerName: this.i18n.t('repositories.table.added_on'),
         sortable: true,
@@ -59,8 +64,8 @@ export default {
         cellRendererParams: {
           legacyId: -6
         },
-      },
-      {
+      });
+      columns.push({
         field: 'created_by',
         headerName: this.i18n.t('repositories.table.added_by'),
         sortable: true,
@@ -68,7 +73,7 @@ export default {
         cellRendererParams: {
           legacyId: -5
         },
-      }];
+      });
       return columns;
     },
     columnHidden() {
