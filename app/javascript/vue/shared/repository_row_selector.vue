@@ -7,7 +7,7 @@
         placeholder="Select inventory"
         :searchable="true"
         :value="selectedRepository"
-        :disabled="preSelectedRepository"
+        :disabled="disabledRepositoryDropdown"
         @change="selectedRepository = $event"
         :e2eValue="`e2e-DD-${dataE2e}-selectInventory`"
       ></SelectDropdown>
@@ -99,6 +99,7 @@ export default {
   created() {
     this.teamId = document.body.dataset.currentTeamId;
     if (this.preSelectedRepository) {
+      this.disabledRepositoryDropdown = true;
       this.selectedRepository = this.preSelectedRepository;
     }
     if (this.preSelectedRows) {
@@ -149,7 +150,8 @@ export default {
       showItemInfo: false,
       hoveredRow: {},
       loadingHoveredRow: false,
-      loading: true
+      loading: true,
+      disabledRepositoryDropdown: false
     };
   },
   methods: {
