@@ -82,12 +82,6 @@ export default {
         sortable: true
       },
       {
-        field: 'assigned_tasks_count',
-        headerName: this.i18n.t('repositories.table.assigned'),
-        sortable: true,
-        hide: this.columnHidden
-      },
-      {
         field: 'connections_count',
         headerName: this.i18n.t('repositories.table.relationships'),
         hide: this.columnHidden
