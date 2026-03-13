@@ -1,5 +1,5 @@
 <template>
-  <div v-if="params.value">
+  <div v-if="params.value || params.data.consumed_stock">
     <component :is="params.columnDataType" :params="params" />
   </div>
 </template>
@@ -18,6 +18,7 @@ import RepositoryDateRangeValue from './custom_cells_renderer/date_range_value.v
 import RepositoryTimeRangeValue from './custom_cells_renderer/time_range_value.vue';
 import RepositoryDateTimeRangeValue from './custom_cells_renderer/date_time_range_value.vue';
 import RepositoryStockValue from './custom_cells_renderer/stock_value.vue';
+import RepositoryStockConsumptionValue from './consume_renderer.vue'
 
 export default {
   name: 'CellRenderer',
@@ -39,7 +40,8 @@ export default {
     RepositoryDateRangeValue,
     RepositoryTimeRangeValue,
     RepositoryDateTimeRangeValue,
-    RepositoryStockValue
+    RepositoryStockValue,
+    RepositoryStockConsumptionValue
   }
 };
 </script>

@@ -110,7 +110,7 @@ export default {
               notSelectable: true
             });
 
-            if (field == 'stock' && this.myModuleId) {
+            if (field == 'stock' && this.myModuleId && !this.repositoryVersion.attributes.is_snapshot) {
               columns.push({
                 field: 'consumed_stock',
                 headerName: this.i18n.t('repositories.table.row_consumption'),
