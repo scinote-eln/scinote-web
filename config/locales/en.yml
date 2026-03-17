@@ -430,7 +430,7 @@ en:
       results: "Results"
       activities: "Activity"
       assigned_items: "Assigned items"
-      archive: "Archived results"
+      archive: "Archive"
 
   smart_annotations:
     private:
@@ -1471,6 +1471,9 @@ en:
       recent_protocols_from_repository: "Recent protocols from the Repository"
       code: "ID: "
       recent_protocols_from_repository: "Recent protocols from the Templates"
+    archive:
+      steps: "Protocol steps"
+      results: "Results"
     shareable_links:
       share: "Share"
       shared: "Shared"
