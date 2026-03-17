@@ -536,10 +536,22 @@ module Lists
 
         sort_by_custom_repository_column(sorting_column)
       else
-        return unless sortable_columns.include?(column)
+        sorting_column = sortable_columns_map(column)
+        return unless sortable_columns.include?(sorting_column)
 
-        @records = @records.group(:id).group(column)
+        @records = @records.group(:id).group(sorting_column)
       end
+    end
+
+    def sortable_columns_map(column)
+      {
+        name: 'repository_rows.name',
+        code: 'repository_rows.id',
+        assigned_tasks_count: 'assigned',
+        created_by: 'created_by.full_name',
+        created_at: 'repository_rows.created_at',
+        connections_count: 'relationships'
+      }[column.to_sym]
     end
 
     def sortable_columns

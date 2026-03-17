@@ -58,6 +58,16 @@ class RepositorySnapshot < RepositoryBase
     )
   end
 
+  def default_sortable_columns
+    [
+      'repository_rows.id',
+      'repository_rows.name',
+      'relationships',
+      'repository_rows.created_at',
+      'users.full_name',
+    ]
+  end
+
   def default_table_state
     Constants::REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE
   end
