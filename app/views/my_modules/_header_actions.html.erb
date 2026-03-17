@@ -34,7 +34,14 @@
     >
       <%= t("nav2.modules.activities") %>
     </a>
-    <div data-hook="secondary-navigation-tabs"></div>
+    <div data-hook="secondary-navigation-tabs" class="-ml-4"></div>
+    <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_archive? ? "text-sn-blue" : "text-sn-grey" %>"
+        href="<%= archive_my_module_path(@my_module) %>"
+        title="<%= t("nav2.modules.archive") %>"
+        data-e2e="e2e-BT-taskTabs-archive"
+    >
+      <%= t("nav2.modules.archive") %>
+    </a>
   </div>
   <div>
     <%= render partial: '/my_modules/task_flow_and_sharing' %>
