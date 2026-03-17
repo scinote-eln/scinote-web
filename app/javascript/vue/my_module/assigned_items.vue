@@ -147,7 +147,7 @@ export default {
       window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
     },
     focusOnNewRepository(repositoryId) {
-      let assignedRepository = this.$refs.assignedRepositories.find((repositoryComponent) => repositoryComponent.repositoryVersion.id == repositoryId);
+      let assignedRepository = this.$refs.assignedRepositories?.find((repositoryComponent) => repositoryComponent.repositoryVersion.id == repositoryId);
       if (!assignedRepository) {
         this.loadAssingedRepositories();
         setTimeout(
@@ -185,7 +185,7 @@ export default {
       });
     },
     repositoryToggled() {
-      if (this.$refs.assignedRepositories.every((repository) => repository.sectionOpened === false)) {
+      if (this.$refs.assignedRepositories?.every((repository) => repository.sectionOpened === false)) {
         this.repositoriesCollapsed = true;
       } else {
         this.repositoriesCollapsed = false;
