@@ -298,8 +298,10 @@ Rails.application.routes.draw do
         get 'atwho_my_modules', to: 'at_who#my_modules'
         get 'atwho_menu_items', to: 'at_who#menu_items'
         get :automations
-        get :settings
-        put :update_settings
+        get :automation_settings
+        put :update_automation_settings
+        get :available_settings
+        put :update_setting
       end
 
       # External protocols routes
