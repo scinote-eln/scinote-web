@@ -1,7 +1,7 @@
 <template>
   <div class="mt-4">
-    <div  class="result-toolbar sticky top-0 transition p-3 flex justify-between bg-sn-white">
-      <div class="result-toolbar__left flex items-center">
+    <div  class="archive-toolbar sticky top-0 transition p-3 flex justify-between bg-sn-white">
+      <div class="archive-toolbar__left flex items-center">
         <div class="p-0.5 bg-sn-super-light-grey flex items-center gap-2 rounded cursor-pointer text-xs">
           <div
             class="h-9 flex items-center px-4"
@@ -19,7 +19,7 @@
           </div>
         </div>
       </div>
-      <div class="result-toolbar__right flex items-center [&_.sn-icon-filter]:!text-sn-blue">
+      <div class="archive-toolbar__right flex items-center [&_.sn-icon-filter]:!text-sn-blue">
         <template>
           <button :title="i18n.t('protocols.steps.collapse_label')" v-if="!objectsCollapsed" class="btn btn-secondary icon-btn xl:!px-4" @click="collapseObjects" tabindex="0">
             <i class="sn-icon sn-icon-collapse-all"></i>
@@ -41,12 +41,17 @@
           ></MenuDropdown>
       </div>
     </div>
+
+    <div class="mt-4">
+      <ArchiveResults v-if="activeView === 'results'" :myModuleId="myModuleId" />
+    </div>
   </div>
 </template>
 
 <script>
 import FilterDropdown from '../shared/filters/filter_dropdown.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
+import ArchiveResults from './archive_results.vue';
 
 const SORTS = [
   'updated_at_asc',
@@ -58,14 +63,23 @@ const SORTS = [
 ];
 
 export default {
+  props: {
+    myModuleId: {
+      required: true
+    }
+  },
   data() {
     return {
       filters: null,
       objectsCollapsed: false,
-      activeView: 'steps'
+      activeView: 'results'
     };
   },
-  components: { FilterDropdown, MenuDropdown },
+  components: {
+    FilterDropdown,
+    MenuDropdown,
+    ArchiveResults
+  },
   created() {
     this.filters = [
       {

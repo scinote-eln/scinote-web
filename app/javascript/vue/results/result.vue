@@ -5,7 +5,13 @@
        @dragenter.prevent="dragEnter($event)"
        @dragover.prevent
        :data-id="result.id"
-       :class="{ 'bg-sn-super-light-blue': dragingFile, 'bg-white': !dragingFile, 'locked': locked, 'pointer-events-none': addingContent }"
+       :class="{
+        'bg-sn-super-light-blue': dragingFile,
+        'bg-white': !dragingFile,
+        'locked': locked,
+        'pointer-events-none': addingContent,
+        '!bg-sn-background-brittlebush': result.attributes.archived
+      }"
        :data-e2e="`e2e-CO-task-result${result.id}`"
   >
     <div class="text-xl items-center flex flex-col text-sn-blue h-full justify-center left-0 absolute top-0 w-full"
@@ -36,7 +42,10 @@
             :autofocus="editingName"
             :placeholder="i18n.t('my_modules.results.placeholder')"
             :defaultValue="i18n.t('my_modules.results.default_name')"
-            :timestamp="i18n.t('protocols.steps.timestamp', {date: result.attributes.created_at, user: result.attributes.created_by })"
+            :timestamp="i18n.t(`protocols.steps.${result.attributes.archived ? 'timestamp_archived' : 'timestamp'}`, {
+              date: result.attributes.archived_on || result.attributes.created_at,
+              user: result.attributes.archived_by || result.attributes.created_by
+            })"
             :data-e2e="`task-result${result.id}`"
             @editingEnabled="editingName = true"
             @editingDisabled="editingName = false"
@@ -45,6 +54,10 @@
           />
         </div>
         <div class="result-head-right flex elements-actions-container">
+          <div v-if="result.attributes.archived" class="sci-tag bg-sn-alert-brittlebush">
+            Archived
+            <span class="sn-icon sn-icon-archive"></span>
+          </div>
           <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
           <MenuDropdown
             :listItems="this.insertMenu"
@@ -70,6 +83,15 @@
             :data-object-type="result.attributes.type"
             tabindex="0"
           ></span> <!-- Hidden element to support legacy code -->
+          <button
+            v-if="this.urls.restore_url"
+            class="btn icon-btn btn-light"
+            @click="restoreResult"
+            :title="this.i18n.t('my_modules.results.actions.restore')"
+            :data-e2e="`e2e-DO-task-result${this.result.id}-optionsMenu-restore`"
+          >
+            <i class="sn-icon sn-icon-restore"></i>
+          </button>
           <template v-if="result.attributes.steps.length == 0">
             <button
               v-if="urls.update_url"
@@ -151,11 +173,19 @@
             @reorder="openReorderModal"
             @duplicate="duplicateResult"
             @archive="archiveResult"
-            @restore="restoreResult"
             @delete="showDeleteModal"
             @pin="pinResult"
             @unpin="unpinResult"
           ></MenuDropdown>
+          <button
+            v-if="this.urls.delete_url"
+            class="btn icon-btn btn-light"
+            @click="deleteResult"
+            :title="this.i18n.t('my_modules.results.actions.delete')"
+            :data-e2e="`e2e-DO-task-result${this.result.id}-optionsMenu-delete`"
+          >
+            <i class="sn-icon sn-icon-delete"></i>
+          </button>
         </div>
       </div>
       <deleteResultModal v-if="confirmingDelete" @confirm="deleteResult" @cancel="closeDeleteModal"/>
@@ -469,20 +499,6 @@ export default {
           text: this.i18n.t('my_modules.results.actions.archive'),
           emit: 'archive',
           data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-archive`
-        }]);
-      }
-      if (this.urls.restore_url) {
-        menu = menu.concat([{
-          text: this.i18n.t('my_modules.results.actions.restore'),
-          emit: 'restore',
-          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-restore`
-        }]);
-      }
-      if (this.urls.delete_url) {
-        menu = menu.concat([{
-          text: this.i18n.t('my_modules.results.actions.delete'),
-          emit: 'delete',
-          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-delete`
         }]);
       }
       return menu;
