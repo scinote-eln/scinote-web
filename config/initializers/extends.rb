@@ -941,6 +941,9 @@ class Extends
       },
       result_deletion_enabled: {
         permission_helper: :can_manage_team?
+      },
+      protocol_steps_deletion_enabled: {
+        permission_helper: :can_manage_team?
       }
     }
   }
