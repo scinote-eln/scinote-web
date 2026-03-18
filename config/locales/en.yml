@@ -3737,6 +3737,10 @@ en:
                   label: "Allow deleting results from Archive"
                   enable_success_message: "Result deleting is enabled."
                   disable_success_message: "Result deleting is disabled."
+                protocol_steps_deletion_enabled:
+                  label: "Allow deleting Protocol steps from Archive"
+                  enable_success_message: "Protocol steps deleting is enabled."
+                  disable_success_message: "Protocol steps deleting is disabled."
 
 
         show:
