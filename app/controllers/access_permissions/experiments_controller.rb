@@ -24,7 +24,7 @@ module AccessPermissions
         )
       end
 
-      UserAssignments::PropagateAssignmentJob.perform_later(@assignment)
+      UserAssignments::PropagateAssignmentJob.perform_later(@assignment, assigner_id: current_user.id)
 
       case assignment_type
       when :team

@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 module UserAssignments
-  class PropagateAssignmentJob < ApplicationJob
+  class PropagateAssignmentJob < BaseJob
     include Canaid::Helpers::PermissionsHelper
 
-    queue_as :high_priority
-
-    def perform(assignment, destroy: false, remove_from_team: false)
+    def perform(assignment, assigner_id:, destroy: false)
       @assignment = assignment
       @resource = assignment.assignable
       @destroy = destroy
-      @remove_from_team = remove_from_team
+      @assigned_by = User.find_by(id: assigner_id)
       @type = assignment.class.model_name.param_key.gsub('_assignment', '').to_sym
+
+      Rails.logger.info "Enqueued by User(#{assigner_id}) for #{@resource.class.name}(#{@resource.id})\n"
 
       @assignment.with_lock do
         @assignment.destroy! if destroy && !@assignment.destroyed?
@@ -64,7 +64,7 @@ module UserAssignments
 
       assignment.update!(
         user_role: @assignment.user_role,
-        assigned_by: @assignment.assigned_by,
+        assigned_by: @assigned_by,
         assigned: :automatically
       )
     end

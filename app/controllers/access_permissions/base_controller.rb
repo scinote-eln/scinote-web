@@ -87,7 +87,7 @@ module AccessPermissions
         raise ActiveRecord::RecordInvalid
       end
 
-      UserAssignments::PropagateAssignmentJob.perform_now(@assignment, destroy: true)
+      UserAssignments::PropagateAssignmentJob.perform_now(@assignment, assigner_id: current_user.id, destroy: true)
 
       case assignment_type
       when :team
@@ -149,6 +149,7 @@ module AccessPermissions
 
       UserAssignments::PropagateAssignmentJob.perform_later(
         @assignment,
+        assigner_id: current_user.id,
         destroy: destroy
       )
     end
