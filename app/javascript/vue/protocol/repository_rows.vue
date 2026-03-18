@@ -42,7 +42,7 @@ import DataTable from '../shared/datatable/table.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import RowNameRenderer from './repository_row_renderers/row_name.vue';
 import RepositoryNameRenderer from './repository_row_renderers/repository_name.vue';
-
+import { batch_destroy_protocol_repository_rows_path } from '../../routes.js';
 
 export default {
   name: 'TagsTable',
@@ -135,7 +135,7 @@ export default {
 
       const ok = await this.$refs.deleteModal.show();
       if (ok) {
-        axios.delete(event.path).then(() => {
+        axios.post(batch_destroy_protocol_repository_rows_path(this.protocolId), { row_ids: rows.map((r) => r.id) }).then(() => {
           this.reloadingTable = true;
         });
       }

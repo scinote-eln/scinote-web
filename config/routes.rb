@@ -583,7 +583,7 @@ Rails.application.routes.draw do
           post :update_repository_records_modal, as: :update_modal
           get :consume_modal
           post :update_consumption
-          delete :batch_destroy
+          post :batch_destroy
         end
 
         collection do
@@ -796,7 +796,7 @@ Rails.application.routes.draw do
           get :repositories
           get :repository_rows
           post :actions_toolbar
-          delete :batch_destroy
+          post :batch_destroy
         end
       end
 
