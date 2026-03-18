@@ -4173,6 +4173,7 @@ en:
       step_duplication_failed: "Step could not be duplicated, try again later."
       component_duplication_failed: "Step content could not be duplicated, try again later."
       timestamp: "Created on %{date} by %{user}"
+      timestamp_archived: "Archived on %{date} by %{user}"
       timestamp_iso_html: "Created on <span class='iso-formatted-date'>%{date}</span> by %{user}"
       manage_links: "Manage links"
       archived_result: "Archived"

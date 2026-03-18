@@ -20,26 +20,6 @@
         {{ i18n.t('my_modules.results.add_label') }}
       </button>
     </div>
-
-    <div v-if="archived_url && active_url" class="dropdown view-switch flex items-center">
-      <div class="btn btn-secondary view-switch-button prevent-shrink" :class="{'mr-3': headerSticked}" id="viewSwitchButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <span v-if="archived" class="state-view-switch-btn-name">{{ i18n.t('my_modules.results.archived_results') }}</span>
-        <span v-else class="state-view-switch-btn-name">{{ i18n.t('my_modules.results.active_results') }}</span>
-        <span class="sn-icon sn-icon-down"></span>
-      </div>
-      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="viewSwitchButton">
-        <li class="view-switch-active h-34">
-          <a class="h-34 dropdown-switch-link" :href="active_url" :class="{'form-dropdown-state-item prevent-shrink': !archived}">
-            {{ i18n.t('my_modules.results.active_results') }}
-          </a>
-        </li>
-        <li class="view-switch-archived h-34">
-          <a class="h-34 dropdown-switch-link" :href="archived_url" :class="{'form-dropdown-state-item prevent-shrink': archived}">
-            {{ i18n.t('my_modules.results.archived_results') }}
-          </a>
-        </li>
-      </ul>
-    </div>
     <div class="result-toolbar__right flex items-center [&_.sn-icon-filter]:!text-sn-blue">
       <template v-if="results.length > 0">
         <button :title="i18n.t('protocols.steps.collapse_label')" v-if="!resultsCollapsed" class="btn btn-secondary icon-btn xl:!px-4" @click="collapseResults" tabindex="0">
@@ -82,10 +62,7 @@ export default {
   props: {
     sort: { type: String, required: true },
     canCreate: { type: Boolean, required: true },
-    archived: { type: Boolean, required: false},
     headerSticked: { type: Boolean, required: true },
-    active_url: { type: String, required: false},
-    archived_url: { type: String, required: false},
     moduleName: { type: String, required: true },
     results: { type: Array, required: true },
     resultsCollapsed: { type: Boolean, required: true }

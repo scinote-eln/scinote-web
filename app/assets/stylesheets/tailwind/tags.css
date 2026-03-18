@@ -1,6 +1,6 @@
 @layer components {
   .sci-tag {
-    @apply text-xs !rounded-full !pl-2 !pr-1.5 h-6 !py-0.5 inline-flex items-center gap-1;
+    @apply text-xs !rounded-full !pl-2 !pr-1.5 h-6 !py-0.5 inline-flex items-center gap-1 shrink-0;
   }
 
   .sci-tag .text-block {
