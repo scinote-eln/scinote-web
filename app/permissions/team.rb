@@ -78,6 +78,10 @@ Canaid::Permissions.register_for(Team) do
   can :delete_tags do |user, team|
     team.permission_granted?(user, TeamPermissions::TAGS_DELETE)
   end
+
+  can :modify_team_deletion_prevention do |user, team|
+    can_manage_team?(user, team)
+  end
 end
 
 Canaid::Permissions.register_for(ProjectFolder) do

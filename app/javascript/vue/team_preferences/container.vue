@@ -3,13 +3,15 @@
     <h2>{{ i18n.t('users.settings.teams.preferences.title') }}</h2>
     <div>
       <div v-for="(items, sectionKey) in settings" :key="`section-${sectionKey}`" class="flex flex-col bg-sn-white gap-4 p-4 w-full rounded">
-        <h5>{{ i18n.t(`users.settings.teams.preferences.sections.${sectionKey}.title`)}}</h5>
+        <h5>{{ i18n.t(`users.settings.teams.preferences.sections.${sectionKey}.title`)}}
+          <i v-if="sectionKey == 'deletion'" class="sn-icon sn-icon-info" :title="i18n.t(`users.settings.teams.preferences.sections.${sectionKey}.message`)"></i>
+        </h5>
 
         <div
           v-for="(item, itemKey) in items"
           :key="`pref-${sectionKey}-${itemKey}`"
           class="flex justify-between max-w-3xl border-0 border-t border-solid border-sn-super-light-grey">
-            <div class="text-base py-3 pl-2">{{ item.label }}</div>
+            <div class="text-base py-3 pl-2" :class="{ 'text-sn-grey': !item.can_update }">{{ item.label }}</div>
             <div class="flex-shrink-0 flex items-center py-3">
               <div class="sci-toggle-checkbox-container">
                 <input
@@ -42,6 +44,7 @@
 import axios from "../../packs/custom_axios.js";
 import ConfirmationModal from "../shared/confirmation_modal.vue";
 import escapeHtml from "../shared/escape_html.js";
+import tooltipMixin from "../mixins/tooltipMixin.js";
 import {
   available_settings_team_path,
   update_setting_team_path
@@ -52,6 +55,7 @@ export default {
   components: {
     ConfirmationModal
   },
+  mixins: [tooltipMixin],
   props: {
     teamId: {
       type: [Number, String],
