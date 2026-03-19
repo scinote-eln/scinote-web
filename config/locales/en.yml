@@ -3731,6 +3731,7 @@ en:
                     button: "Disable"
             deletion:
               title: "Allow deleting"
+              message: "Contact your SciNote administrator to change these settings"
               items:
                 repository_deletion_enabled:
                   label: "Allow deleting inventories and inventory items from Archive"

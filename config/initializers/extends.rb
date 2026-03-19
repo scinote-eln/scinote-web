@@ -937,13 +937,13 @@ class Extends
     },
     deletion: {
       repository_deletion_enabled: {
-        permission_helper: :can_manage_team?
+        permission_helper: :can_modify_team_deletion_prevention?
       },
       result_deletion_enabled: {
-        permission_helper: :can_manage_team?
+        permission_helper: :can_modify_team_deletion_prevention?
       },
       protocol_steps_deletion_enabled: {
-        permission_helper: :can_manage_team?
+        permission_helper: :can_modify_team_deletion_prevention?
       }
     }
   }
