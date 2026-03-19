@@ -43,19 +43,35 @@
         </button>
       </div>
     </span>
+
+    <ConfirmationModal
+      :title="
+        i18n.t('my_modules.repository.version.delete_version_modal.title')
+      "
+      :description="
+        i18n.t('my_modules.repository.version.delete_version_modal.text')
+      "
+      confirmClass="btn btn-danger"
+      :confirmText="i18n.t('general.delete')"
+      ref="deleteVersionModal"
+      :e2eValue="`my-module-repository-deleteVersionModal-${item.id}`"
+    ></ConfirmationModal>
   </div>
 </template>
 
 <script>
-
 import axios from '../../../../packs/custom_axios.js';
 import tooltipMixin from '../../../mixins/tooltipMixin.js';
+import ConfirmationModal from '../../../shared/confirmation_modal.vue';
 import {
   status_my_module_repository_snapshot_path
 } from '../../../../routes.js';
 
 export default {
   name: 'SnapshotItem',
+  components: {
+    ConfirmationModal
+  },
   props: {
     item: { type: Object, required: true },
     pinned: { type: Boolean, default: false },
@@ -82,8 +98,11 @@ export default {
     }
   },
   methods: {
-    deleteVersion() {
-      this.$emit('deleteVersion', this.item);
+    async deleteVersion() {
+      const ok = await this.$refs.deleteVersionModal.show();
+      if (ok) {
+        this.$emit('deleteVersion', this.item);
+      }
     },
     selectVersion() {
       this.$emit('selectVersion', this.item);

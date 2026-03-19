@@ -1772,6 +1772,9 @@ en:
         snapshot_created_by: "by %{user}"
         pin: 'Make default view'
         delete: 'Delete snapshot'
+        delete_version_modal:
+          title: 'Delete snapshot'
+          text: 'Are you sure you want to delete this snapshot?'
         create_snapshot: '+ Create a snapshot'
         creating_snapshot: 'Creating snapshot...'
       full_view:
