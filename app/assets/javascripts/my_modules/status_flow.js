@@ -63,6 +63,10 @@
   }
 
   function checkCurrentStatus() {
+    if (window.myModuleStatusPollingTimeout) {
+      clearTimeout(window.myModuleStatusPollingTimeout);
+      window.myModuleStatusPollingTimeout = null;
+    }
     if (!$('#status-container').data('current-status-url')) return;
 
     $.get($('#status-container').data('current-status-url'), (statusData) => {
@@ -73,7 +77,7 @@
           $('#status-container').trigger('statusChanged');
         });
       } else {
-        setTimeout(() => { checkCurrentStatus(); }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
+        window.myModuleStatusPollingTimeout = setTimeout(() => { checkCurrentStatus(); }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
       }
     });
   }

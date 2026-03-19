@@ -19,7 +19,8 @@ export default {
   },
   computed: {
     defaultRepositoryColumnsDef() {
-      let columns = [{
+      let columns = [];
+      columns.push({
         field: 'name',
         headerName: this.i18n.t('repositories.table.row_name'),
         sortable: true,
@@ -28,30 +29,34 @@ export default {
         cellRendererParams: {
           legacyId: -4
         }
-      },
-      {
+      });
+      columns.push({
         field: 'code',
         headerName: this.i18n.t('repositories.table.id'),
         sortable: true,
         cellRendererParams: {
           legacyId: -3
         }
-      },
-      {
-        field: 'assigned_tasks_count',
-        headerName: this.i18n.t('repositories.table.assigned'),
-        sortable: true,
-        hide: this.columnHidden
-      },
-      {
+      });
+
+      if (!this.repositoryVersion.attributes.is_snapshot) {
+        columns.push({
+          field: 'assigned_tasks_count',
+          headerName: this.i18n.t('repositories.table.assigned'),
+          sortable: true,
+          hide: this.columnHidden
+        });
+      }
+
+      columns.push({
         field: 'connections_count',
         headerName: this.i18n.t('repositories.table.relationships'),
         hide: this.columnHidden,
         cellRendererParams: {
           legacyId: -11
         }
-      },
-      {
+      });
+      columns.push({
         field: 'created_at',
         headerName: this.i18n.t('repositories.table.added_on'),
         sortable: true,
@@ -59,8 +64,8 @@ export default {
         cellRendererParams: {
           legacyId: -6
         },
-      },
-      {
+      });
+      columns.push({
         field: 'created_by',
         headerName: this.i18n.t('repositories.table.added_by'),
         sortable: true,
@@ -68,23 +73,23 @@ export default {
         cellRendererParams: {
           legacyId: -5
         },
-      }];
+      });
       return columns;
     },
     columnHidden() {
-      return !this.repository.is_snapshot;
+      return !this.repositoryVersion.attributes.is_snapshot;
     }
   },
   mounted() {
-    if (this.repository) {
+    if (this.repositoryVersion) {
       this.loadRepositoryColumns();
     }
   },
   methods: {
     loadRepositoryColumns() {
-      axios.get(index_new_repository_repository_columns_path(this.repository.id))
+      axios.get(index_new_repository_repository_columns_path(this.repositoryVersion.id))
         .then((response) => {
-          let columns = this.defaultRepositoryColumnsDef;
+          let columns = [...this.defaultRepositoryColumnsDef];
           response.data.data.forEach((column) => {
             let field = `col_${column.id}`;
             if (column.attributes.data_type == 'RepositoryStockValue') {
@@ -97,7 +102,7 @@ export default {
               cellRenderer: 'cellRenderer',
               hide: !(field == 'stock') && this.columnHidden,
               cellRendererParams: {
-                repositoryId: this.repository.id,
+                repositoryId: this.repositoryVersion.id,
                 columnId: column.id,
                 columnDataType: column.attributes.data_type,
                 legacyId: parseInt(column.id, 10)
@@ -105,7 +110,7 @@ export default {
               notSelectable: true
             });
 
-            if (field == 'stock' && this.myModuleId) {
+            if (field == 'stock' && this.myModuleId && !this.repositoryVersion.attributes.is_snapshot) {
               columns.push({
                 field: 'consumed_stock',
                 headerName: this.i18n.t('repositories.table.row_consumption'),

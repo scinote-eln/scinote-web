@@ -6,10 +6,11 @@ class MyModuleRepositoriesController < ApplicationController
 
   before_action :load_my_module, except: :assign_my_modules
   before_action :load_repository, except: %i(index actions_toolbar repositories_dropdown_list repositories_list_html repositories_list create)
-  before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption assign_my_modules)
-  before_action :check_repository_view_permissions, except: %i(index actions_toolbar index_dt index_ag repositories_dropdown_list repositories_list_html repositories_list create)
+  before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption assign_my_modules batch_destroy)
+  before_action :check_repository_view_permissions, except: %i(index actions_toolbar index_dt index_ag repositories_dropdown_list
+                                                               repositories_list_html repositories_list create batch_destroy)
   before_action :check_repository_row_consumption_permissions, only: %i(consume_modal update_consumption)
-  before_action :check_assign_repository_records_permissions, only: %i(update create)
+  before_action :check_assign_repository_records_permissions, only: %i(update create batch_destroy)
   before_action :load_my_modules, only: :assign_my_modules
   before_action :set_breadcrumbs_items, only: %i(index)
   before_action :set_navigator, only: %i(index)
@@ -254,7 +255,7 @@ class MyModuleRepositoriesController < ApplicationController
         team: @repository.team,
         message_items: {
           my_module: @my_module.id,
-          repository: @repository.id
+          repository: @repository.parent_id || @repository.id
         }
       )
 
@@ -296,6 +297,27 @@ class MyModuleRepositoriesController < ApplicationController
     }
   end
 
+  def batch_destroy
+    service = RepositoryRows::MyModuleAssignUnassignService.call(my_module: @my_module,
+                                                                 repository: @repository,
+                                                                 user: current_user,
+                                                                 params: batch_delete_params)
+    if service.succeed?
+      flash = update_flash_message(service)
+      status = :ok
+    else
+      flash = t('my_modules.repository.flash.update_error')
+      status = :bad_request
+    end
+
+    render json: {
+      flash: flash,
+      rows_count: @my_module.repository_rows_count(@repository),
+      assigned_count: service.assigned_rows_count,
+      repository_id: @repository.repository_snapshots.find_by(selected: true)&.id || @repository.id
+    }, status: status
+  end
+
   private
 
   def load_my_module
@@ -330,11 +352,15 @@ class MyModuleRepositoriesController < ApplicationController
     render_403 unless can_update_my_module_stock_consumption?(@my_module)
   end
 
+  def batch_delete_params
+    params.permit(:downstream, rows_to_unassign: [])
+  end
+
   def update_flash_message(service)
     assigned_count = service.assigned_rows_count
     unassigned_count = service.unassigned_rows_count
 
-    if params[:downstream] == 'true'
+    if params[:downstream]
       if assigned_count&.positive?
         t('my_modules.repository.flash.assign_to_task_and_downstream_html',
           assigned_items: assigned_count)

@@ -7,6 +7,7 @@
         placeholder="Select inventory"
         :searchable="true"
         :value="selectedRepository"
+        :disabled="disabledRepositoryDropdown"
         @change="selectedRepository = $event"
         :e2eValue="`e2e-DD-${dataE2e}-selectInventory`"
       ></SelectDropdown>
@@ -89,11 +90,16 @@ export default {
     dataE2e: {
       type: String,
       default: ''
+    },
+    params: {
+      type: Object,
+      default: () => ({})
     }
   },
   created() {
     this.teamId = document.body.dataset.currentTeamId;
     if (this.preSelectedRepository) {
+      this.disabledRepositoryDropdown = true;
       this.selectedRepository = this.preSelectedRepository;
     }
     if (this.preSelectedRows) {
@@ -126,14 +132,14 @@ export default {
   },
   computed: {
     repositoriesUrl() {
-      return list_repositories_path({ non_empty: true, active: true, manageable: this.manageableRepositoriesOnly });
+      return list_repositories_path({ non_empty: true, active: true, manageable: this.manageableRepositoriesOnly, ...this.params });
     },
     rowsUrl() {
       if (!this.selectedRepository) {
         return null;
       }
 
-      return rows_list_team_repositories_path(this.teamId, { active: true });
+      return rows_list_team_repositories_path(this.teamId, { active: true, ...this.params });
     }
   },
   data() {
@@ -144,7 +150,8 @@ export default {
       showItemInfo: false,
       hoveredRow: {},
       loadingHoveredRow: false,
-      loading: true
+      loading: true,
+      disabledRepositoryDropdown: false
     };
   },
   methods: {

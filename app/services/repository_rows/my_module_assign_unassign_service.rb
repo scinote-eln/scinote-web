@@ -27,7 +27,7 @@ module RepositoryRows
       return self unless valid?
 
       ActiveRecord::Base.transaction do
-        if params[:downstream] == 'true'
+        if params[:downstream]
           @my_module.downstream_modules.each do |downstream_module|
             next unless can_assign_my_module_repository_rows?(@user, downstream_module)
 

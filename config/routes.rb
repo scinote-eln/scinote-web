@@ -585,6 +585,7 @@ Rails.application.routes.draw do
           post :update_repository_records_modal, as: :update_modal
           get :consume_modal
           post :update_consumption
+          post :batch_destroy
         end
 
         collection do
@@ -797,7 +798,7 @@ Rails.application.routes.draw do
           get :repositories
           get :repository_rows
           post :actions_toolbar
-          delete :batch_destroy
+          post :batch_destroy
         end
       end
 
@@ -1236,14 +1237,17 @@ Rails.application.routes.draw do
   get '/shared/:uuid/protocol/results',
       to: 'my_module_shareable_links#results_show',
       as: :shared_protocol_results
-  post '/shared/:uuid/repositories/:id/items',
-       to: 'my_module_shareable_links#repository_index_dt',
-       as: :shared_protocol_items,
-       defaults: { format: :json }
-  post '/shared/:uuid/repositories/:id/snapshot_items',
-       to: 'my_module_shareable_links#repository_snapshot_index_dt',
-       as: :shared_protocol_snapshot_items,
-       defaults: { format: :json }
+  get '/shared/:uuid/protocol/repositories',
+      to: 'my_module_shareable_links#repositories_show',
+      as: :shared_protocol_repositories
+  get '/shared/:uuid/repositories/:id/items',
+      to: 'my_module_shareable_links#repository_index_ag',
+      as: :shared_protocol_items,
+      defaults: { format: :json }
+  get '/shared/:uuid/repositories/:id/columns',
+      to: 'my_module_shareable_links#repository_columns',
+      as: :shared_protocol_repositry_columns,
+      defaults: { format: :json }
 
   resources :marvin_js_assets, only: %i(create update destroy show) do
     collection do

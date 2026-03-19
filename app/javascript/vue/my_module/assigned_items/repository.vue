@@ -1,8 +1,11 @@
 <template>
-  <div ref="container"
-       :id="'assigned-repository-container-' + repositoryVersion.id"
-       :class="{'p-4 bg-white rounded transition-all overflow-hidden mb-4': !onlyRepository}"
-       :style="{height: (sectionOpened ? openSize : '60px')}">
+  <div
+    ref="container"
+    :id="'assigned-repository-container-' + repositoryVersion.id"
+    :class="{'p-4 bg-white rounded transition-all overflow-hidden mb-4': !onlyRepository}"
+    :style="{height: (sectionOpened ? openSize : '60px')}"
+    :data-e2e="`e2e-CO-task-assignedItems-inventory${repository.id}`"
+  >
     <div v-if="!onlyRepository" class="flex items-center h-6 gap-4 assigned-repository-title mb-1">
       <div
         @click="toggleContainer"
@@ -15,7 +18,10 @@
           <span class="text-sn-grey-500 font-normal text-base shrink-0">
             [{{ repositoryVersion.attributes.assigned_rows_count }}]
           </span>
-          <span class="bg-sn-light-grey  font-normal  px-1.5 py-1 rounded-full shrink-0 text-xs">
+          <span
+            class="bg-sn-light-grey  font-normal  px-1.5 py-1 rounded-full shrink-0 text-xs"
+            data-e2e="e2e-LB-task-assignedItems-liveSnapshotTag"
+          >
             <template v-if="repositoryVersion.attributes.is_snapshot">
               {{  i18n.t('my_modules.repository.snapshots.simple_view.snapshot_tag') }}
             </template>
@@ -38,6 +44,8 @@
         :actionsUrl="toolbarActionsUrl"
         :filters="[]"
         :tableOnly="true"
+        :enableBarcodeSearch="true"
+        :fetchColumnsOnReload="true"
         @openConsumeModal="consume"
         @export="exportRows"
         @export_consumption="exportConsumption"
@@ -52,13 +60,20 @@
       ></DataTable>
     </div>
     <Teleport to="body">
-      <ConsumeModal v-if="openConsumeModal" @updateConsume="updateConsume" @close="openConsumeModal = false" :row="selectedRow" />
+      <ConsumeModal
+        v-if="openConsumeModal"
+        @updateConsume="updateConsume"
+        @close="openConsumeModal = false"
+        :row="selectedRow"
+        :e2eValue="'task-assignedItems-consumeModal'"
+      />
       <ConfirmationModal
         :title="i18n.t('my_modules.repository.stock_warning_modal.title')"
         :description="warningModalDescription"
         confirmClass="btn btn-primary"
         :confirmText="i18n.t('my_modules.repository.stock_warning_modal.consume_anyway')"
         ref="warningModal"
+        :e2eValue="'task-assignedItems-outOfStockModal'"
       ></ConfirmationModal>
       <UnassignItemModal
         v-if="showUnassignModal"
@@ -68,19 +83,24 @@
         :downstreamMode="unassignDownstreamMode"
         @unassignRows="unassignRows"
         @close="showUnassignModal = false"
+        :e2eValue="'task-assignedItems-unassignItemModal'"
       ></UnassignItemModal>
       <CreateItemModal
         v-if="openCreateItemModal"
         :myModuleId="myModuleId"
         :selectedRepositoryValue="repositoryVersion.id"
         @tableReloaded="newCreatedRow"
-        @close="openCreateItemModal = false"></CreateItemModal>
+        @close="openCreateItemModal = false"
+        :e2eValue="'task-assignedItems-createItemModal'"
+      ></CreateItemModal>
       <AssignItemModal
           v-if="openAssignItemModal"
           :myModuleId="myModuleId"
           :selectedRepositoryValue="repositoryVersion.id"
           @assignRows="assignRows"
-          @close="openAssignItemModal = false"/>
+          @close="openAssignItemModal = false"
+          :e2eValue="'task-assignedItems-assignItemModal'"
+      />
     </Teleport>
   </div>
 </template>
@@ -100,6 +120,7 @@ import {
   index_ag_my_module_repository_path,
   actions_toolbar_my_module_repositories_path,
   my_module_repository_path,
+  batch_destroy_my_module_repository_path,
   snapshot_list_my_module_repository_snapshots_path,
   my_module_select_default_snapshot_path
 } from '../../../routes.js';
@@ -109,7 +130,6 @@ export default {
   props: {
     repository: Object,
     myModuleId: String,
-    reloadKey: Number,
     onlyRepository: {
       type: Boolean,
       default: false
@@ -139,9 +159,6 @@ export default {
     repositoryVersion: null
   }),
   watch: {
-    reloadKey() {
-      this.reloadingTable = true;
-    },
     sectionOpened() {
       this.setUserState(
         `my_module_repository_rows_my_module_${this.myModuleId}_repository_${this.repositoryVersion.id}_section_opened`,
@@ -154,7 +171,9 @@ export default {
     this.sectionOpened = this.repositoryVersion.attributes.opened;
   },
   mounted() {
-    this.recalculateContainerSize();
+    if (!this.onlyRepository) {
+      this.recalculateContainerSize();
+    }
   },
   computed: {
     openSize() {
@@ -174,6 +193,7 @@ export default {
           icon: 'sn-icon sn-icon-new-task',
           label: this.i18n.t('my_modules.repository.assign_items'),
           type: 'emit',
+          disabled: this.repositoryVersion.attributes.is_snapshot,
           buttonStyle: 'btn btn-primary'
         });
         left.push({
@@ -181,6 +201,7 @@ export default {
           icon: 'sn-icon sn-icon-create-item',
           label: this.i18n.t('my_modules.repository.create_item'),
           type: 'emit',
+          disabled: this.repositoryVersion.attributes.is_snapshot,
           buttonStyle: 'btn btn-secondary'
         });
       }
@@ -232,7 +253,7 @@ export default {
     },
     unassignRows(rowIds, downstream = false) {
       this.showUnassignModal = false;
-      axios.patch(my_module_repository_path(this.myModuleId, this.repositoryVersion.id), {
+      axios.post(batch_destroy_my_module_repository_path(this.myModuleId, this.repositoryVersion.id), {
         rows_to_unassign: rowIds,
         downstream: downstream
       }).then((response) => {
@@ -265,8 +286,10 @@ export default {
     },
     toggleContainer() {
       this.sectionOpened = !this.sectionOpened;
-
       this.recalculateContainerSize();
+      this.$nextTick(() => {
+        this.$emit('toggled');
+      });
     },
     printRows(_e, rows) {
       if (typeof PrintModalComponent !== 'undefined') {
@@ -307,16 +330,19 @@ export default {
       const repositoryId = data.data ? data.data : (this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id);
       axios.get(my_module_repository_path(this.myModuleId, repositoryId))
         .then((response) => {
-          this.repositoryVersion = response.data.data;
-          this.reloadingTable = true;
+          this.versionLoaded(response.data.data);
         });
     },
     pinVersion(data) {
       const params = data.data ? { repository_snapshot_id : data.data } : { repository_id: (this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id) };
       axios.post(this.pinVersionUrl, params).then((response) => {
-        this.repositoryVersion = response.data.data;
-        this.reloadingTable = true;
+        this.versionLoaded(response.data.data);
       });
+    },
+    versionLoaded(data){
+      this.repositoryVersion = data;
+      this.loadRepositoryColumns();
+      this.reloadingTable = true;
     },
     newCreatedRow(repositoryRowSidebarUrl){
       this.reloadingTable = true;

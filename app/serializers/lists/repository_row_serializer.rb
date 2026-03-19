@@ -10,7 +10,7 @@ module Lists
     attribute :has_active_reminders, if: -> { instance_options[:with_reminders] }
     attribute :assigned, if: -> { instance_options[:my_module] && !instance_options[:assigned_view] }
     attribute :stock, if: -> { instance_options[:with_stock_management] }
-    attribute :consumed_stock, if: -> { instance_options[:with_stock_management] && instance_options[:can_consume_stock] }
+    attribute :consumed_stock, if: -> { instance_options[:with_stock_management] }
 
     def attributes(requested_attrs = nil, reload = false)
       data = super(requested_attrs, reload)
@@ -47,11 +47,11 @@ module Lists
     end
 
     def archived
-      object.attributes[:archived] || object.repository.archived
+      object[:archived] || object.repository.archived
     end
 
     def archived_on
-      I18n.l(object.attributes[:archived_on], format: :full) if object.attributes[:archived_on]
+      I18n.l(object[:archived_on], format: :full) if object[:archived_on]
     end
 
     def archived_by
