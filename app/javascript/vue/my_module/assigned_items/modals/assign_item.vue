@@ -18,7 +18,7 @@
         </div>
         <div class="modal-body">
           <p :data-e2e="`e2e-TX-${e2eValue}-description`">
-            {{ i18n.t('my_modules.repository.assign_modal.description', { number: downstreamModules.length }) }}
+            {{ i18n.t('my_modules.repository.assign_modal.description', { number: rowIds.length }) }}
           </p>
           <ul>
             <li v-for="(module, index) in downstreamModules" :key="index">
