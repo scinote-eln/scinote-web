@@ -126,4 +126,12 @@ class Table < ApplicationRecord
       end
     end
   end
+
+  def archived?
+    if result_table.present?
+      return result_table.result_orderable_element.archived?
+    end
+
+    false
+  end
 end

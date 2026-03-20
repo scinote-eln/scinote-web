@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_12_112723) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_19_112642) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -1094,7 +1094,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_12_112723) do
     t.bigint "orderable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "archived", default: false, null: false
+    t.datetime "archived_on"
+    t.datetime "restored_on"
+    t.bigint "archived_by_id"
+    t.bigint "restored_by_id"
+    t.index ["archived"], name: "index_result_orderable_elements_on_archived"
+    t.index ["archived_by_id"], name: "index_result_orderable_elements_on_archived_by_id"
     t.index ["orderable_type", "orderable_id"], name: "index_result_orderable_elements_on_orderable"
+    t.index ["restored_by_id"], name: "index_result_orderable_elements_on_restored_by_id"
   end
 
   create_table "result_tables", force: :cascade do |t|
@@ -1762,6 +1770,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_12_112723) do
   add_foreign_key "result_assets", "assets"
   add_foreign_key "result_assets", "results"
   add_foreign_key "result_orderable_elements", "results"
+  add_foreign_key "result_orderable_elements", "users", column: "archived_by_id"
+  add_foreign_key "result_orderable_elements", "users", column: "restored_by_id"
   add_foreign_key "result_tables", "results"
   add_foreign_key "result_tables", "tables"
   add_foreign_key "result_texts", "results"

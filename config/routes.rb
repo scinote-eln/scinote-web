@@ -826,6 +826,8 @@ Rails.application.routes.draw do
           get :move_targets
           post :move
           post :duplicate
+          post :archive
+          post :restore
         end
       end
       resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
@@ -833,6 +835,8 @@ Rails.application.routes.draw do
           get :move_targets
           post :move
           post :duplicate
+          post :archive
+          post :restore
         end
       end
     end

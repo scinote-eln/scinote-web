@@ -15,6 +15,15 @@ class ResultBaseSerializer < ActiveModel::Serializer
              :wopi_enabled, :wopi_context, :created_at, :created_by, :assets_order,
              :open_vector_editor_context, :assets_view_mode, :storage_limit, :collapsed, :steps
 
+  def result_orderable_elements
+    view_mode = @instance_options[:view_mode]
+    if view_mode == 'archived'
+      object.result_orderable_elements.archived
+    else
+      object.result_orderable_elements.active
+    end
+  end
+
   def marvinjs_enabled
     MarvinJsService.enabled?
   end

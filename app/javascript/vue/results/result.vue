@@ -9,8 +9,7 @@
         'bg-sn-super-light-blue': dragingFile,
         'bg-white': !dragingFile,
         'locked': locked,
-        'pointer-events-none': addingContent,
-        '!bg-sn-background-brittlebush': result.attributes.archived
+        'pointer-events-none': addingContent
       }"
        :data-e2e="`e2e-CO-task-result${result.id}`"
   >
@@ -42,9 +41,9 @@
             :autofocus="editingName"
             :placeholder="i18n.t('my_modules.results.placeholder')"
             :defaultValue="i18n.t('my_modules.results.default_name')"
-            :timestamp="i18n.t(`protocols.steps.${result.attributes.archived ? 'timestamp_archived' : 'timestamp'}`, {
-              date: result.attributes.archived_on || result.attributes.created_at,
-              user: result.attributes.archived_by || result.attributes.created_by
+            :timestamp="i18n.t(`protocols.steps.timestamp`, {
+              date: result.attributes.created_at,
+              user: result.attributes.created_by
             })"
             :data-e2e="`task-result${result.id}`"
             @editingEnabled="editingName = true"
@@ -54,10 +53,6 @@
           />
         </div>
         <div class="result-head-right flex elements-actions-container">
-          <div v-if="result.attributes.archived" class="sci-tag bg-sn-alert-brittlebush">
-            Archived
-            <span class="sn-icon sn-icon-archive"></span>
-          </div>
           <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
           <MenuDropdown
             :listItems="this.insertMenu"
@@ -83,15 +78,6 @@
             :data-object-type="result.attributes.type"
             tabindex="0"
           ></span> <!-- Hidden element to support legacy code -->
-          <button
-            v-if="this.urls.restore_url"
-            class="btn icon-btn btn-light"
-            @click="restoreResult"
-            :title="this.i18n.t('my_modules.results.actions.restore')"
-            :data-e2e="`e2e-DO-task-result${this.result.id}-optionsMenu-restore`"
-          >
-            <i class="sn-icon sn-icon-restore"></i>
-          </button>
           <template v-if="result.attributes.steps.length == 0">
             <button
               v-if="urls.update_url"
@@ -177,15 +163,6 @@
             @pin="pinResult"
             @unpin="unpinResult"
           ></MenuDropdown>
-          <button
-            v-if="this.urls.delete_url"
-            class="btn icon-btn btn-light"
-            @click="deleteResult"
-            :title="this.i18n.t('my_modules.results.actions.delete')"
-            :data-e2e="`e2e-DO-task-result${this.result.id}-optionsMenu-delete`"
-          >
-            <i class="sn-icon sn-icon-delete"></i>
-          </button>
         </div>
       </div>
       <deleteResultModal v-if="confirmingDelete" @confirm="deleteResult" @cancel="closeDeleteModal"/>
@@ -208,7 +185,9 @@
             :assignableMyModuleId="result.attributes.my_module_id"
             :isNew="element.isNew"
             @component:adding-content="($event) => addingContent = $event"
-            @component:delete="deleteElement"
+            @component:delete="removeElement"
+            @component:archive="removeElement"
+            @component:restore="removeElement"
             @update="updateElement"
             @reorder="openReorderModal"
             @component:insert="insertElement"
@@ -266,7 +245,6 @@ import Attachments from '../shared/content/attachments.vue';
 import InlineEdit from '../shared/inline_edit.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
-import deleteResultModal from './delete_result.vue';
 import LinkStepsModal from './modals/link_steps.vue'
 import ContentToolbar from '../shared/content/content_toolbar';
 import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
@@ -275,12 +253,8 @@ import AttachmentsMixin from '../shared/content/mixins/attachments.js';
 import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js';
 import OveMixin from '../shared/content/attachments/mixins/ove.js';
 import UtilsMixin from '../mixins/utils.js';
+import ResultCommonMixin from './mixins/result_common.js';
 import StorageUsage from '../shared/content/attachments/storage_usage.vue';
-import {
-  protocols_my_module_path,
-  protocol_path,
-  user_setting_path
-} from '../../routes.js';
 
 export default {
   name: 'Results',
@@ -295,9 +269,6 @@ export default {
   data() {
     return {
       reordering: false,
-      elements: [],
-      attachments: [],
-      attachmentsReady: true,
       addingContent: false,
       showFileModal: false,
       dragingFile: false,
@@ -345,12 +316,10 @@ export default {
           data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-2`
         }
       ],
-      editingName: false,
-      confirmingDelete: false,
-      isCollapsed: false
+      editingName: false
     };
   },
-  mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin],
+  mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, ResultCommonMixin],
   components: {
     ReorderableItemsModal,
     ResultTable,
@@ -358,7 +327,6 @@ export default {
     Attachments,
     InlineEdit,
     MenuDropdown,
-    deleteResultModal,
     StorageUsage,
     ContentToolbar,
     CustomWellPlateModal,
@@ -366,55 +334,15 @@ export default {
     GeneralDropdown
   },
   watch: {
-    resultToReload() {
-      if (Number(this.resultToReload) === Number(this.result.id)) {
-        this.loadElements();
-        this.loadAttachments();
-      }
-    },
     activeDragResult() {
       if (this.activeDragResult !== this.result.id && this.dragingFile) {
         this.dragingFile = false;
       }
-    },
-    result: {
-      handler(newVal) {
-        if (this.isCollapsed !== newVal.attributes.collapsed) {
-          this.toggleCollapsed();
-        }
-      },
-      deep: true
     }
-  },
-  mounted() {
-    this.$nextTick(() => {
-      const resultId = `#resultBody${this.result.id}`;
-      this.isCollapsed = this.result.attributes.collapsed;
-      if (this.isCollapsed) {
-        $(resultId).collapse('hide');
-      } else {
-        $(resultId).collapse('show');
-      }
-      this.$emit('result:collapsed');
-    });
-
-    window.initTooltip(this.$refs.linkButton);
-  },
-  beforeUnmount() {
-    window.destroyTooltip(this.$refs.linkButton);
   },
   computed: {
     reorderableElements() {
       return this.orderedElements.map((e) => ({ id: e.id, attributes: e.attributes.orderable }));
-    },
-    orderedElements() {
-      return this.elements.sort((a, b) => a.attributes.position - b.attributes.position);
-    },
-    urls() {
-      return this.result.attributes.urls || {};
-    },
-    locked() {
-      return !(this.urls.restore_url || this.urls.archive_url || this.urls.delete_url || this.urls.update_url);
     },
     filesMenu() {
       let menu = [];
@@ -504,31 +432,7 @@ export default {
       return menu;
     }
   },
-  created() {
-    this.elements = this.result.elements;
-    this.attachments = this.result.attachments;
-
-    if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
-      setTimeout(() => {
-        this.loadAttachments();
-      }, 10000);
-    }
-  },
   methods: {
-    toggleCollapsed() {
-      this.isCollapsed = !this.isCollapsed;
-      this.result.attributes.collapsed = this.isCollapsed;
-
-      const stateKey = this.result.attributes.type == "ResultTemplate" ? 'result_template_states' : 'result_states';
-
-      const settings = {
-        value: { [this.result.id]: this.isCollapsed }
-      };
-
-      axios.put(user_setting_path(stateKey), {user_setting: settings});
-
-      this.$emit('result:collapsed');
-    },
     dragEnter(e) {
       if (!this.urls.upload_attachment_url) return;
 
@@ -574,16 +478,6 @@ export default {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
     },
-    deleteElement(position) {
-      this.elements.splice(position, 1);
-      const unorderedElements = this.elements.map((e) => {
-        if (e.attributes.position >= position) {
-          e.attributes.position -= 1;
-        }
-        return e;
-      });
-      this.$emit('resultUpdated');
-    },
     updateElement(element, skipRequest = false, callback) {
       let index = this.elements.findIndex((e) => e.id === element.id);
 
@@ -620,28 +514,6 @@ export default {
         return s;
       });
       this.elements.push(element);
-    },
-    loadElements() {
-      $.get(this.urls.elements_url, (result) => {
-        this.elements = result.data;
-        this.$emit('result:elements:loaded');
-      });
-    },
-    loadAttachments() {
-      this.attachmentsReady = false;
-
-      $.get(this.urls.attachments_url, (result) => {
-        this.attachments = result.data;
-        this.$emit('result:attachments:loaded');
-        if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
-          setTimeout(() => {
-            this.loadAttachments();
-          }, 10000);
-        } else {
-          this.attachmentsReady = true;
-        }
-      });
-      this.showFileModal = false;
     },
     attachmentDeleted(id) {
       this.attachments = this.attachments.filter((a) => a.id !== id);
@@ -691,22 +563,6 @@ export default {
         this.$emit('result:archived', this.result.id);
       });
     },
-    restoreResult() {
-      axios.post(this.urls.restore_url).then((response) => {
-        this.$emit('result:restored', this.result.id);
-      });
-    },
-    showDeleteModal() {
-      this.confirmingDelete = true;
-    },
-    closeDeleteModal() {
-      this.confirmingDelete = false;
-    },
-    deleteResult() {
-      axios.delete(this.urls.delete_url).then((response) => {
-        this.$emit('result:deleted', this.result.id);
-      });
-    },
     duplicateResult() {
       axios.post(this.urls.duplicate_url).then((_) => {
         this.$emit('result:duplicated');
@@ -751,13 +607,7 @@ export default {
       });
 
       this.$nextTick(() => window.initTooltip(this.$refs.linkButton));
-    },
-    protocolUrl(step_id) {
-      if (this.result.attributes.protocol_id) {
-        return protocol_path({ id: this.result.attributes.protocol_id }, { step_id: step_id });
-      }
-      return protocols_my_module_path({ id: this.result.attributes.my_module_id }, { step_id: step_id })
-    },
+    }
   }
 };
 </script>
