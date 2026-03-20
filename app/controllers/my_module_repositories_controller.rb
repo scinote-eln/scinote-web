@@ -106,7 +106,13 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def show
-    assigned_rows_count = @repository.is_a?(RepositorySnapshot) ? @repository.repository_rows.count : @my_module.my_module_repository_rows.count
+    assigned_rows_count =
+      if @repository.is_a?(RepositorySnapshot)
+        @repository.repository_rows.count
+      else
+        @my_module.my_module_repository_rows.joins(repository_row: :repository).where(repository_rows: { repository: @repository }).count
+      end
+
     render json: @repository, serializer: AssignedRepositorySerializer, scope: { user: current_user, my_module: @my_module, assigned_rows_count: assigned_rows_count }
   end
 
