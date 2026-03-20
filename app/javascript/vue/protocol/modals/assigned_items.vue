@@ -57,12 +57,11 @@
         <div class="modal-body !pb-0 min-h-[540px]">
           <AssignedRepository
             v-if="selectedRepository"
-            :key="selectedRepository.id"
+            :key="`${selectedRepository.id}-${reloadKey}`"
             :repository="selectedRepository"
             :myModuleId="myModuleId"
             :onlyRepository="true"
             @assignRows="assignRows"
-            :reloadKey="reloadKey"
           />
           <div
             v-else-if="!initialLoading"
@@ -168,4 +167,3 @@ export default {
   }
 };
 </script>
-
