@@ -76,7 +76,7 @@ module Lists
                          .select('MAX("last_modified_by"."full_name") AS last_modified_by_full_name')
                          .select('MAX("archived_by"."full_name") AS archived_by_full_name')
                          .select('COUNT(DISTINCT my_module_repository_rows.id) AS "assigned_my_modules_count"')
-                         .select('COALESCE(repository_rows.parent_connections_count, 0) + COALESCE(repository_rows.child_connections_count, 0) AS "relationships_count"')
+                         .select('COALESCE(repository_rows.parent_connections_count, 0) + COALESCE(repository_rows.child_connections_count, 0) AS "connections_count"')
                          .group('repository_rows.id')
                          .preload(:repository)
 
@@ -535,6 +535,8 @@ module Lists
         return unless sorting_column
 
         sort_by_custom_repository_column(sorting_column)
+      when 'connections_count'
+        @records.select('COALESCE(repository_rows.parent_connections_count, 0) + COALESCE(repository_rows.child_connections_count, 0) AS "connections_count"')
       else
         sorting_column = sortable_columns_map(column)
         return unless sortable_columns.include?(sorting_column)
@@ -549,8 +551,7 @@ module Lists
         code: 'repository_rows.id',
         assigned_tasks_count: 'assigned',
         created_by: 'created_by.full_name',
-        created_at: 'repository_rows.created_at',
-        connections_count: 'relationships'
+        created_at: 'repository_rows.created_at'
       }[column.to_sym]
     end
 
@@ -563,6 +564,7 @@ module Lists
 
       sortable_columns = @repository.default_sortable_columns
       sortable_columns << 'consumed_stock' if @repository.has_stock_management? && @my_module
+      sortable_columns << 'connections_count'
       sortable_columns
     end
 
