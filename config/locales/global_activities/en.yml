@@ -471,6 +471,8 @@ en:
       protocol_repository_item_removed_html: "%{user} unlinked item %{repository_row} from inventory %{repository} to protocol %{protocol} in Protocol repository."
       skip_step_html: "%{user} skipped protocol's step %{step_position} %{step} on task %{my_module} (%{num_completed}/%{num_all} completed, %{num_skipped} skipped)."
       unskip_step_html: "%{user} unskipped protocol's step %{step_position} %{step} on task %{my_module} (%{num_completed}/%{num_all} completed, %{num_skipped} skipped)."
+      repository_snapshot_created_html: "%{user} created snapshot %{timestamp} of task-assigned items from inventory %{repository}."
+      repository_snapshot_deleted_html: "%{user} deleted snapshot %{timestamp} of task-assigned items from inventory %{repository}."
     activity_name:
       create_project: "Project created"
       edit_project: "Project edited"
@@ -856,8 +858,8 @@ en:
       experiment_access_changed_all_team_members: "Change role of all workspace members"
       my_module_access_changed_all_team_members: "Change role of all workspace members"
       tag_created: "Tag created"
-      tag_edited: "Tag edited" 
-      tag_deleted: "Tag deleted" 
+      tag_edited: "Tag edited"
+      tag_deleted: "Tag deleted"
       tag_merged: "Tags merged"
       result_template_text_added: "Protocol result text added"
       result_template_text_edited: "Protocol result text edited"
@@ -895,6 +897,8 @@ en:
       result_template_restore_asset_version: "Protocol result file version restored"
       protocol_repository_item_added: "Protocol item linked"
       protocol_repository_item_removed: "Protocol item unlinked "
+      repository_snapshot_created: "Task-assigned inventory snapshot created"
+      repository_snapshot_deleted: "Task-assigned inventory snapshot deleted"
     activity_group:
       projects: "Projects"
       task_results: "Task results"
