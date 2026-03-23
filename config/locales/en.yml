@@ -1655,6 +1655,7 @@ en:
       active_results: "Active results"
       archived_results: "Archived results"
       default_name: "Untitled result"
+      archived: "Archived"
       placeholder: "Enter result name"
       add_label: "New result"
       add_title: "Create new result"
@@ -4947,6 +4948,7 @@ en:
     insert: "Insert"
     options_selected: 'options selected'
     output: 'Output'
+    restore: "Restore"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"

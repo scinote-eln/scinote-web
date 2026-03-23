@@ -46,22 +46,7 @@
         </span>
       </div>
     </div>
-    <div v-if="loadingOverlay">
-      <div class="flex flex-col gap-8">
-        <div v-for="_count in loaderResults"
-            class="flex flex-col no-wrap gap-4 py-2"
-          >
-          <div class="h-10 w-full max-w-40 animate-skeleton rounded mr-auto"></div>
-          <div class="w-full animate-skeleton rounded h-64"></div>
-          <div class="flex items-center gap-6 flex-wrap">
-            <div class="w-48 h-64 animate-skeleton rounded"></div>
-            <div class="w-48 h-64 animate-skeleton rounded"></div>
-            <div class="w-48 h-64 animate-skeleton rounded"></div>
-            <div class="w-48 h-64 animate-skeleton rounded"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <LoadingOverlay v-if="loadingOverlay" />
     <clipboardPasteModal v-if="showClipboardPasteModal"
                          :image="pasteImages"
                          :objects="results"
@@ -77,17 +62,19 @@
 import axios from '../../packs/custom_axios.js';
 import ResultsToolbar from './results_toolbar.vue';
 import Result from './result.vue';
+import LoadingOverlay from './loading_overlay.vue';
 
 import stackableHeadersMixin from '../mixins/stackableHeadersMixin';
 import moduleNameObserver from '../mixins/moduleNameObserver';
 
 import clipboardPasteModal from '../shared/content/attachments/clipboard_paste_modal.vue';
 import AssetPasteMixin from '../shared/content/attachments/mixins/paste.js';
+import ResultsCollapseStateMixin from './mixins/results_collapse_state.js';
 
 export default {
   name: 'Results',
-  components: { ResultsToolbar, Result, clipboardPasteModal },
-  mixins: [stackableHeadersMixin, moduleNameObserver, AssetPasteMixin],
+  components: { ResultsToolbar, Result, clipboardPasteModal, LoadingOverlay },
+  mixins: [stackableHeadersMixin, moduleNameObserver, AssetPasteMixin, ResultsCollapseStateMixin],
   props: {
     url: { type: String, required: true },
     canCreate: { type: String, required: true },
@@ -104,12 +91,10 @@ export default {
       nextPageUrl: null,
       loadingPage: false,
       activeDragResult: null,
-      resultsCollapsed: false,
       anchorId: null,
       elementsLoaded: 0,
       attachmentsLoaded: 0,
-      loadingOverlay: false,
-      loaderResults: 3
+      loadingOverlay: false
     };
   },
   created() {

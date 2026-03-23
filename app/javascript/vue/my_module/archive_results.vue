@@ -15,28 +15,15 @@
         {{ i18n.t('my_modules.results.no_results_placeholder') }}
       </div>
     </div>
-    <div v-if="loadingOverlay">
-      <div class="flex flex-col gap-8">
-        <div v-for="_count in loaderResults"
-            class="flex flex-col no-wrap gap-4 py-2"
-          >
-          <div class="h-10 w-full max-w-40 animate-skeleton rounded mr-auto"></div>
-          <div class="w-full animate-skeleton rounded h-64"></div>
-          <div class="flex items-center gap-6 flex-wrap">
-            <div class="w-48 h-64 animate-skeleton rounded"></div>
-            <div class="w-48 h-64 animate-skeleton rounded"></div>
-            <div class="w-48 h-64 animate-skeleton rounded"></div>
-            <div class="w-48 h-64 animate-skeleton rounded"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <LoadingOverlay v-if="loadingOverlay" />
   </div>
 </template>
 
 <script>
 import axios from '../../packs/custom_axios.js';
-import Result from '../results/result.vue';
+import Result from '../results/archived_result.vue';
+import LoadingOverlay from '../results/loading_overlay.vue';
+import ResultsCollapseStateMixin from '../results/mixins/results_collapse_state.js';
 
 import {
   my_module_results_path,
@@ -58,14 +45,14 @@ export default {
       resultToReload: null,
       nextPageUrl: null,
       loadingPage: false,
-      resultsCollapsed: false,
-      loadingOverlay: false,
-      loaderResults: 3
+      loadingOverlay: false
     };
   },
   components: {
-    Result
+    Result,
+    LoadingOverlay
   },
+  mixins: [ResultsCollapseStateMixin],
   created() {
     this.loadingOverlay = true;
   },
@@ -124,32 +111,6 @@ export default {
           this.loadingOverlay = false;
         });
       }
-    },
-    checkResultsState() {
-      this.resultsCollapsed = this.$refs.results.every((result) => result.isCollapsed);
-    },
-    collapseResults() {
-      $('.result-wrapper .collapse').collapse('hide');
-      this.updateResultStateSettings(true);
-      this.$refs.results.forEach((result) => { result.isCollapsed = true; });
-      this.resultsCollapsed = true;
-    },
-    expandResults() {
-      $('.result-wrapper .collapse').collapse('show');
-      this.updateResultStateSettings(false);
-      this.$refs.results.forEach((result) => { result.isCollapsed = false; });
-      this.resultsCollapsed = false;
-    },
-    updateResultStateSettings(newState) {
-      const data = {};
-
-      if (newState) {
-        data.collapsed = true;
-      } else {
-        data.expanded = true;
-      }
-
-      axios.post(this.changeStatesUrl, data);
     },
     removeResult(result_id) {
       this.results = this.results.filter((r) => r.id != result_id);

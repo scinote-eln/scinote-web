@@ -2,47 +2,81 @@
   <div class="content__table-container pr-8"
     :data-e2e="`e2e-CO-${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}`">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
-    <div class="table-header h-9 flex rounded mb-3 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
-      <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader"
-           class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold"
-           :class="{'pointer-events-none': locked}">
-        <InlineEdit
-          :value="element.attributes.orderable.name"
-          :characterLimit="255"
-          :placeholder="i18n.t('protocols.steps.table.table_name')"
-          :allowBlank="false"
-          :autofocus="editingName"
-          :attributeName="`${i18n.t('Table')} ${i18n.t('name')}`"
-          :dataE2e="`${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}`"
-          @editingEnabled="enableNameEdit"
-          @editingDisabled="disableNameEdit"
-          @update="updateName"
-        />
+    <div :class="{'!bg-sn-background-brittlebush p-4': element.attributes.orderable.archived}">
+      <div class="table-header h-9 flex rounded mb-3 items-center gap-2 relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
+        <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader"
+            class="text-ellipsis whitespace-nowrap my-1 font-bold"
+            :class="{'grow': !this.element.attributes.orderable.archived,
+                     'pointer-events-none': locked}">
+          <InlineEdit
+            :value="element.attributes.orderable.name"
+            :characterLimit="255"
+            :placeholder="i18n.t('protocols.steps.table.table_name')"
+            :allowBlank="false"
+            :autofocus="editingName"
+            :attributeName="`${i18n.t('Table')} ${i18n.t('name')}`"
+            :dataE2e="`${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}`"
+            @editingEnabled="enableNameEdit"
+            @editingDisabled="disableNameEdit"
+            @update="updateName"
+          />
+        </div>
+        <template v-if="this.element.attributes.orderable.archived">
+          <div class="sci-tag bg-sn-alert-brittlebush">
+            {{ i18n.t('my_modules.results.archived') }}
+            <span class="sn-icon sn-icon-archive"></span>
+          </div>
+          <span class="text-xs ">
+            {{ i18n.t('protocols.steps.timestamp_archived', {
+              date: this.element.attributes.orderable.archived_on,
+              user: this.element.attributes.orderable.archived_by
+            }) }}
+          </span>
+        </template>
+        <div class="ml-auto flex items gap-4">
+          <button
+            v-if="this.element.attributes.orderable.urls.restore_url"
+            class="btn icon-btn btn-light"
+            @click="restoreElement"
+            :title="i18n.t('general.restore')"
+            :data-e2e="`e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-restore`"
+          >
+            <i class="sn-icon sn-icon-restore"></i>
+          </button>
+          <button
+            v-if="this.element.attributes.orderable.urls.delete_url"
+            class="btn icon-btn btn-light"
+            @click="showDeleteModal"
+            :title="i18n.t('general.delete')"
+            :data-e2e="`e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-delete`"
+          >
+            <i class="sn-icon sn-icon-delete"></i>
+          </button>
+          <MenuDropdown
+            :listItems="this.actionMenu"
+            :btnClasses="'btn btn-light icon-btn btn-sm'"
+            :position="'right'"
+            :btnIcon="'sn-icon sn-icon-more-hori'"
+            :dataE2e="`e2e-DD-${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}-options`"
+            @edit="enableNameEdit"
+            @duplicate="duplicateElement"
+            @move="showMoveModal"
+            @archive="archiveElement"
+          ></MenuDropdown>
+        </div>
       </div>
-      <MenuDropdown
-        class="ml-auto"
-        :listItems="this.actionMenu"
-        :btnClasses="'btn btn-light icon-btn btn-sm'"
-        :position="'right'"
-        :btnIcon="'sn-icon sn-icon-more-hori'"
-        :dataE2e="`e2e-DD-${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}-options`"
-        @edit="enableNameEdit"
-        @duplicate="duplicateElement"
-        @move="showMoveModal"
-        @delete="showDeleteModal"
-      ></MenuDropdown>
-    </div>
-    <div class="table-body group/table-body relative border-solid border-transparent"
-         :class="{'edit border-sn-light-grey': editingTable, 'view': !editingTable, 'locked': !element.attributes.orderable.urls.update_url}"
-         tabindex="0"
-         :data_e2e="`e2e-TB-${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}`"
-         @keyup.enter="!editingTable && enableTableEdit()">
-      <div ref="hotTable" class="hot-table-container" @click="!editingTable && enableTableEdit()">
-      </div>
-      <div class="text-xs pt-3 pb-2 text-sn-grey h-1">
-        <span v-if="editingTable" :dataE2e="`e2e-TX-${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}-editMessage`">
-          {{ i18n.t('protocols.steps.table.edit_message') }}
-        </span>
+      <div class="table-body group/table-body relative border-solid border-transparent"
+          :class="{'edit border-sn-light-grey': editingTable, 'view': !editingTable, 'locked': !element.attributes.orderable.urls.update_url}"
+          tabindex="0"
+          :data_e2e="`e2e-TB-${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}`"
+          @keyup.enter="!editingTable && enableTableEdit()">
+        <div ref="hotTable" class="hot-table-container" @click="!editingTable && enableTableEdit()">
+        </div>
+        <div class="text-xs pt-3 pb-2 text-sn-grey h-1">
+          <span v-if="editingTable" :dataE2e="`e2e-TX-${dataE2e}-${element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}-editMessage`">
+            {{ i18n.t('protocols.steps.table.edit_message') }}
+          </span>
+        </div>
       </div>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @close="closeDeleteModal"/>
@@ -58,6 +92,7 @@
 import DeleteMixin from './mixins/delete.js';
 import MoveMixin from './mixins/move.js';
 import DuplicateMixin from './mixins/duplicate.js';
+import ArchiveMixin from './mixins/archive.js';
 import deleteElementModal from './modal/delete.vue';
 import InlineEdit from '../inline_edit.vue';
 import TableNameModal from './modal/table_name.vue';
@@ -69,7 +104,7 @@ export default {
   components: {
     deleteElementModal, InlineEdit, TableNameModal, moveElementModal, MenuDropdown
   },
-  mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
+  mixins: [DeleteMixin, DuplicateMixin, MoveMixin, ArchiveMixin],
   props: {
     element: {
       type: Object,
@@ -132,11 +167,11 @@ export default {
           data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-move`
         });
       }
-      if (this.element.attributes.orderable.urls.delete_url) {
+      if (this.element.attributes.orderable.urls.archive_url) {
         menu.push({
-          text: I18n.t('general.delete'),
-          emit: 'delete',
-          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-delete`
+          text: I18n.t('general.archive'),
+          emit: 'archive',
+          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-archive`
         });
       }
       return menu;

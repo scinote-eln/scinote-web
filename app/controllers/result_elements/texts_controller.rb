@@ -7,7 +7,7 @@ module ResultElements
     include InputSanitizeHelper
     include Rails.application.routes.url_helpers
 
-    before_action :load_result_text, only: %i(update destroy duplicate move)
+    before_action :load_result_text, only: %i(update destroy duplicate move archive restore)
 
     def create
       result_text = ResultText.build
@@ -69,6 +69,32 @@ module ResultElements
       else
         head :unprocessable_entity
       end
+    end
+
+    def archive
+      orderable_element = @result_text.result_orderable_element
+
+      ActiveRecord::Base.transaction do
+        orderable_element.archive!(current_user)
+        # activity
+      end
+
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def restore
+      orderable_element = @result_text.result_orderable_element
+
+      ActiveRecord::Base.transaction do
+        orderable_element.restore!(current_user)
+        #activity
+      end
+
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
     end
 
     def duplicate

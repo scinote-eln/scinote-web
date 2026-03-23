@@ -44,6 +44,10 @@ class ResultText < ApplicationRecord
     end
   end
 
+  def archived?
+    result_orderable_element.archived?
+  end
+
   private
 
   # Override for ObservableModel
