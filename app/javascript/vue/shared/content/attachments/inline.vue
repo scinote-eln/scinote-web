@@ -1,6 +1,6 @@
 <template>
   <div
-    class="inline-attachment-container asset"
+    class="inline-attachment-container asset relative"
     :class="[{'menu-dropdown-open': isMenuDropdownOpen}, {'context-menu-open': isContextMenuOpen }]"
     :data-e2e="`e2e-CO-${dataE2e}-attachment${attachment.id}-inline`"
     ref="inlineAttachmentContainer"
@@ -23,8 +23,14 @@
           </span>
         </a>
         <div class="file-metadata">
-          <span>
+          <span v-if="!attachment.attributes.archived">
             {{ attachment.attributes.updated_at_formatted }}
+          </span>
+          <span v-else>
+            {{ i18n.t('assets.placeholder.archived_on_label', {
+              date: attachment.attributes.archived_on,
+              user: attachment.attributes.archived_by
+            }) }}
           </span>
           <span>
             {{ attachment.attributes.file_size_formatted }}
@@ -36,6 +42,8 @@
           :attachment="attachment"
           @attachment:viewMode="updateViewMode"
           @attachment:delete="deleteAttachment"
+          @attachment:restore="restoreAttachment"
+          @attachment:archive="archiveAttachment"
           @attachment:moved="attachmentMoved"
           @attachment:uploaded="reloadAttachments"
           @attachment:versionRestored="reloadAttachments"
@@ -46,6 +54,10 @@
           @attachment:open="$emit($event)"
         />
       </div>
+    </div>
+    <div v-if="attachment.attributes.archived" class="sci-tag bg-sn-alert-brittlebush absolute top-16 left-2 z-10">
+      {{ i18n.t('my_modules.results.archived') }}
+      <span class="sn-icon sn-icon-archive"></span>
     </div>
     <template v-if="attachment.attributes.wopi">
       <div v-if="showWopi"

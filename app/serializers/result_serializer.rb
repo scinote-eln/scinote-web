@@ -3,6 +3,28 @@
 class ResultSerializer < ResultBaseSerializer
   attributes :my_module_id, :archived, :comments_count, :archived_by, :archived_on
 
+  def result_orderable_elements
+    object.result_orderable_elements if object.archived?
+
+    view_mode = @instance_options[:view_mode]
+    if view_mode == 'archived'
+      object.result_orderable_elements.archived
+    else
+      object.result_orderable_elements.active
+    end
+  end
+
+  def assets
+    object.assets if object.archived?
+
+    view_mode = @instance_options[:view_mode]
+    if view_mode == 'archived'
+      object.assets.archived
+    else
+      object.assets.active
+    end
+  end
+
   def collapsed
     result_states = current_user.user_settings.find_by(key: 'result_states')&.value || {}
     result_states[object.id.to_s] == true

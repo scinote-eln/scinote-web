@@ -129,6 +129,7 @@
         </div>
         <Attachments v-if="attachments.length"
                       :parent="result"
+                      :archived="true"
                       :attachments="attachments"
                       :attachmentsReady="attachmentsReady"
                       @attachments:openFileModal="showFileModal = true"

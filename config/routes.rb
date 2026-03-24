@@ -1066,6 +1066,8 @@ Rails.application.routes.draw do
                                    as: 'update_asset_image'
     get 'files/:id/move_targets', to: 'assets#move_targets', as: 'asset_move_tagets'
     post 'files/:id/move', to: 'assets#move', as: 'asset_move'
+    post 'files/:id/archive', to: 'assets#archive', as: 'asset_archive'
+    post 'files/:id/restore', to: 'assets#restore', as: 'asset_restore'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
     patch 'files/:id/rename', to: 'assets#rename', as: 'asset_rename'
     post 'files/:id/duplicate', to: 'assets#duplicate', as: 'asset_duplicate'
