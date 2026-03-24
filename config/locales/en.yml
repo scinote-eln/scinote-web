@@ -4625,6 +4625,7 @@ en:
     placeholder:
       modified_label: "Modified:"
       size_label: "Size: %{size}"
+      archived_on_label: "Archived on %{date} by %{user}"
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word for the web.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel for the web.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint for the web.'
@@ -4654,6 +4655,8 @@ en:
       inline_html: "Large"
       thumbnail_html: "Thumbnail"
       list_html: "List"
+      archive: "Archive"
+      restore: "Restore"
       versions: "Version history"
     file_versions_modal:
       title: "Version history"

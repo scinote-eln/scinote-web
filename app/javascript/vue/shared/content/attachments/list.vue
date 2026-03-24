@@ -15,16 +15,28 @@
       <span class="attachment-name" data-toggle="tooltip"
            data-placement="bottom">
         {{ attachment.attributes.file_name }}
+
       </span>
+      <div v-if="attachment.attributes.archived" class="sci-tag ml-1 !text-black bg-sn-alert-brittlebush">
+        {{ i18n.t('my_modules.results.archived') }}
+        <span class="sn-icon sn-icon-archive"></span>
+      </div>
     </a>
+
     <div v-if="attachment.attributes.medium_preview !== null" class="attachment-image-tooltip bg-white sn-shadow-menu-sm">
       <img :src="this.imageLoadError ? attachment.attributes.urls.blob : attachment.attributes.medium_preview" @error="ActiveStoragePreviews.reCheckPreview"
             @load="ActiveStoragePreviews.showPreview"/>
     </div>
     <div class="flex items-center gap-2 text-xs text-sn-grey overflow-hidden ml-auto">
-      <span class="truncate" :title="i18n.t('assets.placeholder.modified_label') + ' ' + attachment.attributes.updated_at_formatted">
+      <span v-if="!attachment.attributes.archived" class="truncate" :title="i18n.t('assets.placeholder.modified_label') + ' ' + attachment.attributes.updated_at_formatted">
           {{ i18n.t('assets.placeholder.modified_label') }}
           {{ attachment.attributes.updated_at_formatted }}
+      </span>
+      <span v-else class="truncate" :title="i18n.t('assets.placeholder.archived_on_label', {
+        date: attachment.attributes.archived_on,
+        user: attachment.attributes.archived_by
+      })">
+        {{ i18n.t('assets.placeholder.archived_on_label', { date: attachment.attributes.archived_on, user: attachment.attributes.archived_by }) }}
       </span>
       <span class="truncate" :title="i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted})">
         {{ i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted}) }}
@@ -35,6 +47,8 @@
           :attachment="attachment"
           @attachment:viewMode="updateViewMode"
           @attachment:delete="deleteAttachment"
+          @attachment:restore="restoreAttachment"
+          @attachment:archive="archiveAttachment"
           @attachment:moved="attachmentMoved"
           @attachment:uploaded="reloadAttachments"
           @attachment:versionRestored="reloadAttachments"

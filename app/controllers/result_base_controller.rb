@@ -13,8 +13,12 @@ class ResultBaseController < ApplicationController
                      results_with_archived_elements = @parent.results.active.joins(:result_orderable_elements)
                                                              .where(result_orderable_elements: { archived: true })
                                                              .distinct
+                     results_with_archived_assets = @parent.results.active.joins(:assets)
+                                                           .where(assets: { archived: true })
+                                                           .distinct
                      @parent.results.where(archived: true)
                             .or(@parent.results.where(id: results_with_archived_elements.select(:id)))
+                            .or(@parent.results.where(id: results_with_archived_assets.select(:id)))
                    else
                      @parent.results.active
                    end

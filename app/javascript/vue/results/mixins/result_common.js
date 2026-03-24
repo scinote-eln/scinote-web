@@ -94,6 +94,10 @@ export default {
       });
       this.$emit('resultUpdated');
     },
+    attachmentDeleted(id) {
+      this.attachments = this.attachments.filter((a) => a.id !== id);
+      this.$emit('resultUpdated');
+    },
     loadElements() {
       $.get(this.urls.elements_url, (result) => {
         this.elements = result.data;

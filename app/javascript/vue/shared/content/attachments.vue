@@ -3,44 +3,48 @@
     :id='"content__attachments-" + parent.id'
     :data-e2e="`e2e-CO-${dataE2e}-attachments`">
     <div class="sci-divider my-6"></div>
-    <div class="content__attachments-actions">
-      <div class="title">
-        {{ i18n.t('protocols.steps.files', {count: attachments.length}) }}
+    <div :class="{'!bg-sn-background-brittlebush p-4': archived}">
+      <div class="content__attachments-actions">
+        <div class="title">
+          {{ i18n.t('protocols.steps.files', {count: attachments.length}) }}
+        </div>
+        <div class="flex items-center gap-2" v-if="parent.attributes.attachments_manageble && attachmentsReady && !archived">
+          <MenuDropdown
+            :listItems="this.viewModeMenu"
+            :btnText="i18n.t('attachments.preview_menu')"
+            :position="'right'"
+            :caret="true"
+            :data_e2e="`e2e-DD-${dataE2e}-attachments-viewOptions`"
+            @attachment:viewMode = "changeAttachmentsViewMode"
+          ></MenuDropdown>
+          <MenuDropdown
+            :listItems="this.sortMenu"
+            :btnIcon="'sn-icon sn-icon-sort-down'"
+            :btnClasses="'btn btn-light icon-btn'"
+            :position="'right'"
+            :data_e2e="`e2e-DD-${dataE2e}-attachments-orderOptions`"
+            @attachment:order = "changeAttachmentsOrder"
+          ></MenuDropdown>
+        </div>
       </div>
-      <div class="flex items-center gap-2" v-if="parent.attributes.attachments_manageble && attachmentsReady">
-        <MenuDropdown
-          :listItems="this.viewModeMenu"
-          :btnText="i18n.t('attachments.preview_menu')"
-          :position="'right'"
-          :caret="true"
-          :data_e2e="`e2e-DD-${dataE2e}-attachments-viewOptions`"
-          @attachment:viewMode = "changeAttachmentsViewMode"
-        ></MenuDropdown>
-        <MenuDropdown
-          :listItems="this.sortMenu"
-          :btnIcon="'sn-icon sn-icon-sort-down'"
-          :btnClasses="'btn btn-light icon-btn'"
-          :position="'right'"
-          :data_e2e="`e2e-DD-${dataE2e}-attachments-orderOptions`"
-          @attachment:order = "changeAttachmentsOrder"
-        ></MenuDropdown>
+      <div class="attachments" :data-parent-id="parent.id">
+        <component
+          v-for="(attachment, index) in attachmentsOrdered"
+          :key="attachment.id"
+          :is="attachment_view_mode(attachmentsOrdered[index])"
+          :attachment="attachment"
+          :parentId="parseInt(parent.id)"
+          :dataE2e="`${dataE2e}`"
+          @attachment:viewMode="updateAttachmentViewMode"
+          @attachment:delete="deleteAttachment(attachment.id)"
+          @attachment:restore="deleteAttachment(attachment.id)"
+          @attachment:archive="deleteAttachment(attachment.id)"
+          @attachment:moved="attachmentMoved"
+          @attachment:uploaded="$emit('attachment:uploaded')"
+          @attachment:changed="$emit('attachment:changed', $event)"
+          @attachment:update="$emit('attachment:update', $event)"
+        />
       </div>
-    </div>
-    <div class="attachments" :data-parent-id="parent.id">
-      <component
-        v-for="(attachment, index) in attachmentsOrdered"
-        :key="attachment.id"
-        :is="attachment_view_mode(attachmentsOrdered[index])"
-        :attachment="attachment"
-        :parentId="parseInt(parent.id)"
-        :dataE2e="`${dataE2e}`"
-        @attachment:viewMode="updateAttachmentViewMode"
-        @attachment:delete="deleteAttachment(attachment.id)"
-        @attachment:moved="attachmentMoved"
-        @attachment:uploaded="$emit('attachment:uploaded')"
-        @attachment:changed="$emit('attachment:changed', $event)"
-        @attachment:update="$emit('attachment:update', $event)"
-      />
     </div>
   </div>
 </template>
@@ -73,6 +77,10 @@ export default {
     dataE2e: {
       type: String,
       default: ''
+    },
+    archived: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

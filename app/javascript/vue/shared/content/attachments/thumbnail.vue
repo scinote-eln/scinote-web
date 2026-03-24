@@ -17,6 +17,10 @@
         :data-e2e="`e2e-BT-attachment-${attachment.id}`"
     >
       <div class="attachment-preview" :class= "attachment.attributes.asset_type">
+        <div v-if="attachment.attributes.archived" class="sci-tag bg-sn-alert-brittlebush absolute top-2 left-2 z-10">
+          {{ i18n.t('my_modules.results.archived') }}
+          <span class="sn-icon sn-icon-archive"></span>
+        </div>
         <img v-if="attachment.attributes.medium_preview !== null"
             class="rounded-sm"
             :src="attachment.attributes.medium_preview"
@@ -45,6 +49,12 @@
         {{ attachment.attributes.file_name }}
       </a>
       <div class="absolute bottom-16 text-sn-grey">
+        <div v-if="attachment.attributes.archived">
+          {{ i18n.t('assets.placeholder.archived_on_label', {
+            date: attachment.attributes.archived_on,
+            user: attachment.attributes.archived_by
+          }) }}
+        </div>
         {{ attachment.attributes.file_size_formatted }}
       </div>
       <div class="absolute bottom-4">
@@ -54,6 +64,8 @@
           :showOptions="showOptions"
           @attachment:viewMode="updateViewMode"
           @attachment:delete="deleteAttachment"
+          @attachment:restore="restoreAttachment"
+          @attachment:archive="archiveAttachment"
           @attachment:moved="attachmentMoved"
           @attachment:uploaded="reloadAttachments"
           @attachment:versionRestored="reloadAttachments"

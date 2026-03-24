@@ -515,10 +515,6 @@ export default {
       });
       this.elements.push(element);
     },
-    attachmentDeleted(id) {
-      this.attachments = this.attachments.filter((a) => a.id !== id);
-      this.$emit('resultUpdated');
-    },
     updateAttachment(attachment) {
       const index = this.attachments.findIndex((a) => a.id === attachment.id);
       if (index !== -1) {

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_19_112642) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_23_113234) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -112,9 +112,17 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_19_112642) do
     t.integer "file_image_quality"
     t.integer "view_mode", default: 0, null: false
     t.boolean "pdf_preview_processing", default: false
+    t.boolean "archived", default: false, null: false
+    t.datetime "archived_on"
+    t.datetime "restored_on"
+    t.bigint "archived_by_id"
+    t.bigint "restored_by_id"
+    t.index ["archived"], name: "index_assets_on_archived"
+    t.index ["archived_by_id"], name: "index_assets_on_archived_by_id"
     t.index ["created_at"], name: "index_assets_on_created_at"
     t.index ["created_by_id"], name: "index_assets_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_assets_on_last_modified_by_id"
+    t.index ["restored_by_id"], name: "index_assets_on_restored_by_id"
     t.index ["team_id"], name: "index_assets_on_team_id"
   end
 
@@ -1615,8 +1623,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_19_112642) do
   add_foreign_key "asset_sync_tokens", "assets"
   add_foreign_key "asset_sync_tokens", "users"
   add_foreign_key "asset_text_data", "assets"
+  add_foreign_key "assets", "users", column: "archived_by_id"
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"
+  add_foreign_key "assets", "users", column: "restored_by_id"
   add_foreign_key "checklist_items", "checklists"
   add_foreign_key "checklist_items", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "users", column: "last_modified_by_id"
