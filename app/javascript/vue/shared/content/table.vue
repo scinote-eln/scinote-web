@@ -37,7 +37,7 @@
           <button
             v-if="this.element.attributes.orderable.urls.restore_url"
             class="btn icon-btn btn-light"
-            @click="restoreElement"
+            @click="confirmingRestore = true"
             :title="i18n.t('general.restore')"
             :data-e2e="`e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-restore`"
           >
@@ -61,7 +61,7 @@
             @edit="enableNameEdit"
             @duplicate="duplicateElement"
             @move="showMoveModal"
-            @archive="archiveElement"
+            @archive="showArchiveModal"
           ></MenuDropdown>
         </div>
       </div>
@@ -80,6 +80,11 @@
       </div>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @close="closeDeleteModal"/>
+    <RestoreModal v-if="confirmingRestore"
+                  :parentType="element.attributes.orderable.parent_type"
+                  @confirm="restoreElement"
+                  @close="confirmingRestore = false"/>
+    <ArchiveModal v-if="confirmingArchive" @confirm="archiveElement" @close="closeArchiveModal"/>
     <tableNameModal v-if="nameModalOpen" :element="element" @update="updateEmptyName" @cancel="nameModalOpen = false" />
     <moveElementModal v-if="movingElement"
                       :parent_type="element.attributes.orderable.parent_type"
@@ -98,11 +103,14 @@ import InlineEdit from '../inline_edit.vue';
 import TableNameModal from './modal/table_name.vue';
 import moveElementModal from './modal/move.vue';
 import MenuDropdown from '../menu_dropdown.vue';
+import ArchiveModal from './modal/archive_table.vue';
+import RestoreModal from './modal/restore_table.vue';
 
 export default {
   name: 'ContentTable',
   components: {
-    deleteElementModal, InlineEdit, TableNameModal, moveElementModal, MenuDropdown
+    deleteElementModal, InlineEdit, TableNameModal,
+    moveElementModal, MenuDropdown, ArchiveModal, RestoreModal
   },
   mixins: [DeleteMixin, DuplicateMixin, MoveMixin, ArchiveMixin],
   props: {
@@ -137,7 +145,9 @@ export default {
       tableObject: null,
       nameModalOpen: false,
       reloadHeader: 0,
-      updatingTableData: false
+      updatingTableData: false,
+      confirmingArchive: false,
+      confirmingRestore: false
     };
   },
   computed: {
@@ -203,6 +213,13 @@ export default {
       if (this.editingCell) {
         e.preventDefault();
         e.returnValue = '';
+      }
+    },
+    showArchiveModal() {
+      if (this.hasCrossTableReferences === true) {
+        this.confirmingArchive = true;
+      } else {
+        this.archiveElement();
       }
     },
     enableTableEdit() {

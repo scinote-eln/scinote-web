@@ -158,7 +158,7 @@
             :data-e2e="`e2e-DD-task-result${result.id}-optionsMenu`"
             @reorder="openReorderModal"
             @duplicate="duplicateResult"
-            @archive="archiveResult"
+            @archive="showArchiveModal"
             @delete="showDeleteModal"
             @pin="pinResult"
             @unpin="unpinResult"
@@ -179,6 +179,7 @@
           <component
             :is="elements[index].attributes.orderable_type"
             class="result-element"
+            ref="resultComponent"
             :element.sync="elements[index]"
             :inRepository="false"
             :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
@@ -230,6 +231,7 @@
             @updateResult="updateLinkedSteps"
             @close="openLinkStepsModal = false"
           />
+          <archiveResultModal v-if="confirmingArchive" @confirm="archiveResult" @cancel="closeArchiveModal"/>
         </Teleport>
       </div>
     </div>
@@ -248,6 +250,7 @@ import GeneralDropdown from '../shared/general_dropdown.vue';
 import LinkStepsModal from './modals/link_steps.vue'
 import ContentToolbar from '../shared/content/content_toolbar';
 import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
+import archiveResultModal from './modals/archive_result.vue';
 
 import AttachmentsMixin from '../shared/content/mixins/attachments.js';
 import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js';
@@ -272,6 +275,7 @@ export default {
       addingContent: false,
       showFileModal: false,
       dragingFile: false,
+      confirmingArchive: false,
       customWellPlate: false,
       openLinkStepsModal: false,
       wellPlateOptions: [
@@ -331,7 +335,8 @@ export default {
     ContentToolbar,
     CustomWellPlateModal,
     LinkStepsModal,
-    GeneralDropdown
+    GeneralDropdown,
+    archiveResultModal
   },
   watch: {
     activeDragResult() {
@@ -553,6 +558,17 @@ export default {
     },
     closeCustomWellPlateModal() {
       this.customWellPlate = false;
+    },
+    showArchiveModal() {
+      const components = this.$refs.resultComponent || [];
+      if (components.some(comp => comp?.hasCrossTableReferences === true)) {
+        this.confirmingArchive = true;
+      } else {
+        this.archiveResult();
+      }
+    },
+    closeArchiveModal() {
+      this.confirmingArchive = false;
     },
     archiveResult() {
       axios.post(this.urls.archive_url).then((response) => {

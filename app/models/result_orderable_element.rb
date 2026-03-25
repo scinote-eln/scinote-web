@@ -6,7 +6,7 @@ class ResultOrderableElement < ApplicationRecord
 
   validate :check_result_relations
 
-  validates :position, uniqueness: { scope: %i(result_id) }
+  validates :position, uniqueness: { scope: %i(result_id) }, if: -> { active? }
 
   around_destroy :decrement_following_elements_positions
 
