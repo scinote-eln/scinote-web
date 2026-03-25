@@ -1,4 +1,5 @@
 class Step < ApplicationRecord
+  include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
   include TinyMceImages
@@ -18,16 +19,15 @@ class Step < ApplicationRecord
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
-  validates :position, presence: true
   validates :completed, inclusion: { in: [true, false] }
   validates :user, :protocol, presence: true
   validates :completed_on, presence: true, if: proc { |s| s.completed? }
-  validates :position, uniqueness: { scope: :protocol }, if: :position_changed?
+  validates :position, uniqueness: { scope: :protocol }, if: -> { !archived && position_changed? }
 
   before_validation :set_completed_on, if: :completed_changed?
   before_save :set_last_modified_by
   before_destroy :cascade_before_destroy
-  after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust }
+  after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust || archived }
 
   # conditional touch excluding step completion updates
   after_destroy :touch_protocol, :remove_from_user_settings
@@ -38,6 +38,9 @@ class Step < ApplicationRecord
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
   belongs_to :protocol, inverse_of: :steps
   belongs_to :original_protocol, class_name: 'Protocol', optional: true, inverse_of: :original_steps
+  belongs_to :archived_by, class_name: 'User', optional: true
+  belongs_to :restored_by, class_name: 'User', optional: true
+
   delegate :team, to: :protocol
   has_many :step_orderable_elements, inverse_of: :step, dependent: :destroy
   has_many :checklists, inverse_of: :step, dependent: :destroy

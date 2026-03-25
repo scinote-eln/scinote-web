@@ -6,7 +6,7 @@ class StepsController < ApplicationController
 
   before_action :load_vars, only: %i(update destroy show toggle_step_state update_view_state
                                      update_asset_view_mode elements
-                                     attachments upload_attachment duplicate toggle_step_skip_state)
+                                     attachments upload_attachment duplicate toggle_step_skip_state archive restore)
   before_action :load_vars_nested, only: %i(create index list reorder list_protocol_steps add_protocol_steps)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
@@ -14,12 +14,21 @@ class StepsController < ApplicationController
   before_action :check_view_permissions, only: %i(show index list attachments elements list_protocol_steps)
   before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: %i(update destroy
-                                                    update_view_state update_asset_view_mode upload_attachment)
+                                                    update_view_state update_asset_view_mode upload_attachment archive restore)
   before_action :check_complete_and_checkbox_permissions, only: :toggle_step_state
   before_action :check_skip_pemissions, only: :toggle_step_skip_state
 
   def index
-    render json: @protocol.steps.includes(:assets, step_orderable_elements: :orderable).in_order,
+    view_mode = params[:view_mode]
+    @steps = @protocol.steps.includes(:assets, step_orderable_elements: :orderable)
+
+    @steps = if view_mode == 'archived'
+               @steps.where(archived: true)
+             else
+               @steps.active.in_order
+             end
+
+    render json: @steps,
            each_serializer: StepSerializer,
            include: %i(step_orderable_elements assets),
            user: current_user
@@ -166,6 +175,28 @@ class StepsController < ApplicationController
     head :unprocessable_entity
   end
 
+  def archive
+    ActiveRecord::Base.transaction do
+      position = @step.position
+      @step.archive!(current_user)
+      @step.update(position: nil)
+      @protocol.steps.where('position > ?', position).order(:position).each do |step|
+        step.update(position: step.position - 1)
+      end
+    end
+
+    render json: @step, serializer: StepSerializer, user: current_user
+  end
+
+  def restore
+    ActiveRecord::Base.transaction do
+      @step.update(position: @protocol.steps.active.maximum(:position).to_i + 1)
+      @step.restore!(current_user)
+    end
+
+    render json: {}, status: :ok
+  end
+
   def update_view_state
     view_state = @step.current_view_state(current_user)
     view_state.state['assets']['sort'] = params.require(:assets).require(:order)
@@ -196,14 +227,16 @@ class StepsController < ApplicationController
       previous_size = @step.space_taken
 
       # Generate activity
-      if @protocol.in_module?
-        log_activity(
-          :destroy_step,
-          @my_module.experiment.project,
-          { my_module: @my_module.id }.merge(step_message_items)
-        )
-      else
-        log_activity(:delete_step_in_protocol_repository, nil, { protocol: @protocol.id }.merge(step_message_items))
+      if @step.active?
+        if @protocol.in_module?
+          log_activity(
+            :destroy_step,
+            @my_module.experiment.project,
+            { my_module: @my_module.id }.merge(step_message_items)
+          )
+        else
+          log_activity(:delete_step_in_protocol_repository, nil, { protocol: @protocol.id }.merge(step_message_items))
+        end
       end
 
       # Destroy the step

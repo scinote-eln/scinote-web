@@ -38,7 +38,7 @@ module CommentHelper
     when 'MyModule'
       can_create_my_module_comments?(object)
     when 'Step'
-      can_create_comments_in_my_module_steps?(object.my_module)
+      can_create_comments_in_my_module_steps?(object.my_module) && object.active?
     when 'Result'
       can_create_my_module_result_comments?(object.my_module) && object.active?
     when 'Project'

@@ -44,6 +44,7 @@
 
     <div class="mt-4">
       <ArchiveResults v-if="activeView === 'results'" :myModuleId="myModuleId" />
+      <ArchiveSteps v-if="activeView === 'steps'" :protocolId="protocolId"/>
     </div>
   </div>
 </template>
@@ -52,6 +53,7 @@
 import FilterDropdown from '../shared/filters/filter_dropdown.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
 import ArchiveResults from './archive_results.vue';
+import ArchiveSteps from './archive_steps.vue'
 
 const SORTS = [
   'updated_at_asc',
@@ -66,19 +68,23 @@ export default {
   props: {
     myModuleId: {
       required: true
+    },
+    protocolId: {
+      required: true
     }
   },
   data() {
     return {
       filters: null,
       objectsCollapsed: false,
-      activeView: 'results'
+      activeView: 'steps'
     };
   },
   components: {
     FilterDropdown,
     MenuDropdown,
-    ArchiveResults
+    ArchiveResults,
+    ArchiveSteps
   },
   created() {
     this.filters = [

@@ -4180,6 +4180,8 @@ en:
       archived_result: "Archived"
       link_results: "Link results to this step"
       linked_results: "Linked results"
+      no_steps_placeholder: "No steps here"
+      archived: "Archived"
       status:
         complete: "Mark as complete"
         uncomplete: "Unmark as complete"
@@ -4190,6 +4192,8 @@ en:
         rearrange: 'Rearrange content'
         duplicate: 'Duplicate'
         delete: 'Delete'
+        archive: 'Archive'
+        restore: 'Restore'
       insert:
         button: 'Insert content'
         title: 'Insert step content'
@@ -4257,6 +4261,19 @@ en:
             targets_label: Select result
             untitled_result: Untitled result
             search_placeholder: "Enter result name"
+        archive_step:
+          title: 'Restore step'
+          description_1: 'This step contains table(s) that include cross-references to other table(s).'
+          description_2: 'Archiving the table will permanently remove cross-references to other table(s).'
+          description_3: 'The table can be restored from Archive without cross-references.'
+          description_4: 'This action cannot be undone.'
+          description_5: 'Are you sure you want to continue?'
+          confirm: 'Archive'
+        restore_step:
+          title: 'Restore step'
+          description_1: 'The step will be restored to the bottom of your current active protocol.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
         delete_step:
           title: 'Delete step'
           description_1: 'You’re about to delete a whole step from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
