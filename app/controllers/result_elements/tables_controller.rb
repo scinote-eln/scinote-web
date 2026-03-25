@@ -103,6 +103,7 @@ module ResultElements
       orderable_element = @table.result_table.result_orderable_element
 
       ActiveRecord::Base.transaction do
+        orderable_element.position = nil
         orderable_element.archive!(current_user)
         #activity
       end
@@ -116,6 +117,8 @@ module ResultElements
       orderable_element = @table.result_table.result_orderable_element
 
       ActiveRecord::Base.transaction do
+        position = @result.result_orderable_elements.active.maximum(:position)
+        orderable_element.position = position ? position + 1 : 0
         orderable_element.restore!(current_user)
         #activity
       end

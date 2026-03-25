@@ -39,7 +39,7 @@
           <button
             v-if="this.element.attributes.orderable.urls.restore_url"
             class="btn icon-btn btn-light"
-            @click="restoreElement"
+            @click="confirmingRestore = true"
             :title="i18n.t('general.restore')"
             :data-e2e="`e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-restore`"
           >
@@ -98,6 +98,10 @@
       </div>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @close="closeDeleteModal"/>
+    <RestoreModal v-if="confirmingRestore"
+                  :parentType="element.attributes.orderable.parent_type"
+                  @confirm="restoreElement"
+                  @close="confirmingRestore = false"/>
     <moveElementModal v-if="movingElement"
                       :parent_type="element.attributes.orderable.parent_type"
                       :targets_url="element.attributes.orderable.urls.move_targets_url"
@@ -112,6 +116,7 @@ import DuplicateMixin from './mixins/duplicate.js';
 import ArchiveMixin from './mixins/archive.js';
 import deleteElementModal from './modal/delete.vue';
 import moveElementModal from './modal/move.vue';
+import RestoreModal from './modal/restore_text.vue';
 import InlineEdit from '../inline_edit.vue';
 import Tinymce from '../tinymce.vue';
 import MenuDropdown from '../menu_dropdown.vue';
@@ -120,7 +125,7 @@ import axios from '../../../packs/custom_axios';
 export default {
   name: 'TextContent',
   components: {
-    deleteElementModal, Tinymce, moveElementModal, InlineEdit, MenuDropdown
+    deleteElementModal, Tinymce, moveElementModal, InlineEdit, MenuDropdown, RestoreModal
   },
   mixins: [DeleteMixin, DuplicateMixin, MoveMixin, ArchiveMixin],
   props: {
@@ -151,7 +156,8 @@ export default {
   data() {
     return {
       inEditMode: false,
-      editingName: false
+      editingName: false,
+      confirmingRestore: false
     };
   },
   mounted() {

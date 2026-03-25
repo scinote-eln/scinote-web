@@ -1680,6 +1680,19 @@ en:
       link_steps: "Link steps to this result"
       linked_steps: "Linked steps"
       modals:
+        archive:
+          title: 'Archive result'
+          description_1: 'This result contains table(s) that include cross-references to other table(s).'
+          description_2: 'Archiving the result will permanently remove cross-references to other table(s).'
+          description_3: 'The result can be restored from Archive without cross-references.'
+          description_4: 'This action cannot be undone.'
+          description_5: 'Are you sure you want to continue?'
+          confirm: 'Archive'
+        restore:
+          title: 'Restore result'
+          description_1: 'The result will be restored to the bottom of your current active protocol.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
         link_steps:
           title: 'Link result to protocol steps'
           description: 'You can link a result to multiple steps.'
@@ -4223,6 +4236,19 @@ en:
           description: 'Tables have become content blocks and require a name. To be able to edit the table, please add the name now:'
           save: 'Save table title'
           error: "Table name can't be empty"
+        archive_modal:
+          title: 'Archive table'
+          description_1: 'Archiving the table will permanently remove cross-references to other table(s).'
+          description_2: 'The table can be restored from Archive without cross-references.'
+          description_3: 'This action cannot be undone.'
+          description_4: 'Are you sure you want to continue?'
+          confirm: 'Archive'
+        restore_modal:
+          title: 'Restore table'
+          description_1_step: 'The table will be restored to the bottom of the protocol step it belonged to previously.'
+          description_1_result: 'The table will be restored to the bottom of the result it belonged to previously.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
         table_name: "Table name"
       checklist:
         placeholder: 'Enter checklist name'
@@ -4233,6 +4259,12 @@ en:
         placeholder: 'Enter step text'
         empty_text: 'No text entered'
         text_name: "Enter text name"
+        restore_modal:
+          title: 'Restore text'
+          description_1_step: 'The text will be restored to the bottom of the protocol step it belonged to previously.'
+          description_1_result: 'The text will be restored to the bottom of the result it belonged to previously.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
       plate:
         default_name: "Plate %{position}"
       modals:

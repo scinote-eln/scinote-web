@@ -45,7 +45,7 @@
           <button
             v-if="this.urls.restore_url"
             class="btn icon-btn btn-light"
-            @click="restoreResult"
+            @click="confirmingRestore = true"
             :title="this.i18n.t('my_modules.results.actions.restore')"
             :data-e2e="`e2e-DO-task-result${this.result.id}-optionsMenu-restore`"
           >
@@ -106,6 +106,7 @@
         </div>
       </div>
       <deleteResultModal v-if="confirmingDelete" @confirm="deleteResult" @cancel="closeDeleteModal"/>
+      <restoreResultModal v-if="confirmingRestore" @confirm="restoreResult" @cancel="closeRestoreModal"/>
 
       <div class="collapse in pl-10" :id="'resultBody' + result.id">
         <div v-for="(element, index) in orderedElements" :key="element.id">
@@ -134,9 +135,6 @@
                       :attachmentsReady="attachmentsReady"
                       @attachments:openFileModal="showFileModal = true"
                       @attachment:deleted="attachmentDeleted"
-                      @attachment:update="updateAttachment"
-                      @attachment:uploaded="loadAttachments"
-                      @attachment:moved="moveAttachment"
                       @attachments:order="changeAttachmentsOrder"
                       @attachments:viewMode="changeAttachmentsViewMode"
                       @attachment:viewMode="updateAttachmentViewMode"/>
@@ -154,6 +152,7 @@ import InlineEdit from '../shared/inline_edit.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import deleteResultModal from './delete_result.vue';
+import restoreResultModal from './modals/restore_result.vue';
 
 import AttachmentsMixin from '../shared/content/mixins/attachments.js';
 import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js';
@@ -176,9 +175,19 @@ export default {
     InlineEdit,
     MenuDropdown,
     deleteResultModal,
-    GeneralDropdown
+    GeneralDropdown,
+    restoreResultModal
+  },
+  data() {
+    return {
+      confirmingDelete: false,
+      confirmingRestore: false
+    };
   },
   methods: {
+    closeRestoreModal() {
+      this.confirmingRestore = false;
+    },
     restoreResult() {
       axios.post(this.urls.restore_url).then((response) => {
         this.$emit('result:restored', this.result.id);

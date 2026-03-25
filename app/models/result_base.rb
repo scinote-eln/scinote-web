@@ -108,7 +108,7 @@ class ResultBase < ApplicationRecord
   end
 
   def normalize_elements_position
-    result_orderable_elements.order(:position).each_with_index do |element, index|
+    result_orderable_elements.active.order(:position).each_with_index do |element, index|
       element.update!(position: index) unless element.position == index
     end
   end
