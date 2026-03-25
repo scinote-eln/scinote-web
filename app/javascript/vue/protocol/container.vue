@@ -268,6 +268,7 @@
                   @step:update="updateStep"
                   @stepUpdated="refreshProtocolStatus"
                   @step:insert="updateStepsPosition"
+                  @step:archived="updateStepsPosition"
                   @step:elements:loaded="stepToReload = null; elementsLoaded++"
                   @step:move_element="reloadStep"
                   @step:attachments:loaded="stepToReload = null; attachmentsLoaded++"
@@ -335,15 +336,12 @@ import Tinymce from '../shared/tinymce.vue';
 import ReorderableItemsModal from '../shared/reorderable_items_modal.vue';
 import clipboardPasteModal from '../shared/content/attachments/clipboard_paste_modal.vue';
 import AssetPasteMixin from '../shared/content/attachments/mixins/paste.js';
-import axios from '../../packs/custom_axios';
 import UtilsMixin from '../mixins/utils.js';
 import stackableHeadersMixin from '../mixins/stackableHeadersMixin';
 import moduleNameObserver from '../mixins/moduleNameObserver';
 import AssignedItemsModal from './modals/assigned_items.vue';
 import tooltipMixin from '../mixins/tooltipMixin.js';
-import {
-    user_setting_path
-  } from '../../routes.js';
+import StepCollapseState from './mixins/step_collapse_state.js';
 
 export default {
   name: 'ProtocolContainer',
@@ -358,7 +356,7 @@ export default {
     ReorderableItemsModal, ProtocolMetadata, clipboardPasteModal,
     AssignedItemsModal
   },
-  mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin, tooltipMixin],
+  mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin, tooltipMixin, StepCollapseState],
   computed: {
     wrappedTables() {
       return window.wrapTables(this.protocol.attributes.description_view);
@@ -450,41 +448,6 @@ export default {
     reloadStep(step) {
       this.stepToReload = step;
     },
-    checkStepsState() {
-      this.stepCollapsed = this.$refs.steps.every((step) => step.isCollapsed);
-    },
-    collapseSteps() {
-      $('.step-container .collapse').collapse('hide');
-      this.updateStepStateSettings(true);
-      this.$refs.steps.forEach((step) => step.isCollapsed = true);
-      this.stepCollapsed = true;
-    },
-    expandSteps() {
-      $('.step-container .collapse').collapse('show');
-      this.updateStepStateSettings(false);
-      this.$refs.steps.forEach((step) => step.isCollapsed = false);
-      this.stepCollapsed = false;
-    },
-    updateStepStateSettings(newState) {
-      const updatedData = this.steps.reduce((acc, currentStep) => {
-        acc[currentStep.id] = newState;
-        return acc;
-      }, {});
-
-      this.steps = this.steps.map((step) => ({
-        ...step,
-        attributes: {
-          ...step.attributes,
-          collapsed: newState
-        }
-      }));
-
-      const settings = {
-        value: updatedData
-      };
-
-      axios.put(user_setting_path('task_step_states'), {user_setting: settings});
-    },
     deleteSteps() {
       $.post(this.urls.delete_steps_url, () => {
         this.steps = [];
@@ -555,9 +518,9 @@ export default {
         HelperModule.flashAlertMsg(data.responseJSON.error ? Object.values(data.responseJSON.error).join(', ') : I18n.t('errors.general'), 'danger');
       });
     },
-    updateStepsPosition(step, action = 'add') {
-      const { position } = step.attributes;
-      if (action === 'delete') {
+    updateStepsPosition(step, action = 'add', old_position = 0) {
+      const position = step.attributes.position || old_position;
+      if (action === 'delete' || action === 'archive') {
         this.steps.splice(position, 1);
       }
       const unordered_steps = this.steps.map((s) => {

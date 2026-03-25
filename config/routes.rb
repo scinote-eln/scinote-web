@@ -709,6 +709,8 @@ Rails.application.routes.draw do
         post 'update_view_state'
         post 'update_asset_view_mode'
         post 'duplicate'
+        post :archive
+        post :restore
       end
       collection do
         get :list

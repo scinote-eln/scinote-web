@@ -304,6 +304,8 @@ class ProtocolsController < ApplicationController
       team = @protocol.team
       previous_size = 0
       @protocol.steps.each do |step|
+        next unless step.active?
+
         previous_size += step.space_taken
 
         if @protocol.in_module?
