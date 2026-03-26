@@ -16,6 +16,16 @@
         <sup class="navigation-results-counter"><%= @my_module.archived_branch? ? @my_module.results.size : @active_results_size %></sup>
       <% end %>
     </a>
+    <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_assigned_items? ? "text-sn-blue" : "text-sn-black" %>"
+        href="<%= shared_protocol_repositories_path(@shareable_link.uuid) %>"
+        title="<%= t("nav2.modules.assigned_items") %>"
+    >
+      <%= t("nav2.modules.assigned_items") %>
+      <% @my_module_repository_rows_count = @my_module.my_module_repository_rows.count %>
+      <% if @my_module_repository_rows_count.positive? %>
+        <sup class="navigation-results-counter"><%= @my_module_repository_rows_count %></sup>
+      <% end %>
+    </a>
     <div class="flex items-center gap-3 ml-auto">
       <%= render partial: 'shareable_links/my_modules/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
     </div>

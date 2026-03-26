@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center mr-3 flex-nowrap relative"
+    class="flex items-center flex-nowrap relative"
     v-click-outside="closeSearchInputs"
   >
     <button :class="{hidden: searchOpened}" ref='searchInputBtn' class="btn btn-light btn-black icon-btn" data-e2e="e2e-BT-topToolbar-search" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
@@ -17,18 +17,20 @@
         />
         <i class="sn-icon sn-icon-search !mr-2.5"></i>
       </div>
-      <div v-if="barcodeSearchOpened" class="sci-input-container-v2 w-full right-icon ml-2">
-        <input
-          ref="barcodeSearchInput"
-          class="sci-input-field"
-          type="text"
-          :placeholder="i18n.t('repositories.show.filter_inventory_items_with_ean')"
-          @keyup="setBarcodeValue"
-        />
-        <i class='sn-icon sn-icon-barcode barcode-scanner !mr-2.5'></i>
-      </div>
+      <template v-if="enableBarcodeSearch">
+        <div v-if="barcodeSearchOpened" class="sci-input-container-v2 w-full right-icon ml-2">
+          <input
+            ref="barcodeSearchInput"
+            class="sci-input-field"
+            type="text"
+            :placeholder="i18n.t('repositories.show.filter_inventory_items_with_ean')"
+            @keyup="setBarcodeValue"
+          />
+          <i class='sn-icon sn-icon-barcode barcode-scanner !mr-2.5'></i>
+        </div>
+      </template>
     </div>
-    <button :class="{hidden: barcodeSearchOpened}" ref='barcodeSearchInputBtn' class="btn btn-light btn-black icon-btn ml-2" data-e2e="e2e-BT-topToolbar-barcode" :title="i18n.t('repositories.show.ean_search_button_tooltip')" @click="openBarcodeSearch">
+    <button v-if="enableBarcodeSearch" :class="{hidden: barcodeSearchOpened}" ref='barcodeSearchInputBtn' class="btn btn-light btn-black icon-btn ml-2" data-e2e="e2e-BT-topToolbar-barcode" :title="i18n.t('repositories.show.ean_search_button_tooltip')" @click="openBarcodeSearch">
       <i class='sn-icon sn-icon-barcode barcode-scanner'></i>
     </button>
   </div>
@@ -38,9 +40,19 @@
 import { vOnClickOutside } from '@vueuse/components';
 
 export default {
-  name: 'RepositorySearchContainer',
+  name: 'SearchContainer',
   directives: {
     'click-outside': vOnClickOutside
+  },
+  props: {
+    searchValue: {
+      type: String,
+      default: ''
+    },
+    enableBarcodeSearch: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -50,15 +62,23 @@ export default {
       value: ''
     };
   },
+  created() {
+    this.value = this.searchValue;
+  },
   directives: {
     'click-outside': vOnClickOutside
   },
   watch: {
+    searchValue(newValue) {
+      if (newValue !== this.value) {
+        this.value = newValue;
+      }
+    },
     barcodeValue() {
-      this.updateRepositoySearch();
+      this.emitSearchValue();
     },
     value() {
-      this.updateRepositoySearch();
+      this.emitSearchValue();
     }
   },
   computed: {
@@ -103,8 +123,8 @@ export default {
         }, 100);
       }
     },
-    updateRepositoySearch() {
-      $('.dataTables_filter input').val(this.activeValue).trigger('keyup');
+    emitSearchValue() {
+      this.$emit('search', this.activeValue);
     },
     clearValues() {
       this.value = '';

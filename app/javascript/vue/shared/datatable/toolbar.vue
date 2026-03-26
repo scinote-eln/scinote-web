@@ -4,9 +4,10 @@
       <template v-for="action in toolbarActions.left" :key="action.label">
         <a v-if="action.type === 'emit' || action.type === 'link'"
            :class="[action.buttonStyle, {
-            'disabled': disabled
+            'disabled': disabled || action.disabled
            }]"
            :href="action.path"
+           :title="action.tooltip || action.label"
            :data-e2e="`e2e-BT-topToolbar-${action.name}`"
            @click="doAction(action, $event)">
           <i :class="action.icon"></i>
@@ -18,7 +19,7 @@
           :btnClasses="action.buttonStyle"
           :btnText="action.label"
           :btnIcon="action.icon"
-          :disabled="disabled"
+          :disabled="disabled || action.disabled"
           :caret="true"
           :position="'right'"
           :data-e2e="`e2e-BT-topToolbar-${action.name}`"
@@ -27,9 +28,11 @@
         <component v-if="action.type === 'component'"
                     :is="action.params.componentRenderer"
                     :params="action.params"
-                    :disabled="disabled"
+                    :disabled="disabled || action.disabled"
                     :data-e2e="`e2e-BT-topToolbar-${action.name}`"
-                    @dtEvent="handleEvent" />
+                    @dtEvent="handleEvent"
+                    :dataE2e="`topToolbar-${action.name}`"
+        />
       </template>
     </div>
     <div class="flex-none">
@@ -57,32 +60,19 @@
         ></MenuDropdown>
       </div>
     </div>
-    <div class="flex flex-1 justify-end gap-2">
-      <div v-if="!disabled" class="sci-input-container-v2"
-           :class="{'w-48': showSearch, 'w-11': !showSearch}"
-           :data-e2e="'e2e-BT-topToolbar-search'">
-        <input
-          ref="searchInput"
-          class="sci-input-field !pr-9"
-          type="text"
-          @focus="openSearch"
-          @blur="hideSearch"
-          :value="searchValue"
-          :placeholder="'Search...'"
-          :data-e2e="'e2e-IF-topToolbar-search'"
-          @change="$emit('search:change', $event.target.value)"
-        />
-        <i v-if="searchValue.length === 0" class="sn-icon sn-icon-search !m-2.5 !ml-auto right-0"></i>
-        <i v-else class="sn-icon sn-icon-close !m-2.5 !ml-auto right-0 cursor-pointer z-10"
-                  @click="$emit('search:change', '')"></i>
-      </div>
+    <div class="flex flex-1 justify-end gap-2 h-11">
+      <Search
+        v-if="!disabled"
+        :value="searchValue"
+        :enableBarcodeSearch="enableBarcodeSearch"
+        @search="$emit('search:change', $event)"
+      />
       <a v-for="action in toolbarActions.right" :key="action.label"
-      :class="[action.buttonStyle, {
-            'disabled': disabled
-           }]"
-          :href="action.path"
-          :title="action.tooltip || action.label"
-          @click="doAction(action, $event)">
+      :class="[action.buttonStyle, { 'disabled': disabled }]"
+      :href="action.path"
+      :title="action.tooltip || action.label"
+      :data-e2e="`e2e-BT-topToolbar-${action.name}`"
+      @click="doAction(action, $event)">
         <i :class="action.icon"></i>
         {{ action.label }}
       </a>
@@ -151,6 +141,8 @@ import GeneralDropdown from '../general_dropdown.vue';
 import FilterDropdown from '../filters/filter_dropdown.vue';
 import ColumnsModal from './modals/columns.vue';
 import ConfirmationModal from '../confirmation_modal.vue';
+import Search from './search.vue';
+import tooltipMixin from '../../mixins/tooltipMixin.js';
 
 export default {
   name: 'Toolbar',
@@ -203,6 +195,10 @@ export default {
     },
     componentRenderer: {
       type: [Function, Object]
+    },
+    enableBarcodeSearch: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -216,8 +212,10 @@ export default {
     FilterDropdown,
     ColumnsModal,
     GeneralDropdown,
-    ConfirmationModal
+    ConfirmationModal,
+    Search
   },
+  mixins: [tooltipMixin],
   computed: {
     viewModesMenu() {
       return [

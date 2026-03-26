@@ -1,0 +1,16 @@
+<%= render partial: "shareable_links/my_modules/protocol_name" %>
+<div class="my-5 flex-1">
+  <div class="content-pane with-grey-background flexible">
+    <%= render partial: 'shareable_links/my_modules/header_actions' %>
+
+    <div id="assignedItems">
+      <assigned-items
+        ref="assignedItems"
+        :assigned-repositories="<%= @assigned_repositories.to_json %>"
+        my-module-uuid="<%= @my_module.shareable_link.uuid %>"
+      />
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag 'vue_shareable_links_my_module_assigned_items' %>

@@ -175,9 +175,11 @@ export default {
       });
     },
     infiniteScrollLoad() {
-      if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
-        this.loadResults();
-      }
+      setTimeout(() => {
+        if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
+          this.loadResults();
+        }
+      }, 500);
     },
     loadResults() {
       if (this.nextPageUrl === null || this.loadingPage) return;

@@ -10,7 +10,7 @@ module Toolbars
     def initialize(current_user, my_module, ids: [])
       @current_user = current_user
       @my_module = my_module
-      @rows = my_module.my_module_repository_rows.where(repository_row_id: ids)
+      @rows = my_module.my_module_repository_rows.includes(repository_row: :repository).where(repository_row_id: ids)
 
       @single = @rows.length == 1
     end
@@ -27,6 +27,10 @@ module Toolbars
     end
 
     private
+
+    def all_readable?
+      @all_readable ||= @rows.all? { |r| can_read_repository?(@current_user, r.repository_row.repository) }
+    end
 
     def unassign_action
       return unless can_assign_my_module_repository_rows?(@current_user, @my_module)
@@ -50,8 +54,9 @@ module Toolbars
       }
     end
 
-
     def print_action
+      return unless all_readable?
+
       {
         name: 'print',
         label: I18n.t('my_modules.assigned_items.toolbar.print'),
@@ -61,6 +66,8 @@ module Toolbars
     end
 
     def export_consumption
+      return unless all_readable?
+
       {
         name: 'export_consumption',
         label: I18n.t('my_modules.assigned_items.toolbar.export_consumption'),

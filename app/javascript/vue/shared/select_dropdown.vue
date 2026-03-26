@@ -167,7 +167,8 @@ export default {
       focusedOption: null,
       skipQueryCallback: false,
       nextPage: 1,
-      totalOptionsCount: this.options.length
+      totalOptionsCount: this.options.length,
+      loadingOptions: false
     };
   },
   mixins: [FixedFlyoutMixin],
@@ -413,7 +414,12 @@ export default {
       return this.rawOptions.filter((option) => value.includes(option[0])).map((option) => option[1]);
     },
     fetchOptions() {
+      if (this.loadingOptions) return;
+
       if (this.optionsUrl) {
+
+        this.loadingOptions = true;
+
         const params = { query: this.query, page: this.nextPage, ...this.urlParams };
 
         let request = {};
@@ -434,6 +440,8 @@ export default {
 
               return [option.id, option.name, option];
             });
+
+            this.loadingOptions = false;
 
             if (response.data.paginated) {
               this.fetchedOptions = [...this.fetchedOptions, ...options];

@@ -29,7 +29,7 @@ gem 'omniauth-saml'
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.15'
 gem 'json-jwt'
-gem 'jwt', '~> 1.5'
+gem 'jwt'
 gem 'kaminari'
 gem 'rack-attack'
 gem 'rack-cors'
@@ -38,7 +38,7 @@ gem 'activerecord-import', '~> 2.2.0'
 gem 'acts_as_list'
 gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
-gem 'bcrypt', '~> 3.1.10'
+gem 'bcrypt', '~> 3.1.22'
 # gem 'caracal'
 gem 'caracal', git: 'https://github.com/scinote-eln/caracal.git', branch: 'custom-docx-reports' # Build docx report
 gem 'caxlsx' # Build XLSX files

@@ -248,7 +248,7 @@ class Extends
     repository_row: nil,
     report: nil,
     team: [:projects],
-    project: [:experiments],
+    project: %i(experiments reports),
     experiment: [:my_modules],
     my_module: %i(results protocols),
     result: [:assets],

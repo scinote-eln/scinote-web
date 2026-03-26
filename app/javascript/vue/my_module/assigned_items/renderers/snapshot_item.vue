@@ -9,55 +9,87 @@
         <div class="text-sn-grey-700">{{ i18n.t('my_modules.repository.version.snapshot_created_by', {user: item.attributes.created_by}) }}</div>
       </div>
     </span>
-    <span v-else class="flex justify-between items-center rounded relative whitespace-nowrap px-3 py-2 cursor-pointer hover:!bg-sn-super-light-grey group"
-          :class="{'!bg-sn-super-light-blue': selected}"  @click="selectVersion">
+    <span
+      class="flex justify-between items-center rounded relative whitespace-nowrap px-3 py-2 cursor-pointer hover:!bg-sn-super-light-grey group"
+      v-else
+      :class="{'!bg-sn-super-light-blue': selected}"
+      @click="selectVersion"
+      :data-e2e="`e2e-DO-${e2eValue}-snapshot${item.id}`"
+    >
       <div>
         <div>{{ item.attributes.name }}</div>
         <div class="text-sn-grey-700">{{ i18n.t('my_modules.repository.version.snapshot_created_by', {user: item.attributes.created_by}) }}</div>
       </div>
       <div class="flex gap-2">
-        <button v-if="canManageSnapshots" class="btn btn-light icon-btn opacity-0 group-hover:opacity-100" :title="i18n.t('my_modules.repository.version.delete')" @click.stop="deleteVersion">
+        <button
+          v-if="canManageSnapshots"
+          class="btn btn-light icon-btn opacity-0 group-hover:opacity-100"
+          :title="i18n.t('my_modules.repository.version.delete')"
+          @click.stop="deleteVersion"
+          :data-e2e="`e2e-BT-${e2eValue}-snapshot${item.id}-delete`"
+        >
           <i class="sn-icon sn-icon-delete"></i>
         </button>
         <i v-if="pinned" class="flex sn-icon sn-icon-pinned text-sn-grey items-center justify-center w-10"></i>
-        <button v-else-if="canManageSnapshots" class="btn btn-light icon-btn" :title="i18n.t('my_modules.repository.version.pin')" @click.stop="pinVersion">
+        <button
+          v-else-if="canManageSnapshots"
+          class="btn btn-light icon-btn"
+          data-toggle="tooltip"
+          :title="i18n.t('my_modules.repository.version.pin')"
+          @click.stop="pinVersion"
+          :data-e2e="`e2e-BT-${e2eValue}-snapshot${item.id}-pin`"
+        >
           <i class="sn-icon sn-icon-pin"></i>
         </button>
       </div>
     </span>
+
+    <ConfirmationModal
+      :title="
+        i18n.t('my_modules.repository.version.delete_version_modal.title')
+      "
+      :description="
+        i18n.t('my_modules.repository.version.delete_version_modal.text')
+      "
+      confirmClass="btn btn-danger"
+      :confirmText="i18n.t('general.delete')"
+      ref="deleteVersionModal"
+      :e2eValue="`my-module-repository-deleteVersionModal-${item.id}`"
+    ></ConfirmationModal>
   </div>
 </template>
 
 <script>
-
 import axios from '../../../../packs/custom_axios.js';
 import tooltipMixin from '../../../mixins/tooltipMixin.js';
+import ConfirmationModal from '../../../shared/confirmation_modal.vue';
 import {
   status_my_module_repository_snapshot_path
 } from '../../../../routes.js';
 
 export default {
   name: 'SnapshotItem',
+  components: {
+    ConfirmationModal
+  },
   props: {
     item: { type: Object, required: true },
     pinned: { type: Boolean, default: false },
     selected: { type: Boolean, default: false },
     myModuleId: { type: String, required: true },
-    canManageSnapshots: { type: Boolean, default: false }
-  },
-  data() {
-    return {
-      provisioning: false
-    };
+    canManageSnapshots: { type: Boolean, default: false },
+    e2eValue: { type: String, default: '' }
   },
   mixins: [tooltipMixin],
   computed: {
     statusUrl() {
       return status_my_module_repository_snapshot_path(this.myModuleId, this.item.id);
+    },
+    provisioning() {
+      return this.item.attributes.status === 'provisioning';
     }
   },
   created() {
-    this.provisioning = this.item.attributes.status == 'provisioning';
     this.statusVersion();
   },
   watch: {
@@ -66,8 +98,11 @@ export default {
     }
   },
   methods: {
-    deleteVersion() {
-      this.$emit('deleteVersion', this.item);
+    async deleteVersion() {
+      const ok = await this.$refs.deleteVersionModal.show();
+      if (ok) {
+        this.$emit('deleteVersion', this.item);
+      }
     },
     selectVersion() {
       this.$emit('selectVersion', this.item);
@@ -81,11 +116,9 @@ export default {
       setTimeout(() => {
         axios.get(this.statusUrl)
         .then((response) => {
-          this.provisioning = response.data.status === 'provisioning';
-          if (this.provisioning) {
+          this.$emit('updateStatus', this.item, response.data.status);
+          if (response.data.status === 'provisioning') {
             this.statusVersion();
-          } else {
-            this.applyTooltips();
           }
         })
       }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);

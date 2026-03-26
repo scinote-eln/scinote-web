@@ -23,7 +23,6 @@ module Lists
       fetch_records
       filter_records
       paginate_records
-      add_sort_joins
       add_extra_fields
       @records
     end
@@ -36,17 +35,18 @@ module Lists
     end
 
     def add_extra_fields
+      sort_records = add_sort_joins
       @records = @records.select('repository_rows.id')
                          .select('COUNT("repository_rows"."id") OVER() AS filtered_count')
 
-      @records = @records.select("row_number() OVER (ORDER BY #{sort_column} #{sort_direction(@params[:order])}) AS row_number") if @params[:order].present?
+      @records = @records.select("row_number() OVER (ORDER BY #{sort_column} #{sort_direction(@params[:order])}) AS row_number") if sort_records
 
       @records = RepositoryRow.with(paginated_repository_rows: @records)
                               .joins('JOIN paginated_repository_rows ON paginated_repository_rows.id = repository_rows.id')
 
       # Adding assigned counters
       if @my_module && !@is_snapshot
-        @records = @records.joins(:my_module_repository_rows)
+        @records = @records.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: @my_module })
         @records = @records.select('SUM(DISTINCT my_module_repository_rows.stock_consumption) AS "consumed_stock"') if @repository.has_stock_management?
       else
         @records = @records.left_outer_joins(:my_module_repository_rows)
@@ -76,11 +76,11 @@ module Lists
                          .select('MAX("last_modified_by"."full_name") AS last_modified_by_full_name')
                          .select('MAX("archived_by"."full_name") AS archived_by_full_name')
                          .select('COUNT(DISTINCT my_module_repository_rows.id) AS "assigned_my_modules_count"')
-                         .select('COALESCE(repository_rows.parent_connections_count, 0) + COALESCE(repository_rows.child_connections_count, 0) AS "relationships_count"')
+                         .select('COALESCE(repository_rows.parent_connections_count, 0) + COALESCE(repository_rows.child_connections_count, 0) AS "connections_count"')
                          .group('repository_rows.id')
                          .preload(:repository)
 
-      @records = @records.group('paginated_repository_rows.row_number').order('paginated_repository_rows.row_number') if @params[:order].present?
+      @records = @records.group('paginated_repository_rows.row_number').order('paginated_repository_rows.row_number') if sort_records
       @records = @records.preload(:repository_columns, repository_cells: { value: @repository.cell_preload_includes }) if @preload_cells
       @records = @records.preload(:repository_stock_cell, :repository_stock_value) if @repository.has_stock_management?
     end
@@ -516,7 +516,14 @@ module Lists
         @records = @records.joins('LEFT OUTER JOIN "users" "created_by" ON "created_by"."id" = "repository_rows"."created_by_id"')
 
       when 'consumed_stock'
-        @records = @records.group('repository_rows.id')
+        if @my_module && !@is_snapshot
+          @records = @records.joins(:my_module_repository_rows)
+                             .where(my_module_repository_rows: { my_module_id: @my_module })
+                             .group('repository_rows.id')
+        else
+          @records = @records.left_outer_joins(:my_module_repository_rows)
+                             .group('repository_rows.id')
+        end
       when /^col_[1-9]\d*\z/
         column_id = column[/\d+\z/].to_i
         sorting_column = @repository.repository_columns.find_by(id: column_id)
@@ -528,11 +535,24 @@ module Lists
         return unless sorting_column
 
         sort_by_custom_repository_column(sorting_column)
+      when 'connections_count'
+        @records.select('COALESCE(repository_rows.parent_connections_count, 0) + COALESCE(repository_rows.child_connections_count, 0) AS "connections_count"')
       else
-        return unless sortable_columns.include?(column)
+        sorting_column = sortable_columns_map(column)
+        return unless sortable_columns.include?(sorting_column)
 
-        @records = @records.group(:id).group(column)
+        @records = @records.group(:id).group(sorting_column)
       end
+    end
+
+    def sortable_columns_map(column)
+      {
+        name: 'repository_rows.name',
+        code: 'repository_rows.id',
+        assigned_tasks_count: 'assigned',
+        created_by: 'created_by.full_name',
+        created_at: 'repository_rows.created_at'
+      }[column.to_sym]
     end
 
     def sortable_columns
@@ -544,6 +564,7 @@ module Lists
 
       sortable_columns = @repository.default_sortable_columns
       sortable_columns << 'consumed_stock' if @repository.has_stock_management? && @my_module
+      sortable_columns << 'connections_count'
       sortable_columns
     end
 

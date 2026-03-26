@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Lists::RepositoryRowsService do
-  
+
   before(:all) do
     team = create(:team)
     user = create(:user)
@@ -53,7 +53,7 @@ RSpec.describe Lists::RepositoryRowsService do
 
     context 'when ordering param is present' do
       it 'is ordered by row name asc' do
-        params[:order] = { column: 'repository_rows.name', dir: 'asc' }
+        params[:order] = { column: 'name', dir: 'asc' }
         repository_rows.second.update_column(:name, '0')
         repository_rows = service.call
 
@@ -61,7 +61,7 @@ RSpec.describe Lists::RepositoryRowsService do
       end
 
       it 'is ordered by row name desc' do
-        params[:order] = { column: 'repository_rows.name', dir: 'desc' }
+        params[:order] = { column: 'name', dir: 'desc' }
         repository_rows.second.update_column(:name, 'ZZZZZ')
         repository_rows = service.call
 
@@ -174,12 +174,12 @@ RSpec.describe Lists::RepositoryRowsService do
       it 'filters repository_rows created during "today"' do
         params[:advanced_search] = {
           filter_elements: [
-            { 
-              repository_column_id: 'added_on', 
+            {
+              repository_column_id: 'added_on',
               operator: 'today'
             }
           ]
-        }  
+        }
 
         expect(service.call.pluck(:created_at)).to all(be > DateTime.now.beginning_of_day && be < DateTime.now.end_of_day)
       end
@@ -190,12 +190,12 @@ RSpec.describe Lists::RepositoryRowsService do
 
         params[:advanced_search] = {
           filter_elements: [
-            { 
-              repository_column_id: 'added_on', 
+            {
+              repository_column_id: 'added_on',
               operator: 'yesterday'
             }
           ]
-        }  
+        }
 
         repository_rows = service.call
         expect(repository_rows).to include(previous_day_repository_row)
@@ -208,18 +208,18 @@ RSpec.describe Lists::RepositoryRowsService do
 
         params[:advanced_search] = {
           filter_elements: [
-            { 
-              repository_column_id: 'added_on', 
+            {
+              repository_column_id: 'added_on',
               operator: 'last_week'
             }
           ]
-        }  
+        }
 
         repository_rows = service.call
         expect(repository_rows).to include(previous_week_repository_row)
         expect(repository_rows.pluck(:created_at)).to all(be > 1.week.ago.beginning_of_week && be < 1.week.ago.end_of_week)
       end
-      
+
 
       it 'filters repository_rows created during "this_month"' do
         previous_month_repository_row = repository_rows.second
@@ -227,12 +227,12 @@ RSpec.describe Lists::RepositoryRowsService do
 
         params[:advanced_search] = {
           filter_elements: [
-            { 
-              repository_column_id: 'added_on', 
+            {
+              repository_column_id: 'added_on',
               operator: 'this_month'
             }
           ]
-        }  
+        }
 
         repository_rows = service.call
         expect(repository_rows).not_to include(previous_month_repository_row)
@@ -245,12 +245,12 @@ RSpec.describe Lists::RepositoryRowsService do
 
         params[:advanced_search] = {
           filter_elements: [
-            { 
-              repository_column_id: 'added_on', 
+            {
+              repository_column_id: 'added_on',
               operator: 'last_year'
             }
           ]
-        }  
+        }
 
         repository_rows = service.call
         expect(repository_rows).to include(last_year_repository_row)
@@ -263,12 +263,12 @@ RSpec.describe Lists::RepositoryRowsService do
 
         params[:advanced_search] = {
           filter_elements: [
-            { 
-              repository_column_id: 'added_on', 
+            {
+              repository_column_id: 'added_on',
               operator: 'this_year'
             }
           ]
-        }  
+        }
 
         repository_rows = service.call
         expect(repository_rows).to_not include(last_year_repository_row)
