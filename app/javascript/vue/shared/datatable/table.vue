@@ -392,10 +392,7 @@ export default {
           values[key] = this.filledRowTemplate[key].value;
         });
 
-        this.gridApi.setGridOption(
-          'rowData',
-          [values, ...this.rowData]
-        );
+        this.rowData = [values, ...this.rowData];
 
         const viewport = this.$refs.agGrid?.$el.querySelector('.ag-body-viewport');
         if (viewport) {
