@@ -185,6 +185,8 @@
           :dataE2e="`protocol-step${step.id}`"
           @component:adding-content="($event) => addingContent = $event"
           @component:delete="removeElement"
+          @component:archive="removeElement"
+          @component:restore="removeElement"
           @update="updateElement"
           @reorder="openReorderModal"
           @component:insert="insertElement"

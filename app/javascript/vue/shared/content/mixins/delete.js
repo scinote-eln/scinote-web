@@ -1,3 +1,5 @@
+import axios from '../../../../packs/custom_axios';
+
 export default {
   data() {
     return {

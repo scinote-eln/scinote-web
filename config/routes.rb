@@ -680,6 +680,8 @@ Rails.application.routes.draw do
           get :move_targets
           post :move
           post :duplicate
+          post :archive
+          post :restore
         end
       end
       resources :checklists, controller: 'step_elements/checklists', only: %i(create destroy update) do
