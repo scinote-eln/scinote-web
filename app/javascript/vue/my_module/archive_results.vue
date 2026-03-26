@@ -1,27 +1,41 @@
 <template>
-  <div class="results-wrapper">
-    <div
-      :class="{ 'tw-hidden': loadingOverlay }"
-      class="results-list">
-      <Result v-for="result in results" :key="result.id"
-        ref="results"
-        :result="result"
-        :protocolId="protocolId"
-        @result:deleted="removeResult"
-        @result:restored="removeResult"
-        @result:collapsed="checkResultsState"
-      />
-      <div v-if="!loadingOverlay && results.length === 0" class="px-4 py-6 bg-white my-4 text-gray-500">
-        {{ i18n.t('my_modules.results.no_results_placeholder') }}
+  <div>
+    <ArchiveToolbar
+      :mode="'results'"
+      :sort="sort"
+      :objects="results"
+      :objectsCollapsed="resultsCollapsed"
+      @setSort="setSort"
+      @setFilters="setFilters"
+      @expandAll="expandResults"
+      @collapseAll="collapseResults"
+      @update:mode="$emit('update:mode', $event)"
+    />
+    <div class="results-wrapper">
+      <div
+        :class="{ 'tw-hidden': loadingOverlay }"
+        class="results-list">
+        <Result v-for="result in results" :key="result.id"
+          ref="results"
+          :result="result"
+          :protocolId="protocolId"
+          @result:deleted="removeResult"
+          @result:restored="removeResult"
+          @result:collapsed="checkResultsState"
+        />
+        <div v-if="!loadingOverlay && results.length === 0" class="px-4 py-6 bg-white my-4 text-gray-500">
+          {{ i18n.t('my_modules.results.no_results_placeholder') }}
+        </div>
       </div>
+      <LoadingOverlay v-if="loadingOverlay" />
     </div>
-    <LoadingOverlay v-if="loadingOverlay" />
   </div>
 </template>
 
 <script>
 import axios from '../../packs/custom_axios.js';
 import Result from '../results/archived_result.vue';
+import ArchiveToolbar from './archive_toolbar.vue';
 import LoadingOverlay from '../results/loading_overlay.vue';
 import ResultsCollapseStateMixin from '../results/mixins/results_collapse_state.js';
 
@@ -45,12 +59,14 @@ export default {
       resultToReload: null,
       nextPageUrl: null,
       loadingPage: false,
-      loadingOverlay: false
+      loadingOverlay: false,
+      resultsCollapsed: false
     };
   },
   components: {
     Result,
-    LoadingOverlay
+    LoadingOverlay,
+    ArchiveToolbar
   },
   mixins: [ResultsCollapseStateMixin],
   created() {
@@ -83,6 +99,14 @@ export default {
         }
       }, 500);
     },
+    resetPageAndReload() {
+      this.nextPageUrl = this.url;
+      this.loadingOverlay = true;
+      this.results = [];
+      this.$nextTick(() => {
+        this.loadResults();
+      });
+    },
     loadResults() {
       if (this.nextPageUrl === null || this.loadingPage) return;
 
@@ -109,8 +133,22 @@ export default {
           this.infiniteScrollLoad();
 
           this.loadingOverlay = false;
+
+          setTimeout(() => {
+            this.checkResultsState()
+          }, 100);
         });
       }
+    },
+    setSort(sort) {
+      this.sort = sort;
+      this.loadingOverlay = true;
+      this.resetPageAndReload();
+    },
+    setFilters(filters) {
+      this.filters = filters;
+      this.loadingOverlay = true;
+      this.resetPageAndReload();
     },
     removeResult(result_id) {
       this.results = this.results.filter((r) => r.id != result_id);

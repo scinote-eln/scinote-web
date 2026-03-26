@@ -20,7 +20,7 @@ class StepsController < ApplicationController
 
   def index
     view_mode = params[:view_mode]
-    @steps = @protocol.steps.includes(:assets, step_orderable_elements: :orderable)
+    @steps = @protocol.steps.includes(:assets).preload(step_orderable_elements: :orderable)
 
     @steps = if view_mode == 'archived'
                @steps.where(archived: true)
@@ -28,10 +28,16 @@ class StepsController < ApplicationController
                @steps.active.in_order
              end
 
+    if view_mode == 'archived'
+      update_and_apply_user_sort_preference!
+      apply_filters!
+    end
+
     render json: @steps,
            each_serializer: StepSerializer,
            include: %i(step_orderable_elements assets),
-           user: current_user
+           user: current_user,
+           meta: { sort: @sort_preference }
   end
 
   def list
@@ -462,5 +468,45 @@ class StepsController < ApplicationController
         value_for: 'position_plus_one'
       }
     }
+  end
+
+  def update_and_apply_user_sort_preference!
+    state = current_user.user_settings.find_or_initialize_by(key: 'protocol_steps_order_archived')
+    state.value ||= {}
+
+    if params[:sort].present?
+      state.value[@my_module.id.to_s] = params[:sort]
+      state.save!
+      @sort_preference = params[:sort]
+    else
+      @sort_preference = state.value[@my_module.id.to_s] || 'created_at_desc'
+    end
+    apply_sort!(@sort_preference)
+  end
+
+  def apply_sort!(sort_order)
+    case sort_order
+    when 'updated_at_asc'
+      @steps = @steps.order('steps.updated_at' => :asc)
+    when 'updated_at_desc'
+      @steps = @steps.order('steps.updated_at' => :desc)
+    when 'created_at_asc'
+      @steps = @steps.order('steps.created_at' => :asc)
+    when 'created_at_desc'
+      @steps = @steps.order('steps.created_at' => :desc)
+    when 'name_asc'
+      @steps = @steps.order('steps.name' => :asc)
+    when 'name_desc'
+      @steps = @steps.order('steps.name' => :desc)
+    end
+  end
+
+  def apply_filters!
+    @steps = @steps.search(current_user, true, params[:query]) if params[:query].present?
+
+    @steps = @steps.where('steps.created_at >= ?', params[:created_at_from]) if params[:created_at_from]
+    @steps = @steps.where('steps.created_at <= ?', params[:created_at_to]) if params[:created_at_to]
+    @steps = @steps.where('steps.updated_at >= ?', params[:updated_at_from]) if params[:updated_at_from]
+    @steps = @steps.where('steps.updated_at <= ?', params[:updated_at_to]) if params[:updated_at_to]
   end
 end
