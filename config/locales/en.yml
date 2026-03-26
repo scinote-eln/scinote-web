@@ -4294,7 +4294,7 @@ en:
             untitled_result: Untitled result
             search_placeholder: "Enter result name"
         archive_step:
-          title: 'Restore step'
+          title: 'Archive step'
           description_1: 'This step contains table(s) that include cross-references to other table(s).'
           description_2: 'Archiving the table will permanently remove cross-references to other table(s).'
           description_3: 'The table can be restored from Archive without cross-references.'

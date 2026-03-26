@@ -23,7 +23,12 @@ class StepsController < ApplicationController
     @steps = @protocol.steps.includes(:assets).preload(step_orderable_elements: :orderable)
 
     @steps = if view_mode == 'archived'
-               @steps.where(archived: true)
+               steps_with_archived_elements = @steps.active
+                                                    .joins(:step_orderable_elements)
+                                                    .where(step_orderable_elements: { archived: true })
+                                                    .distinct
+
+               @steps.where(archived: true).or(@steps.where(id: steps_with_archived_elements.select(:id)))
              else
                @steps.active.in_order
              end
@@ -37,7 +42,8 @@ class StepsController < ApplicationController
            each_serializer: StepSerializer,
            include: %i(step_orderable_elements assets),
            user: current_user,
-           meta: { sort: @sort_preference }
+           meta: { sort: @sort_preference },
+           view_mode: view_mode
   end
 
   def list
@@ -184,8 +190,9 @@ class StepsController < ApplicationController
   def archive
     ActiveRecord::Base.transaction do
       position = @step.position
+      @step.position = nil
       @step.archive!(current_user)
-      @step.update(position: nil)
+
       @protocol.steps.where('position > ?', position).order(:position).each do |step|
         step.update(position: step.position - 1)
       end
@@ -196,7 +203,8 @@ class StepsController < ApplicationController
 
   def restore
     ActiveRecord::Base.transaction do
-      @step.update(position: @protocol.steps.active.maximum(:position).to_i + 1)
+      position = @protocol.steps.active.maximum(:position)
+      @step.position = position ? position + 1 : 0
       @step.restore!(current_user)
     end
 

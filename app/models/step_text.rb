@@ -21,6 +21,7 @@ class StepText < ApplicationRecord
   has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
   delegate :team, to: :step
+  delegate :archived?, to: :step_orderable_element
 
   scope :asc, -> { order('step_texts.created_at ASC') }
 

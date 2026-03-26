@@ -16,6 +16,17 @@ class StepSerializer < ActiveModel::Serializer
              :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id, :skipped_at,
              :archived_by, :archived_on, :archived
 
+  def step_orderable_elements
+    return object.step_orderable_elements if object.archived?
+
+    view_mode = @instance_options[:view_mode]
+    if view_mode == 'archived'
+      object.step_orderable_elements.archived
+    else
+      object.step_orderable_elements.active
+    end
+  end
+
   def collapsed
     step_states = @instance_options[:user].user_settings.find_by(key: 'task_step_states')&.value || {}
     step_states[object.id.to_s] == true
