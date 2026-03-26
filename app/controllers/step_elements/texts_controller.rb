@@ -83,12 +83,8 @@ module StepElements
     end
 
     def archive
-      orderable_element = @step_text.step_orderable_element
-
       ActiveRecord::Base.transaction do
-        orderable_element.position = nil
-        orderable_element.archive!(current_user)
-        @step.normalize_elements_position
+        orderable_element_archive(@step, @step_text.step_orderable_element)
       end
 
       head :ok
@@ -97,12 +93,8 @@ module StepElements
     end
 
     def restore
-      orderable_element = @step_text.step_orderable_element
-
       ActiveRecord::Base.transaction do
-        position = @step.step_orderable_elements.active.maximum(:position)
-        orderable_element.position = position ? position + 1 : 0
-        orderable_element.restore!(current_user)
+        orderable_element_restore(@step_text.step_orderable_element)
       end
 
       head :ok

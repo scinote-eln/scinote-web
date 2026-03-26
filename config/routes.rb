@@ -673,6 +673,8 @@ Rails.application.routes.draw do
           get :move_targets
           post :move
           post :duplicate
+          post :archive
+          post :restore
         end
       end
       resources :texts, controller: 'step_elements/texts', only: %i(create destroy update) do

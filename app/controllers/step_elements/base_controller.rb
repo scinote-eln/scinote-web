@@ -27,7 +27,7 @@ module StepElements
         new_orderable.save!
 
         step.step_orderable_elements.create!(
-          position: step.step_orderable_elements.length,
+          position: step.next_element_position,
           orderable: new_orderable
         )
       end

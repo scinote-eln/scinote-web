@@ -5,7 +5,7 @@ module StepElements
     include ApplicationHelper
     include StepsActions
 
-    before_action :load_table, only: %i(update destroy duplicate move)
+    before_action :load_table, only: %i(update destroy duplicate move archive restore)
 
     def create
       predefined_table_dimensions = create_table_params[:tableDimensions].map(&:to_i)
@@ -108,6 +108,26 @@ module StepElements
         log_step_activity(:table_duplicated, { table_name: new_table.name })
         render_step_orderable_element(new_table.step_table)
       end
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def archive
+      ActiveRecord::Base.transaction do
+        orderable_element_archive(@step, @table.step_table.step_orderable_element)
+      end
+
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def restore
+      ActiveRecord::Base.transaction do
+        orderable_element_restore(@table.step_table.step_orderable_element)
+      end
+
+      head :ok
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end

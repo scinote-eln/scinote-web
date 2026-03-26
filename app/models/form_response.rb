@@ -105,7 +105,7 @@ class FormResponse < ApplicationRecord
       )
 
       parent.step_orderable_elements.create!(
-        position: position || parent.step_orderable_elements.length,
+        position: position || parent.next_element_position,
         orderable: new_form_response
       )
 

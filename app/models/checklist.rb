@@ -55,7 +55,7 @@ class Checklist < ApplicationRecord
       end
 
       step.step_orderable_elements.create!(
-        position: position || step.step_orderable_elements.length,
+        position: position || step.next_element_position,
         orderable: new_checklist
       )
 
