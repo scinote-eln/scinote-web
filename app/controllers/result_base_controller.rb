@@ -155,7 +155,12 @@ class ResultBaseController < ApplicationController
   end
 
   def update_and_apply_user_sort_preference!
-    state = current_user.user_settings.find_or_initialize_by(key: result_sorting_preference_key)
+    state = if params[:view_mode] == 'archived'
+              current_user.user_settings.find_or_initialize_by(key: "#{result_sorting_preference_key}_archived")
+            else
+              current_user.user_settings.find_or_initialize_by(key: result_sorting_preference_key)
+            end
+
     state.value ||= {}
 
     if params[:sort].present?

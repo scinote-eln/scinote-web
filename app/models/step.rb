@@ -6,9 +6,8 @@ class Step < ApplicationRecord
   include ViewableModel
   include ObservableModel
 
-  SEARCHABLE_ATTRIBUTES = ['steps.name'].freeze
-
-  SEARCHABLE_ATTRIBUTES = ['steps.name'].freeze
+  SEARCHABLE_ATTRIBUTES = ['steps.name', :children].freeze
+  SEARCHABLE_IN_PROTOCOL_ATTRIBUTES = ['steps.name'].freeze
 
   attr_accessor :skip_position_adjust # to be used in bulk deletion
 
@@ -69,6 +68,58 @@ class Step < ApplicationRecord
 
   scope :in_order, -> { order(position: :asc) }
   scope :desc_order, -> { order(position: :desc) }
+
+  def self.search(user,
+    include_archived,
+    query = nil,
+    teams = user.teams,
+    options = {})
+    team_ids = teams.is_a?(ActiveRecord::Relation) ? teams.pluck(:id) : teams.id
+
+    if options[:in_repository]
+      steps = joins(:protocol)
+      readable_steps = where(protocols: { id: Protocol.readable_by_user(user, team_ids).select(:id) })
+      steps = steps.active unless include_archived
+    else
+      steps = joins(protocol: :my_module)
+      readable_steps = joins(protocol: :my_module).where(my_modules: { id: MyModule.readable_by_user(user, team_ids).select(:id) })
+      unless include_archived
+        steps = steps.active
+                    .joins(protocol: { my_module: { experiment: :project } })
+                    .where(my_modules: { archived: false }, experiments: { archived: false }, projects: { archived: false })
+      end
+    end
+
+    steps = steps.with(readable_steps: readable_steps)
+              .joins('INNER JOIN "readable_steps" ON "readable_steps"."id" = "steps"."id"')
+
+    steps.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+  end
+
+  def self.where_children_attributes_like(query, options = {})
+
+    unscoped_readable_steps = unscoped.joins('INNER JOIN "readable_steps" ON "readable_steps"."id" = "steps"."id"').select(:id)
+    sql = "#{unscoped_readable_steps.joins(:step_texts).where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    UNION ALL
+    #{unscoped_readable_steps.joins(step_tables: :table).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    UNION ALL
+    #{unscoped_readable_steps.joins(:checklists).where_attributes_like(Checklist::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    UNION ALL
+    #{unscoped_readable_steps.joins(checklists: :checklist_items).where_attributes_like(ChecklistItem::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    UNION ALL
+    #{unscoped_readable_steps.joins(:step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    "
+    unless options[:in_repository]
+      sql += "UNION ALL
+      #{unscoped_readable_steps.joins(form_responses: :form_field_values).where_attributes_like(FormFieldValue::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped_readable_steps.joins(form_responses: :form).where_attributes_like(Form::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped_readable_steps.joins(form_responses: { form: :form_fields }).where_attributes_like(FormField::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      "
+    end
+    unscoped.from("(#{sql}) AS steps", :steps)
+  end
 
   def self.filter_by_teams(teams = [])
     return self if teams.blank?
