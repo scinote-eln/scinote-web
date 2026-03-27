@@ -1486,6 +1486,8 @@ en:
       toolbar:
         print: "Print label"
         export_consumption: "Export consumption"
+        assign: "Assign"
+        assign_downstream: "Assign to task & downstream"
         unassign: "Unassign"
         unassign_downstream: "Unassign from task & downstream"
       create_modal:
@@ -1822,6 +1824,8 @@ en:
         action: 'Assign'
         action_task: 'Assign to task'
         action_task_and_downstream: 'Assign to task & downstream'
+        no_repository_selected: 'Select an inventory to start assigning items'
+        assignment_disclaimer: 'You can only assign items from one inventory at once. Changing the inventory will unselect all items.'
       unassign_modal:
         title: 'Unassign item(s)'
         message: 'You are about to unassign <b>%{number} of items</b> from this task.'

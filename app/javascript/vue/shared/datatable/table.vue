@@ -259,7 +259,7 @@ export default {
     enableBarcodeSearch: {
       type: Boolean,
       default: false
-    }
+    },
   },
   data() {
     return {

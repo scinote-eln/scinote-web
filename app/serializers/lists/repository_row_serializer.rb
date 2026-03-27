@@ -10,7 +10,7 @@ module Lists
     attribute :has_active_reminders, if: -> { instance_options[:with_reminders] }
     attribute :assigned, if: -> { instance_options[:my_module] && !instance_options[:assigned_view] }
     attribute :stock, if: -> { instance_options[:with_stock_management] }
-    attribute :consumed_stock, if: -> { instance_options[:with_stock_management] }
+    attribute :consumed_stock, if: -> { instance_options[:with_stock_management] && instance_options[:my_module] }
 
     def attributes(requested_attrs = nil, reload = false)
       data = super(requested_attrs, reload)
