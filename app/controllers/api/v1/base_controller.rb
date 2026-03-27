@@ -263,17 +263,17 @@ module Api
       end
 
       def timestamps_filter(records)
-        from = Date.parse(params.dig(:filter, :created_at, :from)) if
+        created_at_from = Date.parse(params.dig(:filter, :created_at, :from)) if
           params.dig(:filter, :created_at, :from).present?
-        to = Date.parse(params.dig(:filter, :created_at, :to)) if
+        created_at_to = Date.parse(params.dig(:filter, :created_at, :to)) if
           params.dig(:filter, :created_at, :to).present?
-        records = records.where(created_at: (from..to)) if from || to
+        records = records.where(created_at: (created_at_from..created_at_to)) if created_at_from || created_at_to
 
-        from = Date.parse(params.dig(:filter, :updated_at, :from)) if
+        updated_at_from = Date.parse(params.dig(:filter, :updated_at, :from)) if
           params.dig(:filter, :updated_at, :from).present?
-        to = Date.parse(params.dig(:filter, :updated_at, :to)) if
+        updated_at_to = Date.parse(params.dig(:filter, :updated_at, :to)) if
           params.dig(:filter, :updated_at, :to).present?
-        records = records.where(updated_at: (from..to)) if from || to
+        records = records.where(updated_at: (updated_at_from..updated_at_to)) if updated_at_from || updated_at_to
 
         records
       end
