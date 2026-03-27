@@ -691,6 +691,8 @@ Rails.application.routes.draw do
           get :move_targets
           post :move
           post :duplicate
+          post :archive
+          post :restore
         end
         resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(index create update destroy) do
           patch :toggle, on: :member

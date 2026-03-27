@@ -28,7 +28,7 @@
 </template>
 <script>
 export default {
-  name: 'deleteStepModal',
+  name: 'archiveStepModal',
   mounted() {
     $(this.$refs.modal).modal('show');
     $(this.$refs.modal).on('hidden.bs.modal', () => {

@@ -36,6 +36,8 @@ class Checklist < ApplicationRecord
 
   scope :asc, -> { order('checklists.created_at ASC') }
 
+  delegate :archived?, to: :step_orderable_element
+
   def duplicate(step, user, position = nil)
     ActiveRecord::Base.transaction do
       new_checklist = step.checklists.create!(

@@ -33,6 +33,21 @@ module StepElements
       end
     end
 
+    def archive_element!(step, orderable_element)
+      ActiveRecord::Base.transaction do
+        orderable_element.position = nil
+        orderable_element.archive!(current_user)
+        step.normalize_elements_position
+      end
+    end
+
+    def restore_element!(step, orderable_element)
+      ActiveRecord::Base.transaction do
+        orderable_element.position = step.next_element_position
+        orderable_element.restore!(current_user)
+      end
+    end
+
     def render_step_orderable_element(orderable)
       step_orderable_element = orderable.step_orderable_element
       render json: step_orderable_element, serializer: StepOrderableElementSerializer, user: current_user

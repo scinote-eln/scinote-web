@@ -113,9 +113,7 @@ module StepElements
     end
 
     def archive
-      ActiveRecord::Base.transaction do
-        orderable_element_archive(@step, @table.step_table.step_orderable_element)
-      end
+      archive_element!(@step, @table.step_table.step_orderable_element)
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -123,9 +121,7 @@ module StepElements
     end
 
     def restore
-      ActiveRecord::Base.transaction do
-        orderable_element_restore(@table.step_table.step_orderable_element)
-      end
+      restore_element!(@step, @table.step_table.step_orderable_element)
 
       head :ok
     rescue ActiveRecord::RecordInvalid

@@ -129,17 +129,6 @@ module StepsActions
       ))
   end
 
-  def orderable_element_archive(step, orderable_element)
-    orderable_element.position = nil
-    orderable_element.archive!(current_user)
-    step.normalize_elements_position
-  end
-
-  def orderable_element_restore(orderable_element)
-    orderable_element.position = @step.next_element_position
-    orderable_element.restore!(current_user)
-  end
-
   # temporary data containers
   PreviousChecklistItem = Struct.new(:id, :text)
   PreviousChecklist = Struct.new(:id, :name, :items) do
