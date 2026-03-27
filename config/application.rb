@@ -11,9 +11,8 @@ require 'action_mailer/railtie'
 # require "action_mailbox/engine"
 # require "action_text/engine"
 require 'action_view/railtie'
-# require "action_cable/engine"
+require 'action_cable/engine'
 # require "rails/test_unit/railtie"
-require 'datadog/auto_instrument' if ENV['DD_TRACE_ENABLED'] == 'true'
 
 require_relative '../lib/rack/x_robots_tag'
 
