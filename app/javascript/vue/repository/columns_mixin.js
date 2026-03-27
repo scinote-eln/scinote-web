@@ -76,9 +76,6 @@ export default {
       });
       return columns;
     },
-    columnHidden() {
-      return !this.repositoryVersion.attributes.is_snapshot;
-    }
   },
   mounted() {
     if (this.repositoryVersion) {
