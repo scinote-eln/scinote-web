@@ -27,9 +27,24 @@ module StepElements
         new_orderable.save!
 
         step.step_orderable_elements.create!(
-          position: step.step_orderable_elements.length,
+          position: step.next_element_position,
           orderable: new_orderable
         )
+      end
+    end
+
+    def archive_element!(step, orderable_element)
+      ActiveRecord::Base.transaction do
+        orderable_element.position = nil
+        orderable_element.archive!(current_user)
+        step.normalize_elements_position
+      end
+    end
+
+    def restore_element!(step, orderable_element)
+      ActiveRecord::Base.transaction do
+        orderable_element.position = step.next_element_position
+        orderable_element.restore!(current_user)
       end
     end
 

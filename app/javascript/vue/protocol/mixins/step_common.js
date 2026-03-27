@@ -60,7 +60,7 @@ export default {
       axios.put(user_setting_path('task_step_states'), {user_setting: settings});
     },
     removeElement(position) {
-      this.elements.splice(position, 1)
+      this.elements.splice(position, 1);
       let unorderedElements = this.elements.map( e => {
         if (e.attributes.position >= position) {
           e.attributes.position -= 1;

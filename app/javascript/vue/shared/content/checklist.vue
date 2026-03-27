@@ -1,86 +1,125 @@
 <template>
   <div class="content__checklist-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-checklist${element.id}`">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
-    <div class="checklist-header flex rounded mb-1 items-center relative w-full group/checklist-header"
-      :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
-      <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
-        <InlineEdit
-          :class="{ 'pointer-events-none': !element.attributes.orderable.urls.update_url }"
-          :value="element.attributes.orderable.name"
-          :sa_value="element.attributes.orderable.sa_name"
-          :characterLimit="10000"
-          :placeholder="i18n.t('protocols.steps.checklist.placeholder')"
-          :allowBlank="false"
-          :autofocus="editingName"
-          :smartAnnotation="true"
-          :attributeName="`${i18n.t('Checklist')} ${i18n.t('name')}`"
-          :dataE2e="`${dataE2e}-checklist${element.id}`"
-          @editingEnabled="editingName = true"
-          @editingDisabled="editingName = false"
-          @update="updateName"
-        />
-      </div>
-      <MenuDropdown
-        class="ml-auto"
-        :listItems="this.actionMenu"
-        :btnClasses="'btn btn-light icon-btn  btn-sm'"
-        :position="'right'"
-        :btnIcon="'sn-icon sn-icon-more-hori'"
-        :dataE2e="`e2e-DD-${dataE2e}-checklist${element.id}-options`"
-        @edit="editingName = true"
-        @duplicate="duplicateElement"
-        @move="showMoveModal"
-        @delete="showDeleteModal"
-      ></MenuDropdown>
-    </div>
-    <div v-if="element.attributes.orderable.urls.create_item_url || checklistItems.length > 0" :class="{ 'pointer-events-none': locked }">
-      <Draggable
-        v-model="checklistItems"
-        :ghostClass="'checklist-item-ghost'"
-        :dragClass="'checklist-item-drag'"
-        :chosenClass="'checklist-item-chosen'"
-        :forceFallback="true"
-        :handle="'.element-grip'"
-        item-key="id"
-        :disabled="editingItem || checklistItems.length < 2 || !element.attributes.orderable.urls.reorder_url"
-        @start="startReorder"
-        @end="endReorder"
-      >
-        <template #item="{element}">
-          <ChecklistItem
-            :checklistItem="element"
-            :locked="locked"
-            :reordering="reordering"
-            :reorderChecklistItemUrl="this.element.attributes.orderable.urls.reorder_url"
-            :inRepository="inRepository"
-            :draggable="checklistItems.length > 1"
-            :data-e2e="`${dataE2e}-checklistItem${element.id}`"
-            :class="{
-              'select-none': reordering
-            }"
-            @editStart="editingItem = true"
-            @editEnd="editingItem = false"
-            @update="saveItem"
-            @toggle="saveItemChecked"
-            @removeItem="removeItem"
-            @component:delete="removeItem"
+    <div :class="{'!bg-sn-background-brittlebush p-4': element.attributes.orderable.archived}">
+      <div class="checklist-header flex rounded gap-2 mb-1 items-center relative w-full group/checklist-header"
+        :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
+        <div class="grow-1 text-ellipsis whitespace-nowrap my-1 font-bold" :class="{ 'grow': !element.attributes.orderable.archived }">
+          <InlineEdit
+            :class="{ 'pointer-events-none': !element.attributes.orderable.urls.update_url }"
+            :value="element.attributes.orderable.name"
+            :sa_value="element.attributes.orderable.sa_name"
+            :characterLimit="10000"
+            :placeholder="i18n.t('protocols.steps.checklist.placeholder')"
+            :allowBlank="false"
+            :autofocus="editingName"
+            :smartAnnotation="true"
+            :attributeName="`${i18n.t('Checklist')} ${i18n.t('name')}`"
+            :dataE2e="`${dataE2e}-checklist${element.id}`"
+            @editingEnabled="editingName = true"
+            @editingDisabled="editingName = false"
+            @update="updateName"
           />
+        </div>
+        <template v-if="element.attributes.orderable.archived">
+          <div class="sci-tag bg-sn-alert-brittlebush">
+            {{ i18n.t('my_modules.results.archived') }}
+            <span class="sn-icon sn-icon-archive"></span>
+          </div>
+          <span class="text-xs ">
+            {{ i18n.t('protocols.steps.timestamp_archived', {
+              date: element.attributes.orderable.archived_on,
+              user: element.attributes.orderable.archived_by
+            }) }}
+          </span>
         </template>
-      </Draggable>
-      <div v-if="element.attributes.orderable.urls.create_item_url && !addingNewItem"
-           class="flex items-center gap-1 text-sn-blue cursor-pointer mb-2 mt-1 "
-           tabindex="0"
-           :data-e2e="`e2e-BT-${dataE2e}-checklist${element.id}-addNew`"
-           @keyup.enter="addItem(checklistItems[checklistItems.length - 1]?.id)"
-           @click="addItem(checklistItems[checklistItems.length - 1]?.id)">
-        <i class="sn-icon sn-icon-new-task w-6 text-center inline-block"></i>
-        {{ i18n.t('protocols.steps.insert.checklist_item') }}
+        <div class="ml-auto flex items gap-4">
+          <button
+            v-if="this.element.attributes.orderable.urls.restore_url"
+            class="btn icon-btn btn-light"
+            @click="confirmingRestore = true"
+            :title="i18n.t('general.restore')"
+            :data-e2e="`e2e-BT-${this.dataE2e}-checklist${this.element.id}-options-restore`"
+          >
+            <i class="sn-icon sn-icon-restore"></i>
+          </button>
+          <button
+            v-if="this.element.attributes.orderable.urls.delete_url"
+            class="btn icon-btn btn-light"
+            @click="showDeleteModal"
+            :title="i18n.t('general.delete')"
+            :data-e2e="`e2e-BT-${this.dataE2e}-checklist${this.element.id}-options-delete`"
+          >
+            <i class="sn-icon sn-icon-delete"></i>
+          </button>
+          <MenuDropdown
+            class="ml-auto"
+            :listItems="this.actionMenu"
+            :btnClasses="'btn btn-light icon-btn  btn-sm'"
+            :position="'right'"
+            :btnIcon="'sn-icon sn-icon-more-hori'"
+            :dataE2e="`e2e-DD-${dataE2e}-checklist${element.id}-options`"
+            @edit="editingName = true"
+            @duplicate="duplicateElement"
+            @move="showMoveModal"
+            @delete="showDeleteModal"
+            @archive="archiveElement"
+          ></MenuDropdown>
+        </div>
       </div>
-    </div>
-    <div v-else class="text-sn-grey ml-12">
-      {{ i18n.t("protocols.steps.checklist.empty_checklist") }}
+      <div v-if="element.attributes.orderable.urls.create_item_url || checklistItems.length > 0" :class="{ 'pointer-events-none': locked }">
+        <Draggable
+          v-model="checklistItems"
+          :ghostClass="'checklist-item-ghost'"
+          :dragClass="'checklist-item-drag'"
+          :chosenClass="'checklist-item-chosen'"
+          :forceFallback="true"
+          :handle="'.element-grip'"
+          item-key="id"
+          :disabled="editingItem || checklistItems.length < 2 || !element.attributes.orderable.urls.reorder_url"
+          @start="startReorder"
+          @end="endReorder"
+        >
+          <template #item="{element}">
+            <ChecklistItem
+              :checklistItem="element"
+              :locked="locked"
+              :reordering="reordering"
+              :reorderChecklistItemUrl="this.element.attributes.orderable.urls.reorder_url"
+              :inRepository="inRepository"
+              :draggable="checklistItems.length > 1"
+              :data-e2e="`${dataE2e}-checklistItem${element.id}`"
+              :class="{
+                'select-none': reordering
+              }"
+              @editStart="editingItem = true"
+              @editEnd="editingItem = false"
+              @update="saveItem"
+              @toggle="saveItemChecked"
+              @removeItem="removeItem"
+              @component:delete="removeItem"
+            />
+          </template>
+        </Draggable>
+        <div v-if="element.attributes.orderable.urls.create_item_url && !addingNewItem"
+            class="flex items-center gap-1 text-sn-blue cursor-pointer mb-2 mt-1 "
+            tabindex="0"
+            :data-e2e="`e2e-BT-${dataE2e}-checklist${element.id}-addNew`"
+            @keyup.enter="addItem(checklistItems[checklistItems.length - 1]?.id)"
+            @click="addItem(checklistItems[checklistItems.length - 1]?.id)">
+          <i class="sn-icon sn-icon-new-task w-6 text-center inline-block"></i>
+          {{ i18n.t('protocols.steps.insert.checklist_item') }}
+        </div>
+      </div>
+      <div v-else class="text-sn-grey ml-12">
+        {{ i18n.t("protocols.steps.checklist.empty_checklist") }}
+      </div>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @close="closeDeleteModal"/>
+    <RestoreModal v-if="confirmingRestore"
+                  :parentType="element.attributes.orderable.parent_type"
+                  @confirm="restoreElement"
+                  @close="confirmingRestore = false"/>
     <moveElementModal v-if="movingElement"
                       :parent_type="element.attributes.orderable.parent_type"
                       :targets_url="element.attributes.orderable.urls.move_targets_url"
@@ -101,14 +140,16 @@ import InlineEdit from '../inline_edit.vue';
 import ChecklistItem from './checklistItem.vue';
 import moveElementModal from './modal/move.vue';
 import MenuDropdown from '../menu_dropdown.vue';
+import ArchiveMixin from './mixins/archive.js';
+import RestoreModal from './modal/restore_text.vue';
 import axios from '../../../packs/custom_axios.js';
 
 export default {
   name: 'Checklist',
   components: {
-    deleteElementModal, InlineEdit, ChecklistItem, Draggable, moveElementModal, MenuDropdown
+    deleteElementModal, InlineEdit, ChecklistItem, Draggable, moveElementModal, MenuDropdown, RestoreModal
   },
-  mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
+  mixins: [DeleteMixin, DuplicateMixin, MoveMixin, ArchiveMixin],
   props: {
     element: {
       type: Object,
@@ -139,7 +180,8 @@ export default {
       checklistItems: [],
       editingName: false,
       reordering: false,
-      editingItem: false
+      editingItem: false,
+      confirmingRestore: false
     };
   },
   created() {
@@ -161,7 +203,7 @@ export default {
   },
   computed: {
     locked() {
-      return this.editingName || !this.element.attributes.orderable.urls.update_url;
+      return this.editingName || !this.element.attributes.orderable.urls.update_url || this.element.attributes.orderable.archived;
     },
     addingNewItem() {
       return this.checklistItems.find((item) => item.attributes.isNew);
@@ -194,6 +236,14 @@ export default {
           text: I18n.t('general.delete'),
           emit: 'delete',
           data_e2e: `e2e-BT-${this.dataE2e}-checklist${this.element.id}-options-delete`
+        });
+      }
+
+      if (this.element.attributes.orderable.urls.archive_url) {
+        menu.push({
+          text: I18n.t('general.archive'),
+          emit: 'archive',
+          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-archive`
         });
       }
       return menu;

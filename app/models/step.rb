@@ -238,6 +238,12 @@ class Step < ApplicationRecord
     end
   end
 
+  def next_element_position
+    current_position = step_orderable_elements.active.order(position: :asc).last&.position
+
+    current_position.nil? ? 0 : current_position + 1
+  end
+
   def label
     I18n.t('protocols.steps.label', name: name, position: position + 1)
   end

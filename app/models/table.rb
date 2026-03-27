@@ -83,7 +83,7 @@ class Table < ApplicationRecord
         )
 
         parent.step_orderable_elements.create!(
-          position: position || parent.step_orderable_elements.length,
+          position: position || parent.next_element_position,
           orderable: new_table.step_table
         )
 
@@ -130,6 +130,8 @@ class Table < ApplicationRecord
   def archived?
     if result_table.present?
       return result_table.result_orderable_element.archived?
+    elsif step_table.present?
+      return step_table.step_orderable_element.archived?
     end
 
     false
