@@ -17,7 +17,7 @@ module GlobalActivitiesHelper
         elsif value['type'] == 'Date'
           I18n.l(Date.parse(value['value']), format: :full)
         else
-          no_links ? generate_name(value) : generate_link(value, activity)
+          escape_input(no_links ? generate_name(value) : generate_link(value, activity))
         end
 
       if key == 'comment' && parameters[key].strip.present?
