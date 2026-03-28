@@ -6,7 +6,7 @@ ruby '~> 3.4.8'
 
 gem 'activerecord-session_store'
 gem 'bootsnap', require: false
-gem 'devise', '~> 4.9.4'
+gem 'devise', '~> 5.0.3'
 gem 'devise_invitable'
 gem 'pg', '~> 1.5'
 gem 'puma'
