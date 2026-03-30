@@ -36,7 +36,7 @@ class StepText < ApplicationRecord
       clone_tinymce_assets(new_step_text, step.protocol.team)
 
       step.step_orderable_elements.create!(
-        position: position || step.step_orderable_elements.length,
+        position: position || step.next_element_position,
         orderable: new_step_text
       )
 

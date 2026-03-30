@@ -1,5 +1,7 @@
 /* global HelperModule */
 
+import axios from '../../../../packs/custom_axios';
+
 export default {
   methods: {
     duplicateElement() {

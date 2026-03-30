@@ -4,7 +4,7 @@ module StepElements
   class ChecklistsController < BaseController
     include ApplicationHelper
     include StepsActions
-    before_action :load_checklist, only: %i(update destroy duplicate move)
+    before_action :load_checklist, only: %i(update destroy duplicate move archive restore)
     def create
       checklist = @step.checklists.build(
         name: t('protocols.steps.checklist.default_name', position: @step.checklists.length + 1),
@@ -78,6 +78,21 @@ module StepElements
         log_step_activity(:checklist_duplicated, { checklist_name: @checklist.name })
         render_step_orderable_element(new_checklist)
       end
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def archive
+      archive_element!(@step, @checklist.step_orderable_element)
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def restore
+      restore_element!(@step, @checklist.step_orderable_element)
+
+      head :ok
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
