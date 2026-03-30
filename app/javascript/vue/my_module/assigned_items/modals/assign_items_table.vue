@@ -44,7 +44,6 @@
 
 <script>
 import SelectDropdown from '../../../shared/select_dropdown.vue';
-import axios from '../../../../packs/custom_axios.js';
 import DataTable from '../../../shared/datatable/table.vue';
 import ColumnsMixin from '../../../repository/columns_mixin.js';
 import {

@@ -63,21 +63,6 @@
             :onlyRepository="true"
             @assignRows="assignRows"
           />
-          <div
-            v-else-if="!initialLoading"
-            class="flex flex-col min-h-[540px] items-center justify-center gap-1 ">
-            <h2 class="text-sn-grey" data-e2e="e2e-TX-protocol-assignedItems-empty">
-              {{ i18n.t('my_modules.repository.assigned_items_modal.empty_placeholder') }}
-            </h2>
-            <button
-              @click="openAssignItemModal = true"
-              class="btn btn-primary"
-              data-e2e="e2e-BT-protocol-assignedItemsModal-empty-assignItems"
-            >
-              <i class="sn-icon sn-icon-new-task"></i>
-              {{ i18n.t('my_modules.repository.assign_items') }}
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -140,6 +125,12 @@ export default {
     loadAssignedRepositories(repositoryId = null) {
       axios.get(this.assignedRepositoriesUrl)
         .then((response) => {
+          // if no assigned repositories, open assignment modal
+          if (response.data.data.length === 0) {
+            this.openAssignItemModal = true;
+            return;
+          }
+
           this.assignedRepositories = response.data.data;
           if (this.assignedRepositories.length > 0 && !this.selectedRepository ) {
             this.selectedRepository = this.assignedRepositories[0];
