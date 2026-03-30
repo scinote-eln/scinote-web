@@ -511,7 +511,7 @@ module Lists
 
       case column
       when 'assigned_tasks_count'
-        @records = @records.joins('INNER JOIN "my_module_repository_rows" AS assigned_my_modules
+        @records = @records.joins('LEFT JOIN "my_module_repository_rows" AS assigned_my_modules
                                    ON "assigned_my_modules"."repository_row_id" = "repository_rows"."id"')
                            .group('repository_rows.id')
       when 'created_by'
