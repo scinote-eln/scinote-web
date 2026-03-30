@@ -63,6 +63,7 @@
           <AssignItemsTable
             :selectedRepositoryId="selectedRepositoryId"
             :myModuleId="myModuleId"
+            :dataE2e="'assignItemsTable'"
             @assign="prepareForAssign"
             @assign_downstream="prepareForAssignDownstream"
 
