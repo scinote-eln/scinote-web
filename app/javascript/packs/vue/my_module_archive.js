@@ -4,6 +4,7 @@ import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
 const app = createApp();
 app.component('MyModuleArchive', MyModuleArchive);
+app.config.globalProperties.ActiveStoragePreviews = window.ActiveStoragePreviews;
 app.config.globalProperties.i18n = window.I18n;
 
 window.myModuleArchive = mountWithTurbolinks(app, '#myModuleArchive', () => {

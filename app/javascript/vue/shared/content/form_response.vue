@@ -99,6 +99,7 @@
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @close="closeDeleteModal"/>
     <RestoreModal v-if="confirmingRestore"
                   :parentType="element.attributes.orderable.parent_type"
+                  :element="'form_response'"
                   @confirm="restoreElement"
                   @close="confirmingRestore = false"/>
     <moveElementModal v-if="movingElement"
@@ -127,7 +128,7 @@ import Field from '../../forms/field.vue';
 import axios from '../../../packs/custom_axios.js';
 import ConfirmationModal from '../confirmation_modal.vue';
 import ArchiveMixin from './mixins/archive.js';
-import RestoreModal from './modal/restore_text.vue';
+import RestoreModal from './modal/restore_element.vue';
 
 export default {
   name: 'TextContent',

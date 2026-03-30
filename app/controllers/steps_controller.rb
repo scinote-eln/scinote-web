@@ -27,8 +27,13 @@ class StepsController < ApplicationController
                                                     .joins(:step_orderable_elements)
                                                     .where(step_orderable_elements: { archived: true })
                                                     .distinct
+               steps_with_archived_assets = @steps.active.joins(:assets)
+                                                  .where(assets: { archived: true })
+                                                  .distinct
 
-               @steps.where(archived: true).or(@steps.where(id: steps_with_archived_elements.select(:id)))
+               @steps.where(archived: true)
+                     .or(@steps.where(id: steps_with_archived_elements.select(:id)))
+                     .or(@steps.where(id: steps_with_archived_assets.select(:id)))
              else
                @steps.active.in_order
              end

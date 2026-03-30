@@ -6,6 +6,15 @@ import {
 } from '../../../routes.js';
 
 export default {
+  data() {
+    return {
+      elements: [],
+      attachments: [],
+      attachmentsReady: true,
+      confirmingDelete: false,
+      isCollapsed: false
+    };
+  },
   computed: {
     orderedElements() {
       return this.elements.sort((a, b) => a.attributes.position - b.attributes.position);
@@ -66,8 +75,8 @@ export default {
           e.attributes.position -= 1;
         }
         return e;
-      })
-      this.$emit('stepUpdated')
+      });
+      this.$emit('stepUpdated');
     },
     attachmentDeleted(id) {
       this.attachments = this.attachments.filter((a) => a.id !== id );
@@ -75,7 +84,7 @@ export default {
     },
     loadElements() {
       $.get(this.urls.elements_url, (result) => {
-        this.elements = result.data
+        this.elements = result.data;
         this.$emit('step:elements:loaded');
       });
     },

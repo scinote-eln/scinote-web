@@ -82,6 +82,7 @@
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @close="closeDeleteModal"/>
     <RestoreModal v-if="confirmingRestore"
                   :parentType="element.attributes.orderable.parent_type"
+                  :element="'table'"
                   @confirm="restoreElement"
                   @close="confirmingRestore = false"/>
     <ArchiveModal v-if="confirmingArchive" @confirm="archiveElement" @close="closeArchiveModal"/>
@@ -104,7 +105,7 @@ import TableNameModal from './modal/table_name.vue';
 import moveElementModal from './modal/move.vue';
 import MenuDropdown from '../menu_dropdown.vue';
 import ArchiveModal from './modal/archive_table.vue';
-import RestoreModal from './modal/restore_table.vue';
+import RestoreModal from './modal/restore_element.vue';
 
 export default {
   name: 'ContentTable',
