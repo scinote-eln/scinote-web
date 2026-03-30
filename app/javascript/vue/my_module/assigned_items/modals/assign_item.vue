@@ -65,7 +65,7 @@
             :myModuleId="myModuleId"
             @assign="prepareForAssign"
             @assign_downstream="prepareForAssignDownstream"
-
+            :dataE2e="`${e2eValue}`"
           ></AssignItemsTable>
         </div>
       </div>

@@ -60,6 +60,10 @@ export default {
     selectedRepositoryId: {
       type: Number,
       required: true
+    },
+    dataE2e: {
+      type: String,
+      default: ''
     }
   },
   mixins: [ColumnsMixin],
