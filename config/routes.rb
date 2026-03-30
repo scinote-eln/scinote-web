@@ -704,6 +704,8 @@ Rails.application.routes.draw do
           post :submit
           post :reset
           post :move
+          post :archive
+          post :restore
         end
       end
       member do

@@ -134,6 +134,7 @@ import axios from '../../packs/custom_axios.js';
 import StepTable from '../shared/content/table.vue';
 import StepText from '../shared/content/text.vue';
 import Checklist from '../shared/content/checklist.vue';
+import FormResponse from '../shared/content/form_response.vue';
 import Attachments from '../shared/content/attachments.vue';
 import InlineEdit from '../shared/inline_edit.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
@@ -162,7 +163,8 @@ export default {
     GeneralDropdown,
     deleteStepModal,
     restoreStepModal,
-    Checklist
+    Checklist,
+    FormResponse
   },
   data() {
     return {

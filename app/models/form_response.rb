@@ -32,6 +32,8 @@ class FormResponse < ApplicationRecord
            inverse_of: :previous_form_response,
            dependent: :destroy
 
+  delegate :archived?, to: :step_orderable_element
+
   def step
     step_orderable_element&.step
   end
