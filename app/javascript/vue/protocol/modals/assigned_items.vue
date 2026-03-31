@@ -71,7 +71,7 @@
         v-if="openAssignItemModal"
         :myModuleId="myModuleId"
         @assignRows="assignRows"
-        @close="openAssignItemModal = false"
+        @close="closeAssignModal"
         :e2eValue="'task-assignedItems-assignItemModal'"/>
     </Teleport>
   </div>
@@ -110,6 +110,7 @@ export default {
       selectedRepository: null,
       openAssignItemModal: false,
       initialLoading: true,
+      isEmpty: true,
       reloadKey: 0
     };
   },
@@ -129,6 +130,8 @@ export default {
           if (response.data.data.length === 0) {
             this.openAssignItemModal = true;
             return;
+          } else {
+            this.isEmpty = false;
           }
 
           this.assignedRepositories = response.data.data;
@@ -145,6 +148,8 @@ export default {
         });
     },
     assignRows(rowIds, repositoryId, assignToDownstream = false) {
+      this.isEmpty = false;
+
       axios.patch(my_module_repository_path(this.myModuleId, repositoryId), {
         rows_to_assign: rowIds,
         downstream: assignToDownstream
@@ -155,6 +160,10 @@ export default {
         this.loadAssignedRepositories(repositoryId);
       });
     },
+    closeAssignModal() {
+      this.openAssignItemModal = false;
+      if (this.isEmpty) $(this.$refs.modal).modal('hide');
+    }
   }
 };
 </script>
