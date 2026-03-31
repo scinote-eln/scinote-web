@@ -27,6 +27,17 @@ class StepSerializer < ActiveModel::Serializer
     end
   end
 
+  def assets
+    object.assets if object.archived?
+
+    view_mode = @instance_options[:view_mode]
+    if view_mode == 'archived'
+      object.assets.archived
+    else
+      object.assets.active
+    end
+  end
+
   def collapsed
     step_states = @instance_options[:user].user_settings.find_by(key: 'task_step_states')&.value || {}
     step_states[object.id.to_s] == true

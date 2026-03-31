@@ -122,6 +122,7 @@
                       :attachmentsReady="attachmentsReady"
                       @attachments:openFileModal="showFileModal = true"
                       @attachments:order="changeAttachmentsOrder"
+                      @attachment:deleted="attachmentDeleted"
                       @attachments:viewMode="changeAttachmentsViewMode"
                       @attachment:viewMode="updateAttachmentViewMode"/>
       </div>

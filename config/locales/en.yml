@@ -4255,6 +4255,11 @@ en:
         default_name: 'Checklist %{position}'
         checklist_name: "Checklist name"
         empty_checklist: 'Doesn’t contain any checklist items'
+        restore_modal:
+          title: 'Restore checklist'
+          description_1_step: 'The checklist will be restored to the bottom of the protocol step it belonged to previously.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
       text:
         placeholder: 'Enter step text'
         empty_text: 'No text entered'
@@ -4267,6 +4272,12 @@ en:
           confirm: 'Restore'
       plate:
         default_name: "Plate %{position}"
+      form_response:
+        restore_modal:
+          title: 'Restore form'
+          description_1_step: 'The form will be restored to the bottom of the protocol step it belonged to previously.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
       modals:
         delete_element:
           title: 'Delete content'

@@ -26,7 +26,7 @@
     </a>
     <button class="btn btn-light icon-btn thumbnail-action-btn"
       :title="i18n.t('attachments.thumbnail.buttons.delete')"
-      @click.prevent.stop="$emit('attachment:delete', attachment.id)"
+      @click.prevent.stop="deleteModal=true"
       v-if="this.attachment.attributes.urls.delete">
       <i class="sn-icon sn-icon-delete"></i>
     </button>
@@ -43,12 +43,20 @@
       :withBorder="withBorder"
     />
   </div>
+
+  <deleteAttachmentModal
+    v-if="deleteModal"
+    :fileName="attachment.attributes.file_name"
+    @confirm="deleteAttachment"
+    @cancel="deleteModal = false"
+  />
 </template>
 
 <script>
 import OpenLocallyMixin from './mixins/open_locally.js';
 import OpenMenu from './open_menu.vue';
 import ContextMenu from './context_menu.vue';
+import deleteAttachmentModal from './delete_modal.vue';
 
 export default {
   name: 'attachmentActions',
@@ -57,9 +65,21 @@ export default {
     withBorder: false
   },
   mixins: [OpenLocallyMixin],
+  data() {
+    return {
+      deleteModal: false
+    };
+  },
   components: {
     OpenMenu,
-    ContextMenu
+    ContextMenu,
+    deleteAttachmentModal
+  },
+  methods: {
+    deleteAttachment() {
+      this.deleteModal = false;
+      this.$emit('attachment:delete', this.attachment.id);
+    }
   }
 };
 </script>

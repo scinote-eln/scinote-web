@@ -314,17 +314,12 @@
     },
     data() {
       return {
-        elements: [],
-        attachments: [],
-        attachmentsReady: true,
-        confirmingDelete: false,
         confirmingArchive: false,
         addingContent: false,
         showFileModal: false,
         showCommentsSidebar: false,
         dragingFile: false,
         reordering: false,
-        isCollapsed: false,
         editingName: false,
         inlineEditError: null,
         customWellPlate: false,

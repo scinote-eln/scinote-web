@@ -118,6 +118,7 @@
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @close="closeDeleteModal"/>
     <RestoreModal v-if="confirmingRestore"
                   :parentType="element.attributes.orderable.parent_type"
+                  :element="'checklist'"
                   @confirm="restoreElement"
                   @close="confirmingRestore = false"/>
     <moveElementModal v-if="movingElement"
@@ -141,7 +142,7 @@ import ChecklistItem from './checklistItem.vue';
 import moveElementModal from './modal/move.vue';
 import MenuDropdown from '../menu_dropdown.vue';
 import ArchiveMixin from './mixins/archive.js';
-import RestoreModal from './modal/restore_text.vue';
+import RestoreModal from './modal/restore_element.vue';
 import axios from '../../../packs/custom_axios.js';
 
 export default {

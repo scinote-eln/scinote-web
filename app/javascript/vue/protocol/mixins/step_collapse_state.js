@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     checkStepsState() {
-      this.stepCollapsed = this.$refs.steps.every((step) => step.isCollapsed);
+      this.stepCollapsed = this.$refs.steps?.every((step) => step.isCollapsed) || false;
     },
     collapseSteps() {
       $('.step-container .collapse').collapse('hide');

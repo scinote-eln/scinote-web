@@ -100,6 +100,7 @@
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @close="closeDeleteModal"/>
     <RestoreModal v-if="confirmingRestore"
                   :parentType="element.attributes.orderable.parent_type"
+                  :element="'text'"
                   @confirm="restoreElement"
                   @close="confirmingRestore = false"/>
     <moveElementModal v-if="movingElement"
@@ -116,7 +117,7 @@ import DuplicateMixin from './mixins/duplicate.js';
 import ArchiveMixin from './mixins/archive.js';
 import deleteElementModal from './modal/delete.vue';
 import moveElementModal from './modal/move.vue';
-import RestoreModal from './modal/restore_text.vue';
+import RestoreModal from './modal/restore_element.vue';
 import InlineEdit from '../inline_edit.vue';
 import Tinymce from '../tinymce.vue';
 import MenuDropdown from '../menu_dropdown.vue';
