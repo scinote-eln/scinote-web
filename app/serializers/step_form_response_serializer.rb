@@ -4,7 +4,8 @@ class StepFormResponseSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
-  attributes :id, :created_at, :form_id, :urls, :submitted_by_full_name, :status, :submitted_at, :parent_type, :in_repository, :icon, :name
+  attributes :id, :created_at, :form_id, :urls, :submitted_by_full_name, :status, :submitted_at, :parent_type, :in_repository,
+             :icon, :name, :archived, :archived_by, :archived_on
 
   has_one :form, serializer: FormSerializer
 
@@ -18,6 +19,18 @@ class StepFormResponseSerializer < ActiveModel::Serializer
 
   def parent_type
     :step
+  end
+
+  def archived
+    object.archived?
+  end
+
+  def archived_by
+    object.step_orderable_element.archived_by&.full_name
+  end
+
+  def archived_on
+    I18n.l(object.step_orderable_element.archived_on, format: :full) if object.step_orderable_element.archived_on.present?
   end
 
   def in_repository
@@ -45,17 +58,27 @@ class StepFormResponseSerializer < ActiveModel::Serializer
     list = {}
 
     if Form.forms_enabled?
-      list[:add_value] = form_response_form_field_values_path(object)
-      list[:submit] = submit_step_form_response_path(object.step, object) if can_submit_form_response?(user, object)
-      list[:reset] = reset_step_form_response_path(object.step, object) if can_reset_form_response?(user, object)
+      step = object.step
 
-      if can_manage_step?(user, object.step)
-        list[:move_url] = move_step_form_response_path(object.step, object)
-        list[:move_targets_url] = move_targets_step_text_path(object.step, object)
+      if object.archived?
+        list[:restore_url] = restore_step_form_response_path(step, object)
+      else
+        list[:add_value] = form_response_form_field_values_path(object)
+        list[:submit] = submit_step_form_response_path(step, object) if can_submit_form_response?(user, object)
+        list[:reset] = reset_step_form_response_path(step, object) if can_reset_form_response?(user, object)
+
+        if can_manage_step?(user, step)
+          list[:move_url] = move_step_form_response_path(step, object)
+          list[:move_targets_url] = move_targets_step_text_path(step, object)
+        end
       end
     end
 
-    list[:delete_url] = step_form_response_path(object.step, object) if can_manage_step?(user, object.step)
+    if object.archived?
+      list[:delete_url] = step_form_response_path(step, object)
+    else
+      list[:archive_url] = archive_step_form_response_path(step, object)
+    end
 
     list
   end

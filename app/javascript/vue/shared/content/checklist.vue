@@ -243,7 +243,7 @@ export default {
         menu.push({
           text: I18n.t('general.archive'),
           emit: 'archive',
-          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-archive`
+          data_e2e: `e2e-BT-${this.dataE2e}-checklist${this.element.id}-options-archive`
         });
       }
       return menu;
