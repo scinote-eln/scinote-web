@@ -2,7 +2,7 @@
 <% step_type_str = step.completed ? 'completed' : 'uncompleted' %>
 <% user = step.completed? && step.last_modified_by || step.user %>
 <% timestamp = step.completed ? step.completed_on : step.created_at %>
-<% assets = step.assets %>
+<% assets = @settings.dig('task', 'protocol', 'archived_steps') ? step.assets : step.assets.active %>
 <% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-step-element">
   <div class="report-element-body">
@@ -22,7 +22,8 @@
     </div>
   </div>
   <div class="report-element-children">
-    <% step.step_orderable_elements.order(:position).each do |e| %>
+    <% step_orderable_elements = @settings.dig('task', 'protocol', 'archived_steps') ? step.step_orderable_elements : step.step_orderable_elements.active %>
+    <% step_orderable_elements.order(:position).each do |e| %>
       <% if e.orderable_type == 'StepTable' %>
         <% if e.orderable.table.metadata.present? %>
           <% if @settings.dig('task', 'protocol', 'step_well_plates') && e.orderable.table.metadata['plateTemplate'] %>
@@ -45,6 +46,7 @@
       <% end %>
     <% end %>
     <% if @settings.dig('task', 'protocol', 'step_files') %>
+
       <% assets.each do |asset| %>
         <%= render partial: 'reports/elements/step_asset_element', locals: { asset: asset, export_all: export_all } %>
       <% end %>

@@ -68,17 +68,19 @@
   <div class="report-element-children">
     <%= render partial: 'reports/elements/my_module_protocol_element', locals: { protocol: my_module.protocol, export_all: export_all } %>
 
-    <% filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step| %>
+    <% steps = @settings.dig('task', 'protocol', 'archived_steps') ? my_module.protocol.steps : my_module.protocol.steps.active %>
+    <% filter_steps_for_report(steps, @settings).order(:position).each do |step| %>
       <%= render partial: 'reports/elements/my_module_step_element', locals: { step: step, export_all: export_all } %>
     <% end %>
 
 
-    <% if my_module.results.any? && %w(file_results table_results text_results).any? { |k| @settings.dig('task', k) } %>
+    <% results = @settings.dig('task', 'archived_results') ? my_module.results : my_module.results.active %>
+    <% if results.any? && %w(file_results table_results text_results).any? { |k| @settings.dig('task', k) } %>
       <div class="results-title-name">
         <%= t('projects.reports.elements.module.results') %>
       </div><br>
 
-      <% order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result| %>
+      <% order_results_for_report(results, @settings.dig('task', 'result_order')).each do |result| %>
         <div class="result-name">
           <%= result.name.presence || I18n.t('projects.reports.unnamed') %>
           <% if result.archived? %>
@@ -88,14 +90,21 @@
 
         <div class="user-time">
           <% unless @settings['exclude_timestamps'] %>
-            <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
+            <% if result.archived? %>
+              <%= t('projects.reports.elements.archived_metadata',
+                    user: result.archived_by&.full_name,
+                    datetime: l(result.archived_on, format: :full)) %>
+            <% else %>
+              <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
+            <% end %>
           <% end %>
           <% if !@settings['exclude_task_metadata'] && result.steps.size.positive? %>
             | <%= t("projects.reports.elements.result.linked_steps") %> <%= result.steps.map(&:label).join('; ') %>
           <% end %>
         </div>
 
-        <% result.result_orderable_elements.each do |element| %>
+        <% result_orderable_elements = @settings.dig('task', 'archived_results') ? result.result_orderable_elements : result.result_orderable_elements.active %>
+        <% result_orderable_elements.each do |element| %>
           <% if element.orderable_type == "ResultTable" && @settings.dig('task', 'table_results') %>
             <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, element: element} %>
           <% elsif element.orderable_type == "ResultText" && @settings.dig('task', 'text_results') %>
