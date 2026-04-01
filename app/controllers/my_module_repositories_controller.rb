@@ -80,6 +80,33 @@ class MyModuleRepositoriesController < ApplicationController
           }
   end
 
+  def unassigned_rows
+    repository_rows = Lists::RepositoryRowsService.new(@repository,
+                                                       params,
+                                                       user: current_user,
+                                                       unassigned_to_task: @my_module,
+                                                       preload_cells: true).call.load
+
+    total_count = @repository.repository_rows.count
+    filtered_count = repository_rows.take&.filtered_count.to_i
+    total_pages = (total_count.to_f / params[:per_page].to_i).ceil
+
+    render json: repository_rows,
+           each_serializer: Lists::RepositoryRowSerializer,
+           user: current_user,
+           assigned_view: false,
+           can_read_repository: can_read_repository?(@repository),
+           with_reminders: Repository.reminders_enabled?,
+           with_stock_management: @repository.has_stock_management?,
+           can_manage_stock: false,
+           can_consume_stock: false,
+           meta: {
+            total_pages: total_pages,
+            total_count: total_count,
+            filtered_count: filtered_count
+          }
+  end
+
   def assign_my_modules
     assigned_count = 0
     skipped_count = 0
@@ -297,6 +324,18 @@ class MyModuleRepositoriesController < ApplicationController
       actions:
         Toolbars::MyModuleRepositoriesService.new(
           current_user,
+          @my_module,
+          ids: JSON.parse(params[:items]).map { |i| i['id'] }
+        ).actions
+    }
+  end
+
+  def unassigned_actions_toolbar
+    render json: {
+      actions:
+        Toolbars::MyModuleUnassignedRepositoriesService.new(
+          current_user,
+          @repository,
           @my_module,
           ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions

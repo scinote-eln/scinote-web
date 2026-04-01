@@ -179,6 +179,9 @@ export default {
     openSize() {
       return this.onlyRepository ? '540px' : '600px';
     },
+    columnHidden() {
+      return !this.repositoryVersion.attributes.is_snapshot;
+    },
     toolbarActions() {
       const left = [];
       const right = [];

@@ -76,9 +76,6 @@ export default {
       });
       return columns;
     },
-    columnHidden() {
-      return !this.repositoryVersion.attributes.is_snapshot;
-    }
   },
   mounted() {
     if (this.repositoryVersion) {
@@ -118,7 +115,7 @@ export default {
                 notSelectable: true,
                 cellRenderer: 'consumeRenderer',
                 cellRendererParams: {
-                  repositoryId: this.repository.id,
+                  repositoryId: this.repositoryVersion.id,
                 }
               });
             }
@@ -126,6 +123,8 @@ export default {
           this.repositoryColumnsDef = columns;
         })
         .catch(() => {
+          // TODO: Improve this, this is catching errors silently and is difficult to debug.
+
           // For private repositories we can't load the columns
           this.repositoryColumnsDef = [...this.defaultRepositoryColumnsDef];
         });
