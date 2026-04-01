@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center gap-2">
-    <GeneralDropdown v-if="params.data.has_active_reminders">
+    <GeneralDropdown v-if="hasReminders">
       <template v-slot:field>
         <div @click="loadReminders" class="cursor-pointer flex h-6 rounded hover:bg-sn-super-light-grey">
           <i class="sn-icon sn-icon-notifications"></i>
@@ -67,8 +67,12 @@ export default {
   },
   data() {
     return {
-      reminders: null
+      reminders: null,
+      hasReminders: false
     };
+  },
+  created() {
+    this.hasReminders = this.params.data.has_active_reminders;
   },
   methods: {
     loadReminders() {
@@ -82,7 +86,7 @@ export default {
                 const url = element.dataset.rowHideRemindersUrl;
                 axios.post(url)
                   .then(() => {
-                    this.reminders = null;
+                    this.hasReminders = false;
                   });
               });
             });

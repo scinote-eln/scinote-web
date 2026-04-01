@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!stateLoading" class="flex flex-col h-full" :class="{'pb-4': windowScrollerSeen && selectedRows.length === 0}">
+  <div v-if="!stateLoading" class="flex flex-col h-full w-full" :class="{'pb-4': windowScrollerSeen && selectedRows.length === 0}">
     <div
       class="relative flex flex-col flex-grow z-10"
       :class="{'overflow-y-hidden pb-20': currentViewRender === 'cards'}"
@@ -259,7 +259,7 @@ export default {
     enableBarcodeSearch: {
       type: Boolean,
       default: false
-    }
+    },
   },
   data() {
     return {
@@ -392,10 +392,7 @@ export default {
           values[key] = this.filledRowTemplate[key].value;
         });
 
-        this.gridApi.setGridOption(
-          'rowData',
-          [values, ...this.rowData]
-        );
+        this.rowData = [values, ...this.rowData];
 
         const viewport = this.$refs.agGrid?.$el.querySelector('.ag-body-viewport');
         if (viewport) {
@@ -514,6 +511,14 @@ export default {
     },
     // Table states
     fetchTableState() {
+      // don't load state if state saving is disabled
+      if (this.skipSaveTableState) {
+        this.initializing = false;
+        this.stateLoading = false;
+        this.loadData();
+        return;
+      }
+
       axios.get(user_setting_path(this.stateKey))
         .then((response) => {
           if (response.data.value) {
@@ -534,13 +539,14 @@ export default {
         });
     },
     applyTableState() {
-      const { columnsState } = this.tableState;
-      this.columnsState = columnsState;
+      const columnsState = this.tableState?.columnsState;
 
       if (!columnsState) {
         this.initializing = false;
         return;
       }
+
+      this.columnsState = columnsState;
 
       if (this.order) {
         this.tableState.columnsState.forEach((column) => {

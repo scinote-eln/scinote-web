@@ -10,13 +10,14 @@ module Lists
   class RepositoryRowsService < BaseService
     PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned relationships updated_on updated_by).freeze
 
-    def initialize(raw_data, params, user: nil, my_module: nil, disable_reminders: false, preload_cells: true)
+    def initialize(raw_data, params, user: nil, my_module: nil, disable_reminders: false, preload_cells: true, unassigned_to_task: nil)
       super(raw_data, params, user: user)
       @repository = @raw_data
       @my_module = my_module
       @disable_reminders = disable_reminders
       @preload_cells = preload_cells
       @is_snapshot = @repository.is_a?(RepositorySnapshot)
+      @unassigned_to_task = unassigned_to_task
     end
 
     def call
@@ -32,6 +33,7 @@ module Lists
     def fetch_records
       @records = @repository.repository_rows
       @records = @records.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: @my_module }) if @my_module && !@is_snapshot
+      @records = @records.where.not(id: MyModuleRepositoryRow.where(my_module_id: @unassigned_to_task.id).select(:repository_row_id)) if @unassigned_to_task
     end
 
     def add_extra_fields
@@ -76,7 +78,7 @@ module Lists
                          .select('MAX("last_modified_by"."full_name") AS last_modified_by_full_name')
                          .select('MAX("archived_by"."full_name") AS archived_by_full_name')
                          .select('COUNT(DISTINCT my_module_repository_rows.id) AS "assigned_my_modules_count"')
-                         .select('COALESCE(repository_rows.parent_connections_count, 0) + COALESCE(repository_rows.child_connections_count, 0) AS "relationships_count"')
+                         .select('COALESCE(repository_rows.parent_connections_count, 0) + COALESCE(repository_rows.child_connections_count, 0) AS "connections_count"')
                          .group('repository_rows.id')
                          .preload(:repository)
 
@@ -509,7 +511,7 @@ module Lists
 
       case column
       when 'assigned_tasks_count'
-        @records = @records.joins('INNER JOIN "my_module_repository_rows" AS assigned_my_modules
+        @records = @records.joins('LEFT JOIN "my_module_repository_rows" AS assigned_my_modules
                                    ON "assigned_my_modules"."repository_row_id" = "repository_rows"."id"')
                            .group('repository_rows.id')
       when 'created_by'
@@ -535,6 +537,8 @@ module Lists
         return unless sorting_column
 
         sort_by_custom_repository_column(sorting_column)
+      when 'connections_count'
+        @records.select('COALESCE(repository_rows.parent_connections_count, 0) + COALESCE(repository_rows.child_connections_count, 0) AS "connections_count"')
       else
         sorting_column = sortable_columns_map(column)
         return unless sortable_columns.include?(sorting_column)
@@ -549,8 +553,7 @@ module Lists
         code: 'repository_rows.id',
         assigned_tasks_count: 'assigned',
         created_by: 'created_by.full_name',
-        created_at: 'repository_rows.created_at',
-        connections_count: 'relationships'
+        created_at: 'repository_rows.created_at'
       }[column.to_sym]
     end
 
@@ -563,6 +566,7 @@ module Lists
 
       sortable_columns = @repository.default_sortable_columns
       sortable_columns << 'consumed_stock' if @repository.has_stock_management? && @my_module
+      sortable_columns << 'connections_count'
       sortable_columns
     end
 

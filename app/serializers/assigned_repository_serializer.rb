@@ -50,7 +50,12 @@ class AssignedRepositorySerializer < ActiveModel::Serializer
 
   attribute :urls do
     {
-      export: export_repository_my_module_repository_path(scope[:my_module], object)
+      export:
+        if object.is_a?(RepositorySnapshot)
+          export_repository_snapshot_my_module_repository_snapshot_path(scope[:my_module], object)
+        else
+          export_repository_my_module_repository_path(scope[:my_module], object)
+        end
     }
   end
 end

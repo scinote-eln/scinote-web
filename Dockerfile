@@ -1,7 +1,7 @@
 FROM ruby:3.4-trixie
 MAINTAINER SciNote <info@scinote.net>
 
-ARG TIKA_DIST_URL="https://dlcdn.apache.org/tika/3.2.3/tika-app-3.2.3.jar"
+ARG TIKA_DIST_URL="https://archive.apache.org/dist/tika/3.2.3/tika-app-3.2.3.jar"
 ENV TIKA_PATH=/usr/local/bin/tika-app.jar
 
 # additional dependecies

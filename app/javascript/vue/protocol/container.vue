@@ -320,7 +320,7 @@
       />
       <AssignedItemsModal
         v-if="showRepositoriesModal"
-        :myModuleId="protocol.attributes.assignable_my_module_id"
+        :myModuleId="protocol.attributes.assignable_my_module_id.toString()"
         @close="showRepositoriesModal = false"
       />
     </div>

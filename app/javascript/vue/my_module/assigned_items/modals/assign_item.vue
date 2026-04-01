@@ -1,6 +1,6 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document" :data-e2e="`e2e-CO-${e2eValue}`">
+    <div class="modal-dialog" role="document" :class="{'!w-[90vw]': !downstreamMode}" :data-e2e="`e2e-CO-${e2eValue}`">
       <div v-if="downstreamMode" class="modal-content">
         <div class="modal-header">
           <button
@@ -18,7 +18,7 @@
         </div>
         <div class="modal-body">
           <p :data-e2e="`e2e-TX-${e2eValue}-description`">
-            {{ i18n.t('my_modules.repository.assign_modal.description', { number: downstreamModules.length }) }}
+            {{ i18n.t('my_modules.repository.assign_modal.description', { number: rowIds.length }) }}
           </p>
           <ul>
             <li v-for="(module, index) in downstreamModules" :key="index">
@@ -59,42 +59,15 @@
             {{ i18n.t('my_modules.repository.assign_modal.title') }}
           </h4>
         </div>
-        <div class="modal-body">
-          <RowSelector
-            @change="this.rowIds = $event"
-            @repositoryChange="selectedRepositoryId = $event"
-            :multiple="true"
-            :preSelectedRepository="selectedRepositoryId"
-            class="mb-4"
-            :params="{ my_module_id: myModuleId }"
-            :dataE2e="`${e2eValue}`"
-          ></RowSelector>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-dismiss="modal"
-            :data-e2e="`e2e-BT-${e2eValue}-cancel`"
-          >
-            {{ i18n.t('general.cancel') }}
-          </button>
-          <button
-            class="btn btn-secondary ml-auto"
-            @click="downstreamMode = true"
-            :disabled="!validRowIds"
-            :data-e2e="`e2e-BT-${e2eValue}-assignToDownstream`"
-          >
-            {{ i18n.t('my_modules.repository.assign_modal.action_task_and_downstream') }}
-          </button>
-          <button
-            class="btn btn-primary"
-            @click="assignRows()"
-            :disabled="!validRowIds"
-            :data-e2e="`e2e-BT-${e2eValue}-assignToTask`"
-          >
-            {{ i18n.t('my_modules.repository.assign_modal.action_task') }}
-          </button>
+        <div class="modal-body !pb-0">
+          <AssignItemsTable
+            :selectedRepositoryId="selectedRepositoryId"
+            :myModuleId="myModuleId"
+            :dataE2e="e2eValue"
+            @assign="prepareForAssign"
+            @assign_downstream="prepareForAssignDownstream"
+
+          ></AssignItemsTable>
         </div>
       </div>
     </div>
@@ -104,7 +77,8 @@
 <script>
 import axios from '../../../../packs/custom_axios.js';
 import modalMixin from '../../../shared/modal_mixin.js';
-import RowSelector from '../../../shared/repository_row_selector.vue';
+import AssignItemsTable from './assign_items_table.vue';
+
 import {
   assign_modal_my_module_repository_path
 } from '../../../../routes.js';
@@ -120,7 +94,7 @@ export default {
     }
   },
   components: {
-    RowSelector,
+    AssignItemsTable,
   },
   mixins: [modalMixin],
   data() {
@@ -147,6 +121,16 @@ export default {
     this.selectedRepositoryId = parseInt(this.selectedRepositoryValue, 10);
   },
   methods: {
+    prepareForAssign(event, rowIds, repositoryId) {
+      this.rowIds = rowIds.map(row => parseInt(row.id, 10));
+      this.selectedRepositoryId = repositoryId;
+      this.assignRows();
+    },
+    prepareForAssignDownstream(event, rowIds, repositoryId) {
+      this.rowIds = rowIds.map(row => parseInt(row.id, 10));
+      this.selectedRepositoryId = repositoryId;
+      this.downstreamMode = true;
+    },
     assignRows(assignToDownstream = false) {
       this.$emit('assignRows', this.rowIds, this.selectedRepositoryId, assignToDownstream);
     },

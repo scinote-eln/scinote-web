@@ -70,6 +70,11 @@ module ReportsHelper
     "<span class=\"label step-label-#{style}\">[#{text}]</span>".html_safe
   end
 
+  def parse_subdomain
+    uri = URI.parse(Rails.application.routes.default_url_options[:host])
+    [uri.host, (uri.port if uri.port)].compact.join(':')
+  end
+
   def filter_steps_for_report(steps, settings)
     relations = []
 
