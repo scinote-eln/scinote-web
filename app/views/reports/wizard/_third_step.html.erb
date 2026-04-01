@@ -250,6 +250,16 @@
             <div class="divider"></div>
           </div>
         </li>
+        <li>
+          <div class="select-all-container">
+            <span class="sci-checkbox-container">
+              <input type="checkbox" class="sci-checkbox report-info-metadata-setting" value="report_info_metadata" <%= 'checked' if report.settings.dig(:report_info_metadata) %>/>
+              <span class="sci-checkbox-label"></span>
+            </span>
+            <%= t("projects.reports.wizard.third_step.report_info_metadata") %>
+            <div class="divider"></div>
+          </div>
+        </li>
       </ul>
   </ul>
 </div>

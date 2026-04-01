@@ -578,17 +578,22 @@ Rails.application.routes.draw do
           get :full_view_table
           post :index_dt, defaults: { format: 'json' }
           get :index_ag, defaults: { format: 'json' }
+          get :unassigned_rows, defaults: { format: 'json' }
           post :export_repository
           get :assign_repository_records_modal, as: :assign_modal
           post :update_repository_records_modal, as: :update_modal
           get :consume_modal
           post :update_consumption
-          delete :batch_destroy
+          post :batch_destroy
         end
 
         collection do
           post :actions_toolbar
         end
+        member do
+          post :unassigned_actions_toolbar
+        end
+
       end
 
       resources :repository_snapshots, controller: :my_module_repository_snapshots, only: %i(destroy show) do
@@ -796,7 +801,7 @@ Rails.application.routes.draw do
           get :repositories
           get :repository_rows
           post :actions_toolbar
-          delete :batch_destroy
+          post :batch_destroy
         end
       end
 

@@ -70,8 +70,9 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     render json: repository_snapshots,
            each_serializer: AssignedSnapshotRepositorySerializer,
            meta: {
-             has_live_version: @my_module.repository_rows_count(original_repository).positive? ||
-                               (can_read_repository?(original_repository) && can_assign_my_module_repository_rows?(@my_module))
+             has_live_version: original_repository &&
+                               (@my_module.repository_rows_count(original_repository).positive? ||
+                               (can_read_repository?(original_repository) && can_assign_my_module_repository_rows?(@my_module)))
            }
     # if user can assign rows, it means they can see live version and assign rows from it, even if there are currently no rows assigned to the module from the live version.
   end

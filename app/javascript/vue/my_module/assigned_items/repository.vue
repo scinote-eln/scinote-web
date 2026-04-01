@@ -179,6 +179,9 @@ export default {
     openSize() {
       return this.onlyRepository ? '540px' : '600px';
     },
+    columnHidden() {
+      return !this.repositoryVersion.attributes.is_snapshot;
+    },
     toolbarActions() {
       const left = [];
       const right = [];
@@ -253,11 +256,9 @@ export default {
     },
     unassignRows(rowIds, downstream = false) {
       this.showUnassignModal = false;
-      axios.delete(batch_destroy_my_module_repository_path(this.myModuleId, this.repositoryVersion.id), { 
-        params: {
-          rows_to_unassign: rowIds,
-          downstream: downstream
-        }
+      axios.post(batch_destroy_my_module_repository_path(this.myModuleId, this.repositoryVersion.id), {
+        rows_to_unassign: rowIds,
+        downstream: downstream
       }).then((response) => {
         HelperModule.flashAlertMsg(response.data.flash, 'success');
         this.reloadingTable = true;

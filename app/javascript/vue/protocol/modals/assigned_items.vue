@@ -57,28 +57,12 @@
         <div class="modal-body !pb-0 min-h-[540px]">
           <AssignedRepository
             v-if="selectedRepository"
-            :key="selectedRepository.id"
+            :key="`${selectedRepository.id}-${reloadKey}`"
             :repository="selectedRepository"
             :myModuleId="myModuleId"
             :onlyRepository="true"
             @assignRows="assignRows"
-            :reloadKey="reloadKey"
           />
-          <div
-            v-else-if="!initialLoading"
-            class="flex flex-col min-h-[540px] items-center justify-center gap-1 ">
-            <h2 class="text-sn-grey" data-e2e="e2e-TX-protocol-assignedItems-empty">
-              {{ i18n.t('my_modules.repository.assigned_items_modal.empty_placeholder') }}
-            </h2>
-            <button
-              @click="openAssignItemModal = true"
-              class="btn btn-primary"
-              data-e2e="e2e-BT-protocol-assignedItemsModal-empty-assignItems"
-            >
-              <i class="sn-icon sn-icon-new-task"></i>
-              {{ i18n.t('my_modules.repository.assign_items') }}
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -87,7 +71,7 @@
         v-if="openAssignItemModal"
         :myModuleId="myModuleId"
         @assignRows="assignRows"
-        @close="openAssignItemModal = false"
+        @close="closeAssignModal"
         :e2eValue="'task-assignedItems-assignItemModal'"/>
     </Teleport>
   </div>
@@ -126,6 +110,7 @@ export default {
       selectedRepository: null,
       openAssignItemModal: false,
       initialLoading: true,
+      isEmpty: true,
       reloadKey: 0
     };
   },
@@ -141,6 +126,14 @@ export default {
     loadAssignedRepositories(repositoryId = null) {
       axios.get(this.assignedRepositoriesUrl)
         .then((response) => {
+          // if no assigned repositories, open assignment modal
+          if (response.data.data.length === 0) {
+            this.openAssignItemModal = true;
+            return;
+          } else {
+            this.isEmpty = false;
+          }
+
           this.assignedRepositories = response.data.data;
           if (this.assignedRepositories.length > 0 && !this.selectedRepository ) {
             this.selectedRepository = this.assignedRepositories[0];
@@ -155,6 +148,8 @@ export default {
         });
     },
     assignRows(rowIds, repositoryId, assignToDownstream = false) {
+      this.isEmpty = false;
+
       axios.patch(my_module_repository_path(this.myModuleId, repositoryId), {
         rows_to_assign: rowIds,
         downstream: assignToDownstream
@@ -165,7 +160,10 @@ export default {
         this.loadAssignedRepositories(repositoryId);
       });
     },
+    closeAssignModal() {
+      this.openAssignItemModal = false;
+      if (this.isEmpty) $(this.$refs.modal).modal('hide');
+    }
   }
 };
 </script>
-

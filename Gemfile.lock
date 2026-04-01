@@ -172,7 +172,7 @@ GEM
       aws-eventstream (~> 1, >= 1.0.2)
     base62 (1.0.0)
     base64 (0.3.0)
-    bcrypt (3.1.18)
+    bcrypt (3.1.22)
     benchmark (0.5.0)
     better_errors (2.10.1)
       erubi (>= 1.0.0)
@@ -418,7 +418,7 @@ GEM
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
     logger (1.7.0)
-    loofah (2.25.0)
+    loofah (2.25.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.9.0)
@@ -873,7 +873,7 @@ DEPENDENCIES
   aws-sdk-rails (~> 5)
   aws-sdk-s3
   base62
-  bcrypt (~> 3.1.10)
+  bcrypt (~> 3.1.22)
   better_errors
   binding_of_caller
   bootsnap

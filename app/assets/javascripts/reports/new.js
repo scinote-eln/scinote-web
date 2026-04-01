@@ -1073,6 +1073,7 @@ function reportHandsonTableConverter() {
 
     reportData.report.settings.exclude_task_metadata = $('.exclude-task-metadata-setting')[0].checked;
     reportData.report.settings.exclude_timestamps = $('.exclude-timestamps-setting')[0].checked;
+    reportData.report.settings.report_info_metadata = $('.report-info-metadata-setting')[0].checked;
 
     return reportData;
   }
