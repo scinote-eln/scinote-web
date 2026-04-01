@@ -86,10 +86,6 @@ export default {
       type: String,
       required: true
     },
-    aiParserEnabled: {
-      type: Boolean,
-      required: true
-    },
     protocolsIoEnabled: {
       type: Boolean,
       required: true
@@ -206,15 +202,13 @@ export default {
           buttonStyle: 'btn btn-primary'
         });
 
-        if (this.aiParserEnabled) {
-          left.push({
-            name: 'import_ai',
-            icon: 'sn-icon sn-icon-ai',
-            label: this.i18n.t('protocols.index.import_with_ai'),
-            type: 'emit',
-            buttonStyle: 'btn btn-rainbow',
-          });
-        }
+        left.push({
+          name: 'import_ai',
+          icon: 'sn-icon sn-icon-ai',
+          label: this.i18n.t('protocols.index.import_with_ai'),
+          type: 'emit',
+          buttonStyle: 'btn btn-rainbow',
+        });
 
         const importMenu = {
           name: 'import',

@@ -39,6 +39,7 @@ class Report < ApplicationRecord
     all_tasks: true,
     exclude_task_metadata: false,
     exclude_timestamps: false,
+    report_info_metadata: true,
     task: {
       protocol: {
         description: true,

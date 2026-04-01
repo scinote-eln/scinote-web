@@ -340,6 +340,7 @@ class StepsController < ApplicationController
         message_items[:my_module] = @protocol.my_module.id
         log_activity(:task_steps_loaded_from_template, @my_module.experiment.project, message_items)
       else
+        message_items[:protocol_target] = @protocol.id
         log_activity(:protocol_steps_loaded_from_template, nil, message_items)
       end
 
