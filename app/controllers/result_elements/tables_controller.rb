@@ -4,7 +4,7 @@ module ResultElements
   class TablesController < BaseController
     include ApplicationHelper
 
-    before_action :load_table, only: %i(update destroy duplicate move)
+    before_action :load_table, only: %i(update destroy duplicate move archive restore)
 
     def create
       predefined_table_dimensions = create_table_params[:tableDimensions].map(&:to_i)
@@ -97,6 +97,35 @@ module ResultElements
       else
         head :unprocessable_entity
       end
+    end
+
+    def archive
+      orderable_element = @table.result_table.result_orderable_element
+
+      ActiveRecord::Base.transaction do
+        orderable_element.position = nil
+        orderable_element.archive!(current_user)
+        #activity
+      end
+
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def restore
+      orderable_element = @table.result_table.result_orderable_element
+
+      ActiveRecord::Base.transaction do
+        position = @result.result_orderable_elements.active.maximum(:position)
+        orderable_element.position = position ? position + 1 : 0
+        orderable_element.restore!(current_user)
+        #activity
+      end
+
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
     end
 
     def duplicate

@@ -5,7 +5,7 @@ module StepElements
     include ApplicationHelper
     include StepsActions
 
-    before_action :load_step_text, only: %i(update destroy duplicate move)
+    before_action :load_step_text, only: %i(update destroy duplicate move archive restore)
 
     def create
       step_text = @step.step_texts.build
@@ -78,6 +78,22 @@ module StepElements
         log_step_activity(:text_duplicated, { text_name: new_step_text.name })
         render_step_orderable_element(new_step_text)
       end
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def archive
+      archive_element!(@step, @step_text.step_orderable_element)
+
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def restore
+      restore_element!(@step, @step_text.step_orderable_element)
+
+      head :ok
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end

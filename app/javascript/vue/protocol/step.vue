@@ -164,6 +164,7 @@
           :dataE2e="`e2e-DD-protocol-step${step.id}-options`"
           @reorder="openReorderModal"
           @duplicate="duplicateStep"
+          @archive="showArchiveModal"
           @delete="showDeleteModal"
         ></MenuDropdown>
       </div>
@@ -172,6 +173,7 @@
       <div class="step-elements">
         <component
           v-for="(element, index) in orderedElements"
+          :ref="'stepComponent'"
           :is="elements[index].attributes.orderable_type"
           :key="element.id"
           class="step-element"
@@ -182,7 +184,9 @@
           :isNew="element.isNew"
           :dataE2e="`protocol-step${step.id}`"
           @component:adding-content="($event) => addingContent = $event"
-          @component:delete="deleteElement"
+          @component:delete="removeElement"
+          @component:archive="removeElement"
+          @component:restore="removeElement"
           @update="updateElement"
           @reorder="openReorderModal"
           @component:insert="insertElement"
@@ -219,6 +223,8 @@
     </div>
 
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
+    <archiveStepModal v-if="confirmingArchive" @confirm="archiveStep" @cancel="closeArchiveModal"/>
+
     <ReorderableItemsModal v-if="reordering"
       :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
       :items="reorderableElements"
@@ -261,6 +267,7 @@
   import Checklist from '../shared/content/checklist.vue'
   import FormResponse from '../shared/content/form_response.vue'
   import deleteStepModal from './modals/delete_step.vue'
+  import archiveStepModal from './modals/archive_step.vue'
   import LinkResultsModal from './modals/link_results.vue'
   import Attachments from '../shared/content/attachments.vue'
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
@@ -277,12 +284,7 @@
   import StorageUsage from '../shared/content/attachments/storage_usage.vue'
   import axios from '../../packs/custom_axios';
   import tooltipMixin from '../mixins/tooltipMixin.js';
-
-  import {
-    my_module_results_path,
-    protocol_result_templates_path,
-    user_setting_path
-  } from '../../routes.js';
+  import StepCommonMixin from './mixins/step_common.js';
 
   export default {
     name: 'StepContainer',
@@ -312,16 +314,12 @@
     },
     data() {
       return {
-        elements: [],
-        attachments: [],
-        attachmentsReady: true,
-        confirmingDelete: false,
+        confirmingArchive: false,
         addingContent: false,
         showFileModal: false,
         showCommentsSidebar: false,
         dragingFile: false,
         reordering: false,
-        isCollapsed: false,
         editingName: false,
         inlineEditError: null,
         customWellPlate: false,
@@ -362,7 +360,7 @@
         ]
       }
     },
-    mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, tooltipMixin],
+    mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, tooltipMixin, StepCommonMixin],
     components: {
       InlineEdit,
       StepTable,
@@ -378,17 +376,8 @@
       SelectFormModal,
       FormResponse,
       LinkResultsModal,
-      GeneralDropdown
-    },
-    created() {
-      this.elements = this.step.elements;
-      this.attachments = this.step.attachments;
-
-      if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
-        setTimeout(() => {
-          this.loadAttachments();
-        }, 10000);
-      }
+      GeneralDropdown,
+      archiveStepModal
     },
     watch: {
       stepToReload() {
@@ -401,27 +390,9 @@
         if (this.activeDragStep != this.step.id && this.dragingFile) {
           this.dragingFile = false;
         }
-      },
-      step: {
-        handler(newVal) {
-          if (this.isCollapsed !== newVal.attributes.collapsed) {
-            this.toggleCollapsed();
-          }
-        },
-        deep: true
       }
     },
     mounted() {
-      this.$nextTick(() => {
-        const stepId = `#stepBody${this.step.id}`;
-        this.isCollapsed = this.step.attributes.collapsed;
-        if (this.isCollapsed) {
-          $(stepId).collapse('hide');
-        } else {
-          $(stepId).collapse('show');
-        }
-        this.$emit('step:collapsed');
-      });
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar);
       $(this.$refs.comments).data('openCallback', this.closeCommentsSidebar);
       $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
@@ -550,6 +521,14 @@
             data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-delete`
           }]);
         }
+
+        if (this.urls.archive_url) {
+          menu = menu.concat([{
+            text: this.i18n.t('protocols.steps.options_dropdown.archive'),
+            emit: 'archive',
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-archive`
+          }]);
+        }
         return menu;
       }
     },
@@ -564,22 +543,6 @@
           this.dragingFile = true;
           this.$emit('step:drag_enter', this.step.id);
         }
-      },
-      loadAttachments() {
-        this.attachmentsReady = false
-
-        $.get(this.urls.attachments_url, (result) => {
-          this.attachments = result.data
-          this.$emit('step:attachments:loaded');
-          if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
-            setTimeout(() => {
-              this.loadAttachments()
-            }, 10000)
-          } else {
-            this.attachmentsReady = true
-          }
-        });
-        this.showFileModal = false;
       },
       reloadAttachment(attachmentId) {
         const index = this.attachments.findIndex(attachment => attachment.id === attachmentId);
@@ -600,26 +563,8 @@
 
         this.showFileModal = false;
       },
-      loadElements() {
-        $.get(this.urls.elements_url, (result) => {
-          this.elements = result.data
-          this.$emit('step:elements:loaded');
-        });
-      },
       showStorageUsage() {
         return (this.elements.length || this.attachments.length) && !this.isCollapsed && this.step.attributes.storage_limit;
-      },
-      toggleCollapsed() {
-        this.isCollapsed = !this.isCollapsed;
-
-        this.step.attributes.collapsed = this.isCollapsed;
-
-        const settings = {
-          value: { [this.step.id]: this.isCollapsed }
-        };
-
-        this.$emit('step:collapsed');
-        axios.put(user_setting_path('task_step_states'), {user_setting: settings});
       },
       showDeleteModal() {
         this.confirmingDelete = true;
@@ -638,6 +583,22 @@
               'delete'
             );
           }
+        });
+      },
+      showArchiveModal() {
+        const components = this.$refs.stepComponent || [];
+        if (components.some(comp => comp?.hasCrossTableReferences === true)) {
+          this.confirmingArchive = true;
+        } else {
+          this.archiveStep();
+        }
+      },
+      closeArchiveModal() {
+        this.confirmingArchive = false;
+      },
+      archiveStep() {
+        axios.post(this.urls.archive_url).then((response) => {
+          this.$emit('step:archived', response.data.data, 'archive', this.step.attributes.position);
         });
       },
       clickToggleButton() {
@@ -698,16 +659,6 @@
           });
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
-      },
-      deleteElement(position) {
-        this.elements.splice(position, 1)
-        let unorderedElements = this.elements.map( e => {
-          if (e.attributes.position >= position) {
-            e.attributes.position -= 1;
-          }
-          return e;
-        })
-        this.$emit('stepUpdated')
       },
       updateElement(element, skipRequest=false, callback) {
         let index = this.elements.findIndex((e) => e.id === element.id);
@@ -812,10 +763,6 @@
         $('.comments-sidebar .close-btn').click();
         this.showCommentsSidebar = true
       },
-      attachmentDeleted(id) {
-        this.attachments = this.attachments.filter((a) => a.id !== id );
-        this.$emit('stepUpdated');
-      },
       updateAttachment(attachment) {
         const index = this.attachments.findIndex(a => a.id === attachment.id);
         if (index !== -1) {
@@ -895,13 +842,7 @@
           results: results,
           position: this.step.attributes.position
         });
-      },
-      resultUrl(result_id, archived) {
-        if (!this.step.attributes.my_module_id) {
-          return protocol_result_templates_path({protocol_id: this.step.attributes.protocol_id, result_id: result_id });
-        }
-        return my_module_results_path({my_module_id: this.step.attributes.my_module_id, result_id: result_id, view_mode: (archived ? 'archived' : 'active') });
-      },
+      }
     }
   }
 </script>

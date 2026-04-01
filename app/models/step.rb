@@ -1,13 +1,13 @@
 class Step < ApplicationRecord
+  include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
   include TinyMceImages
   include ViewableModel
   include ObservableModel
 
-  SEARCHABLE_ATTRIBUTES = ['steps.name'].freeze
-
-  SEARCHABLE_ATTRIBUTES = ['steps.name'].freeze
+  SEARCHABLE_ATTRIBUTES = ['steps.name', :children].freeze
+  SEARCHABLE_IN_PROTOCOL_ATTRIBUTES = ['steps.name'].freeze
 
   attr_accessor :skip_position_adjust # to be used in bulk deletion
 
@@ -18,16 +18,15 @@ class Step < ApplicationRecord
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
-  validates :position, presence: true
   validates :completed, inclusion: { in: [true, false] }
   validates :user, :protocol, presence: true
   validates :completed_on, presence: true, if: proc { |s| s.completed? }
-  validates :position, uniqueness: { scope: :protocol }, if: :position_changed?
+  validates :position, uniqueness: { scope: :protocol }, if: -> { !archived && position_changed? }
 
   before_validation :set_completed_on, if: :completed_changed?
   before_save :set_last_modified_by
   before_destroy :cascade_before_destroy
-  after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust }
+  after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust || archived }
 
   # conditional touch excluding step completion updates
   after_destroy :touch_protocol, :remove_from_user_settings
@@ -38,6 +37,9 @@ class Step < ApplicationRecord
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
   belongs_to :protocol, inverse_of: :steps
   belongs_to :original_protocol, class_name: 'Protocol', optional: true, inverse_of: :original_steps
+  belongs_to :archived_by, class_name: 'User', optional: true
+  belongs_to :restored_by, class_name: 'User', optional: true
+
   delegate :team, to: :protocol
   has_many :step_orderable_elements, inverse_of: :step, dependent: :destroy
   has_many :checklists, inverse_of: :step, dependent: :destroy
@@ -66,6 +68,58 @@ class Step < ApplicationRecord
 
   scope :in_order, -> { order(position: :asc) }
   scope :desc_order, -> { order(position: :desc) }
+
+  def self.search(user,
+    include_archived,
+    query = nil,
+    teams = user.teams,
+    options = {})
+    team_ids = teams.is_a?(ActiveRecord::Relation) ? teams.pluck(:id) : teams.id
+
+    if options[:in_repository]
+      steps = joins(:protocol)
+      readable_steps = where(protocols: { id: Protocol.readable_by_user(user, team_ids).select(:id) })
+      steps = steps.active unless include_archived
+    else
+      steps = joins(protocol: :my_module)
+      readable_steps = joins(protocol: :my_module).where(my_modules: { id: MyModule.readable_by_user(user, team_ids).select(:id) })
+      unless include_archived
+        steps = steps.active
+                    .joins(protocol: { my_module: { experiment: :project } })
+                    .where(my_modules: { archived: false }, experiments: { archived: false }, projects: { archived: false })
+      end
+    end
+
+    steps = steps.with(readable_steps: readable_steps)
+              .joins('INNER JOIN "readable_steps" ON "readable_steps"."id" = "steps"."id"')
+
+    steps.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
+  end
+
+  def self.where_children_attributes_like(query, options = {})
+
+    unscoped_readable_steps = unscoped.joins('INNER JOIN "readable_steps" ON "readable_steps"."id" = "steps"."id"').select(:id)
+    sql = "#{unscoped_readable_steps.joins(:step_texts).where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    UNION ALL
+    #{unscoped_readable_steps.joins(step_tables: :table).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    UNION ALL
+    #{unscoped_readable_steps.joins(:checklists).where_attributes_like(Checklist::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    UNION ALL
+    #{unscoped_readable_steps.joins(checklists: :checklist_items).where_attributes_like(ChecklistItem::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    UNION ALL
+    #{unscoped_readable_steps.joins(:step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    "
+    unless options[:in_repository]
+      sql += "UNION ALL
+      #{unscoped_readable_steps.joins(form_responses: :form_field_values).where_attributes_like(FormFieldValue::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped_readable_steps.joins(form_responses: :form).where_attributes_like(Form::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      UNION ALL
+      #{unscoped_readable_steps.joins(form_responses: { form: :form_fields }).where_attributes_like(FormField::SEARCHABLE_ATTRIBUTES, query).to_sql}
+      "
+    end
+    unscoped.from("(#{sql}) AS steps", :steps)
+  end
 
   def self.filter_by_teams(teams = [])
     return self if teams.blank?
@@ -179,9 +233,15 @@ class Step < ApplicationRecord
   end
 
   def normalize_elements_position
-    step_orderable_elements.order(:position).each_with_index do |element, index|
+    step_orderable_elements.active.order(:position).each_with_index do |element, index|
       element.update!(position: index) unless element.position == index
     end
+  end
+
+  def next_element_position
+    current_position = step_orderable_elements.active.order(position: :asc).last&.position
+
+    current_position.nil? ? 0 : current_position + 1
   end
 
   def label

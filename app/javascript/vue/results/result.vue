@@ -5,7 +5,12 @@
        @dragenter.prevent="dragEnter($event)"
        @dragover.prevent
        :data-id="result.id"
-       :class="{ 'bg-sn-super-light-blue': dragingFile, 'bg-white': !dragingFile, 'locked': locked, 'pointer-events-none': addingContent }"
+       :class="{
+        'bg-sn-super-light-blue': dragingFile,
+        'bg-white': !dragingFile,
+        'locked': locked,
+        'pointer-events-none': addingContent
+      }"
        :data-e2e="`e2e-CO-task-result${result.id}`"
   >
     <div class="text-xl items-center flex flex-col text-sn-blue h-full justify-center left-0 absolute top-0 w-full"
@@ -36,7 +41,10 @@
             :autofocus="editingName"
             :placeholder="i18n.t('my_modules.results.placeholder')"
             :defaultValue="i18n.t('my_modules.results.default_name')"
-            :timestamp="i18n.t('protocols.steps.timestamp', {date: result.attributes.created_at, user: result.attributes.created_by })"
+            :timestamp="i18n.t(`protocols.steps.timestamp`, {
+              date: result.attributes.created_at,
+              user: result.attributes.created_by
+            })"
             :data-e2e="`task-result${result.id}`"
             @editingEnabled="editingName = true"
             @editingDisabled="editingName = false"
@@ -150,8 +158,7 @@
             :data-e2e="`e2e-DD-task-result${result.id}-optionsMenu`"
             @reorder="openReorderModal"
             @duplicate="duplicateResult"
-            @archive="archiveResult"
-            @restore="restoreResult"
+            @archive="showArchiveModal"
             @delete="showDeleteModal"
             @pin="pinResult"
             @unpin="unpinResult"
@@ -172,13 +179,16 @@
           <component
             :is="elements[index].attributes.orderable_type"
             class="result-element"
+            ref="resultComponent"
             :element.sync="elements[index]"
             :inRepository="false"
             :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
             :assignableMyModuleId="result.attributes.my_module_id"
             :isNew="element.isNew"
             @component:adding-content="($event) => addingContent = $event"
-            @component:delete="deleteElement"
+            @component:delete="removeElement"
+            @component:archive="removeElement"
+            @component:restore="removeElement"
             @update="updateElement"
             @reorder="openReorderModal"
             @component:insert="insertElement"
@@ -221,6 +231,7 @@
             @updateResult="updateLinkedSteps"
             @close="openLinkStepsModal = false"
           />
+          <archiveResultModal v-if="confirmingArchive" @confirm="archiveResult" @cancel="closeArchiveModal"/>
         </Teleport>
       </div>
     </div>
@@ -236,21 +247,17 @@ import Attachments from '../shared/content/attachments.vue';
 import InlineEdit from '../shared/inline_edit.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
-import deleteResultModal from './delete_result.vue';
 import LinkStepsModal from './modals/link_steps.vue'
 import ContentToolbar from '../shared/content/content_toolbar';
 import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
+import archiveResultModal from './modals/archive_result.vue';
 
 import AttachmentsMixin from '../shared/content/mixins/attachments.js';
 import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js';
 import OveMixin from '../shared/content/attachments/mixins/ove.js';
 import UtilsMixin from '../mixins/utils.js';
+import ResultCommonMixin from './mixins/result_common.js';
 import StorageUsage from '../shared/content/attachments/storage_usage.vue';
-import {
-  protocols_my_module_path,
-  protocol_path,
-  user_setting_path
-} from '../../routes.js';
 
 export default {
   name: 'Results',
@@ -265,12 +272,10 @@ export default {
   data() {
     return {
       reordering: false,
-      elements: [],
-      attachments: [],
-      attachmentsReady: true,
       addingContent: false,
       showFileModal: false,
       dragingFile: false,
+      confirmingArchive: false,
       customWellPlate: false,
       openLinkStepsModal: false,
       wellPlateOptions: [
@@ -315,12 +320,10 @@ export default {
           data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-wellPlate-2`
         }
       ],
-      editingName: false,
-      confirmingDelete: false,
-      isCollapsed: false
+      editingName: false
     };
   },
-  mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin],
+  mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, ResultCommonMixin],
   components: {
     ReorderableItemsModal,
     ResultTable,
@@ -328,63 +331,23 @@ export default {
     Attachments,
     InlineEdit,
     MenuDropdown,
-    deleteResultModal,
     StorageUsage,
     ContentToolbar,
     CustomWellPlateModal,
     LinkStepsModal,
-    GeneralDropdown
+    GeneralDropdown,
+    archiveResultModal
   },
   watch: {
-    resultToReload() {
-      if (Number(this.resultToReload) === Number(this.result.id)) {
-        this.loadElements();
-        this.loadAttachments();
-      }
-    },
     activeDragResult() {
       if (this.activeDragResult !== this.result.id && this.dragingFile) {
         this.dragingFile = false;
       }
-    },
-    result: {
-      handler(newVal) {
-        if (this.isCollapsed !== newVal.attributes.collapsed) {
-          this.toggleCollapsed();
-        }
-      },
-      deep: true
     }
-  },
-  mounted() {
-    this.$nextTick(() => {
-      const resultId = `#resultBody${this.result.id}`;
-      this.isCollapsed = this.result.attributes.collapsed;
-      if (this.isCollapsed) {
-        $(resultId).collapse('hide');
-      } else {
-        $(resultId).collapse('show');
-      }
-      this.$emit('result:collapsed');
-    });
-
-    window.initTooltip(this.$refs.linkButton);
-  },
-  beforeUnmount() {
-    window.destroyTooltip(this.$refs.linkButton);
   },
   computed: {
     reorderableElements() {
       return this.orderedElements.map((e) => ({ id: e.id, attributes: e.attributes.orderable }));
-    },
-    orderedElements() {
-      return this.elements.sort((a, b) => a.attributes.position - b.attributes.position);
-    },
-    urls() {
-      return this.result.attributes.urls || {};
-    },
-    locked() {
-      return !(this.urls.restore_url || this.urls.archive_url || this.urls.delete_url || this.urls.update_url);
     },
     filesMenu() {
       let menu = [];
@@ -471,48 +434,10 @@ export default {
           data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-archive`
         }]);
       }
-      if (this.urls.restore_url) {
-        menu = menu.concat([{
-          text: this.i18n.t('my_modules.results.actions.restore'),
-          emit: 'restore',
-          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-restore`
-        }]);
-      }
-      if (this.urls.delete_url) {
-        menu = menu.concat([{
-          text: this.i18n.t('my_modules.results.actions.delete'),
-          emit: 'delete',
-          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-delete`
-        }]);
-      }
       return menu;
     }
   },
-  created() {
-    this.elements = this.result.elements;
-    this.attachments = this.result.attachments;
-
-    if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
-      setTimeout(() => {
-        this.loadAttachments();
-      }, 10000);
-    }
-  },
   methods: {
-    toggleCollapsed() {
-      this.isCollapsed = !this.isCollapsed;
-      this.result.attributes.collapsed = this.isCollapsed;
-
-      const stateKey = this.result.attributes.type == "ResultTemplate" ? 'result_template_states' : 'result_states';
-
-      const settings = {
-        value: { [this.result.id]: this.isCollapsed }
-      };
-
-      axios.put(user_setting_path(stateKey), {user_setting: settings});
-
-      this.$emit('result:collapsed');
-    },
     dragEnter(e) {
       if (!this.urls.upload_attachment_url) return;
 
@@ -558,16 +483,6 @@ export default {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
     },
-    deleteElement(position) {
-      this.elements.splice(position, 1);
-      const unorderedElements = this.elements.map((e) => {
-        if (e.attributes.position >= position) {
-          e.attributes.position -= 1;
-        }
-        return e;
-      });
-      this.$emit('resultUpdated');
-    },
     updateElement(element, skipRequest = false, callback) {
       let index = this.elements.findIndex((e) => e.id === element.id);
 
@@ -604,32 +519,6 @@ export default {
         return s;
       });
       this.elements.push(element);
-    },
-    loadElements() {
-      $.get(this.urls.elements_url, (result) => {
-        this.elements = result.data;
-        this.$emit('result:elements:loaded');
-      });
-    },
-    loadAttachments() {
-      this.attachmentsReady = false;
-
-      $.get(this.urls.attachments_url, (result) => {
-        this.attachments = result.data;
-        this.$emit('result:attachments:loaded');
-        if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
-          setTimeout(() => {
-            this.loadAttachments();
-          }, 10000);
-        } else {
-          this.attachmentsReady = true;
-        }
-      });
-      this.showFileModal = false;
-    },
-    attachmentDeleted(id) {
-      this.attachments = this.attachments.filter((a) => a.id !== id);
-      this.$emit('resultUpdated');
     },
     updateAttachment(attachment) {
       const index = this.attachments.findIndex((a) => a.id === attachment.id);
@@ -670,25 +559,20 @@ export default {
     closeCustomWellPlateModal() {
       this.customWellPlate = false;
     },
+    showArchiveModal() {
+      const components = this.$refs.resultComponent || [];
+      if (components.some(comp => comp?.hasCrossTableReferences === true)) {
+        this.confirmingArchive = true;
+      } else {
+        this.archiveResult();
+      }
+    },
+    closeArchiveModal() {
+      this.confirmingArchive = false;
+    },
     archiveResult() {
       axios.post(this.urls.archive_url).then((response) => {
         this.$emit('result:archived', this.result.id);
-      });
-    },
-    restoreResult() {
-      axios.post(this.urls.restore_url).then((response) => {
-        this.$emit('result:restored', this.result.id);
-      });
-    },
-    showDeleteModal() {
-      this.confirmingDelete = true;
-    },
-    closeDeleteModal() {
-      this.confirmingDelete = false;
-    },
-    deleteResult() {
-      axios.delete(this.urls.delete_url).then((response) => {
-        this.$emit('result:deleted', this.result.id);
       });
     },
     duplicateResult() {
@@ -735,13 +619,7 @@ export default {
       });
 
       this.$nextTick(() => window.initTooltip(this.$refs.linkButton));
-    },
-    protocolUrl(step_id) {
-      if (this.result.attributes.protocol_id) {
-        return protocol_path({ id: this.result.attributes.protocol_id }, { step_id: step_id });
-      }
-      return protocols_my_module_path({ id: this.result.attributes.my_module_id }, { step_id: step_id })
-    },
+    }
   }
 };
 </script>

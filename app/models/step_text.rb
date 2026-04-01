@@ -21,6 +21,7 @@ class StepText < ApplicationRecord
   has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
   delegate :team, to: :step
+  delegate :archived?, to: :step_orderable_element
 
   scope :asc, -> { order('step_texts.created_at ASC') }
 
@@ -35,7 +36,7 @@ class StepText < ApplicationRecord
       clone_tinymce_assets(new_step_text, step.protocol.team)
 
       step.step_orderable_elements.create!(
-        position: position || step.step_orderable_elements.length,
+        position: position || step.next_element_position,
         orderable: new_step_text
       )
 

@@ -675,6 +675,8 @@ Rails.application.routes.draw do
           get :move_targets
           post :move
           post :duplicate
+          post :archive
+          post :restore
         end
       end
       resources :texts, controller: 'step_elements/texts', only: %i(create destroy update) do
@@ -682,6 +684,8 @@ Rails.application.routes.draw do
           get :move_targets
           post :move
           post :duplicate
+          post :archive
+          post :restore
         end
       end
       resources :checklists, controller: 'step_elements/checklists', only: %i(create destroy update) do
@@ -689,6 +693,8 @@ Rails.application.routes.draw do
           get :move_targets
           post :move
           post :duplicate
+          post :archive
+          post :restore
         end
         resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(index create update destroy) do
           patch :toggle, on: :member
@@ -700,6 +706,8 @@ Rails.application.routes.draw do
           post :submit
           post :reset
           post :move
+          post :archive
+          post :restore
         end
       end
       member do
@@ -711,6 +719,8 @@ Rails.application.routes.draw do
         post 'update_view_state'
         post 'update_asset_view_mode'
         post 'duplicate'
+        post :archive
+        post :restore
       end
       collection do
         get :list
@@ -828,6 +838,8 @@ Rails.application.routes.draw do
           get :move_targets
           post :move
           post :duplicate
+          post :archive
+          post :restore
         end
       end
       resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
@@ -835,6 +847,8 @@ Rails.application.routes.draw do
           get :move_targets
           post :move
           post :duplicate
+          post :archive
+          post :restore
         end
       end
     end
@@ -1064,6 +1078,8 @@ Rails.application.routes.draw do
                                    as: 'update_asset_image'
     get 'files/:id/move_targets', to: 'assets#move_targets', as: 'asset_move_tagets'
     post 'files/:id/move', to: 'assets#move', as: 'asset_move'
+    post 'files/:id/archive', to: 'assets#archive', as: 'asset_archive'
+    post 'files/:id/restore', to: 'assets#restore', as: 'asset_restore'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
     patch 'files/:id/rename', to: 'assets#rename', as: 'asset_rename'
     post 'files/:id/duplicate', to: 'assets#duplicate', as: 'asset_duplicate'

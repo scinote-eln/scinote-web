@@ -87,7 +87,9 @@ const entryList = {
   vue_protocol_versions: './app/javascript/packs/vue/protocol_versions.js',
   vue_protocol_repository_rows: './app/javascript/packs/vue/protocol_repository_rows.js',
   vue_team_preferences: './app/javascript/packs/vue/team_preferences.js',
-  vue_shareable_links_my_module_assigned_items: './app/javascript/packs/vue/shareable_links/assigned_repository.js'
+  vue_shareable_links_my_module_assigned_items: './app/javascript/packs/vue/shareable_links/assigned_repository.js',
+  vue_shareable_links_my_module_assigned_items: './app/javascript/packs/vue/shareable_links/assigned_repository.js',
+  vue_my_module_archive: './app/javascript/packs/vue/my_module_archive.js'
 };
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

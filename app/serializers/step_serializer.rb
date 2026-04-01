@@ -13,7 +13,30 @@ class StepSerializer < ActiveModel::Serializer
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode,
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
              :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
-             :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id, :skipped_at
+             :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id, :skipped_at,
+             :archived_by, :archived_on, :archived
+
+  def step_orderable_elements
+    return object.step_orderable_elements if object.archived?
+
+    view_mode = @instance_options[:view_mode]
+    if view_mode == 'archived'
+      object.step_orderable_elements.archived
+    else
+      object.step_orderable_elements.active
+    end
+  end
+
+  def assets
+    object.assets if object.archived?
+
+    view_mode = @instance_options[:view_mode]
+    if view_mode == 'archived'
+      object.assets.archived
+    else
+      object.assets.active
+    end
+  end
 
   def collapsed
     step_states = @instance_options[:user].user_settings.find_by(key: 'task_step_states')&.value || {}
@@ -107,9 +130,13 @@ class StepSerializer < ActiveModel::Serializer
       urls_list[:duplicate_step_url] = duplicate_step_path(object)
     end
 
+    urls_list[:archive_url] = archive_step_path(object) if object.my_module && object.active? && can_manage_step?(object)
+    urls_list[:restore_url] = restore_step_path(object) if object.my_module && !object.active? && can_manage_step?(object)
+
+    urls_list[:delete_url] = step_path(object) if (object.my_module && !object.active? || !object.my_module) && can_manage_step?(object)
+
     if can_manage_step?(object)
       urls_list.merge!({
-        delete_url: step_path(object),
         update_url: step_path(object),
         create_table_url: step_tables_path(object),
         create_text_url: step_texts_path(object),
@@ -133,5 +160,17 @@ class StepSerializer < ActiveModel::Serializer
 
   def created_by
     object.user.full_name
+  end
+
+  def archived_by
+    object.archived_by.full_name if object.archived_by.present?
+  end
+
+  def archived_on
+    I18n.l(object.archived_on, format: :full) if object.archived_on.present?
+  end
+
+  def archived
+    object.archived?
   end
 end

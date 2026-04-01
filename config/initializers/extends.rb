@@ -853,6 +853,7 @@ class Extends
     result_templates/index
     my_module_repositories/index
     protocol_repository_rows/index
+    my_modules/archive
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {

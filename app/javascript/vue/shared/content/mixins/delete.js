@@ -1,3 +1,5 @@
+import axios from '../../../../packs/custom_axios';
+
 export default {
   data() {
     return {
@@ -12,16 +14,13 @@ export default {
       this.confirmingDelete = false;
     },
     deleteElement() {
-      $.ajax({
-        url: this.deleteUrl || this.element.attributes.orderable.urls.delete_url,
-        type: 'DELETE',
-        success: (result) => {
+      axios.delete(this.deleteUrl || this.element.attributes.orderable.urls.delete_url)
+        .then((result) => {
           this.$emit(
             'component:delete',
             this.element.attributes.position
           );
-        }
-      });
+        });
     }
   }
 };

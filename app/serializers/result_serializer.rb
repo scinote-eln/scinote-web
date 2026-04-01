@@ -1,7 +1,29 @@
 # frozen_string_literal: true
 
 class ResultSerializer < ResultBaseSerializer
-  attributes :my_module_id, :archived, :comments_count
+  attributes :my_module_id, :archived, :comments_count, :archived_by, :archived_on
+
+  def result_orderable_elements
+    object.result_orderable_elements if object.archived?
+
+    view_mode = @instance_options[:view_mode]
+    if view_mode == 'archived'
+      object.result_orderable_elements.archived
+    else
+      object.result_orderable_elements.active
+    end
+  end
+
+  def assets
+    object.assets if object.archived?
+
+    view_mode = @instance_options[:view_mode]
+    if view_mode == 'archived'
+      object.assets.archived
+    else
+      object.assets.active
+    end
+  end
 
   def collapsed
     result_states = current_user.user_settings.find_by(key: 'result_states')&.value || {}
@@ -9,11 +31,7 @@ class ResultSerializer < ResultBaseSerializer
   end
 
   def name
-    if archived
-      "(A) #{object.name}"
-    else
-      object.name
-    end
+    object.name
   end
 
   def archived
@@ -22,6 +40,14 @@ class ResultSerializer < ResultBaseSerializer
 
   def comments_count
     object.comments.count
+  end
+
+  def archived_by
+    object.archived_by.full_name if object.archived_by.present?
+  end
+
+  def archived_on
+    I18n.l(object.archived_on, format: :full) if object.archived_on.present?
   end
 
   def urls

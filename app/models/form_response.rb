@@ -32,6 +32,8 @@ class FormResponse < ApplicationRecord
            inverse_of: :previous_form_response,
            dependent: :destroy
 
+  delegate :archived?, to: :step_orderable_element
+
   def step
     step_orderable_element&.step
   end
@@ -105,7 +107,7 @@ class FormResponse < ApplicationRecord
       )
 
       parent.step_orderable_elements.create!(
-        position: position || parent.step_orderable_elements.length,
+        position: position || parent.next_element_position,
         orderable: new_form_response
       )
 

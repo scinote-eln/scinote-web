@@ -173,7 +173,7 @@ class Protocol < ApplicationRecord
 
   def self.where_children_attributes_like(query, options = {})
     unscoped_readable_protocols = unscoped.joins('INNER JOIN "readable_protocols" ON "readable_protocols"."id" = "protocols"."id"').select(:id)
-    sql = "#{unscoped_readable_protocols.joins(:steps).where_attributes_like(Step::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    sql = "#{unscoped_readable_protocols.joins(:steps).where_attributes_like(Step::SEARCHABLE_IN_PROTOCOL_ATTRIBUTES , query).to_sql}
       UNION ALL
       #{unscoped_readable_protocols.joins(steps: :step_texts).where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
       UNION ALL

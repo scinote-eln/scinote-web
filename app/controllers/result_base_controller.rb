@@ -8,8 +8,17 @@ class ResultBaseController < ApplicationController
     respond_to do |format|
       format.json do
         # API endpoint
-        @results = if params[:view_mode] == 'archived'
-                     @parent.results.archived
+        view_mode = params[:view_mode]
+        @results = if view_mode == 'archived'
+                     results_with_archived_elements = @parent.results.active.joins(:result_orderable_elements)
+                                                             .where(result_orderable_elements: { archived: true })
+                                                             .distinct
+                     results_with_archived_assets = @parent.results.active.joins(:assets)
+                                                           .where(assets: { archived: true })
+                                                           .distinct
+                     @parent.results.where(archived: true)
+                            .or(@parent.results.where(id: results_with_archived_elements.select(:id)))
+                            .or(@parent.results.where(id: results_with_archived_assets.select(:id)))
                    else
                      @parent.results.active
                    end
@@ -22,6 +31,7 @@ class ResultBaseController < ApplicationController
                each_serializer: result_serializer,
                include: %i(result_orderable_elements assets),
                user: current_user,
+               view_mode: view_mode,
                meta: { sort: @sort_preference }
       end
 
@@ -145,7 +155,12 @@ class ResultBaseController < ApplicationController
   end
 
   def update_and_apply_user_sort_preference!
-    state = current_user.user_settings.find_or_initialize_by(key: result_sorting_preference_key)
+    state = if params[:view_mode] == 'archived'
+              current_user.user_settings.find_or_initialize_by(key: "#{result_sorting_preference_key}_archived")
+            else
+              current_user.user_settings.find_or_initialize_by(key: result_sorting_preference_key)
+            end
+
     state.value ||= {}
 
     if params[:sort].present?

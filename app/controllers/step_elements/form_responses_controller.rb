@@ -68,6 +68,21 @@ module StepElements
       end
     end
 
+    def archive
+      archive_element!(@step, @form_response.step_orderable_element)
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def restore
+      restore_element!(@step, @form_response.step_orderable_element)
+
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
     private
 
     def form_response_params

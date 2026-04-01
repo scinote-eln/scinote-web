@@ -17,9 +17,9 @@ class AssetsController < ApplicationController
   helper_method :wopi_file_edit_button_status
 
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode)
-  before_action :check_manage_permission, only: %i(edit destroy duplicate rename toggle_view_mode)
-  before_action :check_restore_permission, only: :restore_version
+  before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode archive restore)
+  before_action :check_manage_permission, only: %i(edit destroy duplicate rename toggle_view_mode archive restore)
+  before_action :check_restore_permission, only: %i(restore_version)
 
   def file_preview
     render json: { html: render_to_string(
@@ -482,6 +482,24 @@ class AssetsController < ApplicationController
     @asset.save!
 
     render json: @asset.file.blob
+  end
+
+  def archive
+    if @asset.archive(current_user)
+      # activity
+      render json: {}, status: :ok
+    else
+      render json: { errors: @asset.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def restore
+    if @asset.restore(current_user)
+      # activity
+      render json: {}, status: :ok
+    else
+      render json: { errors: @asset.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   private

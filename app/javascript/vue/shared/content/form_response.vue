@@ -1,67 +1,107 @@
 <template>
   <div class="content__form-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-stepForm${element.id}`">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
-    <div class="flex items-center gap-4">
-      <MenuDropdown
-        class="ml-auto"
-        :listItems="this.actionMenu"
-        :btnClasses="'btn btn-light icon-btn btn-sm'"
-        :position="'right'"
-        :btnIcon="'sn-icon sn-icon-more-hori'"
-        :dataE2e="`e2e-DD-${dataE2e}-stepForm${element.id}-options`"
-        @move="showMoveModal"
-        @delete="showDeleteModal"
-      ></MenuDropdown>
-    </div>
-    <div class="max-w-[800px] w-full rounded bg-sn-super-light-grey p-6 flex flex-col gap-4">
-      <div class="flex items-center">
-        <h3 class="my-1" :data-e2e="`e2e-TX-${dataE2e}-stepForm${element.id}-formName`">{{ form.name }}</h3>
-        <template v-if="!this.formResponse.in_repository">
-          <div
-            v-if="this.formResponse.status == 'submitted'"
-            class="ml-auto text-right text-xs text-sn-grey-700"
-            :data-e2e="`e2e-TX-${dataE2e}-stepForm${element.id}-submissionInfo`"
-          >
-            {{ i18n.t('forms.response.submitted_on') }} {{ this.formResponse.submitted_at }}<br>
-            {{ i18n.t('forms.response.by') }} {{ this.formResponse.submitted_by_full_name }}
+    <div :class="{'!bg-sn-background-brittlebush p-4': element.attributes.orderable.archived}">
+      <div class="flex items-center gap-4">
+        <template v-if="element.attributes.orderable.archived">
+          <div class="sci-tag bg-sn-alert-brittlebush">
+            {{ i18n.t('my_modules.results.archived') }}
+            <span class="sn-icon sn-icon-archive"></span>
           </div>
-          <div
-            v-else class="ml-auto text-right text-xs text-sn-grey-700"
-            :data-e2e="`e2e-TX-${dataE2e}-stepForm${element.id}-notSubmitted`"
-          >
-            {{ i18n.t('forms.response.not_submitted') }}
-          </div>
+          <span class="text-xs ">
+            {{ i18n.t('protocols.steps.timestamp_archived', {
+              date: element.attributes.orderable.archived_on,
+              user: element.attributes.orderable.archived_by
+            }) }}
+          </span>
         </template>
+        <div class="ml-auto flex items gap-4">
+          <button
+              v-if="this.element.attributes.orderable.urls.restore_url"
+              class="btn icon-btn btn-light"
+              @click="confirmingRestore = true"
+              :title="i18n.t('general.restore')"
+              :data-e2e="`e2e-BT-${this.dataE2e}-stepForm${this.element.id}-options-restore`"
+            >
+              <i class="sn-icon sn-icon-restore"></i>
+            </button>
+            <button
+              v-if="this.element.attributes.orderable.urls.delete_url"
+              class="btn icon-btn btn-light"
+              @click="showDeleteModal"
+              :title="i18n.t('general.delete')"
+              :data-e2e="`e2e-BT-${this.dataE2e}-stepForm${this.element.id}-options-delete`"
+            >
+              <i class="sn-icon sn-icon-delete"></i>
+            </button>
+          <MenuDropdown
+            class="ml-auto"
+            :listItems="this.actionMenu"
+            :btnClasses="'btn btn-light icon-btn btn-sm'"
+            :position="'right'"
+            :btnIcon="'sn-icon sn-icon-more-hori'"
+            :dataE2e="`e2e-DD-${dataE2e}-stepForm${element.id}-options`"
+            @move="showMoveModal"
+            @delete="showDeleteModal"
+            @archive="archiveElement"
+          ></MenuDropdown>
+        </div>
       </div>
-      <Field
-        v-for="field in formFields"
-        :disabled="formDisabled"
-        ref="formFields"
-        :key="field.id"
-        :field="field"
-        :formResponse="formResponse"
-        @save="saveValue"
-        @validChanged="checkValidFormFields"
-        :dataE2e="`${dataE2e}-stepForm${element.id}-field${field.id}`"
-      />
-      <div>
-        <button v-if="this.formResponse.urls.submit"
-                class="btn btn-primary"
-                :disabled="!validResponse || !isValid || submitting"
-                @click="submitForm"
-                :data-e2e="`e2e-BT-${dataE2e}-stepForm${element.id}-submitForm`">
-          {{ i18n.t('forms.response.submit') }}
-        </button>
-        <button v-else-if="this.formResponse.urls.reset"
-                class="btn btn-secondary"
-                @click="resetForm"
-                :disabled="submitting"
-                :data-e2e="`e2e-BT-${dataE2e}-stepForm${element.id}-editForm`">
-          {{ i18n.t('general.edit')}}
-        </button>
+      <div class="max-w-[800px] w-full rounded bg-sn-super-light-grey p-6 flex flex-col gap-4">
+        <div class="flex items-center">
+          <h3 class="my-1" :data-e2e="`e2e-TX-${dataE2e}-stepForm${element.id}-formName`">{{ form.name }}</h3>
+          <template v-if="!this.formResponse.in_repository">
+            <div
+              v-if="this.formResponse.status == 'submitted'"
+              class="ml-auto text-right text-xs text-sn-grey-700"
+              :data-e2e="`e2e-TX-${dataE2e}-stepForm${element.id}-submissionInfo`"
+            >
+              {{ i18n.t('forms.response.submitted_on') }} {{ this.formResponse.submitted_at }}<br>
+              {{ i18n.t('forms.response.by') }} {{ this.formResponse.submitted_by_full_name }}
+            </div>
+            <div
+              v-else class="ml-auto text-right text-xs text-sn-grey-700"
+              :data-e2e="`e2e-TX-${dataE2e}-stepForm${element.id}-notSubmitted`"
+            >
+              {{ i18n.t('forms.response.not_submitted') }}
+            </div>
+          </template>
+        </div>
+        <Field
+          v-for="field in formFields"
+          :disabled="formDisabled"
+          ref="formFields"
+          :key="field.id"
+          :field="field"
+          :formResponse="formResponse"
+          @save="saveValue"
+          @validChanged="checkValidFormFields"
+          :dataE2e="`${dataE2e}-stepForm${element.id}-field${field.id}`"
+        />
+        <div>
+          <button v-if="this.formResponse.urls.submit"
+                  class="btn btn-primary"
+                  :disabled="!validResponse || !isValid || submitting"
+                  @click="submitForm"
+                  :data-e2e="`e2e-BT-${dataE2e}-stepForm${element.id}-submitForm`">
+            {{ i18n.t('forms.response.submit') }}
+          </button>
+          <button v-else-if="this.formResponse.urls.reset"
+                  class="btn btn-secondary"
+                  @click="resetForm"
+                  :disabled="submitting"
+                  :data-e2e="`e2e-BT-${dataE2e}-stepForm${element.id}-editForm`">
+            {{ i18n.t('general.edit')}}
+          </button>
+        </div>
       </div>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @close="closeDeleteModal"/>
+    <RestoreModal v-if="confirmingRestore"
+                  :parentType="element.attributes.orderable.parent_type"
+                  :element="'form_response'"
+                  @confirm="restoreElement"
+                  @close="confirmingRestore = false"/>
     <moveElementModal v-if="movingElement"
                       :parent_type="element.attributes.orderable.parent_type"
                       :targets_url="element.attributes.orderable.urls.move_targets_url"
@@ -87,6 +127,8 @@ import MenuDropdown from '../menu_dropdown.vue';
 import Field from '../../forms/field.vue';
 import axios from '../../../packs/custom_axios.js';
 import ConfirmationModal from '../confirmation_modal.vue';
+import ArchiveMixin from './mixins/archive.js';
+import RestoreModal from './modal/restore_element.vue';
 
 export default {
   name: 'TextContent',
@@ -95,9 +137,10 @@ export default {
     moveElementModal,
     MenuDropdown,
     Field,
-    ConfirmationModal
+    ConfirmationModal,
+    RestoreModal
   },
-  mixins: [DeleteMixin, MoveMixin],
+  mixins: [DeleteMixin, MoveMixin, ArchiveMixin],
   props: {
     element: {
       type: Object,
@@ -123,7 +166,8 @@ export default {
       deleteUrl: this.element.attributes.orderable.urls.delete_url,
       moveUrl: this.element.attributes.orderable.urls.move_url,
       isValid: false,
-      submitting: false
+      submitting: false,
+      confirmingRestore: false
     };
   },
   mounted() {
@@ -165,6 +209,14 @@ export default {
           text: I18n.t('general.delete'),
           emit: 'delete',
           data_e2e: `e2e-BT-${this.dataE2e}-stepForm${this.element.id}-options-delete`
+        });
+      }
+
+      if (this.element.attributes.orderable.urls.archive_url) {
+        menu.push({
+          text: I18n.t('general.archive'),
+          emit: 'archive',
+          data_e2e: `e2e-BT-${this.dataE2e}-stepForm${this.element.id}-options-archive`
         });
       }
       return menu;

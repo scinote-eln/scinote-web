@@ -430,7 +430,7 @@ en:
       results: "Results"
       activities: "Activity"
       assigned_items: "Assigned items"
-      archive: "Archived results"
+      archive: "Archive"
 
   smart_annotations:
     private:
@@ -1471,6 +1471,9 @@ en:
       recent_protocols_from_repository: "Recent protocols from the Repository"
       code: "ID: "
       recent_protocols_from_repository: "Recent protocols from the Templates"
+    archive:
+      steps: "Protocol steps"
+      results: "Results"
     shareable_links:
       share: "Share"
       shared: "Shared"
@@ -1652,6 +1655,7 @@ en:
       active_results: "Active results"
       archived_results: "Archived results"
       default_name: "Untitled result"
+      archived: "Archived"
       placeholder: "Enter result name"
       add_label: "New result"
       add_title: "Create new result"
@@ -1676,6 +1680,19 @@ en:
       link_steps: "Link steps to this result"
       linked_steps: "Linked steps"
       modals:
+        archive:
+          title: 'Archive result'
+          description_1: 'This result contains table(s) that include cross-references to other table(s).'
+          description_2: 'Archiving the result will permanently remove cross-references to other table(s).'
+          description_3: 'The result can be restored from Archive without cross-references.'
+          description_4: 'This action cannot be undone.'
+          description_5: 'Are you sure you want to continue?'
+          confirm: 'Archive'
+        restore:
+          title: 'Restore result'
+          description_1: 'The result will be restored to the bottom of your current active protocol.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
         link_steps:
           title: 'Link result to protocol steps'
           description: 'You can link a result to multiple steps.'
@@ -4196,11 +4213,14 @@ en:
       step_duplication_failed: "Step could not be duplicated, try again later."
       component_duplication_failed: "Step content could not be duplicated, try again later."
       timestamp: "Created on %{date} by %{user}"
+      timestamp_archived: "Archived on %{date} by %{user}"
       timestamp_iso_html: "Created on <span class='iso-formatted-date'>%{date}</span> by %{user}"
       manage_links: "Manage links"
       archived_result: "Archived"
       link_results: "Link results to this step"
       linked_results: "Linked results"
+      no_steps_placeholder: "No steps here"
+      archived: "Archived"
       status:
         complete: "Mark as complete"
         uncomplete: "Unmark as complete"
@@ -4211,6 +4231,8 @@ en:
         rearrange: 'Rearrange content'
         duplicate: 'Duplicate'
         delete: 'Delete'
+        archive: 'Archive'
+        restore: 'Restore'
       insert:
         button: 'Insert content'
         title: 'Insert step content'
@@ -4240,18 +4262,48 @@ en:
           description: 'Tables have become content blocks and require a name. To be able to edit the table, please add the name now:'
           save: 'Save table title'
           error: "Table name can't be empty"
+        archive_modal:
+          title: 'Archive table'
+          description_1: 'Archiving the table will permanently remove cross-references to other table(s).'
+          description_2: 'The table can be restored from Archive without cross-references.'
+          description_3: 'This action cannot be undone.'
+          description_4: 'Are you sure you want to continue?'
+          confirm: 'Archive'
+        restore_modal:
+          title: 'Restore table'
+          description_1_step: 'The table will be restored to the bottom of the protocol step it belonged to previously.'
+          description_1_result: 'The table will be restored to the bottom of the result it belonged to previously.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
         table_name: "Table name"
       checklist:
         placeholder: 'Enter checklist name'
         default_name: 'Checklist %{position}'
         checklist_name: "Checklist name"
         empty_checklist: 'Doesn’t contain any checklist items'
+        restore_modal:
+          title: 'Restore checklist'
+          description_1_step: 'The checklist will be restored to the bottom of the protocol step it belonged to previously.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
       text:
         placeholder: 'Enter step text'
         empty_text: 'No text entered'
         text_name: "Enter text name"
+        restore_modal:
+          title: 'Restore text'
+          description_1_step: 'The text will be restored to the bottom of the protocol step it belonged to previously.'
+          description_1_result: 'The text will be restored to the bottom of the result it belonged to previously.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
       plate:
         default_name: "Plate %{position}"
+      form_response:
+        restore_modal:
+          title: 'Restore form'
+          description_1_step: 'The form will be restored to the bottom of the protocol step it belonged to previously.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
       modals:
         delete_element:
           title: 'Delete content'
@@ -4278,6 +4330,19 @@ en:
             targets_label: Select result
             untitled_result: Untitled result
             search_placeholder: "Enter result name"
+        archive_step:
+          title: 'Archive step'
+          description_1: 'This step contains table(s) that include cross-references to other table(s).'
+          description_2: 'Archiving the table will permanently remove cross-references to other table(s).'
+          description_3: 'The table can be restored from Archive without cross-references.'
+          description_4: 'This action cannot be undone.'
+          description_5: 'Are you sure you want to continue?'
+          confirm: 'Archive'
+        restore_step:
+          title: 'Restore step'
+          description_1: 'The step will be restored to the bottom of your current active protocol.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
         delete_step:
           title: 'Delete step'
           description_1: 'You’re about to delete a whole step from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
@@ -4646,6 +4711,7 @@ en:
     placeholder:
       modified_label: "Modified:"
       size_label: "Size: %{size}"
+      archived_on_label: "Archived on %{date} by %{user}"
     wopi_supported_text_formats_title: 'Only .docx, .docm, .odt file formats are supported for editing in Word for the web.'
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel for the web.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint for the web.'
@@ -4675,6 +4741,8 @@ en:
       inline_html: "Large"
       thumbnail_html: "Thumbnail"
       list_html: "List"
+      archive: "Archive"
+      restore: "Restore"
       versions: "Version history"
     file_versions_modal:
       title: "Version history"
@@ -4969,6 +5037,7 @@ en:
     insert: "Insert"
     options_selected: 'options selected'
     output: 'Output'
+    restore: "Restore"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
