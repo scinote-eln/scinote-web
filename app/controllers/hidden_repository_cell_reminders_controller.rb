@@ -22,7 +22,10 @@ class HiddenRepositoryCellRemindersController < ApplicationController
       user.hidden_repository_cell_reminders.create!(repository_cell_id: repository_cell_id)
     end
 
-    render json: hidden_repository_cell_reminder, status: :ok
+    reminder_count =
+      @repository_row.repository_cells.with_active_reminder(current_user).distinct.count
+
+    render json: hidden_repository_cell_reminder.as_json.merge(reminder_count: reminder_count), status: :ok
   end
 
   private
