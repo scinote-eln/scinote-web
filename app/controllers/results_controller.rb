@@ -10,8 +10,9 @@ class ResultsController < ResultBaseController
   before_action :set_inline_name_editing, only: %i(index)
   before_action :check_create_permissions, only: %i(create)
   before_action :check_read_permissions, only: %i(elements assets)
-  before_action :check_manage_permissions, only: %i(upload_attachment archive update_view_state update_asset_view_mode update duplicate pin unpin)
+  before_action :check_manage_permissions, only: %i(upload_attachment update_view_state update_asset_view_mode update duplicate pin unpin)
   before_action :check_restore_permissions, only: :restore
+  before_action :check_archive_permissions, only: :archive
   before_action :check_destroy_permissions, only: :destroy
   # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -78,6 +79,10 @@ class ResultsController < ResultBaseController
 
   def check_restore_permissions
     render_403 unless can_restore_result?(@result)
+  end
+
+  def check_archive_permissions
+    render_403 unless can_archive_result?(@result)
   end
 
   def check_create_permissions

@@ -4,7 +4,12 @@ module ResultElements
   class TablesController < BaseController
     include ApplicationHelper
 
+    before_action :check_create_permissions, only: :create
     before_action :load_table, only: %i(update destroy duplicate move archive restore)
+    before_action :check_manage_permissions, except: %i(create archive restore destroy)
+    before_action :check_archive_permissions, only: :archive
+    before_action :check_restore_permissions, only: :restore
+    before_action :check_delete_permissions, only: :destroy
 
     def create
       predefined_table_dimensions = create_table_params[:tableDimensions].map(&:to_i)
@@ -100,13 +105,7 @@ module ResultElements
     end
 
     def archive
-      orderable_element = @table.result_table.result_orderable_element
-
-      ActiveRecord::Base.transaction do
-        orderable_element.position = nil
-        orderable_element.archive!(current_user)
-        #activity
-      end
+      archive_element!(@result, @table.result_table.result_orderable_element)
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -114,14 +113,7 @@ module ResultElements
     end
 
     def restore
-      orderable_element = @table.result_table.result_orderable_element
-
-      ActiveRecord::Base.transaction do
-        position = @result.result_orderable_elements.active.maximum(:position)
-        orderable_element.position = position ? position + 1 : 0
-        orderable_element.restore!(current_user)
-        #activity
-      end
+      restore_element!(@result, @table.result_table.result_orderable_element)
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -158,6 +150,22 @@ module ResultElements
     def load_table
       @table = @result.tables.find_by(id: params[:id])
       return render_404 unless @table
+    end
+
+    def check_manage_permissions
+      render_403 unless can_manage_result_orderable_element?(@table.result_table.result_orderable_element)
+    end
+
+    def check_archive_permissions
+      render_403 unless can_archive_result_orderable_element?(@table.result_table.result_orderable_element)
+    end
+
+    def check_restore_permissions
+      render_403 unless can_restore_result_orderable_element?(@table.result_table.result_orderable_element)
+    end
+
+    def check_delete_permissions
+      render_403 unless can_delete_result_orderable_element?(@table.result_table.result_orderable_element)
     end
 
     def result_annotation_notification(old_content = nil)

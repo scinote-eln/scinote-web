@@ -46,7 +46,7 @@
             <i class="sn-icon sn-icon-restore"></i>
           </button>
           <button
-            v-if="this.element.attributes.orderable.urls.delete_url"
+            v-if="this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url"
             class="btn icon-btn btn-light"
             @click="showDeleteModal"
             :title="i18n.t('general.delete')"
@@ -206,6 +206,13 @@ export default {
           text: I18n.t('general.archive'),
           emit: 'archive',
           data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-archive`
+        });
+      }
+      if (!this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url) {
+        menu.push({
+          text: this.i18n.t('general.delete'),
+          emit: 'delete',
+          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-delete`
         });
       }
       return menu;

@@ -137,7 +137,14 @@ export default {
           emit: 'archive'
         });
       }
-      if (this.attachment.attributes.urls.versions && !this.attachment.attributes.archived) {
+      if (this.attachment.attributes.urls.delete && !this.attachment.attributes.archived) {
+        menu.push({
+          text: this.i18n.t('assets.context_menu.delete'),
+          emit: 'delete',
+          data_e2e: 'e2e-BT-attachmentOptions-delete'
+        });
+      }
+      if (this.attachment.attributes.urls.versions) {
         menu.push({
           text: this.i18n.t('assets.context_menu.versions'),
           emit: 'fileVersionsModal'
@@ -177,7 +184,7 @@ export default {
     },
     deleteAttachment() {
       this.deleteModal = false;
-      this.$emit('attachment:delete');
+      this.$emit('attachment:delete', this.attachment.id);
     },
     openOVEditor(url) {
       window.showIFrameModal(url);

@@ -230,7 +230,7 @@ export default {
       );
     },
     checkResultsState() {
-      this.resultsCollapsed = this.$refs.results.every((result) => result.isCollapsed);
+      this.resultsCollapsed = this.$refs.results?.every((result) => result.isCollapsed) || false;
     },
     collapseResults() {
       $('.result-wrapper .collapse').collapse('hide');

@@ -44,7 +44,7 @@
             <i class="sn-icon sn-icon-restore"></i>
           </button>
           <button
-            v-if="this.element.attributes.orderable.urls.delete_url"
+            v-if="this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url"
             class="btn icon-btn btn-light"
             @click="showDeleteModal"
             :title="i18n.t('general.delete')"
@@ -62,6 +62,7 @@
             @duplicate="duplicateElement"
             @move="showMoveModal"
             @archive="showArchiveModal"
+            @delete="showDeleteModal"
           ></MenuDropdown>
         </div>
       </div>
@@ -183,6 +184,14 @@ export default {
           text: I18n.t('general.archive'),
           emit: 'archive',
           data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-archive`
+        });
+      }
+
+      if (!this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url) {
+        menu.push({
+          text: I18n.t('general.delete'),
+          emit: 'delete',
+          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-delete`
         });
       }
       return menu;

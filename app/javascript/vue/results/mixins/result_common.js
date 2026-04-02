@@ -126,5 +126,10 @@ export default {
       }
       return protocols_my_module_path({ id: this.result.attributes.my_module_id }, { step_id: step_id })
     },
+    deleteResult() {
+      axios.delete(this.urls.delete_url).then((response) => {
+        this.$emit('result:deleted', this.result.id);
+      });
+    }
   }
 };
