@@ -87,7 +87,9 @@ class MyModuleRepositoriesController < ApplicationController
                                                        unassigned_to_task: @my_module,
                                                        preload_cells: true).call.load
 
-    total_count = @repository.repository_rows.count
+    total_count = @repository.repository_rows.where.not(
+      id: @my_module.repository_rows.where(repository_id: @repository.id).select(:id)
+    ).count
     filtered_count = repository_rows.take&.filtered_count.to_i
     total_pages = (total_count.to_f / params[:per_page].to_i).ceil
 
