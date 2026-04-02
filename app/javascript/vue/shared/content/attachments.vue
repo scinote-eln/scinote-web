@@ -33,7 +33,7 @@
         :is="attachment_view_mode(attachmentsOrdered[index])"
         :attachment="attachment"
         :parentId="parseInt(parent.id)"
-        :dataE2e="`${dataE2e}`"
+        :dataE2e="dataE2e"
         @attachment:viewMode="updateAttachmentViewMode"
         @attachment:delete="deleteAttachment(attachment.id)"
         @attachment:moved="attachmentMoved"
