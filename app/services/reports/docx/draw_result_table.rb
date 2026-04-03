@@ -12,10 +12,17 @@ module Reports::Docx::DrawResultTable
     obj.render_table(table, table_type, color)
     @docx.p do
       text I18n.t 'projects.reports.elements.result_table.table_name', name: table.name
+      text " | #{I18n.t('search.index.archived')} ", bold: true if table.archived?
       unless settings['exclude_timestamps']
-        text ' '
-        text I18n.t('projects.reports.elements.result_table.user_time',
-                    timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: color[:gray]
+        text '| '
+        if table.archived?
+          text I18n.t('projects.reports.elements.archived_metadata',
+                      datetime: I18n.l(table.result_table.result_orderable_element.archived_on, format: :full),
+                      user: table.result_table.result_orderable_element.archived_by&.full_name), color: color[:gray]
+        else
+          text I18n.t('projects.reports.elements.result_table.user_time',
+                      timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: color[:gray]
+        end
       end
     end
   end

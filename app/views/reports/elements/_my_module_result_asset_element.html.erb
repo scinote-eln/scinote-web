@@ -1,5 +1,6 @@
 <% result ||= report_element.result %>
-<% result.assets.each do |asset| %>
+<% assets = @settings.dig('task', 'archived_results') ? result.assets : result.assets.active %>
+<% assets.each do |asset| %>
   <% timestamp = asset.created_at %>
   <div class="report-element report-result-element report-result-asset-element">
     <div class="report-element-header">
@@ -8,7 +9,7 @@
       </span>
       <span class="result-name">
         <%= result.name.presence || I18n.t('projects.reports.unnamed') %>
-        <% if result.archived? %>
+        <% if asset.archived? %>
           <span class="label label-warning"><%= t('search.index.archived') %></span>
         <% end %>
       </span>
@@ -24,10 +25,14 @@
             <%= link_to t('projects.reports.elements.download'), asset_download_url(asset, disposition: 'attachment'), class: 'download-link', target: :_blank %>
           </em>
         <% end %>
-      </div>  
+      </div>
       <div class="user-time">
         <% unless @settings['exclude_timestamps'] %>
-          <%= t("projects.reports.elements.result_asset.user_time", user: result.user.full_name, timestamp: l(timestamp, format: :full)) %>
+          <% if asset.archived? %>
+            <%= t("projects.reports.elements.archived_metadata", user: asset.archived_by&.full_name, datetime: l(asset.archived_on, format: :full)) %>
+          <% else %>
+            <%= t("projects.reports.elements.result_asset.user_time", user: result.user.full_name, timestamp: l(timestamp, format: :full)) %>
+          <% end%>
         <% end %>
         <% if report.settings.dig(:task, :file_results_previews) && ActiveStorageFileUtil.previewable_document?(asset&.file&.blob) %>
           <%= t('projects.reports.elements.result_asset.full_preview_attached') %>

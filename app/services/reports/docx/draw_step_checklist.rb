@@ -16,10 +16,17 @@ module Reports::Docx::DrawStepChecklist
         team,
         I18n.t('projects.reports.elements.step_checklist.checklist_name', name: checklist.name)
       ).text, italic: true
+      text " | #{I18n.t('search.index.archived')} ", bold: true if checklist.archived?
       unless settings['exclude_timestamps']
-        text ' '
-        text I18n.t('projects.reports.elements.step_checklist.user_time',
+        text '| ' if checklist.name.present?
+        if checklist.archived?
+          text I18n.t('projects.reports.elements.archived_metadata',
+                      datetime: I18n.l(checklist.step_orderable_element.archived_on, format: :full),
+                      user: checklist.step_orderable_element.archived_by&.full_name), color: color[:gray]
+        else
+          text I18n.t('projects.reports.elements.step_checklist.user_time',
                     timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+        end
       end
     end
     if items.any?

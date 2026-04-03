@@ -5,11 +5,20 @@
       <em>
         <%= truncate(form_response.form.name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
       </em>
+      <% if form_response.archived? %>
+        <span class="label label-warning"><%= t('search.index.archived') %></span>
+      <% end %>
     </div>
     <div class="user-time">
       <% if form_response.submitted? %>
-        <%= t("projects.reports.elements.step_forms.user_time", user: form_response.submitted_by&.full_name,
+        <% if form_response.archived? %>
+          <%= t("projects.reports.elements.archived_metadata",
+                user: form_response.step_orderable_element.archived_by&.full_name,
+                datetime: l(form_response.step_orderable_element.archived_on, format: :full)) %>
+        <% else %>
+          <%= t("projects.reports.elements.step_forms.user_time", user: form_response.submitted_by&.full_name,
                                                                    timestamp: l(form_response.submitted_at, format: :full)) %>
+        <% end %>
       <% else %>
         <%= t('projects.reports.elements.step_forms.not_submitted') %>
       <% end %>

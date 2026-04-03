@@ -10,10 +10,19 @@
           <%= truncate(result_text.name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
         </em>
       <% end %>
+      <% if result_text.archived? %>
+        <span class="label label-warning"><%= t('search.index.archived') %></span>
+      <% end %>
     </div>
     <% unless @settings['exclude_timestamps'] %>
       <div class="user-time">
-        <%= t("projects.reports.elements.result_text.user_time", timestamp: l(timestamp, format: :full)) %>
+        <% if result_text.archived? %>
+          <%= t("projects.reports.elements.archived_metadata",
+                user: result_text.result_orderable_element.archived_by&.full_name,
+                datetime: l(result_text.result_orderable_element.archived_on, format: :full)) %>
+        <% else %>
+          <%= t("projects.reports.elements.result_text.user_time", timestamp: l(timestamp, format: :full)) %>
+        <% end %>
       </div>
     <% end %>
   </div>

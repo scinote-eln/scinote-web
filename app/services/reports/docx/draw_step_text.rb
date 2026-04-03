@@ -11,10 +11,17 @@ module Reports::Docx::DrawStepText
       @docx.p do
         text step_text.name.to_s, italic: true
         text ' ' if step_text.name.present?
-
+        text " | #{I18n.t('search.index.archived')} ", bold: true if step_text.archived?
         unless settings['exclude_timestamps']
-          text I18n.t('projects.reports.elements.result_text.user_time',
-                      timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+          text '| ' if step_text.name.present?
+          if step_text.archived?
+            text I18n.t('projects.reports.elements.archived_metadata',
+                        datetime: I18n.l(step_text.step_orderable_element.archived_on, format: :full),
+                        user: step_text.step_orderable_element.archived_by&.full_name), color: color[:gray]
+          else
+            text I18n.t('projects.reports.elements.result_text.user_time',
+                        timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+          end
         end
       end
     end

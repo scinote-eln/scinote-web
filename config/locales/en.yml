@@ -901,6 +901,8 @@ en:
           step_well_plates: "Step well plates"
           step_forms: "Step forms"
           step_comments: "Step comments"
+          archived_steps: "Archived steps and components"
+          archived_results: "Archived results and components"
           assigned_items: "Assigned items"
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
           assigned_items_repository_items_description_html: "You can customize inventory columns <strong>only for the docx report.</strong> The stock management column by default reflects item consumption."
@@ -999,6 +1001,7 @@ en:
           appended_table: "Appended table"
       elements:
         download: "[Download]"
+        archived_metadata: "Archived on %{datetime} by %{user}"
         all:
           sort_asc: "Sort report element contents by oldest on top"
           sort_desc: "Sort report element contents by newest on top"

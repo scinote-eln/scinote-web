@@ -8,7 +8,9 @@ module Reports::Docx::DrawResults
     link_style = @link_style
     return unless can_read_my_module?(@user, my_module)
 
-    if my_module.results.any? && (%w(file_results table_results text_results).any? { |k| @settings.dig('task', k) })
+    results = @settings.dig('task', 'archived_results') ? my_module.results : my_module.results.active
+
+    if results.any? && (%w(file_results table_results text_results).any? { |k| @settings.dig('task', k) })
       if with_my_module_name
         @docx.h3 do
           link  my_module.name,
@@ -17,14 +19,22 @@ module Reports::Docx::DrawResults
         end
       end
       @docx.h4 I18n.t('Results')
-      order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result|
+
+      order_results_for_report(results, @settings.dig('task', 'result_order')).each do |result|
         @docx.p do
           text result.name.presence || I18n.t('projects.reports.unnamed'), italic: true
-          text "  #{I18n.t('search.index.archived')} ", bold: true if result.archived?
+          text " | #{I18n.t('search.index.archived')} ", bold: true if result.archived?
           unless settings['exclude_timestamps']
-            text I18n.t('projects.reports.elements.result.user_time',
-                        timestamp: I18n.l(result.created_at, format: :full),
-                        user: result.user.full_name), color: color[:gray]
+            text '| '
+            if result.archived?
+              text I18n.t('projects.reports.elements.archived_metadata',
+                          datetime: I18n.l(result.archived_on, format: :full),
+                          user: result.archived_by&.full_name), color: color[:gray]
+            else
+              text I18n.t('projects.reports.elements.result.user_time',
+                          timestamp: I18n.l(result.created_at, format: :full),
+                          user: result.user.full_name), color: color[:gray]
+            end
           end
           if !settings['exclude_task_metadata'] && result.steps.size.positive?
             text ' | '
@@ -34,7 +44,8 @@ module Reports::Docx::DrawResults
           end
         end
         draw_result_asset(result, @settings) if @settings.dig('task', 'file_results')
-        result.result_orderable_elements.each do |element|
+        orderable_elements = @settings.dig('task', 'archived_results') ? result.result_orderable_elements : result.result_orderable_elements.active
+        orderable_elements.each do |element|
           if @settings.dig('task', 'table_results') && element.orderable_type == 'ResultTable'
             draw_result_table(element)
           elsif @settings.dig('task', 'text_results') && element.orderable_type == 'ResultText'

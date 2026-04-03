@@ -51,8 +51,19 @@ module Reports
           text ' '
 
           if form_response.submitted?
-            text I18n.t('projects.reports.elements.step_forms.user_time', user: form_response.submitted_by&.full_name,
-                                                                          timestamp: I18n.l(form_response.submitted_at, format: :full)), color: color[:gray]
+            text " | #{I18n.t('search.index.archived')} ", bold: true if form_response.archived?
+            unless settings['exclude_timestamps']
+              text '| '
+              if form_response.archived?
+                text I18n.t('projects.reports.elements.archived_metadata',
+                            datetime: I18n.l(form_response.step_orderable_element.archived_at, format: :full),
+                            user: form_response.step_orderable_element.archived_by&.full_name), color: color[:gray]
+              else
+                text I18n.t('projects.reports.elements.step_forms.user_time',
+                            user: form_response.submitted_by&.full_name,
+                            timestamp: I18n.l(form_response.submitted_at, format: :full)), color: color[:gray]
+              end
+            end
           else
             text I18n.t('projects.reports.elements.step_forms.not_submitted'), color: color[:gray]
           end

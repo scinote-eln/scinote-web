@@ -151,6 +151,8 @@ class Step < ApplicationRecord
   end
 
   def position_plus_one
+    return '' if position.nil?
+
     position + 1
   end
 

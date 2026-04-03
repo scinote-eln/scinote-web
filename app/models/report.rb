@@ -52,12 +52,14 @@ class Report < ApplicationRecord
         step_tables: true,
         step_comments: true,
         step_forms: true,
-        step_well_plates: true
+        step_well_plates: true,
+        archived_steps: false
       },
       file_results: true,
       file_results_previews: false,
       table_results: true,
       text_results: true,
+      archived_results: true,
       result_comments: true,
       result_order: 'new',
       activities: true,

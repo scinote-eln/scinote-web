@@ -72,7 +72,8 @@ module Reports::Docx::DrawMyModule
 
     draw_my_module_protocol(my_module)
 
-    filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step|
+    steps = @settings.dig('task', 'protocol', 'archived_steps') ? my_module.protocol.steps : my_module.protocol.steps.active
+    filter_steps_for_report(steps, @settings).order(:position).each do |step|
       draw_step(step)
     end
     @docx.p
