@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="actions-block gap-4">
-      <% if protocol.steps.length > 0 %>
+      <% if protocol.steps.active.length > 0 %>
         <button class="btn btn-secondary" id="steps-collapse-btn" tabindex="0">
           <%= t("protocols.steps.collapse_label") %>
         </button>
@@ -56,7 +56,7 @@
     <div>
       <div id="protocol-steps-container">
         <div class="protocol-steps">
-          <% protocol.steps.sort_by(&:position).each do |step| %>
+          <% protocol.steps.active.sort_by(&:position).each do |step| %>
             <div class="step-block">
               <%= render partial: "shareable_links/my_modules/step", locals: { step: step } %>
               <%= render partial: "shareable_links/my_modules/step_comments_sidebar", locals: { step: step } %>
