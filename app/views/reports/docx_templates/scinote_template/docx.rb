@@ -14,7 +14,7 @@ module ScinoteTemplateDocx
       if settings['report_info_metadata']
         text I18n.t('projects.reports.new.generate_PDF.generated_on_with_info', subdomain: subdomain,
                                                                                 timestamp: I18n.l(Time.zone.now, format: :full),
-                                                                                reportid: report.id,
+                                                                                reportid: report.code,
                                                                                 version: Scinote::Application::VERSION)
       else
         text I18n.t('projects.reports.new.generate_PDF.generated_on', timestamp: I18n.l(Time.zone.now, format: :full))
