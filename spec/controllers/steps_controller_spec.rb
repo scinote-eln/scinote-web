@@ -6,6 +6,7 @@ describe StepsController, type: :controller do
   login_user
 
   include_context 'reference_project_structure', {
+    record_deletion_enabled: true,
     step: true
   }
 
@@ -13,6 +14,7 @@ describe StepsController, type: :controller do
     create :protocol, :in_repository_draft, team: team, added_by: user
   end
   let(:step_repo) { create :step, protocol: protocol_repo }
+  let(:archived_step) { create :step, protocol: my_module.protocol, user: user, archived: true, archived_by: user, archived_on: Time.zone.now }
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
@@ -127,7 +129,7 @@ describe StepsController, type: :controller do
     end
 
     context 'when in protocol on task' do
-      let(:params) { { id: step.id } }
+      let(:params) { { id: archived_step.id } }
 
       it 'calls create activity for deleting step in protocol on task' do
         expect(Activities::CreateActivityService)

@@ -44,7 +44,7 @@
             <i class="sn-icon sn-icon-restore"></i>
           </button>
           <button
-            v-if="this.element.attributes.orderable.urls.delete_url"
+            v-if="this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url"
             class="btn icon-btn btn-light"
             @click="showDeleteModal"
             :title="i18n.t('general.delete')"
@@ -232,7 +232,7 @@ export default {
           data_e2e: `e2e-BT-${this.dataE2e}-checklist${this.element.id}-options-move`
         });
       }
-      if (this.element.attributes.orderable.urls.delete_url) {
+      if (!this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url) {
         menu.push({
           text: I18n.t('general.delete'),
           emit: 'delete',

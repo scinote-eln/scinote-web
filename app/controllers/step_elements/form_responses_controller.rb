@@ -2,11 +2,15 @@
 
 module StepElements
   class FormResponsesController < BaseController
+    before_action :check_create_permissions, only: :create
     before_action :check_forms_enabled, except: %i(destroy)
     before_action :load_form, only: :create
     before_action :load_step, only: :create
     before_action :load_form_response, except: :create
-    skip_before_action :check_manage_permissions, only: %i(submit reset)
+    before_action :check_manage_permissions, except: %i(create archive restore destroy submit reset)
+    before_action :check_archive_permissions, only: :archive
+    before_action :check_restore_permissions, only: :restore
+    before_action :check_delete_permissions, only: :destroy
 
     def create
       render_403 and return unless can_create_protocol_form_responses?(@step.protocol)
@@ -109,6 +113,22 @@ module StepElements
 
     def check_forms_enabled
       render_404 unless Form.forms_enabled?
+    end
+
+    def check_manage_permissions
+      render_403 unless can_manage_step_orderable_element?(@form_response.step_orderable_element)
+    end
+
+    def check_archive_permissions
+      render_403 unless can_archive_step_orderable_element?(@form_response.step_orderable_element)
+    end
+
+    def check_restore_permissions
+      render_403 unless can_restore_step_orderable_element?(@form_response.step_orderable_element)
+    end
+
+    def check_delete_permissions
+      render_403 unless can_delete_step_orderable_element?(@form_response.step_orderable_element)
     end
 
     def log_step_form_activity(element_type_of, message_items = {})

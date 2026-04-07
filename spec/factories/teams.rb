@@ -22,7 +22,8 @@ FactoryBot.define do
             team.settings.merge(
               {
                 'repository_deletion_enabled' => true,
-                'result_deletion_enabled' => true
+                'result_deletion_enabled' => true,
+                'protocol_steps_deletion_enabled' => true
               }
             )
         )

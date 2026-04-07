@@ -3,7 +3,6 @@
 module ResultElements
   class BaseController < ApplicationController
     before_action :load_result_and_parent
-    before_action :check_manage_permissions
 
     def move_targets
       targets = @parent.results
@@ -24,7 +23,7 @@ module ResultElements
       current_team_switch(@parent.team) if current_team != @parent.team
     end
 
-    def check_manage_permissions
+    def check_create_permissions
       render_403 unless can_manage_result?(@result)
     end
 
@@ -39,6 +38,22 @@ module ResultElements
 
         result_orderable_element.result_id = result.id
         result_orderable_element.save!
+      end
+    end
+
+    def archive_element!(result, orderable_element)
+      ActiveRecord::Base.transaction do
+        orderable_element.position = nil
+        orderable_element.archive!(current_user)
+        result.normalize_elements_position
+      end
+    end
+
+    def restore_element!(result, orderable_element)
+      ActiveRecord::Base.transaction do
+        position = result.result_orderable_elements.active.maximum(:position)
+        orderable_element.position = position ? position + 1 : 0
+        orderable_element.restore!(current_user)
       end
     end
 

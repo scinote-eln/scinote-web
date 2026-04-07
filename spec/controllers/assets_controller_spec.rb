@@ -20,6 +20,11 @@ describe AssetsController, type: :controller do
   let!(:asset) { create :asset }
   let(:step_asset_in_repository) { create :step_asset, step: step_in_repository, asset: asset }
 
+  let!(:archived_asset) { create :asset, archived: true, archived_by: user, archived_on: Time.zone.now }
+
+  let(:archived_step_asset) { create :step_asset, step: step_asset.step, asset: archived_asset }
+  let(:archived_result_asset) { create :result_asset, result: result_asset.result, asset: archived_asset }
+
   def expect_success_json
     expect(response).to have_http_status(:success)
     expect(response.media_type).to eq('application/json')
@@ -348,7 +353,7 @@ describe AssetsController, type: :controller do
     let(:action) { delete :destroy, params: { id: element_id } }
 
     context 'when in task step' do
-      let(:element_id) { step_asset.asset.id }
+      let(:element_id) { archived_step_asset.asset.id }
       it 'destroy' do
         action  
         expect_success_json
@@ -356,7 +361,7 @@ describe AssetsController, type: :controller do
     end
 
     context 'when in task result' do
-      let(:element_id) { result_asset.asset.id }
+      let(:element_id) { archived_result_asset.asset.id }
       it 'destroy' do
         action  
         expect_success_json

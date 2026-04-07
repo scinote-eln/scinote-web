@@ -13,8 +13,10 @@ class StepsController < ApplicationController
   before_action :check_protocol_manage_permissions, only: %i(reorder add_protocol_steps)
   before_action :check_view_permissions, only: %i(show index list attachments elements list_protocol_steps)
   before_action :check_create_permissions, only: %i(create)
-  before_action :check_manage_permissions, only: %i(update destroy
-                                                    update_view_state update_asset_view_mode upload_attachment archive restore)
+  before_action :check_manage_permissions, only: %i(update update_view_state update_asset_view_mode upload_attachment)
+  before_action :check_archive_permissions, only: :archive
+  before_action :check_restore_permissions, only: :restore
+  before_action :check_destroy_permissions, only: :destroy
   before_action :check_complete_and_checkbox_permissions, only: :toggle_step_state
   before_action :check_skip_pemissions, only: :toggle_step_skip_state
 
@@ -246,16 +248,14 @@ class StepsController < ApplicationController
       previous_size = @step.space_taken
 
       # Generate activity
-      if @step.active?
-        if @protocol.in_module?
-          log_activity(
-            :destroy_step,
-            @my_module.experiment.project,
-            { my_module: @my_module.id }.merge(step_message_items)
-          )
-        else
-          log_activity(:delete_step_in_protocol_repository, nil, { protocol: @protocol.id }.merge(step_message_items))
-        end
+      if @protocol.in_module?
+        log_activity(
+          :destroy_step,
+          @my_module.experiment.project,
+          { my_module: @my_module.id }.merge(step_message_items)
+        )
+      else
+        log_activity(:delete_step_in_protocol_repository, nil, { protocol: @protocol.id }.merge(step_message_items))
       end
 
       # Destroy the step
@@ -439,6 +439,18 @@ class StepsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_step?(@step)
+  end
+
+  def check_archive_permissions
+    render_403 unless can_archive_step?(@step)
+  end
+
+  def check_restore_permissions
+    render_403 unless can_restore_step?(@step)
+  end
+
+  def check_destroy_permissions
+    render_403 unless can_delete_step?(@step)
   end
 
   def check_create_permissions

@@ -153,32 +153,27 @@ class AssetSerializer < ActiveModel::Serializer
       marvin_js_icon: image_path('icon_small/marvinjs.svg'),
       versions: (asset_versions_path(object) if attached)
     }
+
     user = scope[:user] || @instance_options[:user]
     if managable?
-      if object.archived?
-        urls.merge!(
-          restore: asset_restore_path(object),
-          delete: asset_destroy_path(object)
-        )
-      else
-        urls.merge!(
-          toggle_view_mode: toggle_view_mode_path(object),
-          edit_asset: edit_asset_path(object),
-          marvin_js_start_edit: start_editing_marvin_js_asset_path(object),
-          start_edit_image: start_edit_image_path(object),
-          archive: asset_archive_path(object),
-          duplicate: asset_duplicate_path(object),
-          move_targets: asset_move_tagets_path(object),
-          move: asset_move_path(object),
-          rename: asset_rename_path(object)
-        )
-      end
+      urls.merge!(
+        toggle_view_mode: toggle_view_mode_path(object),
+        edit_asset: edit_asset_path(object),
+        marvin_js_start_edit: start_editing_marvin_js_asset_path(object),
+        start_edit_image: start_edit_image_path(object),
+        duplicate: asset_duplicate_path(object),
+        move_targets: asset_move_tagets_path(object),
+        move: asset_move_path(object),
+        rename: asset_rename_path(object)
+      )
+      urls[:archive] = asset_archive_path(object) unless object.parent.respond_to?(:protocol) && object.parent.protocol.in_repository?
     end
-
-    urls[:restore_version] = asset_restore_version_path(object) if can_restore_asset?(user, object)
+    urls[:restore] = asset_restore_path(object) if can_restore_asset?(user, object)
+    urls[:delete] = asset_destroy_path(object) if can_delete_asset?(user, object)
+    urls[:restore_version] = asset_restore_version_path(object) if can_restore_asset_version?(user, object)
     urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if managable?
 
-    if !object.archived? && managable? && can_open_asset_locally?(user, object)
+    if managable? && can_open_asset_locally?(user, object)
       urls[:open_locally] = asset_sync_show_path(object)
       urls[:open_locally_api] = Constants::ASSET_SYNC_URL
       urls[:asset_show] = asset_show_path(object)

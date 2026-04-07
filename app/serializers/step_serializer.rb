@@ -28,7 +28,7 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def assets
-    object.assets if object.archived?
+    return object.assets if object.archived?
 
     view_mode = @instance_options[:view_mode]
     if view_mode == 'archived'
@@ -109,34 +109,34 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def attachments_manageble
-    can_manage_step?(object)
+    @instance_options[:view_mode] == 'archived' ? false : can_manage_step?(object)
   end
 
   def urls
-    urls_list = {
+    url_list = {
       elements_url: elements_step_path(object),
       attachments_url: attachments_step_path(object)
     }
 
     if object.my_module && (object.skipped_at ? can_unskip_my_module_steps?(object.my_module) : can_skip_my_module_steps?(object.my_module))
-      urls_list[:skip_url] = toggle_step_skip_state_step_path(object)
+      url_list[:skip_url] = toggle_step_skip_state_step_path(object)
     end
 
     if object.my_module && (object.completed ? can_uncomplete_my_module_steps?(object.my_module) : can_complete_my_module_steps?(object.my_module))
-      urls_list[:state_url] = toggle_step_state_step_path(object)
+      url_list[:state_url] = toggle_step_state_step_path(object)
     end
 
     if can_manage_protocol_in_module?(object.protocol) || can_manage_protocol_draft_in_repository?(object.protocol)
-      urls_list[:duplicate_step_url] = duplicate_step_path(object)
+      url_list[:duplicate_step_url] = duplicate_step_path(object)
     end
 
-    urls_list[:archive_url] = archive_step_path(object) if object.my_module && object.active? && can_manage_step?(object)
-    urls_list[:restore_url] = restore_step_path(object) if object.my_module && !object.active? && can_manage_step?(object)
+    url_list[:archive_url] = archive_step_path(object) if can_archive_step?(object)
+    url_list[:restore_url] = restore_step_path(object) if can_restore_step?(object)
 
-    urls_list[:delete_url] = step_path(object) if (object.my_module && !object.active? || !object.my_module) && can_manage_step?(object)
+    url_list[:delete_url] = step_path(object) if can_delete_step?(object)
 
     if can_manage_step?(object)
-      urls_list.merge!({
+      url_list.merge!({
         update_url: step_path(object),
         create_table_url: step_tables_path(object),
         create_text_url: step_texts_path(object),
@@ -148,10 +148,10 @@ class StepSerializer < ActiveModel::Serializer
         reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)
       })
 
-      urls_list[:create_form_response_url] = step_form_responses_path(object) if Form.forms_enabled?
+      url_list[:create_form_response_url] = step_form_responses_path(object) if Form.forms_enabled?
     end
 
-    urls_list
+    url_list
   end
 
   def created_at

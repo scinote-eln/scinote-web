@@ -50,6 +50,9 @@ export default {
     myModuleId: {
       required: true
     },
+    protocolId: {
+      required: true
+    }
   },
   data() {
     return {

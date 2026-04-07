@@ -45,7 +45,7 @@ RSpec.describe "Api::Service::StepsController", type: :request do
       let(:request_body) do
         { step_element_order:
             @step.step_orderable_elements.pluck(:id).each_with_index.map do |id, i|
-              { id: id, position: @step.next_element_position - 1 - i }
+              { id: id, position: @step.step_orderable_elements.length - 1 - i }
             end
         }
       end
@@ -68,7 +68,7 @@ RSpec.describe "Api::Service::StepsController", type: :request do
       let(:request_body) do
         { step_element_order:
           @step.step_orderable_elements.last(2).pluck(:id).each_with_index.map do |id, i|
-              { id: id, position: @step.next_element_position - 1 - i }
+              { id: id, position: @step.step_orderable_elements.length - 1 - i }
             end
         }
       end

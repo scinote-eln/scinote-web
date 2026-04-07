@@ -251,12 +251,14 @@ import LinkStepsModal from './modals/link_steps.vue'
 import ContentToolbar from '../shared/content/content_toolbar';
 import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
 import archiveResultModal from './modals/archive_result.vue';
+import deleteResultModal from './delete_result.vue';
 
 import AttachmentsMixin from '../shared/content/mixins/attachments.js';
 import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js';
 import OveMixin from '../shared/content/attachments/mixins/ove.js';
 import UtilsMixin from '../mixins/utils.js';
 import ResultCommonMixin from './mixins/result_common.js';
+import DeleteMixin from '../shared/content/mixins/delete.js';
 import StorageUsage from '../shared/content/attachments/storage_usage.vue';
 
 export default {
@@ -323,7 +325,7 @@ export default {
       editingName: false
     };
   },
-  mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, ResultCommonMixin],
+  mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, ResultCommonMixin, DeleteMixin],
   components: {
     ReorderableItemsModal,
     ResultTable,
@@ -336,7 +338,8 @@ export default {
     CustomWellPlateModal,
     LinkStepsModal,
     GeneralDropdown,
-    archiveResultModal
+    archiveResultModal,
+    deleteResultModal
   },
   watch: {
     activeDragResult() {
@@ -432,6 +435,13 @@ export default {
           text: this.i18n.t('my_modules.results.actions.archive'),
           emit: 'archive',
           data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-archive`
+        }]);
+      }
+      if (this.urls.delete_url) {
+        menu = menu.concat([{
+          text: this.i18n.t('my_modules.results.actions.delete'),
+          emit: 'delete',
+          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-delete`
         }]);
       }
       return menu;
