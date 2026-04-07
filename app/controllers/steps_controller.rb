@@ -248,16 +248,14 @@ class StepsController < ApplicationController
       previous_size = @step.space_taken
 
       # Generate activity
-      if @step.active?
-        if @protocol.in_module?
-          log_activity(
-            :destroy_step,
-            @my_module.experiment.project,
-            { my_module: @my_module.id }.merge(step_message_items)
-          )
-        else
-          log_activity(:delete_step_in_protocol_repository, nil, { protocol: @protocol.id }.merge(step_message_items))
-        end
+      if @protocol.in_module?
+        log_activity(
+          :destroy_step,
+          @my_module.experiment.project,
+          { my_module: @my_module.id }.merge(step_message_items)
+        )
+      else
+        log_activity(:delete_step_in_protocol_repository, nil, { protocol: @protocol.id }.merge(step_message_items))
       end
 
       # Destroy the step
