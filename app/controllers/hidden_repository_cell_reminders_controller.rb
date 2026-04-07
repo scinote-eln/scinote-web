@@ -10,7 +10,7 @@ class HiddenRepositoryCellRemindersController < ApplicationController
     hidden_repository_cell_reminder =
       current_user.hidden_repository_cell_reminders.create!(repository_cell_id: params[:repository_cell_id])
 
-    render json: hidden_repository_cell_reminder, status: :ok
+    render json: hidden_repository_cell_reminder.as_json.merge(reminder_count: remaining_reminder_count), status: :ok
   end
 
   def create_all
@@ -22,10 +22,7 @@ class HiddenRepositoryCellRemindersController < ApplicationController
       user.hidden_repository_cell_reminders.create!(repository_cell_id: repository_cell_id)
     end
 
-    reminder_count =
-      @repository_row.repository_cells.with_active_reminder(current_user).distinct.count
-
-    render json: hidden_repository_cell_reminder.as_json.merge(reminder_count: reminder_count), status: :ok
+    render json: hidden_repository_cell_reminder.as_json.merge(reminder_count: remaining_reminder_count), status: :ok
   end
 
   private
@@ -46,5 +43,9 @@ class HiddenRepositoryCellRemindersController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_repository_rows?(@repository)
+  end
+
+  def remaining_reminder_count
+    @repository_row.repository_cells.with_active_reminder(current_user).distinct.count
   end
 end
