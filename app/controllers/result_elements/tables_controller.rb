@@ -164,7 +164,7 @@ module ResultElements
       smart_annotation_notification(
         old_text: old_content,
         new_text: @table.contents,
-        subject: @result,
+        subject: @table.result_table.result_orderable_element,
         title: t(@table.metadata['plateTemplate'] ? 'notifications.result_well_plate_annotation_title' : 'notifications.result_table_annotation_title',
                  result: @result.name,
                  user: current_user.full_name)
