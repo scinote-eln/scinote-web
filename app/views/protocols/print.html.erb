@@ -20,7 +20,7 @@
     <em><%= t('my_modules.protocols.protocol_status_bar.no_description') %></em>
   <% end %>
 </div>
-<% @protocol.steps.order(position: :asc).each do |step| %>
+<% @protocol.steps.active.order(position: :asc).each do |step| %>
   <div class="print-step">
     <h2 class="step-check-circle-checked">
       <% if step.skipped_at %>
@@ -33,7 +33,7 @@
       <%= step.position + 1 %>. <%= step.name %>
     </h2>
 
-    <% step.step_orderable_elements.order(position: :asc).each do |step_element| %>
+    <% step.step_orderable_elements.active.order(position: :asc).each do |step_element| %>
       <% case step_element.orderable_type %>
       <% when 'StepText' %>
         <% step_text = step_element.orderable %>
@@ -77,7 +77,7 @@
       <% end %>
     <% end %>
 
-    <% step.assets.where(view_mode: "inline").each do |asset| %>
+    <% step.assets.active.where(view_mode: "inline").each do |asset| %>
         <div class="print-asset inline">
           <div class="print-asset-image">
             <% if asset.previewable? %>
@@ -88,14 +88,14 @@
         </div>
         <div class="page-break"></div>
     <% end %>
-    <% step.assets.where(view_mode: "list").each do |asset| %>
+    <% step.assets.active.where(view_mode: "list").each do |asset| %>
         <div class="print-asset list">
           <span class="print-asset-icon"><%= file_extension_icon_html(asset) %></span>
           <span><%= asset.render_file_name %></span>
         </div>
     <% end %>
     <div class="print-thumbnails">
-      <% step.assets.where(view_mode: "thumbnail").each do |asset| %>
+      <% step.assets.active.where(view_mode: "thumbnail").each do |asset| %>
         <div class="print-asset thumbnail">
           <div class="print-asset-image">
             <% if asset.previewable? %>

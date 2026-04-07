@@ -9,7 +9,7 @@
             <span class="sn-icon sn-icon-right "></span>
         </a>
         <div class="flex flex-col gap-2">
-          <div class="flex items-center justify-center cursor-pointer 
+          <div class="flex items-center justify-center cursor-pointer
                       step-element--locked <%= step.completed ? 'text-sn-alert-green' : 'text-sn-grey-700' %>"
                tabindex="0">
             <i class="sn-icon <%= step.completed ? 'sn-icon-task-status-completed' : 'sn-icon-task-status-uncompleted' %>"></i>
@@ -75,7 +75,7 @@
 
   <div class="collapse <%= 'in' unless step.skipped_at %>" id="stepBody<%= step.id %>">
     <div class="step-elements">
-      <% step.step_orderable_elements.sort_by(&:position).each do |element| %>
+      <% step.step_orderable_elements.active.sort_by(&:position).each do |element| %>
         <% if element.orderable_type == 'StepText' %>
           <%= render partial: "shareable_links/my_modules/step_elements/text", locals: { element: element.orderable } %>
         <% elsif element.orderable_type == 'Checklist' %>
@@ -86,8 +86,8 @@
           <%= render partial: "shareable_links/my_modules/step_elements/form_response", locals: { element: element.orderable } %>
         <% end %>
       <% end %>
-      <% if step.step_assets.present? %>
-        <%= render partial: "shareable_links/my_modules/attachments", locals: { attachments: step.assets } %>
+      <% if step.assets.active.present? %>
+        <%= render partial: "shareable_links/my_modules/attachments", locals: { attachments: step.assets.active } %>
       <% end %>
     </div>
   </div>
