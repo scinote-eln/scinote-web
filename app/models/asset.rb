@@ -9,6 +9,7 @@ class Asset < ApplicationRecord
   include ActiveStorageHelper
   include VersionedAttachments
   include ArchivableModel
+  include ObservableModel
 
   require 'tempfile'
   # Lock duration set to 30 minutes
@@ -479,5 +480,9 @@ class Asset < ApplicationRecord
 
   def reset_file_processing
     self.file_processing = false
+  end
+
+  def changed_by
+    last_modified_by
   end
 end

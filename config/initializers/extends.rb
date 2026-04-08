@@ -918,7 +918,7 @@ class Extends
     'FormResponse' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'StepOrderableElement' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'StepText' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
-    'Step' => ['AutomationObservers::StepCompletionObserver', 'AutomationObservers::AllStepsCompletionObserver', 'AutomationObservers::TaskProtocolContentChangeObserver'],
+    'Step' => ['AutomationObservers::StepCompletionObserver', 'AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::AllStepsCompletionObserver'],
     'ResultBase' => ['AutomationObservers::ResultContentChangeObserver'],
     'ResultText' => ['AutomationObservers::ResultContentChangeObserver'],
     'ResultComment' => ['AutomationObservers::ResultContentChangeObserver'],
