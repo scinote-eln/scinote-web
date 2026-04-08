@@ -58,7 +58,7 @@ class MyModuleRepositoriesController < ApplicationController
     # In new tables we don't using unfiltered_count, so total count is equal to filtered count
     total_count = @my_module.repository_rows_count(@repository)
     filtered_count = repository_rows.take&.filtered_count.to_i
-    total_pages = (total_count.to_f / params[:per_page].to_i).ceil
+    total_pages = (filtered_count.to_f / params[:per_page].to_i).ceil
 
     serializer = can_read_repository?(@repository) ? Lists::RepositoryRowSerializer : Lists::PrivateRepositoryRowSerializer
 
@@ -89,7 +89,7 @@ class MyModuleRepositoriesController < ApplicationController
 
     total_count = @repository.repository_rows.count
     filtered_count = repository_rows.take&.filtered_count.to_i
-    total_pages = (total_count.to_f / params[:per_page].to_i).ceil
+    total_pages = (filtered_count.to_f / params[:per_page].to_i).ceil
 
     render json: repository_rows,
            each_serializer: Lists::RepositoryRowSerializer,
