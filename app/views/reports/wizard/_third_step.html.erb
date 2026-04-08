@@ -166,7 +166,7 @@
           <ul class="results-type-contents report-result-settings">
             <li>
               <span class="sci-checkbox-container">
-                <input type="checkbox" class="sci-checkbox task-setting" value="archived_results" <%= 'checked' if report.settings.dig(:task, :text_results) %>/>
+                <input type="checkbox" class="sci-checkbox task-setting" value="archived_results" <%= 'checked' if report.settings.dig(:task, :archived_results) %>/>
                 <span class="sci-checkbox-label"></span>
               </span>
               <%= t("projects.reports.wizard.third_step.archived_results") %>
