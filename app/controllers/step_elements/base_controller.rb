@@ -17,7 +17,7 @@ module StepElements
       @protocol = @step.protocol
     end
 
-    def check_create_permissions
+    def check_manage_step_permissions
       render_403 unless can_manage_step?(@step)
     end
 

@@ -47,7 +47,12 @@ class ResultsController < ResultBaseController
   end
 
   def assets
-    render json: @result.assets.preload(:preview_image_attachment, file_attachment: :blob, result: { my_module: { experiment: :project, user_assignments: %i(user user_role) } }),
+    assets = if params[:view_mode] == 'archived'
+               @result.assets.where(archived: true)
+             else
+               @result.assets.active
+             end
+    render json: assets.preload(:preview_image_attachment, file_attachment: :blob, result: { my_module: { experiment: :project, user_assignments: %i(user user_role) } }),
            each_serializer: AssetSerializer,
            user: current_user,
            managable_result: can_manage_result?(@result)

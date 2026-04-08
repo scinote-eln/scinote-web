@@ -63,7 +63,12 @@ class ResultBaseController < ApplicationController
   end
 
   def elements
-    render json: @result.result_orderable_elements.order(:position),
+    elements = if params[:view_mode] == 'archived'
+                 @result.result_orderable_elements.where(archived: true)
+               else
+                 @result.result_orderable_elements.active.order(:position)
+               end
+    render json: elements,
            each_serializer: ResultOrderableElementSerializer,
            user: current_user
   end

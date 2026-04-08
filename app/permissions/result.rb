@@ -86,8 +86,11 @@ Canaid::Permissions.register_for(ResultOrderableElement) do
   end
 
   can :delete_result_orderable_element do |_, result_orderable_element|
-    (result_orderable_element.result.is_a?(ResultTemplate) || result_orderable_element.archived?) &&
-      result_orderable_element.result.team.settings['result_deletion_enabled'] &&
+    if result_orderable_element.result.is_a?(ResultTemplate)
       result_orderable_element.result.unlocked?(result_orderable_element.result)
+    else
+      result_orderable_element.archived? && result_orderable_element.result.team.settings['result_deletion_enabled'] &&
+        result_orderable_element.result.unlocked?(result_orderable_element.result)
+    end
   end
 end

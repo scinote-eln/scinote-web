@@ -28,7 +28,7 @@ module Api
         @step.with_lock do
           checklist.save!
           @step.step_orderable_elements.create!(
-            position: @step.step_orderable_elements.size,
+            position: @step.next_element_position,
             orderable: checklist
           )
         end

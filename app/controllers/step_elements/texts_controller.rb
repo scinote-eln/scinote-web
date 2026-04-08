@@ -5,12 +5,14 @@ module StepElements
     include ApplicationHelper
     include StepsActions
 
-    before_action :check_create_permissions, only: :create
+    # rubocop:disable Rails/LexicallyScopedActionFilter
+    before_action :check_manage_step_permissions, only: %i(create move_targets)
     before_action :load_step_text, only: %i(update destroy duplicate move archive restore)
-    before_action :check_manage_permissions, except: %i(create archive restore destroy)
+    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets)
     before_action :check_archive_permissions, only: :archive
     before_action :check_restore_permissions, only: :restore
     before_action :check_delete_permissions, only: :destroy
+    # rubocop:enable Rails/LexicallyScopedActionFilter
 
     def create
       step_text = @step.step_texts.build
@@ -43,7 +45,7 @@ module StepElements
       target = @protocol.steps.find_by(id: params[:target_id])
       ActiveRecord::Base.transaction do
         @step_text.update!(step: target)
-        @step_text.step_orderable_element.update!(step: target, position: target.step_orderable_elements.size)
+        @step_text.step_orderable_element.update!(step: target, position: target.next_element_position)
         @step.normalize_elements_position
 
         log_step_activity(

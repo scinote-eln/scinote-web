@@ -23,7 +23,7 @@ module ResultElements
       current_team_switch(@parent.team) if current_team != @parent.team
     end
 
-    def check_create_permissions
+    def check_manage_result_permissions
       render_403 unless can_manage_result?(@result)
     end
 

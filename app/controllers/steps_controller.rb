@@ -58,14 +58,25 @@ class StepsController < ApplicationController
   end
 
   def elements
-    render json: @step.step_orderable_elements.order(:position),
+    elements = if params[:view_mode] == 'archived'
+                 @step.step_orderable_elements.where(archived: true)
+               else
+                 @step.step_orderable_elements.active.order(:position)
+               end
+
+    render json: elements,
            each_serializer: StepOrderableElementSerializer,
            user: current_user
   end
 
   def attachments
-    render json: @step.assets.preload(:preview_image_attachment, file_attachment: :blob,
-                                      step: { protocol: { my_module: { experiment: :project, user_assignments: %i(user user_role) } } }),
+    assets = if params[:view_mode] == 'archived'
+               @step.assets.where(archived: true)
+             else
+               @step.assets.active
+             end
+    render json: assets.preload(:preview_image_attachment, file_attachment: :blob,
+                                step: { protocol: { my_module: { experiment: :project, user_assignments: %i(user user_role) } } }),
            each_serializer: AssetSerializer,
            user: current_user,
            managable_step: can_manage_step?(@step)

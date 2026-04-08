@@ -26,7 +26,7 @@ module Api
 
           @result.with_lock do
             @result.result_orderable_elements.create!(
-              position: @result.result_orderable_elements.size,
+              position: @result.next_element_position,
               orderable: table.result_table
             )
 
