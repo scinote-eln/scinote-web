@@ -7,7 +7,7 @@ export default {
         .then((result) => {
           this.$emit(
             'component:archive',
-            this.element.attributes.position
+            this.element.id
           );
         });
     },
@@ -16,7 +16,7 @@ export default {
         .then((result) => {
           this.$emit(
             'component:restore',
-            this.element.attributes.position
+            this.element.id
           );
         });
     }

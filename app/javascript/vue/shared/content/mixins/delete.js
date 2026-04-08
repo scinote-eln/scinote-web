@@ -18,7 +18,7 @@ export default {
         .then((result) => {
           this.$emit(
             'component:delete',
-            this.element.attributes.position
+            this.element.id
           );
         });
     }

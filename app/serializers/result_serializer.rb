@@ -55,9 +55,10 @@ class ResultSerializer < ResultBaseSerializer
   end
 
   def urls
+    view_mode = 'archived' if @instance_options[:view_mode]
     url_list = {
-      elements_url: elements_my_module_result_path(object.my_module, object),
-      attachments_url: assets_my_module_result_path(object.my_module, object)
+      elements_url: elements_my_module_result_path(object.my_module, object, view_mode: view_mode),
+      attachments_url: assets_my_module_result_path(object.my_module, object, view_mode: view_mode)
     }
 
     if can_manage_result?(object)

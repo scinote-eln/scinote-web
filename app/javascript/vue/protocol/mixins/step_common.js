@@ -68,18 +68,29 @@ export default {
       this.$emit('step:collapsed');
       axios.put(user_setting_path('task_step_states'), {user_setting: settings});
     },
-    removeElement(position) {
-      this.elements.splice(position, 1);
-      let unorderedElements = this.elements.map( e => {
-        if (e.attributes.position >= position) {
-          e.attributes.position -= 1;
-        }
-        return e;
-      });
+    removeElement(id) {
+      const position = this.elements.find(el => el.id == id)?.attributes?.position;
+
+      this.elements = this.elements
+                          .filter(el => el.id !== id)
+                          .map(el => {
+                            if (el.attributes.position >= position) {
+                              el.attributes.position--;
+                            }
+                            return el;
+                          });
+
+      if (!this.elements.length && !this.attachments.length) {
+        this.$emit('step:empty', this.step.id);
+      }
+
       this.$emit('stepUpdated');
     },
     attachmentDeleted(id) {
       this.attachments = this.attachments.filter((a) => a.id !== id );
+      if(this.elements.length === 0 && this.attachments.length === 0) {
+        this.$emit('step:empty', this.step.id);
+      }
       this.$emit('stepUpdated');
     },
     loadElements() {

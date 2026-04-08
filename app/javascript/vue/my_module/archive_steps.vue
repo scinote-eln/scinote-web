@@ -22,6 +22,7 @@
           @step:deleted="removeStep"
           @step:restored="removeStep"
           @step:collapsed="checkStepsState"
+          @step:empty="removeStep"
         />
         <div v-if="!loadingOverlay && steps.length === 0" class="px-4 py-6 bg-white my-4 text-gray-500">
           {{ i18n.t('protocols.steps.no_steps_placeholder') }}

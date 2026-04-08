@@ -113,9 +113,11 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def urls
+    view_mode = 'archived' if @instance_options[:view_mode]
+
     url_list = {
-      elements_url: elements_step_path(object),
-      attachments_url: attachments_step_path(object)
+      elements_url: elements_step_path(object, view_mode: view_mode),
+      attachments_url: attachments_step_path(object, view_mode: view_mode)
     }
 
     if object.my_module && (object.skipped_at ? can_unskip_my_module_steps?(object.my_module) : can_skip_my_module_steps?(object.my_module))

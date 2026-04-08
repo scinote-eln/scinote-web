@@ -179,6 +179,7 @@ export default {
     },
     restoreStep() {
       axios.post(this.urls.restore_url).then((response) => {
+        this.closeRestoreModal();
         this.$emit('step:restored', this.step.id);
       });
     },
