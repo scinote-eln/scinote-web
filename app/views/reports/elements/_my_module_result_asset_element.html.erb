@@ -1,5 +1,6 @@
 <% result ||= report_element.result %>
-<% assets = @settings.dig('task', 'archived_results') ? result.assets : result.assets.active %>
+<% export_all = defined? export_all and export_all %>
+<% assets = (@settings.dig('task', 'archived_results') || export_all) ? result.assets : result.assets.active %>
 <% assets.each do |asset| %>
   <% timestamp = asset.created_at %>
   <div class="report-element report-result-element report-result-asset-element">
@@ -14,7 +15,7 @@
         <% end %>
       </span>
       <div class="file-name">
-        <% if defined? export_all and export_all %>
+        <% if export_all %>
           <% file_link = @obj_filenames.dig(:assets, asset.id, :file) %>
           <a href="<%= file_link %>" class="export-all-link" >
             <em><%= file_link&.split('/')&.last %></em>
