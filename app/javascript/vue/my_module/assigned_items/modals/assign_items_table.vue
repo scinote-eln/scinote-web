@@ -4,6 +4,7 @@
     <div class="relative">
       <div class="absolute left-0 z-50 w-64 top-4">
         <SelectDropdown
+          v-if="!selectedRepositoryId"
           :optionsUrl="repositoriesUrl"
           placeholder="Select inventory"
           :searchable="true"
@@ -12,6 +13,9 @@
           @change="changeRepository"
           :e2eValue="`e2e-DD-${dataE2e}-selectInventory`"
         ></SelectDropdown>
+        <h4 v-else class="!leading-10">
+          {{ selectedRepositoryName }}
+        </h4>
       </div>
       <div v-if="repositoryVersion" :key="repositoryVersion.id" style="height: 540px">
         <DataTable
@@ -43,6 +47,7 @@
 </template>
 
 <script>
+import axios from '../../../../packs/custom_axios.js';
 import SelectDropdown from '../../../shared/select_dropdown.vue';
 import DataTable from '../../../shared/datatable/table.vue';
 import ColumnsMixin from '../../../repository/columns_mixin.js';
@@ -51,6 +56,7 @@ import {
   unassigned_rows_my_module_repository_path,
   unassigned_actions_toolbar_my_module_repository_path,
 } from '../../../../routes.js';
+
 
 export default {
   name: 'AssignItemsTable',
@@ -70,12 +76,14 @@ export default {
   created() {
     this.teamId = document.body.dataset.currentTeamId;
     if (this.selectedRepositoryId) {
-      this.disabledRepositoryDropdown = true;
       this.repositoryVersion = {
         id: this.selectedRepositoryId,
         attributes: {}
       }
-
+      axios.get(this.repositoriesUrl)
+           .then(response => {
+             this.selectedRepositoryName = response.data.data.find(repo => repo[0] == this.selectedRepositoryId)[1];
+           });
     }
   },
   watch: {
@@ -119,7 +127,8 @@ export default {
       repositoryVersion: null,
       teamId: null,
       disabledRepositoryDropdown: false,
-      reloadingTable: false
+      reloadingTable: false,
+      selectedRepositoryName: ''
     };
   },
   methods: {
