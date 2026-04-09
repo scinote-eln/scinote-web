@@ -27,13 +27,14 @@
     <button class="btn btn-light icon-btn thumbnail-action-btn"
       :title="i18n.t('attachments.thumbnail.buttons.delete')"
       @click.prevent.stop="deleteModal=true"
-      v-if="this.attachment.attributes.urls.delete">
+      v-if="this.attachment.attributes.urls.delete && this.attachment.attributes.archived">
       <i class="sn-icon sn-icon-delete"></i>
     </button>
     <ContextMenu
       :attachment="attachment"
       @attachment:viewMode="$emit('attachment:viewMode', $event)"
       @attachment:archive="$emit('attachment:archive', $event)"
+      @attachment:delete="$emit('attachment:delete', $event)"
       @attachment:moved="$emit('attachment:moved', $event)"
       @attachment:uploaded="$emit('attachment:uploaded', $event)"
       @attachment:changed="$emit('attachment:changed', $event)"

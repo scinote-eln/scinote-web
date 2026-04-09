@@ -39,33 +39,27 @@ class ChecklistSerializer < ActiveModel::Serializer
   end
 
   def urls
-    if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
-      return { checklist_items_url: step_checklist_checklist_items_path(object.step, object) }
-    end
+    url_list = { checklist_items_url: step_checklist_checklist_items_path(object.step, object) }
+    return url_list if object.destroyed?
 
+    step_orderable_element = object.step_orderable_element
     step = object.step
+    user = scope[:user] || @instance_options[:user]
 
-    url_list = if object.archived?
-                 {
-                   restore_url: restore_step_checklist_path(step, object),
-                   checklist_items_url: step_checklist_checklist_items_path(step, object)
-                 }
-               else
-                 {
-                   checklist_items_url: step_checklist_checklist_items_path(step, object),
-                   duplicate_url: duplicate_step_checklist_path(step, object),
-                   update_url: step_checklist_path(step, object),
-                   reorder_url: reorder_step_checklist_checklist_items_path(step, object),
-                   create_item_url: step_checklist_checklist_items_path(step, object),
-                   move_targets_url: move_targets_step_checklist_path(step, object),
-                   move_url: move_step_checklist_path(step, object)
-                 }
-               end
-    if object.archived? || step.protocol.in_repository?
-      url_list[:delete_url] = step_checklist_path(step, object)
-    else
-      url_list[:archive_url] = archive_step_checklist_path(step, object)
+    if can_manage_step_orderable_element?(user, step_orderable_element)
+      url_list.merge!({
+                        duplicate_url: duplicate_step_checklist_path(step, object),
+                        update_url: step_checklist_path(step, object),
+                        reorder_url: reorder_step_checklist_checklist_items_path(step, object),
+                        create_item_url: step_checklist_checklist_items_path(step, object),
+                        move_targets_url: move_targets_step_checklist_path(step, object),
+                        move_url: move_step_checklist_path(step, object)
+                      })
     end
+
+    url_list[:archive_url] = archive_step_checklist_path(step, object) if can_archive_step_orderable_element?(user, step_orderable_element)
+    url_list[:restore_url] = restore_step_checklist_path(step, object) if can_restore_step_orderable_element?(user, step_orderable_element)
+    url_list[:delete_url] = step_checklist_path(step, object) if can_delete_step_orderable_element?(user, step_orderable_element)
 
     url_list
   end

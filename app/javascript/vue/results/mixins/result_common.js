@@ -24,6 +24,9 @@ export default {
     },
     locked() {
       return !(this.urls.restore_url || this.urls.archive_url || this.urls.delete_url || this.urls.update_url);
+    },
+    archivedElement() {
+      return this.elements.some((el) => el.attributes.orderable.archived) || this.attachments.some((attachment) => attachment.attributes.archived);
     }
   },
   watch: {
@@ -84,18 +87,29 @@ export default {
 
       this.$emit('result:collapsed');
     },
-    removeElement(position) {
-      this.elements.splice(position, 1);
-      const unorderedElements = this.elements.map((e) => {
-        if (e.attributes.position >= position) {
-          e.attributes.position -= 1;
-        }
-        return e;
-      });
+    removeElement(id) {
+      const position = this.elements.find(el => el.id == id)?.attributes?.position;
+
+      this.elements = this.elements
+                          .filter(el => el.id !== id)
+                          .map(el => {
+                            if (el.attributes.position >= position) {
+                              el.attributes.position--;
+                            }
+                            return el;
+                          });
+
+      if (!this.elements.length && !this.attachments.length) {
+        this.$emit('result:empty', this.result.id);
+      }
+
       this.$emit('resultUpdated');
     },
     attachmentDeleted(id) {
       this.attachments = this.attachments.filter((a) => a.id !== id);
+      if(this.elements.length === 0 && this.attachments.length === 0) {
+        this.$emit('result:empty', this.result.id);
+      }
       this.$emit('resultUpdated');
     },
     loadElements() {
@@ -126,5 +140,10 @@ export default {
       }
       return protocols_my_module_path({ id: this.result.attributes.my_module_id }, { step_id: step_id })
     },
+    deleteResult() {
+      axios.delete(this.urls.delete_url).then((response) => {
+        this.$emit('result:deleted', this.result.id);
+      });
+    }
   }
 };

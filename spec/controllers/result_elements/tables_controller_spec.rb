@@ -4,7 +4,7 @@ describe ResultElements::TablesController, type: :controller do
   login_user
 
   let!(:user) { subject.current_user }
-  let!(:team) { create :team, created_by: user }
+  let!(:team) { create :team, :record_deletion_enabled, created_by: user }
   let!(:protocol) { create :protocol, :in_repository_draft, added_by: user, team: team }
   let!(:result_template) { create :result_template, protocol: protocol, user: user }
   let!(:result_table) { create :result_table, result: result_template  }

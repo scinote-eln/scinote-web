@@ -9,13 +9,13 @@ class ResultTemplateSerializer < ResultBaseSerializer
   end
 
   def urls
-    urls_list = {
+    url_list = {
       elements_url: elements_protocol_result_template_path(object.protocol, object),
       attachments_url: assets_protocol_result_template_path(object.protocol, object)
     }
 
     if can_manage_result?(object)
-      urls_list.merge!({
+      url_list.merge!({
                          update_url: protocol_result_template_path(object.protocol, object),
                          create_table_url: result_tables_path(object),
                          create_text_url: result_texts_path(object),
@@ -30,13 +30,13 @@ class ResultTemplateSerializer < ResultBaseSerializer
                        })
     end
 
-    urls_list[:delete_url] = protocol_result_template_path(object.protocol, object) if can_delete_result?(object)
+    url_list[:delete_url] = protocol_result_template_path(object.protocol, object) if can_delete_result?(object)
     if can_create_result_templates?(object.protocol)
-      urls_list[:duplicate_url] =
+      url_list[:duplicate_url] =
         duplicate_protocol_result_template_url(object.protocol, object)
     end
 
-    urls_list
+    url_list
   end
 
   def open_vector_editor_context

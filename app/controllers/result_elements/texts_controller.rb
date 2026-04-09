@@ -7,7 +7,14 @@ module ResultElements
     include InputSanitizeHelper
     include Rails.application.routes.url_helpers
 
+    # rubocop:disable Rails/LexicallyScopedActionFilter
+    before_action :check_manage_result_permissions, only: %i(create move_targets)
     before_action :load_result_text, only: %i(update destroy duplicate move archive restore)
+    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets)
+    before_action :check_archive_permissions, only: :archive
+    before_action :check_restore_permissions, only: :restore
+    before_action :check_delete_permissions, only: :destroy
+    # rubocop:enable Rails/LexicallyScopedActionFilter
 
     def create
       result_text = ResultText.build
@@ -44,7 +51,7 @@ module ResultElements
 
       ActiveRecord::Base.transaction do
         @result_text.update!(result: target)
-        @result_text.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
+        @result_text.result_orderable_element.update!(result: target, position: target.next_element_position)
         @result.normalize_elements_position
         render json: @result_text, serializer: ResultTextSerializer, user: current_user
 
@@ -72,13 +79,7 @@ module ResultElements
     end
 
     def archive
-      orderable_element = @result_text.result_orderable_element
-
-      ActiveRecord::Base.transaction do
-        orderable_element.position = nil
-        orderable_element.archive!(current_user)
-        # activity
-      end
+      archive_element!(@result, @result_text.result_orderable_element)
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -86,14 +87,7 @@ module ResultElements
     end
 
     def restore
-      orderable_element = @result_text.result_orderable_element
-
-      ActiveRecord::Base.transaction do
-        position = @result.result_orderable_elements.active.maximum(:position)
-        orderable_element.position = position ? position + 1 : 0
-        orderable_element.restore!(current_user)
-        #activity
-      end
+      restore_element!(@result, @result_text.result_orderable_element)
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -123,6 +117,22 @@ module ResultElements
     def load_result_text
       @result_text = @result.result_texts.find_by(id: params[:id])
       return render_404 unless @result_text
+    end
+
+    def check_manage_permissions
+      render_403 unless can_manage_result_orderable_element?(@result_text.result_orderable_element)
+    end
+
+    def check_archive_permissions
+      render_403 unless can_archive_result_orderable_element?(@result_text.result_orderable_element)
+    end
+
+    def check_restore_permissions
+      render_403 unless can_restore_result_orderable_element?(@result_text.result_orderable_element)
+    end
+
+    def check_delete_permissions
+      render_403 unless can_delete_result_orderable_element?(@result_text.result_orderable_element)
     end
 
     def result_annotation_notification(old_text = nil)

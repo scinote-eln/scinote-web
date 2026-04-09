@@ -3,7 +3,6 @@
 module StepElements
   class BaseController < ApplicationController
     before_action :load_step_and_protocol
-    before_action :check_manage_permissions
 
     def move_targets
       render json: { targets: @protocol.steps.order(:position).where.not(id: @step.id).map{|i| [i.id, i.name] } }
@@ -18,7 +17,7 @@ module StepElements
       @protocol = @step.protocol
     end
 
-    def check_manage_permissions
+    def check_manage_step_permissions
       render_403 unless can_manage_step?(@step)
     end
 

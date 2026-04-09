@@ -35,24 +35,24 @@ class ResultTableSerializer < ActiveModel::Serializer
 
     object.reload unless object.result
     user = scope[:user] || @instance_options[:user]
-
-    return {} unless can_manage_result?(user, object.result)
-
+    result_orderable_element = object.result_table.result_orderable_element
     result = object.result
 
-    if object.archived?
-      {
-        restore_url: restore_result_table_path(result, object),
-        delete_url: result_table_path(result, object)
-      }
-    else
-      {
-        duplicate_url: duplicate_result_table_path(result, object),
-        archive_url: archive_result_table_path(result, object),
-        update_url: result_table_path(result, object),
-        move_targets_url: move_targets_result_table_path(result, object),
-        move_url: move_result_table_path(result, object)
-      }
+    url_list = {}
+
+    if can_manage_result_orderable_element?(user, result_orderable_element)
+      url_list.merge!({
+                         duplicate_url: duplicate_result_table_path(result, object),
+                         update_url: result_table_path(result, object),
+                         move_targets_url: move_targets_result_table_path(result, object),
+                         move_url: move_result_table_path(result, object)
+                       })
     end
+
+    url_list[:archive_url] = archive_result_table_path(result, object) if can_archive_result_orderable_element?(user, result_orderable_element)
+    url_list[:restore_url] = restore_result_table_path(result, object) if can_restore_result_orderable_element?(user, result_orderable_element)
+    url_list[:delete_url] = result_table_path(result, object) if can_delete_result_orderable_element?(user, result_orderable_element)
+
+    url_list
   end
 end

@@ -5,7 +5,14 @@ module StepElements
     include ApplicationHelper
     include StepsActions
 
+    # rubocop:disable Rails/LexicallyScopedActionFilter
+    before_action :check_manage_step_permissions, only: %i(create move_targets)
     before_action :load_table, only: %i(update destroy duplicate move archive restore)
+    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets)
+    before_action :check_archive_permissions, only: :archive
+    before_action :check_restore_permissions, only: :restore
+    before_action :check_delete_permissions, only: :destroy
+    # rubocop:enable Rails/LexicallyScopedActionFilter
 
     def create
       predefined_table_dimensions = create_table_params[:tableDimensions].map(&:to_i)
@@ -67,7 +74,7 @@ module StepElements
       step_table = @table.step_table
       ActiveRecord::Base.transaction do
         step_table.update!(step: target)
-        step_table.step_orderable_element.update!(step: target, position: target.step_orderable_elements.size)
+        step_table.step_orderable_element.update!(step: target, position: target.next_element_position)
         @step.normalize_elements_position
         render json: @table, serializer: TableSerializer, user: current_user
 
@@ -141,6 +148,22 @@ module StepElements
     def load_table
       @table = @step.tables.find_by(id: params[:id])
       return render_404 unless @table
+    end
+
+    def check_manage_permissions
+      render_403 unless can_manage_step_orderable_element?(@table.step_table.step_orderable_element)
+    end
+
+    def check_archive_permissions
+      render_403 unless can_archive_step_orderable_element?(@table.step_table.step_orderable_element)
+    end
+
+    def check_restore_permissions
+      render_403 unless can_restore_step_orderable_element?(@table.step_table.step_orderable_element)
+    end
+
+    def check_delete_permissions
+      render_403 unless can_delete_step_orderable_element?(@table.step_table.step_orderable_element)
     end
   end
 end

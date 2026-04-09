@@ -97,7 +97,7 @@
           <button
             v-if="this.urls.delete_url"
             class="btn icon-btn btn-light"
-            @click="deleteResult"
+            @click="showDeleteModal"
             :title="this.i18n.t('my_modules.results.actions.delete')"
             :data-e2e="`e2e-DO-task-result${this.result.id}-optionsMenu-delete`"
           >
@@ -159,6 +159,7 @@ import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.
 import OveMixin from '../shared/content/attachments/mixins/ove.js';
 import UtilsMixin from '../mixins/utils.js';
 import ResultCommonMixin from './mixins/result_common.js';
+import DeleteMixin from '../shared/content/mixins/delete.js';
 
 export default {
   name: 'Results',
@@ -167,7 +168,7 @@ export default {
     resultToReload: { type: Number, required: false },
     protocolId: { type: Number, required: false }
   },
-  mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, ResultCommonMixin],
+  mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, ResultCommonMixin, DeleteMixin],
   components: {
     ResultTable,
     ResultText,
@@ -190,18 +191,8 @@ export default {
     },
     restoreResult() {
       axios.post(this.urls.restore_url).then((response) => {
+        this.closeRestoreModal();
         this.$emit('result:restored', this.result.id);
-      });
-    },
-    showDeleteModal() {
-      this.confirmingDelete = true;
-    },
-    closeDeleteModal() {
-      this.confirmingDelete = false;
-    },
-    deleteResult() {
-      axios.delete(this.urls.delete_url).then((response) => {
-        this.$emit('result:deleted', this.result.id);
       });
     }
   }

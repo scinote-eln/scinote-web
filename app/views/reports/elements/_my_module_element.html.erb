@@ -68,13 +68,13 @@
   <div class="report-element-children">
     <%= render partial: 'reports/elements/my_module_protocol_element', locals: { protocol: my_module.protocol, export_all: export_all } %>
 
-    <% steps = @settings.dig('task', 'protocol', 'archived_steps') ? my_module.protocol.steps : my_module.protocol.steps.active %>
+    <% steps = (@settings.dig('task', 'protocol', 'archived_steps') || export_all) ? my_module.protocol.steps : my_module.protocol.steps.active %>
     <% filter_steps_for_report(steps, @settings).order(:position).each do |step| %>
       <%= render partial: 'reports/elements/my_module_step_element', locals: { step: step, export_all: export_all } %>
     <% end %>
 
 
-    <% results = @settings.dig('task', 'archived_results') ? my_module.results : my_module.results.active %>
+    <% results = (@settings.dig('task', 'archived_results') || export_all) ? my_module.results : my_module.results.active %>
     <% if results.any? && %w(file_results table_results text_results).any? { |k| @settings.dig('task', k) } %>
       <div class="results-title-name">
         <%= t('projects.reports.elements.module.results') %>
@@ -103,7 +103,7 @@
           <% end %>
         </div>
 
-        <% result_orderable_elements = @settings.dig('task', 'archived_results') ? result.result_orderable_elements : result.result_orderable_elements.active %>
+        <% result_orderable_elements = (@settings.dig('task', 'archived_results') || export_all) ? result.result_orderable_elements : result.result_orderable_elements.active %>
         <% result_orderable_elements.each do |element| %>
           <% if element.orderable_type == "ResultTable" && @settings.dig('task', 'table_results') %>
             <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, element: element} %>

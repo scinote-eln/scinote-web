@@ -2,8 +2,8 @@
 <% step_type_str = step.completed ? 'completed' : 'uncompleted' %>
 <% user = step.completed? && step.last_modified_by || step.user %>
 <% timestamp = step.completed ? step.completed_on : step.created_at %>
-<% assets = @settings.dig('task', 'protocol', 'archived_steps') ? step.assets : step.assets.active %>
 <% export_all = defined?(export_all) && export_all %>
+<% assets = (@settings.dig('task', 'protocol', 'archived_steps') || export_all) ? step.assets : step.assets.active %>
 <div class="report-element report-step-element">
   <div class="report-element-body">
     <h5 class="step-name">
@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="report-element-children">
-    <% step_orderable_elements = @settings.dig('task', 'protocol', 'archived_steps') ? step.step_orderable_elements : step.step_orderable_elements.active %>
+    <% step_orderable_elements = (@settings.dig('task', 'protocol', 'archived_steps') || export_all) ? step.step_orderable_elements : step.step_orderable_elements.active %>
     <% step_orderable_elements.order(:position).each do |e| %>
       <% if e.orderable_type == 'StepTable' %>
         <% if e.orderable.table.metadata.present? %>

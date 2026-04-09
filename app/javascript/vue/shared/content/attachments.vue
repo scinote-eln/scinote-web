@@ -8,7 +8,7 @@
         <div class="title">
           {{ i18n.t('protocols.steps.files', {count: attachments.length}) }}
         </div>
-        <div class="flex items-center gap-2" v-if="parent.attributes.attachments_manageble && attachmentsReady && !archived">
+        <div class="flex items-center gap-2" v-if="parent.attributes.attachments_manageble && attachmentsReady">
           <MenuDropdown
             :listItems="this.viewModeMenu"
             :btnText="i18n.t('attachments.preview_menu')"

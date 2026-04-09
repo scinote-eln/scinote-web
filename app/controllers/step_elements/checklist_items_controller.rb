@@ -8,7 +8,7 @@ module StepElements
     before_action :load_vars
     before_action :load_checklist_item, only: %i(update toggle destroy)
     before_action :check_toggle_permissions, only: %i(toggle)
-    before_action :check_manage_permissions, only: %i(create update destroy)
+    before_action :check_manage_permissions, only: %i(create update toggle destroy)
 
     def index
       render json: @checklist.checklist_items, each_serializer: ChecklistItemSerializer, user: current_user
@@ -123,7 +123,7 @@ module StepElements
     end
 
     def check_manage_permissions
-      render_403 unless can_manage_step?(@step)
+      render_403 unless can_manage_step_orderable_element?(@checklist.step_orderable_element)
     end
 
     def checklist_item_params

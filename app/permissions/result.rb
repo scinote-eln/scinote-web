@@ -19,6 +19,10 @@ Canaid::Permissions.register_for(ResultBase) do
     end
   end
 
+  can :archive_result do |user, result|
+    result.is_a?(Result) && can_manage_result?(user, result)
+  end
+
   can :restore_result do |user, result|
     result.archived? &&
       !result.my_module.archived_branch? &&
@@ -55,5 +59,38 @@ Canaid::Permissions.register_for(ResultComment) do
     my_module = comment.result.my_module
     (comment.user == user && my_module.permission_granted?(user, MyModulePermissions::RESULTS_COMMENTS_MANAGE_OWN)) ||
       my_module.permission_granted?(user, MyModulePermissions::RESULTS_COMMENTS_MANAGE)
+  end
+end
+
+Canaid::Permissions.register_for(ResultOrderableElement) do
+  %i(manage_result_orderable_element
+     archive_result_orderable_element
+     restore_result_orderable_element
+     delete_result_orderable_element)
+    .each do |perm|
+    can perm do |user, result_orderable_element|
+      can_manage_result?(user, result_orderable_element.result)
+    end
+  end
+
+  can :manage_result_orderable_element do |_, result_orderable_element|
+    result_orderable_element.active?
+  end
+
+  can :archive_result_orderable_element do |_, result_orderable_element|
+    result_orderable_element.result.is_a?(Result) && result_orderable_element.active?
+  end
+
+  can :restore_result_orderable_element do |_, result_orderable_element|
+    result_orderable_element.archived?
+  end
+
+  can :delete_result_orderable_element do |_, result_orderable_element|
+    if result_orderable_element.result.is_a?(ResultTemplate)
+      result_orderable_element.result.unlocked?(result_orderable_element.result)
+    else
+      result_orderable_element.archived? && result_orderable_element.result.team.settings['result_deletion_enabled'] &&
+        result_orderable_element.result.unlocked?(result_orderable_element.result)
+    end
   end
 end

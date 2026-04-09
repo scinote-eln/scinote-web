@@ -18,8 +18,10 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode archive restore)
-  before_action :check_manage_permission, only: %i(edit destroy duplicate rename toggle_view_mode archive restore)
-  before_action :check_restore_permission, only: %i(restore_version)
+  before_action :check_manage_permission, only: %i(edit duplicate rename toggle_view_mode archive)
+  before_action :check_restore_permission, only: :restore
+  before_action :check_destroy_permission, only: :destroy
+  before_action :check_restore_version_permission, only: :restore_version
 
   def file_preview
     render json: { html: render_to_string(
@@ -534,6 +536,14 @@ class AssetsController < ApplicationController
 
   def check_restore_permission
     render_403 and return unless can_restore_asset?(@asset)
+  end
+
+  def check_destroy_permission
+    render_403 and return unless can_delete_asset?(@asset)
+  end
+
+  def check_restore_version_permission
+    render_403 and return unless can_restore_asset_version?(@asset)
   end
 
   def append_wd_params(url)

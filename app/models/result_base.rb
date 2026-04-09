@@ -121,6 +121,12 @@ class ResultBase < ApplicationRecord
     step_results.destroy_all
   end
 
+  def next_element_position
+    current_position = result_orderable_elements.active.order(position: :asc).last&.position
+
+    current_position.nil? ? 0 : current_position + 1
+  end
+
   private
 
   def duplicate_table(new_result, user, table)

@@ -45,15 +45,15 @@
     </div>
   </div>
   <div class="panel-collapse collapse in pl-10" id="result-panel-<%= result.id %>" role="tabpanel">
-    <% result.result_orderable_elements.sort_by(&:position).each do |element| %>
+    <% result.result_orderable_elements.active.sort_by(&:position).each do |element| %>
       <% if element.orderable_type == 'ResultText' %>
         <%= render partial: "shareable_links/my_modules/step_elements/text", locals: { element: element.orderable } %>
       <% elsif element.orderable_type == 'ResultTable'%>
         <%= render partial: "shareable_links/my_modules/step_elements/table", locals: { element: element.orderable.table } %>
       <% end %>
     <% end %>
-    <% if result.result_assets.present? %>
-      <%= render partial: "shareable_links/my_modules/attachments", locals: { attachments: result.assets } %>
+    <% if result.assets.active.present? %>
+      <%= render partial: "shareable_links/my_modules/attachments", locals: { attachments: result.assets.active } %>
     <% end %>
   </div>
 </div>
