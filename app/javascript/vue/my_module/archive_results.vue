@@ -68,6 +68,7 @@ export default {
       loadingPage: false,
       loadingOverlay: false,
       resultsCollapsed: false,
+      anchorId: null,
       elementsLoaded: 0,
       attachmentsLoaded: 0
     };
@@ -79,6 +80,9 @@ export default {
   },
   mixins: [ResultsCollapseStateMixin],
   created() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.anchorId = urlParams.get('result_id');
+
     this.loadingOverlay = true;
   },
   computed: {
@@ -98,6 +102,23 @@ export default {
     window.removeEventListener('scroll', this.infiniteScrollLoad, false);
   },
   methods: {
+    scrollToResult() {
+      if (this.anchorId) {
+        const result = this.$refs.results.find((child) => child.result?.id === this.anchorId);
+        if (result) {
+          this.loadingOverlay = false;
+          this.$nextTick(() => {
+            result.$refs.resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            this.anchorId = null;
+          });
+        }
+      }
+
+      if (!this.nextPageUrl) {
+        this.loadingOverlay = false;
+        this.anchorId = null;
+      }
+    },
     reloadResult(result) {
       this.resultToReload = result;
     },
@@ -141,7 +162,18 @@ export default {
 
           this.infiniteScrollLoad();
 
-          this.loadingOverlay = false;
+          this.$nextTick(() => {
+            if (this.anchorId) {
+              const result = this.results.find((e) => e.id === this.anchorId);
+              if (!result) {
+                this.loadResults();
+              } else {
+                this.scrollToResult();
+              }
+            } else {
+              this.loadingOverlay = false;
+            }
+          });
 
           setTimeout(() => {
             this.checkResultsState()

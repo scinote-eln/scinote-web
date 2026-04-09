@@ -59,7 +59,8 @@ export default {
       sort: null,
       filters: {},
       nextPageUrl: null,
-      loadingOverlay: false
+      loadingOverlay: false,
+      anchorId: null
     };
   },
   components: {
@@ -67,6 +68,8 @@ export default {
     ArchiveToolbar
   },
   created() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.anchorId = urlParams.get('step_id');
     this.loadingOverlay = true;
   },
   computed: {
@@ -97,6 +100,11 @@ export default {
             });
           });
           this.sort = response.data.meta.sort;
+
+          if (this.anchorId) {
+            this.scrollToStep();
+          }
+
           this.loadingOverlay = false;
 
           this.$nextTick(() => {
@@ -104,6 +112,17 @@ export default {
           });
         });
       }
+    },
+    scrollToStep() {
+      this.$nextTick(() => {
+        if (this.anchorId) {
+          const step = this.$refs.steps.find((child) => child.step?.id === this.anchorId);
+          if (step) {
+            step.$refs.stepContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          this.anchorId = null;
+        }
+      });
     },
     setSort(sort) {
       this.sort = sort;

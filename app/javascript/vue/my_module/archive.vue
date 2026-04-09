@@ -27,11 +27,15 @@ export default {
     },
     protocolId: {
       required: false
+    },
+    initialMode: {
+      type: String,
+      default: 'steps'
     }
   },
   data() {
     return {
-      activeMode: 'steps'
+      activeMode: this.initialMode
     };
   },
   components: {
