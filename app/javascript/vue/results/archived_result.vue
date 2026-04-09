@@ -192,7 +192,7 @@ export default {
     restoreResult() {
       axios.post(this.urls.restore_url).then((response) => {
         this.closeRestoreModal();
-        this.$emit('result:restored', this.result.id);
+        this.$emit('result:restored', this.result.id, response.data);
       });
     }
   }

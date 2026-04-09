@@ -226,7 +226,15 @@ class StepsController < ApplicationController
       @step.restore!(current_user)
     end
 
-    render json: {}, status: :ok
+    if @step.step_orderable_elements.archived.any? || @step.assets.archived.any?
+      render json: @step,
+             serializer: StepSerializer,
+             include: %i(step_orderable_elements assets),
+             user: current_user,
+             view_mode: 'archived'
+    else
+      render json: {}, status: :ok
+    end
   end
 
   def update_view_state

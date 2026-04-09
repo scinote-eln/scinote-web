@@ -15,13 +15,13 @@
       <div
         :class="{ 'tw-hidden': loadingOverlay }"
         class="results-list">
-        <Result v-for="result in results" :key="result.id"
+        <Result v-for="result in results" :key="result.id + '-' + (result._updateKey || '')"
           ref="results"
           :result="result"
           :protocolId="protocolId"
           :resultToReload="resultToReload"
           @result:deleted="removeResult"
-          @result:restored="removeResult"
+          @result:restored="restoreResult"
           @result:collapsed="checkResultsState"
           @result:empty="removeResult"
           @result:elements:loaded="resultToReload = null; elementsLoaded++"
@@ -190,6 +190,25 @@ export default {
       this.filters = filters;
       this.loadingOverlay = true;
       this.resetPageAndReload();
+    },
+    restoreResult(result_id, resultData) {
+      if (resultData.data) {
+        const resultIndex = this.results.findIndex((r) => r.id === result_id);
+        if (resultIndex !== -1) {
+          resultData.data.attachments = [];
+          resultData.data.relationships.assets.data.forEach((asset) => {
+            resultData.data.attachments.push(resultData.included.find((a) => a.id === asset.id && a.type === 'assets'));
+          });
+          resultData.data.elements = [];
+          resultData.data.relationships.result_orderable_elements.data.forEach((element) => {
+            resultData.data.elements.push(resultData.included.find((e) => e.id === element.id && e.type === 'result_orderable_elements'));
+          });
+          resultData.data._updateKey = Date.now();
+          this.results.splice(resultIndex, 1, resultData.data);
+        }
+      } else {
+        this.removeResult(result_id);
+      }
     },
     removeResult(result_id) {
       const result = this.$refs.results.find((el) => el.result.id == result_id);
