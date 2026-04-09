@@ -15,12 +15,12 @@
       <div
         :class="{ 'tw-hidden': loadingOverlay }"
         class="steps-list">
-        <Step v-for="step in steps" :key="step.id"
+        <Step v-for="step in steps" :key="step.id + '-' + (step._updateKey || '')"
           ref="steps"
           :step="step"
           :protocolId="protocolId"
           @step:deleted="removeStep"
-          @step:restored="removeStep"
+          @step:restored="restoreStep"
           @step:collapsed="checkStepsState"
           @step:empty="removeStep"
         />
@@ -133,6 +133,25 @@ export default {
       this.filters = filters;
       this.loadingOverlay = true;
       this.loadSteps();
+    },
+    restoreStep(step_id, stepData) {
+      if (stepData.data) {
+        const stepIndex = this.steps.findIndex((r) => r.id === step_id);
+        if (stepIndex !== -1) {
+          stepData.data.attachments = [];
+          stepData.data.relationships.assets.data.forEach((asset) => {
+            stepData.data.attachments.push(stepData.included.find((a) => a.id === asset.id && a.type === 'assets'));
+          });
+          stepData.data.elements = [];
+          stepData.data.relationships.step_orderable_elements.data.forEach((element) => {
+            stepData.data.elements.push(stepData.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
+          });
+          stepData.data._updateKey = Date.now();
+          this.steps.splice(stepIndex, 1, stepData.data);
+        }
+      } else {
+        this.removeStep(step_id);
+      }
     },
     removeStep(step_id) {
       this.steps = this.steps.filter((r) => r.id != step_id);

@@ -61,7 +61,15 @@ class ResultsController < ResultBaseController
   def restore
     if @result.restore(current_user)
       log_activity(:result_restored, { result: @result })
-      render json: {}, status: :ok
+      if @result.result_orderable_elements.archived.any? || @result.assets.archived.any?
+        render json: @result,
+               serializer: ResultSerializer,
+               include: %i(result_orderable_elements assets),
+               user: current_user,
+               view_mode: 'archived'
+      else
+        render json: {}, status: :ok
+      end
     else
       render json: { errors: @result.errors.full_messages }, status: :unprocessable_entity
     end
