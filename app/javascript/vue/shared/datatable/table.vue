@@ -426,7 +426,7 @@ export default {
     filterValues: {
       handler(newVal) {
         this.activeFilters = newVal;
-        this.reloadTable();
+        this.reloadTable(false);
       },
       deep: true
     }
@@ -622,7 +622,7 @@ export default {
       } else if (this.scrollMode === 'pages') {
         this.loadData();
       } else {
-        this.reloadTable();
+        this.reloadTable(false);
       }
     },
     reloadTable(clearSelection = true) {
@@ -770,7 +770,7 @@ export default {
     },
     setSearchValue(value) {
       this.searchValue = value;
-      this.reloadTable();
+      this.reloadTable(false);
     },
     clickCell(e) {
       if (e.column.colId !== 'rowMenu' && e.column.userProvidedColDef.notSelectable !== true) {
@@ -780,7 +780,7 @@ export default {
     },
     applyFilters(filters) {
       this.activeFilters = filters;
-      this.reloadTable();
+      this.reloadTable(false);
     },
     switchViewRender(view) {
       if (this.currentViewRender === view) return;

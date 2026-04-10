@@ -85,8 +85,10 @@ export default {
                 const element = e.currentTarget;
                 const url = element.dataset.rowHideRemindersUrl;
                 axios.post(url)
-                  .then(() => {
-                    this.hasReminders = false;
+                  .then((response) => {
+                    this.hasReminders = response.data.reminder_count > 0;
+
+                    if (this.hasReminders) this.loadReminders();
                   });
               });
             });

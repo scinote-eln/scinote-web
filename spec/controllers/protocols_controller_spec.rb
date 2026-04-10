@@ -480,7 +480,7 @@ describe ProtocolsController, type: :controller do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
               .with(hash_including(activity_type:
-                                     :load_protocol_to_task_from_repository)))
+                                     :load_protocol_to_task_from_repository_replace)))
       action
     end
 
