@@ -103,13 +103,13 @@ export default {
           field: 'name',
           headerName: this.i18n.t('tags.index.tag_name'),
           sortable: true,
-          notSelectable: true,
+          suppressColumnsToolPanel: true,
           cellRenderer: nameRenderer,
         }, {
           field: 'color',
           headerName: this.i18n.t('tags.index.color'),
           sortable: true,
-          notSelectable: true,
+          suppressColumnsToolPanel: true,
           cellRenderer: colorRenderer,
           cellRendererParams: {
             colors: this.tagsColors
