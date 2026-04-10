@@ -53,12 +53,11 @@
             'adding-new-row': addingNewRow
           }"
           :columnDefs="extendedColumnDefs"
+          :selectionColumnDef="selectionColumnDef"
           :rowData="rowData"
           :defaultColDef="defaultColDef"
-          :rowSelection="'multiple'"
           :suppressRowTransform="true"
           :gridOptions="gridOptions"
-          :suppressRowClickSelection="true"
           :getRowClass="getRowClass"
           :enableCellTextSelection="true"
           @grid-ready="onGridReady"
@@ -322,8 +321,19 @@ export default {
         suppressCellFocus: true,
         rowHeight: 40,
         headerHeight: 40,
-        getRowId: (params) => `e2e-TB-row-${params.data.code || params.data.id}`
+        getRowId: (params) => `e2e-TB-row-${params.data.code || params.data.id}`,
+        rowSelection: {
+          mode: 'multiRow',
+          checkboxes: this.withCheckboxes,
+          headerCheckbox: this.withCheckboxes,
+          enableClickSelection: false,
+        }
       };
+    },
+    selectionColumnDef() {
+      return {
+        pinned: 'left'
+      }
     },
     extendedColumnDefs() {
       const columns = this.columnDefs.map((column) => ({
@@ -333,23 +343,6 @@ export default {
         pinned: (this.withPinnedColumns && (column.field === 'name' || column.field === 'name_hash') ? 'left' : null),
         comparator: () => null
       }));
-
-      if (this.withCheckboxes) {
-        columns.unshift({
-          field: 'checkbox',
-          headerCheckboxSelection: true,
-          headerCheckboxSelectionFilteredOnly: true,
-          checkboxSelection: true,
-          suppressMovable: true,
-          width: 40,
-          minWidth: 40,
-          maxWidth: 40,
-          resizable: true,
-          pinned: 'left',
-          lockPosition: 'left',
-          sortable: false
-        });
-      }
 
       if (this.withRowMenu) {
         columns.push({
@@ -773,7 +766,8 @@ export default {
       this.reloadTable();
     },
     clickCell(e) {
-      if (e.column.colId !== 'rowMenu' && e.column.userProvidedColDef.notSelectable !== true) {
+      // We using custom row selection, we need use existing column parameter it will be attribute from one of plugin - suppressColumnsToolPanel
+      if (e.column.colId !== 'rowMenu' && e.column.userProvidedColDef.suppressColumnsToolPanel !== true) {
         e.node.setSelected(true);
         this.$emit('selectionChanged', this.selectedRows);
       }

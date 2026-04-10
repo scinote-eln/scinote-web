@@ -156,7 +156,7 @@ export default {
           cellRenderer: FavoriteRenderer,
           minWidth: 80,
           maxWidth: 80,
-          notSelectable: true
+          suppressColumnsToolPanel: true
         },
         {
           field: 'code',
@@ -172,7 +172,7 @@ export default {
           cellRendererParams: {
             statusesList: this.statusesList
           },
-          notSelectable: true,
+          suppressColumnsToolPanel: true,
           minWidth: 180
         },
         {
