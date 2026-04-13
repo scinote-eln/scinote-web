@@ -488,7 +488,40 @@ class AssetsController < ApplicationController
 
   def archive
     if @asset.archive(current_user)
-      # activity
+
+      case @asset.parent
+      when Step
+        activity_type = case @asset.file.metadata[:asset_type]
+                        when 'gene_sequence'
+                          :task_step_sequence_archived
+                        when 'marvinjs'
+                          :task_step_chemical_structure_archived
+                        else
+                          :task_step_file_archived
+                        end
+        log_step_activity(
+          activity_type,
+          @assoc,
+          @assoc.my_module.project,
+          my_module: @assoc.my_module.id,
+          file: @asset.file_name
+        )
+      when Result
+        activity_type = case @asset.file.metadata[:asset_type]
+                        when 'gene_sequence'
+                          :result_sequence_archived
+                        when 'marvinjs'
+                          :result_chemical_structure_archived
+                        else
+                          :result_file_archived
+                        end
+        log_result_activity(
+          activity_type,
+          @assoc,
+          file: @asset.file_name
+        )
+      end
+
       render json: {}, status: :ok
     else
       render json: { errors: @asset.errors.full_messages }, status: :unprocessable_entity
@@ -497,7 +530,41 @@ class AssetsController < ApplicationController
 
   def restore
     if @asset.restore(current_user)
-      # activity
+      case @asset.parent
+      when Step
+        activity_type = case @asset.file.metadata[:asset_type]
+                        when 'gene_sequence'
+                          :task_step_sequence_restored
+                        when 'marvinjs'
+                          :task_step_chemical_structure_restored
+                        else
+                          :task_step_file_restored
+                        end
+        log_restore_activity(
+          activity_type,
+          @assoc.protocol,
+          @assoc.protocol.team,
+          @assoc.my_module.project,
+          my_module: @assoc.my_module.id,
+          file: @asset.file_name
+        )
+      when Result
+        activity_type = case @asset.file.metadata[:asset_type]
+                        when 'gene_sequence'
+                          :result_sequence_restored
+                        when 'marvinjs'
+                          :result_chemical_structure_restored
+                        else
+                          :result_file_restored
+                        end
+        log_restore_activity(
+          activity_type,
+          @assoc,
+          @assoc.team,
+          @assoc.my_module.project,
+          file: @asset.file_name
+        )
+      end
       render json: {}, status: :ok
     else
       render json: { errors: @asset.errors.full_messages }, status: :unprocessable_entity

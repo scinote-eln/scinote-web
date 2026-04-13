@@ -108,12 +108,12 @@ module GlobalActivitiesHelper
     when Result
       return current_value unless obj.navigable?
 
-      path = obj.archived? ? my_module_results_path(obj.my_module, result_id: obj.id, view_mode: :archived) : my_module_results_path(obj.my_module, result_id: obj.id)
+      path = obj.archived? ? archive_my_module_path(obj.my_module, result_id: obj.id, mode: :results) : my_module_results_path(obj.my_module, result_id: obj.id)
     when Step
       if obj.protocol.in_repository?
         path = protocol_path(obj.protocol, step_id: obj.id)
       elsif obj.my_module.navigable?
-        path = protocols_my_module_path(obj.my_module, step_id: obj.id)
+        path = obj.archived? ? archive_my_module_path(obj.my_module, step_id: obj.id) : protocols_my_module_path(obj.my_module, step_id: obj.id)
       else
         return current_value
       end

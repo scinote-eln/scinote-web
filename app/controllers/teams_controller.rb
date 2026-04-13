@@ -130,16 +130,16 @@ class TeamsController < ApplicationController
   def update_setting
     ActiveRecord::Base.transaction do
       TeamSettingsService.new(@team, current_user).update_setting!(params[:section], params[:key], params[:value])
+      team_settings_activity_mapping = {
+        'task_sharing_enabled' => 'team_sharing_tasks',
+        'repository_deletion_enabled' => 'team_repository_deletion',
+        'result_deletion_enabled' => 'team_result_deletion',
+        'protocol_steps_deletion_enabled' => 'team_protocol_steps_deletion'
+      }
 
-      if params[:key] == 'task_sharing_enabled' && params[:value] == true
+      if (base = team_settings_activity_mapping[params[:key]])
         log_activity(
-          :team_sharing_tasks_enabled,
-          team: @team.id,
-          user: current_user.id
-        )
-      elsif params[:key] == 'task_sharing_enabled'
-        log_activity(
-          :team_sharing_tasks_disabled,
+          :"#{base}_#{params[:value] == true ? 'enabled' : 'disabled'}",
           team: @team.id,
           user: current_user.id
         )
