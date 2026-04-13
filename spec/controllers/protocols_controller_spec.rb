@@ -14,12 +14,21 @@ describe ProtocolsController, type: :controller do
 
   describe 'GET index' do
     let(:action) { get :index, params: { team_id: team.id }, format: :json }
+
     it 'returns a successful response' do
       action
       expect(response).to have_http_status(:success)
       expect(response.content_type).to eq('application/json; charset=utf-8')
       expect(response.body).not_to be_empty
-      expect(JSON.parse(response.body)["data"]).to be_an(Array)
+      expect(JSON.parse(response.body)['data']).to be_an(Array)
+    end
+
+    it 'returns a successful response for non-owners' do
+      allow(controller).to receive(:can_manage_team?).and_return(false)
+
+      action
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)['data']).to be_an(Array)
     end
   end
 
@@ -32,6 +41,14 @@ describe ProtocolsController, type: :controller do
       expect(response).to have_http_status(:success)
       expect(response.content_type).to eq('application/json; charset=utf-8')
       expect(response.body).not_to be_empty
+    end
+
+    it 'serializes published versions for published protocols' do
+      get :versions_modal, params: { id: published_protocol.id }, format: :json
+
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)['versions']).to be_an(Array)
+      expect(JSON.parse(response.body)['versions']).not_to be_empty
     end
   end
 
@@ -51,8 +68,8 @@ describe ProtocolsController, type: :controller do
       expect(response).to have_http_status(:success)
       expect(response.content_type).to eq('application/json; charset=utf-8')
       expect(response.body).not_to be_empty
-      expect(JSON.parse(response.body)["data"]).to be_an(Array)
-      expect(JSON.parse(response.body)["data"].length).to eq(1)
+      expect(JSON.parse(response.body)['data']).to be_an(Array)
+      expect(JSON.parse(response.body)['data'].length).to eq(1)
     end
   end
 
@@ -64,14 +81,15 @@ describe ProtocolsController, type: :controller do
       expect(response).to have_http_status(:success)
       expect(response.content_type).to eq('application/json; charset=utf-8')
       expect(response.body).not_to be_empty
-      expect(JSON.parse(response.body)["versions"]).to be_an(Array)
-      expect(JSON.parse(response.body)["versions"].length).to eq(1)
+      expect(JSON.parse(response.body)['versions']).to be_an(Array)
+      expect(JSON.parse(response.body)['versions'].length).to eq(1)
     end
   end
 
   describe 'POST publish' do
     let(:params) { { id: repository_protocol.id } }
     let(:action) { post :publish, params: params, format: :json }
+
     it 'calls create activity for publishing protocol' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
@@ -89,11 +107,40 @@ describe ProtocolsController, type: :controller do
       action
       expect(repository_protocol.reload.protocol_type).to eq('in_repository_published_original')
     end
+
+    it 'returns url when publishing from show view' do
+      post :publish, params: { id: repository_protocol.id, view: 'show' }, format: :json
+
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to have_key('url')
+    end
+
+    it 'sets flash error when record is invalid' do
+      allow_any_instance_of(Protocol).to receive(:update!) do |protocol|
+        protocol.errors.add(:base, 'invalid')
+        raise ActiveRecord::RecordInvalid, protocol
+      end
+
+      action
+
+      expect(flash[:error]).to include('invalid')
+      expect(response).to redirect_to(protocols_path)
+    end
+
+    it 'sets flash error on unexpected exception' do
+      allow_any_instance_of(Protocol).to receive(:update!).and_raise(StandardError, 'boom')
+
+      action
+
+      expect(flash[:error]).to eq(I18n.t('errors.general'))
+      expect(response).to redirect_to(protocols_path)
+    end
   end
 
   describe 'POST destroy_draft' do
     let(:params) { { id: draft_protocol.id } }
     let(:action) { post :destroy_draft, params: params, format: :json }
+
     it 'calls create activity for deleting protocol draft' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
@@ -105,6 +152,24 @@ describe ProtocolsController, type: :controller do
     it 'adds activity in DB' do
       expect { action }
         .to(change { Activity.count })
+    end
+
+    it 'returns a json message when called from versions modal' do
+      post :destroy_draft, params: { id: draft_protocol.id, version_modal: true }, format: :json
+
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to have_key('message')
+    end
+
+    it 'returns unprocessable_entity when draft cannot be destroyed' do
+      allow_any_instance_of(Protocol)
+        .to receive(:destroy!)
+        .and_raise(ActiveRecord::RecordNotDestroyed.new('cannot destroy'))
+
+      post :destroy_draft, params: { id: draft_protocol.id, version_modal: true }, format: :json
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(JSON.parse(response.body)).to have_key('message')
     end
   end
 
@@ -199,7 +264,7 @@ describe ProtocolsController, type: :controller do
       expect(response).to have_http_status(:success)
       expect(response.content_type).to eq('application/json; charset=utf-8')
       expect(response.body).not_to be_empty
-      expect(JSON.parse(response.body)["data"]).to include("id" => repository_protocol.id.to_s)
+      expect(JSON.parse(response.body)['data']).to include('id' => repository_protocol.id.to_s)
     end
   end
 
@@ -308,7 +373,7 @@ describe ProtocolsController, type: :controller do
     it 'copies the protocol to repository correctly' do
       action
       copied_protocol = Protocol.order(:created_at).last
-      expect(copied_protocol.name).to eq('test' )
+      expect(copied_protocol.name).to eq('test')
       expect(copied_protocol.description).to eq(protocol_in_task.description)
       expect(copied_protocol.protocol_type).to eq('in_repository_draft')
     end
@@ -368,7 +433,7 @@ describe ProtocolsController, type: :controller do
           name: 'my_test_protocol',
           description: 'description',
           authors: 'authors',
-          elnVersion: '1.0',
+          elnVersion: '1.0'
         }
       }
     end
@@ -415,7 +480,7 @@ describe ProtocolsController, type: :controller do
 
   describe 'PATCH update_keywords' do
     let(:params) do
-      { id: repository_protocol.id, keywords: ['keyword-1', 'keyword-2'] }
+      { id: repository_protocol.id, keywords: %w(keyword-1 keyword-2) }
     end
     let(:action) { patch :update_keywords, params: params, format: :json }
 
@@ -513,7 +578,7 @@ describe ProtocolsController, type: :controller do
   end
 
   describe 'POST update_from_parent' do
-   let(:protocol_repo) do
+    let(:protocol_repo) do
       create :protocol, :in_repository_published_original, name: ' test protocol',
                                                team: team,
                                                added_by: user
@@ -540,7 +605,6 @@ describe ProtocolsController, type: :controller do
       expect { action }
         .to(change { Activity.count })
     end
-
   end
 
   describe 'GET unlink_modal' do
@@ -651,5 +715,215 @@ describe ProtocolsController, type: :controller do
     end
   end
 
+  describe 'GET permissions' do
+    let(:params) { { id: repository_protocol.id } }
+    let(:action) { get :permissions, params: params, format: :json }
 
+    before do
+      allow(controller).to receive(:stale?).and_return(true)
+      allow(controller).to receive(:can_clone_protocol_in_repository?).and_return(true)
+      allow(controller).to receive(:can_archive_protocol_in_repository?).and_return(true)
+      allow(controller).to receive(:can_restore_protocol_in_repository?).and_return(true)
+      allow(controller).to receive(:can_read_protocol_in_repository?).and_return(true)
+    end
+
+    it 'returns permission flags' do
+      action
+
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to include(
+        'copyable' => true,
+        'archivable' => true,
+        'restorable' => true,
+        'readable' => true
+      )
+    end
+  end
+
+  describe 'GET actions_toolbar' do
+    let(:params) { { items: [{ id: repository_protocol.id }].to_json } }
+    let(:action) { get :actions_toolbar, params: params, format: :json }
+
+    it 'returns actions from toolbar service' do
+      service = instance_double(Toolbars::ProtocolsService, actions: [{ name: 'test' }])
+      allow(Toolbars::ProtocolsService).to receive(:new).and_return(service)
+
+      action
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to eq('actions' => [{ 'name' => 'test' }])
+    end
+  end
+
+  describe 'GET user_roles' do
+    let(:action) { get :user_roles, format: :json }
+
+    it 'returns user roles collection' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to have_key('data')
+    end
+  end
+
+  describe 'GET version_comment' do
+    let(:params) { { id: repository_protocol.id } }
+    let(:action) { get :version_comment, params: params, format: :json }
+
+    before do
+      allow(controller).to receive(:can_publish_protocol_in_repository?).and_return(true)
+    end
+
+    it 'returns version_comment' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to have_key('version_comment')
+    end
+  end
+
+  describe 'POST update_version_comment' do
+    let(:params) do
+      {
+        id: repository_protocol.id,
+        protocol: {
+          version_comment: 'revision notes'
+        }
+      }
+    end
+
+    let(:action) { post :update_version_comment, params: params, format: :json }
+
+    before do
+      allow(controller).to receive(:can_publish_protocol_in_repository?).and_return(true)
+    end
+
+    it 'updates version_comment' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)['version_comment']).to eq('revision notes')
+    end
+
+    it 'returns validation errors when update fails' do
+      allow_any_instance_of(Protocol).to receive(:update).and_return(false)
+
+      action
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(JSON.parse(response.body)).to have_key('errors')
+    end
+  end
+
+  describe 'GET versions_modal' do
+    let(:published_version) do
+      create :protocol, :in_repository_published_version,
+             team: team,
+             added_by: user,
+             parent: published_protocol,
+             version_number: 2
+    end
+
+    it 'returns forbidden for non-original published versions' do
+      get :versions_modal, params: { id: published_version.id }, format: :json
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'GET linked_children with version' do
+    let(:published_version) do
+      create :protocol, :in_repository_published_version,
+             team: team,
+             added_by: user,
+             parent: published_protocol,
+             version_number: 2
+    end
+
+    let(:linked_protocol) do
+      create :protocol, :linked_to_repository,
+             name: ' test protocol',
+             my_module: my_module,
+             parent: published_version,
+             team: team,
+             added_by: user
+    end
+
+    it 'returns linked children for a specific version' do
+      linked_protocol
+
+      get :linked_children, params: { id: published_protocol.id, version: 2 }, format: :json
+
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)['data'].length).to eq(1)
+    end
+  end
+
+  describe 'POST copy_to_repository' do
+    let(:protocol_in_task) do
+      create :protocol, name: 'test protocol', my_module: my_module
+    end
+
+    let(:params) { { id: protocol_in_task.id, team_id: team.id, protocol: { name: 'test' } } }
+
+    it 'returns bad_request when copy fails in transaction' do
+      allow_any_instance_of(Protocol)
+        .to receive(:copy_to_repository)
+        .and_raise(StandardError, 'copy failed')
+
+      post :copy_to_repository, params: params, format: :json
+
+      expect(response).to have_http_status(:bad_request)
+      expect(JSON.parse(response.body)).to have_key('message')
+    end
+  end
+
+  describe 'POST archive' do
+    let(:protocol_to_archive) do
+      create :protocol, :in_repository_published_original, team: team, added_by: user
+    end
+
+    it 'returns unprocessable_entity when archiving fails' do
+      protocol_to_archive.errors.add(:base, 'archive failed')
+      allow_any_instance_of(Protocol).to receive(:archive).and_return(false)
+
+      post :archive, params: { protocol_ids: [protocol_to_archive.id] }, format: :json
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(JSON.parse(response.body)).to have_key('message')
+    end
+  end
+
+  describe 'GET load_from_repository_datatable' do
+    it 'returns datatable JSON' do
+      datatable = instance_double(LoadFromRepositoryProtocolsDatatable, as_json: { draw: 1, data: [] })
+      allow(LoadFromRepositoryProtocolsDatatable).to receive(:new).and_return(datatable)
+
+      get :load_from_repository_datatable, params: { id: my_module.protocol.id }, format: :json
+
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(JSON.parse(response.body)).to include('draw' => 1, 'data' => [])
+    end
+  end
+
+  describe 'GET show (html)' do
+    it 'sets the active tab' do
+      get :show, params: { id: repository_protocol.id }, format: :html
+
+      expect(response).to have_http_status(:success)
+      expect(assigns(:active_tab)).to eq(:protocol)
+    end
+  end
+
+  describe 'GET print' do
+    it 'renders print layout' do
+      get :print, params: { id: repository_protocol.id }, format: :html
+
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'GET index (html)' do
+    it 'renders index template' do
+      get :index, params: { team_id: team.id }, format: :html
+
+      expect(response).to have_http_status(:success)
+      expect(response).to render_template('index')
+    end
+  end
 end
