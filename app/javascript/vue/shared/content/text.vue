@@ -175,6 +175,9 @@ export default {
     });
   },
   computed: {
+    locked() {
+      return !this.element.attributes.orderable.urls.update_url;
+    },
     wrappedTables() {
       return window.wrapTables(this.element.attributes.orderable.text_view);
     },

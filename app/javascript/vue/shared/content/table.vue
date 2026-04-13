@@ -418,7 +418,6 @@ export default {
       });
       this.$nextTick(() => {
         this.tableObject.render();
-        this.emitRenderHTML();
       });
     }
   }
