@@ -79,10 +79,4 @@ class RepositoryBase < ApplicationRecord
   def default_table_order_as_js_array
     default_table_state['order'].to_json
   end
-
-  def destroy_discarded(discarded_by_id = nil)
-    self.discarded_by_id = discarded_by_id
-    destroy
-  end
-  handle_asynchronously :destroy_discarded, queue: :clear_discarded_repository, priority: 20
 end
