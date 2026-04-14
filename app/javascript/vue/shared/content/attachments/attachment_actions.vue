@@ -43,14 +43,15 @@
       @attachment:versionRestored="$emit('attachment:versionRestored', $event)"
       :withBorder="withBorder"
     />
+    <teleport to="body">
+      <deleteAttachmentModal
+        v-if="deleteModal"
+        :fileName="attachment.attributes.file_name"
+        @confirm="deleteAttachment"
+        @cancel="deleteModal = false"
+      />
+    </teleport>
   </div>
-
-  <deleteAttachmentModal
-    v-if="deleteModal"
-    :fileName="attachment.attributes.file_name"
-    @confirm="deleteAttachment"
-    @cancel="deleteModal = false"
-  />
 </template>
 
 <script>

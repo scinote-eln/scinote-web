@@ -23,7 +23,7 @@
 
   <div id="results" data-behaviour="vue" data-e2e="e2e-CO-task-results">
     <results url="<%= my_module_results_url(@my_module) %>"
-             protocol-id="<%= @my_module.protocol.id %>"
+             :protocol-id="<%= @my_module.protocol.id %>"
              change-states-url="<%= change_results_state_my_module_path(@my_module) %>"
              can-create=<%= can_create_results?(@my_module) %>
      >

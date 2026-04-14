@@ -60,7 +60,7 @@ const SORTS = [
 export default {
   name: 'ResultsToolbar',
   props: {
-    sort: { type: String, required: true },
+    sort: { type: String, required: false },
     canCreate: { type: Boolean, required: true },
     headerSticked: { type: Boolean, required: true },
     moduleName: { type: String, required: true },

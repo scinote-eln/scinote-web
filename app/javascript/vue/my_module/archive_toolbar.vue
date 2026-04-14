@@ -58,7 +58,7 @@ const SORTS = [
 export default {
   props: {
     mode: { type: String, required: true },
-    sort: { type: String, required: true },
+    sort: { type: String, required: false },
     objects: { type: Array, required: true },
     objectsCollapsed: { type: Boolean, required: true }
   },
