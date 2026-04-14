@@ -5342,7 +5342,7 @@ en:
     all_teams: "All workspaces (current & new)"
     all_teams_tooltip: "This will disable individual workspace settings"
     success_message: "Selected sharing options for the %{object_name} have been saved."
-
+    save_before_individual_assign: "Please save changes before assigning individual teams."
   errors:
     general: "Something went wrong."
     general_text_too_long: 'Text is too long'

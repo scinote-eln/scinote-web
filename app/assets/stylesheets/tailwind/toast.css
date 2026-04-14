@@ -8,7 +8,7 @@
 
 .sci-toast.sci-toast-info::before {
   @apply text-sn-science-blue;
-  content: "\e970";
+  content: "\e900";
   font-family: "SN-icon-font";
   font-size: 24px !important;
   line-height: 24px !important;
