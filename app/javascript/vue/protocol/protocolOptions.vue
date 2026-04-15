@@ -28,7 +28,7 @@
             <span>{{ i18n.t("my_modules.protocol.options_dropdown.load_from_repo") }}</span>
           </a>
         </li>
-        <li v-if="protocol.attributes.urls.add_protocol_steps_url">
+        <li v-if="protocol.attributes.urls.add_protocol_steps_url && !inRepository">
           <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             data-turbolinks="false"
             @click.prevent="createWithAi()"
