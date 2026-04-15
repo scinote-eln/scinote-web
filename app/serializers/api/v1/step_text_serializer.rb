@@ -4,12 +4,16 @@ module Api
   module V1
     class StepTextSerializer < ActiveModel::Serializer
       type :step_texts
-      attributes :id, :name, :text, :position
+      attributes :id, :name, :text, :position, :archived
 
       include TimestampableModel
 
       def contents
         object.text&.force_encoding(Encoding::UTF_8)
+      end
+
+      def archived
+        object.archived? if object.step_orderable_element.present?
       end
 
       def position

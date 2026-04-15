@@ -4,10 +4,14 @@ module Api
   module V2
     class ResultTableSerializer < ActiveModel::Serializer
       type :tables
-      attributes :table_id, :table_contents, :table_metadata
+      attributes :table_id, :table_contents, :table_metadata, :archived
 
       def table_id
         object.table&.id
+      end
+
+      def archived
+        object.table.archived? if object.result_orderable_element.present?
       end
 
       def table_contents
