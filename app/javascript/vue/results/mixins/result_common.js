@@ -24,9 +24,6 @@ export default {
     },
     locked() {
       return !(this.urls.restore_url || this.urls.archive_url || this.urls.delete_url || this.urls.update_url);
-    },
-    archivedElement() {
-      return this.elements.some((el) => el.attributes.orderable.archived) || this.attachments.some((attachment) => attachment.attributes.archived);
     }
   },
   watch: {
