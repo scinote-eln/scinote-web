@@ -106,7 +106,7 @@
         </div>
       </div>
       <deleteResultModal v-if="confirmingDelete" @confirm="deleteResult" @cancel="closeDeleteModal"/>
-      <restoreResultModal v-if="confirmingRestore" @confirm="restoreResult" @cancel="closeRestoreModal"/>
+      <restoreResultModal v-if="confirmingRestore" @confirm="restoreResult" @close="closeRestoreModal"/>
 
       <div class="collapse in pl-10" :id="'resultBody' + result.id">
         <div v-for="(element, index) in orderedElements" :key="element.id">

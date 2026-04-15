@@ -24,8 +24,6 @@
           @result:restored="restoreResult"
           @result:collapsed="checkResultsState"
           @result:empty="removeResult"
-          @result:elements:loaded="resultToReload = null; elementsLoaded++"
-          @result:attachments:loaded="resultToReload = null; attachmentsLoaded++"
         />
         <div v-if="!loadingOverlay && results.length === 0" class="px-4 py-6 bg-white my-4 text-gray-500">
           {{ i18n.t('my_modules.results.no_results_placeholder') }}
@@ -68,9 +66,7 @@ export default {
       loadingPage: false,
       loadingOverlay: false,
       resultsCollapsed: false,
-      anchorId: null,
-      elementsLoaded: 0,
-      attachmentsLoaded: 0
+      anchorId: null
     };
   },
   components: {
@@ -211,13 +207,7 @@ export default {
       }
     },
     removeResult(result_id) {
-      const result = this.$refs.results.find((el) => el.result.id == result_id);
-
-      if (!result?.archivedElement) {
-        this.results = this.results.filter((r) => r.id != result_id);
-      } else {
-        this.reloadResult(result_id);
-      }
+      this.results = this.results.filter((r) => r.id != result_id);
     },
   }
 };

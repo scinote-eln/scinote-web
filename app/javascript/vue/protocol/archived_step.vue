@@ -100,7 +100,7 @@
         </div>
       </div>
       <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
-      <restoreStepModal v-if="confirmingRestore" @confirm="restoreStep" @cancel="closeRestoreModal"/>
+      <restoreStepModal v-if="confirmingRestore" @confirm="restoreStep" @close="closeRestoreModal"/>
 
       <div class="collapse in pl-10" :id="'stepBody' + step.id">
         <div v-for="(element, index) in orderedElements" :key="element.id">
