@@ -17,7 +17,7 @@ class CommentsController < ApplicationController
     object_url = nil
     case @commentable
     when Step
-      object_name = "#{@commentable.position + 1} #{@commentable.name}"
+      object_name = @commentable.position ? "#{@commentable.position + 1} #{@commentable.name}" : @commentable.name
       object_url = link_to(t('comments.step_url'), "#stepContainer#{@commentable.id}", class: 'scroll-page-with-anchor')
     else
       object_name = @commentable.name
