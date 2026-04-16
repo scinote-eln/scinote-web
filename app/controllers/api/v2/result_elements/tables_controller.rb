@@ -11,8 +11,9 @@ module Api
         before_action :check_manage_permission, only: %i(create update destroy)
 
         def index
-          result_tables = timestamps_filter(@result.result_tables).page(params.dig(:page, :number))
-                                                                  .per(params.dig(:page, :size))
+          result_tables = timestamps_filter(@result.result_tables)
+          result_tables = archived_filter(result_tables, default_to_active: true)
+          result_tables = result_tables.page(params.dig(:page, :number)).per(params.dig(:page, :size))
 
           render jsonapi: result_tables, each_serializer: ResultTableSerializer
         end

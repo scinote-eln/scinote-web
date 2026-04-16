@@ -9,9 +9,9 @@ module Api
       before_action :load_asset, only: :show
 
       def index
-        attachments =
-          timestamps_filter(@step.assets).page(params.dig(:page, :number))
-                                         .per(params.dig(:page, :size))
+        attachments = timestamps_filter(@step.assets.active)
+        attachments = archived_filter(attachments, default_to_active: true)
+        attachments = attachments.page(params.dig(:page, :number)).per(params.dig(:page, :size))
 
         render jsonapi: attachments, each_serializer: AssetSerializer
       end

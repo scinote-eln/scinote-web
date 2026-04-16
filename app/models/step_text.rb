@@ -25,6 +25,14 @@ class StepText < ApplicationRecord
 
   scope :asc, -> { order('step_texts.created_at ASC') }
 
+  scope :active, lambda {
+    joins(:step_orderable_element).where(step_orderable_elements: { archived: false })
+  }
+
+  scope :archived, lambda {
+    joins(:step_orderable_element).where(step_orderable_elements: { archived: true })
+  }
+
   def duplicate(step, position = nil)
     ActiveRecord::Base.transaction do
       new_step_text = step.step_texts.create!(

@@ -4,8 +4,9 @@ module Api
   module V2
     class StepsController < ::Api::V1::StepsController
       def index
-        steps = timestamps_filter(@protocol.steps).page(params.dig(:page, :number))
-                                                  .per(params.dig(:page, :size))
+        steps = timestamps_filter(@protocol.steps)
+        steps = archived_filter(steps, default_to_active: true)
+        steps = steps.page(params.dig(:page, :number)).per(params.dig(:page, :size))
 
         render jsonapi: steps, each_serializer: Api::V2::StepSerializer,
                include: include_params,

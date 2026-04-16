@@ -4,7 +4,7 @@ module Api
   module V2
     class FormResponseSerializer < ActiveModel::Serializer
       type :form_responses
-      attributes :id, :position, :status
+      attributes :id, :position, :status, :archived
 
       belongs_to :form, serializer: Api::V2::FormSerializer
       belongs_to :created_by, serializer: Api::V1::UserSerializer
@@ -15,6 +15,10 @@ module Api
 
       def form_field_values
         object.form_field_values.latest
+      end
+
+      def archived
+        object.archived?
       end
 
       def position

@@ -16,6 +16,14 @@ class ResultText < ApplicationRecord
   belongs_to :result, inverse_of: :result_texts, touch: true, class_name: 'ResultBase'
   has_one :result_orderable_element, as: :orderable, dependent: :destroy
 
+  scope :active, lambda {
+    joins(:result_orderable_element).where(result_orderable_elements: { archived: false })
+  }
+
+  scope :archived, lambda {
+    joins(:result_orderable_element).where(result_orderable_elements: { archived: true })
+  }
+
   delegate :team, to: :result
 
   def duplicate(result, position = nil)

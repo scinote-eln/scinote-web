@@ -4,12 +4,16 @@ module Api
   module V1
     class TableSerializer < ActiveModel::Serializer
       type :tables
-      attributes :id, :name, :contents, :metadata, :position
+      attributes :id, :name, :contents, :metadata, :position, :archived
 
       include TimestampableModel
 
       def contents
         object.contents&.force_encoding(Encoding::UTF_8)
+      end
+
+      def archived
+        object.archived? if object.step_table&.step_orderable_element.present?
       end
 
       def position
