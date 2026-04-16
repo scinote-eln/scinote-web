@@ -841,9 +841,8 @@ class TeamImporter
           table.team = protocol.team
           table.contents = Base64.decode64(table.contents)
           table.data_vector = Base64.decode64(table.data_vector)
-          table.save!
-          @table_mappings[orig_table_id] = table.id
           orderable = StepTable.create!(step: step, table: table)
+          @table_mappings[orig_table_id] = table.id
         elsif element_json['checklist']
           orderable = create_step_checklist(element_json['checklist'], step, user_id)
         end
