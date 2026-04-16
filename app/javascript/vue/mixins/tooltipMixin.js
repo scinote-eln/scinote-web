@@ -3,7 +3,8 @@ export default {
     return {
       tooltip_instances: [],
       tooltip_observer: null,
-      tooltip_additionalObservers: []
+      tooltip_additionalObservers: [],
+      tooltip_mouseMoveListener: null
     };
   },
   mounted() {
@@ -19,6 +20,7 @@ export default {
     this.tooltip_destroyTooltips();
     this.tooltip_disconnectObserver();
     this.tooltip_disconnectAdditionalObservers();
+    this.tooltip_removeGlobalMouseListener();
   },
   methods: {
     // Shared mutation handler for all observers
@@ -216,7 +218,9 @@ export default {
       const instance = {
         element,
         tooltipEl: null,
-        content: tooltipContent
+        content: tooltipContent,
+        lastMouseX: 0,
+        lastMouseY: 0
       };
 
       const showTooltip = (e) => this.tooltip_showTooltip(instance, e);
@@ -276,12 +280,19 @@ export default {
       document.body.appendChild(tooltipEl);
       tooltipEl.textContent = instance.content;
       instance.tooltipEl = tooltipEl;
+      instance.lastMouseX = event.clientX;
+      instance.lastMouseY = event.clientY;
 
       this.tooltip_updateTooltipPosition(instance, event);
 
       requestAnimationFrame(() => {
         tooltipEl.style.opacity = '1';
       });
+
+      // Setup global mouse listener if not already setup
+      if (!this.tooltip_mouseMoveListener) {
+        this.tooltip_setupGlobalMouseListener();
+      }
     },
 
     tooltip_hideTooltip(instance) {
@@ -299,10 +310,50 @@ export default {
       }, 200);
     },
 
+    tooltip_setupGlobalMouseListener() {
+      this.tooltip_mouseMoveListener = (e) => {
+        this.tooltip_instances.forEach((instance) => {
+          if (instance.tooltipEl) {
+            const distance = this.tooltip_calculateDistance(
+              e.clientX,
+              e.clientY,
+              instance.lastMouseX,
+              instance.lastMouseY
+            );
+
+            // Hide tooltip if mouse is more than 200px away from last position
+            if (distance > 200) {
+              this.tooltip_hideTooltip(instance);
+            } else {
+              // Update last mouse position for active tooltips
+              instance.lastMouseX = e.clientX;
+              instance.lastMouseY = e.clientY;
+            }
+          }
+        });
+      };
+
+      document.addEventListener('mousemove', this.tooltip_mouseMoveListener);
+    },
+
+    tooltip_removeGlobalMouseListener() {
+      if (this.tooltip_mouseMoveListener) {
+        document.removeEventListener('mousemove', this.tooltip_mouseMoveListener);
+        this.tooltip_mouseMoveListener = null;
+      }
+    },
+
+    tooltip_calculateDistance(x1, y1, x2, y2) {
+      return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    },
+
     tooltip_updateTooltipPosition(instance, event) {
       if (!instance.tooltipEl) {
         return;
       }
+
+      instance.lastMouseX = event.clientX;
+      instance.lastMouseY = event.clientY;
 
       const tooltipEl = instance.tooltipEl;
       const offset = 10;
