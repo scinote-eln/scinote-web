@@ -211,6 +211,17 @@ class StepsController < ApplicationController
       @step.position = nil
       @step.archive!(current_user)
 
+      log_activity(
+        :archive_step,
+        @my_module.project,
+        {
+          my_module: @my_module.id,
+          step: @step.id,
+          step_position: { id: @step.id,
+                           value_for: 'position_plus_one' }
+        }
+      )
+
       @protocol.steps.where('position > ?', position).order(:position).each do |step|
         step.update(position: step.position - 1)
       end
@@ -224,6 +235,12 @@ class StepsController < ApplicationController
       position = @protocol.steps.active.maximum(:position)
       @step.position = position ? position + 1 : 0
       @step.restore!(current_user)
+
+      log_activity(
+        :restore_step,
+        @my_module.project,
+        { step: @step.id }
+      )
     end
 
     if @step.step_orderable_elements.archived.any? || @step.assets.archived.any?

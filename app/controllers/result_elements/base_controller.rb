@@ -46,6 +46,13 @@ module ResultElements
         orderable_element.position = nil
         orderable_element.archive!(current_user)
         result.normalize_elements_position
+
+        case orderable_element.orderable
+        when ResultText
+          log_result_activity(:text_archived, { text_name: orderable_element.orderable.name })
+        when ResultTable
+          log_result_activity(:table_archived, { table_name: orderable_element.orderable.table.name })
+        end
       end
     end
 
@@ -54,6 +61,13 @@ module ResultElements
         position = result.result_orderable_elements.active.maximum(:position)
         orderable_element.position = position ? position + 1 : 0
         orderable_element.restore!(current_user)
+
+        case orderable_element.orderable
+        when ResultText
+          log_result_activity(:text_restored, { text_name: orderable_element.orderable.name })
+        when ResultTable
+          log_result_activity(:table_restored, { table_name: orderable_element.orderable.table.name })
+        end
       end
     end
 
