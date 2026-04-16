@@ -12,6 +12,7 @@ module Reports
         color = @color
         form_fields = form_response.form.form_fields
         form_field_values = form_response.form_field_values
+        settings = @settings
 
         table = [[
           I18n.t('projects.reports.elements.step_forms.field'),
