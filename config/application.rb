@@ -15,6 +15,7 @@ require 'action_view/railtie'
 # require "rails/test_unit/railtie"
 require 'datadog/auto_instrument' if ENV['DD_TRACE_ENABLED'] == 'true'
 
+require_relative '../lib/rack/set_wopi_binary_request_type'
 require_relative '../lib/rack/x_robots_tag'
 
 # Require the gems listed in Gemfile, including any gems
@@ -56,6 +57,9 @@ module Scinote
 
     Rails.autoloaders.main.ignore(Rails.root.join('addons/*/app/decorators'))
     Rails.autoloaders.main.ignore(Rails.root.join('addons/*/app/overrides'))
+
+    # Add SkipWopiRequestParsing middleware for parsing skipping of WOPI binary requests, if WOPI is enabled
+    config.middleware.insert_before 0, Rack::SetWopiBinaryRequestType if ENV['WOPI_ENABLED'] == 'true'
 
     # Add rack-attack middleware for request rate limiting
     config.middleware.use Rack::Attack
