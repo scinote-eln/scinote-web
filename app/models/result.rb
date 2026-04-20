@@ -35,20 +35,30 @@ class Result < ResultBase
     results = results.with(readable_results: readable_results)
                      .joins('INNER JOIN "readable_results" ON "readable_results"."id" = "results"."id"')
 
-    results.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
+    results.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, { include_archived: include_archived })
   end
 
-  def self.where_children_attributes_like(query, _options = {})
+  def self.where_children_attributes_like(query, options = {})
     unscoped_readable_results = unscoped.joins('INNER JOIN "readable_results" ON "readable_results"."id" = "results"."id"').select(:id, :type)
-    unscoped.from(
-      "(#{unscoped_readable_results.joins(:result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{unscoped_readable_results.joins(result_tables: :table).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{unscoped_readable_results.joins(:result_comments).where_attributes_like(ResultComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      ) AS results",
-      :results
-    )
+    if options[:include_archived]
+      text_sql = unscoped_readable_results.joins(:result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql
+
+      table_sql = unscoped_readable_results.joins(result_tables: :table).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql
+    else
+      text_sql = unscoped_readable_results.joins(result_texts: :result_orderable_element)
+                                          .where(result_orderable_element: { archived: false })
+                                          .where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query)
+                                          .to_sql
+
+      table_sql = unscoped_readable_results.joins(result_tables: %i(table result_orderable_element))
+                                           .where(result_orderable_element: { archived: false })
+                                           .where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query)
+                                           .to_sql
+    end
+
+    comment_sql = unscoped_readable_results.joins(:result_comments).where_attributes_like(ResultComment::SEARCHABLE_ATTRIBUTES, query).to_sql
+
+    unscoped.from("(#{text_sql} UNION #{table_sql} UNION #{comment_sql}) AS results", :results)
   end
 
   def self.readable_by_user(user, teams)
