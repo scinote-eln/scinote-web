@@ -34,6 +34,14 @@ class FormResponse < ApplicationRecord
 
   delegate :archived?, to: :step_orderable_element
 
+  scope :active, lambda {
+    joins(:step_orderable_element).where(step_orderable_elements: { archived: false })
+  }
+
+  scope :archived, lambda {
+    joins(:step_orderable_element).where(step_orderable_elements: { archived: true })
+  }
+
   def step
     step_orderable_element&.step
   end

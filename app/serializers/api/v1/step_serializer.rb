@@ -12,13 +12,28 @@ module Api
       attribute :completed_on, if: -> { object.completed? }
       belongs_to :user, serializer: UserSerializer
       belongs_to :protocol, serializer: ProtocolSerializer
-      has_many :assets, serializer: AssetSerializer
-      has_many :checklists, serializer: ChecklistSerializer
-      has_many :tables, serializer: TableSerializer
-      has_many :step_texts, serializer: StepTextSerializer
+      has_many :assets, serializer: AssetSerializer do
+        object.archived? ? object.assets : object.assets.active
+      end
+      has_many :checklists, serializer: ChecklistSerializer do
+        object.archived? ? object.checklists : object.checklists.active
+      end
+
+      has_many :tables, serializer: TableSerializer do
+        object.archived? ? object.tables : object.tables.active
+      end
+
+      has_many :step_texts, serializer: StepTextSerializer do
+        object.archived? ? object.step_texts : object.step_texts.active
+      end
+
       has_many :step_comments, key: :comments, serializer: CommentSerializer
-      has_many :form_responses, serializer: FormResponseSerializer
-      has_many :step_orderable_elements, key: :step_elements, serializer: StepOrderableElementSerializer
+      has_many :form_responses, serializer: FormResponseSerializer do
+        object.archived? ? object.form_responses : object.form_responses.active
+      end
+      has_many :step_orderable_elements, key: :step_elements, serializer: StepOrderableElementSerializer do
+        object.archived? ? object.step_orderable_elements : object.step_orderable_elements.active
+      end
 
       include TimestampableModel
 

@@ -32,6 +32,17 @@ class Table < ApplicationRecord
 
   after_save :update_ts_index
 
+  scope :active, lambda {
+    left_joins(step_table: :step_orderable_element)
+      .left_joins(result_table: :result_orderable_element)
+      .where('step_orderable_elements.archived = FALSE OR result_orderable_elements.archived = FALSE')
+  }
+  scope :archived, lambda {
+    left_joins(step_table: :step_orderable_element)
+      .left_joins(result_table: :result_orderable_element)
+      .where('step_orderable_elements.archived = TRUE OR result_orderable_elements.archived = TRUE')
+  }
+
   def metadata
     attributes['metadata'].is_a?(String) ? JSON.parse(attributes['metadata']) : attributes['metadata']
   end

@@ -3,7 +3,7 @@
 module Api
   module V2
     class ResultOrderableElementSerializer < ActiveModel::Serializer
-      attributes :id, :position, :orderable, :orderable_type
+      attributes :id, :position, :orderable, :orderable_type, :archived
 
       def orderable
         case object.orderable_type

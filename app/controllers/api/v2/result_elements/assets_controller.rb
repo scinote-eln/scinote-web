@@ -11,9 +11,9 @@ module Api
         before_action :load_asset, only: %i(show destroy)
 
         def index
-          result_assets =
-            timestamps_filter(@result.assets).page(params.dig(:page, :number))
-                                             .per(params.dig(:page, :size))
+          result_assets = timestamps_filter(@result.assets)
+          result_assets = archived_filter(result_assets, default_to_active: true)
+          result_assets = result_assets.page(params.dig(:page, :number)).per(params.dig(:page, :size))
 
           render jsonapi: result_assets, each_serializer: Api::V2::AssetSerializer
         end
