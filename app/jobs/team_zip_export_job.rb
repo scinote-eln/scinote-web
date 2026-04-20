@@ -208,7 +208,7 @@ class TeamZipExportJob < ZipExportJob
           file_name = preview.blob.filename.to_s
           file_data = preview.download
         end
-      rescue ActiveStorage::FileNotFoundError => e
+      rescue StandardError => e
         Rails.logger.error(e.message)
         Rails.logger.error(e.backtrace.join("\n"))
         return
