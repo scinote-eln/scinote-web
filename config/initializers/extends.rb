@@ -855,6 +855,7 @@ class Extends
     result_templates/index
     my_module_repositories/index
     protocol_repository_rows/index
+    equipment_bookings/index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {

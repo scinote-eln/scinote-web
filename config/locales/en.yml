@@ -371,6 +371,7 @@ en:
     activities: "Global activities"
     academy: "Courses"
     support: "Support"
+    equipment_bookings: "Equipment scheduling"
     support_links:
       support: "Knowledge center"
       tutorials: "Video tutorials"
@@ -1120,6 +1121,10 @@ en:
 
   teams:
     private_team: "Private workspace"
+  equipment_bookings:
+    index:
+      head_title: "Equipment scheduling"
+      show_calendar: "Show calendar for:"
   forms:
     published: "Published"
     draft: "Draft"
@@ -5127,6 +5132,7 @@ en:
     fluics_printer: "Fluics printer"
     forms: "Forms"
     settings: "Settings"
+    equipment_bookings: "Equipment scheduling"
 
   Add: "Add"
   Asset: "File"
