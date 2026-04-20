@@ -31,7 +31,12 @@ module LeftMenuBarHelper
                 icon: 'sn-icon-location',
                 active: storage_locations_are_selected?
               })
-
+    menu.push({
+                url: equipment_bookings_path,
+                name: t('left_menu_bar.equipment_bookings'),
+                icon: 'sn-icon-equipment-scheduling',
+                active: equipment_bookings_are_selected?
+              })
     menu.push({
                 url: forms_path,
                 name: t('left_menu_bar.forms'),
@@ -88,6 +93,10 @@ module LeftMenuBarHelper
 
   def storage_locations_are_selected?
     controller_name == 'storage_locations'
+  end
+
+  def equipment_bookings_are_selected?
+    controller_name == 'equipment_bookings'
   end
 
   def protocols_are_selected?

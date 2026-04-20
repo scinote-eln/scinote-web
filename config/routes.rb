@@ -1230,6 +1230,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :equipment_bookings
+
   # Shareable links
   get '/shared/:uuid/protocol',
       to: 'my_module_shareable_links#protocol_show',
