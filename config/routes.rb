@@ -1232,6 +1232,10 @@ Rails.application.routes.draw do
 
   resources :equipment_bookings
 
+  resources :calendar_events, only: %i(index show create update destroy) do
+    resources :calendar_event_participants, only: %i(index create destroy)
+  end
+
   # Shareable links
   get '/shared/:uuid/protocol',
       to: 'my_module_shareable_links#protocol_show',

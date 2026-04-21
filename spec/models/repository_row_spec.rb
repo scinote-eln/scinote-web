@@ -32,6 +32,7 @@ describe RepositoryRow, type: :model do
     it { should have_many :repository_columns }
     it { should have_many :my_module_repository_rows }
     it { should have_many :my_modules }
+    it { should have_many :calendar_events }
     it { should have_many(:child_connections).class_name('RepositoryRowConnection').with_foreign_key('parent_id').dependent(:destroy).inverse_of(:parent) }
     it { should have_many(:child_repository_rows).through(:child_connections).source(:child) }
     it { should have_many(:parent_connections).class_name('RepositoryRowConnection').with_foreign_key('child_id').dependent(:destroy).inverse_of(:child) }

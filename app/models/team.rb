@@ -64,6 +64,7 @@ class Team < ApplicationRecord
   has_many :forms, dependent: :destroy
   has_many :team_assignments, dependent: :destroy
   has_many :tags, dependent: :destroy
+  has_many :calendar_events, dependent: :destroy
 
   attr_accessor :without_templates
 
