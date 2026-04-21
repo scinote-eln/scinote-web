@@ -1230,7 +1230,12 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :equipment_bookings
+  resources :equipment_bookings do
+    collection do
+      get :assigned_repository_rows
+      get :assigned_users
+    end
+  end
 
   # Shareable links
   get '/shared/:uuid/protocol',

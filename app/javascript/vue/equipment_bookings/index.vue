@@ -12,13 +12,21 @@
       </div>
     </div>
 
-    <div class="p-4 rounded bg-white"></div>
+    <div class="p-4 rounded bg-white h-[calc(100vh_-_18rem)] flex" >
+      <Filters
+        v-if="selectedRepository"
+        :repository-id="selectedRepository"
+        :filters="filters"
+        @update:filters="filters = $event"
+      ></Filters>
+    </div>
   </div>
 </template>
 
 <script>
 import SelectDropdown from '../shared/select_dropdown.vue';
 import axios from '../../packs/custom_axios.js';
+import Filters from './filters.vue';
 
 import {
   list_repositories_path,
@@ -29,11 +37,22 @@ export default {
   data() {
     return {
       repositories: [],
-      selectedRepository: null
+      selectedRepository: null,
+      filters: {
+        types: {
+          calibration: true,
+          maintenance: true,
+          usage: true,
+          no_type: true
+        },
+        assignedRepositoryRows: [],
+        assignedUsers: []
+      }
     };
   },
   components: {
-    SelectDropdown
+    SelectDropdown,
+    Filters
   },
   mounted() {
     this.fetchRepositories();
