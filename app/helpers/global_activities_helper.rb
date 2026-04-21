@@ -22,6 +22,8 @@ module GlobalActivitiesHelper
 
       if key == 'comment' && parameters[key].strip.present?
         parameters[key] = '<i class="sn-icon sn-icon-comments"></i>' + parameters[key]
+      elsif parameters[key].blank? && key == 'step_position'
+        parameters[key] = '<i class="sn-icon sn-icon-archived"></i>'
       end
     end
 
@@ -49,6 +51,8 @@ module GlobalActivitiesHelper
     return message_item['value'] unless obj
 
     current_value = generate_name(message_item)
+    return if current_value.blank?
+
     team = activity.team
     path = ''
 
@@ -158,7 +162,7 @@ module GlobalActivitiesHelper
     return message_item['value'] unless obj
 
     value = obj.public_send(message_item['value_for'] || 'name')
-    value = I18n.t('global_activities.index.no_name') if value.blank?
+    value = I18n.t('global_activities.index.no_name') if value.blank? && message_item['value_for'] != 'position_plus_one'
 
     value
   end
