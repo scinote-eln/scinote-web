@@ -1125,6 +1125,17 @@ en:
     index:
       head_title: "Equipment scheduling"
       show_calendar: "Show calendar for:"
+      sidebar:
+        new_event: "New event"
+        filter_items: "Filter items"
+        all_items_selected: "All items selected"
+        filter_people: "Filter people"
+        all_users_selected: "All users selected"
+        event_types:
+          usage: "Usage"
+          maintenance: "Maintenance"
+          calibration: "Calibration"
+          other: "Other"
   forms:
     published: "Published"
     draft: "Draft"
