@@ -907,8 +907,8 @@ class ProtocolsController < ApplicationController
     if protocols.count == 1
       file_name = 'protocol.eln'
       unless protocol_name.nil?
-        escaped_name = protocol_name.gsub(/[^0-9a-zA-Z\-.,_]/i, '_')
-                                    .downcase[0..Constants::NAME_MAX_LENGTH]
+        escaped_name = ActiveStorage::Filename.new(protocol_name).sanitized.to_s
+                                              .downcase[0..Constants::NAME_MAX_LENGTH]
         file_name = escaped_name + '.eln' unless escaped_name.blank?
       end
     elsif protocols.length > 1
