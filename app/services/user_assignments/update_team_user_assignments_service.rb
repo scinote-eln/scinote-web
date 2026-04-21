@@ -2,9 +2,10 @@
 
 module UserAssignments
   class UpdateTeamUserAssignmentsService
-    def initialize(team_user_assignment)
+    def initialize(team_user_assignment, assigned_by)
       @user = team_user_assignment.user
       @team = team_user_assignment.assignable
+      @assigned_by = assigned_by
       @user_role = team_user_assignment.user_role
     end
 
