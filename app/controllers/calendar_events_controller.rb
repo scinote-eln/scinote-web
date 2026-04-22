@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CalendarEventsController < ApplicationController
+  before_action :check_calendar_events_enabled
   before_action :load_calendar_event, except: %i(index create)
   before_action :load_repository_row, only: :create
   before_action :check_read_permission, only: %i(index show)
@@ -68,6 +69,10 @@ class CalendarEventsController < ApplicationController
   end
 
   private
+
+  def check_calendar_events_enabled
+    render_404 unless CalendarEvent.calendar_events_enabled?
+  end
 
   def load_calendar_event
     @calendar_event = CalendarEvent.find_by(id: params[:id])

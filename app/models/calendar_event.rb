@@ -21,6 +21,10 @@ class CalendarEvent < ApplicationRecord
 
   accepts_nested_attributes_for :calendar_event_participants, allow_destroy: true
 
+  def self.calendar_events_enabled?
+    ApplicationSettings.instance.values['calendar_events_enabled'] == true
+  end
+
   private
 
   def set_full_day

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class EquipmentBookingsController < ApplicationController
+  before_action :check_calendar_events_enabled
   before_action :set_breadcrumbs_items, only: :index
   before_action :load_repository, only: :assigned_repository_rows
 
@@ -40,6 +41,10 @@ class EquipmentBookingsController < ApplicationController
   end
 
   private
+
+  def check_calendar_events_enabled
+    render :promo unless CalendarEvent.calendar_events_enabled?
+  end
 
   def set_breadcrumbs_items
     @breadcrumbs_items = [
