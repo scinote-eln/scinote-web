@@ -129,17 +129,21 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_20_095412) do
   end
 
   create_table "calendar_events", force: :cascade do |t|
+    t.string "name"
     t.string "subject_type", null: false
     t.bigint "subject_id", null: false
     t.bigint "team_id", null: false
     t.datetime "start_at"
     t.datetime "end_at"
     t.bigint "created_by_id", null: false
-    t.string "event_type", null: false
+    t.integer "event_type", null: false
+    t.string "event_sub_type"
+    t.boolean "full_day", default: false
     t.jsonb "metadata", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_calendar_events_on_created_by_id"
+    t.index ["event_sub_type"], name: "index_calendar_events_on_event_sub_type"
     t.index ["event_type"], name: "index_calendar_events_on_event_type"
     t.index ["subject_type", "subject_id"], name: "index_calendar_events_on_subject"
     t.index ["team_id"], name: "index_calendar_events_on_team_id"

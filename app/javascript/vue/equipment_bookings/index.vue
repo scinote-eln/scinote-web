@@ -20,6 +20,7 @@
         @update:filters="filters = $event"
       ></Filters>
     </div>
+
   </div>
 </template>
 

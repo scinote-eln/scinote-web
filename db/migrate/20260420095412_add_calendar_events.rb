@@ -3,12 +3,15 @@
 class AddCalendarEvents < ActiveRecord::Migration[7.2]
   def change
     create_table :calendar_events do |t|
+      t.string :name
       t.references :subject, polymorphic: true, null: false
       t.references :team, null: false, foreign_key: true
       t.datetime :start_at
       t.datetime :end_at
       t.references :created_by, null: false, foreign_key: { to_table: :users }
-      t.string :event_type, null: false, index: true
+      t.integer :event_type, null: false, index: true
+      t.string :event_sub_type, index: true
+      t.boolean :full_day, default: false
       t.jsonb :metadata, null: false, default: {}
 
       t.timestamps
