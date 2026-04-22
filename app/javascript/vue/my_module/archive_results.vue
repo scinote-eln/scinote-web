@@ -40,6 +40,7 @@ import Result from '../results/archived_result.vue';
 import ArchiveToolbar from './archive_toolbar.vue';
 import LoadingOverlay from '../results/loading_overlay.vue';
 import ResultsCollapseStateMixin from '../results/mixins/results_collapse_state.js';
+import tooltipMixin from '../mixins/tooltipMixin.js';
 
 import {
   my_module_results_path,
@@ -74,7 +75,7 @@ export default {
     LoadingOverlay,
     ArchiveToolbar
   },
-  mixins: [ResultsCollapseStateMixin],
+  mixins: [ResultsCollapseStateMixin, tooltipMixin],
   created() {
     const urlParams = new URLSearchParams(window.location.search);
     this.anchorId = urlParams.get('result_id');

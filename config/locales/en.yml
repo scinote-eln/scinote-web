@@ -467,6 +467,7 @@ en:
         move: "Move"
         download: "Download"
         delete: "Delete"
+        restore: 'Restore'
     sort:
       new_html: "Newest first &#8595;"
       old_html: "Oldest first &#8593;"
