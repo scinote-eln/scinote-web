@@ -70,11 +70,12 @@ import moduleNameObserver from '../mixins/moduleNameObserver';
 import clipboardPasteModal from '../shared/content/attachments/clipboard_paste_modal.vue';
 import AssetPasteMixin from '../shared/content/attachments/mixins/paste.js';
 import ResultsCollapseStateMixin from './mixins/results_collapse_state.js';
+import tooltipMixin from '../mixins/tooltipMixin.js';
 
 export default {
   name: 'Results',
   components: { ResultsToolbar, Result, clipboardPasteModal, LoadingOverlay },
-  mixins: [stackableHeadersMixin, moduleNameObserver, AssetPasteMixin, ResultsCollapseStateMixin],
+  mixins: [stackableHeadersMixin, moduleNameObserver, AssetPasteMixin, ResultsCollapseStateMixin, tooltipMixin],
   props: {
     url: { type: String, required: true },
     canCreate: { type: String, required: true },
