@@ -1,7 +1,7 @@
 <template>
   <div class="w-[200px] p-2 pr-4 flex flex-col gap-6 border-transparent !border-r-sn-light-grey border-solid  h-full">
     <div>
-      <button class="btn btn-primary w-full">
+      <button class="btn btn-primary w-full" @click="createEvent = true">
         <i class="sn-icon sn-icon-new-task"></i>
         {{ i18n.t('equipment_bookings.index.sidebar.new_event') }}
       </button>
@@ -56,12 +56,19 @@
         @change="$emit('update:filters', { ...filters, assignedUsers: $event })"
       ></SelectDropdown>
     </div>
+    <manageEventModal
+      v-if="createEvent"
+      :repositoryId="repositoryId"
+      @close="createEvent = false"
+      @event:created="createEvent = false"
+    ></manageEventModal>
   </div>
 </template>
 
 <script>
 import SelectDropdown from '../shared/select_dropdown.vue';
 import usersRenderer from '../shared/select_dropdown_renderers/user.vue';
+import manageEventModal from './manage_modal.vue';
 import {
   assigned_repository_rows_equipment_bookings_path,
   assigned_users_equipment_bookings_path
@@ -81,7 +88,8 @@ export default {
   },
   components: {
     SelectDropdown,
-    usersRenderer
+    usersRenderer,
+    manageEventModal
   },
   computed: {
     assignedRepositoryRowsUrl() {
@@ -96,6 +104,7 @@ export default {
   },
   data() {
     return {
+      createEvent: false,
       eventTypes: [
         { value: 'calibration', label: this.i18n.t('equipment_bookings.index.sidebar.event_types.calibration'), color: '#E9A845' },
         { value: 'maintenance', label: this.i18n.t('equipment_bookings.index.sidebar.event_types.maintenance'), color: '#DF3562' },

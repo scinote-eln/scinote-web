@@ -70,7 +70,16 @@ class CalendarEventsController < ApplicationController
   end
 
   def calendar_event_params
-    params.permit(%i(start_at end_at event_type metadata:{}))
+    params.permit(
+      :name,
+      :start_at,
+      :end_at,
+      :event_type,
+      :event_sub_type,
+      :full_day,
+      calendar_event_participants_attributes: %i(id user_id _destroy),
+      metadata: {}
+    )
   end
 
   def check_read_permission; end
