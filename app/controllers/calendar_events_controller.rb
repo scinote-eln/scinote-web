@@ -8,6 +8,17 @@ class CalendarEventsController < ApplicationController
 
   def index
     calendar_events = current_team.calendar_events.where(event_type: params[:event_type])
+
+    if params.dig(:filters, :sub_types).present?
+      selected_sub_types = params[:filters][:sub_types].select { |_, v| v == 'true' }.keys
+      calendar_events = calendar_events.event_sub_type_filter(selected_sub_types)
+    end
+
+    calendar_events = calendar_events.datetime_filter(params[:start_date], params[:end_date]) if params[:start_date].present? && params[:end_date].present?
+    calendar_events = calendar_events.repository_filter(params[:repository_id]) if params[:repository_id].present?
+    calendar_events = calendar_events.repository_rows_filter(params[:filters][:subject_ids]) if params.dig(:filters, :subject_ids).present?
+    calendar_events = calendar_events.assigned_users_filter(params[:filters][:assigned_user_ids]) if params.dig(:filters, :assigned_user_ids).present?
+
     respond_to do |format|
       format.json do
         render json: calendar_events,
