@@ -8,6 +8,28 @@ class CalendarEventsController < ApplicationController
 
   def index
     calendar_events = current_team.calendar_events.where(event_type: params[:event_type])
+
+    if params.dig(:filters, :sub_types).present?
+      calendar_events = calendar_events.where(event_sub_type: params[:filters][:sub_types].select { |_, v| v == 'true' }.keys)
+    end
+
+    if params[:start_date].present? && params[:end_date].present?
+      calendar_events = calendar_events.where('start_at >= ? AND end_at <= ?', params[:start_date], params[:end_date])
+    end
+
+    if params[:repository_id].present?
+      calendar_events = calendar_events.joins("INNER JOIN repository_rows ON repository_rows.id = calendar_events.subject_id AND calendar_events.subject_type = 'RepositoryRow'")
+                                       .where(repository_rows: { repository_id: params[:repository_id] })
+    end
+
+    if params.dig(:filters, :subject_ids).present?
+      calendar_events = calendar_events.where(subject_id: params[:filters][:subject_ids])
+    end
+
+    if params.dig(:filters, :assigned_user_ids).present?
+      calendar_events = calendar_events.where(id: CalendarEventParticipant.where(user_id: params[:filters][:assigned_user_ids]).select(:calendar_event_id))
+    end
+
     respond_to do |format|
       format.json do
         render json: calendar_events,

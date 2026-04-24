@@ -11,12 +11,12 @@
         v-for="eventType in eventTypes"
         :key="eventType.value"
         class="flex items-center gap-2 cursor-pointer"
-        @click="$emit('update:filters', { ...filters, types: { ...filters['types'], [eventType.value]: !filters['types'][eventType.value] } })"
+        @click="$emit('update:filters', { ...filters, sub_types: { ...filters['sub_types'], [eventType.value]: !filters['sub_types'][eventType.value] } })"
       >
         <div class="w-7 h-7 p-1 relative">
           <div
             :style="{
-              backgroundColor: filters['types'][eventType.value] ? eventType.color : '#FFF',
+              backgroundColor: filters['sub_types'][eventType.value] ? eventType.color : '#FFF',
               border: `1px solid ${eventType.color}`
             }"
             class="w-full h-full">
@@ -36,8 +36,8 @@
         :multiple="true"
         :withCheckboxes="true"
         :searchable="true"
-        :value="filters.assignedRepositoryRows"
-        @change="$emit('update:filters', { ...filters, assignedRepositoryRows: $event })"
+        :value="filters.subject_ids"
+        @change="$emit('update:filters', { ...filters, subject_ids: $event })"
       ></SelectDropdown>
     </div>
     <div>
@@ -50,10 +50,10 @@
         :multiple="true"
         :withCheckboxes="true"
         :searchable="true"
-        :value="filters.assignedUsers"
+        :value="filters.assigned_users"
         :option-renderer="usersRenderer"
         :label-renderer="usersRenderer"
-        @change="$emit('update:filters', { ...filters, assignedUsers: $event })"
+        @change="$emit('update:filters', { ...filters, assigned_users: $event })"
       ></SelectDropdown>
     </div>
     <manageEventModal
