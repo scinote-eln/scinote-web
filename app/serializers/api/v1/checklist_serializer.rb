@@ -11,10 +11,6 @@ module Api
         object&.step_orderable_element&.position
       end
 
-      def archived
-        object.archived? if object.step_orderable_element.present?
-      end
-
       include TimestampableModel
     end
   end

@@ -103,12 +103,12 @@
           <% end %>
         </div>
 
-        <% result_orderable_elements = (@settings.dig('task', 'archived_results') || export_all) ? result.result_orderable_elements : result.result_orderable_elements.active %>
-        <% result_orderable_elements.each do |element| %>
-          <% if element.orderable_type == "ResultTable" && @settings.dig('task', 'table_results') %>
-            <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, element: element} %>
-          <% elsif element.orderable_type == "ResultText" && @settings.dig('task', 'text_results') %>
-            <%= render partial: 'reports/elements/my_module_result_text_element', locals: { result: result, export_all: export_all, element: element } %>
+        <% result_elements = (@settings.dig('task', 'archived_results') || export_all) ? result.all_elements : result.active_elements_ordered %>
+        <% result_elements.each do |element| %>
+          <% if element.is_a?(Table) && @settings.dig('task', 'table_results') %>
+            <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, table: element} %>
+          <% elsif element.is_a?(ResultText) && @settings.dig('task', 'text_results') %>
+            <%= render partial: 'reports/elements/my_module_result_text_element', locals: { result: result, export_all: export_all, result_text: element } %>
           <% end %>
         <% end %>
 

@@ -44,11 +44,11 @@ module Reports::Docx::DrawResults
           end
         end
         draw_result_asset(result, @settings) if @settings.dig('task', 'file_results')
-        orderable_elements = @settings.dig('task', 'archived_results') ? result.result_orderable_elements : result.result_orderable_elements.active
+        orderable_elements = @settings.dig('task', 'archived_results') ? result.all_elements : result.active_elements_ordered
         orderable_elements.each do |element|
-          if @settings.dig('task', 'table_results') && element.orderable_type == 'ResultTable'
+          if @settings.dig('task', 'table_results') && element.is_a?(Table)
             draw_result_table(element)
-          elsif @settings.dig('task', 'text_results') && element.orderable_type == 'ResultText'
+          elsif @settings.dig('task', 'text_results') && element.is_a?(ResultText)
             draw_result_text(element)
           end
         end

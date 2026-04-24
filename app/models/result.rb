@@ -16,6 +16,15 @@ class Result < ResultBase
 
   delegate :team, to: :my_module
 
+  scope :archived_or_having_archived, lambda {
+    with_elements = left_outer_joins(:result_texts, :assets, :tables)
+    with_elements.archived.or(
+      with_elements.where(result_texts: { archived: true })
+                  .or(with_elements.where(assets: { archived: true }))
+                  .or(with_elements.where(tables: { archived: true }))
+    )
+  }
+
   def self.search(user,
                   include_archived,
                   query = nil,
@@ -45,13 +54,13 @@ class Result < ResultBase
 
       table_sql = unscoped_readable_results.joins(result_tables: :table).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql
     else
-      text_sql = unscoped_readable_results.joins(result_texts: :result_orderable_element)
-                                          .where(result_orderable_element: { archived: false })
+      text_sql = unscoped_readable_results.joins(:result_texts)
+                                          .where(result_texts: { archived: false })
                                           .where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query)
                                           .to_sql
 
-      table_sql = unscoped_readable_results.joins(result_tables: %i(table result_orderable_element))
-                                           .where(result_orderable_element: { archived: false })
+      table_sql = unscoped_readable_results.joins(result_tables: :table)
+                                           .where(tables: { archived: false })
                                            .where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query)
                                            .to_sql
     end
@@ -69,6 +78,29 @@ class Result < ResultBase
     return self if teams.blank?
 
     joins(my_module: { experiment: :project }).where(my_module: { experiments: { projects: { team: teams } } })
+  end
+
+  def all_elements
+    result_texts + tables
+  end
+
+  def active_elements
+    result_texts.active + tables.active
+  end
+
+  def active_elements_ordered
+    (
+      result_texts.joins(:result_orderable_element).active.select('result_texts.*, result_orderable_elements.position as position') +
+      tables.joins(result_table: :result_orderable_element).active.select('tables.*, result_orderable_elements.position as position')
+    ).sort_by(&:position)
+  end
+
+  def archived_elements
+    result_texts.archived + tables.archived
+  end
+
+  def has_archived_element?
+    result_texts.archived.any? || tables.archived.any?
   end
 
   def parent

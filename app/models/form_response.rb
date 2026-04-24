@@ -5,12 +5,15 @@ class InvalidStatusError < StandardError; end
 class FormResponse < ApplicationRecord
   include Discard::Model
   include ObservableModel
+  include ArchivableModel
 
   default_scope -> { kept }
 
   belongs_to :form
   belongs_to :created_by, class_name: 'User'
   belongs_to :submitted_by, class_name: 'User', optional: true
+  belongs_to :archived_by, class_name: 'User', optional: true
+  belongs_to :restored_by, class_name: 'User', optional: true
   belongs_to :parent, polymorphic: true, inverse_of: :form_responses
 
   has_one :step_orderable_element, as: :orderable, dependent: :destroy
@@ -32,15 +35,7 @@ class FormResponse < ApplicationRecord
            inverse_of: :previous_form_response,
            dependent: :destroy
 
-  delegate :archived?, to: :step_orderable_element
-
-  scope :active, lambda {
-    joins(:step_orderable_element).where(step_orderable_elements: { archived: false })
-  }
-
-  scope :archived, lambda {
-    joins(:step_orderable_element).where(step_orderable_elements: { archived: true })
-  }
+  after_save :manage_orderable_element_on_archive, if: -> { saved_change_to_archived? }
 
   def step
     step_orderable_element&.step
@@ -128,5 +123,15 @@ class FormResponse < ApplicationRecord
   # Override for ObservableModel
   def changed_by
     submitted_by || created_by
+  end
+
+  def manage_orderable_element_on_archive
+    return unless parent.is_a? Step
+
+    if archived?
+      step_orderable_element&.destroy
+    elsif step_orderable_element.blank?
+      create_step_orderable_element!(step: step, position: step.next_element_position)
+    end
   end
 end

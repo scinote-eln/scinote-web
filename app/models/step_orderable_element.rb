@@ -1,16 +1,13 @@
 # frozen_string_literal: true
 
 class StepOrderableElement < ApplicationRecord
-  include ArchivableModel
   include ObservableModel
 
-  validates :position, uniqueness: { scope: :step }, if: -> { active? }
+  validates :position, uniqueness: { scope: :step }
   validate :check_step_relations
 
   belongs_to :step, inverse_of: :step_orderable_elements, touch: true
   belongs_to :orderable, polymorphic: true, inverse_of: :step_orderable_element
-  belongs_to :archived_by, class_name: 'User', optional: true
-  belongs_to :restored_by, class_name: 'User', optional: true
 
   around_destroy :decrement_following_elements_positions
 

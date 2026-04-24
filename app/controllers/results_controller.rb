@@ -61,7 +61,7 @@ class ResultsController < ResultBaseController
   def restore
     if @result.restore(current_user)
       log_activity(:result_restored, { result: @result })
-      if @result.result_orderable_elements.archived.any? || @result.assets.archived.any?
+      if @result.has_archived_element? || @result.assets.archived.any?
         render json: @result,
                serializer: ResultSerializer,
                include: %i(result_orderable_elements assets),

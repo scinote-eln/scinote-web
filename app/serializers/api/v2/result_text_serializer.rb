@@ -9,10 +9,6 @@ module Api
       def text
         object.tinymce_render('text')
       end
-
-      def archived
-        object.archived? if object.result_orderable_element.present?
-      end
     end
   end
 end

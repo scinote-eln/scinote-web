@@ -47,16 +47,16 @@ module Reports::Docx::DrawStep
       end
     end
 
-    orderable_elements = @settings.dig('task', 'protocol', 'archived_steps') ? step.step_orderable_elements : step.step_orderable_elements.active
-    orderable_elements.order(:position).each do |element|
-      case element.orderable_type
-      when 'StepTable'
-        handle_step_table(element.orderable.table)
-      when 'Checklist'
-        handle_checklist(element.orderable)
-      when 'StepText'
+    elements = @settings.dig('task', 'protocol', 'archived_steps') ? step.all_elements : step.active_elements_ordered
+    elements.each do |element|
+      case element
+      when Table
+        handle_step_table(element)
+      when Checklist
+        handle_checklist(element)
+      when StepText
         handle_step_text(element)
-      when 'FormResponse'
+      when FormResponse
         handle_step_forms(element)
       end
     end
@@ -89,11 +89,11 @@ module Reports::Docx::DrawStep
     draw_step_checklist(checklist) if @settings.dig('task', 'protocol', 'step_checklists')
   end
 
-  def handle_step_text(element)
-    draw_step_text(element) if @settings.dig('task', 'protocol', 'step_texts')
+  def handle_step_text(step_text)
+    draw_step_text(step_text) if @settings.dig('task', 'protocol', 'step_texts')
   end
 
-  def handle_step_forms(element)
-    draw_step_forms(element) if @settings.dig('task', 'protocol', 'step_forms')
+  def handle_step_forms(form_response)
+    draw_step_forms(form_response) if @settings.dig('task', 'protocol', 'step_forms')
   end
 end

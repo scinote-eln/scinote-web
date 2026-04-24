@@ -18,16 +18,12 @@ class TableSerializer < ActiveModel::Serializer
     :step
   end
 
-  def archived
-    object.archived?
-  end
-
   def archived_by
-    object.step_table.step_orderable_element.archived_by&.full_name
+    object.archived_by&.full_name
   end
 
   def archived_on
-    I18n.l(object.step_table.step_orderable_element.archived_on, format: :full) if object.step_table.step_orderable_element.archived_on.present?
+    I18n.l(object.archived_on, format: :full) if object.archived_on.present?
   end
 
   def urls
@@ -35,13 +31,12 @@ class TableSerializer < ActiveModel::Serializer
 
     object.reload unless object.step
 
-    step_orderable_element = object.step_table.step_orderable_element
     step = object.step
     user = scope[:user] || @instance_options[:user]
 
     url_list = {}
 
-    if can_manage_step_orderable_element?(user, step_orderable_element)
+    if can_manage_step_table?(user, object)
       url_list.merge!({
                         duplicate_url: duplicate_step_table_path(step, object),
                         update_url: step_table_path(step, object),
@@ -50,9 +45,9 @@ class TableSerializer < ActiveModel::Serializer
                       })
     end
 
-    url_list[:archive_url] = archive_step_table_path(step, object) if can_archive_step_orderable_element?(user, step_orderable_element)
-    url_list[:restore_url] = restore_step_table_path(step, object) if can_restore_step_orderable_element?(user, step_orderable_element)
-    url_list[:delete_url] = step_table_path(step, object) if can_delete_step_orderable_element?(user, step_orderable_element)
+    url_list[:archive_url] = archive_step_table_path(step, object) if can_archive_step_table?(user, object)
+    url_list[:restore_url] = restore_step_table_path(step, object) if can_restore_step_table?(user, object)
+    url_list[:delete_url] = step_table_path(step, object) if can_delete_step_table?(user, object)
 
     url_list
   end

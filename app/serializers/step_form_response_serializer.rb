@@ -21,16 +21,12 @@ class StepFormResponseSerializer < ActiveModel::Serializer
     :step
   end
 
-  def archived
-    object.archived?
-  end
-
   def archived_by
-    object.step_orderable_element.archived_by&.full_name
+    object.archived_by&.full_name
   end
 
   def archived_on
-    I18n.l(object.step_orderable_element.archived_on, format: :full) if object.step_orderable_element.archived_on.present?
+    I18n.l(object.archived_on, format: :full) if object.archived_on.present?
   end
 
   def in_repository
@@ -55,13 +51,12 @@ class StepFormResponseSerializer < ActiveModel::Serializer
 
   def urls
     user = scope[:user] || @instance_options[:user]
-    step_orderable_element = object.step_orderable_element
     step = object.step
 
     url_list = {}
 
     if Form.forms_enabled?
-      if can_manage_step_orderable_element?(user, step_orderable_element)
+      if can_manage_step_form_response?(user, object)
         url_list[:add_value] = form_response_form_field_values_path(object)
         url_list[:move_url] = move_step_form_response_path(step, object)
         url_list[:move_targets_url] = move_targets_step_text_path(step, object)
@@ -69,11 +64,11 @@ class StepFormResponseSerializer < ActiveModel::Serializer
 
       url_list[:submit] = submit_step_form_response_path(step, object) if can_submit_form_response?(user, object)
       url_list[:reset] = reset_step_form_response_path(step, object) if can_reset_form_response?(user, object)
-      url_list[:restore_url] = restore_step_form_response_path(step, object) if can_restore_step_orderable_element?(user, step_orderable_element)
+      url_list[:restore_url] = restore_step_form_response_path(step, object) if can_restore_step_form_response?(user, object)
     end
 
-    url_list[:delete_url] = step_form_response_path(step, object) if can_delete_step_orderable_element?(user, step_orderable_element)
-    url_list[:archive_url] = archive_step_form_response_path(step, object) if can_archive_step_orderable_element?(user, step_orderable_element)
+    url_list[:delete_url] = step_form_response_path(step, object) if can_delete_step_form_response?(user, object)
+    url_list[:archive_url] = archive_step_form_response_path(step, object) if can_archive_step_form_response?(user, object)
 
     url_list
   end

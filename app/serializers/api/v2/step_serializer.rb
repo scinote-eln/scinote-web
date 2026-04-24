@@ -31,9 +31,7 @@ module Api
       has_many :form_responses, serializer: Api::V2::FormResponseSerializer do
         object.archived? ? object.form_responses : object.form_responses.active
       end
-      has_many :step_orderable_elements, key: :step_elements, serializer: Api::V2::StepOrderableElementSerializer do
-        object.archived? ? object.step_orderable_elements : object.step_orderable_elements.active
-      end
+      has_many :step_orderable_elements, key: :step_elements, serializer: Api::V2::StepOrderableElementSerializer
 
       include TimestampableModel
     end
