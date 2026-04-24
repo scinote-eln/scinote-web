@@ -10,6 +10,7 @@
 @import "tailwind/checkbox";
 @import "tailwind/toggle";
 @import "tailwind/tabs";
+@import "tailwind/schedulex.css";
 
 @tailwind base;
 @tailwind components;

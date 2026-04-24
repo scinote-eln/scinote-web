@@ -19,6 +19,11 @@
         :filters="filters"
         @update:filters="filters = $event"
       ></Filters>
+      <CalendarView
+        v-if="selectedRepository"
+        :repositoryId="selectedRepository"
+        :filters="filters"
+      ></CalendarView>
     </div>
 
   </div>
@@ -27,6 +32,7 @@
 <script>
 import SelectDropdown from '../shared/select_dropdown.vue';
 import axios from '../../packs/custom_axios.js';
+import CalendarView from './calendar_view.vue';
 import Filters from './filters.vue';
 
 import {
@@ -40,20 +46,21 @@ export default {
       repositories: [],
       selectedRepository: null,
       filters: {
-        types: {
+        sub_types: {
           calibration: true,
           maintenance: true,
           usage: true,
           no_type: true
         },
-        assignedRepositoryRows: [],
-        assignedUsers: []
+        subject_ids: [],
+        assigned_users: []
       }
     };
   },
   components: {
     SelectDropdown,
-    Filters
+    Filters,
+    CalendarView
   },
   mounted() {
     this.fetchRepositories();
