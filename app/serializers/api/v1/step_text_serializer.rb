@@ -12,10 +12,6 @@ module Api
         object.text&.force_encoding(Encoding::UTF_8)
       end
 
-      def archived
-        object.archived? if object.step_orderable_element.present?
-      end
-
       def position
         object&.step_orderable_element&.position
       end

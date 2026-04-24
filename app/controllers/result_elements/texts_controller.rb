@@ -79,7 +79,10 @@ module ResultElements
     end
 
     def archive
-      archive_element!(@result, @result_text.result_orderable_element)
+      ActiveRecord::Base.transaction do
+        @result_text.archive!(current_user)
+        log_result_activity(:text_archived, { text_name: @result_text.name })
+      end
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -87,7 +90,10 @@ module ResultElements
     end
 
     def restore
-      restore_element!(@result, @result_text.result_orderable_element)
+      ActiveRecord::Base.transaction do
+        @result_text.restore!(current_user)
+        log_result_activity(:text_restored, { text_name: @result_text.name })
+      end
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -120,19 +126,19 @@ module ResultElements
     end
 
     def check_manage_permissions
-      render_403 unless can_manage_result_orderable_element?(@result_text.result_orderable_element)
+      render_403 unless can_manage_result_text?(@result_text)
     end
 
     def check_archive_permissions
-      render_403 unless can_archive_result_orderable_element?(@result_text.result_orderable_element)
+      render_403 unless can_archive_result_text?(@result_text)
     end
 
     def check_restore_permissions
-      render_403 unless can_restore_result_orderable_element?(@result_text.result_orderable_element)
+      render_403 unless can_restore_result_text?(@result_text)
     end
 
     def check_delete_permissions
-      render_403 unless can_delete_result_orderable_element?(@result_text.result_orderable_element)
+      render_403 unless can_delete_result_text?(@result_text)
     end
 
     def result_annotation_notification(old_text = nil)

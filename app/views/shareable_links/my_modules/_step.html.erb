@@ -75,7 +75,7 @@
 
   <div class="collapse <%= 'in' unless step.skipped_at %>" id="stepBody<%= step.id %>">
     <div class="step-elements">
-      <% step.step_orderable_elements.active.sort_by(&:position).each do |element| %>
+      <% step.step_orderable_elements.sort_by(&:position).each do |element| %>
         <% if element.orderable_type == 'StepText' %>
           <%= render partial: "shareable_links/my_modules/step_elements/text", locals: { element: element.orderable } %>
         <% elsif element.orderable_type == 'Checklist' %>

@@ -11,7 +11,7 @@ module Api
       end
 
       def archived
-        object.table.archived? if object.result_orderable_element.present?
+        object.table.archived
       end
 
       def table_contents

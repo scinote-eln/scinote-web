@@ -66,8 +66,18 @@ class Step < ApplicationRecord
                                 },
                                 allow_destroy: true
 
-  scope :in_order, -> { order(position: :asc) }
+  scope :ordered, -> { order(position: :asc) }
   scope :desc_order, -> { order(position: :desc) }
+  scope :archived_or_having_archived, lambda {
+    with_elements = left_outer_joins(:checklists, :step_texts, :assets, :tables, :form_responses)
+    with_elements.archived.or(
+      with_elements.where(checklists: { archived: true })
+                  .or(with_elements.where(step_texts: { archived: true }))
+                  .or(with_elements.where(assets: { archived: true }))
+                  .or(with_elements.where(tables: { archived: true }))
+                  .or(with_elements.where(form_responses: { archived: true }))
+    )
+  }
 
   def self.search(user,
     include_archived,
@@ -97,7 +107,6 @@ class Step < ApplicationRecord
   end
 
   def self.where_children_attributes_like(query, options = {})
-
     unscoped_readable_steps = unscoped.joins('INNER JOIN "readable_steps" ON "readable_steps"."id" = "steps"."id"').select(:id)
     sql = "#{unscoped_readable_steps.joins(:step_texts).where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
     UNION ALL
@@ -140,6 +149,31 @@ class Step < ApplicationRecord
 
   def self.readable_by_user(user, teams)
     joins(:protocol).where(protocol: { my_module: MyModule.readable_by_user(user, teams) })
+  end
+
+  def all_elements
+    checklists + step_texts + tables + form_responses
+  end
+
+  def active_elements
+    checklists.active + step_texts.active + tables.active + form_responses.active
+  end
+
+  def active_elements_ordered
+    (
+      checklists.joins(:step_orderable_element).active.select('checklists.*, step_orderable_elements.position as position') +
+      step_texts.joins(:step_orderable_element).active.select('step_texts.*, step_orderable_elements.position as position') +
+      tables.joins(step_table: :step_orderable_element).active.select('tables.*, step_orderable_elements.position as position') +
+      form_responses.joins(:step_orderable_element).active.select('form_responses.*, step_orderable_elements.position as position')
+    ).sort_by(&:position)
+  end
+
+  def archived_elements
+    checklists.archived + step_texts.archived + tables.archived + form_responses.archived
+  end
+
+  def has_archived_element?
+    checklists.archived.any? || step_texts.archived.any? || tables.archived.any? || form_responses.archived.any?
   end
 
   def can_destroy?
@@ -235,13 +269,13 @@ class Step < ApplicationRecord
   end
 
   def normalize_elements_position
-    step_orderable_elements.active.order(:position).each_with_index do |element, index|
+    step_orderable_elements.order(:position).each_with_index do |element, index|
       element.update!(position: index) unless element.position == index
     end
   end
 
   def next_element_position
-    current_position = step_orderable_elements.active.order(position: :asc).last&.position
+    current_position = step_orderable_elements.order(position: :asc).last&.position
 
     current_position.nil? ? 0 : current_position + 1
   end

@@ -75,14 +75,21 @@ module StepElements
     end
 
     def archive
-      archive_element!(@step, @form_response.step_orderable_element)
+      ActiveRecord::Base.transaction do
+        @form_response.archive!(current_user)
+        log_step_activity(:form_archived, { form: @form_response.form.id })
+      end
+
       head :ok
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
 
     def restore
-      restore_element!(@step, @form_response.step_orderable_element)
+      ActiveRecord::Base.transaction do
+        @form_response.restore!(current_user)
+        log_step_restore_activity(:task_step_form_restored, { form: @form_response.form.id })
+      end
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -118,19 +125,19 @@ module StepElements
     end
 
     def check_manage_permissions
-      render_403 unless can_manage_step_orderable_element?(@form_response.step_orderable_element)
+      render_403 unless can_manage_step_form_response?(@form_response)
     end
 
     def check_archive_permissions
-      render_403 unless can_archive_step_orderable_element?(@form_response.step_orderable_element)
+      render_403 unless can_archive_step_form_response?(@form_response)
     end
 
     def check_restore_permissions
-      render_403 unless can_restore_step_orderable_element?(@form_response.step_orderable_element)
+      render_403 unless can_restore_step_form_response?(@form_response)
     end
 
     def check_delete_permissions
-      render_403 unless can_delete_step_orderable_element?(@form_response.step_orderable_element)
+      render_403 unless can_delete_step_form_response?(@form_response)
     end
 
     def log_step_form_activity(element_type_of, message_items = {})

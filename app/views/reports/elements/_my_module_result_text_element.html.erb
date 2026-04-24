@@ -1,6 +1,5 @@
 <% result ||= report_element.result %>
-<% result_text = element.orderable %>
-<% timestamp = element.created_at %>
+<% timestamp = result_text.created_at %>
 <% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-result-element report-result-text-element">
   <div class="report-element-header">
@@ -18,8 +17,8 @@
       <div class="user-time">
         <% if result_text.archived? %>
           <%= t("projects.reports.elements.archived_metadata",
-                user: result_text.result_orderable_element.archived_by&.full_name,
-                datetime: l(result_text.result_orderable_element.archived_on, format: :full)) %>
+                user: result_text.archived_by&.full_name,
+                datetime: l(result_text.archived_on, format: :full)) %>
         <% else %>
           <%= t("projects.reports.elements.result_text.user_time", timestamp: l(timestamp, format: :full)) %>
         <% end %>

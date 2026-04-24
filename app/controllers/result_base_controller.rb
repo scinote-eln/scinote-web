@@ -9,19 +9,12 @@ class ResultBaseController < ApplicationController
       format.json do
         # API endpoint
         view_mode = params[:view_mode]
-        @results = if view_mode == 'archived'
-                     results_with_archived_elements = @parent.results.active.joins(:result_orderable_elements)
-                                                             .where(result_orderable_elements: { archived: true })
-                                                             .distinct
-                     results_with_archived_assets = @parent.results.active.joins(:assets)
-                                                           .where(assets: { archived: true })
-                                                           .distinct
-                     @parent.results.where(archived: true)
-                            .or(@parent.results.where(id: results_with_archived_elements.select(:id)))
-                            .or(@parent.results.where(id: results_with_archived_assets.select(:id)))
-                   else
-                     @parent.results.active
-                   end
+        @results =
+          if view_mode == 'archived'
+            @parent.results.archived_or_having_archived
+          else
+            @parent.results.active
+          end
 
         update_and_apply_user_sort_preference!
         apply_filters!
@@ -64,9 +57,9 @@ class ResultBaseController < ApplicationController
 
   def elements
     elements = if params[:view_mode] == 'archived'
-                 @result.result_orderable_elements.where(archived: true)
+                 @result.archived_elements
                else
-                 @result.result_orderable_elements.active.order(:position)
+                 @result.active_elements_ordered
                end
     render json: elements,
            each_serializer: ResultOrderableElementSerializer,

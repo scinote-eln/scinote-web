@@ -5,11 +5,8 @@ class ResultTable < ApplicationRecord
   belongs_to :table, inverse_of: :result_table, dependent: :destroy, touch: true
   has_one :result_orderable_element, as: :orderable, dependent: :destroy
 
-  scope :active, lambda {
-    joins(:result_orderable_element).where(result_orderable_elements: { archived: false })
-  }
+  delegate :archived, to: :table
 
-  scope :archived, lambda {
-    joins(:result_orderable_element).where(result_orderable_elements: { archived: true })
-  }
+  scope :active, -> { joins(:table).where(table: { archived: false }) }
+  scope :archived, -> { joins(:table).where(table: { archived: true }) }
 end

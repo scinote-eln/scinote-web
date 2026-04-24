@@ -22,27 +22,14 @@ class StepsController < ApplicationController
 
   def index
     view_mode = params[:view_mode]
-    @steps = @protocol.steps.includes(:assets).preload(step_orderable_elements: :orderable)
-
-    @steps = if view_mode == 'archived'
-               steps_with_archived_elements = @steps.active
-                                                    .joins(:step_orderable_elements)
-                                                    .where(step_orderable_elements: { archived: true })
-                                                    .distinct
-               steps_with_archived_assets = @steps.active.joins(:assets)
-                                                  .where(assets: { archived: true })
-                                                  .distinct
-
-               @steps.where(archived: true)
-                     .or(@steps.where(id: steps_with_archived_elements.select(:id)))
-                     .or(@steps.where(id: steps_with_archived_assets.select(:id)))
-             else
-               @steps.active.in_order
-             end
+    @steps = @protocol.steps.preload(:assets, :step_orderable_elements, :step_texts, :form_responses, :tables, :checklists)
 
     if view_mode == 'archived'
+      @steps = @steps.archived_or_having_archived
       update_and_apply_user_sort_preference!
       apply_filters!
+    else
+      @steps = @steps.active.ordered
     end
 
     render json: @steps,
@@ -54,14 +41,14 @@ class StepsController < ApplicationController
   end
 
   def list
-    @steps = @protocol.steps.in_order
+    @steps = @protocol.steps.ordered
   end
 
   def elements
     elements = if params[:view_mode] == 'archived'
-                 @step.step_orderable_elements.where(archived: true)
+                 @step.archived_elements
                else
-                 @step.step_orderable_elements.active.order(:position)
+                 @step.active_elements_ordered
                end
 
     render json: elements,
@@ -243,7 +230,7 @@ class StepsController < ApplicationController
       )
     end
 
-    if @step.step_orderable_elements.archived.any? || @step.assets.archived.any?
+    if @step.has_archived_element? || @step.assets.archived.any?
       render json: @step,
              serializer: StepSerializer,
              include: %i(step_orderable_elements assets),

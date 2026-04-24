@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 class ResultOrderableElement < ApplicationRecord
-  include ArchivableModel
   include ObservableModel
 
   validate :check_result_relations
 
-  validates :position, uniqueness: { scope: %i(result_id) }, if: -> { active? }
+  validates :position, uniqueness: { scope: %i(result_id) }
 
   around_destroy :decrement_following_elements_positions
 

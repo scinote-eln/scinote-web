@@ -17,10 +17,6 @@ module Api
         object.form_field_values.latest
       end
 
-      def archived
-        object.archived?
-      end
-
       def position
         object&.step_orderable_element&.position
       end

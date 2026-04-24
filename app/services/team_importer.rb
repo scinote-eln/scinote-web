@@ -855,12 +855,7 @@ class TeamImporter
         StepOrderableElement.create!(
           position: (element_json['position'] unless element_json['archived']),
           step: step,
-          orderable: orderable,
-          archived_by_id: find_user(element_json['archived_by_id']),
-          restored_by_id: find_user(element_json['restored_by_id']),
-          archived_on: element_json['archived_on'],
-          restored_on: element_json['restored_on'],
-          archived: element_json['archived'] || false
+          orderable: orderable
         )
       end
 
