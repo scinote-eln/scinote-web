@@ -65,15 +65,15 @@ class UserAssignment < ApplicationRecord
   end
 
   def assign_team_child_objects
-    UserAssignments::CreateTeamUserAssignmentsService.new(self).call
+    UserAssignments::CreateTeamUserAssignmentsService.new(self, assigned_by).call
   end
 
   def update_team_children_assignments
-    UserAssignments::UpdateTeamUserAssignmentsService.new(self).call
+    UserAssignments::UpdateTeamUserAssignmentsService.new(self, assigned_by).call
   end
 
   def unassign_team_child_objects
-    UserAssignments::RemoveTeamUserAssignmentsService.new(self).call
+    UserAssignments::RemoveTeamUserAssignmentsService.new(self, assigned_by).call
   end
 
   def assignable_owners

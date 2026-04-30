@@ -3,6 +3,7 @@
 class MyModuleRepositoriesController < ApplicationController
   include ApplicationHelper
   include Breadcrumbs
+  include TeamsHelper
 
   before_action :load_my_module, except: :assign_my_modules
   before_action :load_repository, except: %i(index actions_toolbar repositories_dropdown_list repositories_list_html repositories_list create)
@@ -369,7 +370,10 @@ class MyModuleRepositoriesController < ApplicationController
 
   def load_my_module
     @my_module = MyModule.find_by(id: params[:my_module_id])
+
     render_404 unless @my_module
+
+    current_team_switch(@my_module.experiment.project.team) if current_team != @my_module.experiment.project.team
   end
 
   def load_repository

@@ -9,6 +9,12 @@ class Notification < ApplicationRecord
     where.not("notifications.params ? 'hide_in_app' AND notifications.params->'hide_in_app' = 'true'")
   }
 
+  after_create -> { Notification.broadcast_unseen_count_to(recipient) unless params[:hide_in_app] }
+
+  def self.broadcast_unseen_count_to(user)
+    UserNotificationsChannel.broadcast_to(user, unseen_count: user.notifications.in_app.where(read_at: nil).count)
+  end
+
   private
 
   def can_send_to_user?(_user)

@@ -474,6 +474,8 @@ en:
       unskip_step_html: "%{user} unskipped protocol's step %{step_position} %{step} on task %{my_module} (%{num_completed}/%{num_all} completed, %{num_skipped} skipped)."
       load_protocol_to_task_from_repository_merge_html: "%{user} loaded protocol %{protocol_repository} from Protocol repository to task %{my_module} with “keep existing content”"
       load_protocol_to_task_from_repository_replace_html: "%{user} loaded protocol %{protocol_repository} from Protocol repository to task %{my_module} with “overwrite existing content”"
+      repository_snapshot_created_html: "%{user} created snapshot %{timestamp} of task-assigned items from inventory %{repository}."
+      repository_snapshot_deleted_html: "%{user} deleted snapshot %{timestamp} of task-assigned items from inventory %{repository}."
     activity_name:
       create_project: "Project created"
       edit_project: "Project edited"
@@ -900,6 +902,9 @@ en:
       protocol_repository_item_removed: "Protocol item unlinked"
       load_protocol_to_task_from_repository_merge: "Task protocol loaded from repository (keep)"
       load_protocol_to_task_from_repository_replace: "Task protocol loaded from repository (replace)"
+      protocol_repository_item_removed: "Protocol item unlinked "
+      repository_snapshot_created: "Task-assigned inventory snapshot created"
+      repository_snapshot_deleted: "Task-assigned inventory snapshot deleted"
     activity_group:
       projects: "Projects"
       task_results: "Task results"

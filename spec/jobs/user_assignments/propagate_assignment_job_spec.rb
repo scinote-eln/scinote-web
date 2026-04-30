@@ -21,7 +21,7 @@ module UserAssignments
           user_assignment = create(
             :user_assignment, assignable: project, user: user_two, user_role: technician_role, assigned_by: user_one
           )
-          described_class.perform_now(user_assignment)
+          described_class.perform_now(user_assignment, assigner_id: user_two.id)
         }.to change(UserAssignment, :count).by(5)
       end
 
@@ -30,7 +30,7 @@ module UserAssignments
           :user_assignment, assignable: project, user: user_two, user_role: technician_role, assigned_by: user_one
         )
 
-        described_class.perform_now(user_assignment)
+        described_class.perform_now(user_assignment, assigner_id: user_two.id)
         [
           UserAssignment.find_by(user: user_two, assignable: experiment_one),
           UserAssignment.find_by(user: user_two, assignable: experiment_two),
@@ -52,7 +52,7 @@ module UserAssignments
         create :user_assignment, assignable: my_module_two, user: user_two, user_role: technician_role, assigned_by: user_one
 
         expect {
-          described_class.perform_now(project_assignment, destroy: true)
+          described_class.perform_now(project_assignment, assigner_id: user_two.id, destroy: true)
         }.to change(UserAssignment, :count).by(-5)
       end
 
@@ -67,7 +67,7 @@ module UserAssignments
                                        user_role: owner_role,
                                        assigned_by: user_one,
                                        assigned: :manually
-        described_class.perform_now(project_assignment)
+        described_class.perform_now(project_assignment, assigner_id: user_two.id)
         expect(experiment_assignment.reload.user_role).to eq owner_role
       end
 
@@ -82,7 +82,7 @@ module UserAssignments
                                        user_role: owner_role,
                                        assigned_by: user_one,
                                        assigned: :automatically
-        described_class.perform_now(project_assignment)
+        described_class.perform_now(project_assignment, assigner_id: user_two.id)
         expect(experiment_assignment.reload.user_role).to eq technician_role
       end
     end

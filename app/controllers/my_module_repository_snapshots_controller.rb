@@ -30,10 +30,13 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def create
-    repository_snapshot = RepositorySnapshot.create_preliminary!(@repository, @my_module, current_user)
-    RepositorySnapshotProvisioningJob.perform_later(repository_snapshot)
+    ActiveRecord::Base.transaction do
+      @repository_snapshot = RepositorySnapshot.create_preliminary!(@repository, @my_module, current_user)
+      RepositorySnapshotProvisioningJob.perform_later(@repository_snapshot)
 
-    render json: repository_snapshot, serializer: AssignedSnapshotRepositorySerializer
+      log_activity(:repository_snapshot_created)
+      render json: @repository_snapshot, serializer: AssignedSnapshotRepositorySerializer
+    end
   end
 
   def status
@@ -52,7 +55,11 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def destroy
-    @repository_snapshot.destroy!
+    ActiveRecord::Base.transaction do
+      @repository_snapshot.destroy!
+      log_activity(:repository_snapshot_deleted)
+    end
+
     render json: {}
   end
 
@@ -166,5 +173,19 @@ class MyModuleRepositorySnapshotsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_my_module_repository_snapshots?(@my_module)
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService.call(
+      activity_type: type_of,
+      owner: current_user,
+      subject: @my_module,
+      team: @my_module.team,
+      message_items: {
+        my_module: @my_module.id,
+        timestamp: @repository_snapshot.created_at,
+        repository: @repository_snapshot.parent_id
+      }
+    )
   end
 end

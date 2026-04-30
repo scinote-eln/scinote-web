@@ -70,6 +70,7 @@ module Api
       def propagate_job(destroy: false)
         UserAssignments::PropagateAssignmentJob.perform_later(
           @team_assignment,
+          assigner_id: current_user.id,
           destroy: destroy
         )
       end
