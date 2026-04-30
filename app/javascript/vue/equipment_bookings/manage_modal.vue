@@ -33,6 +33,7 @@
                 :placeholder="i18n.t('equipment_bookings.index.manage_modal.select_item')"
                 :searchable="true"
                 :value="event.repository_row_id"
+                :disabled="!!repositoryRowId"
                 @change="event.repository_row_id = $event"
               ></SelectDropdown>
             </div>
@@ -203,7 +204,11 @@ export default {
     },
     existedEvent: {
       type: Object,
-      required: true
+      required: false
+    },
+    repositoryRowId: {
+      type: Number,
+      required: false
     }
   },
   data() {
@@ -218,7 +223,7 @@ export default {
       ],
       event: {
         event_name: '',
-        repository_row_id: null,
+        repository_row_id: this.repositoryRowId,
         event_type: 'equipment_booking',
         event_sub_type: 'calibration',
         start_at: null,

@@ -35,7 +35,8 @@ module Toolbars
         export_actions,
         print_label_action,
         archive_action,
-        delete_action
+        delete_action,
+        create_event_action
       ].compact
     end
 
@@ -67,6 +68,25 @@ module Toolbars
         icon: 'sn-icon sn-icon-edit',
         button_class: 'edit-repository-row-btn',
         button_id: 'editRepositoryRecord',
+        type: :legacy
+      }
+    end
+
+    def create_event_action
+      return unless @single
+
+      return unless CalendarEvent.calendar_events_enabled?
+
+      return unless can_manage_repository_rows?(@repository)
+
+      return unless @repository_rows.all?(&:active?)
+
+      {
+        name: 'assign',
+        label: I18n.t('repositories.create_event_record'),
+        icon: 'sn-icon sn-icon-equipment-scheduling',
+        button_class: 'create-event-repository-rows-btn',
+        button_id: 'createEventRepositoryRecords',
         type: :legacy
       }
     end

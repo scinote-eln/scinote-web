@@ -1,0 +1,15 @@
+<% if CalendarEvent.calendar_events_enabled? %>
+  <div
+    class="event-create-repository-row"
+    data-repository-id="<%= repository.id %>">
+    <event-create-repository-row
+      :visibility="visibility"
+      :repository-id="repositoryId"
+      :repository-row-id="repositoryRowId"
+      @close="closeModal"
+      @event:created="closeModal"
+    />
+  </div>
+
+  <%= javascript_include_tag 'vue_event_create_repository_row' %>
+<% end %>
