@@ -85,7 +85,7 @@ module Users
                         })
               end
               reset_user_current_team(@user_assignment)
-              job_id = UserAssignments::RemoveTeamUserAssignmentsJob.perform_later(@user_assignment).job_id
+              job_id = UserAssignments::RemoveTeamUserAssignmentsJob.perform_later(@user_assignment, assigner_id: current_user.id).job_id
             end
           rescue StandardError => e
             Rails.logger.error e.message

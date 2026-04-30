@@ -105,7 +105,7 @@ class RepositoryStockValue < ApplicationRecord
 
   def data_different?(new_data)
     BigDecimal(new_data[:amount].to_s) != amount ||
-      (new_data[:unit_item_id].present? && new_data[:unit_item_id] != repository_stock_unit_item.id)
+      (new_data[:unit_item_id].present? && new_data[:unit_item_id] != repository_stock_unit_item_id)
   end
 
   def update_data!(new_data, user, preview: false)

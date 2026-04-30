@@ -54,7 +54,6 @@
           :notificationsUrl="notificationsUrl"
           :markAllNotificationsUrl="markAllNotificationsUrl"
           :unseenNotificationsCount="unseenNotificationsCount"
-          @update:unseenNotificationsCount="checkUnseenNotifications(false)"
           @close="$refs.notificationDropdown.$refs.field.click();"/>
       </template>
     </GeneralDropdown>
@@ -86,6 +85,7 @@ import SelectDropdown from '../shared/select_dropdown.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import QuickSearch from './quick_search.vue';
+import ActionCableConsumer from '../../channels/consumer';
 
 export default {
   name: 'TopMenuContainer',
@@ -120,17 +120,16 @@ export default {
       settingsMenu: null,
       userMenu: null,
       unseenNotificationsCount: 0,
+      userNotificationsSubscription: null,
       hideSearch: false,
       globalSearchKey: 0
     };
   },
   created() {
     this.fetchData();
-    this.checkUnseenNotifications();
 
     $(document).on('turbolinks:load', () => {
       this.notificationsOpened = false;
-      this.checkUnseenNotifications(false);
       this.refreshCurrentTeam();
       this.hideSearch = !!document.getElementById('GlobalSearch');
       this.globalSearchKey += 1;
@@ -141,9 +140,19 @@ export default {
   },
   mounted() {
     this.hideSearch = !!document.getElementById('GlobalSearch');
+    this.userNotificationsSubscription = ActionCableConsumer.subscriptions.create(
+      { channel: 'UserNotificationsChannel' },
+      {
+        received: (data) => {
+          if(data?.unseen_count !== undefined) {
+            this.unseenNotificationsCount = data.unseen_count;
+          }
+        }
+      }
+    )
   },
   beforeUnmount() {
-    clearTimeout(this.unseenNotificationsTimeout);
+    if (this.userNotificationsSubscription) ActionCableConsumer.subscriptions.remove(this.userNotificationsSubscription);
   },
   computed: {
     settingsMenuItems() {
@@ -173,6 +182,7 @@ export default {
         this.settingsMenu = result.settings_menu;
         this.userMenu = result.user_menu;
         this.user = result.user;
+        this.unseenNotificationsCount = result.unseen_notifications_count;
       });
     },
     switchTeam(team) {
@@ -192,15 +202,6 @@ export default {
     },
     searchValue(e) {
       window.open(`${this.searchUrl}?q=${e.target.value}`, '_self');
-    },
-    checkUnseenNotifications(repeat = true) {
-      clearTimeout(this.unseenNotificationsTimeout);
-      $.get(this.unseenNotificationsUrl, (result) => {
-        this.unseenNotificationsCount = result.unseen;
-        if (repeat) {
-          this.unseenNotificationsTimeout = setTimeout(this.checkUnseenNotifications, 30000);
-        }
-      });
     },
     refreshCurrentTeam() {
       const newTeam = parseInt($('body').attr('data-current-team-id'), 10);

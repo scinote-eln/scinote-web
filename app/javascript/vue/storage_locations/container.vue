@@ -226,8 +226,8 @@ export default {
       this.$refs.table.searchValue = '';
     },
     selectRow(row) {
-      if (this.$refs.table.selectedRows.includes(row)) {
-        this.$refs.table.selectedRows = this.$refs.table.selectedRows.filter((r) => r !== row);
+      if (this.$refs.table.selectedRows.map((r) => r.id).includes(row.id)) {
+        this.$refs.table.selectedRows = this.$refs.table.selectedRows.filter((r) => r.id !== row.id);
       } else {
         this.$refs.table.selectedRows.push(row);
       }

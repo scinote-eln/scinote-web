@@ -25,7 +25,7 @@ module TeamAssignmentsActions
   def propagate_job(model, assignment)
     return unless model.has_permission_children?
 
-    UserAssignments::PropagateAssignmentJob.perform_later(assignment)
+    UserAssignments::PropagateAssignmentJob.perform_later(assignment, assigner_id: current_user.id)
   end
 
   def log_activity_team_assignment(model, type_of, message_items = {})

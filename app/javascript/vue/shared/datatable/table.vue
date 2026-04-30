@@ -419,7 +419,7 @@ export default {
     filterValues: {
       handler(newVal) {
         this.activeFilters = newVal;
-        this.reloadTable();
+        this.reloadTable(false);
       },
       deep: true
     }
@@ -615,7 +615,7 @@ export default {
       } else if (this.scrollMode === 'pages') {
         this.loadData();
       } else {
-        this.reloadTable();
+        this.reloadTable(false);
       }
     },
     reloadTable(clearSelection = true) {
@@ -763,7 +763,7 @@ export default {
     },
     setSearchValue(value) {
       this.searchValue = value;
-      this.reloadTable();
+      this.reloadTable(false);
     },
     clickCell(e) {
       // We using custom row selection, we need use existing column parameter it will be attribute from one of plugin - suppressColumnsToolPanel
@@ -774,7 +774,7 @@ export default {
     },
     applyFilters(filters) {
       this.activeFilters = filters;
-      this.reloadTable();
+      this.reloadTable(false);
     },
     switchViewRender(view) {
       if (this.currentViewRender === view) return;

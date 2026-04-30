@@ -133,13 +133,11 @@ export default {
             n.attributes.checked = true;
             return n;
           });
-          this.$emit('update:unseenNotificationsCount');
         });
     },
     updateNotification(notification) {
       const index = this.notifications.findIndex((n) => n.id === notification.id);
       this.notifications.splice(index, 1, notification);
-      this.$emit('update:unseenNotificationsCount');
     },
     preventPropagation(e) {
       e.stopPropagation();
@@ -155,7 +153,6 @@ export default {
           this.notifications = this.notifications.concat(response.data.data);
           this.nextPageUrl = response.data.links.next;
           this.loadingPage = false;
-          this.$emit('update:unseenNotificationsCount');
         })
         .catch((error) => {
           this.loadingPage = false;

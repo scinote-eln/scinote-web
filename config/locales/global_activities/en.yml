@@ -506,6 +506,8 @@ en:
       team_repository_deletion_disabled_html: "%{user} disabled deleting inventories and inventory items from Archive in workspace %{team}."
       team_result_deletion_disabled_html: "%{user} disabled deleting results from Archive in workspace %{team}."
       team_protocol_steps_deletion_disabled_html: "%{user} disabled deleting task steps from Archive in workspace %{team}."
+      repository_snapshot_created_html: "%{user} created snapshot %{timestamp} of task-assigned items from inventory %{repository}."
+      repository_snapshot_deleted_html: "%{user} deleted snapshot %{timestamp} of task-assigned items from inventory %{repository}."
     activity_name:
       create_project: "Project created"
       edit_project: "Project edited"
@@ -964,6 +966,9 @@ en:
       team_repository_deletion_disabled: "Inventory deleting disabled"
       team_result_deletion_disabled: "Results deleting disabled"
       team_protocol_steps_deletion_disabled: "Task steps deleting disabled"
+      protocol_repository_item_removed: "Protocol item unlinked "
+      repository_snapshot_created: "Task-assigned inventory snapshot created"
+      repository_snapshot_deleted: "Task-assigned inventory snapshot deleted"
     activity_group:
       projects: "Projects"
       task_results: "Task results"

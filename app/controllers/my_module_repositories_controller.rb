@@ -3,6 +3,7 @@
 class MyModuleRepositoriesController < ApplicationController
   include ApplicationHelper
   include Breadcrumbs
+  include TeamsHelper
 
   before_action :load_my_module, except: :assign_my_modules
   before_action :load_repository, except: %i(index actions_toolbar repositories_dropdown_list repositories_list_html repositories_list create)
@@ -58,7 +59,7 @@ class MyModuleRepositoriesController < ApplicationController
     # In new tables we don't using unfiltered_count, so total count is equal to filtered count
     total_count = @my_module.repository_rows_count(@repository)
     filtered_count = repository_rows.take&.filtered_count.to_i
-    total_pages = (total_count.to_f / params[:per_page].to_i).ceil
+    total_pages = (filtered_count.to_f / params[:per_page].to_i).ceil
 
     serializer = can_read_repository?(@repository) ? Lists::RepositoryRowSerializer : Lists::PrivateRepositoryRowSerializer
 
@@ -87,9 +88,11 @@ class MyModuleRepositoriesController < ApplicationController
                                                        unassigned_to_task: @my_module,
                                                        preload_cells: true).call.load
 
-    total_count = @repository.repository_rows.count
+    total_count = @repository.repository_rows.where.not(
+      id: @my_module.repository_rows.where(repository_id: @repository.id).select(:id)
+    ).count
     filtered_count = repository_rows.take&.filtered_count.to_i
-    total_pages = (total_count.to_f / params[:per_page].to_i).ceil
+    total_pages = (filtered_count.to_f / params[:per_page].to_i).ceil
 
     render json: repository_rows,
            each_serializer: Lists::RepositoryRowSerializer,
@@ -367,7 +370,10 @@ class MyModuleRepositoriesController < ApplicationController
 
   def load_my_module
     @my_module = MyModule.find_by(id: params[:my_module_id])
+
     render_404 unless @my_module
+
+    current_team_switch(@my_module.experiment.project.team) if current_team != @my_module.experiment.project.team
   end
 
   def load_repository

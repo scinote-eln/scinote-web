@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 module UserAssignments
-  RSpec.describe GenerateUserAssignmentsJob, type: :job do
+  RSpec.describe InheritUserAssignmentsJob, type: :job do
     let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
     let!(:viewer_role) { create :viewer_role }
     let!(:technician_role) { create :technician_role }
@@ -30,7 +30,7 @@ module UserAssignments
         end
 
         it 'assigns the same role as the user had on project level' do
-          described_class.perform_now(experiment, user_one.id)
+          described_class.perform_now(experiment, assigner_id: user_one.id)
           user_two_assignment = UserAssignment.find_by(user: user_two, assignable: experiment)
           user_three_assignment = UserAssignment.find_by(user: user_three, assignable: experiment)
           expect(user_two_assignment.user_role).to eq viewer_role
@@ -49,7 +49,7 @@ module UserAssignments
         end
 
         it 'assigns the same role as the user had on project level' do
-          described_class.perform_now(my_module, user_one.id)
+          described_class.perform_now(my_module, assigner_id: user_one.id)
           user_two_assignment = UserAssignment.find_by(user: user_two, assignable: my_module)
           user_three_assignment = UserAssignment.find_by(user: user_three, assignable: my_module)
           expect(user_two_assignment.user_role).to eq viewer_role

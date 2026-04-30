@@ -25,12 +25,28 @@ default: &default
   password: <%= ENV['DATABASE_PASSWORD'] %>
   database: <%= ENV['DATABASE_NAME'] %>
 
+cable_default: &cable_default
+  adapter: <%= ENV['CABLE_DATABASE_ADAPTER'] || ENV['DATABASE_ADAPTER'] || 'postgresql' %>
+  encoding: unicode
+  pool: <%= ENV['CABLE_DB_POOL'] || 4 %>
+  url: <%= ENV['CABLE_DATABASE_URL'] || ENV['DATABASE_URL'] %>
+  host: <%= ENV['CABLE_DATABASE_HOST'] || ENV['DATABASE_HOST'] %>
+  port: <%= ENV['CABLE_DATABASE_PORT'] || ENV['DATABASE_PORT'] || 5432 %>
+  username: <%= ENV['CABLE_DATABASE_USERNAME'] || ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['CABLE_DATABASE_PASSWORD'] || ENV['DATABASE_PASSWORD'] %>
+  database: <%= ENV['CABLE_DATABASE_NAME'] || ENV['DATABASE_NAME'] %>
+  migrations_paths: db/cable_migrate
+
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
 
 development:
-  <<: *default
-  url: <%= ENV['DATABASE_DEV_URL'] || 'postgresql://postgres:mysecretpassword@db/scinote_development' %>
+  primary:
+    <<: *default
+    url: <%= ENV['DATABASE_DEV_URL'] || 'postgresql://postgres:mysecretpassword@db/scinote_development' %>
+  cable:
+    <<: *cable_default
+    url: <%= ENV['CABLE_DATABASE_DEV_URL'] || 'postgresql://postgres:mysecretpassword@db/scinote_cable_development' %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -61,8 +77,12 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test: &test
-  <<: *default
-  url: <%= ENV['DATABASE_TEST_URL'] || 'postgresql://postgres:mysecretpassword@db/scinote_test' %>
+  primary:
+    <<: *default
+    url: <%= ENV['DATABASE_TEST_URL'] || 'postgresql://postgres:mysecretpassword@db/scinote_test' %>
+  cable:
+    <<: *cable_default
+    url: <%= ENV['CABLE_DATABASETEST_URL'] || 'postgresql://postgres:mysecretpassword@db/scinote_cable_test' %>
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -85,7 +105,10 @@ test: &test
 #     url: <%= ENV['DATABASE_URL'] %>
 #
 production:
-  <<: *default
+  primary:
+    <<: *default
+  cable:
+    <<: *cable_default
 
 cucumber:
   <<: *test

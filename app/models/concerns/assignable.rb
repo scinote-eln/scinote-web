@@ -166,7 +166,7 @@ module Assignable
       end
 
       # Generate assignments for the rest of users in the background
-      UserAssignments::GenerateUserAssignmentsJob.perform_later(self, user.id)
+      UserAssignments::InheritUserAssignmentsJob.perform_later(self, assigner_id: user.id)
     end
   end
 end

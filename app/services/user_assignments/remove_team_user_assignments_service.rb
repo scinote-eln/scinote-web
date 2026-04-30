@@ -2,16 +2,16 @@
 
 module UserAssignments
   class RemoveTeamUserAssignmentsService
-    def initialize(team_user_assignment)
+    def initialize(team_user_assignment, unassigned_by)
       @user = team_user_assignment.user
       @team = team_user_assignment.assignable
+      @unassigned_by = unassigned_by
     end
 
     def call
       @team.projects.find_each do |project|
         project.user_assignments.where(user: @user).find_each do |assignment|
-          UserAssignments::PropagateAssignmentJob
-            .perform_now(assignment, destroy: true, remove_from_team: true)
+          UserAssignments::PropagateAssignmentJob.perform_now(assignment, assigner_id: @unassigned_by.id, destroy: true)
         end
       end
       remove_repositories_assignments

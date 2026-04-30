@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class UserNotificationsController < ApplicationController
-  prepend_before_action -> { request.env['devise.skip_trackable'] = true }, only: :unseen_counter
+  after_action -> { Notification.broadcast_unseen_count_to(current_user) },
+               only: %i(mark_all_read toggle_read)
 
   def index
     page = (params.dig(:page, :number) || 1).to_i
@@ -17,12 +18,6 @@ class UserNotificationsController < ApplicationController
     notifications = notifications.page(page).per(Constants::INFINITE_SCROLL_LIMIT)
 
     render json: notifications, each_serializer: NotificationSerializer
-  end
-
-  def unseen_counter
-    render json: {
-      unseen: load_notifications.where(read_at: nil).size
-    }
   end
 
   def mark_all_read

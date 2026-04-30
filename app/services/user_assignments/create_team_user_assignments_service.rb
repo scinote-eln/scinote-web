@@ -2,11 +2,11 @@
 
 module UserAssignments
   class CreateTeamUserAssignmentsService
-    def initialize(team_user_assignment)
+    def initialize(team_user_assignment, assigned_by)
       @user = team_user_assignment.user
       @team = team_user_assignment.assignable
       @user_role = team_user_assignment.user_role
-      @assigned_by = team_user_assignment.assigned_by
+      @assigned_by = assigned_by
       @viewer_role = UserRole.find_predefined_viewer_role
     end
 

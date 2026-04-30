@@ -13,7 +13,7 @@
           class="sci-input-field"
           type="text"
           :placeholder="i18n.t('repositories.show.filter_inventory_items')"
-          @keyup="setValue"
+          @input="setValue"
         />
         <i class="sn-icon sn-icon-search !mr-2.5"></i>
       </div>
@@ -24,7 +24,7 @@
             class="sci-input-field"
             type="text"
             :placeholder="i18n.t('repositories.show.filter_inventory_items_with_ean')"
-            @keyup="setBarcodeValue"
+            @input="setBarcodeValue"
           />
           <i class='sn-icon sn-icon-barcode barcode-scanner !mr-2.5'></i>
         </div>
@@ -59,11 +59,17 @@ export default {
       barcodeSearchOpened: false,
       barcodeValue: '',
       searchOpened: false,
-      value: ''
+      value: '',
+      searchTimeout: null
     };
   },
   created() {
     this.value = this.searchValue;
+  },
+  beforeUnmount() {
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
   },
   directives: {
     'click-outside': vOnClickOutside
@@ -75,10 +81,10 @@ export default {
       }
     },
     barcodeValue() {
-      this.emitSearchValue();
+      this.debouncedSearch();
     },
     value() {
-      this.emitSearchValue();
+      this.debouncedSearch();
     }
   },
   computed: {
@@ -122,6 +128,14 @@ export default {
           this.searchOpened = false;
         }, 100);
       }
+    },
+    debouncedSearch() {
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout);
+      }
+      this.searchTimeout = setTimeout(() => {
+        this.emitSearchValue();
+      }, 500);
     },
     emitSearchValue() {
       this.$emit('search', this.activeValue);

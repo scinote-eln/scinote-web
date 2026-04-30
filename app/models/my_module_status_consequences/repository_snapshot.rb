@@ -8,7 +8,23 @@ module MyModuleStatusConsequences
 
     def before_forward_call(my_module, created_by = nil)
       my_module.assigned_repositories.each do |repository|
-        ::RepositorySnapshot.create_preliminary!(repository, my_module, created_by)
+        ActiveRecord::Base.transaction do
+          repository_snapshot = ::RepositorySnapshot.create_preliminary!(repository, my_module, created_by)
+
+          if created_by
+            Activities::CreateActivityService.call(
+              activity_type: :repository_snapshot_created,
+              owner: created_by,
+              subject: my_module,
+              team: my_module.team,
+              message_items: {
+                my_module: my_module.id,
+                timestamp: repository_snapshot.created_at,
+                repository: repository_snapshot.parent_id
+              }
+            )
+          end
+        end
       end
     end
 
