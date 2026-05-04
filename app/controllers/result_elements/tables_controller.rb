@@ -107,7 +107,10 @@ module ResultElements
     end
 
     def archive
-      archive_element!(@result, @table.result_table.result_orderable_element)
+      ActiveRecord::Base.transaction do
+        @table.archive!(current_user)
+        log_result_activity(:table_archived, { table_name: @table.name })
+      end
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -115,7 +118,10 @@ module ResultElements
     end
 
     def restore
-      restore_element!(@result, @table.result_table.result_orderable_element)
+      ActiveRecord::Base.transaction do
+        @table.restore!(current_user)
+        log_result_activity(:table_restored, { table_name: @table.name })
+      end
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -155,19 +161,19 @@ module ResultElements
     end
 
     def check_manage_permissions
-      render_403 unless can_manage_result_orderable_element?(@table.result_table.result_orderable_element)
+      render_403 unless can_manage_result_table?(@table)
     end
 
     def check_archive_permissions
-      render_403 unless can_archive_result_orderable_element?(@table.result_table.result_orderable_element)
+      render_403 unless can_archive_result_table?(@table)
     end
 
     def check_restore_permissions
-      render_403 unless can_restore_result_orderable_element?(@table.result_table.result_orderable_element)
+      render_403 unless can_restore_result_table?(@table)
     end
 
     def check_delete_permissions
-      render_403 unless can_delete_result_orderable_element?(@table.result_table.result_orderable_element)
+      render_403 unless can_delete_result_table?(@table)
     end
 
     def result_annotation_notification(old_content = nil)

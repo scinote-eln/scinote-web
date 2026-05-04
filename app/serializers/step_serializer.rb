@@ -17,13 +17,13 @@ class StepSerializer < ActiveModel::Serializer
              :archived_by, :archived_on, :archived
 
   def step_orderable_elements
-    return object.step_orderable_elements if object.archived?
+    return object.all_elements if object.archived?
 
     view_mode = @instance_options[:view_mode]
     if view_mode == 'archived'
-      object.step_orderable_elements.archived
+      object.archived_elements
     else
-      object.step_orderable_elements.active
+      object.active_elements
     end
   end
 
@@ -165,14 +165,10 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def archived_by
-    object.archived_by.full_name if object.archived_by.present?
+    object.archived_by.presence&.full_name
   end
 
   def archived_on
     I18n.l(object.archived_on, format: :full) if object.archived_on.present?
-  end
-
-  def archived
-    object.archived?
   end
 end

@@ -16,8 +16,8 @@
       <div class="user-time">
           <% if checklist.archived? %>
             <%= t("projects.reports.elements.archived_metadata",
-                  user: checklist.step_orderable_element.archived_by&.full_name,
-                  datetime: l(checklist.step_orderable_element.archived_on, format: :full)) %>
+                  user: checklist.archived_by&.full_name,
+                  datetime: l(checklist.archived_on, format: :full)) %>
           <% else %>
             <%= t('projects.reports.elements.step_checklist.user_time', timestamp: l(timestamp, format: :full)) %>
           <% end %>

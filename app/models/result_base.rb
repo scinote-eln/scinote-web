@@ -108,7 +108,7 @@ class ResultBase < ApplicationRecord
   end
 
   def normalize_elements_position
-    result_orderable_elements.active.order(:position).each_with_index do |element, index|
+    result_orderable_elements.order(:position).each_with_index do |element, index|
       element.update!(position: index) unless element.position == index
     end
   end
@@ -122,7 +122,7 @@ class ResultBase < ApplicationRecord
   end
 
   def next_element_position
-    current_position = result_orderable_elements.active.order(position: :asc).last&.position
+    current_position = result_orderable_elements.order(position: :asc).last&.position
 
     current_position.nil? ? 0 : current_position + 1
   end

@@ -1,6 +1,7 @@
 class Checklist < ApplicationRecord
   include SearchableModel
   include ObservableModel
+  include ArchivableModel
 
   SEARCHABLE_ATTRIBUTES = ['checklists.name'].freeze
 
@@ -21,6 +22,8 @@ class Checklist < ApplicationRecord
              foreign_key: 'last_modified_by_id',
              class_name: 'User',
              optional: true
+  belongs_to :archived_by, class_name: 'User', optional: true
+  belongs_to :restored_by, class_name: 'User', optional: true
   has_many :checklist_items,
     -> { order(:position) },
     inverse_of: :checklist,
@@ -30,21 +33,13 @@ class Checklist < ApplicationRecord
     dependent: :destroy
   has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
+  after_save :manage_orderable_element_on_archive, if: -> { saved_change_to_archived? }
+
   accepts_nested_attributes_for :checklist_items,
     reject_if: :all_blank,
     allow_destroy: true
 
   scope :asc, -> { order('checklists.created_at ASC') }
-
-  delegate :archived?, to: :step_orderable_element
-
-  scope :active, lambda {
-    joins(:step_orderable_element).where(step_orderable_elements: { archived: false })
-  }
-
-  scope :archived, lambda {
-    joins(:step_orderable_element).where(step_orderable_elements: { archived: true })
-  }
 
   def duplicate(step, user, position = nil)
     ActiveRecord::Base.transaction do
@@ -70,6 +65,16 @@ class Checklist < ApplicationRecord
       )
 
       new_checklist
+    end
+  end
+
+  private
+
+  def manage_orderable_element_on_archive
+    if archived?
+      step_orderable_element&.destroy
+    elsif step_orderable_element.blank?
+      create_step_orderable_element!(step: step, position: step.next_element_position)
     end
   end
 end

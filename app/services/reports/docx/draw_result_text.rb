@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawResultText
-  def draw_result_text(element)
-    result_text = element.orderable
-    timestamp = element.created_at
+  def draw_result_text(result_text)
+    timestamp = result_text.created_at
     settings = @settings
     color = @color
     if result_text.name.present? || !settings['exclude_timestamps']
@@ -15,8 +14,8 @@ module Reports::Docx::DrawResultText
           text '| ' if result_text.name.present?
           if result_text.archived?
             text I18n.t('projects.reports.elements.archived_metadata',
-                        datetime: I18n.l(result_text.result_orderable_element.archived_on, format: :full),
-                        user: result_text.result_orderable_element.archived_by&.full_name), color: color[:gray]
+                        datetime: I18n.l(result_text.archived_on, format: :full),
+                        user: result_text.archived_by&.full_name), color: color[:gray]
           else
             text I18n.t('projects.reports.elements.result_text.user_time',
                         timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]

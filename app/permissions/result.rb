@@ -62,35 +62,68 @@ Canaid::Permissions.register_for(ResultComment) do
   end
 end
 
-Canaid::Permissions.register_for(ResultOrderableElement) do
-  %i(manage_result_orderable_element
-     archive_result_orderable_element
-     restore_result_orderable_element
-     delete_result_orderable_element)
+Canaid::Permissions.register_for(ResultText) do
+  %i(manage_result_text
+     archive_result_text
+     restore_result_text
+     delete_result_text)
     .each do |perm|
-    can perm do |user, result_orderable_element|
-      can_manage_result?(user, result_orderable_element.result)
+    can perm do |user, result_text|
+      can_manage_result?(user, result_text.result)
     end
   end
 
-  can :manage_result_orderable_element do |_, result_orderable_element|
-    result_orderable_element.active?
+  can :manage_result_text do |_, result_text|
+    result_text.active?
   end
 
-  can :archive_result_orderable_element do |_, result_orderable_element|
-    result_orderable_element.result.is_a?(Result) && result_orderable_element.active?
+  can :archive_result_text do |_, result_text|
+    result_text.active? && result_text.result.is_a?(Result)
   end
 
-  can :restore_result_orderable_element do |_, result_orderable_element|
-    result_orderable_element.archived?
+  can :restore_result_text do |_, result_text|
+    result_text.archived?
   end
 
-  can :delete_result_orderable_element do |_, result_orderable_element|
-    if result_orderable_element.result.is_a?(ResultTemplate)
-      result_orderable_element.result.unlocked?(result_orderable_element.result)
+  can :delete_result_text do |_, result_text|
+    if result_text.result.is_a?(ResultTemplate)
+      result_text.result.unlocked?(result_text.result)
     else
-      result_orderable_element.archived? && result_orderable_element.result.team.settings['result_deletion_enabled'] &&
-        result_orderable_element.result.unlocked?(result_orderable_element.result)
+      result_text.archived? && result_text.result.team.settings['result_deletion_enabled'] &&
+        result_text.result.unlocked?(result_text.result)
+    end
+  end
+end
+
+Canaid::Permissions.register_for(Table) do
+  %i(manage_result_table
+     archive_result_table
+     restore_result_table
+     delete_result_table)
+    .each do |perm|
+    can perm do |user, table|
+      can_manage_result?(user, table.result)
+    end
+  end
+
+  can :manage_result_table do |_, table|
+    table.active?
+  end
+
+  can :archive_result_table do |_, table|
+    table.active? && table.result.is_a?(Result)
+  end
+
+  can :restore_result_table do |_, table|
+    table.archived?
+  end
+
+  can :delete_result_table do |_, table|
+    if table.result.is_a?(ResultTemplate)
+      table.result.unlocked?(table.result)
+    else
+      table.archived? && table.result.team.settings['result_deletion_enabled'] &&
+        table.result.unlocked?(table.result)
     end
   end
 end

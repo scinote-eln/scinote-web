@@ -28,14 +28,14 @@ class ChecklistItemSerializer < ActiveModel::Serializer
     my_module = object.checklist.step.protocol.my_module
     user = scope[:user] || @instance_options[:user]
 
-    if can_manage_step_orderable_element?(user, object.checklist.step_orderable_element)
+    if can_manage_step_checklist?(user, object.checklist)
       urls_list[:update_url] = step_checklist_checklist_item_path(step, object.checklist, object)
       urls_list[:delete_url] = step_checklist_checklist_item_path(step, object.checklist, object)
     end
 
     return urls_list unless my_module
 
-    if can_manage_step_orderable_element?(user, object.checklist.step_orderable_element) &&
+    if can_manage_step_checklist?(user, object.checklist) &&
        ((!object.checked && can_check_my_module_steps?(user, my_module)) || (object.checked && can_uncheck_my_module_steps?(user, my_module)))
       urls_list[:toggle_url] =
         toggle_step_checklist_checklist_item_path(step, object.checklist, object)

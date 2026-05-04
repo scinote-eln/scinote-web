@@ -17,9 +17,7 @@ module Api
       has_many :assets, serializer: AssetSerializer do
         object.archived? ? object.assets : object.assets.active
       end
-      has_many :result_orderable_elements, key: :result_elements, serializer: ResultOrderableElementSerializer do
-        object.archived? ? object.result_orderable_elements : object.result_orderable_elements.active
-      end
+      has_many :result_orderable_elements, key: :result_elements, serializer: ResultOrderableElementSerializer
 
       include TimestampableModel
     end

@@ -123,7 +123,7 @@ module StepElements
     end
 
     def check_manage_permissions
-      render_403 unless can_manage_step_orderable_element?(@checklist.step_orderable_element)
+      render_403 unless can_manage_step_checklist?(@checklist)
     end
 
     def checklist_item_params

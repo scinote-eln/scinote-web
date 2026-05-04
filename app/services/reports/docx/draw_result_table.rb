@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawResultTable
-  def draw_result_table(element)
-    result = element.result
-    table = element.orderable.table
+  def draw_result_table(table)
+    result = table.result
     timestamp = table.created_at
     settings = @settings
     color = @color
@@ -17,8 +16,8 @@ module Reports::Docx::DrawResultTable
         text '| '
         if table.archived?
           text I18n.t('projects.reports.elements.archived_metadata',
-                      datetime: I18n.l(table.result_table.result_orderable_element.archived_on, format: :full),
-                      user: table.result_table.result_orderable_element.archived_by&.full_name), color: color[:gray]
+                      datetime: I18n.l(table.archived_on, format: :full),
+                      user: table.archived_by&.full_name), color: color[:gray]
         else
           text I18n.t('projects.reports.elements.result_table.user_time',
                       timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: color[:gray]

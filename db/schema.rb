@@ -149,9 +149,17 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "created_by_id"
     t.bigint "last_modified_by_id"
+    t.boolean "archived", default: false, null: false
+    t.datetime "archived_on"
+    t.datetime "restored_on"
+    t.bigint "archived_by_id"
+    t.bigint "restored_by_id"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_checklists_on_name", using: :gin
+    t.index ["archived"], name: "index_checklists_on_archived"
+    t.index ["archived_by_id"], name: "index_checklists_on_archived_by_id"
     t.index ["created_by_id"], name: "index_checklists_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_checklists_on_last_modified_by_id"
+    t.index ["restored_by_id"], name: "index_checklists_on_restored_by_id"
     t.index ["step_id"], name: "index_checklists_on_step_id"
   end
 
@@ -311,10 +319,18 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
     t.bigint "previous_form_response_id"
     t.string "parent_type"
     t.bigint "parent_id"
+    t.boolean "archived", default: false, null: false
+    t.datetime "archived_on"
+    t.datetime "restored_on"
+    t.bigint "archived_by_id"
+    t.bigint "restored_by_id"
+    t.index ["archived"], name: "index_form_responses_on_archived"
+    t.index ["archived_by_id"], name: "index_form_responses_on_archived_by_id"
     t.index ["created_by_id"], name: "index_form_responses_on_created_by_id"
     t.index ["form_id"], name: "index_form_responses_on_form_id"
     t.index ["parent_type", "parent_id"], name: "index_form_responses_on_parent"
     t.index ["previous_form_response_id"], name: "index_form_responses_on_previous_form_response_id"
+    t.index ["restored_by_id"], name: "index_form_responses_on_restored_by_id"
     t.index ["submitted_by_id"], name: "index_form_responses_on_submitted_by_id"
   end
 
@@ -1097,20 +1113,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
 
   create_table "result_orderable_elements", force: :cascade do |t|
     t.bigint "result_id", null: false
-    t.integer "position"
+    t.integer "position", null: false
     t.string "orderable_type"
     t.bigint "orderable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "archived", default: false, null: false
-    t.datetime "archived_on"
-    t.datetime "restored_on"
-    t.bigint "archived_by_id"
-    t.bigint "restored_by_id"
-    t.index ["archived"], name: "index_result_orderable_elements_on_archived"
-    t.index ["archived_by_id"], name: "index_result_orderable_elements_on_archived_by_id"
     t.index ["orderable_type", "orderable_id"], name: "index_result_orderable_elements_on_orderable"
-    t.index ["restored_by_id"], name: "index_result_orderable_elements_on_restored_by_id"
   end
 
   create_table "result_tables", force: :cascade do |t|
@@ -1123,8 +1131,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
     t.string "text"
     t.bigint "result_id", null: false
     t.string "name"
+    t.boolean "archived", default: false, null: false
+    t.datetime "archived_on"
+    t.datetime "restored_on"
+    t.bigint "archived_by_id"
+    t.bigint "restored_by_id"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_result_texts_on_name", using: :gin
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_result_texts_on_text", using: :gin
+    t.index ["archived"], name: "index_result_texts_on_archived"
+    t.index ["archived_by_id"], name: "index_result_texts_on_archived_by_id"
+    t.index ["restored_by_id"], name: "index_result_texts_on_restored_by_id"
     t.index ["result_id"], name: "index_result_texts_on_result_id"
   end
 
@@ -1231,8 +1247,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.boolean "archived", default: false, null: false
+    t.datetime "archived_on"
+    t.datetime "restored_on"
+    t.bigint "archived_by_id"
+    t.bigint "restored_by_id"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_step_texts_on_name", using: :gin
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_step_texts_on_text", using: :gin
+    t.index ["archived"], name: "index_step_texts_on_archived"
+    t.index ["archived_by_id"], name: "index_step_texts_on_archived_by_id"
+    t.index ["restored_by_id"], name: "index_step_texts_on_restored_by_id"
     t.index ["step_id"], name: "index_step_texts_on_step_id"
   end
 
@@ -1312,11 +1336,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
     t.string "name", default: ""
     t.integer "team_id"
     t.jsonb "metadata", default: {}
+    t.boolean "archived", default: false, null: false
+    t.datetime "archived_on"
+    t.datetime "restored_on"
+    t.bigint "archived_by_id"
+    t.bigint "restored_by_id"
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_tables_on_name", using: :gin
+    t.index ["archived"], name: "index_tables_on_archived"
+    t.index ["archived_by_id"], name: "index_tables_on_archived_by_id"
     t.index ["created_at"], name: "index_tables_on_created_at"
     t.index ["created_by_id"], name: "index_tables_on_created_by_id"
     t.index ["data_vector"], name: "index_tables_on_data_vector", using: :gin
     t.index ["last_modified_by_id"], name: "index_tables_on_last_modified_by_id"
+    t.index ["restored_by_id"], name: "index_tables_on_restored_by_id"
     t.index ["team_id"], name: "index_tables_on_team_id"
   end
 
@@ -1639,8 +1671,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
   add_foreign_key "checklist_items", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "users", column: "last_modified_by_id"
   add_foreign_key "checklists", "steps"
+  add_foreign_key "checklists", "users", column: "archived_by_id"
   add_foreign_key "checklists", "users", column: "created_by_id"
   add_foreign_key "checklists", "users", column: "last_modified_by_id"
+  add_foreign_key "checklists", "users", column: "restored_by_id"
   add_foreign_key "comments", "users"
   add_foreign_key "comments", "users", column: "last_modified_by_id"
   add_foreign_key "connected_devices", "oauth_access_tokens"
@@ -1661,7 +1695,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
   add_foreign_key "form_fields", "users", column: "last_modified_by_id"
   add_foreign_key "form_responses", "form_responses", column: "previous_form_response_id"
   add_foreign_key "form_responses", "forms"
+  add_foreign_key "form_responses", "users", column: "archived_by_id"
   add_foreign_key "form_responses", "users", column: "created_by_id"
+  add_foreign_key "form_responses", "users", column: "restored_by_id"
   add_foreign_key "form_responses", "users", column: "submitted_by_id"
   add_foreign_key "forms", "forms", column: "parent_id"
   add_foreign_key "forms", "teams"
@@ -1788,11 +1824,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
   add_foreign_key "result_assets", "assets"
   add_foreign_key "result_assets", "results"
   add_foreign_key "result_orderable_elements", "results"
-  add_foreign_key "result_orderable_elements", "users", column: "archived_by_id"
-  add_foreign_key "result_orderable_elements", "users", column: "restored_by_id"
   add_foreign_key "result_tables", "results"
   add_foreign_key "result_tables", "tables"
   add_foreign_key "result_texts", "results"
+  add_foreign_key "result_texts", "users", column: "archived_by_id"
+  add_foreign_key "result_texts", "users", column: "restored_by_id"
   add_foreign_key "results", "my_modules"
   add_foreign_key "results", "users"
   add_foreign_key "results", "users", column: "archived_by_id"
@@ -1811,6 +1847,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
   add_foreign_key "step_tables", "steps"
   add_foreign_key "step_tables", "tables"
   add_foreign_key "step_texts", "steps"
+  add_foreign_key "step_texts", "users", column: "archived_by_id"
+  add_foreign_key "step_texts", "users", column: "restored_by_id"
   add_foreign_key "steps", "protocols"
   add_foreign_key "steps", "protocols", column: "original_protocol_id"
   add_foreign_key "steps", "users"
@@ -1823,8 +1861,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
   add_foreign_key "storage_locations", "storage_locations", column: "parent_id"
   add_foreign_key "storage_locations", "teams"
   add_foreign_key "storage_locations", "users", column: "created_by_id"
+  add_foreign_key "tables", "users", column: "archived_by_id"
   add_foreign_key "tables", "users", column: "created_by_id"
   add_foreign_key "tables", "users", column: "last_modified_by_id"
+  add_foreign_key "tables", "users", column: "restored_by_id"
   add_foreign_key "taggings", "tags"
   add_foreign_key "taggings", "users", column: "created_by_id"
   add_foreign_key "tags", "teams"

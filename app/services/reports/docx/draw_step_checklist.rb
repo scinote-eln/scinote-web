@@ -21,8 +21,8 @@ module Reports::Docx::DrawStepChecklist
         text '| ' if checklist.name.present?
         if checklist.archived?
           text I18n.t('projects.reports.elements.archived_metadata',
-                      datetime: I18n.l(checklist.step_orderable_element.archived_on, format: :full),
-                      user: checklist.step_orderable_element.archived_by&.full_name), color: color[:gray]
+                      datetime: I18n.l(checklist.archived_on, format: :full),
+                      user: checklist.archived_by&.full_name), color: color[:gray]
         else
           text I18n.t('projects.reports.elements.step_checklist.user_time',
                     timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]

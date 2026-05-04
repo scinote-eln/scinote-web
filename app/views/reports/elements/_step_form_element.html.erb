@@ -13,8 +13,8 @@
       <% if form_response.submitted? %>
         <% if form_response.archived? %>
           <%= t("projects.reports.elements.archived_metadata",
-                user: form_response.step_orderable_element.archived_by&.full_name,
-                datetime: l(form_response.step_orderable_element.archived_on, format: :full)) %>
+                user: form_response.archived_by&.full_name,
+                datetime: l(form_response.archived_on, format: :full)) %>
         <% else %>
           <%= t("projects.reports.elements.step_forms.user_time", user: form_response.submitted_by&.full_name,
                                                                    timestamp: l(form_response.submitted_at, format: :full)) %>

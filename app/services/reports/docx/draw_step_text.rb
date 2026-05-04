@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawStepText
-  def draw_step_text(element)
-    step_text = element.orderable
+  def draw_step_text(step_text)
     timestamp = element.created_at
     color = @color
     settings = @settings
@@ -16,8 +15,8 @@ module Reports::Docx::DrawStepText
           text '| ' if step_text.name.present?
           if step_text.archived?
             text I18n.t('projects.reports.elements.archived_metadata',
-                        datetime: I18n.l(step_text.step_orderable_element.archived_on, format: :full),
-                        user: step_text.step_orderable_element.archived_by&.full_name), color: color[:gray]
+                        datetime: I18n.l(step_text.archived_on, format: :full),
+                        user: step_text.archived_by&.full_name), color: color[:gray]
           else
             text I18n.t('projects.reports.elements.result_text.user_time',
                         timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]

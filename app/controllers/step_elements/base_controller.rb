@@ -32,46 +32,8 @@ module StepElements
       end
     end
 
-    def archive_element!(step, orderable_element)
-      ActiveRecord::Base.transaction do
-        orderable_element.position = nil
-        orderable_element.archive!(current_user)
-        step.normalize_elements_position
-
-        case orderable_element.orderable
-        when StepText
-          log_step_activity(:text_archived, { text_name: orderable_element.orderable.name })
-        when StepTable
-          log_step_activity(:table_archived, { table_name: orderable_element.orderable.table.name })
-        when Checklist
-          log_step_activity(:checklist_archived, { checklist_name: orderable_element.orderable.name })
-        when FormResponse
-          log_step_activity(:form_archived, { form: orderable_element.orderable.form.id })
-        end
-      end
-    end
-
-    def restore_element!(step, orderable_element)
-      ActiveRecord::Base.transaction do
-        orderable_element.position = step.next_element_position
-        orderable_element.restore!(current_user)
-
-        case orderable_element.orderable
-        when StepText
-          log_step_restore_activity(:task_step_text_restored, { text_name: orderable_element.orderable.name })
-        when StepTable
-          log_step_restore_activity(:task_step_table_restored, { table_name: orderable_element.orderable.table.name })
-        when Checklist
-          log_step_restore_activity(:task_step_checklist_restored, { checklist_name: orderable_element.orderable.name })
-        when FormResponse
-          log_step_restore_activity(:task_step_form_restored, { form: orderable_element.orderable.form.id })
-        end
-      end
-    end
-
     def render_step_orderable_element(orderable)
-      step_orderable_element = orderable.step_orderable_element
-      render json: step_orderable_element, serializer: StepOrderableElementSerializer, user: current_user
+      render json: orderable, serializer: StepOrderableElementSerializer, user: current_user
     end
 
     def log_step_activity(element_type_of, message_items)

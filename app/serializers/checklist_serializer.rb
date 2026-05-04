@@ -10,16 +10,12 @@ class ChecklistSerializer < ActiveModel::Serializer
 
   has_many :checklist_items, serializer: ChecklistItemSerializer
 
-  def archived
-    object.archived?
-  end
-
   def archived_by
-    object.step_orderable_element.archived_by&.full_name
+    object.archived_by&.full_name
   end
 
   def archived_on
-    I18n.l(object.step_orderable_element.archived_on, format: :full) if object.step_orderable_element.archived_on.present?
+    I18n.l(object.archived_on, format: :full) if object.archived_on.present?
   end
 
   def icon
@@ -42,11 +38,10 @@ class ChecklistSerializer < ActiveModel::Serializer
     url_list = { checklist_items_url: step_checklist_checklist_items_path(object.step, object) }
     return url_list if object.destroyed?
 
-    step_orderable_element = object.step_orderable_element
     step = object.step
     user = scope[:user] || @instance_options[:user]
 
-    if can_manage_step_orderable_element?(user, step_orderable_element)
+    if can_manage_step_checklist?(user, object)
       url_list.merge!({
                         duplicate_url: duplicate_step_checklist_path(step, object),
                         update_url: step_checklist_path(step, object),
@@ -57,9 +52,9 @@ class ChecklistSerializer < ActiveModel::Serializer
                       })
     end
 
-    url_list[:archive_url] = archive_step_checklist_path(step, object) if can_archive_step_orderable_element?(user, step_orderable_element)
-    url_list[:restore_url] = restore_step_checklist_path(step, object) if can_restore_step_orderable_element?(user, step_orderable_element)
-    url_list[:delete_url] = step_checklist_path(step, object) if can_delete_step_orderable_element?(user, step_orderable_element)
+    url_list[:archive_url] = archive_step_checklist_path(step, object) if can_archive_step_checklist?(user, object)
+    url_list[:restore_url] = restore_step_checklist_path(step, object) if can_restore_step_checklist?(user, object)
+    url_list[:delete_url] = step_checklist_path(step, object) if can_delete_step_checklist?(user, object)
 
     url_list
   end

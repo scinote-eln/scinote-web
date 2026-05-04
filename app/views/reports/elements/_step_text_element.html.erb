@@ -15,8 +15,8 @@
       <div class="user-time">
         <% if step_text.archived? %>
           <%= t("projects.reports.elements.archived_metadata",
-                user: step_text.step_orderable_element.archived_by&.full_name,
-                datetime: l(step_text.step_orderable_element.archived_on, format: :full)) %>
+                user: step_text.archived_by&.full_name,
+                datetime: l(step_text.archived_on, format: :full)) %>
         <% else %>
           <%= t("projects.reports.elements.step_text.user_time", timestamp: l(timestamp, format: :full)) %>
         <% end %>

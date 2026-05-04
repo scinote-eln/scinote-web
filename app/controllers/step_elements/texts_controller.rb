@@ -90,7 +90,10 @@ module StepElements
     end
 
     def archive
-      archive_element!(@step, @step_text.step_orderable_element)
+      ActiveRecord::Base.transaction do
+        @step_text.archive!(current_user)
+        log_step_activity(:text_archived, { text_name: @step_text.name })
+      end
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -98,7 +101,10 @@ module StepElements
     end
 
     def restore
-      restore_element!(@step, @step_text.step_orderable_element)
+      ActiveRecord::Base.transaction do
+        @step_text.restore!(current_user)
+        log_step_restore_activity(:task_step_text_restored, { text_name: @step_text.name })
+      end
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -117,19 +123,19 @@ module StepElements
     end
 
     def check_manage_permissions
-      render_403 unless can_manage_step_orderable_element?(@step_text.step_orderable_element)
+      render_403 unless can_manage_step_text?(@step_text)
     end
 
     def check_archive_permissions
-      render_403 unless can_archive_step_orderable_element?(@step_text.step_orderable_element)
+      render_403 unless can_archive_step_text?(@step_text)
     end
 
     def check_restore_permissions
-      render_403 unless can_restore_step_orderable_element?(@step_text.step_orderable_element)
+      render_403 unless can_restore_step_text?(@step_text)
     end
 
     def check_delete_permissions
-      render_403 unless can_delete_step_orderable_element?(@step_text.step_orderable_element)
+      render_403 unless can_delete_step_text?(@step_text)
     end
   end
 end

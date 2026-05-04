@@ -6,10 +6,6 @@ module Api
       type :result_tables
       attributes :table_id, :table_contents, :table_metadata, :archived
 
-      def archived
-        object.archived? if object.result_orderable_element.present?
-      end
-
       def table_id
         object.table&.id
       end

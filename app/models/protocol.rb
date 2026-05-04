@@ -209,34 +209,34 @@ class Protocol < ApplicationRecord
                                             .select(:id)
       sql = "#{unscoped_readable_protocols.where_attributes_like(Step::SEARCHABLE_IN_PROTOCOL_ATTRIBUTES, query).to_sql}
         UNION ALL
-        #{unscoped_readable_protocols.joins(steps: { step_texts: :step_orderable_element })
-                                     .where(step_orderable_element: { archived: false })
+        #{unscoped_readable_protocols.joins(steps: :step_texts)
+                                     .where(step_texts: { archived: false })
                                      .where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
         UNION ALL
-        #{unscoped_readable_protocols.joins(steps: { step_tables: %i(table step_orderable_element) })
-                                     .where(step_orderable_element: { archived: false })
+        #{unscoped_readable_protocols.joins(steps: { step_tables: :table })
+                                     .where(tables: { archived: false })
                                      .where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
         UNION ALL
-        #{unscoped_readable_protocols.joins(steps: { checklists: :step_orderable_element })
-                                     .where(step_orderable_element: { archived: false })
+        #{unscoped_readable_protocols.joins(steps: :checklists)
+                                     .where(checklists: { archived: false })
                                      .where_attributes_like(Checklist::SEARCHABLE_ATTRIBUTES, query).to_sql}
         UNION ALL
-        #{unscoped_readable_protocols.joins(steps: { checklists: %i(checklist_items step_orderable_element) })
-                                     .where(step_orderable_element: { archived: false })
+        #{unscoped_readable_protocols.joins(steps: { checklists: :checklist_items })
+                                     .where(checklists: { archived: false })
                                      .where_attributes_like(ChecklistItem::SEARCHABLE_ATTRIBUTES, query).to_sql}
         UNION ALL
         #{unscoped_readable_protocols.joins(steps: :step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
         UNION ALL
-        #{unscoped_readable_protocols.joins(steps: { form_responses: %i(form_field_values step_orderable_element) })
-                                     .where(step_orderable_element: { archived: false })
+        #{unscoped_readable_protocols.joins(steps: { form_responses: :form_field_values })
+                                     .where(form_responses: { archived: false })
                                      .where_attributes_like(FormFieldValue::SEARCHABLE_ATTRIBUTES, query).to_sql}
         UNION ALL
-        #{unscoped_readable_protocols.joins(steps: { form_responses: %i(form step_orderable_element) })
-                                     .where(step_orderable_element: { archived: false })
+        #{unscoped_readable_protocols.joins(steps: { form_responses: :form })
+                                     .where(form_responses: { archived: false })
                                      .where_attributes_like(Form::SEARCHABLE_ATTRIBUTES, query).to_sql}
         UNION ALL
-        #{unscoped_readable_protocols.joins(steps: { form_responses: [:step_orderable_element, { form: :form_fields }] })
-                                     .where(step_orderable_element: { archived: false })
+        #{unscoped_readable_protocols.joins(steps: { form_responses: { form: :form_fields } })
+                                     .where(form_responses: { archived: false })
                                      .where_attributes_like(FormField::SEARCHABLE_ATTRIBUTES, query).to_sql}
         "
     end

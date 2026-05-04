@@ -3,7 +3,7 @@
 module Api
   module V2
     class StepOrderableElementSerializer < ActiveModel::Serializer
-      attributes :position, :element, :archived
+      attributes :position, :element
 
       def element
         case object.orderable_type

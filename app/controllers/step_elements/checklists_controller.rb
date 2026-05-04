@@ -92,14 +92,21 @@ module StepElements
     end
 
     def archive
-      archive_element!(@step, @checklist.step_orderable_element)
+      ActiveRecord::Base.transaction do
+        @checklist.archive!(current_user)
+        log_step_activity(:checklist_archived, { checklist_name: @checklist.name })
+      end
+
       head :ok
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
 
     def restore
-      restore_element!(@step, @checklist.step_orderable_element)
+      ActiveRecord::Base.transaction do
+        @checklist.restore!(current_user)
+        log_step_restore_activity(:task_step_checklist_restored, { checklist_name: @checklist.name })
+      end
 
       head :ok
     rescue ActiveRecord::RecordInvalid
@@ -118,19 +125,19 @@ module StepElements
     end
 
     def check_manage_permissions
-      render_403 unless can_manage_step_orderable_element?(@checklist.step_orderable_element)
+      render_403 unless can_manage_step_checklist?(@checklist)
     end
 
     def check_archive_permissions
-      render_403 unless can_archive_step_orderable_element?(@checklist.step_orderable_element)
+      render_403 unless can_archive_step_checklist?(@checklist)
     end
 
     def check_restore_permissions
-      render_403 unless can_restore_step_orderable_element?(@checklist.step_orderable_element)
+      render_403 unless can_restore_step_checklist?(@checklist)
     end
 
     def check_delete_permissions
-      render_403 unless can_delete_step_orderable_element?(@checklist.step_orderable_element)
+      render_403 unless can_delete_step_checklist?(@checklist)
     end
   end
 end

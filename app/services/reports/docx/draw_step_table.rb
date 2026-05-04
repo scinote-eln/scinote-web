@@ -14,7 +14,6 @@ module Reports::Docx::DrawStepTable
                     'projects.reports.elements.step_well_plates_table'
                   end
 
-
     @docx.p do
       text I18n.t("#{i18n_string}.table_name", name: table.name), italic: true
       text " | #{I18n.t('search.index.archived')} ", bold: true, color: color[:gray] if table.archived?
@@ -22,8 +21,8 @@ module Reports::Docx::DrawStepTable
         text '| '
         if table.archived?
           text I18n.t('projects.reports.elements.archived_metadata',
-                      datetime: I18n.l(table.step_table.step_orderable_element.archived_on, format: :full),
-                      user: table.step_table.step_orderable_element.archived_by&.full_name), color: color[:gray]
+                      datetime: I18n.l(table.archived_on, format: :full),
+                      user: table.archived_by&.full_name), color: color[:gray]
         else
           text I18n.t("#{i18n_string}.user_time",
                       timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]

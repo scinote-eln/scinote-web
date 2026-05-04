@@ -4,13 +4,13 @@ class ResultSerializer < ResultBaseSerializer
   attributes :my_module_id, :archived, :comments_count, :archived_by, :archived_on
 
   def result_orderable_elements
-    return object.result_orderable_elements if object.archived?
+    return object.all_elements if object.archived?
 
     view_mode = @instance_options[:view_mode]
     if view_mode == 'archived'
-      object.result_orderable_elements.archived
+      object.archived_elements
     else
-      object.result_orderable_elements.active
+      object.active_elements
     end
   end
 
