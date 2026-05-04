@@ -1166,6 +1166,8 @@ en:
         occassions: "occassions"
         people: "People"
         create_event: "Create event"
+    promo:
+      promo_title: 'This feature is disabled by default in open source SciNote'
   forms:
     published: "Published"
     draft: "Draft"

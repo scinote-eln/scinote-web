@@ -40,19 +40,19 @@ describe CalendarEvent, type: :model do
     let(:team) { create(:team) }
 
     it "can belong to a RepositoryRow" do
-      event = CalendarEvent.create!(subject: repository_row, team: team, created_by: user, event_type: Faker::Name.unique.name)
+      event = CalendarEvent.create!(subject: repository_row, team: team, created_by: user, event_type: :equipment_booking)
 
       expect(event.subject).to eq(repository_row)
       expect(event.subject_type).to eq("RepositoryRow")
     end
 
     it "destroys associated team" do
-      event = CalendarEvent.create!(subject: repository_row, team: team, created_by: user, event_type: Faker::Name.unique.name)
+      event = CalendarEvent.create!(subject: repository_row, team: team, created_by: user, event_type: :equipment_booking)
       expect { team.destroy }.to change(CalendarEvent, :count).by(-1)
     end
 
      it "destroys associated subject" do
-      event = CalendarEvent.create!(subject: repository_row, team: team, created_by: user, event_type: Faker::Name.unique.name)
+      event = CalendarEvent.create!(subject: repository_row, team: team, created_by: user, event_type: :equipment_booking)
       expect { repository_row.destroy }.to change(CalendarEvent, :count).by(-1)
     end
   end

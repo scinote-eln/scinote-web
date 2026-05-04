@@ -9,12 +9,16 @@ describe CalendarEventsController, type: :controller do
   let!(:team) { create :team, created_by: user }
   let(:repository) { create :repository, team: team, created_by: user }
   let(:repository_row) { create :repository_row, repository: repository }
-  let(:event_type) { Faker::Name.unique.name }
+  let(:event_type) { :equipment_booking }
   let!(:calendar_events) { create_list(:calendar_event, 10, created_by: user, team: team, subject: repository_row, event_type: event_type) }
+
+  before do
+    allow(CalendarEvent).to(receive(:calendar_events_enabled?)).and_return(true)
+  end
 
   describe '#index' do
     let(:params) { { event_type: event_type } }
-    let(:params_new_event_type) { { event_type: Faker::Name.unique.name } }
+    let(:params_new_event_type) { { event_type: :test } }
 
     it 'returns success response with correct event type' do
       get :index, params: params, format: :json
@@ -66,7 +70,7 @@ describe CalendarEventsController, type: :controller do
         repository_row_id: repository_row.id,
         start_at: DateTime.now + 1.days,
         end_at: DateTime.now + 5.days,
-        event_type: Faker::Name.unique.name,
+        event_type: :equipment_booking,
         metadata: { test: Faker::Name.unique.name } 
       }
     }
