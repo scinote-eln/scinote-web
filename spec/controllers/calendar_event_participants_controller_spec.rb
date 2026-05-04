@@ -9,9 +9,13 @@ describe CalendarEventParticipantsController, type: :controller do
   let!(:team) { create :team, created_by: user }
   let(:repository) { create :repository, team: team, created_by: user }
   let(:repository_row) { create :repository_row, repository: repository }
-  let(:event_type) { Faker::Name.unique.name }
+  let(:event_type) { :equipment_booking }
   let!(:calendar_event) { create :calendar_event, created_by: user, team: team, subject: repository_row, event_type: event_type }
-  let!(:calendar_event_participant) { create :calendar_event_participant, user: user, calendar_event: calendar_event}
+  let!(:calendar_event_participant) { create :calendar_event_participant, user: user, calendar_event: calendar_event }
+
+  before do
+    allow(CalendarEvent).to(receive(:calendar_events_enabled?)).and_return(true)
+  end
 
   describe '#index' do
     let(:params) { { calendar_event_id: calendar_event.id } }
