@@ -234,17 +234,17 @@ class Step < ApplicationRecord
       new_step.save!
 
       # Copy texts
-      step_texts.each do |step_text|
+      step_texts.active.each do |step_text|
         step_text.duplicate(new_step, step_text.step_orderable_element.position)
       end
 
       # Copy checklists
-      checklists.asc.each do |checklist|
+      checklists.active.asc.each do |checklist|
         checklist.duplicate(new_step, user, checklist.step_orderable_element.position)
       end
 
       # "Shallow" Copy assets
-      assets.each do |asset|
+      assets.active.each do |asset|
         new_asset = asset.dup
         new_asset.update!(created_by: user, last_modified_by: user)
         new_step.assets << new_asset
@@ -252,12 +252,12 @@ class Step < ApplicationRecord
       end
 
       # Copy tables
-      tables.each do |table|
+      tables.active.each do |table|
         duplicate_table(new_step, user, table)
       end
 
       # Copy form responses
-      form_responses.each do |form_response|
+      form_responses.active.each do |form_response|
         form_response.duplicate(new_step, user, form_response.step_orderable_element.position)
       end
 
