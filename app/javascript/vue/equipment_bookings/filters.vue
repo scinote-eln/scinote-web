@@ -60,7 +60,7 @@
       v-if="createEvent"
       :repositoryId="repositoryId"
       @close="createEvent = false"
-      @event:created="createEvent = false"
+      @event:created="createEvent = false; $emit('event:created')"
     ></manageEventModal>
   </div>
 </template>

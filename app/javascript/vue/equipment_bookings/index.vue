@@ -18,10 +18,12 @@
         :repository-id="selectedRepository"
         :filters="filters"
         @update:filters="filters = $event"
+        @event:created="loadEvents += 1"
       ></Filters>
       <CalendarView
         v-if="selectedRepository"
         :repositoryId="selectedRepository"
+        :loadEvents="loadEvents"
         :filters="filters"
       ></CalendarView>
     </div>
@@ -45,6 +47,7 @@ export default {
     return {
       repositories: [],
       selectedRepository: null,
+      loadEvents: 0,
       filters: {
         sub_types: {
           calibration: true,
