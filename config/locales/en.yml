@@ -1136,8 +1136,13 @@ en:
           maintenance: "Maintenance"
           calibration: "Calibration"
           other: "Other"
+      delete_modal:
+        title: "Delete event"
+        description_html: "Are you sure you want to delete this event?<br><br><b>This action cannot be undone.</b>"
+        delete: "Delete"
       manage_modal:
         create_title: "Create an event"
+        update_title: "Update an event"
         event_name: "Event name"
         item: "Item"
         select_item: "Select an item"
@@ -1166,6 +1171,7 @@ en:
         occassions: "occassions"
         people: "People"
         create_event: "Create event"
+        update_event: "Update event"
     promo:
       promo_title: 'This feature is disabled by default in open source SciNote'
   forms:

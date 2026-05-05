@@ -6,7 +6,10 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <h4 class="modal-title truncate !block" id="edit-project-modal-label">
+          <h4 v-if="event.id" class="modal-title truncate !block" id="edit-project-modal-label">
+            {{ i18n.t('equipment_bookings.index.manage_modal.update_title') }}
+          </h4>
+          <h4 v-else class="modal-title truncate !block" id="edit-project-modal-label">
             {{ i18n.t('equipment_bookings.index.manage_modal.create_title') }}
           </h4>
         </div>
@@ -165,7 +168,10 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.close') }}</button>
-          <button type="button" class="btn btn-primary" :disabled="disabled" @click="createEvent">
+          <button v-if="event.id" type="button" class="btn btn-primary" :disabled="disabled" @click="updateEvent">
+            {{ i18n.t('equipment_bookings.index.manage_modal.update_event') }}
+          </button>
+          <button v-else type="button" class="btn btn-primary" :disabled="disabled" @click="createEvent">
             {{ i18n.t('equipment_bookings.index.manage_modal.create_event') }}
           </button>
         </div>
@@ -184,7 +190,8 @@ import axios from '../../packs/custom_axios.js';
 import {
   rows_list_team_repositories_path,
   users_filter_projects_path,
-  calendar_events_path
+  calendar_events_path,
+  calendar_event_path
 } from '../../routes.js';
 
 export default {
@@ -192,6 +199,10 @@ export default {
   props: {
     repositoryId: {
       type: Number,
+      required: true
+    },
+    existedEvent: {
+      type: Object,
       required: true
     }
   },
@@ -241,18 +252,22 @@ export default {
   created() {
     this.teamId = document.body.dataset.currentTeamId;
 
-    const now = new Date();
-    const later = new Date(now.getTime() + 60 * 60 * 1000);
-    const tillDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    if (this.existedEvent) {
+      this.event = { ...this.existedEvent };
+    } else {
+      const now = new Date();
+      const later = new Date(now.getTime() + 60 * 60 * 1000);
+      const tillDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-    const formatDateTime = (date) => {
-      const pad = (n) => n.toString().padStart(2, '0');
-      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
-    };
+      const formatDateTime = (date) => {
+        const pad = (n) => n.toString().padStart(2, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+      };
 
-    this.event.start_at = formatDateTime(now);
-    this.event.end_at = formatDateTime(later);
-    this.event.custom_frequency.end_date = formatDateTime(tillDate);
+      this.event.start_at = formatDateTime(now);
+      this.event.end_at = formatDateTime(later);
+      this.event.custom_frequency.end_date = formatDateTime(tillDate);
+    }
   },
   computed: {
     disabled() {
@@ -267,6 +282,11 @@ export default {
     calendarEventsUrl() {
       return calendar_events_path();
     },
+    calendarEventUrl() {
+      if (!this.event.id) return null;
+
+      return calendar_event_path(this.event.id);
+    },
     usersRenderer() {
       return usersRenderer;
     }
@@ -277,12 +297,8 @@ export default {
   },
   mixins: [modalMixin],
   methods: {
-    createEvent() {
-      if (this.creating) return;
-
-      this.creating = true;
-
-      const payload = {
+    preparePayload() {
+      return {
         name: this.event.event_name,
         repository_row_id: this.event.repository_row_id,
         event_type: this.event.event_type,
@@ -292,6 +308,28 @@ export default {
         full_day: this.event.full_day,
         calendar_event_participants_attributes: this.event.users.map(user_id => ({ user_id })),
       };
+    },
+    updateEvent() {
+      if (this.creating) return;
+
+      this.creating = true;
+
+      const payload = this.preparePayload();
+
+      axios.patch(this.calendarEventUrl, payload)
+        .then(() => {
+          this.$emit('event:updated');
+        })
+        .finally(() => {
+          this.creating = false;
+        });
+    },
+    createEvent() {
+      if (this.creating) return;
+
+      this.creating = true;
+
+      const payload = this.preparePayload();
 
       axios.post(this.calendarEventsUrl, payload)
         .then(() => {
