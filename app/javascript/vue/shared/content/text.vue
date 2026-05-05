@@ -32,6 +32,7 @@
         @duplicate="duplicateElement"
         @move="showMoveModal"
         @delete="showDeleteModal"
+        @versions="showVersionsModal"
       ></MenuDropdown>
     </div>
     <div class="flex rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body"
@@ -164,6 +165,12 @@ export default {
           data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-delete`
         });
       }
+
+      menu.push({
+          text: 'Versions',
+          emit: 'versions'
+        });
+      
       return menu;
     }
   },
@@ -199,6 +206,12 @@ export default {
     },
     highlightText(textElToHighlight) {
       Prism.highlightAllUnder(textElToHighlight);
+    },
+    showVersionsModal() {
+      $.get(this.element.attributes.orderable.audits_versions_url, function(data) {
+        $('#stepTextVersionsModal').find('.modal-body').html(data.html);
+        $('#stepTextVersionsModal').modal('show');
+      });
     }
   }
 };
