@@ -1060,6 +1060,12 @@ var RepositoryDatatable = (function(global) {
 
       window.AssignItemsToTaskModalComponentContainer.showModal(rowsSelected);
     })
+    .on('click', '#createEventRepositoryRecords', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      window.EventCreateRepositoryRow.showModal(rowsSelected[0]);
+    })
     .on('click', '#deleteRepositoryRecords', function(e) {
       e.preventDefault();
       e.stopPropagation();
