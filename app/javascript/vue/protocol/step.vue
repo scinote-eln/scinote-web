@@ -262,7 +262,7 @@
   }
 
   import InlineEdit from '../shared/inline_edit.vue'
-  import StepTable from '../shared/content/table.vue'
+  import Table from '../shared/content/table.vue'
   import StepText from '../shared/content/text.vue'
   import Checklist from '../shared/content/checklist.vue'
   import FormResponse from '../shared/content/form_response.vue'
@@ -363,7 +363,7 @@
     mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, tooltipMixin, StepCommonMixin],
     components: {
       InlineEdit,
-      StepTable,
+      Table,
       StepText,
       Checklist,
       deleteStepModal,

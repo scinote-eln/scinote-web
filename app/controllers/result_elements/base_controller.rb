@@ -42,8 +42,7 @@ module ResultElements
     end
 
     def render_result_orderable_element(orderable)
-      result_orderable_element = orderable.result_orderable_element
-      render json: result_orderable_element, serializer: ResultOrderableElementSerializer, user: current_user
+      render json: orderable, serializer: ResultOrderableElementSerializer, user: current_user
     end
 
     def log_result_activity(element_type_of, message_items)

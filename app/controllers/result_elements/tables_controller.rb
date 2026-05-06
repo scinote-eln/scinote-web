@@ -41,7 +41,7 @@ module ResultElements
         log_result_activity(:table_added, { table_name: result_table.table.name })
       end
 
-      render_result_orderable_element(result_table)
+      render_result_orderable_element(result_table.table)
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -137,7 +137,7 @@ module ResultElements
         @table.name += ' (1)'
         new_table = @table.duplicate(@result, current_user, position + 1)
         log_result_activity(:table_duplicated, { table_name: new_table.name })
-        render_result_orderable_element(new_table.result_table)
+        render_result_orderable_element(new_table.result_table.table)
       end
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error(e.message)
