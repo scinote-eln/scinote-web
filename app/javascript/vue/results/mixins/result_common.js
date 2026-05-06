@@ -1,6 +1,7 @@
 import axios from '../../../packs/custom_axios.js';
 import {
   protocols_my_module_path,
+  archive_my_module_path,
   protocol_path,
   user_setting_path
 } from '../../../routes.js';
@@ -131,11 +132,16 @@ export default {
       });
       this.showFileModal = false;
     },
-    protocolUrl(step_id) {
+    protocolUrl(step_id, archived) {
       if (this.result.attributes.protocol_id) {
         return protocol_path({ id: this.result.attributes.protocol_id }, { step_id: step_id });
       }
-      return protocols_my_module_path({ id: this.result.attributes.my_module_id }, { step_id: step_id })
+
+      if (archived) {
+        return archive_my_module_path(this.result.attributes.my_module_id, { step_id: step_id, mode: 'steps' });
+      } else {
+        return protocols_my_module_path({ id: this.result.attributes.my_module_id }, { step_id: step_id })
+      }
     },
     deleteResult() {
       axios.delete(this.urls.delete_url).then((response) => {

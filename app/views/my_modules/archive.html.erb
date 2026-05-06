@@ -9,7 +9,7 @@
     <%= render partial: 'my_modules/header_actions' %>
     <div id="myModuleArchive" >
       <my-module-archive
-        initial-mode="<%= params[:mode] || 'steps' %>"
+        initial-mode="<%= params[:mode] || 'results' %>"
         :my-module-id="<%= @my_module.id %>"
         :protocol-id="<%= @my_module.protocol.id %>"
       />

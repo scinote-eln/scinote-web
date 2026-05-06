@@ -2,6 +2,7 @@ import axios from '../../../packs/custom_axios.js';
 import {
   protocol_result_templates_path,
   my_module_results_path,
+  archive_my_module_path,
   user_setting_path
 } from '../../../routes.js';
 
@@ -119,7 +120,12 @@ export default {
       if (!this.step.attributes.my_module_id) {
         return protocol_result_templates_path({protocol_id: this.step.attributes.protocol_id, result_id: result_id });
       }
-      return my_module_results_path({my_module_id: this.step.attributes.my_module_id, result_id: result_id, view_mode: (archived ? 'archived' : 'active') });
+
+      if (archived) {
+        return archive_my_module_path(this.step.attributes.my_module_id, { result_id: result_id, mode: 'results' });
+      } else {
+        return my_module_results_path({my_module_id: this.step.attributes.my_module_id, result_id: result_id });
+      }
     },
   }
 };

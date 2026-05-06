@@ -1,7 +1,7 @@
 <template>
   <div class="mt-4">
     <div class="mt-4">
-      <ArchiveResults v-if="activeMode=== 'results'" :protocolId="protocolId" :myModuleId="myModuleId" @update:mode="setActiveMode" />
+      <ArchiveResults v-if="activeMode === 'results'" :protocolId="protocolId" :myModuleId="myModuleId" @update:mode="setActiveMode" />
       <ArchiveSteps v-if="activeMode === 'steps'" :protocolId="protocolId" @update:mode="setActiveMode"/>
     </div>
   </div>

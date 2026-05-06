@@ -109,10 +109,11 @@
                 <a v-for="step in result.attributes.steps"
                   :key="step.id"
                   :title="step.name"
-                  :href="protocolUrl(step.id)"
+                  :href="protocolUrl(step.id, step.archived)"
                   class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer block hover:no-underline text-sn-blue truncate"
                   :data-e2e="`e2e-BT-task-result${result.id}-linkStep-step${step.id}`"
                 >
+                  <i v-if="step.archived" class="sn-icon sn-icon-archived"></i>
                   {{ step.name }}
                 </a>
               </div>
