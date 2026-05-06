@@ -241,7 +241,7 @@
 <script>
 import axios from '../../packs/custom_axios.js';
 import ReorderableItemsModal from '../shared/reorderable_items_modal.vue';
-import ResultTable from '../shared/content/table.vue';
+import Table from '../shared/content/table.vue';
 import ResultText from '../shared/content/text.vue';
 import Attachments from '../shared/content/attachments.vue';
 import InlineEdit from '../shared/inline_edit.vue';
@@ -328,7 +328,7 @@ export default {
   mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, ResultCommonMixin, DeleteMixin],
   components: {
     ReorderableItemsModal,
-    ResultTable,
+    Table,
     ResultText,
     Attachments,
     InlineEdit,

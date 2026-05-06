@@ -40,7 +40,7 @@ module StepElements
         log_step_activity(:table_added, { table_name: step_table.table.name })
       end
 
-      render_step_orderable_element(step_table)
+      render_step_orderable_element(step_table.table)
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -113,7 +113,7 @@ module StepElements
         @table.name += ' (1)'
         new_table = @table.duplicate(@step, current_user, position + 1)
         log_step_activity(:table_duplicated, { table_name: new_table.name })
-        render_step_orderable_element(new_table.step_table)
+        render_step_orderable_element(new_table.step_table.table)
       end
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
