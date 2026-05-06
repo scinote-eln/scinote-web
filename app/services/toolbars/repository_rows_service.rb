@@ -75,7 +75,7 @@ module Toolbars
     def create_event_action
       return unless @single
 
-      return unless CalendarEvent.calendar_events_enabled?
+      return unless Repository.equipment_booking_enabled?
 
       return unless can_manage_repository_rows?(@repository)
 

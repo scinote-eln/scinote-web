@@ -905,6 +905,7 @@ Rails.application.routes.draw do
           get :active_reminder_repository_cells
           put :update_cell
           get :assigned_counters
+          get :equipment_booking_events
         end
 
         collection do

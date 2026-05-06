@@ -3085,10 +3085,18 @@ en:
       assigned_label: 'Assigned'
       locations_label: 'Locations'
       QR_label: 'QR'
+      schedule_label: 'Schedule'
     locations:
       title: 'Locations (%{count})'
       container: 'Box'
       assign: 'Assign new location'
+    equipment_booking:
+      title: 'Schedule'
+      create_event: 'Create event'
+      upcoming_events: 'Upcoming'
+      past_events: 'Past'
+      show_more: 'Show more'
+      no_events: 'No events scheduled'
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
@@ -3143,6 +3151,8 @@ en:
   repository_ledger_records:
     errors:
       my_module_references_missing: 'Task references are not set'
+  equipment_booking:
+    equipment_booking_disabled: "<b>Equipment booking is disabled</b>"
   storage_locations:
     storage_locations_disabled: "<b>Storage locations are disabled</b>"
     container: 'box'

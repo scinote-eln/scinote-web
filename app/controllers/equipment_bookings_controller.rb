@@ -43,7 +43,7 @@ class EquipmentBookingsController < ApplicationController
   private
 
   def check_calendar_events_enabled
-    render :promo unless CalendarEvent.calendar_events_enabled?
+    render :promo unless Repository.equipment_booking_enabled?
   end
 
   def set_breadcrumbs_items
