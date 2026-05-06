@@ -281,7 +281,7 @@ class Step < ApplicationRecord
   end
 
   def label
-    I18n.t('protocols.steps.label', name: name, position: position + 1)
+    I18n.t('protocols.steps.label', name: name, position: position ? position + 1 : '')
   end
 
   private
