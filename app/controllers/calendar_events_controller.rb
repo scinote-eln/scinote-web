@@ -38,28 +38,47 @@ class CalendarEventsController < ApplicationController
   end
 
   def create
-    @calendar_event = CalendarEvent.new(calendar_event_params)
-    @calendar_event.team = current_team
-    @calendar_event.subject = @repository_row
-    @calendar_event.created_by = current_user
-
-    if @calendar_event.save
-      render json: @calendar_event, serializer: CalendarEventSerializer, user: current_user
-    else
-      render json: { errors: @calendar_event.errors.full_messages }, status: :unprocessable_entity
+    ActiveRecord::Base.transaction do
+      @calendar_event = CalendarEvent.create!(calendar_event_params.merge(
+        team: current_team,
+        subject: @repository_row,
+        created_by: current_user
+      ))
+      log_activity(@calendar_event, :calendar_event_created)
+      calendar_event_params[:user_ids]&.each do |user_id|
+        log_activity(@calendar_event, :calendar_event_participant_created, { user_target: user_id })
+      end
     end
+
+    render json: @calendar_event, serializer: CalendarEventSerializer, user: current_user
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error e.message
+    render json: { errors: e.message }, status: :unprocessable_entity
   end
 
   def update
-    if @calendar_event.update(calendar_event_params)
-      render json: @calendar_event, serializer: CalendarEventSerializer, user: current_user
-    else
-      render json: { errors: @calendar_event.errors.full_messages }, status: :unprocessable_entity
+    participant_ids = Array(calendar_event_params[:user_ids])
+    current_participant_ids = @calendar_event.user_ids
+    removed_ids = current_participant_ids - participant_ids
+    new_ids = participant_ids - current_participant_ids
+
+    ActiveRecord::Base.transaction do
+      @calendar_event.update!(calendar_event_params)
+
+      log_activity(@calendar_event, :calendar_event_updated)
+      new_ids.each { |user_id| log_activity(@calendar_event, :calendar_event_participant_created, { user_target: user_id }) }
+      removed_ids.each { |user_id| log_activity(@calendar_event, :calendar_event_participant_deleted, { user_target: user_id }) }
     end
+
+    render json: @calendar_event, serializer: CalendarEventSerializer, user: current_user
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error e.message
+    render json: { errors: e.message }, status: :unprocessable_entity
   end
 
   def destroy
     ActiveRecord::Base.transaction do
+      log_activity(@calendar_event, :calendar_event_deleted)
       @calendar_event.destroy!
       render json: { message: :ok }
     rescue ActiveRecord::RecordInvalid => e
@@ -93,7 +112,7 @@ class CalendarEventsController < ApplicationController
       :event_type,
       :event_sub_type,
       :full_day,
-      calendar_event_participants_attributes: %i(id user_id _destroy),
+      user_ids: [],
       metadata: {}
     )
   end
@@ -101,4 +120,16 @@ class CalendarEventsController < ApplicationController
   def check_read_permission; end
 
   def check_manage_permission; end
+
+  def log_activity(calendar_event, type_of, message_items = {})
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: calendar_event.team,
+            subject: calendar_event.subject,
+            message_items: {
+              event: calendar_event.name,
+              repository_row: calendar_event.subject.id
+            }.merge(message_items))
+  end
 end

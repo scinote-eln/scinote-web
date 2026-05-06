@@ -311,7 +311,7 @@ export default {
         start_at: this.event.start_at,
         end_at: this.event.end_at,
         full_day: this.event.full_day,
-        calendar_event_participants_attributes: this.event.users.map(user_id => ({ user_id })),
+        user_ids: this.event.users,
       };
     },
     updateEvent() {

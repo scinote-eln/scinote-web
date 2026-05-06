@@ -688,7 +688,19 @@ class Extends
     repository_snapshot_created: 453,
     repository_snapshot_deleted: 454,
     load_protocol_to_task_from_repository_merge: 459,
-    load_protocol_to_task_from_repository_replace: 460
+    load_protocol_to_task_from_repository_replace: 460,
+    calendar_event_created: 493,
+    calendar_event_updated: 494,
+    calendar_event_deleted: 495,
+    calendar_event_participant_created: 496,
+    calendar_event_participant_deleted: 497,
+    calendar_recurring_event_created: 498,
+    calendar_recurring_event_current_updated: 499,
+    calendar_recurring_event_current_and_following_updated: 500,
+    calendar_recurring_event_all_updated: 501,
+    calendar_recurring_event_current_deleted: 502,
+    calendar_recurring_event_current_and_following_deleted: 503,
+    calendar_recurring_event_all_deleted: 504
   }
 
   ACTIVITY_GROUPS = {
@@ -702,7 +714,7 @@ class Extends
     experiment: [*27..31, 57, 141, 165, *363..369, 393, 407, 410],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
-                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329, *397..405],
+                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329, *397..405, *493..504],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
