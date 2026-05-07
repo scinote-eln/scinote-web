@@ -48,8 +48,6 @@
 export default {
   name: 'deleteStepsModal',
   mounted() {
-    // move modal to body to avoid z-index issues
-    $('body').append($(this.$refs.modal));
 
     $(this.$refs.modal).modal('show');
     $(this.$refs.modal).on('hidden.bs.modal', () => {

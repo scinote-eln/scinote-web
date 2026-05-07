@@ -80,9 +80,10 @@
               v-if="protocol.attributes && protocol.attributes.urls"
               :protocol="protocol"
               :inRepository="inRepository"
-              @protocol:delete_steps="deleteSteps"
+              @protocol:archive_steps="archiveSteps"
               @protocol:add_protocol_steps="addSteps"
-              :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
+              :canDeleteSteps="false"
+              :canArchiveSteps="steps.length > 0 && urls.archive_steps_url !== null"
             />
             <button
               class="btn btn-light icon-btn"
@@ -195,6 +196,7 @@
                 @protocol:delete_steps="deleteSteps"
                 @protocol:add_protocol_steps="addSteps"
                 :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
+                :canArchiveSteps="false"
               />
             </div>
           </div>
@@ -450,6 +452,14 @@ export default {
     },
     deleteSteps() {
       $.post(this.urls.delete_steps_url, () => {
+        this.steps = [];
+        this.refreshProtocolStatus();
+      }).fail(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    archiveSteps() {
+      $.post(this.urls.archive_steps_url, () => {
         this.steps = [];
         this.refreshProtocolStatus();
       }).fail(() => {

@@ -44,9 +44,11 @@ class ProtocolsController < ApplicationController
     update_authors
     unlink
     unlink_modal
-    delete_steps
     list_published_protocol_templates
   )
+
+  before_action :check_delete_steps_permissions, only: :delete_steps
+  before_action :check_archive_steps_permissions, only: :archive_steps
 
   before_action :check_manage_with_read_protocol_permissions, only: %i(
     revert
@@ -299,6 +301,30 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  def archive_steps
+    @protocol.with_lock do
+      my_module = @protocol.my_module
+      @protocol.steps.active.each do |step|
+        step.archive!(current_user)
+
+        log_activity(
+          :archive_step,
+          my_module.project,
+          {
+            my_module: my_module.id,
+            step: step.id,
+            step_position: { id: step.id,
+                             value_for: 'position_plus_one' }
+          }
+        )
+      end
+      render json: { status: 'ok' }
+    rescue ActiveRecord::RecordNotDestroyed
+      render json: { status: 'error' }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  end
+
   def delete_steps
     @protocol.with_lock do
       team = @protocol.team
@@ -308,15 +334,8 @@ class ProtocolsController < ApplicationController
 
         previous_size += step.space_taken
 
-        if @protocol.in_module?
-          log_activity(:destroy_step, @protocol.my_module.experiment.project,
-                       my_module: @protocol.my_module.id,
-                       step: step.id,
-                       step_position: { id: step.id, value_for: 'position_plus_one' })
-        else
-          log_activity(:delete_step_in_protocol_repository, nil, step: step.id,
-            step_position: { id: step.id, value_for: 'position_plus_one' })
-        end
+        log_activity(:delete_step_in_protocol_repository, nil, step: step.id,
+                     step_position: { id: step.id, value_for: 'position_plus_one' })
 
         # skip adjusting positions after destroy as this is a bulk delete
         step.skip_position_adjust = true
@@ -1011,6 +1030,16 @@ class ProtocolsController < ApplicationController
     render_403 unless @protocol.present? &&
                       (can_manage_protocol_in_module?(@protocol) ||
                        can_manage_protocol_draft_in_repository?(@protocol))
+  end
+
+  def check_archive_steps_permissions
+    @protocol = Protocol.find_by(id: params[:id])
+    render_403 unless @protocol.present? && can_manage_protocol_in_module?(@protocol)
+  end
+
+  def check_delete_steps_permissions
+    @protocol = Protocol.find_by(id: params[:id])
+    render_403 unless @protocol.present? && can_manage_protocol_draft_in_repository?(@protocol)
   end
 
   def check_manage_with_read_protocol_permissions

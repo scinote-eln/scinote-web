@@ -789,6 +789,7 @@ Rails.application.routes.draw do
         get 'protocol_status_bar', to: 'protocols#protocol_status_bar'
         get 'updated_at_label', to: 'protocols#updated_at_label'
         post 'delete_steps'
+        post :archive_steps
         get :permissions
         put :update_version_comment
         get :list_published_protocol_templates
