@@ -165,6 +165,7 @@ export default {
       formFieldValues: this.element.attributes.orderable.form_field_values,
       deleteUrl: this.element.attributes.orderable.urls.delete_url,
       moveUrl: this.element.attributes.orderable.urls.move_url,
+      archiveUrl: this.element.attributes.orderable.urls.archive_url,
       isValid: false,
       submitting: false,
       confirmingRestore: false
@@ -254,6 +255,7 @@ export default {
         this.formResponse = attributes.orderable;
         this.deleteUrl = attributes.orderable.urls.delete_url;
         this.moveUrl = attributes.orderable.urls.move_url;
+        this.archiveUrl = attributes.orderable.urls.archive_url;
       }).finally(() => {
         this.submitting = false;
       });
@@ -272,6 +274,7 @@ export default {
           this.formResponse = attributes.orderable;
           this.deleteUrl = attributes.orderable.urls.delete_url;
           this.moveUrl = attributes.orderable.urls.move_url;
+          this.archiveUrl = attributes.orderable.urls.archive_url;
         }).finally(() => {
           this.submitting = false;
         });
