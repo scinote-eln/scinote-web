@@ -1525,6 +1525,7 @@ en:
         update_protocol: "New version update"
         save_to_repo: "Save as new template"
         delete_steps: "Delete all steps"
+        archive_steps: "Archive all steps"
         add_protocol_steps: "Add protocol steps"
     description:
       title: "Edit task %{module} description"
@@ -4370,6 +4371,11 @@ en:
           description_1: 'You’ll lose all protocol steps from your protocol. We can’t recover them once you delete.'
           description_2: 'Are you sure?'
           confirm: 'Yes, delete them'
+        archive_steps:
+          title: 'Archive all protocol steps'
+          description_1: 'You’ll lose all protocol steps from your active protocol. You can restore them from Archive later if you change your mind.'
+          description_2: 'Are you sure?'
+          confirm: 'Yes, archive them'
         reorder_elements:
           title: 'Rearrange step %{step_position} content'
         link_results:
