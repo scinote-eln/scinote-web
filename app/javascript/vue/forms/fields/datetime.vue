@@ -97,7 +97,7 @@ export default {
           );
       }
 
-      return !!this.value;
+      return true;
     }
   },
   watch: {
