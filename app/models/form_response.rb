@@ -38,7 +38,9 @@ class FormResponse < ApplicationRecord
   after_save :manage_orderable_element_on_archive, if: -> { saved_change_to_archived? }
 
   def step
-    step_orderable_element&.step
+    return step_orderable_element&.step if step_orderable_element.present?
+
+    parent if parent.is_a?(Step)
   end
 
   def create_value!(created_by, form_field, value, not_applicable: false)
