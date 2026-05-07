@@ -66,6 +66,10 @@ class Repository < RepositoryBase
     false
   end
 
+  def self.equipment_booking_enabled?
+    ApplicationSettings.instance.values['equipment_booking_enabled'] == true
+  end
+
   def readable_by_user?(user)
     permission_granted?(user, RepositoryPermissions::READ)
   end

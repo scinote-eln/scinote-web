@@ -12,8 +12,9 @@ describe CalendarEventsController, type: :controller do
   let(:event_type) { :equipment_booking }
   let!(:calendar_events) { create_list(:calendar_event, 10, created_by: user, team: team, subject: repository_row, event_type: event_type) }
 
+
   before do
-    allow(CalendarEvent).to(receive(:calendar_events_enabled?)).and_return(true)
+    allow(Repository).to(receive(:equipment_booking_enabled?)).and_return(true)
   end
 
   describe '#index' do
@@ -71,7 +72,7 @@ describe CalendarEventsController, type: :controller do
         start_at: DateTime.now + 1.days,
         end_at: DateTime.now + 5.days,
         event_type: :equipment_booking,
-        metadata: { test: Faker::Name.unique.name } 
+        metadata: { test: Faker::Name.unique.name }
       }
     }
     let(:action) { post :create, params: params, format: :json }
@@ -99,7 +100,7 @@ describe CalendarEventsController, type: :controller do
         start_at: DateTime.now
       }
     end
-  
+
     it 'returns success response' do
       action
       expect(response).to have_http_status(:success)

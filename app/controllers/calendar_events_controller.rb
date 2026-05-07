@@ -90,7 +90,7 @@ class CalendarEventsController < ApplicationController
   private
 
   def check_calendar_events_enabled
-    render_404 unless CalendarEvent.calendar_events_enabled?
+    render_404 unless Repository.equipment_booking_enabled?
   end
 
   def load_calendar_event
