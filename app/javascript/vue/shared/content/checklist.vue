@@ -22,9 +22,9 @@
           />
         </div>
         <template v-if="element.attributes.orderable.archived">
-          <div class="sci-tag bg-sn-alert-brittlebush">
+          <div class="sci-tag bg-sn-alert-brittlebush pointer-events-none text-sn-black">
             {{ i18n.t('my_modules.results.archived') }}
-            <span class="sn-icon sn-icon-archive"></span>
+            <span class="sn-icon sn-icon-archived"></span>
           </div>
           <span class="text-xs ">
             {{ i18n.t('protocols.steps.timestamp_archived', {
@@ -115,7 +115,7 @@
         {{ i18n.t("protocols.steps.checklist.empty_checklist") }}
       </div>
     </div>
-    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @close="closeDeleteModal"/>
+    <deleteElementModal v-if="confirmingDelete" :inRepository="inRepository" @confirm="deleteElement" @close="closeDeleteModal"/>
     <RestoreModal v-if="confirmingRestore"
                   :parentType="element.attributes.orderable.parent_type"
                   :element="'checklist'"

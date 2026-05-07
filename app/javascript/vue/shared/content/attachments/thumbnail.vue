@@ -17,9 +17,9 @@
         :data-e2e="`e2e-BT-attachment-${attachment.id}`"
     >
       <div class="attachment-preview" :class= "attachment.attributes.asset_type">
-        <div v-if="attachment.attributes.archived" class="sci-tag bg-sn-alert-brittlebush absolute top-2 left-2 z-10">
+        <div v-if="attachment.attributes.archived" class="sci-tag bg-sn-alert-brittlebush pointer-events-none absolute top-2 left-2 z-10 text-sn-black">
           {{ i18n.t('my_modules.results.archived') }}
-          <span class="sn-icon sn-icon-archive"></span>
+          <span class="sn-icon sn-icon-archived"></span>
         </div>
         <img v-if="attachment.attributes.medium_preview !== null"
             class="rounded-sm"

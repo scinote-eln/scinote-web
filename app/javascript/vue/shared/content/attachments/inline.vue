@@ -55,9 +55,9 @@
         />
       </div>
     </div>
-    <div v-if="attachment.attributes.archived" class="sci-tag bg-sn-alert-brittlebush absolute top-16 left-2 z-10">
+    <div v-if="attachment.attributes.archived" class="sci-tag bg-sn-alert-brittlebush pointer-events-none absolute top-16 left-2 z-10 text-sn-black">
       {{ i18n.t('my_modules.results.archived') }}
-      <span class="sn-icon sn-icon-archive"></span>
+      <span class="sn-icon sn-icon-archived"></span>
     </div>
     <template v-if="attachment.attributes.wopi">
       <div v-if="showWopi"

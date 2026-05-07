@@ -17,9 +17,9 @@
         {{ attachment.attributes.file_name }}
 
       </span>
-      <div v-if="attachment.attributes.archived" class="sci-tag ml-1 !text-black bg-sn-alert-brittlebush">
+      <div v-if="attachment.attributes.archived" class="sci-tag ml-1 !text-sn-black bg-sn-alert-brittlebush pointer-events-none">
         {{ i18n.t('my_modules.results.archived') }}
-        <span class="sn-icon sn-icon-archive"></span>
+        <span class="sn-icon sn-icon-archived"></span>
       </div>
     </a>
 

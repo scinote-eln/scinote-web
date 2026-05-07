@@ -3,15 +3,15 @@
     <div class="archive-toolbar__left flex items-center">
       <div class="p-0.5 bg-sn-super-light-grey flex items-center gap-2 rounded cursor-pointer text-xs">
         <div
-          class="h-9 flex items-center px-4"
-          :class="{'bg-sn-white rounded-sm font-bold shadow': mode === 'steps'}"
+          class="h-10 flex items-center px-4 text-base"
+          :class="mode === 'steps' ? 'bg-sn-white rounded-sm font-semibold shadow' : 'text-sn-grey-700'"
           @click="$emit('update:mode', 'steps')"
         >
           {{ i18n.t('my_modules.archive.steps') }}
         </div>
         <div
-          class="h-9 flex items-center px-4"
-          :class="{'bg-sn-white rounded-sm font-bold shadow': mode === 'results'}"
+          class="h-10 flex items-center px-4 text-base"
+          :class="mode === 'results' ? 'bg-sn-white rounded-sm font-semibold shadow' : 'text-sn-grey-700'"
           @click="$emit('update:mode', 'results')"
         >
           {{ i18n.t('my_modules.archive.results') }}

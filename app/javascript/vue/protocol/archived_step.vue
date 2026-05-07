@@ -37,9 +37,9 @@
           />
         </div>
         <div class="step-head-right flex elements-actions-container">
-          <div v-if="step.attributes.archived" class="sci-tag bg-sn-alert-brittlebush">
+          <div v-if="step.attributes.archived" class="sci-tag bg-sn-alert-brittlebush pointer-events-none text-sn-black">
             {{ i18n.t('protocols.steps.archived') }}
-            <span class="sn-icon sn-icon-archive"></span>
+            <span class="sn-icon sn-icon-archived"></span>
           </div>
           <button
             v-if="this.urls.restore_url"
@@ -131,6 +131,8 @@
 </template>
 
 <script>
+/* global HelperModule */
+
 import axios from '../../packs/custom_axios.js';
 import Table from '../shared/content/table.vue';
 import StepText from '../shared/content/text.vue';
@@ -181,6 +183,9 @@ export default {
       axios.post(this.urls.restore_url).then((response) => {
         this.closeRestoreModal();
         this.$emit('step:restored', this.step.id, response.data);
+         HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.restore_step.success', { name: this.step.attributes.name }),'success');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.restore_modal.restore_error'), 'danger');
       });
     },
     closeDeleteModal() {
