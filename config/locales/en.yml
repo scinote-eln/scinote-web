@@ -1699,9 +1699,10 @@ en:
           confirm: 'Archive'
         restore:
           title: 'Restore result'
-          description_1: 'The result will be restored to the bottom of your current active protocol.'
+          description_1: 'The result will be restored in Results tab according to the currently active sorting.'
           description_2: 'Are you sure you want to continue?'
           confirm: 'Restore'
+          success: '%{name} successfully restored from the archive.'
         link_steps:
           title: 'Link result to protocol steps'
           description: 'You can link a result to multiple steps.'
@@ -4316,9 +4317,13 @@ en:
           description_2: 'Are you sure you want to continue?'
           confirm: 'Restore'
       modals:
+        restore_modal:
+          restore_element: '%{content_type} successfully restored from the archive.'
+          restore_error: 'There was a problem trying to restore elements from the archive. Please try again.'
         delete_element:
           title: 'Delete content'
-          description_1: 'You’re about to delete a content block from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
+          description_repository: 'You’re about to delete a content block from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
+          description_task: 'You’re about to delete a content block from your archive. It might contain data you don’t want to lose. You won’t be able to get it back.'
           description_2: 'Are you sure you want to delete it?'
           confirm: 'Delete forever'
         form_modal:
@@ -4354,6 +4359,7 @@ en:
           description_1: 'The step will be restored to the bottom of your current active protocol.'
           description_2: 'Are you sure you want to continue?'
           confirm: 'Restore'
+          success: '%{name} successfully restored from the archive.'
         delete_step:
           title: 'Delete step'
           description_1: 'You’re about to delete a whole step from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'

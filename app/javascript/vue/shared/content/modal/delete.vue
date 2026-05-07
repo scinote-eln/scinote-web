@@ -11,7 +11,8 @@
           </h4>
         </div>
         <div class="modal-body" data-e2e="e2e-TX-deleteStepResultElementModal-description">
-          <p>{{ i18n.t('protocols.steps.modals.delete_element.description_1')}}</p>
+          <p v-if="inRepository">{{ i18n.t('protocols.steps.modals.delete_element.description_repository')}}</p>
+          <p v-else>{{ i18n.t('protocols.steps.modals.delete_element.description_task')}}</p>
           <p><b>{{ i18n.t('protocols.steps.modals.delete_element.description_2')}}</b></p>
 
         </div>
@@ -33,6 +34,12 @@ import modalMixin from '../../modal_mixin';
 export default {
   name: 'deleteElementModal',
   mixins: [modalMixin],
+  props: {
+    inRepository: {
+      type: Boolean,
+      default: false
+    },
+  },
   methods: {
     confirm() {
       this.$emit('confirm');

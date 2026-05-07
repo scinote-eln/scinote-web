@@ -4,9 +4,9 @@
     <div :class="{'!bg-sn-background-brittlebush p-4': element.attributes.orderable.archived}">
       <div class="flex items-center gap-4">
         <template v-if="element.attributes.orderable.archived">
-          <div class="sci-tag bg-sn-alert-brittlebush">
+          <div class="sci-tag bg-sn-alert-brittlebush pointer-events-none text-sn-black">
             {{ i18n.t('my_modules.results.archived') }}
-            <span class="sn-icon sn-icon-archive"></span>
+            <span class="sn-icon sn-icon-archived"></span>
           </div>
           <span class="text-xs ">
             {{ i18n.t('protocols.steps.timestamp_archived', {
@@ -96,7 +96,7 @@
         </div>
       </div>
     </div>
-    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @close="closeDeleteModal"/>
+    <deleteElementModal v-if="confirmingDelete" :inRepository="inRepository" @confirm="deleteElement($event)" @close="closeDeleteModal"/>
     <RestoreModal v-if="confirmingRestore"
                   :parentType="element.attributes.orderable.parent_type"
                   :element="'form_response'"
