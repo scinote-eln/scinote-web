@@ -5,14 +5,14 @@
         <div
           class="h-10 flex items-center px-4 text-base"
           :class="mode === 'steps' ? 'bg-sn-white rounded-sm font-semibold shadow' : 'text-sn-grey-700'"
-          @click="$emit('update:mode', 'steps')"
+          @click="updateMode('steps')"
         >
           {{ i18n.t('my_modules.archive.steps') }}
         </div>
         <div
           class="h-10 flex items-center px-4 text-base"
           :class="mode === 'results' ? 'bg-sn-white rounded-sm font-semibold shadow' : 'text-sn-grey-700'"
-          @click="$emit('update:mode', 'results')"
+          @click="updateMode('results')"
         >
           {{ i18n.t('my_modules.archive.results') }}
         </div>
@@ -116,6 +116,13 @@ export default {
     expandObjects() {
       this.$emit('expandAll');
     },
+    updateMode(mode) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('mode', mode);
+      window.history.replaceState({}, '', url);
+
+      this.$emit('update:mode', mode);
+    }
   }
 }
 </script>
