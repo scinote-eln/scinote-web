@@ -79,9 +79,9 @@ module ProtocolsExporter
     protocol_xml << "<updated_at>#{protocol.updated_at.as_json}</updated_at>\n"
 
     # Steps
-    if protocol.steps.count > 0
+    if protocol.steps.active.any?
       protocol_xml << "<steps>\n"
-      protocol.steps.order(:id).each do |step|
+      protocol.steps.active.order(:id).each do |step|
         step_guid = get_guid(step.id)
         step_xml = "<step id=\"#{step.id}\" guid=\"#{step_guid}\" " \
                    "position=\"#{step.position}\">\n"
@@ -93,9 +93,9 @@ module ProtocolsExporter
           step_xml << get_tiny_mce_assets(step.description)
         end
         # Assets
-        if step.assets.count > 0
+        if step.assets.active.any?
           step_xml << "<assets>\n"
-          step.assets.order(:id).each do |asset|
+          step.assets.active.order(:id).each do |asset|
             asset_guid = get_guid(asset.id)
             asset_file_name = "#{asset_guid}" \
                               "#{File.extname(asset.file_name)}"
@@ -111,9 +111,9 @@ module ProtocolsExporter
         end
 
         # Tables
-        if step.tables.count > 0
+        if step.tables.active.any?
           step_xml << "<elnTables>\n"
-          step.tables.order(:id).each do |table|
+          step.tables.active.order(:id).each do |table|
             table_xml = "<elnTable id=\"#{table.id}\" guid=\"#{get_guid(table.id)}\">\n"
             table_xml << "<name>#{table.name}</name>\n"
             table_xml << "<contents>#{table.contents.unpack1('H*')}</contents>\n"
@@ -124,9 +124,9 @@ module ProtocolsExporter
         end
 
         # Checklists
-        if step.checklists.count > 0
+        if step.checklists.active.any?
           step_xml << "<checklists>\n"
-          step.checklists.order(:id).each do |checklist|
+          step.checklists.active.order(:id).each do |checklist|
             checklist_xml = "<checklist id=\"#{checklist.id}\" " \
                             "guid=\"#{get_guid(checklist.id)}\">\n"
             checklist_xml << "<name>#{checklist.name}</name>\n"
