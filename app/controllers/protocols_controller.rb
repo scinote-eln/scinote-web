@@ -737,30 +737,30 @@ class ProtocolsController < ApplicationController
         ostream = protocol.tiny_mce_assets.save_to_eln(ostream, protocol_dir)
         # Add assets to protocol folder
 
-        protocol.steps.order(:id).each do |step|
+        protocol.steps.active.order(:id).each do |step|
           step_guid = get_guid(step.id)
           step_dir = "#{protocol_dir}/steps/#{step_guid}"
-          if step.assets.exists?
-            step.assets.order(:id).each do |asset|
+          if step.assets.active.exists?
+            step.assets.active.order(:id).each do |asset|
               prepare_asset_for_export(ostream, asset, step_dir)
             end
           end
           ostream = step.tiny_mce_assets.save_to_eln(ostream, step_dir)
 
-          step.step_texts.each do |step_text|
+          step.step_texts.active.each do |step_text|
             ostream = step_text.tiny_mce_assets.save_to_eln(ostream, step_dir)
           end
         end
 
-        results = protocol.in_module? ? protocol.my_module.results : protocol.results
+        results = protocol.in_module? ? protocol.my_module.results.active : protocol.results
         results.each do |result|
           result_guid = get_guid(result.id)
           result_dir = "#{protocol_dir}/results/#{result_guid}"
-          result.assets.each do |asset|
+          result.assets.active.each do |asset|
             prepare_asset_for_export(ostream, asset, result_dir)
           end
 
-          result.result_texts.each do |result_text|
+          result.result_texts.active.each do |result_text|
             ostream = result_text.tiny_mce_assets.save_to_eln(ostream, result_dir)
           end
         end
