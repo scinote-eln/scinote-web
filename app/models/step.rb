@@ -299,7 +299,7 @@ class Step < ApplicationRecord
     return if ActiveRecord::NoTouching.applied_to?(Protocol)
 
     # if step completion or skip attributes were changed, do not touch protocol
-    return if saved_changes.key?('completed') || saved_changes.key?('skipped_at')
+    return if !previously_new_record? && (saved_changes.key?('completed') || saved_changes.key?('skipped_at'))
 
     # rubocop:disable Rails/SkipsModelValidations
     protocol.update(last_modified_by: last_modified_by) if last_modified_by
