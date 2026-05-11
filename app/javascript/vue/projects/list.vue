@@ -178,7 +178,7 @@ export default {
         cellRenderer: FavoriteRenderer,
         minWidth: 80,
         maxWidth: 80,
-        notSelectable: true
+        suppressColumnsToolPanel: true
       },
       {
         field: 'code',
@@ -193,7 +193,7 @@ export default {
         cellRendererParams: {
           statusesList: this.statusesList
         },
-        notSelectable: true,
+        suppressColumnsToolPanel: true,
         minWidth: 180
       },
       {
@@ -209,7 +209,7 @@ export default {
           emitAction: 'updateDueDate'
         },
         minWidth: 200,
-        notSelectable: true
+        suppressColumnsToolPanel: true
       },
       {
         field: 'start_date',
@@ -224,14 +224,14 @@ export default {
           emitAction: 'updateStartDate'
         },
         minWidth: 200,
-        notSelectable: true
+        suppressColumnsToolPanel: true
       },
       {
         field: 'supervised_by',
         headerName: this.i18n.t('projects.index.card.supervised_by'),
         sortable: true,
         cellRenderer: SuperviserRenderer,
-        notSelectable: true
+        suppressColumnsToolPanel: true
       },
       {
         field: 'completed_experiments',
@@ -263,14 +263,14 @@ export default {
         cellRenderer: 'UsersRenderer',
         sortable: true,
         minWidth: 210,
-        notSelectable: true
+        suppressColumnsToolPanel: true
       },
       {
         field: 'comments',
         headerName: this.i18n.t('projects.index.card.comments'),
         sortable: true,
         cellRenderer: CommentsRenderer,
-        notSelectable: true
+        suppressColumnsToolPanel: true
       },
       {
         field: 'description',

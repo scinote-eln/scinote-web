@@ -123,7 +123,7 @@ export default {
         field: 'name',
         headerName: this.i18n.t('protocols.index.thead.name'),
         sortable: true,
-        notSelectable: true,
+        suppressColumnsToolPanel: true,
         cellRenderer: 'NameRenderer'
       },
       {
@@ -136,14 +136,14 @@ export default {
         headerName: this.i18n.t('protocols.index.thead.versions'),
         sortable: true,
         cellRenderer: 'VersionsRenderer',
-        notSelectable: true
+        suppressColumnsToolPanel: true
       },
       {
         field: 'keywords',
         headerName: this.i18n.t('protocols.index.thead.keywords'),
         sortable: true,
         cellRenderer: 'KeywordsRenderer',
-        notSelectable: true
+        suppressColumnsToolPanel: true
       },
       {
         field: 'linked_tasks',
@@ -157,7 +157,7 @@ export default {
         sortable: true,
         cellRenderer: 'UsersRenderer',
         minWidth: 210,
-        notSelectable: true
+        suppressColumnsToolPanel: true
       },
       {
         field: 'published_by',

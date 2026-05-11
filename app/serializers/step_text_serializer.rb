@@ -6,7 +6,7 @@ class StepTextSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :urls, :text_view, :updated_at, :icon, :name, :placeholder, :parent_type
+  attributes :id, :text, :urls, :text_view, :updated_at, :icon, :name, :placeholder, :parent_type, :archived, :archived_by, :archived_on
 
   def updated_at
     object.updated_at.to_i
@@ -14,6 +14,14 @@ class StepTextSerializer < ActiveModel::Serializer
 
   def parent_type
     :step
+  end
+
+  def archived_by
+    object.archived_by&.full_name
+  end
+
+  def archived_on
+    I18n.l(object.archived_on, format: :full) if object.archived_on.present?
   end
 
   def placeholder
@@ -37,14 +45,25 @@ class StepTextSerializer < ActiveModel::Serializer
   end
 
   def urls
-    return {} if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
+    return {} if object.destroyed?
 
-    {
-      duplicate_url: duplicate_step_text_path(object.step, object),
-      delete_url: step_text_path(object.step, object),
-      update_url: step_text_path(object.step, object),
-      move_url: move_step_text_path(object.step, object),
-      move_targets_url: move_targets_step_text_path(object.step, object)
-    }
+    step = object.step
+    user = scope[:user] || @instance_options[:user]
+    url_list = {}
+
+    if can_manage_step_text?(user, object)
+      url_list.merge!({
+                        duplicate_url: duplicate_step_text_path(step, object),
+                        update_url: step_text_path(step, object),
+                        move_url: move_step_text_path(step, object),
+                        move_targets_url: move_targets_step_text_path(step, object)
+                      })
+    end
+
+    url_list[:archive_url] = archive_step_text_path(step, object) if can_archive_step_text?(user, object)
+    url_list[:restore_url] = restore_step_text_path(step, object) if can_restore_step_text?(user, object)
+    url_list[:delete_url] = step_text_path(step, object) if can_delete_step_text?(user, object)
+
+    url_list
   end
 end

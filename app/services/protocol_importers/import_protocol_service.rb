@@ -52,7 +52,7 @@ module ProtocolImporters
                 team: @team
               )
               step.step_orderable_elements.create!(
-                position: step.step_orderable_elements.size,
+                position: step.next_element_position,
                 orderable: table.step_table
               )
             end

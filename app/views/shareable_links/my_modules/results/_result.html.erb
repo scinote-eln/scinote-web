@@ -52,8 +52,8 @@
         <%= render partial: "shareable_links/my_modules/step_elements/table", locals: { element: element.orderable.table } %>
       <% end %>
     <% end %>
-    <% if result.result_assets.present? %>
-      <%= render partial: "shareable_links/my_modules/attachments", locals: { attachments: result.assets } %>
+    <% if result.assets.active.present? %>
+      <%= render partial: "shareable_links/my_modules/attachments", locals: { attachments: result.assets.active } %>
     <% end %>
   </div>
 </div>

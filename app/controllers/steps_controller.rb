@@ -6,38 +6,64 @@ class StepsController < ApplicationController
 
   before_action :load_vars, only: %i(update destroy show toggle_step_state update_view_state
                                      update_asset_view_mode elements
-                                     attachments upload_attachment duplicate toggle_step_skip_state)
+                                     attachments upload_attachment duplicate toggle_step_skip_state archive restore)
   before_action :load_vars_nested, only: %i(create index list reorder list_protocol_steps add_protocol_steps)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
   before_action :check_protocol_manage_permissions, only: %i(reorder add_protocol_steps)
   before_action :check_view_permissions, only: %i(show index list attachments elements list_protocol_steps)
   before_action :check_create_permissions, only: %i(create)
-  before_action :check_manage_permissions, only: %i(update destroy
-                                                    update_view_state update_asset_view_mode upload_attachment)
+  before_action :check_manage_permissions, only: %i(update update_view_state update_asset_view_mode upload_attachment)
+  before_action :check_archive_permissions, only: :archive
+  before_action :check_restore_permissions, only: :restore
+  before_action :check_destroy_permissions, only: :destroy
   before_action :check_complete_and_checkbox_permissions, only: :toggle_step_state
   before_action :check_skip_pemissions, only: :toggle_step_skip_state
 
   def index
-    render json: @protocol.steps.includes(:assets, step_orderable_elements: :orderable).in_order,
+    view_mode = params[:view_mode]
+    @steps = @protocol.steps.preload(:assets, :step_orderable_elements, :step_texts, :form_responses, :tables, :checklists)
+
+    if view_mode == 'archived'
+      @steps = @steps.archived_or_having_archived
+      update_and_apply_user_sort_preference!
+      apply_filters!
+    else
+      @steps = @steps.active.ordered
+    end
+
+    render json: @steps,
            each_serializer: StepSerializer,
            include: %i(step_orderable_elements assets),
-           user: current_user
+           user: current_user,
+           meta: { sort: @sort_preference },
+           view_mode: view_mode
   end
 
   def list
-    @steps = @protocol.steps.in_order
+    @steps = @protocol.steps.ordered
   end
 
   def elements
-    render json: @step.step_orderable_elements.order(:position),
+    elements = if params[:view_mode] == 'archived'
+                 @step.archived_elements
+               else
+                 @step.active_elements_ordered
+               end
+
+    render json: elements,
            each_serializer: StepOrderableElementSerializer,
            user: current_user
   end
 
   def attachments
-    render json: @step.assets.preload(:preview_image_attachment, file_attachment: :blob,
-                                      step: { protocol: { my_module: { experiment: :project, user_assignments: %i(user user_role) } } }),
+    assets = if params[:view_mode] == 'archived'
+               @step.assets.where(archived: true)
+             else
+               @step.assets.active
+             end
+    render json: assets.preload(:preview_image_attachment, file_attachment: :blob,
+                                step: { protocol: { my_module: { experiment: :project, user_assignments: %i(user user_role) } } }),
            each_serializer: AssetSerializer,
            user: current_user,
            managable_step: can_manage_step?(@step)
@@ -164,6 +190,55 @@ class StepsController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid
     head :unprocessable_entity
+  end
+
+  def archive
+    ActiveRecord::Base.transaction do
+      position = @step.position
+      @step.position = nil
+      @step.archive!(current_user)
+
+      log_activity(
+        :archive_step,
+        @my_module.project,
+        {
+          my_module: @my_module.id,
+          step: @step.id,
+          step_position: { id: @step.id,
+                           value_for: 'position_plus_one' }
+        }
+      )
+
+      @protocol.steps.where('position > ?', position).order(:position).each do |step|
+        step.update(position: step.position - 1)
+      end
+    end
+
+    render json: @step, serializer: StepSerializer, user: current_user
+  end
+
+  def restore
+    ActiveRecord::Base.transaction do
+      position = @protocol.steps.active.maximum(:position)
+      @step.position = position ? position + 1 : 0
+      @step.restore!(current_user)
+
+      log_activity(
+        :restore_step,
+        @my_module.project,
+        { step: @step.id }
+      )
+    end
+
+    if @step.has_archived_element? || @step.assets.archived.any?
+      render json: @step,
+             serializer: StepSerializer,
+             include: %i(step_orderable_elements assets),
+             user: current_user,
+             view_mode: 'archived'
+    else
+      render json: {}, status: :ok
+    end
   end
 
   def update_view_state
@@ -389,6 +464,18 @@ class StepsController < ApplicationController
     render_403 unless can_manage_step?(@step)
   end
 
+  def check_archive_permissions
+    render_403 unless can_archive_step?(@step)
+  end
+
+  def check_restore_permissions
+    render_403 unless can_restore_step?(@step)
+  end
+
+  def check_destroy_permissions
+    render_403 unless can_delete_step?(@step)
+  end
+
   def check_create_permissions
     if @my_module
       render_403 unless can_manage_my_module_steps?(@my_module)
@@ -430,5 +517,45 @@ class StepsController < ApplicationController
         value_for: 'position_plus_one'
       }
     }
+  end
+
+  def update_and_apply_user_sort_preference!
+    state = current_user.user_settings.find_or_initialize_by(key: 'protocol_steps_order_archived')
+    state.value ||= {}
+
+    if params[:sort].present?
+      state.value[@my_module.id.to_s] = params[:sort]
+      state.save!
+      @sort_preference = params[:sort]
+    else
+      @sort_preference = state.value[@my_module.id.to_s] || 'created_at_desc'
+    end
+    apply_sort!(@sort_preference)
+  end
+
+  def apply_sort!(sort_order)
+    case sort_order
+    when 'updated_at_asc'
+      @steps = @steps.order('steps.updated_at' => :asc)
+    when 'updated_at_desc'
+      @steps = @steps.order('steps.updated_at' => :desc)
+    when 'created_at_asc'
+      @steps = @steps.order('steps.created_at' => :asc)
+    when 'created_at_desc'
+      @steps = @steps.order('steps.created_at' => :desc)
+    when 'name_asc'
+      @steps = @steps.order('steps.name' => :asc)
+    when 'name_desc'
+      @steps = @steps.order('steps.name' => :desc)
+    end
+  end
+
+  def apply_filters!
+    @steps = @steps.search(current_user, true, params[:query]) if params[:query].present?
+
+    @steps = @steps.where('steps.created_at >= ?', params[:created_at_from]) if params[:created_at_from]
+    @steps = @steps.where('steps.created_at <= ?', params[:created_at_to]) if params[:created_at_to]
+    @steps = @steps.where('steps.updated_at >= ?', params[:updated_at_from]) if params[:updated_at_from]
+    @steps = @steps.where('steps.updated_at <= ?', params[:updated_at_to]) if params[:updated_at_to]
   end
 end

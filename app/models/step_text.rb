@@ -4,6 +4,7 @@ class StepText < ApplicationRecord
   include TinyMceImages
   include ObservableModel
   include SearchableModel
+  include ArchivableModel
   include ActionView::Helpers::TextHelper
 
   SEARCHABLE_ATTRIBUTES = ['step_texts.name', 'step_texts.text'].freeze
@@ -18,9 +19,13 @@ class StepText < ApplicationRecord
     }
 
   belongs_to :step, inverse_of: :step_texts, touch: true
+  belongs_to :archived_by, class_name: 'User', optional: true
+  belongs_to :restored_by, class_name: 'User', optional: true
   has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
   delegate :team, to: :step
+
+  after_save :manage_orderable_element_on_archive, if: -> { saved_change_to_archived? }
 
   scope :asc, -> { order('step_texts.created_at ASC') }
 
@@ -35,7 +40,7 @@ class StepText < ApplicationRecord
       clone_tinymce_assets(new_step_text, step.protocol.team)
 
       step.step_orderable_elements.create!(
-        position: position || step.step_orderable_elements.length,
+        position: position || step.next_element_position,
         orderable: new_step_text
       )
 
@@ -48,5 +53,13 @@ class StepText < ApplicationRecord
   # Override for ObservableModel
   def changed_by
     step.last_modified_by
+  end
+
+  def manage_orderable_element_on_archive
+    if archived?
+      step_orderable_element&.destroy
+    elsif step_orderable_element.blank?
+      create_step_orderable_element!(step: step, position: step.next_element_position)
+    end
   end
 end

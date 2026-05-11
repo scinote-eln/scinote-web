@@ -33,12 +33,43 @@ module BreadcrumbsHelper
       if parent.in_repository?
         url = protocol_path(parent, step_id: subject.id)
       else
-        url = protocols_my_module_path(parent.my_module, step_id: subject.id)
+        if subject.archived?
+          url = archive_my_module_path(parent.my_module, step_id: subject.id)
+        else
+          url = protocols_my_module_path(parent.my_module, step_id: subject.id)
+        end
       end
+    when StepOrderableElement
+      step = subject.step
+      parent = step.protocol
+      if parent.in_repository?
+        url = protocol_path(parent, step_id: subject.id)
+      else
+        if subject.archived? || step.archived?
+          url = archive_my_module_path(parent.my_module, step_id: step.id, mode: :steps)
+        else
+          url = protocols_my_module_path(parent.my_module, step_id: step.id, mode: :steps)
+        end
+      end
+
+      subject = step
     when Result
       parent = subject.my_module
-      view_mode = subject.archived? ? 'archived' : 'active'
-      url = my_module_results_path(subject.my_module, view_mode:, result_id: subject.id)
+      if subject.archived?
+        url = archive_my_module_path(subject.my_module, result_id: subject.id, mode: :results)
+      else
+        url = my_module_results_path(subject.my_module, result_id: subject.id)
+      end
+    when ResultOrderableElement
+      result = subject.result
+      parent = result.my_module
+      if subject.archived? || result.archived?
+        url = archive_my_module_path(result.my_module, result_id: result.id, mode: :results)
+      else
+        url = my_module_results_path(result.my_module, result_id: result.id)
+      end
+
+      subject = result
     when ResultTemplate
       parent = subject.protocol
       url = protocol_result_templates_path(parent, result_id: subject.id)

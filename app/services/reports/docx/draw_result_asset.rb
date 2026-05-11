@@ -2,7 +2,8 @@
 
 module Reports::Docx::DrawResultAsset
   def draw_result_asset(result, settings)
-    result.assets.each do |asset|
+    assets = settings.dig('task', 'archived_results') ? result.assets : result.assets.active
+    assets.each do |asset|
       timestamp = asset.created_at
       asset_url = Rails.application.routes.url_helpers.asset_download_url(asset)
       color = @color
@@ -23,11 +24,18 @@ module Reports::Docx::DrawResultAsset
         link I18n.t('projects.reports.elements.download'), asset_url do
           italic true
         end
-        text "  #{I18n.t('search.index.archived')} ", bold: true if result.archived?
         text ' ' + I18n.t('projects.reports.elements.result_asset.file_name', file: asset.file_name)
+        text " | #{I18n.t('search.index.archived')} ", bold: true if asset.archived?
         unless settings['exclude_timestamps']
-          text ' ' + I18n.t('projects.reports.elements.result_asset.user_time',
-                            user: result.user.full_name, timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+          text '| '
+          if asset.archived?
+            text I18n.t('projects.reports.elements.archived_metadata',
+                        datetime: I18n.l(asset.archived_on, format: :full),
+                        user: asset.archived_by&.full_name), color: color[:gray]
+          else
+            text I18n.t('projects.reports.elements.result_asset.user_time',
+                        user: result.user.full_name, timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+          end
         end
       end
 

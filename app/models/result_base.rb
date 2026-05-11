@@ -52,12 +52,12 @@ class ResultBase < ApplicationRecord
       new_result.save!
 
       # Copy texts
-      result_texts.each do |result_text|
+      result_texts.active.each do |result_text|
         result_text.duplicate(new_result, result_text.result_orderable_element.position)
       end
 
       # Copy assets
-      assets_to_clone = assets.map do |asset|
+      assets_to_clone = assets.active.map do |asset|
         new_asset = asset.dup
         new_asset.save!
         new_result.assets << new_asset
@@ -66,7 +66,7 @@ class ResultBase < ApplicationRecord
       end
 
       # Copy tables
-      tables.each do |table|
+      tables.active.each do |table|
         duplicate_table(new_result, user, table)
       end
 
@@ -119,6 +119,12 @@ class ResultBase < ApplicationRecord
 
   def delete_step_results
     step_results.destroy_all
+  end
+
+  def next_element_position
+    current_position = result_orderable_elements.order(position: :asc).last&.position
+
+    current_position.nil? ? 0 : current_position + 1
   end
 
   private

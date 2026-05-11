@@ -6,9 +6,17 @@ class ChecklistSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :name, :urls, :icon, :sa_name, :parent_type
+  attributes :id, :name, :urls, :icon, :sa_name, :parent_type, :archived, :archived_by, :archived_on
 
   has_many :checklist_items, serializer: ChecklistItemSerializer
+
+  def archived_by
+    object.archived_by&.full_name
+  end
+
+  def archived_on
+    I18n.l(object.archived_on, format: :full) if object.archived_on.present?
+  end
 
   def icon
     'sn-icon-checkllist'
@@ -27,19 +35,27 @@ class ChecklistSerializer < ActiveModel::Serializer
   end
 
   def urls
-    if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
-      return { checklist_items_url: step_checklist_checklist_items_path(object.step, object) }
+    url_list = { checklist_items_url: step_checklist_checklist_items_path(object.step, object) }
+    return url_list if object.destroyed?
+
+    step = object.step
+    user = scope[:user] || @instance_options[:user]
+
+    if can_manage_step_checklist?(user, object)
+      url_list.merge!({
+                        duplicate_url: duplicate_step_checklist_path(step, object),
+                        update_url: step_checklist_path(step, object),
+                        reorder_url: reorder_step_checklist_checklist_items_path(step, object),
+                        create_item_url: step_checklist_checklist_items_path(step, object),
+                        move_targets_url: move_targets_step_checklist_path(step, object),
+                        move_url: move_step_checklist_path(step, object)
+                      })
     end
 
-    {
-      checklist_items_url: step_checklist_checklist_items_path(object.step, object),
-      duplicate_url: duplicate_step_checklist_path(object.step, object),
-      delete_url: step_checklist_path(object.step, object),
-      update_url: step_checklist_path(object.step, object),
-      reorder_url: reorder_step_checklist_checklist_items_path(object.step, object),
-      create_item_url: step_checklist_checklist_items_path(object.step, object),
-      move_targets_url: move_targets_step_checklist_path(object.step, object),
-      move_url: move_step_checklist_path(object.step, object)
-    }
+    url_list[:archive_url] = archive_step_checklist_path(step, object) if can_archive_step_checklist?(user, object)
+    url_list[:restore_url] = restore_step_checklist_path(step, object) if can_restore_step_checklist?(user, object)
+    url_list[:delete_url] = step_checklist_path(step, object) if can_delete_step_checklist?(user, object)
+
+    url_list
   end
 end

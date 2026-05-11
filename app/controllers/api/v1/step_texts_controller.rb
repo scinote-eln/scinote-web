@@ -10,8 +10,9 @@ module Api
       before_action :load_step_text_for_managing, only: %i(update destroy)
 
       def index
-        step_texts = timestamps_filter(@step.step_texts).page(params.dig(:page, :number))
-                                                        .per(params.dig(:page, :size))
+        step_texts = timestamps_filter(@step.step_texts)
+        step_texts = archived_filter(step_texts, default_to_active: true)
+        step_texts = step_texts.page(params.dig(:page, :number)).per(params.dig(:page, :size))
 
         render jsonapi: step_texts, each_serializer: StepTextSerializer, include: include_params
       end
@@ -27,7 +28,7 @@ module Api
         @step.with_lock do
           step_text.save!
           @step.step_orderable_elements.create!(
-            position: @step.step_orderable_elements.size,
+            position: @step.next_element_position,
             orderable: step_text
           )
         end

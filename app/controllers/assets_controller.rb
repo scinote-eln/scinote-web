@@ -17,9 +17,11 @@ class AssetsController < ApplicationController
   helper_method :wopi_file_edit_button_status
 
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode)
-  before_action :check_manage_permission, only: %i(edit destroy duplicate rename toggle_view_mode)
-  before_action :check_restore_permission, only: :restore_version
+  before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode archive restore)
+  before_action :check_manage_permission, only: %i(edit duplicate rename toggle_view_mode archive)
+  before_action :check_restore_permission, only: :restore
+  before_action :check_destroy_permission, only: :destroy
+  before_action :check_restore_version_permission, only: :restore_version
 
   def file_preview
     render json: { html: render_to_string(
@@ -484,6 +486,91 @@ class AssetsController < ApplicationController
     render json: @asset.file.blob
   end
 
+  def archive
+    if @asset.archive(current_user)
+
+      case @asset.parent
+      when Step
+        activity_type = case @asset.file.metadata[:asset_type]
+                        when 'gene_sequence'
+                          :task_step_sequence_archived
+                        when 'marvinjs'
+                          :task_step_chemical_structure_archived
+                        else
+                          :task_step_file_archived
+                        end
+        log_step_activity(
+          activity_type,
+          @assoc,
+          @assoc.my_module.project,
+          my_module: @assoc.my_module.id,
+          file: @asset.file_name
+        )
+      when Result
+        activity_type = case @asset.file.metadata[:asset_type]
+                        when 'gene_sequence'
+                          :result_sequence_archived
+                        when 'marvinjs'
+                          :result_chemical_structure_archived
+                        else
+                          :result_file_archived
+                        end
+        log_result_activity(
+          activity_type,
+          @assoc,
+          file: @asset.file_name
+        )
+      end
+
+      render json: {}, status: :ok
+    else
+      render json: { errors: @asset.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def restore
+    if @asset.restore(current_user)
+      case @asset.parent
+      when Step
+        activity_type = case @asset.file.metadata[:asset_type]
+                        when 'gene_sequence'
+                          :task_step_sequence_restored
+                        when 'marvinjs'
+                          :task_step_chemical_structure_restored
+                        else
+                          :task_step_file_restored
+                        end
+        log_restore_activity(
+          activity_type,
+          @assoc.protocol,
+          @assoc.protocol.team,
+          @assoc.my_module.project,
+          my_module: @assoc.my_module.id,
+          file: @asset.file_name
+        )
+      when Result
+        activity_type = case @asset.file.metadata[:asset_type]
+                        when 'gene_sequence'
+                          :result_sequence_restored
+                        when 'marvinjs'
+                          :result_chemical_structure_restored
+                        else
+                          :result_file_restored
+                        end
+        log_restore_activity(
+          activity_type,
+          @assoc,
+          @assoc.team,
+          @assoc.my_module.project,
+          file: @asset.file_name
+        )
+      end
+      render json: {}, status: :ok
+    else
+      render json: { errors: @asset.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def load_vars
@@ -516,6 +603,14 @@ class AssetsController < ApplicationController
 
   def check_restore_permission
     render_403 and return unless can_restore_asset?(@asset)
+  end
+
+  def check_destroy_permission
+    render_403 and return unless can_delete_asset?(@asset)
+  end
+
+  def check_restore_version_permission
+    render_403 and return unless can_restore_asset_version?(@asset)
   end
 
   def append_wd_params(url)

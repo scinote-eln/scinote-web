@@ -8,6 +8,8 @@ class Asset < ApplicationRecord
   include ActiveStorageConcerns
   include ActiveStorageHelper
   include VersionedAttachments
+  include ArchivableModel
+  include ObservableModel
 
   require 'tempfile'
   # Lock duration set to 30 minutes
@@ -30,6 +32,8 @@ class Asset < ApplicationRecord
   belongs_to :created_by, class_name: 'User', optional: true
   belongs_to :last_modified_by, class_name: 'User', optional: true
   belongs_to :team, optional: true
+  belongs_to :archived_by, class_name: 'User', optional: true
+  belongs_to :restored_by, class_name: 'User', optional: true
   has_one :step_asset, inverse_of: :asset, dependent: :destroy
   has_one :step, through: :step_asset, touch: true
   has_one :result_asset, inverse_of: :asset, dependent: :destroy
@@ -476,5 +480,9 @@ class Asset < ApplicationRecord
 
   def reset_file_processing
     self.file_processing = false
+  end
+
+  def changed_by
+    last_modified_by
   end
 end

@@ -88,6 +88,6 @@ class FormResponsesZipExportJob < ZipExportJob
       form_response.step.name || I18n.t('protocols.steps.default_name')
     ]
 
-    breadcrumbs.join('/ ')
+    (form_response.archived? ? I18n.t('forms.export.archived') : '') + breadcrumbs.join('/ ')
   end
 end

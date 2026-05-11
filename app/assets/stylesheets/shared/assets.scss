@@ -255,7 +255,9 @@
 
   .file-name {
     @include font-main;
+    align-items: center;
     color: $brand-primary;
+    display: flex;
     margin: 0 .5em;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -167,39 +167,80 @@ class Protocol < ApplicationRecord
 
     protocols = protocols.with(readable_protocols: readable_protocols)
                          .joins('INNER JOIN "readable_protocols" ON "readable_protocols"."id" = "protocols"."id"')
-
+    options[:include_archived] = include_archived
     protocols.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, options)
   end
 
   def self.where_children_attributes_like(query, options = {})
-    unscoped_readable_protocols = unscoped.joins('INNER JOIN "readable_protocols" ON "readable_protocols"."id" = "protocols"."id"').select(:id)
-    sql = "#{unscoped_readable_protocols.joins(:steps).where_attributes_like(Step::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION ALL
-      #{unscoped_readable_protocols.joins(steps: :step_texts).where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION ALL
-      #{unscoped_readable_protocols.joins(steps: { step_tables: :table }).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION ALL
-      #{unscoped_readable_protocols.joins(steps: :checklists).where_attributes_like(Checklist::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION ALL
-      #{unscoped_readable_protocols.joins(steps: { checklists: :checklist_items }).where_attributes_like(ChecklistItem::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION ALL
-      #{unscoped_readable_protocols.joins(steps: :step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION ALL
-      #{unscoped_readable_protocols.joins(:results).where_attributes_like(ResultTemplate::SEARCHABLE_IN_PROTOCOL_ATTRIBUTES, query).to_sql}
-      UNION ALL
-      #{unscoped_readable_protocols.joins(results: :result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION ALL
-      #{unscoped_readable_protocols.joins(results: { result_tables: :table }).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      "
-    unless options[:in_repository]
-      sql += "UNION ALL
-        #{unscoped_readable_protocols.joins(steps: { form_responses: :form_field_values }).where_attributes_like(FormFieldValue::SEARCHABLE_ATTRIBUTES, query).to_sql}
+    if options[:include_archived] || options[:in_repository]
+      unscoped_readable_protocols = unscoped.joins('INNER JOIN "readable_protocols" ON "readable_protocols"."id" = "protocols"."id"').select(:id)
+      sql = "#{unscoped_readable_protocols.joins(:steps).where_attributes_like(Step::SEARCHABLE_IN_PROTOCOL_ATTRIBUTES, query).to_sql}
         UNION ALL
-        #{unscoped_readable_protocols.joins(steps: { form_responses: :form }).where_attributes_like(Form::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        #{unscoped_readable_protocols.joins(steps: :step_texts).where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
         UNION ALL
-        #{unscoped_readable_protocols.joins(steps: { form_responses: { form: :form_fields } }).where_attributes_like(FormField::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        #{unscoped_readable_protocols.joins(steps: { step_tables: :table }).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(steps: :checklists).where_attributes_like(Checklist::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(steps: { checklists: :checklist_items }).where_attributes_like(ChecklistItem::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(steps: :step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(:results).where_attributes_like(ResultTemplate::SEARCHABLE_IN_PROTOCOL_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(results: :result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(results: { result_tables: :table }).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        "
+
+      unless options[:in_repository]
+        sql += "UNION ALL
+          #{unscoped_readable_protocols.joins(steps: { form_responses: :form_field_values }).where_attributes_like(FormFieldValue::SEARCHABLE_ATTRIBUTES, query).to_sql}
+          UNION ALL
+          #{unscoped_readable_protocols.joins(steps: { form_responses: :form }).where_attributes_like(Form::SEARCHABLE_ATTRIBUTES, query).to_sql}
+          UNION ALL
+          #{unscoped_readable_protocols.joins(steps: { form_responses: { form: :form_fields } }).where_attributes_like(FormField::SEARCHABLE_ATTRIBUTES, query).to_sql}
+          "
+      end
+    else
+      unscoped_readable_protocols = unscoped.joins('INNER JOIN "readable_protocols" ON "readable_protocols"."id" = "protocols"."id"')
+                                            .joins(:steps)
+                                            .where(steps: { archived: false })
+                                            .select(:id)
+      sql = "#{unscoped_readable_protocols.where_attributes_like(Step::SEARCHABLE_IN_PROTOCOL_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(steps: :step_texts)
+                                     .where(step_texts: { archived: false })
+                                     .where_attributes_like(StepText::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(steps: { step_tables: :table })
+                                     .where(tables: { archived: false })
+                                     .where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(steps: :checklists)
+                                     .where(checklists: { archived: false })
+                                     .where_attributes_like(Checklist::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(steps: { checklists: :checklist_items })
+                                     .where(checklists: { archived: false })
+                                     .where_attributes_like(ChecklistItem::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(steps: :step_comments).where_attributes_like(StepComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(steps: { form_responses: :form_field_values })
+                                     .where(form_responses: { archived: false })
+                                     .where_attributes_like(FormFieldValue::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(steps: { form_responses: :form })
+                                     .where(form_responses: { archived: false })
+                                     .where_attributes_like(Form::SEARCHABLE_ATTRIBUTES, query).to_sql}
+        UNION ALL
+        #{unscoped_readable_protocols.joins(steps: { form_responses: { form: :form_fields } })
+                                     .where(form_responses: { archived: false })
+                                     .where_attributes_like(FormField::SEARCHABLE_ATTRIBUTES, query).to_sql}
         "
     end
+
     unscoped.from("(#{sql}) AS protocols", :protocols)
   end
 

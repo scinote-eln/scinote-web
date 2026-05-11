@@ -22,6 +22,8 @@ module GlobalActivitiesHelper
 
       if key == 'comment' && parameters[key].strip.present?
         parameters[key] = '<i class="sn-icon sn-icon-comments"></i>' + parameters[key]
+      elsif parameters[key].blank? && key == 'step_position'
+        parameters[key] = '<i class="sn-icon sn-icon-archived"></i>'
       end
     end
 
@@ -49,6 +51,8 @@ module GlobalActivitiesHelper
     return message_item['value'] unless obj
 
     current_value = generate_name(message_item)
+    return if current_value.blank?
+
     team = activity.team
     path = ''
 
@@ -108,12 +112,12 @@ module GlobalActivitiesHelper
     when Result
       return current_value unless obj.navigable?
 
-      path = obj.archived? ? my_module_results_path(obj.my_module, result_id: obj.id, view_mode: :archived) : my_module_results_path(obj.my_module, result_id: obj.id)
+      path = obj.archived? ? archive_my_module_path(obj.my_module, result_id: obj.id, mode: :results) : my_module_results_path(obj.my_module, result_id: obj.id)
     when Step
       if obj.protocol.in_repository?
         path = protocol_path(obj.protocol, step_id: obj.id)
       elsif obj.my_module.navigable?
-        path = protocols_my_module_path(obj.my_module, step_id: obj.id)
+        path = obj.archived? ? archive_my_module_path(obj.my_module, step_id: obj.id) : protocols_my_module_path(obj.my_module, step_id: obj.id)
       else
         return current_value
       end
@@ -158,7 +162,7 @@ module GlobalActivitiesHelper
     return message_item['value'] unless obj
 
     value = obj.public_send(message_item['value_for'] || 'name')
-    value = I18n.t('global_activities.index.no_name') if value.blank?
+    value = I18n.t('global_activities.index.no_name') if value.blank? && message_item['value_for'] != 'position_plus_one'
 
     value
   end

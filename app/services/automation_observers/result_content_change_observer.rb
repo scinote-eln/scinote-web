@@ -4,13 +4,14 @@ module AutomationObservers
   class ResultContentChangeObserver < BaseObserver
     OBJECT_ATTRIBUTES = {
       Protocol: %w(name description),
-      ResultBase: %w(created_at name discarded_at),
+      ResultBase: %w(created_at name discarded_at archived),
       ResultText: %w(name text result_id),
       Table: %w(name contents metadata),
       ResultAsset: %w(result_id asset_id),
-      ResultOrderableElement: %w(result_id position),
+      ResultOrderableElement: %w(result_id position archived),
       'ActiveStorage::Blob': %w(filename checksum),
-      Comment: %w(message)
+      Comment: %w(message),
+      Asset: %w(archived)
     }.freeze
 
     def self.on_create(element, user)

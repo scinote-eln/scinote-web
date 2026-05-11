@@ -3,8 +3,7 @@ export default {
     return {
       tooltip_instances: [],
       tooltip_observer: null,
-      tooltip_additionalObservers: [],
-      tooltip_mouseMoveListener: null
+      tooltip_additionalObservers: []
     };
   },
   mounted() {
@@ -20,9 +19,128 @@ export default {
     this.tooltip_destroyTooltips();
     this.tooltip_disconnectObserver();
     this.tooltip_disconnectAdditionalObservers();
-    this.tooltip_removeGlobalMouseListener();
   },
   methods: {
+    tooltip_getSelector() {
+      return '[title], [data-sn-tooltip]';
+    },
+
+    tooltip_getObserverAttributeFilter() {
+      return ['title', 'data-sn-tooltip'];
+    },
+
+    tooltip_findElementsWithTooltip(root) {
+      if (!root || !root.querySelectorAll) {
+        return [];
+      }
+
+      return root.querySelectorAll(this.tooltip_getSelector());
+    },
+
+    tooltip_findInitializedElements(root) {
+      if (!root || !root.querySelectorAll) {
+        return [];
+      }
+
+      return root.querySelectorAll('[data-sn-tooltip-initialized]');
+    },
+
+    tooltip_hasTooltipAttributes(element) {
+      return element.hasAttribute('title') || element.hasAttribute('data-sn-tooltip');
+    },
+
+    tooltip_removeInstance(instance) {
+      if (!instance) {
+        return;
+      }
+
+      if (instance.cleanup) {
+        instance.cleanup();
+      }
+
+      const index = this.tooltip_instances.indexOf(instance);
+      if (index > -1) {
+        this.tooltip_instances.splice(index, 1);
+      }
+    },
+
+    tooltip_initializeTooltipsInContainer(container) {
+      const tooltipElements = this.tooltip_findElementsWithTooltip(container);
+      tooltipElements.forEach((el) => this.tooltip_initializeElement(el));
+
+      if (this.tooltip_hasTooltipAttributes(container)) {
+        this.tooltip_initializeElement(container);
+      }
+    },
+
+    tooltip_getElementOwnerComponent(element) {
+      if (!element || !(element instanceof HTMLElement)) {
+        return null;
+      }
+
+      if (element.__vueParentComponent) {
+        return element.__vueParentComponent;
+      }
+
+      let current = element.parentElement;
+
+      while (current) {
+        if (current.__vueParentComponent) {
+          return current.__vueParentComponent;
+        }
+        current = current.parentElement;
+      }
+
+      return null;
+    },
+
+    tooltip_isOwnedByCurrentComponent(element) {
+      if (!element || !(element instanceof HTMLElement)) {
+        return false;
+      }
+
+      if (!this.$) {
+        return true;
+      }
+
+      const ownerComponent = this.tooltip_getElementOwnerComponent(element);
+      if (!ownerComponent) {
+        return true;
+      }
+
+      return ownerComponent.uid === this.$.uid;
+    },
+
+    tooltip_getObservedContainers() {
+      const containers = [];
+
+      if (this.$el instanceof HTMLElement) {
+        containers.push(this.$el);
+      }
+
+      this.tooltip_additionalObservers.forEach(({ element }) => {
+        if (element instanceof HTMLElement) {
+          containers.push(element);
+        }
+      });
+
+      return containers;
+    },
+
+    tooltip_isInObservedScope(element) {
+      if (!element || !(element instanceof HTMLElement)) {
+        return false;
+      }
+
+      return this.tooltip_getObservedContainers().some((container) => {
+        if (!(element === container || container.contains(element))) {
+          return false;
+        }
+
+        return this.tooltip_isOwnedByCurrentComponent(element);
+      });
+    },
+
     // Shared mutation handler for all observers
     tooltip_handleMutations(mutations) {
       mutations.forEach((mutation) => {
@@ -41,8 +159,7 @@ export default {
           if (removedNode.nodeType === 1) {
             this.tooltip_cleanupTooltipForElement(removedNode);
 
-            const childElements = removedNode.querySelectorAll ?
-              removedNode.querySelectorAll('[data-sn-tooltip-initialized]') : [];
+            const childElements = this.tooltip_findInitializedElements(removedNode);
 
             childElements.forEach((childElement) => {
               this.tooltip_cleanupTooltipForElement(childElement);
@@ -57,8 +174,7 @@ export default {
           if (addedNode.nodeType === 1) {
             this.tooltip_initializeElement(addedNode);
 
-            const childElements = addedNode.querySelectorAll ?
-              addedNode.querySelectorAll('[title], [data-sn-tooltip]') : [];
+            const childElements = this.tooltip_findElementsWithTooltip(addedNode);
 
             childElements.forEach((childElement) => {
               this.tooltip_initializeElement(childElement);
@@ -70,6 +186,12 @@ export default {
 
     tooltip_handleAttributeMutation(mutation) {
       const target = mutation.target;
+
+      if (!this.tooltip_isInObservedScope(target)) {
+        this.tooltip_cleanupTooltipForElement(target);
+        return;
+      }
+
       if (mutation.attributeName === 'title' || mutation.attributeName === 'data-sn-tooltip') {
         const existingInstance = this.tooltip_instances.find(inst => inst.element === target);
 
@@ -88,14 +210,7 @@ export default {
               existingInstance.tooltipEl.textContent = newContent;
             }
           } else {
-            // Content removed, cleanup
-            if (existingInstance.cleanup) {
-              existingInstance.cleanup();
-            }
-            const index = this.tooltip_instances.indexOf(existingInstance);
-            if (index > -1) {
-              this.tooltip_instances.splice(index, 1);
-            }
+            this.tooltip_removeInstance(existingInstance);
           }
         } else {
           this.tooltip_initializeElement(target);
@@ -121,12 +236,7 @@ export default {
       }
 
       // Initialize existing tooltips
-      const tooltipElements = element.querySelectorAll('[title], [data-sn-tooltip]');
-      tooltipElements.forEach((el) => this.tooltip_initializeElement(el));
-
-      if (element.hasAttribute('title') || element.hasAttribute('data-sn-tooltip')) {
-        this.tooltip_initializeElement(element);
-      }
+      this.tooltip_initializeTooltipsInContainer(element);
 
       // Create and start observer
       const observer = this.tooltip_createObserver();
@@ -138,7 +248,7 @@ export default {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ['title', 'data-sn-tooltip']
+        attributeFilter: this.tooltip_getObserverAttributeFilter()
       });
 
       this.tooltip_additionalObservers.push({ element, observer });
@@ -176,7 +286,7 @@ export default {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ['title', 'data-sn-tooltip']
+        attributeFilter: this.tooltip_getObserverAttributeFilter()
       });
     },
 
@@ -193,11 +303,14 @@ export default {
         return;
       }
 
-      const tooltipElements = this.$el.querySelectorAll('[title], [data-sn-tooltip]');
-      tooltipElements.forEach((el) => this.tooltip_initializeElement(el));
+      this.tooltip_initializeTooltipsInContainer(this.$el);
     },
 
     tooltip_initializeElement(element) {
+      if (!this.tooltip_isInObservedScope(element)) {
+        return;
+      }
+
       if (element.hasAttribute('data-sn-tooltip-initialized')) {
         return;
       }
@@ -217,10 +330,12 @@ export default {
 
       const instance = {
         element,
+        ownerVm: this,
         tooltipEl: null,
         content: tooltipContent,
         lastMouseX: 0,
-        lastMouseY: 0
+        lastMouseY: 0,
+        showDelayTimeout: null
       };
 
       const showTooltip = (e) => this.tooltip_showTooltip(instance, e);
@@ -244,58 +359,162 @@ export default {
 
     tooltip_cleanupTooltipForElement(element) {
       const instance = this.tooltip_instances.find(inst => inst.element === element);
+      this.tooltip_removeInstance(instance);
+    },
 
-      if (instance) {
-        if (instance.cleanup) {
-          instance.cleanup();
-        }
+    tooltip_getGlobalState() {
+      if (typeof window === 'undefined') {
+        return null;
+      }
 
-        const index = this.tooltip_instances.indexOf(instance);
-        if (index > -1) {
-          this.tooltip_instances.splice(index, 1);
+      if (!window.__snVueTooltipGlobalState) {
+        window.__snVueTooltipGlobalState = {
+          activeInstance: null,
+          pendingInstance: null
+        };
+      }
+
+      return window.__snVueTooltipGlobalState;
+    },
+
+    tooltip_cancelShowDelay(instance) {
+      if (instance.showDelayTimeout) {
+        clearTimeout(instance.showDelayTimeout);
+        instance.showDelayTimeout = null;
+      }
+    },
+
+    tooltip_cancelGlobalPending(instanceToKeep = null) {
+      const globalState = this.tooltip_getGlobalState();
+      if (!globalState || !globalState.pendingInstance || globalState.pendingInstance === instanceToKeep) {
+        return;
+      }
+
+      const pendingInstance = globalState.pendingInstance;
+      globalState.pendingInstance = null;
+
+      if (pendingInstance.ownerVm && typeof pendingInstance.ownerVm.tooltip_cancelShowDelay === 'function') {
+        pendingInstance.ownerVm.tooltip_cancelShowDelay(pendingInstance);
+      } else if (pendingInstance.showDelayTimeout) {
+        clearTimeout(pendingInstance.showDelayTimeout);
+        pendingInstance.showDelayTimeout = null;
+      }
+    },
+
+    tooltip_activateGlobalInstance(instance) {
+      const globalState = this.tooltip_getGlobalState();
+      if (!globalState) {
+        return;
+      }
+
+      if (globalState.activeInstance && globalState.activeInstance !== instance) {
+        const activeInstance = globalState.activeInstance;
+        if (activeInstance.ownerVm && typeof activeInstance.ownerVm.tooltip_hideTooltip === 'function') {
+          activeInstance.ownerVm.tooltip_hideTooltip(activeInstance);
         }
       }
+
+      globalState.activeInstance = instance;
+    },
+
+    tooltip_releaseGlobalInstance(instance) {
+      const globalState = this.tooltip_getGlobalState();
+      if (!globalState) {
+        return;
+      }
+
+      if (globalState.pendingInstance === instance) {
+        globalState.pendingInstance = null;
+      }
+
+      if (globalState.activeInstance === instance) {
+        globalState.activeInstance = null;
+      }
+    },
+
+    tooltip_hideOtherTooltips(currentInstance) {
+      this.tooltip_instances.forEach((instance) => {
+        if (instance === currentInstance) {
+          return;
+        }
+
+        this.tooltip_cancelShowDelay(instance);
+
+        this.tooltip_hideTooltip(instance);
+      });
     },
 
     tooltip_showTooltip(instance, event) {
-      const tooltipEl = document.createElement('div');
-      tooltipEl.className = 'vue-custom-tooltip';
-      tooltipEl.style.cssText = `
-        position: fixed;
-        z-index: 99999;
-        background-color: #000;
-        color: #fff;
-        padding: 6px 8px;
-        border-radius: 2px;
-        font-size: 12px;
-        line-height: 1.4;
-        max-width: 300px;
-        word-wrap: break-word;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-      `;
+      this.tooltip_hideOtherTooltips(instance);
+      this.tooltip_cancelGlobalPending(instance);
 
-      document.body.appendChild(tooltipEl);
-      tooltipEl.textContent = instance.content;
-      instance.tooltipEl = tooltipEl;
+      this.tooltip_cancelShowDelay(instance);
+
       instance.lastMouseX = event.clientX;
       instance.lastMouseY = event.clientY;
 
-      this.tooltip_updateTooltipPosition(instance, event);
-
-      requestAnimationFrame(() => {
-        tooltipEl.style.opacity = '1';
-      });
-
-      // Setup global mouse listener if not already setup
-      if (!this.tooltip_mouseMoveListener) {
-        this.tooltip_setupGlobalMouseListener();
+      if (instance.tooltipEl) {
+        this.tooltip_activateGlobalInstance(instance);
+        return;
       }
+
+      const globalState = this.tooltip_getGlobalState();
+      if (globalState) {
+        globalState.pendingInstance = instance;
+      }
+
+      instance.showDelayTimeout = setTimeout(() => {
+        instance.showDelayTimeout = null;
+
+        if (globalState && globalState.pendingInstance === instance) {
+          globalState.pendingInstance = null;
+        }
+
+        if (!instance.element.matches(':hover') || instance.tooltipEl) {
+          return;
+        }
+
+        this.tooltip_activateGlobalInstance(instance);
+
+        const tooltipEl = document.createElement('div');
+        tooltipEl.className = 'vue-custom-tooltip';
+        tooltipEl.style.cssText = `
+          position: fixed;
+          z-index: 99999;
+          background-color: #000;
+          color: #fff;
+          padding: 6px 8px;
+          border-radius: 2px;
+          font-size: 12px;
+          line-height: 1.4;
+          max-width: 300px;
+          word-wrap: break-word;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.2s ease;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        `;
+
+        document.body.appendChild(tooltipEl);
+        tooltipEl.textContent = instance.content;
+        instance.tooltipEl = tooltipEl;
+
+        this.tooltip_updateTooltipPosition(instance, {
+          clientX: instance.lastMouseX,
+          clientY: instance.lastMouseY
+        });
+
+        requestAnimationFrame(() => {
+          tooltipEl.style.opacity = '1';
+        });
+
+      }, 500);
     },
 
     tooltip_hideTooltip(instance) {
+      this.tooltip_cancelShowDelay(instance);
+      this.tooltip_releaseGlobalInstance(instance);
+
       if (!instance.tooltipEl) {
         return;
       }
@@ -310,50 +529,13 @@ export default {
       }, 200);
     },
 
-    tooltip_setupGlobalMouseListener() {
-      this.tooltip_mouseMoveListener = (e) => {
-        this.tooltip_instances.forEach((instance) => {
-          if (instance.tooltipEl) {
-            const distance = this.tooltip_calculateDistance(
-              e.clientX,
-              e.clientY,
-              instance.lastMouseX,
-              instance.lastMouseY
-            );
-
-            // Hide tooltip if mouse is more than 200px away from last position
-            if (distance > 200) {
-              this.tooltip_hideTooltip(instance);
-            } else {
-              // Update last mouse position for active tooltips
-              instance.lastMouseX = e.clientX;
-              instance.lastMouseY = e.clientY;
-            }
-          }
-        });
-      };
-
-      document.addEventListener('mousemove', this.tooltip_mouseMoveListener);
-    },
-
-    tooltip_removeGlobalMouseListener() {
-      if (this.tooltip_mouseMoveListener) {
-        document.removeEventListener('mousemove', this.tooltip_mouseMoveListener);
-        this.tooltip_mouseMoveListener = null;
-      }
-    },
-
-    tooltip_calculateDistance(x1, y1, x2, y2) {
-      return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-    },
-
     tooltip_updateTooltipPosition(instance, event) {
+      instance.lastMouseX = event.clientX;
+      instance.lastMouseY = event.clientY;
+
       if (!instance.tooltipEl) {
         return;
       }
-
-      instance.lastMouseX = event.clientX;
-      instance.lastMouseY = event.clientY;
 
       const tooltipEl = instance.tooltipEl;
       const offset = 10;

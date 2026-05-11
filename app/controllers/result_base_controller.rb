@@ -8,11 +8,13 @@ class ResultBaseController < ApplicationController
     respond_to do |format|
       format.json do
         # API endpoint
-        @results = if params[:view_mode] == 'archived'
-                     @parent.results.archived
-                   else
-                     @parent.results.active
-                   end
+        view_mode = params[:view_mode]
+        @results =
+          if view_mode == 'archived'
+            @parent.results.archived_or_having_archived
+          else
+            @parent.results.active
+          end
 
         update_and_apply_user_sort_preference!
         apply_filters!
@@ -22,6 +24,7 @@ class ResultBaseController < ApplicationController
                each_serializer: result_serializer,
                include: %i(result_orderable_elements assets),
                user: current_user,
+               view_mode: view_mode,
                meta: { sort: @sort_preference }
       end
 
@@ -53,7 +56,12 @@ class ResultBaseController < ApplicationController
   end
 
   def elements
-    render json: @result.result_orderable_elements.order(:position),
+    elements = if params[:view_mode] == 'archived'
+                 @result.archived_elements
+               else
+                 @result.active_elements_ordered
+               end
+    render json: elements,
            each_serializer: ResultOrderableElementSerializer,
            user: current_user
   end
@@ -145,7 +153,12 @@ class ResultBaseController < ApplicationController
   end
 
   def update_and_apply_user_sort_preference!
-    state = current_user.user_settings.find_or_initialize_by(key: result_sorting_preference_key)
+    state = if params[:view_mode] == 'archived'
+              current_user.user_settings.find_or_initialize_by(key: "#{result_sorting_preference_key}_archived")
+            else
+              current_user.user_settings.find_or_initialize_by(key: result_sorting_preference_key)
+            end
+
     state.value ||= {}
 
     if params[:sort].present?

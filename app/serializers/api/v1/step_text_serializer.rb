@@ -4,7 +4,7 @@ module Api
   module V1
     class StepTextSerializer < ActiveModel::Serializer
       type :step_texts
-      attributes :id, :name, :text, :position
+      attributes :id, :name, :text, :position, :archived
 
       include TimestampableModel
 

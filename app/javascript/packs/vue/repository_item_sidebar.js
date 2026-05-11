@@ -8,7 +8,6 @@ import RepositoryItemSidebar from '../../vue/repository_item_sidebar/RepositoryI
 
 const app = createApp({});
 app.component('RepositoryItemSidebar', RepositoryItemSidebar);
-app.use(RepositoryItemSidebar);
 app.component('PerfectScrollbar', PerfectScrollbar);
 app.directive('click-outside', vOnClickOutside)
 app.config.globalProperties.i18n = window.I18n;

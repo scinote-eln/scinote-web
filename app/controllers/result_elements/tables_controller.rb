@@ -4,7 +4,14 @@ module ResultElements
   class TablesController < BaseController
     include ApplicationHelper
 
-    before_action :load_table, only: %i(update destroy duplicate move)
+    # rubocop:disable Rails/LexicallyScopedActionFilter
+    before_action :check_manage_result_permissions, only: %i(create move_targets)
+    before_action :load_table, only: %i(update destroy duplicate move archive restore)
+    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets)
+    before_action :check_archive_permissions, only: :archive
+    before_action :check_restore_permissions, only: :restore
+    before_action :check_delete_permissions, only: :destroy
+    # rubocop:enable Rails/LexicallyScopedActionFilter
 
     def create
       predefined_table_dimensions = create_table_params[:tableDimensions].map(&:to_i)
@@ -34,7 +41,7 @@ module ResultElements
         log_result_activity(:table_added, { table_name: result_table.table.name })
       end
 
-      render_result_orderable_element(result_table)
+      render_result_orderable_element(result_table.table)
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -71,7 +78,7 @@ module ResultElements
 
       ActiveRecord::Base.transaction do
         result_table.update!(result: target)
-        result_table.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
+        result_table.result_orderable_element.update!(result: target, position: target.next_element_position)
         @result.normalize_elements_position
 
         model_key = @result.class.model_name.param_key
@@ -99,6 +106,28 @@ module ResultElements
       end
     end
 
+    def archive
+      ActiveRecord::Base.transaction do
+        @table.archive!(current_user)
+        log_result_activity(:table_archived, { table_name: @table.name })
+      end
+
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def restore
+      ActiveRecord::Base.transaction do
+        @table.restore!(current_user)
+        log_result_activity(:table_restored, { table_name: @table.name })
+      end
+
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
     def duplicate
       ActiveRecord::Base.transaction do
         position = @table.result_table.result_orderable_element.position
@@ -108,7 +137,7 @@ module ResultElements
         @table.name += ' (1)'
         new_table = @table.duplicate(@result, current_user, position + 1)
         log_result_activity(:table_duplicated, { table_name: new_table.name })
-        render_result_orderable_element(new_table.result_table)
+        render_result_orderable_element(new_table.result_table.table)
       end
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error(e.message)
@@ -131,11 +160,27 @@ module ResultElements
       return render_404 unless @table
     end
 
+    def check_manage_permissions
+      render_403 unless can_manage_result_table?(@table)
+    end
+
+    def check_archive_permissions
+      render_403 unless can_archive_result_table?(@table)
+    end
+
+    def check_restore_permissions
+      render_403 unless can_restore_result_table?(@table)
+    end
+
+    def check_delete_permissions
+      render_403 unless can_delete_result_table?(@table)
+    end
+
     def result_annotation_notification(old_content = nil)
       smart_annotation_notification(
         old_text: old_content,
         new_text: @table.contents,
-        subject: @result,
+        subject: @table.result_table.result_orderable_element,
         title: t(@table.metadata['plateTemplate'] ? 'notifications.result_well_plate_annotation_title' : 'notifications.result_table_annotation_title',
                  result: @result.name,
                  user: current_user.full_name)

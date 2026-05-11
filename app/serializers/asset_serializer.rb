@@ -12,11 +12,23 @@ class AssetSerializer < ActiveModel::Serializer
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi, :file_name_without_extension,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
              :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type,
-             :edit_version_range
+             :edit_version_range, :archived, :archived_by, :archived_on
   attribute :checksum, if: :sync_url_present?
 
   def icon
     file_fa_icon_class(object)
+  end
+
+  def archived
+    object.archived?
+  end
+
+  def archived_by
+    object.archived_by&.full_name
+  end
+
+  def archived_on
+    I18n.l(object.archived_on, format: :full) if object.archived_on.present?
   end
 
   def file_name
@@ -141,6 +153,7 @@ class AssetSerializer < ActiveModel::Serializer
       marvin_js_icon: image_path('icon_small/marvinjs.svg'),
       versions: (asset_versions_path(object) if attached)
     }
+
     user = scope[:user] || @instance_options[:user]
     if managable?
       urls.merge!(
@@ -148,15 +161,16 @@ class AssetSerializer < ActiveModel::Serializer
         edit_asset: edit_asset_path(object),
         marvin_js_start_edit: start_editing_marvin_js_asset_path(object),
         start_edit_image: start_edit_image_path(object),
-        delete: asset_destroy_path(object),
         duplicate: asset_duplicate_path(object),
         move_targets: asset_move_tagets_path(object),
         move: asset_move_path(object),
         rename: asset_rename_path(object)
       )
+      urls[:archive] = asset_archive_path(object) unless object.parent.respond_to?(:protocol) && object.parent.protocol.in_repository?
     end
-
-    urls[:restore_version] = asset_restore_version_path(object) if can_restore_asset?(user, object)
+    urls[:restore] = asset_restore_path(object) if can_restore_asset?(user, object)
+    urls[:delete] = asset_destroy_path(object) if can_delete_asset?(user, object)
+    urls[:restore_version] = asset_restore_version_path(object) if can_restore_asset_version?(user, object)
     urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if managable?
 
     if managable? && can_open_asset_locally?(user, object)

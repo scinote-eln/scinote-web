@@ -24,7 +24,7 @@ export default {
         field: 'name',
         headerName: this.i18n.t('repositories.table.row_name'),
         sortable: true,
-        notSelectable: true,
+        suppressColumnsToolPanel: true,
         cellRenderer: 'nameRenderer',
         cellRendererParams: {
           legacyId: -4
@@ -104,7 +104,7 @@ export default {
                 columnDataType: column.attributes.data_type,
                 legacyId: parseInt(column.id, 10)
               },
-              notSelectable: true
+              suppressColumnsToolPanel: true
             });
 
             if (field == 'stock' && this.myModuleId && !this.repositoryVersion.attributes.is_snapshot) {
@@ -112,7 +112,7 @@ export default {
                 field: 'consumed_stock',
                 headerName: this.i18n.t('repositories.table.row_consumption'),
                 sortable: true,
-                notSelectable: true,
+                suppressColumnsToolPanel: true,
                 cellRenderer: 'consumeRenderer',
                 cellRendererParams: {
                   repositoryId: this.repositoryVersion.id,

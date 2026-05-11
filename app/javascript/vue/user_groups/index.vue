@@ -77,7 +77,7 @@ export default {
           sortable: true,
           cellRenderer: 'MembersRenderer',
           minWidth: 210,
-          notSelectable: true
+          suppressColumnsToolPanel: true
         }, {
           field: 'created_by',
           headerName: this.i18n.t('user_groups.index.created_by'),

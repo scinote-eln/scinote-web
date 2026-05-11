@@ -20,9 +20,9 @@ Canaid::Permissions.register_for(Asset) do
 
     case object
     when Step
-      can_manage_step?(user, object)
+      asset.active? && can_manage_step?(user, object)
     when ResultBase
-      can_manage_result?(user, object)
+      asset.active? && can_manage_result?(user, object)
     when RepositoryCell
       if object.repository_column.repository.is_a?(RepositorySnapshot)
         false
@@ -34,6 +34,40 @@ Canaid::Permissions.register_for(Asset) do
   end
 
   can :restore_asset do |user, asset|
+    object = asset.step || asset.result || asset.repository_cell
+
+    case object
+    when Step
+      asset.archived? && can_manage_step?(user, object)
+    when ResultBase
+      asset.archived? && can_manage_result?(user, object)
+    when RepositoryCell
+      if object.repository_column.repository.is_a?(RepositorySnapshot)
+        false
+      else
+        object.repository_row.active? && can_manage_repository_assets?(user, object.repository_column.repository)
+      end
+    end
+  end
+
+  can :delete_asset do |user, asset|
+    object = asset.step || asset.result || asset.repository_cell
+
+    case object
+    when Step
+      (asset.archived? || object.protocol.in_repository?) && can_manage_step?(user, object)
+    when ResultBase
+      (asset.archived? || object.respond_to?(:protocol)) && can_manage_result?(user, object)
+    when RepositoryCell
+      if object.repository_column.repository.is_a?(RepositorySnapshot)
+        false
+      else
+        object.repository_row.active? && can_manage_repository_assets?(user, object.repository_column.repository)
+      end
+    end
+  end
+
+  can :restore_asset_version do |user, asset|
     VersionedAttachments.enabled? && can_manage_asset?(user, asset)
   end
 

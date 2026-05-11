@@ -21,7 +21,7 @@ class ResultBaseSerializer < ActiveModel::Serializer
 
   def steps
     object.steps.map do |step|
-      { id: step.id, name: step.label }
+      { id: step.id, name: step.label, archived: step.archived }
     end
   end
 

@@ -74,7 +74,7 @@ class ChecklistItem < ApplicationRecord
 
   def touch_checklist
     # if only checklist item checked attribute changed, do not touch checklist
-    return if saved_changes.key?('checked')
+    return if !previously_new_record? && saved_changes.key?('checked')
 
     # rubocop:disable Rails/SkipsModelValidations
     checklist.touch

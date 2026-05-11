@@ -31,6 +31,8 @@
       :btnIcon="'sn-icon sn-icon-more-hori'"
       @delete="deleteModal = true"
       @rename="renameModal = true"
+      @archive="$emit('attachment:archive')"
+      @restore="$emit('attachment:restore')"
       @duplicate="duplicate"
       @viewMode="changeViewMode"
       @move="showMoveModal"
@@ -128,7 +130,14 @@ export default {
           emit: 'rename'
         });
       }
-      if (this.attachment.attributes.urls.delete) {
+      if (this.attachment.attributes.urls.archive) {
+        menu.push({
+          text: this.i18n.t('assets.context_menu.archive'),
+          data_e2e: 'e2e-BT-attachmentOptions-archive',
+          emit: 'archive'
+        });
+      }
+      if (this.attachment.attributes.urls.delete && !this.attachment.attributes.archived) {
         menu.push({
           text: this.i18n.t('assets.context_menu.delete'),
           emit: 'delete',
@@ -175,7 +184,7 @@ export default {
     },
     deleteAttachment() {
       this.deleteModal = false;
-      this.$emit('attachment:delete');
+      this.$emit('attachment:delete', this.attachment.id);
     },
     openOVEditor(url) {
       window.showIFrameModal(url);

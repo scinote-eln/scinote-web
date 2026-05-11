@@ -8,8 +8,9 @@ module Api
         before_action :load_form_response, only: %i(show)
 
         def index
-          form_responses = timestamps_filter(@step.form_responses).page(params.dig(:page, :number))
-                                                                  .per(params.dig(:page, :size))
+          form_responses = timestamps_filter(@step.form_responses)
+          form_responses = archived_filter(form_responses, default_to_active: true)
+          form_responses = form_responses.page(params.dig(:page, :number)).per(params.dig(:page, :size))
 
           render jsonapi: form_responses, each_serializer: Api::V2::FormResponseSerializer, include: include_params
         end

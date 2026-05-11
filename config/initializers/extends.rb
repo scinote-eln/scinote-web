@@ -688,16 +688,48 @@ class Extends
     repository_snapshot_created: 453,
     repository_snapshot_deleted: 454,
     load_protocol_to_task_from_repository_merge: 459,
-    load_protocol_to_task_from_repository_replace: 460
+    load_protocol_to_task_from_repository_replace: 460,
+    archive_step: 461,
+    restore_step: 462,
+    task_step_text_archived: 463,
+    task_step_table_archived: 464,
+    task_step_file_archived: 465,
+    task_step_chemical_structure_archived: 466,
+    task_step_sequence_archived: 467,
+    task_step_form_archived: 468,
+    task_step_checklist_archived: 469,
+    task_step_text_restored: 470,
+    task_step_table_restored: 471,
+    task_step_file_restored: 472,
+    task_step_chemical_structure_restored: 473,
+    task_step_sequence_restored: 474,
+    task_step_form_restored: 475,
+    task_step_checklist_restored: 476,
+    result_text_archived: 477,
+    result_table_archived: 478,
+    result_file_archived: 479,
+    result_sequence_archived: 480,
+    result_chemical_structure_archived: 481,
+    result_text_restored: 482,
+    result_table_restored: 483,
+    result_file_restored: 484,
+    result_sequence_restored: 485,
+    result_chemical_structure_restored: 486,
+    team_repository_deletion_enabled: 487,
+    team_result_deletion_enabled: 488,
+    team_protocol_steps_deletion_enabled: 489,
+    team_repository_deletion_disabled: 490,
+    team_result_deletion_disabled: 491,
+    team_protocol_steps_deletion_disabled: 492
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243, *370..378, *390..392, 408],
-    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, *246..248, *257..273, *284..291, 301, 303, 306, 328],
+    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, *246..248, *257..273, *284..291, 301, 303, 306, 328, *477..486],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            148, 166, 394, 395, 396, 406, 411, 453, 454],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
-                    184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327, *347..352, 359, 451, 452, 459, 460],
+                    184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278, 299, 302, 305, 327, *347..352, 359, 451, 452, *459..476],
     task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165, *363..369, 393, 407, 410],
     reports: [48, 50, 49, 163, 164],
@@ -707,7 +739,7 @@ class Extends
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
                           *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409, *416..450],
-    team: [92, 94, 93, 97, 104, 244, 245, *379..383, *412..415],
+    team: [92, 94, 93, 97, 104, 244, 245, *379..383, *412..415, *487..492],
     label_templates: [*216..219],
     storage_locations: [*309..315, 361],
     container_storage_locations: [*316..322, 326, 362],
@@ -857,6 +889,7 @@ class Extends
     result_templates/index
     my_module_repositories/index
     protocol_repository_rows/index
+    my_modules/archive
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
@@ -919,7 +952,7 @@ class Extends
     'FormResponse' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'StepOrderableElement' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
     'StepText' => ['AutomationObservers::TaskProtocolContentChangeObserver'],
-    'Step' => ['AutomationObservers::StepCompletionObserver', 'AutomationObservers::AllStepsCompletionObserver', 'AutomationObservers::TaskProtocolContentChangeObserver'],
+    'Step' => ['AutomationObservers::StepCompletionObserver', 'AutomationObservers::TaskProtocolContentChangeObserver', 'AutomationObservers::AllStepsCompletionObserver'],
     'ResultBase' => ['AutomationObservers::ResultContentChangeObserver'],
     'ResultText' => ['AutomationObservers::ResultContentChangeObserver'],
     'ResultComment' => ['AutomationObservers::ResultContentChangeObserver'],
@@ -929,6 +962,28 @@ class Extends
   DEFAULT_TEAM_SETTINGS = {}
 
   WHITELISTED_USER_SETTINGS = [].freeze
+
+  AVAILABLE_TEAM_SETTINGS = {
+    sharing: {
+      task_sharing_enabled: {
+        permission_helper: :can_manage_team?,
+        confirm: {
+          description_params: %i(name shared_task_count)
+        }
+      }
+    },
+    deletion: {
+      repository_deletion_enabled: {
+        permission_helper: :can_modify_team_deletion_prevention?
+      },
+      result_deletion_enabled: {
+        permission_helper: :can_modify_team_deletion_prevention?
+      },
+      protocol_steps_deletion_enabled: {
+        permission_helper: :can_modify_team_deletion_prevention?
+      }
+    }
+  }
 end
 
 # rubocop:enable Style/MutableConstant

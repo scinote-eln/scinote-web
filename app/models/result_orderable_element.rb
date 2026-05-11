@@ -11,6 +11,8 @@ class ResultOrderableElement < ApplicationRecord
 
   belongs_to :result, inverse_of: :result_orderable_elements, touch: true, class_name: 'ResultBase'
   belongs_to :orderable, polymorphic: true, inverse_of: :result_orderable_element
+  belongs_to :archived_by, class_name: 'User', optional: true
+  belongs_to :restored_by, class_name: 'User', optional: true
 
   private
 

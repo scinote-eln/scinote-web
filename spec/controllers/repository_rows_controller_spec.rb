@@ -6,7 +6,7 @@ describe RepositoryRowsController, type: :controller do
   login_user
   render_views
   let!(:user) { controller.current_user }
-  let!(:team) { create :team, created_by: user }
+  let!(:team) { create :team, :record_deletion_enabled, created_by: user }
   let!(:viewer_role) { create :viewer_role }
   let!(:repository) { create :repository, team: team, created_by: user }
   let!(:repository_state) do

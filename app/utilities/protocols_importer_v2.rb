@@ -50,7 +50,7 @@ class ProtocolsImporterV2
   def create_in_step!(step, new_orderable)
     new_orderable.save!
     step.step_orderable_elements.create!(
-      position: step.step_orderable_elements.size,
+      position: step.next_element_position,
       orderable: new_orderable
     )
   end
@@ -58,7 +58,7 @@ class ProtocolsImporterV2
   def create_in_result!(result, new_orderable)
     new_orderable.save!
     result.result_orderable_elements.create!(
-      position: result.result_orderable_elements.size,
+      position: result.next_element_position,
       orderable: new_orderable
     )
   end

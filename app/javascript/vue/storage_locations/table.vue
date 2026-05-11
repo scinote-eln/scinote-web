@@ -125,7 +125,7 @@ export default {
         field: 'name_hash',
         headerName: this.i18n.t('storage_locations.index.table.name'),
         sortable: true,
-        notSelectable: true,
+        suppressColumnsToolPanel: true,
         cellRenderer: 'NameRenderer'
       },
       {

@@ -100,7 +100,6 @@ export default {
   props: {
     showModal: Boolean,
     row_ids: Array,
-    repository_id: Number,
     urls: Object
   },
   data() {
@@ -115,7 +114,8 @@ export default {
       labelTemplateError: null,
       labelTemplateCode: null,
       fetchedPrintersAndTemplates: false,
-      submitting: false
+      submitting: false,
+      repository_id: null
     };
   },
   components: {

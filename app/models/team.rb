@@ -184,8 +184,17 @@ class Team < ApplicationRecord
     query
   end
 
-  def number_of_task_shared
+  def shared_task_count
     shareable_links.count
+  end
+
+  # override attribute getters/setters for now, to ensure support throughout the app
+  def shareable_links_enabled=(value)
+    settings['task_sharing_enabled'] = value
+  end
+
+  def shareable_links_enabled?
+    settings['task_sharing_enabled'] == true
   end
 
   private
