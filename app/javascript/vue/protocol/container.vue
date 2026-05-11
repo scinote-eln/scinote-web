@@ -5,7 +5,7 @@
         <div class="portocol-header-left-part grow" :class="{'overflow-hidden': headerSticked && moduleName}">
           <template v-if="headerSticked && moduleName">
             <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
-            <div @click="scrollTop" class="task-section-title  min-w-[5rem] cursor-pointer" :title="moduleName">
+            <div @click="scrollTop" class="task-section-title  min-w-[5rem] cursor-pointer" :data-sn-tooltip="moduleName">
               <h2 class="truncate leading-6">{{ moduleName }}</h2>
             </div>
           </template>
@@ -35,7 +35,7 @@
           <div class="protocol-buttons-group shrink-0 bg-sn-white">
             <a v-if="urls.add_step_url"
               class="btn btn-secondary icon-btn xl:!px-4"
-              :title="i18n.t('protocols.steps.new_step_title')"
+              :data-sn-tooltip="i18n.t('protocols.steps.new_step_title')"
               @keyup.enter="addStep(steps.length)"
               @click="addStep(steps.length)"
               tabindex="0"
@@ -47,7 +47,7 @@
               v-if="!inRepository && urls.add_step_url"
               class="btn btn-secondary icon-btn xl:!px-4"
               @click="showRepositoriesModal = true"
-              :title="i18n.t('protocols.steps.show_repositories')"
+              :data-sn-tooltip="i18n.t('protocols.steps.show_repositories')"
               data-e2e="e2e-BT-task-protocol-assignedItems"
             >
               <span class="sn-icon sn-icon-inventory" aria-hidden="true"></span>
@@ -55,7 +55,7 @@
             </button>
             <template v-if="steps.length > 0">
               <button
-                :title="i18n.t('protocols.steps.collapse_label')"
+                :data-sn-tooltip="i18n.t('protocols.steps.collapse_label')"
                 v-if="!stepCollapsed"
                 class="btn btn-secondary icon-btn xl:!px-4"
                 @click="collapseSteps"
@@ -66,7 +66,7 @@
                 <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.collapse_label") }}</span>
               </button>
               <button v-else
-                :title="i18n.t('protocols.steps.expand_label')"
+                :data-sn-tooltip="i18n.t('protocols.steps.expand_label')"
                 class="btn btn-secondary icon-btn xl:!px-4"
                 @click="expandSteps"
                 tabindex="0"
@@ -89,7 +89,7 @@
               class="btn btn-light icon-btn"
               data-toggle="modal"
               data-target="#print-protocol-modal"
-              :title="i18n.t('protocols.print_label')"
+              :data-sn-tooltip="i18n.t('protocols.print_label')"
               tabindex="0"
               data-e2e="e2e-BT-task-protocol-print"
             >
@@ -100,7 +100,7 @@
               data-toggle="modal"
               @click="startStepReorder"
               @keyup.enter="startStepReorder"
-              :title="i18n.t('protocols.rearrange_steps_label')"
+              :data-sn-tooltip="i18n.t('protocols.rearrange_steps_label')"
               :class="{'disabled': steps.length == 1}"
               tabindex="0"
               data-e2e="e2e-BT-task-protocol-reorderSteps"
@@ -206,7 +206,7 @@
               <a
                 v-if="urls.add_step_url"
                 class="btn btn-secondary"
-                :title="i18n.t('protocols.steps.new_step_title')"
+                :data-sn-tooltip="i18n.t('protocols.steps.new_step_title')"
                 data-e2e="e2e-BT-protocol-templateSteps-newStepTop"
                 @keyup.enter="addStep(steps.length)"
                 @click="addStep(steps.length)"
@@ -216,7 +216,7 @@
               </a>
               <div v-if="steps.length > 0" class="ml-auto flex justify-between items-center gap-4">
                 <button
-                  :title="i18n.t('protocols.steps.collapse_label')"
+                  :data-sn-tooltip="i18n.t('protocols.steps.collapse_label')"
                   v-if="!stepCollapsed"
                   class="btn btn-secondary icon-btn xl:!px-4"
                   @click="collapseSteps"
@@ -227,7 +227,7 @@
                   <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.collapse_label") }}</span>
                 </button>
                 <button v-else
-                  :title="i18n.t('protocols.steps.expand_label')"
+                  :data-sn-tooltip="i18n.t('protocols.steps.expand_label')"
                   class="btn btn-secondary icon-btn xl:!px-4"
                   @click="expandSteps"
                   tabindex="0"
@@ -240,7 +240,7 @@
                   class="btn btn-light icon-btn"
                   data-toggle="modal"
                   data-e2e="e2e-BT-protocol-templateSteps-reorder"
-                  :title="i18n.t('protocols.rearrange_steps_label')"
+                  :data-sn-tooltip="i18n.t('protocols.rearrange_steps_label')"
                   @click="startStepReorder"
                   @keyup.enter="startStepReorder"
                   :class="{'disabled': steps.length == 1}"
@@ -288,7 +288,7 @@
               <div v-if="steps.length > 0 && urls.add_step_url && inRepository" class="py-5">
                 <a
                   class="btn btn-secondary"
-                  :title="i18n.t('protocols.steps.new_step_title')"
+                  :data-sn-tooltip="i18n.t('protocols.steps.new_step_title')"
                   data-e2e="e2e-BT-protocol-templateSteps-newStepBottom"
                   @keyup.enter="addStep(steps.length)"
                   @click="addStep(steps.length)"

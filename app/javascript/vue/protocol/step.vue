@@ -103,13 +103,13 @@
           tabindex="0"
         ></span> <!-- Hidden element to support legacy code -->
         <template v-if="step.attributes.results.length == 0">
-          <button ref="linkButton" v-if="urls.update_url" :title="i18n.t('protocols.steps.link_results')" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
+          <button ref="linkButton" v-if="urls.update_url" :data-sn-tooltip="i18n.t('protocols.steps.link_results')" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
             <i class="sn-icon sn-icon-results"></i>
           </button>
         </template>
         <GeneralDropdown v-else ref="linkedResultsDropdown"  position="right">
           <template v-slot:field>
-            <button ref="linkButton" class="btn btn-light icon-btn" :title="i18n.t('protocols.steps.linked_results')">
+            <button ref="linkButton" class="btn btn-light icon-btn" :data-sn-tooltip="i18n.t('protocols.steps.linked_results')">
               <i class="sn-icon sn-icon-results"></i>
               <span class="absolute top-1 right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
                 {{ step.attributes.results.length }}
@@ -120,7 +120,7 @@
             <div class="overflow-y-auto max-h-[calc(50vh_-_6rem)]">
               <a v-for="result in step.attributes.results"
                 :key="result.id"
-                :title="result.name"
+                :data-sn-tooltip="result.name"
                 :href="resultUrl(result.id, result.archived)"
                 class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer hover:no-underline text-sn-blue truncate flex items-center gap-2"
               >
@@ -143,7 +143,7 @@
            class="open-comments-sidebar btn icon-btn btn-light"
            data-turbolinks="false"
            data-object-type="Step"
-           :title="i18n.t('protocols.steps.comments')"
+           :data-sn-tooltip="i18n.t('protocols.steps.comments')"
            @click="openCommentsSidebar"
            :data-object-id="step.id">
           <i class="sn-icon sn-icon-comments"></i>

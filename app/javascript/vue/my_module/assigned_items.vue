@@ -14,7 +14,7 @@
           v-if="canAssign"
           class="btn btn-secondary"
           @click="openAssignItemModal=true"
-          :title="i18n.t('my_modules.repository.assign_items')"
+          :data-sn-tooltip="i18n.t('my_modules.repository.assign_items')"
           data-e2e="e2e-BT-task-assignedItemsTab-assignItems"
         >
          <i class="sn-icon sn-icon-new-task"></i>
@@ -24,7 +24,7 @@
           v-if="canAssign"
           class="btn btn-secondary"
           @click="openCreateItemModal=true"
-          :title="i18n.t('my_modules.repository.create_item')"
+          :data-sn-tooltip="i18n.t('my_modules.repository.create_item')"
           data-e2e="e2e-BT-task-assignedItemsTab-createItem"
         >
           <i class="sn-icon sn-icon-create-item"></i>
@@ -32,7 +32,7 @@
         </button>
         <template v-if="assignedRepositories.length > 0">
           <button v-if="!repositoriesCollapsed"
-            :title="i18n.t('protocols.steps.collapse_label')"
+            :data-sn-tooltip="i18n.t('protocols.steps.collapse_label')"
             class="btn btn-secondary icon-btn xl:!px-4"
             @click="collapseRepositories"
             tabindex="0"
@@ -42,7 +42,7 @@
             <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.collapse_label") }}</span>
           </button>
           <button v-else
-            :title="i18n.t('protocols.steps.expand_label')"
+            :data-sn-tooltip="i18n.t('protocols.steps.expand_label')"
             class="btn btn-secondary icon-btn xl:!px-4"
             @click="expandRepositories"
             tabindex="0"

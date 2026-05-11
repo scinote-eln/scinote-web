@@ -19,7 +19,7 @@
         <div>{{ i18n.t('my_modules.repository.version.live_version') }}</div>
         <div v-if="hasLiveVersion" class="flex gap-2">
           <i v-if="pinnedId == params.defaultVersion" class="flex sn-icon sn-icon-pinned text-sn-grey items-center justify-center w-10"></i>
-          <button v-else-if="params.canManageSnapshots" class="btn btn-light icon-btn" :title="i18n.t('my_modules.repository.version.pin')" @click.stop="pinVersion(null)">
+          <button v-else-if="params.canManageSnapshots" class="btn btn-light icon-btn" :data-sn-tooltip="i18n.t('my_modules.repository.version.pin')" @click.stop="pinVersion(null)">
             <i class="sn-icon sn-icon-pin"></i>
           </button>
         </div>
