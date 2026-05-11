@@ -36,7 +36,7 @@
     createViewMonthGrid,
     createViewWeek,
   } from '@schedule-x/calendar'
-  import { createEventsServicePlugin } from '@schedule-x/events-service'
+  import { createEventRecurrencePlugin, createEventsServicePlugin } from "@schedule-x/event-recurrence";
 
   import 'temporal-polyfill/global'
   import {
@@ -44,8 +44,6 @@
   } from '../../routes.js';
 import { loadScript } from 'pdfjs-dist';
 
-  const eventsServicePlugin = createEventsServicePlugin();
-  const eventModalPlugin = createEventModalPlugin();
   let calendarApp = null;
 
   const calendarsVariants = {
@@ -101,7 +99,10 @@ import { loadScript } from 'pdfjs-dist';
     },
     data() {
       return {
-        selectedEvent: null
+        selectedEvent: null,
+        eventsServicePlugin: null,
+        eventModalPlugin: null,
+        eventRecurrencePlugin: null
       };
     },
     computed: {
@@ -154,6 +155,11 @@ import { loadScript } from 'pdfjs-dist';
     },
     created() {
       const component = this;
+
+      this.eventsServicePlugin = createEventsServicePlugin();
+      this.eventModalPlugin = createEventModalPlugin();
+      this.eventRecurrencePlugin = createEventRecurrencePlugin();
+
       calendarApp = createCalendar({
         calendars: calendarsVariants,
         selectedDate: Temporal.now,
@@ -185,7 +191,7 @@ import { loadScript } from 'pdfjs-dist';
             component.fetchEvents();
           },
         }
-      }, [eventsServicePlugin, eventModalPlugin]);
+      }, [this.eventRecurrencePlugin, this.eventsServicePlugin, this.eventModalPlugin]);
     },
     components: {
       ScheduleXCalendar,
@@ -210,14 +216,28 @@ import { loadScript } from 'pdfjs-dist';
       convertRawDateStringToString(date) {
         return date.toString().replace('T', ' ').substring(0, 16);
       },
+      buildRRule(attrs) {
+        const { frequency, interval, interval_unit, repeat_count, repeat_until } = attrs;
+        if (!frequency || frequency === 'ONCE') return null;
+        if (frequency !== 'CUSTOM') return `FREQ=${frequency}`;
+        let rule = `FREQ=${interval_unit}`;
+        if (interval > 1) rule += `;INTERVAL=${interval}`;
+        if (repeat_count) rule += `;COUNT=${repeat_count}`;
+        else if (repeat_until) rule += `;UNTIL=${new Date(repeat_until).toISOString().replace(/[-:]/g, '').split('.')[0]}Z`;
+        return rule;
+      },
       editEvent(event) {
         this.selectedEvent = {
           id: event.id,
           event_name: event.title,
           start_at: this.convertRawDateStringToString(event.attributes.start_at_string),
           end_at: this.convertRawDateStringToString(event.attributes.end_at_string),
-          event_type: 'equipment_booking',
-          frequency: 'once',
+          event_type: event.attributes.event_type,
+          frequency: event.attributes.frequency,
+          interval: event.attributes.interval,
+          interval_unit: event.attributes.interval_unit,
+          repeat_count: event.attributes.repeat_count,
+          repeat_until: event.attributes.repeat_until,
           full_day: event.attributes.full_day,
           users: event.attributes.users.map(user => user.id),
           repository_row_id: event.attributes.subject.id,
@@ -260,10 +280,11 @@ import { loadScript } from 'pdfjs-dist';
                 end: end,
                 color: calendarsVariants[event.attributes.event_sub_type || 'no_type'].lightColors.main,
                 attributes: event.attributes,
-                calendarId: event.attributes.event_sub_type || 'no_type'
+                calendarId: event.attributes.event_sub_type || 'no_type',
+                rrule: this.buildRRule(event.attributes)
               };
             });
-            eventsServicePlugin.set(events);
+            this.eventsServicePlugin.set(events);
           })
           .catch(error => {
             console.error('Error fetching events:', error);

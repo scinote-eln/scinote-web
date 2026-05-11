@@ -112,6 +112,11 @@ class CalendarEventsController < ApplicationController
       :event_type,
       :event_sub_type,
       :full_day,
+      :frequency,
+      :interval,
+      :interval_unit,
+      :repeat_count,
+      :repeat_until,
       user_ids: [],
       metadata: {}
     )

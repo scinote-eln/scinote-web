@@ -1160,9 +1160,9 @@ en:
           custom: "Custom"
         repeat_every: "Repeat every"
         custom_frequency_units:
-          day: "day(s)"
-          week: "week(s)"
-          month: "month(s)"
+          days: "day(s)"
+          weeks: "week(s)"
+          months: "month(s)"
           years: "year(s)"
         ends: "Ends"
         never: "Never"
