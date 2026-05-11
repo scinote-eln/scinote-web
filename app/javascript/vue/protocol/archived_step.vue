@@ -11,7 +11,7 @@
     <div>
       <div class="step-header flex justify-between">
         <div class="step-element-header flex items-start flex-grow gap-4">
-          <a ref="toggleElement" class="step-collapse-link hover:no-underline focus:no-underline self-start"
+          <a ref="toggleElement" class="step-collapse-link hover:no-underline focus:no-underline self-start mt-0.5"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
             data-remote="true"
@@ -19,6 +19,9 @@
             :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCollapsed`">
             <span class="sn-icon sn-icon-right "></span>
           </a>
+          <div v-if="!step.attributes.archived" class="step-position mt-0.5" :data-e2e="`e2e-TX-protocol-step${step.id}-position`">
+            {{ step.attributes.position + 1 }}.
+          </div>
           <InlineEdit
             :value="step.attributes.name"
             class="flex-grow font-bold text-base"
@@ -37,7 +40,7 @@
           />
         </div>
         <div class="step-head-right flex elements-actions-container">
-          <div v-if="step.attributes.archived" class="sci-tag bg-sn-alert-brittlebush pointer-events-none text-sn-black">
+          <div v-if="step.attributes.archived" class="sci-tag bg-sn-alert-brittlebush !shrink-0 pointer-events-none text-sn-black">
             {{ i18n.t('protocols.steps.archived') }}
             <span class="sn-icon sn-icon-archived"></span>
           </div>
