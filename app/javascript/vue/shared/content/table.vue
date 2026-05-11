@@ -419,6 +419,9 @@ export default {
       this.$nextTick(() => {
         this.tableObject.render();
       });
+    },
+    closeArchiveModal() {
+      this.confirmingArchive = false;
     }
   }
 };
