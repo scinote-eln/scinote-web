@@ -95,9 +95,5 @@
     "webpack": "^5.104.1",
     "webpack-cli": "^4.10.0",
     "webpack-remove-empty-scripts": "^1.1.1"
-  },
-  "resolutions": {
-    "extract-text-webpack-plugin/**/ajv": "6.12.6",
-    "tui-image-editor/**/jsdom": "16.6.0"
   }
 }
