@@ -98,3 +98,5 @@ public/marvin4js-license.cxl
 
 # Ignore generated reports PDF icons
 /app/assets/stylesheets/reports_pdf_icons.sass.scss
+
+./yarn
