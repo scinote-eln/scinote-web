@@ -5,9 +5,9 @@
         <div class="modal-header">
           <div class="w-48 flex justify-end">
             <button
+              @click="close"
               type="button"
               class="close"
-              data-dismiss="modal"
               aria-label="Close"
               data-e2e="e2e-BT-protocol-assignedItemsModal-close"
             >
@@ -95,7 +95,7 @@ export default {
   mixins: [modalMixin],
   props: {
     myModuleId: {
-      type: Number,
+      type: [Number, String],
       required: true
     }
   },
@@ -111,7 +111,8 @@ export default {
       openAssignItemModal: false,
       initialLoading: true,
       isEmpty: true,
-      reloadKey: 0
+      reloadKey: 0,
+      sciModal: true
     };
   },
   computed: {

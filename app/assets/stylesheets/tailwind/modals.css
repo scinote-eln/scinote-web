@@ -1,14 +1,14 @@
 @layer components {
-  .modal-backdrop {
+  .modal-backdrop, .sci-modal-backdrop {
     @apply fixed right-0 top-0 left-0 bottom-0 z-[1040] bg-sn-black;
   }
 
-  .modal-backdrop.fade {
+  .modal-backdrop.fade, .sci-modal-backdrop.fade {
     @apply opacity-0;
   }
 
-  .modal-backdrop.in {
-    @apply opacity-40;
+  .modal-backdrop.in, .sci-modal-backdrop.in {
+    @apply opacity-40 !important;
   }
 
   .modal-open {
