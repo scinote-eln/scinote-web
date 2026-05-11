@@ -332,8 +332,8 @@ export default {
         }
       );
     },
-    removeItem(position) {
-      this.checklistItems = this.checklistItems.filter((item) => item.attributes.position !== position);
+    removeItem(id) {
+      this.checklistItems = this.checklistItems.filter((item) => item.id !== id);
       this.updatedChecklistItem();
     },
     startReorder() {
