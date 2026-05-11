@@ -623,7 +623,7 @@ class Protocol < ApplicationRecord
   def load_from_repository(source, current_user, mode = 'replace')
     ActiveRecord::Base.no_touching do
       # First, destroy step and results contents
-      destroy_contents if mode == 'replace'
+      destroy_contents(current_user) if mode == 'replace'
 
       # Now, clone source's step and result contents
       Protocol.clone_contents(
@@ -759,25 +759,43 @@ class Protocol < ApplicationRecord
     cloned
   end
 
-  def destroy_contents
+  def destroy_contents(user)
     # Calculate total space taken by the protocol
     st = space_taken
-    steps.order(position: :desc).destroy_all
+
+    steps.active.order(position: :desc).find_each do |step|
+      if step.has_archived_element?
+        step.active_elements_ordered.each(&:destroy)
+        step.assets.active.find_each(&:destroy)
+        step.position = nil
+        step.archive!(user)
+      else
+        step.destroy
+      end
+    end
 
     if in_module?
-      my_module.results.destroy_all
+      my_module.results.active.find_each do |result|
+        if result.has_archived_element?
+          result.active_elements_ordered.each(&:destroy)
+          result.assets.active.find_each(&:destroy)
+          result.archive!(user)
+        else
+          result.destroy
+        end
+      end
       my_module.my_module_repository_rows.destroy_all
     else
       results.destroy_all
       protocol_repository_rows.destroy_all
     end
 
-    # Release space taken by the step
-    team.release_space(st)
-    team.save
-
     # Reload protocol
     reload
+
+    # Release space taken by the step
+    team.release_space(st - space_taken)
+    team.save
   end
 
   def can_destroy?
