@@ -1506,6 +1506,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@schedule-x/event-recurrence@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "@schedule-x/event-recurrence@npm:4.5.0"
+  checksum: 10c0/45773b6e91efbfd63252398917e1d0fd4b068f67c6467b107207d3ba124bda56781da1dbfeccfe041c43affad7298b734bde2e7c52bf3e80a05f668663174479
+  languageName: node
+  linkType: hard
+
 "@schedule-x/events-service@npm:^4.5.0":
   version: 4.5.0
   resolution: "@schedule-x/events-service@npm:4.5.0"
@@ -6004,6 +6011,7 @@ __metadata:
     "@rails/actioncable": "npm:^8.1.200"
     "@schedule-x/calendar": "npm:^4.5.0"
     "@schedule-x/event-modal": "npm:^4.5.0"
+    "@schedule-x/event-recurrence": "npm:^4.5.0"
     "@schedule-x/events-service": "npm:^4.5.0"
     "@schedule-x/theme-default": "npm:^4.5.0"
     "@schedule-x/vue": "npm:^4.1.0"

@@ -35,6 +35,7 @@
     "@rails/actioncable": "^8.1.200",
     "@schedule-x/calendar": "^4.5.0",
     "@schedule-x/event-modal": "^4.5.0",
+    "@schedule-x/event-recurrence": "^4.5.0",
     "@schedule-x/events-service": "^4.5.0",
     "@schedule-x/theme-default": "^4.5.0",
     "@schedule-x/vue": "^4.1.0",
