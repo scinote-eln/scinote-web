@@ -477,7 +477,7 @@ export default {
 
       const elementPositions = {
         result_orderable_element_positions: this.elements.map(
-          (element) => [element.id, element.attributes.position]
+          (element) => [element.attributes.result_orderable_element_id, element.attributes.position]
         )
       };
 

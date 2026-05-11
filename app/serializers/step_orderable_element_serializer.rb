@@ -2,7 +2,7 @@
 
 class StepOrderableElementSerializer < ActiveModel::Serializer
   type :step_orderable_elements
-  attributes :position, :orderable, :orderable_type
+  attributes :position, :orderable, :orderable_type, :step_orderable_element_id
 
   def orderable
     case object
@@ -14,6 +14,15 @@ class StepOrderableElementSerializer < ActiveModel::Serializer
       StepTextSerializer.new(object, scope: { user: @instance_options[:user] }).as_json
     when FormResponse
       StepFormResponseSerializer.new(object, scope: { user: @instance_options[:user] }).as_json
+    end
+  end
+
+  def step_orderable_element_id
+    case object
+    when StepText, FormResponse, Checklist
+      object.step_orderable_element&.id
+    when Table
+      object.step_table&.step_orderable_element&.id
     end
   end
 
