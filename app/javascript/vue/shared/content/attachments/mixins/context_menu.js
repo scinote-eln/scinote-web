@@ -21,9 +21,10 @@ export default {
       axios.post(this.attachment.attributes.urls.restore)
         .then((response) => {
           this.$emit('attachment:restore');
+          HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.restore_modal.restore_asset'), 'success');
         })
         .catch(() => {
-          HelperModule.flashAlertMsg(this.i18n.t('general.no_permissions'), 'danger');
+          HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.restore_modal.restore_error'), 'danger');
         });
     },
     archiveAttachment() {

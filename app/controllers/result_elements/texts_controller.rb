@@ -95,7 +95,7 @@ module ResultElements
         log_result_activity(:text_restored, { text_name: @result_text.name })
       end
 
-      head :ok
+      render json: { message: I18n.t('protocols.steps.modals.restore_modal.restore_text') }
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end

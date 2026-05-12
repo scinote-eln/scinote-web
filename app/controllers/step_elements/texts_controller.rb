@@ -106,7 +106,7 @@ module StepElements
         log_step_restore_activity(:task_step_text_restored, { text_name: @step_text.name })
       end
 
-      head :ok
+      render json: { message: I18n.t('protocols.steps.modals.restore_modal.restore_text') }
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
