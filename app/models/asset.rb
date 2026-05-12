@@ -69,6 +69,7 @@ class Asset < ApplicationRecord
     assets_in_steps = Asset.joins(:step)
                            .where(steps: { protocol: Protocol.search(user, include_archived, nil, teams) })
                            .select(:id)
+    assets_in_steps = assets_in_steps.where(archived: false, steps: { archived: false }) unless include_archived
 
     assets_in_template_steps =
       Asset.joins(:step)
@@ -78,6 +79,8 @@ class Asset < ApplicationRecord
     assets_in_results = Asset.joins(:result)
                              .where(results: { id: Result.search(user, include_archived, nil, teams) })
                              .select(:id)
+
+    assets_in_results = assets_in_results.where(archived: false, results: { archived: false }) unless include_archived
 
     assets_in_inventories = Asset.joins(repository_cell: { repository_column: :repository })
                                  .where(repositories: {
