@@ -2,7 +2,7 @@
 
 class ResultOrderableElementSerializer < ActiveModel::Serializer
   type :result_orderable_elements
-  attributes :position, :orderable, :orderable_type
+  attributes :position, :orderable, :orderable_type, :result_orderable_element_id
 
   def orderable
     case object
@@ -10,6 +10,15 @@ class ResultOrderableElementSerializer < ActiveModel::Serializer
       ResultTableSerializer.new(object, scope: { user: @instance_options[:user] }).as_json
     when ResultText
       ResultTextSerializer.new(object, scope: { user: @instance_options[:user] }).as_json
+    end
+  end
+
+  def result_orderable_element_id
+    case object
+    when ResultText
+      object.result_orderable_element&.id
+    when Table
+      object.result_table&.result_orderable_element&.id
     end
   end
 

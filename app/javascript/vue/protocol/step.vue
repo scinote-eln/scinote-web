@@ -691,11 +691,10 @@
           this.elements[index].attributes.position = position;
         });
 
-
         let elementPositions =
           {
             step_orderable_element_positions: this.elements.map(
-              (element) => [element.id, element.attributes.position]
+              (element) => [element.attributes.step_orderable_element_id, element.attributes.position]
             )
           };
 
