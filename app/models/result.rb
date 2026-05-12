@@ -80,10 +80,6 @@ class Result < ResultBase
     joins(my_module: { experiment: :project }).where(my_module: { experiments: { projects: { team: teams } } })
   end
 
-  def all_elements
-    result_texts + tables
-  end
-
   def active_elements
     result_texts.active + tables.active
   end

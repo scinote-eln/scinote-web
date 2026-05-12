@@ -127,6 +127,10 @@ class ResultBase < ApplicationRecord
     current_position.nil? ? 0 : current_position + 1
   end
 
+  def all_elements
+    result_texts + tables
+  end
+
   private
 
   def duplicate_table(new_result, user, table)

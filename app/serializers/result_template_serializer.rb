@@ -3,6 +3,10 @@
 class ResultTemplateSerializer < ResultBaseSerializer
   attributes :protocol_id
 
+  def result_orderable_elements
+    object.all_elements
+  end
+
   def collapsed
     result_template_states = current_user.user_settings.find_by(key: 'result_template_states')&.value || {}
     result_template_states[object.id.to_s] == true
