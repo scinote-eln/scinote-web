@@ -91,7 +91,7 @@ module StepElements
         log_step_restore_activity(:task_step_form_restored, { form: @form_response.form.id })
       end
 
-      head :ok
+      render json: { message: I18n.t('protocols.steps.modals.restore_modal.restore_form_response') }
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end

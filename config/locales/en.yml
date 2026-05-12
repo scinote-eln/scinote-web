@@ -4319,7 +4319,10 @@ en:
           confirm: 'Restore'
       modals:
         restore_modal:
-          restore_element: '%{content_type} successfully restored from the archive.'
+          restore_element_general: '%{content_type} successfully restored from the archive.'
+          restore_text: 'Text successfully restored from the archive.'
+          restore_form_response: 'Form successfully restored from the archive.'
+          restore_asset: 'File successfully restored from the archive.'
           restore_error: 'There was a problem trying to restore elements from the archive. Please try again.'
         delete_element:
           title: 'Delete content'

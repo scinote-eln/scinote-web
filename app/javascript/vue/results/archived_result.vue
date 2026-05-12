@@ -195,7 +195,7 @@ export default {
       axios.post(this.urls.restore_url).then((response) => {
         this.closeRestoreModal();
         this.$emit('result:restored', this.result.id, response.data);
-        HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.restore_modal.success', { name: this.result.attributes.name }),'success');
+        HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.restore_step.success', { name: this.result.attributes.name }),'success');
       }).catch((error) => {
         HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.restore_modal.restore_error'), 'danger');
       });

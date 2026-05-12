@@ -18,7 +18,13 @@ export default {
             'component:restore',
             this.element.id
           );
-          HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.restore_modal.restore_element', { content_type: this.element.attributes.orderable_type }),'success');
+
+          if(result.data.message) {
+            HelperModule.flashAlertMsg(result.data.message, 'success');
+          } else {
+            HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.restore_modal.restore_element_general',
+                                       { content_type: this.element.attributes.orderable_type }), 'success');
+          }
         }).catch((error) => {
           HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.restore_modal.restore_error'), 'danger');
         });
