@@ -38,12 +38,14 @@ class ResultsController < ResultBaseController
   end
 
   def archive
-    if @result.archive(current_user)
+    ActiveRecord::Base.transaction do
+      @result.unpin!
+      @result.archive!(current_user)
       log_activity(:archive_result, { result: @result })
-      render json: {}, status: :ok
-    else
-      render json: { errors: @result.errors.full_messages }, status: :unprocessable_entity
     end
+    render json: {}, status: :ok
+  rescue ActiveRecord::RecordInvalid
+    render json: { errors: @result.errors.full_messages }, status: :unprocessable_entity
   end
 
   def assets

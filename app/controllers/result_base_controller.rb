@@ -172,7 +172,7 @@ class ResultBaseController < ApplicationController
   end
 
   def apply_sort!(sort_order)
-    @results = @results.order(pinned_at: :asc)
+    @results = @results.order(pinned_at: :asc) unless params[:view_mode] == 'archived'
 
     case sort_order
     when 'updated_at_asc'
