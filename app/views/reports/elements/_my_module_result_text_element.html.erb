@@ -19,7 +19,7 @@
                 user: result_text.archived_by&.full_name,
                 datetime: l(result_text.archived_on, format: :full)) %>
         <% else %>
-          <%= t("projects.reports.elements.result_text.user_time", timestamp: l(result_text.result_orderable_element.created_at, format: :full)) %>
+          <%= t("projects.reports.elements.result_text.user_time", timestamp: l(result_text.created_at, format: :full)) %>
         <% end %>
       </div>
     <% end %>

@@ -2,7 +2,7 @@
 
 module Reports::Docx::DrawStepText
   def draw_step_text(step_text)
-    timestamp = element.created_at
+    timestamp = step_text.created_at
     color = @color
     settings = @settings
 

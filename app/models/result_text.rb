@@ -22,6 +22,7 @@ class ResultText < ApplicationRecord
   after_save :manage_orderable_element_on_archive, if: -> { saved_change_to_archived? }
 
   delegate :team, to: :result
+  delegate :created_at, to: :result_orderable_element
 
   def duplicate(result, position = nil)
     ActiveRecord::Base.transaction do

@@ -103,7 +103,11 @@
           <% end %>
         </div>
 
-        <% result_elements = (@settings.dig('task', 'archived_results') || export_all) ? result.all_elements : result.active_elements_ordered %>
+        <% result_elements = if (@settings.dig('task', 'archived_results') || export_all)
+                               result.active_elements_ordered + result.archived_elements
+                             else
+                               result.active_elements_ordered
+                             end %>
         <% result_elements.each do |element| %>
           <% if element.is_a?(Table) && @settings.dig('task', 'table_results') %>
             <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, table: element} %>
