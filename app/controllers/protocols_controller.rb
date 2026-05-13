@@ -305,6 +305,7 @@ class ProtocolsController < ApplicationController
     @protocol.with_lock do
       my_module = @protocol.my_module
       @protocol.steps.active.each do |step|
+        step.position = nil
         step.archive!(current_user)
 
         log_activity(
