@@ -2,7 +2,6 @@
 
 module Reports::Docx::DrawResultText
   def draw_result_text(result_text)
-    timestamp = result_text.created_at
     settings = @settings
     color = @color
     if result_text.name.present? || !settings['exclude_timestamps']
@@ -17,6 +16,7 @@ module Reports::Docx::DrawResultText
                         datetime: I18n.l(result_text.archived_on, format: :full),
                         user: result_text.archived_by&.full_name), color: color[:gray]
           else
+            timestamp = result_text.created_at
             text I18n.t('projects.reports.elements.result_text.user_time',
                         timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
           end

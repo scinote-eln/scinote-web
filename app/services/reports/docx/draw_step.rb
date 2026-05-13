@@ -47,7 +47,11 @@ module Reports::Docx::DrawStep
       end
     end
 
-    elements = @settings.dig('task', 'protocol', 'archived_steps') ? step.all_elements : step.active_elements_ordered
+    elements = if @settings.dig('task', 'protocol', 'archived_steps')
+                 step.active_elements_ordered + step.archived_elements
+               else
+                 step.active_elements_ordered
+               end
     elements.each do |element|
       case element
       when Table
