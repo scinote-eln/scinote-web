@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_20_095412) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_08_105328) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -142,6 +142,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_20_095412) do
     t.jsonb "metadata", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "frequency"
+    t.integer "interval"
+    t.string "interval_unit"
+    t.integer "repeat_count"
+    t.datetime "repeat_until"
     t.index ["created_by_id"], name: "index_calendar_events_on_created_by_id"
     t.index ["event_sub_type"], name: "index_calendar_events_on_event_sub_type"
     t.index ["event_type"], name: "index_calendar_events_on_event_type"

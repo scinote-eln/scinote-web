@@ -95,19 +95,19 @@
                 @change="event.frequency = $event"
               ></SelectDropdown>
             </div>
-            <div v-if="event.frequency === 'custom'" class="rounded p-4 bg-sn-super-light-grey">
+            <div v-if="event.frequency === 'CUSTOM'" class="rounded p-4 bg-sn-super-light-grey">
               <div class="flex items-center">
                 <span class="mr-4">{{ i18n.t('equipment_bookings.index.manage_modal.repeat_every') }}</span>
                 <div class="sci-input-container-v2 w-24 mr-1">
-                  <input type="number" class="!bg-white" min="1" v-model.number="event.custom_frequency.every" />
+                  <input type="number" class="!bg-white" min="1" v-model.number="event.interval" />
                 </div>
                 <div class="w-32">
                   <SelectDropdown
                     class="bg-white"
                     :options="customFrequencyUnits"
                     :searchable="false"
-                    :value="event.custom_frequency.units"
-                    @change="event.custom_frequency.units = $event"
+                    :value="event.interval_unit"
+                    @change="event.interval_unit = $event"
                   ></SelectDropdown>
                 </div>
               </div>
@@ -117,32 +117,32 @@
               <div class="flex items-start gap-1 flex-col">
                 <div class="flex items-center gap-2 h-11">
                   <span class="sci-radio-container">
-                    <input type="radio" class="sci-radio" v-model="event.custom_frequency.mode" value="infinite" />
+                    <input type="radio" class="sci-radio" v-model="event.repeat_mode" value="infinite" />
                     <span class="sci-radio-label"></span>
                   </span>
                   <span class="sci-label">{{ i18n.t('equipment_bookings.index.manage_modal.never') }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                   <span class="sci-radio-container">
-                    <input type="radio" class="sci-radio" v-model="event.custom_frequency.mode" value="occurrences" />
+                    <input type="radio" class="sci-radio" v-model="event.repeat_mode" value="occurrences" />
                     <span class="sci-radio-label"></span>
                   </span>
                   <div class="sci-label w-12">{{ i18n.t('equipment_bookings.index.manage_modal.after') }}</div>
                   <div class="sci-input-container-v2 w-24 ml-10">
-                    <input type="number" class="!bg-white" min="1" v-model.number="event.custom_frequency.occurrences" />
+                    <input type="number" class="!bg-white" min="1" v-model.number="event.repeat_count" />
                   </div>
                   <span class="sci-label">{{ i18n.t('equipment_bookings.index.manage_modal.occassions') }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                   <span class="sci-radio-container">
-                    <input type="radio" class="sci-radio" v-model="event.custom_frequency.mode" value="end_date" />
+                    <input type="radio" class="sci-radio" v-model="event.repeat_mode" value="end_date" />
                     <span class="sci-radio-label"></span>
                   </span>
                   <div class="sci-label w-12">{{ i18n.t('equipment_bookings.index.manage_modal.on_date') }}</div>
                   <DateTimePicker
                     class="ml-10"
-                    @change="event.custom_frequency.end_date = $event"
-                    :defaultValue="event.custom_frequency.end_date"
+                    @change="event.repeat_until = $event"
+                    :defaultValue="event.repeat_until"
                     mode="date"
                     size="mb"
                     :clearable="false"
@@ -229,28 +229,26 @@ export default {
         start_at: null,
         end_at: null,
         full_day: false,
-        frequency: 'once',
-        custom_frequency: {
-          every: 1,
-          units: 'week',
-          mode: 'infinite',
-          end_date: null,
-          occurrences: 1,
-        },
+        frequency: 'ONCE',
+        interval: 1,
+        interval_unit: 'WEEKLY',
+        repeat_mode: 'infinite',
+        repeat_count: 1,
+        repeat_until: null,
         users: []
       },
       frequencies: [
-        ['once', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.once')],
-        ['daily', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.daily')],
-        ['weekly', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.weekly')],
-        ['monthly', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.monthly')],
-        ['custom', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.custom')]
+        ['ONCE', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.once')],
+        ['DAILY', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.daily')],
+        ['WEEKLY', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.weekly')],
+        ['MONTHLY', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.monthly')],
+        ['CUSTOM', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.custom')]
       ],
       customFrequencyUnits: [
-        ['day', this.i18n.t('equipment_bookings.index.manage_modal.custom_frequency_units.day')],
-        ['week', this.i18n.t('equipment_bookings.index.manage_modal.custom_frequency_units.week')],
-        ['month', this.i18n.t('equipment_bookings.index.manage_modal.custom_frequency_units.month')],
-        ['year', this.i18n.t('equipment_bookings.index.manage_modal.custom_frequency_units.year')]
+        ['DAILY', this.i18n.t('equipment_bookings.index.manage_modal.custom_frequency_units.days')],
+        ['WEEKLY', this.i18n.t('equipment_bookings.index.manage_modal.custom_frequency_units.weeks')],
+        ['MONTHLY', this.i18n.t('equipment_bookings.index.manage_modal.custom_frequency_units.months')],
+        ['YEARLY', this.i18n.t('equipment_bookings.index.manage_modal.custom_frequency_units.years')]
       ]
     };
   },
@@ -259,6 +257,11 @@ export default {
 
     if (this.existedEvent) {
       this.event = { ...this.existedEvent };
+      if (this.event.frequency === 'CUSTOM') {
+        if (this.event.repeat_count) this.event.repeat_mode = 'occurrences';
+        else if (this.event.repeat_until) this.event.repeat_mode = 'end_date';
+        else this.event.repeat_mode = 'infinite';
+      }
     } else {
       const now = new Date();
       const later = new Date(now.getTime() + 60 * 60 * 1000);
@@ -271,7 +274,7 @@ export default {
 
       this.event.start_at = formatDateTime(now);
       this.event.end_at = formatDateTime(later);
-      this.event.custom_frequency.end_date = formatDateTime(tillDate);
+      this.event.repeat_until = formatDateTime(tillDate);
     }
   },
   computed: {
@@ -312,6 +315,11 @@ export default {
         end_at: this.event.end_at,
         full_day: this.event.full_day,
         user_ids: this.event.users,
+        frequency: this.event.frequency,
+        interval: this.event.frequency === 'CUSTOM' ? this.event.interval : null,
+        interval_unit: this.event.frequency === 'CUSTOM' ? this.event.interval_unit : null,
+        repeat_count: this.event.frequency === 'CUSTOM' && this.event.repeat_mode === 'occurrences' ? this.event.repeat_count : null,
+        repeat_until: this.event.frequency === 'CUSTOM' && this.event.repeat_mode === 'end_date' ? this.event.repeat_until : null
       };
     },
     updateEvent() {
