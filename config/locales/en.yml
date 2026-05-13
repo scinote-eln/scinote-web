@@ -4317,6 +4317,13 @@ en:
           description_1_step: 'The form will be restored to the bottom of the protocol step it belonged to previously.'
           description_2: 'Are you sure you want to continue?'
           confirm: 'Restore'
+      file:
+        restore_modal:
+          title: 'Restore file'
+          description_1_step: 'The file will be restored to the bottom of the protocol step it belonged to previously.'
+          description_1_result: 'The file will be restored to the bottom of the result it belonged to previously.'
+          description_2: 'Are you sure you want to continue?'
+          confirm: 'Restore'
       modals:
         restore_modal:
           restore_element_general: '%{content_type} successfully restored from the archive.'

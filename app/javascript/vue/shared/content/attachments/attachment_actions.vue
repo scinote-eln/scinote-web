@@ -14,7 +14,7 @@
       <i class="sn-icon sn-icon-move"></i>
     </a>
     <button v-if="attachment.attributes.urls.restore"
-      @click.prevent.stop="$emit('attachment:restore', attachment.id)"
+      @click.prevent.stop="confirmingRestore=true"
       class="btn btn-light icon-btn thumbnail-action-btn"
       :title="i18n.t('attachments.thumbnail.buttons.restore')">
       <i class="sn-icon sn-icon-restore"></i>
@@ -50,6 +50,11 @@
         @confirm="deleteAttachment"
         @cancel="deleteModal = false"
       />
+      <RestoreModal v-if="confirmingRestore"
+                  :parentType="attachment.attributes.parent_type"
+                  :element="'file'"
+                  @confirm="restoreAttachment"
+                  @close="confirmingRestore = false"/>
     </teleport>
   </div>
 </template>
@@ -59,6 +64,7 @@ import OpenLocallyMixin from './mixins/open_locally.js';
 import OpenMenu from './open_menu.vue';
 import ContextMenu from './context_menu.vue';
 import deleteAttachmentModal from './delete_modal.vue';
+import RestoreModal from '../modal/restore_element.vue';
 
 export default {
   name: 'attachmentActions',
@@ -69,18 +75,24 @@ export default {
   mixins: [OpenLocallyMixin],
   data() {
     return {
-      deleteModal: false
+      deleteModal: false,
+      confirmingRestore: false
     };
   },
   components: {
     OpenMenu,
     ContextMenu,
-    deleteAttachmentModal
+    deleteAttachmentModal,
+    RestoreModal
   },
   methods: {
     deleteAttachment() {
       this.deleteModal = false;
       this.$emit('attachment:delete', this.attachment.id);
+    },
+    restoreAttachment() {
+      this.confirmingRestore = false;
+      this.$emit('attachment:restore', this.attachment.id);
     }
   }
 };
