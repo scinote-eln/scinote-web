@@ -103,8 +103,7 @@ export default {
       rowIds: [],
       downstreamModules: [],
       downstreamMode: false,
-      sciModal: true,
-      modalLevel: 'high'
+      sciModal: true
     };
   },
   computed: {
