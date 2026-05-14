@@ -122,7 +122,6 @@ class AssetSerializer < ActiveModel::Serializer
   def image_context
     if image_editable
       {
-        quality: object.file_image_quality || 80,
         type: object.file.content_type
       }
     end
