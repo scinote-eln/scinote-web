@@ -226,7 +226,7 @@ class Step < ApplicationRecord
 
       new_step = protocol.steps.new(
         name: step_name || name,
-        position: step_position || protocol.steps.length,
+        position: step_position || protocol.steps.active.length,
         completed: false,
         user: user,
         original_protocol: original_protocol
