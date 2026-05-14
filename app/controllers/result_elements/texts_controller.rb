@@ -145,7 +145,7 @@ module ResultElements
       smart_annotation_notification(
         old_text: old_text,
         new_text: @result_text.text,
-        subject: @result_text.result_orderable_element,
+        subject: @result_text,
         title: t('notifications.result_annotation_title',
                  result: @result.name,
                  user: current_user.full_name),
