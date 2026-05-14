@@ -334,7 +334,7 @@ var ImageEditorModal = (function() {
       if (data['mime-type'] === 'image/png') {
         imageParams = { format: 'png' };
       } else {
-        imageParams = { format: 'jpeg', quality: (data.quality / 100) };
+        imageParams = { format: 'jpeg', quality: 0.92 };
       }
 
       imageDataURL = imageEditor.toDataURL(imageParams);
@@ -388,7 +388,6 @@ var ImageEditorModal = (function() {
         var fileUrl = responseData;
         var data = {
           id: editButton.data('image-id'),
-          quality: editButton.data('image-quality'),
           filename: editButton.data('image-name'),
           'mime-type': editButton.data('image-mime-type')
         };

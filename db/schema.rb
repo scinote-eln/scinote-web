@@ -109,7 +109,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
     t.integer "version", default: 1
     t.boolean "file_processing"
     t.integer "team_id"
-    t.integer "file_image_quality"
     t.integer "view_mode", default: 0, null: false
     t.boolean "pdf_preview_processing", default: false
     t.boolean "archived", default: false, null: false
