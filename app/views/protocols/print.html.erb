@@ -20,7 +20,7 @@
     <em><%= t('my_modules.protocols.protocol_status_bar.no_description') %></em>
   <% end %>
 </div>
-<% @protocol.steps.order(position: :asc).each do |step| %>
+<% @protocol.steps.active.order(position: :asc).each do |step| %>
   <div class="print-step">
     <h2 class="step-check-circle-checked">
       <% if step.skipped_at %>
@@ -33,33 +33,30 @@
       <%= step.position + 1 %>. <%= step.name %>
     </h2>
 
-    <% step.step_orderable_elements.order(position: :asc).each do |step_element| %>
-      <% case step_element.orderable_type %>
-      <% when 'StepText' %>
-        <% step_text = step_element.orderable %>
+    <% step.active_elements_ordered.each do |step_element| %>
+      <% case step_element %>
+      <% when StepText %>
         <div class="print-step-text">
           <strong>
-            <%= auto_link(simple_format(step_text.name),
+            <%= auto_link(simple_format(step_element.name),
                                 link: :urls,
                                 html: { target: '_blank' }) %>
           </strong>
           <div class="page-break"></div>
           <div class="ql-editor">
-          <%= custom_auto_link(step_text.tinymce_render(:text).gsub(/<p>\S<\/p>/, '').strip,
+          <%= custom_auto_link(step_element.tinymce_render(:text).gsub(/<p>\S<\/p>/, '').strip,
                                 simple_format: false,
                                 tags: %w(img),
                                 team: current_team,
                                 preview_repository: true) %>
         </div>
         </div>
-      <% when 'StepTable' %>
-        <% table = step_element.orderable.table %>
-        <%= render partial: 'protocols/table_element', locals: { table: table, include_name: true }%>
-      <% when 'Checklist' %>
-        <% checklist = step_element.orderable %>
+      <% when Table %>
+        <%= render partial: 'protocols/table_element', locals: { table: step_element, include_name: true }%>
+      <% when Checklist %>
         <div class="print-checklist">
-          <h3><%= smart_annotation_parser(checklist.name, current_team).html_safe %></h3>
-          <% checklist.checklist_items.order(position: :asc).each do |checklist_item| %>
+          <h3><%= smart_annotation_parser(step_element.name, current_team).html_safe %></h3>
+          <% step_element.checklist_items.order(position: :asc).each do |checklist_item| %>
             <div class="print-checklist-item">
               <span class="checklist-checkbox checked">
                 <% if checklist_item.checked %>
@@ -72,12 +69,12 @@
             </div>
           <% end %>
         </div>
-      <% when 'FormResponse' %>
-        <%= render partial: 'protocols/print/element/form_response_element', locals: { form_response: step_element.orderable }%>
+      <% when FormResponse %>
+        <%= render partial: 'protocols/print/element/form_response_element', locals: { form_response: step_element }%>
       <% end %>
     <% end %>
 
-    <% step.assets.where(view_mode: "inline").each do |asset| %>
+    <% step.assets.active.where(view_mode: "inline").each do |asset| %>
         <div class="print-asset inline">
           <div class="print-asset-image">
             <% if asset.previewable? %>
@@ -88,14 +85,14 @@
         </div>
         <div class="page-break"></div>
     <% end %>
-    <% step.assets.where(view_mode: "list").each do |asset| %>
+    <% step.assets.active.where(view_mode: "list").each do |asset| %>
         <div class="print-asset list">
           <span class="print-asset-icon"><%= file_extension_icon_html(asset) %></span>
           <span><%= asset.render_file_name %></span>
         </div>
     <% end %>
     <div class="print-thumbnails">
-      <% step.assets.where(view_mode: "thumbnail").each do |asset| %>
+      <% step.assets.active.where(view_mode: "thumbnail").each do |asset| %>
         <div class="print-asset thumbnail">
           <div class="print-asset-image">
             <% if asset.previewable? %>

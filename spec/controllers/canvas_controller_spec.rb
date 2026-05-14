@@ -54,7 +54,7 @@ describe CanvasController do
     # Tasks for creation
     let(:task_new_items) { 'n0,n1,n2,n3,n4,n5' }
     let(:task_new_items_names) do
-      'task_new1|task_new2|task_on_location_of_moved_task1|task_on_location_of_archived_task3|clone_1|clone_2'
+      'task_new1¦task_new2¦task_on_location_of_moved_task1¦task_on_location_of_archived_task3¦clone_1¦clone_2'
     end
 
     # Tasks for archiving

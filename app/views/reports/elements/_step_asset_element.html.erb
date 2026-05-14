@@ -17,10 +17,17 @@
         <%= link_to t('projects.reports.elements.download'), asset_download_url(asset, disposition: 'attachment'), class: 'download-link', target: :_blank %>
         </em>
       <% end %>
+      <% if asset.archived? %>
+        <span class="label label-warning"><%= t('search.index.archived') %></span>
+      <% end %>
     </span>
     <% unless @settings['exclude_timestamps'] %>
       <div class="user-time">
-        &nbsp;<%= t('projects.reports.elements.step_asset.user_time', timestamp: l(timestamp, format: :full)) %>
+        <% if asset.archived? %>
+          &nbsp;<%= t("projects.reports.elements.archived_metadata", user: asset.archived_by&.full_name, datetime: l(asset.archived_on, format: :full)) %>
+        <% else %>
+          &nbsp;<%= t('projects.reports.elements.step_asset.user_time', timestamp: l(timestamp, format: :full)) %>
+        <% end %>
       </div>
     <% end %>
   </div>

@@ -11,8 +11,9 @@ module Api
         before_action :check_manage_permission, only: %i(create update destroy)
 
         def index
-          result_texts = timestamps_filter(@result.result_texts).page(params.dig(:page, :number))
-                                                                .per(params.dig(:page, :size))
+          result_texts = timestamps_filter(@result.result_texts)
+          result_texts = archived_filter(result_texts, default_to_active: true)
+          result_texts = result_texts.page(params.dig(:page, :number)).per(params.dig(:page, :size))
 
           render jsonapi: result_texts, each_serializer: ResultTextSerializer
         end
@@ -26,7 +27,7 @@ module Api
 
           @result.with_lock do
             @result.result_orderable_elements.create!(
-              position: @result.result_orderable_elements.size,
+              position: @result.next_element_position,
               orderable: result_text
             )
 

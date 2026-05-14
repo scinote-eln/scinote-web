@@ -74,7 +74,7 @@ class CanvasController < ApplicationController
     if update_params[:add].present? &&
        update_params['add-names'].present?
       ids = update_params[:add].split(',')
-      names = update_params['add-names'].split('|')
+      names = update_params['add-names'].split('¦')
       if ids.length == names.length &&
          ids.all? { |id| id.is_a?(String) && positions.include?(id) } &&
          names.all? { |name| name.is_a? String }

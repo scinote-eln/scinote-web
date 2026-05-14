@@ -249,8 +249,10 @@ module Api
         named_collection.where_attributes_like(:name, params.dig(:filter, :name))
       end
 
-      def archived_filter(archivable_collection)
-        return archivable_collection if params.dig(:filter, :archived).blank?
+      def archived_filter(archivable_collection, default_to_active: false)
+        if params.dig(:filter, :archived).blank?
+          return default_to_active ? archivable_collection.active : archivable_collection
+        end
 
         case params.dig(:filter, :archived)
         when 'false'

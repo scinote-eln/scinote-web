@@ -12,8 +12,9 @@ module Api
       before_action :check_update_permissions, only: :update
 
       def index
-        results = timestamps_filter(@task.results).page(params.dig(:page, :number))
-                                                  .per(params.dig(:page, :size))
+        results = timestamps_filter(@task.results)
+        results = archived_filter(results, default_to_active: true)
+        results = results.page(params.dig(:page, :number)).per(params.dig(:page, :size))
         render jsonapi: results, each_serializer: ResultSerializer,
                include: include_params
       end

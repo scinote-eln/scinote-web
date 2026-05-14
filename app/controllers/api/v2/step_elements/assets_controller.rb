@@ -5,9 +5,9 @@ module Api
     module StepElements
       class AssetsController < ::Api::V1::AssetsController
         def index
-          attachments =
-            timestamps_filter(@step.assets).page(params.dig(:page, :number))
-                                           .per(params.dig(:page, :size))
+          attachments = timestamps_filter(@step.assets)
+          attachments = archived_filter(attachments, default_to_active: true)
+          attachments = attachments.page(params.dig(:page, :number)).per(params.dig(:page, :size))
 
           render jsonapi: attachments, each_serializer: Api::V2::AssetSerializer
         end

@@ -3,7 +3,6 @@
 module ResultElements
   class BaseController < ApplicationController
     before_action :load_result_and_parent
-    before_action :check_manage_permissions
 
     def move_targets
       targets = @parent.results
@@ -24,7 +23,7 @@ module ResultElements
       current_team_switch(@parent.team) if current_team != @parent.team
     end
 
-    def check_manage_permissions
+    def check_manage_result_permissions
       render_403 unless can_manage_result?(@result)
     end
 
@@ -43,8 +42,7 @@ module ResultElements
     end
 
     def render_result_orderable_element(orderable)
-      result_orderable_element = orderable.result_orderable_element
-      render json: result_orderable_element, serializer: ResultOrderableElementSerializer, user: current_user
+      render json: orderable, serializer: ResultOrderableElementSerializer, user: current_user
     end
 
     def log_result_activity(element_type_of, message_items)

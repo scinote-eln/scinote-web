@@ -445,7 +445,7 @@ class TeamImporter
       repository.restored_by_id = find_user(repository.restored_by_id)
       repository.discarded_by_id = find_user(repository.discarded_by_id)
       repository.repository_template_id = nil
-      repository.skip_user_assignments = true
+      repository.skip_user_assignments = true unless snapshots
       repository.save!
 
       create_user_assignments(repository_json['user_assignments'], repository)
@@ -809,6 +809,9 @@ class TeamImporter
       step.last_modified_by_id =
         user_id || find_user(step.last_modified_by_id)
       step.protocol_id = protocol.id
+      step.archived_by_id = find_user(step.archived_by_id)
+      step.restored_by_id = find_user(step.restored_by_id)
+      step.original_protocol_id = @protocol_mappings[step.original_protocol_id] if step.original_protocol_id
       step.save!
       @step_mappings[orig_step_id] = step.id
       @step_counter += 1
@@ -828,6 +831,8 @@ class TeamImporter
           orderable = StepText.new(element_json['step_text'])
           orig_step_text_id = orderable.id
           orderable.step_id = step.id
+          orderable.archived_by_id = find_user(element_json['archived_by_id'])
+          orderable.restored_by_id = find_user(element_json['restored_by_id'])
           orderable.id = nil
           orderable.save!
           @step_text_mappings[orig_step_text_id] = orderable.id
@@ -836,6 +841,8 @@ class TeamImporter
           orig_table_id = table.id
           table.id = nil
           table.created_by_id = user_id || find_user(table.created_by_id)
+          table.archived_by_id = find_user(element_json['archived_by_id'])
+          table.restored_by_id = find_user(element_json['restored_by_id'])
           table.last_modified_by_id =
             user_id || find_user(table.last_modified_by_id)
           table.team = protocol.team
@@ -901,6 +908,8 @@ class TeamImporter
           orderable = ResultText.new(element_json['result_text'])
           orig_result_text_id = orderable.id
           orderable.result_id = result.id
+          orderable.archived_by_id = find_user(element_json['archived_by_id'])
+          orderable.restored_by_id = find_user(element_json['restored_by_id'])
           orderable.id = nil
           orderable.save!
           @result_text_mappings[orig_result_text_id] = orderable.id
@@ -912,12 +921,15 @@ class TeamImporter
           table.last_modified_by_id =
             user_id || find_user(table.last_modified_by_id)
           table.team = parent.team
+          table.archived_by_id = find_user(element_json['archived_by_id'])
+          table.restored_by_id = find_user(element_json['restored_by_id'])
           table.contents = Base64.decode64(table.contents)
           table.data_vector = Base64.decode64(table.data_vector)
           table.save!
           @table_mappings[orig_table_id] = table.id
           orderable = ResultTable.create!(result: result, table: table)
         end
+
         ResultOrderableElement.create!(
           position: element_json['position'],
           result: result,
@@ -944,6 +956,8 @@ class TeamImporter
     orig_asset_id = asset.id
     asset.id = nil
     asset.created_by_id = user_id || find_user(asset.created_by_id)
+    asset.archived_by_id = find_user(asset.archived_by_id)
+    asset.restored_by_id = find_user(asset.restored_by_id)
     asset.last_modified_by_id =
       user_id || find_user(asset.last_modified_by_id)
     asset.team = team
@@ -964,6 +978,8 @@ class TeamImporter
         user_id || find_user(checklist.created_by_id)
       checklist.last_modified_by_id =
         user_id || find_user(checklist.last_modified_by_id)
+      checklist.archived_by_id = find_user(checklist.archived_by_id)
+      checklist.restored_by_id = find_user(checklist.restored_by_id)
       checklist.save!
       @checklist_mappings[orig_checklist_id] = checklist.id
       checklist_json['checklist_items'].each do |checklist_item_json|

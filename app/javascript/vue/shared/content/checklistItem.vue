@@ -56,7 +56,7 @@
         </div>
       </div>
     </div>
-    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @close="closeDeleteModal"/>
+    <deleteElementModal v-if="confirmingDelete" :inRepository="true" @confirm="deleteElement" @close="closeDeleteModal"/>
   </div>
 </template>
 
@@ -107,6 +107,7 @@ export default {
   computed: {
     element() { // remap and alias to work with delete mixin
       return ({
+        id: this.checklistItem.id,
         attributes: {
           orderable: this.checklistItem.attributes,
           position: this.checklistItem.attributes.position
@@ -165,7 +166,7 @@ export default {
       if (this.deleteUrl) {
         this.deleteElement();
       } else {
-        this.$emit('removeItem', this.checklistItem.attributes.position);
+        this.$emit('removeItem', this.checklistItem.id);
       }
     },
     update(withKey) {

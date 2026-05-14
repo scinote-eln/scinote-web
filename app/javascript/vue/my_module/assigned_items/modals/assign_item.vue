@@ -6,7 +6,7 @@
           <button
             type="button"
             class="close"
-            data-dismiss="modal"
+            @click="close"
             aria-label="Close"
             :data-e2e="`e2e-BT-${e2eValue}-close`"
           >
@@ -34,7 +34,7 @@
           <button
             type="button"
             class="btn btn-secondary"
-            data-dismiss="modal"
+            @click="close"
             :data-e2e="`e2e-BT-${e2eValue}-cancel`"
           >
             {{ i18n.t('general.cancel') }}
@@ -49,7 +49,7 @@
           <button
             type="button"
             class="close"
-            data-dismiss="modal"
+            @click="close"
             aria-label="Close"
             :data-e2e="`e2e-BT-${e2eValue}-close`"
           >
@@ -102,7 +102,9 @@ export default {
       selectedRepositoryId: null,
       rowIds: [],
       downstreamModules: [],
-      downstreamMode: false
+      downstreamMode: false,
+      sciModal: true,
+      modalLevel: 'high'
     };
   },
   computed: {

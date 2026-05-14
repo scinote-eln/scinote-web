@@ -8,7 +8,6 @@ import RepositoryItemRelationshipsModal from '../../vue/item_relationships/Repos
 
 const app = createApp({});
 app.component('RepositoryItemRelationshipsModal', RepositoryItemRelationshipsModal);
-app.use(RepositoryItemRelationshipsModal);
 app.component('PerfectScrollbar', PerfectScrollbar);
 app.directive('click-outside', vOnClickOutside);
 app.config.globalProperties.i18n = window.I18n;

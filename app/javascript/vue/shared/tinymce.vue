@@ -180,6 +180,12 @@ export default {
     },
     initCodeHighlight() {
       this.$nextTick(() => {
+        if (typeof Prism === 'undefined') {
+          setTimeout(() => {
+            this.initCodeHighlight();
+          }, 100);
+          return;
+        }
         Prism.highlightAllUnder(this.$el);
       });
     }

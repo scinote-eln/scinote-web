@@ -4,6 +4,7 @@ class ResultText < ApplicationRecord
   include TinyMceImages
   include SearchableModel
   include ObservableModel
+  include ArchivableModel
   include ActionView::Helpers::TextHelper
 
   SEARCHABLE_ATTRIBUTES = ['result_texts.name', 'result_texts.text'].freeze
@@ -14,9 +15,14 @@ class ResultText < ApplicationRecord
   validates :text, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
 
   belongs_to :result, inverse_of: :result_texts, touch: true, class_name: 'ResultBase'
+  belongs_to :archived_by, class_name: 'User', optional: true
+  belongs_to :restored_by, class_name: 'User', optional: true
   has_one :result_orderable_element, as: :orderable, dependent: :destroy
 
+  after_save :manage_orderable_element_on_archive, if: -> { saved_change_to_archived? }
+
   delegate :team, to: :result
+  delegate :created_at, to: :result_orderable_element
 
   def duplicate(result, position = nil)
     ActiveRecord::Base.transaction do
@@ -49,5 +55,13 @@ class ResultText < ApplicationRecord
   # Override for ObservableModel
   def changed_by
     result.last_modified_by || result.user
+  end
+
+  def manage_orderable_element_on_archive
+    if archived?
+      result_orderable_element&.destroy
+    elsif result_orderable_element.blank?
+      create_result_orderable_element!(result: result, position: result.next_element_position)
+    end
   end
 end

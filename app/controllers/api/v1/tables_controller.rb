@@ -10,7 +10,9 @@ module Api
       before_action :load_table_for_managing, only: %i(update destroy)
 
       def index
-        tables = timestamps_filter(@step.tables).page(params.dig(:page, :number))
+        tables = timestamps_filter(@step.tables)
+        tables = archived_filter(tables, default_to_active: true)
+        tables = tables.page(params.dig(:page, :number))
                                                 .per(params.dig(:page, :size))
 
         render jsonapi: tables, each_serializer: TableSerializer
@@ -27,7 +29,7 @@ module Api
         @step.with_lock do
           table.save!
           @step.step_orderable_elements.create!(
-            position: @step.step_orderable_elements.size,
+            position: @step.next_element_position,
             orderable: table.step_table
           )
         end

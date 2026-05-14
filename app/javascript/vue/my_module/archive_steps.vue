@@ -1,0 +1,161 @@
+<template>
+  <div>
+    <ArchiveToolbar
+      :mode="'steps'"
+      :sort="sort"
+      :objects="steps"
+      :objectsCollapsed="stepCollapsed"
+      @setSort="setSort"
+      @setFilters="setFilters"
+      @expandAll="expandSteps"
+      @collapseAll="collapseSteps"
+      @update:mode="$emit('update:mode', $event)"
+    />
+    <div class="steps-wrapper">
+      <div
+        :class="{ 'tw-hidden': loadingOverlay }"
+        class="steps-list">
+        <Step v-for="step in steps" :key="step.id + '-' + (step._updateKey || '')"
+          ref="steps"
+          :step="step"
+          :protocolId="protocolId"
+          @step:deleted="removeStep"
+          @step:restored="restoreStep"
+          @step:collapsed="checkStepsState"
+          @step:empty="removeStep"
+        />
+        <div v-if="!loadingOverlay && steps.length === 0" class="px-4 py-6 bg-white my-4 text-gray-500">
+          {{ i18n.t('protocols.steps.no_steps_placeholder') }}
+        </div>
+      </div>
+      <div v-if="loadingOverlay" class="text-center h-20 flex items-center justify-center">
+        <div class="sci-loader"></div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from '../../packs/custom_axios.js';
+import Step from '../protocol/archived_step.vue';
+import StepCollapseState from '../protocol/mixins/step_collapse_state.js';
+import ArchiveToolbar from './archive_toolbar.vue';
+
+import {
+  steps_path,
+} from '../../routes.js';
+
+export default {
+  name: 'ArchiveSteps',
+  props: {
+    protocolId: {
+      required: true
+    },
+  },
+  mixins: [StepCollapseState],
+  data() {
+    return {
+      steps: [],
+      sort: null,
+      filters: {},
+      nextPageUrl: null,
+      loadingOverlay: false,
+      anchorId: null
+    };
+  },
+  components: {
+    Step,
+    ArchiveToolbar
+  },
+  created() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.anchorId = urlParams.get('step_id');
+    this.loadingOverlay = true;
+  },
+  computed: {
+    stepsUrl() {
+      return steps_path({ protocol_id: this.protocolId, view_mode: 'archived' });
+    }
+  },
+  mounted() {
+    this.loadSteps();
+  },
+  methods: {
+    loadSteps() {
+      if (this.loadingOverlay) {
+        const params = this.sort ? { ...this.filters, sort: this.sort } : { ...this.filters };
+        params['format'] = 'json';
+        axios.get(this.stepsUrl, { params }).then((response) => {
+          let result = response.data
+          this.steps = result.data;
+          this.steps.forEach((step) => {
+            step.attachments = [];
+            step.relationships.assets.data.forEach((asset) => {
+              step.attachments.push(result.included.find((a) => a.id === asset.id && a.type === 'assets'));
+            });
+
+            step.elements = [];
+            step.relationships.step_orderable_elements.data.forEach((element) => {
+              step.elements.push(result.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
+            });
+          });
+          this.sort = response.data.meta.sort;
+
+          if (this.anchorId) {
+            this.scrollToStep();
+          }
+
+          this.loadingOverlay = false;
+
+          this.$nextTick(() => {
+            this.checkStepsState();
+          });
+        });
+      }
+    },
+    scrollToStep() {
+      this.$nextTick(() => {
+        if (this.anchorId) {
+          const step = this.$refs.steps.find((child) => child.step?.id === this.anchorId);
+          if (step) {
+            step.$refs.stepContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          this.anchorId = null;
+        }
+      });
+    },
+    setSort(sort) {
+      this.sort = sort;
+      this.loadingOverlay = true;
+      this.loadSteps();
+    },
+    setFilters(filters) {
+      this.filters = filters;
+      this.loadingOverlay = true;
+      this.loadSteps();
+    },
+    restoreStep(step_id, stepData) {
+      if (stepData.data) {
+        const stepIndex = this.steps.findIndex((r) => r.id === step_id);
+        if (stepIndex !== -1) {
+          stepData.data.attachments = [];
+          stepData.data.relationships.assets.data.forEach((asset) => {
+            stepData.data.attachments.push(stepData.included.find((a) => a.id === asset.id && a.type === 'assets'));
+          });
+          stepData.data.elements = [];
+          stepData.data.relationships.step_orderable_elements.data.forEach((element) => {
+            stepData.data.elements.push(stepData.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
+          });
+          stepData.data._updateKey = Date.now();
+          this.steps.splice(stepIndex, 1, stepData.data);
+        }
+      } else {
+        this.removeStep(step_id);
+      }
+    },
+    removeStep(step_id) {
+      this.steps = this.steps.filter((r) => r.id != step_id);
+    },
+  }
+};
+</script>

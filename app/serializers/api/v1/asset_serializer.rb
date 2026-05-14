@@ -6,7 +6,7 @@ module Api
       include Rails.application.routes.url_helpers
 
       type :attachments
-      attributes :id, :file_name, :file_size, :file_type, :file_url
+      attributes :id, :file_name, :file_size, :file_type, :file_url, :archived
       belongs_to :step, serializer: StepSerializer
 
       include TimestampableModel

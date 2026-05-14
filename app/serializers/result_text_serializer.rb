@@ -6,7 +6,7 @@ class ResultTextSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :urls, :text_view, :icon, :placeholder, :name, :parent_type
+  attributes :id, :text, :urls, :text_view, :icon, :placeholder, :name, :parent_type, :archived, :archived_by, :archived_on
 
   def updated_at
     object.updated_at.to_i
@@ -29,6 +29,14 @@ class ResultTextSerializer < ActiveModel::Serializer
                      team: team)
   end
 
+  def archived_by
+    object.archived_by&.full_name
+  end
+
+  def archived_on
+    I18n.l(object.archived_on, format: :full) if object.archived_on.present?
+  end
+
   def text
     sanitize_input(object.tinymce_render('text'))
   end
@@ -41,16 +49,22 @@ class ResultTextSerializer < ActiveModel::Serializer
     return {} if object.destroyed?
 
     user = scope[:user] || @instance_options[:user]
-
-    return {} unless can_manage_result?(user, object.result)
-
     result = object.result
-    {
-      duplicate_url: duplicate_result_text_path(result, object),
-      delete_url: result_text_path(result, object),
-      update_url: result_text_path(result, object),
-      move_targets_url: move_targets_result_text_path(result, object),
-      move_url: move_result_text_path(result, object)
-    }
+    url_list = {}
+
+    if can_manage_result_text?(user, object)
+      url_list.merge!({
+                        duplicate_url: duplicate_result_text_path(result, object),
+                        update_url: result_text_path(result, object),
+                        move_targets_url: move_targets_result_text_path(result, object),
+                        move_url: move_result_text_path(result, object)
+                      })
+    end
+
+    url_list[:archive_url] = archive_result_text_path(result, object) if can_archive_result_text?(user, object)
+    url_list[:restore_url] = restore_result_text_path(result, object) if can_restore_result_text?(user, object)
+    url_list[:delete_url] = result_text_path(result, object) if can_delete_result_text?(user, object)
+
+    url_list
   end
 end

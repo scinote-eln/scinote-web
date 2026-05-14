@@ -16,6 +16,15 @@ class Result < ResultBase
 
   delegate :team, to: :my_module
 
+  scope :archived_or_having_archived, lambda {
+    with_elements = left_outer_joins(:result_texts, :assets, :tables)
+    with_elements.archived.or(
+      with_elements.where(result_texts: { archived: true })
+                  .or(with_elements.where(assets: { archived: true }))
+                  .or(with_elements.where(tables: { archived: true }))
+    )
+  }
+
   def self.search(user,
                   include_archived,
                   query = nil,
@@ -35,20 +44,30 @@ class Result < ResultBase
     results = results.with(readable_results: readable_results)
                      .joins('INNER JOIN "readable_results" ON "readable_results"."id" = "results"."id"')
 
-    results.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
+    results.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query, { include_archived: include_archived })
   end
 
-  def self.where_children_attributes_like(query, _options = {})
+  def self.where_children_attributes_like(query, options = {})
     unscoped_readable_results = unscoped.joins('INNER JOIN "readable_results" ON "readable_results"."id" = "results"."id"').select(:id, :type)
-    unscoped.from(
-      "(#{unscoped_readable_results.joins(:result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{unscoped_readable_results.joins(result_tables: :table).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      UNION
-      #{unscoped_readable_results.joins(:result_comments).where_attributes_like(ResultComment::SEARCHABLE_ATTRIBUTES, query).to_sql}
-      ) AS results",
-      :results
-    )
+    if options[:include_archived]
+      text_sql = unscoped_readable_results.joins(:result_texts).where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query).to_sql
+
+      table_sql = unscoped_readable_results.joins(result_tables: :table).where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query).to_sql
+    else
+      text_sql = unscoped_readable_results.joins(:result_texts)
+                                          .where(result_texts: { archived: false })
+                                          .where_attributes_like(ResultText::SEARCHABLE_ATTRIBUTES, query)
+                                          .to_sql
+
+      table_sql = unscoped_readable_results.joins(result_tables: :table)
+                                           .where(tables: { archived: false })
+                                           .where_attributes_like(Table::SEARCHABLE_ATTRIBUTES, query)
+                                           .to_sql
+    end
+
+    comment_sql = unscoped_readable_results.joins(:result_comments).where_attributes_like(ResultComment::SEARCHABLE_ATTRIBUTES, query).to_sql
+
+    unscoped.from("(#{text_sql} UNION #{table_sql} UNION #{comment_sql}) AS results", :results)
   end
 
   def self.readable_by_user(user, teams)
@@ -59,6 +78,25 @@ class Result < ResultBase
     return self if teams.blank?
 
     joins(my_module: { experiment: :project }).where(my_module: { experiments: { projects: { team: teams } } })
+  end
+
+  def active_elements
+    result_texts.active + tables.active
+  end
+
+  def active_elements_ordered
+    (
+      result_texts.joins(:result_orderable_element).active.select('result_texts.*, result_orderable_elements.position as position') +
+      tables.joins(result_table: :result_orderable_element).active.select('tables.*, result_orderable_elements.position as position')
+    ).sort_by(&:position)
+  end
+
+  def archived_elements
+    result_texts.archived + tables.archived
+  end
+
+  def has_archived_element?
+    result_texts.archived.any? || tables.archived.any?
   end
 
   def parent

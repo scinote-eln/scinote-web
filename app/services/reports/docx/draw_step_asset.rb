@@ -23,10 +23,17 @@ module Reports::Docx::DrawStepAsset
       link I18n.t('projects.reports.elements.download'), asset_url do
         italic true
       end
+      text "| #{I18n.t('search.index.archived')} ", bold: true if asset.archived?
       unless settings['exclude_timestamps']
-        text ' '
-        text I18n.t('projects.reports.elements.step_asset.user_time',
-                    timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+        text '| '
+        if asset.archived?
+          text I18n.t('projects.reports.elements.archived_metadata',
+                      datetime: I18n.l(asset.archived_on, format: :full),
+                      user: asset.archived_by&.full_name), color: color[:gray]
+        else
+          text I18n.t('projects.reports.elements.step_asset.user_time',
+                      timestamp: I18n.l(timestamp, format: :full)), color: color[:gray]
+        end
       end
     end
   end

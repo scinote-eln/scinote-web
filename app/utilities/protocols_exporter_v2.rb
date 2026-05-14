@@ -35,10 +35,10 @@ module ProtocolsExporterV2
     protocol_xml << "<updated_at>#{protocol.updated_at.as_json}</updated_at>\n"
 
     # Steps
-    if protocol.steps.any?
+    if protocol.steps.active.any?
       protocol_xml <<
         "<steps>\n" \
-        "#{protocol.steps.order(:position).map { |s| step_xml(s) }.join}" \
+        "#{protocol.steps.active.order(:position).map { |s| step_xml(s) }.join}" \
         "</steps>\n"
     end
 
@@ -54,9 +54,9 @@ module ProtocolsExporterV2
 
   def export_result_templates(protocol)
     if protocol.in_module?
-      protocol.my_module.results.map { |result| result_template_xml(result) }.join
+      protocol.my_module.results.active.map { |result| result_template_xml(result) }.join
     else
-      protocol.results.map { |result|  result_template_xml(result) }.join
+      protocol.results.map { |result| result_template_xml(result) }.join
     end
   end
 
@@ -66,7 +66,7 @@ module ProtocolsExporterV2
           "<name>#{result.name}</name>\n"
 
     # Assets
-    xml << "<assets>\n#{result.assets.map { |a| asset_xml(a) }.join}</assets>\n" if result.assets.any?
+    xml << "<assets>\n#{result.assets.active.map { |a| asset_xml(a) }.join}</assets>\n" if result.assets.active.any?
 
     if result.result_orderable_elements.any?
       xml << "<resultElements>\n"
@@ -97,7 +97,7 @@ module ProtocolsExporterV2
           "<name>#{step.name}</name>\n"
 
     # Assets
-    xml << "<assets>\n#{step.assets.map { |a| asset_xml(a) }.join}</assets>\n" if step.assets.any?
+    xml << "<assets>\n#{step.assets.active.map { |a| asset_xml(a) }.join}</assets>\n" if step.assets.active.any?
 
     if step.step_orderable_elements.any?
       xml << "<stepElements>\n"

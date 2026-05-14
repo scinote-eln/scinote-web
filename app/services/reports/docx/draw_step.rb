@@ -23,13 +23,20 @@ module Reports::Docx::DrawStep
             text I18n.t('protocols.steps.uncompleted'), color: color[:gray], bold: true
           end
         end
+        text " | #{I18n.t('search.index.archived')} ", bold: true, color: color[:gray] if step.archived?
         unless settings['exclude_timestamps']
-          text ' | ' unless settings['exclude_task_metadata']
-          text I18n.t(
-            "projects.reports.elements.step.#{step_type_str}.user_time",
-            user: user.full_name,
-            timestamp: I18n.l(timestamp, format: :full)
-          ), color: color[:gray]
+          text ' | '
+          if step.archived?
+            text I18n.t('projects.reports.elements.archived_metadata',
+                        datetime: I18n.l(step.archived_on, format: :full),
+                        user: step.archived_by&.full_name), color: color[:gray]
+          else
+            text I18n.t(
+              "projects.reports.elements.step.#{step_type_str}.user_time",
+              user: user.full_name,
+              timestamp: I18n.l(timestamp, format: :full)
+            ), color: color[:gray]
+          end
         end
         if !settings['exclude_task_metadata'] && step.results.size.positive?
           text ' | '
@@ -40,20 +47,26 @@ module Reports::Docx::DrawStep
       end
     end
 
-    step.step_orderable_elements.order(:position).each do |element|
-      case element.orderable_type
-      when 'StepTable'
-        handle_step_table(element.orderable.table)
-      when 'Checklist'
-        handle_checklist(element.orderable)
-      when 'StepText'
+    elements = if @settings.dig('task', 'protocol', 'archived_steps')
+                 step.active_elements_ordered + step.archived_elements
+               else
+                 step.active_elements_ordered
+               end
+    elements.each do |element|
+      case element
+      when Table
+        handle_step_table(element)
+      when Checklist
+        handle_checklist(element)
+      when StepText
         handle_step_text(element)
-      when 'FormResponse'
+      when FormResponse
         handle_step_forms(element)
       end
     end
     if @settings.dig('task', 'protocol', 'step_files')
-      step.assets.each do |asset|
+      assets = @settings.dig('task', 'protocol', 'archived_steps') ? step.assets : step.assets.active
+      assets.each do |asset|
         draw_step_asset(asset)
       end
     end
@@ -80,11 +93,11 @@ module Reports::Docx::DrawStep
     draw_step_checklist(checklist) if @settings.dig('task', 'protocol', 'step_checklists')
   end
 
-  def handle_step_text(element)
-    draw_step_text(element) if @settings.dig('task', 'protocol', 'step_texts')
+  def handle_step_text(step_text)
+    draw_step_text(step_text) if @settings.dig('task', 'protocol', 'step_texts')
   end
 
-  def handle_step_forms(element)
-    draw_step_forms(element) if @settings.dig('task', 'protocol', 'step_forms')
+  def handle_step_forms(form_response)
+    draw_step_forms(form_response) if @settings.dig('task', 'protocol', 'step_forms')
   end
 end

@@ -165,7 +165,7 @@ export default {
         field: 'name',
         headerName: this.i18n.t('libraries.index.table.name'),
         sortable: true,
-        notSelectable: true,
+        suppressColumnsToolPanel: true,
         cellRenderer: 'NameRenderer'
       },
       {
@@ -198,7 +198,7 @@ export default {
           sortable: true,
           cellRenderer: 'UsersRenderer',
           minWidth: 210,
-          notSelectable: true
+          suppressColumnsToolPanel: true
       }, {
         field: 'created_by',
         headerName: this.i18n.t('libraries.index.table.added_by'),

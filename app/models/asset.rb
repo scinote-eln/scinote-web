@@ -8,6 +8,8 @@ class Asset < ApplicationRecord
   include ActiveStorageConcerns
   include ActiveStorageHelper
   include VersionedAttachments
+  include ArchivableModel
+  include ObservableModel
 
   require 'tempfile'
   # Lock duration set to 30 minutes
@@ -30,6 +32,8 @@ class Asset < ApplicationRecord
   belongs_to :created_by, class_name: 'User', optional: true
   belongs_to :last_modified_by, class_name: 'User', optional: true
   belongs_to :team, optional: true
+  belongs_to :archived_by, class_name: 'User', optional: true
+  belongs_to :restored_by, class_name: 'User', optional: true
   has_one :step_asset, inverse_of: :asset, dependent: :destroy
   has_one :step, through: :step_asset, touch: true
   has_one :result_asset, inverse_of: :asset, dependent: :destroy
@@ -65,6 +69,7 @@ class Asset < ApplicationRecord
     assets_in_steps = Asset.joins(:step)
                            .where(steps: { protocol: Protocol.search(user, include_archived, nil, teams) })
                            .select(:id)
+    assets_in_steps = assets_in_steps.where(archived: false, steps: { archived: false }) unless include_archived
 
     assets_in_template_steps =
       Asset.joins(:step)
@@ -74,6 +79,8 @@ class Asset < ApplicationRecord
     assets_in_results = Asset.joins(:result)
                              .where(results: { id: Result.search(user, include_archived, nil, teams) })
                              .select(:id)
+
+    assets_in_results = assets_in_results.where(archived: false, results: { archived: false }) unless include_archived
 
     assets_in_inventories = Asset.joins(repository_cell: { repository_column: :repository })
                                  .where(repositories: {
@@ -476,5 +483,9 @@ class Asset < ApplicationRecord
 
   def reset_file_processing
     self.file_processing = false
+  end
+
+  def changed_by
+    last_modified_by
   end
 end

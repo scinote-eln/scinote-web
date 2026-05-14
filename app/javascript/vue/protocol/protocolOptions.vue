@@ -109,6 +109,17 @@
             }}</span>
           </a>
         </li>
+        <li v-if="canArchiveSteps">
+          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
+            data-turbolinks="false"
+            @click.prevent="openStepsArchivingModal()"
+            data-e2e="e2e-DO-task-protocol-actions-archiveAllSteps"
+          >
+            <span>{{
+              i18n.t("my_modules.protocol.options_dropdown.archive_steps")
+            }}</span>
+          </a>
+        </li>
         <li v-if="canDeleteSteps">
           <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             data-turbolinks="false"
@@ -122,22 +133,27 @@
         </li>
       </ul>
     </div>
-    <DeleteStepsModals v-if="stepsDeleting" @confirm="deleteSteps" @close="closeStartStepsDeletingModal" />
-    <AddStepsModal v-if="stepsAdding" :protocol="protocol" @confirm="addSteps" @close="closeAddStepsModal" />
+    <Teleport to="body">
+      <DeleteStepsModals v-if="stepsDeleting" @confirm="deleteSteps" @close="closeStartStepsDeletingModal" />
+      <ArchiveStepsModal v-if="stepsArchiving" @confirm="archiveSteps" @close="closeStepsArchivingModal" />
+      <AddStepsModal v-if="stepsAdding" :protocol="protocol" @confirm="addSteps" @close="closeAddStepsModal" />
+    </Teleport>
   </div>
 </template>
 
 <script>
 import DeleteStepsModals from './modals/delete_steps';
+import ArchiveStepsModal from './modals/archive_steps';
 import AddStepsModal from './modals/add_protocol_steps';
 
 export default {
 
   name: 'ProtocolOptions',
-  components: { DeleteStepsModals, AddStepsModal },
+  components: { DeleteStepsModals, ArchiveStepsModal, AddStepsModal },
   data() {
     return {
       stepsDeleting: false,
+      stepsArchiving: false,
       stepsAdding: false
     };
   },
@@ -147,6 +163,10 @@ export default {
       required: true
     },
     canDeleteSteps: {
+      type: Boolean,
+      required: true
+    },
+    canArchiveSteps: {
       type: Boolean,
       required: true
     },
@@ -176,6 +196,12 @@ export default {
     }
   },
   methods: {
+    openStepsArchivingModal() {
+      this.stepsArchiving = true;
+    },
+    closeStepsArchivingModal() {
+      this.stepsArchiving = false;
+    },
     openStepsDeletingModal() {
       this.stepsDeleting = true;
     },
@@ -216,6 +242,9 @@ export default {
     },
     deleteSteps() {
       this.$emit('protocol:delete_steps');
+    },
+    archiveSteps() {
+      this.$emit('protocol:archive_steps');
     },
     addSteps(steps) {
       this.$emit('protocol:add_protocol_steps', steps);

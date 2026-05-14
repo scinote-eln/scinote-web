@@ -34,13 +34,24 @@
                 <span class="sci-toggle-checkbox-label"></span>
               </span>
             </div>
+            <div v-if="needsSaveBeforeIndividualAssign" class="w-full z-10  absolute top-24 sci-toast sci-toast-info !py-2 ">
+              {{ i18n.t('modal_share.save_before_individual_assign') }}
+            </div>
             <template v-for="team in shareableTeams">
-              <div class="col-span-2 flex items-center h-9 gap-1">
-                <span class="sci-checkbox-container" :class="{'opacity-0 pointer-events-none': sharedWithAllRead}">
-                  <input :disabled="!team.attributes.readable" type="checkbox" class="sci-checkbox" v-model="team.attributes.private_shared_with" />
+              <div class="col-span-2 flex items-center h-9 gap-1 relative" :class="{'blur-sm': needsSaveBeforeIndividualAssign}">
+                <span class="sci-checkbox-container"
+                      :class="{'opacity-0 pointer-events-none': sharedWithAllRead || needsSaveBeforeIndividualAssign}"
+                      :title="needsSaveBeforeIndividualAssign ? i18n.t('modal_share.save_before_individual_assign') : ''">
+                  <input :disabled="!team.attributes.readable || needsSaveBeforeIndividualAssign"
+                         type="checkbox"
+                         class="sci-checkbox"
+                         v-model="team.attributes.private_shared_with" />
                   <span class="sci-checkbox-label"></span>
                 </span>
-                {{ team.attributes.name || `(${i18n.t('teams.private_team')})` }}
+                <span>
+                  {{ team.attributes.name || `(${i18n.t('teams.private_team')})` }}
+                </span>
+                <span v-if="needsSaveBeforeIndividualAssign" class="absolute left-0 right-0 top-0 bottom-0 cursor-not-allowed"></span>
               </div>
               <div class="flex justify-center items-center">
                 <span v-if="team.attributes.private_shared_with"
@@ -100,6 +111,9 @@ export default {
       return this.shareableTeams.some((t) => {
         return this.initialState.shareableTeams.find((it) => t.id === it.id).attributes.private_shared_with && !t.attributes.private_shared_with;
       });
+    },
+    needsSaveBeforeIndividualAssign() {
+      return this.initialState.sharedWithAllRead && !this.sharedWithAllRead;
     }
   },
   methods: {
@@ -133,6 +147,13 @@ export default {
           'modal_share.success_message',
           { object_name: this.object.name }
         ), 'success');
+
+        this.initialState = {
+          shareableTeams: JSON.parse(JSON.stringify(this.shareableTeams)),
+          sharedWithAllRead: this.sharedWithAllRead,
+          sharedWithAllWrite: this.sharedWithAllWrite
+        };
+
         this.$emit('share');
       });
     }

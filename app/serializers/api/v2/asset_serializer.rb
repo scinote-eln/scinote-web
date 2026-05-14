@@ -5,7 +5,7 @@ module Api
     class AssetSerializer < ActiveModel::Serializer
       type :attachments
 
-      attributes :id, :file_name, :file_size, :file_type, :file_url
+      attributes :id, :file_name, :file_size, :file_type, :file_url, :archived
 
       include TimestampableModel
 

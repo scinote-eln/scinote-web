@@ -4,7 +4,7 @@ module Api
   module V1
     class TableSerializer < ActiveModel::Serializer
       type :tables
-      attributes :id, :name, :contents, :metadata, :position
+      attributes :id, :name, :contents, :metadata, :position, :archived
 
       include TimestampableModel
 

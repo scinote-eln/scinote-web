@@ -218,12 +218,14 @@ export default {
       allUsers: [],
       users: [],
       startDate: null,
-      dueDate: null,
-      usersRenderer: usersRenderer,
+      dueDate: null
     };
   },
   mixins: [escapeHtml],
   computed: {
+    usersRenderer() {
+      return usersRenderer
+    },
     formattedUsers() {
       return this.allUsers.map((user) => (
         [

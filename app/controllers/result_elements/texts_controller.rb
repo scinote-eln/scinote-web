@@ -7,7 +7,14 @@ module ResultElements
     include InputSanitizeHelper
     include Rails.application.routes.url_helpers
 
-    before_action :load_result_text, only: %i(update destroy duplicate move)
+    # rubocop:disable Rails/LexicallyScopedActionFilter
+    before_action :check_manage_result_permissions, only: %i(create move_targets)
+    before_action :load_result_text, only: %i(update destroy duplicate move archive restore)
+    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets)
+    before_action :check_archive_permissions, only: :archive
+    before_action :check_restore_permissions, only: :restore
+    before_action :check_delete_permissions, only: :destroy
+    # rubocop:enable Rails/LexicallyScopedActionFilter
 
     def create
       result_text = ResultText.build
@@ -44,7 +51,7 @@ module ResultElements
 
       ActiveRecord::Base.transaction do
         @result_text.update!(result: target)
-        @result_text.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
+        @result_text.result_orderable_element.update!(result: target, position: target.next_element_position)
         @result.normalize_elements_position
         render json: @result_text, serializer: ResultTextSerializer, user: current_user
 
@@ -69,6 +76,28 @@ module ResultElements
       else
         head :unprocessable_entity
       end
+    end
+
+    def archive
+      ActiveRecord::Base.transaction do
+        @result_text.archive!(current_user)
+        log_result_activity(:text_archived, { text_name: @result_text.name })
+      end
+
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def restore
+      ActiveRecord::Base.transaction do
+        @result_text.restore!(current_user)
+        log_result_activity(:text_restored, { text_name: @result_text.name })
+      end
+
+      render json: { message: I18n.t('protocols.steps.modals.restore_modal.restore_text') }
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
     end
 
     def duplicate
@@ -96,11 +125,27 @@ module ResultElements
       return render_404 unless @result_text
     end
 
+    def check_manage_permissions
+      render_403 unless can_manage_result_text?(@result_text)
+    end
+
+    def check_archive_permissions
+      render_403 unless can_archive_result_text?(@result_text)
+    end
+
+    def check_restore_permissions
+      render_403 unless can_restore_result_text?(@result_text)
+    end
+
+    def check_delete_permissions
+      render_403 unless can_delete_result_text?(@result_text)
+    end
+
     def result_annotation_notification(old_text = nil)
       smart_annotation_notification(
         old_text: old_text,
         new_text: @result_text.text,
-        subject: @result,
+        subject: @result_text.result_orderable_element,
         title: t('notifications.result_annotation_title',
                  result: @result.name,
                  user: current_user.full_name),

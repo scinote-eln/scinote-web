@@ -1,0 +1,128 @@
+<template>
+  <div  class="archive-toolbar sticky top-0 transition p-3 flex justify-between bg-sn-white">
+    <div class="archive-toolbar__left flex items-center">
+      <div class="p-0.5 bg-sn-super-light-grey flex items-center gap-2 rounded cursor-pointer text-xs">
+        <div
+          class="h-10 flex items-center px-4 text-base"
+          :class="mode === 'steps' ? 'bg-sn-white rounded-sm font-semibold shadow' : 'text-sn-grey-700'"
+          @click="updateMode('steps')"
+        >
+          {{ i18n.t('my_modules.archive.steps') }}
+        </div>
+        <div
+          class="h-10 flex items-center px-4 text-base"
+          :class="mode === 'results' ? 'bg-sn-white rounded-sm font-semibold shadow' : 'text-sn-grey-700'"
+          @click="updateMode('results')"
+        >
+          {{ i18n.t('my_modules.archive.results') }}
+        </div>
+      </div>
+    </div>
+    <div class="archive-toolbar__right flex items-center [&_.sn-icon-filter]:!text-sn-blue">
+      <template v-if="objects.length > 0">
+        <button :title="i18n.t('protocols.steps.collapse_label')" v-if="!objectsCollapsed" class="btn btn-secondary icon-btn xl:!px-4" @click="collapseObjects" tabindex="0">
+          <i class="sn-icon sn-icon-collapse-all"></i>
+          <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.collapse_label") }}</span>
+        </button>
+        <button v-else  :title="i18n.t('protocols.steps.expand_label')" class="btn btn-secondary icon-btn xl:!px-4" @click="expandObjects" tabindex="0">
+          <i class="sn-icon sn-icon-expand-all"></i>
+          <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.expand_label") }}</span>
+        </button>
+      </template>
+
+      <FilterDropdown :filters="filters" @applyFilters="setFilters" />
+      <MenuDropdown
+          :listItems="this.sortMenu"
+          :btnClasses="'btn btn-light icon-btn'"
+          :position="'right'"
+          :btnIcon="'sn-icon sn-icon-sort-down'"
+          @sort="setSort"
+        ></MenuDropdown>
+    </div>
+  </div>
+</template>
+
+<script>
+import FilterDropdown from '../shared/filters/filter_dropdown.vue';
+import MenuDropdown from '../shared/menu_dropdown.vue';
+
+const SORTS = [
+  'updated_at_asc',
+  'updated_at_desc',
+  'created_at_asc',
+  'created_at_desc',
+  'name_asc',
+  'name_desc'
+];
+
+export default {
+  props: {
+    mode: { type: String, required: true },
+    sort: { type: String, required: false },
+    objects: { type: Array, required: true },
+    objectsCollapsed: { type: Boolean, required: true }
+  },
+  data() {
+    return {
+      filters: null
+    };
+  },
+  components: {
+    FilterDropdown,
+    MenuDropdown,
+  },
+  created() {
+    this.filters = [
+      {
+        key: 'query',
+        type: 'Text',
+        label: this.i18n.t('my_modules.results.filters.query.label'),
+        placeholder: this.i18n.t('my_modules.results.filters.query.placeholder')
+      },
+      {
+        key: 'created_at',
+        type: 'DateRange',
+        label: this.i18n.t('my_modules.results.filters.created_at.label')
+      },
+      {
+        key: 'updated_at',
+        type: 'DateRange',
+        label: this.i18n.t('my_modules.results.filters.updated_at.label')
+      }
+    ];
+
+    this.sorts = SORTS;
+  },
+  computed: {
+    sortMenu() {
+      return this.sorts.map((sort) => ({
+        text: this.i18n.t(`my_modules.results.sorts.${sort}`),
+        emit: 'sort',
+        params: sort,
+        active: sort == this.sort
+      }));
+    }
+  },
+  methods: {
+    setSort(sort) {
+      this.$emit('setSort', sort);
+    },
+    setFilters(filters) {
+      this.$emit('setFilters', filters);
+    },
+    collapseObjects() {
+      this.$emit('collapseAll');
+    },
+    expandObjects() {
+      this.$emit('expandAll');
+    },
+    updateMode(mode) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('mode', mode);
+      window.history.replaceState({}, '', url);
+
+      this.$emit('update:mode', mode);
+    }
+  }
+}
+</script>

@@ -1,16 +1,13 @@
 <template>
   <div>
     <div :title="shareTitle" :data-html="true" data-toggle="tooltip" data-placement="left">
-      <button class="btn"
+      <button class="btn icon-btn"
               id="share-button"
               type="button"
               data-e2e="e2e-BT-tasks-shareTask"
               :class="[shareClass, {'disabled': !enabled}]"
               @click="openModal">
         <span class="sn-icon sn-icon-shared"></span>
-        <span class="text-sm">
-          {{ shareValue }}
-        </span>
       </button>
     </div>
     <div ref="modal">

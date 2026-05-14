@@ -1,7 +1,29 @@
 # frozen_string_literal: true
 
 class ResultSerializer < ResultBaseSerializer
-  attributes :my_module_id, :archived, :comments_count
+  attributes :my_module_id, :archived, :comments_count, :archived_by, :archived_on
+
+  def result_orderable_elements
+    return object.all_elements if object.archived?
+
+    view_mode = @instance_options[:view_mode]
+    if view_mode == 'archived'
+      object.archived_elements
+    else
+      object.active_elements
+    end
+  end
+
+  def assets
+    return object.assets if object.archived?
+
+    view_mode = @instance_options[:view_mode]
+    if view_mode == 'archived'
+      object.assets.archived
+    else
+      object.assets.active
+    end
+  end
 
   def collapsed
     result_states = current_user.user_settings.find_by(key: 'result_states')&.value || {}
@@ -9,30 +31,38 @@ class ResultSerializer < ResultBaseSerializer
   end
 
   def name
-    if archived
-      "(A) #{object.name}"
-    else
-      object.name
-    end
+    object.name
   end
 
   def archived
     object.archived?
   end
 
+  def attachments_manageble
+    @instance_options[:view_mode] == 'archived' ? false : can_manage_result?(object)
+  end
+
   def comments_count
     object.comments.count
   end
 
+  def archived_by
+    object.archived_by.full_name if object.archived_by.present?
+  end
+
+  def archived_on
+    I18n.l(object.archived_on, format: :full) if object.archived_on.present?
+  end
+
   def urls
-    urls_list = {
-      elements_url: elements_my_module_result_path(object.my_module, object),
-      attachments_url: assets_my_module_result_path(object.my_module, object)
+    view_mode = 'archived' if @instance_options[:view_mode]
+    url_list = {
+      elements_url: elements_my_module_result_path(object.my_module, object, view_mode: view_mode),
+      attachments_url: assets_my_module_result_path(object.my_module, object, view_mode: view_mode)
     }
 
     if can_manage_result?(object)
-      urls_list.merge!({
-                         archive_url: archive_my_module_result_path(object.my_module, object),
+      url_list.merge!({
                          update_url: my_module_result_path(object.my_module, object),
                          create_table_url: result_tables_path(object),
                          create_text_url: result_texts_path(object),
@@ -45,23 +75,18 @@ class ResultSerializer < ResultBaseSerializer
                            object.my_module, object
                          )
                        })
-    end
-
-    urls_list[:restore_url] = restore_my_module_result_path(object.my_module, object) if can_restore_result?(object)
-    urls_list[:delete_url] = my_module_result_path(object.my_module, object) if can_delete_result?(object)
-    if can_create_results?(object.my_module)
-      urls_list[:duplicate_url] =
-        duplicate_my_module_result_url(object.my_module, object)
-    end
-
-    if can_manage_result?(object)
       if object.pinned?
-        urls_list[:unpin_url] = unpin_my_module_result_path(object.my_module, object)
+        url_list[:unpin_url] = unpin_my_module_result_path(object.my_module, object)
       else
-        urls_list[:pin_url] = pin_my_module_result_path(object.my_module, object)
+        url_list[:pin_url] = pin_my_module_result_path(object.my_module, object)
       end
     end
 
-    urls_list
+    url_list[:archive_url] = archive_my_module_result_path(object.my_module, object) if can_archive_result?(object)
+    url_list[:restore_url] = restore_my_module_result_path(object.my_module, object) if can_restore_result?(object)
+    url_list[:delete_url] = my_module_result_path(object.my_module, object) if can_delete_result?(object)
+    url_list[:duplicate_url] = duplicate_my_module_result_url(object.my_module, object) if can_create_results?(object.my_module)
+
+    url_list
   end
 end

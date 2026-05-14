@@ -157,7 +157,7 @@ export default {
         cellRenderer: FavoriteRenderer,
         minWidth: 80,
         maxWidth: 80,
-        notSelectable: true
+        suppressColumnsToolPanel: true
       },
       {
         field: 'code',
@@ -239,7 +239,7 @@ export default {
       headerName: this.i18n.t('experiments.table.column.comments_html'),
       sortable: true,
       cellRenderer: CommentsRenderer,
-      notSelectable: true
+      suppressColumnsToolPanel: true
     });
 
     if (window.externalMyModuleColumns) {

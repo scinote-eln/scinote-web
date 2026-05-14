@@ -1,6 +1,4 @@
 <% result ||= report_element.result %>
-<% result_text = element.orderable %>
-<% timestamp = element.created_at %>
 <% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-result-element report-result-text-element">
   <div class="report-element-header">
@@ -10,10 +8,19 @@
           <%= truncate(result_text.name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
         </em>
       <% end %>
+      <% if result_text.archived? %>
+        <span class="label label-warning"><%= t('search.index.archived') %></span>
+      <% end %>
     </div>
     <% unless @settings['exclude_timestamps'] %>
       <div class="user-time">
-        <%= t("projects.reports.elements.result_text.user_time", timestamp: l(timestamp, format: :full)) %>
+        <% if result_text.archived? %>
+          <%= t("projects.reports.elements.archived_metadata",
+                user: result_text.archived_by&.full_name,
+                datetime: l(result_text.archived_on, format: :full)) %>
+        <% else %>
+          <%= t("projects.reports.elements.result_text.user_time", timestamp: l(result_text.created_at, format: :full)) %>
+        <% end %>
       </div>
     <% end %>
   </div>

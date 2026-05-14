@@ -102,7 +102,7 @@ export default {
           sortable: true,
           cellRenderer: 'UsersRenderer',
           minWidth: 210,
-          notSelectable: true
+          suppressColumnsToolPanel: true
         }, {
           field: 'published_by',
           headerName: this.i18n.t('forms.index.table.published_by'),

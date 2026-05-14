@@ -4,17 +4,18 @@ module AutomationObservers
   class TaskProtocolContentChangeObserver < BaseObserver
     OBJECT_ATTRIBUTES = {
       Protocol: %w(name description),
-      Step: %w(created_at completed name position skipped_at),
+      Step: %w(created_at completed name position skipped_at archived),
       StepText: %w(name text step_id),
       Checklist: %w(name step_id),
       ChecklistItem: %w(text position checked),
       Table: %w(name contents metadata),
       StepAsset: %w(step_id asset_id),
-      StepOrderableElement: %w(step_id position),
+      StepOrderableElement: %w(step_id position archived),
       'ActiveStorage::Blob': %w(filename checksum),
       Comment: %w(message),
       FormFieldValue: %w(not_applicable datetime datetime_to number number_to unit text selection flag data latest),
-      FormResponse: %w(status discarded_at)
+      FormResponse: %w(status discarded_at),
+      Asset: %w(archived)
     }.freeze
 
     def self.on_create(element, user)
@@ -30,7 +31,7 @@ module AutomationObservers
       protocol = nil
 
       case element.class.base_class.name
-      when 'Table', 'StepAsset'
+      when 'Table', 'StepAsset', 'Asset'
         return if element.step.blank?
 
         protocol = element.step.protocol

@@ -4,6 +4,7 @@ class Table < ApplicationRecord
   include SearchableModel
   include TableHelper
   include ObservableModel
+  include ArchivableModel
 
   SEARCHABLE_ATTRIBUTES = ['tables.name', 'tables.data_vector'].freeze
 
@@ -23,6 +24,8 @@ class Table < ApplicationRecord
              class_name: 'User',
              optional: true
   belongs_to :team, optional: true
+  belongs_to :archived_by, class_name: 'User', optional: true
+  belongs_to :restored_by, class_name: 'User', optional: true
   has_one :step_table, inverse_of: :table, dependent: :destroy
   has_one :step, through: :step_table, touch: true
 
@@ -30,6 +33,7 @@ class Table < ApplicationRecord
   has_one :result, through: :result_table, touch: true, class_name: 'ResultBase'
   has_many :report_elements, inverse_of: :table, dependent: :destroy
 
+  after_save :manage_orderable_element_on_archive, if: -> { saved_change_to_archived? }
   after_save :update_ts_index
 
   def metadata
@@ -83,7 +87,7 @@ class Table < ApplicationRecord
         )
 
         parent.step_orderable_elements.create!(
-          position: position || parent.step_orderable_elements.length,
+          position: position || parent.next_element_position,
           orderable: new_table.step_table
         )
 
@@ -123,6 +127,24 @@ class Table < ApplicationRecord
         )
 
         new_table
+      end
+    end
+  end
+
+  private
+
+  def manage_orderable_element_on_archive
+    if step_table.present?
+      if archived?
+        step_table.step_orderable_element&.destroy
+      elsif step_table.step_orderable_element.blank?
+        step_table.create_step_orderable_element!(step: step, position: step.next_element_position)
+      end
+    elsif result_table.present?
+      if archived?
+        result_table.result_orderable_element&.destroy
+      elsif result_table.result_orderable_element.blank?
+        result_table.create_result_orderable_element!(result: result, position: result.next_element_position)
       end
     end
   end

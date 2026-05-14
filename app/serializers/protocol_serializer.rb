@@ -92,6 +92,7 @@ class ProtocolSerializer < ActiveModel::Serializer
       update_protocol_authors_url: update_protocol_authors_url,
       update_protocol_keywords_url: update_protocol_keywords_url,
       delete_steps_url: delete_steps_url,
+      archive_steps_url: archive_steps_url,
       publish_url: publish_url,
       save_as_draft_url: save_as_draft_url,
       versions_modal_url: versions_modal_url,
@@ -234,9 +235,15 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def delete_steps_url
-    return unless can_manage_protocol_in_module?(object) || can_manage_protocol_draft_in_repository?(object)
+    return unless can_manage_protocol_draft_in_repository?(object)
 
     delete_steps_protocol_path(object)
+  end
+
+  def archive_steps_url
+    return unless can_manage_protocol_in_module?(object)
+
+    archive_steps_protocol_path(object)
   end
 
   def publish_url
