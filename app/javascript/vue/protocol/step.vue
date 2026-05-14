@@ -584,8 +584,7 @@
         });
       },
       showArchiveModal() {
-        const components = this.$refs.stepComponent || [];
-        if (components.some(comp => comp?.hasCrossTableReferences === true)) {
+        if (this.elements.some(e => e.attributes.orderable_type === 'Table')) {
           this.confirmingArchive = true;
         } else {
           this.archiveStep();

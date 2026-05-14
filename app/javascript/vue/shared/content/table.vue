@@ -226,11 +226,7 @@ export default {
       }
     },
     showArchiveModal() {
-      if (this.hasCrossTableReferences === true) {
-        this.confirmingArchive = true;
-      } else {
-        this.archiveElement();
-      }
+      this.confirmingArchive = true;
     },
     enableTableEdit() {
       if (this.locked) {
