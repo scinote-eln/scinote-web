@@ -112,7 +112,8 @@ export default {
       initialLoading: true,
       isEmpty: true,
       reloadKey: 0,
-      sciModal: true
+      sciModal: true,
+      modalLevel: 'low'
     };
   },
   computed: {
