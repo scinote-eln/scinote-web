@@ -7,7 +7,7 @@
             'disabled': disabled || action.disabled
            }]"
            :href="action.path"
-           :title="action.tooltip || action.label"
+           :data-sn-tooltip="action.tooltip || action.label"
            :data-e2e="`e2e-BT-topToolbar-${action.name}`"
            @click="doAction(action, $event)">
           <i :class="action.icon"></i>
@@ -70,11 +70,11 @@
       <a v-for="action in toolbarActions.right" :key="action.label"
       :class="[action.buttonStyle, { 'disabled': disabled }]"
       :href="action.path"
-      :title="action.tooltip || action.label"
+      :data-sn-tooltip="action.tooltip || action.label"
       :data-e2e="`e2e-BT-topToolbar-${action.name}`"
       @click="doAction(action, $event)">
         <i :class="action.icon"></i>
-        {{ action.label }}
+        <span :data-sn-tooltip="action.tooltip || action.label">{{ action.label }}</span>
       </a>
       <FilterDropdown v-if="filters.length && !disabled" :filters="filters" @applyFilters="applyFilters" :data-e2e="'e2e-BT-topToolbar-filters'"/>
       <button
@@ -82,7 +82,7 @@
         @click="showColumnsModal = true"
         :disabled="disabled"
         :data-e2e="'e2e-BT-topToolbar-manageColumns'"
-        :title="i18n.t('experiments.table.column_display_modal.title')"
+        :data-sn-tooltip="i18n.t('experiments.table.column_display_modal.title')"
         class="btn btn-light icon-btn btn-black"
       >
         <i class="sn-icon sn-icon-manage-columns"></i>

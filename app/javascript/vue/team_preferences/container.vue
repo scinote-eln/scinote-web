@@ -4,14 +4,14 @@
     <div>
       <div v-for="(items, sectionKey) in settings" :key="`section-${sectionKey}`" class="flex flex-col bg-sn-white gap-4 p-4 w-full rounded">
         <h5>{{ i18n.t(`users.settings.teams.preferences.sections.${sectionKey}.title`)}}
-          <i v-if="sectionKey == 'deletion'" class="sn-icon sn-icon-info" :title="i18n.t(`users.settings.teams.preferences.sections.${sectionKey}.message`)"></i>
+          <i v-if="sectionKey == 'deletion'" class="sn-icon sn-icon-info" :data-sn-tooltip="i18n.t(`users.settings.teams.preferences.sections.${sectionKey}.message`)"></i>
         </h5>
 
         <div
           v-for="(item, itemKey) in items"
           :key="`pref-${sectionKey}-${itemKey}`"
           class="flex justify-between max-w-3xl border-0 border-t border-solid border-sn-super-light-grey">
-            <div class="text-base py-3 pl-2" :class="{ 'text-sn-grey': !item.can_update }">{{ item.label }}</div>
+            <div class="text-base py-3 pl-2" :class="{ 'text-sn-grey': !item.can_update }" :data-sn-tooltip="item.label">{{ item.label }}</div>
             <div class="flex-shrink-0 flex items-center py-3">
               <div class="sci-toggle-checkbox-container">
                 <input

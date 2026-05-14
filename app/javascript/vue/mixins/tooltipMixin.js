@@ -22,11 +22,11 @@ export default {
   },
   methods: {
     tooltip_getSelector() {
-      return '[title], [data-sn-tooltip]';
+      return '[data-sn-tooltip]';
     },
 
     tooltip_getObserverAttributeFilter() {
-      return ['title', 'data-sn-tooltip'];
+      return ['data-sn-tooltip'];
     },
 
     tooltip_findElementsWithTooltip(root) {
@@ -46,7 +46,7 @@ export default {
     },
 
     tooltip_hasTooltipAttributes(element) {
-      return element.hasAttribute('title') || element.hasAttribute('data-sn-tooltip');
+      return element.hasAttribute('data-sn-tooltip');
     },
 
     tooltip_removeInstance(instance) {
@@ -192,19 +192,14 @@ export default {
         return;
       }
 
-      if (mutation.attributeName === 'title' || mutation.attributeName === 'data-sn-tooltip') {
+      if (mutation.attributeName === 'data-sn-tooltip') {
         const existingInstance = this.tooltip_instances.find(inst => inst.element === target);
 
         if (existingInstance) {
-          const newContent = target.getAttribute('data-sn-tooltip') || target.getAttribute('title');
+          const newContent = target.getAttribute('data-sn-tooltip');
 
           if (newContent) {
             existingInstance.content = newContent;
-
-            if (target.hasAttribute('title')) {
-              target.setAttribute('data-sn-tooltip', newContent);
-              target.removeAttribute('title');
-            }
 
             if (existingInstance.tooltipEl) {
               existingInstance.tooltipEl.textContent = newContent;
@@ -315,18 +310,13 @@ export default {
         return;
       }
 
-      const tooltipContent = element.getAttribute('data-sn-tooltip') || element.getAttribute('title');
+      const tooltipContent = element.getAttribute('data-sn-tooltip');
 
       if (!tooltipContent) {
         return;
       }
 
       element.setAttribute('data-sn-tooltip-initialized', 'true');
-
-      if (element.hasAttribute('title')) {
-        element.setAttribute('data-sn-tooltip', tooltipContent);
-        element.removeAttribute('title');
-      }
 
       const instance = {
         element,
