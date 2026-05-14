@@ -14,7 +14,6 @@
             <p>{{ i18n.t('protocols.steps.table.archive_modal.description_2')}}</p>
           </div>
           <p><b>{{ i18n.t('protocols.steps.table.archive_modal.description_3')}}</b></p>
-          <p>{{ i18n.t('protocols.steps.table.archive_modal.description_4')}}</p>
 
         </div>
         <div class="modal-footer">

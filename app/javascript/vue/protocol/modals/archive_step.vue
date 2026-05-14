@@ -12,11 +12,8 @@
           <div>
             <p>{{ i18n.t('protocols.steps.modals.archive_step.description_1')}}</p>
             <p>{{ i18n.t('protocols.steps.modals.archive_step.description_2')}}</p>
-            <p>{{ i18n.t('protocols.steps.modals.archive_step.description_3')}}</p>
           </div>
-          <p><b>{{ i18n.t('protocols.steps.modals.archive_step.description_4')}}</b></p>
-          <p>{{ i18n.t('protocols.steps.modals.archive_step.description_5')}}</p>
-
+          <p><b>{{ i18n.t('protocols.steps.modals.archive_step.description_3')}}</b></p>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
