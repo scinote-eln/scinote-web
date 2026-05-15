@@ -19,7 +19,7 @@ Canaid::Permissions.register_for(Step) do
 
   can :delete_step do |user, step|
     if step.my_module
-      step.team.settings['protocol_steps_deletion_enabled'] && step.archived? && can_manage_my_module_steps?(user, step.my_module)
+      (!Team.deletion_prevention_enabled? || step.team.settings['protocol_steps_deletion_enabled']) && step.archived? && can_manage_my_module_steps?(user, step.my_module)
     else
       can_manage_protocol_draft_in_repository?(user, step.protocol)
     end
@@ -51,7 +51,7 @@ Canaid::Permissions.register_for(StepText) do
 
   can :delete_step_text do |_, step_text|
     if step_text.step.protocol.in_module?
-      step_text.archived? && step_text.step.team.settings['protocol_steps_deletion_enabled']
+      step_text.archived? && (!Team.deletion_prevention_enabled? || step_text.step.team.settings['protocol_steps_deletion_enabled'])
     else
       true
     end
@@ -83,7 +83,7 @@ Canaid::Permissions.register_for(FormResponse) do
 
   can :delete_step_form_response do |_, form_response|
     if form_response.step.protocol.in_module?
-      form_response.archived? && form_response.step.team.settings['protocol_steps_deletion_enabled']
+      form_response.archived? && (!Team.deletion_prevention_enabled? || form_response.step.team.settings['protocol_steps_deletion_enabled'])
     else
       true
     end
@@ -115,7 +115,7 @@ Canaid::Permissions.register_for(Checklist) do
 
   can :delete_step_checklist do |_, checklist|
     if checklist.step.protocol.in_module?
-      checklist.archived? && checklist.step.team.settings['protocol_steps_deletion_enabled']
+      checklist.archived? && (!Team.deletion_prevention_enabled? || checklist.step.team.settings['protocol_steps_deletion_enabled'])
     else
       true
     end
@@ -147,7 +147,7 @@ Canaid::Permissions.register_for(Table) do
 
   can :delete_step_table do |_, table|
     if table.step.protocol.in_module?
-      table.archived? && table.step.team.settings['protocol_steps_deletion_enabled']
+      table.archived? && (!Team.deletion_prevention_enabled? || table.step.team.settings['protocol_steps_deletion_enabled'])
     else
       true
     end

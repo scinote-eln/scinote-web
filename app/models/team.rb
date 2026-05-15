@@ -162,6 +162,10 @@ class Team < ApplicationRecord
     ProtocolKeyword.where(team: self).pluck(:name)
   end
 
+  def self.deletion_prevention_enabled?
+    ENV['DELETION_PREVENTION_ENABLED'] == 'true'
+  end
+
   def self.by_activity_subjects(subjects)
     team_ids = []
     valid_subjects = subjects.select { |k| Extends::SEARCHABLE_ACTIVITY_SUBJECT_TYPES.include?(k.to_s) }

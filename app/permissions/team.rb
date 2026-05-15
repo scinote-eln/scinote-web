@@ -80,7 +80,7 @@ Canaid::Permissions.register_for(Team) do
   end
 
   can :modify_team_deletion_prevention do |user, team|
-    can_manage_team?(user, team)
+    Team.deletion_prevention_enabled? && can_manage_team?(user, team)
   end
 end
 
