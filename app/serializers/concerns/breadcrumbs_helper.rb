@@ -34,7 +34,7 @@ module BreadcrumbsHelper
         url = protocol_path(parent, step_id: subject.id)
       else
         if subject.archived?
-          url = archive_my_module_path(parent.my_module, step_id: subject.id)
+          url = archive_my_module_path(parent.my_module, step_id: subject.id, mode: :steps)
         else
           url = protocols_my_module_path(parent.my_module, step_id: subject.id)
         end
