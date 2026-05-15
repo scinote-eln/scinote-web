@@ -10,6 +10,7 @@ function initPrintModalComponent() {
         return {
           showModal: false,
           row_ids: [],
+          repository_id: null,
           urls: {
             print: container.data('print-url'),
             zebraProgress: container.data('zebra-progress-url'),
