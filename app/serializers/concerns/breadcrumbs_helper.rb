@@ -57,12 +57,13 @@ module BreadcrumbsHelper
       form_parent = subject.parent
       if form_parent.is_a?(Step)
         parent = form_parent.protocol
-        if subject.archived? || step.archived?
-          url = archive_my_module_path(parent.my_module, step_id: step.id, mode: :steps)
+        if subject.archived? || form_parent.archived?
+          url = archive_my_module_path(parent.my_module, step_id: form_parent.id, mode: :steps)
         else
-          url = protocols_my_module_path(parent.my_module, step_id: step.id, mode: :steps)
+          url = protocols_my_module_path(parent.my_module, step_id: form_parent.id, mode: :steps)
         end
       end
+      subject = form_parent
     when Table
       if subject.step
         step = subject.step
