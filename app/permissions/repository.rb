@@ -57,6 +57,8 @@ Canaid::Permissions.register_for(Repository) do
 
   %i(delete_repository delete_repository_rows).each do |perm|
     can perm do |_user, repository|
+      next true unless Team.deletion_prevention_enabled?
+
       repository.team.settings['repository_deletion_enabled']
     end
   end

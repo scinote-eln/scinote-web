@@ -34,7 +34,7 @@ Canaid::Permissions.register_for(ResultBase) do
       can_manage_protocol_draft_in_repository?(user, result.protocol)
     else
       result.archived? &&
-        result.team.settings['result_deletion_enabled'] &&
+        (!Team.deletion_prevention_enabled? || result.team.settings['result_deletion_enabled']) &&
         !result.my_module.archived_branch? &&
         result.unlocked?(result) &&
         result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_DELETE_ARCHIVED)
@@ -89,7 +89,8 @@ Canaid::Permissions.register_for(ResultText) do
     if result_text.result.is_a?(ResultTemplate)
       result_text.result.unlocked?(result_text.result)
     else
-      result_text.archived? && result_text.result.team.settings['result_deletion_enabled'] &&
+      result_text.archived? &&
+        (!Team.deletion_prevention_enabled? || result_text.result.team.settings['result_deletion_enabled']) &&
         result_text.result.unlocked?(result_text.result)
     end
   end
@@ -122,7 +123,7 @@ Canaid::Permissions.register_for(Table) do
     if table.result.is_a?(ResultTemplate)
       table.result.unlocked?(table.result)
     else
-      table.archived? && table.result.team.settings['result_deletion_enabled'] &&
+      table.archived? && (!Team.deletion_prevention_enabled? || table.result.team.settings['result_deletion_enabled']) &&
         table.result.unlocked?(table.result)
     end
   end
