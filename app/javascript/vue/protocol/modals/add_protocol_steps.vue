@@ -138,9 +138,11 @@ export default {
           step.attachments = [];
           step.elements = [];
           response.data.included.forEach((included) => {
-            if (included.type === 'assets') {
+            if (included.type === 'assets' &&
+                step.relationships.assets.data.some((attachment) => attachment.id === included.id)) {
               step.attachments.push(included);
-            } else if (included.type === 'step_orderable_elements') {
+            } else if (included.type === 'step_orderable_elements' &&
+                       step.relationships.step_orderable_elements.data.some((element) => element.id === included.id)) {
               step.elements.push(included);
             }
           });
