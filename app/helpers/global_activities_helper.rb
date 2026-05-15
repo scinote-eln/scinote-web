@@ -117,7 +117,7 @@ module GlobalActivitiesHelper
       if obj.protocol.in_repository?
         path = protocol_path(obj.protocol, step_id: obj.id)
       elsif obj.my_module.navigable?
-        path = obj.archived? ? archive_my_module_path(obj.my_module, step_id: obj.id) : protocols_my_module_path(obj.my_module, step_id: obj.id)
+        path = obj.archived? ? archive_my_module_path(obj.my_module, step_id: obj.id, mode: :steps) : protocols_my_module_path(obj.my_module, step_id: obj.id)
       else
         return current_value
       end
