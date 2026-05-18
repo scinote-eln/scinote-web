@@ -1699,7 +1699,8 @@ en:
         restore:
           title: 'Restore result'
           description_1: 'The result will be restored in Results tab according to the currently active sorting.'
-          description_2: 'Are you sure you want to continue?'
+          description_2: 'Note: Any individually archived components within this result will not be restored automatically. You can restore them separately afterwards.'
+          description_3: 'Are you sure you want to continue?'
           confirm: 'Restore'
           success: '%{name} successfully restored from the archive.'
         link_steps:
@@ -4363,7 +4364,8 @@ en:
         restore_step:
           title: 'Restore step'
           description_1: 'The step will be restored to the bottom of your current active protocol.'
-          description_2: 'Are you sure you want to continue?'
+          description_2: 'Note: Any individually archived components within this step will not be restored automatically. You can restore them separately afterwards.'
+          description_3: 'Are you sure you want to continue?'
           confirm: 'Restore'
           success: '%{name} successfully restored from the archive.'
         delete_step:
