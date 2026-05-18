@@ -201,6 +201,14 @@ class Team < ApplicationRecord
     settings['task_sharing_enabled'] == true
   end
 
+  def protocol_steps_deletion_enabled?
+    !Team.deletion_prevention_enabled? || settings['protocol_steps_deletion_enabled']
+  end
+
+  def result_deletion_enabled?
+    !Team.deletion_prevention_enabled? || settings['result_deletion_enabled']
+  end
+
   private
 
   def generate_template_project

@@ -55,9 +55,21 @@ Canaid::Permissions.register_for(Asset) do
 
     case object
     when Step
-      (asset.archived? || object.protocol.in_repository?) && can_manage_step?(user, object)
+      if object.protocol.in_repository?
+        can_manage_step?(user, object)
+      else
+        asset.archived? &&
+          object.team.protocol_steps_deletion_enabled? &&
+          can_manage_step?(user, object)
+      end
     when ResultBase
-      (asset.archived? || object.respond_to?(:protocol)) && can_manage_result?(user, object)
+      if object.respond_to?(:protocol)
+        can_manage_result?(user, object)
+      else
+        asset.archived? &&
+          object.team.result_deletion_enabled? &&
+          can_manage_result?(user, object)
+      end
     when RepositoryCell
       if object.repository_column.repository.is_a?(RepositorySnapshot)
         false
