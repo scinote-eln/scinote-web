@@ -17,12 +17,14 @@
         v-if="selectedRepository"
         :repository-id="selectedRepository"
         :filters="filters"
+        :permissions="permissions"
         @update:filters="filters = $event"
         @event:created="loadEvents += 1"
       ></Filters>
       <CalendarView
         v-if="selectedRepository"
         :repositoryId="selectedRepository"
+        :permissions="permissions"
         :loadEvents="loadEvents"
         :filters="filters"
       ></CalendarView>
@@ -39,6 +41,7 @@ import Filters from './filters.vue';
 
 import {
   list_repositories_path,
+  permissions_repository_path,
 } from '../../routes.js';
 
 export default {
@@ -48,6 +51,7 @@ export default {
       repositories: [],
       selectedRepository: null,
       loadEvents: 0,
+      permissions: {},
       filters: {
         sub_types: {
           calibration: true,
@@ -65,15 +69,33 @@ export default {
     Filters,
     CalendarView
   },
+  watch: {
+    selectedRepository() {
+      this.loadPermissions();
+    }
+  },
   mounted() {
     this.fetchRepositories();
   },
   computed: {
     listRepositoriesUrl() {
       return list_repositories_path
+    },
+    permissionsUrl() {
+      if (this.selectedRepository) {
+        return permissions_repository_path(this.selectedRepository);
+      }
     }
   },
   methods: {
+    loadPermissions() {
+      if (this.permissionsUrl) {
+        axios.get(this.permissionsUrl)
+          .then(response => {
+            this.permissions = response.data;
+          })
+      }
+    },
     fetchRepositories() {
       axios
       axios.get(this.listRepositoriesUrl())

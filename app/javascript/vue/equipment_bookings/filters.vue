@@ -1,6 +1,6 @@
 <template>
   <div class="w-[200px] p-2 pr-4 flex flex-col gap-6 border-transparent !border-r-sn-light-grey border-solid  h-full">
-    <div>
+    <div v-if="permissions.create_equipment_bookings">
       <button class="btn btn-primary w-full" @click="createEvent = true">
         <i class="sn-icon sn-icon-new-task"></i>
         {{ i18n.t('equipment_bookings.index.sidebar.new_event') }}
@@ -83,6 +83,10 @@ export default {
     },
     repositoryId: {
       type: Number,
+      required: true
+    },
+    permissions: {
+      type: Object,
       required: true
     }
   },

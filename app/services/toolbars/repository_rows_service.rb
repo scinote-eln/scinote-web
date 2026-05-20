@@ -77,7 +77,7 @@ module Toolbars
 
       return unless Repository.equipment_booking_enabled?
 
-      return unless can_manage_repository_rows?(@repository)
+      return unless can_create_equipment_bookings?(@repository)
 
       return unless @repository_rows.all?(&:active?)
 

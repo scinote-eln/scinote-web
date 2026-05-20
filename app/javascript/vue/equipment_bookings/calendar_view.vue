@@ -96,6 +96,10 @@ import { loadScript } from 'pdfjs-dist';
       loadEvents: {
         type: Number,
         required: true
+      },
+      permissions: {
+        type: Object,
+        required: true
       }
     },
     data() {
@@ -121,15 +125,15 @@ import { loadScript } from 'pdfjs-dist';
                 [
                   h('div', { class: `h-6 w-6 rounded`, style: { backgroundColor: calendarEvent.color } }),
                   h('h3', { class: 'font-semibold my-0 grow' }, calendarEvent.title),
-                  h('button', {
+                  this.permissions.create_equipment_bookings && h('button', {
                     class: 'btn btn-light icon-btn btn-black',
                     onClick: () => this.duplicateEvent(calendarEvent)
                   }, h('i', { class: 'sn-icon sn-icon-duplicate' })),
-                  h('button', {
+                  this.permissions.manage_equipment_bookings && h('button', {
                     class: 'btn btn-light icon-btn btn-black',
                     onClick: () => this.editEvent(calendarEvent)
                   }, h('i', { class: 'sn-icon sn-icon-edit' })),
-                  h('button', {
+                  this.permissions.manage_equipment_bookings && h('button', {
                     class: 'btn btn-light icon-btn btn-black',
                     onClick: () => this.removeEvent(calendarEvent)
                   }, h('i', { class: 'sn-icon sn-icon-delete' }))
@@ -267,7 +271,8 @@ import { loadScript } from 'pdfjs-dist';
       },
       fetchEvents() {
         const params = {
-          repository_id: this.repositoryId,
+          parent_type: 'Repository',
+          parent_id: this.repositoryId,
           filters: this.filters,
           start_date: this.startDate,
           end_date: this.endDate,
