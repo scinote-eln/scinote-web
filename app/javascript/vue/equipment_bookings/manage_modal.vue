@@ -262,19 +262,10 @@ export default {
         else if (this.event.repeat_until) this.event.repeat_mode = 'end_date';
         else this.event.repeat_mode = 'infinite';
       }
-    } else {
-      const now = new Date();
-      const later = new Date(now.getTime() + 60 * 60 * 1000);
-      const tillDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    }
 
-      const formatDateTime = (date) => {
-        const pad = (n) => n.toString().padStart(2, '0');
-        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
-      };
-
-      this.event.start_at = formatDateTime(now);
-      this.event.end_at = formatDateTime(later);
-      this.event.repeat_until = formatDateTime(tillDate);
+    if (!this.event.start_at && !this.event.end_at) {
+      this.setDefaultDates();
     }
   },
   computed: {
@@ -305,6 +296,18 @@ export default {
   },
   mixins: [modalMixin],
   methods: {
+    setDefaultDates() {
+      const now = new Date();
+      const later = new Date(now.getTime() + 60 * 60 * 1000);
+
+      const formatDateTime = (date) => {
+        const pad = (n) => n.toString().padStart(2, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+      };
+
+      this.event.start_at = formatDateTime(now);
+      this.event.end_at = formatDateTime(later);
+    },
     preparePayload() {
       return {
         name: this.event.event_name,
