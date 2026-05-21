@@ -11,6 +11,7 @@
       :existed-event="selectedEvent"
       :repositoryId="repositoryId"
       @event:updated="fetchEvents(); selectedEvent = null"
+      @event:created="fetchEvents(); selectedEvent = null"
       @close="selectedEvent = null"
     />
     <ConfirmationModal
@@ -26,7 +27,7 @@
 <script>
   import axios from '../../packs/custom_axios.js';
   import { ScheduleXCalendar } from '@schedule-x/vue'
-  import { h, toRaw } from 'vue'
+  import { h } from 'vue'
   import { createEventModalPlugin } from '@schedule-x/event-modal'
   import ManageModal from './manage_modal.vue';
   import ConfirmationModal from '../shared/confirmation_modal.vue';
@@ -120,6 +121,10 @@ import { loadScript } from 'pdfjs-dist';
                 [
                   h('div', { class: `h-6 w-6 rounded`, style: { backgroundColor: calendarEvent.color } }),
                   h('h3', { class: 'font-semibold my-0 grow' }, calendarEvent.title),
+                  h('button', {
+                    class: 'btn btn-light icon-btn btn-black',
+                    onClick: () => this.duplicateEvent(calendarEvent)
+                  }, h('i', { class: 'sn-icon sn-icon-duplicate' })),
                   h('button', {
                     class: 'btn btn-light icon-btn btn-black',
                     onClick: () => this.editEvent(calendarEvent)
@@ -226,6 +231,19 @@ import { loadScript } from 'pdfjs-dist';
         else if (repeat_until) rule += `;UNTIL=${new Date(repeat_until).toISOString().replace(/[-:]/g, '').split('.')[0]}Z`;
         return rule;
       },
+      duplicateEvent(event) {
+        this.selectedEvent = {
+          id: null,
+          event_name: event.title,
+          start_at: null,
+          end_at: null,
+          event_type: event.attributes.event_type,
+          full_day: event.attributes.full_day,
+          users: event.attributes.users.map(user => user.id),
+          repository_row_id: event.attributes.subject.id,
+          event_sub_type: event.attributes.event_sub_type,
+        }
+      },
       editEvent(event) {
         this.selectedEvent = {
           id: event.id,
@@ -233,11 +251,6 @@ import { loadScript } from 'pdfjs-dist';
           start_at: this.convertRawDateStringToString(event.attributes.start_at_string),
           end_at: this.convertRawDateStringToString(event.attributes.end_at_string),
           event_type: event.attributes.event_type,
-          frequency: event.attributes.frequency,
-          interval: event.attributes.interval,
-          interval_unit: event.attributes.interval_unit,
-          repeat_count: event.attributes.repeat_count,
-          repeat_until: event.attributes.repeat_until,
           full_day: event.attributes.full_day,
           users: event.attributes.users.map(user => user.id),
           repository_row_id: event.attributes.subject.id,
