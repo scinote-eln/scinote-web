@@ -12,7 +12,13 @@ class CalendarEvent < ApplicationRecord
   }
 
   scope :repository_rows_filter, ->(subject_ids) { where(subject_type: 'RepositoryRow', subject_id: subject_ids) }
-  scope :repository_filter, ->(repository_id) { joins("INNER JOIN repository_rows ON repository_rows.id = calendar_events.subject_id AND calendar_events.subject_type = 'RepositoryRow'").where(repository_rows: { repository_id: repository_id }) }
+  scope :repository_filter, ->(repository_id) {
+    joins("INNER JOIN repository_rows ON
+      repository_rows.id = calendar_events.subject_id AND
+      calendar_events.subject_type = 'RepositoryRow' AND
+      repository_rows.archived = false")
+      .where(repository_rows: { repository_id: repository_id })
+  }
   scope :datetime_filter, ->(start_time, end_time) {
     one_time = where(frequency: [nil, 'ONCE']).where('start_at <= ? AND end_at >= ?', end_time, start_time)
     recurring = where.not(frequency: [nil, 'ONCE'])
