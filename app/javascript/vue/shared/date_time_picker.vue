@@ -20,6 +20,7 @@
       :auto-apply="true"
       :partial-flow="true"
       :markers="markers"
+      :range="range"
       :start-time="{ hours: 0, minutes: 0, seconds: 0 }"
       week-start="0"
       :hide-input-icon="noIcons"
@@ -77,7 +78,8 @@ export default {
     dataE2e: { type: String, default: '' },
     valueType: { type: String, default: 'object' },
     noIcons: { type: Boolean, default: false },
-    noBorder: { type: Boolean, default: false }
+    noBorder: { type: Boolean, default: false },
+    range: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -110,18 +112,43 @@ export default {
     },
     stringValue() {
       if (this.value === null) return '';
+      if (this.range) {
+        const start = this.value[0];
+        const end = this.value[1];
 
-      if (this.mode === 'time') {
-        return `${this.value.hours.toString().padStart(2, '0')}:${this.value.minutes.toString().padStart(2, '0')}`
-      }
+        if (!start || !end) return '';
 
-      const time = ` ${this.value.getHours().toString().padStart(2, '0')}:${this.value.getMinutes().toString().padStart(2, '0')}`
-      const date = `${this.value.getFullYear()}-${this.value.getMonth() + 1}-${this.value.getDate()}`;
+        if (this.mode === 'time') {
+          const startTime = `${start.hours.toString().padStart(2, '0')}:${start.minutes.toString().padStart(2, '0')}`;
+          const endTime = `${end.hours.toString().padStart(2, '0')}:${end.minutes.toString().padStart(2, '0')}`;
 
-      if (this.mode === 'date') {
-        return date;
+          return [startTime, endTime];
+        }
+
+        const startDate = this.extractDateString(start);
+        const endDate = this.extractDateString(end);
+
+        if (this.mode === 'date') {
+          return [startDate, endDate];
+        } else {
+          const startTime = this.extractTimeString(start);
+          const endTime = this.extractTimeString(end);
+
+          return [`${startDate} ${startTime}`, `${endDate} ${endTime}`];
+        }
       } else {
-        return `${date} ${time}`;
+        if (this.mode === 'time') {
+          return `${this.value.hours.toString().padStart(2, '0')}:${this.value.minutes.toString().padStart(2, '0')}`
+        }
+
+        const time = this.extractTimeString(this.value);
+        const date = this.extractDateString(this.value);
+
+        if (this.mode === 'date') {
+          return this.extractDateString(this.value);
+        } else {
+          return `${this.extractDateString(this.value)} ${this.extractTimeString(this.value)}`;
+        }
       }
     }
   },
@@ -132,6 +159,12 @@ export default {
     window.removeEventListener('resize', this.close);
   },
   methods: {
+    extractTimeString(date) {
+      return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    },
+    extractDateString(date) {
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    },
     initializeValue() {
       if (!this.defaultValue) return;
 
