@@ -104,7 +104,7 @@ class RepositoryStockValue < ApplicationRecord
   end
 
   def data_different?(new_data)
-    BigDecimal(new_data[:amount].to_s) != amount ||
+    (new_data[:amount].present? && BigDecimal(new_data[:amount].to_s) != amount) ||
       (new_data[:unit_item_id].present? && new_data[:unit_item_id] != repository_stock_unit_item_id)
   end
 
