@@ -873,6 +873,7 @@ Rails.application.routes.draw do
         get :assigned_my_modules
         get :repository_users
         get :load_table
+        get :permissions
       end
       # Save repository table state
       post 'state_save',

@@ -2,27 +2,21 @@
 
 class CalendarEventsController < ApplicationController
   before_action :check_calendar_events_enabled
+  before_action :load_parent, only: :index
+  before_action :load_subject, only: :create
   before_action :load_calendar_event, except: %i(index create)
-  before_action :load_repository_row, only: :create
-  before_action :check_read_permission, only: %i(index show)
-  before_action :check_manage_permission, except: %i(index show)
+  before_action :check_read_permission, only: :show
+  before_action :check_manage_permission, except: %i(index show create)
+  before_action :check_create_permission, only: :create
 
   def index
-    calendar_events = current_team.calendar_events.where(event_type: params[:event_type])
+    @calendar_events = current_team.calendar_events.where(event_type: params[:event_type])
 
-    if params.dig(:filters, :sub_types).present?
-      selected_sub_types = params[:filters][:sub_types].select { |_, v| v == 'true' }.keys
-      calendar_events = calendar_events.event_sub_type_filter(selected_sub_types)
-    end
-
-    calendar_events = calendar_events.datetime_filter(params[:start_date], params[:end_date]) if params[:start_date].present? && params[:end_date].present?
-    calendar_events = calendar_events.repository_filter(params[:repository_id]) if params[:repository_id].present?
-    calendar_events = calendar_events.repository_rows_filter(params[:filters][:subject_ids]) if params.dig(:filters, :subject_ids).present?
-    calendar_events = calendar_events.assigned_users_filter(params[:filters][:assigned_user_ids]) if params.dig(:filters, :assigned_user_ids).present?
+    filter_calendar_events!
 
     respond_to do |format|
       format.json do
-        render json: calendar_events,
+        render json: @calendar_events,
                each_serializer: CalendarEventSerializer
       end
     end
@@ -41,7 +35,7 @@ class CalendarEventsController < ApplicationController
     ActiveRecord::Base.transaction do
       @calendar_event = CalendarEvent.create!(calendar_event_params.merge(
         team: current_team,
-        subject: @repository_row,
+        subject: @subject,
         created_by: current_user
       ))
       log_activity(@calendar_event, :calendar_event_created)
@@ -98,10 +92,22 @@ class CalendarEventsController < ApplicationController
     render_404 unless @calendar_event
   end
 
-  def load_repository_row
-    @repository_row = RepositoryRow.find_by(id: params[:repository_row_id])
+  def load_parent
+    @parent = case params[:parent_type]
+              when 'Repository'
+                @parent = Repository.readable_by_user(current_user).find(params[:parent_id])
+              else
+                raise NotImplementedError
+              end
+  end
 
-    render_404 unless @repository_row
+  def load_subject
+    case params[:subject_type]
+    when 'RepositoryRow'
+      @subject = RepositoryRow.find(params[:subject_id])
+    else
+      raise NotImplementedError
+    end
   end
 
   def calendar_event_params
@@ -122,9 +128,32 @@ class CalendarEventsController < ApplicationController
     )
   end
 
-  def check_read_permission; end
+  def check_read_permission
+    case @calendar_event.subject_type
+    when 'RepositoryRow'
+      render_403 unless can_read_equipment_bookings?(@calendar_event.subject.repository)
+    else
+      raise NotImplementedError
+    end
+  end
 
-  def check_manage_permission; end
+  def check_create_permission
+    case @subject
+    when RepositoryRow
+      render_403 unless can_create_equipment_bookings?(@subject.repository)
+    else
+      raise NotImplementedError
+    end
+  end
+
+  def check_manage_permission
+    case @calendar_event.subject_type
+    when 'RepositoryRow'
+      render_403 unless can_manage_equipment_bookings?(@calendar_event.subject.repository)
+    else
+      raise NotImplementedError
+    end
+  end
 
   def log_activity(calendar_event, type_of, message_items = {})
     Activities::CreateActivityService
@@ -136,5 +165,20 @@ class CalendarEventsController < ApplicationController
               event: calendar_event.name,
               repository_row: calendar_event.subject.id
             }.merge(message_items))
+  end
+
+  def filter_calendar_events!
+    if @parent.is_a?(Repository) # Repository related filters
+      @calendar_events = @calendar_events.repository_filter(@parent.id)
+      @calendar_events = @calendar_events.repository_rows_filter(params[:filters][:subject_ids]) if params.dig(:filters, :subject_ids).present?
+    end
+
+    # General filters
+    if params.dig(:filters, :sub_types).present?
+      selected_sub_types = params[:filters][:sub_types].select { |_, v| v == 'true' }.keys
+      @calendar_events = @calendar_events.event_sub_type_filter(selected_sub_types)
+    end
+    @calendar_events = @calendar_events.datetime_filter(params[:start_date], params[:end_date]) if params[:start_date].present? && params[:end_date].present?
+    @calendar_events = @calendar_events.assigned_users_filter(params[:filters][:assigned_user_ids]) if params.dig(:filters, :assigned_user_ids).present?
   end
 end

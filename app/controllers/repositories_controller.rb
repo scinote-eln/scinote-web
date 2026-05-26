@@ -497,6 +497,13 @@ class RepositoriesController < ApplicationController
     render json: { data: user_roles_collection(Repository.new).map(&:reverse) }
   end
 
+  def permissions
+    render json: {
+      create_equipment_bookings: can_create_equipment_bookings?(@repository),
+      manage_equipment_bookings: can_manage_equipment_bookings?(@repository)
+    }
+  end
+
   private
 
   def load_repository

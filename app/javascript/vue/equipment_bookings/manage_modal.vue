@@ -311,7 +311,8 @@ export default {
     preparePayload() {
       return {
         name: this.event.event_name,
-        repository_row_id: this.event.repository_row_id,
+        subject_id: this.event.repository_row_id,
+        subject_type: 'RepositoryRow',
         event_type: this.event.event_type,
         event_sub_type: this.event.event_sub_type,
         start_at: this.event.start_at,

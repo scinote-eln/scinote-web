@@ -18,8 +18,8 @@ describe CalendarEventsController, type: :controller do
   end
 
   describe '#index' do
-    let(:params) { { event_type: event_type } }
-    let(:params_new_event_type) { { event_type: :test } }
+    let(:params) { { event_type: event_type, parent_type: 'Repository', parent_id: repository.id } }
+    let(:params_new_event_type) { { event_type: :test, parent_type: 'Repository', parent_id: repository.id } }
 
     it 'returns success response with correct event type' do
       get :index, params: params, format: :json
@@ -68,7 +68,8 @@ describe CalendarEventsController, type: :controller do
    describe 'POST create' do
     let(:params) {
       {
-        repository_row_id: repository_row.id,
+        subject_id: repository_row.id,
+        subject_type: 'RepositoryRow',
         start_at: DateTime.now + 1.days,
         end_at: DateTime.now + 5.days,
         event_type: :equipment_booking,
