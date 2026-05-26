@@ -37,6 +37,7 @@ if ENV['SCINOTE_SCHEDULER_ENABLED'] == 'true'
     ExperimentDueDateReminderJob.perform_now
     MyModules::DueDateReminderJob.perform_now
     RepositoryItemDateReminderJob.perform_now
+    CalendarEventReminderJob.perform_now
   end
 
   if ENV['WOPI_ENABLED'] == 'true'

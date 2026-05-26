@@ -50,6 +50,8 @@ class CalendarEventsController < ApplicationController
       end
     end
 
+    send_notifications!(:create)
+
     render json: @calendar_event, serializer: CalendarEventSerializer, user: current_user
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error e.message
@@ -64,11 +66,12 @@ class CalendarEventsController < ApplicationController
 
     ActiveRecord::Base.transaction do
       @calendar_event.update!(calendar_event_params)
-
       log_activity(@calendar_event, :calendar_event_updated)
       new_ids.each { |user_id| log_activity(@calendar_event, :calendar_event_participant_created, { user_target: user_id }) }
       removed_ids.each { |user_id| log_activity(@calendar_event, :calendar_event_participant_deleted, { user_target: user_id }) }
     end
+
+    send_notifications!(:update)
 
     render json: @calendar_event, serializer: CalendarEventSerializer, user: current_user
   rescue ActiveRecord::RecordInvalid => e
@@ -79,6 +82,7 @@ class CalendarEventsController < ApplicationController
   def destroy
     ActiveRecord::Base.transaction do
       log_activity(@calendar_event, :calendar_event_deleted)
+      send_notifications!(:destroy)
       @calendar_event.destroy!
       render json: { message: :ok }
     rescue ActiveRecord::RecordInvalid => e
@@ -125,6 +129,26 @@ class CalendarEventsController < ApplicationController
   def check_read_permission; end
 
   def check_manage_permission; end
+
+  def send_notifications!(action)
+    case @calendar_event.event_type
+    when 'equipment_booking'
+      case action
+      when :create
+        EquipmentBookingCreatedNotification.send_notifications({ calendar_event_id: @calendar_event.id, user_name: current_user.full_name })
+      when :update
+        EquipmentBookingUpdatedNotification.send_notifications({ calendar_event_id: @calendar_event.id })
+      when :destroy
+        EquipmentBookingDeletedNotification.send_notifications(
+          {
+            calendar_event_id: @calendar_event.id,
+            event_name: @calendar_event.name,
+            repository_row_name: @calendar_event.subject.name
+          }
+        )
+      end
+    end
+  end
 
   def log_activity(calendar_event, type_of, message_items = {})
     Activities::CreateActivityService

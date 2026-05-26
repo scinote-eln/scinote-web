@@ -4717,6 +4717,7 @@ en:
       experiment_due_date: "Due date reminder if you have Owner or User access role on a Experiment"
       project_due_date: "Due date reminder if you have Owner access role on a Project"
       other_user_group_member: "You were added or removed from the group"
+      equipment_scheduling: "Equipment scheduling reminders"
     content:
       my_module_due_date_reminder:
         title_html: "Task due date reminder"
@@ -4733,6 +4734,18 @@ en:
       experiment_due_date_reminder:
         title_html: "Experiment due date reminder"
         message_html: "Due date for the experiment %{experiment_name} is coming up."
+      equipment_booking_created:
+        title_html: "Equipment booking created"
+        message_html: "%{user_name} added you to the %{event_name} event for %{repository_row_name}."
+      equipment_booking_updated:
+        title_html: "Equipment booking updated"
+        message_html: "The %{event_name} event for %{repository_row_name} has been updated."
+      equipment_booking_deleted:
+        title_html: "Equipment booking deleted"
+        message_html: "The %{event_name} event for %{repository_row_name} has been deleted."
+      equipment_booking_reminder:
+        title_html: "Equipment booking reminder"
+        message_html: "The %{event_name} event for %{repository_row_name} starts in 24 hours."
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
