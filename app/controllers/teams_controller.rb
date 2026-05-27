@@ -124,12 +124,12 @@ class TeamsController < ApplicationController
   end
 
   def available_settings
-    render json: TeamSettingsService.new(@team, current_user).available_settings
+    render json: TeamSettingsService.new(@team, current_user, params[:mode]).available_settings
   end
 
   def update_setting
     ActiveRecord::Base.transaction do
-      TeamSettingsService.new(@team, current_user).update_setting!(params[:section], params[:key], params[:value])
+      TeamSettingsService.new(@team, current_user, params[:mode]).update_setting!(params[:section], params[:key], params[:value])
       team_settings_activity_mapping = {
         'task_sharing_enabled' => 'team_sharing_tasks',
         'repository_deletion_enabled' => 'team_repository_deletion',

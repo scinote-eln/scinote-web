@@ -170,6 +170,7 @@ Rails.application.routes.draw do
 
           member do
             get :members
+            get :data_integrity
           end
 
           collection do
