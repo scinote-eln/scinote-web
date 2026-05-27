@@ -6,7 +6,7 @@
         'bg-white': !step.attributes.archived,
         '!bg-sn-background-brittlebush': step.attributes.archived
       }"
-       :data-e2e="`e2e-CO-task-step${step.id}`"
+       :data-e2e="`e2e-CO-task-archived-step${step.id}`"
   >
     <div>
       <div class="step-header flex justify-between">
@@ -16,10 +16,10 @@
             data-toggle="collapse"
             data-remote="true"
             @click="toggleCollapsed"
-            :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCollapsed`">
+            :data-e2e="`e2e-BT-protocol-archived-step${step.id}-toggleCollapsed`">
             <span class="sn-icon sn-icon-right "></span>
           </a>
-          <div v-if="!step.attributes.archived" class="step-position mt-0.5" :data-e2e="`e2e-TX-protocol-step${step.id}-position`">
+          <div v-if="!step.attributes.archived" class="step-position mt-0.5" :data-e2e="`e2e-TX-protocol-archived-step${step.id}-position`">
             {{ step.attributes.position + 1 }}.
           </div>
           <InlineEdit
@@ -36,7 +36,7 @@
               date: step.attributes.archived_on || step.attributes.created_at,
               user: step.attributes.archived_by || step.attributes.created_by
             })"
-            :data-e2e="`task-step${step.id}`"
+            :data-e2e="`task-archived-step${step.id}`"
           />
         </div>
         <div class="step-head-right flex elements-actions-container">
@@ -46,10 +46,10 @@
           </div>
           <button
             v-if="this.urls.restore_url"
-            class="btn icon-btn btn-light"
+            :class="['btn icon-btn btn-light', 'e2e-DO-task-archived-step-optionsMenu-restore']"
             @click="confirmingRestore=true"
             :data-sn-tooltip="this.i18n.t('protocols.steps.options_dropdown.restore')"
-            :data-e2e="`e2e-DO-task-step${this.step.id}-optionsMenu-restore`"
+            :data-e2e="`e2e-DO-task-archived-step${this.step.id}-optionsMenu-restore`"
           >
             <i class="sn-icon sn-icon-restore"></i>
           </button>
@@ -94,9 +94,10 @@
           </a>
           <button
             v-if="this.urls.delete_url"
-            class="btn icon-btn btn-light"
+            :class="['btn icon-btn btn-light', 'e2e-DO-task-archived-step-optionsMenu-delete']"
             @click="confirmingDelete=true"
             :data-sn-tooltip="this.i18n.t('protocols.steps.options_dropdown.delete')"
+            :data-e2e="`e2e-DO-task-archived-step${this.step.id}-optionsMenu-delete`"
           >
             <i class="sn-icon sn-icon-delete"></i>
           </button>
@@ -116,6 +117,8 @@
             :element.sync="elements[index]"
             :inRepository="false"
             :assignableMyModuleId="step.attributes.my_module_id"
+            :dataE2e="`protocol-archived-step${step.id}`"
+            :cssE2e="'protocol-archived-step'"
             @component:delete="removeElement"
             @component:archive="removeElement"
             @component:restore="removeElement"
@@ -126,6 +129,8 @@
                       :archived="true"
                       :attachments="attachments"
                       :attachmentsReady="attachmentsReady"
+                      :dataE2e="`protocol-archived-step${step.id}`"
+                      cssE2e="protocol-archived-step"
                       @attachments:openFileModal="showFileModal = true"
                       @attachments:order="changeAttachmentsOrder"
                       @attachment:deleted="attachmentDeleted"

@@ -34,7 +34,8 @@
           :is="attachment_view_mode(attachmentsOrdered[index])"
           :attachment="attachment"
           :parentId="parseInt(parent.id)"
-          :dataE2e="`${dataE2e}`"
+          :dataE2e="this.dataE2e"
+          :cssE2e="this.cssE2e"
           @attachment:viewMode="updateAttachmentViewMode"
           @attachment:delete="deleteAttachment(attachment.id)"
           @attachment:restore="deleteAttachment(attachment.id)"
@@ -75,6 +76,10 @@ export default {
       required: true
     },
     dataE2e: {
+      type: String,
+      default: ''
+    },
+    cssE2e: {
       type: String,
       default: ''
     },

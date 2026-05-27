@@ -1,5 +1,5 @@
 <template>
-  <div class="content__form-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-stepForm${element.id}`">
+  <div class="content__form-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-formElement${element.id}`">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
     <div :class="{'!bg-sn-background-brittlebush p-4': element.attributes.orderable.archived}">
       <div class="flex items-center gap-4">
@@ -18,19 +18,19 @@
         <div class="ml-auto flex items gap-4">
           <button
               v-if="this.element.attributes.orderable.urls.restore_url"
-              class="btn icon-btn btn-light"
+              :class="['btn icon-btn btn-light', `e2e-BT-${this.cssE2e}-formElement-options-restore`]"
               @click="confirmingRestore = true"
               :title="i18n.t('general.restore')"
-              :data-e2e="`e2e-BT-${this.dataE2e}-stepForm${this.element.id}-options-restore`"
+              :data-e2e="`e2e-BT-${this.dataE2e}-formElement${this.element.id}-options-restore`"
             >
               <i class="sn-icon sn-icon-restore"></i>
             </button>
             <button
               v-if="this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url"
-              class="btn icon-btn btn-light"
+              :class="['btn icon-btn btn-light', `e2e-BT-${this.cssE2e}-formElement-options-delete`]"
               @click="showDeleteModal"
               :title="i18n.t('general.delete')"
-              :data-e2e="`e2e-BT-${this.dataE2e}-stepForm${this.element.id}-options-delete`"
+              :data-e2e="`e2e-BT-${this.dataE2e}-formElement${this.element.id}-options-delete`"
             >
               <i class="sn-icon sn-icon-delete"></i>
             </button>
@@ -40,7 +40,7 @@
             :btnClasses="'btn btn-light icon-btn btn-sm'"
             :position="'right'"
             :btnIcon="'sn-icon sn-icon-more-hori'"
-            :dataE2e="`e2e-DD-${dataE2e}-stepForm${element.id}-options`"
+            :dataE2e="`e2e-DD-${dataE2e}-formElement${element.id}-options`"
             @move="showMoveModal"
             @delete="showDeleteModal"
             @archive="archiveElement"
@@ -49,19 +49,19 @@
       </div>
       <div class="max-w-[800px] w-full rounded bg-sn-super-light-grey p-6 flex flex-col gap-4">
         <div class="flex items-center">
-          <h3 class="my-1" :data-e2e="`e2e-TX-${dataE2e}-stepForm${element.id}-formName`">{{ form.name }}</h3>
+          <h3 class="my-1" :data-e2e="`e2e-TX-${dataE2e}-formElement${element.id}-formName`">{{ form.name }}</h3>
           <template v-if="!this.formResponse.in_repository">
             <div
               v-if="this.formResponse.status == 'submitted'"
               class="ml-auto text-right text-xs text-sn-grey-700"
-              :data-e2e="`e2e-TX-${dataE2e}-stepForm${element.id}-submissionInfo`"
+              :data-e2e="`e2e-TX-${dataE2e}-formElement${element.id}-submissionInfo`"
             >
               {{ i18n.t('forms.response.submitted_on') }} {{ this.formResponse.submitted_at }}<br>
               {{ i18n.t('forms.response.by') }} {{ this.formResponse.submitted_by_full_name }}
             </div>
             <div
               v-else class="ml-auto text-right text-xs text-sn-grey-700"
-              :data-e2e="`e2e-TX-${dataE2e}-stepForm${element.id}-notSubmitted`"
+              :data-e2e="`e2e-TX-${dataE2e}-formElement${element.id}-notSubmitted`"
             >
               {{ i18n.t('forms.response.not_submitted') }}
             </div>
@@ -76,21 +76,21 @@
           :formResponse="formResponse"
           @save="saveValue"
           @validChanged="checkValidFormFields"
-          :dataE2e="`${dataE2e}-stepForm${element.id}-field${field.id}`"
+          :dataE2e="`${dataE2e}-formElement${element.id}-field${field.id}`"
         />
         <div>
           <button v-if="this.formResponse.urls.submit"
                   class="btn btn-primary"
                   :disabled="!validResponse || !isValid || submitting"
                   @click="submitForm"
-                  :data-e2e="`e2e-BT-${dataE2e}-stepForm${element.id}-submitForm`">
+                  :data-e2e="`e2e-BT-${dataE2e}-formElement${element.id}-submitForm`">
             {{ i18n.t('forms.response.submit') }}
           </button>
           <button v-else-if="this.formResponse.urls.reset"
                   class="btn btn-secondary"
                   @click="resetForm"
                   :disabled="submitting"
-                  :data-e2e="`e2e-BT-${dataE2e}-stepForm${element.id}-editForm`">
+                  :data-e2e="`e2e-BT-${dataE2e}-formElement${element.id}-editForm`">
             {{ i18n.t('general.edit')}}
           </button>
         </div>
@@ -156,6 +156,10 @@ export default {
     dataE2e: {
       type: String,
       default: ''
+    },
+    cssE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -202,14 +206,16 @@ export default {
         menu.push({
           text: I18n.t('general.move'),
           emit: 'move',
-          data_e2e: `e2e-BT-${this.dataE2e}-stepForm${this.element.id}-options-move`
+          data_e2e: `e2e-BT-${this.dataE2e}-formElement${this.element.id}-options-move`,
+          e2e_class: `e2e-BT-${this.cssE2e}-formElement-options-move`
         });
       }
       if (!this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url) {
         menu.push({
           text: I18n.t('general.delete'),
           emit: 'delete',
-          data_e2e: `e2e-BT-${this.dataE2e}-stepForm${this.element.id}-options-delete`
+          data_e2e: `e2e-BT-${this.dataE2e}-formElement${this.element.id}-options-delete`,
+          e2e_class: `e2e-BT-${this.cssE2e}-formElement-options-delete`
         });
       }
 
@@ -217,7 +223,8 @@ export default {
         menu.push({
           text: I18n.t('general.archive'),
           emit: 'archive',
-          data_e2e: `e2e-BT-${this.dataE2e}-stepForm${this.element.id}-options-archive`
+          data_e2e: `e2e-BT-${this.dataE2e}-formElement${this.element.id}-options-archive`,
+          e2e_class: `e2e-BT-${this.cssE2e}-formElement-options-archive`
         });
       }
       return menu;

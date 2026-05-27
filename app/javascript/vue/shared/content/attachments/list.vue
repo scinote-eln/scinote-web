@@ -45,6 +45,8 @@
     <div class="attachment-actions shrink-0 ml-auto">
       <AttachmentActions
           :attachment="attachment"
+          :dataE2e="this.dataE2e"
+          :cssE2e="this.cssE2e"
           @attachment:viewMode="updateViewMode"
           @attachment:delete="deleteAttachment"
           @attachment:restore="restoreAttachment"
@@ -98,6 +100,10 @@ export default {
       required: true
     },
     dataE2e: {
+      type: String,
+      default: ''
+    },
+    cssE2e: {
       type: String,
       default: ''
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="content__text-container pr-8"
-    :data-e2e="`e2e-CO-${dataE2e}-stepText${element.id}`">
+    :data-e2e="`e2e-CO-${dataE2e}-textElement${element.id}`">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
     <div :class="{'!bg-sn-background-brittlebush p-4': element.attributes.orderable.archived}">
       <div class="text-header h-9 flex rounded mb-1 gap-2 items-center relative w-full group/text-header"
@@ -17,7 +17,7 @@
             :allowBlank="true"
             :autofocus="editingName"
             :attributeName="`${i18n.t('Text')} ${i18n.t('name')}`"
-            :dataE2e="`${dataE2e}-stepText${element.id}-title`"
+            :dataE2e="`${dataE2e}-textElement${element.id}-title`"
             @editingEnabled="enableNameEdit"
             @editingDisabled="disableNameEdit"
             @update="updateName"
@@ -38,19 +38,19 @@
         <div class="ml-auto flex items gap-4">
           <button
             v-if="this.element.attributes.orderable.urls.restore_url"
-            class="btn icon-btn btn-light"
+            :class="['btn icon-btn btn-light', `e2e-BT-${this.cssE2e}-textElement-options-restore`]"
             @click="confirmingRestore = true"
             :title="i18n.t('general.restore')"
-            :data-e2e="`e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-restore`"
+            :data-e2e="`e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-restore`"
           >
             <i class="sn-icon sn-icon-restore"></i>
           </button>
           <button
             v-if="this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url"
-            class="btn icon-btn btn-light"
+            :class="['btn icon-btn btn-light', `e2e-BT-${this.cssE2e}-textElement-options-delete`]"
             @click="showDeleteModal"
             :title="i18n.t('general.delete')"
-            :data-e2e="`e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-delete`"
+            :data-e2e="`e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-delete`"
           >
             <i class="sn-icon sn-icon-delete"></i>
           </button>
@@ -59,7 +59,7 @@
             :btnClasses="'btn btn-light icon-btn btn-sm'"
             :position="'right'"
             :btnIcon="'sn-icon sn-icon-more-hori'"
-            :dataE2e="`e2e-DD-${dataE2e}-stepText${element.id}-options`"
+            :dataE2e="`e2e-DD-${dataE2e}-textElement${element.id}-options`"
             @edit="enableNameEdit"
             @duplicate="duplicateElement"
             @move="showMoveModal"
@@ -71,7 +71,7 @@
       </div>
       <div class="flex rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body"
         :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }"
-        :data-e2e="`e2e-IF-${dataE2e}-stepText${element.id}-content`"
+        :data-e2e="`e2e-IF-${dataE2e}-textElement${element.id}-content`"
         @keyup.enter="enableEditMode($event)"
         tabindex="0">
         <Tinymce
@@ -91,8 +91,8 @@
           @editingDisabled="disableEditMode"
           @editingEnabled="enableEditMode"
         />
-        <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="wrappedTables" :data-e2e="`e2e-TX-${dataE2e}-stepText${element.id}`"></div>
-        <div v-else class="text-sn-grey" :data-e2e="`e2e-TX-${dataE2e}-stepText${element.id}-empty`">
+        <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="wrappedTables" :data-e2e="`e2e-TX-${dataE2e}-textElement${element.id}`"></div>
+        <div v-else class="text-sn-grey" :data-e2e="`e2e-TX-${dataE2e}-textElement${element.id}-empty`">
           {{ i18n.t("protocols.steps.text.empty_text") }}
         </div>
       </div>
@@ -152,6 +152,10 @@ export default {
     dataE2e: {
       type: String,
       default: ''
+    },
+    cssE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -187,35 +191,40 @@ export default {
         menu.push({
           text: I18n.t('general.edit'),
           emit: 'edit',
-          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-edit`
+          data_e2e: `e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-edit`,
+          e2e_class: `e2e-BT-${this.cssE2e}-textElement-options-edit`
         });
       }
       if (this.element.attributes.orderable.urls.duplicate_url) {
         menu.push({
           text: I18n.t('general.duplicate'),
           emit: 'duplicate',
-          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-duplicate`
+          data_e2e: `e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-duplicate`,
+          e2e_class: `e2e-BT-${this.cssE2e}-textElement-options-duplicate`
         });
       }
       if (this.element.attributes.orderable.urls.move_targets_url) {
         menu.push({
           text: I18n.t('general.move'),
           emit: 'move',
-          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-move`
+          data_e2e: `e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-move`,
+          e2e_class: `e2e-BT-${this.cssE2e}-textElement-options-move`
         });
       }
       if (this.element.attributes.orderable.urls.archive_url) {
         menu.push({
           text: I18n.t('general.archive'),
           emit: 'archive',
-          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-archive`
+          data_e2e: `e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-archive`,
+          e2e_class: `e2e-BT-${this.cssE2e}-textElement-options-archive`
         });
       }
       if (!this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url) {
         menu.push({
           text: this.i18n.t('general.delete'),
           emit: 'delete',
-          data_e2e: `e2e-BT-${this.dataE2e}-stepText${this.element.id}-options-delete`
+          data_e2e: `e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-delete`,
+          e2e_class: `e2e-BT-${this.cssE2e}-textElement-options-delete`
         });
       }
       return menu;

@@ -96,6 +96,14 @@ export default {
     displayInDropdown: {
       type: Array,
       default: []
+    },
+    dataE2e: {
+      type: String,
+      default: ''
+    },
+    cssE2e: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -114,39 +122,48 @@ export default {
           text: this.i18n.t('Download'),
           url: this.attachment.attributes.urls.download,
           url_target: '_blank',
-          data_e2e: 'e2e-BT-attachmentOptions-download'
+          data_e2e: `e2e-BT-${this.dataE2e}-options-download`,
+          e2e_class: `e2e-BT-${this.cssE2e}-options-download`
         });
       }
       if (this.attachment.attributes.urls.duplicate) {
         menu.push({
           text: this.i18n.t('assets.context_menu.duplicate'),
-          emit: 'duplicate'
+          emit: 'duplicate',
+          data_e2e: `e2e-BT-${this.dataE2e}-options-duplicate`,
+          e2e_class: `e2e-BT-${this.cssE2e}-options-duplicate`
         });
       }
       if (this.attachment.attributes.urls.rename) {
         menu.push({
           text: this.i18n.t('assets.context_menu.rename'),
-          emit: 'rename'
+          emit: 'rename',
+          data_e2e: `e2e-BT-${this.dataE2e}-options-rename`,
+          e2e_class: `e2e-BT-${this.cssE2e}-options-rename`
         });
       }
       if (this.attachment.attributes.urls.archive) {
         menu.push({
           text: this.i18n.t('assets.context_menu.archive'),
-          data_e2e: 'e2e-BT-attachmentOptions-archive',
-          emit: 'archive'
+          emit: 'archive',
+          data_e2e: `e2e-BT-${this.dataE2e}-options-archive`,
+          e2e_class: `e2e-BT-${this.cssE2e}-options-archive`
         });
       }
       if (this.attachment.attributes.urls.delete && !this.attachment.attributes.archived) {
         menu.push({
           text: this.i18n.t('assets.context_menu.delete'),
           emit: 'delete',
-          data_e2e: 'e2e-BT-attachmentOptions-delete'
+          data_e2e: `e2e-BT-${this.dataE2e}-options-delete`,
+          e2e_class: `e2e-BT-${this.cssE2e}-options-delete`
         });
       }
       if (this.attachment.attributes.urls.versions) {
         menu.push({
           text: this.i18n.t('assets.context_menu.versions'),
-          emit: 'fileVersionsModal'
+          emit: 'fileVersionsModal',
+          data_e2e: `e2e-BT-${this.dataE2e}-options-versions`,
+          e2e_class: `e2e-BT-${this.cssE2e}-options-versions`
         });
       }
       if (this.attachment.attributes.urls.toggle_view_mode) {

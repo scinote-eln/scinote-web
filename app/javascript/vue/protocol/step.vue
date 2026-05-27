@@ -181,6 +181,7 @@
           :assignableMyModuleId="assignableMyModuleId"
           :isNew="element.isNew"
           :dataE2e="`protocol-step${step.id}`"
+          cssE2e="protocol-step"
           @component:adding-content="($event) => addingContent = $event"
           @component:delete="removeElement"
           @component:archive="removeElement"
@@ -195,6 +196,7 @@
                     :attachments="attachments"
                     :attachmentsReady="attachmentsReady"
                     :dataE2e="`protocol-step${step.id}`"
+                    cssE2e="protocol-step"
                     @attachments:openFileModal="showFileModal = true"
                     @attachment:deleted="attachmentDeleted"
                     @attachment:update="updateAttachment"
@@ -502,21 +504,24 @@
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.rearrange'),
             emit: 'reorder',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-rearrange`
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-rearrange`,
+            e2e_class: 'e2e-BT-protocol-step-stepOptions-rearrange'
           }]);
         }
         if (this.urls.duplicate_step_url) {
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.duplicate'),
             emit: 'duplicate',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-duplicate`
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-duplicate`,
+            e2e_class: 'e2e-BT-protocol-step-stepOptions-duplicate'
           }]);
         }
         if (this.urls.delete_url) {
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.delete'),
             emit: 'delete',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-delete`
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-delete`,
+            e2e_class: 'e2e-BT-protocol-step-stepOptions-delete'
           }]);
         }
 
@@ -524,7 +529,8 @@
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.archive'),
             emit: 'archive',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-archive`
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-archive`,
+            e2e_class: 'e2e-BT-protocol-step-stepOptions-archive'
           }]);
         }
         return menu;

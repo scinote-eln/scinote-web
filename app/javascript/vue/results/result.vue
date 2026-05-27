@@ -186,6 +186,8 @@
             :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
             :assignableMyModuleId="result.attributes.my_module_id"
             :isNew="element.isNew"
+            :dataE2e="`task-result${result.id}`"
+            cssE2e="task-result"
             @component:adding-content="($event) => addingContent = $event"
             @component:delete="removeElement"
             @component:archive="removeElement"
@@ -200,6 +202,8 @@
                       :parent="result"
                       :attachments="attachments"
                       :attachmentsReady="attachmentsReady"
+                      :dataE2e="`task-result${result.id}`"
+                      cssE2e="task-result"
                       @attachments:openFileModal="showFileModal = true"
                       @attachment:deleted="attachmentDeleted"
                       @attachment:update="updateAttachment"
@@ -421,28 +425,32 @@ export default {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.rearrange'),
           emit: 'reorder',
-          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-reorder`
+          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-reorder`,
+          e2e_class: 'e2e-DO-task-result-optionsMenu-reorder'
         }]);
       }
       if (this.urls.duplicate_url && !this.result.attributes.archived) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.duplicate'),
           emit: 'duplicate',
-          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-duplicate`
+          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-duplicate`,
+          e2e_class: 'e2e-BT-task-result-optionsMenu-duplicate'
         }]);
       }
       if (this.urls.archive_url) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.archive'),
           emit: 'archive',
-          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-archive`
+          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-archive`,
+          e2e_class: 'e2e-DO-task-result-optionsMenu-archive'
         }]);
       }
       if (this.urls.delete_url) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.delete'),
           emit: 'delete',
-          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-delete`
+          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-delete`,
+          e2e_class: 'e2e-DO-task-result-optionsMenu-delete'
         }]);
       }
       return menu;

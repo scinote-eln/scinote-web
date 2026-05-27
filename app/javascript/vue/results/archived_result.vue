@@ -44,10 +44,10 @@
           </div>
           <button
             v-if="this.urls.restore_url"
-            class="btn icon-btn btn-light"
+            :class="['btn icon-btn btn-light', 'e2e-DO-task-archived-result-optionsMenu-restore']"
             @click="confirmingRestore = true"
             :title="this.i18n.t('my_modules.results.actions.restore')"
-            :data-e2e="`e2e-DO-task-result${this.result.id}-optionsMenu-restore`"
+            :data-e2e="`e2e-DO-task-archived-result${this.result.id}-optionsMenu-restore`"
           >
             <i class="sn-icon sn-icon-restore"></i>
           </button>
@@ -96,10 +96,10 @@
           </a>
           <button
             v-if="this.urls.delete_url"
-            class="btn icon-btn btn-light"
+            :class="['btn icon-btn btn-light', 'e2e-DO-task-archived-result-optionsMenu-delete']"
             @click="showDeleteModal"
             :title="this.i18n.t('my_modules.results.actions.delete')"
-            :data-e2e="`e2e-DO-task-result${this.result.id}-optionsMenu-delete`"
+            :data-e2e="`e2e-DO-task-archived-result${this.result.id}-optionsMenu-delete`"
           >
             <i class="sn-icon sn-icon-delete"></i>
           </button>
@@ -122,6 +122,8 @@
             :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
             :assignableMyModuleId="result.attributes.my_module_id"
             :isNew="element.isNew"
+            :dataE2e="`task-archived-result${result.id}`"
+            cssE2e="task-archived-result"
             @component:adding-content="($event) => addingContent = $event"
             @component:delete="removeElement"
             @component:archive="removeElement"
@@ -137,6 +139,8 @@
                       :archived="true"
                       :attachments="attachments"
                       :attachmentsReady="attachmentsReady"
+                      :dataE2e="`task-archived-result${result.id}`"
+                      cssE2e="task-archived-result"
                       @attachments:openFileModal="showFileModal = true"
                       @attachment:deleted="attachmentDeleted"
                       @attachments:order="changeAttachmentsOrder"
