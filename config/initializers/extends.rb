@@ -890,6 +890,7 @@ class Extends
     my_module_repositories/index
     protocol_repository_rows/index
     my_modules/archive
+    teams/data_integrity
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
@@ -964,23 +965,27 @@ class Extends
   WHITELISTED_USER_SETTINGS = [].freeze
 
   AVAILABLE_TEAM_SETTINGS = {
-    sharing: {
-      task_sharing_enabled: {
-        permission_helper: :can_manage_team?,
-        confirm: {
-          description_params: %i(name shared_task_count)
+    general: {
+      sharing: {
+        task_sharing_enabled: {
+          permission_helper: :can_manage_team?,
+          confirm: {
+            description_params: %i(name shared_task_count)
+          }
         }
       }
     },
-    deletion: {
-      repository_deletion_enabled: {
-        permission_helper: :can_modify_team_deletion_prevention?
-      },
-      result_deletion_enabled: {
-        permission_helper: :can_modify_team_deletion_prevention?
-      },
-      protocol_steps_deletion_enabled: {
-        permission_helper: :can_modify_team_deletion_prevention?
+    data_integrity: {
+     deletion: {
+        repository_deletion_enabled: {
+          permission_helper: :can_modify_team_deletion_prevention?
+        },
+        result_deletion_enabled: {
+          permission_helper: :can_modify_team_deletion_prevention?
+        },
+        protocol_steps_deletion_enabled: {
+          permission_helper: :can_modify_team_deletion_prevention?
+        }
       }
     }
   }

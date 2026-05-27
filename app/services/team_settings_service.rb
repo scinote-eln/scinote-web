@@ -5,14 +5,16 @@ class TeamSettingPermissionError < StandardError; end
 class TeamSettingsService
   include Canaid::Helpers::PermissionsHelper
 
-  def initialize(team, user)
+  def initialize(team, user, mode)
     @user = user
     @team = team
+    @mode = mode.to_sym
   end
 
   def available_settings
-    settings = Extends::AVAILABLE_TEAM_SETTINGS
-    settings = settings.except(:deletion) unless Team.deletion_prevention_enabled?
+    settings = Extends::AVAILABLE_TEAM_SETTINGS[@mode]
+
+    settings = settings.except(:deletion) if @mode == :data_integrity && !Team.deletion_prevention_enabled?
 
     @available_settings ||= settings.to_h do |section, available_settings|
       [

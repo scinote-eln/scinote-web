@@ -3743,8 +3743,11 @@ en:
           members: "Members"
           groups: "Groups"
           tags: "Tags"
+          data_integrity: "Data integrity"
         preferences:
-          title: "Workspace preferences"
+          title:
+            general: "Workspace preferences"
+            data_integrity: "Data deletion"
           sections:
             sharing:
               title: "Sharing"

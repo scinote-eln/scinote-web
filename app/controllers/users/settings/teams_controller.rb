@@ -16,6 +16,7 @@ module Users
         show
         users_datatable
         members
+        data_integrity
       )
 
       before_action :load_team, only: %i(
@@ -26,12 +27,15 @@ module Users
         update
         destroy
         members
+        data_integrity
       )
 
       before_action :check_create_team_permission,
                     only: %i(new create)
 
-      before_action :set_breadcrumbs_items, only: %i(index show members)
+      before_action :check_data_integrity_enabled, only: %i(data_integrity)
+
+      before_action :set_breadcrumbs_items, only: %i(index show members data_integrity)
 
       layout 'fluid'
 
@@ -65,6 +69,10 @@ module Users
 
       def members
         @active_tab = :members
+      end
+
+      def data_integrity
+        @active_tab = :data_integrity
       end
 
       def users_datatable
@@ -136,6 +144,10 @@ module Users
 
       def check_create_team_permission
         render_403 unless can_create_teams?
+      end
+
+      def check_data_integrity_enabled
+        render_403 unless Team.deletion_prevention_enabled?
       end
 
       def load_user
