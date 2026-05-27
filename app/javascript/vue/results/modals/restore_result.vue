@@ -9,8 +9,11 @@
           </h4>
         </div>
         <div class="modal-body flex flex-col gap-6">
-          <p>{{ i18n.t('my_modules.results.modals.restore.description_1')}}</p>
-          <p>{{ i18n.t('my_modules.results.modals.restore.description_2')}}</p>
+          <p>
+            {{ i18n.t('my_modules.results.modals.restore.description_1')}}
+            <div v-if="hasArchivedElements" class="mt-1">{{ i18n.t('my_modules.results.modals.restore.description_2')}}</div>
+          </p>
+          <p><b>{{ i18n.t('my_modules.results.modals.restore.description_3')}}</b></p>
 
         </div>
         <div class="modal-footer">
@@ -27,6 +30,12 @@ import modalMixin from '../../shared/modal_mixin.js';
 
 export default {
   name: 'restoreResultModal',
-  mixins: [modalMixin]
+  mixins: [modalMixin],
+    props: {
+      hasArchivedElements: {
+        type: Boolean,
+        required: true
+      }
+    }
 };
 </script>

@@ -232,7 +232,7 @@
             @updateResult="updateLinkedSteps"
             @close="openLinkStepsModal = false"
           />
-          <archiveResultModal v-if="confirmingArchive" @confirm="archiveResult" @cancel="closeArchiveModal"/>
+          <archiveResultModal v-if="confirmingArchive" @confirm="archiveResult" @close="closeArchiveModal"/>
         </Teleport>
       </div>
     </div>
@@ -571,8 +571,7 @@ export default {
       this.customWellPlate = false;
     },
     showArchiveModal() {
-      const components = this.$refs.resultComponent || [];
-      if (components.some(comp => comp?.hasCrossTableReferences === true)) {
+      if (this.elements.some(e => e.attributes.orderable_type === 'Table')) {
         this.confirmingArchive = true;
       } else {
         this.archiveResult();

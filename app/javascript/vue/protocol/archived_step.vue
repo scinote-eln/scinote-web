@@ -48,7 +48,7 @@
             v-if="this.urls.restore_url"
             class="btn icon-btn btn-light"
             @click="confirmingRestore=true"
-            :title="this.i18n.t('protocols.steps.options_dropdown.restore')"
+            :data-sn-tooltip="this.i18n.t('protocols.steps.options_dropdown.restore')"
             :data-e2e="`e2e-DO-task-step${this.step.id}-optionsMenu-restore`"
           >
             <i class="sn-icon sn-icon-restore"></i>
@@ -58,7 +58,7 @@
               <button
                 ref="linkButton"
                 class="btn btn-light icon-btn"
-                :title="i18n.t('protocols.steps.linked_results')"
+                :data-sn-tooltip="i18n.t('protocols.steps.linked_results')"
               >
                 <i class="sn-icon sn-icon-steps"></i>
                 <span class="absolute top-1 -right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
@@ -70,7 +70,7 @@
               <div class="overflow-y-auto max-h-[calc(50vh_-_6rem)]">
                 <a v-for="result in step.attributes.results"
                   :key="result.id"
-                  :title="result.name"
+                  :data-sn-tooltip="result.name"
                   :href="resultUrl(result.id, result.archived)"
                   class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer block hover:no-underline text-sn-blue truncate"
                 >
@@ -96,14 +96,17 @@
             v-if="this.urls.delete_url"
             class="btn icon-btn btn-light"
             @click="confirmingDelete=true"
-            :title="this.i18n.t('protocols.steps.options_dropdown.delete')"
+            :data-sn-tooltip="this.i18n.t('protocols.steps.options_dropdown.delete')"
           >
             <i class="sn-icon sn-icon-delete"></i>
           </button>
         </div>
       </div>
       <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
-      <restoreStepModal v-if="confirmingRestore" @confirm="restoreStep" @close="closeRestoreModal"/>
+      <restoreStepModal v-if="confirmingRestore"
+                        :hasArchivedElements="hasArchivedElements"
+                        @confirm="restoreStep"
+                        @close="closeRestoreModal" />
 
       <div class="collapse in pl-10" :id="'stepBody' + step.id">
         <div v-for="(element, index) in orderedElements" :key="element.id">
@@ -176,6 +179,11 @@ export default {
     return {
       confirmingDelete: false,
       confirmingRestore: false
+    }
+  },
+  computed: {
+    hasArchivedElements() {
+      return this.elements.some(element => element.attributes.orderable.archived);
     }
   },
   methods: {

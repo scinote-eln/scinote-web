@@ -67,7 +67,6 @@
       :data-image-id="attachment.id"
       :data-image-name="attachment.attributes.file_name"
       :data-image-url="attachment.attributes.urls.asset_file"
-      :data-image-quality="attachment.attributes.image_context && attachment.attributes.image_context.quality"
       :data-image-mime-type="attachment.attributes.image_context && attachment.attributes.image_context.type"
       :data-image-start-edit-url="attachment.attributes.urls.start_edit_image"
     >
@@ -83,7 +82,6 @@
       :data-image-id="attachment.id"
       :data-image-name="attachment.attributes.file_name"
       :data-image-url="attachment.attributes.urls.asset_file"
-      :data-image-quality="attachment.attributes.image_context.quality"
       :data-image-mime-type="attachment.attributes.image_context.type"
       :data-image-start-edit-url="attachment.attributes.urls.start_edit_image"
     ></a>

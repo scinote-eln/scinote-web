@@ -11,10 +11,19 @@
       <% unless @settings['exclude_task_metadata'] %>
         <%= step_status_label(step) %>
       <% end %>
+      <% if step.archived? %>
+        <span class="label label-warning"><%= t('search.index.archived') %></span>
+      <% end %>
     </h5>
     <div class="user-time">
       <% unless @settings['exclude_timestamps'] %>
-        <%= t("projects.reports.elements.step.#{step_type_str}.user_time", user: user.full_name , timestamp: l(timestamp, format: :full)) %>
+        <% if step.archived? %>
+          <%= t('projects.reports.elements.archived_metadata',
+                datetime: I18n.l(step.archived_on, format: :full),
+                user: step.archived_by&.full_name) %>
+        <% else %>
+          <%= t("projects.reports.elements.step.#{step_type_str}.user_time", user: user.full_name , timestamp: l(timestamp, format: :full)) %>
+        <% end %>
       <% end %>
       <% if !@settings['exclude_task_metadata'] && step.results.size.positive? %>
       | <%= t("projects.reports.elements.step.linked_results") %> <%= step.results.pluck(:name).join('; ') %>

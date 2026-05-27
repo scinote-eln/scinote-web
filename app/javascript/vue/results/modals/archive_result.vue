@@ -12,10 +12,8 @@
           <div>
             <p>{{ i18n.t('my_modules.results.modals.archive.description_1')}}</p>
             <p>{{ i18n.t('my_modules.results.modals.archive.description_2')}}</p>
-            <p>{{ i18n.t('my_modules.results.modals.archive.description_3')}}</p>
           </div>
-          <p><b>{{ i18n.t('my_modules.results.modals.archive.description_4')}}</b></p>
-          <p>{{ i18n.t('my_modules.results.modals.archive.description_5')}}</p>
+          <p><b>{{ i18n.t('my_modules.results.modals.archive.description_3')}}</b></p>
 
         </div>
         <div class="modal-footer">

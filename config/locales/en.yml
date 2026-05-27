@@ -1746,16 +1746,15 @@ en:
       modals:
         archive:
           title: 'Archive result'
-          description_1: 'This result contains table(s) that include cross-references to other table(s).'
-          description_2: 'Archiving the result will permanently remove cross-references to other table(s).'
-          description_3: 'The result can be restored from Archive without cross-references.'
-          description_4: 'This action cannot be undone.'
-          description_5: 'Are you sure you want to continue?'
+          description_1: 'Table(s) in this result may contain cells that are cross-referenced by other table(s).'
+          description_2: 'Archiving the step will preserve those cross-references, but referenced cells in other tables may not display correctly until this step is restored, as archived data is inaccessible.'
+          description_3: 'Are you sure you want to archive this result?'
           confirm: 'Archive'
         restore:
           title: 'Restore result'
           description_1: 'The result will be restored in Results tab according to the currently active sorting.'
-          description_2: 'Are you sure you want to continue?'
+          description_2: 'Note: Any individually archived components within this result will not be restored automatically. You can restore them separately afterwards.'
+          description_3: 'Are you sure you want to continue?'
           confirm: 'Restore'
           success: '%{name} successfully restored from the archive.'
         link_steps:
@@ -4342,10 +4341,9 @@ en:
           error: "Table name can't be empty"
         archive_modal:
           title: 'Archive table'
-          description_1: 'Archiving the table will permanently remove cross-references to other table(s).'
-          description_2: 'The table can be restored from Archive without cross-references.'
-          description_3: 'This action cannot be undone.'
-          description_4: 'Are you sure you want to continue?'
+          description_1: 'This table may contain cells that are cross-referenced by other table(s).'
+          description_2: 'Archiving it will preserve those cross-references, but referenced cells in other tables may not display correctly until this table is restored, as archived data is inaccessible.'
+          description_3: 'Are you sure you want to archive this table?'
           confirm: 'Archive'
         restore_modal:
           title: 'Restore table'
@@ -4424,16 +4422,15 @@ en:
             search_placeholder: "Enter result name"
         archive_step:
           title: 'Archive step'
-          description_1: 'This step contains table(s) that include cross-references to other table(s).'
-          description_2: 'Archiving the table will permanently remove cross-references to other table(s).'
-          description_3: 'The table can be restored from Archive without cross-references.'
-          description_4: 'This action cannot be undone.'
-          description_5: 'Are you sure you want to continue?'
+          description_1: 'Table(s) in this step may contain cells that are cross-referenced by other table(s).'
+          description_2: 'Archiving the step will preserve those cross-references, but referenced cells in other tables may not display correctly until this step is restored, as archived data is inaccessible.'
+          description_3: 'Are you sure you want to archive this step?'
           confirm: 'Archive'
         restore_step:
           title: 'Restore step'
           description_1: 'The step will be restored to the bottom of your current active protocol.'
-          description_2: 'Are you sure you want to continue?'
+          description_2: 'Note: Any individually archived components within this step will not be restored automatically. You can restore them separately afterwards.'
+          description_3: 'Are you sure you want to continue?'
           confirm: 'Restore'
           success: '%{name} successfully restored from the archive.'
         delete_step:

@@ -56,6 +56,8 @@ export default {
         this.$refs.table.searchValue = this.searchValue;
       }
     });
+
+    document.getElementById('show_report_preview')?.click();
   },
   components: {
     DataTable,

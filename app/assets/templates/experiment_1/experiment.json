@@ -227,7 +227,6 @@
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1,
-                    "file_image_quality": 99,
                     "view_mode": "thumbnail"
                   },
                   "asset_blob": {
@@ -916,7 +915,6 @@
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1,
-                    "file_image_quality": null,
                     "view_mode": "thumbnail"
                   },
                   "asset_blob": {
@@ -1616,7 +1614,6 @@
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1,
-                    "file_image_quality": null,
                     "view_mode": "thumbnail"
                   },
                   "asset_blob": {
@@ -1759,7 +1756,6 @@
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1,
-                    "file_image_quality": 79,
                     "view_mode": "thumbnail"
                   },
                   "asset_blob": {
@@ -1789,7 +1785,6 @@
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1,
-                    "file_image_quality": 99,
                     "view_mode": "thumbnail"
                   },
                   "asset_blob": {
@@ -1845,7 +1840,6 @@
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1,
-                    "file_image_quality": null,
                     "view_mode": "thumbnail"
                   },
                   "asset_blob": {
@@ -1873,7 +1867,6 @@
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1,
-                    "file_image_quality": 92,
                     "view_mode": "thumbnail"
                   },
                   "asset_blob": {
@@ -2074,7 +2067,6 @@
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1,
-                    "file_image_quality": null,
                     "view_mode": "thumbnail"
                   },
                   "asset_blob": {
@@ -2128,7 +2120,6 @@
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1,
-                    "file_image_quality": null,
                     "view_mode": "thumbnail"
                   },
                   "asset_blob": {
@@ -2236,7 +2227,6 @@
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1,
-                    "file_image_quality": 88,
                     "view_mode": "thumbnail"
                   },
                   "asset_blob": {
@@ -2365,7 +2355,6 @@
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1,
-                    "file_image_quality": null,
                     "view_mode": "thumbnail"
                   },
                   "asset_blob": {
@@ -2395,7 +2384,6 @@
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1,
-                    "file_image_quality": null,
                     "view_mode": "thumbnail"
                   },
                   "asset_blob": {

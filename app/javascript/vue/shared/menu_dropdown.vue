@@ -23,7 +23,7 @@
               :target="item.url_target || '_self'"
               :class="{ 'bg-sn-super-light-blue': item.active, 'disabled': item.disabled }"
               :style="item.disabled === 'style-only' && 'pointer-events: all'"
-              :title="item.title"
+              :data-sn-tooltip="item.title"
               :data-toggle="item.modalTarget && 'modal'"
               :data-target="item.modalTarget"
               :data-e2e="item.data_e2e"

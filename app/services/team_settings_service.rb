@@ -11,7 +11,10 @@ class TeamSettingsService
   end
 
   def available_settings
-    @available_settings ||= Extends::AVAILABLE_TEAM_SETTINGS.to_h do |section, available_settings|
+    settings = Extends::AVAILABLE_TEAM_SETTINGS
+    settings = settings.except(:deletion) unless Team.deletion_prevention_enabled?
+
+    @available_settings ||= settings.to_h do |section, available_settings|
       [
         section,
         available_settings.to_h do |setting_key, setting|

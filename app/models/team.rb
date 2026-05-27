@@ -163,6 +163,10 @@ class Team < ApplicationRecord
     ProtocolKeyword.where(team: self).pluck(:name)
   end
 
+  def self.deletion_prevention_enabled?
+    ENV['DELETION_PREVENTION_ENABLED'] == 'true'
+  end
+
   def self.by_activity_subjects(subjects)
     team_ids = []
     valid_subjects = subjects.select { |k| Extends::SEARCHABLE_ACTIVITY_SUBJECT_TYPES.include?(k.to_s) }
@@ -196,6 +200,14 @@ class Team < ApplicationRecord
 
   def shareable_links_enabled?
     settings['task_sharing_enabled'] == true
+  end
+
+  def protocol_steps_deletion_enabled?
+    !Team.deletion_prevention_enabled? || settings['protocol_steps_deletion_enabled']
+  end
+
+  def result_deletion_enabled?
+    !Team.deletion_prevention_enabled? || settings['result_deletion_enabled']
   end
 
   private

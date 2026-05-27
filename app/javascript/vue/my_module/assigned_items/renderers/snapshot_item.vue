@@ -24,7 +24,7 @@
         <button
           v-if="canManageSnapshots"
           class="btn btn-light icon-btn opacity-0 group-hover:opacity-100"
-          :title="i18n.t('my_modules.repository.version.delete')"
+          :data-sn-tooltip="i18n.t('my_modules.repository.version.delete')"
           @click.stop="deleteVersion"
           :data-e2e="`e2e-BT-${e2eValue}-snapshot${item.id}-delete`"
         >
@@ -35,7 +35,7 @@
           v-else-if="canManageSnapshots"
           class="btn btn-light icon-btn"
           data-toggle="tooltip"
-          :title="i18n.t('my_modules.repository.version.pin')"
+          :data-sn-tooltip="i18n.t('my_modules.repository.version.pin')"
           @click.stop="pinVersion"
           :data-e2e="`e2e-BT-${e2eValue}-snapshot${item.id}-pin`"
         >
