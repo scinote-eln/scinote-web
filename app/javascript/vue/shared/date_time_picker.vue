@@ -67,7 +67,7 @@ export default {
     mode: { type: String, default: 'datetime' },
     clearable: { type: Boolean, default: false },
     teleport: { type: Boolean, default: true },
-    defaultValue: { type: String, required: false },
+    defaultValue: { type: [String, Array], required: false },
     placeholder: { type: String },
     standAlone: { type: Boolean, default: false, required: false },
     dateClassName: { type: String, default: '' },
@@ -167,14 +167,33 @@ export default {
     },
     initializeValue() {
       if (!this.defaultValue) return;
+      
+      if (this.range) {
+        const start = this.defaultValue[0];
+        const end = this.defaultValue[1];
+        if (!start || !end) return '';
 
-      if (this.mode === 'time') {
-        // expects time in format of "[date] HH:mm"
-        const [hours, minutes] = this.defaultValue.match(/(\d{2}:\d{2})/)[0].split(":").map(Number);
+        this.value = [];
+        if (this.mode === 'time') {
+          // expects time in format of "[date] HH:mm"
+          const [startHours, startMinutes] = start.match(/(\d{2}:\d{2})/)[0].split(":").map(Number);
+          const [endHours, endMinutes] = end.match(/(\d{2}:\d{2})/)[0].split(":").map(Number);
 
-        this.value = { hours: hours, minutes: minutes, seconds: 0 }
+          this.value[0] = { hours: startHours, minutes: startMinutes, seconds: 0 }
+          this.value[1] = { hours: endHours, minutes: endMinutes, seconds: 0 }
+        } else {
+          this.value[0] = new Date(start.replace(/([^!\s])-/g, '$1/'));
+          this.value[1] = new Date(end.replace(/([^!\s])-/g, '$1/'));
+        }
       } else {
-        this.value = new Date(this.defaultValue.replace(/([^!\s])-/g, '$1/'));
+        if (this.mode === 'time') {
+          // expects time in format of "[date] HH:mm"
+          const [hours, minutes] = this.defaultValue.match(/(\d{2}:\d{2})/)[0].split(":").map(Number);
+
+          this.value = { hours: hours, minutes: minutes, seconds: 0 }
+        } else {
+          this.value = new Date(this.defaultValue.replace(/([^!\s])-/g, '$1/'));
+        }
       }
     },
     close() {
