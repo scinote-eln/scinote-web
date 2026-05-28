@@ -4,7 +4,9 @@ module AutomationObservers
   class StepCompletionObserver < BaseObserver
     def self.on_update(step, user)
       return unless Current.team.settings.dig('team_automation_settings', 'tasks', 'task_status_in_progress', 'on_step_completion')
-      unless (step.saved_change_to_archived? && !step.archived) || (step.saved_change_to_completed? && step.completed) || (step.saved_change_to_skipped_at? && step.skipped_at)
+
+      unless (step.saved_change_to_archived? && !step.archived && (step.completed || step.skipped_at)) ||
+             (step.saved_change_to_completed? && step.completed) || (step.saved_change_to_skipped_at? && step.skipped_at)
         return
       end
       return unless step.protocol.in_module? && step.protocol.my_module.my_module_status.initial_status?
