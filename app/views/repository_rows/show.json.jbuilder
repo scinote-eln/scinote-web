@@ -14,6 +14,7 @@ json.repository do
   json.id @repository.id
   json.name @repository.name
   json.is_snapshot @repository.is_a?(RepositorySnapshot) || !@repository_row.snapshot_at.nil?
+  json.url repository_path(@repository)
 end
 json.editable @repository_row.editable?
 json.notification @notification
