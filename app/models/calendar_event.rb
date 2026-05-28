@@ -5,7 +5,7 @@ class CalendarEvent < ApplicationRecord
   belongs_to :team
   belongs_to :created_by, class_name: 'User'
   has_many :calendar_event_participants, inverse_of: :calendar_event, dependent: :destroy
-  has_many :users, through: :calendar_event_participants
+  has_many :users, through: :calendar_event_participants, dependent: :destroy
 
   enum event_type: {
     equipment_booking: 0
@@ -30,8 +30,6 @@ class CalendarEvent < ApplicationRecord
   scope :event_sub_type_filter, ->(sub_types) { where(event_sub_type: sub_types) }
 
   before_save :set_full_day
-
-  accepts_nested_attributes_for :calendar_event_participants, allow_destroy: true
 
   private
 
