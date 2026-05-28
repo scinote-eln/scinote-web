@@ -35,7 +35,7 @@
           :attachment="attachment"
           :parentId="parseInt(parent.id)"
           :dataE2e="this.dataE2e"
-          :cssE2e="this.cssE2e"
+          :e2eClass="this.e2eClass"
           @attachment:viewMode="updateAttachmentViewMode"
           @attachment:delete="deleteAttachment(attachment.id)"
           @attachment:restore="deleteAttachment(attachment.id)"
@@ -79,7 +79,7 @@ export default {
       type: String,
       default: ''
     },
-    cssE2e: {
+    e2eClass: {
       type: String,
       default: ''
     },

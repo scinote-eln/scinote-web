@@ -9,7 +9,7 @@
     />
     <a v-if="attachment.attributes.urls.move"
       @click.prevent.stop="$emit('attachment:move_modal')"
-      :class="['btn btn-light icon-btn thumbnail-action-btn', `e2e-BT-${this.cssE2e}-options-move`]"
+      :class="['btn btn-light icon-btn thumbnail-action-btn', `e2e-BT-${this.e2eClass}-options-move`]"
       :title="i18n.t('attachments.thumbnail.buttons.move')"
       :data-e2e="`e2e-BT-${this.dataE2e}-attachment${this.attachment.id}-options-move`"
     >
@@ -17,14 +17,14 @@
     </a>
     <button v-if="attachment.attributes.urls.restore"
       @click.prevent.stop="confirmingRestore=true"
-      :class="['btn btn-light icon-btn thumbnail-action-btn', `e2e-BT-${this.cssE2e}-options-restore`]"
+      :class="['btn btn-light icon-btn thumbnail-action-btn', `e2e-BT-${this.e2eClass}-options-restore`]"
       :title="i18n.t('attachments.thumbnail.buttons.restore')"
       :data-e2e="`e2e-BT-${this.dataE2e}-attachment${this.attachment.id}-options-restore`"
     >
       <i class="sn-icon sn-icon-restore"></i>
     </button>
     <a
-      :class="['btn btn-light icon-btn thumbnail-action-btn', `e2e-BT-${this.cssE2e}-options-download`]"
+      :class="['btn btn-light icon-btn thumbnail-action-btn', `e2e-BT-${this.e2eClass}-options-download`]"
       :title="i18n.t('attachments.thumbnail.buttons.download')"
       :href="attachment.attributes.urls.download" data-turbolinks="false"
       :data-e2e="`e2e-BT-${this.dataE2e}-attachment${this.attachment.id}-options-download`"
@@ -32,7 +32,7 @@
       <i class="sn-icon sn-icon-export"></i>
     </a>
     <button
-      :class="['btn btn-light icon-btn thumbnail-action-btn', `e2e-BT-${this.cssE2e}-options-delete`]"
+      :class="['btn btn-light icon-btn thumbnail-action-btn', `e2e-BT-${this.e2eClass}-options-delete`]"
       :title="i18n.t('attachments.thumbnail.buttons.delete')"
       @click.prevent.stop="deleteModal=true"
       v-if="this.attachment.attributes.urls.delete && this.attachment.attributes.archived"
@@ -43,7 +43,7 @@
     <ContextMenu
       :attachment="attachment"
       :dataE2e="`${this.dataE2e}-attachment${this.attachment.id}`"
-      :cssE2e="`${this.cssE2e}-attachment`"
+      :e2eClass="`${this.e2eClass}-attachment`"
       @attachment:viewMode="$emit('attachment:viewMode', $event)"
       @attachment:archive="$emit('attachment:archive', $event)"
       @attachment:delete="$emit('attachment:delete', $event)"
@@ -87,7 +87,7 @@ export default {
       type: String,
       default: ''
     },
-    cssE2e: {
+    e2eClass: {
       type: String,
       default: ''
     }

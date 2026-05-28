@@ -38,7 +38,7 @@
         <div class="ml-auto flex items gap-4">
           <button
             v-if="this.element.attributes.orderable.urls.restore_url"
-            :class="['btn icon-btn btn-light', `e2e-BT-${this.cssE2e}-textElement-options-restore`]"
+            :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-textElement-options-restore`]"
             @click="confirmingRestore = true"
             :title="i18n.t('general.restore')"
             :data-e2e="`e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-restore`"
@@ -47,7 +47,7 @@
           </button>
           <button
             v-if="this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url"
-            :class="['btn icon-btn btn-light', `e2e-BT-${this.cssE2e}-textElement-options-delete`]"
+            :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-textElement-options-delete`]"
             @click="showDeleteModal"
             :title="i18n.t('general.delete')"
             :data-e2e="`e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-delete`"
@@ -153,7 +153,7 @@ export default {
       type: String,
       default: ''
     },
-    cssE2e: {
+    e2eClass: {
       type: String,
       default: ''
     }
@@ -192,7 +192,7 @@ export default {
           text: I18n.t('general.edit'),
           emit: 'edit',
           data_e2e: `e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-edit`,
-          e2e_class: `e2e-BT-${this.cssE2e}-textElement-options-edit`
+          e2e_class: `e2e-BT-${this.e2eClass}-textElement-options-edit`
         });
       }
       if (this.element.attributes.orderable.urls.duplicate_url) {
@@ -200,7 +200,7 @@ export default {
           text: I18n.t('general.duplicate'),
           emit: 'duplicate',
           data_e2e: `e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-duplicate`,
-          e2e_class: `e2e-BT-${this.cssE2e}-textElement-options-duplicate`
+          e2e_class: `e2e-BT-${this.e2eClass}-textElement-options-duplicate`
         });
       }
       if (this.element.attributes.orderable.urls.move_targets_url) {
@@ -208,7 +208,7 @@ export default {
           text: I18n.t('general.move'),
           emit: 'move',
           data_e2e: `e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-move`,
-          e2e_class: `e2e-BT-${this.cssE2e}-textElement-options-move`
+          e2e_class: `e2e-BT-${this.e2eClass}-textElement-options-move`
         });
       }
       if (this.element.attributes.orderable.urls.archive_url) {
@@ -216,7 +216,7 @@ export default {
           text: I18n.t('general.archive'),
           emit: 'archive',
           data_e2e: `e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-archive`,
-          e2e_class: `e2e-BT-${this.cssE2e}-textElement-options-archive`
+          e2e_class: `e2e-BT-${this.e2eClass}-textElement-options-archive`
         });
       }
       if (!this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url) {
@@ -224,7 +224,7 @@ export default {
           text: this.i18n.t('general.delete'),
           emit: 'delete',
           data_e2e: `e2e-BT-${this.dataE2e}-textElement${this.element.id}-options-delete`,
-          e2e_class: `e2e-BT-${this.cssE2e}-textElement-options-delete`
+          e2e_class: `e2e-BT-${this.e2eClass}-textElement-options-delete`
         });
       }
       return menu;

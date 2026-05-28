@@ -101,7 +101,7 @@ export default {
       type: String,
       default: ''
     },
-    cssE2e: {
+    e2eClass: {
       type: String,
       default: ''
     }
@@ -123,7 +123,7 @@ export default {
           url: this.attachment.attributes.urls.download,
           url_target: '_blank',
           data_e2e: `e2e-BT-${this.dataE2e}-options-download`,
-          e2e_class: `e2e-BT-${this.cssE2e}-options-download`
+          e2e_class: `e2e-BT-${this.e2eClass}-options-download`
         });
       }
       if (this.attachment.attributes.urls.duplicate) {
@@ -131,7 +131,7 @@ export default {
           text: this.i18n.t('assets.context_menu.duplicate'),
           emit: 'duplicate',
           data_e2e: `e2e-BT-${this.dataE2e}-options-duplicate`,
-          e2e_class: `e2e-BT-${this.cssE2e}-options-duplicate`
+          e2e_class: `e2e-BT-${this.e2eClass}-options-duplicate`
         });
       }
       if (this.attachment.attributes.urls.rename) {
@@ -139,7 +139,7 @@ export default {
           text: this.i18n.t('assets.context_menu.rename'),
           emit: 'rename',
           data_e2e: `e2e-BT-${this.dataE2e}-options-rename`,
-          e2e_class: `e2e-BT-${this.cssE2e}-options-rename`
+          e2e_class: `e2e-BT-${this.e2eClass}-options-rename`
         });
       }
       if (this.attachment.attributes.urls.archive) {
@@ -147,7 +147,7 @@ export default {
           text: this.i18n.t('assets.context_menu.archive'),
           emit: 'archive',
           data_e2e: `e2e-BT-${this.dataE2e}-options-archive`,
-          e2e_class: `e2e-BT-${this.cssE2e}-options-archive`
+          e2e_class: `e2e-BT-${this.e2eClass}-options-archive`
         });
       }
       if (this.attachment.attributes.urls.delete && !this.attachment.attributes.archived) {
@@ -155,7 +155,7 @@ export default {
           text: this.i18n.t('assets.context_menu.delete'),
           emit: 'delete',
           data_e2e: `e2e-BT-${this.dataE2e}-options-delete`,
-          e2e_class: `e2e-BT-${this.cssE2e}-options-delete`
+          e2e_class: `e2e-BT-${this.e2eClass}-options-delete`
         });
       }
       if (this.attachment.attributes.urls.versions) {
@@ -163,7 +163,7 @@ export default {
           text: this.i18n.t('assets.context_menu.versions'),
           emit: 'fileVersionsModal',
           data_e2e: `e2e-BT-${this.dataE2e}-options-versions`,
-          e2e_class: `e2e-BT-${this.cssE2e}-options-versions`
+          e2e_class: `e2e-BT-${this.e2eClass}-options-versions`
         });
       }
       if (this.attachment.attributes.urls.toggle_view_mode) {

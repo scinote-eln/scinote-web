@@ -46,7 +46,7 @@
       <AttachmentActions
           :attachment="attachment"
           :dataE2e="this.dataE2e"
-          :cssE2e="this.cssE2e"
+          :e2eClass="this.e2eClass"
           @attachment:viewMode="updateViewMode"
           @attachment:delete="deleteAttachment"
           @attachment:restore="restoreAttachment"
@@ -103,7 +103,7 @@ export default {
       type: String,
       default: ''
     },
-    cssE2e: {
+    e2eClass: {
       type: String,
       default: ''
     }
