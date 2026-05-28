@@ -9,29 +9,41 @@
     />
     <a v-if="attachment.attributes.urls.move"
       @click.prevent.stop="$emit('attachment:move_modal')"
-      class="btn btn-light icon-btn thumbnail-action-btn"
-      :title="i18n.t('attachments.thumbnail.buttons.move')">
+      :class="['btn btn-light icon-btn thumbnail-action-btn', `e2e-BT-${this.e2eClass}-options-move`]"
+      :title="i18n.t('attachments.thumbnail.buttons.move')"
+      :data-e2e="`e2e-BT-${this.dataE2e}-attachment${this.attachment.id}-options-move`"
+    >
       <i class="sn-icon sn-icon-move"></i>
     </a>
     <button v-if="attachment.attributes.urls.restore"
       @click.prevent.stop="confirmingRestore=true"
-      class="btn btn-light icon-btn thumbnail-action-btn"
-      :title="i18n.t('attachments.thumbnail.buttons.restore')">
+      :class="['btn btn-light icon-btn thumbnail-action-btn', `e2e-BT-${this.e2eClass}-options-restore`]"
+      :title="i18n.t('attachments.thumbnail.buttons.restore')"
+      :data-e2e="`e2e-BT-${this.dataE2e}-attachment${this.attachment.id}-options-restore`"
+    >
       <i class="sn-icon sn-icon-restore"></i>
     </button>
-    <a class="btn btn-light icon-btn thumbnail-action-btn"
+    <a
+      :class="['btn btn-light icon-btn thumbnail-action-btn', `e2e-BT-${this.e2eClass}-options-download`]"
       :title="i18n.t('attachments.thumbnail.buttons.download')"
-      :href="attachment.attributes.urls.download" data-turbolinks="false">
+      :href="attachment.attributes.urls.download" data-turbolinks="false"
+      :data-e2e="`e2e-BT-${this.dataE2e}-attachment${this.attachment.id}-options-download`"
+    >
       <i class="sn-icon sn-icon-export"></i>
     </a>
-    <button class="btn btn-light icon-btn thumbnail-action-btn"
+    <button
+      :class="['btn btn-light icon-btn thumbnail-action-btn', `e2e-BT-${this.e2eClass}-options-delete`]"
       :title="i18n.t('attachments.thumbnail.buttons.delete')"
       @click.prevent.stop="deleteModal=true"
-      v-if="this.attachment.attributes.urls.delete && this.attachment.attributes.archived">
+      v-if="this.attachment.attributes.urls.delete && this.attachment.attributes.archived"
+      :data-e2e="`e2e-BT-${this.dataE2e}-attachment${this.attachment.id}-options-delete`"
+    >
       <i class="sn-icon sn-icon-delete"></i>
     </button>
     <ContextMenu
       :attachment="attachment"
+      :dataE2e="`${this.dataE2e}-attachment${this.attachment.id}`"
+      :e2eClass="`${this.e2eClass}-attachment`"
       @attachment:viewMode="$emit('attachment:viewMode', $event)"
       @attachment:archive="$emit('attachment:archive', $event)"
       @attachment:delete="$emit('attachment:delete', $event)"
@@ -70,7 +82,15 @@ export default {
   name: 'attachmentActions',
   props: {
     attachment: Object,
-    withBorder: false
+    withBorder: false,
+    dataE2e: {
+      type: String,
+      default: ''
+    },
+    e2eClass: {
+      type: String,
+      default: ''
+    }
   },
   mixins: [OpenLocallyMixin],
   data() {

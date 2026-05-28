@@ -6,6 +6,7 @@
           class="h-10 flex items-center px-4 text-base"
           :class="mode === 'steps' ? 'bg-sn-white rounded-sm font-semibold shadow' : 'text-sn-grey-700'"
           @click="updateMode('steps')"
+          data-e2e="'e2e-BT-task-archivedTab-toolbar-steps'"
         >
           {{ i18n.t('my_modules.archive.steps') }}
         </div>
@@ -13,6 +14,7 @@
           class="h-10 flex items-center px-4 text-base"
           :class="mode === 'results' ? 'bg-sn-white rounded-sm font-semibold shadow' : 'text-sn-grey-700'"
           @click="updateMode('results')"
+          data-e2e="'e2e-BT-task-archivedTab-toolbar-results'"
         >
           {{ i18n.t('my_modules.archive.results') }}
         </div>
