@@ -26,8 +26,9 @@ var globalActivities = (function() {
   };
 
   function GlobalActivitiesFiltersGetDates() {
-    var fromDate = $('#calendar-from-date').data('dateTimePicker').$refs.vueDateTime.datetime;
-    var toDate = $('#calendar-to-date').data('dateTimePicker').$refs.vueDateTime.datetime;
+    var fromDate = $('#calendar-from-date').data('dateTimePicker').$refs.vueDateTime.value;
+    var toDate = $('#calendar-to-date').data('dateTimePicker').$refs.vueDateTime.value;
+
     if (fromDate) {
       fromDate = fromDate.date_to_string();
     }
@@ -335,8 +336,8 @@ var globalActivities = (function() {
       $(this).find('.calendar-input').data('dateTimePicker').onChange = () => {
         let dateContainer = $('.ga-side .date-selector.filter-block');
         if (!updateRunning) {
-          let toDate = $('#calendar-to-date').data('dateTimePicker').$refs.vueDateTime.datetime;
-          let fromDate = $('#calendar-from-date').data('dateTimePicker').$refs.vueDateTime.datetime;
+          let toDate = $('#calendar-to-date').data('dateTimePicker').$refs.vueDateTime.value;
+          let fromDate = $('#calendar-from-date').data('dateTimePicker').$refs.vueDateTime.value;
           dateContainer[0].dataset.periodSelect = (toDate ? toDate?.date_to_string() : '') + ' - ' + (fromDate ? fromDate.date_to_string() : '');
           GlobalActivitiesUpdateTopPaneTags();
           reloadActivities();
@@ -367,23 +368,23 @@ var globalActivities = (function() {
       var lastMonthStart = new Date(lastMonthEnd.getFullYear(), lastMonthEnd.getMonth(), 1);
       updateRunning = true;
       if (selectPeriod === 'today') {
-        fromDate.$refs.vueDateTime.datetime = today;
-        toDate.$refs.vueDateTime.datetime = today;
+        fromDate.$refs.vueDateTime.value = today;
+        toDate.$refs.vueDateTime.value = today;
       } else if (selectPeriod === 'yesterday') {
-        fromDate.$refs.vueDateTime.datetime = yesterday;
-        toDate.$refs.vueDateTime.datetime = yesterday;
+        fromDate.$refs.vueDateTime.value = yesterday;
+        toDate.$refs.vueDateTime.value = yesterday;
       } else if (selectPeriod === 'this_week') {
-        fromDate.$refs.vueDateTime.datetime = today;
-        toDate.$refs.vueDateTime.datetime = monday;
+        fromDate.$refs.vueDateTime.value = today;
+        toDate.$refs.vueDateTime.value = monday;
       } else if (selectPeriod === 'last_week') {
-        fromDate.$refs.vueDateTime.datetime = lastWeekEnd;
-        toDate.$refs.vueDateTime.datetime = lastWeekStart;
+        fromDate.$refs.vueDateTime.value = lastWeekEnd;
+        toDate.$refs.vueDateTime.value = lastWeekStart;
       } else if (selectPeriod === 'this_month') {
-        fromDate.$refs.vueDateTime.datetime = today;
-        toDate.$refs.vueDateTime.datetime = firstDay;
+        fromDate.$refs.vueDateTime.value = today;
+        toDate.$refs.vueDateTime.value = firstDay;
       } else if (selectPeriod === 'last_month') {
-        fromDate.$refs.vueDateTime.datetime = lastMonthEnd;
-        toDate.$refs.vueDateTime.datetime = lastMonthStart;
+        fromDate.$refs.vueDateTime.value = lastMonthEnd;
+        toDate.$refs.vueDateTime.value = lastMonthStart;
       }
       updateRunning = false;
       dateContainer[0].dataset.periodSelect = this.innerHTML;
