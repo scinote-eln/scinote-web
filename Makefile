@@ -21,7 +21,7 @@ docker:
 	@$(COMPOSE) --progress plain build
 
 docker-ci:
-	@$(COMPOSE) --progress plain build web
+	@$(COMPOSE) -f docker-compose.test.yml build web
 
 docker-production:
 	@$(COMPOSE) --progress plain -f docker-compose.production.yml build --build-arg BUILD_TIMESTAMP=$(BUILD_TIMESTAMP)
@@ -80,8 +80,8 @@ integration-tests:
 	@$(MAKE) rails cmd="bundle exec cucumber"
 
 tests-ci:
-	@$(COMPOSE) run --rm web bash -c "bundle install"
-	@$(COMPOSE) run -e ENABLE_EMAIL_CONFIRMATIONS=false \
+	@$(COMPOSE) -f docker-compose.test.yml run \
+					-e ENABLE_EMAIL_CONFIRMATIONS=false \
 					-e MAIL_FROM=MAIL_FROM \
 					-e MAIL_REPLYTO=MAIL_REPLYTO \
 					-e RAILS_ENV=test \
@@ -92,7 +92,8 @@ tests-ci:
 					-e CORE_API_RATE_LIMIT=1000000 \
 					-e PROTOCOLS_IO_ACCESS_TOKEN=PROTOCOLS_IO_ACCESS_TOKEN \
 					-e ENABLE_WEBHOOKS=true \
-					--rm web bash -c "rake db:create && rake db:migrate && bundle exec rspec ./spec/"
+					-e SECRET_KEY_BASE=$(shell openssl rand -hex 64) \
+					--rm web bash -c "rake parallel:create && rails db:schema:load && rake parallel:prepare && rake parallel:spec"
 
 console:
 	@$(MAKE) rails cmd="rails console"

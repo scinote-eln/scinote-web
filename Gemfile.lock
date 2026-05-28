@@ -591,6 +591,8 @@ GEM
       rexml (~> 3.2)
     pairing_heap (3.0.1)
     parallel (1.23.0)
+    parallel_tests (5.7.0)
+      parallel
     parser (3.2.2.3)
       ast (~> 2.4.1)
       racc
@@ -934,6 +936,7 @@ DEPENDENCIES
   opentelemetry-propagator-xray
   opentelemetry-sdk
   overcommit
+  parallel_tests
   pg (~> 1.5)
   pry
   pry-byebug
