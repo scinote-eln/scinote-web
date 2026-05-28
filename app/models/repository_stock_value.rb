@@ -115,22 +115,26 @@ class RepositoryStockValue < ApplicationRecord
                                       .repository_stock_unit_items
                                       .find_by(id: new_data[:unit_item_id])
     self.last_modified_by = user
-    new_amount = new_data[:amount].to_d
-    delta = new_amount - amount.to_d
-    self.comment = new_data[:comment].presence
 
-    unless preview
-      repository_ledger_records.create!(
-        user: last_modified_by,
-        amount: delta,
-        balance: new_amount,
-        reference: repository_cell.repository_column.repository,
-        comment: comment,
-        unit: repository_stock_unit_item&.data
-      )
+    if new_data[:amount].present?
+      new_amount = new_data[:amount].to_d
+      delta = new_amount - amount.to_d
+      self.comment = new_data[:comment].presence
+
+      unless preview
+        repository_ledger_records.create!(
+          user: last_modified_by,
+          amount: delta,
+          balance: new_amount,
+          reference: repository_cell.repository_column.repository,
+          comment: comment,
+          unit: repository_stock_unit_item&.data
+        )
+      end
+
+      self.amount = new_amount
     end
 
-    self.amount = new_amount
     preview ? validate : save!
   end
 
