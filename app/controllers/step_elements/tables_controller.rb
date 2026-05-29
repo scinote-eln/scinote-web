@@ -60,7 +60,7 @@ module StepElements
 
         if @table.saved_changes?
           log_step_activity(:table_edited, { table_name: @table.name })
-          table_content_annotation(@table.step, @table, @table.contents_was)
+          table_content_annotation(@table.step, @table, @table.contents_before_last_save)
         end
       end
 
