@@ -8,6 +8,7 @@ module Api
         load_checklist(:id)
       end
       before_action :load_checklist_for_managing, only: %i(update destroy)
+      before_action :check_delete_permission, only: :destroy
 
       def index
         checklists = timestamps_filter(@step.checklists)
@@ -66,6 +67,10 @@ module Api
       def load_checklist_for_managing
         @checklist = @step.checklists.find(params.require(:id))
         raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@protocol)
+      end
+
+      def check_delete_permission
+        raise PermissionError.new(Checklist, :delete) unless can_delete_step_checklist?(@checklist)
       end
     end
   end
