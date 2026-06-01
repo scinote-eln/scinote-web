@@ -9,6 +9,7 @@ module Api
           load_result_text(:id)
         end
         before_action :check_manage_permission, only: %i(create update destroy)
+        before_action :check_delete_permission, only: :destroy
 
         def index
           result_texts = timestamps_filter(@result.result_texts)
@@ -56,6 +57,10 @@ module Api
 
         def check_manage_permission
           raise PermissionError.new(Result, :manage) unless can_manage_result?(@result)
+        end
+
+        def check_delete_permission
+          raise PermissionError.new(ResultText, :delete) unless can_delete_result_text?(@result_text)
         end
 
         def result_text_params

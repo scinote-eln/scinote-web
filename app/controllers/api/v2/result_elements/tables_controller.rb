@@ -9,6 +9,7 @@ module Api
           load_result_table(:id)
         end
         before_action :check_manage_permission, only: %i(create update destroy)
+        before_action :check_delete_permission, only: :destroy
 
         def index
           result_tables = timestamps_filter(@result.result_tables)
@@ -56,6 +57,10 @@ module Api
 
         def check_manage_permission
           raise PermissionError.new(Result, :manage) unless can_manage_result?(@result)
+        end
+
+        def check_delete_permission
+          raise PermissionError.new(Table, :delete) unless can_delete_result_table?(@table)
         end
 
         def convert_plate_template(metadata_params)

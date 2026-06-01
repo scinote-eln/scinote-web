@@ -6,7 +6,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V2::ResultElements::TablesController', type: :request do
   let(:user) { create(:user) }
-  let(:team) { create(:team, created_by: user) }
+  let(:team) { create(:team, :record_deletion_enabled, created_by: user) }
   let(:project) { create(:project, team: team, created_by: user) }
   let(:experiment) { create(:experiment, :with_tasks, project: project, created_by: user) }
   let(:task) { experiment.my_modules.first }
@@ -249,6 +249,8 @@ RSpec.describe 'Api::V2::ResultElements::TablesController', type: :request do
     let(:result_table) { create(:result_table, result: result) }
     let(:result_table_archived) { create(:result_table, result: result_archived) }
     let(:delete_action) do
+      result_table.table.archive!(user)
+
       delete(api_v2_team_project_experiment_task_result_table_path(
         team_id: team.id,
         project_id: project.id,

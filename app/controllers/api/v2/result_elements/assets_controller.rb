@@ -7,8 +7,9 @@ module Api
         include ::Api::V1::BlobCreation
 
         before_action :load_team, :load_project, :load_experiment, :load_task, :load_result
-        before_action :check_manage_permission, only: %i(create destroy)
         before_action :load_asset, only: %i(show destroy)
+        before_action :check_manage_permission, only: %i(create destroy)
+        before_action :check_delete_permission, only: :destroy
 
         def index
           result_assets = timestamps_filter(@result.assets)
@@ -53,6 +54,10 @@ module Api
 
         def check_manage_permission
           raise PermissionError.new(Result, :manage) unless can_manage_result?(@result)
+        end
+
+        def check_delete_permission
+          raise PermissionError.new(Asset, :delete) unless can_delete_asset?(@asset)
         end
       end
     end

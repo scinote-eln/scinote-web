@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'Api::V2::StepsController', type: :request do
   before :all do
     @user = create(:user)
-    @team = create(:team, created_by: @user)
+    @team = create(:team, :record_deletion_enabled, created_by: @user)
     @project = create(:project, team: @team, created_by: @user)
     @experiment = create(:experiment, :with_tasks, project: @project, created_by: @user)
     @task = @experiment.my_modules.first
@@ -14,7 +14,7 @@ RSpec.describe 'Api::V2::StepsController', type: :request do
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }
   end
 
-  let(:protocol) { create :protocol, my_module: @task }
+  let(:protocol) { create :protocol, my_module: @task, team: @team }
   let(:steps) { create_list(:step, 3, protocol: protocol) }
   let(:step) { steps.first }
 
@@ -257,6 +257,8 @@ RSpec.describe 'Api::V2::StepsController', type: :request do
     end
 
     let(:action) do
+      step.archive!(@user)
+
       delete(
         api_v2_team_project_experiment_task_protocol_step_path(
           team_id: @team.id,
