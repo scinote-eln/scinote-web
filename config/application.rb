@@ -70,6 +70,8 @@ module Scinote
 
     config.encoding = 'utf-8'
 
+    config.active_record.schema_format = :sql
+
     config.active_job.queue_adapter = :delayed_job
 
     config.action_dispatch.cookies_serializer = :hybrid

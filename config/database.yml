@@ -79,10 +79,10 @@ development:
 test: &test
   primary:
     <<: *default
-    url: <%= ENV['DATABASE_TEST_URL'] || 'postgresql://postgres:mysecretpassword@db/scinote_test' %>
+    url: <%= ENV['DATABASE_TEST_URL'] || "postgresql://postgres:mysecretpassword@db/scinote_test#{ENV['TEST_ENV_NUMBER']}" %>
   cable:
     <<: *cable_default
-    url: <%= ENV['CABLE_DATABASETEST_URL'] || 'postgresql://postgres:mysecretpassword@db/scinote_cable_test' %>
+    url: <%= ENV['CABLE_DATABASETEST_URL'] || "postgresql://postgres:mysecretpassword@db/scinote_cable_test#{ENV['TEST_ENV_NUMBER']}" %>
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
