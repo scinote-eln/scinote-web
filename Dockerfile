@@ -30,7 +30,7 @@ RUN apt-get update -qq && \
   wget -O $TIKA_PATH $TIKA_DIST_URL && \
   chmod +x $TIKA_PATH && \
   ln -s /usr/bin/yarnpkg /usr/bin/yarn && \
-  ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
+  ln -s /usr/lib/$(dpkg-architecture -q DEB_HOST_MULTIARCH)/libvips.so.42 /usr/lib/$(dpkg-architecture -q DEB_HOST_MULTIARCH)/libvips.so && \
   rm -rf /var/lib/apt/lists/*
 
 ENV PATH=/usr/share/nodejs/yarn/bin:$PATH
