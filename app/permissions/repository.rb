@@ -159,11 +159,11 @@ Canaid::Permissions.register_for(Repository) do
   end
 
   can :create_equipment_bookings do |user, repository|
-    can_manage_repository?(user, repository)
+    can_manage_repository_rows?(user, repository)
   end
 
   can :manage_equipment_bookings do |user, repository|
-    can_manage_repository?(user, repository)
+    can_manage_repository_rows?(user, repository)
   end
 end
 

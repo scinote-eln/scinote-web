@@ -10,7 +10,8 @@ class CalendarEventsController < ApplicationController
   before_action :check_create_permission, only: :create
 
   def index
-    @calendar_events = current_team.calendar_events.where(event_type: params[:event_type])
+    @calendar_events = CalendarEvent.where(team_id: current_user.teams.select(:id))
+                                    .where(event_type: params[:event_type])
 
     filter_calendar_events!
 
