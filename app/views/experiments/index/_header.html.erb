@@ -19,3 +19,9 @@
     </h1>
   </div>
 </div>
+
+<% if @project.read_only_description %>
+  <div class="bg-white py-4">
+    <%= @project.read_only_description.html_safe %>
+  </div>
+<% end %>
