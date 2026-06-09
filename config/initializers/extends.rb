@@ -960,7 +960,11 @@ class Extends
     'ResultOrderableElement' => ['AutomationObservers::ResultContentChangeObserver']
   }
 
-  DEFAULT_TEAM_SETTINGS = {}
+  DEFAULT_TEAM_SETTINGS = {
+    repository_deletion_enabled: true,
+    result_deletion_enabled: true,
+    protocol_steps_deletion_enabled: true
+  }
 
   WHITELISTED_USER_SETTINGS = [].freeze
 
