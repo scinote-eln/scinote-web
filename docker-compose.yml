@@ -4,10 +4,11 @@ services:
     container_name: scinote_db_development
     image: postgres:18
     volumes:
-      - scinote_development_postgres:/var/lib/postgresql/18/docker
+      - scinote_development_postgres18:/var/lib/postgresql/18/docker
     environment:
       - "POSTGRES_USER=postgres"
       - "POSTGRES_PASSWORD=mysecretpassword"
+
   web:
     build:
       context: .
@@ -85,6 +86,6 @@ services:
       - scinote_development_bundler:/usr/local/bundle/
 
 volumes:
-  scinote_development_postgres:
+  scinote_development_postgres18: 
   scinote_development_bundler:
   scinote_development_storage:
