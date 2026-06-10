@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_08_105328) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_26_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -154,6 +154,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_08_105328) do
     t.string "interval_unit"
     t.integer "repeat_count"
     t.datetime "repeat_until"
+    t.boolean "reminder_sent", default: false, null: false
     t.index ["created_by_id"], name: "index_calendar_events_on_created_by_id"
     t.index ["event_sub_type"], name: "index_calendar_events_on_event_sub_type"
     t.index ["event_type"], name: "index_calendar_events_on_event_type"

@@ -138,6 +138,18 @@ class NotificationExtends
     },
     delivery: {
       recipients_module: :DirectRecipient
+    },
+    equipment_booking_created: {
+      recipients_module: :AssignedCalendarEventRecipients
+    },
+    equipment_booking_updated: {
+      recipients_module: :AssignedCalendarEventRecipients
+    },
+    equipment_booking_deleted: {
+      recipients_module: :AssignedCalendarEventRecipients
+    },
+    equipment_booking_reminder: {
+      recipients_module: :AssignedCalendarEventRecipients
     }
   }
 
@@ -193,6 +205,12 @@ class NotificationExtends
       ],
       repository_date_reminder: %I[
         item_date_reminder
+      ],
+      equipment_scheduling: %I[
+        equipment_booking_created
+        equipment_booking_updated
+        equipment_booking_deleted
+        equipment_booking_reminder
       ]
     },
     other: {
