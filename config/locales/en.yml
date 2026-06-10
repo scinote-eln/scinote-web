@@ -371,6 +371,7 @@ en:
     activities: "Global activities"
     academy: "Courses"
     support: "Support"
+    equipment_bookings: "Equipment scheduling"
     support_links:
       support: "Knowledge center"
       tutorials: "Video tutorials"
@@ -1124,6 +1125,59 @@ en:
 
   teams:
     private_team: "Private workspace"
+  equipment_bookings:
+    index:
+      head_title: "Equipment scheduling"
+      show_calendar: "Show calendar for:"
+      sidebar:
+        new_event: "New event"
+        filter_items: "Filter items"
+        all_items_selected: "All items selected"
+        filter_people: "Filter people"
+        all_users_selected: "All users selected"
+        event_types:
+          usage: "Usage"
+          maintenance: "Maintenance"
+          calibration: "Calibration"
+          other: "Other"
+      delete_modal:
+        title: "Delete event"
+        description_html: "Are you sure you want to delete this event?<br><br><b>This action cannot be undone.</b>"
+        delete: "Delete"
+      manage_modal:
+        create_title: "Create an event"
+        update_title: "Update an event"
+        event_name: "Event name"
+        item: "Item"
+        select_item: "Select an item"
+        event_type: "Event type"
+        start_date: "Start date"
+        end_date: "End date"
+        until: "until"
+        full_day_event: "Full-day event"
+        frequency: "Frequency"
+        frequency_options:
+          once: "Once"
+          daily: "Daily"
+          weekly: "Weekly"
+          monthly: "Monthly"
+          custom: "Custom"
+        repeat_every: "Repeat every"
+        custom_frequency_units:
+          days: "day(s)"
+          weeks: "week(s)"
+          months: "month(s)"
+          years: "year(s)"
+        ends: "Ends"
+        never: "Never"
+        after: "After"
+        on_date: "On"
+        occassions: "occassions"
+        people: "People"
+        create_event: "Create event"
+        update_event: "Update event"
+    promo:
+      promo_title: 'This feature is disabled by default in open source SciNote'
   forms:
     published: "Published"
     draft: "Draft"
@@ -1699,7 +1753,8 @@ en:
         restore:
           title: 'Restore result'
           description_1: 'The result will be restored in Results tab according to the currently active sorting.'
-          description_2: 'Are you sure you want to continue?'
+          description_2: 'Note: Any individually archived components within this result will not be restored automatically. You can restore them separately afterwards.'
+          description_3: 'Are you sure you want to continue?'
           confirm: 'Restore'
           success: '%{name} successfully restored from the archive.'
         link_steps:
@@ -2805,6 +2860,7 @@ en:
     archive_record: "Archive"
     restore_record: "Restore"
     print_label: "Print label"
+    create_event_record: 'Create event'
     exports:
       export: "Export"
       records: "Items"
@@ -3052,10 +3108,18 @@ en:
       assigned_label: 'Assigned'
       locations_label: 'Locations'
       QR_label: 'QR'
+      schedule_label: 'Schedule'
     locations:
       title: 'Locations (%{count})'
       container: 'Box'
       assign: 'Assign new location'
+    equipment_booking:
+      title: 'Schedule'
+      create_event: 'Create event'
+      upcoming_events: 'Upcoming'
+      past_events: 'Past'
+      show_more: 'Show more'
+      no_events: 'No events scheduled'
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
@@ -3110,6 +3174,8 @@ en:
   repository_ledger_records:
     errors:
       my_module_references_missing: 'Task references are not set'
+  equipment_booking:
+    equipment_booking_disabled: "<b>Equipment booking is disabled</b>"
   storage_locations:
     storage_locations_disabled: "<b>Storage locations are disabled</b>"
     container: 'box'
@@ -4363,7 +4429,8 @@ en:
         restore_step:
           title: 'Restore step'
           description_1: 'The step will be restored to the bottom of your current active protocol.'
-          description_2: 'Are you sure you want to continue?'
+          description_2: 'Note: Any individually archived components within this step will not be restored automatically. You can restore them separately afterwards.'
+          description_3: 'Are you sure you want to continue?'
           confirm: 'Restore'
           success: '%{name} successfully restored from the archive.'
         delete_step:
@@ -5241,6 +5308,7 @@ en:
     fluics_printer: "Fluics printer"
     forms: "Forms"
     settings: "Settings"
+    equipment_bookings: "Equipment scheduling"
 
   Add: "Add"
   Asset: "File"

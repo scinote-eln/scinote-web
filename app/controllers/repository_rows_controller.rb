@@ -5,12 +5,13 @@ class RepositoryRowsController < ApplicationController
   include MyModulesHelper
   include RepositoryDatatableHelper
   include StorageLocationsHelper
+  include EquipmentBookingHelper
 
   before_action :load_repository, except: %i(show print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(show print rows_to_print print_zpl
                                                        validate_label_template_columns)
   before_action :load_repository_row, only: %i(show update update_cell assigned_task_list assigned_counters
-                                               active_reminder_repository_cells relationships)
+                                               active_reminder_repository_cells relationships equipment_booking_events)
   before_action :load_repository_rows, only: %i(print rows_to_print print_zpl validate_label_template_columns)
 
   before_action :check_read_permissions, except: %i(create update update_cell delete_records
@@ -168,6 +169,31 @@ class RepositoryRowsController < ApplicationController
         labels: labels
       }
     )
+  end
+
+  def equipment_booking_events
+    page = params[:page]&.to_i || 1
+
+    events = @repository_row.calendar_events
+
+    events = case params[:direction]
+             when 'past'
+               events.where('end_at < ?', Time.current)
+                     .order(end_at: :desc)
+             when 'future'
+               events.where('end_at > ?', Time.current)
+                     .order(start_at: :asc)
+             else
+               events.order(start_at: :desc)
+             end
+
+    events = events.page(page).per(3)
+
+    render json: events,
+           each_serializer: CalendarEventSerializer,
+           meta: {
+             has_next_page: events.next_page.present?
+           }
   end
 
   def rows_to_print

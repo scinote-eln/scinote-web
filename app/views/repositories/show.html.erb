@@ -88,6 +88,9 @@
 <%= render partial: 'repository_filters' %>
 <%= render partial: 'save_repository_filter_modal' %>
 
+<%= render partial: 'repositories/event_manage_repository_rows_modal',
+           locals: { repository: @repository } %>
+
 <div id="importRepositoryModal" data-behaviour="vue">
   <import-repository-modal repository-url="<%= repository_path(@repository) %>" />
 </div>

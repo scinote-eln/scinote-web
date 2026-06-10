@@ -22,7 +22,7 @@ class Result < ResultBase
       with_elements.where(result_texts: { archived: true })
                   .or(with_elements.where(assets: { archived: true }))
                   .or(with_elements.where(tables: { archived: true }))
-    )
+    ).distinct
   }
 
   def self.search(user,

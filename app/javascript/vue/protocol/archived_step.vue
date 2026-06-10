@@ -103,7 +103,10 @@
         </div>
       </div>
       <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
-      <restoreStepModal v-if="confirmingRestore" @confirm="restoreStep" @close="closeRestoreModal"/>
+      <restoreStepModal v-if="confirmingRestore"
+                        :hasArchivedElements="hasArchivedElements"
+                        @confirm="restoreStep"
+                        @close="closeRestoreModal" />
 
       <div class="collapse in pl-10" :id="'stepBody' + step.id">
         <div v-for="(element, index) in orderedElements" :key="element.id">
@@ -176,6 +179,11 @@ export default {
     return {
       confirmingDelete: false,
       confirmingRestore: false
+    }
+  },
+  computed: {
+    hasArchivedElements() {
+      return this.elements.some(element => element.attributes.orderable.archived);
     }
   },
   methods: {

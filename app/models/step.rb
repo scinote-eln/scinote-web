@@ -76,7 +76,7 @@ class Step < ApplicationRecord
                   .or(with_elements.where(assets: { archived: true }))
                   .or(with_elements.where(tables: { archived: true }))
                   .or(with_elements.where(form_responses: { archived: true }))
-    )
+    ).distinct
   }
 
   def self.search(user,

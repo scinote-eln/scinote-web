@@ -1,0 +1,16 @@
+ <% provide(:head_title, t('seo.titles.forms_index')) %>
+
+ <div class="content-pane flexible content-pane with-grey-background">
+  <div class="content-header sticky-header">
+    <div class="title-row">
+      <h1>
+         <%= t('equipment_bookings.index.head_title') %>
+    </div>
+  </div>
+  <div id="equipmentBookings" class="fixed-content-body"
+  >
+    <equipment-bookings
+    />
+  </div>
+</div>
+<%= javascript_include_tag 'vue_equipment_bookings' %>

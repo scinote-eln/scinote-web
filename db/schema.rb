@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_08_105328) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -123,6 +123,42 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
     t.index ["last_modified_by_id"], name: "index_assets_on_last_modified_by_id"
     t.index ["restored_by_id"], name: "index_assets_on_restored_by_id"
     t.index ["team_id"], name: "index_assets_on_team_id"
+  end
+
+  create_table "calendar_event_participants", force: :cascade do |t|
+    t.bigint "calendar_event_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["calendar_event_id", "user_id"], name: "idx_on_calendar_event_id_user_id_afd6522000", unique: true
+    t.index ["calendar_event_id"], name: "index_calendar_event_participants_on_calendar_event_id"
+    t.index ["user_id"], name: "index_calendar_event_participants_on_user_id"
+  end
+
+  create_table "calendar_events", force: :cascade do |t|
+    t.string "name"
+    t.string "subject_type", null: false
+    t.bigint "subject_id", null: false
+    t.bigint "team_id", null: false
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.bigint "created_by_id", null: false
+    t.integer "event_type", null: false
+    t.string "event_sub_type"
+    t.boolean "full_day", default: false
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "frequency"
+    t.integer "interval"
+    t.string "interval_unit"
+    t.integer "repeat_count"
+    t.datetime "repeat_until"
+    t.index ["created_by_id"], name: "index_calendar_events_on_created_by_id"
+    t.index ["event_sub_type"], name: "index_calendar_events_on_event_sub_type"
+    t.index ["event_type"], name: "index_calendar_events_on_event_type"
+    t.index ["subject_type", "subject_id"], name: "index_calendar_events_on_subject"
+    t.index ["team_id"], name: "index_calendar_events_on_team_id"
   end
 
   create_table "checklist_items", force: :cascade do |t|
@@ -1411,7 +1447,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
     t.bigint "last_modified_by_id"
     t.string "description"
     t.bigint "space_taken", default: 1048576, null: false
-    t.boolean "shareable_links_enabled", default: false, null: false
     t.jsonb "settings", default: {}, null: false
     t.index ["created_by_id"], name: "index_teams_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_teams_on_last_modified_by_id"
@@ -1539,8 +1574,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
 
   create_table "user_settings", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "key", null: false
-    t.json "value", null: false
+    t.string "key"
+    t.json "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_user_settings_on_user_id"
@@ -1666,6 +1701,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_25_140651) do
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"
   add_foreign_key "assets", "users", column: "restored_by_id"
+  add_foreign_key "calendar_event_participants", "calendar_events"
+  add_foreign_key "calendar_event_participants", "users"
+  add_foreign_key "calendar_events", "teams"
+  add_foreign_key "calendar_events", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "checklists"
   add_foreign_key "checklist_items", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "users", column: "last_modified_by_id"

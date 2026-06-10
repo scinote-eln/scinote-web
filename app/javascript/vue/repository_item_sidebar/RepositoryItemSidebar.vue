@@ -328,6 +328,12 @@
                 </section>
                 <div v-if="!repository?.is_snapshot" id="divider" class="bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
 
+                <!-- Schedule -->
+                <section v-if="!repository?.is_snapshot" id="schedule-section" ref="scheduleSectionRef" data-e2e="e2e-CO-itemCard-schedule">
+                  <Schedule :repositoryRow="repositoryRow" :repository="repository" @reloadRow="reload" />
+                </section>
+                <div v-if="!repository?.is_snapshot" id="divider" class="bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
+
                 <!-- QR -->
                 <section id="qr-section" ref="QR-label">
                   <div id="QR-label" class="font-inter text-lg font-semibold leading-7 mb-6 mt-0 transition-colors duration-300">
@@ -382,6 +388,7 @@ import CustomColumns from './customColumns.vue';
 import RepositoryItemSidebarTitle from './Title.vue';
 import UnlinkModal from './unlink_modal.vue';
 import Locations from './locations.vue';
+import Schedule from './schedule.vue';
 import axios from '../../packs/custom_axios.js';
 
 const items = [
@@ -428,6 +435,14 @@ const items = [
   {
     id: 'highlight-item-6',
     textId: 'text-item-6',
+    labelAlias: 'schedule_label',
+    label: 'schedule-label',
+    sectionId: 'schedule-section',
+    showInSnapshot: false
+  },
+  {
+    id: 'highlight-item-7',
+    textId: 'text-item-7',
     labelAlias: 'QR_label',
     label: 'QR-label',
     sectionId: 'qr-section',
@@ -440,6 +455,7 @@ export default {
   components: {
     CustomColumns,
     Locations,
+    Schedule,
     'repository-item-sidebar-title': RepositoryItemSidebarTitle,
     'inline-edit': InlineEdit,
     'scroll-spy': ScrollSpy,

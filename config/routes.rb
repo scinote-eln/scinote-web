@@ -873,6 +873,7 @@ Rails.application.routes.draw do
         get :assigned_my_modules
         get :repository_users
         get :load_table
+        get :permissions
       end
       # Save repository table state
       post 'state_save',
@@ -922,6 +923,7 @@ Rails.application.routes.draw do
           get :active_reminder_repository_cells
           put :update_cell
           get :assigned_counters
+          get :equipment_booking_events
         end
 
         collection do
@@ -1246,6 +1248,17 @@ Rails.application.routes.draw do
       get :user_filter
       post :save_activity_filter
     end
+  end
+
+  resources :equipment_bookings do
+    collection do
+      get :assigned_repository_rows
+      get :assigned_users
+    end
+  end
+
+  resources :calendar_events, only: %i(index show create update destroy) do
+    resources :calendar_event_participants, only: %i(index create destroy)
   end
 
   # Shareable links

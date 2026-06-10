@@ -64,6 +64,7 @@ class Team < ApplicationRecord
   has_many :forms, dependent: :destroy
   has_many :team_assignments, dependent: :destroy
   has_many :tags, dependent: :destroy
+  has_many :calendar_events, dependent: :destroy
 
   attr_accessor :without_templates
 
@@ -199,6 +200,14 @@ class Team < ApplicationRecord
 
   def shareable_links_enabled?
     settings['task_sharing_enabled'] == true
+  end
+
+  def protocol_steps_deletion_enabled?
+    !Team.deletion_prevention_enabled? || settings['protocol_steps_deletion_enabled']
+  end
+
+  def result_deletion_enabled?
+    !Team.deletion_prevention_enabled? || settings['result_deletion_enabled']
   end
 
   private

@@ -89,6 +89,8 @@ describe User, type: :model do
     it { should have_many :notifications }
     it { should have_many :zip_exports }
     it { should have_many :supervised_projects }
+    it { should have_many :calendar_events }
+    it { should have_many(:calendar_event_participants).dependent(:destroy) }
     it { should have_many(:shareable_links).dependent(:destroy) }
 
     it 'have many repositories' do

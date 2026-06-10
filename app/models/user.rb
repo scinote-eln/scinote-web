@@ -314,6 +314,8 @@ class User < ApplicationRecord
            foreign_key: 'supervised_by_id',
            inverse_of: :supervised_by,
            dependent: :nullify
+  has_many :calendar_event_participants, dependent: :destroy
+  has_many :calendar_events, through: :calendar_event_participants
 
   has_many :notifications, as: :recipient, dependent: :destroy, inverse_of: :recipient
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
