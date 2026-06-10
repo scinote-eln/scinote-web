@@ -4,19 +4,11 @@ MAINTAINER SciNote <info@scinote.net>
 ARG TIKA_DIST_URL="https://archive.apache.org/dist/tika/3.2.3/tika-app-3.2.3.jar"
 ENV TIKA_PATH=/usr/local/bin/tika-app.jar
 
-# Dependencies for postgresql client 18
-RUN apt-get update -qq && \
-  apt-get install -y --no-install-recommends curl gnupg && \
-  curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
-    | gpg --dearmor -o /usr/share/keyrings/postgresql.gpg && \
-  echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] \
-    https://apt.postgresql.org/pub/repos/apt trixie-pgdg main" \
-    > /etc/apt/sources.list.d/pgdg.list && \
-  rm -rf /var/lib/apt/lists/
-
 # additional dependencies
 # libreoffice for file preview generation
 RUN apt-get update -qq && \
+  apt-get install -y --no-install-recommends postgresql-common && \
+  /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \ 
   apt-get install -y --no-install-recommends \
   libjemalloc2 \
   libssl-dev \

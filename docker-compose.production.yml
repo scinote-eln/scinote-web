@@ -4,7 +4,7 @@ services:
     container_name: scinote_db_production
     image: postgres:18
     volumes:
-      - scinote_production_postgres18:/var/lib/postgresql/18/docker
+      - scinote_production_postgres:/var/lib/postgresql/18/docker
     environment:
       - "POSTGRES_USER=postgres"
       - "POSTGRES_PASSWORD=mysecretpassword"
@@ -42,5 +42,5 @@ services:
       - scinote_production_storage:/usr/src/app/storage
 
 volumes:
-  scinote_production_postgres18:
+  scinote_production_postgres:
   scinote_production_storage:
