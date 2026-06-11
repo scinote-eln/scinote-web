@@ -231,7 +231,9 @@ class Experiment < ApplicationRecord
     rescue ActiveRecord::ActiveRecordError,
            ArgumentError,
            ActiveRecord::RecordNotSaved => e
-      logger.error e.message
+      logger.error e.full_message
+      # TODO: remove before merge — surfaces the swallowed error in CI stdout
+      warn e.full_message if Rails.env.test?
       return false
     end
     true
