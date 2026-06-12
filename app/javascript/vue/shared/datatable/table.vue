@@ -767,7 +767,7 @@ export default {
     },
     clickCell(e) {
       // We using custom row selection, we need use existing column parameter it will be attribute from one of plugin - suppressColumnsToolPanel
-      if (e.column.colId !== 'rowMenu' && e.column.userProvidedColDef.suppressColumnsToolPanel !== true) {
+      if (e.column.colId !== 'rowMenu' && e.column.userProvidedColDef?.suppressColumnsToolPanel !== true) {
         e.node.setSelected(true);
         this.$emit('selectionChanged', this.selectedRows);
       }
