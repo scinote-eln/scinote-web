@@ -87,70 +87,6 @@
               <span class="sci-label">{{ i18n.t('equipment_bookings.index.manage_modal.full_day_event') }}</span>
             </div>
             <div>
-              <span class="sci-label">{{ i18n.t('equipment_bookings.index.manage_modal.frequency') }}</span>
-              <SelectDropdown
-                :options="frequencies"
-                :searchable="false"
-                :value="event.frequency"
-                @change="event.frequency = $event"
-              ></SelectDropdown>
-            </div>
-            <div v-if="event.frequency === 'CUSTOM'" class="rounded p-4 bg-sn-super-light-grey">
-              <div class="flex items-center">
-                <span class="mr-4">{{ i18n.t('equipment_bookings.index.manage_modal.repeat_every') }}</span>
-                <div class="sci-input-container-v2 w-24 mr-1">
-                  <input type="number" class="!bg-white" min="1" v-model.number="event.interval" />
-                </div>
-                <div class="w-32">
-                  <SelectDropdown
-                    class="bg-white"
-                    :options="customFrequencyUnits"
-                    :searchable="false"
-                    :value="event.interval_unit"
-                    @change="event.interval_unit = $event"
-                  ></SelectDropdown>
-                </div>
-              </div>
-              <div class="sci-label my-4 !text-sn-grey-700">
-                {{ i18n.t('equipment_bookings.index.manage_modal.ends') }}
-              </div>
-              <div class="flex items-start gap-1 flex-col">
-                <div class="flex items-center gap-2 h-11">
-                  <span class="sci-radio-container">
-                    <input type="radio" class="sci-radio" v-model="event.repeat_mode" value="infinite" />
-                    <span class="sci-radio-label"></span>
-                  </span>
-                  <span class="sci-label">{{ i18n.t('equipment_bookings.index.manage_modal.never') }}</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span class="sci-radio-container">
-                    <input type="radio" class="sci-radio" v-model="event.repeat_mode" value="occurrences" />
-                    <span class="sci-radio-label"></span>
-                  </span>
-                  <div class="sci-label w-12">{{ i18n.t('equipment_bookings.index.manage_modal.after') }}</div>
-                  <div class="sci-input-container-v2 w-24 ml-10">
-                    <input type="number" class="!bg-white" min="1" v-model.number="event.repeat_count" />
-                  </div>
-                  <span class="sci-label">{{ i18n.t('equipment_bookings.index.manage_modal.occassions') }}</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span class="sci-radio-container">
-                    <input type="radio" class="sci-radio" v-model="event.repeat_mode" value="end_date" />
-                    <span class="sci-radio-label"></span>
-                  </span>
-                  <div class="sci-label w-12">{{ i18n.t('equipment_bookings.index.manage_modal.on_date') }}</div>
-                  <DateTimePicker
-                    class="ml-10"
-                    @change="event.repeat_until = $event"
-                    :defaultValue="event.repeat_until"
-                    mode="date"
-                    size="mb"
-                    :clearable="false"
-                  />
-                </div>
-              </div>
-            </div>
-            <div>
               <span class="sci-label">
                 {{ i18n.t('equipment_bookings.index.manage_modal.people') }}
               </span>
@@ -230,38 +166,15 @@ export default {
         end_at: null,
         full_day: false,
         frequency: 'ONCE',
-        interval: 1,
-        interval_unit: 'WEEKLY',
-        repeat_mode: 'infinite',
-        repeat_count: 1,
-        repeat_until: null,
         users: []
-      },
-      frequencies: [
-        ['ONCE', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.once')],
-        ['DAILY', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.daily')],
-        ['WEEKLY', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.weekly')],
-        ['MONTHLY', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.monthly')],
-        ['CUSTOM', this.i18n.t('equipment_bookings.index.manage_modal.frequency_options.custom')]
-      ],
-      customFrequencyUnits: [
-        ['DAILY', this.i18n.t('equipment_bookings.index.manage_modal.custom_frequency_units.days')],
-        ['WEEKLY', this.i18n.t('equipment_bookings.index.manage_modal.custom_frequency_units.weeks')],
-        ['MONTHLY', this.i18n.t('equipment_bookings.index.manage_modal.custom_frequency_units.months')],
-        ['YEARLY', this.i18n.t('equipment_bookings.index.manage_modal.custom_frequency_units.years')]
-      ]
-    };
+      }
+    }
   },
   created() {
     this.teamId = document.body.dataset.currentTeamId;
 
     if (this.existedEvent) {
       this.event = { ...this.existedEvent };
-      if (this.event.frequency === 'CUSTOM') {
-        if (this.event.repeat_count) this.event.repeat_mode = 'occurrences';
-        else if (this.event.repeat_until) this.event.repeat_mode = 'end_date';
-        else this.event.repeat_mode = 'infinite';
-      }
     }
 
     if (!this.event.start_at && !this.event.end_at) {
@@ -319,11 +232,6 @@ export default {
         end_at: this.event.end_at,
         full_day: this.event.full_day,
         user_ids: this.event.users,
-        frequency: this.event.frequency,
-        interval: this.event.frequency === 'CUSTOM' ? this.event.interval : null,
-        interval_unit: this.event.frequency === 'CUSTOM' ? this.event.interval_unit : null,
-        repeat_count: this.event.frequency === 'CUSTOM' && this.event.repeat_mode === 'occurrences' ? this.event.repeat_count : null,
-        repeat_until: this.event.frequency === 'CUSTOM' && this.event.repeat_mode === 'end_date' ? this.event.repeat_until : null
       };
     },
     updateEvent() {
