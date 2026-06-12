@@ -36,6 +36,7 @@
     onUnSelect: function(), // Run action after unselect
     customDropdownIcon: function(), // Add custom dropdown icon
     inputTagMode: boolean, // Use as simple input tag field
+    commitInputOnBlur: boolean, // (inputTagMode only) commit typed text as a tag when input users clicks away from the field
     selectKeys: array, // array of keys id which use for fast select // default - [13]
     noEmptyOption: boolean, // use defaut select (only for single option select). default 'false'
     singleSelect: boolean, // disable multiple select. default 'false'
@@ -422,6 +423,9 @@ var dropdownSelector = (function() {
 
     dropdownContainer.find('.search-field').on('keydown', function(e) {
       if (e.which === 9) { // Tab key
+        if (config.inputTagMode && config.commitInputOnBlur) {
+          addNewTag(selectElement, dropdownContainer);
+        }
         dropdownContainer.find('.search-field').val('');
         if (dropdownContainer.hasClass('open') && config.onClose) {
           config.onClose();
@@ -429,6 +433,22 @@ var dropdownSelector = (function() {
         dropdownContainer.removeClass('open active');
       }
     });
+
+    // Add blur event for input tag mode, to commit tag when user clicks away
+    if (config.inputTagMode && config.commitInputOnBlur) {
+      let suppressBlurCommit = false;
+      dropdownContainer.on('mousedown.tagCommit', function() {
+        suppressBlurCommit = true;
+        $(document).one('mouseup.tagCommit', function() {
+          suppressBlurCommit = false;
+        });
+      });
+      dropdownContainer.find('.search-field').on('blur.tagCommit', function() {
+        if (suppressBlurCommit) return;          // blur caused by in-dropdown click
+        if (!document.hasFocus()) return;        // window/tab lost focus, not the field
+        addNewTag(selectElement, dropdownContainer);
+      });
+    }
 
     // Add click event to input field
     dropdownContainer.find('.input-field').click(() => {

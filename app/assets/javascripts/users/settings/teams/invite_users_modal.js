@@ -44,6 +44,7 @@
       labelHTML: true,
       tagClass: 'users-dropdown-list',
       inputTagMode: true,
+      commitInputOnBlur: true,
       selectKeys: [13, 32, 44, 188],
       customDropdownIcon: () => { return '<i class="sn-icon sn-icon-search right-icon"></i>'; },
       onChange: () => {
@@ -51,7 +52,7 @@
         if (values.length > 0) {
           inviteBtn.attr('disabled', false);
           inviteWithRoleBtn.attr('disabled', false);
-          $($('.search-field')[0]).val('');
+          emailsInput.next().find('.search-field').val('');
         } else {
           inviteBtn.attr('disabled', 'disabled');
           inviteWithRoleBtn.attr('disabled', 'disabled');
