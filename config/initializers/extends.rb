@@ -725,14 +725,7 @@ class Extends
     calendar_event_updated: 494,
     calendar_event_deleted: 495,
     calendar_event_participant_created: 496,
-    calendar_event_participant_deleted: 497,
-    calendar_recurring_event_created: 498,
-    calendar_recurring_event_current_updated: 499,
-    calendar_recurring_event_current_and_following_updated: 500,
-    calendar_recurring_event_all_updated: 501,
-    calendar_recurring_event_current_deleted: 502,
-    calendar_recurring_event_current_and_following_deleted: 503,
-    calendar_recurring_event_all_deleted: 504
+    calendar_event_participant_deleted: 497
   }
 
   ACTIVITY_GROUPS = {

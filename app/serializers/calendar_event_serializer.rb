@@ -4,7 +4,6 @@ class CalendarEventSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
   attributes :id, :name, :full_day, :created_by_name, :event_type, :event_sub_type,
-             :frequency, :interval, :interval_unit, :repeat_count, :repeat_until,
              :start_at_string, :end_at_string, :urls, :subject, :start_at_formatted, :end_at_formatted, :users
 
   def created_by_name

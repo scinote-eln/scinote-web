@@ -20,11 +20,7 @@ class CalendarEvent < ApplicationRecord
       .where(repository_rows: { repository_id: repository_id })
   }
   scope :datetime_filter, ->(start_time, end_time) {
-    one_time = where(frequency: [nil, 'ONCE']).where('start_at <= ? AND end_at >= ?', end_time, start_time)
-    recurring = where.not(frequency: [nil, 'ONCE'])
-                     .where('start_at <= ?', end_time)
-                     .where('repeat_until IS NULL OR repeat_until >= ?', start_time)
-    one_time.or(recurring)
+    where('start_at <= ? AND end_at >= ?', end_time, start_time)
   }
   scope :assigned_users_filter, ->(user_ids) { where(id: CalendarEventParticipant.where(user_id: user_ids).select(:calendar_event_id)) }
   scope :event_sub_type_filter, ->(sub_types) { where(event_sub_type: sub_types) }
