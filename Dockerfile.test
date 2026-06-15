@@ -4,14 +4,16 @@ MAINTAINER SciNote <info@scinote.net>
 ARG TIKA_DIST_URL="https://archive.apache.org/dist/tika/3.2.3/tika-app-3.2.3.jar"
 ENV TIKA_PATH=/usr/local/bin/tika-app.jar
 
-# additional dependecies
+# additional dependencies
 # libreoffice for file preview generation
 RUN apt-get update -qq && \
+  apt-get install -y --no-install-recommends postgresql-common && \
+  /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \ 
   apt-get install -y --no-install-recommends \
   libjemalloc2 \
   libssl-dev \
   nodejs \
-  postgresql-client \
+  postgresql-client-18 \
   default-jre-headless \
   poppler-utils \
   librsvg2-2 \

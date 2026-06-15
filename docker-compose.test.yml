@@ -2,7 +2,7 @@ version: '2'
 services:
   db:
     container_name: scinote_db_test
-    image: postgres:15
+    image: postgres:18
     environment:
       - "POSTGRES_USER=postgres"
       - "POSTGRES_PASSWORD=mysecretpassword"
