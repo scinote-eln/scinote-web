@@ -353,6 +353,85 @@ ALTER SEQUENCE public.assets_id_seq OWNED BY public.assets.id;
 
 
 --
+-- Name: calendar_event_participants; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.calendar_event_participants (
+    id bigint NOT NULL,
+    calendar_event_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: calendar_event_participants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.calendar_event_participants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: calendar_event_participants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.calendar_event_participants_id_seq OWNED BY public.calendar_event_participants.id;
+
+
+--
+-- Name: calendar_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.calendar_events (
+    id bigint NOT NULL,
+    name character varying,
+    subject_type character varying NOT NULL,
+    subject_id bigint NOT NULL,
+    team_id bigint NOT NULL,
+    start_at timestamp(6) without time zone,
+    end_at timestamp(6) without time zone,
+    created_by_id bigint NOT NULL,
+    event_type integer NOT NULL,
+    event_sub_type character varying,
+    full_day boolean DEFAULT false,
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    frequency character varying,
+    "interval" integer,
+    interval_unit character varying,
+    repeat_count integer,
+    repeat_until timestamp(6) without time zone,
+    reminder_sent boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: calendar_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.calendar_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: calendar_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.calendar_events_id_seq OWNED BY public.calendar_events.id;
+
+
+--
 -- Name: checklist_items; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2045,12 +2124,12 @@ ALTER SEQUENCE public.repository_date_time_range_values_id_seq OWNED BY public.r
 --
 
 CREATE TABLE public.repository_date_time_values (
-    id bigint NOT NULL,
+    id bigint CONSTRAINT repository_date_values_id_not_null NOT NULL,
     data timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    created_by_id bigint NOT NULL,
-    last_modified_by_id bigint NOT NULL,
+    created_by_id bigint CONSTRAINT repository_date_values_created_by_id_not_null NOT NULL,
+    last_modified_by_id bigint CONSTRAINT repository_date_values_last_modified_by_id_not_null NOT NULL,
     type character varying,
     data_dup timestamp without time zone,
     notification_sent boolean DEFAULT false
@@ -3335,12 +3414,12 @@ ALTER SEQUENCE public.team_assignments_id_seq OWNED BY public.team_assignments.i
 --
 
 CREATE TABLE public.team_shared_objects (
-    id bigint NOT NULL,
+    id bigint CONSTRAINT team_repositories_id_not_null NOT NULL,
     team_id bigint,
     shared_object_id bigint,
-    permission_level integer DEFAULT 0 NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    permission_level integer DEFAULT 0 CONSTRAINT team_repositories_permission_level_not_null NOT NULL,
+    created_at timestamp without time zone CONSTRAINT team_repositories_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT team_repositories_updated_at_not_null NOT NULL,
     shared_object_type character varying
 );
 
@@ -3889,7 +3968,7 @@ CREATE TABLE public.webhooks (
     activity_filter_id bigint NOT NULL,
     active boolean DEFAULT true NOT NULL,
     url character varying NOT NULL,
-    http_method integer NOT NULL,
+    http_method integer CONSTRAINT webhooks_method_not_null NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     last_error text,
@@ -4104,6 +4183,20 @@ ALTER TABLE ONLY public.asset_text_data ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.assets ALTER COLUMN id SET DEFAULT nextval('public.assets_id_seq'::regclass);
+
+
+--
+-- Name: calendar_event_participants id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.calendar_event_participants ALTER COLUMN id SET DEFAULT nextval('public.calendar_event_participants_id_seq'::regclass);
+
+
+--
+-- Name: calendar_events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.calendar_events ALTER COLUMN id SET DEFAULT nextval('public.calendar_events_id_seq'::regclass);
 
 
 --
@@ -4876,6 +4969,22 @@ ALTER TABLE ONLY public.asset_text_data
 
 ALTER TABLE ONLY public.assets
     ADD CONSTRAINT assets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: calendar_event_participants calendar_event_participants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.calendar_event_participants
+    ADD CONSTRAINT calendar_event_participants_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: calendar_events calendar_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.calendar_events
+    ADD CONSTRAINT calendar_events_pkey PRIMARY KEY (id);
 
 
 --
@@ -5701,6 +5810,13 @@ CREATE INDEX delayed_jobs_queue ON public.delayed_jobs USING btree (queue);
 
 
 --
+-- Name: idx_on_calendar_event_id_user_id_afd6522000; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_on_calendar_event_id_user_id_afd6522000 ON public.calendar_event_participants USING btree (calendar_event_id, user_id);
+
+
+--
 -- Name: idx_on_protocol_id_repository_row_id_8e60521e65; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5880,6 +5996,55 @@ CREATE INDEX index_assets_on_restored_by_id ON public.assets USING btree (restor
 --
 
 CREATE INDEX index_assets_on_team_id ON public.assets USING btree (team_id);
+
+
+--
+-- Name: index_calendar_event_participants_on_calendar_event_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_calendar_event_participants_on_calendar_event_id ON public.calendar_event_participants USING btree (calendar_event_id);
+
+
+--
+-- Name: index_calendar_event_participants_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_calendar_event_participants_on_user_id ON public.calendar_event_participants USING btree (user_id);
+
+
+--
+-- Name: index_calendar_events_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_calendar_events_on_created_by_id ON public.calendar_events USING btree (created_by_id);
+
+
+--
+-- Name: index_calendar_events_on_event_sub_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_calendar_events_on_event_sub_type ON public.calendar_events USING btree (event_sub_type);
+
+
+--
+-- Name: index_calendar_events_on_event_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_calendar_events_on_event_type ON public.calendar_events USING btree (event_type);
+
+
+--
+-- Name: index_calendar_events_on_subject; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_calendar_events_on_subject ON public.calendar_events USING btree (subject_type, subject_id);
+
+
+--
+-- Name: index_calendar_events_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_calendar_events_on_team_id ON public.calendar_events USING btree (team_id);
 
 
 --
@@ -8806,6 +8971,14 @@ ALTER TABLE ONLY public.connections
 
 
 --
+-- Name: calendar_event_participants fk_rails_27ed948f4a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.calendar_event_participants
+    ADD CONSTRAINT fk_rails_27ed948f4a FOREIGN KEY (calendar_event_id) REFERENCES public.calendar_events(id);
+
+
+--
 -- Name: steps fk_rails_28e8f7466e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9339,6 +9512,14 @@ ALTER TABLE ONLY public.team_assignments
 
 ALTER TABLE ONLY public.report_elements
     ADD CONSTRAINT fk_rails_6cc9abd66b FOREIGN KEY (step_id) REFERENCES public.steps(id);
+
+
+--
+-- Name: calendar_events fk_rails_6cdcb76531; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.calendar_events
+    ADD CONSTRAINT fk_rails_6cdcb76531 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -9934,6 +10115,14 @@ ALTER TABLE ONLY public.user_group_memberships
 
 
 --
+-- Name: calendar_event_participants fk_rails_afbcf79663; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.calendar_event_participants
+    ADD CONSTRAINT fk_rails_afbcf79663 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: my_module_statuses fk_rails_b024d15104; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10470,6 +10659,14 @@ ALTER TABLE ONLY public.report_elements
 
 
 --
+-- Name: calendar_events fk_rails_f5097a86eb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.calendar_events
+    ADD CONSTRAINT fk_rails_f5097a86eb FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: report_elements fk_rails_f5d944fc4d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10548,8 +10745,11 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260526000000'),
 ('20260515130015'),
 ('20260514114311'),
+('20260508105328'),
+('20260420095412'),
 ('20260319112642'),
 ('20260312130217'),
 ('20260302132406'),
