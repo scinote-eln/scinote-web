@@ -95,6 +95,8 @@ export default {
       this.fetchEvents('past', this.pastPage);
     },
     fetchEvents(direction, page) {
+      if (!this.repository || !this.repositoryRow) return;
+
       axios.get(this.equipmentBookingEventsPath, {
         params: {
           direction,

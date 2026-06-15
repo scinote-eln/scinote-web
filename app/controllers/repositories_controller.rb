@@ -53,12 +53,20 @@ class RepositoriesController < ApplicationController
                    else
                      Repository.readable_by_user(current_user, current_team)
                    end
-    results = repositories.select(:id, :name, 'LOWER(repositories.name)')
+    results = repositories.select(:id, :name, 'LOWER(repositories.name)', :team_id)
     results = results.name_like(params[:query]) if params[:query].present?
     results = results.joins(:repository_rows).distinct if params[:non_empty].present?
     results = results.active if params[:active].present?
 
-    render json: { data: results.order('LOWER(repositories.name) asc').map { |r| [r.id, r.name] } }
+    render json: { data: results.order('LOWER(repositories.name) asc').map { |r|
+      [
+        r.id,
+        r.name,
+        {
+          shared: r.shared_with?(current_team),
+        }
+      ]
+    } }
   end
 
   def rows_list
