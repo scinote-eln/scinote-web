@@ -59,13 +59,10 @@
 
     // Enable/disable invite button based on input
     function updateInviteButtonsState() {
-      if (dropdownSelector.getValues(emailsInput).length > 0 || emailsSearchField.val().length > 1) {
-        inviteBtn.attr('disabled', false);
-        inviteWithRoleBtn.attr('disabled', false);
-      } else {
-        inviteBtn.attr('disabled', 'disabled');
-        inviteWithRoleBtn.attr('disabled', 'disabled');
-      }
+      const buttonsEnabled = dropdownSelector.getValues(emailsInput).length > 0 || emailsSearchField.val().length > 1;
+
+      inviteBtn.attr('disabled', !buttonsEnabled);
+      inviteWithRoleBtn.attr('disabled', !buttonsEnabled);
     }
 
     emailsSearchField.on('input', updateInviteButtonsState);
