@@ -1,3 +1,65 @@
 .calendar-view {
   --sx-color-primary: #3B99FD;
 }
+
+.sx__calendar {
+  border: 0 !important;
+}
+
+.sx__calendar .sx__view-selection-items {
+  width: 100%;
+}
+
+.sx__calendar .sx__view-selection-items button {
+  border: 0 !important;
+  padding: 0.5rem 1rem !important;
+}
+
+.sx__calendar .sx__view-selection-items button:hover {
+  background-color: #F9F9F9 !important;
+  color: #1D2939 !important;
+}
+
+.sx__calendar .sx__view-selection-items button.is-selected {
+  background-color: #F0F8FF !important;
+  color: #1D2939 !important;
+}
+
+.sx__calendar .sx__date-input-label,
+.sx__calendar .sx__view-selection-label {
+  display: none !important;
+}
+
+.sx__calendar .sx__view-selection-selected-item,
+.sx__calendar .sx__date-input,
+.sx__calendar .sx__button {
+  border-color: #EAECF0 !important;
+}
+
+.sx__calendar .sx__date-input-chevron-wrapper {
+  border: none !important;
+}
+
+.sx__calendar .sx__today-button {
+  color: #104DA9 !important;
+  padding: 0.625rem 1rem !important;
+}
+
+.sx__calendar .sx__week-grid__date {
+  padding-top: 0 !important;
+}
+
+.sx__calendar .sx__week-grid__date-number {
+  height: 1.75rem !important;
+  font-size: 1rem !important;
+  width: 1.75rem !important;
+  line-height: 1.75rem !important;
+}
+
+.sx__calendar .sx__ripple:before {
+  display: none !important;
+}
+
+.sx__calendar .sx__calendar-header {
+  padding-top: 0.5rem !important;
+}

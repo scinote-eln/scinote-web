@@ -1,24 +1,14 @@
 <template>
   <div>
-    <div class="flex items-center gap-4 p-4 rounded bg-white mb-4">
-      <div class="font-bold">{{ i18n.t('equipment_bookings.index.show_calendar') }}</div>
-      <div class="w-80">
-        <SelectDropdown
-          :options="repositories"
-          :searchable="true"
-          :value="selectedRepository"
-          @change="selectedRepository = $event"
-        ></SelectDropdown>
-      </div>
-    </div>
-
-    <div class="p-4 rounded bg-white h-[calc(100vh_-_18rem)] flex" >
+    <div class="p-4 rounded bg-white h-[calc(100vh_-_12rem)] flex" >
       <Filters
         v-if="selectedRepository"
         :repository-id="selectedRepository"
         :filters="filters"
         :permissions="permissions"
+        :repositories="repositories"
         @update:filters="filters = $event"
+        @update:repository="selectedRepository = $event"
         @event:created="loadEvents += 1"
       ></Filters>
       <CalendarView

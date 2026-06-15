@@ -20,22 +20,17 @@
                 {{ i18n.t('equipment_bookings.index.manage_modal.event_name') }}
               </span>
               <div class="sci-input-container-v2">
-                <input type="text" v-model="event.event_name" />
+                <input type="text" ref="eventNameInput" v-model="event.event_name" />
               </div>
             </div>
             <div>
-              <span class="sci-label">
-                {{ i18n.t('equipment_bookings.index.manage_modal.item') }}
-              </span>
-              <SelectDropdown
-                :optionsUrl="repositoryRowsUrl"
-                ajaxMethod="post"
-                :placeholder="i18n.t('equipment_bookings.index.manage_modal.select_item')"
-                :searchable="true"
-                :value="event.repository_row_id"
-                :disabled="!!repositoryRowId"
+              <RepositoryRowSelector
+                :preSelectedRepository="repositoryId"
+                :hideRepositorySelector="true"
+                :preSelectedRows="event.repository_row_id"
+                :disableRowSelection="!!repositoryRowId"
                 @change="event.repository_row_id = $event"
-              ></SelectDropdown>
+              />
             </div>
             <div>
               <span class="sci-label">
@@ -49,7 +44,7 @@
               ></SelectDropdown>
             </div>
             <div class="flex gap-2">
-              <div>
+              <div class="grow">
                 <span class="sci-label">
                   {{ i18n.t('equipment_bookings.index.manage_modal.start_date') }}
                 </span>
@@ -62,10 +57,10 @@
                   :clearable="false"
                 />
               </div>
-              <div class="flex items-center h-10 mt-5">
+              <div class="flex items-center h-10 mt-5 shrink-0">
                 {{ i18n.t('equipment_bookings.index.manage_modal.until') }}
               </div>
-              <div>
+              <div class="grow">
                 <span class="sci-label">
                   {{ i18n.t('equipment_bookings.index.manage_modal.end_date') }}
                 </span>
@@ -185,6 +180,7 @@
 
 import modalMixin from '../shared/modal_mixin';
 import SelectDropdown from '../shared/select_dropdown.vue';
+import RepositoryRowSelector from '../shared/repository_row_selector.vue';
 import usersRenderer from '../shared/select_dropdown_renderers/user.vue';
 import DateTimePicker from '../shared/date_time_picker.vue';
 import axios from '../../packs/custom_axios.js';
@@ -268,6 +264,11 @@ export default {
       this.setDefaultDates();
     }
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.$refs.eventNameInput.focus();
+    });
+  },
   computed: {
     disabled() {
       return this.event.event_name.length === 0 || !this.event.repository_row_id || this.creating;
@@ -292,21 +293,27 @@ export default {
   },
   components: {
     SelectDropdown,
-    DateTimePicker
+    DateTimePicker,
+    RepositoryRowSelector
   },
   mixins: [modalMixin],
   methods: {
     setDefaultDates() {
+      // i need for now set next avaialble hour and 0 minutes and seconds
+
       const now = new Date();
-      const later = new Date(now.getTime() + 60 * 60 * 1000);
+      now.setMinutes(0);
+      now.setSeconds(0);
+      const from = new Date(now.getTime() + 60 * 60 * 1000);
+      const to = new Date(from.getTime() + 60 * 60 * 1000);
 
       const formatDateTime = (date) => {
         const pad = (n) => n.toString().padStart(2, '0');
         return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
       };
 
-      this.event.start_at = formatDateTime(now);
-      this.event.end_at = formatDateTime(later);
+      this.event.start_at = formatDateTime(from);
+      this.event.end_at = formatDateTime(to);
     },
     preparePayload() {
       return {

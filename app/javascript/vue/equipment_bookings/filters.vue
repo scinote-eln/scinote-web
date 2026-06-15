@@ -1,12 +1,26 @@
 <template>
-  <div class="w-[200px] p-2 pr-4 flex flex-col gap-6 border-transparent !border-r-sn-light-grey border-solid  h-full">
-    <div v-if="permissions.create_equipment_bookings">
-      <button class="btn btn-primary w-full" @click="createEvent = true">
+  <div class="w-[300px] p-2 pr-4 flex flex-col gap-6 border-transparent !border-r-sn-light-grey border-solid  h-full">
+    <div>
+      <button
+        class="btn btn-primary w-full"
+        @click="createEvent = true"
+        :disabled="!permissions.create_equipment_bookings">
         <i class="sn-icon sn-icon-new-task"></i>
         {{ i18n.t('equipment_bookings.index.sidebar.new_event') }}
       </button>
     </div>
     <div class="flex flex-col gap-3">
+      <div class="mb-3">
+        <label>{{ i18n.t('equipment_bookings.index.show_calendar') }}</label>
+        <SelectDropdown
+          :options="repositories"
+          :searchable="true"
+          :value="repositoryId"
+          :optionRenderer="repositoryRenderer"
+          :labelRenderer="repositoryRenderer"
+          @change="$emit('update:repository', $event)"
+        ></SelectDropdown>
+      </div>
       <div
         v-for="eventType in eventTypes"
         :key="eventType.value"
@@ -36,6 +50,7 @@
         :multiple="true"
         :withCheckboxes="true"
         :searchable="true"
+        :hideSelectAll="true"
         :value="filters.subject_ids"
         @change="$emit('update:filters', { ...filters, subject_ids: $event })"
       ></SelectDropdown>
@@ -50,6 +65,7 @@
         :multiple="true"
         :withCheckboxes="true"
         :searchable="true"
+        :hideSelectAll="true"
         :value="filters.assigned_users"
         :option-renderer="usersRenderer"
         :label-renderer="usersRenderer"
@@ -68,6 +84,7 @@
 <script>
 import SelectDropdown from '../shared/select_dropdown.vue';
 import usersRenderer from '../shared/select_dropdown_renderers/user.vue';
+import repositoryRenderer from './renderers/repository.vue';
 import manageEventModal from './manage_modal.vue';
 import {
   assigned_repository_rows_equipment_bookings_path,
@@ -88,12 +105,17 @@ export default {
     permissions: {
       type: Object,
       required: true
+    },
+    repositories: {
+      type: Array,
+      required: true
     }
   },
   components: {
     SelectDropdown,
     usersRenderer,
-    manageEventModal
+    manageEventModal,
+    repositoryRenderer
   },
   computed: {
     assignedRepositoryRowsUrl() {
@@ -104,6 +126,9 @@ export default {
     },
     usersRenderer() {
       return usersRenderer;
+    },
+    repositoryRenderer() {
+      return repositoryRenderer;
     }
   },
   data() {

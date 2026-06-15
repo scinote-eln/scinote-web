@@ -38,6 +38,8 @@
     createViewWeek,
   } from '@schedule-x/calendar'
   import { createEventRecurrencePlugin, createEventsServicePlugin } from "@schedule-x/event-recurrence";
+  import { createCurrentTimePlugin } from '@schedule-x/current-time'
+  import { createScrollControllerPlugin } from '@schedule-x/scroll-controller'
 
   import 'temporal-polyfill/global'
   import {
@@ -107,7 +109,9 @@ import { loadScript } from 'pdfjs-dist';
         selectedEvent: null,
         eventsServicePlugin: null,
         eventModalPlugin: null,
-        eventRecurrencePlugin: null
+        eventRecurrencePlugin: null,
+        createCurrentTimePlugin: null,
+        scrollControllerPlugin: null,
       };
     },
     computed: {
@@ -168,6 +172,10 @@ import { loadScript } from 'pdfjs-dist';
       this.eventsServicePlugin = createEventsServicePlugin();
       this.eventModalPlugin = createEventModalPlugin();
       this.eventRecurrencePlugin = createEventRecurrencePlugin();
+      this.createCurrentTimePlugin = createCurrentTimePlugin();
+      this.scrollControllerPlugin = createScrollControllerPlugin({
+        initialScroll: '07:50'
+      })
 
       calendarApp = createCalendar({
         calendars: calendarsVariants,
@@ -199,8 +207,36 @@ import { loadScript } from 'pdfjs-dist';
             component.endDate = range.end.toPlainDateTime()['o'];
             component.fetchEvents();
           },
+          onClickDate(date) {
+            if (!component.permissions.create_equipment_bookings) return;
+
+            const now = Temporal.Now.plainDateTimeISO()
+
+            let startAt = now.with({
+              year: date.year,
+              month: date.month,
+              day: date.day,
+              minute: 0,
+              second: 0,
+            });
+
+            let endAt = startAt.add({ hours: 1 });
+
+            component.openEventModatWithDateTime(startAt, endAt);
+          },
+          onClickDateTime(dateTime) {
+            if (!component.permissions.create_equipment_bookings) return;
+
+            const startAt = dateTime.with({ minute: 0, second: 0 });
+            const endAt = startAt.add({ hours: 1 });
+            component.openEventModatWithDateTime(startAt, endAt);
+          },
         }
-      }, [this.eventRecurrencePlugin, this.eventsServicePlugin, this.eventModalPlugin]);
+      }, [this.eventRecurrencePlugin,
+          this.eventsServicePlugin,
+          this.eventModalPlugin,
+          this.createCurrentTimePlugin,
+          this.scrollControllerPlugin]);
     },
     components: {
       ScheduleXCalendar,
@@ -234,6 +270,19 @@ import { loadScript } from 'pdfjs-dist';
         if (repeat_count) rule += `;COUNT=${repeat_count}`;
         else if (repeat_until) rule += `;UNTIL=${new Date(repeat_until).toISOString().replace(/[-:]/g, '').split('.')[0]}Z`;
         return rule;
+      },
+      openEventModatWithDateTime(startAt, endAt) {
+        this.selectedEvent = {
+          id: null,
+          event_name: '',
+          start_at: startAt.toString().substring(0, 16).replace('T', ' '),
+          end_at: endAt.toString().substring(0, 16).replace('T', ' '),
+          event_type: null,
+          full_day: false,
+          users: [],
+          repository_row_id: null,
+          event_sub_type: null
+        }
       },
       duplicateEvent(event) {
         this.selectedEvent = {
@@ -270,6 +319,8 @@ import { loadScript } from 'pdfjs-dist';
         }
       },
       fetchEvents() {
+        if (!this.repositoryId) return;
+
         const params = {
           parent_type: 'Repository',
           parent_id: this.repositoryId,
