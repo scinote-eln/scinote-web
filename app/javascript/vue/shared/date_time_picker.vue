@@ -1,5 +1,8 @@
 <template>
-  <div class="date-time-picker grow" :class="`size-${size}`" :data-e2e="dataE2e">
+  <div class="date-time-picker grow" :class="{
+      [`size-${size}`]: true,
+      'error': error
+    }" :data-e2e="dataE2e">
     <VueDatePicker
       ref="datetimePicker"
       :class="{
@@ -77,7 +80,8 @@ export default {
     dataE2e: { type: String, default: '' },
     valueType: { type: String, default: 'object' },
     noIcons: { type: Boolean, default: false },
-    noBorder: { type: Boolean, default: false }
+    noBorder: { type: Boolean, default: false },
+    error: { type: Boolean, default: false }
   },
   data() {
     return {
