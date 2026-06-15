@@ -44,20 +44,28 @@
       labelHTML: true,
       tagClass: 'users-dropdown-list',
       inputTagMode: true,
+      commitInputOnBlur: true,
       selectKeys: [13, 32, 44, 188],
       customDropdownIcon: () => { return '<i class="sn-icon sn-icon-search right-icon"></i>'; },
       onChange: () => {
-        let values = dropdownSelector.getValues(emailsInput);
-        if (values.length > 0) {
-          inviteBtn.attr('disabled', false);
-          inviteWithRoleBtn.attr('disabled', false);
-          $($('.search-field')[0]).val('');
-        } else {
-          inviteBtn.attr('disabled', 'disabled');
-          inviteWithRoleBtn.attr('disabled', 'disabled');
+        if (dropdownSelector.getValues(emailsInput).length > 0) {
+          emailsSearchField.val('');
         }
+        updateInviteButtonsState();
       }
     });
+
+    var emailsSearchField = emailsInput.next().find('.search-field');
+
+    // Enable/disable invite button based on input
+    function updateInviteButtonsState() {
+      const buttonsEnabled = dropdownSelector.getValues(emailsInput).length > 0 || emailsSearchField.val().length > 1;
+
+      inviteBtn.attr('disabled', !buttonsEnabled);
+      inviteWithRoleBtn.attr('disabled', !buttonsEnabled);
+    }
+
+    emailsSearchField.on('input', updateInviteButtonsState);
 
     modal.find('.search-field').on('paste', function(event) {
       event.preventDefault();
