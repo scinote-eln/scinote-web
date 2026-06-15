@@ -720,7 +720,12 @@ class Extends
     team_protocol_steps_deletion_enabled: 489,
     team_repository_deletion_disabled: 490,
     team_result_deletion_disabled: 491,
-    team_protocol_steps_deletion_disabled: 492
+    team_protocol_steps_deletion_disabled: 492,
+    calendar_event_created: 493,
+    calendar_event_updated: 494,
+    calendar_event_deleted: 495,
+    calendar_event_participant_created: 496,
+    calendar_event_participant_deleted: 497
   }
 
   ACTIVITY_GROUPS = {
@@ -734,7 +739,7 @@ class Extends
     experiment: [*27..31, 57, 141, 165, *363..369, 393, 407, 410],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
-                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329, *397..405],
+                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329, *397..405, *493..504],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
@@ -891,6 +896,7 @@ class Extends
     protocol_repository_rows/index
     my_modules/archive
     teams/data_integrity
+    equipment_bookings/index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {

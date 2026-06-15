@@ -47,6 +47,11 @@ json.actions do
   end
 end
 
+json.equipment_booking do
+  json.enabled Repository.equipment_booking_enabled?
+  json.placeholder equipment_booking_placeholder
+end
+
 json.storage_locations do
   json.locations(
     @repository_row.storage_locations.distinct.map do |storage_location|

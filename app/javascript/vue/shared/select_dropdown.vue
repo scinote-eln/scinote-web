@@ -20,7 +20,7 @@
     >
     <template v-if="!tagsView">
       <template v-if="!isOpen || !searchable">
-        <div class="overflow-hidden" v-if="labelRendererType == 'object' && !multiple && this.rawOptions && Object.keys(this.rawOptions).length > 0 && this.newValue && Object.keys(this.newValue).length > 0">
+        <div class="overflow-hidden" v-if="labelRendererType == 'object' && !multiple && this.rawOptions && this.rawOptions.length > 0 && this.newValue">
           <component :is="labelRenderer"
                      :option="this.rawOptions.find((i) => i[0] === this.newValue)" />
         </div>
@@ -74,7 +74,7 @@
           class="sn-select-dropdown bg-white inline-block sn-shadow-menu-sm rounded w-full fixed z-[3000]"
           :data-e2e="`${e2eValue}-dropdownOptions`"
         >
-          <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
+          <div v-if="multiple && withCheckboxes && !hideSelectAll" class="p-2.5 pb-0">
             <div @click="selectAll" :style="sizeStyle"
                 class="border border-x-0 !border-transparent border-solid !border-b-sn-light-grey
                         py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
@@ -84,7 +84,7 @@
               {{ i18n.t('general.select_all') }}
             </div>
           </div>
-          <div ref="scrollContainer" class="p-2.5 flex flex-col max-h-80 relative overflow-y-auto" :class="{ 'pt-0': withCheckboxes }">
+          <div ref="scrollContainer" class="p-2.5 flex flex-col max-h-80 relative overflow-y-auto" :class="{ 'pt-0': withCheckboxes && !hideSelectAll }">
             <template v-for="(option, i) in filteredOptions" :key="option[0]">
               <div
                 @click.stop="setValue(option[0])"
@@ -151,7 +151,8 @@ export default {
     urlParams: { type: Object, default: () => ({}) },
     e2eValue: { type: String, default: '' },
     ajaxMethod: { type: String, default: 'get' },
-    oneLineLabel: { type: Boolean, default: false }
+    oneLineLabel: { type: Boolean, default: false },
+    hideSelectAll: { type: Boolean, default: false }
   },
   directives: {
     'click-outside': vOnClickOutside

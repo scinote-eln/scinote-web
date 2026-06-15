@@ -63,6 +63,15 @@ Canaid::Permissions.register_for(Repository) do
     end
   end
 
+  %i(read_equipment_bookings
+     create_equipment_bookings
+     manage_equipment_bookings)
+    .each do |perm|
+    can perm do |user, repository|
+      Repository.equipment_booking_enabled?
+    end
+  end
+
   # repository: update, delete
   can :manage_repository do |user, repository|
     !repository.shared_with?(user.current_team) && repository.permission_granted?(user, RepositoryPermissions::MANAGE)
@@ -141,6 +150,20 @@ Canaid::Permissions.register_for(Repository) do
     repository.team.permission_granted?(user, TeamPermissions::MANAGE) ||
       repository.can_manage_shared?(user) ||
       repository.permission_granted?(user, RepositoryPermissions::USERS_MANAGE)
+  end
+
+  # Equipment booking: view/create/manage
+
+  can :read_equipment_bookings do |user, repository|
+    can_read_repository?(user, repository)
+  end
+
+  can :create_equipment_bookings do |user, repository|
+    can_manage_repository_rows?(user, repository)
+  end
+
+  can :manage_equipment_bookings do |user, repository|
+    can_manage_repository_rows?(user, repository)
   end
 end
 

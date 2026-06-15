@@ -508,6 +508,10 @@ en:
       team_protocol_steps_deletion_disabled_html: "%{user} disabled deleting task steps from Archive in workspace %{team}."
       repository_snapshot_created_html: "%{user} created snapshot %{timestamp} of task-assigned items from inventory %{repository}."
       repository_snapshot_deleted_html: "%{user} deleted snapshot %{timestamp} of task-assigned items from inventory %{repository}."
+      calendar_event_created_html: "%{user} created booking event %{event} for %{repository_row}."
+      calendar_event_updated_html: "%{user} updated booking event %{event} for %{repository_row}."
+      calendar_event_deleted_html: "%{user} deleted booking event %{event} for %{repository_row}."
+      calendar_event_participant_created_html: "%{user} added %{user_target} to booking event %{event} for %{repository_row}."
     activity_name:
       create_project: "Project created"
       edit_project: "Project edited"
@@ -969,6 +973,11 @@ en:
       protocol_repository_item_removed: "Protocol item unlinked "
       repository_snapshot_created: "Task-assigned inventory snapshot created"
       repository_snapshot_deleted: "Task-assigned inventory snapshot deleted"
+      calendar_event_created: "Booking event created"
+      calendar_event_updated: "Booking event updated"
+      calendar_event_deleted: "Booking event deleted"
+      calendar_event_participant_created: "Person added to Booking event"
+      calendar_event_participant_deleted: "Person removed from Booking event"
     activity_group:
       projects: "Projects"
       task_results: "Task results"

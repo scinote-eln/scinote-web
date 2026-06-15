@@ -371,6 +371,7 @@ en:
     activities: "Global activities"
     academy: "Courses"
     support: "Support"
+    equipment_bookings: "Equipment scheduling"
     support_links:
       support: "Knowledge center"
       tutorials: "Video tutorials"
@@ -1124,6 +1125,59 @@ en:
 
   teams:
     private_team: "Private workspace"
+  equipment_bookings:
+    index:
+      head_title: "Equipment scheduling"
+      show_calendar: "Show calendar for:"
+      sidebar:
+        new_event: "New event"
+        filter_items: "Filter items"
+        all_items_selected: "All items selected"
+        filter_people: "Filter people"
+        all_users_selected: "All users selected"
+        event_types:
+          usage: "Usage"
+          maintenance: "Maintenance"
+          calibration: "Calibration"
+          other: "Other"
+      delete_modal:
+        title: "Delete event"
+        description_html: "Are you sure you want to delete this event?<br><br><b>This action cannot be undone.</b>"
+        delete: "Delete"
+      manage_modal:
+        create_title: "Create an event"
+        update_title: "Update an event"
+        event_name: "Event name"
+        item: "Item"
+        select_item: "Select an item"
+        event_type: "Event type"
+        start_date: "Start date"
+        end_date: "End date"
+        until: "until"
+        full_day_event: "Full-day event"
+        frequency: "Frequency"
+        frequency_options:
+          once: "Once"
+          daily: "Daily"
+          weekly: "Weekly"
+          monthly: "Monthly"
+          custom: "Custom"
+        repeat_every: "Repeat every"
+        custom_frequency_units:
+          days: "day(s)"
+          weeks: "week(s)"
+          months: "month(s)"
+          years: "year(s)"
+        ends: "Ends"
+        never: "Never"
+        after: "After"
+        on_date: "On"
+        occassions: "occassions"
+        people: "People"
+        create_event: "Create event"
+        update_event: "Update event"
+    promo:
+      promo_title: 'This feature is disabled by default in open source SciNote'
   forms:
     published: "Published"
     draft: "Draft"
@@ -2806,6 +2860,7 @@ en:
     archive_record: "Archive"
     restore_record: "Restore"
     print_label: "Print label"
+    create_event_record: 'Create event'
     exports:
       export: "Export"
       records: "Items"
@@ -3053,10 +3108,18 @@ en:
       assigned_label: 'Assigned'
       locations_label: 'Locations'
       QR_label: 'QR'
+      schedule_label: 'Schedule'
     locations:
       title: 'Locations (%{count})'
       container: 'Box'
       assign: 'Assign new location'
+    equipment_booking:
+      title: 'Schedule'
+      create_event: 'Create event'
+      upcoming_events: 'Upcoming'
+      past_events: 'Past'
+      show_more: 'Show more'
+      no_events: 'No events scheduled'
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
@@ -3111,6 +3174,8 @@ en:
   repository_ledger_records:
     errors:
       my_module_references_missing: 'Task references are not set'
+  equipment_booking:
+    equipment_booking_disabled: "<b>Equipment booking is disabled</b>"
   storage_locations:
     storage_locations_disabled: "<b>Storage locations are disabled</b>"
     container: 'box'
@@ -4652,6 +4717,7 @@ en:
       experiment_due_date: "Due date reminder if you have Owner or User access role on a Experiment"
       project_due_date: "Due date reminder if you have Owner access role on a Project"
       other_user_group_member: "You were added or removed from the group"
+      equipment_scheduling: "Equipment scheduling reminders"
     content:
       my_module_due_date_reminder:
         title_html: "Task due date reminder"
@@ -4668,6 +4734,18 @@ en:
       experiment_due_date_reminder:
         title_html: "Experiment due date reminder"
         message_html: "Due date for the experiment %{experiment_name} is coming up."
+      equipment_booking_created:
+        title_html: "Equipment booking created"
+        message_html: "%{user_name} added you to the %{event_name} event for %{repository_row_name}."
+      equipment_booking_updated:
+        title_html: "Equipment booking updated"
+        message_html: "The %{event_name} event for %{repository_row_name} has been updated."
+      equipment_booking_deleted:
+        title_html: "Equipment booking deleted"
+        message_html: "The %{event_name} event for %{repository_row_name} has been deleted."
+      equipment_booking_reminder:
+        title_html: "Equipment booking reminder"
+        message_html: "The %{event_name} event for %{repository_row_name} starts in 24 hours."
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
@@ -5246,6 +5324,7 @@ en:
     fluics_printer: "Fluics printer"
     forms: "Forms"
     settings: "Settings"
+    equipment_bookings: "Equipment scheduling"
 
   Add: "Add"
   Asset: "File"
