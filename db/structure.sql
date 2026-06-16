@@ -394,12 +394,11 @@ CREATE TABLE public.calendar_events (
     subject_type character varying NOT NULL,
     subject_id bigint NOT NULL,
     team_id bigint NOT NULL,
-    start_at timestamp(6) without time zone,
-    end_at timestamp(6) without time zone,
+    start_datetime timestamp(6) without time zone,
+    end_datetime timestamp(6) without time zone,
     created_by_id bigint NOT NULL,
     event_type integer NOT NULL,
     event_sub_type character varying,
-    full_day boolean DEFAULT false,
     metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
@@ -408,7 +407,9 @@ CREATE TABLE public.calendar_events (
     interval_unit character varying,
     repeat_count integer,
     repeat_until timestamp(6) without time zone,
-    reminder_sent boolean DEFAULT false NOT NULL
+    reminder_sent boolean DEFAULT false NOT NULL,
+    start_date date,
+    end_date date
 );
 
 
@@ -10745,6 +10746,7 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260616085134'),
 ('20260526000000'),
 ('20260515130015'),
 ('20260514114311'),

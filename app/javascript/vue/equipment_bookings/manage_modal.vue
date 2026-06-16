@@ -229,17 +229,25 @@ export default {
       this.event.end_at = formatDateTime(to);
     },
     preparePayload() {
-      return {
+      const params = {
         name: this.event.event_name,
         subject_id: this.event.repository_row_id,
         subject_type: 'RepositoryRow',
         event_type: this.event.event_type,
         event_sub_type: this.event.event_sub_type,
-        start_at: this.event.start_at,
-        end_at: this.event.end_at,
         full_day: this.event.full_day,
         user_ids: this.event.users,
       };
+
+      if (this.event.full_day) {
+        params.start_date = this.event.start_at;
+        params.end_date = this.event.end_at;
+      } else {
+        params.start_datetime = this.event.start_at;
+        params.end_datetime = this.event.end_at;
+      }
+
+      return params;
     },
     updateEvent() {
       if (this.creating) return;
