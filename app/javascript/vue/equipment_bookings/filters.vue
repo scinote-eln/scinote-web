@@ -66,10 +66,10 @@
         :withCheckboxes="true"
         :searchable="true"
         :hideSelectAll="true"
-        :value="filters.assigned_users"
+        :value="filters.assigned_user_ids"
         :option-renderer="usersRenderer"
         :label-renderer="usersRenderer"
-        @change="$emit('update:filters', { ...filters, assigned_users: $event })"
+        @change="$emit('update:filters', { ...filters, assigned_user_ids: $event })"
       ></SelectDropdown>
     </div>
     <manageEventModal

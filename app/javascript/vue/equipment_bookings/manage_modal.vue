@@ -54,6 +54,7 @@
                   :defaultValue="event.start_at"
                   :mode="event.full_day ? 'date' : 'datetime'"
                   size="mb"
+                  :error="event.start_at && event.end_at && notValidDates"
                   :clearable="false"
                 />
               </div>
@@ -71,6 +72,7 @@
                   :mode="event.full_day ? 'date' : 'datetime'"
                   size="mb"
                   :clearable="false"
+                  :error="event.start_at && event.end_at && notValidDates"
                 />
               </div>
             </div>
@@ -183,8 +185,16 @@ export default {
     });
   },
   computed: {
+    notValidDates() {
+      return new Date(this.event.start_at) >= new Date(this.event.end_at);
+    },
     disabled() {
-      return this.event.event_name.length === 0 || !this.event.repository_row_id || this.creating;
+      return this.event.event_name.length === 0 ||
+             !this.event.repository_row_id ||
+             this.creating ||
+             !this.event.start_at ||
+             !this.event.end_at ||
+             this.notValidDates;
     },
     repositoryRowsUrl() {
       return rows_list_team_repositories_path(this.teamId, { active: true, repository_id: this.repositoryId });

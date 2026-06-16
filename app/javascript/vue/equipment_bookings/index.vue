@@ -50,7 +50,7 @@ export default {
           no_type: true
         },
         subject_ids: [],
-        assigned_users: []
+        assigned_user_ids: []
       }
     };
   },
@@ -62,6 +62,17 @@ export default {
   watch: {
     selectedRepository() {
       this.loadPermissions();
+
+      this.filters = {
+        sub_types: {
+          calibration: true,
+          maintenance: true,
+          usage: true,
+          no_type: true
+        },
+        subject_ids: [],
+        assigned_user_ids: []
+      }
     }
   },
   mounted() {

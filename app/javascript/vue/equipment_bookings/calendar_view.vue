@@ -40,6 +40,7 @@
   import { createEventRecurrencePlugin, createEventsServicePlugin } from "@schedule-x/event-recurrence";
   import { createCurrentTimePlugin } from '@schedule-x/current-time'
   import { createScrollControllerPlugin } from '@schedule-x/scroll-controller'
+  import { createCalendarControlsPlugin } from '@schedule-x/calendar-controls'
 
   import 'temporal-polyfill/global'
   import {
@@ -48,6 +49,8 @@
 import { loadScript } from 'pdfjs-dist';
 
   let calendarApp = null;
+
+  const calendarControls = createCalendarControlsPlugin();
 
   const calendarsVariants = {
     calibration: {
@@ -112,6 +115,7 @@ import { loadScript } from 'pdfjs-dist';
         eventRecurrencePlugin: null,
         createCurrentTimePlugin: null,
         scrollControllerPlugin: null,
+        calendarControlsPlugin: null
       };
     },
     computed: {
@@ -175,7 +179,8 @@ import { loadScript } from 'pdfjs-dist';
       this.createCurrentTimePlugin = createCurrentTimePlugin();
       this.scrollControllerPlugin = createScrollControllerPlugin({
         initialScroll: '07:50'
-      })
+      });
+      this.calendarControlsPlugin = calendarControls;
 
       calendarApp = createCalendar({
         calendars: calendarsVariants,
@@ -236,7 +241,8 @@ import { loadScript } from 'pdfjs-dist';
           this.eventsServicePlugin,
           this.eventModalPlugin,
           this.createCurrentTimePlugin,
-          this.scrollControllerPlugin]);
+          this.scrollControllerPlugin,
+          this.calendarControlsPlugin]);
     },
     components: {
       ScheduleXCalendar,
@@ -318,6 +324,7 @@ import { loadScript } from 'pdfjs-dist';
           })
         }
       },
+
       fetchEvents() {
         if (!this.repositoryId) return;
 
@@ -342,6 +349,9 @@ import { loadScript } from 'pdfjs-dist';
                 end = Temporal.Instant.from(event.attributes.end_at_string).toZonedDateTimeISO('UTC');
               }
 
+              const startHours = String(start.hour).padStart(2, '0');
+              const startMinutes = String(start.minute).padStart(2, '0');
+
               return {
                 id: event.id,
                 title: event.attributes.name,
@@ -350,7 +360,10 @@ import { loadScript } from 'pdfjs-dist';
                 color: calendarsVariants[event.attributes.event_sub_type || 'no_type'].lightColors.main,
                 attributes: event.attributes,
                 calendarId: event.attributes.event_sub_type || 'no_type',
-                rrule: this.buildRRule(event.attributes)
+                rrule: this.buildRRule(event.attributes),
+                _customContent: {
+                  monthGrid: `${startHours}:${startMinutes} ${event.attributes.name}`
+                }
               };
             });
             this.eventsServicePlugin.set(events);
