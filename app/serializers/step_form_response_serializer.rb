@@ -5,7 +5,7 @@ class StepFormResponseSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
   attributes :id, :created_at, :form_id, :urls, :submitted_by_full_name, :status, :submitted_at, :parent_type, :in_repository,
-             :icon, :name, :archived, :archived_by, :archived_on
+             :icon, :name, :archived, :archived_by, :archived_on, :locked
 
   has_one :form, serializer: FormSerializer
 
@@ -69,6 +69,8 @@ class StepFormResponseSerializer < ActiveModel::Serializer
 
     url_list[:delete_url] = step_form_response_path(step, object) if can_delete_step_form_response?(user, object)
     url_list[:archive_url] = archive_step_form_response_path(step, object) if can_archive_step_form_response?(user, object)
+    url_list[:lock_url] = lock_step_form_response_path(step, object) if can_lock_step_form_response?(user, object)
+    url_list[:unlock_url] = unlock_step_form_response_path(step, object) if can_unlock_step_form_response?(user, object)
 
     url_list
   end

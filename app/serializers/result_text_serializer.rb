@@ -6,7 +6,7 @@ class ResultTextSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :urls, :text_view, :icon, :placeholder, :name, :parent_type, :archived, :archived_by, :archived_on
+  attributes :id, :text, :urls, :text_view, :icon, :placeholder, :name, :parent_type, :archived, :archived_by, :archived_on, :locked
 
   def updated_at
     object.updated_at.to_i
@@ -64,6 +64,8 @@ class ResultTextSerializer < ActiveModel::Serializer
     url_list[:archive_url] = archive_result_text_path(result, object) if can_archive_result_text?(user, object)
     url_list[:restore_url] = restore_result_text_path(result, object) if can_restore_result_text?(user, object)
     url_list[:delete_url] = result_text_path(result, object) if can_delete_result_text?(user, object)
+    url_list[:lock_url] = lock_result_text_path(result, object) if can_lock_result_text?(user, object)
+    url_list[:unlock_url] = unlock_result_text_path(result, object) if can_unlock_result_text?(user, object)
 
     url_list
   end

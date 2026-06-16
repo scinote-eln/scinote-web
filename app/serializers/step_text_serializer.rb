@@ -6,7 +6,7 @@ class StepTextSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :urls, :text_view, :updated_at, :icon, :name, :placeholder, :parent_type, :archived, :archived_by, :archived_on
+  attributes :id, :text, :urls, :text_view, :updated_at, :icon, :name, :placeholder, :parent_type, :archived, :archived_by, :archived_on, :locked
 
   def updated_at
     object.updated_at.to_i
@@ -63,6 +63,8 @@ class StepTextSerializer < ActiveModel::Serializer
     url_list[:archive_url] = archive_step_text_path(step, object) if can_archive_step_text?(user, object)
     url_list[:restore_url] = restore_step_text_path(step, object) if can_restore_step_text?(user, object)
     url_list[:delete_url] = step_text_path(step, object) if can_delete_step_text?(user, object)
+    url_list[:lock_url] = lock_step_text_path(step, object) if can_lock_step_text?(user, object)
+    url_list[:unlock_url] = unlock_step_text_path(step, object) if can_unlock_step_text?(user, object)
 
     url_list
   end

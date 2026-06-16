@@ -73,6 +73,13 @@ Canaid::Permissions.register_for(ResultText) do
     end
   end
 
+  %i(manage_result_text archive_result_text).each do |perm|
+    can perm do |user, result_text|
+      !result_text.locked? ||
+        (result_text.result.is_a?(ResultTemplate) && can_manage_protocol_draft_in_repository?(user, result_text.result.protocol))
+    end
+  end
+
   can :manage_result_text do |_, result_text|
     result_text.active?
   end
@@ -85,14 +92,24 @@ Canaid::Permissions.register_for(ResultText) do
     result_text.archived?
   end
 
-  can :delete_result_text do |_, result_text|
+  can :delete_result_text do |user, result_text|
     if result_text.result.is_a?(ResultTemplate)
-      result_text.result.unlocked?(result_text.result)
+      (!result_text.locked? || can_manage_protocol_draft_in_repository?(user, result_text.result.protocol)) &&
+        result_text.result.unlocked?(result_text.result)
     else
-      result_text.archived? &&
+      !result_text.locked? &&
+        result_text.archived? &&
         result_text.result.team.result_deletion_enabled? &&
         result_text.result.unlocked?(result_text.result)
     end
+  end
+
+  can :lock_result_text do |user, result_text|
+    can_manage_protocol_draft_in_repository?(user, result_text.result.protocol)
+  end
+
+  can :unlock_result_text do |user, result_text|
+    can_manage_protocol_draft_in_repository?(user, result_text.result.protocol)
   end
 end
 
@@ -104,6 +121,13 @@ Canaid::Permissions.register_for(Table) do
     .each do |perm|
     can perm do |user, table|
       can_manage_result?(user, table.result)
+    end
+  end
+
+  %i(manage_result_table archive_result_table).each do |perm|
+    can perm do |user, table|
+      !table.locked? ||
+        (table.result.is_a?(ResultTemplate) && can_manage_protocol_draft_in_repository?(user, table.result.protocol))
     end
   end
 
@@ -119,13 +143,23 @@ Canaid::Permissions.register_for(Table) do
     table.archived?
   end
 
-  can :delete_result_table do |_, table|
+  can :delete_result_table do |user, table|
     if table.result.is_a?(ResultTemplate)
-      table.result.unlocked?(table.result)
+      (!table.locked? || can_manage_protocol_draft_in_repository?(user, table.result.protocol)) &&
+        table.result.unlocked?(table.result)
     else
-      table.archived? &&
+      !table.locked? &&
+        table.archived? &&
         table.result.team.result_deletion_enabled? &&
         table.result.unlocked?(table.result)
     end
+  end
+
+  can :lock_result_table do |user, table|
+    can_manage_protocol_draft_in_repository?(user, table.result.protocol)
+  end
+
+  can :unlock_result_table do |user, table|
+    can_manage_protocol_draft_in_repository?(user, table.result.protocol)
   end
 end

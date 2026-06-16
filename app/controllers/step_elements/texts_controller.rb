@@ -7,10 +7,12 @@ module StepElements
 
     # rubocop:disable Rails/LexicallyScopedActionFilter
     before_action :check_manage_step_permissions, only: %i(create move_targets)
-    before_action :load_step_text, only: %i(update destroy duplicate move archive restore)
-    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets)
+    before_action :load_step_text, only: %i(update destroy duplicate move archive restore lock unlock)
+    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets lock unlock)
     before_action :check_archive_permissions, only: :archive
     before_action :check_restore_permissions, only: :restore
+    before_action :check_lock_permissions, only: :lock
+    before_action :check_unlock_permissions, only: :unlock
     before_action :check_delete_permissions, only: :destroy
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -89,28 +91,6 @@ module StepElements
       head :unprocessable_entity
     end
 
-    def archive
-      ActiveRecord::Base.transaction do
-        @step_text.archive!(current_user)
-        log_step_activity(:text_archived, { text_name: @step_text.name })
-      end
-
-      head :ok
-    rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
-    end
-
-    def restore
-      ActiveRecord::Base.transaction do
-        @step_text.restore!(current_user)
-        log_step_restore_activity(:task_step_text_restored, { text_name: @step_text.name })
-      end
-
-      render json: { message: I18n.t('protocols.steps.modals.restore_modal.restore_text') }
-    rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
-    end
-
     private
 
     def step_text_params
@@ -120,6 +100,8 @@ module StepElements
     def load_step_text
       @step_text = @step.step_texts.find_by(id: params[:id])
       return render_404 unless @step_text
+
+      @element = @step_text
     end
 
     def check_manage_permissions
@@ -132,6 +114,26 @@ module StepElements
 
     def check_restore_permissions
       render_403 unless can_restore_step_text?(@step_text)
+    end
+
+    def check_lock_permissions
+      render_403 unless can_lock_step_text?(@step_text)
+    end
+
+    def check_unlock_permissions
+      render_403 unless can_unlock_step_text?(@step_text)
+    end
+
+    def log_archive_activity
+      log_step_activity(:text_archived, { text_name: @element.name })
+    end
+
+    def log_restore_activity
+      log_step_restore_activity(:task_step_text_restored, { text_name: @element.name })
+    end
+
+    def restore_response
+      render json: { message: I18n.t('protocols.steps.modals.restore_modal.restore_text') }
     end
 
     def check_delete_permissions
