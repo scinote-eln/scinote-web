@@ -1,0 +1,54 @@
+<div>
+  <h1>Activity statistics</h1>
+</div>
+<form action="<%= qa_tools_activity_statistics_path %>" method="get" class="form-inline">
+  <div class="form-group">
+    <label for="start_date">Start date</label>
+    <input type="date" id="start_date" name="start_date"
+           value="<%= params[:start_date] %>" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="end_date">End date</label>
+    <input type="date" id="end_date" name="end_date"
+           value="<%= params[:end_date] %>" class="form-control">
+  </div>
+  <button type="submit" class="btn btn-primary">Filter</button>
+  <%= link_to 'Export CSV', qa_tools_activity_statistics_path(
+    column: params[:column],
+    direction: params[:direction],
+    start_date: params[:start_date],
+    end_date: params[:end_date],
+    format: :csv), class: 'btn btn-primary' %>
+</form>
+<br>
+<strong>Start Date:</strong> <%= @start_date.strftime('%d.%m.%Y') %>
+<strong>End Date:</strong> <%= @end_date.strftime('%d.%m.%Y') %>
+<br>
+<table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th><%= sort_header('Type ID', 'type_id') %></th>
+        <th><%= sort_header('Group', 'group') %></th>
+        <th><%= sort_header('Type', 'type') %></th>
+        <th><%= sort_header('Name', 'name') %></th>
+        <th><%= sort_header('Count', 'count') %></th>
+        <th>Workspaces</th>
+      </tr>
+    </thead>
+    <tbody>
+  <% @stats.each do |info| %>
+    <tr>
+      <td> <%= info[:type_id] %> </td>
+      <td> <%= info[:group] %> </td>
+      <td> <%= info[:type] %> </td>
+      <td> <%= info[:name] %> </td>
+      <td> <%= info[:count] %> </td>
+      <td>
+        <% info[:workspaces].each do |team_name, n| %>
+          <%= team_name %>: <%= n %><br>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+    </tbody>
+</table>
