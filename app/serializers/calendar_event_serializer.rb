@@ -6,32 +6,36 @@ class CalendarEventSerializer < ActiveModel::Serializer
   attributes :id, :name, :full_day, :created_by_name, :event_type, :event_sub_type,
              :start_at_string, :end_at_string, :urls, :subject, :start_at_formatted, :end_at_formatted, :users
 
+  def full_day
+    object.start_date.present? && object.end_date.present?
+  end
+
   def created_by_name
     object.created_by&.full_name
   end
 
   def start_at_formatted
-    if object.full_day
-      return I18n.l(object.start_at.utc.to_date, format: :full_date)
+    if full_day
+      return I18n.l(object.start_date, format: :full_date)
     end
-    I18n.l(object.start_at, format: :full)
+    I18n.l(object.start_datetime, format: :full)
   end
 
   def end_at_formatted
-    if object.full_day
-      return I18n.l(object.end_at.utc.to_date, format: :full_date)
+    if full_day
+      return I18n.l(object.end_date, format: :full_date)
     end
-    I18n.l(object.end_at, format: :full)
+    I18n.l(object.end_datetime, format: :full)
   end
 
   def start_at_string
-    return object.start_at.utc.to_date if object.full_day
-    object.start_at
+    return object.start_date if full_day
+    object.start_datetime
   end
 
   def end_at_string
-    return object.end_at.utc.to_date if object.full_day
-    object.end_at
+    return object.end_date if full_day
+    object.end_datetime
   end
 
   def users

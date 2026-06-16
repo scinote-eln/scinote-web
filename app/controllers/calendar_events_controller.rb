@@ -116,13 +116,22 @@ class CalendarEventsController < ApplicationController
   end
 
   def calendar_event_params
+    if params[:start_date].present? && params[:end_date].present?
+      params[:start_datetime] = nil
+      params[:end_datetime] = nil
+    else
+      params[:start_date] = nil
+      params[:end_date] = nil
+    end
+
     params.permit(
       :name,
-      :start_at,
-      :end_at,
+      :start_datetime,
+      :start_date,
+      :end_datetime,
+      :end_date,
       :event_type,
       :event_sub_type,
-      :full_day,
       user_ids: [],
       metadata: {}
     )

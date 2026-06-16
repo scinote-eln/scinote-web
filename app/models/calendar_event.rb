@@ -20,19 +20,13 @@ class CalendarEvent < ApplicationRecord
       .where(repository_rows: { repository_id: repository_id })
   }
   scope :datetime_filter, ->(start_time, end_time) {
-    where('start_at <= ? AND end_at >= ?', end_time, start_time)
+    where('(start_datetime <= :end_time AND end_datetime >= :start_time) OR
+           (start_date <= :end_time AND end_date >= :start_time)',
+           start_time: start_time, end_time: end_time)
   }
   scope :assigned_users_filter, ->(user_ids) { where(id: CalendarEventParticipant.where(user_id: user_ids).select(:calendar_event_id)) }
   scope :event_sub_type_filter, ->(sub_types) { where(event_sub_type: sub_types) }
 
-  before_save :set_full_day
-
   private
 
-  def set_full_day
-    if full_day
-      self.start_at = start_at.beginning_of_day
-      self.end_at = end_at.end_of_day
-    end
-  end
 end

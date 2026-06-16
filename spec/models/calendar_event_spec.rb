@@ -20,8 +20,10 @@ describe CalendarEvent, type: :model do
     it { should have_db_column :created_by_id }
     it { should have_db_column :metadata }
     it { should have_db_column :event_type }
-    it { should have_db_column :end_at }
-    it { should have_db_column :start_at }
+    it { should have_db_column :end_datetime }
+    it { should have_db_column :start_datetime }
+    it { should have_db_column :start_date }
+    it { should have_db_column :end_date }
     it { should have_db_column :subject_id }
     it { should have_db_column :subject_type }
   end
