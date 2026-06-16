@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module QaTools
   class DesignElementsController < ApplicationController
     def index; end

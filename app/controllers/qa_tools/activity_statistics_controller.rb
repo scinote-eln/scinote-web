@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 module QaTools
   class ActivityStatisticsController < ApplicationController
     SORTABLE_COLUMNS = %w(type_id group type name count).freeze
     helper_method :sort_header
 
     def index
-      @start_date = import_params[:start_date]&.to_date || Date.today
-      @end_date   = import_params[:end_date]&.to_date   || Date.today
+      @start_date = import_params[:start_date]&.to_date || Time.zone.today
+      @end_date   = import_params[:end_date]&.to_date   || Time.zone.today
       @sort_column = SORTABLE_COLUMNS.include?(params[:column]) ? params[:column] : 'count'
       @sort_direction = params[:direction] == 'asc' ? 'asc' : 'desc'
-      
+
       activities = Activity.where(created_at: (@start_date.beginning_of_day..@end_date.end_of_day))
       activity_count = normalize_type_keys(activities.group(:type_of).count)
 
@@ -34,19 +36,18 @@ module QaTools
           workspaces: workspaces[type_id]
         }
       end
-      
+
       @stats = stats.sort_by(&sort_value(@sort_column))
       @stats.reverse! if @sort_direction == 'desc'
-      
+
       respond_to do |format|
         format.html
-        format.csv { send_data to_csv(@stats), filename: "activity_statistics_#{Time.now.strftime('%Y%m%d%H%M%S')}.csv", type: 'text/csv'}
+        format.csv { send_data to_csv(@stats), filename: "activity_statistics_#{Time.zone.now.strftime('%Y%m%d%H%M%S')}.csv", type: 'text/csv' }
       end
     end
 
-    
     private
-    
+
     def import_params
       params.permit(:start_date, :end_date, :direction, :column).to_h
     end
@@ -67,23 +68,28 @@ module QaTools
     def normalize_type_keys(hash)
       hash.transform_keys { |k| normalize_type_key(k) }
     end
-    
-    def to_csv(data)
-    require 'csv'
-    attributes = %w{'Type ID' Group Type Name Count Workspaces}
 
-    CSV.generate(headers: true) do |csv|
-      csv << attributes
-      data.each do |row|
-        csv << row.values
+    def to_csv(data)
+      require 'csv'
+      attributes = ['Type ID', 'Group', 'Type', 'Name', 'Count', 'Workspaces']
+
+      CSV.generate(headers: true) do |csv|
+        csv << attributes
+        data.each do |row|
+          csv << row.values
+        end
       end
     end
-  end
 
     def sort_header(label, column)
       active = @sort_column == column
       direction = active && @sort_direction == 'asc' ? 'desc' : 'asc'
-      indicator = active ? (@sort_direction == 'asc' ? ' ▲' : ' ▼') : ''
+      indicator =
+        if active
+          @sort_direction == 'asc' ? ' ▲' : ' ▼'
+        else
+          ''
+        end
       url = qa_tools_activity_statistics_path(
         column: column,
         direction: direction,
