@@ -283,11 +283,11 @@ import { loadScript } from 'pdfjs-dist';
           event_name: '',
           start_at: startAt.toString().substring(0, 16).replace('T', ' '),
           end_at: endAt.toString().substring(0, 16).replace('T', ' '),
-          event_type: null,
+          event_type: 'equipment_booking',
+          event_sub_type: 'calibration',
           full_day: false,
           users: [],
-          repository_row_id: null,
-          event_sub_type: null
+          repository_row_id: null
         }
       },
       duplicateEvent(event) {
