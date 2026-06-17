@@ -339,7 +339,7 @@ import { loadScript } from 'pdfjs-dist';
         axios.get(this.eventsUrl, { params })
           .then(response => {
             let events = response.data.data.map((event) => {
-              let start, end;
+              let start, end, label;
 
               if (event.attributes.full_day) {
                 start = Temporal.PlainDate.from(event.attributes.start_at_string);
@@ -352,6 +352,12 @@ import { loadScript } from 'pdfjs-dist';
               const startHours = String(start.hour).padStart(2, '0');
               const startMinutes = String(start.minute).padStart(2, '0');
 
+              if (event.attributes.full_day) {
+                label = `${event.attributes.name}`;
+              } else {
+                label = `${startHours}:${startMinutes} ${event.attributes.name}`;
+              }
+
               return {
                 id: event.id,
                 title: event.attributes.name,
@@ -362,7 +368,7 @@ import { loadScript } from 'pdfjs-dist';
                 calendarId: event.attributes.event_sub_type || 'no_type',
                 rrule: this.buildRRule(event.attributes),
                 _customContent: {
-                  monthGrid: `${startHours}:${startMinutes} ${event.attributes.name}`
+                  monthGrid: label
                 }
               };
             });
