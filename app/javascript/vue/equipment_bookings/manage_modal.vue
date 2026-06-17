@@ -186,6 +186,10 @@ export default {
   },
   computed: {
     notValidDates() {
+      if (this.event.full_day) {
+        return new Date(this.event.start_at) > new Date(this.event.end_at);
+      }
+
       return new Date(this.event.start_at) >= new Date(this.event.end_at);
     },
     disabled() {
