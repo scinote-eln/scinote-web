@@ -39,7 +39,11 @@ module QaTools
 
       respond_to do |format|
         format.html
-        format.csv { send_data to_csv(@activity_statistics), filename: "activity_statistics_#{Time.zone.now.strftime('%Y%m%d%H%M%S')}.csv", type: 'text/csv' }
+        format.csv do
+          send_data to_csv(@activity_statistics),
+                    filename: "activity_statistics_#{Time.zone.now.strftime('%Y%m%d%H%M%S')}.csv",
+                    type: 'text/csv'
+        end
       end
     end
 
