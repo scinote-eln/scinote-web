@@ -487,6 +487,7 @@ en:
       label_templates_index: "Label templates"
       label_templates_show: "Label template"
       reports_index: "Reports"
+      equipment_bookings_index: "Equipment scheduling"
   search:
     quick_search:
       experiments: "Experiments"
@@ -1129,6 +1130,8 @@ en:
     index:
       head_title: "Equipment scheduling"
       show_calendar: "Show calendar for:"
+      no_repositories: "You don’t have access to any inventories"
+      go_to_repositories: "Go to Inventories"
       sidebar:
         new_event: "New event"
         filter_items: "Filter items"

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="p-4 rounded bg-white h-[calc(100vh_-_12rem)] flex" >
+    <div v-if="repositories.length > 0" class="p-4 rounded bg-white h-[calc(100vh_-_12rem)] flex" >
       <Filters
         v-if="selectedRepository"
         :repository-id="selectedRepository"
@@ -19,12 +19,18 @@
         :filters="filters"
       ></CalendarView>
     </div>
-
+    <div v-else-if="!loadingRepositories" class="h-[calc(100vh_-_12rem)] flex items-center justify-center flex-col gap-4" >
+      <h2 class="text-sn-grey">{{ i18n.t('equipment_bookings.index.no_repositories') }}</h2>
+      <a :href="repositoriesUrl" class="btn btn-secondary">
+        {{ i18n.t('equipment_bookings.index.go_to_repositories') }}
+      </a>
+    </div>
   </div>
 </template>
 
 <script>
 import SelectDropdown from '../shared/select_dropdown.vue';
+import StateMixin from '../mixins/user_state_mixin.js';
 import axios from '../../packs/custom_axios.js';
 import CalendarView from './calendar_view.vue';
 import Filters from './filters.vue';
@@ -32,12 +38,14 @@ import Filters from './filters.vue';
 import {
   list_repositories_path,
   permissions_repository_path,
+  repositories_path
 } from '../../routes.js';
 
 export default {
   name: 'EquipmentBookings',
   data() {
     return {
+      loadingRepositories: true,
       repositories: [],
       selectedRepository: null,
       loadEvents: 0,
@@ -54,6 +62,7 @@ export default {
       }
     };
   },
+  mixins: [StateMixin],
   components: {
     SelectDropdown,
     Filters,
@@ -73,6 +82,8 @@ export default {
         subject_ids: [],
         assigned_user_ids: []
       }
+
+      this.setUserState('equipment_bookings_selected_repository', {repository_id: this.selectedRepository});
     }
   },
   mounted() {
@@ -86,6 +97,9 @@ export default {
       if (this.selectedRepository) {
         return permissions_repository_path(this.selectedRepository);
       }
+    },
+    repositoriesUrl() {
+      return repositories_path();
     }
   },
   methods: {
@@ -102,10 +116,16 @@ export default {
       axios.get(this.listRepositoriesUrl())
         .then(response => {
           this.repositories = response.data.data;
-          this.$nextTick(() => {
-            if (this.repositories.length > 0) {
+          this.$nextTick(async() => {
+            const savedRepositoryState = await this.getUserState('equipment_bookings_selected_repository');
+
+            if (savedRepositoryState && this.repositories.some(repo => repo[0] === savedRepositoryState.repository_id)) {
+              this.selectedRepository = savedRepositoryState.repository_id;
+            } else if (this.repositories.length > 0) {
               this.selectedRepository = this.repositories[0][0];
             }
+
+            this.loadingRepositories = false;
           });
         })
     }

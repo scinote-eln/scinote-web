@@ -20,7 +20,7 @@
                 {{ i18n.t('equipment_bookings.index.manage_modal.event_name') }}
               </span>
               <div class="sci-input-container-v2">
-                <input type="text" ref="eventNameInput" v-model="event.event_name" />
+                <input type="text" ref="eventNameInput" v-model="event.event_name" :placeholder="i18n.t('equipment_bookings.index.manage_modal.event_name')" />
               </div>
             </div>
             <div>
