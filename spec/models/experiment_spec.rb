@@ -84,7 +84,7 @@ describe Experiment, type: :model do
     let(:user) { experiment.created_by }
 
     context 'when creating tasks' do
-      let(:to_add) { [{ id: 'n0', name: 'new task name', x: 50, y: 50 }] }
+      let(:to_add) { [{ id: 'n0', name: 'new task name', x: experiment.my_modules.maximum(:x) + 1, y: experiment.my_modules.maximum(:y) + 1 }] }
       let(:function_call) { experiment.update_canvas([], to_add, [], {}, [], [], [], {}, user) }
 
       it 'calls create activity for creating tasks' do

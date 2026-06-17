@@ -725,14 +725,7 @@ class Extends
     calendar_event_updated: 494,
     calendar_event_deleted: 495,
     calendar_event_participant_created: 496,
-    calendar_event_participant_deleted: 497,
-    calendar_recurring_event_created: 498,
-    calendar_recurring_event_current_updated: 499,
-    calendar_recurring_event_current_and_following_updated: 500,
-    calendar_recurring_event_all_updated: 501,
-    calendar_recurring_event_current_deleted: 502,
-    calendar_recurring_event_current_and_following_deleted: 503,
-    calendar_recurring_event_all_deleted: 504
+    calendar_event_participant_deleted: 497
   }
 
   ACTIVITY_GROUPS = {
@@ -902,6 +895,7 @@ class Extends
     my_module_repositories/index
     protocol_repository_rows/index
     my_modules/archive
+    teams/data_integrity
     equipment_bookings/index
   )
 
@@ -972,28 +966,36 @@ class Extends
     'ResultOrderableElement' => ['AutomationObservers::ResultContentChangeObserver']
   }
 
-  DEFAULT_TEAM_SETTINGS = {}
+  DEFAULT_TEAM_SETTINGS = {
+    repository_deletion_enabled: true,
+    result_deletion_enabled: true,
+    protocol_steps_deletion_enabled: true
+  }
 
   WHITELISTED_USER_SETTINGS = [].freeze
 
   AVAILABLE_TEAM_SETTINGS = {
-    sharing: {
-      task_sharing_enabled: {
-        permission_helper: :can_manage_team?,
-        confirm: {
-          description_params: %i(name shared_task_count)
+    general: {
+      sharing: {
+        task_sharing_enabled: {
+          permission_helper: :can_manage_team?,
+          confirm: {
+            description_params: %i(name shared_task_count)
+          }
         }
       }
     },
-    deletion: {
-      repository_deletion_enabled: {
-        permission_helper: :can_modify_team_deletion_prevention?
-      },
-      result_deletion_enabled: {
-        permission_helper: :can_modify_team_deletion_prevention?
-      },
-      protocol_steps_deletion_enabled: {
-        permission_helper: :can_modify_team_deletion_prevention?
+    data_integrity: {
+     deletion: {
+        repository_deletion_enabled: {
+          permission_helper: :can_modify_team_deletion_prevention?
+        },
+        result_deletion_enabled: {
+          permission_helper: :can_modify_team_deletion_prevention?
+        },
+        protocol_steps_deletion_enabled: {
+          permission_helper: :can_modify_team_deletion_prevention?
+        }
       }
     }
   }

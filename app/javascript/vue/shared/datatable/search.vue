@@ -12,10 +12,13 @@
           ref="searchInput"
           class="sci-input-field"
           type="text"
+          :value="value"
           :placeholder="i18n.t('repositories.show.filter_inventory_items')"
           @input="setValue"
         />
-        <i class="sn-icon sn-icon-search !mr-2.5"></i>
+         <i v-if="searchValue.length === 0" class="sn-icon sn-icon-search !m-2.5 !ml-auto right-0"></i>
+         <i v-else class="sn-icon sn-icon-close !m-2.5 !ml-auto right-0 cursor-pointer z-10"
+              @click="$emit('search', '')"></i>
       </div>
       <template v-if="enableBarcodeSearch">
         <div v-if="barcodeSearchOpened" class="sci-input-container-v2 w-full right-icon ml-2">
@@ -78,6 +81,7 @@ export default {
     searchValue(newValue) {
       if (newValue !== this.value) {
         this.value = newValue;
+        this.searchOpened = true;
       }
     },
     barcodeValue() {
@@ -123,11 +127,11 @@ export default {
       }
     },
     closeSearch() {
-      if (this.value.length == 0) {
-        setTimeout(() => {
+      setTimeout(() => {
+        if (this.value.length == 0) {
           this.searchOpened = false;
-        }, 100);
-      }
+        }
+      }, 100);
     },
     debouncedSearch() {
       if (this.searchTimeout) {

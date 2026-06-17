@@ -1,0 +1,58 @@
+<div>
+  <h1>Activity statistics</h1>
+</div>
+<form action="<%= qa_tools_activity_statistics_path %>" method="get" class="form-inline">
+  <div class="form-group">
+    <label for="start_date">Start date</label>
+    <input type="date" id="start_date" name="start_date"
+           value="<%= params[:start_date] %>" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="end_date">End date</label>
+    <input type="date" id="end_date" name="end_date"
+           value="<%= params[:end_date] %>" class="form-control">
+  </div>
+  <button type="submit" class="btn btn-primary">Filter</button>
+  <%= link_to 'Export CSV', qa_tools_activity_statistics_path(
+    column: params[:column],
+    direction: params[:direction],
+    start_date: params[:start_date],
+    end_date: params[:end_date],
+    format: :csv), class: 'btn btn-primary' %>
+</form>
+<br>
+<strong>Start Date:</strong> <%= @start_date.strftime('%d.%m.%Y') %>
+<strong>End Date:</strong> <%= @end_date.strftime('%d.%m.%Y') %>
+<br>
+<table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th><%= sort_header('Type Id', 'type_of') %></th>
+        <th><%= sort_header('Group', 'group') %></th>
+        <th><%= sort_header('Group Name', 'group_name') %></th>
+        <th><%= sort_header('Type', 'type') %></th>
+        <th><%= sort_header('Type Name', 'type_name') %></th>
+        <th><%= sort_header('Count', 'total_count') %></th>
+        <th>Workspaces</th>
+      </tr>
+    </thead>
+    <tbody>
+  <% @activity_statistics.each do |activity_statistic| %>
+    <tr>
+      <td> <%= activity_statistic[:type_of] %> </td>
+      <td> <%= activity_statistic[:group] %> </td>
+      <td> <%= activity_statistic[:group_name] %></td>
+      <td> <%= activity_statistic[:type] %> </td>
+      <td> <%= activity_statistic[:type_name] %> </td>
+      <td> <%= activity_statistic[:total_count] %> </td>
+      <td>
+        <% if activity_statistic[:team_counts] %>
+          <% activity_statistic[:team_counts].each do |team_name, n| %>
+              <%= team_name %>: <%= n %><br>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+    </tbody>
+</table>

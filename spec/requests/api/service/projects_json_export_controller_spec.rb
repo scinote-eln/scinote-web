@@ -20,6 +20,8 @@ RSpec.describe "Api::Service::ProjectsJsonExportController", type: :request do
       
     @unaccessible_experiment.user_assignments.destroy_all
 
+    @callback_url = Faker::Internet.url
+
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }
   end
@@ -32,7 +34,7 @@ RSpec.describe "Api::Service::ProjectsJsonExportController", type: :request do
     let(:request_body) do
       {
         data: {
-          "callback_url": Faker::Internet.url,
+          "callback_url": @callback_url,
           "task_ids": [@accessible_task.id, @unaccessible_task.id]
         }
       }
@@ -48,6 +50,7 @@ RSpec.describe "Api::Service::ProjectsJsonExportController", type: :request do
 
     context 'when has valid params' do
       it 'returns status 202' do
+        stub_request(:post, @callback_url).to_return(status: 200, body: "", headers: {})
         action
         expect(response).to have_http_status 202
       end

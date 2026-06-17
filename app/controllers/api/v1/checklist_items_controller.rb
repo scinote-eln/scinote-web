@@ -10,6 +10,7 @@ module Api
         load_checklist_item(:id)
       end
       before_action :load_checklist_item_for_managing, only: %i(update destroy)
+      before_action :check_delete_permission, only: :destroy
 
       def index
         checklist_items =
@@ -74,6 +75,10 @@ module Api
       def load_checklist_item_for_managing
         @checklist_item = @checklist.checklist_items.find(params.require(:id))
         raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@protocol)
+      end
+
+      def check_delete_permission
+        raise PermissionError.new(Checklist, :delete) unless can_delete_step_checklist?(@checklist_item.checklist)
       end
 
       def log_activity(type_of, message_items = {})

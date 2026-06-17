@@ -63,7 +63,7 @@
     <div class="flex flex-1 justify-end gap-2 h-11">
       <Search
         v-if="!disabled"
-        :value="searchValue"
+        :searchValue="searchValue"
         :enableBarcodeSearch="enableBarcodeSearch"
         @search="$emit('search:change', $event)"
       />

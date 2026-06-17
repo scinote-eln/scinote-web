@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col mb-5">
-    <h2>{{ i18n.t('users.settings.teams.preferences.title') }}</h2>
+    <h2>{{ i18n.t(`users.settings.teams.preferences.title.${mode}`) }}</h2>
     <div>
       <div v-for="(items, sectionKey) in settings" :key="`section-${sectionKey}`" class="flex flex-col bg-sn-white gap-4 p-4 w-full rounded">
         <h5>{{ i18n.t(`users.settings.teams.preferences.sections.${sectionKey}.title`)}}
@@ -60,6 +60,10 @@ export default {
     teamId: {
       type: [Number, String],
       required: true
+    },
+    mode: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -82,7 +86,9 @@ export default {
       this.loadingSettings = true;
 
       axios
-        .get(available_settings_team_path({ id: this.teamId }))
+        .get(available_settings_team_path({ id: this.teamId }), {
+          params: { mode: this.mode }
+        })
         .then(({ data }) => {
           this.settings = data || {};
         })
@@ -125,7 +131,7 @@ export default {
       item.value = !!value;
 
       axios
-        .put(update_setting_team_path({ id: this.teamId }), {
+        .put(update_setting_team_path({ id: this.teamId }, { params: { mode: this.mode } }), {
           section: sectionKey,
           key: itemKey,
           value

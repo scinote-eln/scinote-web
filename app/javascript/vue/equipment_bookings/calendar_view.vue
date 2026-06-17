@@ -38,6 +38,9 @@
     createViewWeek,
   } from '@schedule-x/calendar'
   import { createEventRecurrencePlugin, createEventsServicePlugin } from "@schedule-x/event-recurrence";
+  import { createCurrentTimePlugin } from '@schedule-x/current-time'
+  import { createScrollControllerPlugin } from '@schedule-x/scroll-controller'
+  import { createCalendarControlsPlugin } from '@schedule-x/calendar-controls'
 
   import 'temporal-polyfill/global'
   import {
@@ -46,6 +49,8 @@
 import { loadScript } from 'pdfjs-dist';
 
   let calendarApp = null;
+
+  const calendarControls = createCalendarControlsPlugin();
 
   const calendarsVariants = {
     calibration: {
@@ -107,7 +112,10 @@ import { loadScript } from 'pdfjs-dist';
         selectedEvent: null,
         eventsServicePlugin: null,
         eventModalPlugin: null,
-        eventRecurrencePlugin: null
+        eventRecurrencePlugin: null,
+        createCurrentTimePlugin: null,
+        scrollControllerPlugin: null,
+        calendarControlsPlugin: null
       };
     },
     computed: {
@@ -168,6 +176,11 @@ import { loadScript } from 'pdfjs-dist';
       this.eventsServicePlugin = createEventsServicePlugin();
       this.eventModalPlugin = createEventModalPlugin();
       this.eventRecurrencePlugin = createEventRecurrencePlugin();
+      this.createCurrentTimePlugin = createCurrentTimePlugin();
+      this.scrollControllerPlugin = createScrollControllerPlugin({
+        initialScroll: '07:50'
+      });
+      this.calendarControlsPlugin = calendarControls;
 
       calendarApp = createCalendar({
         calendars: calendarsVariants,
@@ -199,8 +212,37 @@ import { loadScript } from 'pdfjs-dist';
             component.endDate = range.end.toPlainDateTime()['o'];
             component.fetchEvents();
           },
+          onClickDate(date) {
+            if (!component.permissions.create_equipment_bookings) return;
+
+            const now = Temporal.Now.plainDateTimeISO()
+
+            let startAt = now.with({
+              year: date.year,
+              month: date.month,
+              day: date.day,
+              minute: 0,
+              second: 0,
+            });
+
+            let endAt = startAt.add({ hours: 1 });
+
+            component.openEventModatWithDateTime(startAt, endAt);
+          },
+          onClickDateTime(dateTime) {
+            if (!component.permissions.create_equipment_bookings) return;
+
+            const startAt = dateTime.with({ minute: 0, second: 0 });
+            const endAt = startAt.add({ hours: 1 });
+            component.openEventModatWithDateTime(startAt, endAt);
+          },
         }
-      }, [this.eventRecurrencePlugin, this.eventsServicePlugin, this.eventModalPlugin]);
+      }, [this.eventRecurrencePlugin,
+          this.eventsServicePlugin,
+          this.eventModalPlugin,
+          this.createCurrentTimePlugin,
+          this.scrollControllerPlugin,
+          this.calendarControlsPlugin]);
     },
     components: {
       ScheduleXCalendar,
@@ -234,6 +276,19 @@ import { loadScript } from 'pdfjs-dist';
         if (repeat_count) rule += `;COUNT=${repeat_count}`;
         else if (repeat_until) rule += `;UNTIL=${new Date(repeat_until).toISOString().replace(/[-:]/g, '').split('.')[0]}Z`;
         return rule;
+      },
+      openEventModatWithDateTime(startAt, endAt) {
+        this.selectedEvent = {
+          id: null,
+          event_name: '',
+          start_at: startAt.toString().substring(0, 16).replace('T', ' '),
+          end_at: endAt.toString().substring(0, 16).replace('T', ' '),
+          event_type: 'equipment_booking',
+          event_sub_type: 'calibration',
+          full_day: false,
+          users: [],
+          repository_row_id: null
+        }
       },
       duplicateEvent(event) {
         this.selectedEvent = {
@@ -269,7 +324,10 @@ import { loadScript } from 'pdfjs-dist';
           })
         }
       },
+
       fetchEvents() {
+        if (!this.repositoryId) return;
+
         const params = {
           parent_type: 'Repository',
           parent_id: this.repositoryId,
@@ -281,7 +339,7 @@ import { loadScript } from 'pdfjs-dist';
         axios.get(this.eventsUrl, { params })
           .then(response => {
             let events = response.data.data.map((event) => {
-              let start, end;
+              let start, end, label;
 
               if (event.attributes.full_day) {
                 start = Temporal.PlainDate.from(event.attributes.start_at_string);
@@ -289,6 +347,15 @@ import { loadScript } from 'pdfjs-dist';
               } else {
                 start = Temporal.Instant.from(event.attributes.start_at_string).toZonedDateTimeISO('UTC');
                 end = Temporal.Instant.from(event.attributes.end_at_string).toZonedDateTimeISO('UTC');
+              }
+
+              const startHours = String(start.hour).padStart(2, '0');
+              const startMinutes = String(start.minute).padStart(2, '0');
+
+              if (event.attributes.full_day) {
+                label = `${event.attributes.name}`;
+              } else {
+                label = `${startHours}:${startMinutes} ${event.attributes.name}`;
               }
 
               return {
@@ -299,7 +366,10 @@ import { loadScript } from 'pdfjs-dist';
                 color: calendarsVariants[event.attributes.event_sub_type || 'no_type'].lightColors.main,
                 attributes: event.attributes,
                 calendarId: event.attributes.event_sub_type || 'no_type',
-                rrule: this.buildRRule(event.attributes)
+                rrule: this.buildRRule(event.attributes),
+                _customContent: {
+                  monthGrid: label
+                }
               };
             });
             this.eventsServicePlugin.set(events);

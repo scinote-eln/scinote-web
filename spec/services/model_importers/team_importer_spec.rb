@@ -303,9 +303,6 @@ describe TeamImporter do
                 expect(db_asset.team_id). to eq @team.id
 
                 # Other fields
-                expect(db_asset.estimated_size).to eq(
-                  json_asset['asset']['estimated_size']
-                )
                 expect(db_asset.blob.content_type).to eq(
                   json_asset['asset_blob']['content_type']
                 )

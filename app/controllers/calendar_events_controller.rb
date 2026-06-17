@@ -45,6 +45,8 @@ class CalendarEventsController < ApplicationController
       end
     end
 
+    send_notifications!(:create)
+
     render json: @calendar_event, serializer: CalendarEventSerializer, user: current_user
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error e.message
@@ -59,11 +61,12 @@ class CalendarEventsController < ApplicationController
 
     ActiveRecord::Base.transaction do
       @calendar_event.update!(calendar_event_params)
-
       log_activity(@calendar_event, :calendar_event_updated)
       new_ids.each { |user_id| log_activity(@calendar_event, :calendar_event_participant_created, { user_target: user_id }) }
       removed_ids.each { |user_id| log_activity(@calendar_event, :calendar_event_participant_deleted, { user_target: user_id }) }
     end
+
+    send_notifications!(:update)
 
     render json: @calendar_event, serializer: CalendarEventSerializer, user: current_user
   rescue ActiveRecord::RecordInvalid => e
@@ -74,6 +77,7 @@ class CalendarEventsController < ApplicationController
   def destroy
     ActiveRecord::Base.transaction do
       log_activity(@calendar_event, :calendar_event_deleted)
+      send_notifications!(:destroy)
       @calendar_event.destroy!
       render json: { message: :ok }
     rescue ActiveRecord::RecordInvalid => e
@@ -112,18 +116,22 @@ class CalendarEventsController < ApplicationController
   end
 
   def calendar_event_params
+    if params[:start_date].present? && params[:end_date].present?
+      params[:start_datetime] = nil
+      params[:end_datetime] = nil
+    else
+      params[:start_date] = nil
+      params[:end_date] = nil
+    end
+
     params.permit(
       :name,
-      :start_at,
-      :end_at,
+      :start_datetime,
+      :start_date,
+      :end_datetime,
+      :end_date,
       :event_type,
       :event_sub_type,
-      :full_day,
-      :frequency,
-      :interval,
-      :interval_unit,
-      :repeat_count,
-      :repeat_until,
       user_ids: [],
       metadata: {}
     )
@@ -153,6 +161,26 @@ class CalendarEventsController < ApplicationController
       render_403 unless can_manage_equipment_bookings?(@calendar_event.subject.repository)
     else
       raise NotImplementedError
+    end
+  end
+
+  def send_notifications!(action)
+    case @calendar_event.event_type
+    when 'equipment_booking'
+      case action
+      when :create
+        EquipmentBookingCreatedNotification.send_notifications({ calendar_event_id: @calendar_event.id, user_name: current_user.full_name })
+      when :update
+        EquipmentBookingUpdatedNotification.send_notifications({ calendar_event_id: @calendar_event.id })
+      when :destroy
+        EquipmentBookingDeletedNotification.send_notifications(
+          {
+            calendar_event_id: @calendar_event.id,
+            event_name: @calendar_event.name,
+            repository_row_name: @calendar_event.subject.name
+          }
+        )
+      end
     end
   end
 

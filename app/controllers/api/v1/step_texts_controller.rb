@@ -8,6 +8,7 @@ module Api
         load_step_text(:id)
       end
       before_action :load_step_text_for_managing, only: %i(update destroy)
+      before_action :check_delete_permission, only: :destroy
 
       def index
         step_texts = timestamps_filter(@step.step_texts)
@@ -62,6 +63,10 @@ module Api
       def load_step_text_for_managing
         @step_text = @step.step_texts.find(params.require(:id))
         raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@protocol)
+      end
+
+      def check_delete_permission
+        raise PermissionError.new(StepText, :delete) unless can_delete_step_text?(@step_text)
       end
     end
   end

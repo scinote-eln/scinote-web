@@ -5,11 +5,11 @@ require 'rails_helper'
 RSpec.describe 'Api::V2::StepElements::ChecklistsController', type: :request do
   before :all do
     @user = create(:user)
-    @team = create(:team, created_by: @user)
+    @team = create(:team, :record_deletion_enabled, created_by: @user)
     @project = create(:project, team: @team, created_by: @user)
     @experiment = create(:experiment, :with_tasks, project: @project)
     @task = @experiment.my_modules.first
-    @protocol = create(:protocol, my_module: @task)
+    @protocol = create(:protocol, my_module: @task, team: @team)
     @step = create(:step, protocol: @protocol)
     @valid_headers = {
       'Authorization': 'Bearer ' + generate_token(@user.id),
@@ -206,6 +206,8 @@ RSpec.describe 'Api::V2::StepElements::ChecklistsController', type: :request do
   describe 'DELETE checklist, #destroy' do
     let(:checklist) { create(:checklist, step: @step) }
     let(:action) do
+      checklist.archive!(@user)
+
       delete(api_v2_team_project_experiment_task_protocol_step_checklist_path(
         team_id: @team.id,
         project_id: @project.id,

@@ -36,7 +36,7 @@
         <div class="ml-auto flex items gap-4">
           <button
             v-if="this.element.attributes.orderable.urls.restore_url"
-            class="btn icon-btn btn-light"
+            :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}-options-restore`]"
             @click="confirmingRestore = true"
             :title="i18n.t('general.restore')"
             :data-e2e="`e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-restore`"
@@ -45,7 +45,7 @@
           </button>
           <button
             v-if="this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url"
-            class="btn icon-btn btn-light"
+            :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}-options-delete`]"
             @click="showDeleteModal"
             :title="i18n.t('general.delete')"
             :data-e2e="`e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-delete`"
@@ -137,6 +137,10 @@ export default {
     dataE2e: {
       type: String,
       default: ''
+    },
+    e2eClass: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -162,28 +166,32 @@ export default {
         menu.push({
           text: I18n.t('general.edit'),
           emit: 'edit',
-          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-edit`
+          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-edit`,
+          e2e_class: `e2e-BT-${this.e2eClass}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}-options-edit`
         });
       }
       if (this.element.attributes.orderable.urls.duplicate_url) {
         menu.push({
           text: I18n.t('general.duplicate'),
           emit: 'duplicate',
-          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-duplicate`
+          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-duplicate`,
+          e2e_class: `e2e-BT-${this.e2eClass}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}-options-duplicate`
         });
       }
       if (this.element.attributes.orderable.urls.move_targets_url) {
         menu.push({
           text: I18n.t('general.move'),
           emit: 'move',
-          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-move`
+          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-move`,
+          e2e_class: `e2e-BT-${this.e2eClass}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}-options-move`
         });
       }
       if (this.element.attributes.orderable.urls.archive_url) {
         menu.push({
           text: I18n.t('general.archive'),
           emit: 'archive',
-          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-archive`
+          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-archive`,
+          e2e_class: `e2e-BT-${this.e2eClass}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}-options-archive`
         });
       }
 
@@ -191,7 +199,8 @@ export default {
         menu.push({
           text: I18n.t('general.delete'),
           emit: 'delete',
-          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-delete`
+          data_e2e: `e2e-BT-${this.dataE2e}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}${this.element.id}-options-delete`,
+          e2e_class: `e2e-BT-${this.e2eClass}-${this.element.attributes.orderable.metadata.plateTemplate ? 'wellPlate' : 'table'}-options-delete`
         });
       }
       return menu;

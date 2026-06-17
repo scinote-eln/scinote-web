@@ -116,7 +116,7 @@ module Api
       end
 
       def check_delete_permissions
-        raise PermissionError.new(Step, :delete) unless can_manage_step?(@step)
+        raise PermissionError.new(Step, :delete) unless can_delete_step?(@step)
       end
 
       def log_activity(type_of, message_items = {})

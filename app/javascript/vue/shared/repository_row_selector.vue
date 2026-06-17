@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mb-4">
+    <div v-if="!hideRepositorySelector" class="mb-4">
       <div class="sci-label">{{ i18n.t(`storage_locations.show.assign_modal.inventory`) }}</div>
       <SelectDropdown
         :optionsUrl="repositoriesUrl"
@@ -16,7 +16,7 @@
       <div class="sci-label">{{ i18n.t(`storage_locations.show.assign_modal.item`) }}</div>
       <SelectDropdown
         :key="selectedRepository"
-        :disabled="!selectedRepository"
+        :disabled="!selectedRepository || disableRowSelection"
         :optionsUrl="rowsUrl"
         :urlParams="{ repository_id: selectedRepository, excluded_ids: excludeRows }"
         ajaxMethod="post"
@@ -75,9 +75,17 @@ export default {
       type: Number,
       default: null
     },
+    hideRepositorySelector: {
+      type: Boolean,
+      default: false
+    },
     preSelectedRows: {
-      type: [Array],
+      type: [Array, Number],
       default: null
+    },
+    disableRowSelection: {
+      type: Boolean,
+      default: false
     },
     excludeRows: {
       type: Array,

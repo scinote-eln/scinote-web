@@ -4,6 +4,11 @@ ActiveRecord::Migration.check_all_pending!
 
 MyModuleStatusFlow.ensure_default
 
+UserRole.owner_role.save! unless UserRole.exists?(name: UserRole.owner_role.name)
+UserRole.normal_user_role.save! unless UserRole.exists?(name: UserRole.normal_user_role.name)
+UserRole.technician_role.save! unless UserRole.exists?(name: UserRole.technician_role.name)
+UserRole.viewer_role.save! unless UserRole.exists?(name: UserRole.viewer_role.name)
+
 if User.count.zero?
   if ENV['ADMIN_NAME'].present? &&
      ENV['ADMIN_EMAIL'].present? &&

@@ -5,7 +5,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V2::ResultElements::TextsController', type: :request do
   let(:user) { create(:user) }
-  let(:team) { create(:team, created_by: user) }
+  let(:team) { create(:team, :record_deletion_enabled, created_by: user) }
   let(:project) { create(:project, team: team, created_by: user) }
   let(:experiment) { create(:experiment, :with_tasks, project: project, created_by: user) }
   let(:task) { experiment.my_modules.first }
@@ -335,6 +335,8 @@ RSpec.describe 'Api::V2::ResultElements::TextsController', type: :request do
     let(:result_text) { create(:result_text, result: result) }
     let(:result_text_archived) { create(:result_text, result: result_archived) }
     let(:action) do
+      result_text.archive!(user)
+
       delete(api_v2_team_project_experiment_task_result_text_path(
         team_id: team.id,
         project_id: project.id,

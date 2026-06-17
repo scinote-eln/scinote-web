@@ -5,11 +5,11 @@ require 'rails_helper'
 RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :request do
   before :all do
     @user = create(:user)
-    @team = create(:team, created_by: @user)
+    @team = create(:team, :record_deletion_enabled, created_by: @user)
     @project = create(:project, team: @team, created_by: @user)
     @experiment = create(:experiment, :with_tasks, project: @project, created_by: @user)
     @task = @experiment.my_modules.first
-    @protocol = create(:protocol, my_module: @task)
+    @protocol = create(:protocol, my_module: @task, team: @team)
     @step = create(:step, protocol: @protocol)
 
     @valid_headers = {
@@ -210,6 +210,8 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :re
   describe 'DELETE step_text, #destroy' do
     let(:step_text) { create(:step_text, step: @step) }
     let(:action) do
+      step_text.archive!(@user)
+
       delete(api_v2_team_project_experiment_task_protocol_step_text_path(
         team_id: @team.id,
         project_id: @project.id,

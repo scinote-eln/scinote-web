@@ -106,11 +106,13 @@ group :development, :test do
   gem 'brakeman', require: false
   gem 'bullet'
   gem 'byebug'
+  gem 'database_cleaner'
   gem 'factory_bot_rails'
   gem 'faker' # Generate fake data
   gem 'figaro'
   gem 'listen'
   gem 'overcommit'
+  gem 'parallel_tests'
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-rails'
@@ -127,7 +129,6 @@ group :test do
   gem 'capybara'
   gem 'capybara-email'
   gem 'cucumber-rails', require: false
-  gem 'database_cleaner'
   gem 'json_matchers'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers'

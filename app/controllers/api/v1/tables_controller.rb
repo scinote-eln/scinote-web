@@ -8,6 +8,7 @@ module Api
         load_table(:id)
       end
       before_action :load_table_for_managing, only: %i(update destroy)
+      before_action :check_delete_permission, only: :destroy
 
       def index
         tables = timestamps_filter(@step.tables)
@@ -74,6 +75,10 @@ module Api
       def load_table_for_managing
         @table = @step.tables.find(params.require(:id))
         raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@protocol)
+      end
+
+      def check_delete_permission
+        raise PermissionError.new(Table, :delete) unless can_delete_step_table?(@table)
       end
 
       def convert_plate_template(metadata_params)
