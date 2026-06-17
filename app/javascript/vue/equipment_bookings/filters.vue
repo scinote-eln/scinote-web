@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[300px] p-2 pr-4 flex flex-col gap-6 border-transparent !border-r-sn-light-grey border-solid  h-full">
+  <div class="w-[300px] flex-shrink-0 p-2 pr-4 flex flex-col gap-6 border-transparent !border-r-sn-light-grey border-solid  h-full">
     <div>
       <button
         class="btn btn-primary w-full"
