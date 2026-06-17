@@ -7,7 +7,7 @@ import { mountWithTurbolinks } from '../helpers/turbolinks.js';
 const app = createApp({
   data() {
     return {
-      dataUrl: '/design_elements/test_table'
+      dataUrl: '/qa_tools/design_elements/test_table'
     };
   },
   computed: {
