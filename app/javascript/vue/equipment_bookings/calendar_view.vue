@@ -47,6 +47,7 @@
     calendar_events_path
   } from '../../routes.js';
 import { loadScript } from 'pdfjs-dist';
+import escapeHtml from '../shared/escape_html.js';
 
   let calendarApp = null;
 
@@ -339,7 +340,7 @@ import { loadScript } from 'pdfjs-dist';
         axios.get(this.eventsUrl, { params })
           .then(response => {
             let events = response.data.data.map((event) => {
-              let start, end, label;
+              let start, end, labelMonthGrid, labelTimeGrid;
 
               if (event.attributes.full_day) {
                 start = Temporal.PlainDate.from(event.attributes.start_at_string);
@@ -349,13 +350,19 @@ import { loadScript } from 'pdfjs-dist';
                 end = Temporal.Instant.from(event.attributes.end_at_string).toZonedDateTimeISO('UTC');
               }
 
-              const startHours = String(start.hour).padStart(2, '0');
-              const startMinutes = String(start.minute).padStart(2, '0');
+              const startTime = event.attributes.start_at_formatted.split(' ')[event.attributes.start_at_formatted.split(' ').length - 1]
+              const endTime = event.attributes.end_at_formatted.split(' ')[event.attributes.end_at_formatted.split(' ').length - 1]
 
               if (event.attributes.full_day) {
-                label = `${event.attributes.name}`;
+                labelMonthGrid = `${escapeHtml(event.attributes.name)}`;
+                labelTimeGrid = `<div class="sx__time-grid-event-title">${escapeHtml(event.attributes.name)}</div>`;
               } else {
-                label = `${startHours}:${startMinutes} ${event.attributes.name}`;
+                labelMonthGrid = `${startTime} ${escapeHtml(event.attributes.name)}`;
+                labelTimeGrid = `<div class="sx__time-grid-event-title">${escapeHtml(event.attributes.name)}</div>
+                                 <div class="sx__time-grid-event-time">
+                                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sx__event-icon"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M12 8V12L15 15" stroke="var(--sx-color-on-calibration-container)" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="12" r="9" stroke="var(--sx-color-on-calibration-container)" stroke-width="2"></circle></g></svg>
+                                   ${startTime} - ${endTime}
+                                 </div>`;
               }
 
               return {
@@ -368,7 +375,8 @@ import { loadScript } from 'pdfjs-dist';
                 calendarId: event.attributes.event_sub_type || 'no_type',
                 rrule: this.buildRRule(event.attributes),
                 _customContent: {
-                  monthGrid: label
+                  monthGrid: labelMonthGrid,
+                  timeGrid: labelTimeGrid
                 }
               };
             });
