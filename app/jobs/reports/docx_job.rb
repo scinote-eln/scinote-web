@@ -20,8 +20,6 @@ module Reports
         Reports::Docx.new(report, docx, user: user, scinote_url: root_url).draw
         docx.save
         report.docx_file.attach(io: file, filename: 'report.docx')
-        report_path = Rails.application.routes.url_helpers
-                           .reports_path(team: report.team.id, preview_report_id: report.id, preview_type: :docx)
 
         DeliveryNotification.send_notifications(
           {

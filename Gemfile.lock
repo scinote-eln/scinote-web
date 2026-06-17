@@ -25,6 +25,16 @@ GIT
       mini_magick (~> 4.9)
 
 GIT
+  remote: https://github.com/scinote-eln/odf-report
+  revision: 122fa812bd9fb2ecc3c0842dd5a5e946f5a16251
+  branch: rich-text-improvements
+  specs:
+    odf-report (0.9.0)
+      mime-types
+      nokogiri (>= 1.12.0)
+      rubyzip (>= 1.3.0)
+
+GIT
   remote: https://github.com/scinote-eln/omniauth-okta
   revision: fc4d833532dec050a3c6296691d631b64de1ee19
   branch: org_auth_server_support
