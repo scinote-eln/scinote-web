@@ -20,6 +20,7 @@
     confirmClass="btn btn-danger"
     :confirmText="i18n.t('equipment_bookings.index.delete_modal.delete')"
     ref="deleteEventModal"
+    e2eValue='equipmentBooking-deleteEventModal'
   ></ConfirmationModal>
   </div>
 </template>
@@ -135,15 +136,15 @@ import escapeHtml from '../shared/escape_html.js';
                   h('div', { class: `h-6 w-6 rounded`, style: { backgroundColor: calendarEvent.color } }),
                   h('h3', { class: 'font-semibold my-0 grow' }, calendarEvent.title),
                   this.permissions.create_equipment_bookings && h('button', {
-                    class: 'btn btn-light icon-btn btn-black',
+                    class: 'btn btn-light icon-btn btn-black e2e-BT-equipmentBooking-eventFlyout-duplicate',
                     onClick: () => this.duplicateEvent(calendarEvent)
                   }, h('i', { class: 'sn-icon sn-icon-duplicate' })),
                   this.permissions.manage_equipment_bookings && h('button', {
-                    class: 'btn btn-light icon-btn btn-black',
+                    class: 'btn btn-light icon-btn btn-black e2e-BT-equipmentBooking-eventFlyout-edit',
                     onClick: () => this.editEvent(calendarEvent)
                   }, h('i', { class: 'sn-icon sn-icon-edit' })),
                   this.permissions.manage_equipment_bookings && h('button', {
-                    class: 'btn btn-light icon-btn btn-black',
+                    class: 'btn btn-light icon-btn btn-black e2e-BT-equipmentBooking-eventFlyout-delete',
                     onClick: () => this.removeEvent(calendarEvent)
                   }, h('i', { class: 'sn-icon sn-icon-delete' }))
                 ]
