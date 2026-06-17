@@ -2,76 +2,61 @@
 
 module QaTools
   class ActivityStatisticsController < ApplicationController
-    SORTABLE_COLUMNS = %w(type_id group type name count).freeze
-    helper_method :sort_header
+    SORTABLE_COLUMNS = %w(type_of group group_name type type_name total_count).freeze
 
     def index
-      @start_date = import_params[:start_date]&.to_date || Time.zone.today
-      @end_date   = import_params[:end_date]&.to_date   || Time.zone.today
-      @sort_column = SORTABLE_COLUMNS.include?(params[:column]) ? params[:column] : 'count'
+      @start_date = params[:start_date]&.to_date || Time.zone.today
+      @end_date   = params[:end_date]&.to_date   || Time.zone.today
+      @sort_column = SORTABLE_COLUMNS.include?(params[:column]) ? params[:column] : 'total_count'
       @sort_direction = params[:direction] == 'asc' ? 'asc' : 'desc'
 
-      activities = Activity.where(created_at: (@start_date.beginning_of_day..@end_date.end_of_day))
-      activity_count = normalize_type_keys(activities.group(:type_of).count)
+      activity_counts =
+        Activity.where(created_at: (@start_date.beginning_of_day..@end_date.end_of_day))
+                .group(:type_of, :team_id)
+                .pluck(:type_of, :team_id, 'count(type_of)')
+                .group_by(&:first).to_h do |type_of, team_counts|
+                  [
+                    type_of.to_sym,
+                    team_counts.to_h { |c| [Team.find(c[1]).name, c[2]] }
+                  ]
+                end
 
-      # Workspaces: { type_id => { team_name => count } }
-      workspaces = Hash.new { |h, k| h[k] = {} }
-      activities.joins(:team).group(:type_of, 'teams.name').count.each do |(type, team_name), n|
-        workspaces[Activity.type_ofs[type.to_s]][team_name] = n
-      end
-
-      # Reverse map: activity type id => group key
-      activity_group_ids = Extends::ACTIVITY_GROUPS.each_with_object({}) do |(group, ids), m|
-        ids.each { |id| m[id] = group }
-      end
-
-      stats = Activity.type_ofs.map do |type_key, type_id|
-        group_key = activity_group_ids[type_id]
+      activity_statistics = Extends::ACTIVITY_TYPES.map do |activity_type, type_of|
+        group = Extends::ACTIVITY_GROUPS.find { |_, type_ofs| type_ofs.include?(type_of) }.first
         {
-          type_id: type_id,
-          group: I18n.t("global_activities.activity_group.#{group_key}"),
-          type: type_key,
-          name: I18n.t("global_activities.activity_name.#{type_key}"),
-          count: activity_count.fetch(type_id, 0),
-          workspaces: workspaces[type_id]
+          type_of: type_of,
+          type: activity_type,
+          type_name: I18n.t("global_activities.activity_name.#{activity_type}"),
+          group: group,
+          group_name: I18n.t("global_activities.activity_group.#{group}"),
+          total_count: activity_counts[activity_type]&.values&.sum || 0,
+          team_counts: activity_counts[activity_type]
         }
       end
 
-      @stats = stats.sort_by(&sort_value(@sort_column))
-      @stats.reverse! if @sort_direction == 'desc'
+      @activity_statistics = activity_statistics.sort_by(&sort_value(@sort_column))
+      @activity_statistics.reverse! if @sort_direction == 'desc'
 
       respond_to do |format|
         format.html
-        format.csv { send_data to_csv(@stats), filename: "activity_statistics_#{Time.zone.now.strftime('%Y%m%d%H%M%S')}.csv", type: 'text/csv' }
+        format.csv { send_data to_csv(@activity_statistics), filename: "activity_statistics_#{Time.zone.now.strftime('%Y%m%d%H%M%S')}.csv", type: 'text/csv' }
       end
     end
 
     private
 
-    def import_params
-      params.permit(:start_date, :end_date, :direction, :column).to_h
-    end
-
     def sort_value(column)
       lambda do |info|
         case column
-        when 'count', 'type_id' then info[column.to_sym].to_i
+        when 'total_count', 'type_of' then info[column.to_sym].to_i
         else info[column.to_sym].to_s.downcase
         end
       end
     end
 
-    def normalize_type_key(value)
-      Activity.type_ofs[value.to_s]
-    end
-
-    def normalize_type_keys(hash)
-      hash.transform_keys { |k| normalize_type_key(k) }
-    end
-
     def to_csv(data)
       require 'csv'
-      attributes = ['Type ID', 'Group', 'Type', 'Name', 'Count', 'Workspaces']
+      attributes = ['Type Id', 'Group', 'Group Name', 'Type', ' Type Name', 'Count', 'Workspaces']
 
       CSV.generate(headers: true) do |csv|
         csv << attributes
@@ -81,6 +66,7 @@ module QaTools
       end
     end
 
+    helper_method :sort_header
     def sort_header(label, column)
       active = @sort_column == column
       direction = active && @sort_direction == 'asc' ? 'desc' : 'asc'

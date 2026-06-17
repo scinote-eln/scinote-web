@@ -27,25 +27,29 @@
 <table class="table table-striped table-bordered">
     <thead>
       <tr>
-        <th><%= sort_header('Type ID', 'type_id') %></th>
+        <th><%= sort_header('Type Id', 'type_of') %></th>
         <th><%= sort_header('Group', 'group') %></th>
+        <th><%= sort_header('Group Name', 'group_name') %></th>
         <th><%= sort_header('Type', 'type') %></th>
-        <th><%= sort_header('Name', 'name') %></th>
-        <th><%= sort_header('Count', 'count') %></th>
+        <th><%= sort_header('Type Name', 'type_name') %></th>
+        <th><%= sort_header('Count', 'total_count') %></th>
         <th>Workspaces</th>
       </tr>
     </thead>
     <tbody>
-  <% @stats.each do |info| %>
+  <% @activity_statistics.each do |activity_statistic| %>
     <tr>
-      <td> <%= info[:type_id] %> </td>
-      <td> <%= info[:group] %> </td>
-      <td> <%= info[:type] %> </td>
-      <td> <%= info[:name] %> </td>
-      <td> <%= info[:count] %> </td>
+      <td> <%= activity_statistic[:type_of] %> </td>
+      <td> <%= activity_statistic[:group] %> </td>
+      <td> <%= activity_statistic[:group_name] %></td>
+      <td> <%= activity_statistic[:type] %> </td>
+      <td> <%= activity_statistic[:type_name] %> </td>
+      <td> <%= activity_statistic[:total_count] %> </td>
       <td>
-        <% info[:workspaces].each do |team_name, n| %>
-          <%= team_name %>: <%= n %><br>
+        <% if activity_statistic[:team_counts] %>
+          <% activity_statistic[:team_counts].each do |team_name, n| %>
+              <%= team_name %>: <%= n %><br>
+          <% end %>
         <% end %>
       </td>
     </tr>
