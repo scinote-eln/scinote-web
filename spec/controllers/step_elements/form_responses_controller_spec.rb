@@ -129,4 +129,52 @@ describe StepElements::FormResponsesController, type: :controller do
       end
     end
   end
+
+  describe 'POST lock' do
+    let(:action) { post :lock, params: { step_id: step.id, id: form_response.id } }
+
+    context 'when user has permissions' do
+      before { allow(controller).to receive(:can_lock_step_form_response?).and_return(true) }
+
+      it 'locks the form response' do
+        action
+        expect(response).to have_http_status(:ok)
+        expect(form_response.reload.locked).to be true
+      end
+    end
+
+    context 'when user lacks permissions' do
+      before { allow(controller).to receive(:can_lock_step_form_response?).and_return(false) }
+
+      it 'returns a forbidden response' do
+        action
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
+  describe 'POST unlock' do
+    before { form_response.update!(locked: true) }
+
+    let(:action) { post :unlock, params: { step_id: step.id, id: form_response.id } }
+
+    context 'when user has permissions' do
+      before { allow(controller).to receive(:can_unlock_step_form_response?).and_return(true) }
+
+      it 'unlocks the form response' do
+        action
+        expect(response).to have_http_status(:ok)
+        expect(form_response.reload.locked).to be false
+      end
+    end
+
+    context 'when user lacks permissions' do
+      before { allow(controller).to receive(:can_unlock_step_form_response?).and_return(false) }
+
+      it 'returns a forbidden response' do
+        action
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
 end

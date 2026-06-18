@@ -6,7 +6,7 @@ class ChecklistSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :name, :urls, :icon, :sa_name, :parent_type, :archived, :archived_by, :archived_on
+  attributes :id, :name, :urls, :icon, :sa_name, :parent_type, :archived, :archived_by, :archived_on, :locked
 
   has_many :checklist_items, serializer: ChecklistItemSerializer
 
@@ -55,6 +55,8 @@ class ChecklistSerializer < ActiveModel::Serializer
     url_list[:archive_url] = archive_step_checklist_path(step, object) if can_archive_step_checklist?(user, object)
     url_list[:restore_url] = restore_step_checklist_path(step, object) if can_restore_step_checklist?(user, object)
     url_list[:delete_url] = step_checklist_path(step, object) if can_delete_step_checklist?(user, object)
+    url_list[:lock_url] = lock_step_checklist_path(step, object) if can_lock_step_checklist?(user, object)
+    url_list[:unlock_url] = unlock_step_checklist_path(step, object) if can_unlock_step_checklist?(user, object)
 
     url_list
   end

@@ -37,6 +37,12 @@ Canaid::Permissions.register_for(StepText) do
     end
   end
 
+  %i(manage_step_text archive_step_text).each do |perm|
+    can perm do |user, step_text|
+      !step_text.locked? || can_manage_protocol_draft_in_repository?(user, step_text.step.protocol)
+    end
+  end
+
   can :manage_step_text do |_, step_text|
     step_text.active?
   end
@@ -49,12 +55,20 @@ Canaid::Permissions.register_for(StepText) do
     step_text.archived?
   end
 
-  can :delete_step_text do |_, step_text|
+  can :delete_step_text do |user, step_text|
     if step_text.step.protocol.in_module?
-      step_text.archived? && step_text.step.team.protocol_steps_deletion_enabled?
+      !step_text.locked? && step_text.archived? && step_text.step.team.protocol_steps_deletion_enabled?
     else
-      true
+      !step_text.locked? || can_manage_protocol_draft_in_repository?(user, step_text.step.protocol)
     end
+  end
+
+  can :lock_step_text do |user, step_text|
+    can_manage_protocol_draft_in_repository?(user, step_text.step.protocol)
+  end
+
+  can :unlock_step_text do |user, step_text|
+    can_manage_protocol_draft_in_repository?(user, step_text.step.protocol)
   end
 end
 
@@ -66,6 +80,12 @@ Canaid::Permissions.register_for(FormResponse) do
     .each do |perm|
     can perm do |user, form_response|
       can_manage_step?(user, form_response.step)
+    end
+  end
+
+  %i(manage_step_form_response archive_step_form_response).each do |perm|
+    can perm do |user, form_response|
+      !form_response.locked? || can_manage_protocol_draft_in_repository?(user, form_response.step.protocol)
     end
   end
 
@@ -81,12 +101,20 @@ Canaid::Permissions.register_for(FormResponse) do
     form_response.archived?
   end
 
-  can :delete_step_form_response do |_, form_response|
+  can :delete_step_form_response do |user, form_response|
     if form_response.step.protocol.in_module?
-      form_response.archived? && form_response.step.team.protocol_steps_deletion_enabled?
+      !form_response.locked? && form_response.archived? && form_response.step.team.protocol_steps_deletion_enabled?
     else
-      true
+      !form_response.locked? || can_manage_protocol_draft_in_repository?(user, form_response.step.protocol)
     end
+  end
+
+  can :lock_step_form_response do |user, form_response|
+    can_manage_protocol_draft_in_repository?(user, form_response.step.protocol)
+  end
+
+  can :unlock_step_form_response do |user, form_response|
+    can_manage_protocol_draft_in_repository?(user, form_response.step.protocol)
   end
 end
 
@@ -98,6 +126,12 @@ Canaid::Permissions.register_for(Checklist) do
     .each do |perm|
     can perm do |user, checklist|
       can_manage_step?(user, checklist.step)
+    end
+  end
+
+  %i(manage_step_checklist archive_step_checklist).each do |perm|
+    can perm do |user, checklist|
+      !checklist.locked? || can_manage_protocol_draft_in_repository?(user, checklist.step.protocol)
     end
   end
 
@@ -113,12 +147,20 @@ Canaid::Permissions.register_for(Checklist) do
     checklist.archived?
   end
 
-  can :delete_step_checklist do |_, checklist|
+  can :delete_step_checklist do |user, checklist|
     if checklist.step.protocol.in_module?
-      checklist.archived? && checklist.step.team.protocol_steps_deletion_enabled?
+      !checklist.locked? && checklist.archived? && checklist.step.team.protocol_steps_deletion_enabled?
     else
-      true
+      !checklist.locked? || can_manage_protocol_draft_in_repository?(user, checklist.step.protocol)
     end
+  end
+
+  can :lock_step_checklist do |user, checklist|
+    can_manage_protocol_draft_in_repository?(user, checklist.step.protocol)
+  end
+
+  can :unlock_step_checklist do |user, checklist|
+    can_manage_protocol_draft_in_repository?(user, checklist.step.protocol)
   end
 end
 
@@ -130,6 +172,12 @@ Canaid::Permissions.register_for(Table) do
     .each do |perm|
     can perm do |user, table|
       can_manage_step?(user, table.step)
+    end
+  end
+
+  %i(manage_step_table archive_step_table).each do |perm|
+    can perm do |user, table|
+      !table.locked? || can_manage_protocol_draft_in_repository?(user, table.step.protocol)
     end
   end
 
@@ -145,11 +193,19 @@ Canaid::Permissions.register_for(Table) do
     table.archived?
   end
 
-  can :delete_step_table do |_, table|
+  can :delete_step_table do |user, table|
     if table.step.protocol.in_module?
-      table.archived? && table.step.team.protocol_steps_deletion_enabled?
+      !table.locked? && table.archived? && table.step.team.protocol_steps_deletion_enabled?
     else
-      true
+      !table.locked? || can_manage_protocol_draft_in_repository?(user, table.step.protocol)
     end
+  end
+
+  can :lock_step_table do |user, table|
+    can_manage_protocol_draft_in_repository?(user, table.step.protocol)
+  end
+
+  can :unlock_step_table do |user, table|
+    can_manage_protocol_draft_in_repository?(user, table.step.protocol)
   end
 end
