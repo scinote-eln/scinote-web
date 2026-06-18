@@ -41,9 +41,17 @@
       </div>
     </div>
     <div>
-      <label>
-        {{ i18n.t('equipment_bookings.index.sidebar.filter_items') }}
-      </label>
+      <div class="flex items-center">
+        <label>
+          {{ i18n.t('equipment_bookings.index.sidebar.filter_items') }}
+        </label>
+        <span
+          v-if="filters.subject_ids.length > 0"
+          class="cursor-pointer ml-auto text-sn-blue text-xs"
+          @click="$emit('update:filters', { ...filters, subject_ids: [] })">
+          {{ i18n.t('general.clear') }}
+        </span>
+      </div>
       <SelectDropdown
         :optionsUrl="assignedRepositoryRowsUrl"
         :placeholder="i18n.t('equipment_bookings.index.sidebar.all_items_selected')"
@@ -56,9 +64,17 @@
       ></SelectDropdown>
     </div>
     <div>
-      <label>
-        {{ i18n.t('equipment_bookings.index.sidebar.filter_people') }}
-      </label>
+      <div class="flex items-center">
+        <label>
+          {{ i18n.t('equipment_bookings.index.sidebar.filter_people') }}
+        </label>
+        <span
+          v-if="filters.assigned_user_ids.length > 0"
+          class="cursor-pointer ml-auto text-sn-blue text-xs"
+          @click="$emit('update:filters', { ...filters, assigned_user_ids: [] })">
+          {{ i18n.t('general.clear') }}
+        </span>
+      </div>
       <SelectDropdown
         :optionsUrl="assignedUsersUrl"
         :placeholder="i18n.t('equipment_bookings.index.sidebar.all_users_selected')"
