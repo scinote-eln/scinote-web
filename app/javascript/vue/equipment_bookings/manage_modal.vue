@@ -187,7 +187,7 @@ export default {
   computed: {
     notValidDates() {
       if (this.event.full_day) {
-        return new Date(this.event.start_at) > new Date(this.event.end_at);
+        return new Date(this.event.start_at).setHours(0,0,0,0) > new Date(this.event.end_at).setHours(0,0,0,0);
       }
 
       return new Date(this.event.start_at) >= new Date(this.event.end_at);

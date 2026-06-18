@@ -9,8 +9,10 @@ export default {
       axios.put(user_setting_path(key), {user_setting: {value: value}});
     },
     async getUserState(key) {
-      const response = await axios.get(user_setting_path(key));
-      return response.data.value;
+      const response = await axios.get(user_setting_path(key)).catch((error) => {
+        return null;
+      });
+      return response?.data?.value;
     },
   },
 }
