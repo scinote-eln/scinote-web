@@ -3,7 +3,7 @@
 class CalendarEventsController < ApplicationController
   before_action :check_calendar_events_enabled
   before_action :load_parent, only: :index
-  before_action :load_subject, only: :create
+  before_action :load_subject, only: %i(create update)
   before_action :load_calendar_event, except: %i(index create)
   before_action :check_read_permission, only: :show
   before_action :check_manage_permission, except: %i(index show create)
@@ -60,8 +60,9 @@ class CalendarEventsController < ApplicationController
     new_ids = participant_ids - current_participant_ids
 
     ActiveRecord::Base.transaction do
-      @calendar_event.update!(calendar_event_params)
-      log_activity(@calendar_event, :calendar_event_updated)
+      @calendar_event.update!(calendar_event_params.merge(subject: @subject))
+
+      log_activity(@calendar_event, :calendar_event_updated) if @calendar_event.saved_changes?
       new_ids.each { |user_id| log_activity(@calendar_event, :calendar_event_participant_created, { user_target: user_id }) }
       removed_ids.each { |user_id| log_activity(@calendar_event, :calendar_event_participant_deleted, { user_target: user_id }) }
     end
