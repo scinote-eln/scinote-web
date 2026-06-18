@@ -512,6 +512,7 @@ en:
       calendar_event_updated_html: "%{user} updated booking event %{event} for %{repository_row}."
       calendar_event_deleted_html: "%{user} deleted booking event %{event} for %{repository_row}."
       calendar_event_participant_created_html: "%{user} added %{user_target} to booking event %{event} for %{repository_row}."
+      calendar_event_participant_deleted_html: "%{user} removed %{user_target} from booking event %{event} for %{repository_row}."
     activity_name:
       create_project: "Project created"
       edit_project: "Project edited"

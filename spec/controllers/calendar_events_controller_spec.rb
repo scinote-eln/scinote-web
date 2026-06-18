@@ -98,7 +98,9 @@ describe CalendarEventsController, type: :controller do
     let(:params) do
       {
         id: CalendarEvent.last.id,
-        start_datetime: DateTime.now
+        start_datetime: DateTime.now,
+        subject_id: CalendarEvent.last.subject.id,
+        subject_type: 'RepositoryRow'
       }
     end
 
@@ -117,7 +119,7 @@ describe CalendarEventsController, type: :controller do
     end
 
     it 'incorrect id' do
-      get :update, format: :json, params: { id: -1 }
+      get :update, format: :json, params: { id: -1, subject_id: CalendarEvent.last.subject.id, subject_type: 'RepositoryRow' }
       expect(response).to have_http_status(:not_found)
     end
   end
