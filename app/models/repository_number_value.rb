@@ -3,9 +3,9 @@
 class RepositoryNumberValue < ApplicationRecord
   include SearchableModel
 
-  belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User',
+  belongs_to :created_by, class_name: 'User',
              inverse_of: :created_repository_number_values
-  belongs_to :last_modified_by, foreign_key: :last_modified_by_id, class_name: 'User',
+  belongs_to :last_modified_by, class_name: 'User',
              inverse_of: :modified_repository_number_values
   has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value, touch: true
   accepts_nested_attributes_for :repository_cell
@@ -15,7 +15,11 @@ class RepositoryNumberValue < ApplicationRecord
   SORTABLE_COLUMN_NAME = 'repository_number_values.data'
 
   def formatted
-    data.to_s
+    decimals = repository_cell.repository_column.metadata.fetch(
+      'decimals',
+      Constants::REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS
+    ).to_i
+    data.round(decimals).to_s
   end
 
   def self.add_filter_condition(repository_rows, join_alias, filter_element)
