@@ -4,7 +4,8 @@
       <button
         class="btn btn-primary w-full"
         @click="createEvent = true"
-        :disabled="!permissions.create_equipment_bookings">
+        :disabled="!permissions.create_equipment_bookings"
+        data-e2e="e2e-BT-equipmentBooking-newEvent">
         <i class="sn-icon sn-icon-new-task"></i>
         {{ i18n.t('equipment_bookings.index.sidebar.new_event') }}
       </button>

@@ -1,12 +1,13 @@
 <template>
   <div v-if="repositoryRow">
     <div class="flex items-center gap-4">
-      <h4 data-e2e="e2e-TX-itemCard-schedule-title">{{ i18n.t('repositories.equipment_booking.title') }}</h4>
+      <h4 data-e2e="e2e-TX-itemCard-equipmentBooking-title">{{ i18n.t('repositories.equipment_booking.title') }}</h4>
       <button v-if="repositoryRow.permissions.can_manage &&
                     repositoryRow.equipment_booking.enabled &&
                     !repositoryRow.default_columns.archived"
               class="btn btn-light ml-auto"
-              @click="createEvent = true">
+              @click="createEvent = true"
+              data-e2e="e2e-BT-itemCard-equipmentBooking-createEvent">
         {{ i18n.t('repositories.equipment_booking.create_event') }}
       </button>
     </div>
