@@ -29,11 +29,11 @@ module Users
         end
 
         def check_time_zone_permissions
-          render_403 if update_params.include?(:time_zone) && can_set_time_zone?
+          render_403 if update_params.include?(:time_zone) && !can_set_time_zone?
         end
 
         def check_date_format_permissions
-          render_403 if update_params.include?(:date_format) && can_set_date_format?
+          render_403 if update_params.include?(:date_format) && !can_set_date_format?
         end
 
         def update_params

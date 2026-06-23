@@ -18,11 +18,11 @@ module Organization
     end
 
     can :set_time_zone do |_|
-      true
+      !ApplicationSettings.instance.values['security.time_zone.enforced']
     end
 
     can :set_date_format do |_|
-      true
+      !ApplicationSettings.instance.values['security.date_format.enforced']
     end
   end
 end
