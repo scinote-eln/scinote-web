@@ -4739,7 +4739,7 @@ en:
         message_html: "Due date for the experiment %{experiment_name} is coming up."
       equipment_booking_reminder:
         title_html: "Scheduled event reminder"
-        message_html: "The %{event_name} event for %{repository_row_name} starts in 24 hours."
+        message_html: Your event %{event_name} for %{repository_row_name} scheduled for %{date_time} is happening in 24 hours!
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
