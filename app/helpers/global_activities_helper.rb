@@ -76,7 +76,14 @@ module GlobalActivitiesHelper
 
       return current_value unless obj.repository
 
-      path = repository_path(obj.repository, team: obj.repository.team.id)
+      path =
+        repository_path(
+          obj.repository,
+          team: obj.repository.team.id,
+          row_id: obj.id,
+          landing_page: true,
+          anchor: activity.values.dig('message_items', 'calendar_event_id') && 'schedule-section'
+        )
     when RepositoryColumn
       return I18n.t('repositories.repository_column.private') unless can_read_repository?(obj.repository)
 
