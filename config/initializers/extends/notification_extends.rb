@@ -139,17 +139,24 @@ class NotificationExtends
     delivery: {
       recipients_module: :DirectRecipient
     },
-    equipment_booking_created: {
-      recipients_module: :AssignedCalendarEventRecipients
-    },
-    equipment_booking_updated: {
-      recipients_module: :AssignedCalendarEventRecipients
-    },
-    equipment_booking_deleted: {
-      recipients_module: :AssignedCalendarEventRecipients
-    },
     equipment_booking_reminder: {
+      recipients_module: :CalendarEventReminderRecipients
+    },
+    calendar_event_created_activity: {
+      code: 493,
       recipients_module: :AssignedCalendarEventRecipients
+    },
+    calendar_event_updated_activity: {
+      code: 494,
+      recipients_module: :AssignedCalendarEventRecipients
+    },
+    calendar_event_deleted_activity: {
+      code: 495,
+      recipients_module: :DeletedCalendarEventRecipients
+    },
+    calendar_event_participant_created_activity: {
+      code: 497,
+      recipients_module: :CreatedCalendarEventRecipient
     }
   }
 
@@ -207,10 +214,11 @@ class NotificationExtends
         item_date_reminder
       ],
       equipment_scheduling: %I[
-        equipment_booking_created
-        equipment_booking_updated
-        equipment_booking_deleted
         equipment_booking_reminder
+        calendar_event_updated_activity
+        calendar_event_deleted_activity
+        calendar_event_created_activity
+        calendar_event_participant_created_activity
       ]
     },
     other: {

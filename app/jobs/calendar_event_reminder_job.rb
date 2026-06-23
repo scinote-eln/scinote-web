@@ -13,8 +13,8 @@ class CalendarEventReminderJob < ApplicationJob
     now = DateTime.current
     CalendarEvent
       .where(event_type: :equipment_booking, reminder_sent: false)
-      .where('start_at > ?', now - BUFFER)
-      .where('start_at <= ?', now + REMINDER_WINDOW)
+      .where('COALESCE(start_datetime, start_date) > ?', now - BUFFER)
+      .where('COALESCE(start_datetime, start_date) <= ?', now + REMINDER_WINDOW)
       .find_each do |event|
         EquipmentBookingReminderNotification.send_notifications({ calendar_event_id: event.id })
       end
