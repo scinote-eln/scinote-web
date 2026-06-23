@@ -139,7 +139,7 @@ export default {
       return assigned_repository_rows_equipment_bookings_path({ repository_id: this.repositoryId });
     },
     assignedUsersUrl() {
-      return assigned_users_equipment_bookings_path();
+      return assigned_users_equipment_bookings_path({ repository_id: this.repositoryId, mode: 'assigned_only'});
     },
     usersRenderer() {
       return usersRenderer;
