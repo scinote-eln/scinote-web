@@ -12,6 +12,8 @@
                                 [df, "#{l(Time.new(2024, 4, 22), format: :full_date, date_format: df)}"]
                               }.to_json %>"
     :notifications-groups = "<%= NotificationExtends::NOTIFICATIONS_GROUPS.to_json %>"
+    :time-zone-enforced = "<%= can_set_time_zone? %>"
+    :date-format-enforced = "<%= can_set_date_format? %>"
   />
 </div>
 

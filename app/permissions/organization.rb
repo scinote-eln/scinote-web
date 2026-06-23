@@ -16,5 +16,13 @@ module Organization
     can :create_acitivity_filters do
       Rails.application.config.x.webhooks_enabled
     end
+
+    can :set_time_zone do |_|
+      true
+    end
+
+    can :set_date_format do |_|
+      true
+    end
   end
 end
