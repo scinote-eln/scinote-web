@@ -12,7 +12,7 @@ class NotificationSerializer < ActiveModel::Serializer
 
   def breadcrumbs
     subject = object.to_notification.subject
-    generate_breadcrumbs(subject, []) if subject
+    generate_breadcrumbs(subject, [], anchor: anchor) if subject
   end
 
   def message
@@ -33,5 +33,12 @@ class NotificationSerializer < ActiveModel::Serializer
 
   def toggle_read_url
     toggle_read_user_notification_path(object)
+  end
+
+  def anchor
+    if object.is_a?(EquipmentBookingReminderNotification) ||
+       (object.params[:activity_id] && Activity.find(object.params[:activity_id]).values.dig('message_items', 'calendar_event_id'))
+      'schedule-section'
+    end
   end
 end

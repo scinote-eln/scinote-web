@@ -4,16 +4,17 @@
   <span class="sn-icon sn-icon-inventory"></span>
   <% if subject %>
     <% if can_read_repository?(subject.repository) %>
-      <%= route_to_other_team(repository_path(
-                                              subject.repository.id,
-                                              team: subject.repository.team.id,
-                                              row_id: subject.id,
-                                              landing_page: true,
-                                              anchor: values["message_items"]["calendar_event_id"] && 'schedule-section'
-                                            ),
-                              team,
-                              subject.repository.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
-                              title: subject.repository.name) %>
+      <%= link_to(
+            subject.repository.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+            repository_path(subject.repository.id,
+              team: subject.repository.team.id,
+              row_id: subject.id,
+              landing_page: true,
+              anchor: values["message_items"]["calendar_event_id"] && 'schedule-section'
+            ),
+            title: subject.repository.name
+          )
+      %>
     <% else %>
       <%= I18n.t('repositories.private') %>
     <% end %>

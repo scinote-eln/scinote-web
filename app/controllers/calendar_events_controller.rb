@@ -10,9 +10,7 @@ class CalendarEventsController < ApplicationController
   before_action :check_create_permission, only: :create
 
   def index
-    @calendar_events = CalendarEvent.where(team_id: current_user.teams.select(:id))
-                                    .where(event_type: params[:event_type])
-
+    load_calendar_events!
     filter_calendar_events!
 
     respond_to do |format|
@@ -166,13 +164,26 @@ class CalendarEventsController < ApplicationController
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            team: calendar_event.team,
+            team: calendar_event.subject.team,
             subject: calendar_event.subject,
             message_items: {
               event: calendar_event.name,
               repository_row: calendar_event.subject.id,
               calendar_event_id: calendar_event.id
             }.merge(message_items))
+  end
+
+  def load_calendar_events!
+    @calendar_events =
+      case params[:event_type]
+      when 'equipment_booking'
+        CalendarEvent.where(
+          subject_type: 'RepositoryRow', subject_id: @parent.repository_rows.joins(:calendar_events).distinct.select(:id)
+        )
+      else
+        CalendarEvent.where(team_id: current_user.teams.select(:id))
+                     .where(event_type: params[:event_type])
+      end
   end
 
   def filter_calendar_events!
