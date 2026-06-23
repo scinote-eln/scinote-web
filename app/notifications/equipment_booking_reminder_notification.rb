@@ -6,10 +6,13 @@ class EquipmentBookingReminderNotification < BaseNotification
   end
 
   def title
+    repository_row_path =
+      repository_path(subject.subject.repository, landing_page: true, row_id: subject.subject.id, anchor: 'schedule-section')
+
     I18n.t(
       'notifications.content.equipment_booking_reminder.message_html',
       event_name: subject.name,
-      repository_row_name: subject.subject.name
+      repository_row_name: "<a href=\"#{repository_row_path}\">#{subject.subject.name}</a>"
     )
   end
 
