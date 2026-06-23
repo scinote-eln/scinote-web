@@ -20,6 +20,7 @@
     confirmClass="btn btn-danger"
     :confirmText="i18n.t('equipment_bookings.index.delete_modal.delete')"
     ref="deleteEventModal"
+    e2eValue='equipmentBooking-deleteEventModal'
   ></ConfirmationModal>
   </div>
 </template>
@@ -40,14 +41,18 @@
   import { createEventRecurrencePlugin, createEventsServicePlugin } from "@schedule-x/event-recurrence";
   import { createCurrentTimePlugin } from '@schedule-x/current-time'
   import { createScrollControllerPlugin } from '@schedule-x/scroll-controller'
+  import { createCalendarControlsPlugin } from '@schedule-x/calendar-controls'
 
   import 'temporal-polyfill/global'
   import {
     calendar_events_path
   } from '../../routes.js';
 import { loadScript } from 'pdfjs-dist';
+import escapeHtml from '../shared/escape_html.js';
 
   let calendarApp = null;
+
+  const calendarControls = createCalendarControlsPlugin();
 
   const calendarsVariants = {
     calibration: {
@@ -112,6 +117,7 @@ import { loadScript } from 'pdfjs-dist';
         eventRecurrencePlugin: null,
         createCurrentTimePlugin: null,
         scrollControllerPlugin: null,
+        calendarControlsPlugin: null
       };
     },
     computed: {
@@ -130,15 +136,15 @@ import { loadScript } from 'pdfjs-dist';
                   h('div', { class: `h-6 w-6 rounded`, style: { backgroundColor: calendarEvent.color } }),
                   h('h3', { class: 'font-semibold my-0 grow' }, calendarEvent.title),
                   this.permissions.create_equipment_bookings && h('button', {
-                    class: 'btn btn-light icon-btn btn-black',
+                    class: 'btn btn-light icon-btn btn-black e2e-BT-equipmentBooking-eventFlyout-duplicate',
                     onClick: () => this.duplicateEvent(calendarEvent)
                   }, h('i', { class: 'sn-icon sn-icon-duplicate' })),
                   this.permissions.manage_equipment_bookings && h('button', {
-                    class: 'btn btn-light icon-btn btn-black',
+                    class: 'btn btn-light icon-btn btn-black e2e-BT-equipmentBooking-eventFlyout-edit',
                     onClick: () => this.editEvent(calendarEvent)
                   }, h('i', { class: 'sn-icon sn-icon-edit' })),
                   this.permissions.manage_equipment_bookings && h('button', {
-                    class: 'btn btn-light icon-btn btn-black',
+                    class: 'btn btn-light icon-btn btn-black e2e-BT-equipmentBooking-eventFlyout-delete',
                     onClick: () => this.removeEvent(calendarEvent)
                   }, h('i', { class: 'sn-icon sn-icon-delete' }))
                 ]
@@ -175,7 +181,8 @@ import { loadScript } from 'pdfjs-dist';
       this.createCurrentTimePlugin = createCurrentTimePlugin();
       this.scrollControllerPlugin = createScrollControllerPlugin({
         initialScroll: '07:50'
-      })
+      });
+      this.calendarControlsPlugin = calendarControls;
 
       calendarApp = createCalendar({
         calendars: calendarsVariants,
@@ -236,7 +243,8 @@ import { loadScript } from 'pdfjs-dist';
           this.eventsServicePlugin,
           this.eventModalPlugin,
           this.createCurrentTimePlugin,
-          this.scrollControllerPlugin]);
+          this.scrollControllerPlugin,
+          this.calendarControlsPlugin]);
     },
     components: {
       ScheduleXCalendar,
@@ -277,11 +285,11 @@ import { loadScript } from 'pdfjs-dist';
           event_name: '',
           start_at: startAt.toString().substring(0, 16).replace('T', ' '),
           end_at: endAt.toString().substring(0, 16).replace('T', ' '),
-          event_type: null,
+          event_type: 'equipment_booking',
+          event_sub_type: 'calibration',
           full_day: false,
           users: [],
-          repository_row_id: null,
-          event_sub_type: null
+          repository_row_id: null
         }
       },
       duplicateEvent(event) {
@@ -318,6 +326,7 @@ import { loadScript } from 'pdfjs-dist';
           })
         }
       },
+
       fetchEvents() {
         if (!this.repositoryId) return;
 
@@ -332,7 +341,7 @@ import { loadScript } from 'pdfjs-dist';
         axios.get(this.eventsUrl, { params })
           .then(response => {
             let events = response.data.data.map((event) => {
-              let start, end;
+              let start, end, labelMonthGrid, labelTimeGrid;
 
               if (event.attributes.full_day) {
                 start = Temporal.PlainDate.from(event.attributes.start_at_string);
@@ -340,6 +349,21 @@ import { loadScript } from 'pdfjs-dist';
               } else {
                 start = Temporal.Instant.from(event.attributes.start_at_string).toZonedDateTimeISO('UTC');
                 end = Temporal.Instant.from(event.attributes.end_at_string).toZonedDateTimeISO('UTC');
+              }
+
+              const startTime = event.attributes.start_at_formatted.split(' ')[event.attributes.start_at_formatted.split(' ').length - 1]
+              const endTime = event.attributes.end_at_formatted.split(' ')[event.attributes.end_at_formatted.split(' ').length - 1]
+
+              if (event.attributes.full_day) {
+                labelMonthGrid = `${escapeHtml(event.attributes.name)}`;
+                labelTimeGrid = `<div class="sx__time-grid-event-title">${escapeHtml(event.attributes.name)}</div>`;
+              } else {
+                labelMonthGrid = `${startTime} ${escapeHtml(event.attributes.name)}`;
+                labelTimeGrid = `<div class="sx__time-grid-event-title">${escapeHtml(event.attributes.name)}</div>
+                                 <div class="sx__time-grid-event-time">
+                                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="sx__event-icon"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M12 8V12L15 15" stroke="var(--sx-color-on-calibration-container)" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="12" r="9" stroke="var(--sx-color-on-calibration-container)" stroke-width="2"></circle></g></svg>
+                                   ${startTime} - ${endTime}
+                                 </div>`;
               }
 
               return {
@@ -350,7 +374,11 @@ import { loadScript } from 'pdfjs-dist';
                 color: calendarsVariants[event.attributes.event_sub_type || 'no_type'].lightColors.main,
                 attributes: event.attributes,
                 calendarId: event.attributes.event_sub_type || 'no_type',
-                rrule: this.buildRRule(event.attributes)
+                rrule: this.buildRRule(event.attributes),
+                _customContent: {
+                  monthGrid: labelMonthGrid,
+                  timeGrid: labelTimeGrid
+                }
               };
             });
             this.eventsServicePlugin.set(events);

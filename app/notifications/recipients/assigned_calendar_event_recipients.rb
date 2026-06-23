@@ -6,7 +6,14 @@ class Recipients::AssignedCalendarEventRecipients
   end
 
   def recipients
-    calendar_event = CalendarEvent.find(@params[:calendar_event_id])
+    calendar_event_id =
+      if @params[:activity_id]
+        Activity.find(@params[:activity_id]).message_items['calendar_event_id']
+      else
+        @params[:calendar_event_id]
+      end
+
+    calendar_event = CalendarEvent.find(calendar_event_id)
 
     case calendar_event.subject
     when RepositoryRow

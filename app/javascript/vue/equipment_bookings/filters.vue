@@ -1,10 +1,11 @@
 <template>
-  <div class="w-[300px] p-2 pr-4 flex flex-col gap-6 border-transparent !border-r-sn-light-grey border-solid  h-full">
+  <div class="w-[300px] flex-shrink-0 p-2 pr-4 flex flex-col gap-6 border-transparent !border-r-sn-light-grey border-solid  h-full">
     <div>
       <button
         class="btn btn-primary w-full"
         @click="createEvent = true"
-        :disabled="!permissions.create_equipment_bookings">
+        :disabled="!permissions.create_equipment_bookings"
+        data-e2e="e2e-BT-equipmentBooking-newEvent">
         <i class="sn-icon sn-icon-new-task"></i>
         {{ i18n.t('equipment_bookings.index.sidebar.new_event') }}
       </button>
@@ -41,9 +42,17 @@
       </div>
     </div>
     <div>
-      <label>
-        {{ i18n.t('equipment_bookings.index.sidebar.filter_items') }}
-      </label>
+      <div class="flex items-center">
+        <label>
+          {{ i18n.t('equipment_bookings.index.sidebar.filter_items') }}
+        </label>
+        <span
+          v-if="filters.subject_ids.length > 0"
+          class="cursor-pointer ml-auto text-sn-blue text-xs"
+          @click="$emit('update:filters', { ...filters, subject_ids: [] })">
+          {{ i18n.t('general.clear') }}
+        </span>
+      </div>
       <SelectDropdown
         :optionsUrl="assignedRepositoryRowsUrl"
         :placeholder="i18n.t('equipment_bookings.index.sidebar.all_items_selected')"
@@ -56,9 +65,17 @@
       ></SelectDropdown>
     </div>
     <div>
-      <label>
-        {{ i18n.t('equipment_bookings.index.sidebar.filter_people') }}
-      </label>
+      <div class="flex items-center">
+        <label>
+          {{ i18n.t('equipment_bookings.index.sidebar.filter_people') }}
+        </label>
+        <span
+          v-if="filters.assigned_user_ids.length > 0"
+          class="cursor-pointer ml-auto text-sn-blue text-xs"
+          @click="$emit('update:filters', { ...filters, assigned_user_ids: [] })">
+          {{ i18n.t('general.clear') }}
+        </span>
+      </div>
       <SelectDropdown
         :optionsUrl="assignedUsersUrl"
         :placeholder="i18n.t('equipment_bookings.index.sidebar.all_users_selected')"
@@ -66,10 +83,10 @@
         :withCheckboxes="true"
         :searchable="true"
         :hideSelectAll="true"
-        :value="filters.assigned_users"
+        :value="filters.assigned_user_ids"
         :option-renderer="usersRenderer"
         :label-renderer="usersRenderer"
-        @change="$emit('update:filters', { ...filters, assigned_users: $event })"
+        @change="$emit('update:filters', { ...filters, assigned_user_ids: $event })"
       ></SelectDropdown>
     </div>
     <manageEventModal

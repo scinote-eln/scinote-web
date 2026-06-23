@@ -806,6 +806,10 @@ class Extends
     delete_group_signature_request
     change_user_role_on_experiment
     change_user_role_on_my_module
+    calendar_event_updated_activity
+    calendar_event_deleted_activity
+    calendar_event_participant_created_activity
+    calendar_event_participant_deleted_activity
   )
 
   DEFAULT_LABEL_TEMPLATE = {

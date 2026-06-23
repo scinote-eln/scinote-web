@@ -654,6 +654,11 @@ export default {
 
           // if scrollTop was provided, scroll to it
           this.$nextTick(() => { this.$refs.bodyWrapper.scrollTop = scrollTop; });
+
+          // if there's an anchor in the URL, scroll to it
+          if (window.location.hash) {
+            this.$nextTick(() => window.location = window.location);
+          }
         });
       }).catch(() => {
         this.loadingError = true;

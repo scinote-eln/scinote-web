@@ -1,39 +1,45 @@
 <template>
   <div v-if="repositoryRow">
     <div class="flex items-center gap-4">
-      <h4 data-e2e="e2e-TX-itemCard-schedule-title">{{ i18n.t('repositories.equipment_booking.title') }}</h4>
+      <h4 data-e2e="e2e-TX-itemCard-equipmentBooking-title">{{ i18n.t('repositories.equipment_booking.title') }}</h4>
       <button v-if="repositoryRow.permissions.can_manage &&
                     repositoryRow.equipment_booking.enabled &&
                     !repositoryRow.default_columns.archived"
               class="btn btn-light ml-auto"
-              @click="createEvent = true">
+              @click="createEvent = true"
+              data-e2e="e2e-BT-itemCard-equipmentBooking-createEvent">
         {{ i18n.t('repositories.equipment_booking.create_event') }}
       </button>
     </div>
-    <template v-if="!repositoryRow.default_columns.archived">
-      <div v-if="futureEvents.length > 0" class="mt-4">
-        <h5 class="!text-sm">{{ i18n.t('repositories.equipment_booking.upcoming_events') }}</h5>
-        <div v-for="event in futureEvents" :key="event.id" class="mb-2 flex items-center">
-          <span class="truncate" :title="event.attributes.name">{{ event.attributes.name }}</span>:
-          <span class="grow shrink-0 ml-1">{{ event.attributes.start_at_formatted }} - {{ event.attributes.end_at_formatted }}</span>
+    <template v-if="repositoryRow.equipment_booking.enabled">
+      <template v-if="!repositoryRow.default_columns.archived">
+        <div v-if="futureEvents.length > 0" class="mt-4">
+          <h5 class="!text-sm">{{ i18n.t('repositories.equipment_booking.upcoming_events') }}</h5>
+          <div v-for="event in futureEvents" :key="event.id" class="mb-2 flex items-center">
+            <span class="truncate" :title="event.attributes.name">{{ event.attributes.name }}</span>:
+            <span class="grow shrink-0 ml-1">{{ event.attributes.start_at_formatted }} - {{ event.attributes.end_at_formatted }}</span>
+          </div>
+          <div v-if="futurePage" class="cursor-pointer text-sn-science-blue" @click="fetchEvents('future', futurePage)">
+            {{ i18n.t('repositories.equipment_booking.show_more') }}
+          </div>
         </div>
-        <div v-if="futurePage" class="cursor-pointer text-sn-science-blue" @click="fetchEvents('future', futurePage)">
-          {{ i18n.t('repositories.equipment_booking.show_more') }}
+        <div v-if="pastEvents.length > 0" class="mt-4">
+          <h5 class="!text-sm">{{ i18n.t('repositories.equipment_booking.past_events') }}</h5>
+          <div v-for="event in pastEvents" :key="event.id" class="mb-2 flex items-center text-sn-grey-700">
+            <span class="truncate" :title="event.attributes.name">{{ event.attributes.name }}</span>:
+            <span class="grow shrink-0 ml-1">{{ event.attributes.start_at_formatted }} - {{ event.attributes.end_at_formatted }}</span>
+          </div>
+          <div v-if="pastPage" class="cursor-pointer text-sn-blue" @click="fetchEvents('past', pastPage)">
+            {{ i18n.t('repositories.equipment_booking.show_more') }}
+          </div>
         </div>
-      </div>
-      <div v-if="pastEvents.length > 0" class="mt-4">
-        <h5 class="!text-sm">{{ i18n.t('repositories.equipment_booking.past_events') }}</h5>
-        <div v-for="event in pastEvents" :key="event.id" class="mb-2 flex items-center text-sn-grey-700">
-          <span class="truncate" :title="event.attributes.name">{{ event.attributes.name }}</span>:
-          <span class="grow shrink-0 ml-1">{{ event.attributes.start_at_formatted }} - {{ event.attributes.end_at_formatted }}</span>
+        <div v-if="futureEvents.length === 0 && pastEvents.length === 0" class="mt-4 text-sn-grey-700">
+          {{ i18n.t('repositories.equipment_booking.no_events') }}
         </div>
-        <div v-if="pastPage" class="cursor-pointer text-sn-blue" @click="fetchEvents('past', pastPage)">
-          {{ i18n.t('repositories.equipment_booking.show_more') }}
-        </div>
-      </div>
-      <div v-if="futureEvents.length === 0 && pastEvents.length === 0" class="mt-4 text-sn-grey-700">
-        {{ i18n.t('repositories.equipment_booking.no_events') }}
-      </div>
+      </template>
+    </template>
+    <template v-else>
+      <div class="mt-4" v-html="repositoryRow.equipment_booking.placeholder"></div>
     </template>
     <Teleport to="body">
       <manageEventModal

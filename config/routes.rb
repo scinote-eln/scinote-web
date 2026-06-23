@@ -1326,11 +1326,15 @@ Rails.application.routes.draw do
 
   resources :user_settings, only: %i(show update), param: :key
 
-  if Rails.env.development? || ENV['ENABLE_DESIGN_ELEMENTS'] == 'true'
-    resources :design_elements, only: %i(index) do
-      collection do
-        get :test_select
-        get :test_table
+  if Rails.env.development? || ENV['ENABLE_QA_TOOLS'] == 'true'
+    namespace :qa_tools do
+      resources :design_elements, only: %i(index) do
+        collection do
+          get :test_select
+          get :test_table
+        end
+      end
+      resources  :activity_statistics, only: %i(index) do
       end
     end
   end

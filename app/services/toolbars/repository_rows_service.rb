@@ -82,7 +82,7 @@ module Toolbars
       return unless @repository_rows.all?(&:active?)
 
       {
-        name: 'assign',
+        name: 'create_event',
         label: I18n.t('repositories.create_event_record'),
         icon: 'sn-icon sn-icon-equipment-scheduling',
         button_class: 'create-event-repository-rows-btn',

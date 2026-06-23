@@ -3,16 +3,14 @@
 class CalendarEventsController < ApplicationController
   before_action :check_calendar_events_enabled
   before_action :load_parent, only: :index
-  before_action :load_subject, only: :create
+  before_action :load_subject, only: %i(create update)
   before_action :load_calendar_event, except: %i(index create)
   before_action :check_read_permission, only: :show
   before_action :check_manage_permission, except: %i(index show create)
   before_action :check_create_permission, only: :create
 
   def index
-    @calendar_events = CalendarEvent.where(team_id: current_user.teams.select(:id))
-                                    .where(event_type: params[:event_type])
-
+    load_calendar_events!
     filter_calendar_events!
 
     respond_to do |format|
@@ -45,7 +43,6 @@ class CalendarEventsController < ApplicationController
       end
     end
 
-    send_notifications!(:create)
 
     render json: @calendar_event, serializer: CalendarEventSerializer, user: current_user
   rescue ActiveRecord::RecordInvalid => e
@@ -60,13 +57,12 @@ class CalendarEventsController < ApplicationController
     new_ids = participant_ids - current_participant_ids
 
     ActiveRecord::Base.transaction do
-      @calendar_event.update!(calendar_event_params)
-      log_activity(@calendar_event, :calendar_event_updated)
+      @calendar_event.update!(calendar_event_params.merge(subject: @subject))
+
+      log_activity(@calendar_event, :calendar_event_updated) if @calendar_event.saved_changes?
       new_ids.each { |user_id| log_activity(@calendar_event, :calendar_event_participant_created, { user_target: user_id }) }
       removed_ids.each { |user_id| log_activity(@calendar_event, :calendar_event_participant_deleted, { user_target: user_id }) }
     end
-
-    send_notifications!(:update)
 
     render json: @calendar_event, serializer: CalendarEventSerializer, user: current_user
   rescue ActiveRecord::RecordInvalid => e
@@ -76,8 +72,8 @@ class CalendarEventsController < ApplicationController
 
   def destroy
     ActiveRecord::Base.transaction do
-      log_activity(@calendar_event, :calendar_event_deleted)
-      send_notifications!(:destroy)
+      log_activity(@calendar_event, :calendar_event_deleted, { participant_user_ids: @calendar_event.user_ids.join(',') })
+
       @calendar_event.destroy!
       render json: { message: :ok }
     rescue ActiveRecord::RecordInvalid => e
@@ -116,13 +112,22 @@ class CalendarEventsController < ApplicationController
   end
 
   def calendar_event_params
+    if params[:start_date].present? && params[:end_date].present?
+      params[:start_datetime] = nil
+      params[:end_datetime] = nil
+    else
+      params[:start_date] = nil
+      params[:end_date] = nil
+    end
+
     params.permit(
       :name,
-      :start_at,
-      :end_at,
+      :start_datetime,
+      :start_date,
+      :end_datetime,
+      :end_date,
       :event_type,
       :event_sub_type,
-      :full_day,
       user_ids: [],
       metadata: {}
     )
@@ -155,36 +160,30 @@ class CalendarEventsController < ApplicationController
     end
   end
 
-  def send_notifications!(action)
-    case @calendar_event.event_type
-    when 'equipment_booking'
-      case action
-      when :create
-        EquipmentBookingCreatedNotification.send_notifications({ calendar_event_id: @calendar_event.id, user_name: current_user.full_name })
-      when :update
-        EquipmentBookingUpdatedNotification.send_notifications({ calendar_event_id: @calendar_event.id })
-      when :destroy
-        EquipmentBookingDeletedNotification.send_notifications(
-          {
-            calendar_event_id: @calendar_event.id,
-            event_name: @calendar_event.name,
-            repository_row_name: @calendar_event.subject.name
-          }
-        )
-      end
-    end
-  end
-
   def log_activity(calendar_event, type_of, message_items = {})
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            team: calendar_event.team,
+            team: calendar_event.subject.team,
             subject: calendar_event.subject,
             message_items: {
               event: calendar_event.name,
-              repository_row: calendar_event.subject.id
+              repository_row: calendar_event.subject.id,
+              calendar_event_id: calendar_event.id
             }.merge(message_items))
+  end
+
+  def load_calendar_events!
+    @calendar_events =
+      case params[:event_type]
+      when 'equipment_booking'
+        CalendarEvent.where(
+          subject_type: 'RepositoryRow', subject_id: @parent.repository_rows.joins(:calendar_events).distinct.select(:id)
+        )
+      else
+        CalendarEvent.where(team_id: current_user.teams.select(:id))
+                     .where(event_type: params[:event_type])
+      end
   end
 
   def filter_calendar_events!

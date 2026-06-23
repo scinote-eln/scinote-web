@@ -20,7 +20,7 @@
                 {{ i18n.t('equipment_bookings.index.manage_modal.event_name') }}
               </span>
               <div class="sci-input-container-v2">
-                <input type="text" ref="eventNameInput" v-model="event.event_name" />
+                <input type="text" ref="eventNameInput" v-model="event.event_name" :placeholder="i18n.t('equipment_bookings.index.manage_modal.event_name')" />
               </div>
             </div>
             <div>
@@ -54,6 +54,7 @@
                   :defaultValue="event.start_at"
                   :mode="event.full_day ? 'date' : 'datetime'"
                   size="mb"
+                  :error="event.start_at && event.end_at && notValidDates"
                   :clearable="false"
                 />
               </div>
@@ -71,6 +72,7 @@
                   :mode="event.full_day ? 'date' : 'datetime'"
                   size="mb"
                   :clearable="false"
+                  :error="event.start_at && event.end_at && notValidDates"
                 />
               </div>
             </div>
@@ -183,8 +185,20 @@ export default {
     });
   },
   computed: {
+    notValidDates() {
+      if (this.event.full_day) {
+        return new Date(this.event.start_at).setHours(0,0,0,0) > new Date(this.event.end_at).setHours(0,0,0,0);
+      }
+
+      return new Date(this.event.start_at) >= new Date(this.event.end_at);
+    },
     disabled() {
-      return this.event.event_name.length === 0 || !this.event.repository_row_id || this.creating;
+      return this.event.event_name.length === 0 ||
+             !this.event.repository_row_id ||
+             this.creating ||
+             !this.event.start_at ||
+             !this.event.end_at ||
+             this.notValidDates;
     },
     repositoryRowsUrl() {
       return rows_list_team_repositories_path(this.teamId, { active: true, repository_id: this.repositoryId });
@@ -229,17 +243,25 @@ export default {
       this.event.end_at = formatDateTime(to);
     },
     preparePayload() {
-      return {
+      const params = {
         name: this.event.event_name,
         subject_id: this.event.repository_row_id,
         subject_type: 'RepositoryRow',
         event_type: this.event.event_type,
         event_sub_type: this.event.event_sub_type,
-        start_at: this.event.start_at,
-        end_at: this.event.end_at,
         full_day: this.event.full_day,
         user_ids: this.event.users,
       };
+
+      if (this.event.full_day) {
+        params.start_date = this.event.start_at;
+        params.end_date = this.event.end_at;
+      } else {
+        params.start_datetime = this.event.start_at;
+        params.end_datetime = this.event.end_at;
+      }
+
+      return params;
     },
     updateEvent() {
       if (this.creating) return;

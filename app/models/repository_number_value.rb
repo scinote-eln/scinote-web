@@ -15,7 +15,11 @@ class RepositoryNumberValue < ApplicationRecord
   SORTABLE_COLUMN_NAME = 'repository_number_values.data'
 
   def formatted
-    data.to_s
+    decimals = repository_cell.repository_column.metadata.fetch(
+      'decimals',
+      Constants::REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS
+    ).to_i
+    data.round(decimals).to_s
   end
 
   def self.add_filter_condition(repository_rows, join_alias, filter_element)
