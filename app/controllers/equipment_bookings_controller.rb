@@ -3,7 +3,7 @@
 class EquipmentBookingsController < ApplicationController
   before_action :check_calendar_events_enabled
   before_action :set_breadcrumbs_items, only: :index
-  before_action :load_repository, only: :assigned_repository_rows
+  before_action :load_repository, only: %i(assigned_repository_rows assigned_users)
 
   def index; end
 
@@ -29,9 +29,23 @@ class EquipmentBookingsController < ApplicationController
   end
 
   def assigned_users
-    users = current_team.users
+    calendar_events = User.joins(:calendar_events)
+                          .joins("INNER JOIN repository_rows ON
+                                  repository_rows.id = calendar_events.subject_id AND
+                                  calendar_events.subject_type = 'RepositoryRow' AND
+                                  repository_rows.archived = false")
+                          .where(repository_rows: { repository_id: @repository.id })
 
-    # In next tickets it will be filtered by assigned users to events
+    repository_users = @repository.users_with_permission(RepositoryPermissions::READ, current_team)
+
+    users = case params[:mode]
+            when 'repository_only'
+              repository_users
+            when 'assigned_only'
+              calendar_events
+            else
+              User.where(id: repository_users.select(:id)).or(User.where(id: calendar_events.select(:id))).distinct
+            end
 
     users = users.search(false, params[:query]).map do |u|
       [u.id, u.name, { avatar_url: avatar_path(u, :icon_small) }]
