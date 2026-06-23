@@ -21,7 +21,8 @@ module Reports
       initialize_template
       set_renderer_context
       generate_pdf_content
-      process_attach_pdf_report_and_notify
+      generate_pdf_file
+      create_notification_for_user
     rescue StandardError => e
       raise e if @report.blank?
 
@@ -60,15 +61,6 @@ module Reports
 
     def generate_pdf_content
       @num_of_cover_pages = cover_pages_count
-
-      render_header_footer_and_report
-
-      gather_styles_and_scripts
-
-      generate_pdf_file
-    end
-
-    def render_header_footer_and_report
       @header_html = @renderer.render_to_string(
         template: "reports/templates/#{@template}/header",
         layout: false,
@@ -87,45 +79,6 @@ module Reports
       )
     end
 
-    def gather_styles_and_scripts
-      css_files = [
-        'application',
-        'reports_pdf',
-        'reports_pdf_icons',
-        'bootstrap_pack',
-        'handsontable.formula',
-        'fontawesome'
-      ]
-
-      javascript_files = [
-        'jquery_bundle',
-        'handsontable.full',
-        'lodash',
-        'numeral',
-        'numeric',
-        'md5',
-        'jstat',
-        'formula',
-        'parser',
-        'ruleJS',
-        'big.min',
-        'handsontable.formula',
-        'reports/content',
-        'reports/template_helpers'
-      ]
-
-      @style_tag_options = []
-      @script_tag_options = []
-
-      @style_tag_options = css_files.map do |file_name|
-        { content: fetch_asset_content("#{file_name}.css") }
-      end
-
-      @script_tag_options = javascript_files.map do |file_name|
-        { content: fetch_asset_content("#{file_name}.js") }
-      end
-    end
-
     def generate_pdf_file
       current_margin = extract_margins_from_header ||
                        { top: '2cm', bottom: '2cm', left: '1cm', right: '1.5cm' }
@@ -138,28 +91,20 @@ module Reports
         display_header_footer: true,
         header_template: @header_html,
         footer_template: @footer_html,
-        style_tag_options: @style_tag_options,
-        script_tag_options: @script_tag_options,
         page_ranges: "#{@num_of_cover_pages + 1}-999999",
         emulate_media: 'screen',
         display_url: Rails.application.routes.default_url_options[:host]
       ).to_pdf(@file.path)
-    end
 
-    def process_attach_pdf_report_and_notify
       @file.rewind
       @file = prepend_title_page if @num_of_cover_pages.positive?
       @file = append_result_asset_previews if @report.settings.dig(:task, :file_results_previews)
 
       @report.pdf_file.attach(io: @file, filename: 'report.pdf')
       @report.pdf_ready!
-
-      create_notification_for_user
     end
-
+    
     def create_notification_for_user
-      report_path = Rails.application.routes.url_helpers
-                         .reports_path(team: @report.team.id, preview_report_id: @report.id, preview_type: :pdf)
       DeliveryNotification.send_notifications(
         {
           title: I18n.t('projects.reports.index.generation.completed_pdf_notification_title'),
@@ -303,15 +248,6 @@ module Reports
       I18n.t('projects.reports.index.generation.error_notification_message',
              report_link: "<a href='#{report_path}'>#{escape_input(report.name)}</a>",
              team_name: escape_input(report.team.name))
-    end
-
-    def fetch_asset_content(asset_name)
-      Rails.application
-           .assets_manifest
-           .find_sources(asset_name)
-           .first
-           .to_s
-           .force_encoding(Encoding::UTF_8)
     end
 
     def extract_margins_from_header

@@ -149,7 +149,7 @@ class Constants
 
   # URL expire time, used for presigned file URLs, because outsiders shouldn't
   # have access to them, but some buffer time is needed for file to be loaded
-  URL_SHORT_EXPIRE_TIME = 30
+  URL_SHORT_EXPIRE_TIME = 1_800
   # Same as URL_EXPIRE_TIME, except for cases where the URL migth be used in
   # another page, and hence the URL mustn't expire by then (e.g. when generating
   # report and than using same HTML code in PDF, and consequently same file
