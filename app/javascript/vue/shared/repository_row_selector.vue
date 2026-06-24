@@ -16,9 +16,9 @@
       <div class="sci-label">{{ i18n.t(`storage_locations.show.assign_modal.item`) }}</div>
       <SelectDropdown
         :key="selectedRepository"
-        :disabled="!selectedRepository || disableRowSelection"
+        :disabled="disabledRowSelection"
         :optionsUrl="rowsUrl"
-        :urlParams="{ repository_id: selectedRepository, excluded_ids: excludeRows }"
+        :urlParams="{ repository_id: selectedRepository, excluded_ids: excludeRows, preselected_rows: (disabledRowSelection ? this.preSelectedRows : null) }"
         ajaxMethod="post"
         placeholder="Select item"
         :multiple="multiple"
@@ -148,6 +148,9 @@ export default {
       }
 
       return rows_list_team_repositories_path(this.teamId, { active: true, ...this.params });
+    },
+    disabledRowSelection() {
+      return !this.selectedRepository || this.disableRowSelection;
     }
   },
   data() {
