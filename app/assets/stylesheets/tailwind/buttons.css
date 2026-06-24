@@ -3,8 +3,9 @@
     @apply inline-flex items-center gap-2 relative;
   }
 
+  /* Medium (default): h40, gap 6, text 14/20, radius 8px, base (text-side) padding 16px */
   .btn {
-    @apply relative inline-flex items-center text-sm shrink-0 gap-2 justify-center px-4 rounded border border-solid appearance-none whitespace-nowrap cursor-pointer h-[40px];
+    @apply relative inline-flex items-center text-sm shrink-0 gap-[6px] justify-center px-4 rounded-lg border border-solid appearance-none whitespace-nowrap cursor-pointer h-[40px];
     border-color: transparent;
   }
 
@@ -12,24 +13,76 @@
     @apply px-2 ;
   }
 
+  /* Icon-aware padding: a leading/trailing icon tightens THAT side's padding (per size).
+     The :not() guard skips a lone icon (icon-only buttons / bare-text labels) so it never
+     fires on both sides. Requires the label to be wrapped in an element (e.g. <span>). */
+  .btn:has(> .sn-icon:first-child:not(:last-child)) {
+    padding-left: 8px;
+  }
+
+  .btn:has(> .sn-icon:last-child:not(:first-child)) {
+    padding-right: 8px;
+  }
+
+  /* Per-size icon glyph sizing */
+  .btn .sn-icon {
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  /* Large: h44, gap 8, text 16/24, base padding 24px, icon side 16px, icon 24px */
   .btn.btn-lg {
-    @apply px-[1.125rem] text-base h-[44px];
+    @apply px-6 text-base h-[44px] gap-[8px];
+  }
+
+  .btn.btn-lg:has(> .sn-icon:first-child:not(:last-child)) {
+    padding-left: 16px;
+  }
+
+  .btn.btn-lg:has(> .sn-icon:last-child:not(:first-child)) {
+    padding-right: 16px;
   }
 
   .btn.btn-lg.icon-btn {
     @apply px-2.5;
   }
 
+  /* Small: h36, gap 4, text 12/18, base padding 12px, icon side 8px, icon 20px */
   .btn.btn-sm {
-    @apply px-2.5 text-xs h-[36px];
+    @apply px-3 text-xs leading-[18px] h-[36px] gap-[4px];
+  }
+
+  .btn.btn-sm:has(> .sn-icon:first-child:not(:last-child)) {
+    padding-left: 8px;
+  }
+
+  .btn.btn-sm:has(> .sn-icon:last-child:not(:first-child)) {
+    padding-right: 8px;
+  }
+
+  .btn.btn-sm .sn-icon {
+    font-size: 20px;
   }
 
   .btn.btn-sm.icon-btn {
     @apply px-1.5;
   }
 
+  /* x-small: h30, gap 4, text 12/18, base padding 8px, icon side 6px, icon 16px */
   .btn.btn-xs {
-    @apply px-2.5 text-xs h-[30px];
+    @apply px-2 text-xs leading-[18px] h-[30px] gap-[4px];
+  }
+
+  .btn.btn-xs:has(> .sn-icon:first-child:not(:last-child)) {
+    padding-left: 6px;
+  }
+
+  .btn.btn-xs:has(> .sn-icon:last-child:not(:first-child)) {
+    padding-right: 6px;
+  }
+
+  .btn.btn-xs .sn-icon {
+    font-size: 16px;
   }
 
   .btn.btn-xs.icon-btn {
