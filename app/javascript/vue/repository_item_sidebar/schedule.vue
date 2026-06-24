@@ -15,9 +15,9 @@
       <template v-if="!repositoryRow.default_columns.archived">
         <div v-if="futureEvents.length > 0" class="mt-4">
           <h5 class="!text-sm">{{ i18n.t('repositories.equipment_booking.upcoming_events') }}</h5>
-          <div v-for="event in futureEvents" :key="event.id" class="mb-2 flex items-center">
-            <span class="truncate" :title="event.attributes.name">{{ event.attributes.name }}</span>:
-            <span class="grow shrink-0 ml-1">{{ event.attributes.start_at_formatted }} - {{ event.attributes.end_at_formatted }}</span>
+          <div v-for="event in futureEvents" :key="event.id" class="mb-2 flex flex-col">
+            <span class="truncate" :title="event.attributes.name">{{ event.attributes.name }}</span>
+            <span class="grow shrink-0">{{ event.attributes.start_at_formatted }} - {{ event.attributes.end_at_formatted }}</span>
           </div>
           <div v-if="futurePage" class="cursor-pointer text-sn-science-blue" @click="fetchEvents('future', futurePage)">
             {{ i18n.t('repositories.equipment_booking.show_more') }}
@@ -25,9 +25,9 @@
         </div>
         <div v-if="pastEvents.length > 0" class="mt-4">
           <h5 class="!text-sm">{{ i18n.t('repositories.equipment_booking.past_events') }}</h5>
-          <div v-for="event in pastEvents" :key="event.id" class="mb-2 flex items-center text-sn-grey-700">
-            <span class="truncate" :title="event.attributes.name">{{ event.attributes.name }}</span>:
-            <span class="grow shrink-0 ml-1">{{ event.attributes.start_at_formatted }} - {{ event.attributes.end_at_formatted }}</span>
+          <div v-for="event in pastEvents" :key="event.id" class="mb-2 flex flex-col text-sn-grey-700">
+            <span class="truncate" :title="event.attributes.name">{{ event.attributes.name }}</span>
+            <span class="grow shrink-0">{{ event.attributes.start_at_formatted }} - {{ event.attributes.end_at_formatted }}</span>
           </div>
           <div v-if="pastPage" class="cursor-pointer text-sn-blue" @click="fetchEvents('past', pastPage)">
             {{ i18n.t('repositories.equipment_booking.show_more') }}

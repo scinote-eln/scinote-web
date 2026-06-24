@@ -91,12 +91,18 @@ class RepositoriesController < ApplicationController
 
     results = results.order('LOWER(repository_rows.name) asc').page(params[:page])
 
-    results = results.where.not(id: params[:excluded_ids]) if params[:excluded_ids].present?
+    results_extended = nil
+
+    if params[:preselected_rows].present?
+      preselected_rows = RepositoryRow.where(id: params[:preselected_rows]).order('LOWER(repository_rows.name) asc')
+      results = results.where.not(id: params[:preselected_rows])
+      results_extended = preselected_rows + results if params[:page].to_i == 1
+    end
 
     render json: {
       paginated: true,
       next_page: results.next_page,
-      data: results.map { |r| [r.id, r.name] }
+      data: (results_extended || results).map { |r| [r.id, r.name] }
     }
   end
 
