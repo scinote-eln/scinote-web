@@ -79,6 +79,7 @@ export default {
   },
   watch: {
     searchValue(newValue) {
+      if (this.barcodeSearchOpened) return;
       if (newValue !== this.value) {
         this.value = newValue;
         this.searchOpened = true;
