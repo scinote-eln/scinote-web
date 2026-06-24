@@ -155,8 +155,12 @@ class NotificationExtends
       recipients_module: :DeletedCalendarEventRecipients
     },
     calendar_event_participant_created_activity: {
-      code: 497,
+      code: 496,
       recipients_module: :CreatedCalendarEventRecipient
+    },
+    calendar_event_participant_deleted_activity: {
+      code: 497,
+      recipients_module: :DeletedCalendarEventRecipients
     }
   }
 
@@ -219,6 +223,7 @@ class NotificationExtends
         calendar_event_deleted_activity
         calendar_event_created_activity
         calendar_event_participant_created_activity
+        calendar_event_participant_deleted_activity
       ]
     },
     other: {
