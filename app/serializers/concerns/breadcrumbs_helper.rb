@@ -135,7 +135,7 @@ module BreadcrumbsHelper
       params[:archived] = true if subject.archived
       params[:anchor] = anchor if anchor
 
-      url = repository_path(subject, params)
+      url = repository_path(subject.repository, params)
     when Report
       parent = subject.team
 
