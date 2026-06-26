@@ -16,7 +16,7 @@
             :e2eValue="`e2e-DD-${dataE2e}-selectInventory`"
           ></SelectDropdown>
         </div>
-          <h4 v-else class="!leading-10 truncate !bock", :title="selectedRepositoryName">
+          <h4 v-else class="!leading-10 truncate !block" :title="selectedRepositoryName">
           {{ selectedRepositoryName }}
         </h4>
       </div>
