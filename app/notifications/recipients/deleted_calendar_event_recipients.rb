@@ -6,6 +6,9 @@ class Recipients::DeletedCalendarEventRecipients
   end
 
   def recipients
-    User.where(id: Activity.find(@params[:activity_id]).message_items['participant_user_ids'].split(','))
+    activity = Activity.find(@params[:activity_id])
+    user_ids = activity.message_items.dig('user_target', 'id') || activity.message_items['participant_user_ids']&.split(',')
+
+    User.where(id: user_ids)
   end
 end

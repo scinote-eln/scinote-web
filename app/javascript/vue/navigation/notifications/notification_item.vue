@@ -42,6 +42,12 @@ export default {
   components: {
     Breadcrumbs
   },
+  mounted() {
+    // handle user popovers
+    [...document.getElementsByClassName("atwho-user-popover")].forEach(e => {
+      window.SmartAnnotation.preventPropagation(e);
+    });
+  },
   computed: {
     lastBreadcrumbUrl() {
       if (!this.notification.attributes.breadcrumbs) {
