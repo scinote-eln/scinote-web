@@ -24,6 +24,15 @@ class EquipmentBookingReminderNotification < BaseNotification
 
   def subject
     CalendarEvent.find(params[:calendar_event_id])
+  rescue ActiveRecord::RecordNotFound
+    NonExistantRecord.new(
+      params[:name],
+      params: {
+        start_date: params[:start_date],
+        start_datetime: params[:start_datetime],
+        subject: RepositoryRow.find(params[:repository_row_id])
+      }
+    )
   end
 
   after_deliver do
