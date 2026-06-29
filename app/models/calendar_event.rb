@@ -7,6 +7,8 @@ class CalendarEvent < ApplicationRecord
   has_many :calendar_event_participants, inverse_of: :calendar_event, dependent: :destroy
   has_many :users, through: :calendar_event_participants, dependent: :destroy
 
+  before_save :reset_reminder_sent, if: -> { start_date_changed? || start_datetime_changed? }
+
   enum event_type: {
     equipment_booking: 0
   }
@@ -29,4 +31,7 @@ class CalendarEvent < ApplicationRecord
 
   private
 
+  def reset_reminder_sent
+    self.reminder_sent = false
+  end
 end
