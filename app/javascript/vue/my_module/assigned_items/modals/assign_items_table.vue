@@ -2,18 +2,21 @@
   <div>
     <p>{{ i18n.t('my_modules.repository.assign_modal.assignment_disclaimer') }}</p>
     <div class="relative">
-      <div class="absolute left-0 z-50 w-64 top-4">
-        <SelectDropdown
-          v-if="!selectedRepositoryId"
-          :optionsUrl="repositoriesUrl"
-          placeholder="Select inventory"
-          :searchable="true"
-          :value="selectedRepositoryId"
-          :disabled="disabledRepositoryDropdown"
-          @change="changeRepository"
-          :e2eValue="`e2e-DD-${dataE2e}-selectInventory`"
-        ></SelectDropdown>
-        <h4 v-else class="!leading-10">
+      <div class="absolute left-0 right-[272px] z-50 top-4">
+        <div v-if="!selectedRepositoryId" class="w-64">
+          <SelectDropdown
+            v-if="!selectedRepositoryId"
+            :optionsUrl="repositoriesUrl"
+            placeholder="Select inventory"
+            :searchable="true"
+            :value="selectedRepositoryId"
+            :disabled="disabledRepositoryDropdown"
+            :class="w-64"
+            @change="changeRepository"
+            :e2eValue="`e2e-DD-${dataE2e}-selectInventory`"
+          ></SelectDropdown>
+        </div>
+          <h4 v-else class="!leading-10 truncate !block" :title="selectedRepositoryName">
           {{ selectedRepositoryName }}
         </h4>
       </div>
