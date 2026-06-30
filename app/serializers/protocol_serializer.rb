@@ -9,7 +9,7 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version,
-             :code, :published, :version_comment, :archived, :linked, :has_draft,
+             :code, :published, :version_comment, :archived, :linked, :has_draft, :description_locked, :adding_steps_allowed,
              :published_on_formatted, :published_by, :created_from_version, :assignable_my_module_id, :assignable_my_module_name
 
   def updated_at
@@ -100,7 +100,10 @@ class ProtocolSerializer < ActiveModel::Serializer
       print_protocol_url: print_protocol_url,
       versions_modal: versions_modal_protocol_path(object.parent || object),
       redirect_to_protocols: protocols_path,
-      add_protocol_steps_url: add_protocol_steps_url
+      add_protocol_steps_url: add_protocol_steps_url,
+      lock_all_steps_url: lock_all_steps_url,
+      unlock_all_steps_url: unlock_all_steps_url,
+      update_adding_steps_allowed_url: update_adding_steps_allowed_url
     }
   end
 
@@ -183,7 +186,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def add_step_url
-    return unless can_manage_protocol_in_module?(object) || can_manage_protocol_draft_in_repository?(object)
+    return unless (object.in_module? && can_create_my_module_steps?(object.my_module)) || can_manage_protocol_draft_in_repository?(object)
 
     protocol_steps_path(protocol_id: object.id)
   end
@@ -262,5 +265,23 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_save_protocol_version_as_draft?(object)
 
     save_as_draft_protocol_path(object)
+  end
+
+  def lock_all_steps_url
+    return unless can_publish_protocol_in_repository?(object)
+
+    lock_all_protocol_steps_path(object)
+  end
+
+  def unlock_all_steps_url
+    return unless can_manage_protocol_draft_in_repository?(object)
+
+    unlock_all_protocol_steps_path(object)
+  end
+
+  def update_adding_steps_allowed_url
+    return unless can_manage_protocol_draft_in_repository?(object)
+
+    update_adding_steps_allowed_protocol_path(object)
   end
 end

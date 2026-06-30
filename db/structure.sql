@@ -1691,7 +1691,8 @@ CREATE TABLE public.protocols (
     last_modified_by_id bigint,
     published_by_id bigint,
     linked_at timestamp without time zone,
-    description_locked boolean DEFAULT false NOT NULL
+    description_locked boolean DEFAULT false NOT NULL,
+    adding_steps_allowed boolean DEFAULT true NOT NULL
 );
 
 
@@ -6939,6 +6940,13 @@ CREATE INDEX index_protocols_on_added_by_id ON public.protocols USING btree (add
 
 
 --
+-- Name: index_protocols_on_adding_steps_allowed; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_adding_steps_allowed ON public.protocols USING btree (adding_steps_allowed);
+
+
+--
 -- Name: index_protocols_on_archived; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10810,11 +10818,8 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-<<<<<<< HEAD
-('20260615135346'),
-=======
 ('20260616085134'),
->>>>>>> develop
+('20260615135346'),
 ('20260526000000'),
 ('20260515130015'),
 ('20260514114311'),
@@ -11151,4 +11156,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20150713071921'),
 ('20150713063224'),
 ('20150713060702');
-

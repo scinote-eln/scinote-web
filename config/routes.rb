@@ -734,6 +734,8 @@ Rails.application.routes.draw do
         post 'duplicate'
         post :archive
         post :restore
+        post :lock
+        post :unlock
       end
       collection do
         get :list
@@ -764,6 +766,8 @@ Rails.application.routes.draw do
           post :reorder
           get :list_protocol_steps
           post :add_protocol_steps
+          post :lock_all
+          post :unlock_all
         end
       end
       member do
@@ -802,6 +806,7 @@ Rails.application.routes.draw do
         get :permissions
         put :update_version_comment
         get :list_published_protocol_templates
+        post :update_adding_steps_allowed
       end
       collection do
         post 'archive', to: 'protocols#archive'

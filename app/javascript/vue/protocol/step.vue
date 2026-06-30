@@ -73,6 +73,7 @@
             @update="updateName"
           />
         </div>
+        <LockedTag v-if="step.attributes.locked" />
       </div>
       <div class="elements-actions-container mt-[-5px]">
         <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
@@ -275,6 +276,7 @@
   import GeneralDropdown from '../shared/general_dropdown.vue'
   import ContentToolbar from '../shared/content/content_toolbar.vue'
   import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
+  import LockedTag from '../shared/snippets/locked_tag.vue'
 
   import UtilsMixin from '../mixins/utils.js'
   import AttachmentsMixin from '../shared/content/mixins/attachments.js'
@@ -377,7 +379,8 @@
       FormResponse,
       LinkResultsModal,
       GeneralDropdown,
-      archiveStepModal
+      archiveStepModal,
+      LockedTag
     },
     watch: {
       stepToReload() {
