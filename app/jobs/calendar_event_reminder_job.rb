@@ -23,7 +23,8 @@ class CalendarEventReminderJob < ApplicationJob
             name: event.name,
             start_date: event.start_date,
             start_datetime: event.start_datetime,
-            repository_row_id: event.subject_id
+            repository_row_id: event.subject_id,
+            repository_row_name: event.subject.name
           }
         )
       end
