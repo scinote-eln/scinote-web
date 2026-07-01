@@ -6,7 +6,7 @@ ruby '~> 3.3.8'
 
 gem 'activerecord-session_store'
 gem 'bootsnap', require: false
-gem 'devise', '~> 4.9.4'
+gem 'devise', '~> 5.0.4'
 gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 1.5'
@@ -31,7 +31,7 @@ gem 'omniauth-saml'
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.15'
 gem 'json-jwt'
-gem 'jwt', '~> 1.5'
+gem 'jwt'
 gem 'kaminari'
 gem 'rack-attack'
 gem 'rack-cors'
@@ -41,7 +41,6 @@ gem 'uglifier', '>= 1.3.0'
 gem 'activerecord-import', '~> 2.2.0'
 gem 'acts_as_list'
 gem 'ajax-datatables-rails', '~> 0.3.1'
-gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
 # gem 'caracal'
@@ -58,7 +57,7 @@ gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'mime-types', '~> 3.4'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.18.9' # HTML/XML parser
+gem 'nokogiri', '~> 1.19.4' # HTML/XML parser
 gem 'noticed'
 gem 'oj'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
