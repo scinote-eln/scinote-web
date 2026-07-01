@@ -7,7 +7,7 @@
 
     <% if resource.errors.present? %>
       <div class="alert alert-danger" id="alert-flash">
-        <%= devise_error_messages! %>
+        <%= render "devise/shared/error_messages", resource: resource %>
       </div>
     <% end %>
 
