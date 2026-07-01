@@ -818,6 +818,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :analytical_reports, controller: 'protocol_analytical_reports', only: %i(index create) do
+        collection do
+          get :input_tags
+        end
+      end
+
       resources :result_templates, only: %i(index show create update destroy) do
         collection do
           get :list
