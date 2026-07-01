@@ -178,10 +178,10 @@ class RepositoryRowsController < ApplicationController
 
     events = case params[:direction]
              when 'past'
-               events.where('end_date < ? OR end_datetime < ?', Time.current, Time.current)
+               events.where('end_date < ? OR end_datetime < ?', Time.zone.today, Time.current)
                      .order(Arel.sql('COALESCE(end_date, end_datetime) DESC'))
              when 'future'
-               events.where('start_date > ? OR start_datetime > ?', Time.current, Time.current)
+               events.where('end_date >= ? OR end_datetime >= ?', Time.zone.today, Time.current)
                      .order(Arel.sql('COALESCE(start_date, start_datetime) ASC'))
              else
                events.order(Arel.sql('COALESCE(start_date, start_datetime) DESC'))

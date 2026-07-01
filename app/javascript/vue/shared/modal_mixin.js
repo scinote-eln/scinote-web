@@ -41,7 +41,7 @@ export default {
   methods: {
     close() {
       if (this.sciModal) {
-        if (document.querySelectorAll('.modal').length === 1) {
+        if (document.querySelectorAll('.sci-modal').length === 1) {
           document.querySelector('body').classList.remove('modal-open');
         }
         this.removeModalBackdrop();

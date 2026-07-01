@@ -124,7 +124,7 @@ import DateTimePicker from '../shared/date_time_picker.vue';
 import axios from '../../packs/custom_axios.js';
 import {
   rows_list_team_repositories_path,
-  users_filter_projects_path,
+  assigned_users_equipment_bookings_path,
   calendar_events_path,
   calendar_event_path
 } from '../../routes.js';
@@ -187,7 +187,7 @@ export default {
   computed: {
     notValidDates() {
       if (this.event.full_day) {
-        return new Date(this.event.start_at) > new Date(this.event.end_at);
+        return new Date(this.event.start_at).setHours(0,0,0,0) > new Date(this.event.end_at).setHours(0,0,0,0);
       }
 
       return new Date(this.event.start_at) >= new Date(this.event.end_at);
@@ -204,7 +204,13 @@ export default {
       return rows_list_team_repositories_path(this.teamId, { active: true, repository_id: this.repositoryId });
     },
     usersUrl() {
-      return users_filter_projects_path();
+      const params = { repository_id: this.repositoryId };
+
+      if (!this.event.id) {
+        params.mode = 'repository_only';
+      }
+
+      return assigned_users_equipment_bookings_path(params);
     },
     calendarEventsUrl() {
       return calendar_events_path();

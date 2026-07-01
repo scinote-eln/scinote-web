@@ -3,7 +3,7 @@
     <div v-if="!onlyLocations" class="flex items-center gap-4">
       <h4 data-e2e="e2e-TX-itemCard-locations-title">{{ i18n.t('repositories.locations.title', { count: repositoryRow.storage_locations.locations.length }) }}</h4>
       <button v-if="repositoryRow.permissions.can_manage && repositoryRow.storage_locations.enabled"
-              @click="openAssignModal = true" class="btn btn-light ml-auto" data-e2e="e2e-BT-itemCard-assignLocation">
+              @click="openAssignModal = true" class="btn btn-light ml-auto" data-e2e="e2e-BT-itemCard-locations-assignLocation">
         {{ i18n.t('repositories.locations.assign') }}
       </button>
     </div>
