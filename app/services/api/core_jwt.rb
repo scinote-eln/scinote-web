@@ -16,7 +16,7 @@ module Api
 
     def self.decode(token)
       HashWithIndifferentAccess.new(
-        JWT.decode(token, KEY_SECRET, Rails.configuration.x.core_api_sign_alg)[0]
+        JWT.decode(token, KEY_SECRET, true, { algorithm: Rails.configuration.x.core_api_sign_alg })[0]
       )
     end
 

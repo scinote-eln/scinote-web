@@ -28,7 +28,7 @@ RSpec.describe Users::SessionsController, type: :controller do
       it 'returns error message' do
         action
 
-        expect(flash[:alert]).to eq('Invalid Email or password.')
+        expect(flash[:alert]).to eq('Invalid email or password.')
       end
 
       it 'does not set current user' do
