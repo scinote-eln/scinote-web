@@ -45,6 +45,7 @@ class ProtocolsController < ApplicationController
     unlink
     unlink_modal
     list_published_protocol_templates
+    update_adding_steps_allowed
   )
 
   before_action :check_delete_steps_permissions, only: :delete_steps
@@ -276,6 +277,14 @@ class ProtocolsController < ApplicationController
       TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
       protocol_annotation_notification(old_description)
       render json: @protocol, serializer: ProtocolSerializer, user: current_user
+    else
+      render json: @protocol.errors, status: :unprocessable_entity
+    end
+  end
+
+  def update_adding_steps_allowed
+    if @protocol.update(adding_steps_allowed: params.require(:protocol)[:adding_steps_allowed], last_modified_by: current_user)
+      render json: {}, status: :ok
     else
       render json: @protocol.errors, status: :unprocessable_entity
     end

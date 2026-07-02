@@ -77,6 +77,10 @@ Canaid::Permissions.register_for(MyModule) do
     my_module.permission_granted?(user, MyModulePermissions::TAGS_MANAGE)
   end
 
+  can :create_my_module_steps do |user, my_module|
+    my_module.protocol.adding_steps_allowed? && can_manage_my_module_steps?(user, my_module)
+  end
+
   can :manage_my_module_steps do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::STEPS_MANAGE)
   end

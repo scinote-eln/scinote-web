@@ -229,7 +229,8 @@ class Step < ApplicationRecord
         position: step_position || protocol.steps.active.length,
         completed: false,
         user: user,
-        original_protocol: original_protocol
+        original_protocol: original_protocol,
+        locked: locked
       )
       new_step.save!
 

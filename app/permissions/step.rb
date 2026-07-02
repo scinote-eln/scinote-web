@@ -3,7 +3,7 @@
 Canaid::Permissions.register_for(Step) do
   can :manage_step do |user, step|
     if step.my_module
-      step.active? && can_manage_my_module_steps?(user, step.my_module)
+      !step.locked? && step.active? && can_manage_my_module_steps?(user, step.my_module)
     else
       can_manage_protocol_draft_in_repository?(user, step.protocol)
     end

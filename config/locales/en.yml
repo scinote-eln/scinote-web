@@ -3930,6 +3930,11 @@ en:
     results: "Results [%{count}]"
     print_label: "Print protocol"
     rearrange_steps_label: "Rearrange steps"
+    manage_steps: "Manage steps"
+    lock_step: "Lock step"
+    unlock_step: "Unlock step"
+    all_steps: "All steps"
+    allow_adding_steps: "Allow adding steps"
     empty_results_placeholder: "No results added to this template. Create new draft to add them."
     table:
       filters:

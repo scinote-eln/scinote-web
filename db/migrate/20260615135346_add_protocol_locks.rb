@@ -9,5 +9,8 @@ class AddProtocolLocks < ActiveRecord::Migration[7.2]
 
     add_column :protocols, :description_locked, :boolean, default: false, null: false
     add_index :protocols, :description_locked
+
+    add_column :protocols, :adding_steps_allowed, :boolean, default: true, null: false
+    add_index :protocols, :adding_steps_allowed
   end
 end

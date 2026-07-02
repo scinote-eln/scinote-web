@@ -5,15 +5,15 @@ class StepsController < ApplicationController
   include MarvinJsActions
 
   before_action :load_vars, only: %i(update destroy show toggle_step_state update_view_state
-                                     update_asset_view_mode elements
+                                     update_asset_view_mode elements lock unlock
                                      attachments upload_attachment duplicate toggle_step_skip_state archive restore)
-  before_action :load_vars_nested, only: %i(create index list reorder list_protocol_steps add_protocol_steps)
+  before_action :load_vars_nested, only: %i(create index list reorder list_protocol_steps add_protocol_steps lock_all unlock_all)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
-  before_action :check_protocol_manage_permissions, only: %i(reorder add_protocol_steps)
+  before_action :check_protocol_manage_permissions, only: %i(reorder add_protocol_steps lock_all unlock_all)
   before_action :check_view_permissions, only: %i(show index list attachments elements list_protocol_steps)
   before_action :check_create_permissions, only: %i(create)
-  before_action :check_manage_permissions, only: %i(update update_view_state update_asset_view_mode upload_attachment)
+  before_action :check_manage_permissions, only: %i(update update_view_state update_asset_view_mode upload_attachment lock unlock)
   before_action :check_archive_permissions, only: :archive
   before_action :check_restore_permissions, only: :restore
   before_action :check_destroy_permissions, only: :destroy
@@ -239,6 +239,44 @@ class StepsController < ApplicationController
     else
       render json: {}, status: :ok
     end
+  end
+
+  def lock
+    @step.update!(locked: true)
+    head :ok
+  rescue ActiveRecord::RecordInvalid
+    head :unprocessable_entity
+  end
+
+  def unlock
+    @step.update!(locked: false)
+    head :ok
+  rescue ActiveRecord::RecordInvalid
+    head :unprocessable_entity
+  end
+
+  def lock_all
+    ActiveRecord::Base.transaction do
+      @protocol.steps.each do |step|
+        step.update!(locked: true)
+      end
+    end
+
+    head :ok
+  rescue ActiveRecord::RecordInvalid
+    head :unprocessable_entity
+  end
+
+  def unlock_all
+    ActiveRecord::Base.transaction do
+      @protocol.steps.each do |step|
+        step.update!(locked: false)
+      end
+    end
+
+    head :ok
+  rescue ActiveRecord::RecordInvalid
+    head :unprocessable_entity
   end
 
   def update_view_state
@@ -478,7 +516,7 @@ class StepsController < ApplicationController
 
   def check_create_permissions
     if @my_module
-      render_403 unless can_manage_my_module_steps?(@my_module)
+      render_403 unless can_create_my_module_steps?(@my_module)
     else
       render_403 unless can_manage_protocol_draft_in_repository?(@protocol)
     end

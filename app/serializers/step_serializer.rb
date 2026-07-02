@@ -14,7 +14,7 @@ class StepSerializer < ActiveModel::Serializer
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
              :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
              :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id, :skipped_at,
-             :archived_by, :archived_on, :archived
+             :archived_by, :archived_on, :archived, :locked
 
   def step_orderable_elements
     return object.all_elements if object.archived?
@@ -147,7 +147,9 @@ class StepSerializer < ActiveModel::Serializer
         update_view_state_url: update_view_state_step_path(object),
         direct_upload_url: rails_direct_uploads_url,
         upload_attachment_url: upload_attachment_step_path(object),
-        reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)
+        reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id),
+        lock_url: lock_step_path(object),
+        unlock_url: unlock_step_path(object)
       })
 
       url_list[:create_form_response_url] = step_form_responses_path(object) if Form.forms_enabled?
