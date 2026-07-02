@@ -6,7 +6,7 @@ ruby '~> 3.4.8'
 
 gem 'activerecord-session_store'
 gem 'bootsnap', require: false
-gem 'devise', '~> 4.9.4'
+gem 'devise', '~> 5.0.4'
 gem 'devise_invitable'
 gem 'pg', '~> 1.5'
 gem 'puma'
@@ -54,7 +54,7 @@ gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'mime-types', '~> 3.4'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.19.1' # HTML/XML parser
+gem 'nokogiri', '~> 1.19.4' # HTML/XML parser
 gem 'noticed'
 gem 'oj'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'

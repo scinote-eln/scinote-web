@@ -5,10 +5,10 @@
 
   <%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>
 
-    <% if not resource.errors.blank? %>
-    <div class="alert alert-danger">
-    <%= devise_error_messages! %>
-    </div>
+    <% if resource.errors.present? %>
+      <div class="alert alert-danger">
+        <%= render "devise/shared/error_messages", resource: resource %>
+      </div>
     <% end %>
 
     <div class="form-group">
