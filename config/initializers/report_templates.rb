@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+ODFReport.delimiters = :curly
+
 Dir.chdir(Rails.root.join('app/views/reports/templates')) do
   templates = Dir.glob('*').select { |entry| File.directory?(entry) }
   templates.each do |template|

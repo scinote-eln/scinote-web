@@ -56,6 +56,7 @@ gem 'mime-types', '~> 3.4'
 gem 'nested_form_fields'
 gem 'nokogiri', '~> 1.19.1' # HTML/XML parser
 gem 'noticed'
+gem 'odf-report', git: 'https://github.com/scinote-eln/odf-report', branch: 'rich-text-improvements' # Build report from odt template
 gem 'oj'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
