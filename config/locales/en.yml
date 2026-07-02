@@ -4092,6 +4092,7 @@ en:
       protocol: "Protocol"
       results: "Results [%{count}]"
       repository_rows: "Items [%{count}]"
+      protocol_analytical_reports: "Analytical report [%{count}]"
       draft_with_from_version: 'Draft (from Version %{nr})'
       protocol_description: 'Protocol description'
       protocol_steps: 'Protocol steps'
@@ -4263,7 +4264,42 @@ en:
         title: "Remove assigned items"
         description_html: "You are about to remove %{count} item(s) from this protocol template.<br></br>You can always add items back to this template."
         confirm: "Remove"
-
+    analytical_reports:
+      title: "Report template"
+      new_template: "New template"
+      data_inputs:
+        title: "Data inputs"
+        banner: "Copy & paste these codes into your .DOCX file where you want to populate fields."
+        codes:
+          task_name: "Task name"
+          task_due_date: "Due date"
+          task_tags: "Tags"
+          task_protocol: "All protocol steps"
+          task_name_code: "{{TASKNAME}}"
+          task_due_date_code: "{{TASKDUEDATE}}"
+          task_tags_code: "{{TASKTAGS}}"
+          task_protocol_code: "{{PROTOCOL}}"
+          tag_content_code: "{{%{content_type}_%{id}}}"
+          tag_form_field_code: "{{FORM_%{form_id}_FIELD_%{id}}}"
+          type:
+            step: "STEP"
+            result: "RESULT"
+            step_text: "STEP_TEXT"
+            result_text: "RESULT_TEXT"
+            step_table: "STEP_TABLE"
+            result_table: "RESULT_TABLE"
+            checklist: "CHECKLIST"
+            form_response: "FORM"
+      create_modal:
+        title: "Create report template"
+        description: "Upload your .DOCX file with all the fields mapped"
+        name_label: "Template name"
+        name_placeholder: "Add a template name"
+        import_label: "File import"
+        drag_and_drop_supporting_text: ".odt file"
+        create_button: "Create template"
+        errors:
+          max_length: "Template name is too long (maximum is %{max_length} characters)"
     steps:
       label: "Step %{position} - %{name}"
       placeholder: 'Step name'

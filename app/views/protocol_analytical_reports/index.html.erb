@@ -1,0 +1,11 @@
+<div class="content-pane flexible protocol-content protocol-results with-grey-background" >
+  <%= render partial: "protocols/header" %>
+
+  <div id="protocolAnalyticalReports" class="protocol-analytical-reports-container">
+    <protocol-analytical-reports 
+      :protocol-id="<%= @protocol.id %>"
+      :editable="<%= can_manage_protocol_draft_in_repository?(@protocol) %>"></protocol-analytical-reports>  
+  </div>
+</div>
+
+<%= javascript_include_tag 'vue_protocol_analytical_reports' %>
