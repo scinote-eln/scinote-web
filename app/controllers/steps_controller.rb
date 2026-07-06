@@ -392,6 +392,8 @@ class StepsController < ApplicationController
   end
 
   def reorder
+    render_403 and return unless can_reorder_protocol_steps?(@protocol)
+
     @protocol.with_lock do
       position_changed = false
       params[:step_positions].each do |id, position|

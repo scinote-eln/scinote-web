@@ -10,7 +10,8 @@ class ProtocolSerializer < ActiveModel::Serializer
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version,
              :code, :published, :version_comment, :archived, :linked, :has_draft, :description_locked, :adding_steps_allowed,
-             :published_on_formatted, :published_by, :created_from_version, :assignable_my_module_id, :assignable_my_module_name
+             :published_on_formatted, :published_by, :created_from_version, :assignable_my_module_id, :assignable_my_module_name,
+             :has_locked_steps
 
   def updated_at
     object.updated_at.to_i
@@ -74,6 +75,10 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   def description
     sanitize_input(object.tinymce_render('description'))
+  end
+
+  def has_locked_steps
+    object.steps.locked.any?
   end
 
   def urls
@@ -180,7 +185,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def reorder_steps_url
-    return unless can_manage_protocol_in_module?(object) || can_manage_protocol_draft_in_repository?(object)
+    return unless can_reorder_protocol_steps?(object)
 
     reorder_protocol_steps_url(protocol_id: object.id)
   end
@@ -192,15 +197,13 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def unlink_url
-    return unless can_manage_protocol_in_module?(object) && object.linked?
+    return unless can_unlink_protocol?(object)
 
     unlink_modal_protocol_path(object, format: :json)
   end
 
   def revert_protocol_url
-    return unless can_manage_protocol_in_module?(object) && object.linked? &&
-                  object.parent.active? && object.newer_than_parent? &&
-                  can_read_protocol_in_repository?(object.parent)
+    return unless can_revert_protocol?(object)
 
     revert_modal_protocol_path(object, format: :json)
   end
@@ -216,7 +219,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   def update_protocol_name_url
     if in_repository && can_manage_protocol_draft_in_repository?(object)
       name_protocol_path(object)
-    elsif can_manage_protocol_in_module?(object)
+    elsif can_update_protocol_name?(object)
       protocol_my_module_path(object.my_module)
     end
   end
@@ -224,7 +227,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   def update_protocol_description_url
     if in_repository && can_manage_protocol_draft_in_repository?(object)
       description_protocol_path(object)
-    elsif can_manage_protocol_in_module?(object)
+    elsif can_update_protocol_description?(object)
       protocol_my_module_path(object.my_module)
     end
   end
@@ -244,7 +247,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def archive_steps_url
-    return unless can_manage_protocol_in_module?(object)
+    return unless can_archive_all_protocol_steps?(object)
 
     archive_steps_protocol_path(object)
   end
