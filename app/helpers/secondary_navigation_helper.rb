@@ -56,6 +56,10 @@ module SecondaryNavigationHelper
     action_name == 'archive'
   end
 
+  def is_module_analytical_reports?
+    controller_name == 'my_module_analytical_reports' && action_name == 'index'
+  end
+
   def title_element
     if all_projects_page?
       current_team
