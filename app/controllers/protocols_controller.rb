@@ -262,6 +262,8 @@ class ProtocolsController < ApplicationController
   end
 
   def update_name
+    render_403 and return unless can_update_protocol_name?(@protocol)
+
     if @protocol.update(name: params.require(:protocol)[:name], last_modified_by: current_user)
       log_activity(:edit_protocol_name_in_repository, nil, protocol: @protocol.id)
       render json: {}, status: :ok
@@ -271,6 +273,8 @@ class ProtocolsController < ApplicationController
   end
 
   def update_description
+    render_403 and return unless can_update_protocol_description?(@protocol)
+
     old_description = @protocol.description
     if @protocol.update(description: params.require(:protocol)[:description], last_modified_by: current_user)
       log_activity(:edit_description_in_protocol_repository, nil, protocol: @protocol.id)
@@ -437,6 +441,8 @@ class ProtocolsController < ApplicationController
   end
 
   def unlink
+    render_403 unless can_unlink_protocol?(@protocol)
+
     transaction_error = false
     Protocol.transaction do
       @protocol.unlink
@@ -461,6 +467,8 @@ class ProtocolsController < ApplicationController
   end
 
   def revert
+    render_403 unless can_revert_protocol?(@protocol)
+
     if @protocol.can_destroy?
       transaction_error = false
       parent = @protocol.parent

@@ -68,6 +68,11 @@
         background-image: linear-gradient(to right, $brand-primary 15%, rgba(255, 255, 255, 0) 0%);
       }
     }
+
+    &.disabled {
+      color: var(--sn-sleepy-grey);
+      cursor: default;
+    }
   }
   .protocol-description {
     margin-bottom: 1rem;

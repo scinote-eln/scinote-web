@@ -269,10 +269,18 @@
               class="protocol-steps pb-8"
             >
               <div v-for="(step, index) in steps" :key="step.id" class="step-block">
-                <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
-                  <i class="sn-icon sn-icon-new-task"></i>
-                  <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
-                </div>
+                <template v-if="urls.reorder_steps_url">
+                  <div v-if="index > 0 && urls.add_step_url && urls.reorder_steps_url" class="insert-step" @click="addStep(index)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
+                    <i class="sn-icon sn-icon-new-task"></i>
+                    <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
+                  </div>
+                </template>
+                <template v-else-if="index > 0 && urls.add_step_url">
+                  <div class="insert-step disabled"  :data-sn-tooltip="i18n.t('protocols.action_disabled')">
+                    <i class="sn-icon sn-icon-new-task"></i>
+                    <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
+                  </div>
+                </template>
                 <Step
                   ref="steps"
                   :step.sync="steps[index]"

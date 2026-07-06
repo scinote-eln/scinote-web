@@ -79,6 +79,8 @@ class Step < ApplicationRecord
     ).distinct
   }
 
+  scope :locked, -> { where(locked: true) }
+
   def self.search(user,
     include_archived,
     query = nil,

@@ -3935,6 +3935,7 @@ en:
     unlock_step: "Unlock step"
     all_steps: "All steps"
     allow_adding_steps: "Allow adding steps"
+    action_disabled: "This action has been disabled for this protocol template."
     empty_results_placeholder: "No results added to this template. Create new draft to add them."
     table:
       filters:
