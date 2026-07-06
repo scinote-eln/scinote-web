@@ -60,7 +60,7 @@ en:
         session_end_in:
           header: 'Your session will end in %{time}'
           description: 'To keep the data you entered into the fields without clicking the Save button, please revive your session and save them.'
-          paragraph1: 'To keep your work secure, SciNote times out sessions after 3 hours of inactivity. '
+          paragraph1: 'To keep your work secure, SciNote times out sessions after %{session_timeout} minutes of inactivity.'
           paragraph2: 'To proceed working after the session ends, you’ll have to log in again, starting a new working session.'
           revive_session: 'Revive my session'
         session_ended:
