@@ -11,6 +11,37 @@ class LabelTemplatesPreviewService
   end
 
   def generate_zpl_preview!
+    if ENV['LABEL_PREVIEW_URL'].present?
+      generate_zpl_preview_from_url!
+    else
+      generate_zpl_preview_from_lambda!
+    end
+  end
+
+  private
+
+  def generate_zpl_preview_from_url!
+    resp = HTTParty.post(
+      ENV['LABEL_PREVIEW_URL'],
+      body: {
+        content: @params[:zpl],
+        width: @params[:width],
+        height: @params[:height],
+        density: @params[:density]
+      }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+
+    if resp.success?
+      @preview = resp.body
+    else
+      @error = resp.body.presence || I18n.t('label_templates.label_preview.error_html')
+    end
+  rescue StandardError => e
+    @error = e.message
+  end
+
+  def generate_zpl_preview_from_lambda!
     client = Aws::Lambda::Client.new(region: ENV['AWS_REGION'])
     resp = client.invoke(
       function_name: 'BinaryKitsZplViewer',
