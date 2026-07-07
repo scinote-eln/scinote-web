@@ -35,8 +35,7 @@ class ChecklistItemSerializer < ActiveModel::Serializer
 
     return urls_list unless my_module
 
-    if can_manage_step_checklist?(user, object.checklist) &&
-       ((!object.checked && can_check_my_module_steps?(user, my_module)) || (object.checked && can_uncheck_my_module_steps?(user, my_module)))
+    if (!object.checked && can_check_my_module_steps?(user, my_module)) || (object.checked && can_uncheck_my_module_steps?(user, my_module))
       urls_list[:toggle_url] =
         toggle_step_checklist_checklist_item_path(step, object.checklist, object)
     end
