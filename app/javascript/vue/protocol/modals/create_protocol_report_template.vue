@@ -13,35 +13,35 @@
               <i class="sn-icon sn-icon-close"></i>
             </button>
             <h4 class="modal-title truncate !block">
-              {{ i18n.t('protocols.analytical_reports.create_modal.title') }}
+              {{ i18n.t('protocols.report_template.create_modal.title') }}
             </h4>
           </div>
           <div class="modal-body">
             <p class="mb-6">
-              {{ i18n.t('protocols.analytical_reports.create_modal.description') }}
+              {{ i18n.t('protocols.report_template.create_modal.description') }}
             </p>
             <div class="mb-2">
               <label class="sci-label">
-                {{ i18n.t('protocols.analytical_reports.create_modal.name_label') }}
+                {{ i18n.t('protocols.report_template.create_modal.name_label') }}
               </label>
               <div class="sci-input-container-v2">
                 <input
                   type="text"
                   v-model="templateName"
-                  :placeholder="i18n.t('protocols.analytical_reports.create_modal.name_placeholder')"
+                  :placeholder="i18n.t('protocols.report_template.create_modal.name_placeholder')"
                 >
               </div>
               <span v-if="this.errors.name" class="text-sn-coral text-xs">{{ this.errors.name }}</span>
             </div>
             <div class="mb-6">
               <label class="sci-label">
-                {{ i18n.t('protocols.analytical_reports.create_modal.import_label') }}
+                {{ i18n.t('protocols.report_template.create_modal.import_label') }}
               </label>
               <DragAndDropUpload
                 v-if="!attachedFile"
                 class="h-60"
                 @file:dropped="addFile"
-                :supportingText="`${i18n.t('protocols.analytical_reports.create_modal.drag_and_drop_supporting_text')}`"
+                :supportingText="`${i18n.t('protocols.report_template.create_modal.drag_and_drop_supporting_text')}`"
                 :supportedFormats="['odt']"
               />
               <div v-else class="border border-sn-light-grey rounded flex items-center p-2 gap-2">
@@ -61,7 +61,7 @@
               class="btn btn-primary"
               :disabled="submitting || !validObject"
               type="submit"
-            >{{ i18n.t('protocols.analytical_reports.create_modal.create_button') }}
+            >{{ i18n.t('protocols.report_template.create_modal.create_button') }}
             </button>
           </div>
         </div>
@@ -78,11 +78,11 @@ import modalMixin from '../../shared/modal_mixin.js';
 import DragAndDropUpload from '../../shared/drag_and_drop_upload.vue';
 import {
   rails_direct_uploads_path,
-  protocol_analytical_reports_path
+  protocol_protocol_report_templates_path
 } from '../../../routes.js'
 
 export default {
-  name: 'CreateAnalyticalReportTemplateModal',
+  name: 'CreateProtocolReportTemplateModal',
   props: {
     protocolId: {
       required: true
@@ -105,7 +105,7 @@ export default {
       this.errors = {};
 
       if (this.templateName.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
-        this.errors.name = this.i18n.t('protocols.analytical_reports.create_modal.errors.max_length', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
+        this.errors.name = this.i18n.t('protocols.report_template.create_modal.errors.max_length', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
         return false;
       }
 
@@ -116,7 +116,7 @@ export default {
       return true;
     },
     createUrl() {
-      return protocol_analytical_reports_path(this.protocolId);
+      return protocol_protocol_report_templates_path(this.protocolId);
     }
   },
   methods: {

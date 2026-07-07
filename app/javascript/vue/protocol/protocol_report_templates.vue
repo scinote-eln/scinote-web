@@ -1,17 +1,17 @@
 <template>
   <div class="grid grid-cols-2 gap-4 items-start">
     <div class="bg-sn-white p-4 rounded-lg">
-      <AnalyticalReportTemplateDataInputs
+      <ProtocolReportTemplateDataInputs
         :protocolId="protocolId"
-      ></AnalyticalReportTemplateDataInputs>
+      ></ProtocolReportTemplateDataInputs>
     </div>
 
     <div class="flex flex-col bg-sn-white p-4 rounded-lg gap-4">
       <div class="flex justify-between items-center">
-        <div class="text-xl font-semibold"> {{ i18n.t('protocols.analytical_reports.title') }}</div>
-        <button v-if="editable" class="btn btn-primary icon-btn" @click="protocolAnalyticalReportTemplateModal = true">
+        <div class="text-xl font-semibold"> {{ i18n.t('protocols.report_template.title') }}</div>
+        <button v-if="editable" class="btn btn-primary icon-btn" @click="protocolReportTemplateModal = true">
           <i class="sn-icon sn-icon-new-task"></i>
-          {{ i18n.t('protocols.analytical_reports.new_template') }}
+          {{ i18n.t('protocols.report_template.new_template') }}
         </button>
       </div>
       <div v-for="template in templates" class="text-lg font-semibold bg-sn-super-light-grey p-4 rounded">
@@ -19,22 +19,22 @@
       </div>
     </div>
   </div>
-  <CreateAnalyticalReportTemplateModal v-if="protocolAnalyticalReportTemplateModal"
+  <CreateProtocolReportTemplateModal v-if="protocolReportTemplateModal"
                                        :protocolId="protocolId"
                                        @templateCreated="reloadTemplates()"
-                                       @close="protocolAnalyticalReportTemplateModal = false"/>
+                                       @close="protocolReportTemplateModal = false"/>
 </template>
 
 <script>
 import axios from '../../packs/custom_axios.js';
-import AnalyticalReportTemplateDataInputs from './analytical_reports/data_inputs.vue';
-import CreateAnalyticalReportTemplateModal from './modals/create_analytical_report_template.vue'
+import ProtocolReportTemplateDataInputs from './protocol_report_templates/data_inputs.vue';
+import CreateProtocolReportTemplateModal from './modals/create_protocol_report_template.vue'
 import {
-  protocol_analytical_reports_path
+  protocol_protocol_report_templates_path
 } from '../../routes.js'
 
 export default {
-  name: 'ProtocolAnalyticalReports',
+  name: 'ProtocolReportTemplates',
   props: {
     protocolId: {
       required: true
@@ -44,12 +44,12 @@ export default {
     }
   },
   components: {
-    AnalyticalReportTemplateDataInputs,
-    CreateAnalyticalReportTemplateModal
+    ProtocolReportTemplateDataInputs,
+    CreateProtocolReportTemplateModal
   },
   data() {
     return {
-      protocolAnalyticalReportTemplateModal: false,
+      protocolReportTemplateModal: false,
       templates: []
     }
   },
@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     loadUrl() {
-      return protocol_analytical_reports_path(this.protocolId);
+      return protocol_protocol_report_templates_path(this.protocolId);
     }
   },
   methods: {
@@ -68,7 +68,7 @@ export default {
       });
     },
     reloadTemplates() {
-      this.protocolAnalyticalReportTemplateModal = false;
+      this.protocolReportTemplateModal = false;
       this.fetchTemplates();
     }
   }

@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
-class MyModuleAnalyticalReportsController < ApplicationController
+class MyModuleReportsController < ApplicationController
   include ApplicationHelper
   include Breadcrumbs
   include TeamsHelper
 
   before_action :load_my_module
-  before_action :check_my_module_view_permissions
-  before_action :load_attachment, only: %i(download destroy)
+  before_action :check_view_permissions, except: :destroy
+  before_action :check_manage_permissions, only: :destroy
+  before_action :load_my_module_report, only: %i(download destroy)
   before_action :set_breadcrumbs_items, only: %i(index)
   before_action :set_navigator, only: %i(index)
   before_action :set_inline_name_editing, only: %i(index)
@@ -16,8 +17,8 @@ class MyModuleAnalyticalReportsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          templates: @my_module.protocol.odt_template_files.map do |file|
-            { name: file.blob.custom_metadata[:template_name] }
+          templates: @my_module.protocol.report_templates.map do |report_template|
+            { name: report_template.name }
           end
         }
       end
@@ -29,8 +30,15 @@ class MyModuleAnalyticalReportsController < ApplicationController
   end
 
   def generated_reports
-    # TODO expected values per file: id, name, created_at
-    render json: {}
+    render json: {
+      reports: @my_module.my_module_reports.map do |my_module_report|
+        {
+          id: my_module_report.id,
+          name: my_module_report.name,
+          created_at: I18n.l(my_module_report.created_at, format: :full_date)
+        }
+      end
+    }
   end
 
   def destroy
@@ -51,12 +59,18 @@ class MyModuleAnalyticalReportsController < ApplicationController
     current_team_switch(@my_module.experiment.project.team) if current_team != @my_module.experiment.project.team
   end
 
-  def load_attachment
-    # TODO
+  def load_my_module_report
+    @my_module_report = @my_module.find_by(params[:id])
+
+    render_404 unless @my_module_report
   end
 
-  def check_my_module_view_permissions
+  def check_view_permissions
     render_403 unless can_read_my_module?(@my_module)
+  end
+
+  def check_manage_permissions
+    render_403 unless can_manage_my_module?(@my_module)
   end
 
   def set_navigator

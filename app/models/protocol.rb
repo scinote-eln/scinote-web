@@ -143,8 +143,7 @@ class Protocol < ApplicationRecord
   has_many :repository_rows, through: :protocol_repository_rows, dependent: :destroy
   has_many :steps, inverse_of: :protocol, dependent: :destroy
   has_many :original_steps, class_name: 'Step', foreign_key: :original_protocol_id, inverse_of: :original_protocol, dependent: :nullify
-
-  has_many_attached :odt_template_files
+  has_many :report_templates, as: :subject, dependent: :destroy
 
   def self.search(user,
                   include_archived,

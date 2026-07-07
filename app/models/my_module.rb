@@ -79,6 +79,7 @@ class MyModule < ApplicationRecord
   has_many :assets_in_results, class_name: 'Asset', source: :assets, through: :results
   # Associations for old activity type
   has_many :activities, inverse_of: :my_module
+  has_many :my_module_reports, dependent: :destroy
 
   scope :overdue, -> { where('my_modules.due_date < ?', Time.current.utc) }
   scope :without_group, -> { active.where(my_module_group: nil) }

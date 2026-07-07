@@ -42,10 +42,10 @@
     >
       <%= t("nav2.modules.archive") %>
     </a>
-    <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_analytical_reports? ? "text-sn-blue" : "text-sn-grey" %>"
-        href="<%= my_module_analytical_reports_path(@my_module) %>"
+    <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_reports? ? "text-sn-blue" : "text-sn-grey" %>"
+        href="<%= my_module_my_module_reports_path(@my_module) %>"
         title="<%= t("nav2.modules.analytical_reports") %>"
-        data-e2e="e2e-BT-taskTabs-analyticalReport"
+        data-e2e="e2e-BT-taskTabs-report"
     >
       <%= t("nav2.modules.analytical_reports") %>
     </a>

@@ -1971,7 +1971,7 @@ en:
     status_error:
       general: "Status transition failed"
       repository_snapshot: "Snapshot failed in %{repository} inventory"
-    analytical_reports:
+    reports:
       no_reports: "No reports were generated yet."
       generated_title: "Generated reports"
       generate_button: "Generate report"
@@ -4101,7 +4101,7 @@ en:
       protocol: "Protocol"
       results: "Results [%{count}]"
       repository_rows: "Items [%{count}]"
-      protocol_analytical_reports: "Analytical report [%{count}]"
+      protocol_report_templates: "Analytical report [%{count}]"
       draft_with_from_version: 'Draft (from Version %{nr})'
       protocol_description: 'Protocol description'
       protocol_steps: 'Protocol steps'
@@ -4273,7 +4273,7 @@ en:
         title: "Remove assigned items"
         description_html: "You are about to remove %{count} item(s) from this protocol template.<br></br>You can always add items back to this template."
         confirm: "Remove"
-    analytical_reports:
+    report_template:
       title: "Report templates"
       new_template: "New template"
       data_inputs:

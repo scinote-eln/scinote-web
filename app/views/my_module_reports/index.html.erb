@@ -4,13 +4,13 @@
   <%= render partial: 'my_modules/header' %>
   <%= render partial: 'my_modules/header_actions' %>
 
-  <div id="analyticalReports" data-e2e="e2e-CO-task-analyticalReports">
-    <analytical-reports
-      ref="analyticalReports"
+  <div id="myModuleReports" data-e2e="e2e-CO-task-myModuleReports">
+    <my-module-reports
+      ref="myModuleReports"
       :my-module-id="<%= @my_module.id %>"
       :editable="<%= can_manage_my_module?(@my_module) %>"
     />
   </div>
 </div>
 
-<%= javascript_include_tag 'vue_my_module_analytical_reports' %>
+<%= javascript_include_tag 'vue_my_module_reports' %>
