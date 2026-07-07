@@ -18,6 +18,11 @@ class TableSerializer < ActiveModel::Serializer
     :step
   end
 
+  def locked
+    # TODO: Currently inherited from step, will be controlled separately in the future
+    object.step.locked
+  end
+
   def archived_by
     object.archived_by&.full_name
   end

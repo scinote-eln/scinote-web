@@ -33,6 +33,7 @@
             }) }}
           </span>
         </template>
+        <LockedTag v-if="element.attributes.orderable.locked" />
         <div class="ml-auto flex items gap-4">
           <button
             v-if="this.element.attributes.orderable.urls.restore_url"
@@ -52,7 +53,10 @@
           >
             <i class="sn-icon sn-icon-delete"></i>
           </button>
-          <MenuDropdown
+          <button v-if="this.element.attributes.orderable.locked" class="btn btn-light icon-btn !pointer-events-auto" :data-sn-tooltip="i18n.t('protocols.action_disabled')" disabled>
+            <i class="sn-icon sn-icon-more-hori"></i>
+          </button>
+          <MenuDropdown v-else
             :listItems="this.actionMenu"
             :btnClasses="'btn btn-light icon-btn btn-sm'"
             :position="'right'"
@@ -107,14 +111,16 @@ import moveElementModal from './modal/move.vue';
 import MenuDropdown from '../menu_dropdown.vue';
 import ArchiveModal from './modal/archive_table.vue';
 import RestoreModal from './modal/restore_element.vue';
+import tooltipMixin from '../../mixins/tooltipMixin.js';
+import LockedTag from '../snippets/locked_tag.vue';
 
 export default {
   name: 'ContentTable',
   components: {
     deleteElementModal, InlineEdit, TableNameModal,
-    moveElementModal, MenuDropdown, ArchiveModal, RestoreModal
+    moveElementModal, MenuDropdown, ArchiveModal, RestoreModal, LockedTag
   },
-  mixins: [DeleteMixin, DuplicateMixin, MoveMixin, ArchiveMixin],
+  mixins: [DeleteMixin, DuplicateMixin, MoveMixin, ArchiveMixin, tooltipMixin],
   props: {
     element: {
       type: Object,
