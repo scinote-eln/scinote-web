@@ -4,11 +4,14 @@ MAINTAINER SciNote <info@scinote.net>
 ARG TIKA_DIST_URL="https://archive.apache.org/dist/tika/3.2.3/tika-app-3.2.3.jar"
 ENV TIKA_PATH=/usr/local/bin/tika-app.jar
 
+# Chromium 150.0.7871.46 crashes on startup under Grover/headless (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1141571)
+ARG CHROMIUM_VERSION=149.0.7827.196-1~deb13u1
+
 # additional dependencies
 # libreoffice for file preview generation
 RUN apt-get update -qq && \
   apt-get install -y --no-install-recommends postgresql-common && \
-  /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \ 
+  /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \
   apt-get install -y --no-install-recommends \
   libjemalloc2 \
   libssl-dev \
@@ -25,10 +28,17 @@ RUN apt-get update -qq && \
   fonts-wqy-microhei \
   fonts-wqy-zenhei \
   libfile-mimeinfo-perl \
-  chromium \
-  chromium-sandbox \
   npm \
   yarnpkg && \
+  echo "deb [check-valid-until=no] https://snapshot.debian.org/archive/debian-security/20260625T165532Z/ trixie-security main" > /etc/apt/sources.list.d/chromium-pin.list && \
+  apt-get update -qq && \
+  apt-get install -y --no-install-recommends \
+  chromium=$CHROMIUM_VERSION \
+  chromium-common=$CHROMIUM_VERSION \
+  chromium-sandbox=$CHROMIUM_VERSION && \
+  apt-mark hold chromium chromium-common chromium-sandbox && \
+  rm -f /etc/apt/sources.list.d/chromium-pin.list && \
+  apt-get update -qq && \
   wget -O $TIKA_PATH $TIKA_DIST_URL && \
   chmod +x $TIKA_PATH && \
   ln -s /usr/bin/yarnpkg /usr/bin/yarn && \
@@ -44,6 +54,7 @@ ENV BUNDLE_PATH=/usr/local/bundle/
 # create app directory
 ENV APP_HOME=/usr/src/app
 ENV PATH=$APP_HOME/bin:$PATH
+
 RUN mkdir $APP_HOME
 RUN useradd --uid 1000 -m scinote
 RUN chown scinote:scinote $APP_HOME
