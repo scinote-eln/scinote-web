@@ -902,6 +902,7 @@ class Extends
     teams/data_integrity
     equipment_bookings/index
     protocol_analytical_reports/index
+    my_module_analytical_reports/index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {

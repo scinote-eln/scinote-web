@@ -1,0 +1,16 @@
+<% provide(:head_title, t("my_modules.repository.head_title", project: h(@my_module.experiment.project.name), module: h(@my_module.name))) %>
+
+<div class="content-pane flexible my-module-content my-module-assigned-items with-grey-background" data-task-id="<%= @my_module.id %>">
+  <%= render partial: 'my_modules/header' %>
+  <%= render partial: 'my_modules/header_actions' %>
+
+  <div id="analyticalReports" data-e2e="e2e-CO-task-analyticalReports">
+    <analytical-reports
+      ref="analyticalReports"
+      :my-module-id="<%= @my_module.id %>"
+      :editable="<%= can_manage_my_module?(@my_module) %>"
+    />
+  </div>
+</div>
+
+<%= javascript_include_tag 'vue_my_module_analytical_reports' %>

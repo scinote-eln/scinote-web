@@ -432,6 +432,7 @@ en:
       activities: "Activity"
       assigned_items: "Assigned items"
       archive: "Archive"
+      analytical_reports: "Analytical report"
 
   smart_annotations:
     private:
@@ -1970,6 +1971,14 @@ en:
     status_error:
       general: "Status transition failed"
       repository_snapshot: "Snapshot failed in %{repository} inventory"
+    analytical_reports:
+      no_reports: "No reports were generated yet."
+      generated_title: "Generated reports"
+      generate_button: "Generate report"
+      cretated: "Created: %{date}"
+      delete:
+        title: "Delete report %{name}"
+        description_html: "You are trying to delete a report.<br><br>This action cannot be undone."
   experiments:
     id: "ID"
     experiment_id: "Experiment ID"
@@ -4265,7 +4274,7 @@ en:
         description_html: "You are about to remove %{count} item(s) from this protocol template.<br></br>You can always add items back to this template."
         confirm: "Remove"
     analytical_reports:
-      title: "Report template"
+      title: "Report templates"
       new_template: "New template"
       data_inputs:
         title: "Data inputs"
