@@ -136,7 +136,7 @@
           <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol"/>
           <div :class="inRepository ? 'protocol-section protocol-information' : ''">
             <div v-if="inRepository" id="protocol-description" class="protocol-section-header">
-              <div class="protocol-description-container">
+              <div class="protocol-description-container w-full flex flex-row items-center justify-between">
                 <a class="protocol-section-caret"
                   role="button"
                   data-toggle="collapse"
@@ -150,6 +150,14 @@
                     </h2>
                   </span>
                 </a>
+                <a v-if="urls.update_description_locked_url"
+                  class="btn icon-btn"
+                  data-e2e="e2e-BT-protocol-templateDescription-lock"
+                  @click="toggleDescriptionLock"
+                  tabindex="0">
+                  <i class="sn-icon" :class="{ 'sn-icon-unlocked': !protocol.attributes.description_locked, 'sn-icon-locked-fill': protocol.attributes.description_locked }" aria-hidden="true"></i>
+                </a>
+                <i v-else-if="protocol.attributes.description_locked" class="sn-icon sn-icon-locked-fill" aria-hidden="true"></i>
               </div>
             </div>
             <div id="protocol-description-container"
@@ -606,6 +614,14 @@ export default {
     updateAddingStepsAllowed(value) {
       axios.post(this.protocol.attributes.urls.update_adding_steps_allowed_url, { protocol: { adding_steps_allowed: value } }).then(() => {
         this.protocol.adding_steps_allowed = value;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    toggleDescriptionLock() {
+      const locked = !this.protocol.attributes.description_locked;
+      axios.post(this.protocol.attributes.urls.update_description_locked_url, { protocol: { description_locked: locked } }).then(() => {
+        this.protocol.attributes.description_locked = locked;
       }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });

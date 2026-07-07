@@ -807,6 +807,7 @@ Rails.application.routes.draw do
         put :update_version_comment
         get :list_published_protocol_templates
         post :update_adding_steps_allowed
+        post :update_description_locked
       end
       collection do
         post 'archive', to: 'protocols#archive'
