@@ -147,10 +147,13 @@ class StepSerializer < ActiveModel::Serializer
         update_view_state_url: update_view_state_step_path(object),
         direct_upload_url: rails_direct_uploads_url,
         upload_attachment_url: upload_attachment_step_path(object),
-        reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id),
-        lock_url: lock_step_path(object),
-        unlock_url: unlock_step_path(object)
+        reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)
       })
+
+      if Protocol.locking_enabled?
+        url_list[:lock_url] = lock_step_path(object)
+        url_list[:unlock_url] = unlock_step_path(object)
+      end
 
       url_list[:create_form_response_url] = step_form_responses_path(object) if Form.forms_enabled?
     end

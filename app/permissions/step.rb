@@ -64,11 +64,11 @@ Canaid::Permissions.register_for(StepText) do
   end
 
   can :lock_step_text do |user, step_text|
-    can_manage_protocol_draft_in_repository?(user, step_text.step.protocol)
+    Protocol.locking_enabled? && can_manage_protocol_draft_in_repository?(user, step_text.step.protocol)
   end
 
   can :unlock_step_text do |user, step_text|
-    can_manage_protocol_draft_in_repository?(user, step_text.step.protocol)
+    Protocol.locking_enabled? && can_manage_protocol_draft_in_repository?(user, step_text.step.protocol)
   end
 end
 
@@ -110,11 +110,11 @@ Canaid::Permissions.register_for(FormResponse) do
   end
 
   can :lock_step_form_response do |user, form_response|
-    can_manage_protocol_draft_in_repository?(user, form_response.step.protocol)
+    Protocol.locking_enabled? && can_manage_protocol_draft_in_repository?(user, form_response.step.protocol)
   end
 
   can :unlock_step_form_response do |user, form_response|
-    can_manage_protocol_draft_in_repository?(user, form_response.step.protocol)
+    Protocol.locking_enabled? && can_manage_protocol_draft_in_repository?(user, form_response.step.protocol)
   end
 end
 
@@ -156,11 +156,11 @@ Canaid::Permissions.register_for(Checklist) do
   end
 
   can :lock_step_checklist do |user, checklist|
-    can_manage_protocol_draft_in_repository?(user, checklist.step.protocol)
+    Protocol.locking_enabled? && can_manage_protocol_draft_in_repository?(user, checklist.step.protocol)
   end
 
   can :unlock_step_checklist do |user, checklist|
-    can_manage_protocol_draft_in_repository?(user, checklist.step.protocol)
+    Protocol.locking_enabled? && can_manage_protocol_draft_in_repository?(user, checklist.step.protocol)
   end
 end
 
@@ -202,10 +202,10 @@ Canaid::Permissions.register_for(Table) do
   end
 
   can :lock_step_table do |user, table|
-    can_manage_protocol_draft_in_repository?(user, table.step.protocol)
+    Protocol.locking_enabled? && can_manage_protocol_draft_in_repository?(user, table.step.protocol)
   end
 
   can :unlock_step_table do |user, table|
-    can_manage_protocol_draft_in_repository?(user, table.step.protocol)
+    Protocol.locking_enabled? && can_manage_protocol_draft_in_repository?(user, table.step.protocol)
   end
 end
