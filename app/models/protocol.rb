@@ -298,6 +298,10 @@ class Protocol < ApplicationRecord
     ENV['PROTOCOLS_IO_ACCESS_TOKEN'].present?
   end
 
+  def self.locking_enabled?
+    ApplicationSettings.instance.values['protocol_locking_enabled'] == true
+  end
+
   def original_code
     # returns linked protocol code, or code of the original version of the linked protocol
     parent&.parent&.code || parent&.code || code

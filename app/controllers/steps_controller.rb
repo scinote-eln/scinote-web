@@ -14,6 +14,7 @@ class StepsController < ApplicationController
   before_action :check_view_permissions, only: %i(show index list attachments elements list_protocol_steps)
   before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: %i(update update_view_state update_asset_view_mode upload_attachment lock unlock)
+  before_action :check_locking_enabled, only: %i(lock unlock lock_all unlock_all)
   before_action :check_archive_permissions, only: :archive
   before_action :check_restore_permissions, only: :restore
   before_action :check_destroy_permissions, only: :destroy
@@ -490,6 +491,10 @@ class StepsController < ApplicationController
           v[:contents].encode(Encoding::UTF_8).force_encoding(Encoding::UTF_8)
       end
     end
+  end
+
+  def check_locking_enabled
+    render_403 unless Protocol.locking_enabled?
   end
 
   def check_view_permissions

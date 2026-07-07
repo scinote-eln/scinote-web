@@ -271,12 +271,14 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def lock_all_steps_url
+    return unless Protocol.locking_enabled?
     return unless can_publish_protocol_in_repository?(object)
 
     lock_all_protocol_steps_path(object)
   end
 
   def unlock_all_steps_url
+    return unless Protocol.locking_enabled?
     return unless can_manage_protocol_draft_in_repository?(object)
 
     unlock_all_protocol_steps_path(object)

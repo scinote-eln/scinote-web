@@ -94,7 +94,7 @@ Canaid::Permissions.register_for(Protocol) do
   end
 
   can :revert_protocol do |user, protocol|
-      protocol.linked? &&
+    protocol.linked? &&
       protocol.parent.active? &&
       protocol.newer_than_parent? &&
       protocol.steps.locked.none? &&
