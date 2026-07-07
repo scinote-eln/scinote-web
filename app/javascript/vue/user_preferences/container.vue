@@ -18,7 +18,11 @@
           :value="selectedTimeZone"
           @change="setTimeZone"
           :options="timeZones"
+          :disabled="timeZoneEnforced"
         />
+        <p v-if="timeZoneEnforced" class="text-sn-dark-grey mt-2">
+          {{ i18n.t("users.settings.account.preferences.edit.time_zone_managed_note") }}
+        </p>
       </div>
       <div class="sci-divider my-6 inline-block"></div>
       <div>
@@ -31,7 +35,11 @@
           :value="selectedDateFormat"
           @change="setDateFormat"
           :options="dateFormats"
+          :disabled="dateFormatEnforced"
         />
+        <p v-if="dateFormatEnforced" class="text-sn-dark-grey mt-2">
+          {{ i18n.t("users.settings.account.preferences.edit.date_format_managed_note") }}
+        </p>
       </div>
     </div>
     <div class="p-4 mb-4 bg-sn-white rounded">
@@ -91,7 +99,9 @@ export default {
     timeZones: Array,
     dateFormats: Array,
     updateUrl: String,
-    notificationsGroups: Object
+    notificationsGroups: Object,
+    timeZoneEnforced: { type: Boolean, default: false },
+    dateFormatEnforced: { type: Boolean, default: false }
   },
   data() {
     return {

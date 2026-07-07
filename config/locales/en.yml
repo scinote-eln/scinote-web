@@ -3682,9 +3682,11 @@ en:
             time_zone_label: "Time zone"
             time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
             time_zone_title: "Time zone"
+            time_zone_managed_note: "This setting is managed by your organization and cannot be changed."
             date_format_label: "Date format"
             date_format_sublabel: "Date format setting affects all date display throughout application."
             date_format_title: "Date format"
+            date_format_managed_note: "This setting is managed by your organization and cannot be changed."
           update_flash: "Preferences successfully updated."
         addons:
           head_title: "Settings | Add-ons"
