@@ -828,9 +828,14 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :protocol_report_templates, only: %i(index create) do
+      resources :protocol_report_templates, only: %i(index create destroy) do
         collection do
           get :input_tags
+        end
+
+        member do
+          get :preview
+          get :pdf_preview_path
         end
       end
 

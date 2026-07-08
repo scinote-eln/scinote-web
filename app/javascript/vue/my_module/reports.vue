@@ -7,7 +7,12 @@
       <div v-for="template in templates" class="flex justify-between items-center bg-sn-super-light-grey p-4 rounded">
         <div class="text-lg font-semibold">{{ template.name }}</div>
         <div class="flex gap-4">
-          <button class="btn btn-secondary icon-btn">
+          <button class="btn btn-secondary icon-btn file-preview-link file-name"
+            :id="`modal_link${template.id}`"
+            data-no-turbolink="true"
+            :data-id="template.id"
+            :data-gallery-view-id="myModuleId"
+            :data-preview-url="template.preview">
             <i class="sn-icon sn-icon-visibility-show"></i>
           </button>
           <button v-if="editable" class="btn btn-primary icon-btn">

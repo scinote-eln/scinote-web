@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class ProtocolReportTemplatesController < ApplicationController
+  include ActiveStorageFileUtil
+
   before_action :load_protocol
   before_action :check_read_permissions, except: :create
   before_action :check_manage_permissions, only: :create
+  before_action :load_report_template, only: %i(destroy preview pdf_preview_path)
   before_action :set_inline_name_editing, only: :index
   before_action :set_breadcrumbs_items, only: :index
 
@@ -12,7 +15,11 @@ class ProtocolReportTemplatesController < ApplicationController
       format.json do
         render json: {
           templates: @protocol.report_templates.map do |report_template|
-            { name: report_template.name }
+            {
+              id: report_template.id,
+              name: report_template.name,
+              preview: preview_protocol_protocol_report_template_path(@protocol, report_template)
+            }
           end
         }
       end
@@ -31,6 +38,7 @@ class ProtocolReportTemplatesController < ApplicationController
       protocol_report_template.subject = @protocol
       protocol_report_template.odt_template_file.attach(params[:file])
       protocol_report_template.save!
+      protocol_report_template.generate_preview
     end
   end
 
@@ -39,23 +47,51 @@ class ProtocolReportTemplatesController < ApplicationController
     render json: input_tags
   end
 
+  def destroy
+    @protocol_report_template.destroy!
+    render body: nil, status: :ok
+  end
+
+  def preview
+    render json: { html: render_to_string(
+      partial: 'protocol_report_templates/preview',
+      locals: {
+        attachment: @protocol_report_template
+      },
+      formats: :html
+    ) }
+  end
+
+  def pdf_preview_path
+    return render plain: '', status: :not_acceptable unless previewable_document?(@protocol_report_template.odt_template_file.blob)
+    return render plain: '', status: :accepted if @protocol_report_template.odt_template_file_preview.blank?
+
+    redirect_to @protocol_report_template.odt_template_file_preview.url
+  end
+
   private
 
   def load_protocol
-    @protocol = current_team.protocols.readable_by_user(current_user).find_by(id: params[:protocol_id])
+    @protocol = Protocol.find_by(id: params[:protocol_id])
     render_404 unless @protocol
   end
 
   def check_read_permissions
-    render_403 unless can_read_protocol_in_repository?(@protocol)
+    render_403 unless can_read_protocol_in_module?(@protocol) || can_read_protocol_in_repository?(@protocol)
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_protocol_draft_in_repository?(@protocol)
+    render_403 unless can_manage_protocol_in_module?(@protocol) || can_manage_protocol_draft_in_repository?(@protocol)
   end
 
   def protocol_report_template_params
     params.permit(:name)
+  end
+
+  def load_report_template
+    @protocol_report_template = @protocol.report_templates.find_by(id: params[:id])
+
+    render_404 unless @protocol_report_template
   end
 
   def set_breadcrumbs_items

@@ -4309,6 +4309,9 @@ en:
         create_button: "Create template"
         errors:
           max_length: "Template name is too long (maximum is %{max_length} characters)"
+      delete:
+        title: "Delete report template %{name}"
+        description_html: "You are trying to delete a report template.<br><br>This action cannot be undone."
     steps:
       label: "Step %{position} - %{name}"
       placeholder: 'Step name'
