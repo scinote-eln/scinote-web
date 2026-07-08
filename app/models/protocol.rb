@@ -298,8 +298,8 @@ class Protocol < ApplicationRecord
     ENV['PROTOCOLS_IO_ACCESS_TOKEN'].present?
   end
 
-  def self.locking_enabled?
-    ApplicationSettings.instance.values['protocol_locking_enabled'] == true
+  def self.content_locking_enabled?
+    ApplicationSettings.instance.values['protocol_content_locking_enabled'] == true
   end
 
   def original_code

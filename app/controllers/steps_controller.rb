@@ -494,7 +494,7 @@ class StepsController < ApplicationController
   end
 
   def check_locking_enabled
-    render_403 unless Protocol.locking_enabled?
+    render_403 unless Protocol.content_locking_enabled?
   end
 
   def check_view_permissions

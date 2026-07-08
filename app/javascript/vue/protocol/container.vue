@@ -236,16 +236,15 @@
                   <i class="sn-icon sn-icon-expand-all"></i>
                   <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.expand_label") }}</span>
                 </button>
-                <template v-if="inRepository">
-                  <a v-if="urls.reorder_steps_url"
-                    class="btn btn-light icon-btn"
-                    data-toggle="modal"
-                    data-e2e="e2e-BT-protocol-templateSteps-manage"
-                    :data-sn-tooltip="i18n.t('protocols.manage_steps')"
-                    @click="managingSteps = true"
-                    @keyup.enter="managingSteps = true"
-                    tabindex="0" >
-                    <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
+                <template v-if="inRepository && urls.lock_all_steps_url">
+                  <a class="btn btn-light icon-btn"
+                     data-toggle="modal"
+                     data-e2e="e2e-BT-protocol-templateSteps-manage"
+                     :data-sn-tooltip="i18n.t('protocols.manage_steps')"
+                     @click="managingSteps = true"
+                     @keyup.enter="managingSteps = true"
+                     tabindex="0">
+                    <i class="sn-icon sn-icon-steps-manage" aria-hidden="true"></i>
                   </a>
                 </template>
                 <template v-else>
@@ -254,7 +253,7 @@
                     data-toggle="modal"
                     data-e2e="e2e-BT-protocol-templateSteps-reorder"
                     :data-sn-tooltip="i18n.t('protocols.rearrange_steps_label')"
-                    @click="startStepReorder"
+                    @click="steps.length > 1 && startStepReorder()"
                     @keyup.enter="startStepReorder"
                     :class="{'disabled': steps.length == 1}"
                     tabindex="0" >
