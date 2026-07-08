@@ -287,7 +287,7 @@ class ProtocolsController < ApplicationController
   end
 
   def update_adding_steps_allowed
-    render_403 if Protocol.locking_enabled?
+    render_403 if Protocol.content_locking_enabled?
 
     if @protocol.update(adding_steps_allowed: params.require(:protocol)[:adding_steps_allowed], last_modified_by: current_user)
       render json: {}, status: :ok

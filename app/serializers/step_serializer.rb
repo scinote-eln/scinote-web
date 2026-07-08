@@ -150,7 +150,7 @@ class StepSerializer < ActiveModel::Serializer
         reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)
       })
 
-      if Protocol.locking_enabled?
+      if Protocol.content_locking_enabled?
         url_list[:lock_url] = lock_step_path(object)
         url_list[:unlock_url] = unlock_step_path(object)
       end
