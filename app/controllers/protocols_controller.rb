@@ -287,7 +287,7 @@ class ProtocolsController < ApplicationController
   end
 
   def update_adding_steps_allowed
-    render_403 if Protocol.content_locking_enabled?
+    render_403 and return unless Protocol.content_locking_enabled?
 
     if @protocol.update(adding_steps_allowed: params.require(:protocol)[:adding_steps_allowed], last_modified_by: current_user)
       render json: {}, status: :ok
@@ -443,7 +443,7 @@ class ProtocolsController < ApplicationController
   end
 
   def unlink
-    render_403 unless can_unlink_protocol?(@protocol)
+    render_403 and return unless can_unlink_protocol?(@protocol)
 
     transaction_error = false
     Protocol.transaction do
@@ -469,7 +469,7 @@ class ProtocolsController < ApplicationController
   end
 
   def revert
-    render_403 unless can_revert_protocol?(@protocol)
+    render_403 and return unless can_revert_protocol?(@protocol)
 
     if @protocol.can_destroy?
       transaction_error = false
