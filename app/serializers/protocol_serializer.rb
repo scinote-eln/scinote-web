@@ -108,7 +108,8 @@ class ProtocolSerializer < ActiveModel::Serializer
       add_protocol_steps_url: add_protocol_steps_url,
       lock_all_steps_url: lock_all_steps_url,
       unlock_all_steps_url: unlock_all_steps_url,
-      update_adding_steps_allowed_url: update_adding_steps_allowed_url
+      update_adding_steps_allowed_url: update_adding_steps_allowed_url,
+      update_description_locked_url: update_description_locked_url
     }
   end
 
@@ -288,5 +289,12 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_manage_protocol_draft_in_repository?(object)
 
     update_adding_steps_allowed_protocol_path(object)
+  end
+
+  def update_description_locked_url
+    return unless Protocol.content_locking_enabled?
+    return unless can_manage_protocol_draft_in_repository?(object)
+
+    update_description_locked_protocol_path(object)
   end
 end

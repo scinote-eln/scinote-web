@@ -46,6 +46,7 @@ class ProtocolsController < ApplicationController
     unlink_modal
     list_published_protocol_templates
     update_adding_steps_allowed
+    update_description_locked
   )
 
   before_action :check_delete_steps_permissions, only: :delete_steps
@@ -290,6 +291,16 @@ class ProtocolsController < ApplicationController
     render_403 and return unless Protocol.content_locking_enabled?
 
     if @protocol.update(adding_steps_allowed: params.require(:protocol)[:adding_steps_allowed], last_modified_by: current_user)
+      render json: {}, status: :ok
+    else
+      render json: @protocol.errors, status: :unprocessable_entity
+    end
+  end
+
+  def update_description_locked
+    render_403 and return unless Protocol.content_locking_enabled?
+
+    if @protocol.update(description_locked: params.require(:protocol)[:description_locked], last_modified_by: current_user)
       render json: {}, status: :ok
     else
       render json: @protocol.errors, status: :unprocessable_entity

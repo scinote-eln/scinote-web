@@ -405,7 +405,7 @@ class Protocol < ApplicationRecord
   def self.clone_contents(src, dest, current_user, clone_keywords, only_contents: false, include_file_versions: false, include_results: false, include_assigned_rows: false, load_mode: 'replace')
     # Update metadata
     if load_mode == 'replace'
-      dest.update(description: src.description, name: src.name, adding_steps_allowed: src.adding_steps_allowed) unless only_contents
+      dest.update(description: src.description, name: src.name, adding_steps_allowed: src.adding_steps_allowed, description_locked: src.description_locked) unless only_contents
 
       src.clone_tinymce_assets(dest, dest.team)
 
@@ -669,6 +669,7 @@ class Protocol < ApplicationRecord
     clone.added_by = current_user
     clone.last_modified_by = current_user
     clone.description = description
+    clone.description_locked = description_locked
     # Don't proceed further if clone is invalid
     return clone if clone.invalid?
 
@@ -721,6 +722,7 @@ class Protocol < ApplicationRecord
     clone.name = name
     clone.authors = authors
     clone.description = description
+    clone.description_locked = description_locked
     clone.protocol_type = protocol_type
 
     if linked?
@@ -740,6 +742,7 @@ class Protocol < ApplicationRecord
       name: name,
       authors: authors,
       description: description,
+      description_locked: description_locked,
       added_by: current_user,
       last_modified_by: current_user,
       team: team,
