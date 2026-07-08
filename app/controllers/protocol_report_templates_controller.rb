@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProtocolAnalyticalReportsController < ApplicationController
+class ProtocolReportTemplatesController < ApplicationController
   before_action :load_protocol
   before_action :check_read_permissions, except: :create
   before_action :check_manage_permissions, only: :create
@@ -11,29 +11,31 @@ class ProtocolAnalyticalReportsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          templates: @protocol.odt_template_files.map do |file|
-            { name: file.blob.custom_metadata[:template_name] }
+          templates: @protocol.report_templates.map do |report_template|
+            { name: report_template.name }
           end
         }
       end
 
       format.html do
-        @active_tab = :protocol_analytical_reports
+        @active_tab = :protocol_report_templates
         render(:index, formats: :html)
       end
     end
   end
 
   def create
-    blob = ActiveStorage::Blob.find_signed!(params[:file])
-    blob.custom_metadata = { template_name: params[:name] }
-    blob.save!
+    ActiveRecord::Base.transaction do
+      protocol_report_template = ReportTemplate.new(protocol_report_template_params)
 
-    @protocol.odt_template_files.attach(blob)
+      protocol_report_template.subject = @protocol
+      protocol_report_template.odt_template_file.attach(params[:file])
+      protocol_report_template.save!
+    end
   end
 
   def input_tags
-    input_tags = ProtocolAnalyticalReports::TagService.new(@protocol).call
+    input_tags = ProtocolReportTemplates::TagService.new(@protocol).call
     render json: input_tags
   end
 
@@ -50,6 +52,10 @@ class ProtocolAnalyticalReportsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_protocol_draft_in_repository?(@protocol)
+  end
+
+  def protocol_report_template_params
+    params.permit(:name)
   end
 
   def set_breadcrumbs_items

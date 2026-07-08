@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-module ProtocolAnalyticalReports
+module ProtocolReportTemplates
   class TagService
     DEFAULT_INPUTS = [
       {
         label: 'General task data',
         inputs: [
-          { label: I18n.t('protocols.analytical_reports.data_inputs.codes.task_name'), tag: I18n.t('protocols.analytical_reports.data_inputs.codes.task_name_code') },
-          { label: I18n.t('protocols.analytical_reports.data_inputs.codes.task_due_date'), tag: I18n.t('protocols.analytical_reports.data_inputs.codes.task_due_date_code') },
-          { label: I18n.t('protocols.analytical_reports.data_inputs.codes.task_tags'), tag: I18n.t('protocols.analytical_reports.data_inputs.codes.task_tags_code') },
-          { label: I18n.t('protocols.analytical_reports.data_inputs.codes.task_protocol'), tag: I18n.t('protocols.analytical_reports.data_inputs.codes.task_protocol_code') }
+          { label: I18n.t('protocols.report_template.data_inputs.codes.task_name'), tag: I18n.t('protocols.report_template.data_inputs.codes.task_name_code') },
+          { label: I18n.t('protocols.report_template.data_inputs.codes.task_due_date'), tag: I18n.t('protocols.report_template.data_inputs.codes.task_due_date_code') },
+          { label: I18n.t('protocols.report_template.data_inputs.codes.task_tags'), tag: I18n.t('protocols.report_template.data_inputs.codes.task_tags_code') },
+          { label: I18n.t('protocols.report_template.data_inputs.codes.task_protocol'), tag: I18n.t('protocols.report_template.data_inputs.codes.task_protocol_code') }
         ]
       }
     ].freeze
@@ -56,7 +56,7 @@ module ProtocolAnalyticalReports
           base_input = [base_input] + element.orderable.form.form_fields.order(:position).map do |form_field|
             {
               label: form_field.name,
-              tag: I18n.t('protocols.analytical_reports.data_inputs.codes.tag_form_field_code', form_id: element.orderable.id, id: form_field.id)
+              tag: I18n.t('protocols.report_template.data_inputs.codes.tag_form_field_code', form_id: element.orderable.id, id: form_field.id)
             }
           end
         end
@@ -84,7 +84,7 @@ module ProtocolAnalyticalReports
     end
 
     def build_tag(type, id)
-      I18n.t('protocols.analytical_reports.data_inputs.codes.tag_content_code', content_type: I18n.t("protocols.analytical_reports.data_inputs.codes.type.#{type}"), id: id)
+      I18n.t('protocols.report_template.data_inputs.codes.tag_content_code', content_type: I18n.t("protocols.report_template.data_inputs.codes.type.#{type}"), id: id)
     end
 
     def icon(type)

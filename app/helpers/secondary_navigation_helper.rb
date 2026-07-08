@@ -56,8 +56,8 @@ module SecondaryNavigationHelper
     action_name == 'archive'
   end
 
-  def is_module_analytical_reports?
-    controller_name == 'my_module_analytical_reports' && action_name == 'index'
+  def is_module_reports?
+    controller_name == 'my_module_reports' && action_name == 'index'
   end
 
   def title_element

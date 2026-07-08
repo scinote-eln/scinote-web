@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col gap-4">
-    <h2 class="text-xl font-semibold m-0">{{ i18n.t('protocols.analytical_reports.data_inputs.title') }}</h2>
+    <h2 class="text-xl font-semibold m-0">{{ i18n.t('protocols.report_template.data_inputs.title') }}</h2>
     <div class="w-full sci-toast sci-toast-info">
-      {{ i18n.t('protocols.analytical_reports.data_inputs.banner') }}
+      {{ i18n.t('protocols.report_template.data_inputs.banner') }}
     </div>
     <div v-for="inputTag in inputTags" :key="inputTag.label" class="bg-sn-super-light-grey p-4 rounded text-base">
       <div class="flex flex-col gap-2">
@@ -37,11 +37,11 @@
 <script>
 import axios from '../../../packs/custom_axios.js';
 import {
-  input_tags_protocol_analytical_reports_path
+  input_tags_protocol_protocol_report_templates_path
 } from '../../../routes.js';
 
 export default {
-  name: 'AnalyticalReportTemplateDataInputs',
+  name: 'ProtocolReportTemplateDataInputs',
   props: {
     protocolId: {
       required: true
@@ -57,7 +57,7 @@ export default {
   },
   computed: {
     url() {
-      return input_tags_protocol_analytical_reports_path(this.protocolId);
+      return input_tags_protocol_protocol_report_templates_path(this.protocolId);
     }
   },
   methods: {

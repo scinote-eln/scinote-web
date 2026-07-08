@@ -619,7 +619,7 @@ Rails.application.routes.draw do
 
       post :select_default_snapshot, to: 'my_module_repository_snapshots#select'
 
-      resources :analytical_reports, controller: :my_module_analytical_reports, only: %i(index destroy) do
+      resources :my_module_reports, only: %i(index destroy) do
         collection do
           get :generated_reports
         end
@@ -828,7 +828,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :analytical_reports, controller: 'protocol_analytical_reports', only: %i(index create) do
+      resources :protocol_report_templates, only: %i(index create) do
         collection do
           get :input_tags
         end
