@@ -87,12 +87,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
         end
 
         format.html {
-          bypass_sign_in resource_name, resource
+          bypass_sign_in resource, scope: resource_name
           respond_with resource, location: edit_user_registration_path
         }
         format.json {
           flash.keep
-          bypass_sign_in resource_name, resource
+          bypass_sign_in resource, scope: resource_name
           render json: {}
         }
       else
