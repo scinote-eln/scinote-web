@@ -593,7 +593,7 @@ export default {
       this.refreshProtocolStatus();
     },
     toggleStepLock(step) {
-      const url = step.locked ? step.attributes.urls.unlock_url : step.attributes.urls.lock_url;
+      const url = step.attributes.locked ? step.attributes.urls.lock_url : step.attributes.urls.unlock_url;
       axios.post(url).then(() => {
         this.updateStep(step.attributes);
       }).catch(() => {
