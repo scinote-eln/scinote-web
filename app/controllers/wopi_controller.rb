@@ -101,17 +101,17 @@ class WopiController < ActionController::Base
     return render body: nil, status: :not_found if lock.blank?
 
     @asset.with_lock do
-      if @asset.locked?
-        if @asset.lock == lock
-          @asset.refresh_lock
+      if @asset.wopi_locked?
+        if @asset.wopi_lock == lock
+          @asset.wopi_refresh_lock
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           render body: nil, status: :ok
         else
-          response.headers['X-WOPI-Lock'] = @asset.lock
+          response.headers['X-WOPI-Lock'] = @asset.wopi_lock
           render body: nil, status: :conflict
         end
       else
-        @asset.lock_asset(lock)
+        @asset.wopi_lock_asset(lock)
         response.headers['X-WOPI-ItemVersion'] = @asset.version
         render body: nil, status: :ok
       end
@@ -126,14 +126,14 @@ class WopiController < ActionController::Base
     return render body: nil, status: :bad_request if lock.blank? || old_lock.blank?
 
     @asset.with_lock do
-      if @asset.locked?
-        if @asset.lock == old_lock
-          @asset.unlock
-          @asset.lock_asset(lock)
+      if @asset.wopi_locked?
+        if @asset.wopi_lock == old_lock
+          @asset.wopi_unlock
+          @asset.wopi_lock_asset(lock)
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           render body: nil, status: :ok
         else
-          response.headers['X-WOPI-Lock'] = @asset.lock
+          response.headers['X-WOPI-Lock'] = @asset.wopi_lock
           render body: nil, status: :conflict
         end
       else
@@ -148,17 +148,17 @@ class WopiController < ActionController::Base
     return render body: nil, status: :bad_request if lock.blank?
 
     @asset.with_lock do
-      if @asset.locked?
-        logger.warn "WOPI: current asset lock: #{@asset.lock}, unlocking lock #{lock}"
-        if @asset.lock == lock
-          @asset.unlock
+      if @asset.wopi_locked?
+        logger.warn "WOPI: current asset lock: #{@asset.wopi_lock}, unlocking lock #{lock}"
+        if @asset.wopi_lock == lock
+          @asset.wopi_unlock
           @asset.post_process_file # Space is already taken in put_file
           create_wopi_file_activity(@user, false)
 
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           render body: nil, status: :ok
         else
-          response.headers['X-WOPI-Lock'] = @asset.lock
+          response.headers['X-WOPI-Lock'] = @asset.wopi_lock
           render body: nil, status: :conflict
         end
       else
@@ -174,14 +174,14 @@ class WopiController < ActionController::Base
     return render body: nil, status: :bad_request if lock.nil? || lock.blank?
 
     @asset.with_lock do
-      if @asset.locked?
-        if @asset.lock == lock
-          @asset.refresh_lock
+      if @asset.wopi_locked?
+        if @asset.wopi_lock == lock
+          @asset.wopi_refresh_lock
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           render body: nil, status: :ok
         else
-          response.headers['X-WOPI-Lock'] = @asset.lock
+          response.headers['X-WOPI-Lock'] = @asset.wopi_lock
           render body: nil, status: :conflict
         end
       else
@@ -193,7 +193,7 @@ class WopiController < ActionController::Base
 
   def get_lock
     @asset.with_lock do
-      response.headers['X-WOPI-Lock'] = @asset.locked? ? @asset.lock : ' '
+      response.headers['X-WOPI-Lock'] = @asset.wopi_locked? ? @asset.wopi_lock : ' '
       render body: nil, status: :ok
     end
   end
@@ -201,8 +201,8 @@ class WopiController < ActionController::Base
   def put_file
     @asset.with_lock do
       lock = request.headers['X-WOPI-Lock']
-      if @asset.locked?
-        if @asset.lock == lock
+      if @asset.wopi_locked?
+        if @asset.wopi_lock == lock
           logger.warn 'WOPI: replacing file'
 
           @asset.last_modified_by = @user
@@ -216,7 +216,7 @@ class WopiController < ActionController::Base
           render body: nil, status: :ok
         else
           logger.warn 'WOPI: wrong lock used to try and modify file'
-          response.headers['X-WOPI-Lock'] = @asset.lock
+          response.headers['X-WOPI-Lock'] = @asset.wopi_lock
           render body: nil, status: :conflict
         end
       elsif !@asset.file_size.nil? && @asset.file_size.zero?

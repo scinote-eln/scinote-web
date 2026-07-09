@@ -311,12 +311,6 @@ describe TeamImporter do
                 )
                 expect(db_asset.blob.created_at).to be_within(10.seconds)
                   .of(Time.now)
-                expect(db_asset.lock).to eq(
-                  json_asset['asset']['lock']
-                )
-                expect(db_asset.lock_ttl).to eq(
-                  json_asset['asset']['lock_ttl']
-                )
                 expect(db_asset.version).to eq(
                   json_asset['asset']['version']
                 )

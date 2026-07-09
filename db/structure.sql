@@ -317,8 +317,8 @@ CREATE TABLE public.assets (
     created_by_id bigint,
     last_modified_by_id bigint,
     estimated_size bigint DEFAULT 0 NOT NULL,
-    lock character varying(1024),
-    lock_ttl integer,
+    wopi_lock character varying(1024),
+    wopi_lock_ttl integer,
     version integer DEFAULT 1,
     file_processing boolean,
     team_id integer,
@@ -10818,6 +10818,7 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260708142245'),
 ('20260616085134'),
 ('20260615135346'),
 ('20260526000000'),
@@ -11156,3 +11157,4 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20150713071921'),
 ('20150713063224'),
 ('20150713060702');
+

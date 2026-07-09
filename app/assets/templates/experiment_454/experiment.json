@@ -132,8 +132,8 @@
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 28736,
-                    "lock": null,
-                    "lock_ttl": null,
+                    "wopi_lock": null,
+                    "wopi_lock_ttl": null,
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1
@@ -813,8 +813,8 @@
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 12461,
-                    "lock": null,
-                    "lock_ttl": null,
+                    "wopi_lock": null,
+                    "wopi_lock_ttl": null,
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1
@@ -924,8 +924,8 @@
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 12461,
-                    "lock": null,
-                    "lock_ttl": null,
+                    "wopi_lock": null,
+                    "wopi_lock_ttl": null,
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1
@@ -2042,8 +2042,8 @@
                     "created_by_id": 202,
                     "last_modified_by_id": null,
                     "estimated_size": 12461,
-                    "lock": null,
-                    "lock_ttl": null,
+                    "wopi_lock": null,
+                    "wopi_lock_ttl": null,
                     "version": 1,
                     "file_processing": false,
                     "team_id": 1
