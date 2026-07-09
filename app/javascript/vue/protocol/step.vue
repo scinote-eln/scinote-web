@@ -155,7 +155,7 @@
           </span>
         </a>
 
-        <button v-if="step.attributes.locked" class="btn btn-light icon-btn !pointer-events-auto" :data-sn-tooltip="i18n.t('protocols.action_disabled')" disabled>
+        <button v-if="step.attributes.locked && !inRepository" class="btn btn-light icon-btn !pointer-events-auto" :data-sn-tooltip="i18n.t('protocols.action_disabled')" disabled>
           <i class="sn-icon sn-icon-more-hori"></i>
         </button>
         <MenuDropdown v-else
