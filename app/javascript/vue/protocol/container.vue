@@ -596,6 +596,7 @@ export default {
       const url = step.attributes.locked ? step.attributes.urls.lock_url : step.attributes.urls.unlock_url;
       axios.post(url).then(() => {
         this.updateStep(step.attributes);
+        this.toggleElementsLock(step);
       }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
@@ -606,9 +607,15 @@ export default {
         this.steps.forEach((step) => {
           step.attributes.locked = locked;
           this.updateStep(step.attributes);
+          this.toggleElementsLock(step);
         });
       }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    toggleElementsLock(step) {
+      step.elements.forEach((element) => {
+        element.attributes.orderable.locked = step.attributes.locked;
       });
     },
     updateAddingStepsAllowed(value) {
