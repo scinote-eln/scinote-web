@@ -89,7 +89,7 @@
             }}</span>
           </a>
         </li>
-        <li v-if="!inRepository">
+        <li v-if="!inRepository && protocol.attributes.linked">
           <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             ref="unlinkProtocol"
             data-action="unlink"
@@ -103,7 +103,7 @@
             }}</span>
           </a>
         </li>
-        <li v-if="!inRepository">
+        <li v-if="!inRepository && protocol.attributes.linked">
           <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             ref="revertProtocol"
             data-action="revert"
