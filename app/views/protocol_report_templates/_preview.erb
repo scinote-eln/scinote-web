@@ -1,0 +1,14 @@
+<div class="modal-header">
+  <span class="file-name"><%= attachment.name %></span>
+  <div class="sci-btn-group">
+   
+    <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="sn-icon sn-icon-close"></span></button>
+  </div>
+</div>
+<div class="modal-body">
+  <div class="file-preview-container">
+    <%= render partial: 'shared/pdf_viewer', locals: { asset: attachment, report_template: true } %>
+  </div>
+</div>
+
+<%= javascript_include_tag 'shared/file_preview', nonce: true %>

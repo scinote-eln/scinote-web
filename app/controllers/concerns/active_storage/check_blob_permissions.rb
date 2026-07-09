@@ -32,6 +32,9 @@ module ActiveStorage
         can_read_storage_location?(attachment.record)
       when 'Report'
         can_read_project?(attachment.record.project)
+      when 'ReportTemplate'
+        protocol = attachment.record.subject
+        can_read_protocol_in_module?(protocol) || can_read_protocol_in_repository?(protocol)
       when 'User'
         # No read restrictions for avatars
         true

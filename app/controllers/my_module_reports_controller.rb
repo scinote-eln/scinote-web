@@ -18,7 +18,11 @@ class MyModuleReportsController < ApplicationController
       format.json do
         render json: {
           templates: @my_module.protocol.report_templates.map do |report_template|
-            { name: report_template.name }
+            {
+              id: report_template.id,
+              name: report_template.name,
+              preview: preview_protocol_protocol_report_template_path(@my_module.protocol, report_template)
+            }
           end
         }
       end
@@ -42,7 +46,8 @@ class MyModuleReportsController < ApplicationController
   end
 
   def destroy
-    # TODO
+    @my_module_report.destroy!
+    render body: nil, status: :ok
   end
 
   def download
@@ -60,7 +65,7 @@ class MyModuleReportsController < ApplicationController
   end
 
   def load_my_module_report
-    @my_module_report = @my_module.find_by(params[:id])
+    @my_module_report = @my_module.my_module_reports.find_by(id: params[:id])
 
     render_404 unless @my_module_report
   end
