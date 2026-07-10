@@ -597,6 +597,7 @@ export default {
       axios.post(url).then(() => {
         this.updateStep(step.attributes);
         this.toggleElementsLock(step);
+        this.toggleAttachmentsLock(step);
       }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
@@ -608,6 +609,7 @@ export default {
           step.attributes.locked = locked;
           this.updateStep(step.attributes);
           this.toggleElementsLock(step);
+          this.toggleAttachmentsLock(step);
         });
       }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
@@ -616,6 +618,11 @@ export default {
     toggleElementsLock(step) {
       step.elements.forEach((element) => {
         element.attributes.orderable.locked = step.attributes.locked;
+      });
+    },
+    toggleAttachmentsLock(step) {
+      step.attachments.forEach((attachment) => {
+        attachment.attributes.locked = step.attributes.locked;
       });
     },
     updateAddingStepsAllowed(value) {

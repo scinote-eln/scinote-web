@@ -22,7 +22,7 @@
         <span class="sn-icon sn-icon-archived"></span>
       </div>
     </a>
-
+    <LockedTag v-if="attachment.attributes.locked" class="ml-1" />
     <div v-if="attachment.attributes.medium_preview !== null" class="attachment-image-tooltip bg-white sn-shadow-menu-sm">
       <img :src="this.imageLoadError ? attachment.attributes.urls.blob : attachment.attributes.medium_preview" @error="ActiveStoragePreviews.reCheckPreview"
             @load="ActiveStoragePreviews.showPreview"/>
@@ -80,6 +80,7 @@ import MoveMixin from './mixins/move.js';
 import MoveAssetModal from '../modal/move.vue';
 import AttachmentActions from './attachment_actions.vue';
 import OpenMenu from './open_menu.vue';
+import LockedTag from '../../snippets/locked_tag.vue';
 
 export default {
   name: 'listAttachment',
@@ -88,7 +89,8 @@ export default {
     ContextMenu,
     MoveAssetModal,
     OpenMenu,
-    AttachmentActions
+    AttachmentActions,
+    LockedTag
   },
   props: {
     attachment: {
