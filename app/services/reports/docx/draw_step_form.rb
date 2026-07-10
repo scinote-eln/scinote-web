@@ -50,7 +50,7 @@ module Reports
           text I18n.t('projects.reports.elements.step_forms.table_name', name: form_response.form.name), italic: true
           text ' '
 
-          if form_response.submitted?
+          if form_response.status_submitted?
             text " | #{I18n.t('search.index.archived')} ", bold: true if form_response.archived?
             unless settings['exclude_timestamps']
               text '| '
