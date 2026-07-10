@@ -284,10 +284,12 @@ class WopiController < ActionController::Base
     # current_user
     @user.permission_team = @team
     @current_user = @user
+
+    @can_read = can_read_asset?(@asset)
+    @can_write = can_manage_asset?(@asset)
+
     if @assoc.instance_of?(Step)
       if @protocol.in_module?
-        @can_read = can_read_protocol_in_module?(@protocol)
-        @can_write = can_manage_step?(@assoc)
         @close_url = protocols_my_module_url(@protocol.my_module, only_path: false, host: ENV['WOPI_USER_HOST'])
 
         project = @protocol.my_module.experiment.project
@@ -295,8 +297,6 @@ class WopiController < ActionController::Base
         @breadcrumb_brand_url = project_url(project, only_path: false, host: ENV['WOPI_USER_HOST'])
         @breadcrumb_folder_name = @protocol.my_module.name
       else
-        @can_read = can_read_protocol_in_repository?(@protocol)
-        @can_write = can_manage_step?(@assoc)
         @close_url = protocols_url(only_path: false, host: ENV['WOPI_USER_HOST'])
 
         @breadcrumb_brand_name = @protocol.name
@@ -305,9 +305,6 @@ class WopiController < ActionController::Base
       end
       @breadcrumb_folder_url = @close_url
     elsif @assoc.instance_of?(Result)
-      @can_read = can_read_experiment?(@my_module.experiment)
-      @can_write = can_manage_my_module?(@my_module)
-
       @close_url = my_module_results_url(@my_module, only_path: false, host: ENV['WOPI_USER_HOST'])
 
       @breadcrumb_brand_name  = @my_module.experiment.project.name
@@ -317,17 +314,12 @@ class WopiController < ActionController::Base
       @breadcrumb_folder_name = @my_module.name
       @breadcrumb_folder_url  = @close_url
     elsif @assoc.instance_of?(ResultTemplate)
-      @can_read = can_read_protocol_in_repository?(@protocol)
-      @can_write = can_manage_protocol_draft_in_repository?(@protocol)
       @close_url = protocols_url(only_path: false, host: ENV['WOPI_USER_HOST'])
 
       @breadcrumb_brand_name = @protocol.name
       @breadcrumb_brand_url = root_url(only_path: false, host: ENV['WOPI_USER_HOST'])
       @breadcrumb_folder_name = 'Protocol management'
     elsif @assoc.instance_of?(RepositoryCell)
-      @can_read = can_read_repository?(@repository)
-      @can_write = !@repository.is_a?(RepositorySnapshot) && can_edit_wopi_file_in_repository_rows?
-
       @close_url = repository_url(@repository, only_path: false, host: ENV['WOPI_USER_HOST'])
 
       @breadcrumb_brand_name  = @team.name
@@ -361,9 +353,5 @@ class WopiController < ActionController::Base
   rescue StandardError => e
     logger.warn 'WOPI: proof verification: failed; ' + e.message
     render body: nil, status: :internal_server_error
-  end
-
-  def can_edit_wopi_file_in_repository_rows?
-    can_manage_repository_rows?(@repository)
   end
 end
