@@ -41,6 +41,11 @@ class StepFormResponseSerializer < ActiveModel::Serializer
     'sn-icon-forms'
   end
 
+  def locked
+    # TODO: Currently inherited from step, will be controlled separately in the future
+    object.step.locked
+  end
+
   def submitted_by_full_name
     object.submitted_by&.full_name
   end
