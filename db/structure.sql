@@ -1062,6 +1062,38 @@ ALTER SEQUENCE public.my_module_groups_id_seq OWNED BY public.my_module_groups.i
 
 
 --
+-- Name: my_module_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.my_module_reports (
+    id bigint NOT NULL,
+    name character varying,
+    my_module_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: my_module_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.my_module_reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: my_module_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.my_module_reports_id_seq OWNED BY public.my_module_reports.id;
+
+
+--
 -- Name: my_module_repository_rows; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1788,6 +1820,39 @@ CREATE SEQUENCE public.report_template_values_id_seq
 --
 
 ALTER SEQUENCE public.report_template_values_id_seq OWNED BY public.report_template_values.id;
+
+
+--
+-- Name: report_templates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.report_templates (
+    id bigint NOT NULL,
+    name character varying,
+    subject_type character varying NOT NULL,
+    subject_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: report_templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.report_templates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: report_templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.report_templates_id_seq OWNED BY public.report_templates.id;
 
 
 --
@@ -4313,6 +4378,13 @@ ALTER TABLE ONLY public.my_module_groups ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: my_module_reports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_reports ALTER COLUMN id SET DEFAULT nextval('public.my_module_reports_id_seq'::regclass);
+
+
+--
 -- Name: my_module_repository_rows id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4443,6 +4515,13 @@ ALTER TABLE ONLY public.report_elements ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.report_template_values ALTER COLUMN id SET DEFAULT nextval('public.report_template_values_id_seq'::regclass);
+
+
+--
+-- Name: report_templates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.report_templates ALTER COLUMN id SET DEFAULT nextval('public.report_templates_id_seq'::regclass);
 
 
 --
@@ -5117,6 +5196,14 @@ ALTER TABLE ONLY public.my_module_groups
 
 
 --
+-- Name: my_module_reports my_module_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_reports
+    ADD CONSTRAINT my_module_reports_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: my_module_repository_rows my_module_repository_rows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5266,6 +5353,14 @@ ALTER TABLE ONLY public.report_elements
 
 ALTER TABLE ONLY public.report_template_values
     ADD CONSTRAINT report_template_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: report_templates report_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.report_templates
+    ADD CONSTRAINT report_templates_pkey PRIMARY KEY (id);
 
 
 --
@@ -6525,6 +6620,13 @@ CREATE UNIQUE INDEX index_my_module_ids_repository_row_ids ON public.my_module_r
 
 
 --
+-- Name: index_my_module_reports_on_my_module_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_reports_on_my_module_id ON public.my_module_reports USING btree (my_module_id);
+
+
+--
 -- Name: index_my_module_repository_rows_on_repository_row_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7110,6 +7212,13 @@ CREATE INDEX index_report_template_values_on_report_id ON public.report_template
 --
 
 CREATE INDEX index_report_template_values_on_view_component_name ON public.report_template_values USING btree (view_component, name);
+
+
+--
+-- Name: index_report_templates_on_subject; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_report_templates_on_subject ON public.report_templates USING btree (subject_type, subject_id);
 
 
 --
@@ -9372,6 +9481,14 @@ ALTER TABLE ONLY public.assets
 
 
 --
+-- Name: my_module_reports fk_rails_54b6f384df; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_reports
+    ADD CONSTRAINT fk_rails_54b6f384df FOREIGN KEY (my_module_id) REFERENCES public.my_modules(id);
+
+
+--
 -- Name: assets fk_rails_57eb23f6d3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10746,6 +10863,7 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260707140106'),
 ('20260616085134'),
 ('20260526000000'),
 ('20260515130015'),
