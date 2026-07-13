@@ -38,7 +38,7 @@ class ProtocolReportTemplatesController < ApplicationController
       protocol_report_template.subject = @protocol
       protocol_report_template.odt_template_file.attach(params[:file])
       protocol_report_template.save!
-      protocol_report_template.generate_preview
+      protocol_report_template.generate_preview!
     end
   end
 
