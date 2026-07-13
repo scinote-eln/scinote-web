@@ -7,6 +7,6 @@ class ReportTemplate < ApplicationRecord
   has_one_attached :odt_template_file_preview
 
   def generate_preview
-    ReportTemplatePreviewJob.perform_later(id)
+    ReportTemplates::ReportTemplatePreviewJob.perform_later(id)
   end
 end

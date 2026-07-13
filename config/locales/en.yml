@@ -4289,6 +4289,7 @@ en:
           task_tags_code: "{{TASKTAGS}}"
           task_protocol_code: "{{PROTOCOL}}"
           tag_content_code: "{{%{content_type}_%{id}}}"
+          tag_content: "%{content_type}_%{id}"
           tag_form_field_code: "{{FORM_%{form_id}_FIELD_%{id}}}"
           type:
             step: "STEP"

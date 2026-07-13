@@ -43,7 +43,7 @@ class ProtocolReportTemplatesController < ApplicationController
   end
 
   def input_tags
-    input_tags = ProtocolReportTemplates::TagService.new(@protocol).call
+    input_tags = ProtocolReportTemplates::TagService.new(@protocol).tags
     render json: input_tags
   end
 
