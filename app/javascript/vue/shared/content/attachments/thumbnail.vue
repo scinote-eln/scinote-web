@@ -17,9 +17,12 @@
         :data-e2e="`e2e-BT-attachment-${attachment.id}`"
     >
       <div class="attachment-preview" :class= "attachment.attributes.asset_type">
-        <div v-if="attachment.attributes.archived" class="sci-tag bg-sn-alert-brittlebush pointer-events-none absolute top-2 left-2 z-10 text-sn-black">
-          {{ i18n.t('my_modules.results.archived') }}
-          <span class="sn-icon sn-icon-archived"></span>
+        <div class="absolute top-2 left-2 z-10 flex items-center gap-1">
+          <div v-if="attachment.attributes.archived" class="sci-tag bg-sn-alert-brittlebush pointer-events-none text-sn-black">
+            {{ i18n.t('my_modules.results.archived') }}
+            <span class="sn-icon sn-icon-archived"></span>
+          </div>
+          <LockedTag v-if="attachment.attributes.locked" />
         </div>
         <img v-if="attachment.attributes.medium_preview !== null"
             class="rounded-sm"
@@ -118,6 +121,7 @@ import MoveMixin from './mixins/move.js';
 import OpenMenu from './open_menu.vue';
 import AttachmentActions from './attachment_actions.vue';
 import { vOnClickOutside } from '@vueuse/components';
+import LockedTag from '../../snippets/locked_tag.vue';
 
 export default {
   name: 'thumbnailAttachment',
@@ -128,7 +132,8 @@ export default {
     MoveAssetModal,
     MenuDropdown,
     OpenMenu,
-    AttachmentActions
+    AttachmentActions,
+    LockedTag
   },
   props: {
     attachment: {

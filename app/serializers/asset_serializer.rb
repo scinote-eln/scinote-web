@@ -142,6 +142,11 @@ class AssetSerializer < ActiveModel::Serializer
     { min: Constants::MIN_SCINOTE_EDIT_VERSION, max: Constants::MAX_SCINOTE_EDIT_VERSION }
   end
 
+  def locked
+    # TODO: Currently inherited from step, will be controlled separately in the future
+    object.step ? object.step.locked : false
+  end
+
   def urls
     urls = {
       preview: asset_file_preview_path(object),
