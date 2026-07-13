@@ -9,7 +9,7 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version,
-             :code, :published, :version_comment, :archived, :linked, :has_draft, :description_locked, :adding_steps_allowed,
+             :code, :published, :version_comment, :archived, :linked, :has_draft, :description_locked,
              :published_on_formatted, :published_by, :created_from_version, :assignable_my_module_id, :assignable_my_module_name,
              :has_locked_steps
 
@@ -108,7 +108,6 @@ class ProtocolSerializer < ActiveModel::Serializer
       add_protocol_steps_url: add_protocol_steps_url,
       lock_all_steps_url: lock_all_steps_url,
       unlock_all_steps_url: unlock_all_steps_url,
-      update_adding_steps_allowed_url: update_adding_steps_allowed_url,
       update_description_locked_url: update_description_locked_url
     }
   end
@@ -283,12 +282,6 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_manage_protocol_draft_in_repository?(object)
 
     unlock_all_protocol_steps_path(object)
-  end
-
-  def update_adding_steps_allowed_url
-    return unless can_manage_protocol_draft_in_repository?(object)
-
-    update_adding_steps_allowed_protocol_path(object)
   end
 
   def update_description_locked_url
