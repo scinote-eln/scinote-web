@@ -22,12 +22,16 @@
             data-no-turbolink="true"
             :data-id="template.id"
             :data-gallery-view-id="protocolId"
-            :data-preview-url="template.preview">
+            :data-preview-url="template.preview"
+            data-render-tooltip="true"
+            :title="i18n.t('general.preview')">
             <i class="sn-icon sn-icon-visibility-show"></i>
           </button>
           <button
             v-if="editable"
             class="btn btn-light icon-btn"
+            data-render-tooltip="true"
+            :title="i18n.t('general.delete')"
             @click.stop="deleteTemplate(template)"
           >
             <i class="sn-icon sn-icon-delete"></i>

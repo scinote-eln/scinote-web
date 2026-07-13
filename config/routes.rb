@@ -619,13 +619,14 @@ Rails.application.routes.draw do
 
       post :select_default_snapshot, to: 'my_module_repository_snapshots#select'
 
-      resources :my_module_reports, only: %i(index destroy) do
+      resources :my_module_reports, only: %i(index create destroy) do
         collection do
           get :generated_reports
         end
 
         member do
           get :download
+          get :preview
         end
       end
 

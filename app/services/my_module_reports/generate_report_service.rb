@@ -1,0 +1,219 @@
+# frozen_string_literal: true
+
+module MyModuleReports
+  class GenerateReportService
+    include FormFieldValuesHelper
+
+    PROTOCOL_TAG = :PROTOCOL
+
+    def initialize(protocol, report_template, team, user)
+      @report_template = report_template
+      @protocol = protocol
+      @my_module = protocol.my_module
+      @team = team
+      @user = user
+    end
+
+    def call(my_module_report)
+      original_blob = @report_template.odt_template_file.blob
+      output = Tempfile.new(['report', '.odt'])
+
+      @report_template.odt_template_file.open do |odt_template_file|
+        report = ODFReport::Report.new(odt_template_file.path) do |r|
+          render_general(r)
+          render_steps(r)
+          render_results(r)
+        end
+
+        report.generate(output.path)
+        my_module_report.report.attach(io: File.open(output.path), filename: original_blob.filename, content_type: original_blob.content_type)
+      end
+    ensure
+      output.close
+      output.unlink
+    end
+
+    private
+
+    def render_general(report)
+      report.add_field :TASKNAME, @my_module.name
+      report.add_field :TASKDUEDATE, @my_module.due_date ? I18n.l(@my_module.due_date, format: :full) : ''
+
+      tags = @my_module.tags.order(:id).map(&:name)
+
+      report.add_text :TASKTAGS, tags ? "<p>#{tags.join(' ')}</p>" : ''
+    end
+
+    def render_steps(report)
+      @my_module.steps.ordered.each do |step|
+        report.add_field build_tag('step', step.id).to_sym, step.name
+
+        # for full protocol tag
+        report.add_text PROTOCOL_TAG, "<div>#{step.position + 1}. #{step.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+
+        step.step_orderable_elements.order(:position).each do |element|
+          element_type = element.orderable_type
+          element_tag = build_tag(element_type.underscore, element_id(element))
+
+          case element.orderable_type
+          when 'StepText'
+            render_text(report, element_tag, element.orderable, with_protocol: true)
+          when 'StepTable'
+            render_table(report, element_tag, element.orderable.table, with_protocol: true)
+          when 'Checklist'
+            render_checklist(report, element_tag, element.orderable)
+          when 'FormResponse'
+            render_form_response(report, element_tag, element.orderable)
+          end
+        end
+
+        report.add_field PROTOCOL_TAG, ''
+      end
+    end
+
+    def render_results(report)
+      @my_module.results.order(:created_at).each do |result|
+        report.add_field build_tag('result', result.id).to_sym, result.name
+
+        result.result_orderable_elements.order(:position).each do |element|
+          element_type = element.orderable_type
+          element_tag = build_tag(element_type.underscore, element_id(element))
+
+          case element.orderable_type
+          when 'ResultText'
+            render_text(report, element_tag, element.orderable)
+          when 'ResultTable'
+            render_table(report, element_tag, element.orderable.table)
+          end
+        end
+      end
+    end
+
+    def render_text(report, text_tag, text, with_protocol: false)
+      report.add_text text_tag, "<div>#{text.name}</div><div>{{#{text_tag}}}</div>"
+      report.add_text text_tag, text.text
+
+      # for full protocol tag
+      if with_protocol
+        report.add_text PROTOCOL_TAG, "<div>#{text.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        report.add_text PROTOCOL_TAG, "<div>#{text.text}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+      end
+    end
+
+    def render_table(report, table_tag, table, with_protocol: false)
+      report.add_text table_tag, "<div>#{table.name}</div><div>{{#{table_tag}}}</div>"
+      table_html = build_table_data(table)
+      report.add_text table_tag, table_html
+
+      # for full protocol tag
+      if with_protocol
+        report.add_text PROTOCOL_TAG, "<div>#{table.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        report.add_text PROTOCOL_TAG, "<div>#{table_html}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+      end
+    end
+
+    def render_checklist(report, checklist_tag, checklist)
+      report.add_text checklist_tag, "<div>#{checklist.name}</div><div>{{#{checklist_tag}}}</div>"
+      report.add_checklist(checklist_tag, checklist.checklist_items.map { |checklist_item| [checklist_item.text, checklist_item.checked] })
+
+      # for full protocol tag
+      protocol_checklist_tag = :PROTOCOL_CHECKLIST
+      report.add_text PROTOCOL_TAG, "<div>#{checklist.name}</div><div>{{#{PROTOCOL_TAG}}}</div><div>{{#{protocol_checklist_tag}}}</div>"
+      report.add_checklist(PROTOCOL_TAG, checklist.checklist_items.map { |checklist_item| [checklist_item.text, checklist_item.checked] })
+      report.add_text protocol_checklist_tag, "{{#{PROTOCOL_TAG}}}"
+    end
+
+    def render_form_response(report, form_response_tag, form_response)
+      report.add_field form_response_tag, form_response.form.name
+
+      # for full protocol tag
+      report.add_text PROTOCOL_TAG, "<div>#{form_response.form.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+
+      form_fields = form_response.form.form_fields.order(:position)
+      form_field_values = form_response.form_field_values
+      # byebug
+
+      form_fields&.each do |form_field|
+        form_field_value = form_field_values.find_by(form_field_id: form_field.id, latest: true)
+        tag = I18n.t('protocols.report_template.data_inputs.codes.tag_form_field', form_id: form_response.id, id: form_field.id).to_sym
+
+        value = if form_field_value&.not_applicable
+                  I18n.t('forms.export.values.not_applicable')
+                elsif form_field_value.is_a?(FormTextFieldValue)
+                  SmartAnnotations::TagToText.new(@user, @team, form_field_value&.formatted).text
+                elsif form_field_value.is_a?(FormDatetimeFieldValue)
+                  form_field_value&.formatted_localize
+                elsif form_field_value.is_a?(FormRepositoryRowsFieldValue)
+                  form_repository_rows_field_value_formatter(form_field_value, @user)
+                else
+                  form_field_value&.formatted
+                end
+        report.add_field tag, value
+        report.add_text PROTOCOL_TAG, "<div>#{value}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+      end
+    end
+
+    def element_id(element)
+      case element.orderable_type
+      when 'StepTable', 'ResultTable'
+        element.orderable.table.id
+      else
+        element.orderable.id
+      end
+    end
+
+    def element_label(element)
+      case element.orderable_type
+      when 'StepTable', 'ResultTable'
+        element.orderable.table.name
+      else
+        element.orderable.name
+      end
+    end
+
+    def build_tag(type, id)
+      I18n.t('protocols.report_template.data_inputs.codes.tag_content', content_type: I18n.t("protocols.report_template.data_inputs.codes.type.#{type}"), id: id)
+    end
+
+    def build_table_data(element)
+      table_data = JSON.parse(Class.new.extend(InputSanitizeHelper).smart_annotation_text(element.contents_utf_8, sanitize_text: false))['data']
+      table_data = add_headers_to_table(table_data, element.well_plate?)
+
+      table = '<table>'
+      table_data.each_with_index do |row, index|
+        table_tag = index.zero? ? 'th' : 'td'
+        table += "<tr>#{row.map { |el| "<#{table_tag}>#{el}</#{table_tag}>" }.join}</tr>"
+      end
+      table += '</table>'
+
+      table
+    end
+
+    def add_headers_to_table(table, is_well_plate)
+      table&.each_with_index do |row, index|
+        row.unshift(is_well_plate ? convert_index_to_letter(index) : index + 1)
+      end
+
+      header_row = Array.new(table&.dig(0)&.length || 0) do |index|
+        next '' if index.zero?
+
+        is_well_plate ? index : convert_index_to_letter(index - 1)
+      end
+      table&.unshift(header_row)
+    end
+
+    def convert_index_to_letter(index)
+      ord_a = 'A'.ord
+      ord_z = 'Z'.ord
+      len = (ord_z - ord_a) + 1
+      num = index
+
+      col_name = ''
+      while num >= 0
+        col_name = ((num % len) + ord_a).chr + col_name
+        num = (num / len).floor - 1
+      end
+      col_name
+    end
+  end
+end

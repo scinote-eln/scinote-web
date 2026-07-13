@@ -5205,6 +5205,7 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     invalid_params: "Invalid params"
+    preview: "Preview"
     sort:
       title: "Sorting"
       new_html: "Started last"
