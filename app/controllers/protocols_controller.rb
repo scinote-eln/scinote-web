@@ -45,7 +45,6 @@ class ProtocolsController < ApplicationController
     unlink
     unlink_modal
     list_published_protocol_templates
-    update_adding_steps_allowed
     update_description_locked
   )
 
@@ -282,16 +281,6 @@ class ProtocolsController < ApplicationController
       TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
       protocol_annotation_notification(old_description)
       render json: @protocol, serializer: ProtocolSerializer, user: current_user
-    else
-      render json: @protocol.errors, status: :unprocessable_entity
-    end
-  end
-
-  def update_adding_steps_allowed
-    render_403 and return unless Protocol.content_locking_enabled?
-
-    if @protocol.update(adding_steps_allowed: params.require(:protocol)[:adding_steps_allowed], last_modified_by: current_user)
-      render json: {}, status: :ok
     else
       render json: @protocol.errors, status: :unprocessable_entity
     end

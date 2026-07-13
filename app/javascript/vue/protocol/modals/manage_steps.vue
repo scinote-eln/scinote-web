@@ -60,15 +60,6 @@
               </div>
             </template>
           </Draggable>
-          <div class="mt-3">
-            <div class="flex items-center gap-2">
-              <span class="sci-checkbox-container">
-                <input type="checkbox" class="sci-checkbox" :checked="protocol.attributes.adding_steps_allowed" @change="updateAddingStepsAllowed" />
-                <span class="sci-checkbox-label"></span>
-              </span>
-              <span class="sci-label">{{ i18n.t('protocols.allow_adding_steps') }}</span>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -121,9 +112,6 @@ export default {
     toggleLockAll(locked) {
       this.orderedSteps.forEach((step) => step.attributes.locked = locked);
       this.$emit('toggle-lock-all', locked);
-    },
-    updateAddingStepsAllowed(event) {
-      this.$emit('update-adding-steps-allowed', event.target.checked);
     }
   }
 };

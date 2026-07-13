@@ -347,7 +347,6 @@
         @toggle-lock="toggleStepLock"
         @toggle-lock-all="toggleLockAllSteps"
         @reorder="updateStepOrder"
-        @update-adding-steps-allowed="updateAddingStepsAllowed"
         @close="managingSteps = false"
       />
       <clipboardPasteModal v-if="showClipboardPasteModal"
@@ -623,13 +622,6 @@ export default {
     toggleAttachmentsLock(step) {
       step.attachments.forEach((attachment) => {
         attachment.attributes.locked = step.attributes.locked;
-      });
-    },
-    updateAddingStepsAllowed(value) {
-      axios.post(this.protocol.attributes.urls.update_adding_steps_allowed_url, { protocol: { adding_steps_allowed: value } }).then(() => {
-        this.protocol.adding_steps_allowed = value;
-      }).catch(() => {
-        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     toggleDescriptionLock() {
