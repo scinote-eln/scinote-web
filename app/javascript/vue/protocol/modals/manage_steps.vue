@@ -17,7 +17,7 @@
             <a
               class="btn icon-btn ml-auto"
               data-e2e="e2e-BT-protocol-templateSteps-lockStep"
-              :data-sn-tooltip="i18n.t('protocols.manage_steps')"
+              :data-sn-tooltip="allStepsLocked ? i18n.t('protocols.unlock_all_steps') : i18n.t('protocols.lock_all_steps')"
               @click="toggleLockAll(!this.allStepsLocked)"
               tabindex="0" >
               <i class="sn-icon" :class="{ 'sn-icon-unlocked': !allStepsLocked, 'sn-icon-locked-fill': allStepsLocked }" aria-hidden="true"></i>
@@ -51,7 +51,7 @@
                   <a
                     class="btn icon-btn ml-auto"
                     data-e2e="e2e-BT-protocol-templateSteps-lockStep"
-                    :data-sn-tooltip="i18n.t('protocols.manage_steps')"
+                    :data-sn-tooltip="element.attributes.locked ? i18n.t('protocols.unlock_step') : i18n.t('protocols.lock_step')"
                     @click="toggleLock(element)"
                     tabindex="0" >
                     <i class="sn-icon" :class="{ 'sn-icon-unlocked': !element.attributes.locked, 'sn-icon-locked-fill': element.attributes.locked }" aria-hidden="true"></i>
@@ -67,12 +67,14 @@
 </template>
 <script>
 import Draggable from 'vuedraggable';
+import tooltipMixin from '../../mixins/tooltipMixin.js';
 
 export default {
   name: 'ManageStepsModal',
   components: {
     Draggable
   },
+  mixins: [tooltipMixin],
   props: {
     steps: {
       type: Array,

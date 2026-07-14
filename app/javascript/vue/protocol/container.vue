@@ -150,15 +150,24 @@
                     </h2>
                   </span>
                 </a>
-                <a v-if="urls.update_description_locked_url"
-                  class="btn icon-btn"
-                  data-e2e="e2e-BT-protocol-templateDescription-lock"
-                  @click="toggleDescriptionLock"
-                  tabindex="0">
-                  <i class="sn-icon" :class="{ 'sn-icon-unlocked': !protocol.attributes.description_locked, 'sn-icon-locked-fill': protocol.attributes.description_locked }" aria-hidden="true"></i>
-                </a>
-                <i v-else-if="protocol.attributes.description_locked" class="sn-icon sn-icon-locked-fill" aria-hidden="true"></i>
+                <div class="flex flex-row items-center gap-2">
+                  <LockedTag v-if="protocol.attributes.description_locked" />
+                  <a v-if="urls.update_description_locked_url"
+                    class="btn icon-btn"
+                    data-e2e="e2e-BT-protocol-templateDescription-lock"
+                    :data-sn-tooltip="protocol.attributes.description_locked ? i18n.t('protocols.header.unlock_description') : i18n.t('protocols.header.lock_description')"
+                    @click="toggleDescriptionLock"
+                    tabindex="0">
+                    <i class="sn-icon" :class="{ 'sn-icon-unlocked': !protocol.attributes.description_locked, 'sn-icon-locked-fill': protocol.attributes.description_locked }" aria-hidden="true"></i>
+                  </a>
+                </div>
               </div>
+            </div>
+            <div v-if="!inRepository" class="w-full flex flex-row items-center gap-2 mb-1">
+              <h2 class="text-base font-bold my-0" data-e2e="e2e-TX-task-protocolDescription-title">
+                {{ i18n.t("protocols.header.protocol_description") }}
+              </h2>
+              <LockedTag v-if="protocol.attributes.description_locked" />
             </div>
             <div id="protocol-description-container"
               class="text-base content__text-container"
@@ -385,6 +394,7 @@ import tooltipMixin from '../mixins/tooltipMixin.js';
 import StepCollapseState from './mixins/step_collapse_state.js';
 import axios from '../../packs/custom_axios.js';
 import { protocol_filter_global_activities_path } from '../../routes.js';
+import LockedTag from '../shared/snippets/locked_tag.vue';
 
 export default {
   name: 'ProtocolContainer',
@@ -397,7 +407,7 @@ export default {
   components: {
     Step, InlineEdit, ProtocolOptions, Tinymce,
     ReorderableItemsModal, ProtocolMetadata, clipboardPasteModal,
-    AssignedItemsModal, ManageStepsModal
+    AssignedItemsModal, ManageStepsModal, LockedTag
   },
   mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin, tooltipMixin, StepCollapseState],
   computed: {

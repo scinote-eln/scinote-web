@@ -53,10 +53,8 @@
           >
             <i class="sn-icon sn-icon-delete"></i>
           </button>
-          <button v-if="this.element.attributes.orderable.locked" class="btn btn-light icon-btn !pointer-events-auto" :data-sn-tooltip="i18n.t('protocols.action_disabled')" disabled>
-            <i class="sn-icon sn-icon-more-hori"></i>
-          </button>
-          <MenuDropdown v-else
+          <MenuDropdown 
+            v-if="!this.element.attributes.orderable.locked"
             class="ml-auto"
             :listItems="this.actionMenu"
             :btnClasses="'btn btn-light icon-btn  btn-sm'"

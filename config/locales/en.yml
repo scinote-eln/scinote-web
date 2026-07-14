@@ -3936,8 +3936,10 @@ en:
     lock_step: "Lock step"
     unlock_step: "Unlock step"
     all_steps: "All steps"
+    lock_all_steps: "Lock all steps"
+    unlock_all_steps: "Unlock all steps"
     allow_adding_steps: "Allow adding steps"
-    action_disabled: "This action has been disabled for this protocol template."
+    action_disabled: "This action is unavailable due to the protocol containing locked steps"
     empty_results_placeholder: "No results added to this template. Create new draft to add them."
     table:
       filters:
@@ -4107,6 +4109,8 @@ en:
       repository_rows: "Items [%{count}]"
       draft_with_from_version: 'Draft (from Version %{nr})'
       protocol_description: 'Protocol description'
+      lock_description: "Lock description"
+      unlock_description: "Unlock description"
       protocol_steps: 'Protocol steps'
       publish: 'Publish'
       save_as_draft: 'Create new draft'
