@@ -67,7 +67,6 @@
 </template>
 <script>
 import Draggable from 'vuedraggable';
-import axios from '../../../packs/custom_axios';
 import tooltipMixin from '../../mixins/tooltipMixin.js';
 
 export default {
