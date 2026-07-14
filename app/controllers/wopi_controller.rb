@@ -284,6 +284,12 @@ class WopiController < ActionController::Base
     # current_user
     @user.permission_team = @team
     @current_user = @user
+    @current_team = @asset.team
+    
+    # Needed for proper functioning of ObservableModel concern
+    Current.user = @current_user
+    Current.team = @current_team
+
     if @assoc.instance_of?(Step)
       if @protocol.in_module?
         @can_read = can_read_protocol_in_module?(@protocol)
