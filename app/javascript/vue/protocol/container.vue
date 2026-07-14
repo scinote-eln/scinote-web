@@ -306,6 +306,7 @@
                   @step:move_attachment="reloadStep"
                   @step:drag_enter="dragEnter"
                   @step:collapsed="checkStepsState"
+                  @step:toggle-lock="toggleStepLock(step)"
                   :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                   :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
                 />
@@ -446,27 +447,8 @@ export default {
           this.initStackableHeaders();
         }
       });
-      return axios.get(this.urls.steps_url);
-    }).then((response) => {
-      this.steps = response.data.data;
-      this.steps.forEach((step) => {
-        step.attachments = [];
-        step.relationships.assets.data.forEach((asset) => {
-          step.attachments.push(response.data.included.find((a) => a.id === asset.id && a.type === 'assets'));
-        });
-
-        step.elements = [];
-        step.relationships.step_orderable_elements.data.forEach((element) => {
-          step.elements.push(response.data.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
-        });
-      });
-
-      this.loadingOverlay = false;
-
-      if (this.anchorId) {
-        this.scrollToStep();
-      }
-    });
+      this.loadSteps();
+    })
   },
   beforeUnmount() {
     if (!this.inRepository) {
@@ -474,6 +456,32 @@ export default {
     }
   },
   methods: {
+    setStepRelationships(step, response) {
+      step.attachments = [];
+      step.relationships.assets.data.forEach((asset) => {
+        step.attachments.push(response.data.included.find((a) => a.id === asset.id && a.type === 'assets'));
+      });
+
+      step.elements = [];
+      step.relationships.step_orderable_elements.data.forEach((element) => {
+        step.elements.push(response.data.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
+      });
+    },
+    loadSteps() {
+      axios.get(this.urls.steps_url).then((response) => {
+        const steps = response.data.data;
+        steps.forEach((step) => {
+          this.setStepRelationships(step, response);
+        });
+
+        this.steps = steps;
+        this.loadingOverlay = false;
+
+        if (this.anchorId) {
+          this.scrollToStep();
+        }
+      });
+    },
     scrollToStep() {
       this.$nextTick(() => {
         if (this.anchorId) {
@@ -544,15 +552,7 @@ export default {
         const step = response.data.data;
         step.newStep = true;
 
-        step.attachments = [];
-        step.relationships.assets.data.forEach((asset) => {
-          step.attachments.push(response.data.included.find((a) => a.id === asset.id && a.type === 'assets'));
-        });
-
-        step.elements = [];
-        step.relationships.step_orderable_elements.data.forEach((element) => {
-          step.elements.push(response.data.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
-        });
+        this.setStepRelationships(step, response);
         this.updateStepsPosition(step);
 
         // scroll to bottom if step was appended at the end
@@ -592,11 +592,11 @@ export default {
       this.refreshProtocolStatus();
     },
     toggleStepLock(step) {
-      const url = step.attributes.locked ? step.attributes.urls.lock_url : step.attributes.urls.unlock_url;
-      axios.post(url).then(() => {
-        this.updateStep(step.attributes);
-        this.toggleElementsLock(step);
-        this.toggleAttachmentsLock(step);
+      const url = step.attributes.locked ? step.attributes.urls.unlock_url : step.attributes.urls.lock_url;
+      axios.post(url).then((response) => {
+        const updatedStep = response.data.data;
+        this.updateStep(updatedStep.attributes);
+        this.reloadStep(parseInt(updatedStep.id, 10));
       }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
@@ -604,24 +604,9 @@ export default {
     toggleLockAllSteps(locked) {
       const url = locked ? this.protocol.attributes.urls.lock_all_steps_url : this.protocol.attributes.urls.unlock_all_steps_url;
       axios.post(url).then(() => {
-        this.steps.forEach((step) => {
-          step.attributes.locked = locked;
-          this.updateStep(step.attributes);
-          this.toggleElementsLock(step);
-          this.toggleAttachmentsLock(step);
-        });
+        this.loadSteps();
       }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-      });
-    },
-    toggleElementsLock(step) {
-      step.elements.forEach((element) => {
-        element.attributes.orderable.locked = step.attributes.locked;
-      });
-    },
-    toggleAttachmentsLock(step) {
-      step.attachments.forEach((attachment) => {
-        attachment.attributes.locked = step.attributes.locked;
       });
     },
     toggleDescriptionLock() {
