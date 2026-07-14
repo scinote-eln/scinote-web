@@ -121,6 +121,9 @@ class StepsController < ApplicationController
       last_modified_by: current_user
     )
 
+    # set locked if in protocol template and all other steps are locked
+    @step.locked = true if @protocol.in_repository_draft? && @protocol.steps.any? && @protocol.steps.where(locked: false).none?
+
     @step = @protocol.insert_step(@step, params[:position])
     if @protocol.in_repository? && @protocol.errors.present?
       return render json: { error: @protocol.errors }, status: :unprocessable_entity
