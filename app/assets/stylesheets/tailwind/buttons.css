@@ -3,9 +3,18 @@
     @apply inline-flex items-center gap-2 relative;
   }
 
+  /* Medium (default). Size, radius, icon size and icon-aware padding follow
+     the Core Design system spec and are identical across all button types. */
   .btn {
-    @apply relative inline-flex items-center text-sm shrink-0 gap-2 justify-center px-4 rounded border border-solid appearance-none whitespace-nowrap cursor-pointer h-[40px];
+    @apply relative inline-flex items-center text-sm shrink-0 gap-[6px] justify-center px-4 rounded-lg border border-solid appearance-none whitespace-nowrap cursor-pointer h-[40px];
     border-color: transparent;
+  }
+
+  /* Icon-aware padding: a leading (left) icon gets less padding on its side than
+     the text side. Buttons in this system only ever have a left icon or no icon,
+     so matching the first child is enough — no label wrapper or side class needed. */
+  .btn:not(.icon-btn):has(> .sn-icon:first-child) {
+    @apply pl-2;
   }
 
   .btn.icon-btn {
@@ -13,24 +22,47 @@
   }
 
   .btn.btn-lg {
-    @apply px-[1.125rem] text-base h-[44px];
+    @apply px-6 text-base h-[44px] gap-2;
   }
+
+  .btn.btn-lg:not(.icon-btn):has(> .sn-icon:first-child) {
+    @apply pl-4;
+  }
+
 
   .btn.btn-lg.icon-btn {
     @apply px-2.5;
   }
 
   .btn.btn-sm {
-    @apply px-2.5 text-xs h-[36px];
+    @apply px-3 text-xs h-[36px] gap-1;
   }
 
+  .btn.btn-sm .sn-icon {
+    @apply !text-[20px];
+  }
+
+  .btn.btn-sm:not(.icon-btn):has(> .sn-icon:first-child) {
+    @apply pl-2;
+  }
+
+
   .btn.btn-sm.icon-btn {
-    @apply px-1.5;
+    @apply px-2;
   }
 
   .btn.btn-xs {
-    @apply px-2.5 text-xs h-[30px];
+    @apply px-2 text-xs h-[30px] gap-1;
   }
+
+  .btn.btn-xs .sn-icon {
+    @apply !text-[16px];
+  }
+
+  .btn.btn-xs:not(.icon-btn):has(> .sn-icon:first-child) {
+    @apply pl-1.5;
+  }
+
 
   .btn.btn-xs.icon-btn {
     @apply px-0.5 w-[30px];
