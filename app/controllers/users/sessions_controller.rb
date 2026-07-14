@@ -45,7 +45,9 @@ class Users::SessionsController < Devise::SessionsController
     end
   end
 
-  def revive_session; end
+  def revive_session
+    render json: { csrf_token: form_authenticity_token }
+  end
 
   def two_factor_recovery
     unless session[:otp_user_id]

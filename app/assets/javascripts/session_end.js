@@ -69,7 +69,24 @@
   }
 
   function reviveSession() {
-    $.post($('meta[name=\'revive-url\']').attr('content'));
+    $.post($('meta[name=\'revive-url\']').attr('content'), (data) => {
+      if (!data.csrf_token) {
+        return;
+      }
+
+      const metaTag = document.querySelector('meta[name="csrf-token"]');
+
+      if (metaTag) {
+        metaTag.setAttribute("content", data.csrf_token);
+      }
+
+      document
+        .querySelectorAll('input[type="hidden"][name="authenticity_token"]')
+        .forEach((input) => {
+          input.value = data.csrf_token;
+        });
+    });
+
     toggleDocumentTitle();
     window.localStorage.removeItem('sessionEnd');
     setSessionTimeout(initializeSessionCountdown, oneSecondTimeout);
