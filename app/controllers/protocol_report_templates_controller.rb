@@ -4,6 +4,7 @@ class ProtocolReportTemplatesController < ApplicationController
   include ActiveStorageFileUtil
 
   before_action :load_protocol
+  before_action :check_analytical_reporting, only: :create
   before_action :check_read_permissions, except: :create
   before_action :check_manage_permissions, only: :create
   before_action :load_report_template, only: %i(destroy preview pdf_preview_path)
@@ -74,6 +75,10 @@ class ProtocolReportTemplatesController < ApplicationController
   def load_protocol
     @protocol = Protocol.find_by(id: params[:protocol_id])
     render_404 unless @protocol
+  end
+
+  def check_analytical_reporting
+    render_403 unless ReportTemplate.analytical_reporting_enabled?
   end
 
   def check_read_permissions
