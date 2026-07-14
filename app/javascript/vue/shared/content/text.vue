@@ -56,7 +56,7 @@
             <i class="sn-icon sn-icon-delete"></i>
           </button>
           <MenuDropdown
-            v-if="!this.element.attributes.orderable.locked"
+            v-if="inRepository || !this.element.attributes.orderable.locked"
             :listItems="this.actionMenu"
             :btnClasses="'btn btn-light icon-btn btn-sm'"
             :position="'right'"
