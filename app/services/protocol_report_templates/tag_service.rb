@@ -22,18 +22,22 @@ module ProtocolReportTemplates
       DEFAULT_INPUTS + step_tags + result_tags
     end
 
-    def replace_tags(report_template, target, src_object, include_results: true)
-      original_blob = report_template.odt_template_file.blob
+    def replace_tags(src_report_template, dest_report_template, src_object, include_results: true)
+      original_blob = src_report_template.odt_template_file.blob
       output = Tempfile.new(['report', '.odt'])
 
-      report_template.odt_template_file.open do |odt_template_file|
+      src_report_template.odt_template_file.open do |odt_template_file|
         report = ODFReport::Report.new(odt_template_file.path) do |r|
           src_object.steps.order(:position).zip(@protocol.steps.order(:position)) do |src_step, dest_step|
             r.add_field(build_tag('step', src_step.id, delimiter: false).to_sym, build_tag('step', dest_step.id))
 
             src_step.step_orderable_elements.order(:position).zip(dest_step.step_orderable_elements.order(:position)) do |src_element, dest_element|
               type = src_element.orderable_type.underscore
-              r.add_field(build_tag(type, element_id(src_element), delimiter: false).to_sym, build_tag(type, element_id(dest_element)))
+              if src_element.orderable_type == 'FormResponse'
+                replace_form_response(r, src_element.orderable, dest_element.orderable)
+              else
+                r.add_field(build_tag(type, element_id(src_element), delimiter: false).to_sym, build_tag(type, element_id(dest_element)))
+              end
             end
           end
 
@@ -51,7 +55,24 @@ module ProtocolReportTemplates
         end
         report.generate(output.path)
 
-        target.odt_template_file.attach(io: File.open(output.path), filename: original_blob.filename, content_type: original_blob.content_type)
+        dest_report_template.odt_template_file.attach(io: File.open(output.path), filename: original_blob.filename, content_type: original_blob.content_type)
+      end
+    ensure
+      output.close
+      output.unlink
+    end
+
+    def replace_form_response_tags(report_template, src_form_response, dest_form_response)
+      original_blob = src_report_template.odt_template_file.blob
+      output = Tempfile.new(['report', '.odt'])
+
+      report_template.odt_template_file.open do |odt_template_file|
+        report = ODFReport::Report.new(odt_template_file.path) do |r|
+          replace_form_response(r, src_form_response, dest_form_response)
+        end
+        report.generate(output.path)
+
+        report_template.odt_template_file.attach(io: File.open(output.path), filename: original_blob.filename, content_type: original_blob.content_type)
       end
     ensure
       output.close
@@ -92,7 +113,7 @@ module ProtocolReportTemplates
           base_input = [base_input] + element.orderable.form.form_fields.order(:position).map do |form_field|
             {
               label: form_field.name,
-              tag: I18n.t('protocols.report_template.data_inputs.codes.tag_form_field_code', form_id: element.orderable.id, id: form_field.id)
+              tag: I18n.t('protocols.report_template.data_inputs.codes.tag_form_field_code', form_id: element_id(element), id: form_field.id)
             }
           end
         end
@@ -137,6 +158,16 @@ module ProtocolReportTemplates
         'sn-icon-checkllist'
       else
         'sn-icon-forms'
+      end
+    end
+
+    def replace_form_response(report, src_form_response, dest_form_response)
+      type = 'form_response'
+      report.add_field(build_tag(type, src_form_response.id, delimiter: false).to_sym, build_tag(type, dest_form_response.id))
+
+      src_form_response.form.form_fields.order(:position).zip(dest_form_response.form.form_fields.order(:position)) do |src_form_field, dest_form_field|
+        report.add_field(I18n.t('protocols.report_template.data_inputs.codes.tag_form_field', form_id: src_form_response.id, id: src_form_field.id).to_sym,
+                         I18n.t('protocols.report_template.data_inputs.codes.tag_form_field_code', form_id: dest_form_response.id, id: dest_form_field.id))
       end
     end
   end

@@ -465,7 +465,7 @@ class Protocol < ApplicationRecord
       ProtocolReportTemplates::TagService.new(dest).replace_tags(report_template, new_report_template, src.in_module? ? src.my_module : src, include_results: include_results)
 
       new_report_template.save!
-      new_report_template.generate_preview
+      new_report_template.generate_preview!
     end
   end
 

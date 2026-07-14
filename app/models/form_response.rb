@@ -72,6 +72,15 @@ class FormResponse < ApplicationRecord
   end
 
   def submit!(user)
+    if parent.is_a?(Step) && previous_form_response
+      protocol = parent.protocol
+      protocol.report_templates.each do |report_template|
+        ProtocolReportTemplates::TagService.new(protocol).replace_form_response_tags(report_template, previous_form_response, self)
+        report_template.save!
+        report_template.generate_preview!
+      end
+    end
+
     update!(
       status: :submitted,
       submitted_by: user,
