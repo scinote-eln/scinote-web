@@ -17,7 +17,7 @@ module Api
         end
 
         def create
-          raise PermissionError.new(Step, :manage) unless can_manage_step?(@step)
+          raise PermissionError.new(Asset, :create) unless can_manage_step?(@step)
 
           asset = attach_blob!(@step)
 
