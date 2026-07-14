@@ -8,8 +8,8 @@ module Api
 
         before_action :load_team, :load_project, :load_experiment, :load_task, :load_result
         before_action :load_asset, only: %i(show destroy)
-        before_action :check_manage_permission, only: %i(create destroy)
-        before_action :check_delete_permission, only: :destroy
+        before_action :check_create_permissions, only: :create
+        before_action :check_delete_permissions, only: :destroy
 
         def index
           result_assets = timestamps_filter(@result.assets)
@@ -49,14 +49,14 @@ module Api
 
         def load_asset
           @asset = @result.assets.find(params.require(:id))
-          raise PermissionError.new(Result, :read) unless can_read_result?(@result)
+          raise PermissionError.new(Asset, :read) unless can_read_asset?(@asset)
         end
 
-        def check_manage_permission
+        def check_create_permissions
           raise PermissionError.new(Result, :manage) unless can_manage_result?(@result)
         end
 
-        def check_delete_permission
+        def check_delete_permissions
           raise PermissionError.new(Asset, :delete) unless can_delete_asset?(@asset)
         end
       end
