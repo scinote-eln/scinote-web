@@ -229,13 +229,28 @@
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
     <archiveStepModal v-if="confirmingArchive" @confirm="archiveStep" @cancel="closeArchiveModal"/>
 
-    <ReorderableItemsModal v-if="reordering"
-      :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
-      :items="reorderableElements"
-      :dataE2e="`protocol-step${step.id}-reorder`"
-      @reorder="updateElementOrder"
-      @close="closeReorderModal"
-    />
+    <template v-if="step.attributes.urls.lock_url">
+      <ManageItemsModal
+        v-if="reordering"
+        :items="reorderableElements"
+        :subject="step"
+        @reorder="updateElementOrder"
+        @toggle-lock-subject="$emit('step:toggle-lock', step)"
+        @toggle-lock="toggleItemLock"
+        @toggle-lock-attachments="toggleAttachmentsLock"
+        @update-adding-items-allowed="updateAddingItemsAllowed"
+        @close="closeReorderModal"
+      ></ManageItemsModal>
+    </template>
+    <template v-else>
+      <ReorderableItemsModal v-if="reordering"
+        :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
+        :items="reorderableElements"
+        :dataE2e="`protocol-step${step.id}-reorder`"
+        @reorder="updateElementOrder"
+        @close="closeReorderModal"
+      />
+    </template>
 
     <CustomWellPlateModal v-if="customWellPlate"
       @cancel="closeCustomWellPlateModal"
@@ -275,6 +290,7 @@
   import LinkResultsModal from './modals/link_results.vue'
   import Attachments from '../shared/content/attachments.vue'
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
+  import ManageItemsModal from './modals/manage_items.vue'
   import MenuDropdown from '../shared/menu_dropdown.vue'
   import GeneralDropdown from '../shared/general_dropdown.vue'
   import ContentToolbar from '../shared/content/content_toolbar.vue'
@@ -383,9 +399,14 @@
       LinkResultsModal,
       GeneralDropdown,
       archiveStepModal,
+      ManageItemsModal,
       LockedTag
     },
     watch: {
+      step() {
+        this.elements = this.step.elements;
+        this.attachments = this.step.attachments;
+      },
       stepToReload() {
         if (this.stepToReload == this.step.id) {
           this.loadElements();
@@ -613,6 +634,27 @@
       clickToggleButton() {
         this.$refs.toggleElement.click();
       },
+      toggleAttachmentsLock() {
+        axios.patch(this.urls.update_url, {
+          step: {attachments_locked: !this.step.attributes.attachments_locked}
+        }).then((response) => {
+            this.$emit('step:update', {
+              position: this.step.attributes.position,
+              attachments_locked: response.data.data.attributes.attachments_locked
+            });
+            this.loadAttachments();
+        });
+      },
+      updateAddingItemsAllowed() {
+        axios.patch(this.urls.update_url, {
+          step: {adding_items_allowed: !this.step.attributes.adding_items_allowed}
+        }).then((response) => {
+            this.$emit('step:update', {
+              position: this.step.attributes.position,
+              adding_items_allowed: response.data.data.attributes.adding_items_allowed
+            });
+        });
+      },
       changeState() {
         if (!this.urls.state_url) return;
 
@@ -733,6 +775,14 @@
           error: (data) => {
             HelperModule.flashAlertMsg(data.responseJSON.errors ? Object.values(data.responseJSON.errors).join(', ') : I18n.t('errors.general'), 'danger');
           }
+        });
+      },
+      toggleItemLock(item) {
+        const url = item.attributes.locked ? item.attributes.urls.unlock_url : item.attributes.urls.lock_url;
+        axios.post(url).then(() => {
+          item.attributes.locked = !item.attributes.locked;
+        }).catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
       },
       createElement(elementType, tableDimensions = null, name = '', formId = null) {

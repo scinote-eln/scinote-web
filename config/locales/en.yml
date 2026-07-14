@@ -3955,6 +3955,11 @@ en:
         button: "Rearrange steps"
         modal:
           title: "Rearrange protocol steps"
+    manage_items_modal:
+      title_step: "Manage step %{position}"
+      lock_all: "Lock all"
+      attachments: "Attachments"
+      allow_new_items: "Allow adding new step content blocks"
     print:
       title: "Print protocol"
       button: "Print"

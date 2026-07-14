@@ -67,7 +67,6 @@
 </template>
 <script>
 import Draggable from 'vuedraggable';
-import axios from '../../../packs/custom_axios';
 
 export default {
   name: 'ManageStepsModal',
@@ -82,6 +81,11 @@ export default {
     protocol: {
       type: Object,
       required: true
+    }
+  },
+  watch: {
+    steps(newSteps) {
+      this.orderedSteps = [...newSteps];
     }
   },
   data() {
@@ -106,11 +110,9 @@ export default {
       this.$emit('close');
     },
     toggleLock(step) {
-      step.attributes.locked = !step.attributes.locked;
       this.$emit('toggle-lock', step);
     },
     toggleLockAll(locked) {
-      this.orderedSteps.forEach((step) => step.attributes.locked = locked);
       this.$emit('toggle-lock-all', locked);
     }
   }

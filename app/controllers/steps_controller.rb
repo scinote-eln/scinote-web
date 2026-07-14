@@ -247,14 +247,14 @@ class StepsController < ApplicationController
 
   def lock
     @step.update!(locked: true)
-    head :ok
+    render json: @step, serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
   rescue ActiveRecord::RecordInvalid
     head :unprocessable_entity
   end
 
   def unlock
     @step.update!(locked: false)
-    head :ok
+    render json: @step, serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
   rescue ActiveRecord::RecordInvalid
     head :unprocessable_entity
   end
@@ -541,7 +541,7 @@ class StepsController < ApplicationController
   end
 
   def step_params
-    params.require(:step).permit(:name)
+    params.require(:step).permit(:name, :attachments_locked, :adding_items_allowed)
   end
 
   def log_activity(type_of, project = nil, message_items = {})

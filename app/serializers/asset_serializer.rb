@@ -143,8 +143,7 @@ class AssetSerializer < ActiveModel::Serializer
   end
 
   def locked
-    # TODO: Currently inherited from step, will be controlled separately in the future
-    object.step ? object.step.locked : false
+    object.step ? (object.step.attachments_locked || object.step.locked) : false
   end
 
   def urls

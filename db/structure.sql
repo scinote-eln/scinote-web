@@ -3174,7 +3174,9 @@ CREATE TABLE public.steps (
     restored_on timestamp(6) without time zone,
     archived_by_id bigint,
     restored_by_id bigint,
-    locked boolean DEFAULT false NOT NULL
+    locked boolean DEFAULT false NOT NULL,
+    adding_items_allowed boolean DEFAULT true NOT NULL,
+    attachments_locked boolean DEFAULT false NOT NULL
 );
 
 
@@ -8081,6 +8083,13 @@ CREATE INDEX index_step_texts_on_text ON public.step_texts USING gin (public.tri
 
 
 --
+-- Name: index_steps_on_adding_items_allowed; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_steps_on_adding_items_allowed ON public.steps USING btree (adding_items_allowed);
+
+
+--
 -- Name: index_steps_on_archived; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8092,6 +8101,13 @@ CREATE INDEX index_steps_on_archived ON public.steps USING btree (archived);
 --
 
 CREATE INDEX index_steps_on_archived_by_id ON public.steps USING btree (archived_by_id);
+
+
+--
+-- Name: index_steps_on_attachments_locked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_steps_on_attachments_locked ON public.steps USING btree (attachments_locked);
 
 
 --
@@ -10818,6 +10834,7 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260714101739'),
 ('20260708142245'),
 ('20260616085134'),
 ('20260615135346'),

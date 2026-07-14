@@ -14,7 +14,7 @@ class StepSerializer < ActiveModel::Serializer
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
              :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
              :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id, :skipped_at,
-             :archived_by, :archived_on, :archived, :locked
+             :archived_by, :archived_on, :archived, :locked, :attachments_locked, :adding_items_allowed
 
   def step_orderable_elements
     return object.all_elements if object.archived?
@@ -150,7 +150,7 @@ class StepSerializer < ActiveModel::Serializer
         reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)
       })
 
-      if Protocol.content_locking_enabled?
+      if Protocol.content_locking_enabled? && can_manage_protocol_draft_in_repository?(object.protocol)
         url_list[:lock_url] = lock_step_path(object)
         url_list[:unlock_url] = unlock_step_path(object)
       end

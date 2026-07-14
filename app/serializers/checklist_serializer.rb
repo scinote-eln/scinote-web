@@ -27,8 +27,7 @@ class ChecklistSerializer < ActiveModel::Serializer
   end
 
   def locked
-    # TODO: Currently inherited from step, will be controlled separately in the future
-    object.step.locked
+    object.locked || object.step.locked
   end
 
   def sa_name
