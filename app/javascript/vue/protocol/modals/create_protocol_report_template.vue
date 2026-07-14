@@ -42,7 +42,7 @@
                 class="h-60"
                 @file:dropped="addFile"
                 :supportingText="`${i18n.t('protocols.report_template.create_modal.drag_and_drop_supporting_text')}`"
-                :supportedFormats="['odt']"
+                :supportedFormats="['odt', 'docx']"
               />
               <div v-else class="border border-sn-light-grey rounded flex items-center p-2 gap-2">
                 <i class="sn-icon sn-icon-result-image text-sn-grey"></i>
@@ -151,7 +151,7 @@ export default {
     addFile(file) {
       this.attachedFile = file;
     },
-    removeImage() {
+    removeFile() {
       this.attachedFile = null;
     }
   }
