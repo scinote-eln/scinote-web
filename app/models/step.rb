@@ -25,7 +25,6 @@ class Step < ApplicationRecord
 
   before_validation :set_completed_on, if: :completed_changed?
   before_save :set_last_modified_by
-  before_create :set_locked
   before_destroy :cascade_before_destroy
   after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust || archived }
   after_save :change_protocol_adding_steps_allowed
@@ -351,10 +350,5 @@ class Step < ApplicationRecord
 
   def set_last_modified_by
     self.last_modified_by_id ||= user_id
-  end
-
-  def set_locked
-    # auto-lock protocol template step if all other steps on protocol are locked
-    self.locked = protocol.in_repository_draft? && protocol.steps.where(locked: false).none?
   end
 end
