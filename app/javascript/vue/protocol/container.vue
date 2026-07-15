@@ -163,11 +163,8 @@
                 </div>
               </div>
             </div>
-            <div v-if="!inRepository" class="w-full flex flex-row items-center gap-2 mb-1">
-              <h2 class="text-base font-bold my-0" data-e2e="e2e-TX-task-protocolDescription-title">
-                {{ i18n.t("protocols.header.protocol_description") }}
-              </h2>
-              <LockedTag v-if="protocol.attributes.description_locked" />
+            <div v-if="!inRepository && protocol.attributes.description_locked" class="w-full flex flex-row items-center justify-end mb-1">
+              <LockedTag />
             </div>
             <div id="protocol-description-container"
               class="text-base content__text-container"
