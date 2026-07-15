@@ -105,7 +105,6 @@ export default {
       const ok = await this.$refs.deleteModal.show();
 
       if (ok) {
-        console.log(this.protocolId, template.id)
         axios.delete(protocol_protocol_report_template_path(this.protocolId, template.id)).then((response) => {
           this.fetchTemplates();
         }).catch((error) => {

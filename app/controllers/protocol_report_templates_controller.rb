@@ -34,12 +34,25 @@ class ProtocolReportTemplatesController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-      protocol_report_template = ReportTemplate.new(protocol_report_template_params)
+      blob = ActiveStorage::Blob.find_signed!(params[:file])
+      is_docx = File.extname(blob.filename.to_s).casecmp('.docx').zero?
 
+      protocol_report_template = ReportTemplate.new(protocol_report_template_params)
       protocol_report_template.subject = @protocol
-      protocol_report_template.odt_template_file.attach(params[:file])
+
+      if is_docx
+        protocol_report_template.docx_template_file.attach(blob)
+      else
+        protocol_report_template.odt_template_file.attach(blob)
+      end
+
       protocol_report_template.save!
-      protocol_report_template.generate_preview!
+
+      if is_docx
+        ReportTemplates::ConvertDocxToOdtJob.perform_later(protocol_report_template.id)
+      else
+        protocol_report_template.generate_preview!
+      end
     end
   end
 

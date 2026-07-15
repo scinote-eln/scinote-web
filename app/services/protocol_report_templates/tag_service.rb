@@ -55,7 +55,12 @@ module ProtocolReportTemplates
         end
         report.generate(output.path)
 
-        dest_report_template.odt_template_file.attach(io: File.open(output.path), filename: original_blob.filename, content_type: original_blob.content_type)
+        blob = ActiveStorage::Blob.create_and_upload!(
+          io: File.open(output.path),
+          filename: original_blob.filename,
+          content_type: original_blob.content_type
+        )
+        dest_report_template.odt_template_file.attach(blob)
       end
     ensure
       output.close

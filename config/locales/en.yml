@@ -4307,7 +4307,7 @@ en:
         name_label: "Template name"
         name_placeholder: "Add a template name"
         import_label: "File import"
-        drag_and_drop_supporting_text: ".odt file"
+        drag_and_drop_supporting_text: ".docx or .odt file"
         create_button: "Create template"
         errors:
           max_length: "Template name is too long (maximum is %{max_length} characters)"
