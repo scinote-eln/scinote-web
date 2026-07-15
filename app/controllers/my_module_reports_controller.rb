@@ -6,6 +6,7 @@ class MyModuleReportsController < ApplicationController
   include TeamsHelper
 
   before_action :load_my_module
+  before_action :check_analytical_reporting, only: :create
   before_action :check_view_permissions, except: :destroy
   before_action :check_manage_permissions, only: :destroy
   before_action :load_my_module_report, only: %i(download destroy)
@@ -62,6 +63,10 @@ class MyModuleReportsController < ApplicationController
     render_404 unless @my_module
 
     current_team_switch(@my_module.experiment.project.team) if current_team != @my_module.experiment.project.team
+  end
+
+  def check_analytical_reporting
+    render_403 unless ReportTemplate.analytical_reporting_enabled?
   end
 
   def load_my_module_report

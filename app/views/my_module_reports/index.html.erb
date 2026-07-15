@@ -8,7 +8,7 @@
     <my-module-reports
       ref="myModuleReports"
       :my-module-id="<%= @my_module.id %>"
-      :editable="<%= can_manage_my_module?(@my_module) %>"
+      :editable="<%= ReportTemplate.analytical_reporting_enabled? && can_manage_my_module?(@my_module) %>"
     />
   </div>
 </div>

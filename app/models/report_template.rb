@@ -9,4 +9,8 @@ class ReportTemplate < ApplicationRecord
   def generate_preview!
     ReportTemplates::ReportTemplatePreviewJob.perform_later(id)
   end
+
+  def self.analytical_reporting_enabled?
+    ApplicationSettings.instance.values['analytical_reporting_enabled'] == true
+  end
 end

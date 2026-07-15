@@ -4,7 +4,7 @@
   <div id="protocolReportTemplates" class="protocol-report-templates-container">
     <protocol-report-templates
       :protocol-id="<%= @protocol.id %>"
-      :editable="<%= can_manage_protocol_draft_in_repository?(@protocol) %>"></protocol-report-templates>  
+      :editable="<%= ReportTemplate.analytical_reporting_enabled? && can_manage_protocol_draft_in_repository?(@protocol) %>"></protocol-report-templates>  
   </div>
 </div>
 
