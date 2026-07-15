@@ -58,15 +58,19 @@ class StepFormResponseSerializer < ActiveModel::Serializer
     step = object.step
 
     url_list = {}
+    # url_list = {add_value: form_response_form_field_values_path(object)}
 
     if Form.forms_enabled?
       if can_manage_step_form_response?(user, object)
-        url_list[:add_value] = form_response_form_field_values_path(object)
         url_list[:move_url] = move_step_form_response_path(step, object)
         url_list[:move_targets_url] = move_targets_step_text_path(step, object)
       end
 
-      url_list[:submit] = submit_step_form_response_path(step, object) if can_submit_form_response?(user, object)
+      if can_submit_form_response?(user, object)
+        url_list[:add_value] = form_response_form_field_values_path(object)
+        url_list[:submit] = submit_step_form_response_path(step, object)
+      end
+
       url_list[:reset] = reset_step_form_response_path(step, object) if can_reset_form_response?(user, object)
       url_list[:restore_url] = restore_step_form_response_path(step, object) if can_restore_step_form_response?(user, object)
     end
