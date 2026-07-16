@@ -83,7 +83,8 @@ class Table < ApplicationRecord
           team: parent.protocol.team,
           created_by: user,
           metadata: metadata,
-          last_modified_by: user
+          last_modified_by: user,
+          locked: locked
         )
 
         parent.step_orderable_elements.create!(

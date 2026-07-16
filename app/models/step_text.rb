@@ -33,7 +33,8 @@ class StepText < ApplicationRecord
     ActiveRecord::Base.transaction do
       new_step_text = step.step_texts.create!(
         text: text,
-        name: name
+        name: name,
+        locked: locked,
       )
 
       # Copy steps tinyMce assets
