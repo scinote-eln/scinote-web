@@ -447,7 +447,7 @@ class StepsController < ApplicationController
       render_403 unless selected_protocol.present? && can_read_protocol_in_repository?(selected_protocol)
 
       steps = selected_protocol.steps.where(id: params[:steps]).order(position: :asc).map do |step|
-        step.duplicate(@protocol, current_user, original_protocol: selected_protocol)
+        step.duplicate(@protocol, current_user, original_protocol: selected_protocol, skip_lock: true)
       end
 
       message_items = {

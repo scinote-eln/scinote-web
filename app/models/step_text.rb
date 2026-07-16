@@ -29,12 +29,12 @@ class StepText < ApplicationRecord
 
   scope :asc, -> { order('step_texts.created_at ASC') }
 
-  def duplicate(step, position = nil)
+  def duplicate(step, position = nil, skip_lock: false)
     ActiveRecord::Base.transaction do
       new_step_text = step.step_texts.create!(
         text: text,
         name: name,
-        locked: locked,
+        locked: (skip_lock ? false : locked)
       )
 
       # Copy steps tinyMce assets
