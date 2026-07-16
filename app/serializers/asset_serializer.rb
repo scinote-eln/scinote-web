@@ -143,7 +143,13 @@ class AssetSerializer < ActiveModel::Serializer
   end
 
   def locked
-    object.step ? (object.step.attachments_locked || object.step.locked) : false
+    if object.step
+      object.step.attachments_locked || object.step.locked
+    elsif object.result
+      object.result.attachments_locked
+    else
+      false
+    end
   end
 
   def urls

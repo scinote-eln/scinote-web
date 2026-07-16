@@ -6,29 +6,34 @@
           <button @click="close" type="button" class="close" data-dismiss="modal" aria-label="Close" :data-e2e="`e2e-BT-manageSteps-close`">
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <h4 class="modal-title" :data-e2e="`e2e-TX-manageSteps-title`">
+          <h4 v-if="subject.type == 'steps'" class="modal-title" :data-e2e="`e2e-TX-manageSteps-title`">
             {{ i18n.t('protocols.manage_items_modal.title_step', {position: subject.attributes.position + 1}) }}
+          </h4>
+          <h4 v-else-if="subject.type == 'result_templates'" class="modal-title" :data-e2e="`e2e-TX-manageResults-title`">
+            {{ i18n.t('protocols.manage_items_modal.title_result') }}
           </h4>
         </div>
         <div class="modal-body">
-          <div class="flex items-center border-0 border-solid border-b border-sn-light-grey">
-            <span>
-              <template v-if="subject.attributes.position !== null">
-                {{ subject.attributes.position + 1 }}
-              </template>
-              {{ subject.attributes.name }}
-            </span>
-            <a
-              class="btn icon-btn ml-auto"
-              :data-sn-tooltip="i18n.t('protocols.manage_items_modal.lock_all')"
-              @click="toggleLockSubject(!subject.attributes.locked)"
-              tabindex="0" >
-              <i class="sn-icon" :class="{
-                'sn-icon-unlocked': !subject.attributes.locked,
-                'sn-icon-locked-fill': subject.attributes.locked
-              }" aria-hidden="true"></i>
-            </a>
-          </div>
+          <template v-if="subject.type == 'steps'">
+            <div class="flex items-center border-0 border-solid border-b border-sn-light-grey">
+              <span>
+                <template v-if="subject.attributes.position !== null">
+                  {{ subject.attributes.position + 1 }}
+                </template>
+                {{ subject.attributes.name }}
+              </span>
+              <a
+                class="btn icon-btn ml-auto"
+                :data-sn-tooltip="i18n.t('protocols.manage_items_modal.lock_all')"
+                @click="toggleLockSubject(!subject.attributes.locked)"
+                tabindex="0" >
+                <i class="sn-icon" :class="{
+                  'sn-icon-unlocked': !subject.attributes.locked,
+                  'sn-icon-locked-fill': subject.attributes.locked
+                }" aria-hidden="true"></i>
+              </a>
+            </div>
+          </template>
           <Draggable
             v-model="orderedItems"
             :ghostClass="'step-checklist-item-ghost'"
@@ -81,20 +86,6 @@
               }" aria-hidden="true"></i>
             </a>
           </div>
-          <div class="mt-3">
-            <div class="flex items-center gap-2">
-              <span class="sci-checkbox-container">
-                <input
-                  type="checkbox"
-                  class="sci-checkbox"
-                  :checked="subject.attributes.adding_items_allowed"
-                  :disabled="subject.attributes.locked"
-                  @change="updateAddingItemsAllowed" />
-                <span class="sci-checkbox-label"></span>
-              </span>
-              <span class="sci-label">{{ i18n.t('protocols.manage_items_modal.allow_new_items') }}</span>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -116,6 +107,11 @@ export default {
     subject: {
       type: Object,
       required: true
+    }
+  },
+  watch: {
+    items(newItems) {
+      this.orderedItems = [...newItems];
     }
   },
   data() {

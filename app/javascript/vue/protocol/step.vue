@@ -155,7 +155,7 @@
           </span>
         </a>
 
-        <MenuDropdown 
+        <MenuDropdown
           v-if="!(step.attributes.locked && !inRepository)"
           :listItems="this.actionsMenu"
           :btnClasses="'btn btn-light icon-btn'"
@@ -236,7 +236,6 @@
         @toggle-lock-subject="$emit('step:toggle-lock', step)"
         @toggle-lock="toggleItemLock"
         @toggle-lock-attachments="toggleAttachmentsLock"
-        @update-adding-items-allowed="updateAddingItemsAllowed"
         @close="closeReorderModal"
       ></ManageItemsModal>
     </template>
@@ -288,7 +287,7 @@
   import LinkResultsModal from './modals/link_results.vue'
   import Attachments from '../shared/content/attachments.vue'
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
-  import ManageItemsModal from './modals/manage_items.vue'
+  import ManageItemsModal from '../shared/manage_items_modal.vue'
   import MenuDropdown from '../shared/menu_dropdown.vue'
   import GeneralDropdown from '../shared/general_dropdown.vue'
   import ContentToolbar from '../shared/content/content_toolbar.vue'
@@ -525,7 +524,14 @@
       },
       actionsMenu() {
         let menu = [];
-        if (this.urls.reorder_elements_url && this.elements.length > 1) {
+        if (this.step.attributes.urls.lock_url) {
+          menu = menu.concat([{
+            text: this.i18n.t('protocols.steps.options_dropdown.manage_step'),
+            emit: 'reorder',
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-manageStep`,
+            e2e_class: 'e2e-BT-protocol-step-stepOptions-manageStep'
+          }]);
+        } else if (this.urls.reorder_elements_url && this.elements.length > 1) {
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.rearrange'),
             emit: 'reorder',
@@ -641,16 +647,6 @@
               attachments_locked: response.data.data.attributes.attachments_locked
             });
             this.loadAttachments();
-        });
-      },
-      updateAddingItemsAllowed() {
-        axios.patch(this.urls.update_url, {
-          step: {adding_items_allowed: !this.step.attributes.adding_items_allowed}
-        }).then((response) => {
-            this.$emit('step:update', {
-              position: this.step.attributes.position,
-              adding_items_allowed: response.data.data.attributes.adding_items_allowed
-            });
         });
       },
       changeState() {

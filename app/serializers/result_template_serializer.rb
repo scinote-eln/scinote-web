@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 class ResultTemplateSerializer < ResultBaseSerializer
-  attributes :protocol_id
+  attributes :protocol_id, :lock_enabled, :attachments_locked
 
   def result_orderable_elements
     object.all_elements
+  end
+
+  def lock_enabled
+    Protocol.content_locking_enabled?
   end
 
   def collapsed

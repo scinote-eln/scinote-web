@@ -2849,7 +2849,8 @@ CREATE TABLE public.results (
     type character varying,
     protocol_id bigint,
     pinned_at timestamp(6) without time zone,
-    pinned_by_id bigint
+    pinned_by_id bigint,
+    attachments_locked boolean DEFAULT false NOT NULL
 );
 
 
@@ -7866,6 +7867,13 @@ CREATE INDEX index_results_on_archived_by_id ON public.results USING btree (arch
 
 
 --
+-- Name: index_results_on_attachments_locked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_results_on_attachments_locked ON public.results USING btree (attachments_locked);
+
+
+--
 -- Name: index_results_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10834,6 +10842,7 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260715121739'),
 ('20260714101739'),
 ('20260708142245'),
 ('20260616085134'),

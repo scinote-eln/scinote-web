@@ -1812,6 +1812,7 @@ en:
         edit_title: "Edit result"
         archive_title: "Archive result"
       actions:
+        manage_result: "Manage result"
         rearrange: "Rearrange"
         archive: "Archive"
         duplicate: "Duplicate"
@@ -3959,9 +3960,9 @@ en:
           title: "Rearrange protocol steps"
     manage_items_modal:
       title_step: "Manage step %{position}"
+      title_result: "Manage result"
       lock_all: "Lock all"
       attachments: "Attachments"
-      allow_new_items: "Allow adding new step content blocks"
     print:
       title: "Print protocol"
       button: "Print"
@@ -4329,6 +4330,7 @@ en:
       options_dropdown:
         title: 'Step options'
         rearrange: 'Rearrange content'
+        manage_step: 'Manage step'
         duplicate: 'Duplicate'
         delete: 'Delete'
         archive: 'Archive'
