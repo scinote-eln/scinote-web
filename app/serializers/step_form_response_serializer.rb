@@ -58,7 +58,6 @@ class StepFormResponseSerializer < ActiveModel::Serializer
     step = object.step
 
     url_list = {}
-    # url_list = {add_value: form_response_form_field_values_path(object)}
 
     if Form.forms_enabled?
       if can_manage_step_form_response?(user, object)
