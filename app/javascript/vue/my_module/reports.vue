@@ -12,10 +12,13 @@
             data-no-turbolink="true"
             :data-id="template.id"
             :data-gallery-view-id="myModuleId"
-            :data-preview-url="template.preview">
+            :data-preview-url="template.preview"
+            data-render-tooltip="true"
+            :title="i18n.t('general.preview')"
+            >
             <i class="sn-icon sn-icon-visibility-show"></i>
           </button>
-          <button v-if="editable" class="btn btn-primary icon-btn">
+          <button v-if="editable" class="btn btn-primary icon-btn" @click.stop="generateReport(template.id)">
             <i class="sn-icon sn-icon-reports"></i>
             {{ i18n.t('my_modules.reports.generate_button') }}
           </button>
@@ -30,23 +33,33 @@
       <div v-for="report in reports" class="flex items-center justify-between border border-sn-light-grey rounded px-2">
         <div class="flex items-center gap-2">
           <i class="sn-icon sn-icon-file-pdf text-sn-grey"></i>
-          <a href="TODO">{{ report.name }}</a>
+          <a class="file-preview-link file-name"
+             :id="`modal_link${report.id}`"
+             data-no-turbolink="true"
+             :data-id="report.id"
+             :data-gallery-view-id="myModuleId"
+             :data-preview-url="report.preview">{{ report.name }}</a>
         </div>
         <div class="flex items-center gap-2">
           <div class="text-sn-grey">{{ i18n.t('my_modules.reports.cretated', { date: report.created_at }) }}</div>
           <button
             v-if="editable"
             class="btn btn-light icon-btn"
+            data-render-tooltip="true"
+            :title="i18n.t('general.delete')"
             @click.stop="deleteReport(report)"
           >
             <i class="sn-icon sn-icon-delete"></i>
           </button>
-          <button
+          <a
             class="btn btn-light icon-btn"
-            @click.stop="exportReport(report.id)"
+            target="_blank"
+            :href="download_url(report.id)"
+            data-render-tooltip="true"
+            :title="i18n.t('general.download')"
           >
             <i class="sn-icon sn-icon-export"></i>
-          </button>
+          </a>
         </div>
       </div>
       <div v-if="!reports || reports?.length == 0">
@@ -106,6 +119,9 @@ export default {
     }
   },
   methods: {
+    download_url(reportId) {
+      return download_my_module_my_module_report_path(this.myModuleId, reportId);
+    },
     fetchTemplates() {
       axios.get(this.loadUrl).then((response) => {
         this.templates = response.data.templates;
@@ -121,11 +137,21 @@ export default {
       const ok = await this.$refs.deleteModal.show();
 
       if (ok) {
-        axios.delete(my_module_my_module_report_path(this.myModuleId, report.id)).then((response) => {}).catch((error) => {});
+        axios.delete(my_module_my_module_report_path(this.myModuleId, report.id)).then((response) => {
+          this.fetchGeneratedReports();
+        }).catch((error) => {
+          HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
+        });
       }
     },
-    exportReport(reportId) {
-      axios.get(download_my_module_my_module_report_path(this.myModuleId, reportId))
+    generateReport(templateId) {
+      axios.post(my_module_my_module_reports_path(this.myModuleId), {
+        report_template_id: templateId
+      }).then((response) => {
+        this.fetchGeneratedReports();
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
+      });
     }
   }
 };

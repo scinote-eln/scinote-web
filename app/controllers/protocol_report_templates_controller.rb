@@ -70,7 +70,7 @@ class ProtocolReportTemplatesController < ApplicationController
     render json: { html: render_to_string(
       partial: 'protocol_report_templates/preview',
       locals: {
-        attachment: @protocol_report_template
+        report_template: @protocol_report_template
       },
       formats: :html
     ) }

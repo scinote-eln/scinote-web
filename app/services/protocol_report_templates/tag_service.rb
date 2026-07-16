@@ -68,7 +68,7 @@ module ProtocolReportTemplates
     end
 
     def replace_form_response_tags(report_template, src_form_response, dest_form_response)
-      original_blob = src_report_template.odt_template_file.blob
+      original_blob = report_template.odt_template_file.blob
       output = Tempfile.new(['report', '.odt'])
 
       report_template.odt_template_file.open do |odt_template_file|

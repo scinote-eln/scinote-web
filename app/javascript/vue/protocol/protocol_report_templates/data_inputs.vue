@@ -24,7 +24,7 @@
           </div> 
           <div class="flex items-center gap-1">
             {{ inputs.tag }}
-            <button class="btn btn-light btn-xs icon-btn btn-black" @click="copy(inputs.tag)">
+            <button class="btn btn-light btn-xs icon-btn btn-black" @click="copy(inputs.tag)" data-render-tooltip="true" :title="i18n.t('general.copy')">
               <i class="sn-icon sn-icon-copyclipboard"></i>
             </button>
           </div>
