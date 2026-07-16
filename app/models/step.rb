@@ -233,7 +233,8 @@ class Step < ApplicationRecord
         completed: false,
         user: user,
         original_protocol: original_protocol,
-        locked: locked
+        locked: locked,
+        attachments_locked: attachments_locked
       )
       new_step.save!
 

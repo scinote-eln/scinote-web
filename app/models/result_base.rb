@@ -47,7 +47,8 @@ class ResultBase < ApplicationRecord
 
       new_result = target_object.results.new(
         name: result_name || name,
-        user: user
+        user: user,
+        attachments_locked: attachments_locked
       )
       new_result.save!
 

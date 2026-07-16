@@ -46,7 +46,8 @@ class Checklist < ApplicationRecord
       new_checklist = step.checklists.create!(
         name: name,
         created_by: user,
-        last_modified_by: user
+        last_modified_by: user,
+        locked: locked
       )
 
       checklist_items.each do |item|

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ResultSerializer < ResultBaseSerializer
-  attributes :my_module_id, :archived, :comments_count, :archived_by, :archived_on
+  attributes :my_module_id, :archived, :comments_count, :archived_by, :archived_on, :attachments_locked
 
   def result_orderable_elements
     return object.all_elements if object.archived?
