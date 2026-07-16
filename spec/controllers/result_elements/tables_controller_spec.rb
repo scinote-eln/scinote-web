@@ -66,4 +66,52 @@ describe ResultElements::TablesController, type: :controller do
     end
   end
 
+  describe 'POST lock' do
+    let(:action) { post :lock, params: { result_id: result_template.id, id: result_table.table.id } }
+
+    context 'when user has permissions' do
+      before { allow(controller).to receive(:can_lock_result_table?).and_return(true) }
+
+      it 'locks the table' do
+        action
+        expect(response).to have_http_status(:ok)
+        expect(result_table.table.reload.locked).to be true
+      end
+    end
+
+    context 'when user lacks permissions' do
+      before { allow(controller).to receive(:can_lock_result_table?).and_return(false) }
+
+      it 'returns forbidden' do
+        action
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
+  describe 'POST unlock' do
+    before { result_table.table.update!(locked: true) }
+
+    let(:action) { post :unlock, params: { result_id: result_template.id, id: result_table.table.id } }
+
+    context 'when user has permissions' do
+      before { allow(controller).to receive(:can_unlock_result_table?).and_return(true) }
+
+      it 'unlocks the table' do
+        action
+        expect(response).to have_http_status(:ok)
+        expect(result_table.table.reload.locked).to be false
+      end
+    end
+
+    context 'when user lacks permissions' do
+      before { allow(controller).to receive(:can_unlock_result_table?).and_return(false) }
+
+      it 'returns forbidden' do
+        action
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
 end

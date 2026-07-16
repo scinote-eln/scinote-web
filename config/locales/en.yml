@@ -60,7 +60,7 @@ en:
         session_end_in:
           header: 'Your session will end in %{time}'
           description: 'To keep the data you entered into the fields without clicking the Save button, please revive your session and save them.'
-          paragraph1: 'To keep your work secure, SciNote times out sessions after 3 hours of inactivity. '
+          paragraph1: 'To keep your work secure, SciNote times out sessions after %{session_timeout} minutes of inactivity.'
           paragraph2: 'To proceed working after the session ends, you’ll have to log in again, starting a new working session.'
           revive_session: 'Revive my session'
         session_ended:
@@ -1812,6 +1812,7 @@ en:
         edit_title: "Edit result"
         archive_title: "Archive result"
       actions:
+        manage_result: "Manage result"
         rearrange: "Rearrange"
         archive: "Archive"
         duplicate: "Duplicate"
@@ -3682,9 +3683,11 @@ en:
             time_zone_label: "Time zone"
             time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
             time_zone_title: "Time zone"
+            time_zone_managed_note: "This setting is managed by your organization and cannot be changed."
             date_format_label: "Date format"
             date_format_sublabel: "Date format setting affects all date display throughout application."
             date_format_title: "Date format"
+            date_format_managed_note: "This setting is managed by your organization and cannot be changed."
           update_flash: "Preferences successfully updated."
         addons:
           head_title: "Settings | Add-ons"
@@ -3930,6 +3933,14 @@ en:
     results: "Results [%{count}]"
     print_label: "Print protocol"
     rearrange_steps_label: "Rearrange steps"
+    manage_steps: "Manage steps"
+    lock_step: "Lock step"
+    unlock_step: "Unlock step"
+    all_steps: "All steps"
+    lock_all_steps: "Lock all steps"
+    unlock_all_steps: "Unlock all steps"
+    allow_adding_steps: "Allow adding steps"
+    action_disabled: "This action is unavailable due to the protocol containing locked steps"
     empty_results_placeholder: "No results added to this template. Create new draft to add them."
     table:
       filters:
@@ -3947,6 +3958,11 @@ en:
         button: "Rearrange steps"
         modal:
           title: "Rearrange protocol steps"
+    manage_items_modal:
+      title_step: "Manage step %{position}"
+      title_result: "Manage result"
+      lock_all: "Lock all"
+      attachments: "Attachments"
     print:
       title: "Print protocol"
       button: "Print"
@@ -4094,6 +4110,8 @@ en:
       repository_rows: "Items [%{count}]"
       draft_with_from_version: 'Draft (from Version %{nr})'
       protocol_description: 'Protocol description'
+      lock_description: "Lock description"
+      unlock_description: "Unlock description"
       protocol_steps: 'Protocol steps'
       publish: 'Publish'
       save_as_draft: 'Create new draft'
@@ -4312,6 +4330,7 @@ en:
       options_dropdown:
         title: 'Step options'
         rearrange: 'Rearrange content'
+        manage_step: 'Manage step'
         duplicate: 'Duplicate'
         delete: 'Delete'
         archive: 'Archive'

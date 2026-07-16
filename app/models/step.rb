@@ -27,6 +27,7 @@ class Step < ApplicationRecord
   before_save :set_last_modified_by
   before_destroy :cascade_before_destroy
   after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust || archived }
+  after_save :change_protocol_adding_steps_allowed
 
   # conditional touch excluding step completion updates
   after_destroy :touch_protocol, :remove_from_user_settings
@@ -78,6 +79,8 @@ class Step < ApplicationRecord
                   .or(with_elements.where(form_responses: { archived: true }))
     ).distinct
   }
+
+  scope :locked, -> { where(locked: true) }
 
   def self.search(user,
     include_archived,
@@ -229,7 +232,9 @@ class Step < ApplicationRecord
         position: step_position || protocol.steps.active.length,
         completed: false,
         user: user,
-        original_protocol: original_protocol
+        original_protocol: original_protocol,
+        locked: locked,
+        attachments_locked: attachments_locked
       )
       new_step.save!
 
@@ -305,6 +310,11 @@ class Step < ApplicationRecord
     protocol.update(last_modified_by: last_modified_by) if last_modified_by
     protocol.touch
     # rubocop:enable Rails/SkipsModelValidations
+  end
+
+  def change_protocol_adding_steps_allowed
+    # if the protocol has any locked steps, disallow adding new steps, otherwise allow it
+    protocol.update!(adding_steps_allowed: protocol.steps.locked.none?)
   end
 
   def adjust_positions_after_destroy

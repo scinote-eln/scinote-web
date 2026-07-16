@@ -86,3 +86,7 @@ html {
 
   40%, 100% { background-position: 320px }
 }
+
+[data-sn-tooltip] {
+  pointer-events: auto !important;
+}

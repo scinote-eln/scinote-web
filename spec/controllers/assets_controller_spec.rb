@@ -355,7 +355,7 @@ describe AssetsController, type: :controller do
     context 'when in task step' do
       let(:element_id) { archived_step_asset.asset.id }
       it 'destroy' do
-        action  
+        action
         expect_success_json
       end
     end
@@ -363,8 +363,56 @@ describe AssetsController, type: :controller do
     context 'when in task result' do
       let(:element_id) { archived_result_asset.asset.id }
       it 'destroy' do
-        action  
+        action
         expect_success_json
+      end
+    end
+  end
+
+  describe 'POST #lock' do
+    let(:action) { post :lock, params: { id: step_asset_in_repository.asset.id } }
+
+    context 'when user has permissions' do
+      before { allow(controller).to receive(:can_lock_asset?).and_return(true) }
+
+      it 'locks the asset' do
+        action
+        expect(response).to have_http_status(:ok)
+        expect(step_asset_in_repository.asset.reload.locked).to be true
+      end
+    end
+
+    context 'when user lacks permissions' do
+      before { allow(controller).to receive(:can_lock_asset?).and_return(false) }
+
+      it 'returns forbidden' do
+        action
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
+  describe 'POST #unlock' do
+    before { step_asset_in_repository.asset.update!(locked: true) }
+
+    let(:action) { post :unlock, params: { id: step_asset_in_repository.asset.id } }
+
+    context 'when user has permissions' do
+      before { allow(controller).to receive(:can_unlock_asset?).and_return(true) }
+
+      it 'unlocks the asset' do
+        action
+        expect(response).to have_http_status(:ok)
+        expect(step_asset_in_repository.asset.reload.locked).to be false
+      end
+    end
+
+    context 'when user lacks permissions' do
+      before { allow(controller).to receive(:can_unlock_asset?).and_return(false) }
+
+      it 'returns forbidden' do
+        action
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end

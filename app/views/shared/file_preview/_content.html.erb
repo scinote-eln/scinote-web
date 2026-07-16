@@ -2,6 +2,9 @@
   <% if asset.archived? %>
     <div class="sci-tag bg-sn-alert-brittlebush pointer-events-none mr-2"><%= I18n.t('my_modules.results.archived') %> <span class="sn-icon sn-icon-archive"></span></div>
   <% end %>
+  <% if locked %>
+    <span class="bg-sn-super-light-grey rounded-full text-xs shrink-0 py-1 px-2 mr-2 pointer-events-none">Locked <i class="sn-icon mini sn-icon-locked-fill !align-sub"></i></span>
+  <% end %>
   <span class="file-name">
     <%= asset.file.metadata[:name] || asset.file_name %>
   </span>

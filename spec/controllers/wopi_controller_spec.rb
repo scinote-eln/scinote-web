@@ -33,7 +33,7 @@ describe WopiController, type: :controller do
       allow(controller).to receive(:verify_proof!).and_return(true)
       @request.headers['X-WOPI-Override'] = 'UNLOCK'
       @request.headers['X-WOPI-Lock'] = 'lock'
-      asset.lock_asset('lock')
+      asset.wopi_lock_asset('lock')
     end
 
     let(:action) { post :post_file_endpoint, params: { id: asset.id, access_token: 'token' } }

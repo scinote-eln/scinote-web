@@ -4,7 +4,7 @@ class ResultTableSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
-  attributes :name, :contents, :urls, :icon, :metadata, :parent_type, :archived, :archived_by, :archived_on
+  attributes :name, :contents, :urls, :icon, :metadata, :parent_type, :archived, :archived_by, :archived_on, :locked
 
   def contents
     object.contents_utf_8
@@ -48,6 +48,8 @@ class ResultTableSerializer < ActiveModel::Serializer
     url_list[:archive_url] = archive_result_table_path(result, object) if can_archive_result_table?(user, object)
     url_list[:restore_url] = restore_result_table_path(result, object) if can_restore_result_table?(user, object)
     url_list[:delete_url] = result_table_path(result, object) if can_delete_result_table?(user, object)
+    url_list[:lock_url] = lock_result_table_path(result, object) if can_lock_result_table?(user, object)
+    url_list[:unlock_url] = unlock_result_table_path(result, object) if can_unlock_result_table?(user, object)
 
     url_list
   end

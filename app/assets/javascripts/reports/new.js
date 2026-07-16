@@ -1375,9 +1375,13 @@ function reportHandsonTableConverter() {
 
     if (dropdownSelector.getValues('#templateSelector').length > 0) {
       loadTemplate();
+    } else {
+      dropdownSelector.disableSelector('#templateSelector');
     }
     if (dropdownSelector.getValues('#docxTemplateSelector').length > 0) {
       loadDocxTemplate();
+    } else {
+      dropdownSelector.disableSelector('#docxTemplateSelector');
     }
 
     $('.repository-columns').each((_, element) => {

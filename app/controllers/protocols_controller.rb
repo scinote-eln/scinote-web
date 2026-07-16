@@ -45,6 +45,7 @@ class ProtocolsController < ApplicationController
     unlink
     unlink_modal
     list_published_protocol_templates
+    update_description_locked
   )
 
   before_action :check_delete_steps_permissions, only: :delete_steps
@@ -261,6 +262,8 @@ class ProtocolsController < ApplicationController
   end
 
   def update_name
+    render_403 and return unless can_update_protocol_name?(@protocol)
+
     if @protocol.update(name: params.require(:protocol)[:name], last_modified_by: current_user)
       log_activity(:edit_protocol_name_in_repository, nil, protocol: @protocol.id)
       render json: {}, status: :ok
@@ -270,12 +273,24 @@ class ProtocolsController < ApplicationController
   end
 
   def update_description
+    render_403 and return unless can_update_protocol_description?(@protocol)
+
     old_description = @protocol.description
     if @protocol.update(description: params.require(:protocol)[:description], last_modified_by: current_user)
       log_activity(:edit_description_in_protocol_repository, nil, protocol: @protocol.id)
       TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
       protocol_annotation_notification(old_description)
       render json: @protocol, serializer: ProtocolSerializer, user: current_user
+    else
+      render json: @protocol.errors, status: :unprocessable_entity
+    end
+  end
+
+  def update_description_locked
+    render_403 and return unless Protocol.content_locking_enabled?
+
+    if @protocol.update(description_locked: params.require(:protocol)[:description_locked], last_modified_by: current_user)
+      render json: {}, status: :ok
     else
       render json: @protocol.errors, status: :unprocessable_entity
     end
@@ -428,6 +443,8 @@ class ProtocolsController < ApplicationController
   end
 
   def unlink
+    render_403 and return unless can_unlink_protocol?(@protocol)
+
     transaction_error = false
     Protocol.transaction do
       @protocol.unlink
@@ -452,6 +469,8 @@ class ProtocolsController < ApplicationController
   end
 
   def revert
+    render_403 and return unless can_revert_protocol?(@protocol)
+
     if @protocol.can_destroy?
       transaction_error = false
       parent = @protocol.parent

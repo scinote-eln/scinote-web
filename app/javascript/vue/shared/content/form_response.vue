@@ -16,25 +16,27 @@
           </span>
         </template>
         <div class="ml-auto flex items gap-4">
+          <LockedTag v-if="element.attributes.orderable.locked" />
           <button
-              v-if="this.element.attributes.orderable.urls.restore_url"
-              :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-formElement-options-restore`]"
-              @click="confirmingRestore = true"
-              :title="i18n.t('general.restore')"
-              :data-e2e="`e2e-BT-${this.dataE2e}-formElement${this.element.id}-options-restore`"
-            >
-              <i class="sn-icon sn-icon-restore"></i>
-            </button>
-            <button
-              v-if="this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url"
-              :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-formElement-options-delete`]"
-              @click="showDeleteModal"
-              :title="i18n.t('general.delete')"
-              :data-e2e="`e2e-BT-${this.dataE2e}-formElement${this.element.id}-options-delete`"
-            >
-              <i class="sn-icon sn-icon-delete"></i>
-            </button>
+            v-if="this.element.attributes.orderable.urls.restore_url"
+            :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-formElement-options-restore`]"
+            @click="confirmingRestore = true"
+            :title="i18n.t('general.restore')"
+            :data-e2e="`e2e-BT-${this.dataE2e}-formElement${this.element.id}-options-restore`"
+          >
+            <i class="sn-icon sn-icon-restore"></i>
+          </button>
+          <button
+            v-if="this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url"
+            :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-formElement-options-delete`]"
+            @click="showDeleteModal"
+            :title="i18n.t('general.delete')"
+            :data-e2e="`e2e-BT-${this.dataE2e}-formElement${this.element.id}-options-delete`"
+          >
+            <i class="sn-icon sn-icon-delete"></i>
+          </button>
           <MenuDropdown
+            v-if="inRepository || !this.element.attributes.orderable.locked"
             class="ml-auto"
             :listItems="this.actionMenu"
             :btnClasses="'btn btn-light icon-btn btn-sm'"
@@ -129,6 +131,8 @@ import axios from '../../../packs/custom_axios.js';
 import ConfirmationModal from '../confirmation_modal.vue';
 import ArchiveMixin from './mixins/archive.js';
 import RestoreModal from './modal/restore_element.vue';
+import LockedTag from '../snippets/locked_tag.vue';
+import tooltipMixin from '../../mixins/tooltipMixin.js';
 
 export default {
   name: 'TextContent',
@@ -138,9 +142,10 @@ export default {
     MenuDropdown,
     Field,
     ConfirmationModal,
-    RestoreModal
+    RestoreModal,
+    LockedTag
   },
-  mixins: [DeleteMixin, MoveMixin, ArchiveMixin],
+  mixins: [DeleteMixin, MoveMixin, ArchiveMixin, tooltipMixin],
   props: {
     element: {
       type: Object,

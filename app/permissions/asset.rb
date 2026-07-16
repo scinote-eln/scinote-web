@@ -20,9 +20,9 @@ Canaid::Permissions.register_for(Asset) do
 
     case object
     when Step
-      asset.active? && can_manage_step?(user, object)
+      asset.active? && !asset.locked? && can_manage_step?(user, object)
     when ResultBase
-      asset.active? && can_manage_result?(user, object)
+      asset.active? && !asset.locked? && can_manage_result?(user, object)
     when RepositoryCell
       if object.repository_column.repository.is_a?(RepositorySnapshot)
         false
@@ -56,17 +56,21 @@ Canaid::Permissions.register_for(Asset) do
     case object
     when Step
       if object.protocol.in_repository?
-        can_manage_step?(user, object)
+        (!asset.locked? || can_manage_protocol_draft_in_repository?(user, object.protocol)) &&
+          can_manage_step?(user, object)
       else
-        asset.archived? &&
+        !asset.locked? &&
+          asset.archived? &&
           object.team.protocol_steps_deletion_enabled? &&
           can_manage_step?(user, object)
       end
     when ResultBase
       if object.respond_to?(:protocol)
-        can_manage_result?(user, object)
+        (!asset.locked? || can_manage_protocol_draft_in_repository?(user, object.protocol)) &&
+          can_manage_result?(user, object)
       else
-        asset.archived? &&
+        !asset.locked? &&
+          asset.archived? &&
           object.team.result_deletion_enabled? &&
           can_manage_result?(user, object)
       end
@@ -81,6 +85,30 @@ Canaid::Permissions.register_for(Asset) do
 
   can :restore_asset_version do |user, asset|
     VersionedAttachments.enabled? && can_manage_asset?(user, asset)
+  end
+
+  can :lock_asset do |user, asset|
+    object = asset.step || asset.result
+    case object
+    when Step
+      can_manage_protocol_draft_in_repository?(user, object.protocol)
+    when ResultBase
+      object.respond_to?(:protocol) && can_manage_protocol_draft_in_repository?(user, object.protocol)
+    else
+      false
+    end
+  end
+
+  can :unlock_asset do |user, asset|
+    object = asset.step || asset.result
+    case object
+    when Step
+      can_manage_protocol_draft_in_repository?(user, object.protocol)
+    when ResultBase
+      object.respond_to?(:protocol) && can_manage_protocol_draft_in_repository?(user, object.protocol)
+    else
+      false
+    end
   end
 
   can :open_asset_locally do |_user, asset|

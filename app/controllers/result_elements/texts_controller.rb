@@ -9,10 +9,12 @@ module ResultElements
 
     # rubocop:disable Rails/LexicallyScopedActionFilter
     before_action :check_manage_result_permissions, only: %i(create move_targets)
-    before_action :load_result_text, only: %i(update destroy duplicate move archive restore)
-    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets)
+    before_action :load_result_text, only: %i(update destroy duplicate move archive restore lock unlock)
+    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets lock unlock)
     before_action :check_archive_permissions, only: :archive
     before_action :check_restore_permissions, only: :restore
+    before_action :check_lock_permissions, only: :lock
+    before_action :check_unlock_permissions, only: :unlock
     before_action :check_delete_permissions, only: :destroy
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -78,28 +80,6 @@ module ResultElements
       end
     end
 
-    def archive
-      ActiveRecord::Base.transaction do
-        @result_text.archive!(current_user)
-        log_result_activity(:text_archived, { text_name: @result_text.name })
-      end
-
-      head :ok
-    rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
-    end
-
-    def restore
-      ActiveRecord::Base.transaction do
-        @result_text.restore!(current_user)
-        log_result_activity(:text_restored, { text_name: @result_text.name })
-      end
-
-      render json: { message: I18n.t('protocols.steps.modals.restore_modal.restore_text') }
-    rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
-    end
-
     def duplicate
       ActiveRecord::Base.transaction do
         position = @result_text.result_orderable_element.position
@@ -123,6 +103,8 @@ module ResultElements
     def load_result_text
       @result_text = @result.result_texts.find_by(id: params[:id])
       return render_404 unless @result_text
+
+      @element = @result_text
     end
 
     def check_manage_permissions
@@ -135,6 +117,26 @@ module ResultElements
 
     def check_restore_permissions
       render_403 unless can_restore_result_text?(@result_text)
+    end
+
+    def check_lock_permissions
+      render_403 unless can_lock_result_text?(@result_text)
+    end
+
+    def check_unlock_permissions
+      render_403 unless can_unlock_result_text?(@result_text)
+    end
+
+    def log_archive_activity
+      log_result_activity(:text_archived, { text_name: @element.name })
+    end
+
+    def log_restore_activity
+      log_result_activity(:text_restored, { text_name: @element.name })
+    end
+
+    def restore_response
+      render json: { message: I18n.t('protocols.steps.modals.restore_modal.restore_text') }
     end
 
     def check_delete_permissions

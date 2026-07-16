@@ -27,7 +27,8 @@ class ResultText < ApplicationRecord
     ActiveRecord::Base.transaction do
       new_result_text = result.result_texts.create!(
         text: text,
-        name: name
+        name: name,
+        locked: locked
       )
 
       case result

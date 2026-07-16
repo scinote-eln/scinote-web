@@ -18,7 +18,7 @@ class FormResponse < ApplicationRecord
 
   has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
-  enum :status, { pending: 0, submitted: 1, locked: 2 }
+  enum :status, { pending: 0, submitted: 1, locked: 2 }, prefix: true
 
   has_many :form_field_values, dependent: :destroy
 

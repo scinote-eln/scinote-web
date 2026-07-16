@@ -127,6 +127,57 @@ describe ProtocolsController, type: :controller do
     end
   end
 
+  describe 'POST update_description_locked' do
+    before { allow(Protocol).to receive(:content_locking_enabled?).and_return(true) }
+
+    let(:params) do
+      { id: repository_protocol.id,
+        protocol: { description_locked: true } }
+    end
+    let(:action) { post :update_description_locked, params: params, format: :json }
+
+    it 'returns a successful response' do
+      action
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'locks the protocol description' do
+      action
+      expect(repository_protocol.reload.description_locked).to be true
+    end
+
+    context 'when protocol draft cannot be managed' do
+      let(:params) do
+        { id: published_protocol.id,
+          protocol: { description_locked: true } }
+      end
+
+      it 'returns a forbidden response' do
+        action
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'does not lock the protocol description' do
+        action
+        expect(published_protocol.reload.description_locked).to be false
+      end
+    end
+
+    context 'when protocol content locking is disabled' do
+      before { allow(Protocol).to receive(:content_locking_enabled?).and_return(false) }
+
+      it 'returns a forbidden response' do
+        action
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'does not lock the protocol description' do
+        action
+        expect(repository_protocol.reload.description_locked).to be false
+      end
+    end
+  end
+
   describe 'POST update_authors' do
     let(:params) do
       { id: repository_protocol.id,
@@ -311,6 +362,18 @@ describe ProtocolsController, type: :controller do
       expect(copied_protocol.name).to eq('test' )
       expect(copied_protocol.description).to eq(protocol_in_task.description)
       expect(copied_protocol.protocol_type).to eq('in_repository_draft')
+    end
+
+    context 'when the description is locked' do
+      let(:protocol_in_task) do
+        create :protocol, name: 'test protocol', my_module: my_module, description_locked: true
+      end
+
+      it 'propagates description_locked to the copied protocol' do
+        action
+        copied_protocol = Protocol.order(:created_at).last
+        expect(copied_protocol.description_locked).to be true
+      end
     end
   end
 
