@@ -5,7 +5,7 @@ ARG TIKA_DIST_URL="https://archive.apache.org/dist/tika/3.2.2/tika-app-3.2.2.jar
 ENV TIKA_PATH=/usr/local/bin/tika-app.jar
 
 # Chromium 150.0.7871.46 crashes on startup under Grover/headless (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1141571)
-ARG CHROMIUM_VERSION=149.0.7827.196-1~deb13u1
+ARG CHROMIUM_VERSION=149.0.7827.196-1~deb12u1
 
 # additional dependecies
 # libreoffice for file preview generation
@@ -27,7 +27,7 @@ RUN apt-get update -qq && \
   fonts-wqy-zenhei \
   libfile-mimeinfo-perl \
   yarnpkg && \
-  echo "deb [check-valid-until=no] https://snapshot.debian.org/archive/debian-security/20260625T165532Z/ trixie-security main" > /etc/apt/sources.list.d/chromium-pin.list && \
+  echo "deb [check-valid-until=no] https://snapshot.debian.org/archive/debian-security/20260626T014759Z/ bookworm-security main" > /etc/apt/sources.list.d/chromium-pin.list && \
   apt-get update -qq && \
   apt-get install -y --no-install-recommends \
   chromium=$CHROMIUM_VERSION \
