@@ -223,7 +223,7 @@ class Step < ApplicationRecord
     step_texts.order(created_at: :asc).first
   end
 
-  def duplicate(protocol, user, step_position: nil, step_name: nil, include_file_versions: false, original_protocol: nil)
+  def duplicate(protocol, user, step_position: nil, step_name: nil, include_file_versions: false, original_protocol: nil, skip_lock: false)
     ActiveRecord::Base.transaction do
       assets_to_clone = []
 
@@ -233,19 +233,19 @@ class Step < ApplicationRecord
         completed: false,
         user: user,
         original_protocol: original_protocol,
-        locked: locked,
-        attachments_locked: attachments_locked
+        locked: (skip_lock ? false : locked),
+        attachments_locked: (skip_lock ? false : attachments_locked)
       )
       new_step.save!
 
       # Copy texts
       step_texts.active.each do |step_text|
-        step_text.duplicate(new_step, step_text.step_orderable_element.position)
+        step_text.duplicate(new_step, step_text.step_orderable_element.position, skip_lock: skip_lock)
       end
 
       # Copy checklists
       checklists.active.asc.each do |checklist|
-        checklist.duplicate(new_step, user, checklist.step_orderable_element.position)
+        checklist.duplicate(new_step, user, checklist.step_orderable_element.position, skip_lock: skip_lock)
       end
 
       # "Shallow" Copy assets
@@ -258,12 +258,12 @@ class Step < ApplicationRecord
 
       # Copy tables
       tables.active.each do |table|
-        duplicate_table(new_step, user, table)
+        duplicate_table(new_step, user, table, skip_lock: skip_lock)
       end
 
       # Copy form responses
       form_responses.active.each do |form_response|
-        form_response.duplicate(new_step, user, form_response.step_orderable_element.position)
+        form_response.duplicate(new_step, user, form_response.step_orderable_element.position, skip_lock: skip_lock)
       end
 
       # Call clone helper
@@ -291,8 +291,8 @@ class Step < ApplicationRecord
 
   private
 
-  def duplicate_table(new_step, user, table)
-    table.duplicate(new_step, user, table.step_table.step_orderable_element.position)
+  def duplicate_table(new_step, user, table, skip_lock: false)
+    table.duplicate(new_step, user, table.step_table.step_orderable_element.position, skip_lock: skip_lock)
   end
 
   def remove_from_user_settings

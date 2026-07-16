@@ -41,13 +41,13 @@ class Checklist < ApplicationRecord
 
   scope :asc, -> { order('checklists.created_at ASC') }
 
-  def duplicate(step, user, position = nil)
+  def duplicate(step, user, position = nil, skip_lock: false)
     ActiveRecord::Base.transaction do
       new_checklist = step.checklists.create!(
         name: name,
         created_by: user,
         last_modified_by: user,
-        locked: locked
+        locked: (skip_lock ? false : locked)
       )
 
       checklist_items.each do |item|
