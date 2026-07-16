@@ -138,7 +138,7 @@ class MyModuleShareableLinksController < ApplicationController
 
     return render_404 if @asset.blank?
 
-    redirect_to @asset.file.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes, disposition: 'attachment'),
+    redirect_to @asset.file.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME, disposition: 'attachment'),
                 allow_other_host: true
   end
 

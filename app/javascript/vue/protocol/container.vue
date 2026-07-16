@@ -136,7 +136,7 @@
           <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol"/>
           <div :class="inRepository ? 'protocol-section protocol-information' : ''">
             <div v-if="inRepository" id="protocol-description" class="protocol-section-header">
-              <div class="protocol-description-container">
+              <div class="protocol-description-container w-full flex flex-row items-center justify-between">
                 <a class="protocol-section-caret"
                   role="button"
                   data-toggle="collapse"
@@ -150,7 +150,21 @@
                     </h2>
                   </span>
                 </a>
+                <div class="flex flex-row items-center gap-2">
+                  <LockedTag v-if="protocol.attributes.description_locked" />
+                  <a v-if="urls.update_description_locked_url"
+                    class="btn icon-btn"
+                    data-e2e="e2e-BT-protocol-templateDescription-lock"
+                    :data-sn-tooltip="protocol.attributes.description_locked ? i18n.t('protocols.header.unlock_description') : i18n.t('protocols.header.lock_description')"
+                    @click="toggleDescriptionLock"
+                    tabindex="0">
+                    <i class="sn-icon" :class="{ 'sn-icon-unlocked': !protocol.attributes.description_locked, 'sn-icon-locked-fill': protocol.attributes.description_locked }" aria-hidden="true"></i>
+                  </a>
+                </div>
               </div>
+            </div>
+            <div v-if="!inRepository && protocol.attributes.description_locked" class="w-full flex flex-row items-center justify-end mb-1">
+              <LockedTag />
             </div>
             <div id="protocol-description-container"
               class="text-base content__text-container"
@@ -236,18 +250,31 @@
                   <i class="sn-icon sn-icon-expand-all"></i>
                   <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.expand_label") }}</span>
                 </button>
-                <a v-if="steps.length > 0 && urls.reorder_steps_url"
-                  class="btn btn-light icon-btn"
-                  data-toggle="modal"
-                  data-e2e="e2e-BT-protocol-templateSteps-reorder"
-                  :data-sn-tooltip="i18n.t('protocols.rearrange_steps_label')"
-                  @click="startStepReorder"
-                  @keyup.enter="startStepReorder"
-                  :class="{'disabled': steps.length == 1}"
-                  tabindex="0" >
-                <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
-            </a>
-            </div>
+                <template v-if="inRepository && urls.lock_all_steps_url">
+                  <a class="btn btn-light icon-btn"
+                     data-toggle="modal"
+                     data-e2e="e2e-BT-protocol-templateSteps-manage"
+                     :data-sn-tooltip="i18n.t('protocols.manage_steps')"
+                     @click="managingSteps = true"
+                     @keyup.enter="managingSteps = true"
+                     tabindex="0">
+                    <i class="sn-icon sn-icon-steps-manage" aria-hidden="true"></i>
+                  </a>
+                </template>
+                <template v-else>
+                  <a v-if="steps.length > 0 && urls.reorder_steps_url"
+                    class="btn btn-light icon-btn"
+                    data-toggle="modal"
+                    data-e2e="e2e-BT-protocol-templateSteps-reorder"
+                    :data-sn-tooltip="i18n.t('protocols.rearrange_steps_label')"
+                    @click="steps.length > 1 && startStepReorder()"
+                    @keyup.enter="startStepReorder"
+                    :class="{'disabled': steps.length == 1}"
+                    tabindex="0" >
+                    <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
+                  </a>
+                </template>
+              </div>
             </div>
             <div :class="{
                 'tw-hidden': loadingOverlay
@@ -255,10 +282,18 @@
               class="protocol-steps pb-8"
             >
               <div v-for="(step, index) in steps" :key="step.id" class="step-block">
-                <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
-                  <i class="sn-icon sn-icon-new-task"></i>
-                  <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
-                </div>
+                <template v-if="urls.reorder_steps_url">
+                  <div v-if="index > 0 && urls.add_step_url && urls.reorder_steps_url" class="insert-step" @click="addStep(index)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
+                    <i class="sn-icon sn-icon-new-task"></i>
+                    <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
+                  </div>
+                </template>
+                <template v-else-if="index > 0 && urls.add_step_url">
+                  <div class="insert-step disabled"  :data-sn-tooltip="i18n.t('protocols.action_disabled')">
+                    <i class="sn-icon sn-icon-new-task"></i>
+                    <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
+                  </div>
+                </template>
                 <Step
                   ref="steps"
                   :step.sync="steps[index]"
@@ -277,6 +312,7 @@
                   @step:move_attachment="reloadStep"
                   @step:drag_enter="dragEnter"
                   @step:collapsed="checkStepsState"
+                  @step:toggle-lock="toggleStepLock(step)"
                   :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                   :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
                 />
@@ -312,6 +348,14 @@
         @reorder="updateStepOrder"
         @close="closeStepReorderModal"
       />
+      <ManageStepsModal v-if="managingSteps"
+        :steps="steps"
+        :protocol="protocol"
+        @toggle-lock="toggleStepLock"
+        @toggle-lock-all="toggleLockAllSteps"
+        @reorder="updateStepOrder"
+        @close="managingSteps = false"
+      />
       <clipboardPasteModal v-if="showClipboardPasteModal"
                           :image="pasteImages"
                           :objects="steps"
@@ -336,6 +380,7 @@ import ProtocolMetadata from './protocolMetadata';
 import ProtocolOptions from './protocolOptions';
 import Tinymce from '../shared/tinymce.vue';
 import ReorderableItemsModal from '../shared/reorderable_items_modal.vue';
+import ManageStepsModal from './modals/manage_steps.vue';
 import clipboardPasteModal from '../shared/content/attachments/clipboard_paste_modal.vue';
 import AssetPasteMixin from '../shared/content/attachments/mixins/paste.js';
 import UtilsMixin from '../mixins/utils.js';
@@ -344,6 +389,9 @@ import moduleNameObserver from '../mixins/moduleNameObserver';
 import AssignedItemsModal from './modals/assigned_items.vue';
 import tooltipMixin from '../mixins/tooltipMixin.js';
 import StepCollapseState from './mixins/step_collapse_state.js';
+import axios from '../../packs/custom_axios.js';
+import { protocol_filter_global_activities_path } from '../../routes.js';
+import LockedTag from '../shared/snippets/locked_tag.vue';
 
 export default {
   name: 'ProtocolContainer',
@@ -356,7 +404,7 @@ export default {
   components: {
     Step, InlineEdit, ProtocolOptions, Tinymce,
     ReorderableItemsModal, ProtocolMetadata, clipboardPasteModal,
-    AssignedItemsModal
+    AssignedItemsModal, ManageStepsModal, LockedTag
   },
   mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin, tooltipMixin, StepCollapseState],
   computed: {
@@ -380,6 +428,7 @@ export default {
       },
       steps: [],
       reordering: false,
+      managingSteps: false,
       stepToReload: null,
       activeDragStep: null,
       stepCollapsed: false,
@@ -396,8 +445,8 @@ export default {
     this.loadingOverlay = true;
   },
   mounted() {
-    $.get(this.protocolUrl, (result) => {
-      this.protocol = result.data;
+    axios.get(this.protocolUrl).then((response) => {
+      this.protocol = response.data.data;
       this.$nextTick(() => {
         this.refreshProtocolStatus();
         if (!this.inRepository) {
@@ -405,27 +454,8 @@ export default {
           this.initStackableHeaders();
         }
       });
-      $.get(this.urls.steps_url, (result) => {
-        this.steps = result.data;
-        this.steps.forEach((step) => {
-          step.attachments = []
-          step.relationships.assets.data.forEach((asset) => {
-            step.attachments.push(result.included.find((a) => a.id === asset.id && a.type === 'assets'));
-          });
-
-          step.elements = [];
-          step.relationships.step_orderable_elements.data.forEach((element) => {
-            step.elements.push(result.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
-          });
-        });
-
-        this.loadingOverlay = false;
-
-        if (this.anchorId) {
-          this.scrollToStep();
-        }
-      });
-    });
+      this.loadSteps();
+    })
   },
   beforeUnmount() {
     if (!this.inRepository) {
@@ -433,6 +463,32 @@ export default {
     }
   },
   methods: {
+    setStepRelationships(step, response) {
+      step.attachments = [];
+      step.relationships.assets.data.forEach((asset) => {
+        step.attachments.push(response.data.included.find((a) => a.id === asset.id && a.type === 'assets'));
+      });
+
+      step.elements = [];
+      step.relationships.step_orderable_elements.data.forEach((element) => {
+        step.elements.push(response.data.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
+      });
+    },
+    loadSteps() {
+      axios.get(this.urls.steps_url).then((response) => {
+        const steps = response.data.data;
+        steps.forEach((step) => {
+          this.setStepRelationships(step, response);
+        });
+
+        this.steps = steps;
+        this.loadingOverlay = false;
+
+        if (this.anchorId) {
+          this.scrollToStep();
+        }
+      });
+    },
     scrollToStep() {
       this.$nextTick(() => {
         if (this.anchorId) {
@@ -451,18 +507,18 @@ export default {
       this.stepToReload = step;
     },
     deleteSteps() {
-      $.post(this.urls.delete_steps_url, () => {
+      axios.post(this.urls.delete_steps_url).then(() => {
         this.steps = [];
         this.refreshProtocolStatus();
-      }).fail(() => {
+      }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     archiveSteps() {
-      $.post(this.urls.archive_steps_url, () => {
+      axios.post(this.urls.archive_steps_url).then(() => {
         this.steps = [];
         this.refreshProtocolStatus();
-      }).fail(() => {
+      }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
@@ -481,8 +537,8 @@ export default {
     refreshProtocolDropdownOptions() {
       if (!this.linked && this.inRepository) return;
 
-      $.get(this.protocolUrl, (result) => {
-        this.protocol.attributes.urls = result.data.attributes.urls;
+      axios.get(this.protocolUrl).then((response) => {
+        this.protocol.attributes.urls = response.data.data.attributes.urls;
       });
     },
     updateProtocol(attributes) {
@@ -490,13 +546,8 @@ export default {
     },
     updateName(newName) {
       this.protocol.attributes.name = newName;
-      $.ajax({
-        type: 'PATCH',
-        url: this.urls.update_protocol_name_url,
-        data: { protocol: { name: newName } },
-        success: () => {
-          this.refreshProtocolStatus();
-        }
+      axios.patch(this.urls.update_protocol_name_url, { protocol: { name: newName } }).then(() => {
+        this.refreshProtocolStatus();
       });
     },
     updateDescription(protocol) {
@@ -504,19 +555,11 @@ export default {
       this.refreshProtocolStatus();
     },
     addStep(position) {
-      $.post(this.urls.add_step_url, { position }, (result) => {
-        const step = result.data;
+      axios.post(this.urls.add_step_url, { position }).then((response) => {
+        const step = response.data.data;
         step.newStep = true;
 
-        step.attachments = []
-        step.relationships.assets.data.forEach((asset) => {
-          step.attachments.push(result.included.find((a) => a.id === asset.id && a.type === 'assets'));
-        });
-
-        step.elements = [];
-        step.relationships.step_orderable_elements.data.forEach((element) => {
-          step.elements.push(result.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
-        });
+        this.setStepRelationships(step, response);
         this.updateStepsPosition(step);
 
         // scroll to bottom if step was appended at the end
@@ -524,8 +567,8 @@ export default {
           this.$nextTick(() => this.scrollToBottom());
         }
         this.refreshProtocolStatus();
-      }).fail((data) => {
-        HelperModule.flashAlertMsg(data.responseJSON.error ? Object.values(data.responseJSON.error).join(', ') : I18n.t('errors.general'), 'danger');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response?.data?.error ? Object.values(error.response.data.error).join(', ') : I18n.t('errors.general'), 'danger');
       });
     },
     updateStepsPosition(step, action = 'add', old_position = 0) {
@@ -555,6 +598,32 @@ export default {
       };
       this.refreshProtocolStatus();
     },
+    toggleStepLock(step) {
+      const url = step.attributes.locked ? step.attributes.urls.unlock_url : step.attributes.urls.lock_url;
+      axios.post(url).then((response) => {
+        const updatedStep = response.data.data;
+        this.updateStep(updatedStep.attributes);
+        this.reloadStep(parseInt(updatedStep.id, 10));
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    toggleLockAllSteps(locked) {
+      const url = locked ? this.protocol.attributes.urls.lock_all_steps_url : this.protocol.attributes.urls.unlock_all_steps_url;
+      axios.post(url).then(() => {
+        this.loadSteps();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    toggleDescriptionLock() {
+      const locked = !this.protocol.attributes.description_locked;
+      axios.post(this.protocol.attributes.urls.update_description_locked_url, { protocol: { description_locked: locked } }).then(() => {
+        this.protocol.attributes.description_locked = locked;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
     reorderSteps(steps) {
       this.steps = steps.sort((a, b) => a.attributes.position - b.attributes.position);
       this.refreshProtocolStatus();
@@ -571,14 +640,10 @@ export default {
         )
       };
 
-      $.ajax({
-        type: 'POST',
-        url: this.protocol.attributes.urls.reorder_steps_url,
-        data: JSON.stringify(stepPositions),
-        contentType: 'application/json',
-        dataType: 'json',
-        error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
-        success: (() => this.reorderSteps(this.steps))
+      axios.post(this.protocol.attributes.urls.reorder_steps_url, stepPositions).then(() => {
+        this.reorderSteps(this.steps);
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     startStepReorder() {

@@ -1,6 +1,6 @@
 <%
   if defined?(shareable_document) && shareable_document
-    pdf_url = asset.file.url(disposition: 'attachment', expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes)
+    pdf_url = asset.file.url(disposition: 'attachment', expires_in: Constants::URL_SHORT_EXPIRE_TIME)
     pdf_size = asset&.blob&.byte_size
   elsif defined?(report_template) && report_template
     pdf_url = asset.odt_template_file_preview.present? ? rails_blob_path(asset.odt_template_file_preview, disposition: 'attachment') : pdf_preview_path_protocol_protocol_report_template_path(asset.subject, asset)

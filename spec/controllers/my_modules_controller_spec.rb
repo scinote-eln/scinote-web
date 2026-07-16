@@ -170,6 +170,69 @@ describe MyModulesController, type: :controller do
       expect { action }
         .to(change { Activity.count })
     end
+
+    context 'when the protocol description is locked' do
+      before { my_module.protocol.update!(description_locked: true) }
+
+      it 'returns a forbidden response' do
+        action
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'does not change the protocol description' do
+        expect { action }.not_to(change { my_module.protocol.reload.description })
+      end
+    end
+  end
+
+  describe 'PATCH update_protocol' do
+    let(:action) { patch :update_protocol, params: params, format: :json }
+
+    context 'when changing the protocol description' do
+      let(:params) do
+        { id: my_module.id, protocol: { description: 'protocol description changed' } }
+      end
+
+      it 'calls create activity for changing task protocol description' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type:
+                                       :protocol_description_in_task_edited)))
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
+      end
+
+      context 'when the protocol description is locked' do
+        before { my_module.protocol.update!(description_locked: true) }
+
+        it 'returns a forbidden response' do
+          action
+          expect(response).to have_http_status(:forbidden)
+        end
+
+        it 'does not change the protocol description' do
+          expect { action }.not_to(change { my_module.protocol.reload.description })
+        end
+      end
+    end
+
+    context 'when changing the protocol name' do
+      let(:params) do
+        { id: my_module.id, protocol: { name: 'Updated protocol name' } }
+      end
+
+      it 'calls create activity for changing task protocol name' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type:
+                                       :protocol_name_in_task_edited)))
+        action
+      end
+    end
   end
 
   describe 'PUT update' do

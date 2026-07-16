@@ -265,6 +265,7 @@ class MyModulesController < ApplicationController
     protocol = @my_module.protocol
     old_description = protocol.description
     return render_404 unless protocol
+    return render_403 unless can_update_protocol_description?(protocol)
 
     if protocol.update(description: params.require(:protocol)[:description])
       log_activity(:protocol_description_in_task_edited)
@@ -294,6 +295,8 @@ class MyModulesController < ApplicationController
 
   def update_protocol
     protocol = @my_module.protocol
+    return render_403 if protocol_params.key?(:description) && !can_update_protocol_description?(protocol)
+
     old_description = protocol.description
 
     ActiveRecord::Base.transaction do

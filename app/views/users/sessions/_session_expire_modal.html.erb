@@ -19,7 +19,7 @@
               </div>
             </a>
             <ul class="collapse" id="InstructionsSection">
-                <li><%= t('devise.sessions.expire_modal.session_end_in.paragraph1') %></li>
+                <li><%= t('devise.sessions.expire_modal.session_end_in.paragraph1', session_timeout: @current_user.timeout_in / 60) %></li>
                 <li><%= t('devise.sessions.expire_modal.session_end_in.paragraph2') %></li>
             </ul>
           </li>

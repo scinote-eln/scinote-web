@@ -18,7 +18,7 @@ class FormResponse < ApplicationRecord
 
   has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
-  enum :status, { pending: 0, submitted: 1, locked: 2 }
+  enum :status, { pending: 0, submitted: 1, locked: 2 }, prefix: true
 
   has_many :form_field_values, dependent: :destroy
 
@@ -109,7 +109,7 @@ class FormResponse < ApplicationRecord
     end
   end
 
-  def duplicate(parent, user, position = nil)
+  def duplicate(parent, user, position = nil, skip_lock: false)
     ActiveRecord::Base.transaction do
       new_form_response = FormResponse.create!(
         status: :pending,
@@ -117,7 +117,8 @@ class FormResponse < ApplicationRecord
         discarded_at: nil,
         submitted_by: nil,
         created_by_id: user.id,
-        parent: parent
+        parent: parent,
+        locked: (skip_lock ? false : locked)
       )
 
       parent.step_orderable_elements.create!(

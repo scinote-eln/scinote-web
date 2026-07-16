@@ -317,8 +317,8 @@ CREATE TABLE public.assets (
     created_by_id bigint,
     last_modified_by_id bigint,
     estimated_size bigint DEFAULT 0 NOT NULL,
-    lock character varying(1024),
-    lock_ttl integer,
+    wopi_lock character varying(1024),
+    wopi_lock_ttl integer,
     version integer DEFAULT 1,
     file_processing boolean,
     team_id integer,
@@ -328,7 +328,8 @@ CREATE TABLE public.assets (
     archived_on timestamp(6) without time zone,
     restored_on timestamp(6) without time zone,
     archived_by_id bigint,
-    restored_by_id bigint
+    restored_by_id bigint,
+    locked boolean DEFAULT false NOT NULL
 );
 
 
@@ -485,7 +486,8 @@ CREATE TABLE public.checklists (
     archived_on timestamp(6) without time zone,
     restored_on timestamp(6) without time zone,
     archived_by_id bigint,
-    restored_by_id bigint
+    restored_by_id bigint,
+    locked boolean DEFAULT false NOT NULL
 );
 
 
@@ -845,7 +847,8 @@ CREATE TABLE public.form_responses (
     archived_on timestamp(6) without time zone,
     restored_on timestamp(6) without time zone,
     archived_by_id bigint,
-    restored_by_id bigint
+    restored_by_id bigint,
+    locked boolean DEFAULT false NOT NULL
 );
 
 
@@ -1719,7 +1722,9 @@ CREATE TABLE public.protocols (
     previous_version_id bigint,
     last_modified_by_id bigint,
     published_by_id bigint,
-    linked_at timestamp without time zone
+    linked_at timestamp without time zone,
+    description_locked boolean DEFAULT false NOT NULL,
+    adding_steps_allowed boolean DEFAULT true NOT NULL
 );
 
 
@@ -2862,7 +2867,8 @@ CREATE TABLE public.result_texts (
     archived_by_id bigint,
     restored_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    locked boolean DEFAULT false NOT NULL
 );
 
 
@@ -2908,7 +2914,8 @@ CREATE TABLE public.results (
     type character varying,
     protocol_id bigint,
     pinned_at timestamp(6) without time zone,
-    pinned_by_id bigint
+    pinned_by_id bigint,
+    attachments_locked boolean DEFAULT false NOT NULL
 );
 
 
@@ -3185,7 +3192,8 @@ CREATE TABLE public.step_texts (
     archived_on timestamp(6) without time zone,
     restored_on timestamp(6) without time zone,
     archived_by_id bigint,
-    restored_by_id bigint
+    restored_by_id bigint,
+    locked boolean DEFAULT false NOT NULL
 );
 
 
@@ -3231,7 +3239,10 @@ CREATE TABLE public.steps (
     archived_on timestamp(6) without time zone,
     restored_on timestamp(6) without time zone,
     archived_by_id bigint,
-    restored_by_id bigint
+    restored_by_id bigint,
+    locked boolean DEFAULT false NOT NULL,
+    adding_items_allowed boolean DEFAULT true NOT NULL,
+    attachments_locked boolean DEFAULT false NOT NULL
 );
 
 
@@ -3347,7 +3358,8 @@ CREATE TABLE public.tables (
     archived_on timestamp(6) without time zone,
     restored_on timestamp(6) without time zone,
     archived_by_id bigint,
-    restored_by_id bigint
+    restored_by_id bigint,
+    locked boolean DEFAULT false NOT NULL
 );
 
 
@@ -6081,6 +6093,13 @@ CREATE INDEX index_assets_on_last_modified_by_id ON public.assets USING btree (l
 
 
 --
+-- Name: index_assets_on_locked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_assets_on_locked ON public.assets USING btree (locked);
+
+
+--
 -- Name: index_assets_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6204,6 +6223,13 @@ CREATE INDEX index_checklists_on_created_by_id ON public.checklists USING btree 
 --
 
 CREATE INDEX index_checklists_on_last_modified_by_id ON public.checklists USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_checklists_on_locked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_checklists_on_locked ON public.checklists USING btree (locked);
 
 
 --
@@ -6470,6 +6496,13 @@ CREATE INDEX index_form_responses_on_created_by_id ON public.form_responses USIN
 --
 
 CREATE INDEX index_form_responses_on_form_id ON public.form_responses USING btree (form_id);
+
+
+--
+-- Name: index_form_responses_on_locked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_form_responses_on_locked ON public.form_responses USING btree (locked);
 
 
 --
@@ -7012,6 +7045,13 @@ CREATE INDEX index_protocols_on_added_by_id ON public.protocols USING btree (add
 
 
 --
+-- Name: index_protocols_on_adding_steps_allowed; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_adding_steps_allowed ON public.protocols USING btree (adding_steps_allowed);
+
+
+--
 -- Name: index_protocols_on_archived; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7044,6 +7084,13 @@ CREATE INDEX index_protocols_on_default_public_user_role_id ON public.protocols 
 --
 
 CREATE INDEX index_protocols_on_description ON public.protocols USING gin (public.trim_html_tags(description) public.gin_trgm_ops);
+
+
+--
+-- Name: index_protocols_on_description_locked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_description_locked ON public.protocols USING btree (description_locked);
 
 
 --
@@ -7880,6 +7927,13 @@ CREATE INDEX index_result_texts_on_archived_by_id ON public.result_texts USING b
 
 
 --
+-- Name: index_result_texts_on_locked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_result_texts_on_locked ON public.result_texts USING btree (locked);
+
+
+--
 -- Name: index_result_texts_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7919,6 +7973,13 @@ CREATE INDEX index_results_on_archived ON public.results USING btree (archived);
 --
 
 CREATE INDEX index_results_on_archived_by_id ON public.results USING btree (archived_by_id);
+
+
+--
+-- Name: index_results_on_attachments_locked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_results_on_attachments_locked ON public.results USING btree (attachments_locked);
 
 
 --
@@ -8104,6 +8165,13 @@ CREATE INDEX index_step_texts_on_archived_by_id ON public.step_texts USING btree
 
 
 --
+-- Name: index_step_texts_on_locked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_step_texts_on_locked ON public.step_texts USING btree (locked);
+
+
+--
 -- Name: index_step_texts_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8132,6 +8200,13 @@ CREATE INDEX index_step_texts_on_text ON public.step_texts USING gin (public.tri
 
 
 --
+-- Name: index_steps_on_adding_items_allowed; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_steps_on_adding_items_allowed ON public.steps USING btree (adding_items_allowed);
+
+
+--
 -- Name: index_steps_on_archived; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8143,6 +8218,13 @@ CREATE INDEX index_steps_on_archived ON public.steps USING btree (archived);
 --
 
 CREATE INDEX index_steps_on_archived_by_id ON public.steps USING btree (archived_by_id);
+
+
+--
+-- Name: index_steps_on_attachments_locked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_steps_on_attachments_locked ON public.steps USING btree (attachments_locked);
 
 
 --
@@ -8164,6 +8246,13 @@ CREATE INDEX index_steps_on_description ON public.steps USING gin (public.trim_h
 --
 
 CREATE INDEX index_steps_on_last_modified_by_id ON public.steps USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_steps_on_locked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_steps_on_locked ON public.steps USING btree (locked);
 
 
 --
@@ -8325,6 +8414,13 @@ CREATE INDEX index_tables_on_data_vector ON public.tables USING gin (data_vector
 --
 
 CREATE INDEX index_tables_on_last_modified_by_id ON public.tables USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_tables_on_locked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tables_on_locked ON public.tables USING btree (locked);
 
 
 --
@@ -10863,8 +10959,12 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260715121739'),
+('20260714101739'),
+('20260708142245'),
 ('20260707140106'),
 ('20260616085134'),
+('20260615135346'),
 ('20260526000000'),
 ('20260515130015'),
 ('20260514114311'),

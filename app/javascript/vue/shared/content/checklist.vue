@@ -33,6 +33,7 @@
             }) }}
           </span>
         </template>
+        <LockedTag v-if="element.attributes.orderable.locked" />
         <div class="ml-auto flex items gap-4">
           <button
             v-if="this.element.attributes.orderable.urls.restore_url"
@@ -52,7 +53,8 @@
           >
             <i class="sn-icon sn-icon-delete"></i>
           </button>
-          <MenuDropdown
+          <MenuDropdown 
+            v-if="inRepository || !this.element.attributes.orderable.locked"
             class="ml-auto"
             :listItems="this.actionMenu"
             :btnClasses="'btn btn-light icon-btn  btn-sm'"
@@ -144,13 +146,15 @@ import MenuDropdown from '../menu_dropdown.vue';
 import ArchiveMixin from './mixins/archive.js';
 import RestoreModal from './modal/restore_element.vue';
 import axios from '../../../packs/custom_axios.js';
+import tooltipMixin from '../../mixins/tooltipMixin.js';
+import LockedTag from '../snippets/locked_tag.vue';
 
 export default {
   name: 'Checklist',
   components: {
-    deleteElementModal, InlineEdit, ChecklistItem, Draggable, moveElementModal, MenuDropdown, RestoreModal
+    deleteElementModal, InlineEdit, ChecklistItem, Draggable, moveElementModal, MenuDropdown, RestoreModal, LockedTag
   },
-  mixins: [DeleteMixin, DuplicateMixin, MoveMixin, ArchiveMixin],
+  mixins: [DeleteMixin, DuplicateMixin, MoveMixin, ArchiveMixin, tooltipMixin],
   props: {
     element: {
       type: Object,
@@ -267,8 +271,8 @@ export default {
       this.$emit('update', this.element, true);
     },
     loadChecklistItems(insertAfter) {
-      $.get(this.element.attributes.orderable.urls.checklist_items_url, (result) => {
-        this.checklistItems = result.data;
+      axios.get(this.element.attributes.orderable.urls.checklist_items_url).then((response) => {
+        this.checklistItems = response.data.data;
         if (insertAfter) {
           this.addItem(insertAfter);
         }
@@ -298,32 +302,20 @@ export default {
     saveItem(item, key) {
       if (item.id > 0) {
         const insertAfter = key === 'Enter' ? item.id : null;
-        $.ajax({
-          url: item.attributes.urls.update_url,
-          type: 'PATCH',
-          data: item,
-          success: () => {
-            this.loadChecklistItems(insertAfter);
-            this.updatedChecklistItem();
-          },
-          error: (xhr) => this.setFlashErrors(xhr.responseJSON.errors)
-        });
+        axios.patch(item.attributes.urls.update_url, item).then(() => {
+          this.loadChecklistItems(insertAfter);
+          this.updatedChecklistItem();
+        }).catch((error) => this.setFlashErrors(error.response.data.errors));
       } else {
         this.postItem(item, key);
       }
     },
     saveItemChecked(item) {
-      $.ajax({
-        url: item.attributes.urls.toggle_url,
-        type: 'PATCH',
-        data: { attributes: { checked: item.attributes.checked } },
-        success: (result) => {
-          this.checklistItems.find(
-            (i) => i.id === item.id
-          ).attributes.checked = result.data.attributes.checked;
-        },
-        error: () => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
-      });
+      axios.patch(item.attributes.urls.toggle_url, { attributes: { checked: item.attributes.checked } }).then((response) => {
+        this.checklistItems.find(
+          (i) => i.id === item.id
+        ).attributes.checked = response.data.data.attributes.checked;
+      }).catch((e) => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'));
     },
     addItem(insertAfter) {
       const afterIndex = this.checklistItems.findIndex((i) => i.id === insertAfter);

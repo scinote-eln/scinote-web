@@ -8,9 +8,11 @@ module StepElements
     before_action :load_form, only: :create
     before_action :load_step, only: :create
     before_action :load_form_response, except: :create
-    before_action :check_manage_permissions, except: %i(create archive restore destroy submit reset move_targets)
+    before_action :check_manage_permissions, except: %i(create archive restore destroy submit reset move_targets lock unlock)
     before_action :check_archive_permissions, only: :archive
     before_action :check_restore_permissions, only: :restore
+    before_action :check_lock_permissions, only: :lock
+    before_action :check_unlock_permissions, only: :unlock
     before_action :check_delete_permissions, only: :destroy
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -74,28 +76,6 @@ module StepElements
       end
     end
 
-    def archive
-      ActiveRecord::Base.transaction do
-        @form_response.archive!(current_user)
-        log_step_activity(:form_archived, { form: @form_response.form.id })
-      end
-
-      head :ok
-    rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
-    end
-
-    def restore
-      ActiveRecord::Base.transaction do
-        @form_response.restore!(current_user)
-        log_step_restore_activity(:task_step_form_restored, { form: @form_response.form.id })
-      end
-
-      render json: { message: I18n.t('protocols.steps.modals.restore_modal.restore_form_response') }
-    rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
-    end
-
     private
 
     def form_response_params
@@ -116,8 +96,9 @@ module StepElements
 
     def load_form_response
       @form_response = FormResponse.find_by(id: params[:id])
+      return render_404 unless @form_response
 
-      render_404 unless @form_response
+      @element = @form_response
     end
 
     def check_forms_enabled
@@ -134,6 +115,26 @@ module StepElements
 
     def check_restore_permissions
       render_403 unless can_restore_step_form_response?(@form_response)
+    end
+
+    def check_lock_permissions
+      render_403 unless can_lock_step_form_response?(@form_response)
+    end
+
+    def check_unlock_permissions
+      render_403 unless can_unlock_step_form_response?(@form_response)
+    end
+
+    def log_archive_activity
+      log_step_activity(:form_archived, { form: @element.form.id })
+    end
+
+    def log_restore_activity
+      log_step_restore_activity(:task_step_form_restored, { form: @element.form.id })
+    end
+
+    def restore_response
+      render json: { message: I18n.t('protocols.steps.modals.restore_modal.restore_form_response') }
     end
 
     def check_delete_permissions

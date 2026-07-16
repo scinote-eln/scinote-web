@@ -2,6 +2,34 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <style>
+      <% ['application',
+          'reports_pdf',
+          'reports_pdf_icons',
+          'bootstrap_pack',
+          'handsontable.formula',
+          'fontawesome'].each do |css_file| %>
+        <%= Rails.application.assets_manifest.find_sources(css_file).first.to_s.force_encoding(Encoding::UTF_8) %>
+      <% end %>
+    </style>
+    <script>
+      <% ['jquery_bundle',
+          'handsontable.full',
+          'lodash',
+          'numeral',
+          'numeric',
+          'md5',
+          'jstat',
+          'formula',
+          'parser',
+          'ruleJS',
+          'big.min',
+          'handsontable.formula',
+          'reports/content',
+          'reports/template_helpers'].each do |js_file| %>
+        <%= Rails.application.assets_manifest.find_sources(js_file).first.to_s.force_encoding(Encoding::UTF_8) %>
+      <% end %>
+    </script>
   </head>
   <body class="print-report-body">
     <% num_of_cover_pages.times do %>

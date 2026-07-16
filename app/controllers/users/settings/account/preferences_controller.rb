@@ -7,6 +7,8 @@ module Users
           :update
         ]
         before_action :set_breadcrumbs_items, only: %i(index)
+        before_action :check_time_zone_permissions, only: :update
+        before_action :check_date_format_permissions, only: :update
         layout 'fluid'
 
         def index
@@ -26,12 +28,16 @@ module Users
           @user = current_user
         end
 
-        def update_params
-          params.require(:user).permit(:time_zone, :date_format, notifications_settings: {})
+        def check_time_zone_permissions
+          render_403 if update_params.include?(:time_zone) && !can_set_time_zone?
         end
 
-        def read_from_params(name)
-          yield(params.include?(name) ? true : false)
+        def check_date_format_permissions
+          render_403 if update_params.include?(:date_format) && !can_set_date_format?
+        end
+
+        def update_params
+          params.require(:user).permit(:time_zone, :date_format, notifications_settings: {})
         end
 
         def set_breadcrumbs_items

@@ -22,7 +22,9 @@
           <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             ref="loadProtocol"
             data-action="load-from-repository"
-            @click="loadProtocol"
+            :class="{ 'disabled': protocol.attributes.has_locked_steps }"
+            :data-sn-tooltip="protocol.attributes.has_locked_steps ? i18n.t('protocols.action_disabled') : null"
+            @click="!protocol.attributes.has_locked_steps && loadProtocol()"
             data-e2e="e2e-DO-task-protocol-actions-loadFromRepository"
           >
             <span>{{ i18n.t("my_modules.protocol.options_dropdown.load_from_repo") }}</span>
@@ -31,7 +33,9 @@
         <li v-if="protocol.attributes.urls.add_protocol_steps_url && !inRepository">
           <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             data-turbolinks="false"
-            @click.prevent="createWithAi()"
+            :class="{ 'disabled': protocol.attributes.has_locked_steps }"
+            :data-sn-tooltip="protocol.attributes.has_locked_steps ? i18n.t('protocols.action_disabled') : null"
+            @click.prevent="!protocol.attributes.has_locked_steps && createWithAi()"
           >
             <i class="sn-icon sn-icon-ai mr-1"></i>
             <span>{{ i18n.t("protocols.index.import_with_ai") }}</span>
@@ -85,11 +89,13 @@
             }}</span>
           </a>
         </li>
-        <li v-if="protocol.attributes.urls.unlink_url && !inRepository">
+        <li v-if="!inRepository && protocol.attributes.linked">
           <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             ref="unlinkProtocol"
             data-action="unlink"
-            @click="unlinkProtocol"
+            :class="{ 'disabled': !protocol.attributes.urls.unlink_url }"
+            :data-sn-tooltip="!protocol.attributes.urls.unlink_url ? i18n.t('protocols.action_disabled') : null"
+            @click="protocol.attributes.urls.unlink_url && unlinkProtocol()"
             data-e2e="e2e-DO-task-protocol-actions-unlinkProtocol"
           >
             <span>{{
@@ -97,11 +103,13 @@
             }}</span>
           </a>
         </li>
-        <li v-if="protocol.attributes.urls.revert_protocol_url && !inRepository">
+        <li v-if="!inRepository && protocol.attributes.linked">
           <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             ref="revertProtocol"
             data-action="revert"
-            @click="revertProtocol"
+            :class="{ 'disabled': !protocol.attributes.urls.revert_protocol_url }"
+            :data-sn-tooltip="!protocol.attributes.urls.revert_protocol_url ? i18n.t('protocols.action_disabled') : null"
+            @click="protocol.attributes.urls.revert_protocol_url && revertProtocol()"
             data-e2e="e2e-DO-task-protocol-actions-revertProtocol"
           >
             <span>{{
@@ -112,7 +120,9 @@
         <li v-if="canArchiveSteps">
           <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             data-turbolinks="false"
-            @click.prevent="openStepsArchivingModal()"
+            :class="{ 'disabled': !protocol.attributes.urls.archive_steps_url }"
+            :data-sn-tooltip="!protocol.attributes.urls.archive_steps_url ? i18n.t('protocols.action_disabled') : null"
+            @click.prevent="protocol.attributes.urls.archive_steps_url && openStepsArchivingModal()"
             data-e2e="e2e-DO-task-protocol-actions-archiveAllSteps"
           >
             <span>{{
@@ -145,11 +155,12 @@
 import DeleteStepsModals from './modals/delete_steps';
 import ArchiveStepsModal from './modals/archive_steps';
 import AddStepsModal from './modals/add_protocol_steps';
+import tooltipMixin from '../mixins/tooltipMixin';
 
 export default {
-
   name: 'ProtocolOptions',
   components: { DeleteStepsModals, ArchiveStepsModal, AddStepsModal },
+  mixins: [tooltipMixin],
   data() {
     return {
       stepsDeleting: false,

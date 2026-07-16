@@ -10,7 +10,7 @@
       <% end %>
     </div>
     <div class="user-time">
-      <% if form_response.submitted? %>
+      <% if form_response.status_submitted? %>
         <% if form_response.archived? %>
           <%= t("projects.reports.elements.archived_metadata",
                 user: form_response.archived_by&.full_name,

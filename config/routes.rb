@@ -693,6 +693,8 @@ Rails.application.routes.draw do
           post :duplicate
           post :archive
           post :restore
+          post :lock
+          post :unlock
         end
       end
       resources :texts, controller: 'step_elements/texts', only: %i(create destroy update) do
@@ -702,6 +704,8 @@ Rails.application.routes.draw do
           post :duplicate
           post :archive
           post :restore
+          post :lock
+          post :unlock
         end
       end
       resources :checklists, controller: 'step_elements/checklists', only: %i(create destroy update) do
@@ -711,6 +715,8 @@ Rails.application.routes.draw do
           post :duplicate
           post :archive
           post :restore
+          post :lock
+          post :unlock
         end
         resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(index create update destroy) do
           patch :toggle, on: :member
@@ -724,6 +730,8 @@ Rails.application.routes.draw do
           post :move
           post :archive
           post :restore
+          post :lock
+          post :unlock
         end
       end
       member do
@@ -737,6 +745,8 @@ Rails.application.routes.draw do
         post 'duplicate'
         post :archive
         post :restore
+        post :lock
+        post :unlock
       end
       collection do
         get :list
@@ -767,6 +777,8 @@ Rails.application.routes.draw do
           post :reorder
           get :list_protocol_steps
           post :add_protocol_steps
+          post :lock_all
+          post :unlock_all
         end
       end
       member do
@@ -805,6 +817,8 @@ Rails.application.routes.draw do
         get :permissions
         put :update_version_comment
         get :list_published_protocol_templates
+        post :update_adding_steps_allowed
+        post :update_description_locked
       end
       collection do
         post 'archive', to: 'protocols#archive'
@@ -868,6 +882,8 @@ Rails.application.routes.draw do
           post :duplicate
           post :archive
           post :restore
+          post :lock
+          post :unlock
         end
       end
       resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
@@ -877,6 +893,8 @@ Rails.application.routes.draw do
           post :duplicate
           post :archive
           post :restore
+          post :lock
+          post :unlock
         end
       end
     end
@@ -1110,6 +1128,8 @@ Rails.application.routes.draw do
     post 'files/:id/move', to: 'assets#move', as: 'asset_move'
     post 'files/:id/archive', to: 'assets#archive', as: 'asset_archive'
     post 'files/:id/restore', to: 'assets#restore', as: 'asset_restore'
+    post 'files/:id/lock', to: 'assets#lock', as: 'asset_lock'
+    post 'files/:id/unlock', to: 'assets#unlock', as: 'asset_unlock'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
     patch 'files/:id/rename', to: 'assets#rename', as: 'asset_rename'
     post 'files/:id/duplicate', to: 'assets#duplicate', as: 'asset_duplicate'

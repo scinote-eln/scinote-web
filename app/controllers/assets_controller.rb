@@ -17,11 +17,13 @@ class AssetsController < ApplicationController
   helper_method :wopi_file_edit_button_status
 
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode archive restore)
+  before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode archive restore lock unlock)
   before_action :check_manage_permission, only: %i(edit duplicate rename toggle_view_mode archive)
   before_action :check_restore_permission, only: :restore
   before_action :check_destroy_permission, only: :destroy
   before_action :check_restore_version_permission, only: :restore_version
+  before_action :check_lock_permission, only: :lock
+  before_action :check_unlock_permission, only: :unlock
 
   def file_preview
     render json: { html: render_to_string(
@@ -30,7 +32,9 @@ class AssetsController < ApplicationController
         asset: @asset,
         can_edit: can_manage_asset?(@asset),
         gallery: params[:gallery],
-        preview: params[:preview]
+        preview: params[:preview],
+        # TODO: Currently inherited from step, will be controlled separately in the future
+        locked: @asset.step ? @asset.step.locked : false
       },
       formats: :html
     ) }
@@ -571,6 +575,16 @@ class AssetsController < ApplicationController
     end
   end
 
+  def lock
+    @asset.update!(locked: true)
+    head :ok
+  end
+
+  def unlock
+    @asset.update!(locked: false)
+    head :ok
+  end
+
   private
 
   def load_vars
@@ -611,6 +625,14 @@ class AssetsController < ApplicationController
 
   def check_restore_version_permission
     render_403 and return unless can_restore_asset_version?(@asset)
+  end
+
+  def check_lock_permission
+    render_403 and return unless can_lock_asset?(@asset)
+  end
+
+  def check_unlock_permission
+    render_403 and return unless can_unlock_asset?(@asset)
   end
 
   def append_wd_params(url)

@@ -4,7 +4,7 @@ class TableSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
-  attributes :name, :contents, :urls, :icon, :metadata, :parent_type, :archived, :archived_by, :archived_on
+  attributes :name, :contents, :urls, :icon, :metadata, :parent_type, :archived, :archived_by, :archived_on, :locked
 
   def contents
     object.contents_utf_8
@@ -16,6 +16,10 @@ class TableSerializer < ActiveModel::Serializer
 
   def parent_type
     :step
+  end
+
+  def locked
+    object.locked || object.step.locked
   end
 
   def archived_by
@@ -48,6 +52,8 @@ class TableSerializer < ActiveModel::Serializer
     url_list[:archive_url] = archive_step_table_path(step, object) if can_archive_step_table?(user, object)
     url_list[:restore_url] = restore_step_table_path(step, object) if can_restore_step_table?(user, object)
     url_list[:delete_url] = step_table_path(step, object) if can_delete_step_table?(user, object)
+    url_list[:lock_url] = lock_step_table_path(step, object) if can_lock_step_table?(user, object)
+    url_list[:unlock_url] = unlock_step_table_path(step, object) if can_unlock_step_table?(user, object)
 
     url_list
   end

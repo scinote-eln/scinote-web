@@ -36,6 +36,7 @@
           </span>
         </template>
         <div class="ml-auto flex items gap-4">
+          <LockedTag v-if="element.attributes.orderable.locked" />
           <button
             v-if="this.element.attributes.orderable.urls.restore_url"
             :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-textElement-options-restore`]"
@@ -55,6 +56,7 @@
             <i class="sn-icon sn-icon-delete"></i>
           </button>
           <MenuDropdown
+            v-if="inRepository || !this.element.attributes.orderable.locked"
             :listItems="this.actionMenu"
             :btnClasses="'btn btn-light icon-btn btn-sm'"
             :position="'right'"
@@ -122,13 +124,15 @@ import InlineEdit from '../inline_edit.vue';
 import Tinymce from '../tinymce.vue';
 import MenuDropdown from '../menu_dropdown.vue';
 import axios from '../../../packs/custom_axios';
+import tooltipMixin from '../../mixins/tooltipMixin.js';
+import LockedTag from '../snippets/locked_tag.vue';
 
 export default {
   name: 'TextContent',
   components: {
-    deleteElementModal, Tinymce, moveElementModal, InlineEdit, MenuDropdown, RestoreModal
+    deleteElementModal, Tinymce, moveElementModal, InlineEdit, MenuDropdown, RestoreModal, LockedTag
   },
-  mixins: [DeleteMixin, DuplicateMixin, MoveMixin, ArchiveMixin],
+  mixins: [DeleteMixin, DuplicateMixin, MoveMixin, ArchiveMixin, tooltipMixin],
   props: {
     element: {
       type: Object,

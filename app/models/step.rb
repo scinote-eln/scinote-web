@@ -27,6 +27,7 @@ class Step < ApplicationRecord
   before_save :set_last_modified_by
   before_destroy :cascade_before_destroy
   after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust || archived }
+  after_save :change_protocol_adding_steps_allowed
 
   # conditional touch excluding step completion updates
   after_destroy :touch_protocol, :remove_from_user_settings
@@ -78,6 +79,8 @@ class Step < ApplicationRecord
                   .or(with_elements.where(form_responses: { archived: true }))
     ).distinct
   }
+
+  scope :locked, -> { where(locked: true) }
 
   def self.search(user,
     include_archived,
@@ -220,7 +223,7 @@ class Step < ApplicationRecord
     step_texts.order(created_at: :asc).first
   end
 
-  def duplicate(protocol, user, step_position: nil, step_name: nil, include_file_versions: false, original_protocol: nil)
+  def duplicate(protocol, user, step_position: nil, step_name: nil, include_file_versions: false, original_protocol: nil, skip_lock: false)
     ActiveRecord::Base.transaction do
       assets_to_clone = []
 
@@ -229,18 +232,20 @@ class Step < ApplicationRecord
         position: step_position || protocol.steps.active.length,
         completed: false,
         user: user,
-        original_protocol: original_protocol
+        original_protocol: original_protocol,
+        locked: (skip_lock ? false : locked),
+        attachments_locked: (skip_lock ? false : attachments_locked)
       )
       new_step.save!
 
       # Copy texts
       step_texts.active.each do |step_text|
-        step_text.duplicate(new_step, step_text.step_orderable_element.position)
+        step_text.duplicate(new_step, step_text.step_orderable_element.position, skip_lock: skip_lock)
       end
 
       # Copy checklists
       checklists.active.asc.each do |checklist|
-        checklist.duplicate(new_step, user, checklist.step_orderable_element.position)
+        checklist.duplicate(new_step, user, checklist.step_orderable_element.position, skip_lock: skip_lock)
       end
 
       # "Shallow" Copy assets
@@ -253,12 +258,12 @@ class Step < ApplicationRecord
 
       # Copy tables
       tables.active.each do |table|
-        duplicate_table(new_step, user, table)
+        duplicate_table(new_step, user, table, skip_lock: skip_lock)
       end
 
       # Copy form responses
       form_responses.active.each do |form_response|
-        form_response.duplicate(new_step, user, form_response.step_orderable_element.position)
+        form_response.duplicate(new_step, user, form_response.step_orderable_element.position, skip_lock: skip_lock)
       end
 
       # Call clone helper
@@ -286,8 +291,8 @@ class Step < ApplicationRecord
 
   private
 
-  def duplicate_table(new_step, user, table)
-    table.duplicate(new_step, user, table.step_table.step_orderable_element.position)
+  def duplicate_table(new_step, user, table, skip_lock: false)
+    table.duplicate(new_step, user, table.step_table.step_orderable_element.position, skip_lock: skip_lock)
   end
 
   def remove_from_user_settings
@@ -305,6 +310,11 @@ class Step < ApplicationRecord
     protocol.update(last_modified_by: last_modified_by) if last_modified_by
     protocol.touch
     # rubocop:enable Rails/SkipsModelValidations
+  end
+
+  def change_protocol_adding_steps_allowed
+    # if the protocol has any locked steps, disallow adding new steps, otherwise allow it
+    protocol.update!(adding_steps_allowed: protocol.steps.locked.none?)
   end
 
   def adjust_positions_after_destroy

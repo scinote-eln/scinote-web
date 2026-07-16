@@ -5,15 +5,16 @@ class StepsController < ApplicationController
   include MarvinJsActions
 
   before_action :load_vars, only: %i(update destroy show toggle_step_state update_view_state
-                                     update_asset_view_mode elements
+                                     update_asset_view_mode elements lock unlock
                                      attachments upload_attachment duplicate toggle_step_skip_state archive restore)
-  before_action :load_vars_nested, only: %i(create index list reorder list_protocol_steps add_protocol_steps)
+  before_action :load_vars_nested, only: %i(create index list reorder list_protocol_steps add_protocol_steps lock_all unlock_all)
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
-  before_action :check_protocol_manage_permissions, only: %i(reorder add_protocol_steps)
+  before_action :check_protocol_manage_permissions, only: %i(reorder add_protocol_steps lock_all unlock_all)
   before_action :check_view_permissions, only: %i(show index list attachments elements list_protocol_steps)
   before_action :check_create_permissions, only: %i(create)
-  before_action :check_manage_permissions, only: %i(update update_view_state update_asset_view_mode upload_attachment)
+  before_action :check_manage_permissions, only: %i(update update_view_state update_asset_view_mode upload_attachment lock unlock)
+  before_action :check_locking_enabled, only: %i(lock unlock lock_all unlock_all)
   before_action :check_archive_permissions, only: :archive
   before_action :check_restore_permissions, only: :restore
   before_action :check_destroy_permissions, only: :destroy
@@ -119,6 +120,9 @@ class StepsController < ApplicationController
       user: current_user,
       last_modified_by: current_user
     )
+
+    # set locked if in protocol template and all other steps are locked
+    @step.locked = true if @protocol.in_repository_draft? && @protocol.steps.any? && @protocol.steps.where(locked: false).none?
 
     @step = @protocol.insert_step(@step, params[:position])
     if @protocol.in_repository? && @protocol.errors.present?
@@ -241,6 +245,44 @@ class StepsController < ApplicationController
     end
   end
 
+  def lock
+    @step.update!(locked: true)
+    render json: @step, serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
+  rescue ActiveRecord::RecordInvalid
+    head :unprocessable_entity
+  end
+
+  def unlock
+    @step.update!(locked: false)
+    render json: @step, serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
+  rescue ActiveRecord::RecordInvalid
+    head :unprocessable_entity
+  end
+
+  def lock_all
+    ActiveRecord::Base.transaction do
+      @protocol.steps.each do |step|
+        step.update!(locked: true)
+      end
+    end
+
+    head :ok
+  rescue ActiveRecord::RecordInvalid
+    head :unprocessable_entity
+  end
+
+  def unlock_all
+    ActiveRecord::Base.transaction do
+      @protocol.steps.each do |step|
+        step.update!(locked: false)
+      end
+    end
+
+    head :ok
+  rescue ActiveRecord::RecordInvalid
+    head :unprocessable_entity
+  end
+
   def update_view_state
     view_state = @step.current_view_state(current_user)
     view_state.state['assets']['sort'] = params.require(:assets).require(:order)
@@ -354,6 +396,8 @@ class StepsController < ApplicationController
   end
 
   def reorder
+    render_403 and return unless can_reorder_protocol_steps?(@protocol)
+
     @protocol.with_lock do
       position_changed = false
       params[:step_positions].each do |id, position|
@@ -403,7 +447,7 @@ class StepsController < ApplicationController
       render_403 unless selected_protocol.present? && can_read_protocol_in_repository?(selected_protocol)
 
       steps = selected_protocol.steps.where(id: params[:steps]).order(position: :asc).map do |step|
-        step.duplicate(@protocol, current_user, original_protocol: selected_protocol)
+        step.duplicate(@protocol, current_user, original_protocol: selected_protocol, skip_lock: true)
       end
 
       message_items = {
@@ -452,6 +496,10 @@ class StepsController < ApplicationController
     end
   end
 
+  def check_locking_enabled
+    render_403 unless Protocol.content_locking_enabled?
+  end
+
   def check_view_permissions
     render_403 unless can_read_protocol_in_module?(@protocol) || can_read_protocol_in_repository?(@protocol)
   end
@@ -478,7 +526,7 @@ class StepsController < ApplicationController
 
   def check_create_permissions
     if @my_module
-      render_403 unless can_manage_my_module_steps?(@my_module)
+      render_403 unless can_create_my_module_steps?(@my_module)
     else
       render_403 unless can_manage_protocol_draft_in_repository?(@protocol)
     end
@@ -493,7 +541,7 @@ class StepsController < ApplicationController
   end
 
   def step_params
-    params.require(:step).permit(:name)
+    params.require(:step).permit(:name, :attachments_locked, :adding_items_allowed)
   end
 
   def log_activity(type_of, project = nil, message_items = {})

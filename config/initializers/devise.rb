@@ -204,7 +204,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
-  # time the user will be asked for credentials again. Default is 30 minutes.
+  # time the user will be asked for credentials again. Default is 3 hours.
   config.timeout_in = if ENV['SCINOTE_SESSION_TIMEOUTS_IN'].present?
                         ENV['SCINOTE_SESSION_TIMEOUTS_IN'].to_i.seconds
                       else

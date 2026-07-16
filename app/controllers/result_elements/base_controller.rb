@@ -12,6 +12,40 @@ module ResultElements
       render json: { targets: targets }
     end
 
+    def lock
+      @element.update!(locked: true)
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def unlock
+      @element.update!(locked: false)
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def archive
+      ActiveRecord::Base.transaction do
+        @element.archive!(current_user)
+        log_archive_activity
+      end
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def restore
+      ActiveRecord::Base.transaction do
+        @element.restore!(current_user)
+        log_restore_activity
+      end
+      restore_response
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
     private
 
     def load_result_and_parent
@@ -25,6 +59,22 @@ module ResultElements
 
     def check_manage_result_permissions
       render_403 unless can_manage_result?(@result)
+    end
+
+    def check_lock_permissions
+      render_403
+    end
+
+    def check_unlock_permissions
+      render_403
+    end
+
+    def log_archive_activity; end
+
+    def log_restore_activity; end
+
+    def restore_response
+      head :ok
     end
 
     def create_in_result!(result, new_orderable)
