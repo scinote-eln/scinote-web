@@ -4,11 +4,12 @@ module Api
   module V1
     class ChecklistsController < BaseController
       before_action :load_team, :load_project, :load_experiment, :load_task, :load_protocol, :load_step
-      before_action only: :show do
+      before_action only: %i(show update destroy) do
         load_checklist(:id)
       end
-      before_action :load_checklist_for_managing, only: %i(update destroy)
-      before_action :check_delete_permission, only: :destroy
+      before_action :check_create_permissions, only: :create
+      before_action :check_manage_permissions, only: :update
+      before_action :check_delete_permissions, only: :destroy
 
       def index
         checklists = timestamps_filter(@step.checklists)
@@ -23,8 +24,6 @@ module Api
       end
 
       def create
-        raise PermissionError.new(Protocol, :create) unless can_manage_protocol_in_module?(@protocol)
-
         checklist = @step.checklists.new(checklist_params.merge!(created_by: current_user))
         @step.with_lock do
           checklist.save!
@@ -64,12 +63,15 @@ module Api
         %w(checklist_items)
       end
 
-      def load_checklist_for_managing
-        @checklist = @step.checklists.find(params.require(:id))
-        raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@protocol)
+      def check_create_permissions
+        raise PermissionError.new(Checklist, :create) unless can_manage_step?(@step)
       end
 
-      def check_delete_permission
+      def check_manage_permissions
+        raise PermissionError.new(Checklist, :manage) unless can_manage_step_checklist?(@checklist)
+      end
+
+      def check_delete_permissions
         raise PermissionError.new(Checklist, :delete) unless can_delete_step_checklist?(@checklist)
       end
     end
