@@ -48,8 +48,11 @@
     box-shadow: none;
   }
 
-  .btn:disabled,
-  .btn.disabled {
+  .btn:disabled {
+    @apply cursor-not-allowed;
+  }
+
+  a.btn.disabled {
     @apply cursor-not-allowed pointer-events-none;
   }
 

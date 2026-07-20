@@ -19,6 +19,7 @@
           ref="steps"
           :step="step"
           :protocolId="protocolId"
+          :addingStepsLocked="addingStepsLocked"
           @step:deleted="removeStep"
           @step:restored="restoreStep"
           @step:collapsed="checkStepsState"
@@ -75,6 +76,9 @@ export default {
   computed: {
     stepsUrl() {
       return steps_path({ protocol_id: this.protocolId, view_mode: 'archived' });
+    },
+    addingStepsLocked() {
+      return false;
     }
   },
   mounted() {

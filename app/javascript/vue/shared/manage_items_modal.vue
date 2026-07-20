@@ -14,26 +14,6 @@
           </h4>
         </div>
         <div class="modal-body">
-          <template v-if="subject.type == 'steps'">
-            <div class="flex items-center border-0 border-solid border-b border-sn-light-grey">
-              <span>
-                <template v-if="subject.attributes.position !== null">
-                  {{ subject.attributes.position + 1 }}
-                </template>
-                {{ subject.attributes.name }}
-              </span>
-              <a
-                class="btn icon-btn ml-auto"
-                :data-sn-tooltip="i18n.t('protocols.manage_items_modal.lock_all')"
-                @click="toggleLockSubject(!subject.attributes.locked)"
-                tabindex="0" >
-                <i class="sn-icon" :class="{
-                  'sn-icon-unlocked': !subject.attributes.locked,
-                  'sn-icon-locked-fill': subject.attributes.locked
-                }" aria-hidden="true"></i>
-              </a>
-            </div>
-          </template>
           <Draggable
             v-model="orderedItems"
             :ghostClass="'step-checklist-item-ghost'"
@@ -135,12 +115,6 @@ export default {
     },
     toggleLockAttachments() {
       this.$emit('toggle-lock-attachments');
-    },
-    toggleLockSubject() {
-      this.$emit('toggle-lock-subject');
-    },
-    updateAddingItemsAllowed() {
-      this.$emit('update-adding-items-allowed');
     }
   }
 };

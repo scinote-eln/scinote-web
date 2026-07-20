@@ -18,19 +18,20 @@
         >
           <span v-for="(item, i) in listItems" :key="i" class="contents">
             <div v-if="item.dividerBefore" class="border-0 border-t border-solid border-sn-light-grey"></div>
-            <a :href="item.url" v-if="!item.submenu"
-              v-html="item.text"
-              :target="item.url_target || '_self'"
-              :class="[{ 'bg-sn-super-light-blue': item.active, 'disabled': item.disabled }, item.e2e_class]"
-              :style="item.disabled === 'style-only' && 'pointer-events: all'"
-              :data-sn-tooltip="item.title"
-              :data-toggle="item.modalTarget && 'modal'"
-              :data-target="item.modalTarget"
-              :data-e2e="item.data_e2e"
-              class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative"
-              @click="handleClick($event, item)"
-            >
-            </a>
+            <span v-if="!item.submenu" :data-sn-tooltip="item.title">
+              <a :href="item.url"
+                v-html="item.text"
+                :target="item.url_target || '_self'"
+                :class="[{ 'bg-sn-super-light-blue': item.active, 'disabled': item.disabled }, item.e2e_class]"
+                :style="item.disabled === 'style-only' && 'pointer-events: all'"
+                :data-toggle="item.modalTarget && 'modal'"
+                :data-target="item.modalTarget"
+                :data-e2e="item.data_e2e"
+                class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5 relative"
+                @click="handleClick($event, item)"
+              >
+              </a>
+            </span>
             <div v-else class="-mx-2.5 px-2.5 group relative">
               <span
                 :class="{ 'bg-sn-super-light-blue': item.active }"
@@ -103,6 +104,12 @@ export default {
   watch: {
     isOpen(newValue) {
       this.$emit('menu-toggle', newValue);
+      if (newValue) {
+        this.$nextTick(() => {
+          this.tooltip_registerTooltipContainer(this.$refs.flyout);
+          this.tooltip_initializeTooltipsInContainer(this.$refs.flyout);
+        });
+      }
     }
   },
   methods: {
