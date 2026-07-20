@@ -805,6 +805,10 @@ function importProtocolFromFile(
       type: stepElementNode.attr('type')
     };
 
+    if (stepElementNode.attr('locked') !== undefined) {
+      json.locked = stepElementNode.attr('locked');
+    }
+
     switch (json.type) {
       case 'Checklist':
         json.checklist = checklistJson(stepElementNode.find('checklist'));
@@ -854,6 +858,7 @@ function importProtocolFromFile(
     var updatedAt = '';
     var descriptionAssetsJson = [];
     var protocolDescription;
+    var protocolDescriptionLocked;
     var protocolJson = {};
     var steps;
     var stepsJson = [];
@@ -868,6 +873,7 @@ function importProtocolFromFile(
     $(protocolXmls[index]).find('protocol').each(function() {
       createdAt = $(this).find('created_at').text();
       updatedAt = $(this).find('updated_at').text();
+      protocolDescriptionLocked = $(this).attr('description_locked');
       descriptionAssetsJson = prepareTinyMceAssets(this, index);
       protocolDescription = $('<div></div>').html($(this)
         .children('description')
@@ -887,6 +893,9 @@ function importProtocolFromFile(
     protocolJson.created_at = createdAt;
     protocolJson.updated_at = updatedAt;
     protocolJson.descriptionAssets = descriptionAssetsJson;
+    if (protocolDescriptionLocked !== undefined) {
+      protocolJson.description_locked = protocolDescriptionLocked;
+    }
     steps.sort(stepComparator);
 
     // Iterate through steps
@@ -900,6 +909,15 @@ function importProtocolFromFile(
       stepJson.id = stepId;
       stepJson.position = $(this).attr('position');
       stepJson.name = $(this).children('name').text();
+      if ($(this).attr('locked') !== undefined) {
+        stepJson.locked = $(this).attr('locked');
+      }
+      if ($(this).attr('attachments_locked') !== undefined) {
+        stepJson.attachments_locked = $(this).attr('attachments_locked');
+      }
+      if ($(this).attr('adding_items_allowed') !== undefined) {
+        stepJson.adding_items_allowed = $(this).attr('adding_items_allowed');
+      }
       // I know is crazy but is the only way I found to pass valid HTML
       if ($(this).children('description').html()) {
         stepJson.description = $('<div></div>').html($(this)
