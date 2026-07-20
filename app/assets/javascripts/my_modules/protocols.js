@@ -7,6 +7,7 @@
 
 // Currently selected row in "load from protocol" modal
 var selectedRow = null;
+var addingStepsAllowed = null;
 
 
 function initLinkUpdate() {
@@ -95,7 +96,7 @@ function initLoadFromRepository() {
 
       loadBtn.on('click', function() {
         let isEmpty = $('#my_module_is_empty').val() === 'true';
-        if (!isEmpty) {
+        if (!isEmpty && addingStepsAllowed) {
           // Show warning modal
           loadFromRepositoryWarning();
           return;
@@ -161,6 +162,7 @@ function initLoadFromRepositoryTable(content) {
       // Get row ID
       var rowId = data.DT_RowId;
       $(row).attr('data-row-id', rowId);
+      $(row).attr('data-adding-steps-allowed', data.DT_AddingStepsAllowed);
     },
     fnDrawCallback: function() {
       animateSpinner(this, false);
@@ -188,6 +190,7 @@ function initLoadFromRepositoryTable(content) {
 
     // Select the current row
     selectedRow = datatable.row($(this)).data().DT_RowId;
+    addingStepsAllowed = datatable.row($(this)).data().DT_AddingStepsAllowed;
     $(this).addClass('selected');
 
     // Enable load btn

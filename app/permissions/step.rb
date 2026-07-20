@@ -9,12 +9,23 @@ Canaid::Permissions.register_for(Step) do
     end
   end
 
+  can :link_results do |user, step|
+    if step.my_module
+      step.active? && can_manage_my_module_steps?(user, step.my_module)
+    else
+      can_manage_protocol_draft_in_repository?(user, step.protocol)
+    end
+  end
+
   can :archive_step do |user, step|
     step.my_module && step.active? && can_manage_step?(user, step)
   end
 
   can :restore_step do |user, step|
-    step.my_module && step.archived? && can_manage_my_module_steps?(user, step.my_module)
+    step.my_module &&
+    step.archived? &&
+    step.protocol.adding_steps_allowed? &&
+    can_manage_my_module_steps?(user, step.my_module)
   end
 
   can :delete_step do |user, step|

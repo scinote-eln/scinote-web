@@ -20,9 +20,15 @@ Canaid::Permissions.register_for(Asset) do
 
     case object
     when Step
-      asset.active? && !asset.locked? && can_manage_step?(user, object)
+      asset.active? &&
+      !asset.locked? &&
+      (!object.attachments_locked || object.protocol.in_repository_draft?) &&
+      can_manage_step?(user, object)
     when ResultBase
-      asset.active? && !asset.locked? && can_manage_result?(user, object)
+      asset.active? &&
+      !asset.locked? &&
+      (!object.attachments_locked || object.type == 'ResultTemplate') &&
+      can_manage_result?(user, object)
     when RepositoryCell
       if object.repository_column.repository.is_a?(RepositorySnapshot)
         false

@@ -33,16 +33,17 @@
         </div>
         <div class="actions-block">
           <div class="protocol-buttons-group shrink-0 bg-sn-white">
-            <a v-if="urls.add_step_url"
+            <button v-if="urls.add_step_url || addingStepsLocked"
               class="btn btn-secondary icon-btn xl:!px-4"
-              :data-sn-tooltip="i18n.t('protocols.steps.new_step_title')"
+              :disabled="addingStepsLocked"
+              :data-sn-tooltip="addingStepsLocked ? i18n.t('protocols.action_disabled') : i18n.t('protocols.steps.new_step_title')"
               @keyup.enter="addStep(steps.length)"
               @click="addStep(steps.length)"
               tabindex="0"
               data-e2e="e2e-BT-task-protocol-newStep">
                 <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
                 <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.new_step") }}</span>
-            </a>
+            </button>
             <button
               v-if="!inRepository && urls.add_step_url"
               class="btn btn-secondary icon-btn xl:!px-4"
@@ -80,6 +81,7 @@
               v-if="protocol.attributes && protocol.attributes.urls"
               :protocol="protocol"
               :inRepository="inRepository"
+              :addingStepsLocked="addingStepsLocked"
               @protocol:archive_steps="archiveSteps"
               @protocol:add_protocol_steps="addSteps"
               :canDeleteSteps="false"
@@ -207,6 +209,7 @@
                 v-if="protocol.attributes && protocol.attributes.urls"
                 :protocol="protocol"
                 :inRepository="inRepository"
+                :addingStepsLocked="addingStepsLocked"
                 @protocol:delete_steps="deleteSteps"
                 @protocol:add_protocol_steps="addSteps"
                 :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
@@ -297,6 +300,7 @@
                 <Step
                   ref="steps"
                   :step.sync="steps[index]"
+                  :addingStepsLocked="addingStepsLocked"
                   @reorder="startStepReorder"
                   :inRepository="inRepository"
                   :stepToReload="stepToReload"
@@ -312,7 +316,6 @@
                   @step:move_attachment="reloadStep"
                   @step:drag_enter="dragEnter"
                   @step:collapsed="checkStepsState"
-                  @step:toggle-lock="toggleStepLock(step)"
                   :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                   :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
                 />
@@ -419,6 +422,9 @@ export default {
     },
     urls() {
       return this.protocol.attributes.urls || {};
+    },
+    addingStepsLocked() {
+      return (!this.inRepository && !this.protocol.attributes.adding_steps_allowed);
     }
   },
   data() {

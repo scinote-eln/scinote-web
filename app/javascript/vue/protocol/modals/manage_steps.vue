@@ -61,6 +61,11 @@
             </template>
           </Draggable>
         </div>
+        <template v-if="anyStepLocked">
+          <div class="sci-toast sci-toast-warning">
+            {{ i18n.t('protocols.manage_steps_disclaimer') }}
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -98,6 +103,9 @@ export default {
   computed: {
     allStepsLocked() {
       return this.orderedSteps.every((step) => step.attributes.locked);
+    },
+    anyStepLocked() {
+      return this.orderedSteps.some((step) => step.attributes.locked);
     }
   },
   mounted() {

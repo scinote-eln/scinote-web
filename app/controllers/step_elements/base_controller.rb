@@ -5,7 +5,7 @@ module StepElements
     before_action :load_step_and_protocol
 
     def move_targets
-      render json: { targets: @protocol.steps.active.order(:position).where.not(id: @step.id).map { |i| [i.id, i.name] } }
+      render json: { targets: @protocol.steps.active.unlocked.order(:position).where.not(id: @step.id).map { |i| [i.id, i.name] } }
     end
 
     def lock

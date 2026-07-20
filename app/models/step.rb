@@ -81,6 +81,7 @@ class Step < ApplicationRecord
   }
 
   scope :locked, -> { where(locked: true) }
+  scope :unlocked, -> { where(locked: false) }
 
   def self.search(user,
     include_archived,

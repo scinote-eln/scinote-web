@@ -102,7 +102,8 @@ class Table < ApplicationRecord
           team: parent.protocol.team,
           created_by: user,
           metadata: metadata,
-          last_modified_by: user
+          last_modified_by: user,
+          locked: (skip_lock ? false : locked)
         )
         parent.result_orderable_elements.create!(
           position: position || parent.result_orderable_elements.length,
@@ -119,7 +120,8 @@ class Table < ApplicationRecord
           team: parent.my_module.team,
           created_by: user,
           metadata: metadata,
-          last_modified_by: user
+          last_modified_by: user,
+          locked: (skip_lock ? false : locked)
         )
 
         parent.result_orderable_elements.create!(
