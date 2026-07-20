@@ -22,6 +22,19 @@ describe StepElements::ChecklistsController, type: :controller do
         expect(response).to have_http_status(:ok)
         expect(checklist.reload.locked).to be true
       end
+
+      it 'logs a lock activity' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: 'lock_protocol_step_checklist')))
+        action
+      end
+
+      it 'does not log an activity when the checklist is already locked' do
+        checklist.update!(locked: true)
+        allow(Activities::CreateActivityService).to receive(:call)
+        action
+        expect(Activities::CreateActivityService).not_to have_received(:call)
+      end
     end
 
     context 'when user lacks permissions' do
@@ -46,6 +59,12 @@ describe StepElements::ChecklistsController, type: :controller do
         action
         expect(response).to have_http_status(:ok)
         expect(checklist.reload.locked).to be false
+      end
+
+      it 'logs an unlock activity' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: 'unlock_protocol_step_checklist')))
+        action
       end
     end
 

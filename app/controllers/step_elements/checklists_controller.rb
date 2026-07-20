@@ -126,6 +126,10 @@ module StepElements
       render_403 unless can_unlock_step_checklist?(@checklist)
     end
 
+    def content_block_type
+      :checklist
+    end
+
     def log_archive_activity
       log_step_activity(:checklist_archived, { checklist_name: @element.name })
     end

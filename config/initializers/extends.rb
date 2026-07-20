@@ -725,7 +725,21 @@ class Extends
     calendar_event_updated: 494,
     calendar_event_deleted: 495,
     calendar_event_participant_created: 496,
-    calendar_event_participant_deleted: 497
+    calendar_event_participant_deleted: 497,
+    lock_protocol_step: 498,
+    unlock_protocol_step: 499,
+    lock_all_protocol_steps: 500,
+    unlock_all_protocol_steps: 501,
+    lock_protocol_step_text: 502,
+    unlock_protocol_step_text: 503,
+    lock_protocol_step_table: 504,
+    unlock_protocol_step_table: 505,
+    lock_protocol_step_checklist: 506,
+    unlock_protocol_step_checklist: 507,
+    lock_protocol_step_form: 508,
+    unlock_protocol_step_form: 509,
+    lock_protocol_step_file: 510,
+    unlock_protocol_step_file: 511
   }
 
   ACTIVITY_GROUPS = {
@@ -743,7 +757,8 @@ class Extends
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
-                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409, *416..450],
+                          *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409, *416..450,
+                          *498..511],
     team: [92, 94, 93, 97, 104, 244, 245, *379..383, *412..415, *487..492],
     label_templates: [*216..219],
     storage_locations: [*309..315, 361],

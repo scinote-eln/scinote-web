@@ -9,14 +9,20 @@ module StepElements
     end
 
     def lock
-      @element.update!(locked: true)
+      ActiveRecord::Base.transaction do
+        @element.update!(locked: true) 
+        log_lock_activity("lock_protocol_step_#{content_block_type}") if @element.saved_change_to_locked?
+      end
       head :ok
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
 
     def unlock
-      @element.update!(locked: false)
+      ActiveRecord::Base.transaction do
+        @element.update!(locked: false)
+        log_lock_activity("unlock_protocol_step_#{content_block_type}") if @element.saved_change_to_locked?
+      end
       head :ok
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
@@ -71,6 +77,10 @@ module StepElements
       raise NotImplementedError
     end
 
+    def content_block_type
+      raise NotImplementedError
+    end
+
     def restore_response
       head :ok
     end
@@ -117,6 +127,22 @@ module StepElements
         project: @protocol.my_module.project,
         subject: @protocol,
         message_items: message_items
+      )
+    end
+
+    def log_lock_activity(activity_type)
+      Activities::CreateActivityService.call(
+        activity_type: activity_type,
+        owner: current_user,
+        team: @protocol.team,
+        subject: @protocol,
+        message_items: {
+          step: @step.id,
+          step_position: {
+            id: @step.id,
+            value_for: 'position_plus_one'
+          }
+        }
       )
     end
   end

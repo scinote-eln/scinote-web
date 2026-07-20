@@ -246,14 +246,25 @@ class StepsController < ApplicationController
   end
 
   def lock
-    @step.update!(locked: true)
+    ActiveRecord::Base.transaction do
+      if @step.update!(locked: true) && @step.saved_change_to_locked?
+        log_activity(:lock_protocol_step, nil, step_message_items)
+        log_activity(:lock_all_protocol_steps, nil, protocol: @protocol.id) if @protocol.steps.where(locked: false).none?
+      end
+    end
     render json: @step, serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
   rescue ActiveRecord::RecordInvalid
     head :unprocessable_entity
   end
 
   def unlock
-    @step.update!(locked: false)
+    ActiveRecord::Base.transaction do
+      @step.update!(locked: false)
+      if @step.saved_change_to_locked?
+        log_activity(:unlock_protocol_step, nil, step_message_items)
+        log_activity(:unlock_all_protocol_steps, nil, protocol: @protocol.id) if @protocol.steps.where(locked: true).none?
+      end
+    end
     render json: @step, serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
   rescue ActiveRecord::RecordInvalid
     head :unprocessable_entity
@@ -263,7 +274,11 @@ class StepsController < ApplicationController
     ActiveRecord::Base.transaction do
       @protocol.steps.each do |step|
         step.update!(locked: true)
+        if step.saved_change_to_locked?
+          log_activity(:lock_protocol_step, nil, step_message_items(step))
+        end
       end
+      log_activity(:lock_all_protocol_steps, nil, protocol: @protocol.id)
     end
 
     head :ok
@@ -275,7 +290,11 @@ class StepsController < ApplicationController
     ActiveRecord::Base.transaction do
       @protocol.steps.each do |step|
         step.update!(locked: false)
+        if step.saved_change_to_locked?
+          log_activity(:unlock_protocol_step, nil, step_message_items(step))
+        end
       end
+      log_activity(:unlock_all_protocol_steps, nil, protocol: @protocol.id)
     end
 
     head :ok
@@ -554,14 +573,14 @@ class StepsController < ApplicationController
             message_items: message_items)
   end
 
-  def step_message_items
+  def step_message_items(step = @step)
     {
       step: {
-        id: @step.id,
+        id: step.id,
         value_for: 'name'
       },
       step_position: {
-        id: @step.id,
+        id: step.id,
         value_for: 'position_plus_one'
       }
     }

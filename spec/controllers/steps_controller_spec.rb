@@ -183,4 +183,126 @@ describe StepsController, type: :controller do
       end
     end
   end
+
+  describe 'step locking activities' do
+    let!(:step1) { create :step, protocol: protocol_repo }
+    let!(:step2) { create :step, protocol: protocol_repo }
+
+    before { allow(Protocol).to receive(:content_locking_enabled?).and_return(true) }
+
+    describe 'POST lock' do
+      before { allow(controller).to receive(:can_manage_step?).and_return(true) }
+
+      context 'when other steps remain unlocked' do
+        let(:action) { post :lock, params: { id: step1.id }, format: :json }
+
+        it 'logs a step lock activity' do
+          expect(Activities::CreateActivityService)
+            .to(receive(:call).with(hash_including(activity_type: :lock_protocol_step)))
+          action
+        end
+
+        it 'does not log an all-steps-locked activity' do
+          allow(Activities::CreateActivityService).to receive(:call)
+          action
+          expect(Activities::CreateActivityService)
+            .not_to have_received(:call).with(hash_including(activity_type: :lock_all_protocol_steps))
+        end
+      end
+
+      context 'when locking the final unlocked step' do
+        before { step1.update!(locked: true) }
+
+        let(:action) { post :lock, params: { id: step2.id }, format: :json }
+
+        it 'logs both the step lock and the all-steps-locked activity' do
+          allow(Activities::CreateActivityService).to receive(:call)
+          action
+          expect(Activities::CreateActivityService)
+            .to have_received(:call).with(hash_including(activity_type: :lock_protocol_step)).once
+          expect(Activities::CreateActivityService)
+            .to have_received(:call).with(hash_including(activity_type: :lock_all_protocol_steps)).once
+        end
+      end
+
+      context 'when the step is already locked' do
+        before { step1.update!(locked: true) }
+
+        let(:action) { post :lock, params: { id: step1.id }, format: :json }
+
+        it 'does not log an activity' do
+          allow(Activities::CreateActivityService).to receive(:call)
+          action
+          expect(Activities::CreateActivityService).not_to have_received(:call)
+        end
+      end
+    end
+
+    describe 'POST unlock' do
+      before do
+        allow(controller).to receive(:can_manage_step?).and_return(true)
+        step1.update!(locked: true)
+        step2.update!(locked: true)
+      end
+
+      let(:action) { post :unlock, params: { id: step1.id }, format: :json }
+
+      it 'logs a step unlock activity' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: :unlock_protocol_step)))
+        action
+      end
+
+      it 'never logs an all-steps-unlocked activity on the individual path' do
+        allow(Activities::CreateActivityService).to receive(:call)
+        action
+        expect(Activities::CreateActivityService)
+          .not_to have_received(:call).with(hash_including(activity_type: :unlock_all_protocol_steps))
+      end
+    end
+
+    describe 'POST lock_all' do
+      before { allow(controller).to receive(:can_manage_protocol_draft_in_repository?).and_return(true) }
+
+      let(:action) { post :lock_all, params: { protocol_id: protocol_repo.id }, format: :json }
+
+      it 'logs a lock activity for each step plus the all-steps summary' do
+        allow(Activities::CreateActivityService).to receive(:call)
+        action
+        expect(Activities::CreateActivityService)
+          .to have_received(:call).with(hash_including(activity_type: :lock_protocol_step)).twice
+        expect(Activities::CreateActivityService)
+          .to have_received(:call).with(hash_including(activity_type: :lock_all_protocol_steps)).once
+      end
+
+      it 'only logs step lock activities for steps that were unlocked' do
+        step1.update!(locked: true)
+        allow(Activities::CreateActivityService).to receive(:call)
+        action
+        expect(Activities::CreateActivityService)
+          .to have_received(:call).with(hash_including(activity_type: :lock_protocol_step)).once
+        expect(Activities::CreateActivityService)
+          .to have_received(:call).with(hash_including(activity_type: :lock_all_protocol_steps)).once
+      end
+    end
+
+    describe 'POST unlock_all' do
+      before do
+        allow(controller).to receive(:can_manage_protocol_draft_in_repository?).and_return(true)
+        step1.update!(locked: true)
+        step2.update!(locked: true)
+      end
+
+      let(:action) { post :unlock_all, params: { protocol_id: protocol_repo.id }, format: :json }
+
+      it 'logs an unlock activity for each step plus the all-steps summary' do
+        allow(Activities::CreateActivityService).to receive(:call)
+        action
+        expect(Activities::CreateActivityService)
+          .to have_received(:call).with(hash_including(activity_type: :unlock_protocol_step)).twice
+        expect(Activities::CreateActivityService)
+          .to have_received(:call).with(hash_including(activity_type: :unlock_all_protocol_steps)).once
+      end
+    end
+  end
 end
