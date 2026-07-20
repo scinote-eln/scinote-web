@@ -22,7 +22,8 @@ module ProtocolsExporterV2
 
     protocol_xml =
       "<eln xmlns=\"http://www.scinote.net\" version=\"1.2\">\n" \
-      "<protocol id=\"#{protocol.id}\" guid=\"#{get_guid(protocol.id)}\">\n" \
+      "<protocol id=\"#{protocol.id}\" guid=\"#{get_guid(protocol.id)}\" " \
+      "description_locked=\"#{protocol.description_locked}\">\n" \
       "<name>#{protocol_name}</name>\n" \
       "<authors>#{protocol.authors}</authors>\n" \
       "<description>" \
@@ -93,7 +94,9 @@ module ProtocolsExporterV2
 
   def step_xml(step)
     step_guid = get_guid(step.id)
-    xml = "<step id=\"#{step.id}\" guid=\"#{step_guid}\" position=\"#{step.position}\">\n" \
+    xml = "<step id=\"#{step.id}\" guid=\"#{step_guid}\" position=\"#{step.position}\" " \
+          "locked=\"#{step.locked}\" attachments_locked=\"#{step.attachments_locked}\" " \
+          "adding_items_allowed=\"#{step.adding_items_allowed}\">\n" \
           "<name>#{step.name}</name>\n"
 
     # Assets
@@ -104,8 +107,9 @@ module ProtocolsExporterV2
       step.step_orderable_elements.find_each do |step_orderable_element|
         element = step_orderable_element.orderable
         element_guid = get_guid(element.id)
+        element_locked = element.is_a?(StepTable) ? element.table&.locked : element.locked
         xml << "<stepElement type=\"#{step_orderable_element.orderable_type}\" guid=\"#{element_guid}\" " \
-               "position=\"#{step_orderable_element.position}\">"
+               "position=\"#{step_orderable_element.position}\" locked=\"#{element_locked}\">"
 
         case element
         when StepText
