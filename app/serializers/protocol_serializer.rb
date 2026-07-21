@@ -11,7 +11,7 @@ class ProtocolSerializer < ActiveModel::Serializer
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version,
              :code, :published, :version_comment, :archived, :linked, :has_draft, :description_locked,
              :published_on_formatted, :published_by, :created_from_version, :assignable_my_module_id, :assignable_my_module_name,
-             :adding_steps_allowed
+             :adding_steps_allowed, :permissions
 
   def updated_at
     object.updated_at.to_i
@@ -75,6 +75,12 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   def description
     sanitize_input(object.tinymce_render('description'))
+  end
+
+  def permissions
+    {
+      can_manage_protocol_in_module: can_manage_protocol_in_module?(object),
+    }
   end
 
   def urls

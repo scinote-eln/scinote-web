@@ -45,7 +45,7 @@
                 <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.new_step") }}</span>
             </button>
             <button
-              v-if="!inRepository && urls.add_step_url"
+              v-if="!inRepository && permissions.can_manage_protocol_in_module"
               class="btn btn-secondary icon-btn xl:!px-4"
               @click="showRepositoriesModal = true"
               :data-sn-tooltip="i18n.t('protocols.steps.show_repositories')"
@@ -422,6 +422,9 @@ export default {
     },
     urls() {
       return this.protocol.attributes.urls || {};
+    },
+    permissions() {
+      return this.protocol.attributes.permissions || {};
     },
     addingStepsLocked() {
       return (!this.inRepository && !this.protocol.attributes.adding_steps_allowed);

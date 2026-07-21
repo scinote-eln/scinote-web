@@ -66,7 +66,7 @@ class AssetsController < ApplicationController
     case @assoc
     when Step
       protocol = @assoc.protocol
-      render json: { targets: protocol.steps.order(:position).where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
+      render json: { targets: protocol.steps.active.order(:position).where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
     when ResultBase
       parent = @assoc.parent
       render json: { targets: parent.results.active.where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
