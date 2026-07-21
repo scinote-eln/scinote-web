@@ -13,6 +13,7 @@
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
+                 :class="{ 'pointer-events-auto': !!this.checklistItem.attributes.urls?.toggle_url }"
                  :disabled="checklistItem.attributes.isNew"
                  :checked="checklistItem.attributes.checked"
                  :data-e2e="`e2e-CB-${dataE2e}-toggleChecked`"

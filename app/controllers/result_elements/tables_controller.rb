@@ -6,10 +6,12 @@ module ResultElements
 
     # rubocop:disable Rails/LexicallyScopedActionFilter
     before_action :check_manage_result_permissions, only: %i(create move_targets)
-    before_action :load_table, only: %i(update destroy duplicate move archive restore)
-    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets)
+    before_action :load_table, only: %i(update destroy duplicate move archive restore lock unlock)
+    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets lock unlock)
     before_action :check_archive_permissions, only: :archive
     before_action :check_restore_permissions, only: :restore
+    before_action :check_lock_permissions, only: :lock
+    before_action :check_unlock_permissions, only: :unlock
     before_action :check_delete_permissions, only: :destroy
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -106,28 +108,6 @@ module ResultElements
       end
     end
 
-    def archive
-      ActiveRecord::Base.transaction do
-        @table.archive!(current_user)
-        log_result_activity(:table_archived, { table_name: @table.name })
-      end
-
-      head :ok
-    rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
-    end
-
-    def restore
-      ActiveRecord::Base.transaction do
-        @table.restore!(current_user)
-        log_result_activity(:table_restored, { table_name: @table.name })
-      end
-
-      head :ok
-    rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
-    end
-
     def duplicate
       ActiveRecord::Base.transaction do
         position = @table.result_table.result_orderable_element.position
@@ -158,6 +138,8 @@ module ResultElements
     def load_table
       @table = @result.tables.find_by(id: params[:id])
       return render_404 unless @table
+
+      @element = @table
     end
 
     def check_manage_permissions
@@ -170,6 +152,22 @@ module ResultElements
 
     def check_restore_permissions
       render_403 unless can_restore_result_table?(@table)
+    end
+
+    def check_lock_permissions
+      render_403 unless can_lock_result_table?(@table)
+    end
+
+    def check_unlock_permissions
+      render_403 unless can_unlock_result_table?(@table)
+    end
+
+    def log_archive_activity
+      log_result_activity(:table_archived, { table_name: @element.name })
+    end
+
+    def log_restore_activity
+      log_result_activity(:table_restored, { table_name: @element.name })
     end
 
     def check_delete_permissions

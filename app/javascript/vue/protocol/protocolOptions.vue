@@ -19,37 +19,43 @@
         aria-labelledby="dropdownProtocolOptions"
       >
         <li v-if="protocol.attributes.urls.load_from_repo_url && !inRepository">
-          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
+          <button class="sn-legacy-menu-item"
             ref="loadProtocol"
             data-action="load-from-repository"
-            @click="loadProtocol"
+            :disabled="addingStepsLocked"
+            :data-sn-tooltip="addingStepsLocked ? i18n.t('protocols.action_disabled') : null"
+            @click="loadProtocol()"
             data-e2e="e2e-DO-task-protocol-actions-loadFromRepository"
           >
             <span>{{ i18n.t("my_modules.protocol.options_dropdown.load_from_repo") }}</span>
-          </a>
+        </button>
         </li>
         <li v-if="protocol.attributes.urls.add_protocol_steps_url && !inRepository">
-          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
+          <button class="sn-legacy-menu-item"
             data-turbolinks="false"
+            :disabled="addingStepsLocked"
+            :data-sn-tooltip="addingStepsLocked ? i18n.t('protocols.action_disabled') : null"
             @click.prevent="createWithAi()"
           >
             <i class="sn-icon sn-icon-ai mr-1"></i>
             <span>{{ i18n.t("protocols.index.import_with_ai") }}</span>
-          </a>
+          </button>
         </li>
         <li v-if="protocol.attributes.urls.add_protocol_steps_url">
-          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
+          <button class="sn-legacy-menu-item"
             data-turbolinks="false"
+            :disabled="addingStepsLocked"
+            :data-sn-tooltip="addingStepsLocked ? i18n.t('protocols.action_disabled') : null"
             @click.prevent="openAddStepsModal()"
             data-e2e="e2e-DO-task-protocol-actions-addProtocolSteps"
           >
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.add_protocol_steps")
             }}</span>
-          </a>
+          </button>
         </li>
         <li v-if="!inRepository">
-          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
+          <button class="sn-legacy-menu-item"
             data-toggle="modal"
             data-target="#newProtocolModal"
             v-bind:data-protocol-name="protocol.attributes.name"
@@ -59,10 +65,10 @@
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.save_to_repo")
             }}</span>
-          </a>
+          </button>
         </li>
         <li v-if="!inRepository">
-          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
+          <button class="sn-legacy-menu-item"
             data-turbolinks="false"
             :href="protocol.attributes.urls.export_url"
             :class="{ disabled: !protocol.attributes.urls.export_url }"
@@ -71,10 +77,10 @@
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.export")
             }}</span>
-          </a>
+          </button>
         </li>
         <li v-if="protocol.attributes.urls.update_protocol_url && !inRepository">
-          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
+          <button class="sn-legacy-menu-item"
             ref="updateProtocol"
             data-action="update-self"
             @click="updateProtocol"
@@ -83,45 +89,51 @@
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.update_protocol")
             }}</span>
-          </a>
+          </button>
         </li>
-        <li v-if="protocol.attributes.urls.unlink_url && !inRepository">
-          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
+        <li v-if="!inRepository && protocol.attributes.linked">
+          <button class="sn-legacy-menu-item"
             ref="unlinkProtocol"
             data-action="unlink"
-            @click="unlinkProtocol"
+            :disabled="!protocol.attributes.urls.unlink_url"
+            :data-sn-tooltip="addingStepsLocked ? i18n.t('protocols.action_disabled') : null"
+            @click="unlinkProtocol()"
             data-e2e="e2e-DO-task-protocol-actions-unlinkProtocol"
           >
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.unlink")
             }}</span>
-          </a>
+          </button>
         </li>
-        <li v-if="protocol.attributes.urls.revert_protocol_url && !inRepository">
-          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
+        <li v-if="!inRepository && protocol.attributes.linked">
+          <button class="sn-legacy-menu-item"
             ref="revertProtocol"
             data-action="revert"
-            @click="revertProtocol"
+            :disabled="!protocol.attributes.urls.revert_protocol_url"
+            :data-sn-tooltip="addingStepsLocked ? i18n.t('protocols.action_disabled') : null"
+            @click="revertProtocol()"
             data-e2e="e2e-DO-task-protocol-actions-revertProtocol"
           >
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.revert_protocol")
             }}</span>
-          </a>
+          </button>
         </li>
-        <li v-if="canArchiveSteps">
-          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
+        <li v-if="canArchiveSteps || addingStepsLocked">
+          <button class="sn-legacy-menu-item"
             data-turbolinks="false"
+            :disabled="!protocol.attributes.urls.archive_steps_url"
+            :data-sn-tooltip="addingStepsLocked ? i18n.t('protocols.action_disabled') : null"
             @click.prevent="openStepsArchivingModal()"
             data-e2e="e2e-DO-task-protocol-actions-archiveAllSteps"
           >
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.archive_steps")
             }}</span>
-          </a>
+          </button>
         </li>
         <li v-if="canDeleteSteps">
-          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
+          <button class="sn-legacy-menu-item"
             data-turbolinks="false"
             @click.prevent="openStepsDeletingModal()"
             data-e2e="e2e-DO-task-protocol-actions-deleteAllSteps"
@@ -129,7 +141,7 @@
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.delete_steps")
             }}</span>
-          </a>
+          </button>
         </li>
       </ul>
     </div>
@@ -145,11 +157,12 @@
 import DeleteStepsModals from './modals/delete_steps';
 import ArchiveStepsModal from './modals/archive_steps';
 import AddStepsModal from './modals/add_protocol_steps';
+import tooltipMixin from '../mixins/tooltipMixin';
 
 export default {
-
   name: 'ProtocolOptions',
   components: { DeleteStepsModals, ArchiveStepsModal, AddStepsModal },
+  mixins: [tooltipMixin],
   data() {
     return {
       stepsDeleting: false,
@@ -171,6 +184,10 @@ export default {
       required: true
     },
     inRepository: {
+      type: Boolean,
+      required: true
+    },
+    addingStepsLocked: {
       type: Boolean,
       required: true
     }

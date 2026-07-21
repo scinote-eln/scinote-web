@@ -4,11 +4,12 @@ module Api
   module V1
     class StepTextsController < BaseController
       before_action :load_team, :load_project, :load_experiment, :load_task, :load_protocol, :load_step
-      before_action only: :show do
+      before_action only: %i(show update destroy) do
         load_step_text(:id)
       end
-      before_action :load_step_text_for_managing, only: %i(update destroy)
-      before_action :check_delete_permission, only: :destroy
+      before_action :check_create_permissions, only: :create
+      before_action :check_manage_permissions, only: :update
+      before_action :check_delete_permissions, only: :destroy
 
       def index
         step_texts = timestamps_filter(@step.step_texts)
@@ -23,8 +24,6 @@ module Api
       end
 
       def create
-        raise PermissionError.new(Protocol, :create) unless can_manage_protocol_in_module?(@protocol)
-
         step_text = @step.step_texts.new(step_text_params)
         @step.with_lock do
           step_text.save!
@@ -60,12 +59,15 @@ module Api
         params.require(:data).require(:attributes).permit(:text)
       end
 
-      def load_step_text_for_managing
-        @step_text = @step.step_texts.find(params.require(:id))
-        raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@protocol)
+      def check_create_permissions
+        raise PermissionError.new(StepText, :create) unless can_manage_step?(@step)
       end
 
-      def check_delete_permission
+      def check_manage_permissions
+        raise PermissionError.new(StepText, :manage) unless can_manage_step_text?(@step_text)
+      end
+
+      def check_delete_permissions
         raise PermissionError.new(StepText, :delete) unless can_delete_step_text?(@step_text)
       end
     end

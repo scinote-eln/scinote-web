@@ -14,7 +14,7 @@ class StepSerializer < ActiveModel::Serializer
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
              :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
              :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id, :skipped_at,
-             :archived_by, :archived_on, :archived
+             :archived_by, :archived_on, :archived, :locked, :attachments_locked, :adding_items_allowed, :permissions
 
   def step_orderable_elements
     return object.all_elements if object.archived?
@@ -100,6 +100,12 @@ class StepSerializer < ActiveModel::Serializer
     end
   end
 
+  def permissions
+    {
+      can_link_results: can_link_results?(object)
+    }
+  end
+
   def storage_limit
     nil
   end
@@ -109,7 +115,11 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def attachments_manageble
-    @instance_options[:view_mode] == 'archived' ? false : can_manage_step?(object)
+    if @instance_options[:view_mode] == 'archived'
+      false
+    else
+      (!object.attachments_locked || object.protocol.in_repository_draft?) && can_manage_step?(object)
+    end
   end
 
   def urls
@@ -128,7 +138,7 @@ class StepSerializer < ActiveModel::Serializer
       url_list[:state_url] = toggle_step_state_step_path(object)
     end
 
-    if can_manage_protocol_in_module?(object.protocol) || can_manage_protocol_draft_in_repository?(object.protocol)
+    if (can_manage_protocol_in_module?(object.protocol) && !object.locked?) || can_manage_protocol_draft_in_repository?(object.protocol)
       url_list[:duplicate_step_url] = duplicate_step_path(object)
     end
 
@@ -149,6 +159,11 @@ class StepSerializer < ActiveModel::Serializer
         upload_attachment_url: upload_attachment_step_path(object),
         reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)
       })
+
+      if Protocol.content_locking_enabled? && can_manage_protocol_draft_in_repository?(object.protocol)
+        url_list[:lock_url] = lock_step_path(object)
+        url_list[:unlock_url] = unlock_step_path(object)
+      end
 
       url_list[:create_form_response_url] = step_form_responses_path(object) if Form.forms_enabled?
     end

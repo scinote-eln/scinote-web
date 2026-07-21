@@ -108,7 +108,14 @@ export default {
         return true;
       }
 
-      return ownerComponent.uid === this.$.uid;
+      if (ownerComponent.uid === this.$.uid) {
+        return true;
+      }
+      return !this.tooltip_componentManagesTooltips(ownerComponent);
+    },
+
+    tooltip_componentManagesTooltips(componentInstance) {
+      return !!(componentInstance && componentInstance.proxy && typeof componentInstance.proxy.tooltip_initTooltips === 'function');
     },
 
     tooltip_getObservedContainers() {

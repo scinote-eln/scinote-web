@@ -33,6 +33,10 @@ class ResultTemplatesController < ResultBaseController
 
   private
 
+  def result_params
+    params.require(:result).permit(:name, :attachments_locked)
+  end
+
   def load_parent
     @parent = Protocol.readable_by_user(current_user).find(params[:protocol_id])
     current_team_switch(@parent.team) if current_team != @parent.team

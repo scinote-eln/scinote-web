@@ -168,13 +168,26 @@
       </div>
       <deleteResultModal v-if="confirmingDelete" @confirm="deleteResult" @cancel="closeDeleteModal"/>
 
-      <ReorderableItemsModal v-if="reordering"
-        :title="i18n.t('my_modules.modals.reorder_results.title')"
-        :items="reorderableElements"
-        :dataE2e="`task-result${result.id}-reorder`"
-        @reorder="updateElementOrder"
-        @close="closeReorderModal"
-      />
+      <template v-if="result.attributes.lock_enabled">
+        <ManageItemsModal
+          v-if="reordering"
+          :items="reorderableElements"
+          :subject="result"
+          @reorder="updateElementOrder"
+          @toggle-lock="toggleItemLock"
+          @toggle-lock-attachments="toggleAttachmentsLock"
+          @close="closeReorderModal"
+        ></ManageItemsModal>
+      </template>
+      <template v-else>
+        <ReorderableItemsModal v-if="reordering"
+          :title="i18n.t('my_modules.modals.reorder_results.title')"
+          :items="reorderableElements"
+          :dataE2e="`task-result${result.id}-reorder`"
+          @reorder="updateElementOrder"
+          @close="closeReorderModal"
+        />
+      </template>
       <div class="collapse in pl-10" :id="'resultBody' + result.id">
         <div v-for="(element, index) in orderedElements" :key="element.id">
           <component
@@ -254,6 +267,7 @@ import MenuDropdown from '../shared/menu_dropdown.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import LinkStepsModal from './modals/link_steps.vue'
 import ContentToolbar from '../shared/content/content_toolbar';
+import ManageItemsModal from '../shared/manage_items_modal.vue'
 import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
 import archiveResultModal from './modals/archive_result.vue';
 import deleteResultModal from './delete_result.vue';
@@ -344,7 +358,8 @@ export default {
     LinkStepsModal,
     GeneralDropdown,
     archiveResultModal,
-    deleteResultModal
+    deleteResultModal,
+    ManageItemsModal
   },
   watch: {
     activeDragResult() {
@@ -421,7 +436,14 @@ export default {
     },
     actionsMenu() {
       let menu = [];
-      if (this.urls.reorder_elements_url && this.elements.length > 1) {
+      if (this.result.attributes.lock_enabled) {
+        menu = menu.concat([{
+          text: this.i18n.t('my_modules.results.actions.manage_result'),
+          emit: 'reorder',
+          data_e2e: `e2e-BT-protocol-result${this.result.id}-optionsMenu-manageResult`,
+          e2e_class: 'e2e-DO-task-result-optionsMenu-manageResult'
+        }]);
+      } else if (this.urls.reorder_elements_url && this.elements.length > 1) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.rearrange'),
           emit: 'reorder',
@@ -627,6 +649,23 @@ export default {
     updateName(name) {
       axios.patch(this.urls.update_url, { result: { name } }).then((_) => {
         this.$emit('updated');
+      });
+    },
+    toggleAttachmentsLock() {
+      axios.patch(this.urls.update_url, {
+        result: {attachments_locked: !this.result.attributes.attachments_locked}
+      }).then((response) => {
+        const result = response.data.data;
+        this.$emit('result:update', result.id, {attachments_locked: result.attributes.attachments_locked});
+        this.loadAttachments();
+      });
+    },
+    toggleItemLock(item) {
+      const url = item.attributes.locked ? item.attributes.urls.unlock_url : item.attributes.urls.lock_url;
+      axios.post(url).then(() => {
+        item.attributes.locked = !item.attributes.locked;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     updateLinkedSteps(steps) {

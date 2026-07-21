@@ -73,7 +73,7 @@ class Table < ApplicationRecord
     end
   end
 
-  def duplicate(parent, user, position = nil)
+  def duplicate(parent, user, position = nil, skip_lock: false)
     case parent
     when Step
       ActiveRecord::Base.transaction do
@@ -83,7 +83,8 @@ class Table < ApplicationRecord
           team: parent.protocol.team,
           created_by: user,
           metadata: metadata,
-          last_modified_by: user
+          last_modified_by: user,
+          locked: (skip_lock ? false : locked)
         )
 
         parent.step_orderable_elements.create!(
@@ -101,7 +102,8 @@ class Table < ApplicationRecord
           team: parent.protocol.team,
           created_by: user,
           metadata: metadata,
-          last_modified_by: user
+          last_modified_by: user,
+          locked: (skip_lock ? false : locked)
         )
         parent.result_orderable_elements.create!(
           position: position || parent.result_orderable_elements.length,
@@ -118,7 +120,8 @@ class Table < ApplicationRecord
           team: parent.my_module.team,
           created_by: user,
           metadata: metadata,
-          last_modified_by: user
+          last_modified_by: user,
+          locked: (skip_lock ? false : locked)
         )
 
         parent.result_orderable_elements.create!(

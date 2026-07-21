@@ -76,7 +76,7 @@
       </div>
       <div class="elements-actions-container mt-[-5px]">
         <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
-
+        <LockedTag v-if="step.attributes.locked" />
         <MenuDropdown
           :listItems="this.insertMenu"
           :btnText="i18n.t('protocols.steps.insert.button')"
@@ -103,7 +103,7 @@
           tabindex="0"
         ></span> <!-- Hidden element to support legacy code -->
         <template v-if="step.attributes.results.length == 0">
-          <button ref="linkButton" v-if="urls.update_url" :data-sn-tooltip="i18n.t('protocols.steps.link_results')" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
+          <button ref="linkButton" v-if="permissions.can_link_results" :data-sn-tooltip="i18n.t('protocols.steps.link_results')" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
             <i class="sn-icon sn-icon-results"></i>
           </button>
         </template>
@@ -128,7 +128,7 @@
                 {{ result.name }}
               </a>
             </div>
-            <template v-if="urls.update_url">
+            <template v-if="permissions.can_link_results">
               <hr class="my-0">
               <div class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-blue"
                   @click="this.openLinkResultsModal = true; $refs.linkedResultsDropdown.closeMenu()">
@@ -154,7 +154,9 @@
             {{ step.attributes.comments_count }}
           </span>
         </a>
+
         <MenuDropdown
+          v-if="!(step.attributes.locked && !inRepository)"
           :listItems="this.actionsMenu"
           :btnClasses="'btn btn-light icon-btn'"
           :position="'right'"
@@ -225,13 +227,26 @@
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
     <archiveStepModal v-if="confirmingArchive" @confirm="archiveStep" @cancel="closeArchiveModal"/>
 
-    <ReorderableItemsModal v-if="reordering"
-      :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
-      :items="reorderableElements"
-      :dataE2e="`protocol-step${step.id}-reorder`"
-      @reorder="updateElementOrder"
-      @close="closeReorderModal"
-    />
+    <template v-if="step.attributes.urls.lock_url">
+      <ManageItemsModal
+        v-if="reordering"
+        :items="reorderableElements"
+        :subject="step"
+        @reorder="updateElementOrder"
+        @toggle-lock="toggleItemLock"
+        @toggle-lock-attachments="toggleAttachmentsLock"
+        @close="closeReorderModal"
+      ></ManageItemsModal>
+    </template>
+    <template v-else>
+      <ReorderableItemsModal v-if="reordering"
+        :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
+        :items="reorderableElements"
+        :dataE2e="`protocol-step${step.id}-reorder`"
+        @reorder="updateElementOrder"
+        @close="closeReorderModal"
+      />
+    </template>
 
     <CustomWellPlateModal v-if="customWellPlate"
       @cancel="closeCustomWellPlateModal"
@@ -271,10 +286,12 @@
   import LinkResultsModal from './modals/link_results.vue'
   import Attachments from '../shared/content/attachments.vue'
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
+  import ManageItemsModal from '../shared/manage_items_modal.vue'
   import MenuDropdown from '../shared/menu_dropdown.vue'
   import GeneralDropdown from '../shared/general_dropdown.vue'
   import ContentToolbar from '../shared/content/content_toolbar.vue'
   import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
+  import LockedTag from '../shared/snippets/locked_tag.vue'
 
   import UtilsMixin from '../mixins/utils.js'
   import AttachmentsMixin from '../shared/content/mixins/attachments.js'
@@ -289,6 +306,10 @@
   export default {
     name: 'StepContainer',
     props: {
+      addingStepsLocked: {
+        type: Boolean,
+        required: true
+      },
       step: {
         type: Object,
         required: true
@@ -377,9 +398,15 @@
       FormResponse,
       LinkResultsModal,
       GeneralDropdown,
-      archiveStepModal
+      archiveStepModal,
+      ManageItemsModal,
+      LockedTag
     },
     watch: {
+      step() {
+        this.elements = this.step.elements;
+        this.attachments = this.step.attachments;
+      },
       stepToReload() {
         if (this.stepToReload == this.step.id) {
           this.loadElements();
@@ -411,6 +438,9 @@
       },
       urls() {
         return this.step.attributes.urls || {}
+      },
+      permissions() {
+        return this.step.attributes.permissions || {}
       },
       completeStateTooltip() {
         return this.step.attributes.completed
@@ -500,7 +530,14 @@
       },
       actionsMenu() {
         let menu = [];
-        if (this.urls.reorder_elements_url && this.elements.length > 1) {
+        if (this.step.attributes.urls.lock_url) {
+          menu = menu.concat([{
+            text: this.i18n.t('protocols.steps.options_dropdown.manage_step'),
+            emit: 'reorder',
+            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-manageStep`,
+            e2e_class: 'e2e-BT-protocol-step-stepOptions-manageStep'
+          }]);
+        } else if (this.urls.reorder_elements_url && this.elements.length > 1) {
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.rearrange'),
             emit: 'reorder',
@@ -512,6 +549,8 @@
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.duplicate'),
             emit: 'duplicate',
+            disabled: this.addingStepsLocked,
+            title: this.addingStepsLocked ? this.i18n.t('protocols.action_disabled') : '',
             data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-duplicate`,
             e2e_class: 'e2e-BT-protocol-step-stepOptions-duplicate'
           }]);
@@ -529,6 +568,8 @@
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.archive'),
             emit: 'archive',
+            disabled: this.addingStepsLocked,
+            title: this.addingStepsLocked ? this.i18n.t('protocols.action_disabled') : '',
             data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-archive`,
             e2e_class: 'e2e-BT-protocol-step-stepOptions-archive'
           }]);
@@ -606,6 +647,17 @@
       },
       clickToggleButton() {
         this.$refs.toggleElement.click();
+      },
+      toggleAttachmentsLock() {
+        axios.patch(this.urls.update_url, {
+          step: {attachments_locked: !this.step.attributes.attachments_locked}
+        }).then((response) => {
+            this.$emit('step:update', {
+              position: this.step.attributes.position,
+              attachments_locked: response.data.data.attributes.attachments_locked
+            });
+            this.loadAttachments();
+        });
       },
       changeState() {
         if (!this.urls.state_url) return;
@@ -727,6 +779,14 @@
           error: (data) => {
             HelperModule.flashAlertMsg(data.responseJSON.errors ? Object.values(data.responseJSON.errors).join(', ') : I18n.t('errors.general'), 'danger');
           }
+        });
+      },
+      toggleItemLock(item) {
+        const url = item.attributes.locked ? item.attributes.urls.unlock_url : item.attributes.urls.lock_url;
+        axios.post(url).then(() => {
+          item.attributes.locked = !item.attributes.locked;
+        }).catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
       },
       createElement(elementType, tableDimensions = null, name = '', formId = null) {

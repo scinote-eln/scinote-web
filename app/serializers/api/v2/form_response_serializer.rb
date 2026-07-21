@@ -4,7 +4,7 @@ module Api
   module V2
     class FormResponseSerializer < ActiveModel::Serializer
       type :form_responses
-      attributes :id, :position, :status, :archived
+      attributes :id, :position, :status, :archived, :locked
 
       belongs_to :form, serializer: Api::V2::FormSerializer
       belongs_to :created_by, serializer: Api::V1::UserSerializer
@@ -19,6 +19,10 @@ module Api
 
       def position
         object&.step_orderable_element&.position
+      end
+
+      def locked
+        object.locked || object.step.locked
       end
     end
   end

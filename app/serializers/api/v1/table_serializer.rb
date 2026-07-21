@@ -4,12 +4,16 @@ module Api
   module V1
     class TableSerializer < ActiveModel::Serializer
       type :tables
-      attributes :id, :name, :contents, :metadata, :position, :archived
+      attributes :id, :name, :contents, :metadata, :position, :archived, :locked
 
       include TimestampableModel
 
       def contents
         object.contents&.force_encoding(Encoding::UTF_8)
+      end
+
+      def locked
+        object.locked || object.step.locked
       end
 
       def position

@@ -76,7 +76,7 @@ class TinyMceAsset < ApplicationRecord
       new_asset = obj.tiny_mce_assets.find_by(id: Base62.decode(asset_id))
       if new_asset&.image&.attached?
         tm_asset.attributes['src'].value = if is_shared_object
-                                             new_asset.image.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes)
+                                             new_asset.image.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME)
                                            else
                                              Rails.application.routes.url_helpers.url_for(new_asset.image)
                                            end

@@ -4,11 +4,12 @@ module Api
   module V1
     class TablesController < BaseController
       before_action :load_team, :load_project, :load_experiment, :load_task, :load_protocol, :load_step
-      before_action only: :show do
+      before_action only: %i(show update destroy) do
         load_table(:id)
       end
-      before_action :load_table_for_managing, only: %i(update destroy)
-      before_action :check_delete_permission, only: :destroy
+      before_action :check_create_permissions, only: :create
+      before_action :check_manage_permissions, only: :update
+      before_action :check_delete_permissions, only: :destroy
 
       def index
         tables = timestamps_filter(@step.tables)
@@ -24,8 +25,6 @@ module Api
       end
 
       def create
-        raise PermissionError.new(Protocol, :create) unless can_manage_protocol_in_module?(@protocol)
-
         table = @step.tables.new(table_params.merge!(team: @team, created_by: current_user))
         @step.with_lock do
           table.save!
@@ -72,12 +71,15 @@ module Api
         attributes_params
       end
 
-      def load_table_for_managing
-        @table = @step.tables.find(params.require(:id))
-        raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@protocol)
+      def check_create_permissions
+        raise PermissionError.new(Table, :create) unless can_manage_step?(@step)
       end
 
-      def check_delete_permission
+      def check_manage_permissions
+        raise PermissionError.new(Table, :manage) unless can_manage_step_table?(@table)
+      end
+
+      def check_delete_permissions
         raise PermissionError.new(Table, :delete) unless can_delete_step_table?(@table)
       end
 

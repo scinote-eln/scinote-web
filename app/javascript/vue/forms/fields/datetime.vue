@@ -88,7 +88,9 @@ export default {
     range() {
       return this.field.attributes.data.range;
     },
-    validValue() {
+    validValue() {      
+      if (this.fieldDisabled) return true;
+
       if (this.range) {
         return Boolean(this.fromValue) === Boolean(this.toValue) &&
           (

@@ -5,7 +5,7 @@ module Api
     class InventoryItemParentRelationshipsController < BaseController
       before_action :load_team, :load_inventory, :load_inventory_item
       before_action :load_parent_connection, only: %w(show destroy)
-      before_action :check_manage_permission, only: %w(create destroy)
+      before_action :check_manage_permissions, only: %w(create destroy)
 
       def index
         parent_connections = timestamps_filter(@inventory_item.parent_connections).page(params.dig(:page, :number))
@@ -43,7 +43,7 @@ module Api
         @parent_connection = @inventory_item.parent_connections.find(params.require(:id))
       end
 
-      def check_manage_permission
+      def check_manage_permissions
         raise PermissionError.new(Repository, :manage) unless can_connect_repository_rows?(@inventory)
       end
 

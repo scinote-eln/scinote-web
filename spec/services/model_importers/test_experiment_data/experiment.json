@@ -194,7 +194,7 @@
                             "step_comments": [],
                             "step_tables": [],
                             "step_orderable_elements": [
-                                {   
+                                {
                                     "checklist": {
                                         "position": 0,
                                         "checklist": {
@@ -250,7 +250,7 @@
                                         "updated_at": "2019-01-21T13:04:30.562Z",
                                         "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">"
                                     }
-                                }                                 
+                                }
                             ]
                         }
                     ]
@@ -320,8 +320,6 @@
                                         "file_processing": null,
                                         "id": 21,
                                         "last_modified_by_id": null,
-                                        "lock": null,
-                                        "lock_ttl": null,
                                         "team_id": 1,
                                         "updated_at": "2019-01-21T13:10:06.290Z",
                                         "version": 1
@@ -353,7 +351,7 @@
                                         "updated_at": "2019-01-21T13:04:30.562Z",
                                         "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">"
                                     }
-                                }  
+                                }
                             ],
                             "step_assets": [
                                 {
@@ -476,7 +474,7 @@
                                         "updated_at": "2019-01-21T13:04:30.562Z",
                                         "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">"
                                     }
-                                }  
+                                }
                             ],
                             "step_tables": [
                                 {
@@ -579,7 +577,7 @@
                                         "updated_at": "2019-01-21T13:04:30.562Z",
                                         "text": "Compare response of PVYNTN, cab4 and PR1 genes in mock/virus inoculated potatoes & in time"
                                     }
-                                }  
+                                }
                             ],
                             "step_comments": [
                                 {
@@ -643,8 +641,6 @@
                                 "file_processing": null,
                                 "id": 1,
                                 "last_modified_by_id": 1,
-                                "lock": null,
-                                "lock_ttl": null,
                                 "team_id": 1,
                                 "updated_at": "2019-01-21T13:06:01.610Z",
                                 "version": 1
@@ -942,7 +938,7 @@
                             "step_comments": [],
                             "step_tables": [],
                             "step_orderable_elements": [
-                                {   
+                                {
                                     "position": 0,
                                     "step_text": {
                                         "created_at": "2019-01-21T13:04:30.562Z",
@@ -968,7 +964,7 @@
                                 "user_id": 1
                             },
                             "step_orderable_elements": [
-                                {   
+                                {
                                     "position": 0,
                                     "step_text": {
                                         "created_at": "2019-01-21T13:04:30.562Z",
@@ -1141,8 +1137,6 @@
                                         "file_processing": null,
                                         "id": 8,
                                         "last_modified_by_id": 1,
-                                        "lock": null,
-                                        "lock_ttl": null,
                                         "team_id": 1,
                                         "updated_at": "2019-01-21T13:06:04.590Z",
                                         "version": 1
@@ -1182,7 +1176,7 @@
             ],
             "results": [
                 {
-                    "assets":[ 
+                    "assets":[
                         {
                             "asset": {
                                 "created_at": "2019-01-21T12:45:32.847Z",
@@ -1191,8 +1185,6 @@
                                 "file_processing": null,
                                 "id": 9,
                                 "last_modified_by_id": 1,
-                                "lock": null,
-                                "lock_ttl": null,
                                 "team_id": 1,
                                 "updated_at": "2019-01-21T12:45:44.269Z",
                                 "version": 1

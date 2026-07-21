@@ -38,14 +38,16 @@ class Users::SessionsController < Devise::SessionsController
     return render body: nil, status: :unauthorized if current_user.blank?
 
     if current_user.remember_created_at.nil? || (current_user.remember_created_at + Devise.remember_for).past?
-      render plain: (Devise.timeout_in.to_i - (Time.now.to_i - user_session['last_request_at']).round) * 1000
+      render plain: (current_user.timeout_in.to_i - (Time.now.to_i - user_session['last_request_at']).round) * 1000
     else
       render plain: [(Devise.remember_for - (Time.now.to_i - current_user.remember_created_at.to_i).round) * 1000,
-                     (Devise.timeout_in.to_i - (Time.now.to_i - user_session['last_request_at']).round) * 1000].max
+                     (current_user.timeout_in.to_i - (Time.now.to_i - user_session['last_request_at']).round) * 1000].max
     end
   end
 
-  def revive_session; end
+  def revive_session
+    render json: { csrf_token: form_authenticity_token }
+  end
 
   def two_factor_recovery
     unless session[:otp_user_id]

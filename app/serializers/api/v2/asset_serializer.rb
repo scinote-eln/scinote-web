@@ -5,12 +5,16 @@ module Api
     class AssetSerializer < ActiveModel::Serializer
       type :attachments
 
-      attributes :id, :file_name, :file_size, :file_type, :file_url, :archived
+      attributes :id, :file_name, :file_size, :file_type, :file_url, :archived, :locked
 
       include TimestampableModel
 
       def file_type
         object.content_type
+      end
+
+      def locked
+        object.step&.attachments_locked || object.step&.locked || false
       end
 
       def file_url

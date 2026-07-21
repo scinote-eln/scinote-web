@@ -67,6 +67,7 @@ class ProtocolsImporterV2
     protocol.reload
     protocol.description = populate_rte(protocol_json, protocol)
     protocol.name = protocol_json['name'].presence
+    protocol.description_locked = protocol_json['description_locked'] if Protocol.content_locking_enabled? && protocol_json.key?('description_locked')
     protocol.save!
     step_pos = 0
 
@@ -84,16 +85,18 @@ class ProtocolsImporterV2
       step.save!
       step_pos += 1
 
+      set_step_locks(step, step_json)
+
       step_json['stepElements']&.values&.each do |element_params|
         case element_params['type']
         when 'StepText'
-          create_step_text(step, element_params['stepText'])
+          create_step_text(step, element_params['stepText'], element_params['locked'])
         when 'StepTable'
-          create_step_table(step, element_params['elnTable'])
+          create_step_table(step, element_params['elnTable'], element_params['locked'])
         when 'Checklist'
-          create_checklist(step, element_params['checklist'])
+          create_checklist(step, element_params['checklist'], element_params['locked'])
         when 'FormResponse'
-          create_form(step, element_params['form'])
+          create_form(step, element_params['form'], element_params['locked'])
         end
       end
 
@@ -153,7 +156,7 @@ class ProtocolsImporterV2
     end
   end
 
-  def create_step_text(step, params)
+  def create_step_text(step, params, locked = nil)
     step_text = StepText.create!(
       step: step
     )
@@ -161,6 +164,7 @@ class ProtocolsImporterV2
     step_text.update!(text: populate_rte(params, step_text), name: params[:name])
 
     create_in_step!(step, step_text)
+    set_lock(step_text, locked)
   end
 
   def create_result_text(result, params)
@@ -173,7 +177,7 @@ class ProtocolsImporterV2
     create_in_result!(result, result_text)
   end
 
-  def create_step_table(step, params)
+  def create_step_table(step, params, locked = nil)
     step_table = StepTable.new(
       step: step,
       table: Table.new(
@@ -187,6 +191,7 @@ class ProtocolsImporterV2
     )
 
     create_in_step!(step, step_table)
+    set_lock(step_table.table, locked)
   end
 
   def create_result_table(result, params)
@@ -205,7 +210,7 @@ class ProtocolsImporterV2
     create_in_result!(result, result_table)
   end
 
-  def create_checklist(step, params)
+  def create_checklist(step, params, locked = nil)
     checklist = Checklist.new(
       name: params['name'],
       step: step,
@@ -214,6 +219,7 @@ class ProtocolsImporterV2
     )
 
     create_in_step!(step, checklist)
+    set_lock(checklist, locked)
 
     return unless params['items']
 
@@ -232,13 +238,14 @@ class ProtocolsImporterV2
     end
   end
 
-  def create_form(step, params)
+  def create_form(step, params, locked = nil)
     form = @team.forms.readable_by_user(@user).published.find_by(id: params['id'])
 
     if form.present?
       form_response = FormResponse.create(form: form, created_by: @user, parent: step)
 
       create_in_step!(step, form_response)
+      set_lock(form_response, locked)
     end
   end
 
@@ -284,5 +291,23 @@ class ProtocolsImporterV2
 
   def table_metadata(table)
     JSON.parse(table['metadata'].presence || '{}')
+  end
+
+  def set_step_locks(step, step_json)
+    return unless Protocol.content_locking_enabled?
+
+    updates = {}
+    updates[:locked] = step_json['locked'] if step_json.key?('locked')
+    updates[:attachments_locked] = step_json['attachments_locked'] if step_json.key?('attachments_locked')
+    updates[:adding_items_allowed] = step_json['adding_items_allowed'] if step_json.key?('adding_items_allowed')
+
+    step.update!(updates) if updates.any?
+  end
+
+  def set_lock(record, locked)
+    return unless Protocol.content_locking_enabled?
+    return if record.nil? || locked.nil?
+
+    record.update!(locked: locked)
   end
 end

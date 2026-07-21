@@ -5,7 +5,7 @@ class StepFormResponseSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
   attributes :id, :created_at, :form_id, :urls, :submitted_by_full_name, :status, :submitted_at, :parent_type, :in_repository,
-             :icon, :name, :archived, :archived_by, :archived_on
+             :icon, :name, :archived, :archived_by, :archived_on, :locked
 
   has_one :form, serializer: FormSerializer
 
@@ -41,6 +41,10 @@ class StepFormResponseSerializer < ActiveModel::Serializer
     'sn-icon-forms'
   end
 
+  def locked
+    object.locked || object.step.locked
+  end
+
   def submitted_by_full_name
     object.submitted_by&.full_name
   end
@@ -57,18 +61,23 @@ class StepFormResponseSerializer < ActiveModel::Serializer
 
     if Form.forms_enabled?
       if can_manage_step_form_response?(user, object)
-        url_list[:add_value] = form_response_form_field_values_path(object)
         url_list[:move_url] = move_step_form_response_path(step, object)
         url_list[:move_targets_url] = move_targets_step_text_path(step, object)
       end
 
-      url_list[:submit] = submit_step_form_response_path(step, object) if can_submit_form_response?(user, object)
+      if can_submit_form_response?(user, object)
+        url_list[:add_value] = form_response_form_field_values_path(object)
+        url_list[:submit] = submit_step_form_response_path(step, object)
+      end
+
       url_list[:reset] = reset_step_form_response_path(step, object) if can_reset_form_response?(user, object)
       url_list[:restore_url] = restore_step_form_response_path(step, object) if can_restore_step_form_response?(user, object)
     end
 
     url_list[:delete_url] = step_form_response_path(step, object) if can_delete_step_form_response?(user, object)
     url_list[:archive_url] = archive_step_form_response_path(step, object) if can_archive_step_form_response?(user, object)
+    url_list[:lock_url] = lock_step_form_response_path(step, object) if can_lock_step_form_response?(user, object)
+    url_list[:unlock_url] = unlock_step_form_response_path(step, object) if can_unlock_step_form_response?(user, object)
 
     url_list
   end

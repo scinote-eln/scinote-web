@@ -12,7 +12,7 @@ class AssetSerializer < ActiveModel::Serializer
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi, :file_name_without_extension,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
              :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type,
-             :edit_version_range, :archived, :archived_by, :archived_on
+             :edit_version_range, :archived, :archived_by, :archived_on, :locked
   attribute :checksum, if: :sync_url_present?
 
   def icon
@@ -142,6 +142,16 @@ class AssetSerializer < ActiveModel::Serializer
     { min: Constants::MIN_SCINOTE_EDIT_VERSION, max: Constants::MAX_SCINOTE_EDIT_VERSION }
   end
 
+  def locked
+    if object.step
+      object.step.attachments_locked || object.step.locked
+    elsif object.result
+      object.result.attachments_locked
+    else
+      false
+    end
+  end
+
   def urls
     urls = {
       preview: asset_file_preview_path(object),
@@ -169,6 +179,8 @@ class AssetSerializer < ActiveModel::Serializer
     end
     urls[:restore] = asset_restore_path(object) if can_restore_asset?(user, object)
     urls[:delete] = asset_destroy_path(object) if can_delete_asset?(user, object)
+    urls[:lock] = asset_lock_path(object) if can_lock_asset?(user, object)
+    urls[:unlock] = asset_unlock_path(object) if can_unlock_asset?(user, object)
     urls[:restore_version] = asset_restore_version_path(object) if can_restore_asset_version?(user, object)
     urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if managable?
 

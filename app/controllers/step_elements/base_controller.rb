@@ -5,7 +5,41 @@ module StepElements
     before_action :load_step_and_protocol
 
     def move_targets
-      render json: { targets: @protocol.steps.active.order(:position).where.not(id: @step.id).map { |i| [i.id, i.name] } }
+      render json: { targets: @protocol.steps.active.unlocked.order(:position).where.not(id: @step.id).map { |i| [i.id, i.name] } }
+    end
+
+    def lock
+      @element.update!(locked: true)
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def unlock
+      @element.update!(locked: false)
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def archive
+      ActiveRecord::Base.transaction do
+        @element.archive!(current_user)
+        log_archive_activity
+      end
+      head :ok
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
+    end
+
+    def restore
+      ActiveRecord::Base.transaction do
+        @element.restore!(current_user)
+        log_restore_activity
+      end
+      restore_response
+    rescue ActiveRecord::RecordInvalid
+      head :unprocessable_entity
     end
 
     private
@@ -19,6 +53,26 @@ module StepElements
 
     def check_manage_step_permissions
       render_403 unless can_manage_step?(@step)
+    end
+
+    def check_lock_permissions
+      render_403
+    end
+
+    def check_unlock_permissions
+      render_403
+    end
+
+    def log_archive_activity
+      raise NotImplementedError
+    end
+
+    def log_restore_activity
+      raise NotImplementedError
+    end
+
+    def restore_response
+      head :ok
     end
 
     def create_in_step!(step, new_orderable)

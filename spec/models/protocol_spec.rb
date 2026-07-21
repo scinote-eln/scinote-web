@@ -111,5 +111,16 @@ describe Protocol, type: :model do
     it 'creats one new activity DB' do
       expect { protocol.deep_clone_repository(user) }.to change { Activity.count }.by(1)
     end
+
+    context 'when the description is locked' do
+      let(:protocol) do
+        create :protocol, :in_repository_published_original, team: team, added_by: user, description_locked: true
+      end
+
+      it 'propagates description_locked to the cloned protocol' do
+        clone = protocol.deep_clone_repository(user)
+        expect(clone.description_locked).to be true
+      end
+    end
   end
 end

@@ -86,3 +86,12 @@ html {
 
   40%, 100% { background-position: 320px }
 }
+
+.sn-legacy-menu-item {
+  @apply !px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue bg-white
+         border-0 whitespace-nowrap w-full text-left;
+}
+
+.sn-legacy-menu-item:disabled {
+  @apply !opacity-50 !cursor-not-allowed hover:!bg-white;
+}

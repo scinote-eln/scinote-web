@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ResultSerializer < ResultBaseSerializer
-  attributes :my_module_id, :archived, :comments_count, :archived_by, :archived_on
+  attributes :my_module_id, :archived, :comments_count, :archived_by, :archived_on, :attachments_locked
 
   def result_orderable_elements
     return object.all_elements if object.archived?
@@ -39,7 +39,11 @@ class ResultSerializer < ResultBaseSerializer
   end
 
   def attachments_manageble
-    @instance_options[:view_mode] == 'archived' ? false : can_manage_result?(object)
+    if @instance_options[:view_mode] == 'archived'
+      false
+    else
+      !object.attachments_locked && can_manage_result?(object)
+    end
   end
 
   def comments_count

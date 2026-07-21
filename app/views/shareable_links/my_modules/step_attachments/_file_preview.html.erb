@@ -22,7 +22,7 @@
           <% if asset.pdf_previewable? %>
             <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false, shareable_document: true } %>
           <% elsif asset.previewable? && asset.large_preview&.image&.attached? %>
-            <%= image_tag asset.large_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
+            <%= image_tag asset.large_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME),
                 class: 'asset-image',
                 style: 'opacity: 1' %>
           <% else %>
@@ -40,7 +40,7 @@
               data: { id: previous_asset.id } do %>
               <i class="sn-icon sn-icon-arrow-left"></i>
               <% if previous_asset.previewable? && previous_asset.medium_preview&.image&.attached? %>
-                <%= image_tag previous_asset.medium_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
+                <%= image_tag previous_asset.medium_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME),
                     class: 'asset-image',
                     style: 'opacity: 1' %>
               <% else %>
@@ -57,7 +57,7 @@
               class: "next-asset shareable-gallery-switcher",
               data: { id: next_asset.id } do %>
               <% if next_asset.previewable? && next_asset.medium_preview&.image&.attached? %>
-                <%= image_tag next_asset.medium_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
+                <%= image_tag next_asset.medium_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME),
                     class: 'asset-image',
                     style: 'opacity: 1' %>
               <% else %>
