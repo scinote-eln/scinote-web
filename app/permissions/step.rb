@@ -9,12 +9,23 @@ Canaid::Permissions.register_for(Step) do
     end
   end
 
+  can :link_results do |user, step|
+    if step.my_module
+      step.active? && can_manage_my_module_steps?(user, step.my_module)
+    else
+      can_manage_protocol_draft_in_repository?(user, step.protocol)
+    end
+  end
+
   can :archive_step do |user, step|
     step.my_module && step.active? && can_manage_step?(user, step)
   end
 
   can :restore_step do |user, step|
-    step.my_module && step.archived? && can_manage_my_module_steps?(user, step.my_module)
+    step.my_module &&
+    step.archived? &&
+    step.protocol.adding_steps_allowed? &&
+    can_manage_my_module_steps?(user, step.my_module)
   end
 
   can :delete_step do |user, step|
@@ -85,7 +96,7 @@ Canaid::Permissions.register_for(FormResponse) do
 
   %i(manage_step_form_response archive_step_form_response).each do |perm|
     can perm do |user, form_response|
-      !form_response.status_locked? || can_manage_protocol_draft_in_repository?(user, form_response.step.protocol)
+      !form_response.locked? || can_manage_protocol_draft_in_repository?(user, form_response.step.protocol)
     end
   end
 
@@ -103,9 +114,9 @@ Canaid::Permissions.register_for(FormResponse) do
 
   can :delete_step_form_response do |user, form_response|
     if form_response.step.protocol.in_module?
-      !form_response.status_locked? && form_response.archived? && form_response.step.team.protocol_steps_deletion_enabled?
+      !form_response.locked? && form_response.archived? && form_response.step.team.protocol_steps_deletion_enabled?
     else
-      !form_response.status_locked? || can_manage_protocol_draft_in_repository?(user, form_response.step.protocol)
+      !form_response.locked? || can_manage_protocol_draft_in_repository?(user, form_response.step.protocol)
     end
   end
 

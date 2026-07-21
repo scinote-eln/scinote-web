@@ -39,7 +39,11 @@ class ResultSerializer < ResultBaseSerializer
   end
 
   def attachments_manageble
-    @instance_options[:view_mode] == 'archived' ? false : can_manage_result?(object)
+    if @instance_options[:view_mode] == 'archived'
+      false
+    else
+      !object.attachments_locked && can_manage_result?(object)
+    end
   end
 
   def comments_count

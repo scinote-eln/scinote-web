@@ -69,7 +69,7 @@ Canaid::Permissions.register_for(Protocol) do
 
   can :update_protocol_name do |user, protocol|
     if protocol.in_module?
-      protocol.steps.locked.none? && can_manage_my_module_protocol?(user, protocol.my_module)
+      !protocol.description_locked? && can_manage_my_module_protocol?(user, protocol.my_module)
     else
       can_manage_protocol_draft_in_repository?(user, protocol)
     end

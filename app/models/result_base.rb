@@ -134,7 +134,7 @@ class ResultBase < ApplicationRecord
 
   private
 
-  def duplicate_table(new_result, user, table)
-    table.duplicate(new_result, user, table.result_table.result_orderable_element.position)
+  def duplicate_table(new_result, user, table, skip_lock: false)
+    table.duplicate(new_result, user, table.result_table.result_orderable_element.position, skip_lock: skip_lock)
   end
 end

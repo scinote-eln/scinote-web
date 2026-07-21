@@ -3943,6 +3943,7 @@ en:
     print_label: "Print protocol"
     rearrange_steps_label: "Rearrange steps"
     manage_steps: "Manage steps"
+    manage_steps_disclaimer: "If a single step is locked, adding new steps on the Task protocol will be disabled"
     lock_step: "Lock step"
     unlock_step: "Unlock step"
     all_steps: "All steps"
@@ -4120,8 +4121,8 @@ en:
       protocol_report_templates: "Analytical report [%{count}]"
       draft_with_from_version: 'Draft (from Version %{nr})'
       protocol_description: 'Protocol description'
-      lock_description: "Lock description"
-      unlock_description: "Unlock description"
+      lock_description: "Lock title and description"
+      unlock_description: "Unlock title and description"
       protocol_steps: 'Protocol steps'
       publish: 'Publish'
       save_as_draft: 'Create new draft'
@@ -5212,6 +5213,7 @@ en:
     options_selected: 'options selected'
     output: 'Output'
     restore: "Restore"
+    locked: "Locked"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"

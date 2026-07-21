@@ -213,8 +213,6 @@ RSpec.describe 'Api::V2::StepElements::ChecklistItemsController', type: :request
   describe 'DELETE checklist_item, #destroy' do
     let(:checklist_item) { create(:checklist_item, checklist: @checklist) }
     let(:action) do
-      @checklist.archive!(@user)
-
       delete(api_v2_team_project_experiment_task_protocol_step_checklist_item_path(
         team_id: @team.id,
         project_id: @project.id,

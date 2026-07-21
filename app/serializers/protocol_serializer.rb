@@ -11,7 +11,7 @@ class ProtocolSerializer < ActiveModel::Serializer
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version,
              :code, :published, :version_comment, :archived, :linked, :has_draft, :description_locked,
              :published_on_formatted, :published_by, :created_from_version, :assignable_my_module_id, :assignable_my_module_name,
-             :has_locked_steps
+             :adding_steps_allowed
 
   def updated_at
     object.updated_at.to_i
@@ -75,10 +75,6 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   def description
     sanitize_input(object.tinymce_render('description'))
-  end
-
-  def has_locked_steps
-    object.steps.locked.any?
   end
 
   def urls

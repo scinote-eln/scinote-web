@@ -6,11 +6,11 @@ module Api
       include ApplicationHelper
 
       before_action :load_team, :load_project, :load_experiment, :load_task, :load_protocol, :load_step, :load_checklist
-      before_action only: :show do
+      before_action only: %i(show update destroy) do
         load_checklist_item(:id)
       end
-      before_action :load_checklist_item_for_managing, only: %i(update destroy)
-      before_action :check_delete_permission, only: :destroy
+      before_action :check_create_permissions, only: :create
+      before_action :check_manage_permissions, only: %i(update destroy)
 
       def index
         checklist_items =
@@ -25,8 +25,6 @@ module Api
       end
 
       def create
-        raise PermissionError.new(Protocol, :create) unless can_manage_protocol_in_module?(@protocol)
-
         checklist_item = @checklist.checklist_items.create!(checklist_item_params.merge!(created_by: current_user))
 
         render jsonapi: checklist_item, serializer: ChecklistItemSerializer, status: :created
@@ -72,13 +70,12 @@ module Api
         params.require(:data).require(:attributes).permit(:text, :checked, :position)
       end
 
-      def load_checklist_item_for_managing
-        @checklist_item = @checklist.checklist_items.find(params.require(:id))
-        raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@protocol)
+      def check_create_permissions
+        raise PermissionError.new(ChecklistItem, :create) unless can_manage_step?(@step)
       end
 
-      def check_delete_permission
-        raise PermissionError.new(Checklist, :delete) unless can_delete_step_checklist?(@checklist_item.checklist)
+      def check_manage_permissions
+        raise PermissionError.new(ChecklistItem, :manage) unless can_manage_step_checklist?(@checklist)
       end
 
       def log_activity(type_of, message_items = {})

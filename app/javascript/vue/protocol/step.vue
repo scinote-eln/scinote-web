@@ -103,7 +103,7 @@
           tabindex="0"
         ></span> <!-- Hidden element to support legacy code -->
         <template v-if="step.attributes.results.length == 0">
-          <button ref="linkButton" v-if="urls.update_url" :data-sn-tooltip="i18n.t('protocols.steps.link_results')" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
+          <button ref="linkButton" v-if="permissions.can_link_results" :data-sn-tooltip="i18n.t('protocols.steps.link_results')" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
             <i class="sn-icon sn-icon-results"></i>
           </button>
         </template>
@@ -128,7 +128,7 @@
                 {{ result.name }}
               </a>
             </div>
-            <template v-if="urls.update_url">
+            <template v-if="permissions.can_link_results">
               <hr class="my-0">
               <div class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-blue"
                   @click="this.openLinkResultsModal = true; $refs.linkedResultsDropdown.closeMenu()">
@@ -233,7 +233,6 @@
         :items="reorderableElements"
         :subject="step"
         @reorder="updateElementOrder"
-        @toggle-lock-subject="$emit('step:toggle-lock', step)"
         @toggle-lock="toggleItemLock"
         @toggle-lock-attachments="toggleAttachmentsLock"
         @close="closeReorderModal"
@@ -307,6 +306,10 @@
   export default {
     name: 'StepContainer',
     props: {
+      addingStepsLocked: {
+        type: Boolean,
+        required: true
+      },
       step: {
         type: Object,
         required: true
@@ -436,6 +439,9 @@
       urls() {
         return this.step.attributes.urls || {}
       },
+      permissions() {
+        return this.step.attributes.permissions || {}
+      },
       completeStateTooltip() {
         return this.step.attributes.completed
           ? this.i18n.t('protocols.steps.status.uncomplete')
@@ -543,6 +549,8 @@
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.duplicate'),
             emit: 'duplicate',
+            disabled: this.addingStepsLocked,
+            title: this.addingStepsLocked ? this.i18n.t('protocols.action_disabled') : '',
             data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-duplicate`,
             e2e_class: 'e2e-BT-protocol-step-stepOptions-duplicate'
           }]);
@@ -560,6 +568,8 @@
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.archive'),
             emit: 'archive',
+            disabled: this.addingStepsLocked,
+            title: this.addingStepsLocked ? this.i18n.t('protocols.action_disabled') : '',
             data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-archive`,
             e2e_class: 'e2e-BT-protocol-step-stepOptions-archive'
           }]);

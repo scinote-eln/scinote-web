@@ -165,6 +165,7 @@ import StepCommonMixin from './mixins/step_common.js';
 export default {
   name: 'Steps',
   props: {
+    addingStepsLocked: { type: Boolean, required: true },
     step: { type: Object, required: true },
     protocolId: { type: Number, required: false }
   },
