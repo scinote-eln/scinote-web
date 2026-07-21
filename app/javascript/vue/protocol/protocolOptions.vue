@@ -84,6 +84,8 @@
             ref="updateProtocol"
             data-action="update-self"
             @click="updateProtocol"
+            :disabled="addingStepsLocked"
+            :data-sn-tooltip="addingStepsLocked ? i18n.t('protocols.action_disabled') : null"
             data-e2e="e2e-DO-task-protocol-actions-updateProtocol"
           >
             <span>{{
