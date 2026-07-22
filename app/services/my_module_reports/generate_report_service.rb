@@ -12,6 +12,7 @@ module MyModuleReports
       @my_module = protocol.my_module
       @team = team
       @user = user
+      @tiny_mce_assets = []
     end
 
     def call(my_module_report)
@@ -25,10 +26,19 @@ module MyModuleReports
           render_results(r)
         end
 
+        # Finally insert all TinyMCE images into the report
+        @tiny_mce_assets.each do |tiny_mce_asset|
+          report.add_inline_image "TINY_MCE_ASSET_#{tiny_mce_asset[:id]}".to_sym, tiny_mce_asset[:file].path, width: tiny_mce_asset[:width], height: tiny_mce_asset[:height]
+        end
+
         report.generate(output.path)
         my_module_report.report.attach(io: File.open(output.path), filename: original_blob.filename, content_type: original_blob.content_type)
       end
     ensure
+      @tiny_mce_assets.each do |tiny_mce_asset|
+        tiny_mce_asset[:file]&.close
+        tiny_mce_asset[:file]&.unlink
+      end
       output.close
       output.unlink
     end
@@ -57,7 +67,7 @@ module MyModuleReports
 
           case element.orderable_type
           when 'StepText'
-            render_text(report, element_tag, element.orderable, with_protocol: true)
+            render_text_element(report, element_tag, element.orderable, with_protocol: true)
           when 'StepTable'
             render_table(report, element_tag, element.orderable.table, with_protocol: true)
           when 'Checklist'
@@ -81,7 +91,7 @@ module MyModuleReports
 
           case element.orderable_type
           when 'ResultText'
-            render_text(report, element_tag, element.orderable)
+            render_text_element(report, element_tag, element.orderable)
           when 'ResultTable'
             render_table(report, element_tag, element.orderable.table)
           end
@@ -89,14 +99,14 @@ module MyModuleReports
       end
     end
 
-    def render_text(report, text_tag, text, with_protocol: false)
-      report.add_text text_tag, "<div>#{text.name}</div><div>{{#{text_tag}}}</div>"
-      report.add_text text_tag, text.text
+    def render_text_element(report, text_tag, text_element, with_protocol: false)
+      report.add_text text_tag, "<div>#{text_element.name}</div><div>{{#{text_tag}}}</div>"
+      report.add_text text_tag, insert_tiny_mce_asset_placeholders(text_element.text, text_element.tiny_mce_assets)
 
       # for full protocol tag
       if with_protocol
-        report.add_text PROTOCOL_TAG, "<div>#{text.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
-        report.add_text PROTOCOL_TAG, "<div>#{text.text}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        report.add_text PROTOCOL_TAG, "<div>#{text_element.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        report.add_text PROTOCOL_TAG, "<div>#{text_element.text}</div><div>{{#{PROTOCOL_TAG}}}</div>"
       end
     end
 
@@ -131,7 +141,6 @@ module MyModuleReports
 
       form_fields = form_response.form.form_fields.order(:position)
       form_field_values = form_response.form_field_values
-      # byebug
 
       form_fields&.each do |form_field|
         form_field_value = form_field_values.find_by(form_field_id: form_field.id, latest: true)
@@ -151,6 +160,42 @@ module MyModuleReports
         report.add_field tag, value
         report.add_text PROTOCOL_TAG, "<div>#{value}</div><div>{{#{PROTOCOL_TAG}}}</div>"
       end
+    end
+
+    def insert_tiny_mce_asset_placeholders(text, attached_tiny_mce_assets)
+      html_text = Nokogiri::HTML(text)
+
+      attached_tiny_mce_assets.each do |tiny_mce_asset|
+        next unless tiny_mce_asset&.image&.attached?
+
+        tiny_mce_asset_elms = html_text.search("img[data-mce-token=\"#{Base62.encode(tiny_mce_asset.id)}\"]")
+        next if tiny_mce_asset_elms.blank?
+
+        begin
+          variant = tiny_mce_asset.image.variant(resize_to_limit: Constants::LARGE_PIC_FORMAT).processed
+          width = tiny_mce_asset_elms[0].attributes['width']&.value&.to_i
+          height = tiny_mce_asset_elms[0].attributes['height']&.value&.to_i
+          unless width && height
+            variant.blob.analyze unless variant.blob.metadata['width'] && variant.blob.metadata['height']
+            width = variant.blob.metadata['width']
+            height = variant.blob.metadata['height']
+          end
+
+          tempfile = Tempfile.new([variant.blob.filename.base, variant.blob.filename.extension_with_delimiter], Rails.root.join('tmp'), binmode: true)
+          variant.blob.download { |chunk| tempfile.write(chunk) }
+          tempfile.flush
+          tempfile.rewind
+
+          @tiny_mce_assets << { id: tiny_mce_asset.id, file: tempfile, width: width, height: height }
+
+          tiny_mce_asset_elms.each { |el| el.replace(html_text.create_text_node("{{TINY_MCE_ASSET_#{tiny_mce_asset.id}}}")) }
+        rescue StandardError => e
+          Rails.logger.error(e.message)
+          Rails.logger.error(e.backtrace.join("\n"))
+        end
+      end
+
+      html_text.at('body').inner_html.to_s
     end
 
     def element_id(element)
