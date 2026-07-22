@@ -118,7 +118,7 @@ class StepSerializer < ActiveModel::Serializer
     if @instance_options[:view_mode] == 'archived'
       false
     else
-      (!object.attachments_locked || object.protocol.in_repository_draft?) && can_manage_step?(object)
+      can_manage_step?(object)
     end
   end
 
@@ -147,6 +147,11 @@ class StepSerializer < ActiveModel::Serializer
 
     url_list[:delete_url] = step_path(object) if can_delete_step?(object)
 
+    if can_manage_step_attachments?(current_user, object)
+      url_list[:direct_upload_url] = rails_direct_uploads_url
+      url_list[:upload_attachment_url] = upload_attachment_step_path(object)
+    end
+
     if can_manage_step?(object)
       url_list.merge!({
         update_url: step_path(object),
@@ -155,8 +160,6 @@ class StepSerializer < ActiveModel::Serializer
         create_checklist_url: step_checklists_path(object),
         update_asset_view_mode_url: update_asset_view_mode_step_path(object),
         update_view_state_url: update_view_state_step_path(object),
-        direct_upload_url: rails_direct_uploads_url,
-        upload_attachment_url: upload_attachment_step_path(object),
         reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)
       })
 

@@ -7,7 +7,7 @@ export default {
         inline: 0,
         thumbnail: 1,
         list: 2
-      }
+      },
     };
   },
   computed: {
@@ -16,10 +16,15 @@ export default {
     },
     attachmentsParentName() {
       return this.step ? 'step' : 'result';
+    },
+    cantUploadFiles() {
+      return false;
     }
   },
   methods: {
     dropFile(e) {
+      if (this.cantUploadFiles) return;
+
       if (!this.showFileModal && e.dataTransfer && e.dataTransfer.files.length) {
         this.dragingFile = false;
         this.uploadFiles(e.dataTransfer.files);

@@ -42,7 +42,7 @@ class ResultSerializer < ResultBaseSerializer
     if @instance_options[:view_mode] == 'archived'
       false
     else
-      !object.attachments_locked && can_manage_result?(object)
+      can_manage_result?(object)
     end
   end
 
@@ -65,6 +65,11 @@ class ResultSerializer < ResultBaseSerializer
       attachments_url: assets_my_module_result_path(object.my_module, object, view_mode: view_mode)
     }
 
+    if can_manage_result_attachments?(current_user, object)
+      url_list[:direct_upload_url] = rails_direct_uploads_url
+      url_list[:upload_attachment_url] = upload_attachment_my_module_result_path(object.my_module, object)
+    end
+
     if can_manage_result?(object)
       url_list.merge!({
                          update_url: my_module_result_path(object.my_module, object),
@@ -73,8 +78,6 @@ class ResultSerializer < ResultBaseSerializer
                          update_asset_view_mode_url: update_asset_view_mode_my_module_result_path(object.my_module,
                                                                                                   object),
                          update_view_state_url: update_view_state_my_module_result_path(object.my_module, object),
-                         direct_upload_url: rails_direct_uploads_url,
-                         upload_attachment_url: upload_attachment_my_module_result_path(object.my_module, object),
                          reorder_elements_url: reorder_my_module_result_result_orderable_elements_path(
                            object.my_module, object
                          )

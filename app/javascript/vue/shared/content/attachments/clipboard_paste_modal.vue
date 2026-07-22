@@ -80,7 +80,7 @@ export default {
     });
 
     if (this.selectedObjectId) this.target = this.selectedObjectId;
-    this.targets = this.objects.map((object) => [
+    this.targets = this.objects.filter(object => !object.attributes.attachments_locked && !object.attributes.locked).map((object) => [
       object.id,
       object.attributes.name
     ]);

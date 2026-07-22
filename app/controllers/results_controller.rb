@@ -10,7 +10,8 @@ class ResultsController < ResultBaseController
   before_action :set_inline_name_editing, only: %i(index)
   before_action :check_create_permissions, only: %i(create)
   before_action :check_read_permissions, only: %i(elements assets)
-  before_action :check_manage_permissions, only: %i(upload_attachment update_view_state update_asset_view_mode update duplicate pin unpin)
+  before_action :check_manage_permissions, only: %i(update_view_state update_asset_view_mode update duplicate pin unpin)
+  before_action :check_upload_attachment_permissions, only: %i(upload_attachment)
   before_action :check_restore_permissions, only: :restore
   before_action :check_archive_permissions, only: :archive
   before_action :check_destroy_permissions, only: :destroy
@@ -102,6 +103,10 @@ class ResultsController < ResultBaseController
 
   def check_create_permissions
     render_403 unless can_create_results?(@parent)
+  end
+
+  def check_upload_attachment_permissions
+    render_403 unless can_manage_result_attachments?(current_user, @result)
   end
 
   def set_navigator

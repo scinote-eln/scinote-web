@@ -19,6 +19,17 @@ Canaid::Permissions.register_for(ResultBase) do
     end
   end
 
+  can :manage_result_attachments do |user, result|
+    if result.is_a?(ResultTemplate)
+      can_manage_protocol_draft_in_repository?(user, result.protocol)
+    else
+      !result.archived? &&
+        !result.my_module.archived_branch? &&
+        !result.attachments_locked &&
+        result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_MANAGE)
+    end
+  end
+
   can :archive_result do |user, result|
     result.is_a?(Result) && can_manage_result?(user, result)
   end
