@@ -66,10 +66,26 @@ class AssetsController < ApplicationController
     case @assoc
     when Step
       protocol = @assoc.protocol
-      render json: { targets: protocol.steps.active.order(:position).where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
+      targets = protocol.steps
+                        .active
+                        .where.not(id: @assoc.id)
+                        .order(:position)
+
+      if protocol.in_module?
+        targets = targets.unlocked.where.not(attachments_locked: true)
+      end
+
+      render json: { targets: targets.map { |i| [i.id, i.name] } }
     when ResultBase
       parent = @assoc.parent
-      render json: { targets: parent.results.active.where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
+      targets = parent.results
+                      .active
+                      .where.not(id: @assoc.id)
+
+      if parent.is_a?(MyModule)
+        targets = targets.where.not(attachments_locked: true)
+      end
+      render json: { targets: targets.map { |i| [i.id, i.name] } }
     else
       render json: { targets: [] }
     end

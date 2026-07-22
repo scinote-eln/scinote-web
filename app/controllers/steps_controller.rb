@@ -13,7 +13,8 @@ class StepsController < ApplicationController
   before_action :check_protocol_manage_permissions, only: %i(reorder add_protocol_steps lock_all unlock_all)
   before_action :check_view_permissions, only: %i(show index list attachments elements list_protocol_steps)
   before_action :check_create_permissions, only: %i(create)
-  before_action :check_manage_permissions, only: %i(update update_view_state update_asset_view_mode upload_attachment lock unlock)
+  before_action :check_manage_permissions, only: %i(update update_view_state update_asset_view_mode lock unlock)
+  before_action :check_upload_attachment_permissions, only: %i(upload_attachment)
   before_action :check_locking_enabled, only: %i(lock unlock lock_all unlock_all)
   before_action :check_archive_permissions, only: :archive
   before_action :check_restore_permissions, only: :restore
@@ -529,6 +530,10 @@ class StepsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_step?(@step)
+  end
+
+  def check_upload_attachment_permissions
+    render_403 unless can_manage_step_attachments?(current_user, @step)
   end
 
   def check_archive_permissions

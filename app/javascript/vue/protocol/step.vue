@@ -442,6 +442,9 @@
       permissions() {
         return this.step.attributes.permissions || {}
       },
+      cantUploadFiles() {
+        return !this.inRepository && (this.step.attributes.attachments_locked || this.step.attributes.locked);
+      },
       completeStateTooltip() {
         return this.step.attributes.completed
           ? this.i18n.t('protocols.steps.status.uncomplete')
@@ -496,6 +499,8 @@
                     text: this.i18n.t('protocols.steps.insert.attachment'),
                     submenu: this.filesMenu,
                     position: 'left',
+                    disabled: this.cantUploadFiles,
+                    title: this.cantUploadFiles ? this.i18n.t('protocols.action_disabled') : '',
                     icon: 'sn-icon sn-icon-file',
                     data_e2e: `e2e-BT-protocol-step${this.step.id}-insertAttachment`
                   },{
@@ -579,7 +584,9 @@
     },
     methods: {
       dragEnter(e) {
-        if (this.showFileModal || !this.urls.upload_attachment_url) return;
+        if (this.showFileModal ||
+            !this.urls.upload_attachment_url ||
+            this.cantUploadFiles) return;
 
         // Detect if dragged element is a file
         // https://stackoverflow.com/a/8494918

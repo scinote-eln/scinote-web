@@ -9,6 +9,14 @@ Canaid::Permissions.register_for(Step) do
     end
   end
 
+  can :manage_step_attachments do |user, step|
+    protocol = step.protocol
+    step.active? &&
+    can_manage_step?(user, step) &&
+    (!step.attachments_locked || protocol.in_repository_draft?)
+  end
+
+
   can :link_results do |user, step|
     if step.my_module
       step.active? && can_manage_my_module_steps?(user, step.my_module)

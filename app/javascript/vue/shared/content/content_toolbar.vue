@@ -5,14 +5,19 @@
     </span>
     <div class="flex items-center gap-2 flex-wrap">
       <template v-for="item in insertMenu">
-        <button v-if="!item.submenu" @click="$emit(item.emit)" :data-sn-tooltip="item.text" class="btn btn-light">
+        <button v-if="!item.submenu"
+          @click="$emit(item.emit)"
+          :disabled="item.disabled"
+          :data-sn-tooltip="item.title || item.text"
+          class="btn btn-light">
           <i :class="item.icon"></i>
           <span class="tw-hidden xl:inline">{{ item.text }}</span>
         </button>
         <MenuDropdown
           :listItems="item.submenu"
           :btnText="item.text"
-          :data-sn-tooltip="item.text"
+          :disabled="item.disabled"
+          :data-sn-tooltip="item.title || item.text"
           :disableOverflow="true"
           :btnClasses="'btn btn-light'"
           :smallScreenCollapse="true"
