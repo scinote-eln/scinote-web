@@ -380,6 +380,31 @@ describe AssetsController, type: :controller do
         expect(response).to have_http_status(:ok)
         expect(step_asset_in_repository.asset.reload.locked).to be true
       end
+
+      it 'logs a file lock activity' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: :lock_protocol_step_file)))
+        action
+      end
+
+      it 'does not log an activity when the asset is already locked' do
+        step_asset_in_repository.asset.update!(locked: true)
+        allow(Activities::CreateActivityService).to receive(:call)
+        action
+        expect(Activities::CreateActivityService).not_to have_received(:call)
+      end
+    end
+
+    context 'when locking a result asset' do
+      let(:action) { post :lock, params: { id: result_asset.asset.id } }
+
+      before { allow(controller).to receive(:can_lock_asset?).and_return(true) }
+
+      it 'does not log a step file lock activity' do
+        allow(Activities::CreateActivityService).to receive(:call)
+        action
+        expect(Activities::CreateActivityService).not_to have_received(:call)
+      end
     end
 
     context 'when user lacks permissions' do
@@ -404,6 +429,12 @@ describe AssetsController, type: :controller do
         action
         expect(response).to have_http_status(:ok)
         expect(step_asset_in_repository.asset.reload.locked).to be false
+      end
+
+      it 'logs a file unlock activity' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: :unlock_protocol_step_file)))
+        action
       end
     end
 

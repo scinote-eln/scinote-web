@@ -576,12 +576,18 @@ class AssetsController < ApplicationController
   end
 
   def lock
-    @asset.update!(locked: true)
+    ActiveRecord::Base.transaction do
+      @asset.update!(locked: true)
+      log_asset_lock_activity(:lock_protocol_step_file) if @asset.saved_change_to_locked?
+    end
     head :ok
   end
 
   def unlock
-    @asset.update!(locked: false)
+    ActiveRecord::Base.transaction do
+      @asset.update!(locked: false)
+      log_asset_lock_activity(:unlock_protocol_step_file) if @asset.saved_change_to_locked?
+    end
     head :ok
   end
 
@@ -633,6 +639,26 @@ class AssetsController < ApplicationController
 
   def check_unlock_permission
     render_403 and return unless can_unlock_asset?(@asset)
+  end
+
+  def log_asset_lock_activity(activity_type)
+    step = @asset.step
+    return unless step&.protocol&.in_repository?
+
+    protocol = step.protocol
+    Activities::CreateActivityService.call(
+      activity_type: activity_type,
+      owner: current_user,
+      team: protocol.team,
+      subject: protocol,
+      message_items: {
+        step: step.id,
+        step_position: {
+          id: step.id,
+          value_for: 'position_plus_one'
+        }
+      }
+    )
   end
 
   def append_wd_params(url)

@@ -124,6 +124,10 @@ module StepElements
       render_403 unless can_unlock_step_text?(@step_text)
     end
 
+    def content_block_type
+      :text
+    end
+
     def log_archive_activity
       log_step_activity(:text_archived, { text_name: @element.name })
     end

@@ -158,6 +158,10 @@ module StepElements
       render_403 unless can_unlock_step_table?(@table)
     end
 
+    def content_block_type
+      :table
+    end
+
     def log_archive_activity
       log_step_activity(:table_archived, { table_name: @element.name })
     end
