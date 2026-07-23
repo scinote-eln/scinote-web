@@ -59,9 +59,13 @@
                     <div class="flex flex-col ">
                       <span class="inline-block font-semibold pb-[6px]">{{
                         i18n.t('repositories.item_card.default_columns.repository_name') }}</span>
-                      <span class="repository-name text-sn-dark-grey line-clamp-3" :title="repository?.name" data-e2e="e2e-TX-itemCard-inventory">
+                      <span v-if="repository?.is_snapshot" class="repository-name text-sn-dark-grey line-clamp-3" :title="repository?.name" data-e2e="e2e-TX-itemCard-inventory">
                         {{ repository?.name }}
                       </span>
+                      <a v-else :href="repository?.url" target="_blank" class="repository-name line-clamp-3" :title="repository?.name" data-e2e="e2e-TX-itemCard-inventory">
+                        {{ repository?.name }}
+                        <i class="sn-icon sn-icon-open"></i>
+                      </a>
                     </div>
 
                     <div class="sci-divider"></div>

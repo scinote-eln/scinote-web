@@ -63,7 +63,7 @@ module ResultElements
 
         if @table.saved_changes?
           log_result_activity(:table_edited, { table_name: @table.name })
-          result_annotation_notification(@table.contents_was)
+          result_annotation_notification(@table.contents_before_last_save)
         end
       end
 

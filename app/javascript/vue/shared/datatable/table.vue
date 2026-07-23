@@ -181,6 +181,14 @@ export default {
       type: String,
       required: true
     },
+    loadMethod: {
+      type: String,
+      default: 'get'
+    },
+    postParams: {
+      type: Object,
+      required: false
+    },
     actionsUrl: {
       type: String
     },
@@ -630,56 +638,55 @@ export default {
       this.loadData(true);
     },
     loadData(reload = false) {
-      axios
-        .get(this.dataUrl, {
-          params: {
-            per_page: this.perPage,
-            page: this.page,
-            order: this.order,
-            search: this.searchValue,
-            view_mode: this.currentViewMode,
-            filters: this.activeFilters
-          }
-        })
-        .then((response) => {
-          if (reload) {
-            if (this.gridApi) this.gridApi.setGridOption('rowData', []);
-            this.rowData = [];
-          }
+      const params = {
+        per_page: this.perPage,
+        page: this.page,
+        order: this.order,
+        search: this.searchValue,
+        view_mode: this.currentViewMode,
+        filters: this.activeFilters
+      };
 
-          if (this.scrollMode === 'pages' || this.scrollMode === 'none') {
-            if (this.gridApi) this.gridApi.setGridOption('rowData', this.formatData(response.data.data));
-            this.rowData = this.formatData(response.data.data);
-          } else {
-            this.handleInfiniteScroll(response);
-          }
+      const request = this.loadMethod === 'post' ? axios.post(this.dataUrl, { ...this.postParams, ...params }) : axios.get(this.dataUrl, { params });
+      request.then((response) => {
+               if (reload) {
+                 if (this.gridApi) this.gridApi.setGridOption('rowData', []);
+                 this.rowData = [];
+               }
 
-          if (!this.dataLoading && this.fetchColumnsOnReload) {
-            this.gridApi.setGridOption('columnDefs', this.extendedColumnDefs);
-            this.applyTableState();
-          }
+               if (this.scrollMode === 'pages' || this.scrollMode === 'none') {
+                 if (this.gridApi) this.gridApi.setGridOption('rowData', this.formatData(response.data.data));
+                 this.rowData = this.formatData(response.data.data);
+               } else {
+                 this.handleInfiniteScroll(response);
+               }
 
-          if (this.scrollMode !== 'none') {
-            this.totalPage = response.data.meta.total_pages;
-            this.totalEntries = response.data.meta.total_count;
-            this.filteredEntries = response.data.meta.filtered_count;
-          }
-          this.$emit('tableReloaded', this.rowData, { filtered: this.searchValue.length > 0 });
-          this.dataLoading = false;
-          this.restoreSelection();
+               if (!this.dataLoading && this.fetchColumnsOnReload) {
+                 this.gridApi.setGridOption('columnDefs', this.extendedColumnDefs);
+                 this.applyTableState();
+               }
 
-          this.gridApi?.refreshCells({
-            force: true
-          });
+               if (this.scrollMode !== 'none') {
+                 this.totalPage = response.data.meta.total_pages;
+                 this.totalEntries = response.data.meta.total_count;
+                 this.filteredEntries = response.data.meta.filtered_count;
+               }
+               this.$emit('tableReloaded', this.rowData, { filtered: this.searchValue.length > 0 });
+               this.dataLoading = false;
+               this.restoreSelection();
 
-          this.handleScroll();
-        })
-        .catch((e) => {
-          this.dataLoading = false;
-          this.$emit('tableReloaded', [], { filtered: this.searchValue.length > 0 });
-          console.error(e);
-          window.HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
-        });
+               this.gridApi?.refreshCells({
+                 force: true
+               });
+
+               this.handleScroll();
+             })
+             .catch((e) => {
+                this.dataLoading = false;
+                this.$emit('tableReloaded', [], { filtered: this.searchValue.length > 0 });
+                console.error(e);
+                window.HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
+             });
     },
     handleInfiniteScroll(response) {
       const newRows = this.rowData.slice();

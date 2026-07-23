@@ -23,6 +23,7 @@
       :auto-apply="true"
       :partial-flow="true"
       :markers="markers"
+      :range="range"
       :start-time="{ hours: 0, minutes: 0, seconds: 0 }"
       week-start="0"
       :hide-input-icon="noIcons"
@@ -69,7 +70,7 @@ export default {
     mode: { type: String, default: 'datetime' },
     clearable: { type: Boolean, default: false },
     teleport: { type: Boolean, default: true },
-    defaultValue: { type: String, required: false },
+    defaultValue: { type: [String, Array], required: false },
     placeholder: { type: String },
     standAlone: { type: Boolean, default: false, required: false },
     dateClassName: { type: String, default: '' },
@@ -81,6 +82,7 @@ export default {
     valueType: { type: String, default: 'object' },
     noIcons: { type: Boolean, default: false },
     noBorder: { type: Boolean, default: false },
+    range: { type: Boolean, default: false },
     error: { type: Boolean, default: false }
   },
   data() {
@@ -114,18 +116,43 @@ export default {
     },
     stringValue() {
       if (this.value === null) return '';
+      if (this.range) {
+        const start = this.value[0];
+        const end = this.value[1];
 
-      if (this.mode === 'time') {
-        return `${this.value.hours.toString().padStart(2, '0')}:${this.value.minutes.toString().padStart(2, '0')}`
-      }
+        if (!start || !end) return '';
 
-      const time = ` ${this.value.getHours().toString().padStart(2, '0')}:${this.value.getMinutes().toString().padStart(2, '0')}`
-      const date = `${this.value.getFullYear()}-${this.value.getMonth() + 1}-${this.value.getDate()}`;
+        if (this.mode === 'time') {
+          const startTime = `${start.hours.toString().padStart(2, '0')}:${start.minutes.toString().padStart(2, '0')}`;
+          const endTime = `${end.hours.toString().padStart(2, '0')}:${end.minutes.toString().padStart(2, '0')}`;
 
-      if (this.mode === 'date') {
-        return date;
+          return [startTime, endTime];
+        }
+
+        const startDate = this.extractDateString(start);
+        const endDate = this.extractDateString(end);
+
+        if (this.mode === 'date') {
+          return [startDate, endDate];
+        } else {
+          const startTime = this.extractTimeString(start);
+          const endTime = this.extractTimeString(end);
+
+          return [`${startDate} ${startTime}`, `${endDate} ${endTime}`];
+        }
       } else {
-        return `${date} ${time}`;
+        if (this.mode === 'time') {
+          return `${this.value.hours.toString().padStart(2, '0')}:${this.value.minutes.toString().padStart(2, '0')}`
+        }
+
+        const time = this.extractTimeString(this.value);
+        const date = this.extractDateString(this.value);
+
+        if (this.mode === 'date') {
+          return this.extractDateString(this.value);
+        } else {
+          return `${this.extractDateString(this.value)} ${this.extractTimeString(this.value)}`;
+        }
       }
     }
   },
@@ -136,16 +163,41 @@ export default {
     window.removeEventListener('resize', this.close);
   },
   methods: {
+    extractTimeString(date) {
+      return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    },
+    extractDateString(date) {
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    },
     initializeValue() {
       if (!this.defaultValue) return;
+      
+      if (this.range) {
+        const start = this.defaultValue[0];
+        const end = this.defaultValue[1];
+        if (!start || !end) return '';
 
-      if (this.mode === 'time') {
-        // expects time in format of "[date] HH:mm"
-        const [hours, minutes] = this.defaultValue.match(/(\d{2}:\d{2})/)[0].split(":").map(Number);
+        this.value = [];
+        if (this.mode === 'time') {
+          // expects time in format of "[date] HH:mm"
+          const [startHours, startMinutes] = start.match(/(\d{2}:\d{2})/)[0].split(":").map(Number);
+          const [endHours, endMinutes] = end.match(/(\d{2}:\d{2})/)[0].split(":").map(Number);
 
-        this.value = { hours: hours, minutes: minutes, seconds: 0 }
+          this.value[0] = { hours: startHours, minutes: startMinutes, seconds: 0 }
+          this.value[1] = { hours: endHours, minutes: endMinutes, seconds: 0 }
+        } else {
+          this.value[0] = new Date(start.replace(/([^!\s])-/g, '$1/'));
+          this.value[1] = new Date(end.replace(/([^!\s])-/g, '$1/'));
+        }
       } else {
-        this.value = new Date(this.defaultValue.replace(/([^!\s])-/g, '$1/'));
+        if (this.mode === 'time') {
+          // expects time in format of "[date] HH:mm"
+          const [hours, minutes] = this.defaultValue.match(/(\d{2}:\d{2})/)[0].split(":").map(Number);
+
+          this.value = { hours: hours, minutes: minutes, seconds: 0 }
+        } else {
+          this.value = new Date(this.defaultValue.replace(/([^!\s])-/g, '$1/'));
+        }
       }
     },
     close() {
