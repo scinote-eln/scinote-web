@@ -5483,3 +5483,9 @@ en:
       dialog:
         title: "Ooops, something went wrong."
         text: "Please contact your SciNote administrator."
+
+  mailer:
+    layout:
+      subtitle: "Electronic Lab Notebook"
+      automated_message: "This is an automatically generated message. Please do not reply to this email."
+      instance: "Instance"
