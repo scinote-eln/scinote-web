@@ -964,6 +964,9 @@ Rails.application.routes.draw do
           post :hide_reminder, to: 'hidden_repository_cell_reminders#create'
           post :hide_reminders, to: 'hidden_repository_cell_reminders#create_all'
         end
+        post 'repository_cells/:repository_column_id',
+             to: 'repository_cells#update',
+             as: 'repository_cell'
       end
 
       collection do
