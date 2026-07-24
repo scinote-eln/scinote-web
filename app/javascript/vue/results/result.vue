@@ -372,6 +372,9 @@ export default {
     reorderableElements() {
       return this.orderedElements.map((e) => ({ id: e.id, attributes: e.attributes.orderable }));
     },
+    cantUploadFiles() {
+      return (!this.protocolId && this.result.attributes.attachments_locked);
+    },
     filesMenu() {
       let menu = [];
       if (this.urls.upload_attachment_url) {
@@ -416,6 +419,7 @@ export default {
           text: this.i18n.t('my_modules.results.insert.attachment'),
           submenu: this.filesMenu,
           icon: 'sn-icon sn-icon-file',
+          disabled: this.cantUploadFiles,
           position: 'left',
           data_e2e: `e2e-DO-task-result${this.result.id}-insertMenu-file`
         }, {
@@ -480,7 +484,8 @@ export default {
   },
   methods: {
     dragEnter(e) {
-      if (!this.urls.upload_attachment_url) return;
+      if (!this.urls.upload_attachment_url ||
+          this.cantUploadFiles) return;
 
       // Detect if dragged element is a file
       // https://stackoverflow.com/a/8494918

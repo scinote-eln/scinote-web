@@ -32,9 +32,12 @@
               >
               </a>
             </span>
-            <div v-else class="-mx-2.5 px-2.5 group relative">
+            <div v-else class="-mx-2.5 px-2.5 group relative" :data-sn-tooltip="item.title">
               <span
-                :class="{ 'bg-sn-super-light-blue': item.active }"
+                :class="{
+                  'bg-sn-super-light-blue': item.active,
+                  'opacity-50 pointer-events-none': item.disabled
+                }"
                 class="flex group items-center rounded relative text-sn-blue whitespace-nowrap px-3 py-2.5 hover:no-underline cursor-pointer
                       group-hover:bg-sn-super-light-blue hover:!bg-sn-super-light-grey"
                 :data-e2e="item.data_e2e"
@@ -43,6 +46,7 @@
                 <i class="sn-icon sn-icon-right ml-auto"></i>
               </span>
               <div
+                  v-if="!item.disabled"
                   class="absolute bg-sn-white rounded p-2.5 sn-shadow-menu-sm  flex flex-col gap-[1px] tw-hidden group-hover:block"
                   :class="{
                     'left-0 ml-[100%]': item.position === 'right',

@@ -13,7 +13,8 @@ class StepsController < ApplicationController
   before_action :check_protocol_manage_permissions, only: %i(reorder add_protocol_steps lock_all unlock_all)
   before_action :check_view_permissions, only: %i(show index list attachments elements list_protocol_steps)
   before_action :check_create_permissions, only: %i(create)
-  before_action :check_manage_permissions, only: %i(update update_view_state update_asset_view_mode upload_attachment lock unlock)
+  before_action :check_manage_permissions, only: %i(update update_view_state update_asset_view_mode lock unlock)
+  before_action :check_upload_attachment_permissions, only: %i(upload_attachment)
   before_action :check_locking_enabled, only: %i(lock unlock lock_all unlock_all)
   before_action :check_archive_permissions, only: :archive
   before_action :check_restore_permissions, only: :restore
@@ -246,14 +247,25 @@ class StepsController < ApplicationController
   end
 
   def lock
-    @step.update!(locked: true)
+    ActiveRecord::Base.transaction do
+      if @step.update!(locked: true) && @step.saved_change_to_locked?
+        log_activity(:lock_protocol_step, nil, step_message_items)
+        log_activity(:lock_all_protocol_steps, nil, protocol: @protocol.id) if @protocol.steps.where(locked: false).none?
+      end
+    end
     render json: @step, serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
   rescue ActiveRecord::RecordInvalid
     head :unprocessable_entity
   end
 
   def unlock
-    @step.update!(locked: false)
+    ActiveRecord::Base.transaction do
+      @step.update!(locked: false)
+      if @step.saved_change_to_locked?
+        log_activity(:unlock_protocol_step, nil, step_message_items)
+        log_activity(:unlock_all_protocol_steps, nil, protocol: @protocol.id) if @protocol.steps.where(locked: true).none?
+      end
+    end
     render json: @step, serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
   rescue ActiveRecord::RecordInvalid
     head :unprocessable_entity
@@ -263,7 +275,11 @@ class StepsController < ApplicationController
     ActiveRecord::Base.transaction do
       @protocol.steps.each do |step|
         step.update!(locked: true)
+        if step.saved_change_to_locked?
+          log_activity(:lock_protocol_step, nil, step_message_items(step))
+        end
       end
+      log_activity(:lock_all_protocol_steps, nil, protocol: @protocol.id)
     end
 
     head :ok
@@ -275,7 +291,11 @@ class StepsController < ApplicationController
     ActiveRecord::Base.transaction do
       @protocol.steps.each do |step|
         step.update!(locked: false)
+        if step.saved_change_to_locked?
+          log_activity(:unlock_protocol_step, nil, step_message_items(step))
+        end
       end
+      log_activity(:unlock_all_protocol_steps, nil, protocol: @protocol.id)
     end
 
     head :ok
@@ -512,6 +532,10 @@ class StepsController < ApplicationController
     render_403 unless can_manage_step?(@step)
   end
 
+  def check_upload_attachment_permissions
+    render_403 unless can_manage_step_attachments?(current_user, @step)
+  end
+
   def check_archive_permissions
     render_403 unless can_archive_step?(@step)
   end
@@ -554,14 +578,14 @@ class StepsController < ApplicationController
             message_items: message_items)
   end
 
-  def step_message_items
+  def step_message_items(step = @step)
     {
       step: {
-        id: @step.id,
+        id: step.id,
         value_for: 'name'
       },
       step_position: {
-        id: @step.id,
+        id: step.id,
         value_for: 'position_plus_one'
       }
     }

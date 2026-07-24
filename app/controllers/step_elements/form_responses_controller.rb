@@ -125,6 +125,10 @@ module StepElements
       render_403 unless can_unlock_step_form_response?(@form_response)
     end
 
+    def content_block_type
+      :form
+    end
+
     def log_archive_activity
       log_step_activity(:form_archived, { form: @element.form.id })
     end

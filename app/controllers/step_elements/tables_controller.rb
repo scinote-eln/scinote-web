@@ -62,7 +62,7 @@ module StepElements
 
         if @table.saved_changes?
           log_step_activity(:table_edited, { table_name: @table.name })
-          table_content_annotation(@table.step, @table, @table.contents_was)
+          table_content_annotation(@table.step, @table, @table.contents_before_last_save)
         end
       end
 
@@ -156,6 +156,10 @@ module StepElements
 
     def check_unlock_permissions
       render_403 unless can_unlock_step_table?(@table)
+    end
+
+    def content_block_type
+      :table
     end
 
     def log_archive_activity

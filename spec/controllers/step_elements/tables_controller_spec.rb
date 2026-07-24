@@ -23,6 +23,19 @@ describe StepElements::TablesController, type: :controller do
         expect(response).to have_http_status(:ok)
         expect(table.reload.locked).to be true
       end
+
+      it 'logs a lock activity' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: 'lock_protocol_step_table')))
+        action
+      end
+
+      it 'does not log an activity when the table is already locked' do
+        table.update!(locked: true)
+        allow(Activities::CreateActivityService).to receive(:call)
+        action
+        expect(Activities::CreateActivityService).not_to have_received(:call)
+      end
     end
 
     context 'when user lacks permissions' do
@@ -47,6 +60,12 @@ describe StepElements::TablesController, type: :controller do
         action
         expect(response).to have_http_status(:ok)
         expect(table.reload.locked).to be false
+      end
+
+      it 'logs an unlock activity' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: 'unlock_protocol_step_table')))
+        action
       end
     end
 
