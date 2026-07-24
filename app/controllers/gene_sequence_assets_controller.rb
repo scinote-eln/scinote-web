@@ -199,9 +199,9 @@ class GeneSequenceAssetsController < ApplicationController
   def asset_managable?
     case @parent
     when Step
-      can_manage_step?(@parent)
+      can_manage_step_attachments?(@parent)
     when ResultBase
-      can_manage_result?(@parent)
+      can_manage_result_attachments?(@parent)
     else
       false
     end
