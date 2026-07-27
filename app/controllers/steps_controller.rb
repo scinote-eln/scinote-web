@@ -67,8 +67,7 @@ class StepsController < ApplicationController
     render json: assets.preload(:preview_image_attachment, file_attachment: :blob,
                                 step: { protocol: { my_module: { experiment: :project, user_assignments: %i(user user_role) } } }),
            each_serializer: AssetSerializer,
-           user: current_user,
-           managable_step: can_manage_step?(@step)
+           user: current_user
   end
 
   def upload_attachment

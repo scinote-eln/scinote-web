@@ -27,8 +27,7 @@ class ResultTemplatesController < ResultBaseController
   def assets
     render json: @result.assets.preload(:preview_image_attachment, file_attachment: :blob, result: { protocol: { user_assignments: %i(user user_role) } }),
            each_serializer: AssetSerializer,
-           user: current_user,
-           managable_result: can_manage_result?(@result)
+           user: current_user
   end
 
   private

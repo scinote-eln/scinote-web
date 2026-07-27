@@ -205,8 +205,6 @@ class AssetSerializer < ActiveModel::Serializer
   private
 
   def managable?
-    return true if @instance_options[:managable_step] || @instance_options[:managable_result]
-
     user = scope[:user] || @instance_options[:user]
     @managable ||= can_manage_asset?(user, object)
   end
