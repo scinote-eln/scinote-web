@@ -383,21 +383,26 @@ export default {
   },
   watch: {
     addingNewRow() {
-      if (!this.addingNewRow) return;
+      if (this.addingNewRow) {
+        this.filledRowTemplate = JSON.parse(JSON.stringify(this.newRowTemplate));
 
-      this.filledRowTemplate = JSON.parse(JSON.stringify(this.newRowTemplate));
+        if (this.gridApi) {
+          const values = {};
+          Object.keys(this.filledRowTemplate).forEach((key) => {
+            values[key] = this.filledRowTemplate[key].value;
+          });
 
-      if (this.gridApi) {
-        const values = {};
-        Object.keys(this.filledRowTemplate).forEach((key) => {
-          values[key] = this.filledRowTemplate[key].value;
-        });
+          this.rowData = [values, ...this.rowData];
 
-        this.rowData = [values, ...this.rowData];
-
-        const viewport = this.$refs.agGrid?.$el.querySelector('.ag-body-viewport');
-        if (viewport) {
-          viewport.scrollTop = 0;
+          const viewport = this.$refs.agGrid?.$el.querySelector('.ag-body-viewport');
+          if (viewport) {
+            viewport.scrollTop = 0;
+          }
+        }
+      } else {
+        this.filledRowTemplate = {};
+        if (this.gridApi) {
+          this.rowData = this.rowData.filter((row) => row.id);
         }
       }
     },
@@ -458,6 +463,21 @@ export default {
     window.removeEventListener('resize', this.resize);
   },
   methods: {
+    updateRowData(row) {
+      if (row.attributes) {
+        row = { ...row.attributes, id: row.id, type: row.type };
+      }
+
+      if (!row.id) return;
+
+      const index = this.rowData.findIndex((r) => r.id === row.id);
+      if (index !== -1) {
+        this.rowData[index] = { ...this.rowData[index], ...row };
+      } else {
+        this.rowData = [row, ...this.rowData];
+      }
+      if (this.gridApi) this.gridApi.setGridOption('rowData', this.rowData);
+    },
     setGridColsClass() {
       if (this.currentViewRender !== 'cards') return;
       const availableGridWidth = document.querySelector('.sci--layout-content').offsetWidth;

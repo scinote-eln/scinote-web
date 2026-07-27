@@ -2,6 +2,7 @@
   <div class="h-full">
     <DataTable :columnDefs="columnDefs"
                tableId="tags"
+               ref="tagsTable"
                :dataUrl="dataSource"
                :reloadingTable="reloadingTable"
                :toolbarActions="toolbarActions"
@@ -169,8 +170,8 @@ export default {
         tag: {
           name
         }
-      }).then(() => {
-        this.reloadingTable = true;
+      }).then((response) => {
+        this.$refs.tagsTable.updateRowData(response.data.data);
       })
     },
     changeColor(color, tag) {
@@ -178,8 +179,8 @@ export default {
         tag: {
           color
         }
-      }).then(() => {
-        this.reloadingTable = true;
+      }).then((response) => {
+        this.$refs.tagsTable.updateRowData(response.data.data);
       })
     },
     openMergeModal(event, rows) {
@@ -189,14 +190,14 @@ export default {
       this.addingNewRow = false;
     },
     createTag(newTag) {
-      this.addingNewRow = false;
       axios.post(this.createUrl, {
         tag: {
           name: newTag.name.value,
           color: newTag.color.value
         }
-      }).then(() => {
-        this.reloadingTable = true;
+      }).then((response) => {
+        this.addingNewRow = false;
+        this.$refs.tagsTable.updateRowData(response.data.data);
       });
     },
     async deleteTag(event, rows) {
