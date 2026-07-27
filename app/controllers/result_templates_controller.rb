@@ -36,6 +36,13 @@ class ResultTemplatesController < ResultBaseController
     params.require(:result).permit(:name, :attachments_locked)
   end
 
+  def log_attachments_lock_activity
+    return unless @result.saved_change_to_attachments_locked?
+
+    activity_type = @result.attachments_locked ? :lock_result_template_file : :unlock_result_template_file
+    log_activity(activity_type, { result_template: @result })
+  end
+
   def load_parent
     @parent = Protocol.readable_by_user(current_user).find(params[:protocol_id])
     current_team_switch(@parent.team) if current_team != @parent.team

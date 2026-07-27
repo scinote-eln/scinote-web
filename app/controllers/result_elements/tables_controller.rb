@@ -162,6 +162,10 @@ module ResultElements
       render_403 unless can_unlock_result_table?(@table)
     end
 
+    def content_block_type
+      :table
+    end
+
     def log_archive_activity
       log_result_activity(:table_archived, { table_name: @element.name })
     end

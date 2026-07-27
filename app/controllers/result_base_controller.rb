@@ -47,8 +47,11 @@ class ResultBaseController < ApplicationController
   end
 
   def update
-    @result.update!(result_params.merge(last_modified_by: current_user))
-    log_activity(:"edit_#{model_parameter}", { "#{model_parameter}": @result })
+    ActiveRecord::Base.transaction do
+      @result.update!(result_params.merge(last_modified_by: current_user))
+      log_activity(:"edit_#{model_parameter}", { "#{model_parameter}": @result })
+      log_attachments_lock_activity
+    end
     render json: @result,
            serializer: result_serializer,
            include: %i(result_orderable_elements assets),
@@ -151,6 +154,8 @@ class ResultBaseController < ApplicationController
   def model_parameter
     @result.class.model_name.param_key
   end
+
+  def log_attachments_lock_activity; end
 
   def update_and_apply_user_sort_preference!
     state = if params[:view_mode] == 'archived'
