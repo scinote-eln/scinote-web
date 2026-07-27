@@ -373,7 +373,7 @@ export default {
       return this.orderedElements.map((e) => ({ id: e.id, attributes: e.attributes.orderable }));
     },
     cantUploadFiles() {
-      return (!this.protocolId && this.result.attributes.attachments_locked);
+      return (this.result.type == 'results' && this.result.attributes.attachments_locked);
     },
     filesMenu() {
       let menu = [];
