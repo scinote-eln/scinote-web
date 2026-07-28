@@ -91,7 +91,8 @@ const entryList = {
   vue_equipment_bookings: './app/javascript/packs/vue/equipment_bookings.js',
   vue_event_create_repository_row: './app/javascript/packs/vue/event_create_repository_row.js',
   vue_shareable_links_my_module_assigned_items: './app/javascript/packs/vue/shareable_links/assigned_repository.js',
-  vue_my_module_archive: './app/javascript/packs/vue/my_module_archive.js'
+  vue_my_module_archive: './app/javascript/packs/vue/my_module_archive.js',
+  vue_repository_table: './app/javascript/packs/vue/repository_table.js',
 };
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

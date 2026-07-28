@@ -23,17 +23,29 @@ class RepositoryRowsController < ApplicationController
 
   def index_ag
     repository_rows = Lists::RepositoryRowsService.new(@repository, params, user: current_user).call.load
+
+    total_count = if @repository.archived?
+                    @repository.repository_rows.count
+                  elsif params[:archived]
+                    @repository.repository_rows.archived.count
+                  else
+                    @repository.repository_rows.active.count
+                  end
+
+    filtered_count = repository_rows.take&.filtered_count.to_i
+    total_pages = (filtered_count.to_f / params[:per_page].to_i).ceil
+
     render json: repository_rows,
-           adapter: :json,
-           root: 'data',
            each_serializer: Lists::RepositoryRowSerializer,
            user: current_user,
+           can_read_repository: can_read_repository?(@repository),
            with_reminders: Repository.reminders_enabled?,
            with_stock_management: @repository.has_stock_management?,
            can_manage_stock: can_manage_repository_stock?(@repository),
-           meta:  {
-             total_count: @repository.repository_rows_count,
-             filtered_count: repository_rows.take&.filtered_count.to_i
+           meta: {
+             total_pages: total_pages,
+             total_count: total_count,
+             filtered_count: filtered_count
            }
   rescue Lists::RepositoryFilters::ColumnNotFoundException
     render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }
