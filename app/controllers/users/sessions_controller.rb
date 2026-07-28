@@ -4,6 +4,7 @@ class Users::SessionsController < Devise::SessionsController
   layout :session_layout
   before_action :remove_authenticate_mesasge_if_root_path, only: :new
   prepend_before_action :skip_timeout, only: :expire_in
+  prepend_before_action :flag_pending_two_factor, only: :create
 
   rescue_from ActionController::InvalidAuthenticityToken do
     redirect_to new_user_session_path
@@ -70,7 +71,7 @@ class Users::SessionsController < Devise::SessionsController
     if user.valid_otp?(params[:otp])
       session.delete(:otp_user_id)
 
-      sign_in(user)
+      sign_in(user, event: :authentication)
       generate_templates_project
       flash[:notice] = t('devise.sessions.signed_in')
       redirect_to params[:initial_page] || root_path
@@ -90,7 +91,7 @@ class Users::SessionsController < Devise::SessionsController
 
     session.delete(:otp_user_id)
     if user.recover_2fa!(params[:recovery_code])
-      sign_in(user)
+      sign_in(user, event: :authentication)
       generate_templates_project
       flash[:notice] = t('devise.sessions.signed_in')
       redirect_to root_path
@@ -98,7 +99,6 @@ class Users::SessionsController < Devise::SessionsController
       flash[:alert] = t("devise.sessions.2fa_recovery.not_correct_code")
       redirect_to new_user_session_path
     end
-
   end
 
   private
@@ -134,5 +134,11 @@ class Users::SessionsController < Devise::SessionsController
 
   def redirect_to_two_factor_auth?(user)
     user.two_factor_auth_enabled? && !bypass_two_factor_auth?
+  end
+
+  def flag_pending_two_factor
+    email = params.dig(:user, :email)
+    user = User.find_for_authentication(email: email)
+    request.env['scinote.pending_two_factor'] = true if user && redirect_to_two_factor_auth?(user)
   end
 end

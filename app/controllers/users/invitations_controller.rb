@@ -169,6 +169,12 @@ module Users
 
     private
 
+    def sign_in(resource_or_scope, *args)
+      args << {} unless args.last.is_a?(Hash)
+      args.last[:event] ||= :authentication
+      super
+    end
+
     def invite_resource
       # Replaced with invite_users action
       raise NotImplementedError
