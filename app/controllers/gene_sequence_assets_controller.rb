@@ -176,12 +176,14 @@ class GeneSequenceAssetsController < ApplicationController
   end
 
   def check_read_permission
+    render_403 if @asset && !can_read_asset?(@asset)
+
     case @parent
     when Step
-      return render_403 unless can_read_protocol_in_module?(@protocol) ||
-                               can_read_protocol_in_repository?(@protocol)
+      render_403 unless can_read_protocol_in_module?(@protocol) ||
+                        can_read_protocol_in_repository?(@protocol)
     when ResultBase
-      return render_403 unless can_read_result?(@parent)
+      render_403 unless can_read_result?(@parent)
     else
       render_403
     end
@@ -197,6 +199,8 @@ class GeneSequenceAssetsController < ApplicationController
 
   helper_method :asset_managable?
   def asset_managable?
+    return can_manage_asset?(@asset) if @asset
+
     case @parent
     when Step
       can_manage_step_attachments?(@parent)
