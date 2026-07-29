@@ -1976,6 +1976,7 @@ en:
       no_reports: "No reports were generated yet."
       generated_title: "Generated reports"
       generate_button: "Generate report"
+      generating: "Generating report"
       cretated: "Created: %{date}"
       delete:
         title: "Delete report %{name}"

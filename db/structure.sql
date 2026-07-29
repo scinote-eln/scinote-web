@@ -1837,7 +1837,8 @@ CREATE TABLE public.report_templates (
     subject_type character varying NOT NULL,
     subject_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    generating_report boolean DEFAULT false NOT NULL
 );
 
 
@@ -10959,6 +10960,7 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260729082431'),
 ('20260715121739'),
 ('20260714101739'),
 ('20260708142245'),
