@@ -18,9 +18,10 @@
             >
             <i class="sn-icon sn-icon-visibility-show"></i>
           </button>
-          <button v-if="editable" class="btn btn-primary icon-btn" @click.stop="generateReport(template.id)">
-            <i class="sn-icon sn-icon-reports"></i>
-            {{ i18n.t('my_modules.reports.generate_button') }}
+          <button v-if="editable" :disabled="template.generating_report" class="btn btn-primary icon-btn" @click.stop="generateReport(template.id)">
+            <div v-if="template.generating_report" class="sci-loader-inline relative"></div>
+            <i v-else class="sn-icon sn-icon-reports"></i>
+            {{ reportButtonLabel(template) }}
           </button>
         </div>
       </div>
@@ -79,6 +80,8 @@
 <script>
 import axios from '../../packs/custom_axios.js';
 import DeleteModal from '../shared/confirmation_modal.vue';
+import ActionCableConsumer from '../../channels/consumer';
+
 import {
   my_module_my_module_reports_path,
   my_module_my_module_report_path,
@@ -103,12 +106,28 @@ export default {
     return {
       templates: [],
       reports: [],
-      deleteTitle: ''
+      deleteTitle: '',
+      myModuleReportGenerationsSubscription: null
     }
   },
   created() {
     this.fetchTemplates();
     this.fetchGeneratedReports();
+  },
+  mounted() {
+    this.myModuleReportGenerationsSubscription = ActionCableConsumer.subscriptions.create(
+      { channel: 'MyModuleReportGenerationsChannel', my_module_id: this.myModuleId  },
+      {
+        received: (data) => {
+          if(data?.generating_report !== undefined) {
+            this.updateGeneratingReportStatus(data.id, data.generating_report);
+          }
+        }
+      }
+    )
+  },
+  beforeUnmount() {
+    if (this.myModuleReportGenerationsSubscription) ActionCableConsumer.subscriptions.remove(this.myModuleReportGenerationsSubscription);
   },
   computed: {
     loadUrl() {
@@ -119,6 +138,9 @@ export default {
     }
   },
   methods: {
+    reportButtonLabel(template) {
+      return template.generating_report ? this.i18n.t('my_modules.reports.generating') : this.i18n.t('my_modules.reports.generate_button');
+    },
     download_url(reportId) {
       return download_my_module_my_module_report_path(this.myModuleId, reportId);
     },
@@ -144,12 +166,19 @@ export default {
         });
       }
     },
+    updateGeneratingReportStatus(templateId, generatingReportStatus){
+      let index = this.templates.findIndex((template) => template.id === templateId);
+      this.templates[index].generating_report = generatingReportStatus;
+      if (!generatingReportStatus) {
+        this.fetchGeneratedReports();
+      }
+    },
     generateReport(templateId) {
+      this.updateGeneratingReportStatus(templateId, true);
       axios.post(my_module_my_module_reports_path(this.myModuleId), {
         report_template_id: templateId
-      }).then((response) => {
-        this.fetchGeneratedReports();
-      }).catch((error) => {
+      }).then((response) => {}).catch((error) => {
+        this.updateGeneratingReportStatus(templateId, false);
         HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
       });
     }

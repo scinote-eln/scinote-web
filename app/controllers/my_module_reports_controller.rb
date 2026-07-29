@@ -23,6 +23,7 @@ class MyModuleReportsController < ApplicationController
             {
               id: report_template.id,
               name: report_template.name,
+              generating_report: report_template.generating_report,
               preview: preview_protocol_protocol_report_template_path(@my_module.protocol, report_template)
             }
           end
@@ -36,12 +37,8 @@ class MyModuleReportsController < ApplicationController
   end
 
   def create
-    my_module_report = MyModuleReport.new({ name: @report_template.name })
-    my_module_report.my_module = @my_module
-
-    MyModuleReports::GenerateReportService.new(@my_module.protocol, @report_template, current_team, current_user).call(my_module_report)
-    my_module_report.save!
-    PdfPreviewService.new(my_module_report.report, my_module_report.report).generate!
+    @report_template.update!(generating_report: true)
+    MyModules::GenerateReportJob.perform_later(@report_template.id, @my_module.id, user_id: current_user.id, team_id: current_team.id)
   end
 
   def generated_reports
