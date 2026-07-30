@@ -744,8 +744,10 @@ class Extends
     unlock_result_template_text: 513,
     lock_result_template_table: 514,
     unlock_result_template_table: 515,
-    lock_result_template_file: 516,
-    unlock_result_template_file: 517
+    lock_result_template_files: 516,
+    unlock_result_template_files: 517,
+    lock_protocol_step_files: 518,
+    unlock_protocol_step_files: 519
   }
 
   ACTIVITY_GROUPS = {
@@ -764,7 +766,7 @@ class Extends
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
                           *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409, *416..450,
-                          *498..517],
+                          *498..519],
     team: [92, 94, 93, 97, 104, 244, 245, *379..383, *412..415, *487..492],
     label_templates: [*216..219],
     storage_locations: [*309..315, 361],

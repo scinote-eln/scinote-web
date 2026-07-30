@@ -49,7 +49,8 @@ class ResultBaseController < ApplicationController
   def update
     ActiveRecord::Base.transaction do
       @result.update!(result_params.merge(last_modified_by: current_user))
-      log_activity(:"edit_#{model_parameter}", { "#{model_parameter}": @result })
+      # Log the edit only if something other than the attachment lock changed
+      log_activity(:"edit_#{model_parameter}", { "#{model_parameter}": @result }) if (result_params.keys - %w(attachments_locked)).any?
       log_attachments_lock_activity
     end
     render json: @result,
