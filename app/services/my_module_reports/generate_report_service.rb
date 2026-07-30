@@ -111,14 +111,17 @@ module MyModuleReports
     end
 
     def render_table(report, table_tag, table, with_protocol: false)
+      table_data = table.table_data
+      table_data[:table_name] = table.name
+
       report.add_text table_tag, "<div>#{table.name}</div><div>{{#{table_tag}}}</div>"
-      table_html = build_table_data(table)
-      report.add_text table_tag, table_html
+      report.add_table_from_data table_tag, table_data
 
       # for full protocol tag
       if with_protocol
-        report.add_text PROTOCOL_TAG, "<div>#{table.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
-        report.add_text PROTOCOL_TAG, "<div>#{table_html}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        protocol_table_tag = :PROTOCOL_TABLE
+        report.add_text PROTOCOL_TAG, "<div>#{table.name}</div><div>{{#{protocol_table_tag}}}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        report.add_table_from_data protocol_table_tag, table_data
       end
     end
 
@@ -128,9 +131,8 @@ module MyModuleReports
 
       # for full protocol tag
       protocol_checklist_tag = :PROTOCOL_CHECKLIST
-      report.add_text PROTOCOL_TAG, "<div>#{checklist.name}</div><div>{{#{PROTOCOL_TAG}}}</div><div>{{#{protocol_checklist_tag}}}</div>"
-      report.add_checklist(PROTOCOL_TAG, checklist.checklist_items.map { |checklist_item| [checklist_item.text, checklist_item.checked] })
-      report.add_text protocol_checklist_tag, "{{#{PROTOCOL_TAG}}}"
+      report.add_text PROTOCOL_TAG, "<div>#{checklist.name}</div><div>{{#{protocol_checklist_tag}}}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+      report.add_checklist(protocol_checklist_tag, checklist.checklist_items.map { |checklist_item| [checklist_item.text, checklist_item.checked] })
     end
 
     def render_form_response(report, form_response_tag, form_response)
@@ -195,7 +197,7 @@ module MyModuleReports
         end
       end
 
-      html_text.at('body').inner_html.to_s
+      html_text&.at('body')&.inner_html.to_s
     end
 
     def element_id(element)

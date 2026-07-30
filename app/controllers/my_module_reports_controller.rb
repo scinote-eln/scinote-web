@@ -43,7 +43,7 @@ class MyModuleReportsController < ApplicationController
 
   def generated_reports
     render json: {
-      reports: @my_module.my_module_reports.map do |my_module_report|
+      reports: @my_module.my_module_reports.order(:created_at).map do |my_module_report|
         {
           id: my_module_report.id,
           name: my_module_report.name,
