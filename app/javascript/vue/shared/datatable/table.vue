@@ -886,7 +886,6 @@ export default {
     cancelCreation() {
       this.filledRowTemplate = this.newRowTemplate;
       this.$emit('cancelCreation');
-      this.updateTable();
       this.$nextTick(() => {
         this.selectedRows = [];
         this.gridApi?.deselectAll();
