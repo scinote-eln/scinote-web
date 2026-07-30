@@ -27,14 +27,20 @@ class ResultTemplatesController < ResultBaseController
   def assets
     render json: @result.assets.preload(:preview_image_attachment, file_attachment: :blob, result: { protocol: { user_assignments: %i(user user_role) } }),
            each_serializer: AssetSerializer,
-           user: current_user,
-           managable_result: can_manage_result?(@result)
+           user: current_user
   end
 
   private
 
   def result_params
     params.require(:result).permit(:name, :attachments_locked)
+  end
+
+  def log_attachments_lock_activity
+    return unless @result.saved_change_to_attachments_locked?
+
+    activity_type = @result.attachments_locked ? :lock_result_template_file : :unlock_result_template_file
+    log_activity(activity_type, { result_template: @result })
   end
 
   def load_parent

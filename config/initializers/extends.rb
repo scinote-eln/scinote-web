@@ -739,7 +739,13 @@ class Extends
     lock_protocol_step_form: 508,
     unlock_protocol_step_form: 509,
     lock_protocol_step_file: 510,
-    unlock_protocol_step_file: 511
+    unlock_protocol_step_file: 511,
+    lock_result_template_text: 512,
+    unlock_result_template_text: 513,
+    lock_result_template_table: 514,
+    unlock_result_template_table: 515,
+    lock_result_template_file: 516,
+    unlock_result_template_file: 517
   }
 
   ACTIVITY_GROUPS = {
@@ -753,12 +759,12 @@ class Extends
     experiment: [*27..31, 57, 141, 165, *363..369, 393, 407, 410],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
-                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329, *397..405, *493..504],
+                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298, 308, 329, *397..405, *493..497],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
                           *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409, *416..450,
-                          *498..511],
+                          *498..517],
     team: [92, 94, 93, 97, 104, 244, 245, *379..383, *412..415, *487..492],
     label_templates: [*216..219],
     storage_locations: [*309..315, 361],

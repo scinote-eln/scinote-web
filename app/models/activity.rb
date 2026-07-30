@@ -172,6 +172,9 @@ class Activity < ApplicationRecord
     when Result
       breadcrumbs[:result] = subject.name
       generate_breadcrumb(subject.my_module)
+    when ResultTemplate
+      breadcrumbs[:result] = subject.name
+      generate_breadcrumb(subject.protocol)
     when Team
       breadcrumbs[:team] = subject.name
     when LabelTemplate

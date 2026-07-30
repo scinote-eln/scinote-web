@@ -127,6 +127,10 @@ module ResultElements
       render_403 unless can_unlock_result_text?(@result_text)
     end
 
+    def content_block_type
+      :text
+    end
+
     def log_archive_activity
       log_result_activity(:text_archived, { text_name: @element.name })
     end

@@ -78,6 +78,8 @@ class MarvinJsAssetsController < ApplicationController
   end
 
   def check_read_permission
+    render_403 if @asset && !can_read_asset?(@asset)
+
     case @assoc
     when Step
       render_403 unless can_read_protocol_in_module?(@protocol) ||
@@ -90,11 +92,13 @@ class MarvinJsAssetsController < ApplicationController
   end
 
   def check_manage_permission
+    render_403 if @asset && !can_manage_asset?(@asset)
+
     case @assoc
     when Step
-      render_403 unless can_manage_step?(@assoc)
+      render_403 unless can_manage_step_attachments?(@assoc)
     when ResultBase
-      render_403 unless can_manage_result?(@assoc)
+      render_403 unless can_manage_result_attachments?(@assoc)
     else
       render_403
     end
