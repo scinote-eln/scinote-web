@@ -144,11 +144,13 @@ class RepositoryRowsController < ApplicationController
         end
       end
 
-      render json: { id: service.repository_row.id, flash: t('repositories.create.success_flash',
-                                                             record: escape_input(repository_row.name),
-                                                             repository: escape_input(@repository.name)),
-                     repository_row_url: repository_repository_row_path(@repository, repository_row) },
-             status: :ok
+      render json: repository_row,
+             serializer: Lists::RepositoryRowSerializer,
+             user: current_user,
+             can_read_repository: can_read_repository?(@repository),
+             with_reminders: Repository.reminders_enabled?,
+             with_stock_management: @repository.has_stock_management?,
+             can_manage_stock: can_manage_repository_stock?(@repository)
     else
       render json: service.errors, status: :bad_request
     end
@@ -255,14 +257,13 @@ class RepositoryRowsController < ApplicationController
         end
       end
 
-      render json: {
-        id: @repository_row.id,
-        flash: t(
-          'repositories.update.success_flash',
-          record: escape_input(@repository_row.name),
-          repository: escape_input(@repository.name)
-        )
-      }, status: :ok
+      render json: @repository_row,
+             serializer: Lists::RepositoryRowSerializer,
+             user: current_user,
+             can_read_repository: can_read_repository?(@repository),
+             with_reminders: Repository.reminders_enabled?,
+             with_stock_management: @repository.has_stock_management?,
+             can_manage_stock: can_manage_repository_stock?(@repository)
     else
       render json: row_update.errors, status: :bad_request
     end

@@ -59,7 +59,7 @@ module Lists
     end
 
     def assigned_tasks_count
-      object.assigned_my_modules_count
+      object[:assigned_my_modules_count] || object.my_modules.count
     end
 
     def connections_count

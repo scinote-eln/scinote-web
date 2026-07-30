@@ -2669,6 +2669,7 @@ en:
           set_all_or_none: 'Needs to set both or none'
           not_valid_range: 'Range is not valid.'
       name:
+        placeholder: "Enter name"
         errors:
           too_long: "Item name is too long (maximum is %{max_length} characters)"
           is_empty: "Item name should be filled"
