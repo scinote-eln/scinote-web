@@ -47,7 +47,7 @@ class MyModuleReportsController < ApplicationController
         {
           id: my_module_report.id,
           name: my_module_report.name,
-          created_at: I18n.l(my_module_report.created_at, format: :full_date),
+          created_at: I18n.l(my_module_report.created_at, format: :full),
           preview: preview_my_module_my_module_report_path(@my_module, my_module_report)
         }
       end
