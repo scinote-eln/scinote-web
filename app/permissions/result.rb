@@ -116,12 +116,14 @@ Canaid::Permissions.register_for(ResultText) do
   end
 
   can :lock_result_text do |user, result_text|
-    result_text.result.is_a?(ResultTemplate) &&
+    Protocol.content_locking_enabled? &&
+      result_text.result.is_a?(ResultTemplate) &&
       can_manage_protocol_draft_in_repository?(user, result_text.result.protocol)
   end
 
   can :unlock_result_text do |user, result_text|
-    result_text.result.is_a?(ResultTemplate) &&
+    Protocol.content_locking_enabled? &&
+      result_text.result.is_a?(ResultTemplate) &&
       can_manage_protocol_draft_in_repository?(user, result_text.result.protocol)
   end
 end
@@ -169,12 +171,14 @@ Canaid::Permissions.register_for(Table) do
   end
 
   can :lock_result_table do |user, table|
-    table.result.is_a?(ResultTemplate) &&
+    Protocol.content_locking_enabled? && 
+      table.result.is_a?(ResultTemplate) &&
       can_manage_protocol_draft_in_repository?(user, table.result.protocol)
   end
 
   can :unlock_result_table do |user, table|
-    table.result.is_a?(ResultTemplate) &&
+    Protocol.content_locking_enabled? && 
+      table.result.is_a?(ResultTemplate) &&
       can_manage_protocol_draft_in_repository?(user, table.result.protocol)
   end
 end
