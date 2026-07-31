@@ -6,6 +6,8 @@ class RepositoryCellsController < ApplicationController
   before_action :load_repository_column
   before_action :check_manage_permissions
 
+  include RepositoryDatatableHelper
+
   def update
     value = params[:value]
     @cell = @repository_row.repository_cells.find_by(repository_column: @repository_column)
@@ -27,7 +29,7 @@ class RepositoryCellsController < ApplicationController
 
     return head :no_content if @cell.blank?
 
-    render json: @cell.reload, serializer: RepositoryCellSerializer
+    render json: serialize_repository_cell_value(@cell.reload, current_team, @repository)
   rescue ActiveRecord::RecordInvalid => e
     render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
   end

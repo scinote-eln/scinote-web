@@ -15,23 +15,35 @@
       :addingNewRow="addingNewRow"
       :newRowTemplate="newRowTemplate"
       @cancelCreation="cancelCreation"
+      @showTextCell="showTextCellModal"
       @createRow="createRow"
       @changeName="changeName"
       @tableReloaded="reloadingTable = false"
       @startCreate="addingNewRow = true"
     ></DataTable>
+    <teleport to="body">
+      <TextCellModal
+        <TextCellModal
+          v-if="textCellModalObject"
+          :row="textCellModalObject.row"
+          :colDef="textCellModalObject.colDef"
+          @updateCell="updateCell"
+          @close="textCellModalObject = null"/>
+      </teleport>
   </div>
 </template>
 <script>
 import DataTable from '../shared/datatable/table.vue';
 import axios from '../../packs/custom_axios.js';
 import ColumnsMixin from './columns_mixin.js';
+import TextCellModal from './modals/text_cell.vue';
 
 import {
   repository_table_index_ag_path,
   repository_path,
   repository_repository_rows_path,
-  repository_repository_row_path
+  repository_repository_row_path,
+  repository_repository_row_repository_cell_path
 } from '../../routes.js';
 
 export default {
@@ -41,13 +53,15 @@ export default {
     createUrl: String,
   },
   components: {
-    DataTable
+    DataTable,
+    TextCellModal
   },
   mixins: [ColumnsMixin],
   data: () => ({
     repositoryVersion: null,
     addingNewRow: false,
     reloadingTable: false,
+    textCellModalObject: null,
     newRowTemplate: {
       name: {
         value: '',
@@ -126,6 +140,30 @@ export default {
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
       });
     },
+    showTextCellModal(_e, rows, colDef) {
+      this.textCellModalObject = {
+        row: rows[0],
+        colDef
+      }
+    },
+    updateCell(row, columnDef, value) {
+      axios.post(repository_repository_row_repository_cell_path({
+        repository_id: row.repository_id,
+        repository_row_id: row.id,
+        repository_column_id: columnDef.field.split('_')[1] }), {
+        value: value
+      }).then((response) => {
+        const updatedRow = {
+          id: row.id,
+        }
+        updatedRow[columnDef.field] = response.data;
+        this.$refs.repositoryTable.updateRowData(updatedRow);
+        this.textCellModalObject = null;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
+        textCellModalObject = null;
+      });
+    }
   }
 };
 </script>
