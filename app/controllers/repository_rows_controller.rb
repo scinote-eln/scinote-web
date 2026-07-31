@@ -42,6 +42,7 @@ class RepositoryRowsController < ApplicationController
            with_reminders: Repository.reminders_enabled?,
            with_stock_management: @repository.has_stock_management?,
            can_manage_stock: can_manage_repository_stock?(@repository),
+           can_manage_repository_rows: can_manage_repository_rows?(@repository),
            meta: {
              total_pages: total_pages,
              total_count: total_count,
@@ -150,7 +151,8 @@ class RepositoryRowsController < ApplicationController
              can_read_repository: can_read_repository?(@repository),
              with_reminders: Repository.reminders_enabled?,
              with_stock_management: @repository.has_stock_management?,
-             can_manage_stock: can_manage_repository_stock?(@repository)
+             can_manage_stock: can_manage_repository_stock?(@repository),
+             can_manage_repository_rows: can_manage_repository_rows?(@repository)
     else
       render json: service.errors, status: :bad_request
     end
@@ -263,7 +265,8 @@ class RepositoryRowsController < ApplicationController
              can_read_repository: can_read_repository?(@repository),
              with_reminders: Repository.reminders_enabled?,
              with_stock_management: @repository.has_stock_management?,
-             can_manage_stock: can_manage_repository_stock?(@repository)
+             can_manage_stock: can_manage_repository_stock?(@repository),
+             can_manage_repository_rows: can_manage_repository_rows?(@repository)
     else
       render json: row_update.errors, status: :bad_request
     end

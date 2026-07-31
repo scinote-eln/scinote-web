@@ -1,34 +1,45 @@
 <template>
-  <div ref="textCell" v-if="params.value">
-    <span v-html="linkedValue"></span>
+  <div >
+    <div class="group relative flex items-center group-hover:marker text-xs h-full w-full leading-[unset]">
+      <div ref="descripitonBox" class="flex gap-2 w-full items-center text-sm leading-[unset]">
+        <span v-if="textValue && textValue.length > 0" class="cursor-pointer line-clamp-1 leading-[unset]"
+              @click.stop="showTextCellModal">
+          {{ textValue}}
+        </span>
+        <span v-if="textValue && textValue.length > 0"
+              @click.stop="showTextCellModal"
+              class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
+          {{ i18n.t('repositories.table.text.more') }}
+        </span>
+        <span v-else-if="params.data.permissions.manage" @click.stop="showTextCellModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
+          {{ i18n.t('repositories.table.text.add_text') }}
+        </span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import autolink from '../../../shared/autolink.js';
-
 export default {
-  name: 'TextValue',
+  name: 'TextCellRenderer',
   props: {
     params: {
       required: true
     }
   },
+  mounted() {
+    this.$nextTick(() => {
+      window.renderElementSmartAnnotations(this.$refs.descripitonBox, 'span');
+    });
+  },
   computed: {
-    linkedValue() {
-      return autolink(this.params?.value?.value?.edit || '');
+    textValue() {
+      return this.params?.value?.value?.edit || '';
     }
   },
-  mounted() {
-    this.$nextTick(this.renderSmartAnnotations);
-  },
   methods: {
-    renderSmartAnnotations() {
-      if (!this.$refs.textCell) return;
-
-      const tableRoot = this.params.eGridCell?.closest('.ag-root-wrapper, .ag-root');
-      const bodyViewport = tableRoot?.querySelector('.ag-body-viewport, .ag-center-cols-viewport');
-      window.renderElementSmartAnnotations(this.$refs.textCell, 'span', [bodyViewport, window].filter(Boolean));
+    showTextCellModal() {
+      this.params.dtComponent.$emit('showTextCell', null, [this.params.data], this.params.colDef);
     }
   }
 };

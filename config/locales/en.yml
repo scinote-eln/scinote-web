@@ -2651,6 +2651,8 @@ en:
       assets:
         select_file_btn: "Select File (Max %{max_size} MB)..."
       text:
+        add_text: "Add text"
+        more: more
         errors:
           too_long: "Text is too long (maximum is %{max_length} characters)"
         enter_text: "Enter text"
