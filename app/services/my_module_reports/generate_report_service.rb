@@ -71,7 +71,7 @@ module MyModuleReports
           when 'StepTable'
             render_table(report, element_tag, element.orderable.table, with_protocol: true)
           when 'Checklist'
-            render_checklist(report, element_tag, element.orderable)
+            render_checklist(report, element_tag, element.orderable, element.orderable.checklist_items)
           when 'FormResponse'
             render_form_response(report, element_tag, element.orderable)
           end
@@ -125,14 +125,17 @@ module MyModuleReports
       end
     end
 
-    def render_checklist(report, checklist_tag, checklist)
-      report.add_text checklist_tag, "<div>#{checklist.name}</div><div>{{#{checklist_tag}}}</div>"
-      report.add_checklist(checklist_tag, checklist.checklist_items.map { |checklist_item| [checklist_item.text, checklist_item.checked] })
+    def render_checklist(report, checklist_tag, checklist, checklist_items)
+      checklist_items_pairs = checklist_items.map { |item| [item[:text], item[:checked]] }
+      checklist_name_div = checklist ? "<div>#{checklist.name}</div>" : ''
+
+      report.add_text checklist_tag, "#{checklist_name_div}<div>{{#{checklist_tag}}}</div>"
+      report.add_checklist(checklist_tag, checklist_items_pairs)
 
       # for full protocol tag
       protocol_checklist_tag = :PROTOCOL_CHECKLIST
-      report.add_text PROTOCOL_TAG, "<div>#{checklist.name}</div><div>{{#{protocol_checklist_tag}}}</div><div>{{#{PROTOCOL_TAG}}}</div>"
-      report.add_checklist(protocol_checklist_tag, checklist.checklist_items.map { |checklist_item| [checklist_item.text, checklist_item.checked] })
+      report.add_text PROTOCOL_TAG, "#{checklist_name_div}<div>{{#{protocol_checklist_tag}}}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+      report.add_checklist(protocol_checklist_tag, checklist_items_pairs)
     end
 
     def render_form_response(report, form_response_tag, form_response)
@@ -156,11 +159,17 @@ module MyModuleReports
                   form_field_value&.formatted_localize
                 elsif form_field_value.is_a?(FormRepositoryRowsFieldValue)
                   form_repository_rows_field_value_formatter(form_field_value, @user)
+                elsif form_field_value.is_a?(FormMultipleChoiceFieldValue)
+                  form_field[:data]['options'].map { |option| { text: option, checked: form_field_value.value&.include?(option) } }
                 else
                   form_field_value&.formatted
                 end
-        report.add_field tag, value
-        report.add_text PROTOCOL_TAG, "<div>#{value}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        if form_field_value.is_a?(FormMultipleChoiceFieldValue)
+          render_checklist(report, tag, nil, value)
+        else
+          report.add_field tag, value
+          report.add_text PROTOCOL_TAG, "<div>#{value}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        end
       end
     end
 
