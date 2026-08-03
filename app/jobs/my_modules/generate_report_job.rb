@@ -8,6 +8,8 @@ module MyModules
       user = User.find(user_id)
       team = Team.find(team_id)
 
+      I18n.backend.date_format = user.settings[:date_format]
+
       my_module_report = MyModuleReport.new({ name: report_template.name })
       my_module_report.my_module = my_module
 
