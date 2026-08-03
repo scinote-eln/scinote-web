@@ -18,7 +18,7 @@
             >
             <i class="sn-icon sn-icon-visibility-show"></i>
           </button>
-          <button v-if="editable" :disabled="template.generating_report" class="btn btn-primary icon-btn" @click.stop="generateReport(template.id)">
+          <button v-if="editable" :disabled="template.generating_report" class="btn btn-primary icon-btn" @click="openWizard(template.id)">
             <div v-if="template.generating_report" class="sci-loader-inline relative"></div>
             <i v-else class="sn-icon sn-icon-reports"></i>
             {{ reportButtonLabel(template) }}
@@ -68,6 +68,12 @@
       </div>
     </div>
   </div>
+  <GenerateReportModal v-if="wizardShowing"
+    :templateId="selectedTemplateId"
+    :myModuleId="myModuleId"
+    @reportStatus="updateGeneratingReportStatus"
+    @close="closeWizard">
+  </GenerateReportModal>
   <DeleteModal
     :title="deleteTitle"
     :description="i18n.t('my_modules.reports.delete.description_html')"
@@ -81,6 +87,7 @@
 import axios from '../../packs/custom_axios.js';
 import DeleteModal from '../shared/confirmation_modal.vue';
 import ActionCableConsumer from '../../channels/consumer';
+import GenerateReportModal from './modals/generate_report_modal.vue'
 
 import {
   my_module_my_module_reports_path,
@@ -100,14 +107,17 @@ export default {
     }
   },
   components: {
-    DeleteModal
+    DeleteModal,
+    GenerateReportModal
   },
   data() {
     return {
       templates: [],
       reports: [],
       deleteTitle: '',
-      myModuleReportGenerationsSubscription: null
+      myModuleReportGenerationsSubscription: null,
+      wizardShowing: false,
+      selectedTemplateId: null
     }
   },
   created() {
@@ -173,14 +183,13 @@ export default {
         this.fetchGeneratedReports();
       }
     },
-    generateReport(templateId) {
-      this.updateGeneratingReportStatus(templateId, true);
-      axios.post(my_module_my_module_reports_path(this.myModuleId), {
-        report_template_id: templateId
-      }).then((response) => {}).catch((error) => {
-        this.updateGeneratingReportStatus(templateId, false);
-        HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
-      });
+    openWizard(templateId) {
+      this.wizardShowing = true;
+      this.selectedTemplateId = templateId;
+    },
+    closeWizard() {
+      this.wizardShowing = false;
+      this.selectedTemplateId = null;
     }
   }
 };

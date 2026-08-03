@@ -54,6 +54,19 @@ class MyModuleReportsController < ApplicationController
     }
   end
 
+  def pdfs
+    step_assets = Asset.pdfs
+                       .joins(:step)
+                       .where(steps: { protocol_id: @my_module.protocol.id })
+                       .order('steps.position ASC, active_storage_blobs.filename ASC')
+
+    result_assets = Asset.pdfs
+                         .joins(:result)
+                         .where(results: { my_module_id: @my_module.id })
+                         .order('results.created_at DESC, active_storage_blobs.filename ASC')
+    @assets = (step_assets + result_assets)
+  end
+
   def destroy
     @my_module_report.destroy!
     render body: nil, status: :ok

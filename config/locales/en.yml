@@ -1981,6 +1981,38 @@ en:
       delete:
         title: "Delete report %{name}"
         description_html: "You are trying to delete a report.<br><br>This action cannot be undone."
+      wizard:
+        actions:
+          cancel: 'Cancel'
+          next: 'Next step'
+        title: "How to"
+        description: "Follow these steps to define report attachments."
+        first_step:
+          title: "Step 1: Select files for your report attachment"
+          label: "Step 1"
+          description:  "Select files you want to include into your report as attachment and define their order."
+          no_assets: "Task contains no PDF attachments."
+          asset_from_result: "Result: %{name}"
+          asset_from_step: "Step: %{name}"
+        second_step:
+          title: "Step 2: Add attachment information"
+          label: "Step 2"
+          description: "Add additional information such as  header and footer text for report attachment."
+          form: 
+            header:
+              label: "Header"
+              placeholder: "Maximum 3 rows, 140 characters"
+              error_rows: "Maximum 3 rows allowed"
+              error_size: "Header is too long (maximum number is 140 characters)"
+            footer:
+              label: "Footer"
+              placeholder: "1 row, 80 characters"
+              error_size: "Footer is too long (maximum number is 80 characters)"
+            numarization_checkbox: "Add numerization after footer text"
+            blank_page_checkbox: "Add a blank page after attachments"
+        third_step:
+          description: "Header and footer will appear on each page of the attachment section. If left empty, no header and footer will be added."
+
   experiments:
     id: "ID"
     experiment_id: "Experiment ID"
