@@ -16,6 +16,7 @@
       :newRowTemplate="newRowTemplate"
       @cancelCreation="cancelCreation"
       @showTextCell="showTextCellModal"
+      @updateCell="updateCell"
       @createRow="createRow"
       @changeName="changeName"
       @tableReloaded="reloadingTable = false"
