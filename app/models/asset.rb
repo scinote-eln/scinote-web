@@ -121,6 +121,15 @@ class Asset < ApplicationRecord
     preview_attachment.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT, format: image_preview_format(blob))
   end
 
+  def preview_status
+    return 'not_previewable' unless previewable?
+    return 'failed' if preview_failed?
+    return 'ready' if preview_generated?
+    return 'processing' if file_processing?
+
+    'ready'
+  end
+
   def file_name
     return '' unless file.attached?
 
@@ -458,6 +467,14 @@ class Asset < ApplicationRecord
   def previewable_image?
     preview_image.attached? ||
       file.blob&.content_type&.match?(%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}})
+  end
+
+  def preview_failed?
+    preview_attachment.blob.metadata['preview_failed'].present?
+  end
+
+  def preview_generated?
+    medium_preview.image&.attached? || false
   end
 
   def step_or_result_or_repository_asset_value
