@@ -554,7 +554,6 @@ Rails.application.routes.draw do
         post :tag_resource
         post :untag_resource
         post :tag_resource_with_new_tag
-        get :current_status
         get :status_partial
       end
       resources :user_my_modules, path: '/users', only: %i(index create destroy) do
