@@ -262,6 +262,8 @@ export default {
       }).then((response) => {
         HelperModule.flashAlertMsg(response.data.flash, 'success');
         this.reloadingTable = true;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     unassignModalShow(_e, rows) {
@@ -340,6 +342,8 @@ export default {
       const params = data.data ? { repository_snapshot_id : data.data } : { repository_id: (this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id) };
       axios.post(this.pinVersionUrl, params).then((response) => {
         this.versionLoaded(response.data.data);
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     versionLoaded(data){
@@ -382,6 +386,9 @@ export default {
         }).then(() => {
           this.reloadingTable = true;
           this.submitting = false;
+        }).catch(() => {
+          this.submitting = false;
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
       }
     }

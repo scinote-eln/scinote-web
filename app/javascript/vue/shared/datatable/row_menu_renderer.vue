@@ -53,6 +53,9 @@ export default {
       axios.post(this.params.data.urls.actions)
         .then((response) => {
           this.actionsMenu = response.data.actions;
+        })
+        .catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
     },
     handleEvents(event, option) {

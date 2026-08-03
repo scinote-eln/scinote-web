@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import axios from '../../../packs/custom_axios';
 import SelectDropdown from '../../shared/select_dropdown.vue';
 import repositoryValueMixin from './mixins/repository_value.js';
 
@@ -66,7 +67,8 @@ export default {
   mounted() {
     this.isLoading = true;
 
-    $.get(this.optionsPath, { all_options: true }, (data) => {
+    axios.get(this.optionsPath, { params: { all_options: true } }).then((response) => {
+      const data = response.data;
       if (Array.isArray(data)) {
         this.options = data.map((option) => {
           const { value, label } = option;
@@ -76,7 +78,7 @@ export default {
       }
       this.options = [];
       return true;
-    }).always(() => {
+    }).finally(() => {
       this.isLoading = false;
       this.selected = this.id;
     });

@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import axios from '../../packs/custom_axios';
 import ColumnElement from './column.vue';
 import FiltersList from './filters_list.vue';
 import SavedFilterElement from './saved_filter.vue';
@@ -115,7 +116,8 @@ export default {
     },
     loadFilters(filterUrl) {
       this.filters = [];
-      $.get(filterUrl, (data) => {
+      axios.get(filterUrl).then((response) => {
+        const data = response.data;
         const filters = [];
         const rawFilters = data.data.attributes.default_columns.concat((data.included || []).map((f) => f.attributes));
         let id = 0;

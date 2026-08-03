@@ -9,7 +9,7 @@
        :data-e2e="`e2e-CO-protocol-step${step.id}`"
   >
     <div class="drop-message" @dragleave.prevent="!showFileModal ? dragingFile = false : null">
-      {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
+      {{ this.i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
       <StorageUsage v-if="showStorageUsage()" :parent="step"/>
     </div>
     <div class="step-header">
@@ -60,12 +60,12 @@
             :class="{ 'step-element--locked': !urls.update_url }"
             :characterLimit="255"
             :allowBlank="false"
-            :attributeName="`${i18n.t('Step')} ${i18n.t('name')}`"
+            :attributeName="`${this.i18n.t('Step')} ${this.i18n.t('name')}`"
             :autofocus="editingName"
             :singleLine="false"
-            :timestamp="i18n.t('protocols.steps.timestamp', { date: step.attributes.created_at, user: step.attributes.created_by })"
-            :placeholder="i18n.t('protocols.steps.placeholder')"
-            :defaultValue="i18n.t('protocols.steps.default_name')"
+            :timestamp="this.i18n.t('protocols.steps.timestamp', { date: step.attributes.created_at, user: step.attributes.created_by })"
+            :placeholder="this.i18n.t('protocols.steps.placeholder')"
+            :defaultValue="this.i18n.t('protocols.steps.default_name')"
             @editingEnabled="editingName = true"
             @editingDisabled="editingName = false"
             :editOnload="step.newStep == true"
@@ -79,7 +79,7 @@
         <LockedTag v-if="step.attributes.locked" />
         <MenuDropdown
           :listItems="this.insertMenu"
-          :btnText="i18n.t('protocols.steps.insert.button')"
+          :btnText="this.i18n.t('protocols.steps.insert.button')"
           :position="'right'"
           :caret="true"
           :dataE2e="`e2e-DD-protocol-step${step.id}-insertContent`"
@@ -625,16 +625,14 @@
         this.confirmingDelete = false;
       },
       deleteStep() {
-        $.ajax({
-          url: this.urls.delete_url,
-          type: 'DELETE',
-          success: (result) => {
-            this.$emit(
-              'step:delete',
-              result.data,
-              'delete'
-            );
-          }
+        axios.delete(this.urls.delete_url).then((response) => {
+          this.$emit(
+            'step:delete',
+            response.data.data,
+            'delete'
+          );
+        }).catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
       },
       showArchiveModal() {
@@ -650,6 +648,8 @@
       archiveStep() {
         axios.post(this.urls.archive_url).then((response) => {
           this.$emit('step:archived', response.data.data, 'archive', this.step.attributes.position);
+        }).catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
       },
       clickToggleButton() {
@@ -664,6 +664,8 @@
               attachments_locked: response.data.data.attributes.attachments_locked
             });
             this.loadAttachments();
+        }).catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
       },
       changeState() {
@@ -683,7 +685,7 @@
           position: this.step.attributes.position,
           skipped_at: this.step.attributes.skipped_at
         });
-        $.post(this.urls.state_url, {completed: this.step.attributes.completed}).fail(() => {
+        axios.post(this.urls.state_url, {completed: this.step.attributes.completed}).catch(() => {
           this.step.attributes.completed = !this.step.attributes.completed;
           this.step.attributes.skipped_at = currentSkipStatus;
           this.$emit('step:update', {
@@ -711,7 +713,7 @@
           this.clickToggleButton();
         }
 
-        $.post(this.urls.skip_url, {skipped: this.step.attributes.skipped_at}).fail(() => {
+        axios.post(this.urls.skip_url, {skipped: this.step.attributes.skipped_at}).catch(() => {
           this.step.attributes.skipped_at = !this.step.attributes.skipped_at;
           this.step.attributes.completed = currentCompleteStatus;
           this.$emit('step:update', {
@@ -762,30 +764,18 @@
             )
           };
 
-        $.ajax({
-          type: "POST",
-          url: this.urls.reorder_elements_url,
-          data: JSON.stringify(elementPositions),
-          contentType: "application/json",
-          dataType: "json",
-          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
-          success: (() => this.$emit('stepUpdated'))
-        });
+        axios.post(this.urls.reorder_elements_url, elementPositions)
+          .then(() => this.$emit('stepUpdated'))
+          .catch(() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'));
       },
       updateName(newName) {
-        $.ajax({
-          url: this.urls.update_url,
-          type: 'PATCH',
-          data: {step: {name: newName}},
-          success: (result) => {
-            this.$emit('step:update', {
-              name: result.data.attributes.name,
-              position: this.step.attributes.position
-            })
-          },
-          error: (data) => {
-            HelperModule.flashAlertMsg(data.responseJSON.errors ? Object.values(data.responseJSON.errors).join(', ') : I18n.t('errors.general'), 'danger');
-          }
+        axios.patch(this.urls.update_url, {step: {name: newName}}).then((response) => {
+          this.$emit('step:update', {
+            name: response.data.data.attributes.name,
+            position: this.step.attributes.position
+          })
+        }).catch((error) => {
+          HelperModule.flashAlertMsg(error.response?.data?.errors ? Object.values(error.response.data.errors).join(', ') : this.i18n.t('errors.general'), 'danger');
         });
       },
       toggleItemLock(item) {
@@ -799,7 +789,8 @@
       createElement(elementType, tableDimensions = null, name = '', formId = null) {
         let plateTemplate = tableDimensions != null;
         tableDimensions ||= [5, 8];
-        $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate, name: name, form_id: formId }, (result) => {
+        axios.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate, name: name, form_id: formId }).then((response) => {
+          const result = response.data;
           result.data.isNew = true;
           this.elements.push(result.data)
 
@@ -807,9 +798,7 @@
             this.clickToggleButton();
           }
           this.$emit('stepUpdated')
-        }).fail(() => {
-          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        }).done(() => {
+
           this.$parent.$nextTick(() => {
             const children = this.$refs.stepContainer.querySelectorAll(".step-element");
             const lastChild = children[children.length - 1];
@@ -820,6 +809,8 @@
               behavior: 'smooth'
             });
           })
+        }).catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
       },
       openCustomWellPlateModal() {
@@ -889,7 +880,8 @@
         this.$emit('step:move_attachment', target_id)
       },
       duplicateStep() {
-        $.post(this.urls.duplicate_step_url, (result) => {
+        axios.post(this.urls.duplicate_step_url).then((response) => {
+          const result = response.data;
           let step = result.data;
           step.attachments = [];
           step.elements = [];
@@ -902,7 +894,7 @@
           });
           this.$emit('step:insert', result.data);
           HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplicated'), 'success');
-        }).fail(() => {
+        }).catch(() => {
           HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplication_failed'), 'danger');
         });
       },

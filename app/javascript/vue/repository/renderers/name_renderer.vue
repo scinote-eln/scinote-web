@@ -89,6 +89,9 @@ export default {
                     this.hasReminders = response.data.reminder_count > 0;
 
                     if (this.hasReminders) this.loadReminders();
+                  })
+                  .catch(() => {
+                    HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
                   });
               });
             });

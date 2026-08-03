@@ -458,6 +458,10 @@ export default {
             this.$nextTick(() => {
               this.setPosition();
             });
+          })
+          .catch(() => {
+            this.loadingOptions = false;
+            HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
           });
       }
     },

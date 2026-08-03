@@ -279,7 +279,8 @@ export default {
       // Legacy part - to be updated
       const container = document.getElementById('accessModalContainer');
       this.$refs.myModuleDetailsDropdown.isOpen = false;
-      $.get(container.dataset.url, (data) => {
+      axios.get(container.dataset.url).then((response) => {
+        const data = response.data;
         const object = {
           ...data.data.attributes,
           id: data.data.id,
@@ -310,6 +311,8 @@ export default {
         }
       }).then(() => {
         this.reloadMyModule();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     setStartDate(value) {
@@ -320,6 +323,8 @@ export default {
         }
       }).then(() => {
         this.reloadMyModule();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     setUsers(value) {
@@ -327,7 +332,9 @@ export default {
         user_ids: value
       }).then(() => {
         this.reloadMyModule();
-      })
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
     }
   }
 };

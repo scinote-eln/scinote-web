@@ -576,7 +576,8 @@ export default {
       let plateTemplate = tableDimensions != null;
       tableDimensions ||= [5, 8];
 
-      $.post(this.urls[`create_${elementType}_url`], { tableDimensions, plateTemplate, name }, (result) => {
+      axios.post(this.urls[`create_${elementType}_url`], { tableDimensions, plateTemplate, name }).then((response) => {
+        const result = response.data;
         result.data.isNew = true;
         this.elements.push(result.data);
 
@@ -584,9 +585,7 @@ export default {
           this.$refs.toggleElement.click();
         }
         this.$emit('resultUpdated');
-      }).fail(() => {
-        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-      }).done(() => {
+
         this.$parent.$nextTick(() => {
           const children = this.$refs.resultContainer.querySelectorAll('.result-element');
           const lastChild = children[children.length - 1];
@@ -597,6 +596,8 @@ export default {
             behavior: 'smooth'
           });
         });
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     openCustomWellPlateModal() {
@@ -618,21 +619,29 @@ export default {
     archiveResult() {
       axios.post(this.urls.archive_url).then((response) => {
         this.$emit('result:archived', this.result.id);
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     duplicateResult() {
       axios.post(this.urls.duplicate_url).then((_) => {
         this.$emit('result:duplicated');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     pinResult() {
       axios.post(this.urls.pin_url).then((_) => {
         this.$emit('result:pin_changed');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     unpinResult() {
       axios.post(this.urls.unpin_url).then((_) => {
         this.$emit('result:pin_changed');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     moveElement(position, target_id) {
@@ -654,6 +663,8 @@ export default {
     updateName(name) {
       axios.patch(this.urls.update_url, { result: { name } }).then((_) => {
         this.$emit('updated');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     toggleAttachmentsLock() {
@@ -663,6 +674,8 @@ export default {
         const result = response.data.data;
         this.$emit('result:update', result.id, {attachments_locked: result.attributes.attachments_locked});
         this.loadAttachments();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     toggleItemLock(item) {

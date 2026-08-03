@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import axios from '../../../packs/custom_axios';
 import FilterMixin from '../mixins/filter.js';
 import DropdownSelector from '../../shared/legacy/dropdown_selector.vue';
 
@@ -55,7 +56,8 @@ export default {
   mounted() {
     const params = {};
     if (this.filter.column.id === 'archived_by') params.archived_by = true;
-    $.get($('#filterContainer').data('users-url'), params, (data) => {
+    axios.get($('#filterContainer').data('users-url'), { params }).then((response) => {
+      const data = response.data;
       this.users = data.users;
     });
   },
