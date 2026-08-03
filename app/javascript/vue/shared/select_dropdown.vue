@@ -7,7 +7,7 @@
   >
     <div
       ref="field"
-      class="px-3 py-1 rounded flex items-center cursor-pointer"
+      class="px-3 py-1 rounded flex items-center cursor-pointer grow"
       @click="open"
       :class="[{
         'border border-solid': !borderless,

@@ -102,7 +102,8 @@ export default {
                 repositoryId: this.repositoryVersion.id,
                 columnId: column.id,
                 columnDataType: column.attributes.data_type,
-                legacyId: parseInt(column.id, 10)
+                legacyId: parseInt(column.id, 10),
+                columnItems: column.attributes.column_items,
               },
               suppressColumnsToolPanel: true
             });

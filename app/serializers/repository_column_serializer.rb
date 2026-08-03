@@ -15,6 +15,10 @@ class RepositoryColumnSerializer < ActiveModel::Serializer
       object.repository_checklist_items.map do |item|
         { id: item.id, label: item.data }
       end
+    elsif object.data_type == 'RepositoryStatusValue'
+      object.repository_status_items.map do |item|
+        { id: item.id, label: item.data, icon: item.icon }
+      end
     end
   end
 
