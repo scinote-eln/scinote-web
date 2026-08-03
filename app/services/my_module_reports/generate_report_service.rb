@@ -106,7 +106,7 @@ module MyModuleReports
       # for full protocol tag
       if with_protocol
         report.add_text PROTOCOL_TAG, "<div>#{text_element.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
-        report.add_text PROTOCOL_TAG, "<div>#{text_element.text}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        report.add_text PROTOCOL_TAG, "<div>#{insert_tiny_mce_asset_placeholders(text_element.text, text_element.tiny_mce_assets)}</div><div>{{#{PROTOCOL_TAG}}}</div>"
       end
     end
 
