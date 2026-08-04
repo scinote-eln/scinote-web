@@ -119,6 +119,7 @@ export default {
                 columnDataType: column.attributes.data_type,
                 legacyId: parseInt(column.id, 10),
                 columnItems: column.attributes.column_items,
+                metadata: column.attributes.metadata
               },
               suppressColumnsToolPanel: true
             });

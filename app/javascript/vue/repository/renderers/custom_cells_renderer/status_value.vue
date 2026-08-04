@@ -13,7 +13,7 @@
         @change="changeValue"
       />
     </div>
-    <div v-else>
+    <div v-else-if="selectedOption">
       <div ref="container" class="flex items-center gap-1">
         <span>{{ selectedOption[2].icon }}</span>
         <span>{{ selectedOption[1] }}</span>

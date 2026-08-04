@@ -62,10 +62,10 @@ export default {
     }
   },
   created() {
-    this.checkListValue = this.params?.value?.value.map(item => item.value);
+    this.checkListValue = this.params?.value?.value?.map(item => item.value) || [];
   },
   data: () => ({
-    checkListValue: null
+    checkListValue: []
   }),
   methods: {
     changeValue(newValue) {
