@@ -348,7 +348,7 @@ export default {
         ...column,
         minWidth: column.minWidth || 110,
         cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
-        pinned: (this.withPinnedColumns && (column.field === 'name' || column.field === 'name_hash') ? 'left' : null),
+        pinned: (this.withPinnedColumns && (column.field === 'name' || column.field === 'name_hash') ? 'left' : column.pinned),
         comparator: () => null
       }));
 
