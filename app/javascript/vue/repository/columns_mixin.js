@@ -1,6 +1,7 @@
 import axios from '../../packs/custom_axios.js';
 import cellRenderer from './renderers/cell_renderer.vue';
 import nameRenderer from './renderers/name_renderer.vue';
+import assignedRenderer from './renderers/assigned_renderer.vue';
 import consumeRenderer from './renderers/consume_renderer.vue';
 import {
   index_new_repository_repository_columns_path
@@ -10,7 +11,8 @@ export default {
   components: {
     cellRenderer,
     nameRenderer,
-    consumeRenderer
+    consumeRenderer,
+    assignedRenderer
   },
   data() {
     return {
@@ -20,6 +22,18 @@ export default {
   computed: {
     defaultRepositoryColumnsDef() {
       let columns = [];
+      columns.push({
+        field: 'has_active_reminders',
+        headerComponentParams: {
+          html: '<div class="sn-icon sn-icon-notifications"></div>'
+        },
+        headerName: this.i18n.t('repositories.table.reminders'),
+        sortable: true,
+        suppressColumnsToolPanel: true,
+        maxWidth: 80,
+        minWidth: 80,
+        pinned: 'left'
+      });
       columns.push({
         field: 'name',
         headerName: this.i18n.t('repositories.table.row_name'),
@@ -44,7 +58,8 @@ export default {
           field: 'assigned_tasks_count',
           headerName: this.i18n.t('repositories.table.assigned'),
           sortable: true,
-          hide: this.columnHidden
+          hide: this.columnHidden,
+          cellRenderer: 'assignedRenderer'
         });
       }
 
