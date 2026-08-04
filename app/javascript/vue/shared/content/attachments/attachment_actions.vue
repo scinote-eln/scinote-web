@@ -1,8 +1,5 @@
 <template>
   <div class="flex items-center gap-1.5 justify-end w-[184px]">
-    <!-- TODO: OpenMenu emits attachment:changed after a SciNote Edit save and it is not
-         forwarded here, so the file never refreshes in steps or results.
-         See SCINOTE_EDIT_REFRESH.md -->
     <OpenMenu
       :attachment="attachment"
       @open="$emit('attachment:toggle_menu', $event)"
@@ -43,8 +40,6 @@
     >
       <i class="sn-icon sn-icon-delete"></i>
     </button>
-    <!-- TODO: the attachment:changed forward below is vestigial - ContextMenu never
-         emits it. See SCINOTE_EDIT_REFRESH.md -->
     <ContextMenu
       :attachment="attachment"
       :dataE2e="`${this.dataE2e}-attachment${this.attachment.id}`"
@@ -54,7 +49,6 @@
       @attachment:delete="$emit('attachment:delete', $event)"
       @attachment:moved="$emit('attachment:moved', $event)"
       @attachment:uploaded="$emit('attachment:uploaded', $event)"
-      @attachment:changed="$emit('attachment:changed', $event)"
       @attachment:update="$emit('attachment:update', $event)"
       @menu-toggle="$emit('attachment:toggle_menu', $event)"
       @attachment:versionRestored="$emit('attachment:versionRestored', $event)"
@@ -77,7 +71,6 @@
 </template>
 
 <script>
-import OpenLocallyMixin from './mixins/open_locally.js';
 import OpenMenu from './open_menu.vue';
 import ContextMenu from './context_menu.vue';
 import deleteAttachmentModal from './delete_modal.vue';
@@ -97,10 +90,6 @@ export default {
       default: ''
     }
   },
-  // TODO: OpenLocallyMixin is never invoked here - open_menu.vue owns the button.
-  // Removing it also removes a redundant AssetSyncChannel subscription slot.
-  // See SCINOTE_EDIT_REFRESH.md
-  mixins: [OpenLocallyMixin],
   data() {
     return {
       deleteModal: false,

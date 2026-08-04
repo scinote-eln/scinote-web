@@ -6,6 +6,7 @@ class AssetSyncChannel < ApplicationCable::Channel
   def subscribed
     asset = Asset.find_by(id: params[:asset_id])
 
+    return reject unless asset&.file&.attached?
     return reject unless can_manage_asset?(current_user, asset) && can_open_asset_locally?(current_user, asset)
 
     stream_for asset

@@ -11,9 +11,9 @@ RSpec.describe AssetSyncChannel, type: :channel do
 
   # Canaid implements can_*? through method_missing, so any_instance verification
   # (which checks method_defined?) cannot see it.
-  def stub_permissions(read: true, open_locally: true)
+  def stub_permissions(manage: true, open_locally: true)
     without_partial_double_verification do
-      allow_any_instance_of(described_class).to receive(:can_read_asset?).and_return(read)
+      allow_any_instance_of(described_class).to receive(:can_manage_asset?).and_return(manage)
       allow_any_instance_of(described_class).to receive(:can_open_asset_locally?).and_return(open_locally)
     end
   end
@@ -24,7 +24,7 @@ RSpec.describe AssetSyncChannel, type: :channel do
     stub_connection current_user: user, env: { 'warden' => warden }
   end
 
-  context 'when the user can read the asset and SciNote Edit is enabled' do
+  context 'when the user can manage the asset and SciNote Edit is enabled' do
     before { stub_permissions }
 
     it 'subscribes and streams for the asset' do
@@ -70,8 +70,8 @@ RSpec.describe AssetSyncChannel, type: :channel do
     end
   end
 
-  context 'when the user cannot read the asset' do
-    before { stub_permissions(read: false) }
+  context 'when the user cannot manage the asset' do
+    before { stub_permissions(manage: false) }
 
     it 'rejects the subscription' do
       subscribe(asset_id: asset.id)
