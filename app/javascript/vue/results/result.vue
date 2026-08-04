@@ -211,6 +211,8 @@
             @moved="moveElement"
           />
         </div>
+        <!-- TODO: unlike step.vue this never binds @attachment:changed, so a SciNote Edit
+             save does not refresh the file here. See SCINOTE_EDIT_REFRESH.md -->
         <Attachments v-if="attachments.length"
                       :parent="result"
                       :attachments="attachments"

@@ -117,6 +117,8 @@ import LockedTag from '../../snippets/locked_tag.vue';
 
 export default {
   name: 'inlineAttachment',
+  // TODO: OpenLocallyMixin is never invoked here - open_menu.vue owns the button.
+  // See SCINOTE_EDIT_REFRESH.md
   mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin, OpenLocallyMixin],
   components: {
     ContextMenu,

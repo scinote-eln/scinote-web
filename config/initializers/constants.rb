@@ -454,9 +454,6 @@ class Constants
   # Infinite date, for use in sorting
   INFINITE_DATE = Date.new(9999, 1, 1).freeze
 
-  # Interval time for polling asset changes when editing with SciNote Edit
-  ASSET_POLLING_INTERVAL = 5000
-
   ASSET_SYNC_TOKEN_EXPIRATION = 1.year
   ASSET_SYNC_URL = ENV['ASSET_SYNC_URL'].freeze
 

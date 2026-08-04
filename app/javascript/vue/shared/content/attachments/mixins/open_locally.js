@@ -1,6 +1,7 @@
 /* global GLOBAL_CONSTANTS */
 
 import axios from '../../../../../packs/custom_axios.js';
+import consumer from '../../../../../channels/consumer';
 import { satisfies } from 'compare-versions';
 import editLaunchingApplicationModal from '../../modal/edit_launching_application_modal.vue';
 import NoPredefinedAppModal from '../../modal/no_predefined_app_modal.vue';
@@ -16,7 +17,7 @@ export default {
       showRestrictedExtensionModal: false,
       showUpdateVersionModal: false,
       editAppModal: false,
-      pollingInterval: null
+      fileChangesSubscription: null
     };
   },
   components: {
@@ -29,6 +30,11 @@ export default {
     attributes() {
       return this.attachment.attributes;
     },
+    assetId() {
+      // The json_api adapter strips id from attributes and exposes it on the resource,
+      // but views that call AssetSerializer#as_json directly keep it in attributes.
+      return this.attributes.id ?? this.attachment.id;
+    },
     canOpenLocally() {
       return this.scinoteEditRunning
              && !!this.attributes.urls.open_locally
@@ -37,7 +43,7 @@ export default {
     }
   },
   beforeUnmount() {
-    this.stopPolling();
+    this.unsubscribeFileChanges();
   },
   methods: {
     async checkScinoteEditRunning() {
@@ -119,7 +125,7 @@ export default {
 
       this.editAppModal = true;
       try {
-        this.startPolling();
+        this.subscribeFileChanges();
         const { data } = await axios.get(this.attributes.urls.open_locally);
         await axios.post(`${this.attributes.urls.open_locally_api}/download`, data);
       } catch (error) {
@@ -130,32 +136,32 @@ export default {
       const { min, max } = this.attributes.edit_version_range;
       return !satisfies(version, `${min} - ${max}`);
     },
-    async pollForChanges() {
-      try {
-        const checksumResponse = await axios.get(this.attributes.urls.asset_checksum);
+    subscribeFileChanges() {
+      if (this.fileChangesSubscription) return;
 
-        if (checksumResponse.status === 200) {
-          const currentChecksum = checksumResponse.data.checksum;
+      this.fileChangesSubscription = consumer.subscriptions.create(
+        { channel: 'AssetSyncChannel', asset_id: this.assetId },
+        {
+          received: (data) => {
+            if (data.checksum === this.attributes.checksum) return;
 
-          if (currentChecksum !== this.attributes.checksum) {
-            this.$emit('attachment:changed', this.attachment.id);
-          }
+            this.onFileChanged();
+          },
+          rejected: () => this.unsubscribeFileChanges()
         }
-      } catch (error) {
-        console.error('Error polling for changes:', error);
-        this.stopPolling();
-      }
+      );
     },
-    startPolling() {
-      if (this.pollingInterval === null) {
-        this.pollingInterval = setInterval(this.pollForChanges, GLOBAL_CONSTANTS.ASSET_POLLING_INTERVAL);
-      }
+    unsubscribeFileChanges() {
+      if (!this.fileChangesSubscription) return;
+
+      consumer.subscriptions.remove(this.fileChangesSubscription);
+      this.fileChangesSubscription = null;
     },
-    stopPolling() {
-      if (this.pollingInterval !== null) {
-        clearInterval(this.pollingInterval);
-        this.pollingInterval = null;
-      }
+    // TODO: outside of open_locally_menu.vue this emit is swallowed by
+    // attachment_actions.vue, so the file never refreshes in steps or results.
+    // See SCINOTE_EDIT_REFRESH.md
+    onFileChanged() {
+      this.$emit('attachment:changed', this.assetId);
     }
   }
 }

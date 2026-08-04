@@ -133,6 +133,11 @@ export default {
     openImageEditor() {
       document.getElementById('editImageButton').click();
     },
+    // This component is mounted on its own, so there is no parent to emit
+    // attachment:changed to - reload the preview instead.
+    onFileChanged() {
+      this.refreshPreview();
+    },
     refreshPreview() {
       const filePreview = document.querySelector('.file-preview-container');
 
