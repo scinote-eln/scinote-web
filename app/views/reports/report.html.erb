@@ -9,7 +9,7 @@
           'bootstrap_pack.css',
           'handsontable.formula.css',
           'fontawesome.css'].each do |css_file| %>
-        <%= Rails.application.assets_manifest.find_sources(css_file).first.to_s.force_encoding(Encoding::UTF_8) %>
+        <%= raw Rails.application.assets_manifest.find_sources(css_file).first.force_encoding(Encoding::UTF_8) %>
       <% end %>
     </style>
     <script>
@@ -27,7 +27,7 @@
           'handsontable.formula.js',
           'reports/content.js',
           'reports/template_helpers.js'].each do |js_file| %>
-        <%= Rails.application.assets_manifest.find_sources(js_file).first.to_s.force_encoding(Encoding::UTF_8) %>
+        <%= raw Rails.application.assets_manifest.find_sources(js_file).first.force_encoding(Encoding::UTF_8) %>
       <% end %>
     </script>
   </head>

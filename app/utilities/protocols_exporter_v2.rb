@@ -63,7 +63,8 @@ module ProtocolsExporterV2
 
   def result_template_xml(result)
     result_template_guid = get_guid(result.id)
-    xml = "<resultTemplate id=\"#{result.id}\" guid=\"#{result_template_guid}\">\n" \
+    xml = "<resultTemplate id=\"#{result.id}\" guid=\"#{result_template_guid}\" " \
+          "attachments_locked=\"#{result.attachments_locked}\">\n" \
           "<name>#{result.name}</name>\n"
 
     # Assets
@@ -74,8 +75,9 @@ module ProtocolsExporterV2
       result.result_orderable_elements.find_each do |result_orderable_element|
         element = result_orderable_element.orderable
         element_guid = get_guid(element.id)
+        element_locked = element.is_a?(ResultTable) ? element.table&.locked : element.locked
         xml << "<resultElement type=\"#{result_orderable_element.orderable_type}\" guid=\"#{element_guid}\" " \
-               "position=\"#{result_orderable_element.position}\">"
+               "position=\"#{result_orderable_element.position}\" locked=\"#{element_locked}\">"
 
         case element
         when ResultText

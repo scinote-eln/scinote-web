@@ -39,7 +39,7 @@ class ResultTemplatesController < ResultBaseController
   def log_attachments_lock_activity
     return unless @result.saved_change_to_attachments_locked?
 
-    activity_type = @result.attachments_locked ? :lock_result_template_file : :unlock_result_template_file
+    activity_type = @result.attachments_locked ? :lock_result_template_files : :unlock_result_template_files
     log_activity(activity_type, { result_template: @result })
   end
 

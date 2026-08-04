@@ -151,17 +151,27 @@ class StepsController < ApplicationController
   def update
     if @step.update(step_params)
       # Generate activity
-      if @protocol.in_module?
+      if @step.saved_change_to_attachments_locked? && @protocol.in_repository?
         log_activity(
-          :edit_step, @my_module.experiment.project,
-          { my_module: @my_module.id }.merge(step_message_items)
-        )
-      else
-        log_activity(
-          :edit_step_in_protocol_repository,
+          @step.attachments_locked ? :lock_protocol_step_files : :unlock_protocol_step_files,
           nil,
-          { protocol: @protocol.id }.merge(step_message_items)
+          step_message_items
         )
+      end
+      # Log the edit only if something other than the attachment lock changed
+      if (step_params.keys - %w(attachments_locked)).any?
+        if @protocol.in_module?
+          log_activity(
+            :edit_step, @my_module.experiment.project,
+            { my_module: @my_module.id }.merge(step_message_items)
+          )
+        else
+          log_activity(
+            :edit_step_in_protocol_repository,
+            nil,
+            { protocol: @protocol.id }.merge(step_message_items)
+          )
+        end
       end
       render json: @step, serializer: StepSerializer, user: current_user
     else

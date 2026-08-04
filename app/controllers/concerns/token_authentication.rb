@@ -61,7 +61,8 @@ module TokenAuthentication
   end
 
   def check_token_revocation!
-    if Doorkeeper::AccessToken.where.not(revoked_at: nil).exists?(token: @token)
+    # Strip padding to prevent token revocation check bypass
+    if Doorkeeper::AccessToken.where.not(revoked_at: nil).exists?(token: @token.delete_suffix('='))
       raise JWT::VerificationError, I18n.t('api.core.expired_token')
     end
   end
