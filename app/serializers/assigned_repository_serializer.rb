@@ -39,6 +39,7 @@ class AssignedRepositorySerializer < ActiveModel::Serializer
     {
       can_assign: can_assign_my_module_repository_rows?(scope[:user], scope[:my_module]),
       can_read: can_read?,
+      can_create_repository_rows: can_create_repository_rows?(scope[:user], object),
       can_create_snapshots: can_create_my_module_repository_snapshots?(scope[:user], scope[:my_module]),
       can_manage_snapshots: can_manage_my_module_repository_snapshots?(scope[:user], scope[:my_module])
     }

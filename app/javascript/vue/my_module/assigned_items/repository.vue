@@ -204,7 +204,9 @@ export default {
           icon: 'sn-icon sn-icon-create-item',
           label: this.i18n.t('my_modules.repository.create_item'),
           type: 'emit',
-          disabled: this.repositoryVersion.attributes.is_snapshot,
+          disabled:
+            this.repositoryVersion.attributes.is_snapshot ||
+            !this.repositoryVersion.attributes.permissions.can_create_repository_rows,
           buttonStyle: 'btn btn-secondary'
         });
       }
