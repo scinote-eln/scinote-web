@@ -49,7 +49,6 @@
       @attachment:delete="$emit('attachment:delete', $event)"
       @attachment:moved="$emit('attachment:moved', $event)"
       @attachment:uploaded="$emit('attachment:uploaded', $event)"
-      @attachment:changed="$emit('attachment:changed', $event)"
       @attachment:update="$emit('attachment:update', $event)"
       @menu-toggle="$emit('attachment:toggle_menu', $event)"
       @attachment:versionRestored="$emit('attachment:versionRestored', $event)"
@@ -72,7 +71,6 @@
 </template>
 
 <script>
-import OpenLocallyMixin from './mixins/open_locally.js';
 import OpenMenu from './open_menu.vue';
 import ContextMenu from './context_menu.vue';
 import deleteAttachmentModal from './delete_modal.vue';
@@ -92,7 +90,6 @@ export default {
       default: ''
     }
   },
-  mixins: [OpenLocallyMixin],
   data() {
     return {
       deleteModal: false,

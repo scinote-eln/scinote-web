@@ -203,7 +203,6 @@
                     @attachment:deleted="attachmentDeleted"
                     @attachment:update="updateAttachment"
                     @attachment:uploaded="loadAttachments"
-                    @attachment:changed="reloadAttachment"
                     @attachments:order="changeAttachmentsOrder"
                     @attachment:moved="moveAttachment"
                     @attachments:viewMode="changeAttachmentsViewMode"
@@ -595,25 +594,6 @@
           this.dragingFile = true;
           this.$emit('step:drag_enter', this.step.id);
         }
-      },
-      reloadAttachment(attachmentId) {
-        const index = this.attachments.findIndex(attachment => attachment.id === attachmentId);
-        const attachmentUrl = this.attachments[index].attributes.urls.asset_show
-
-        axios.get(attachmentUrl)
-          .then((response) => {
-            const updatedAttachment = response.data.data;
-            const index = this.attachments.findIndex(attachment => attachment.id === attachmentId);
-
-            if (index !== -1) {
-              this.attachments[index] = updatedAttachment;
-            }
-          })
-          .catch((error) => {
-            console.error("Failed to reload attachment:", error);
-          });
-
-        this.showFileModal = false;
       },
       showStorageUsage() {
         return (this.elements.length || this.attachments.length) && !this.isCollapsed && this.step.attributes.storage_limit;

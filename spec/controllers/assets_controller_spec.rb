@@ -268,15 +268,6 @@ describe AssetsController, type: :controller do
     end
   end
 
-  describe 'GET #checksum' do
-    let(:action) { get :checksum, params: { id: step_asset.asset.id } }
-
-    it 'checksum returned' do
-      action
-      expect_success_json
-    end
-  end
-
   describe 'POST #duplicate' do
     let(:action) { post :duplicate, params: { id: element_id } }
 
