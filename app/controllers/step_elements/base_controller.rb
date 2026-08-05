@@ -10,7 +10,7 @@ module StepElements
 
     def lock
       ActiveRecord::Base.transaction do
-        @element.update!(locked: true) 
+        @element.update!(locked: true)
         log_lock_activity("lock_protocol_step_#{content_block_type}") if @element.saved_change_to_locked?
       end
       head :ok
@@ -35,7 +35,13 @@ module StepElements
       end
       head :ok
     rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
+      error_message =
+        if @element.errors[:sheet_name]
+          t('activerecord.errors.models.table.attributes.sheet_name.not_unique_in_context_long')
+        else
+          t('general.error')
+        end
+      render json: { error: error_message }, status: :unprocessable_entity
     end
 
     def restore
@@ -45,7 +51,13 @@ module StepElements
       end
       restore_response
     rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
+      error_message =
+        if @element.errors[:sheet_name]
+          t('activerecord.errors.models.table.attributes.sheet_name.not_unique_in_context_long')
+        else
+          t('general.error')
+        end
+      render json: { error: error_message }, status: :unprocessable_entity
     end
 
     private

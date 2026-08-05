@@ -249,8 +249,7 @@ class ExperimentsController < ApplicationController
       render json: { url: experiment_my_modules_path(service.cloned_experiment) }
     else
       render json: {
-        message: t('experiments.clone.error_flash',
-        experiment: @experiment.name)
+        message: service.errors[:invalid_content]&.first || t('experiments.clone.error_flash', experiment: @experiment.name)
       }, status: :unprocessable_entity
     end
   end
@@ -417,6 +416,8 @@ class ExperimentsController < ApplicationController
                    .where(id: params[:my_module_ids])
 
       @my_modules.find_each do |my_module|
+        my_module.raise_if_invalid_content!
+
         new_my_module = my_module.dup
         new_my_module.my_module_status = MyModuleStatusFlow.global.present? ? MyModuleStatusFlow.global.last.initial_status : MyModuleStatus.first
         new_my_module.update!(
@@ -441,6 +442,8 @@ class ExperimentsController < ApplicationController
         provisioning_status_urls: @my_modules.map { |m| provisioning_status_my_module_url(m) }
       }
     )
+  rescue MyModule::InvalidContentError => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   def actions_toolbar

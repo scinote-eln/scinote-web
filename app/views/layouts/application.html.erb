@@ -130,6 +130,8 @@
     <%= render partial: 'shared/flash_alerts',
                  locals: { flash: flash, notice: notice, alert: alert } %>
 
+    <%= render "shared/general_error_modal" %>
+
     <% if user_signed_in? %>
       <%= render "shared/about_modal" %>
       <%= render "shared/file_preview/modal" %>
