@@ -105,7 +105,7 @@ class MyModuleReportsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_my_module?(@my_module)
+    render_403 unless can_manage_my_module_reports?(@my_module)
   end
 
   def set_navigator
