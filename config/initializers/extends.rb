@@ -1028,6 +1028,13 @@ class Extends
       }
     }
   }
+
+  DEFAULT_REPORT_TEMPLATE_PLACEHOLDERS = [
+    {
+      label: 'General task data',
+      inputs: %w(task_name task_due_date task_tags task_protocol)
+    }
+  ]
 end
 
 # rubocop:enable Style/MutableConstant
