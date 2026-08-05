@@ -2,24 +2,12 @@
 
 module ProtocolReportTemplates
   class TagService
-    DEFAULT_INPUTS = [
-      {
-        label: 'General task data',
-        inputs: [
-          { label: I18n.t('protocols.report_template.data_inputs.codes.task_name'), tag: I18n.t('protocols.report_template.data_inputs.codes.task_name_code') },
-          { label: I18n.t('protocols.report_template.data_inputs.codes.task_due_date'), tag: I18n.t('protocols.report_template.data_inputs.codes.task_due_date_code') },
-          { label: I18n.t('protocols.report_template.data_inputs.codes.task_tags'), tag: I18n.t('protocols.report_template.data_inputs.codes.task_tags_code') },
-          { label: I18n.t('protocols.report_template.data_inputs.codes.task_protocol'), tag: I18n.t('protocols.report_template.data_inputs.codes.task_protocol_code') }
-        ]
-      }
-    ].freeze
-
     def initialize(protocol)
       @protocol = protocol
     end
 
     def tags
-      DEFAULT_INPUTS + step_tags + result_tags
+      default_report_template_placeholders + step_tags + result_tags
     end
 
     def replace_tags(src_report_template, dest_report_template, src_object, include_results: true)
@@ -173,6 +161,20 @@ module ProtocolReportTemplates
       src_form_response.form.form_fields.order(:position).zip(dest_form_response.form.form_fields.order(:position)) do |src_form_field, dest_form_field|
         report.add_field(I18n.t('protocols.report_template.data_inputs.codes.tag_form_field', form_id: src_form_response.id, id: src_form_field.id).to_sym,
                          I18n.t('protocols.report_template.data_inputs.codes.tag_form_field_code', form_id: dest_form_response.id, id: dest_form_field.id))
+      end
+    end
+
+    def default_report_template_placeholders
+      Extends::DEFAULT_REPORT_TEMPLATE_PLACEHOLDERS.map do |group|
+        {
+          label: group[:label],
+          inputs: group[:inputs].map do |input|
+            {
+              label: I18n.t("protocols.report_template.data_inputs.codes.#{input}"),
+              tag: I18n.t("protocols.report_template.data_inputs.codes.#{input}_code")
+            }
+          end
+        }
       end
     end
   end
