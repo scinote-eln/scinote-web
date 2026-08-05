@@ -14,6 +14,7 @@ class Table < ApplicationRecord
   validates :contents,
             presence: true,
             length: { maximum: Constants::TABLE_JSON_MAX_SIZE_MB.megabytes }
+  validate :enforce_unique_sheet_name_in_context!
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -38,6 +39,10 @@ class Table < ApplicationRecord
 
   def metadata
     attributes['metadata'].is_a?(String) ? JSON.parse(attributes['metadata']) : attributes['metadata']
+  end
+
+  def sheet_name
+    metadata['sheet_name']
   end
 
   def update_metadata!(new_metadata)
@@ -134,6 +139,27 @@ class Table < ApplicationRecord
     end
   end
 
+  def sibling_tables
+    base_query =
+      if step_table
+        Table.joins(step_table: { step: :protocol }).where(protocols: { id: step_table.step.protocol_id })
+      elsif result_table&.result.is_a?(Result)
+        Table.joins(:result_table).where(result_table: { result_id: result_table.result.my_module.results.select(:id) })
+      elsif result_table&.result.is_a?(ResultTemplate)
+        Table.joins(:result_table).where(result_table: { result_id: result_table.result.protocol.results.select(:id) })
+      else
+        Table.none
+      end
+
+    base_query.where.not(id: id).where(archived: archived)
+  end
+
+  def duplicate_sheet_name_tables
+    return Table.none unless metadata['sheet_name']
+
+    sibling_tables.where("metadata->>'sheet_name' = ?", metadata['sheet_name'])
+  end
+
   private
 
   def manage_orderable_element_on_archive
@@ -149,6 +175,28 @@ class Table < ApplicationRecord
       elsif result_table.result_orderable_element.blank?
         result_table.create_result_orderable_element!(result: result, position: result.next_element_position)
       end
+    end
+  end
+
+  def enforce_unique_sheet_name_in_context!
+    if duplicate_sheet_name_tables.any?
+      context_parent =
+        if step_table
+          step_table.step.protocol
+        elsif result_table.result.is_a?(Result)
+          result_table.result.my_module
+        else
+          result_table.result.protocol
+        end
+
+      errors.add(
+        :sheet_name,
+        I18n.t(
+          'activerecord.errors.models.table.attributes.sheet_name.not_unique_in_context',
+          parent_class: context_parent.class,
+          parent_id: context_parent.id
+        )
+      )
     end
   end
 end

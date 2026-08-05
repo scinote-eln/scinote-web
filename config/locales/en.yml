@@ -278,6 +278,11 @@ en:
             parent_storage_location_child: "Storage location cannot be moved to it's child"
             metadata:
               invalid: 'Invalid metadata'
+        table:
+          attributes:
+            sheet_name:
+              not_unique_in_context: "Table sheet name is not unique in this context (%{parent_class} with id '%{parent_id}')!"
+              not_unique_in_context_long: "Cannot perform this action because this item contains tables with duplicate sheet names. Please rename the duplicates and try again."
   storage:
     limit_reached: "Storage limit has been reached."
   helpers:
@@ -5175,6 +5180,7 @@ en:
     comment_placeholder: "Your Message"
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
+    archive_error: "There was a problem trying to archive this element."
     invalid_params: "Invalid params"
     sort:
       title: "Sorting"

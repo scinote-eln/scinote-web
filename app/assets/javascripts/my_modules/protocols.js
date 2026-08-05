@@ -63,7 +63,7 @@ function initLinkUpdate() {
         },
         error: function(ev) {
           // Display error message in alert()
-          alert(ev.responseJSON.message);
+          HelperModule.flashAlertMsg(ev.responseJSON.message, 'danger');
           modal.find(".modal-footer [data-action='submit']").prop('disabled', false);
           // Hide modal
           modal.modal('hide');
@@ -274,7 +274,7 @@ function loadFromRepository() {
         if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
         } else {
-          alert(response.responseJSON.message);
+          HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');
         }
 
         modal.find(".modal-footer [data-action='submit']").prop('disabled', false);

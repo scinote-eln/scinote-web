@@ -212,6 +212,19 @@ var HelperModule = (function(){
     helpers.dismissAlert();
   }
 
+  helpers.showErrorModal = function(title, content) {
+    var $modal =  $('#general-error-modal');
+
+    $modal.find('.modal-header h4').html(title);
+    $modal.find('.modal-body').html(content);
+    $modal.modal('show');
+
+    $modal.on('hidden.bs.modal', function() {
+      $modal.find('.modal-header h4').html('');
+      $modal.find('.modal-body').html('');
+    });
+  }
+
   $(document).on('turbolinks:load', function() {
     helpers.hideFlashMsg();
     helpers.dismissAlert();

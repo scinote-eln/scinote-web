@@ -39,7 +39,13 @@ module ResultElements
       end
       head :ok
     rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
+      error_message =
+        if @element.errors[:sheet_name]
+          t('activerecord.errors.models.table.attributes.sheet_name.not_unique_in_context_long')
+        else
+          t('general.error')
+        end
+      render json: { error: error_message }, status: :unprocessable_entity
     end
 
     def restore
@@ -49,7 +55,13 @@ module ResultElements
       end
       restore_response
     rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
+      error_message =
+        if @element.errors[:sheet_name]
+          t('activerecord.errors.models.table.attributes.sheet_name.not_unique_in_context_long')
+        else
+          t('general.error')
+        end
+      render json: { error: error_message }, status: :unprocessable_entity
     end
 
     private
