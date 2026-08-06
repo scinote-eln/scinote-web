@@ -71,6 +71,7 @@ import StatusRenderer from './renderers/status.vue';
 import DueDateRenderer from '../shared/datatable/renderers/date.vue';
 import StartDateRenderer from '../shared/datatable/renderers/date.vue';
 import DesignatedUsers from './renderers/designated_users.vue';
+import ReportRenderer from './renderers/report.vue';
 import TagsModal from '../shared/tags_modal.vue';
 import TagsRenderer from './renderers/tags.vue';
 import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
@@ -102,7 +103,8 @@ export default {
     StatusRenderer,
     FavoriteRenderer,
     UsersDropdownRenderer,
-    TagsDropdownRenderer
+    TagsDropdownRenderer,
+    ReportRenderer
   },
   props: {
     dataSource: { type: String, required: true },
@@ -121,7 +123,8 @@ export default {
     statusesList: { type: Array, required: true },
     projectName: { type: String },
     archived: { type: Boolean },
-    experimentUrl: { type: String, required: true }
+    experimentUrl: { type: String, required: true },
+    analyticalReportsEnabled: { type: Boolean }
   },
   data() {
     return {
@@ -241,6 +244,15 @@ export default {
       cellRenderer: CommentsRenderer,
       suppressColumnsToolPanel: true
     });
+
+    if (this.analyticalReportsEnabled) {
+      columns.push({
+        field: 'report',
+        headerName: this.i18n.t('experiments.table.column.report_html'),
+        sortable: true,
+        cellRenderer: ReportRenderer
+      });
+    }
 
     if (window.externalMyModuleColumns) {
       window.externalMyModuleColumns.forEach((column) => {

@@ -29,6 +29,7 @@ module Lists
       team
       favorite
       project_id
+      analytical_report
     )
 
     def attributes(_options = {})
@@ -78,6 +79,10 @@ module Lists
       urls_list[:update_due_date] = my_module_path(object, user, format: :json) if can_update_my_module_due_date?(object)
       urls_list[:update_start_date] = my_module_path(object, user, format: :json) if can_update_my_module_start_date?(object)
 
+      if ReportTemplate.analytical_reporting_enabled? && object.last_my_module_report
+        urls_list[:report] = preview_my_module_my_module_report_path(object, object.last_my_module_report)
+      end
+
       urls_list
     end
 
@@ -120,6 +125,10 @@ module Lists
 
     def archived
       object.archived_branch?
+    end
+
+    def analytical_report
+      object.last_my_module_report&.name if ReportTemplate.analytical_reporting_enabled?
     end
 
     def project_id
