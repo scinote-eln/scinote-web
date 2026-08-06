@@ -9,7 +9,8 @@ module Lists
       task_comments: { user: :teams },
       user_assignments: :user,
       designated_users: {},
-      experiment: { project: :team }
+      experiment: { project: :team },
+      last_my_module_report: {}
     }
 
     private
@@ -52,7 +53,8 @@ module Lists
         tags: 'tags',
         signatures: 'signatures',
         comments: 'comments',
-        favorite: 'favorite'
+        favorite: 'favorite',
+        report: 'report'
       }
     end
 
@@ -66,6 +68,12 @@ module Lists
         @records = @records.left_joins(:results).select('COUNT(DISTINCT results.id) AS result_count')
       when 'tags'
         @records = @records.left_joins(:tags).select('COUNT(DISTINCT tags.id) AS tag_count')
+      when 'report'
+        @records = @records.select(
+          '(SELECT mr.name FROM my_module_reports mr ' \
+          'WHERE mr.my_module_id = my_modules.id ' \
+          'ORDER BY mr.created_at DESC LIMIT 1) AS report_name'
+        )
       end
     end
 
@@ -124,6 +132,10 @@ module Lists
         @records = @records.order(favorite: :desc)
       when 'favorite_DESC'
         @records = @records.order(:favorite)
+      when 'report_ASC'
+        @records = @records.order('report_name ASC')
+      when 'report_DESC'
+        @records = @records.order('report_name DESC')
       else
         __send__("#{sortable_columns[order_params[:column].to_sym]}_sort", sort_direction(order_params))
       end

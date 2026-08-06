@@ -80,6 +80,9 @@ class MyModule < ApplicationRecord
   # Associations for old activity type
   has_many :activities, inverse_of: :my_module
   has_many :my_module_reports, dependent: :destroy
+  has_one :last_my_module_report,
+          -> { order(created_at: :desc) },
+          class_name: 'MyModuleReport'
 
   scope :overdue, -> { where('my_modules.due_date < ?', Time.current.utc) }
   scope :without_group, -> { active.where(my_module_group: nil) }

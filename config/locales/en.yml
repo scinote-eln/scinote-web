@@ -2102,6 +2102,7 @@ en:
         no_due_date: 'not set'
         no_start_date_placeholder: "+ Add starting date"
         favorite: 'Favorites'
+        report_html: 'Analytical reports'
         status:
           not_started: 'Not started'
           in_progress: 'In progress'
