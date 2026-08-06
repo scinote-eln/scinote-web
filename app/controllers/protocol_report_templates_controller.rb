@@ -7,7 +7,7 @@ class ProtocolReportTemplatesController < ApplicationController
   before_action :check_analytical_reporting, only: :create
   before_action :check_read_permissions, except: :create
   before_action :check_manage_permissions, only: :create
-  before_action :load_report_template, only: %i(destroy preview pdf_preview_path)
+  before_action :load_report_template, only: %i(destroy preview pdf_preview_path download)
   before_action :set_inline_name_editing, only: :index
   before_action :set_breadcrumbs_items, only: :index
 
@@ -59,6 +59,10 @@ class ProtocolReportTemplatesController < ApplicationController
   def input_tags
     input_tags = ProtocolReportTemplates::TagService.new(@protocol).tags
     render json: input_tags
+  end
+
+  def download
+    redirect_to rails_blob_path(@protocol_report_template.docx_template_file.presence || @protocol_report_template.odt_template_file.presence, disposition: 'attachment')
   end
 
   def destroy
