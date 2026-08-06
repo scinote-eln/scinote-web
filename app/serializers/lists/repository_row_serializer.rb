@@ -73,7 +73,7 @@ module Lists
     end
 
     def has_active_reminders
-      object.has_active_reminders
+      object[:has_active_reminders]
     end
 
     def stock
@@ -84,7 +84,9 @@ module Lists
         if stock_cell.present?
           serialize_repository_cell_value(stock_cell, repository.team, repository)
         else
-          { stock_url: Rails.application.routes.url_helpers.new_repository_stock_repository_repository_row_url(repository, object) }
+          { value: {
+            stock_url: Rails.application.routes.url_helpers.new_repository_stock_repository_repository_row_url(repository, object)
+          } }
         end
       stock_object[:display_warnings] = display_stock_warnings?(repository)
       stock_object[:stock_status] = object.repository_stock_cell&.value&.status

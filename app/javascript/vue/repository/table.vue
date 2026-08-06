@@ -17,6 +17,7 @@
       @cancelCreation="cancelCreation"
       @showTextCell="showTextCellModal"
       @updateCell="updateCell"
+      @openStockModal="openStockModal"
       @createRow="createRow"
       @changeName="changeName"
       @tableReloaded="reloadingTable = false"
@@ -24,13 +25,17 @@
     ></DataTable>
     <teleport to="body">
       <TextCellModal
-        <TextCellModal
-          v-if="textCellModalObject"
-          :row="textCellModalObject.row"
-          :colDef="textCellModalObject.colDef"
-          @updateCell="updateCell"
-          @close="textCellModalObject = null"/>
-      </teleport>
+        v-if="textCellModalObject"
+        :row="textCellModalObject.row"
+        :colDef="textCellModalObject.colDef"
+        @updateCell="updateCell"
+        @close="textCellModalObject = null"/>
+      <StockValueModal
+        v-if="stockValueModalUrl"
+        :stockUrl="stockValueModalUrl"
+        @updateStock="updateStock"
+        @close="stockValueModalUrl = null"/>
+    </teleport>
   </div>
 </template>
 <script>
@@ -38,6 +43,7 @@ import DataTable from '../shared/datatable/table.vue';
 import axios from '../../packs/custom_axios.js';
 import ColumnsMixin from './columns_mixin.js';
 import TextCellModal from './modals/text_cell.vue';
+import StockValueModal from './modals/stock_value_modal.vue';
 
 import {
   repository_table_index_ag_path,
@@ -55,7 +61,8 @@ export default {
   },
   components: {
     DataTable,
-    TextCellModal
+    TextCellModal,
+    StockValueModal
   },
   mixins: [ColumnsMixin],
   data: () => ({
@@ -63,6 +70,7 @@ export default {
     addingNewRow: false,
     reloadingTable: false,
     textCellModalObject: null,
+    stockValueModalUrl: null,
     newRowTemplate: {
       name: {
         value: '',
@@ -164,6 +172,13 @@ export default {
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
         textCellModalObject = null;
       });
+    },
+    openStockModal(row) {
+      this.stockValueModalUrl = row.stock.value.stock_url;
+    },
+    updateStock(row) {
+      this.stockValueModalUrl = null;
+      this.$refs.repositoryTable.updateRowData(row);
     }
   }
 };
