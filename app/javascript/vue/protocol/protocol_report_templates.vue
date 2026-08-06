@@ -27,6 +27,15 @@
             :title="i18n.t('general.preview')">
             <i class="sn-icon sn-icon-visibility-show"></i>
           </button>
+          <a
+            class="btn btn-light icon-btn"
+            target="_blank"
+            :href="download_url(template.id)"
+            data-render-tooltip="true"
+            :title="i18n.t('general.download')"
+          >
+            <i class="sn-icon sn-icon-export"></i>
+          </a>
           <button
             v-if="editable"
             class="btn btn-light icon-btn"
@@ -61,7 +70,8 @@ import DeleteModal from '../shared/confirmation_modal.vue';
 
 import {
   protocol_protocol_report_templates_path,
-  protocol_protocol_report_template_path
+  protocol_protocol_report_template_path,
+  download_protocol_protocol_report_template_path
 } from '../../routes.js'
 
 export default {
@@ -99,6 +109,9 @@ export default {
       axios.get(this.loadUrl).then((response) => {
         this.templates = response.data.templates;
       });
+    },
+    download_url(protocolTemplateId) {
+      return download_protocol_protocol_report_template_path(this.protocolId, protocolTemplateId);
     },
     reloadTemplates() {
       this.protocolReportTemplateModal = false;

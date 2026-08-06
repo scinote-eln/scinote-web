@@ -849,6 +849,7 @@ Rails.application.routes.draw do
         end
 
         member do
+          get :download
           get :preview
           get :pdf_preview_path
         end
