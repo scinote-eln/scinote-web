@@ -101,6 +101,46 @@
       width: 40px;
     }
   }
+
+  .dp__time_picker_inline_container {
+
+    .dp__flex {
+      justify-content: space-between;
+    }
+
+    .dp__time_input {
+      margin: 0 10px;
+      width: auto;
+    }
+
+    .dp__time_col_reg_inline {
+      flex-grow: 1;
+      flex-shrink: 0;
+      padding: 0 6px;
+
+    }
+
+    .dp__time_display {
+      margin-top: 4px;
+    }
+
+    .dp__time_col_reg_inline {
+      max-width: 40px;
+    }
+
+    .dp__tp_inline_btn_top .dp__tp_btn_in_l {
+      transform: rotate(-12deg) scale(1.15) translateY(-2px);
+    }
+    .dp__tp_inline_btn_top .dp__tp_btn_in_r {
+      transform: rotate(12deg) scale(1.15) translateY(-2px);
+    }
+    .dp__tp_inline_btn_bottom .dp__tp_btn_in_l {
+      transform: rotate(12deg) scale(1.15) translateY(-2px);
+    }
+    .dp__tp_inline_btn_bottom .dp__tp_btn_in_r {
+      transform: rotate(-12deg) scale(1.15) translateY(-2px);
+    }
+  }
 }
 
 .dp__input_wrap {

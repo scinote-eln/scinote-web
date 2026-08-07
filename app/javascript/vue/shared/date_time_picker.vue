@@ -20,6 +20,7 @@
       :month-change-on-scroll="false"
       :six-weeks="true"
       :disabled="disabled"
+      :time-picker-inline="mode == 'datetime'"
       :auto-apply="true"
       :partial-flow="true"
       :markers="markers"
@@ -171,7 +172,7 @@ export default {
     },
     initializeValue() {
       if (!this.defaultValue) return;
-      
+
       if (this.range) {
         const start = this.defaultValue[0];
         const end = this.defaultValue[1];

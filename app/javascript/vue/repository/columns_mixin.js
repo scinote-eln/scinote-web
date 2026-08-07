@@ -94,6 +94,16 @@ export default {
       });
       return columns;
     },
+    minWidth() {
+      return {
+        'RepositoryDateTimeValue': 220,
+        'RepositoryTimeValue': 140,
+        'RepositoryDateValue': 180,
+        'RepositoryDateTimeRangeValue': 350,
+        'RepositoryTimeRangeValue': 200,
+        'RepositoryDateRangeValue': 250
+      }
+    }
   },
   mounted() {
     if (this.repositoryVersion) {
@@ -116,6 +126,7 @@ export default {
               sortable: true,
               cellRenderer: 'cellRenderer',
               hide: !(field == 'stock') && this.columnHidden,
+              minWidth: this.minWidth[column.attributes.data_type] || 150,
               cellRendererParams: {
                 repositoryId: this.repositoryVersion.id,
                 columnId: column.id,
