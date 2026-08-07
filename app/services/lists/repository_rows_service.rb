@@ -8,7 +8,7 @@ module Lists
   end
 
   class RepositoryRowsService < BaseService
-    PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned relationships updated_on updated_by).freeze
+    PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned relationships updated_on updated_by active_reminders_count).freeze
 
     def initialize(raw_data, params, user: nil, my_module: nil, disable_reminders: false, preload_cells: true, unassigned_to_task: nil)
       super(raw_data, params, user: user)
@@ -58,14 +58,14 @@ module Lists
         @records =
           if @repository.archived? || @is_snapshot
             # don't load reminders for archived repositories or snapshots
-            @records.select('FALSE AS has_active_reminders')
+            @records.select('0 AS active_reminders_count')
           else
-            @records.select("EXISTS (#{RepositoryCell.with_active_reminder(@user)
-                                                     .joins(:repository_column)
-                                                     .where(repository_column: { repository: @repository })
-                                                     .where('repository_cells.repository_row_id = repository_rows.id')
-                                                     .select(1)
-                                                     .to_sql}) AS has_active_reminders")
+            @records.select("(#{RepositoryCell.with_active_reminder(@user)
+                                             .joins(:repository_column)
+                                             .where(repository_column: { repository: @repository })
+                                             .where('repository_cells.repository_row_id = repository_rows.id')
+                                             .select('COUNT(repository_cells.id)')
+                                             .to_sql}) AS active_reminders_count")
           end
       end
 

@@ -101,6 +101,7 @@ class Repository < RepositoryBase
   def default_sortable_columns
     [
       'assigned',
+      'active_reminders_count',
       'repository_rows.id',
       'repository_rows.name',
       'relationships',

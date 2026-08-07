@@ -17,6 +17,7 @@
       @cancelCreation="cancelCreation"
       @showTextCell="showTextCellModal"
       @updateCell="updateCell"
+      @updateRemindersCount="updateRemindersCount"
       @createRow="createRow"
       @changeName="changeName"
       @tableReloaded="reloadingTable = false"
@@ -164,6 +165,13 @@ export default {
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
         textCellModalObject = null;
       });
+    },
+    updateRemindersCount(row, count) {
+      const updatedRow = {
+        id: row.id,
+      }
+      updatedRow['active_reminders_count'] = count;
+      this.$refs.repositoryTable.updateRowData(updatedRow);
     }
   }
 };

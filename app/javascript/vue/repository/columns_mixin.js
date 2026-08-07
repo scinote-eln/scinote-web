@@ -3,6 +3,7 @@ import cellRenderer from './renderers/cell_renderer.vue';
 import nameRenderer from './renderers/name_renderer.vue';
 import assignedRenderer from './renderers/assigned_renderer.vue';
 import consumeRenderer from './renderers/consume_renderer.vue';
+import remindersRenderer from './renderers/reminders_renderer.vue';
 import {
   index_new_repository_repository_columns_path
 } from '../../routes.js';
@@ -12,7 +13,8 @@ export default {
     cellRenderer,
     nameRenderer,
     consumeRenderer,
-    assignedRenderer
+    assignedRenderer,
+    remindersRenderer
   },
   data() {
     return {
@@ -23,13 +25,14 @@ export default {
     defaultRepositoryColumnsDef() {
       let columns = [];
       columns.push({
-        field: 'has_active_reminders',
+        field: 'active_reminders_count',
         headerComponentParams: {
           html: '<div class="sn-icon sn-icon-notifications"></div>'
         },
         headerName: this.i18n.t('repositories.table.reminders'),
         sortable: true,
         suppressColumnsToolPanel: true,
+        cellRenderer: 'remindersRenderer',
         maxWidth: 80,
         minWidth: 80,
         pinned: 'left'
