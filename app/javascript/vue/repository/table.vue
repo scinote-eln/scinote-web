@@ -18,6 +18,7 @@
       @showTextCell="showTextCellModal"
       @updateCell="updateCell"
       @openStockModal="openStockModal"
+      @updateRemindersCount="updateRemindersCount"
       @createRow="createRow"
       @changeName="changeName"
       @tableReloaded="reloadingTable = false"
@@ -179,6 +180,13 @@ export default {
     updateStock(row) {
       this.stockValueModalUrl = null;
       this.$refs.repositoryTable.updateRowData(row);
+    },
+    updateRemindersCount(row, count) {
+      const updatedRow = {
+        id: row.id,
+      }
+      updatedRow['active_reminders_count'] = count;
+      this.$refs.repositoryTable.updateRowData(updatedRow);
     }
   }
 };

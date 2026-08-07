@@ -7,7 +7,7 @@ module Lists
 
     attributes :code, :created_at, :name, :created_by, :updated_at, :last_modified_by, :archived, :archived_on, :archived_by,
                :assigned_tasks_count, :connections_count, :repository_id, :output, :permissions
-    attribute :has_active_reminders, if: -> { instance_options[:with_reminders] }
+    attribute :active_reminders_count, if: -> { instance_options[:with_reminders] }
     attribute :assigned, if: -> { instance_options[:my_module] && !instance_options[:assigned_view] }
     attribute :stock, if: -> { instance_options[:with_stock_management] }
     attribute :consumed_stock, if: -> { instance_options[:with_stock_management] && instance_options[:my_module] }
@@ -72,8 +72,8 @@ module Lists
       "#{object.parent_connections_count || 0} / #{object.child_connections_count || 0}"
     end
 
-    def has_active_reminders
-      object[:has_active_reminders]
+    def active_reminders_count
+      object[:active_reminders_count]
     end
 
     def stock
