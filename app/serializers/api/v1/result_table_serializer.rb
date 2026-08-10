@@ -4,10 +4,14 @@ module Api
   module V1
     class ResultTableSerializer < ActiveModel::Serializer
       type :result_tables
-      attributes :table_id, :table_contents, :table_metadata, :archived
+      attributes :table_id, :table_contents, :table_metadata, :archived, :locked
 
       def table_id
         object.table&.id
+      end
+
+      def locked
+        object.table.locked
       end
 
       def table_metadata
