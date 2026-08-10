@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="params.data.permissions.manage" class="relative">
+    <div v-if="canManage" class="relative">
       <SelectDropdown
         class="h-10 flex w-full"
         :searchable="true"
@@ -39,6 +39,9 @@ export default {
     },
     selectedOption() {
       return this.options.find(option => option[0] === this.listValue);
+    },
+    canManage() {
+      return this.params?.data?.permissions?.manage || false;
     }
   },
   created() {

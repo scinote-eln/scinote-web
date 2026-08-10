@@ -1,5 +1,5 @@
 <template>
-  <div v-if="params.value">
+  <div>
     <DateTimeShared :params="params" />
   </div>
 </template>

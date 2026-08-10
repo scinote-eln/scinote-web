@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="params.data.permissions.manage" class="relative">
+    <div v-if="canManage" class="relative">
       <div v-if="params.value" class="relative flex items-center gap-2 group">
         <a  :href="params.value.value.url"
             class="file-preview-link file-name grow truncate"
@@ -85,6 +85,9 @@ export default {
   computed: {
     previewUrl() {
       return asset_file_preview_path(this.params.value.value.id, { preview: true });
+    },
+    canManage() {
+      return this.params?.data?.permissions?.manage || false;
     }
   },
   methods: {

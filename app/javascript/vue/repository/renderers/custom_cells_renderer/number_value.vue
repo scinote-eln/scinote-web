@@ -1,5 +1,5 @@
 <template>
-  <div v-if="params.data.permissions.manage" class="relative">
+  <div v-if="canManage" class="relative">
     <input
       ref="input"
       v-model="newValue"
@@ -32,6 +32,11 @@ export default {
     return {
       newValue: null,
     };
+  },
+  computed: {
+    canManage() {
+      return this.params?.data?.permissions?.manage || false;
+    }
   },
   methods: {
     validateFormat() {

@@ -2,6 +2,7 @@ import axios from '../../packs/custom_axios.js';
 import cellRenderer from './renderers/cell_renderer.vue';
 import nameRenderer from './renderers/name_renderer.vue';
 import assignedRenderer from './renderers/assigned_renderer.vue';
+import connectionsRenderer from './renderers/connections_renderer.vue';
 import consumeRenderer from './renderers/consume_renderer.vue';
 import remindersRenderer from './renderers/reminders_renderer.vue';
 import {
@@ -14,7 +15,8 @@ export default {
     nameRenderer,
     consumeRenderer,
     assignedRenderer,
-    remindersRenderer
+    remindersRenderer,
+    connectionsRenderer
   },
   data() {
     return {
@@ -70,6 +72,7 @@ export default {
         field: 'connections_count',
         headerName: this.i18n.t('repositories.table.relationships'),
         hide: this.columnHidden,
+        cellRenderer: 'connectionsRenderer',
         cellRendererParams: {
           legacyId: -11
         }
@@ -97,7 +100,7 @@ export default {
     minWidth() {
       return {
         'RepositoryDateTimeValue': 220,
-        'RepositoryTimeValue': 140,
+        'RepositoryTimeValue': 160,
         'RepositoryDateValue': 180,
         'RepositoryDateTimeRangeValue': 350,
         'RepositoryTimeRangeValue': 200,

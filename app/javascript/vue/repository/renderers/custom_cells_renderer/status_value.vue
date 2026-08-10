@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="params.data.permissions.manage" class="relative">
+    <div v-if="canManage" class="relative">
       <SelectDropdown
         class="h-10 flex w-full"
         :options="options"
@@ -49,6 +49,9 @@ export default {
     },
     optionRenderer() {
       return optionRenderer;
+    },
+    canManage() {
+      return this.params?.data?.permissions?.manage || false;
     }
   },
   created() {

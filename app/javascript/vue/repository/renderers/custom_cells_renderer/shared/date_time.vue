@@ -1,18 +1,19 @@
 <template>
   <div>
-    <div v-if="params.data.permissions.manage">
+    <div v-if="canManage">
       <DateTimePicker
         class="borderless-input -mt-[1px]"
         :defaultValue="value"
         @change="updateValue"
         @closed="saveValue"
         :mode="mode"
+        :placeholder="placeholder"
         :customIcon="icon"
         :range="isRange"
         valueType="stringWithoutTimezone"
         :clearable="true"/>
     </div>
-    <div v-else>
+    <div v-else-if="params.value">
       <div v-if="isRange" class="flex items-center gap-1">
         {{ params.value.value.start_time.formatted }}
         <span> - </span>
@@ -40,10 +41,12 @@ export default {
   },
   created() {
     if (this.isRange) {
-      this.value = [
-        this.params.value?.value?.start_time?.datetime,
-        this.params.value?.value?.end_time?.datetime
-      ];
+      if (this.params.value?.value?.start_time?.datetime && this.params.value?.value?.end_time?.datetime) {
+        this.value = [
+          this.params.value.value.start_time.datetime,
+          this.params.value.value.end_time.datetime
+        ];
+      }
     } else {
       this.value = this.params.value?.value?.datetime;
     }
@@ -54,20 +57,39 @@ export default {
     };
   },
   computed: {
+    canManage() {
+      return this.params?.data?.permissions?.manage || false;
+    },
+    valueType() {
+      return this.params.colDef.cellRendererParams.columnDataType;
+    },
     isRange() {
-      return this.params.value.value_type.includes('Range');
+      return this.valueType.includes('Range');
     },
     mode() {
-      if (this.params.value.value_type.includes('RepositoryDateTime')) {
+      if (this.valueType.includes('RepositoryDateTime')) {
         return 'datetime';
-      } else if (this.params.value.value_type.includes('RepositoryDate')) {
+      } else if (this.valueType.includes('RepositoryDate')) {
         return 'date';
-      } else if (this.params.value.value_type.includes('RepositoryTime')) {
+      } else if (this.valueType.includes('RepositoryTime')) {
         return 'time';
       }
     },
+    placeholder() {
+      if (this.valueType.includes('RepositoryDate')) {
+        if (this.isRange) {
+          return this.i18n.t('repositories.table.date_time.add_date_range');
+        }
+        return this.i18n.t('repositories.table.date_time.add_date')
+      } else if (this.valueType.includes('RepositoryTime')) {
+        if (this.isRange) {
+          return this.i18n.t('repositories.table.date_time.add_time_range');
+        }
+        return this.i18n.t('repositories.table.date_time.add_time')
+      }
+    },
     icon() {
-      if (this.params.value.value_type.includes('RepositoryTime')) {
+      if (this.valueType.includes('RepositoryTime')) {
         return 'sn-icon sn-icon-created';
       } else {
         return 'sn-icon sn-icon-calendar';
