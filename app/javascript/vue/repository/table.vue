@@ -17,6 +17,7 @@
       @cancelCreation="cancelCreation"
       @showTextCell="showTextCellModal"
       @updateCell="updateCell"
+      @uploadFile="uploadFile"
       @openStockModal="openStockModal"
       @updateRemindersCount="updateRemindersCount"
       @createRow="createRow"
@@ -51,7 +52,8 @@ import {
   repository_path,
   repository_repository_rows_path,
   repository_repository_row_path,
-  repository_repository_row_repository_cell_path
+  repository_repository_row_repository_cell_path,
+  rails_direct_uploads_path
 } from '../../routes.js';
 
 export default {
@@ -155,6 +157,16 @@ export default {
         row: rows[0],
         colDef
       }
+    },
+    uploadFile(row, columnDef, file) {
+      const upload = new ActiveStorage.DirectUpload(file, rails_direct_uploads_path());
+      upload.create((error, blob) => {
+        if (error) {
+          HelperModule.flashAlertMsg(`Upload failed: ${error}`, 'danger');
+        } else {
+          this.updateCell(row, columnDef, blob.signed_id);
+        }
+      });
     },
     updateCell(row, columnDef, value) {
       axios.post(repository_repository_row_repository_cell_path({

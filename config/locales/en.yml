@@ -2650,7 +2650,8 @@ en:
       enter_row_name: "Enter name"
       locked_item: "This is read-only item."
       assets:
-        select_file_btn: "Select File (Max %{max_size} MB)..."
+        add_file: "Add file"
+        uploading: "Uploading..."
       text:
         add_text: "Add text"
         more: more
