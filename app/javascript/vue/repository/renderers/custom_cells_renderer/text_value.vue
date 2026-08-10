@@ -11,7 +11,7 @@
               class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
           {{ i18n.t('repositories.table.text.more') }}
         </span>
-        <span v-else-if="params.data.permissions.manage" @click.stop="showTextCellModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
+        <span v-else-if="canManage" @click.stop="showTextCellModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
           {{ i18n.t('repositories.table.text.add_text') }}
         </span>
       </div>
@@ -35,6 +35,9 @@ export default {
   computed: {
     textValue() {
       return this.params?.value?.value?.edit || '';
+    },
+    canManage() {
+      return this.params?.data?.permissions?.manage || false;
     }
   },
   methods: {

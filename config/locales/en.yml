@@ -2669,6 +2669,10 @@ en:
       checklist:
         set_checklist: "Set Checklist..."
       date_time:
+        add_date: "Add date"
+        add_time: "Add time"
+        add_date_range: "Add date range"
+        add_time_range: "Add time range"
         errors:
           set_all_or_none: 'Needs to set both or none'
           not_valid_range: 'Range is not valid.'

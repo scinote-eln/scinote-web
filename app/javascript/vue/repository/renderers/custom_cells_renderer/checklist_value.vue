@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="params.data.permissions.manage" class="relative flex items-center gap-2">
+    <div v-if="canManage" class="relative flex items-center gap-2">
       <i class="sn-icon sn-icon-checkllist shrink-0"></i>
       <SelectDropdown
         class="h-10 flex w-full"
@@ -59,6 +59,9 @@ export default {
     },
     selectedOptions() {
       return this.options.filter(option => this.checkListValue.includes(option[0]));
+    },
+    canManage() {
+      return this.params?.data?.permissions?.manage || false;
     }
   },
   created() {
