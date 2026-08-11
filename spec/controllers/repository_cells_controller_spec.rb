@@ -140,6 +140,40 @@ describe RepositoryCellsController, type: :controller do
       end
     end
 
+    context 'when the value contains a smart annotation mention' do
+      let!(:mentioned_user) { create :user, email: 'mentioned@user.com' }
+      let(:params) do
+        {
+          repository_id: repository.id,
+          repository_row_id: repository_row.id,
+          repository_column_id: repository_column.id,
+          value: "Hello [@#{mentioned_user.full_name}~#{mentioned_user.id.base62_encode}]"
+        }
+      end
+
+      it 'sends a smart annotation notification to the mentioned user' do
+        expect(GeneralNotification).to(
+          receive(:send_notifications).with(hash_including(type: :smart_annotation_added, user_id: mentioned_user.id))
+        )
+
+        action
+      end
+
+      context 'when updating an existing text cell' do
+        let!(:repository_cell) do
+          create :repository_cell, :text_value, repository_row: repository_row, repository_column: repository_column
+        end
+
+        it 'sends a smart annotation notification to the mentioned user' do
+          expect(GeneralNotification).to(
+            receive(:send_notifications).with(hash_including(type: :smart_annotation_added, user_id: mentioned_user.id))
+          )
+
+          action
+        end
+      end
+    end
+
     context 'when the repository is not visible to the user' do
       let(:params) do
         {

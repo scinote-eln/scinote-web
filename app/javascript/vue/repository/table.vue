@@ -82,7 +82,11 @@ export default {
     },
   }),
   created() {
+    window.repositoryTable = this;
     this.loadRepository();
+  },
+  beforeUnmount() {
+    delete window.repositoryTable;
   },
   computed: {
     toolbarActions() {
@@ -119,6 +123,9 @@ export default {
     },
   },
   methods: {
+    updateRowData(row) {
+      this.$refs.repositoryTable.updateRowData(row);
+    },
     loadRepository() {
       axios.get(this.repositoryUrl)
         .then((response) => {
