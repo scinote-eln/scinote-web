@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import axios from '../../../packs/custom_axios.js';
+import { repository_repository_row_repository_cell_path } from '../../../routes.js';
 import TooltipPreview from './TooltipPreview.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
 
@@ -85,7 +87,8 @@ export default {
     colVal: Object,
     permissions: Object,
     actions: Object,
-    updatePath: String,
+    repositoryId: Number,
+    repositoryRowId: Number,
     canEdit: { type: Boolean, default: false }
   },
   created() {
@@ -156,34 +159,35 @@ export default {
       });
     },
     updateCell(value) {
-      $.ajax({
-        type: 'PUT',
-        url: this.updatePath,
-        data: {
-          repository_cells: {
-            [this.colId]: value
-          }
-        },
-        success: (result) => {
-          const assetRepositoryCell = result?.value;
-          this.uploading = false;
+      axios.post(
+        repository_repository_row_repository_cell_path({
+          repository_id: this.repositoryId,
+          repository_row_id: this.repositoryRowId,
+          repository_column_id: this.colId
+        }),
+        { value }
+      ).then((response) => {
+        const result = response.data;
+        const assetRepositoryCell = result?.value;
+        this.uploading = false;
 
-          if (assetRepositoryCell) {
-            this.id = assetRepositoryCell.id;
-            this.url = assetRepositoryCell.url;
-            this.preview_url = assetRepositoryCell.preview_url;
-            this.file_name = assetRepositoryCell.file_name;
-            this.icon_html = assetRepositoryCell.icon_html;
-            this.medium_preview_url = assetRepositoryCell.medium_preview_url;
-          } else {
-            this.file_name = '';
-          }
-          if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
-        },
-        error: () => {
-          this.error = I18n.t('repositories.item_card.repository_asset_value.errors.upload_failed_general');
-          this.uploading = false;
+        if (assetRepositoryCell) {
+          this.id = assetRepositoryCell.id;
+          this.url = assetRepositoryCell.url;
+          this.preview_url = assetRepositoryCell.preview_url;
+          this.file_name = assetRepositoryCell.file_name;
+          this.icon_html = assetRepositoryCell.icon_html;
+          this.medium_preview_url = assetRepositoryCell.medium_preview_url;
+        } else {
+          this.file_name = '';
         }
+        window.repositoryTable?.updateRowData({
+          id: this.repositoryRowId,
+          [`col_${this.colId}`]: result
+        });
+      }).catch(() => {
+        this.error = I18n.t('repositories.item_card.repository_asset_value.errors.upload_failed_general');
+        this.uploading = false;
       });
     }
   }
