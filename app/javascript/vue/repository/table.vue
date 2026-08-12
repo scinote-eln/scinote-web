@@ -31,6 +31,7 @@
       @clearAllReminders="clearAllReminders"
     ></DataTable>
     <teleport to="body">
+      <ImportRepositoryModal ref="importModal" :repository-url="repositoryUrl" @import-success="reloadingTable = true" />
       <TextCellModal
         v-if="textCellModalObject"
         :row="textCellModalObject.row"
@@ -51,6 +52,7 @@ import axios from '../../packs/custom_axios.js';
 import ColumnsMixin from './columns_mixin.js';
 import TextCellModal from './modals/text_cell.vue';
 import StockValueModal from './modals/stock_value_modal.vue';
+import ImportRepositoryModal from '../repositories/modals/import/container.vue';
 
 import {
   repository_table_index_ag_path,
@@ -74,7 +76,8 @@ export default {
   components: {
     DataTable,
     TextCellModal,
-    StockValueModal
+    StockValueModal,
+    ImportRepositoryModal
   },
   mixins: [ColumnsMixin],
   data: () => ({
@@ -94,10 +97,6 @@ export default {
   }),
   created() {
     this.loadRepository();
-    window.repositoryTableComponent = this;
-  },
-  beforeUnmount() {
-    delete window.repositoryTableComponent;
   },
   computed: {
     toolbarActions() {
@@ -165,7 +164,7 @@ export default {
       this.currentPageRows = rows;
     },
     importItems() {
-      window.importRepositoryModalComponent.open();
+      this.$refs.importModal.open();
     },
     clearAllReminders() {
       const rowIds = this.currentPageRows
