@@ -5,8 +5,6 @@
 
 
 var RepositoryColumns = (function() {
-  var TABLE_ID = '';
-  var TABLE = null;
   var columnsList = '#repository-columns-list';
   var manageModal = '#manage-repository-column';
   var columnTypeClassNames = {
@@ -21,20 +19,8 @@ var RepositoryColumns = (function() {
   };
 
   function reloadDataTablePartial() {
-    // Append buttons for inventory datatable
-    $('div.toolbar-filter-buttons').appendTo('.repository-show');
-    $('div.toolbar-filter-buttons').hide();
-
-    // destroy datatable and remove partial
-    TABLE.destroy();
-    $('.repository-table').remove();
-
-    // reload datatable partial and intialize DataTable
-    $.get($('.repository-show').data('table-url'), (response) => {
-      $(response.html).appendTo($('.repository-show'));
-      RepositoryDatatable.init('#' + $('.repository-table table').attr('id'));
-      RepositoryDatatable.redrawTableOnSidebarToggle();
-    });
+    $(manageModal).modal('hide');
+    window.repositoryTableComponent.$refs.tableContainer.legacyReloadTableComponent();
   }
 
   function initColumnTypeSelector() {
@@ -224,140 +210,19 @@ var RepositoryColumns = (function() {
     });
   }
 
-  function toggleColumnVisibility() {
-    $(columnsList).find('.vis').on('click', function(event) {
-      const $this = $(this);
-      const li = $this.closest('li');
-      const column = TABLE.column(li.attr('data-position'));
-
-      event.stopPropagation();
-      if (!['row-name', 'archived-by', 'archived-on'].includes(column.header().id)) {
-        if (column.visible()) {
-          $this.addClass('sn-icon-visibility-hide');
-          $this.removeClass('sn-icon-visibility-show');
-          li.addClass('col-invisible');
-          column.visible(false);
-          TABLE.setColumnSearchable(column.index(), false);
-        } else {
-          $this.addClass('sn-icon-visibility-show');
-          $this.removeClass('sn-icon-visibility-hide');
-          li.removeClass('col-invisible');
-          column.visible(true);
-          TABLE.setColumnSearchable(column.index(), true);
-        }
-      }
-      // Re-filter/search if neccesary
-      let searchText = $('div.dataTables_filter input').val();
-      if (!_.isEmpty(searchText)) {
-        TABLE.search(searchText).draw();
-      }
-      const scrollBody = $('.dataTables_scrollBody');
-      if (scrollBody[0].offsetWidth > scrollBody[0].clientWidth) {
-        scrollBody.css('width', `calc(100% + ${scrollBody[0].offsetWidth - scrollBody[0].clientWidth}px)`);
-      }
-    });
-  }
-
-  function getColumnTypeText(el) {
-    let colType = $(el).attr('data-type');
-    if (!colType) return '';
-
-    return I18n.t('libraries.manange_modal_column.select.' + colType.split(/(?=[A-Z])/).join('_')
-      .toLowerCase());
-  }
-
   // loads the columns names in the manage columns modal index
   function loadColumnsNames() {
     var $columnsList = $(columnsList);
     var scrollPosition = $columnsList.scrollTop();
     // Clear the list
-    $columnsList.find('li[data-position]').remove();
-    _.each(TABLE.columns().header(), (el) => {
-      if (!el.dataset.unmanageable) {
-        let colId = $(el).attr('id');
-        let colIndex = $(el).attr('data-column-index');
-        let visible = TABLE.column(colIndex).visible();
-        let visClass = (visible) ? 'sn-icon-visibility-show' : 'sn-icon-visibility-hide';
-        let visLi = (visible) ? '' : 'col-invisible';
-        let visText = $(TABLE_ID).data('columns-visibility-text');
-        let customColumn = ($(el).attr('data-type')) ? 'editable' : '';
-        let editableRow = ($(el).attr('data-editable-row') === 'true') ? 'has-permissions' : '';
-        let editUrl = $(el).attr('data-edit-column-url');
-        let destroyUrl = $(el).attr('data-destroy-column-url');
-        const isDisabled = $(el).attr('data-disabled') === 'true';
-        let thederName;
-        
-        if ($(el).find('.modal-tooltiptext').length > 0) {
-          thederName = $(el).find('.modal-tooltiptext').text();
-        } else {
-          thederName = el.innerText;
-        }
-        thederName = _.escape(thederName);
-        
-        const e2eName = thederName.toLowerCase().replace(' ', '_');
 
-        if (['row-name', 'archived-by', 'archived-on'].includes(el.id)) {
-          visClass = '';
-          visText = '';
-        }
+    const columns = window.repositoryTableComponent.$refs.tableContainer.legacyColumnsHTML()
 
-        let destroyButton = '';
+    columns.forEach((column, index) => {
+      $columnsList.append(column);
+    })
 
-        if (destroyUrl) {
-          destroyButton = `<button class="btn icon-btn btn-light btn-xs delete-repo-column manage-repo-column"
-                              data-action="destroy"
-                              data-modal-url="${destroyUrl}">
-                              <span class="sn-icon sn-icon-delete" title="Delete" data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-delete"></span>
-                          </button>`;
-        }
-
-        let listItem = `<li class="col-list-el ${visLi} ${customColumn} ${editableRow}" data-position="${colIndex}" data-id="${colId}">
-          <i class="grippy sn-icon sn-icon-drag" data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-drag"></i>
-          <span class="vis-controls">
-            <span class="vis sn-icon ${visClass}" title="${visText}"  data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-visibility"></span>
-          </span>
-          <div class="text truncate" title="${thederName}"  data-e2e="e2e-TX-invItems-manageColumnsModal-${e2eName}-columnName">
-            ${thederName} ${isDisabled ? `<span data-e2e="e2e-LB-invItems-manageColumnsModal-${e2eName}-disabled"></span>` : ''}
-          </div>
-          <span class="column-type pull-right shrink-0">${
-            getColumnTypeText(el, colId) || `<i class="sn-icon sn-icon-locked-task"  data-e2e="e2e-IC-invItems-manageColumnsModal-${e2eName}-locked"></i>`
-          }</span>
-          <span class="sci-btn-group manage-controls pull-right" data-view-mode="active">
-            <button class="btn icon-btn btn-light btn-xs edit-repo-column manage-repo-column"
-                    data-action="edit"
-                    data-modal-url="${editUrl}">
-              <span class="sn-icon sn-icon-edit" title="Edit"  data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-edit"></span>
-            </button>
-            ${destroyButton}
-          </span>
-          <br>
-        </li>`;
-
-        $columnsList.append(listItem);
-      }
-    });
     $columnsList.scrollTop(scrollPosition);
-    toggleColumnVisibility();
-  }
-
-  function initSorting() {
-    var $columnsList = $(columnsList);
-    $columnsList.sortable({
-      items: 'li',
-      scrollSpeed: 10,
-      axis: 'y',
-      update: function() {
-        var reorderer = TABLE.colReorder;
-        var listIds = [];
-        // We skip first two columns
-        listIds.push(0, 1);
-        $columnsList.find('li[data-position]').each(function() {
-          listIds.push($(this).first().data('position'));
-        });
-        reorderer.order(listIds, false);
-        loadColumnsNames();
-      }
-    });
   }
 
   function initManageColumnModal(button) {
@@ -365,14 +230,7 @@ var RepositoryColumns = (function() {
     $.get(modalUrl, (data) => {
       // show modal
       $(manageModal).modal('show').find('.modal-content').html(data.html);
-
-      TABLE_ID = '#repository-table-' + data.id;
-      TABLE = $(TABLE_ID).DataTable();
-
-      initSorting();
-      toggleColumnVisibility();
       loadColumnsNames();
-      RepositoryDatatable.checkAvailableColumns();
     }).fail(function() {
       HelperModule.flashAlertMsg(I18n.t('libraries.repository_columns.no_permissions'), 'danger');
     });

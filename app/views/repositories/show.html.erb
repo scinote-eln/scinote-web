@@ -61,6 +61,7 @@
   <div class="content-body">
     <div id="repositoryTable" class="fixed-content-body">
       <repository-table
+        ref='tableContainer'
         :repository-id="<%= @repository.id %>"
         create-url="<%= repository_repository_rows_path(@repository) if can_create_repository_rows?(@repository) %>"
         active-page-url="<%= repository_path(@repository) %>"
@@ -71,6 +72,8 @@
     <%= javascript_include_tag 'vue_repository_table' %>
   </div>
 </div>
+
+<%= render partial: 'repository_columns/manage_column_modal', locals: { my_module_page: false } %>
 
 <%= javascript_include_tag 'vue_components_action_toolbar' %>
 <%= javascript_include_tag 'vue_repository_search' %>

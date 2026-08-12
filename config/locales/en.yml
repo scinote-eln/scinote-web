@@ -2513,6 +2513,7 @@ en:
       archived_inventory_items: "%{repository_name} archived items"
       archived_inventory: "Archived %{repository_name}"
       inventory_archived_items: "%{repository_name} archived items"
+      laoding_table_configuration: "Loading table configuration..."
       subtitle: "Owned by %{team_name}"
       your_team: "your Workspace"
       show_active_items: "Show active items"
