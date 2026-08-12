@@ -32,8 +32,10 @@ RSpec.describe Lists::RepositoryRowsService do
 
   describe '#call' do
     context 'when view_mode is archived' do
+      let(:service) { described_class.new(repository, params, user: user, filter_by_view_mode: true) }
+
       it 'fetches only archived repository_rows' do
-        params[:archived] = 'true'
+        params[:view_mode] = 'archived'
         repository_rows.limit(10).update_all(archived: true)
 
         expect(service.call).to all(be_archived)
@@ -41,6 +43,8 @@ RSpec.describe Lists::RepositoryRowsService do
     end
 
     context 'when view_mode is active' do
+      let(:service) { described_class.new(repository, params, user: user, filter_by_view_mode: true) }
+
       it 'fetches only active repository_rows' do
         expect(service.call).to all(be_active)
       end

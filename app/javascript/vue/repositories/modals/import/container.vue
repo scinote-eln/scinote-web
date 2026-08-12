@@ -127,7 +127,11 @@ export default {
             HelperModule.flashAlertMsg(response.data.message, 'success');
             this.modalOpened = false;
             this.activeStep = null;
-            $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
+            if (window.repositoryTableComponent) {
+              window.repositoryTableComponent.reloadingTable = true;
+            } else {
+              $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
+            }
           }
 
           this.loading = false;

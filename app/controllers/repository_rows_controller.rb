@@ -22,11 +22,11 @@ class RepositoryRowsController < ApplicationController
   before_action :check_manage_permissions, only: %i(update update_cell archive_records restore_records copy_records)
 
   def index_ag
-    repository_rows = Lists::RepositoryRowsService.new(@repository, params, user: current_user).call.load
+    repository_rows = Lists::RepositoryRowsService.new(@repository, params, user: current_user, filter_by_view_mode: true).call.load
 
     total_count = if @repository.archived?
                     @repository.repository_rows.count
-                  elsif params[:archived]
+                  elsif params[:view_mode] == 'archived'
                     @repository.repository_rows.archived.count
                   else
                     @repository.repository_rows.active.count
