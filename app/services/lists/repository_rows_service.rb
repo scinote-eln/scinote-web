@@ -10,7 +10,8 @@ module Lists
   class RepositoryRowsService < BaseService
     PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned relationships updated_on updated_by active_reminders_count).freeze
 
-    def initialize(raw_data, params, user: nil, my_module: nil, disable_reminders: false, preload_cells: true, unassigned_to_task: nil)
+    def initialize(raw_data, params, user: nil, my_module: nil, disable_reminders: false, preload_cells: true,
+                   unassigned_to_task: nil, filter_by_view_mode: false)
       super(raw_data, params, user: user)
       @repository = @raw_data
       @my_module = my_module
@@ -18,6 +19,7 @@ module Lists
       @preload_cells = preload_cells
       @is_snapshot = @repository.is_a?(RepositorySnapshot)
       @unassigned_to_task = unassigned_to_task
+      @filter_by_view_mode = filter_by_view_mode
     end
 
     def call
@@ -90,7 +92,11 @@ module Lists
     # Filtering logic
 
     def filter_records
-      @records = @records.where(archived: @params[:archived]) if @params[:archived] && !@repository.archived?
+      if @filter_by_view_mode && !@repository.archived?
+        view_mode = @params[:view_mode] || 'active'
+        @records = @records.archived if view_mode == 'archived'
+        @records = @records.active if view_mode == 'active'
+      end
       @records = @records.where(external_id: @params[:external_ids]) if @params[:external_ids]
 
       # filter only rows with reminders if filter param is present

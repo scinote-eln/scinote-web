@@ -14,6 +14,9 @@
       :fetchColumnsOnReload="true"
       :addingNewRow="addingNewRow"
       :newRowTemplate="newRowTemplate"
+      :activePageUrl="activePageUrl"
+      :archivedPageUrl="archivedPageUrl"
+      :currentViewMode="currentViewMode"
       @cancelCreation="cancelCreation"
       @showTextCell="showTextCellModal"
       @updateCell="updateCell"
@@ -22,10 +25,13 @@
       @updateRemindersCount="updateRemindersCount"
       @createRow="createRow"
       @changeName="changeName"
-      @tableReloaded="reloadingTable = false"
+      @tableReloaded="onTableReloaded"
       @startCreate="addingNewRow = true"
+      @importItems="importItems"
+      @clearAllReminders="clearAllReminders"
     ></DataTable>
     <teleport to="body">
+      <ImportRepositoryModal ref="importModal" :repository-url="repositoryUrl" @import-success="reloadingTable = true" />
       <TextCellModal
         v-if="textCellModalObject"
         :row="textCellModalObject.row"
@@ -46,6 +52,7 @@ import axios from '../../packs/custom_axios.js';
 import ColumnsMixin from './columns_mixin.js';
 import TextCellModal from './modals/text_cell.vue';
 import StockValueModal from './modals/stock_value_modal.vue';
+import ImportRepositoryModal from '../repositories/modals/import/container.vue';
 
 import {
   repository_table_index_ag_path,
@@ -53,7 +60,8 @@ import {
   repository_repository_rows_path,
   repository_repository_row_path,
   repository_repository_row_repository_cell_path,
-  rails_direct_uploads_path
+  rails_direct_uploads_path,
+  team_repository_hide_reminders_path
 } from '../../routes.js';
 
 export default {
@@ -61,11 +69,15 @@ export default {
   props: {
     repositoryId: Number,
     createUrl: String,
+    activePageUrl: String,
+    archivedPageUrl: String,
+    currentViewMode: { type: String, default: 'active' }
   },
   components: {
     DataTable,
     TextCellModal,
-    StockValueModal
+    StockValueModal,
+    ImportRepositoryModal
   },
   mixins: [ColumnsMixin],
   data: () => ({
@@ -74,6 +86,8 @@ export default {
     reloadingTable: false,
     textCellModalObject: null,
     stockValueModalUrl: null,
+    hasActiveReminders: false,
+    currentPageRows: [],
     newRowTemplate: {
       name: {
         value: '',
@@ -92,8 +106,9 @@ export default {
     toolbarActions() {
       const left = [];
       const right = [];
+      const isActiveView = this.currentViewMode !== 'archived';
 
-      if (this.createUrl) {
+      if (this.createUrl && isActiveView) {
         left.push({
           name: 'startCreate',
           icon: 'sn-icon sn-icon-new-task',
@@ -101,6 +116,23 @@ export default {
           type: 'emit',
           path: this.createUrl,
           buttonStyle: 'btn btn-primary'
+        });
+        left.push({
+          name: 'importItems',
+          icon: 'sn-icon sn-icon-import',
+          label: this.i18n.t('repositories.import_records.update_inventory'),
+          type: 'emit',
+          buttonStyle: 'btn btn-light'
+        });
+      }
+
+      if (this.hasActiveReminders && isActiveView) {
+        left.push({
+          name: 'clearAllReminders',
+          icon: 'fas fa-bell-slash',
+          label: this.i18n.t('repositories.hide_reminders'),
+          type: 'emit',
+          buttonStyle: 'btn btn-light'
         });
       }
 
@@ -130,7 +162,27 @@ export default {
       axios.get(this.repositoryUrl)
         .then((response) => {
           this.repositoryVersion = response.data.data;
+          this.hasActiveReminders = response.data.data.attributes.has_active_reminders;
           this.loadRepositoryColumns();
+        });
+    },
+    onTableReloaded(rows) {
+      this.reloadingTable = false;
+      this.currentPageRows = rows;
+    },
+    importItems() {
+      this.$refs.importModal.open();
+    },
+    clearAllReminders() {
+      const rowIds = this.currentPageRows
+        .filter((row) => row.active_reminders_count > 0)
+        .map((row) => row.id);
+
+      axios.post(team_repository_hide_reminders_path(this.repositoryVersion.attributes.team_id, this.repositoryId),
+                 { visible_reminder_repository_row_ids: rowIds })
+        .then(() => {
+          this.hasActiveReminders = false;
+          this.reloadingTable = true;
         });
     },
     cancelCreation() {
