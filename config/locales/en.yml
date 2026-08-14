@@ -1817,8 +1817,8 @@ en:
         edit_title: "Edit result"
         archive_title: "Archive result"
       actions:
-        manage_result: "Manage result"
-        rearrange: "Rearrange"
+        edit_content: "Manage result content"
+        rearrange_content: "Rearrange result content"
         archive: "Archive"
         duplicate: "Duplicate"
         restore: "Restore"
@@ -4328,6 +4328,8 @@ en:
       linked_results: "Linked results"
       no_steps_placeholder: "No steps here"
       archived: "Archived"
+      rearrange_content: "Rearrange step content"
+      manage_content: "Manage & lock step content"
       status:
         complete: "Mark as complete"
         uncomplete: "Unmark as complete"
@@ -4335,8 +4337,6 @@ en:
         unskip: "Unskip step"
       options_dropdown:
         title: 'Step options'
-        rearrange: 'Rearrange content'
-        manage_step: 'Manage step'
         duplicate: 'Duplicate'
         delete: 'Delete'
         archive: 'Archive'
