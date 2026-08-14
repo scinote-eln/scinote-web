@@ -552,6 +552,10 @@ export default {
           this.childrenCount = data.children.length;
           this.children = data.children;
         }
+        window.repositoryTable?.updateRowData({
+          id: this.repositoryRowId,
+          connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+        });
       };
       window.repositoryItemRelationshipsModal.show(
         {
@@ -632,7 +636,7 @@ export default {
       if (this.defaultColumns?.name) {
         this.defaultColumns.name = '';
       }
-      axios.get(
+      return axios.get(
         repositoryRowUrl,
         { params: { my_module_id: this.myModuleId } }
       ).then((response) => {
@@ -742,7 +746,11 @@ export default {
           ),
           'success'
         );
-        this.loadRepositoryRow(this.currentItemUrl);
+        await this.loadRepositoryRow(this.currentItemUrl);
+        window.repositoryTable?.updateRowData({
+          id: this.repositoryRowId,
+          connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+        });
         if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
       } catch {
         HelperModule.flashAlertMsg(
