@@ -279,6 +279,7 @@
                 </template>
               </div>
             </div>
+            <div v-if="inRepository && steps.length > 0" class="sci-divider"></div>
             <div :class="{
                 'tw-hidden': loadingOverlay
               }"
