@@ -42,7 +42,7 @@
     >
       <%= t("nav2.modules.archive") %>
     </a>
-    <% if @my_module.protocol.report_templates.present? %>
+    <% if ReportTemplate.analytical_reporting_enabled? && @my_module.protocol.report_templates.present? %>
       <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_reports? ? "text-sn-blue" : "text-sn-grey" %>"
           href="<%= my_module_my_module_reports_path(@my_module) %>"
           title="<%= t("nav2.modules.analytical_reports") %>"
