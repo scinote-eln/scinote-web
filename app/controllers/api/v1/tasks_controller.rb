@@ -85,7 +85,7 @@ module Api
       def task_params_update
         raise TypeError unless params.require(:data).require(:type) == 'tasks'
 
-        params.require(:data).require(:attributes).permit(:name, :x, :y, :description, :archived, :my_module_status_id, metadata: {})
+        params.require(:data).require(:attributes).permit(:name, :x, :y, :description, :read_only_description, :archived, :my_module_status_id, metadata: {})
       end
 
       def permitted_includes
