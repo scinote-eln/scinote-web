@@ -1282,6 +1282,12 @@ Rails.application.routes.draw do
     resources :calendar_event_participants, only: %i(index create destroy)
   end
 
+  resources :editing_flags, controller: 'editing_flag', only: %i(index create destroy) do
+    member do
+      patch :refresh
+    end
+  end
+
   # Shareable links
   get '/shared/:uuid/protocol',
       to: 'my_module_shareable_links#protocol_show',

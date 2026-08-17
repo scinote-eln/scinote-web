@@ -191,28 +191,33 @@
     </div>
     <div class="collapse in" :id="'stepBody' + step.id">
       <div class="step-elements">
-        <component
-          v-for="(element, index) in orderedElements"
-          :ref="'stepComponent'"
-          :is="elements[index].attributes.orderable_type"
-          :key="element.id"
-          class="step-element"
-          :element.sync="elements[index]"
-          :inRepository="inRepository"
-          :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
-          :assignableMyModuleId="assignableMyModuleId"
-          :isNew="element.isNew"
-          :dataE2e="`protocol-step${step.id}`"
-          e2eClass="protocol-step"
-          @component:adding-content="($event) => addingContent = $event"
-          @component:delete="removeElement"
-          @component:archive="removeElement"
-          @component:restore="removeElement"
-          @update="updateElement"
-          @reorder="openReorderModal"
-          @component:insert="insertElement"
-          @moved="moveElement"
-        />
+        <div v-for="(element, index) in orderedElements" :key="element.id" class="relative">
+          <div v-if="editingFlagsFor(element.id).length" class="absolute -bottom-4 left-0 z-10 flex gap-1">
+            <EditingTag v-for="flag in editingFlagsFor(element.id)" :key="flag.id" :user="flag.attributes.user" />
+          </div>
+          <component
+            :ref="'stepComponent'"
+            :is="elements[index].attributes.orderable_type"
+            class="step-element"
+            :element.sync="elements[index]"
+            :inRepository="inRepository"
+            :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
+            :assignableMyModuleId="assignableMyModuleId"
+            :isNew="element.isNew"
+            :dataE2e="`protocol-step${step.id}`"
+            e2eClass="protocol-step"
+            @component:adding-content="($event) => addingContent = $event"
+            @component:delete="removeElement"
+            @component:archive="removeElement"
+            @component:restore="removeElement"
+            @component:editing-start="createEditingFlag"
+            @component:editing-end="destroyEditingFlag"
+            @update="updateElement"
+            @reorder="openReorderModal"
+            @component:insert="insertElement"
+            @moved="moveElement"
+          />
+        </div>
         <Attachments v-if="attachments.length"
                     :parent="step"
                     :attachments="attachments"
@@ -312,6 +317,7 @@
   import ContentToolbar from '../shared/content/content_toolbar.vue'
   import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
   import LockedTag from '../shared/snippets/locked_tag.vue'
+  import EditingTag from '../shared/snippets/editing_tag.vue'
 
   import UtilsMixin from '../mixins/utils.js'
   import AttachmentsMixin from '../shared/content/mixins/attachments.js'
@@ -322,6 +328,7 @@
   import axios from '../../packs/custom_axios';
   import tooltipMixin from '../mixins/tooltipMixin.js';
   import StepCommonMixin from './mixins/step_common.js';
+  import EditingFlagMixin from '../shared/content/mixins/editing_flag.js';
 
   export default {
     name: 'StepContainer',
@@ -401,7 +408,7 @@
         ]
       }
     },
-    mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, tooltipMixin, StepCommonMixin],
+    mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, tooltipMixin, StepCommonMixin, EditingFlagMixin],
     components: {
       InlineEdit,
       Table,
@@ -420,7 +427,8 @@
       GeneralDropdown,
       archiveStepModal,
       ManageItemsModal,
-      LockedTag
+      LockedTag,
+      EditingTag
     },
     watch: {
       step() {

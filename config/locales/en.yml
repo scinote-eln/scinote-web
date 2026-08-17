@@ -5169,6 +5169,7 @@ en:
     output: 'Output'
     restore: "Restore"
     locked: "Locked"
+    editing_tag: "%{user} is editing"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"

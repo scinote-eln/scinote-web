@@ -655,6 +655,40 @@ ALTER SEQUENCE public.delayed_jobs_id_seq OWNED BY public.delayed_jobs.id;
 
 
 --
+-- Name: editing_flags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.editing_flags (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    timeout_at timestamp without time zone,
+    subject_type character varying NOT NULL,
+    subject_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: editing_flags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.editing_flags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: editing_flags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.editing_flags_id_seq OWNED BY public.editing_flags.id;
+
+
+--
 -- Name: experiments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4258,6 +4292,13 @@ ALTER TABLE ONLY public.delayed_jobs ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: editing_flags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.editing_flags ALTER COLUMN id SET DEFAULT nextval('public.editing_flags_id_seq'::regclass);
+
+
+--
 -- Name: experiments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5049,6 +5090,14 @@ ALTER TABLE ONLY public.connections
 
 ALTER TABLE ONLY public.delayed_jobs
     ADD CONSTRAINT delayed_jobs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: editing_flags editing_flags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.editing_flags
+    ADD CONSTRAINT editing_flags_pkey PRIMARY KEY (id);
 
 
 --
@@ -6222,6 +6271,34 @@ CREATE INDEX index_connections_on_input_id ON public.connections USING btree (in
 --
 
 CREATE INDEX index_connections_on_output_id ON public.connections USING btree (output_id);
+
+
+--
+-- Name: index_editing_flags_on_subject; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_editing_flags_on_subject ON public.editing_flags USING btree (subject_type, subject_id);
+
+
+--
+-- Name: index_editing_flags_on_timeout_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_editing_flags_on_timeout_at ON public.editing_flags USING btree (timeout_at);
+
+
+--
+-- Name: index_editing_flags_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_editing_flags_on_user_id ON public.editing_flags USING btree (user_id);
+
+
+--
+-- Name: index_editing_flags_on_user_id_and_subject_type_and_subject_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_editing_flags_on_user_id_and_subject_type_and_subject_id ON public.editing_flags USING btree (user_id, subject_type, subject_id);
 
 
 --
@@ -9140,6 +9217,14 @@ ALTER TABLE ONLY public.forms
 
 
 --
+-- Name: editing_flags fk_rails_2c6192b417; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.editing_flags
+    ADD CONSTRAINT fk_rails_2c6192b417 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: my_modules fk_rails_2c8021ee5f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10866,6 +10951,7 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260729083813'),
 ('20260715121739'),
 ('20260714101739'),
 ('20260708142245'),

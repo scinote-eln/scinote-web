@@ -1,7 +1,6 @@
 <template>
   <div class="content__text-container pr-8"
     :data-e2e="`e2e-CO-${dataE2e}-textElement${element.id}`">
-    <div class="sci-divider my-6" v-if="!inRepository"></div>
     <div :class="{'!bg-sn-background-brittlebush p-4': element.attributes.orderable.archived}">
       <div class="text-header h-9 flex rounded mb-1 gap-2 items-center relative w-full group/text-header"
         :class="{ 'editing-name': editingName,
@@ -239,9 +238,11 @@ export default {
       if (!this.element.attributes.orderable.urls.update_url) return;
       if (this.inEditMode) return;
       this.inEditMode = true;
+      this.$emit('component:editing-start', this.element);
     },
     disableEditMode() {
       this.inEditMode = false;
+      this.$emit('component:editing-end', this.element);
     },
     enableNameEdit() {
       this.editingName = true;
