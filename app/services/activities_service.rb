@@ -65,7 +65,7 @@ class ActivitiesService
                                                 Protocol.where(my_module: visible_my_modules).select(:id),
                                                 visible_forms.select(:id),
                                                 visible_repositories.select(:id),
-                                                RepositoryRow.where(repository_id: visible_repositories).select(:id)))
+                                                RepositoryRow.with_discarded.where(repository_id: visible_repositories).select(:id)))
 
     activities.order(created_at: :desc)
               .page(filters[:page])
