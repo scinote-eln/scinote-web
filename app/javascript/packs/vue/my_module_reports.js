@@ -6,6 +6,7 @@ import { mountWithTurbolinks } from './helpers/turbolinks.js';
 window.initMyModuleReportsComponent = () => {
   const app = createApp({});
   app.component('MyModuleReports', MyModuleReports);
+  app.config.globalProperties.ActiveStoragePreviews = window.ActiveStoragePreviews;
   app.config.globalProperties.i18n = window.I18n;
   mountWithTurbolinks(app, '#myModuleReports');
 };
