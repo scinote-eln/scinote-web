@@ -47,11 +47,6 @@
         <span class="button-text"><%= t("repositories.hide_reminders") %></span>
       </button>
     <% end %>
-    <% if can_manage_repository_filters?(@repository) %>
-      <div class="toolbar-save-filters">
-        <%= render partial: 'repositories/toolbar/save_filters' %>
-      </div>
-    <% end %>
   </div>
 
   <div class="toolbar-middle-block">

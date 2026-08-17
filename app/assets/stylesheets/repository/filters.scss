@@ -230,54 +230,6 @@
     }
   }
 
-  @media (max-width: 992px) {
-    .filters-container {
-      .filter-container {
-        .filter-attributes {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: flex-start;
-
-          .operator-selector {
-            .dropdown-selector-container {
-              width: 125px;
-            }
-          }
-
-          .date-time-picker {
-            display: flex;
-            flex-wrap: wrap;
-          }
-
-          .between-delimiter {
-            height: 10px;
-            margin: 5px auto;
-            transform: rotate(90deg);
-          }
-        }
-      }
-
-      .footer {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        text-align: center;
-
-        .apply-button {
-          margin-left: 0;
-          margin-top: .5em;
-        }
-
-        .clear-filters-btn {
-          margin-left: 0;
-          margin-top: .5em;
-          padding-left: 38px;
-          padding-right: 38px;
-        }
-      }
-    }
-  }
-
   .task-option {
     background-image: image-url("icon_small/task-black.svg");
     background-position: left center;

@@ -31,7 +31,6 @@ const entryList = {
   vue_label_template: './app/javascript/packs/vue/label_template.js',
   vue_protocol: './app/javascript/packs/vue/protocol.js',
   vue_results: './app/javascript/packs/vue/results.js',
-  vue_repository_filter: './app/javascript/packs/vue/repository_filter.js',
   vue_repository_search: './app/javascript/packs/vue/repository_search.js',
   vue_repository_print_modal: './app/javascript/packs/vue/repository_print_modal.js',
   vue_repository_assign_items_to_task_modal: './app/javascript/packs/vue/assign_items_to_task_modal.js',

@@ -7,7 +7,7 @@
   <meta id="cache-directive" name="turbolinks-cache-control" content="no-cache">
 <% end %>
 
-<div class="content-pane flexible repository-show <%=  @repository.archived? || params[:view_mode] == 'archived' ? "archived" : "active" %>" data-table-url="<%= load_table_repository_path(@repository) %>" data-e2e="e2e-CO-invInventory-<%= @repository.id %>">
+<div id="repositoryShowContainer"  class="content-pane flexible repository-show <%=  @repository.archived? || params[:view_mode] == 'archived' ? "archived" : "active" %>" data-table-url="<%= load_table_repository_path(@repository) %>" data-e2e="e2e-CO-invInventory-<%= @repository.id %>">
   <div id="repository-toolbar" class="content-header">
     <div class="title-row">
       <% if @repository.active? %>
