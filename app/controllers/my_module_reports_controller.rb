@@ -6,7 +6,7 @@ class MyModuleReportsController < ApplicationController
   include TeamsHelper
 
   before_action :load_my_module
-  before_action :check_analytical_reporting, only: :create
+  before_action :check_analytical_reporting
   before_action :check_view_permissions, except: %i(create destroy)
   before_action :check_manage_permissions, only: %i(create destroy)
   before_action :load_my_module_report, only: %i(download destroy preview)

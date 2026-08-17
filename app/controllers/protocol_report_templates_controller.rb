@@ -4,7 +4,7 @@ class ProtocolReportTemplatesController < ApplicationController
   include ActiveStorageFileUtil
 
   before_action :load_protocol
-  before_action :check_analytical_reporting, only: :create
+  before_action :check_analytical_reporting
   before_action :check_read_permissions, except: :create
   before_action :check_manage_permissions, only: :create
   before_action :load_report_template, only: %i(destroy preview pdf_preview_path download)
