@@ -159,12 +159,13 @@ module MyModuleReports
                   form_field_value&.formatted_localize
                 elsif form_field_value.is_a?(FormRepositoryRowsFieldValue)
                   form_repository_rows_field_value_formatter(form_field_value, @user)
-                elsif form_field_value.is_a?(FormMultipleChoiceFieldValue)
-                  form_field[:data]['options'].map { |option| { text: option, checked: form_field_value.value&.include?(option) } }
+                elsif form_field[:data]['type'] == 'MultipleChoiceField'
+                  form_field[:data]['options'].map { |option| { text: option, checked: form_field_value&.value&.include?(option) } }
                 else
                   form_field_value&.formatted
                 end
-        if form_field_value.is_a?(FormMultipleChoiceFieldValue)
+
+        if !form_field_value&.not_applicable && form_field[:data]['type'] == 'MultipleChoiceField'
           render_checklist(report, tag, nil, value)
         else
           report.add_field tag, value
