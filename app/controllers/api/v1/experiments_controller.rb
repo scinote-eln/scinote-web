@@ -56,7 +56,7 @@ module Api
       def experiment_params
         raise TypeError unless params.require(:data).require(:type) == 'experiments'
 
-        params.require(:data).require(:attributes).permit(:name, :description, :status, :due_date, :start_date, :archived, metadata: {})
+        params.require(:data).require(:attributes).permit(:name, :description, :read_only_description, :status, :due_date, :start_date, :archived, metadata: {})
       end
 
       def load_experiment_for_managing

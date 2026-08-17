@@ -5,7 +5,7 @@ class MyModule < ApplicationRecord
 
   ID_PREFIX = 'TA'
   include PrefixedIdModel
-  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description', PREFIXED_ID_SQL,
+  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description', 'my_modules.read_only_description', PREFIXED_ID_SQL,
                            'comments.message', 'tags.name', 'users.full_name', 'users.email'].freeze
 
   include ArchivableModel
