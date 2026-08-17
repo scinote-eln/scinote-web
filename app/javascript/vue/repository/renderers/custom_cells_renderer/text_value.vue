@@ -3,8 +3,7 @@
     <div class="group relative flex items-center group-hover:marker text-xs h-full w-full leading-[unset]">
       <div ref="descripitonBox" class="flex gap-2 w-full items-center text-sm leading-[unset]">
         <span v-if="textValue && textValue.length > 0" class="cursor-pointer line-clamp-1 leading-[unset]"
-              @click.stop="showTextCellModal">
-          {{ textValue}}
+              @click.stop="showTextCellModal" v-html="textValue">
         </span>
         <span v-if="textValue && textValue.length > 0"
               @click.stop="showTextCellModal"
@@ -34,7 +33,7 @@ export default {
   },
   computed: {
     textValue() {
-      return this.params?.value?.value?.edit || '';
+      return this.params?.value?.value?.view || '';
     },
     canManage() {
       return this.params?.data?.permissions?.manage || false;
@@ -42,6 +41,7 @@ export default {
   },
   methods: {
     showTextCellModal() {
+      if (event.target.closest('a')) return; // do not open modal if value is a link
       this.params.dtComponent.$emit('showTextCell', null, [this.params.data], this.params.colDef);
     }
   }

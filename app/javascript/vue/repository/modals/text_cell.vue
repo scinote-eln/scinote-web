@@ -15,7 +15,7 @@
             <textarea v-model="textValue" ref="input" class="sci-input-field w-full "></textarea>
           </div>
           <div v-else ref="textContainer" class="[&_.atwho-user-container]:!whitespace-normal whitespace-pre-wrap">
-            <span v-html="textValue"></span>
+            <span v-html="viewValue"></span>
           </div>
         </div>
         <div class="modal-footer">
@@ -38,10 +38,12 @@ export default {
     row: Object
   },
   data: () => ({
-    textValue: ''
+    textValue: '',
+    viewValue: ''
   }),
   mounted() {
     this.textValue = this.row[this.colDef.field]?.value?.edit || '';
+    this.viewValue = this.row[this.colDef.field]?.value?.view || '';
 
     this.$nextTick(() => {
       if (this.$refs.textContainer) {

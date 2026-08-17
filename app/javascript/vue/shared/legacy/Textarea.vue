@@ -24,7 +24,8 @@
                   'text-sn-dark-grey': value, 'text-sn-grey': !value
                 }"
         @click="enableEdit">
-    <span>{{ value || noContentPlaceholder }}</span>
+    <span v-if="viewValue" v-html="viewValue"></span>
+    <span v-else>{{ value || noContentPlaceholder }}</span>
   </div>
 </template>
 
@@ -41,6 +42,7 @@ export default {
     expandable: { type: Boolean, required: true },
     collapsed: { type: Boolean, required: true },
     initialValue: String,
+    viewValue: { type: String, default: null },
     noContentPlaceholder: String,
     placeholder: String,
     canEdit: { type: Boolean, default: false },
@@ -114,6 +116,7 @@ export default {
     enableEdit(e) {
       if (!this.canEdit) return;
 
+      if (e && e.target.closest('a')) return;
       if (e && $(e.target).hasClass('atwho-user-popover')) return;
       if (e && $(e.target).hasClass('sa-name')) return;
       if (e && $(e.target).hasClass('sa-link')) return;
