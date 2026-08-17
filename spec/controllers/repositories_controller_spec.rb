@@ -65,6 +65,12 @@ describe RepositoriesController, type: :controller do
       expect(response.content_type).to eq('application/json; charset=utf-8')
       expect(response.body).not_to be_empty
     end
+
+    it 'includes has_active_reminders in the response' do
+      action
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response['data']['attributes']).to have_key('has_active_reminders')
+    end
   end
 
   describe 'GET show HTML' do

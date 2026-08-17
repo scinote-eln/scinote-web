@@ -121,6 +121,35 @@ describe RepositoryRowsController, type: :controller do
     end
   end
 
+  describe '#index_ag' do
+    before { repository.repository_rows.destroy_all }
+
+    let!(:active_repository_row) do
+      create :repository_row, repository: repository, created_by: user, last_modified_by: user, archived: false
+    end
+    let!(:archived_repository_row) do
+      create :repository_row, repository: repository, created_by: user, last_modified_by: user, archived: true
+    end
+
+    it 'returns only active rows by default' do
+      get :index_ag, params: { repository_id: repository.id, per_page: 20, page: 1 }, format: :json
+      response_body = JSON.parse(response.body)
+      ids = response_body['data'].map { |row| row['id'].to_i }
+
+      expect(ids).to include(active_repository_row.id)
+      expect(ids).not_to include(archived_repository_row.id)
+    end
+
+    it 'returns only archived rows when view_mode is archived' do
+      get :index_ag, params: { repository_id: repository.id, per_page: 20, page: 1, view_mode: 'archived' }, format: :json
+      response_body = JSON.parse(response.body)
+      ids = response_body['data'].map { |row| row['id'].to_i }
+
+      expect(ids).to include(archived_repository_row.id)
+      expect(ids).not_to include(active_repository_row.id)
+    end
+  end
+
   describe 'POST #copy_records' do
     it 'returns a success response' do
       post :copy_records, params: { repository_id: repository.id,

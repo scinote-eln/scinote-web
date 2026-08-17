@@ -6,6 +6,7 @@ class RepositoryCellsController < ApplicationController
   before_action :load_repository_column
   before_action :check_manage_permissions
 
+  include ApplicationHelper
   include RepositoryDatatableHelper
 
   def update
@@ -21,9 +22,11 @@ class RepositoryCellsController < ApplicationController
       elsif @cell.blank? && value.present?
         @cell = RepositoryCell.create_with_value!(@repository_row, @repository_column, value, current_user)
         log_activity
+        record_annotation_notification(@repository_row, @cell) if @cell.value_type == 'RepositoryTextValue'
       elsif @cell.present? && @cell.value.data_different?(value)
         @cell.value.update_data!(value, current_user)
         log_activity
+        record_annotation_notification(@repository_row, @cell) if @cell.value_type == 'RepositoryTextValue'
       end
     end
 
@@ -65,6 +68,22 @@ class RepositoryCellsController < ApplicationController
       subject: @repository_row,
       team: @repository.team,
       message_items: { repository_row: @repository_row.id, repository: @repository.id }
+    )
+  end
+
+  def record_annotation_notification(record, cell, old_text = nil)
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: cell.value.data,
+      subject: cell.repository_row,
+      title: t('notifications.repository_annotation_title',
+               user: current_user.full_name,
+               column: cell.repository_column.name,
+               record: record.name,
+               repository: record.repository.name),
+      message: t('notifications.repository_annotation_message_html',
+                 record: link_to(record.name, repository_url(@repository)),
+                 column: link_to(cell.repository_column.name, repository_url(@repository)))
     )
   end
 end

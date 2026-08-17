@@ -5,10 +5,10 @@
         <div class="w-full flex relative gap-1 group">
           <a v-if="params.data.name"
             class="hover:no-underline record-info-link truncate cursor-pointer block grow"
-            :title="rowName"
+            :title="params.data.name"
             :href="recordInfoUrl"
           >
-            {{ rowName }}
+            {{ params.data.name }}
           </a>
           <div @click="startEditing" class="tw-hidden group-hover:block">
             <i class="sn-icon sn-icon-edit cursor-pointer "></i>
@@ -104,6 +104,7 @@ export default {
   methods: {
     startEditing() {
       if (this.editing || !this.params.data.id) return;
+      this.rowName = this.params.data.name;
       this.editing = true;
       this.$nextTick(() => {
         this.$refs.nameInput.focus();

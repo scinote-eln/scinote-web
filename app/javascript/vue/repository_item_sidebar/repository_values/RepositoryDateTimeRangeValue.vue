@@ -6,7 +6,8 @@
       :colVal="colVal"
       :colId="colId"
       :colName="colName"
-      :updatePath="updatePath"
+      :repositoryId="repositoryId"
+      :repositoryRowId="repositoryRowId"
       :canEdit="canEdit"
     />
   </div>
@@ -23,7 +24,8 @@ export default {
     colId: Number,
     colName: String,
     colVal: Object,
-    updatePath: String,
+    repositoryId: Number,
+    repositoryRowId: Number,
     canEdit: { type: Boolean, default: false }
   }
 };

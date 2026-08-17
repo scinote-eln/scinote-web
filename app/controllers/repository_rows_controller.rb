@@ -10,23 +10,23 @@ class RepositoryRowsController < ApplicationController
   before_action :load_repository, except: %i(show print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(show print rows_to_print print_zpl
                                                        validate_label_template_columns)
-  before_action :load_repository_row, only: %i(show update update_cell assigned_task_list assigned_counters
+  before_action :load_repository_row, only: %i(show update assigned_task_list assigned_counters
                                                active_reminder_repository_cells relationships equipment_booking_events)
   before_action :load_repository_rows, only: %i(print rows_to_print print_zpl validate_label_template_columns)
 
-  before_action :check_read_permissions, except: %i(create update update_cell delete_records
+  before_action :check_read_permissions, except: %i(create update delete_records
                                                     copy_records archive_records restore_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: :delete_records
-  before_action :check_manage_permissions, only: %i(update update_cell archive_records restore_records copy_records)
+  before_action :check_manage_permissions, only: %i(update archive_records restore_records copy_records)
 
   def index_ag
-    repository_rows = Lists::RepositoryRowsService.new(@repository, params, user: current_user).call.load
+    repository_rows = Lists::RepositoryRowsService.new(@repository, params, user: current_user, filter_by_view_mode: true).call.load
 
     total_count = if @repository.archived?
                     @repository.repository_rows.count
-                  elsif params[:archived]
+                  elsif params[:view_mode] == 'archived'
                     @repository.repository_rows.archived.count
                   else
                     @repository.repository_rows.active.count
@@ -269,47 +269,6 @@ class RepositoryRowsController < ApplicationController
              can_manage_repository_rows: can_manage_repository_rows?(@repository)
     else
       render json: row_update.errors, status: :bad_request
-    end
-  end
-
-  def update_cell
-    return render_422(t('.invalid_params')) if
-      update_params['repository_row'].present? && update_params['repository_cells'].present?
-    return render_422(t('.invalid_params')) if
-      update_params['repository_cells'] && update_params['repository_cells'].size != 1
-
-    row_cell_update =
-      RepositoryRows::UpdateRepositoryRowService.call(
-        repository_row: @repository_row, user: current_user, params: update_params
-      )
-
-    if row_cell_update.succeed?
-      if row_cell_update.record_updated
-        log_activity(:edit_item_field_inventory, @repository_row,
-                     { repository_row: @repository_row.id,
-                       repository_column: update_params['repository_cells']&.keys&.first ||
-                       I18n.t('repositories.table.row_name') })
-
-        record_annotation_notification(@repository_row, row_cell_update.cell) if row_cell_update.cell && row_cell_update.cell.value_type == 'RepositoryTextValue'
-      end
-      @reminders_present = Repository.reminders_enabled?
-
-      return render json: { name: @repository_row.name } if update_params['repository_row'].present?
-
-      column = row_cell_update.column
-      cell = row_cell_update.cell&.reload || row_cell_update.cell
-      data = { value_type: column.data_type, id: column.id, value: nil }
-
-      return render json: data if cell.blank?
-
-      data['hasActiveReminders'] = @reminders_present
-      data.merge! serialize_repository_cell_value(cell,
-                                                  @repository.team,
-                                                  @repository,
-                                                  reminders_enabled: @reminders_present)
-      render json: data
-    else
-      render json: row_cell_update.errors, status: :bad_request
     end
   end
 

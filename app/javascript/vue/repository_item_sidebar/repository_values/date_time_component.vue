@@ -39,6 +39,8 @@
 </template>
 
 <script>
+import axios from '../../../packs/custom_axios.js';
+import { repository_repository_row_repository_cell_path } from '../../../routes.js';
 import DateTimePicker from '../../shared/date_time_picker.vue';
 import Reminder from '../reminder.vue';
 
@@ -63,7 +65,8 @@ export default {
     range: { type: Boolean, default: false },
     colVal: { type: Object, default: {} },
     colId: Number,
-    updatePath: String,
+    repositoryId: Number,
+    repositoryRowId: Number,
     canEdit: { type: Boolean, default: false },
     colName: String
   },
@@ -167,25 +170,22 @@ export default {
       return (t['hours'] * 60 * 60 + t['minutes'] * 60 + t['seconds'])
     },
     update() {
-      const params = {};
-
       if (!this.validateValue()) return;
 
-      params[this.colId] = this.value;
-
-      $.ajax({
-        method: 'PUT',
-        url: this.updatePath,
-        dataType: 'json',
-        data: { repository_cells: params },
-        success: () => {
-          this.defaultStartDate = this.startDate;
-          this.defaultEndDate = this.endDate;
-          if ($('.dataTable.repository-dataTable')[0]) {
-            $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
-          }
-          this.reloadRepoItemSidebar();
-        }
+      axios.post(
+        repository_repository_row_repository_cell_path({
+          repository_id: this.repositoryId,
+          repository_row_id: this.repositoryRowId,
+          repository_column_id: this.colId
+        }),
+        { value: this.value }
+      ).then((response) => {
+        this.defaultStartDate = this.startDate;
+        this.defaultEndDate = this.endDate;
+        window.repositoryTable?.updateRowData({
+          id: this.repositoryRowId,
+          [`col_${this.colId}`]: response.data
+        });
       });
     }
   }

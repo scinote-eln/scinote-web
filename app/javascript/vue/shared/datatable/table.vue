@@ -470,7 +470,7 @@ export default {
 
       if (!row.id) return;
 
-      const index = this.rowData.findIndex((r) => r.id === row.id);
+      const index = this.rowData.findIndex((r) => String(r.id) === String(row.id));
       if (index !== -1) {
         this.rowData[index] = { ...this.rowData[index], ...row };
       } else {
