@@ -460,6 +460,9 @@ class Constants
   ASSET_SYNC_TOKEN_EXPIRATION = 1.year
   ASSET_SYNC_URL = ENV['ASSET_SYNC_URL'].freeze
 
+  # TinyMCE 7+/8+ requires a license_key init option; 'gpl' agrees to the open-source terms.
+  TINYMCE_LICENSE_KEY = ENV.fetch('TINYMCE_LICENSE_KEY', 'gpl').freeze
+
   # Grover timeout in ms
   GROVER_TIMEOUT_MS = 450000
 
