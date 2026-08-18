@@ -42,7 +42,7 @@ class RepositoryStockValue < ApplicationRecord
       number_with_precision(
         amount,
         precision: (repository_cell.repository_column.metadata['decimals'].to_i || 0),
-        strip_insignificant_zeros: true
+        strip_insignificant_zeros: false
       )
     end
   end
@@ -52,7 +52,7 @@ class RepositoryStockValue < ApplicationRecord
       number_with_precision(
         low_stock_threshold,
         precision: (repository_cell.repository_column.metadata['decimals'].to_i || 0),
-        strip_insignificant_zeros: true
+        strip_insignificant_zeros: false
       )
     end
   end

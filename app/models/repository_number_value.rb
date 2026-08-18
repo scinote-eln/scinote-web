@@ -2,6 +2,7 @@
 
 class RepositoryNumberValue < ApplicationRecord
   include SearchableModel
+  include ActionView::Helpers::NumberHelper
 
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User',
              inverse_of: :created_repository_number_values
@@ -19,7 +20,7 @@ class RepositoryNumberValue < ApplicationRecord
       'decimals',
       Constants::REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS
     ).to_i
-    data.round(decimals).to_s
+    number_with_precision(data, precision: decimals, strip_insignificant_zeros: false)
   end
 
   def self.add_filter_condition(repository_rows, join_alias, filter_element)

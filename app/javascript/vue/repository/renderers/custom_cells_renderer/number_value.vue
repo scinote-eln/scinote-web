@@ -9,10 +9,10 @@
       @keydown.esc="cancelEdit"
       @blur="saveValue"
       @input="validateFormat"
-      class="sci-table-input-v2 !border-transparent !bg-transparent placeholder:text-sn-grey"
+      class="sci-table-input-v2 align-right !border-transparent !bg-transparent placeholder:text-sn-grey"
     />
   </div>
-  <div v-else>
+  <div v-else class="align-right">
     {{ this.newValue }}
   </div>
 </template>
