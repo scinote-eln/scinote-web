@@ -8,7 +8,7 @@ window.mountRepositoryTable = () => {
   app.component('RepositoryTable', RepositoryTable);
   app.config.globalProperties.i18n = window.I18n;
   app.use(PerfectScrollbar);
-  mountWithTurbolinks(app, '#repositoryTable');
+  window.repositoryTableComponent = mountWithTurbolinks(app, '#repositoryTable');
 };
 
 window.mountRepositoryTable();
