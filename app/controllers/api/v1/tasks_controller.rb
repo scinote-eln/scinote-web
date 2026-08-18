@@ -79,7 +79,7 @@ module Api
       def task_params_create
         raise TypeError unless params.require(:data).require(:type) == 'tasks'
 
-        params.require(:data).require(:attributes).permit(:name, :x, :y, :description, metadata: {})
+        params.require(:data).require(:attributes).permit(:name, :x, :y, :description, :read_only_description, metadata: {})
       end
 
       def task_params_update
