@@ -67,15 +67,25 @@
         :enableBarcodeSearch="enableBarcodeSearch"
         @search="$emit('search:change', $event)"
       />
-      <a v-for="action in toolbarActions.right" :key="action.label"
-      :class="[action.buttonStyle, { 'disabled': disabled }]"
-      :href="action.path"
-      :data-sn-tooltip="action.tooltip || action.label"
-      :data-e2e="`e2e-BT-topToolbar-${action.name}`"
-      @click="doAction(action, $event)">
-        <i :class="action.icon"></i>
-        <span v-if="action.label" :data-sn-tooltip="action.tooltip || action.label">{{ action.label }}</span>
-      </a>
+      <template v-for="action in toolbarActions.right" :key="action.label">
+        <a v-if="action.type === 'emit' || action.type === 'link'"
+        :class="[action.buttonStyle, { 'disabled': disabled }]"
+        :href="action.path"
+        :data-sn-tooltip="action.tooltip || action.label"
+        :data-e2e="`e2e-BT-topToolbar-${action.name}`"
+        @click="doAction(action, $event)">
+          <i :class="action.icon"></i>
+          <span :data-sn-tooltip="action.tooltip || action.label">{{ action.label }}</span>
+        </a>
+        <component v-if="action.type === 'component'"
+                  :is="action.params.componentRenderer"
+                  :params="action.params"
+                  :disabled="disabled || action.disabled"
+                  :data-e2e="`e2e-BT-topToolbar-${action.name}`"
+                  @dtEvent="handleEvent"
+                  :dataE2e="`topToolbar-${action.name}`">
+        </component>
+      </template>
       <FilterDropdown v-if="filters.length && !disabled" :filters="filters" @applyFilters="applyFilters" :data-e2e="'e2e-BT-topToolbar-filters'"/>
       <button
         v-if="currentViewRender === 'table' && !hideColumnsManagment"

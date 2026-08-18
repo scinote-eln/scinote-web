@@ -1,16 +1,15 @@
 <template>
   <div class="filter-attributes">
     <div class="operator-selector">
-      <DropdownSelector
-        :disableSearch="true"
+      <SelectDropdown
+        :searchable="false"
         :options="this.operators"
-        :selectedValue="this.operator"
-        :selectorId="`OperatorSelector${this.filter.id}`"
-        :data-e2e="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
-        @dropdown:changed="($event) => { updateOperator($event); this.value = ''; }"
+        :value="this.operator"
+        :e2eValue="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
+        @change="updateOperator"
       />
     </div>
-    <div class="sci-input-container">
+    <div class="sci-input-container-v2">
       <input
         class="sci-input-field"
         :class="{ invisible: operator !== 'contains' }"
@@ -26,7 +25,7 @@
 
 <script>
 import FilterMixin from '../mixins/filter.js';
-import DropdownSelector from '../../shared/legacy/dropdown_selector.vue';
+import SelectDropdown from '../../shared/select_dropdown.vue';
 
 export default {
   name: 'RepositoryRelationshipValue',
@@ -34,16 +33,16 @@ export default {
   data() {
     return {
       operators: [
-        { value: 'contains', label: this.i18n.t('repositories.show.repository_filter.filters.operators.contains') },
-        { value: 'contains_relationship', label: this.i18n.t('repositories.show.repository_filter.filters.operators.contains_relationship') },
-        { value: 'doesnt_contain_relationship', label: this.i18n.t('repositories.show.repository_filter.filters.operators.does_not_contain_relationship') }
+        [ 'contains', this.i18n.t('repositories.show.repository_filter.filters.operators.contains') ],
+        [ 'contains_relationship', this.i18n.t('repositories.show.repository_filter.filters.operators.contains_relationship') ],
+        [ 'doesnt_contain_relationship', this.i18n.t('repositories.show.repository_filter.filters.operators.does_not_contain_relationship') ]
       ],
       operator: 'contains',
       value: ''
     };
   },
   components: {
-    DropdownSelector
+    SelectDropdown
   },
   watch: {
     value() {

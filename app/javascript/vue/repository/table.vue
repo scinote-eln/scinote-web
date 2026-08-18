@@ -9,7 +9,12 @@
       :reloadingTable="reloadingTable"
       :toolbarActions="toolbarActions"
       :actionsUrl="toolbarActionsUrl"
-      :filters="[]"
+      loadMethod="post"
+      :postParams="{
+        advanced_search: {
+          filter_elements: activeFilter
+        }
+      }"
       :enableBarcodeSearch="true"
       :fetchColumnsOnReload="true"
       :addingNewRow="addingNewRow"
@@ -27,6 +32,7 @@
       @createRow="createRow"
       @changeName="changeName"
       @tableReloaded="onTableReloaded"
+      @applyFilters="applyFilters"
       @startCreate="addingNewRow = true"
       @importItems="importItems"
       @clearAllReminders="clearAllReminders"
@@ -61,6 +67,7 @@ import ColumnsMixin from './columns_mixin.js';
 import TextCellModal from './modals/text_cell.vue';
 import StockValueModal from './modals/stock_value_modal.vue';
 import ImportRepositoryModal from '../repositories/modals/import/container.vue';
+import RepositoryFilters from './filters.vue'
 
 import {
   repository_table_index_ag_path,
@@ -88,7 +95,8 @@ export default {
     DataTable,
     TextCellModal,
     StockValueModal,
-    ImportRepositoryModal
+    ImportRepositoryModal,
+    RepositoryFilters
   },
   mixins: [ColumnsMixin],
   data: () => ({
@@ -99,6 +107,7 @@ export default {
     stockValueModalUrl: null,
     hasActiveReminders: false,
     currentPageRows: [],
+    activeFilter: [],
     newRowTemplate: {
       name: {
         value: '',
@@ -158,6 +167,14 @@ export default {
           buttonStyle: 'btn btn-light icon-btn btn-black'
         })
       }
+      right.push({
+        name: 'filters',
+        type: 'component',
+        params: {
+          componentRenderer: RepositoryFilters,
+          repositoryId: this.repositoryId
+        }
+      });
 
       return {
         left: left,
@@ -324,6 +341,10 @@ export default {
         columnsHTML.push(listItem)
       });
       return columnsHTML
+    },
+    applyFilters(filters) {
+      this.activeFilter = filters.data
+      this.reloadingTable = true
     }
   }
 };

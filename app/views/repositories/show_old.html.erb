@@ -85,8 +85,6 @@
 <%= render partial: "toolbar_buttons", locals: { view_mode: @repository.archived? || params[:archived] ? 'archived' : 'active' } %>
 <%= render partial: "assign_items_to_task_modal" %>
 
-<%= render partial: 'repository_filters' %>
-<%= render partial: 'save_repository_filter_modal' %>
 
 <%= render partial: 'repositories/event_manage_repository_rows_modal',
            locals: { repository: @repository } %>

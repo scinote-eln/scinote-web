@@ -1,22 +1,21 @@
 <template>
   <div class="filter-attributes">
     <div class="operator-selector">
-      <DropdownSelector
-        :disableSearch="true"
+      <SelectDropdown
+        :searchable="false"
         :options="this.operators"
-        :selectedValue="this.operator"
-        :selectorId="`OperatorSelector${this.filter.id}`"
-        :data-e2e="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
-        @dropdown:changed="updateOperator"
+        :value="this.operator"
+        :e2eValue="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
+        @change="updateOperator"
       />
     </div>
-    <div class="sci-input-container" v-if="operator != 'empty'">
+    <div class="sci-input-container-v2" v-if="operator != 'empty'">
       <input
         class="sci-input-field"
         type="text"
         name="value"
         v-model="value"
-        :data-e2e="`e2e-IF-invInventoryFilterCO-input${this.filter.column.id}`"
+        :e2eValue="`e2e-IF-invInventoryFilterCO-input${this.filter.column.id}`"
         :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.input_placeholder',{name: this.filter.column.name})"
       />
     </div>
@@ -25,7 +24,7 @@
 
 <script>
 import FilterMixin from '../mixins/filter.js';
-import DropdownSelector from '../../shared/legacy/dropdown_selector.vue';
+import SelectDropdown from '../../shared/select_dropdown.vue';
 
 export default {
   name: 'RepositoryTextValue',
@@ -33,16 +32,16 @@ export default {
   data() {
     return {
       operators: [
-        { value: 'contains', label: this.i18n.t('repositories.show.repository_filter.filters.operators.contains') },
-        { value: 'doesnt_contain', label: this.i18n.t('repositories.show.repository_filter.filters.operators.does_not_contain') },
-        { value: 'empty', label: this.i18n.t('repositories.show.repository_filter.filters.operators.empty') }
+        [ 'contains', this.i18n.t('repositories.show.repository_filter.filters.operators.contains') ],
+        [ 'doesnt_contain', this.i18n.t('repositories.show.repository_filter.filters.operators.does_not_contain') ],
+        [ 'empty', this.i18n.t('repositories.show.repository_filter.filters.operators.empty') ]
       ],
       operator: 'contains',
       value: ''
     };
   },
   components: {
-    DropdownSelector
+    SelectDropdown
   },
   watch: {
     value() {
