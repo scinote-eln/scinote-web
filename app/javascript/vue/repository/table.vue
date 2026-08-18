@@ -159,14 +159,6 @@ export default {
         });
       }
 
-      if (this.createUrl) {
-        right.push({
-          name: 'manageColumns',
-          icon: 'sn-icon sn-icon-add-columns',
-          type: 'emit',
-          buttonStyle: 'btn btn-light icon-btn btn-black'
-        })
-      }
       right.push({
         name: 'filters',
         type: 'component',
@@ -175,6 +167,15 @@ export default {
           repositoryId: this.repositoryId
         }
       });
+
+      if (this.createUrl) {
+        right.push({
+          name: 'manageColumns',
+          icon: 'sn-icon sn-icon-add-columns',
+          type: 'emit',
+          buttonStyle: 'btn btn-light icon-btn btn-black'
+        })
+      }
 
       return {
         left: left,
