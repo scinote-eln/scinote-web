@@ -1224,6 +1224,7 @@ en:
       add_date: "Add date"
       add_datetime: "Add date & time"
       not_valid_range: "Range is not valid"
+      not_valid_future_date: "Future dates not allowed"
       no_selection: "No options selected"
       mark_as_completed: "Mark as completed"
     index:
@@ -1284,6 +1285,9 @@ en:
           min_placeholder: 'Add min. value'
           max_placeholder: 'Add max. value'
           message_placeholder: 'Add a custom warning message'
+        future_dates:
+          title: "Future dates not allowed"
+          description: "Turning this setting on will not allow users to select dates in the future"
       blocks:
         TextField: 'Text'
         NumberField: 'Number'
