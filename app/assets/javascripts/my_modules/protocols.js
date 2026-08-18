@@ -48,7 +48,6 @@ function initLinkUpdate() {
 
   if (!$._data(updateBtn[0], 'events')) {
     updateBtn.on('click', function() {
-      let selectedOption = modal.find("input[name='load_option']:checked").val();
       modal.find(".modal-footer [data-action='submit']").prop('disabled', true);
 
       // POST via ajax
@@ -56,7 +55,7 @@ function initLinkUpdate() {
         url: modal.attr('data-url'),
         type: 'POST',
         dataType: 'json',
-        data: { load_mode: selectedOption },
+        data: { load_mode: 'replace' },
         success: function() {
           // Simply reload page
           location.reload();

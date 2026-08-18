@@ -1658,12 +1658,12 @@ en:
         unlink_message: "This will stop tracking changes of protocol templates. We can’t link it back once you unlink it."
         unlink_btn_text: "Yes, unlink it"
         revert_title: "Revert protocol on task"
-        revert_message_html: "Choose how to <strong>revert</strong> changes you made to this task:"
+        revert_message_html: "Clicking the Revert button will overwrite existing task content with the current protocol template version: Protocol steps, Items, and Results will replace any existing ones on Task."
         revert_option_merge_html: "<strong>Keep existing task content</strong> and append selected template content (Template will get unlinked; current protocol name and description stay unchanged)."
         revert_option_replace_html: "<strong>Overwrite existing task content</strong> with the current protocol template version: Protocol steps, Items, and Results will replace any existing ones on Task."
-        revert_btn_text: "Update"
+        revert_btn_text: "Revert"
         update_self_title: "Update protocol on task"
-        update_self_message_html: "Choose how to <strong>update</strong> this task with the latest protocol template version:"
+        update_self_message_html: "Clicking the Update button will overwrite existing task content with the current protocol template version: Protocol steps, Items, and Results will replace any existing ones on Task."
         update_self_option_merge_html: "<strong>Keep existing task content</strong> and append the new version as additional content (Template will get unlinked; current protocol name and description stay unchanged)."
         update_self_option_replace_html: "<strong>Overwrite existing task content</strong> with the latest protocol template version: Protocol steps, Items, and Results will replace any existing ones on Task."
         update_self_btn_text: "Update"
@@ -1699,7 +1699,7 @@ en:
         confirm_modal:
           description: "This task already contains %{steps_count} steps, %{results_count} results and %{rows_count} assigned items."
           load_description: "Choose how to load the selected protocol template:"
-          option_merge_html: "<strong>Keep existing task content</strong> and append selected template content (Template will get unlinked; current protocol name and description stay unchanged)."
+          option_merge_html: "<strong>Keep existing task content</strong> and append the new version as additional content. <strong>Warning</strong>: Template will get unlinked; current protocol name and description stay unchanged; if the template you are loading contains tables with references, we suggest using “Overwrite existing task content”, as tables sheet names will be renamed, which may result in cross-references in newly loaded tables not working properly."
           option_replace_html: "<strong>Overwrite existing task content</strong> with the template: Protocol steps, Items, and Results will replace any existing ones on Task."
           confirmation_description_html: "<strong>This action cannot be undone. Are you sure you want to continue?</strong>"
           load: "Load template"
@@ -4498,7 +4498,7 @@ en:
           dimension_label: 'Dimensions (rows x columns)'
         add_protocol_steps:
           title: "Add steps from another template"
-          description: "Select one or more steps from a different protocol template to add them as new steps at the end of your current protocol."
+          description_html: "<p>Select one or more steps from a different protocol template to add them as new steps at the end of your current protocol.</p><p><strong>Warning</strong>: If the steps you are loading contain tables with references, the references may not work properly as the tables' sheet names will be renamed.</p>"
           confirm: "Add steps"
           protocol_label: "Protocol"
           protocol_placeholder: "Select protocol template"
