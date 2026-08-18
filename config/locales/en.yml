@@ -2537,7 +2537,12 @@ en:
         filters: "Filters"
         search: "Quick search"
       filters:
-        save_filters: "Save filters"
+        title: "Filters"
+        create_new_filter: "Create new filter"
+        active_filter: "Active filter"
+        clear_filter: "Clear filter"
+        filter_name: "Filter name"
+        save_filter: "Save filter"
         new_filter: "New filter"
         overwrite_filter: "Overwrite"
         title: "Filters"

@@ -1,13 +1,13 @@
 <template>
   <div class="filter-attributes">
     <div class="operator-selector">
-      <DropdownSelector
-      :disableSearch="true"
-      :options="operators"
-      :selectorId="`OperatorSelector${filter.id}`"
-      :selectedValue="operator"
-      :data-e2e="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
-      @dropdown:changed="updateOperator" />
+      <SelectDropdown
+        :searchable="false"
+        :options="this.operators"
+        :value="this.operator"
+        :e2eValue="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
+        @change="updateOperator"
+      />
     </div>
     <template v-if="!isPreset">
       <div class="filter-datepicker-input">
@@ -32,7 +32,7 @@
 <script>
 import FilterMixin from '../mixins/filter.js';
 import DateTimeFilterMixin from '../mixins/filters/date_time_filter.js';
-import DropdownSelector from '../../shared/legacy/dropdown_selector.vue';
+import SelectDropdown from '../../shared/select_dropdown.vue';
 import DateTimePicker from '../../shared/date_time_picker.vue';
 
 export default {
@@ -42,13 +42,13 @@ export default {
     return {
       timeType: 'time',
       operators: [
-        { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.equal_to') },
-        { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.unequal_to') },
-        { value: 'greater_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than') },
-        { value: 'greater_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than_or_equal_to') },
-        { value: 'less_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than') },
-        { value: 'less_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than_or_equal_to') },
-        { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') }
+        [ 'equal_to', this.i18n.t('repositories.show.repository_filter.filters.operators.equal_to') ],
+        [ 'unequal_to', this.i18n.t('repositories.show.repository_filter.filters.operators.unequal_to') ],
+        [ 'greater_than', this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than') ],
+        [ 'greater_than_or_equal_to', this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than_or_equal_to') ],
+        [ 'less_than', this.i18n.t('repositories.show.repository_filter.filters.operators.less_than') ],
+        [ 'less_than_or_equal_to', this.i18n.t('repositories.show.repository_filter.filters.operators.less_than_or_equal_to') ],
+        [ 'between', this.i18n.t('repositories.show.repository_filter.filters.operators.between') ]
       ],
       operator: 'equal_to',
       date: null,
@@ -57,7 +57,7 @@ export default {
     };
   },
   components: {
-    DropdownSelector,
+    SelectDropdown,
     DateTimePicker
   },
   watch: {

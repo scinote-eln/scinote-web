@@ -1,16 +1,15 @@
 <template>
   <div class="filter-attributes">
     <div class="operator-selector">
-      <DropdownSelector
-        :disableSearch="true"
-        :options="operators"
-        :selectedValue="this.operator"
-        :selectorId="`OperatorSelector${filter.id}`"
-        :data-e2e="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
-        @dropdown:changed="updateOperator"
+      <SelectDropdown
+        :searchable="false"
+        :options="this.operators"
+        :value="this.operator"
+        :e2eValue="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
+        @change="updateOperator"
       />
     </div>
-    <div class="sci-input-container">
+    <div class="sci-input-container-v2">
       <input v-if="operator === 'file_contains'"
         class="sci-input-field"
         type="text"
@@ -25,7 +24,7 @@
 
 <script>
   import FilterMixin from '../mixins/filter.js';
-  import DropdownSelector from '../../shared/legacy/dropdown_selector.vue';
+  import SelectDropdown from '../../shared/select_dropdown.vue';
 
 export default {
   name: 'RepositoryAssetValue',
@@ -36,9 +35,9 @@ export default {
   data() {
     return {
       operators: [
-        { value: 'file_contains', label: this.i18n.t('repositories.show.repository_filter.filters.operators.file_contains') },
-        { value: 'file_attached', label: this.i18n.t('repositories.show.repository_filter.filters.operators.file_attached') },
-        { value: 'file_not_attached', label: this.i18n.t('repositories.show.repository_filter.filters.operators.file_not_attached') }
+        [ 'file_contains', this.i18n.t('repositories.show.repository_filter.filters.operators.file_contains') ],
+        [ 'file_attached', this.i18n.t('repositories.show.repository_filter.filters.operators.file_attached') ],
+        [ 'file_not_attached', this.i18n.t('repositories.show.repository_filter.filters.operators.file_not_attached') ]
       ],
       operator: 'file_contains',
       value: ''
@@ -54,7 +53,7 @@ export default {
     }
   },
   components: {
-    DropdownSelector
+    SelectDropdown
   },
   computed: {
     isBlank() {

@@ -884,7 +884,7 @@ Rails.application.routes.draw do
            to: 'repository_rows#index',
            as: 'table_index',
            defaults: { format: 'json' }
-      get 'repository_index_ag',
+      post 'repository_index_ag',
            to: 'repository_rows#index_ag',
            as: 'table_index_ag',
            defaults: { format: 'json' }

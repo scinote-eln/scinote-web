@@ -1,16 +1,15 @@
 <template>
   <div class="filter-attributes">
     <div class="operator-selector">
-      <DropdownSelector
-        :disableSearch="true"
+      <SelectDropdown
+        :searchable="false"
         :options="this.operators"
-        :selectedValue="this.operator"
-        :selectorId="`OperatorSelector${this.filter.id}`"
-        :data-e2e="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
-        @dropdown:changed="updateOperator"
+        :value="this.operator"
+        :e2eValue="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
+        @change="updateOperator"
       />
     </div>
-    <div v-if="operator !== 'between'" class="sci-input-container">
+    <div v-if="operator !== 'between'" class="sci-input-container-v2">
       <input
         class="sci-input-field"
         type="text"
@@ -21,7 +20,7 @@
       />
     </div>
     <div v-else class="number-range-selector">
-      <div class="sci-input-container">
+      <div class="sci-input-container-v2">
         <input
           class="sci-input-field"
           type="text"
@@ -48,7 +47,7 @@
 
 <script>
 import FilterMixin from '../mixins/filter.js';
-import DropdownSelector from '../../shared/legacy/dropdown_selector.vue';
+import SelectDropdown from '../../shared/select_dropdown.vue';
 
 export default {
   name: 'RepositoryNumberValue',
@@ -56,13 +55,13 @@ export default {
   data() {
     return {
       operators: [
-        { value: 'equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.equal_to') },
-        { value: 'unequal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.unequal_to') },
-        { value: 'greater_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than') },
-        { value: 'greater_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than_or_equal_to') },
-        { value: 'less_than', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than') },
-        { value: 'less_than_or_equal_to', label: this.i18n.t('repositories.show.repository_filter.filters.operators.less_than_or_equal_to') },
-        { value: 'between', label: this.i18n.t('repositories.show.repository_filter.filters.operators.between') }
+        [ 'equal_to', this.i18n.t('repositories.show.repository_filter.filters.operators.equal_to') ],
+        [ 'unequal_to', this.i18n.t('repositories.show.repository_filter.filters.operators.unequal_to') ],
+        [ 'greater_than', this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than') ],
+        [ 'greater_than_or_equal_to', this.i18n.t('repositories.show.repository_filter.filters.operators.greater_than_or_equal_to') ],
+        [ 'less_than', this.i18n.t('repositories.show.repository_filter.filters.operators.less_than') ],
+        [ 'less_than_or_equal_to', this.i18n.t('repositories.show.repository_filter.filters.operators.less_than_or_equal_to') ],
+        [ 'between', this.i18n.t('repositories.show.repository_filter.filters.operators.between') ]
       ],
       operator: 'equal_to',
       value: '',
@@ -71,7 +70,7 @@ export default {
     };
   },
   components: {
-    DropdownSelector
+    SelectDropdown
   },
   methods: {
     validateNumber(number) {
