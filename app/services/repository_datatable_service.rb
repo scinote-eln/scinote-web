@@ -116,23 +116,13 @@ class RepositoryDatatableService
     repository_rows = repository_rows.with_active_reminders(@repository, @user) if @params[:only_reminders]
 
     if search_value.present?
-      if @repository.default_search_fileds.include?('users.full_name')
-        repository_rows = repository_rows.joins(:created_by)
-      end
-      repository_row_matches = repository_rows.where_attributes_like(@repository.default_search_fileds, search_value)
-      results = repository_rows.where(id: repository_row_matches)
+      repository_rows = repository_rows.joins(:created_by) if @repository.default_search_fileds.include?('users.full_name')
+      present_data_types = @repository.repository_columns.pluck(:data_type).uniq
+      repository_row_matches = repository_rows.where_attributes_like_boolean(@repository.default_search_fileds.push(:children),
+                                                                             search_value,
+                                                                             data_types: present_data_types)
 
-      data_types = @repository.repository_columns.pluck(:data_type).uniq
-
-      Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |data_type, config|
-        next unless data_types.include?(data_type.to_s)
-
-        custom_cell_matches = repository_rows.joins(config[:includes])
-                                             .where_attributes_like(config[:field], search_value)
-        results = results.or(repository_rows.where(id: custom_cell_matches))
-      end
-
-      repository_rows = results
+      repository_rows = repository_rows.where(id: repository_row_matches)
     end
 
     repository_rows = repository_rows.where(id: advanced_search(repository_rows)) if @params[:advanced_search].present?
