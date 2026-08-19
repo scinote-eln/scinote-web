@@ -18,6 +18,7 @@ module MyModules
 
       PdfPreviewService.new(my_module_report.report, my_module_report.report).generate!
     ensure
+      I18n.backend.date_format = nil
       report_template&.update(generating_report: false)
     end
   end
