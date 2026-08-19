@@ -17,11 +17,11 @@
         </div>
       <% end %>
     </h1>
-
-    <% if @experiment.read_only_description %>
-      <div class="bg-white p-4">
-        <%= @experiment.read_only_description.html_safe %>
-      </div>
-    <% end %>
   </div>
+
+  <% if @experiment.read_only_description %>
+    <div class="bg-white p-4">
+      <%= @experiment.read_only_description.html_safe %>
+    </div>
+  <% end %>
 </div>
