@@ -129,7 +129,9 @@ export default {
       }
     },
     rangeIsValid() {
-      return this.$refs.endDatepicker?.value >= this.$refs.startDatepicker?.value
+      const start = this.$refs.startDatepicker?.value ?? this.fromValue;
+      const end = this.$refs.endDatepicker?.value ?? this.toValue;
+      return new Date(end) >= new Date(start);
     }
   }
 };
