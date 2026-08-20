@@ -75,7 +75,7 @@
         :data-e2e="`e2e-BT-topToolbar-${action.name}`"
         @click="doAction(action, $event)">
           <i :class="action.icon"></i>
-          <span :data-sn-tooltip="action.tooltip || action.label">{{ action.label }}</span>
+          <span v-if="action.label" :data-sn-tooltip="action.tooltip || action.label">{{ action.label }}</span>
         </a>
         <component v-if="action.type === 'component'"
                   :is="action.params.componentRenderer"
