@@ -35,6 +35,7 @@
     </div>
     <div style="height: 540px">
       <DataTable
+        ref="repositoryTable"
         v-if="repositoryColumnsDef.length > 0"
         :columnDefs="repositoryColumnsDef"
         :tableId="`my_module_repository_rows_my_module_${myModuleId}_repository_${repositoryVersion.id}`"
@@ -46,7 +47,14 @@
         :tableOnly="true"
         :enableBarcodeSearch="true"
         :fetchColumnsOnReload="true"
+        loadMethod="post"
+        :postParams="{
+          advanced_search: {
+            filter_elements: activeFilter
+          }
+        }"
         @openConsumeModal="consume"
+        @showTextCell="showTextCellModal"
         @export="exportRows"
         @export_consumption="exportConsumption"
         @print="printRows"
@@ -55,6 +63,7 @@
         @unassign_downstream="unassignModalDownstreamShow"
         @create="openCreateItemModal = true"
         @tableReloaded="reloadingTable = false"
+        @applyFilters="applyFilters"
         @selectVersion="loadVersion"
         @pinVersion="pinVersion"
       ></DataTable>
@@ -67,6 +76,11 @@
         :row="selectedRow"
         :e2eValue="'task-assignedItems-consumeModal'"
       />
+      <TextCellModal
+        v-if="textCellModalObject"
+        :row="textCellModalObject.row"
+        :colDef="textCellModalObject.colDef"
+        @close="textCellModalObject = null"/>
       <ConfirmationModal
         :title="i18n.t('my_modules.repository.stock_warning_modal.title')"
         :description="warningModalDescription"
@@ -114,7 +128,9 @@ import UserStateMixin from '../../mixins/user_state_mixin.js';
 import CreateItemModal from '../assigned_items/modals/new_item.vue';
 import AssignItemModal from './modals/assign_item.vue';
 import UnassignItemModal from './modals/unassign_item.vue';
-import VersionDropdown from './version_dropdown.vue'
+import VersionDropdown from './version_dropdown.vue';
+import TextCellModal from '../../repository/modals/text_cell.vue';
+import RepositoryFilters from '../../repository/filters.vue';
 
 import {
   index_ag_my_module_repository_path,
@@ -142,7 +158,9 @@ export default {
     CreateItemModal,
     AssignItemModal,
     UnassignItemModal,
-    VersionDropdown
+    VersionDropdown,
+    TextCellModal,
+    RepositoryFilters
   },
   mixins: [ColumnsMixin, UserStateMixin],
   data: () => ({
@@ -156,7 +174,9 @@ export default {
     reloadingTable: false,
     openConsumeModal: false,
     openCreateItemModal: false,
-    repositoryVersion: null
+    repositoryVersion: null,
+    textCellModalObject: null,
+    activeFilter: []
   }),
   watch: {
     sectionOpened() {
@@ -174,6 +194,11 @@ export default {
     if (!this.onlyRepository) {
       this.recalculateContainerSize();
     }
+
+    window.repositoryTable = this;
+  },
+  unmounted() {
+    window.repositoryTable = null;
   },
   computed: {
     openSize() {
@@ -224,6 +249,17 @@ export default {
         }
       });
 
+      if (!this.repositoryVersion.attributes.is_snapshot) {
+        right.push({
+          name: 'filters',
+          type: 'component',
+          params: {
+            componentRenderer: RepositoryFilters,
+            repositoryId: parseInt(this.repository.id, 10)
+          }
+        });
+      }
+
       right.push({
         name: 'export',
         icon: 'sn-icon sn-icon-export',
@@ -231,6 +267,7 @@ export default {
         tooltip: this.i18n.t('my_modules.repository.export'),
         buttonStyle: 'btn btn-light icon-btn btn-black',
       })
+
       return {
         left: left,
         right: right
@@ -250,6 +287,9 @@ export default {
     }
   },
   methods: {
+    updateRowData(row) {
+      this.$refs.repositoryTable.updateRowData(row);
+    },
     assignRows(rowIds, repositoryId, assignToDownstream = false) {
       this.openAssignItemModal = false;
       this.$emit('assignRows', rowIds, repositoryId, assignToDownstream);
@@ -329,6 +369,12 @@ export default {
         );
       }
     },
+    showTextCellModal(_e, rows, colDef) {
+      this.textCellModalObject = {
+        row: rows[0],
+        colDef
+      }
+    },
     loadVersion(data){
       const repositoryId = data.data ? data.data : (this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id);
       axios.get(my_module_repository_path(this.myModuleId, repositoryId))
@@ -384,6 +430,10 @@ export default {
           this.submitting = false;
         });
       }
+    },
+    applyFilters(filters) {
+      this.activeFilter = filters.data
+      this.reloadingTable = true
     }
   }
 };

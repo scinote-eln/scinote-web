@@ -552,10 +552,18 @@ export default {
           this.childrenCount = data.children.length;
           this.children = data.children;
         }
-        window.repositoryTable?.updateRowData({
-          id: this.repositoryRowId,
-          connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
-        });
+        if (window.repositoryAssignTable) {
+          window.repositoryAssignTable.updateRowData({
+            id: this.repositoryRowId,
+            connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+          });
+        } else {
+          window.repositoryTable?.updateRowData({
+            id: this.repositoryRowId,
+            connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+          });
+        }
+
       };
       window.repositoryItemRelationshipsModal.show(
         {
@@ -705,7 +713,11 @@ export default {
       ).then((response) => {
         const row = response.data.data;
         if (this.defaultColumns) this.defaultColumns.name = row.attributes.name;
-        window.repositoryTable?.updateRowData(row);
+        if (window.repositoryAssignTable) {
+          window.repositoryAssignTable.updateRowData(row);
+        } else {
+          window.repositoryTable?.updateRowData(row);
+        }
         window.assignedItemsTable?.$refs?.assignedItems?.loadAssingedRepositories();
       });
     },
@@ -723,7 +735,12 @@ export default {
       ).then((response) => {
         const result = response.data;
         this.customColumns = this.customColumns.map((col) => (String(col.id) === String(colId) ? { ...col, ...result } : col));
-        window.repositoryTable?.updateRowData({ id: this.repositoryRowId, [`col_${colId}`]: result });
+        if (window.repositoryAssignTable) {
+          window.repositoryAssignTable.updateRowData({ id: this.repositoryRowId, [`col_${colId}`]: result });
+        } else {
+          window.repositoryTable?.updateRowData({ id: this.repositoryRowId, [`col_${colId}`]: result });
+        }
+
         window.assignedItemsTable?.$refs?.assignedItems?.loadAssingedRepositories();
       });
     },
@@ -747,10 +764,18 @@ export default {
           'success'
         );
         await this.loadRepositoryRow(this.currentItemUrl);
-        window.repositoryTable?.updateRowData({
-          id: this.repositoryRowId,
-          connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+        if (window.repositoryAssignTable) {
+          window.repositoryAssignTable?.updateRowData({
+            id: this.repositoryRowId,
+            connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+          });
+        } else {
+          window.repositoryTable?.updateRowData({
+            id: this.repositoryRowId,
+            connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
         });
+        }
+
         if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
       } catch {
         HelperModule.flashAlertMsg(
