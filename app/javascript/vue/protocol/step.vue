@@ -165,7 +165,7 @@
           tabindex="0">
           <i class="sn-icon sn-icon-steps-manage" aria-hidden="true"></i>
         </a>
-        <a v-else-if="this.urls.reorder_elements_url && this.step.attributes.locked && this.elements.length > 1"
+        <a v-else-if="this.urls.reorder_elements_url && !this.step.attributes.locked && this.elements.length > 1"
           class="btn btn-light icon-btn"
           data-toggle="modal"
           data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-manageStep`
