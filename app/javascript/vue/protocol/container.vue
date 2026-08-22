@@ -558,6 +558,8 @@ export default {
       this.protocol.attributes.name = newName;
       axios.patch(this.urls.update_protocol_name_url, { protocol: { name: newName } }).then(() => {
         this.refreshProtocolStatus();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     updateDescription(protocol) {

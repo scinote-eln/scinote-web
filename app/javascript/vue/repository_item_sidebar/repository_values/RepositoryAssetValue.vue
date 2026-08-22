@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import axios from '../../../packs/custom_axios';
 import TooltipPreview from './TooltipPreview.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
 
@@ -156,34 +157,29 @@ export default {
       });
     },
     updateCell(value) {
-      $.ajax({
-        type: 'PUT',
-        url: this.updatePath,
-        data: {
-          repository_cells: {
-            [this.colId]: value
-          }
-        },
-        success: (result) => {
-          const assetRepositoryCell = result?.value;
-          this.uploading = false;
-
-          if (assetRepositoryCell) {
-            this.id = assetRepositoryCell.id;
-            this.url = assetRepositoryCell.url;
-            this.preview_url = assetRepositoryCell.preview_url;
-            this.file_name = assetRepositoryCell.file_name;
-            this.icon_html = assetRepositoryCell.icon_html;
-            this.medium_preview_url = assetRepositoryCell.medium_preview_url;
-          } else {
-            this.file_name = '';
-          }
-          if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
-        },
-        error: () => {
-          this.error = I18n.t('repositories.item_card.repository_asset_value.errors.upload_failed_general');
-          this.uploading = false;
+      axios.put(this.updatePath, {
+        repository_cells: {
+          [this.colId]: value
         }
+      }).then((response) => {
+        const result = response.data;
+        const assetRepositoryCell = result?.value;
+        this.uploading = false;
+
+        if (assetRepositoryCell) {
+          this.id = assetRepositoryCell.id;
+          this.url = assetRepositoryCell.url;
+          this.preview_url = assetRepositoryCell.preview_url;
+          this.file_name = assetRepositoryCell.file_name;
+          this.icon_html = assetRepositoryCell.icon_html;
+          this.medium_preview_url = assetRepositoryCell.medium_preview_url;
+        } else {
+          this.file_name = '';
+        }
+        if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
+      }).catch(() => {
+        this.error = I18n.t('repositories.item_card.repository_asset_value.errors.upload_failed_general');
+        this.uploading = false;
       });
     }
   }

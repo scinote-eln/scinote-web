@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import axios from '../../../packs/custom_axios';
 import DateTimePicker from '../../shared/date_time_picker.vue';
 import Reminder from '../reminder.vue';
 
@@ -173,19 +174,15 @@ export default {
 
       params[this.colId] = this.value;
 
-      $.ajax({
-        method: 'PUT',
-        url: this.updatePath,
-        dataType: 'json',
-        data: { repository_cells: params },
-        success: () => {
-          this.defaultStartDate = this.startDate;
-          this.defaultEndDate = this.endDate;
-          if ($('.dataTable.repository-dataTable')[0]) {
-            $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
-          }
-          this.reloadRepoItemSidebar();
+      axios.put(this.updatePath, { repository_cells: params }).then(() => {
+        this.defaultStartDate = this.startDate;
+        this.defaultEndDate = this.endDate;
+        if ($('.dataTable.repository-dataTable')[0]) {
+          $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
         }
+        this.reloadRepoItemSidebar();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     }
   }

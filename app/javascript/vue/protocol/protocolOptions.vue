@@ -158,6 +158,7 @@
 </template>
 
 <script>
+import axios from '../../packs/custom_axios.js';
 import DeleteStepsModals from './modals/delete_steps';
 import ArchiveStepsModal from './modals/archive_steps';
 import AddStepsModal from './modals/add_protocol_steps';
@@ -236,24 +237,28 @@ export default {
       this.stepsAdding = false;
     },
     loadProtocol() {
-      $.get(
+      axios.get(
         `${this.protocol.attributes.urls.load_from_repo_url}?type=recent`
-      ).done((data) => {
+      ).then((response) => {
+        const data = response.data;
         $(this.$refs.loadProtocol).trigger('ajax:success', data);
       });
     },
     unlinkProtocol() {
-      $.get(this.protocol.attributes.urls.unlink_url).done((data) => {
+      axios.get(this.protocol.attributes.urls.unlink_url).then((response) => {
+        const data = response.data;
         $(this.$refs.unlinkProtocol).trigger('ajax:success', data);
       });
     },
     updateProtocol() {
-      $.get(this.protocol.attributes.urls.update_protocol_url).done((data) => {
+      axios.get(this.protocol.attributes.urls.update_protocol_url).then((response) => {
+        const data = response.data;
         $(this.$refs.updateProtocol).trigger('ajax:success', data);
       });
     },
     revertProtocol() {
-      $.get(this.protocol.attributes.urls.revert_protocol_url).done((data) => {
+      axios.get(this.protocol.attributes.urls.revert_protocol_url).then((response) => {
+        const data = response.data;
         $(this.$refs.revertProtocol).trigger('ajax:success', data);
       });
     },

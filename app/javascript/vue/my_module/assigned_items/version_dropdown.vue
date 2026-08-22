@@ -122,6 +122,8 @@ export default {
     createVersion(){
       axios.post(this.createVersionUrl).then((response) => {
         this.versions.unshift(response.data.data);
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     deleteVersion(item) {
@@ -130,7 +132,9 @@ export default {
       }
 
       this.versions = this.versions.filter(v => v.id !== item.id);
-      axios.delete(my_module_repository_snapshots_path(this.params.myModuleId, item.id));
+      axios.delete(my_module_repository_snapshots_path(this.params.myModuleId, item.id)).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
     },
     statusVersion(item, status) {
       this.versions = this.versions.map(v => {

@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import axios from '../../packs/custom_axios';
+
 export default {
   name: 'SavedFilterElement',
   props: {
@@ -19,12 +21,10 @@ export default {
       this.$emit('savedFilter:load', this.savedFilter.attributes.show_url);
     },
     deleteFilter() {
-      $.ajax({
-        url: this.savedFilter.attributes.delete_url,
-        type: 'DELETE',
-        success: () => {
-          this.$emit('savedFilter:delete');
-        }
+      axios.delete(this.savedFilter.attributes.delete_url).then(() => {
+        this.$emit('savedFilter:delete');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     }
   }
