@@ -112,7 +112,7 @@ export default {
     submit() {
       this.$emit('next');
       const assetIds = this.assets.filter(asset => asset.checked).map(asset => asset.id);
-      this.wizardComponent.$emit('setAssetIds', { assetIds });
+      this.wizardComponent.$emit('setAssetIds', assetIds);
     }
 
   }

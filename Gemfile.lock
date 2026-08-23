@@ -937,6 +937,7 @@ DEPENDENCIES
   newrelic_rpm
   nokogiri (~> 1.19.4)
   noticed
+  odf-report!
   oj
   omniauth (~> 2.1)
   omniauth-azure-activedirectory-v2
