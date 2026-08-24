@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="params.data.stock">
     <div v-if="canManage" class="relative">
       <span class="cursor-pointer text-sn-blue" @click="openStockModal">
         <span v-if="params.data.stock.value.stock_formatted" class="truncate">
