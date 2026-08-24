@@ -36,12 +36,22 @@
       @startCreate="addingNewRow = true"
       @importItems="importItems"
       @clearAllReminders="clearAllReminders"
+      @assign="openAssignToTaskModal"
+      @duplicate="duplicateRows"
+      @exportRows="exportRows"
+      @exportConsumption="exportConsumption"
+      @printLabel="printLabel"
+      @archive="archiveRows"
+      @createEvent="createEvent"
     ></DataTable>
     <div v-else class="flex items-center justify-center w-full h-96 text-sn-grey-500">
       {{ i18n.t('repositories.show.laoding_table_configuration') }}
     </div>
     <teleport to="body">
-      <ImportRepositoryModal ref="importModal" :repository-url="repositoryUrl" @import-success="reloadingTable = true" />
+      <ImportRepositoryModal
+        ref="importModal"
+        :repository-url="repositoryUrl"
+        @import-success="reloadingTable = true" />
       <TextCellModal
         v-if="textCellModalObject"
         :row="textCellModalObject.row"
@@ -53,6 +63,32 @@
         :stockUrl="stockValueModalUrl"
         @updateStock="updateStock"
         @close="stockValueModalUrl = null"/>
+      <ExportItemsModal
+        v-if="exportParams"
+        :repository="repositoryVersion"
+        :params="exportParams"
+        @close="exportParams = null"/>
+      <ExportConsumptionModal
+        v-if="exportStockConsumptionRows"
+        :repository="repositoryVersion"
+        :rows="exportStockConsumptionRows"
+        @close="exportStockConsumptionRows = null"/>
+      <PrintModal
+        v-if="printLabelRows"
+        :repositoryId="repositoryId"
+        :rowIds="printLabelRows"
+        @close="printLabelRows = null"/>
+      <AssignToTasksModal
+        v-if="assignToTasksModalRows"
+        :rowsToAssign="assignToTasksModalRows"
+        :repositoryId="repositoryId"
+        @reloadTable="reloadingTable = true"
+        @close="assignToTasksModalRows = null"/>
+      <CreateEventModal
+        v-if="createEventModalRow"
+        :repositoryId="repositoryId"
+        :repositoryRowId="createEventModalRow"
+        @close="createEventModalRow = null"/>
     </teleport>
     <button ref="legacyManageColumns" class="hidden manage-repo-column-index"
             :data-modal-url="repositoriesUrl"
@@ -67,6 +103,11 @@ import ColumnsMixin from './columns_mixin.js';
 import TextCellModal from './modals/text_cell.vue';
 import StockValueModal from './modals/stock_value_modal.vue';
 import ImportRepositoryModal from '../repositories/modals/import/container.vue';
+import AssignToTasksModal from './modals/assign_to_tasks.vue';
+import ExportItemsModal from './modals/export_items.vue';
+import ExportConsumptionModal from './modals/export_stock_consumption_modal.vue';
+import PrintModal from './modals/print_modal.vue';
+import CreateEventModal from '../equipment_bookings/manage_modal.vue';
 import RepositoryFilters from './filters.vue'
 
 import {
@@ -79,7 +120,10 @@ import {
   repository_repository_columns_path,
   edit_repository_repository_column_path,
   repository_columns_destroy_html_path,
-  team_repository_hide_reminders_path
+  team_repository_hide_reminders_path,
+  actions_toolbar_repository_repository_rows_path,
+  repository_copy_records_path,
+  repository_archive_records_path
 } from '../../routes.js';
 
 export default {
@@ -96,7 +140,12 @@ export default {
     TextCellModal,
     StockValueModal,
     ImportRepositoryModal,
-    RepositoryFilters
+    RepositoryFilters,
+    AssignToTasksModal,
+    ExportItemsModal,
+    ExportConsumptionModal,
+    PrintModal,
+    CreateEventModal
   },
   mixins: [ColumnsMixin],
   data: () => ({
@@ -106,6 +155,11 @@ export default {
     textCellModalObject: null,
     stockValueModalUrl: null,
     hasActiveReminders: false,
+    assignToTasksModalRows: null,
+    exportParams: null,
+    exportStockConsumptionRows: null,
+    printLabelRows: null,
+    createEventModalRow: null,
     currentPageRows: [],
     activeFilter: [],
     newRowTemplate: {
@@ -192,7 +246,7 @@ export default {
       return repository_repository_rows_path(this.repositoryId);
     },
     toolbarActionsUrl() {
-      return '';
+      return actions_toolbar_repository_repository_rows_path(this.repositoryId)
     },
   },
   methods: {
@@ -256,6 +310,55 @@ export default {
       this.textCellModalObject = {
         row: rows[0],
         colDef
+      }
+    },
+    openAssignToTaskModal(_e, rows) {
+      this.assignToTasksModalRows = rows.map((row) => ( row.id ));
+    },
+    duplicateRows(_e, rows) {
+      const rowIds = rows.map((row) => row.id);
+      axios.post(repository_copy_records_path(this.repositoryId), {
+        selected_rows: rowIds
+      }).then((response) => {
+        this.reloadingTable = true;
+        HelperModule.flashAlertMsg(response.data.flash, 'success');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
+      });
+    },
+    printLabel(_e, rows) {
+      this.printLabelRows = rows.map((row) => ( row.id ));
+    },
+    exportConsumption(_e, rows) {
+      this.exportStockConsumptionRows = rows.map((row) => ( row.id ));
+    },
+    createEvent(_e, rows) {
+      this.createEventModalRow = parseInt(rows[0].id, 10);
+    },
+    archiveRows(_e, rows) {
+      const rowIds = rows.map((row) => row.id);
+      axios.post(repository_archive_records_path(this.repositoryId), {
+        selected_rows: rowIds
+      }).then((response) => {
+        this.reloadingTable = true;
+        HelperModule.flashAlertMsg(response.data.flash, 'success');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
+      });
+    },
+    exportRows(_e, rows) {
+      const rowIds = rows.map((row) => row.id);
+
+      const headerIDs = [];
+      this.repositoryColumnsDef.forEach((column) => {
+        if (column.cellRendererParams?.legacyId) {
+          headerIDs.push(column.cellRendererParams.legacyId);
+        }
+      });
+
+      this.exportParams = {
+        rows: rowIds,
+        headers: headerIDs
       }
     },
     uploadFile(row, columnDef, file) {

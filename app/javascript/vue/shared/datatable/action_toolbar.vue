@@ -7,26 +7,53 @@
       <div v-if="!loading && actions.length === 0" class="text-sn-grey-grey">
         {{ i18n.t('action_toolbar.no_actions') }}
       </div>
-      <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action shrink-0" :class="{ 'disable-click': disabledActions[action.name] }">
-        <a :class="`rounded flex gap-2 items-center py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
-                  bg-sn-white color-sn-blue hover:no-underline focus:no-underline ${action.button_class}`"
-          :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
-          :data-target="action.target"
-          :data-toggle="action.type === 'modal' && 'modal'"
-          :id="action.button_id"
-          :title="action.label"
-          :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
-          @click="doAction(action, $event)">
-          <i :class="action.icon"></i>
-          <span class="tw-hidden xl:inline-block">{{ action.label }}</span>
-        </a>
-      </div>
+      <template v-for="action in actions" :key="action.name" >
+        <div v-if="action.type !== 'group'" class="sn-action-toolbar__action shrink-0" :class="{ 'disable-click': disabledActions[action.name] }">
+          <a :class="`rounded flex gap-2 items-center py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
+                    bg-sn-white color-sn-blue hover:no-underline focus:no-underline ${action.button_class}`"
+            :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
+
+            :data-target="action.target"
+            :data-toggle="action.type === 'modal' && 'modal'"
+            :id="action.button_id"
+            :title="action.label"
+            :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
+            @click="doAction(action, $event)">
+            <i :class="action.icon"></i>
+            <span class="tw-hidden xl:inline-block">{{ action.label }}</span>
+          </a>
+        </div>
+        <template v-if="action.type === 'group'">
+          <GeneralDropdown ref="dropdown" position="right">
+            <template v-slot:field>
+              <span
+                :class="`rounded flex gap-2 text-sn-blue items-center py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
+                  bg-sn-white color-sn-blue hover:no-underline focus:no-underline`"
+                :title="action.label"
+                :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
+              >
+                <i :class="action.icon"></i>
+                <span class="tw-hidden xl:inline-block">{{ action.label }}</span>
+              </span>
+            </template>
+            <template v-slot:flyout >
+              <template v-for="action in action.actions" :key="action.name">
+                <div @click="doAction(action, $event)" :title="action.label" class="flex items-center gap-2 text-sn-blue p-3 hover:bg-sn-super-light-grey cursor-pointer">
+                  <i :class="action.icon"></i>
+                  <span>{{ action.label }}</span>
+                </div>
+              </template>
+            </template>
+          </GeneralDropdown>
+        </template>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
 import axios from '../../../packs/custom_axios.js';
+import GeneralDropdown from '../general_dropdown.vue';
 
 export default {
   name: 'ActionToolbar',
@@ -34,6 +61,9 @@ export default {
     actionsUrl: { type: String, required: true },
     actionsMethod: { type: String, default: 'post' },
     params: { type: Object },
+  },
+  components: {
+    GeneralDropdown
   },
   data() {
     return {
