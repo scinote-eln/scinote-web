@@ -172,11 +172,15 @@ class RepositoryRow < ApplicationRecord
     repository_rows.where_attributes_like_boolean(SEARCHABLE_ATTRIBUTES, query)
   end
 
-  def self.where_children_attributes_like(query, _options = {})
+  def self.where_children_attributes_like(query, options = {})
     query_clauses = []
-    Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each_value do |config|
+    Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |data_type, config|
+      next if options[:data_types].present? && options[:data_types].exclude?(data_type.to_s)
+
       query_clauses << unscoped.joins(config[:includes]).where_attributes_like(config[:field], query).to_sql
     end
+    return unscoped if query_clauses.empty?
+
     unscoped.from("(#{query_clauses.join(' UNION ')}) AS repository_rows", :repository_rows)
   end
 

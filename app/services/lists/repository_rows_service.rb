@@ -104,21 +104,25 @@ module Lists
 
       if @params[:search].present?
         @records = @records.joins(:created_by) if @repository.default_search_fileds.include?('users.full_name')
-        data_types = @repository.repository_columns.pluck(:data_type).uniq
+        present_data_types = @repository.repository_columns.pluck(:data_type).uniq
 
-        filtered_records = @records.where_attributes_like(@repository.default_search_fileds, @params[:search])
+        filtered_records = @records.where_attributes_like_boolean(@repository.default_search_fileds.push(:children),
+                                                                  @params[:search],
+                                                                  data_types: present_data_types)
 
-        Extends::AG_REPOSITORY_EXTRA_SEARCH_ATTR.each do |data_type, config|
-          next unless data_types.include?(data_type.to_s)
+        # Test this approach for bigger inventories, could be faster than implementation in RepositoryRow.where_children_attributes_like
 
-          filtered_records = filtered_records.or(@records.where('EXISTS (?)',
-                                                                data_type.to_s.constantize
-                                                                         .joins(:repository_cell)
-                                                                         .joins(config[:includes])
-                                                                         .where('repository_cells.repository_row_id = repository_rows.id')
-                                                                         .where_attributes_like(config[:field], @params[:search])
-                                                                         .select(1)))
-        end
+        # Extends::AG_REPOSITORY_EXTRA_SEARCH_ATTR.each do |data_type, config|
+        #   next unless data_types.include?(data_type.to_s)
+
+        #   filtered_records = filtered_records.or(@records.where('EXISTS (?)',
+        #                                                         data_type.to_s.constantize
+        #                                                                  .joins(:repository_cell)
+        #                                                                  .joins(config[:includes])
+        #                                                                  .where('repository_cells.repository_row_id = repository_rows.id')
+        #                                                                  .where_attributes_like(config[:field], @params[:search])
+        #                                                                  .select(1)))
+        # end
 
         @records = filtered_records
       elsif @params.dig(:advanced_search, :filter_elements).present?
