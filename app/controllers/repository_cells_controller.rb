@@ -63,11 +63,11 @@ class RepositoryCellsController < ApplicationController
 
   def log_activity
     Activities::CreateActivityService.call(
-      activity_type: :edit_item_inventory,
+      activity_type: :edit_item_field_inventory,
       owner: current_user,
       subject: @repository_row,
       team: @repository.team,
-      message_items: { repository_row: @repository_row.id, repository: @repository.id }
+      message_items: { repository_row: @repository_row.id, repository_column: @repository_column.id }
     )
   end
 
