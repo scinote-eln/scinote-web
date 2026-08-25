@@ -65,6 +65,7 @@
       <repository-table
         ref='tableContainer'
         :repository-id="<%= @repository.id %>"
+        :can-manage-repository="<%= can_manage_repository?(@repository) %>"
         create-url="<%= repository_repository_rows_path(@repository) if can_create_repository_rows?(@repository) %>"
         active-page-url="<%= repository_path(@repository) %>"
         archived-page-url="<%= repository_path(@repository, view_mode: :archived) %>"

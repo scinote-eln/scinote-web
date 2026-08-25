@@ -133,7 +133,8 @@ export default {
     createUrl: String,
     activePageUrl: String,
     archivedPageUrl: String,
-    currentViewMode: { type: String, default: 'active' }
+    currentViewMode: { type: String, default: 'active' },
+    canManageRepository: { type: Boolean, default: false }
   },
   components: {
     DataTable,
@@ -222,7 +223,7 @@ export default {
         }
       });
 
-      if (this.createUrl) {
+      if (this.canManageRepository) {
         right.push({
           name: 'manageColumns',
           icon: 'sn-icon sn-icon-add-columns',

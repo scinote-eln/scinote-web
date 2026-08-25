@@ -10,7 +10,7 @@
           >
             {{ params.data.name }}
           </a>
-          <div @click="startEditing" class="tw-hidden group-hover:block">
+          <div v-if="canManage" @click="startEditing" class="tw-hidden group-hover:block">
             <i class="sn-icon sn-icon-edit cursor-pointer "></i>
           </div>
         </div>
@@ -78,6 +78,11 @@ export default {
   components: {
     GeneralDropdown,
     errorFlyout
+  },
+  computed: {
+    canManage() {
+      return this.params?.data?.permissions?.manage || false;
+    }
   },
   data() {
     return {
