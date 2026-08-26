@@ -1708,6 +1708,7 @@ en:
           option_replace_html: "<strong>Overwrite existing task content</strong> with the template: Protocol steps, Items, and Results will replace any existing ones on Task."
           confirmation_description_html: "<strong>This action cannot be undone. Are you sure you want to continue?</strong>"
           load: "Load template"
+          load_message: "Clicking the Load template button will overwrite existing task content with the current protocol template version: Protocol steps, Items, and Results will replace any existing ones on Task."
       copy_to_repository_modal:
         title: "Save to protocol templates"
         name_label: "Templates protocol name"

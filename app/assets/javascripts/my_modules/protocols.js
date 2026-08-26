@@ -252,7 +252,7 @@ function loadFromRepository() {
 
   if (selectedRow !== null) {
     modal.find(".modal-footer [data-action='submit']").prop('disabled', true);
-    let loadMode = $("#load-from-repository-warning-modal input[name='load_option']:checked").val();
+    let loadMode = $("#load-from-repository-warning-modal input[name='load_option']:checked").val() || 'replace';
     // POST via ajax
     $('#loadingOverlay').removeClass('tw-hidden');
     $.ajax({
