@@ -465,7 +465,7 @@ class Protocol < ApplicationRecord
 
   def self.clone_step(protocol_dest, current_user, step, include_file_versions, load_mode: 'replace')
     position = load_mode == 'replace' ? step.position : nil
-    step.duplicate(protocol_dest, current_user, step_position: position, include_file_versions: include_file_versions, load_mode: load_mode)
+    step.duplicate(protocol_dest, current_user, step_position: position, include_file_versions: include_file_versions)
   end
 
   def self.clone_result(protocol_dest, current_user, result)
