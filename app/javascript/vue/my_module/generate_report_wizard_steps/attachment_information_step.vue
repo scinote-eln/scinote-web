@@ -120,8 +120,8 @@ export default {
         ...this.params,
         header: this.header,
         footer: this.footer,
-        addNumarization: this.addNumarization,
-        addBlankPage: this.addBlankPage
+        add_numarization: this.addNumarization,
+        add_blank_page: this.addBlankPage
       }
 
       this.wizardComponent.$emit('reportStatus', reportTemplateParams.report_template_id, true);

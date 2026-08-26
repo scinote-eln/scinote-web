@@ -64,19 +64,19 @@ export default {
         ]
       },
       wizardParams: {
-        assetIds: [],
+        asset_ids: [],
         myModuleId: this.myModuleId,
         report_template_id: this.templateId,
         header: '',
         footer: '',
-        addNumarization: false,
-        addBlankPage: false
+        add_numarization: false,
+        add_blank_page: false
       }
     };
   },
   methods: {
     setAssetIds(assetIds) {
-      this.wizardParams.assetIds = assetIds;
+      this.wizardParams.asset_ids = assetIds;
     }
   }
 };

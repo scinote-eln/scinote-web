@@ -1988,6 +1988,7 @@ en:
       generate_button: "Generate report"
       generating: "Generating report"
       cretated: "Created: %{date}"
+      empty_page: "This page is intentionally blank."
       delete:
         title: "Delete report %{name}"
         description_html: "You are trying to delete a report.<br><br>This action cannot be undone."

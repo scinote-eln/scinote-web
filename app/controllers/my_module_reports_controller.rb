@@ -38,7 +38,7 @@ class MyModuleReportsController < ApplicationController
 
   def create
     @report_template.update!(generating_report: true)
-    MyModules::GenerateReportJob.perform_later(@report_template.id, @my_module.id, user_id: current_user.id, team_id: current_team.id)
+    MyModules::GenerateReportJob.perform_later(@report_template.id, @my_module.id, create_params, user_id: current_user.id, team_id: current_team.id)
   end
 
   def generated_reports
@@ -55,15 +55,9 @@ class MyModuleReportsController < ApplicationController
   end
 
   def pdfs
-    step_assets = Asset.pdfs
-                       .joins(:step)
-                       .where(steps: { protocol_id: @my_module.protocol.id })
-                       .order('steps.position ASC, active_storage_blobs.filename ASC')
+    step_assets = @my_module.assets_in_steps.pdfs.order('steps.position ASC, active_storage_blobs.filename ASC')
 
-    result_assets = Asset.pdfs
-                         .joins(:result)
-                         .where(results: { my_module_id: @my_module.id })
-                         .order('results.created_at DESC, active_storage_blobs.filename ASC')
+    result_assets = @my_module.assets_in_results.pdfs.order('results.created_at DESC, active_storage_blobs.filename ASC')
     @assets = (step_assets + result_assets)
   end
 
@@ -99,6 +93,10 @@ class MyModuleReportsController < ApplicationController
 
   def check_analytical_reporting
     render_403 unless ReportTemplate.analytical_reporting_enabled?
+  end
+
+  def create_params
+    params.permit(:header, :footer, :add_numarization, :add_blank_page, asset_ids: [])
   end
 
   def load_my_module_report
