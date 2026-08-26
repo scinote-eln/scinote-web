@@ -114,6 +114,8 @@ module Api
       end
 
       def update_file_result
+        raise PermissionError.new(Result, :manage) unless can_manage_result_attachments?(@result)
+
         old_checksum, new_checksum = nil
         asset = @result.assets.order(created_at: :asc).first
         Result.transaction do

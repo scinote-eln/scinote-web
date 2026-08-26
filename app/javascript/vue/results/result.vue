@@ -150,6 +150,28 @@
           <button v-if="urls.unpin_url" class="btn btn-light icon-btn" :title="i18n.t('my_modules.results.actions.unpin')" @click="unpinResult" :data-e2e="`e2e-BT-task-result${result.id}-unpin`">
             <i class="sn-icon sn-icon-pinned"></i>
           </button>
+          <a v-if="!locked &&  this.result.attributes.lock_enabled"
+            class="btn btn-light icon-btn"
+            data-toggle="modal"
+            data_e2e: `e2e-BT-protocol-result${this.result.id}-stepOptions-rearrange`
+            e2e_class: `e2e-BT-protocol-result-stepOptions-rearrange`
+            :data-sn-tooltip="i18n.t('my_modules.results.actions.edit_content')"
+            @click="openReorderModal()"
+            @keyup.enter="openReorderModal()"
+            tabindex="0">
+            <i class="sn-icon sn-icon-steps-manage" aria-hidden="true"></i>
+          </a>
+          <a v-else-if="!locked && this.result.attributes.urls.reorder_elements_url && this.elements.length > 1"
+            class="btn btn-light icon-btn"
+            data-toggle="modal"
+            data_e2e: `e2e-BT-protocol-result${this.result.id}-stepOptions-manageResult`
+            e2e_class: `e2e-BT-protocol-result-stepOptions-manageResult`
+            :data-sn-tooltip="i18n.t('my_modules.results.actions.rearrange_content')"
+            @click="openReorderModal()"
+            @keyup.enter="openReorderModal"
+            tabindex="0" >
+            <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
+          </a>
           <MenuDropdown
             v-if="!locked"
             :listItems="this.actionsMenu"
@@ -157,7 +179,6 @@
             :position="'right'"
             :btnIcon="'sn-icon sn-icon-more-hori'"
             :data-e2e="`e2e-DD-task-result${result.id}-optionsMenu`"
-            @reorder="openReorderModal"
             @duplicate="duplicateResult"
             @archive="showArchiveModal"
             @delete="showDeleteModal"
@@ -440,21 +461,6 @@ export default {
     },
     actionsMenu() {
       let menu = [];
-      if (this.result.attributes.lock_enabled) {
-        menu = menu.concat([{
-          text: this.i18n.t('my_modules.results.actions.manage_result'),
-          emit: 'reorder',
-          data_e2e: `e2e-BT-protocol-result${this.result.id}-optionsMenu-manageResult`,
-          e2e_class: 'e2e-DO-task-result-optionsMenu-manageResult'
-        }]);
-      } else if (this.urls.reorder_elements_url && this.elements.length > 1) {
-        menu = menu.concat([{
-          text: this.i18n.t('my_modules.results.actions.rearrange'),
-          emit: 'reorder',
-          data_e2e: `e2e-DO-task-result${this.result.id}-optionsMenu-reorder`,
-          e2e_class: 'e2e-DO-task-result-optionsMenu-reorder'
-        }]);
-      }
       if (this.urls.duplicate_url && !this.result.attributes.archived) {
         menu = menu.concat([{
           text: this.i18n.t('my_modules.results.actions.duplicate'),

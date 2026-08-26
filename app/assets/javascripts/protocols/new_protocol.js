@@ -14,9 +14,11 @@
     }
   });
 
+  submitButton.attr('disabled', 'disabled');
+
   $(protocolModal)
     .on('input', '#protocol_name', function() {
-      if ($(this).val().length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH) {
+      if ($(this).val().length != 0 || $(this).val().length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH) {
         submitButton.removeAttr('disabled');
       } else {
         submitButton.attr('disabled', 'disabled');
@@ -41,8 +43,8 @@
     })
     .on('ajax:error', 'form', function(e, error) {
       let msg = error.responseJSON.error;
-      submitButton.attr('disabled', false);
-      $(`${protocolModal} #protocol_name`).parent().addClass('error').attr('data-error-text', msg);
+
+      HelperModule.flashAlertMsg(msg, 'danger');
     })
     .on('ajax:success', 'form', function(e, data) {
       if (data.message) {

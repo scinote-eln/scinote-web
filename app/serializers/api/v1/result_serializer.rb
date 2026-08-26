@@ -4,7 +4,7 @@ module Api
   module V1
     class ResultSerializer < ActiveModel::Serializer
       type :results
-      attributes :name, :archived
+      attributes :name, :archived, :attachments_locked
       belongs_to :user, serializer: UserSerializer
       has_one :result_text, key: :text,
                             serializer: ResultTextSerializer,

@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class MyModule < ApplicationRecord
+  class InvalidContentError < StandardError; end
+
   ID_PREFIX = 'TA'
   include PrefixedIdModel
-  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description', PREFIXED_ID_SQL,
+  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description', 'my_modules.read_only_description', PREFIXED_ID_SQL,
                            'comments.message', 'tags.name', 'users.full_name', 'users.email'].freeze
 
   include ArchivableModel
@@ -432,7 +434,16 @@ class MyModule < ApplicationRecord
     deep_clone_to_experiment(current_user, experiment)
   end
 
+  def raise_if_invalid_content!
+    invalid_element = (steps.flat_map(&:all_elements) + results.flat_map(&:all_elements)).find { |element| !element.valid? }
+    return unless invalid_element
+
+    raise InvalidContentError, invalid_content_error_message(invalid_element)
+  end
+
   def deep_clone_to_experiment(current_user, experiment_dest)
+    raise_if_invalid_content!
+
     # Copy the module
     clone = MyModule.new(
       name: name,
@@ -527,6 +538,12 @@ class MyModule < ApplicationRecord
   end
 
   private
+
+  def invalid_content_error_message(element)
+    return I18n.t('general.error') unless element.is_a?(Table) && element.errors.key?(:sheet_name)
+
+    I18n.t('activerecord.errors.models.table.attributes.sheet_name.not_unique_in_context_long')
+  end
 
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)

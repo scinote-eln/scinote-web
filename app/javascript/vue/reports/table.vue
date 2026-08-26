@@ -36,7 +36,7 @@
 </template>
 
 <script>
-/* global HelperModule */
+/* global HelperModule PdfPreview */
 
 import axios from '../../packs/custom_axios.js';
 
@@ -48,6 +48,8 @@ import ConfirmationModal from '../shared/confirmation_modal.vue';
 import SaveToInventoryModal from './modals/save_to_inventory.vue';
 import UpdateReportModal from './modals/update.vue';
 
+import { document_preview_report_path } from '../../routes.js';
+
 export default {
   name: 'ReportsTable',
   mounted() {
@@ -57,7 +59,7 @@ export default {
       }
     });
 
-    document.getElementById('show_report_preview')?.click();
+    this.openReportPreview();
   },
   components: {
     DataTable,
@@ -204,6 +206,22 @@ export default {
     savePdfToRepository(_event, rows) {
       const [report] = rows;
       this.reportToSave = report;
+    },
+    openReportPreview() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('preview_report_id')) {
+        const reportId = urlParams.get('preview_report_id');
+        const reportType = urlParams.get('preview_type');
+        const previewUrl = document_preview_report_path(reportId);
+
+        axios.get(previewUrl, { params: { report_type: reportType } })
+          .then((response) => {
+            $('#filePreviewModal .modal-content').html(response.data.html);
+            $('#filePreviewModal').modal('show');
+            $('.modal-backdrop').last().css('z-index', $('#filePreviewModal').css('z-index') - 1);
+            PdfPreview.initCanvas();
+          })
+      }
     }
   }
 };
