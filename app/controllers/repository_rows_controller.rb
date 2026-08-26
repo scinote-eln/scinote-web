@@ -32,6 +32,12 @@ class RepositoryRowsController < ApplicationController
                     @repository.repository_rows.active.count
                   end
 
+    can_manage_repository_rows = if params[:view_mode] == 'archived'
+                                   false
+                                 else
+                                   can_manage_repository_rows?(@repository)
+                                 end
+
     filtered_count = repository_rows.take&.filtered_count.to_i
     total_pages = (filtered_count.to_f / params[:per_page].to_i).ceil
 
@@ -42,7 +48,7 @@ class RepositoryRowsController < ApplicationController
            with_reminders: Repository.reminders_enabled?,
            with_stock_management: @repository.has_stock_management?,
            can_manage_stock: can_manage_repository_stock?(@repository),
-           can_manage_repository_rows: can_manage_repository_rows?(@repository),
+           can_manage_repository_rows: can_manage_repository_rows,
            meta: {
              total_pages: total_pages,
              total_count: total_count,
