@@ -126,16 +126,17 @@ module MyModuleReports
     end
 
     def render_checklist(report, checklist_tag, checklist, checklist_items)
+      checklist_checked_simbol = "\u22A0"
       checklist_items_pairs = checklist_items.map { |item| [item[:text], item[:checked]] }
       checklist_name_div = checklist ? "<div>#{checklist.name}</div>" : ''
 
       report.add_text checklist_tag, "#{checklist_name_div}<div>{{#{checklist_tag}}}</div>"
-      report.add_checklist(checklist_tag, checklist_items_pairs)
+      report.add_checklist(checklist_tag, checklist_items_pairs, checked_symbol: checklist_checked_simbol)
 
       # for full protocol tag
       protocol_checklist_tag = :PROTOCOL_CHECKLIST
       report.add_text PROTOCOL_TAG, "#{checklist_name_div}<div>{{#{protocol_checklist_tag}}}</div><div>{{#{PROTOCOL_TAG}}}</div>"
-      report.add_checklist(protocol_checklist_tag, checklist_items_pairs)
+      report.add_checklist(protocol_checklist_tag, checklist_items_pairs, checked_symbol: checklist_checked_simbol)
     end
 
     def render_form_response(report, form_response_tag, form_response)
@@ -159,13 +160,13 @@ module MyModuleReports
                   form_field_value&.formatted_localize
                 elsif form_field_value.is_a?(FormRepositoryRowsFieldValue)
                   form_repository_rows_field_value_formatter(form_field_value, @user)
-                elsif form_field[:data]['type'] == 'MultipleChoiceField'
+                elsif %w(MultipleChoiceField SingleChoiceField).include?(form_field[:data]['type'])
                   form_field[:data]['options'].map { |option| { text: option, checked: form_field_value&.value&.include?(option) } }
                 else
                   form_field_value&.formatted
                 end
 
-        if !form_field_value&.not_applicable && form_field[:data]['type'] == 'MultipleChoiceField'
+        if !form_field_value&.not_applicable && %w(MultipleChoiceField SingleChoiceField).include?(form_field[:data]['type'])
           render_checklist(report, tag, nil, value)
         else
           report.add_field tag, value
@@ -230,47 +231,6 @@ module MyModuleReports
 
     def build_tag(type, id)
       I18n.t('protocols.report_template.data_inputs.codes.tag_content', content_type: I18n.t("protocols.report_template.data_inputs.codes.type.#{type}"), id: id)
-    end
-
-    def build_table_data(element)
-      table_data = JSON.parse(Class.new.extend(InputSanitizeHelper).smart_annotation_text(element.contents_utf_8, sanitize_text: false))['data']
-      table_data = add_headers_to_table(table_data, element.well_plate?)
-
-      table = '<table>'
-      table_data.each_with_index do |row, index|
-        table_tag = index.zero? ? 'th' : 'td'
-        table += "<tr>#{row.map { |el| "<#{table_tag}>#{el}</#{table_tag}>" }.join}</tr>"
-      end
-      table += '</table>'
-
-      table
-    end
-
-    def add_headers_to_table(table, is_well_plate)
-      table&.each_with_index do |row, index|
-        row.unshift(is_well_plate ? convert_index_to_letter(index) : index + 1)
-      end
-
-      header_row = Array.new(table&.dig(0)&.length || 0) do |index|
-        next '' if index.zero?
-
-        is_well_plate ? index : convert_index_to_letter(index - 1)
-      end
-      table&.unshift(header_row)
-    end
-
-    def convert_index_to_letter(index)
-      ord_a = 'A'.ord
-      ord_z = 'Z'.ord
-      len = (ord_z - ord_a) + 1
-      num = index
-
-      col_name = ''
-      while num >= 0
-        col_name = ((num % len) + ord_a).chr + col_name
-        num = (num / len).floor - 1
-      end
-      col_name
     end
   end
 end
