@@ -42,6 +42,8 @@
       @exportConsumption="exportConsumption"
       @printLabel="printLabel"
       @archive="archiveRows"
+      @restore="restoreRows"
+      @delete="deleteRows"
       @createEvent="createEvent"
     ></DataTable>
     <div v-else class="flex items-center justify-center w-full h-96 text-sn-grey-500">
@@ -123,7 +125,9 @@ import {
   team_repository_hide_reminders_path,
   actions_toolbar_repository_repository_rows_path,
   repository_copy_records_path,
-  repository_archive_records_path
+  repository_archive_records_path,
+  repository_restore_records_path,
+  repository_delete_records_path
 } from '../../routes.js';
 
 export default {
@@ -339,6 +343,28 @@ export default {
     archiveRows(_e, rows) {
       const rowIds = rows.map((row) => row.id);
       axios.post(repository_archive_records_path(this.repositoryId), {
+        selected_rows: rowIds
+      }).then((response) => {
+        this.reloadingTable = true;
+        HelperModule.flashAlertMsg(response.data.flash, 'success');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
+      });
+    },
+    restoreRows(_e, rows) {
+      const rowIds = rows.map((row) => row.id);
+      axios.post(repository_restore_records_path(this.repositoryId), {
+        selected_rows: rowIds
+      }).then((response) => {
+        this.reloadingTable = true;
+        HelperModule.flashAlertMsg(response.data.flash, 'success');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
+      });
+    },
+    deleteRows(_e, rows) {
+      const rowIds = rows.map((row) => row.id);
+      axios.post(repository_delete_records_path(this.repositoryId), {
         selected_rows: rowIds
       }).then((response) => {
         this.reloadingTable = true;
