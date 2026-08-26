@@ -18,8 +18,8 @@ class Protocol < ApplicationRecord
 
   before_create -> { self.skip_user_assignments = true }, if: -> { in_module? }
 
-  enum visibility: { hidden: 0, visible: 1 }
-  enum protocol_type: {
+  enum :visibility, { hidden: 0, visible: 1 }
+  enum :protocol_type, {
     unlinked: 0,
     linked: 1,
     in_repository_private: 2, # Deprecated
@@ -465,7 +465,7 @@ class Protocol < ApplicationRecord
 
   def self.clone_step(protocol_dest, current_user, step, include_file_versions, load_mode: 'replace')
     position = load_mode == 'replace' ? step.position : nil
-    step.duplicate(protocol_dest, current_user, step_position: position, include_file_versions: include_file_versions, load_mode: load_mode)
+    step.duplicate(protocol_dest, current_user, step_position: position, include_file_versions: include_file_versions)
   end
 
   def self.clone_result(protocol_dest, current_user, result)

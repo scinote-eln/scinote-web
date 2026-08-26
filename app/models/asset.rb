@@ -16,7 +16,7 @@ class Asset < ApplicationRecord
   WOPI_LOCK_DURATION = 60 * 30
   SEARCHABLE_ATTRIBUTES = ['active_storage_blobs.filename', 'asset_text_data.data_vector'].freeze
 
-  enum view_mode: { thumbnail: 0, list: 1, inline: 2 }
+  enum :view_mode, { thumbnail: 0, list: 1, inline: 2 }
 
   # ActiveStorage configuration
   has_one_versioned_attached :file
