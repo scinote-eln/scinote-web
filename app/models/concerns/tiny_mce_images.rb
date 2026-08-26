@@ -122,8 +122,8 @@ module TinyMceImages
       parsed_asset_ids = []
 
       parsed_description.css('img').each do |image|
-        image_id = image['data-mce-token'] || image['alt'].split('-').last
-        asset = image_id.presence && TinyMceAsset.find_by(id: Base62.decode(image_id))
+        image_id = image['data-mce-token'] || image['alt']&.split('-')&.last
+        asset = image_id.presence && image_id.match?(/\A[0-9a-zA-Z]+\z/) && TinyMceAsset.find_by(id: Base62.decode(image_id))
 
         if asset
           if asset.object == self && parsed_asset_ids.exclude?(asset.id)
