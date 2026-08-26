@@ -398,6 +398,45 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include('status': 404)
     end
+
+    context 'when result attachments are locked' do
+      let(:local_task) { create(:my_module, created_by: @user, last_modified_by: @user, experiment: @valid_experiment) }
+      let(:result_locked) do
+        create(:result, user: @user, last_modified_by: @user, my_module: local_task, attachments_locked: true)
+      end
+
+      it 'includes attachments_locked status' do
+        get api_v1_team_project_experiment_task_result_path(
+          team_id: @team1.id,
+          project_id: @valid_project,
+          experiment_id: @valid_experiment,
+          task_id: local_task,
+          id: result_locked.id
+        ), headers: @valid_headers
+
+        expect(json[:data][:attributes][:attachments_locked]).to be(true)
+      end
+    end
+
+    context 'when result text is locked' do
+      let(:local_task) { create(:my_module, created_by: @user, last_modified_by: @user, experiment: @valid_experiment) }
+      let(:result_with_locked_text) do
+        create(:result, user: @user, last_modified_by: @user, my_module: local_task)
+      end
+      let!(:locked_text) { create(:result_text, result: result_with_locked_text, locked: true) }
+
+      it 'includes locked status for the text element' do
+        get api_v1_team_project_experiment_task_result_path(
+          team_id: @team1.id,
+          project_id: @valid_project,
+          experiment_id: @valid_experiment,
+          task_id: local_task,
+          id: result_with_locked_text.id
+        ), headers: @valid_headers
+
+        expect(json[:included].find { |el| el[:type] == 'result_texts' }[:attributes][:locked]).to be(true)
+      end
+    end
   end
 
   describe 'PUT result, #update' do
@@ -517,6 +556,45 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
           ), params: request_body_with_same_name.to_json, headers: @valid_headers)
 
           expect(response).to have_http_status 204
+        end
+      end
+
+      context 'when result attachments are locked' do
+        let(:local_task) { create(:my_module, created_by: @user, last_modified_by: @user, experiment: @valid_experiment) }
+        let(:locked_result) do
+          create(:result, user: @user, last_modified_by: @user, my_module: local_task, attachments_locked: true)
+        end
+        let!(:locked_asset) { create(:result_asset, result: locked_result) }
+        let(:request_body) do
+          {
+            data: {
+              type: 'results',
+              attributes: {
+                name: 'my result'
+              }
+            },
+            included: [
+              { type: 'result_files',
+                attributes: {
+                  file: Rack::Test::UploadedFile.new(file_fixture('test.jpg').open)
+                } }
+            ]
+          }
+        end
+        let(:action) do
+          put(api_v1_team_project_experiment_task_result_path(
+            team_id: @team1.id,
+            project_id: @valid_project,
+            experiment_id: @valid_experiment,
+            task_id: local_task,
+            id: locked_result.id
+          ), params: request_body, headers: @valid_headers)
+        end
+
+        it 'renders 403' do
+          action
+
+          expect(response).to have_http_status 403
         end
       end
     end

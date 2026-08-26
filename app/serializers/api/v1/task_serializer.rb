@@ -11,6 +11,7 @@ module Api
       attributes :id, :name, :started_on, :due_date, :description, :state, :archived, :status_id, :status_name,
                  :prev_status_id, :prev_status_name, :next_status_id, :next_status_name, :x, :y
       attribute :metadata, if: -> { scope && scope[:metadata] == true }
+      attribute :read_only_description, if: -> { object.read_only_description }
       has_many :output_tasks, key: :outputs,
                             serializer: TaskSerializer,
                             class_name: 'MyModule'

@@ -18,4 +18,10 @@
       <% end %>
     </h1>
   </div>
+
+  <% if @experiment.read_only_description %>
+    <div class="bg-white py-4">
+      <%= @experiment.read_only_description.html_safe %>
+    </div>
+  <% end %>
 </div>

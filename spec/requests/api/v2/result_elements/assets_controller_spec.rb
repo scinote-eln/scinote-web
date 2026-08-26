@@ -86,6 +86,24 @@ RSpec.describe 'Api::V2::ResultElements::AssetsController', type: :request do
         )
       end
     end
+
+    context 'when result attachments are locked' do
+      let(:result) { create(:result, user: user, my_module: task, attachments_locked: true) }
+
+      it 'includes locked status inherited from the result' do
+        result_asset.asset.reload
+        get api_v2_team_project_experiment_task_result_asset_path(
+          team_id: team.id,
+          project_id: project.id,
+          experiment_id: experiment.id,
+          task_id: task.id,
+          result_id: result.id,
+          id: result_asset.asset.id
+        ), headers: valid_headers
+
+        expect(json[:data][:attributes][:locked]).to be(true)
+      end
+    end
   end
 
   describe 'POST result_asset, #create' do
@@ -182,6 +200,33 @@ RSpec.describe 'Api::V2::ResultElements::AssetsController', type: :request do
         action
 
         expect(response).to have_http_status(400)
+      end
+    end
+
+    context 'when result attachments are locked' do
+      let(:result) { create(:result, user: user, my_module: task, attachments_locked: true) }
+      let(:request_body) do
+        {
+          data: {
+            type: 'attachments',
+            attributes: {
+              file_data: "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAE0lEQVQIHWP8//8/
+                          AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg=='\''",
+              file_type: 'image/jpeg',
+              file_name: 'test.jpg'
+            }
+          }
+        }
+      end
+
+      it 'renders 403' do
+        action
+
+        expect(response).to have_http_status(403)
+      end
+
+      it 'does not create new result_asset' do
+        expect { action }.not_to(change { ResultAsset.count })
       end
     end
   end

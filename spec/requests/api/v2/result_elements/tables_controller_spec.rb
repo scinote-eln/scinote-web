@@ -85,6 +85,23 @@ RSpec.describe 'Api::V2::ResultElements::TablesController', type: :request do
         )
       end
     end
+
+    context 'when table is locked' do
+      it 'includes locked status' do
+        result_table.table.update!(locked: true)
+
+        get api_v2_team_project_experiment_task_result_table_path(
+          team_id: team.id,
+          project_id: project.id,
+          experiment_id: experiment.id,
+          task_id: task.id,
+          result_id: result.id,
+          id: result_table.table.id
+        ), headers: valid_headers
+
+        expect(json[:data][:attributes][:locked]).to be(true)
+      end
+    end
   end
 
   describe 'POST result_table, #create' do
