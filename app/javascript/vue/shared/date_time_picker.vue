@@ -15,21 +15,29 @@
       v-model="value"
       :teleport="teleport"
       :no-today="true"
-      :clearable="clearable"
       :format="format"
       :month-change-on-scroll="false"
       :six-weeks="true"
       :disabled="disabled"
-      :time-picker-inline="mode == 'datetime'"
+      :config="{
+        monthChangeOnScroll: false
+      }"
+      :input-attrs="{
+        clearable: this.clearable
+      }"
+      :time-config="{
+       timePickerInline: mode == 'datetime',
+       startTime: (mode == 'time' ? null : { hours: 0, minutes: 0, seconds: 0 }),
+       enableTimePicker: mode == 'datetime'
+      }"
+      :flow="{
+        partial: true,
+      }"
       :auto-apply="true"
-      :partial-flow="true"
       :markers="markers"
       :range="range"
-      :start-time="{ hours: 0, minutes: 0, seconds: 0 }"
       week-start="0"
       :hide-input-icon="noIcons"
-      :enable-time-picker="mode == 'datetime'"
-      :time-picker="mode == 'time'"
       :placeholder="placeholder" >
         <template #arrow-right>
             <img class="slot-icon" src="/images/calendar/navigate_next.svg"/>
@@ -63,7 +71,7 @@
 </template>
 
 <script>
-import VueDatePicker from '@vuepic/vue-datepicker';
+import { VueDatePicker } from '@vuepic/vue-datepicker';
 
 export default {
   name: 'DateTimePicker',

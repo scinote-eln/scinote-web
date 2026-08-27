@@ -582,7 +582,7 @@ export default {
       const allowedSelectors = [
         'a',
         '.modal',
-        '.dp__instance_calendar',
+        '.dp--instance-calendar',
         '.label-printing-progress-modal',
         '.atwho-view',
         '.sn-select-dropdown'

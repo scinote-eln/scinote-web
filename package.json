@@ -42,7 +42,7 @@
     "@schedule-x/scroll-controller": "^4.6.0",
     "@schedule-x/theme-default": "^4.5.0",
     "@schedule-x/vue": "^4.1.0",
-    "@vuepic/vue-datepicker": "^7.4.1",
+    "@vuepic/vue-datepicker": "^14.0.0",
     "@vueuse/components": "^13.3.0",
     "@vueuse/core": "^13.3.0",
     "ag-grid-community": "^32.3.9",
