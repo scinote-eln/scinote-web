@@ -97,6 +97,10 @@ export default {
       return this.field.attributes.data.range;
     },
     currentDatetime() {
+      if (!this.field?.attributes?.current_datetime) {
+        return;
+      }
+
       return new Date(this.field.attributes.current_datetime);
     },
     validValue() {
