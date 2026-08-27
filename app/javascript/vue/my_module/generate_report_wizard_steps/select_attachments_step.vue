@@ -31,10 +31,17 @@
             </span>
             <div class="text-center flex items-center gap-2 list-attachment-container w-full min-w-0">
               <i class="text-sn-grey asset-icon sn-icon sn-icon-file-pdf shrink-0"></i>
-              <span class="file-preview-link file-name truncate shrink-0" data-toggle="tooltip"
-                  data-placement="bottom">
-                {{ element.file_name }}
-              </span>
+              <a
+                class="file-preview-link file-name"
+                :id="`modal_link${element.id}`"
+                data-no-turbolink="true"
+                :data-id="element.id"
+                :data-preview-url="element.preview"
+              >
+                <span class="attachment-name" data-toggle="tooltip" data-placement="bottom">
+                  {{ element.file_name }}
+                </span>
+              </a>
               <div v-if="element.medium_preview" class="attachment-image-tooltip bg-white sn-shadow-menu-sm shrink-0">
                 <img :src="element.medium_preview" @error="ActiveStoragePreviews.reCheckPreview"
                       @load="ActiveStoragePreviews.showPreview"/>
