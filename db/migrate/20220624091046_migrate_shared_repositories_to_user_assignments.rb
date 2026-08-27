@@ -3,7 +3,7 @@
 class MigrateSharedRepositoriesToUserAssignments < ActiveRecord::Migration[6.1]
   class TeamRepository < ApplicationRecord
     self.table_name = 'team_repositories'
-    enum permission_level: { not_shared: 0, shared_read: 1, shared_write: 2 }
+    enum :permission_level, { not_shared: 0, shared_read: 1, shared_write: 2 }
     belongs_to :team
     belongs_to :repository
   end
