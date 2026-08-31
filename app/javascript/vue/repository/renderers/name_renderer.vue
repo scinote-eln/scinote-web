@@ -65,6 +65,9 @@ export default {
     }
   },
   computed: {
+    canManage() {
+      return this.params?.data?.permissions?.manage || false;
+    },
     recordInfoUrl() {
       return repository_repository_row_path(
         this.params.data.repository_id,
@@ -78,11 +81,6 @@ export default {
   components: {
     GeneralDropdown,
     errorFlyout
-  },
-  computed: {
-    canManage() {
-      return this.params?.data?.permissions?.manage || false;
-    }
   },
   data() {
     return {
@@ -140,6 +138,8 @@ export default {
       } else if (event.key === 'End') {
         event.stopPropagation();
         this.$refs.nameInput.selectionEnd = this.rowName.length;
+      } else if ((event.key === 'a' || event.key === 'A') && (event.ctrlKey || event.metaKey)) {
+        event.stopPropagation();
       }
     },
     saveName() {

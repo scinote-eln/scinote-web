@@ -3419,6 +3419,8 @@ en:
     repository_columns:
       head_title: '%{repository} | Manage Columns'
       repository_list_items_limit: "Dropdown items limit reached max. %{limit}"
+      empty_placeholder: "There are no custom columns yet. Click the button bellow to add the first one."
+      button_tooltip: "Add or Edit columns"
       no_permissions: "You don't have permissions on that repository"
       update:
         success_flash: "Column %{name} was successfully updated."

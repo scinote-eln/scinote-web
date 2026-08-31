@@ -57,7 +57,8 @@
         v-if="openSaveModal"
         :activeFilter="activeFilter"
         :repositoryId="params.repositoryId"
-        @close="openModal = false"
+        @filterSaved="assignSavedFilter"
+        @close="openSaveModal = false"
       ></SaveFilterModal>
     </teleport>
   </div>
@@ -176,6 +177,9 @@ export default {
       }).catch(() => {
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
       })
+    },
+    assignSavedFilter(filter){
+      this.loadFilter(filter)
     }
   }
 }

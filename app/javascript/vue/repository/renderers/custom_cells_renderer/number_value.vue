@@ -4,12 +4,14 @@
       ref="input"
       v-model="newValue"
       type="text"
-      :placeholder="i18n.t('repositories.table.number.enter_number')"
+      :placeholder="(isFocused ? '' : i18n.t('repositories.table.number.enter_number'))"
+      :style="{ textAlign: (newValue || isFocused) ? 'right' : 'left' }"
       @keydown.enter="saveValue"
       @keydown.esc="cancelEdit"
-      @blur="saveValue"
+      @focus="isFocused = true"
+      @blur="onBlur"
       @input="validateFormat"
-      class="sci-table-input-v2 align-right !border-transparent !bg-transparent placeholder:text-sn-grey"
+      class="sci-table-input-v2 !border-transparent !bg-transparent placeholder:text-sn-grey"
     />
   </div>
   <div v-else class="align-right">
@@ -31,6 +33,7 @@ export default {
   data() {
     return {
       newValue: null,
+      isFocused: false,
     };
   },
   computed: {
@@ -57,6 +60,10 @@ export default {
           this.newValue
         );
       }
+    },
+    onBlur() {
+      this.isFocused = false;
+      this.saveValue();
     },
     cancelEdit() {
       this.newValue = this.params?.value?.value;

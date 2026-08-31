@@ -58,8 +58,8 @@ export default {
           repository_table_filter_elements_json: JSON.stringify(this.activeFilter.filters)
         }
       }
-      axios.post(repository_repository_table_filters_path(this.repositoryId), params).then(() => {
-        this.$emit('filterSaved')
+      axios.post(repository_repository_table_filters_path(this.repositoryId), params).then((response) => {
+        this.$emit('filterSaved', response.data.data)
         this.close()
       }).catch(() => {
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
