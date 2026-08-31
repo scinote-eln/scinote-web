@@ -59,7 +59,7 @@ module MyModuleReports
         report.add_field build_tag('step', step.id).to_sym, step.name
 
         # for full protocol tag
-        report.add_text PROTOCOL_TAG, "<div>#{step.position + 1}. #{step.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        report.add_text PROTOCOL_TAG, "<div>#{step.position_plus_one}. #{step.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
 
         step.step_orderable_elements.order(:position).each do |element|
           element_type = element.orderable_type
@@ -127,7 +127,7 @@ module MyModuleReports
 
     def render_checklist(report, checklist_tag, checklist, checklist_items)
       checklist_checked_simbol = "\u22A0"
-      checklist_items_pairs = checklist_items.map { |item| [item[:text], item[:checked]] }
+      checklist_items_pairs = checklist_items&.map { |item| [item[:text], item[:checked]] }
       checklist_name_div = checklist ? "<div>#{checklist.name}</div>" : ''
 
       report.add_text checklist_tag, "#{checklist_name_div}<div>{{#{checklist_tag}}}</div>"
@@ -160,8 +160,10 @@ module MyModuleReports
                   form_field_value&.formatted_localize
                 elsif form_field_value.is_a?(FormRepositoryRowsFieldValue)
                   form_repository_rows_field_value_formatter(form_field_value, @user)
-                elsif %w(MultipleChoiceField SingleChoiceField).include?(form_field[:data]['type'])
-                  form_field[:data]['options'].map { |option| { text: option, checked: form_field_value&.value&.include?(option) } }
+                elsif form_field[:data]['type'] == 'MultipleChoiceField'
+                  form_field[:data]['options']&.map { |option| { text: option, checked: form_field_value&.value&.include?(option) } }
+                elsif form_field[:data]['type'] == 'SingleChoiceField'
+                  form_field[:data]['options']&.map { |option| { text: option, checked: form_field_value&.value == option } }
                 else
                   form_field_value&.formatted
                 end
