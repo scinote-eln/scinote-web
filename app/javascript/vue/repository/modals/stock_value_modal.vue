@@ -163,6 +163,7 @@ export default {
   },
   data() {
     return {
+      initializing: true,
       initialStockObject: null,
       stockObject: null,
       operation: 'set',
@@ -175,6 +176,7 @@ export default {
   watch: {
     'stockObject.amount'(newValue) {
       this.stockObject.amount = this.validateDecimals(newValue);
+      this.validateStockObject();
     },
     'stockObject.low_stock_treshold'(newValue) {
       this.stockObject.low_stock_treshold = this.validateDecimals(newValue);
@@ -249,14 +251,18 @@ export default {
           this.repositoryRowName = response.data.repository_row_name;
           this.initialStockObject = {...response.data.stock_value};
           this.stockObject = {...response.data.stock_value};
-          this.updateStockUrl = response.data.stock_url
-
+          this.updateStockUrl = response.data.stock_url;
+          this.$nextTick(() => {
+            this.initializing = false;
+          });
         })
         .catch(() => {
           HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
         });
     },
     validateStockObject() {
+      if (this.initializing) return;
+
       const newErrors = {};
       if (!this.stockObject.unit) { newErrors.unit = I18n.t('repository_stock_values.manage_modal.unit_error'); }
       if (!this.stockObject.amount) { newErrors.amount = I18n.t('repository_stock_values.manage_modal.amount_error'); }

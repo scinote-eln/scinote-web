@@ -29,6 +29,7 @@
                 :filter="filter"
                 :repositoryId="params.repositoryId"
                 :my_modules="myModules"
+                :filtersCount="filters.length"
                 @filter:update="updateFilter"
                 @filter:delete="deleteFilter(index)"
               />

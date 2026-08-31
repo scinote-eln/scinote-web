@@ -48,8 +48,6 @@
   .filters-container {
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - 300px);
-    min-height: 300px;
     padding: 0;
 
     .dropdown-selector {
@@ -187,10 +185,7 @@
 
         .operator-selector {
           height: 2em;
-
-          .dropdown-selector-container {
-            width: 120px;
-          }
+          width: 120px;
         }
 
         input {
@@ -217,15 +212,6 @@
 
       .filter-remove {
         margin-left: .5em;
-        margin-right: 1rem;
-
-        .icon-btn {
-          color: $color-silver-chalice;
-
-          &:hover {
-            color: $color-black;
-          }
-        }
       }
     }
   }

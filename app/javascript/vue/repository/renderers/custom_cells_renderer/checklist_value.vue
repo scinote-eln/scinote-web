@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="canManage" class="relative flex items-center gap-2">
-      <i class="sn-icon sn-icon-checkllist shrink-0"></i>
       <SelectDropdown
         class="h-10 flex w-full"
         :searchable="true"
