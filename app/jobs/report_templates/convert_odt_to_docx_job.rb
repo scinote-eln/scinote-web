@@ -7,7 +7,7 @@ module ReportTemplates
       blob = report_template.odt_template_file.blob
 
       blob.open do |file|
-        odt_file = Reports::ConvertToDocxService.convert(file)
+        odt_file = Reports::ConvertFileFormatService.convert(file, 'docx')
 
         report_template.docx_template_file.attach(
           io: odt_file,

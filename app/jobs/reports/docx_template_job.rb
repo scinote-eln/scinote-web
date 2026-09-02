@@ -31,7 +31,7 @@ module Reports
           odt_report.generate(report_odt_file.path)
         end
 
-        report_docx_file = Reports::ConvertToDocxService.convert(report_odt_file)
+        report_docx_file = Reports::ConvertFileFormatService.convert(report_odt_file, 'docx')
         report.docx_file.attach(io: report_docx_file, filename: 'report.docx')
 
         DeliveryNotification.send_notifications(
