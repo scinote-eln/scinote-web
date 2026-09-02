@@ -26,7 +26,7 @@ GIT
 
 GIT
   remote: https://github.com/scinote-eln/odf-report
-  revision: 86fdb553d51633971f681cb9e621799745f0c059
+  revision: b3a355510af936dc28a5922880cb19e07da51d62
   branch: rich-text-improvements
   specs:
     odf-report (0.9.0)

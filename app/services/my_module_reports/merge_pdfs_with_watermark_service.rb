@@ -54,20 +54,22 @@ module MyModuleReports
 
     def process_asset!(asset)
       asset.blob.open do |tempfile|
-        # pages, width, height = pdf_info(tempfile.path)
-        # content_path = tempfile.path
+        pages, format, orientation = pdf_info(tempfile.path)
+        content_path = tempfile.path
 
-        # if @add_blank_page
-        #   blank_path = render_blank_content(width, height)
-        #   content_path = merge_pdf_files(content_path, blank_path)
-        #   pages += 1
-        # end
+        if @add_blank_page
+          blank_path = Rails.root.join("app/assets/report_templates/#{format}_#{orientation}_empty_page.pdf")
+          content_path = merge_pdf_files(content_path, blank_path.to_s)
+          pages += 1
+        end
 
-        # page_entries = Array.new(pages) { |i| { header: @header_text, footer: footer(i + 1) } }
-        # watermark_path = render_watermark(width, height, page_entries)
-        # overlayed_path = overlay_watermark(content_path, watermark_path)
+        if @header_text.present? || @footer_text.present? || @add_numarization
+          page_entries = Array.new(pages) { |i| { header: @header_text, footer: footer(i + 1) } }
+          watermark_path = render_watermark(page_entries, format, orientation)
+          content_path = overlay_watermark(content_path, watermark_path)
+        end
 
-        @report = merge_pdf_files(@report, tempfile.path)
+        @report = merge_pdf_files(@report, content_path)
       end
     rescue StandardError => e
       raise e.class, "#{e.message} (asset_id: #{asset.id})", e.backtrace
@@ -82,23 +84,48 @@ module MyModuleReports
         hash[key.strip] = value.strip if key && value
       end
 
-      match = data['Page size']&.match(/([\d.]+)\s*x\s*([\d.]+)\s*pts/)
+      pages = data['Pages'].to_i
+      raise StandardError, "Could not parse page count: #{data['Pages'].inspect}" if pages.zero?
+
+      match = data['Page size']&.match(/([\d.]+)\s*x\s*([\d.]+)\s*pts(?:\s*\(([^)]+)\))?/)
       raise StandardError, "Could not parse page size: #{data['Page size']}" unless match
 
       width = match[1].to_f
       height = match[2].to_f
-      pages = data['Pages'].to_i
-      raise StandardError, "Could not parse page count: #{data['Pages'].inspect}" if pages.zero?
+      extra  = match[3]
 
-      [pages, width, height]
+      parts = extra&.split(',')&.map(&:strip) || []
+      format = parts.find { |p| p !~ /portrait|landscape/i } || 'Custom'
+      orientation = if parts.any? { |p| p =~ /landscape/i }
+                      'landscape'
+                    elsif parts.any? { |p| p =~ /portrait/i }
+                      'portrait'
+                    else
+                      width > height ? 'landscape' : 'portrait'
+                    end
+      format = format == 'letter' ? 'letter' : 'A4'
+
+      [pages, format, orientation]
     end
 
-    def render_watermark(width, height, page_entries)
-     # TODO
+    def render_watermark(page_entries, format, orientation)
+      template_path = Rails.root.join("app/assets/report_templates/odt_#{format}_#{orientation}_watermark_template.odt")
+
+      odt_files = page_entries.map { |page_entry| generate_filled_watermark_odt(template_path, page_entry) }
+      pdf_paths = Reports::ConvertFileFormatService.convert_batch(odt_files, 'pdf')
+
+      merge_pdf_files(*pdf_paths)
     end
 
-    def render_blank_content(width, height)
-      # TODO
+    def generate_filled_watermark_odt(template_path, page_entry)
+      filled_odt = new_tempfile('watermark', '.odt')
+
+      ODFReport::Report.new(template_path.to_s) do |report|
+        report.add_field :REPORT_HEADER, page_entry[:header]
+        report.add_field :REPORT_FOOTER, page_entry[:footer]
+      end.generate(filled_odt.path)
+
+      filled_odt
     end
 
     def overlay_watermark(source_path, watermark_path)
@@ -115,10 +142,14 @@ module MyModuleReports
       output_tempfile.path
     end
 
-    def merge_pdf_files(tail_path, head_path)
+    def merge_pdf_files(*paths)
+      paths = paths.flatten.compact
+      raise ArgumentError, 'merge_pdf_files requires at least one path' if paths.empty?
+      return paths.first if paths.one?
+
       merged_file = new_tempfile('report', '.pdf')
 
-      _stdout, stderr, status = run_command('pdfunite', tail_path, head_path, merged_file.path)
+      _stdout, stderr, status = run_command('pdfunite', *paths, merged_file.path)
 
       if stderr.include?(PDFUNITE_ENCRYPTED_PDF_ERROR_STRING)
         Rails.logger.warn("Cannot merge encrypted PDF #{head_path}, skipping!")
