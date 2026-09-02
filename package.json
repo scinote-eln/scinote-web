@@ -31,6 +31,8 @@
     "@babel/preset-env": "^7.27.2",
     "@fortawesome/fontawesome-free": "^5.2.0",
     "@joeattardi/emoji-button": "^4.6.4",
+    "@mathjax/mathjax-newcm-font": "4",
+    "@mathjax/src": "4",
     "@preact/signals": "^2.9.0",
     "@rails/actioncable": "^8.1.200",
     "@schedule-x/calendar": "^4.5.0",
