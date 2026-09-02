@@ -15,6 +15,12 @@ div.print-report {
     display: none;
   }
 
+  .text-block {
+    table {
+      width: auto !important;
+    }
+  }
+
   .report-element {
     color: $color-black !important;
 
