@@ -15,7 +15,7 @@ class ProtocolReportTemplatesController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          templates: @protocol.report_templates.map do |report_template|
+          templates: @protocol.report_templates.order(:created_at).map do |report_template|
             {
               id: report_template.id,
               name: report_template.name,
