@@ -271,6 +271,7 @@ class RepositoryRowsController < ApplicationController
       if row_cell_update.record_updated
         log_activity(:edit_item_field_inventory, @repository_row,
                      { repository_row: @repository_row.id,
+                       repository: @repository.id,
                        repository_column: update_params['repository_cells']&.keys&.first ||
                        I18n.t('repositories.table.row_name') })
 
