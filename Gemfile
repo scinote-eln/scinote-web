@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '~> 3.4.8'
+ruby '~> 3.4.10'
 
 gem 'activerecord-session_store'
 gem 'bootsnap', require: false
@@ -10,16 +10,16 @@ gem 'devise', '~> 5.0.4'
 gem 'devise_invitable'
 gem 'pg', '~> 1.5'
 gem 'puma'
-gem 'rails', '~> 7.2.3'
+gem 'rails', '~> 8.1.3'
 gem 'recaptcha'
 gem 'sanitize'
-gem 'solid_cable', '~> 3.0'
+gem 'solid_cable', '~> 4.0'
 gem 'sprockets-rails'
 gem 'view_component'
 
 # Gems for OAuth2 subsystem
-gem 'doorkeeper', '>= 4.6'
-gem 'omniauth', '~> 2.1'
+gem 'doorkeeper'
+gem 'omniauth'
 gem 'omniauth-azure-activedirectory-v2'
 gem 'omniauth-linkedin-oauth2'
 gem 'omniauth-okta', git: 'https://github.com/scinote-eln/omniauth-okta', branch: 'org_auth_server_support'
@@ -37,7 +37,7 @@ gem 'rack-attack'
 gem 'rack-cors'
 gem 'rack-session'
 
-gem 'activerecord-import', '~> 2.2.0'
+gem 'activerecord-import', '~> 2.3.0'
 gem 'acts_as_list'
 gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
@@ -51,30 +51,30 @@ gem 'fastimage' # Light gem to get image resolution
 gem 'grover'
 gem 'httparty', '~> 0.24.0'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
+gem 'image_processing'
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'mime-types', '~> 3.4'
 gem 'nested_form_fields'
 gem 'nokogiri', '~> 1.19.4' # HTML/XML parser
-gem 'noticed'
+gem 'noticed', '< 2'
 gem 'oj'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
-gem 'roo', '~> 2.10.0' # Spreadsheet parser
+gem 'roo', '~> 3.0.0' # Spreadsheet parser
 gem 'rotp'
 gem 'rqrcode', '~> 2.0' # QR code generator
-gem 'rubyzip', '>= 2.3.0' # will load new rubyzip version
+gem 'rubyzip'
+gem 'ruby-vips'
 gem 'silencer' # Silence certain Rails logs
 gem 'turbolinks', '~> 5.2.0'
 gem 'underscore-rails'
 gem 'wicked_pdf'
-gem 'zip-zip' # will load compatibility for old rubyzip API.
 
-gem 'aws-actionmailer-ses', '~> 1'
+gem 'aws-actionmailer-ses'
 gem 'aws-sdk-lambda'
-gem 'aws-sdk-rails', '~> 5'
+gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
 gem 'delayed_job_active_record'
-gem 'image_processing'
 gem 'img2zpl', git: 'https://github.com/scinote-eln/img2zpl'
 gem 'rufus-scheduler'
 
@@ -86,7 +86,7 @@ gem 'cssbundling-rails'
 gem 'jsbundling-rails'
 gem 'js-routes'
 
-gem 'tailwindcss-rails', '~> 2.4'
+gem 'tailwindcss-rails'
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'

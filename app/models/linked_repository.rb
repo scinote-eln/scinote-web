@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class LinkedRepository < Repository
-  enum permission_level: Extends::SHARED_OBJECTS_PERMISSION_LEVELS.except(:shared_write)
+  enum :permission_level, Extends::SHARED_OBJECTS_PERMISSION_LEVELS.except(:shared_write)
 
   def shareable_write?
     false

@@ -8,7 +8,7 @@ module Shareable
     has_many :teams_shared_with, through: :team_shared_objects, source: :team, dependent: :destroy
 
     if column_names.include? 'permission_level'
-      enum permission_level: Extends::SHARED_OBJECTS_PERMISSION_LEVELS
+      enum :permission_level, Extends::SHARED_OBJECTS_PERMISSION_LEVELS
       define_method :globally_shareable? do
         true
       end

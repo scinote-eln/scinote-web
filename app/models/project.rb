@@ -16,7 +16,7 @@ class Project < ApplicationRecord
   include Favoritable
   include MetadataModel
 
-  enum visibility: { hidden: 0, visible: 1 }
+  enum :visibility, { hidden: 0, visible: 1 }
 
   auto_strip_attributes :name, nullify: false
   auto_strip_attributes :description, nullify: true
