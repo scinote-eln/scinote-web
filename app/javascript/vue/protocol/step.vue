@@ -155,10 +155,9 @@
           </span>
         </a>
         <a v-if="this.step.attributes.urls.lock_url && !this.step.attributes.locked"
-          class="btn btn-light icon-btn"
+          class="btn btn-light icon-btn e2e-BT-protocol-step-stepOptions-manage"
           data-toggle="modal"
-          data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-rearrange`
-          e2e_class: `e2e-BT-protocol-step-stepOptions-rearrange`
+          :data-e2e="`e2e-BT-protocol-step${this.step.id}-stepOptions-manage`"
           :data-sn-tooltip="i18n.t('protocols.steps.manage_content')"
           @click="openReorderModal()"
           @keyup.enter="openReorderModal()"
@@ -166,10 +165,9 @@
           <i class="sn-icon sn-icon-steps-manage" aria-hidden="true"></i>
         </a>
         <a v-else-if="this.urls.reorder_elements_url && !this.step.attributes.locked && this.elements.length > 1"
-          class="btn btn-light icon-btn"
+          class="btn btn-light icon-btn e2e-BT-protocol-step-stepOptions-reorder"
           data-toggle="modal"
-          data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-manageStep`
-          e2e_class: `e2e-BT-protocol-step-stepOptions-manageStep`
+          :data-e2e="`e2e-BT-protocol-step${this.step.id}-stepOptions-reorder`"
           :data-sn-tooltip="i18n.t('protocols.steps.rearrange_content')"
           @click="openReorderModal()"
           @keyup.enter="openReorderModal"
@@ -256,13 +254,14 @@
         @toggle-lock="toggleItemLock"
         @toggle-lock-attachments="toggleAttachmentsLock"
         @close="closeReorderModal"
+        dataE2e="protocol-step-manage"
       ></ManageItemsModal>
     </template>
     <template v-else>
       <ReorderableItemsModal v-if="reordering"
         :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
         :items="reorderableElements"
-        :dataE2e="`protocol-step${step.id}-reorder`"
+        dataE2e="protocol-step-reorder"
         @reorder="updateElementOrder"
         @close="closeReorderModal"
       />
