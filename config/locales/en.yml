@@ -5246,6 +5246,7 @@ en:
     webhooks:
       errors:
         subject_not_serializable: "Subject not serializable."
+        subject_not_exist: "Subject does not exist."
     core:
       status_ok: "Ok"
       invalid_api_key: "API key is invalid or expired"
