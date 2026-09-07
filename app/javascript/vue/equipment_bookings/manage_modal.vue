@@ -1,15 +1,15 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="document" data-e2e="e2e-MD-equipmentBooking-manageEvent">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-equipmentBooking-manageEvent-close">
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <h4 v-if="event.id" class="modal-title truncate !block" id="edit-project-modal-label">
+          <h4 v-if="event.id" class="modal-title truncate !block" id="edit-project-modal-label" data-e2e="e2e-TX-equipmentBooking-manageEvent-titleUpdate">
             {{ i18n.t('equipment_bookings.index.manage_modal.update_title') }}
           </h4>
-          <h4 v-else class="modal-title truncate !block" id="edit-project-modal-label">
+          <h4 v-else class="modal-title truncate !block" id="edit-project-modal-label" data-e2e="e2e-TX-equipmentBooking-manageEvent-titleCreate">
             {{ i18n.t('equipment_bookings.index.manage_modal.create_title') }}
           </h4>
         </div>
@@ -20,7 +20,13 @@
                 {{ i18n.t('equipment_bookings.index.manage_modal.event_name') }}
               </span>
               <div class="sci-input-container-v2">
-                <input type="text" ref="eventNameInput" v-model="event.event_name" :placeholder="i18n.t('equipment_bookings.index.manage_modal.event_name')" />
+                <input
+                  type="text"
+                  ref="eventNameInput"
+                  v-model="event.event_name"
+                  :placeholder="i18n.t('equipment_bookings.index.manage_modal.event_name')"
+                  data-e2e="e2e-IF-equipmentBooking-manageEvent-title"
+                />
               </div>
             </div>
             <div>
@@ -30,6 +36,7 @@
                 :preSelectedRows="event.repository_row_id"
                 :disableRowSelection="!!repositoryRowId"
                 @change="event.repository_row_id = $event"
+                dataE2e="equipmentBooking-manageEvent"
               />
             </div>
             <div>
@@ -41,6 +48,7 @@
                 :searchable="false"
                 :value="event.event_sub_type"
                 @change="event.event_sub_type = $event"
+                e2eValue="e2e-DD-equipmentBooking-manageEvent-eventType"
               ></SelectDropdown>
             </div>
             <div class="flex gap-2">
@@ -56,6 +64,7 @@
                   size="mb"
                   :error="event.start_at && event.end_at && notValidDates"
                   :clearable="false"
+                  dataE2e="e2e-DP-equipmentBooking-manageEvent-startDate"
                 />
               </div>
               <div class="flex items-center h-10 mt-5 shrink-0">
@@ -73,12 +82,18 @@
                   size="mb"
                   :clearable="false"
                   :error="event.start_at && event.end_at && notValidDates"
+                  dataE2e="e2e-DP-equipmentBooking-manageEvent-endDate"
                 />
               </div>
             </div>
             <div class="flex items-center gap-2">
               <span class="sci-checkbox-container">
-                <input type="checkbox" class="sci-checkbox" v-model="event.full_day" />
+                <input
+                  type="checkbox"
+                  class="sci-checkbox"
+                  v-model="event.full_day"
+                  data-e2e="e2e-CB-equipmentBooking-manageEvent-fullDay"
+                />
                 <span class="sci-checkbox-label"></span>
               </span>
               <span class="sci-label">{{ i18n.t('equipment_bookings.index.manage_modal.full_day_event') }}</span>
@@ -96,16 +111,38 @@
               @change="event.users = $event"
               :option-renderer="usersRenderer"
               :label-renderer="usersRenderer"
+              e2eValue="e2e-DD-equipmentBooking-manageEvent-people"
               ></SelectDropdown>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.close') }}</button>
-          <button v-if="event.id" type="button" class="btn btn-primary" :disabled="disabled" @click="updateEvent">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+            data-e2e="e2e-BT-equipmentBooking-manageEvent-close"
+          >
+            {{ i18n.t('general.close') }}
+          </button>
+          <button
+            v-if="event.id"
+            type="button"
+            class="btn btn-primary"
+            :disabled="disabled"
+            @click="updateEvent"
+            data-e2e="e2e-BT-equipmentBooking-manageEvent-update"
+          >
             {{ i18n.t('equipment_bookings.index.manage_modal.update_event') }}
           </button>
-          <button v-else type="button" class="btn btn-primary" :disabled="disabled" @click="createEvent">
+          <button
+            v-else
+            type="button"
+            class="btn btn-primary"
+            :disabled="disabled"
+            @click="createEvent"
+            data-e2e="e2e-BT-equipmentBooking-manageEvent-create"
+          >
             {{ i18n.t('equipment_bookings.index.manage_modal.create_event') }}
           </button>
         </div>
