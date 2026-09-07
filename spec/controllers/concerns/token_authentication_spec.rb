@@ -32,5 +32,13 @@ describe TokenAuthentication do
       access_token.revoke
       expect { test_controller_instance.send(:authenticate_request!) }.to raise_error(JWT::VerificationError)
     end
+
+    it "rejects revoked token padded with a valid extra '=' character" do
+      test_controller_instance.token = "#{access_token.token}="
+      test_controller_instance.current_user = user
+
+      access_token.revoke
+      expect { test_controller_instance.send(:authenticate_request!) }.to raise_error(JWT::VerificationError)
+    end
   end
 end
