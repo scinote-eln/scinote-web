@@ -92,7 +92,7 @@ import GenerateReportModal from './modals/generate_report_modal.vue'
 import {
   my_module_my_module_reports_path,
   my_module_my_module_report_path,
-  generated_reports_my_module_my_module_reports_path,
+  report_templates_my_module_my_module_reports_path,
   download_my_module_my_module_report_path
 } from '../../routes.js'
 
@@ -130,7 +130,7 @@ export default {
       {
         received: (data) => {
           if(data?.generating_report !== undefined) {
-            this.updateGeneratingReportStatus(data.id, data.generating_report);
+            this.updateGeneratingReportStatus(data.report_template_id, data.generating_report);
           }
         }
       }
@@ -143,8 +143,8 @@ export default {
     loadUrl() {
       return my_module_my_module_reports_path(this.myModuleId);
     },
-    loadGeneratedReportUrl() {
-      return generated_reports_my_module_my_module_reports_path(this.myModuleId);
+    loadReportTemplatestUrl() {
+      return report_templates_my_module_my_module_reports_path(this.myModuleId);
     }
   },
   methods: {
@@ -155,12 +155,12 @@ export default {
       return download_my_module_my_module_report_path(this.myModuleId, reportId);
     },
     fetchTemplates() {
-      axios.get(this.loadUrl).then((response) => {
+      axios.get(this.loadReportTemplatestUrl).then((response) => {
         this.templates = response.data.templates;
       });
     },
     fetchGeneratedReports() {
-      axios.get(this.loadGeneratedReportUrl).then((response) => {
+      axios.get(this.loadUrl).then((response) => {
         this.reports = response.data.reports;
       });
     },

@@ -9,7 +9,7 @@ class MyModuleReportsController < ApplicationController
   before_action :check_analytical_reporting
   before_action :check_view_permissions, except: %i(create destroy)
   before_action :check_manage_permissions, only: %i(create destroy)
-  before_action :load_my_module_report, only: %i(download destroy preview)
+  before_action :load_analytical_report, only: %i(download destroy preview)
   before_action :load_protocol_report_template, only: :create
   before_action :set_breadcrumbs_items, only: %i(index)
   before_action :set_navigator, only: %i(index)
@@ -18,16 +18,7 @@ class MyModuleReportsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        render json: {
-          templates: @my_module.protocol.report_templates.order(:created_at).map do |report_template|
-            {
-              id: report_template.id,
-              name: report_template.name,
-              generating_report: report_template.generating_report,
-              preview: preview_protocol_protocol_report_template_path(@my_module.protocol, report_template)
-            }
-          end
-        }
+        @analytical_reports = @my_module.analytical_reports.where(generating_status: :done).order(:created_at)
       end
 
       format.html do
@@ -37,21 +28,23 @@ class MyModuleReportsController < ApplicationController
   end
 
   def create
-    @report_template.update!(generating_report: true)
-    MyModules::GenerateReportJob.perform_later(@report_template.id, @my_module.id, create_params, user_id: current_user.id, team_id: current_team.id)
+    analytical_report = AnalyticalReport.create!(
+      name: @report_template.name,
+      generating_status: :in_progress,
+      reference: @my_module,
+      report_template_id: @report_template.id
+    )
+
+    MyModules::GenerateReportJob.perform_later(analytical_report.id, create_params, user_id: current_user.id, team_id: current_team.id)
   end
 
-  def generated_reports
-    render json: {
-      reports: @my_module.my_module_reports.order(:created_at).map do |my_module_report|
-        {
-          id: my_module_report.id,
-          name: my_module_report.name,
-          created_at: I18n.l(my_module_report.created_at, format: :full),
-          preview: preview_my_module_my_module_report_path(@my_module, my_module_report)
-        }
-      end
-    }
+  def report_templates
+    @in_progress_template_ids = @my_module.analytical_reports
+                                          .where(generating_status: :in_progress)
+                                          .distinct
+                                          .pluck(:report_template_id)
+                                          .to_set
+    @report_templates = @my_module.protocol.report_templates.order(:created_at)
   end
 
   def pdfs
@@ -62,12 +55,12 @@ class MyModuleReportsController < ApplicationController
   end
 
   def destroy
-    @my_module_report.destroy!
+    @analytical_report.destroy!
     render body: nil, status: :ok
   end
 
   def download
-    redirect_to rails_blob_path(@my_module_report.report, disposition: 'attachment')
+    redirect_to rails_blob_path(@analytical_report.report, disposition: 'attachment')
   end
 
   def preview
@@ -75,7 +68,7 @@ class MyModuleReportsController < ApplicationController
       partial: 'my_module_reports/preview',
       locals: {
         my_module_id: @my_module.id,
-        report: @my_module_report
+        report: @analytical_report
       },
       formats: :html
     ) }
@@ -99,10 +92,10 @@ class MyModuleReportsController < ApplicationController
     params.permit(:header, :footer, :add_numarization, :add_blank_page, asset_ids: [])
   end
 
-  def load_my_module_report
-    @my_module_report = @my_module.my_module_reports.find_by(id: params[:id])
+  def load_analytical_report
+    @analytical_report = @my_module.analytical_reports.find_by(id: params[:id])
 
-    render_404 unless @my_module_report
+    render_404 unless @analytical_report
   end
 
   def load_protocol_report_template

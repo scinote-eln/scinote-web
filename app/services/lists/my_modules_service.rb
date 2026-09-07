@@ -10,7 +10,7 @@ module Lists
       user_assignments: :user,
       designated_users: {},
       experiment: { project: :team },
-      last_my_module_report: {}
+      last_analytical_report: {}
     }
 
     private
@@ -70,8 +70,8 @@ module Lists
         @records = @records.left_joins(:tags).select('COUNT(DISTINCT tags.id) AS tag_count')
       when 'report'
         @records = @records.select(
-          '(SELECT mr.name FROM my_module_reports mr ' \
-          'WHERE mr.my_module_id = my_modules.id ' \
+          '(SELECT mr.name FROM analytical_reports mr ' \
+          'WHERE mr.reference_type = \'MyModule\' AND mr.reference_id = my_modules.id ' \
           'ORDER BY mr.created_at DESC LIMIT 1) AS report_name'
         )
       end
