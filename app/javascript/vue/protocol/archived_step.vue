@@ -110,9 +110,9 @@
                         @close="closeRestoreModal" />
 
       <div class="collapse in pl-10" :id="'stepBody' + step.id">
-        <div v-for="(element, index) in orderedElements" :key="element.id">
+        <div v-for="(element, index) in orderedElements" :key="`${element.id}-${element.orderable_type}`">
           <component
-            :is="elements[index].attributes.orderable_type"
+            :is="elements[index].orderable_type"
             class="result-element"
             :element.sync="elements[index]"
             :inRepository="false"
@@ -189,7 +189,7 @@ export default {
   },
   computed: {
     hasArchivedElements() {
-      return this.elements.some(element => element.attributes.orderable.archived);
+      return this.elements.some(element => element.archived);
     }
   },
   methods: {

@@ -1,5 +1,5 @@
 <template>
-  <div ref="modal" class="modal" :id="`tableNameModal${element.attributes.orderable.id}`" tabindex="-1" role="dialog">
+  <div ref="modal" class="modal" :id="`tableNameModal${element.id}`" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-md" role="document">
       <div class="modal-content">
         <div class="modal-header">

@@ -114,7 +114,12 @@ module ResultElements
     end
 
     def render_result_orderable_element(orderable)
-      render json: orderable, serializer: ResultOrderableElementSerializer, user: current_user
+      serializer = case orderable
+                   when Table then ResultTableSerializer
+                   when ResultText then ResultTextSerializer
+                   end
+
+      render json: orderable, serializer: serializer, user: current_user
     end
 
     def log_result_activity(element_type_of, message_items)

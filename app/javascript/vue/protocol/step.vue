@@ -194,8 +194,8 @@
         <component
           v-for="(element, index) in orderedElements"
           :ref="'stepComponent'"
-          :is="elements[index].attributes.orderable_type"
-          :key="element.id"
+          :is="elements[index].orderable_type"
+          :key="`${element.id}-${element.orderable_type}`"
           class="step-element"
           :element.sync="elements[index]"
           :inRepository="inRepository"
@@ -451,10 +451,10 @@
     },
     computed: {
       reorderableElements() {
-        return this.orderedElements.map((e) => { return { id: e.id, attributes: e.attributes.orderable } })
+        return this.orderedElements.map((e) => { return { id: e.id, attributes: e } })
       },
       orderedElements() {
-        return this.elements.sort((a, b) => a.attributes.position - b.attributes.position);
+        return this.elements.sort((a, b) => (a.orderable_element.position) - (b.orderable_element.position));
       },
       urls() {
         return this.step.attributes.urls || {}
@@ -643,7 +643,7 @@
         });
       },
       showArchiveModal() {
-        if (this.elements.some(e => e.attributes.orderable_type === 'Table')) {
+        if (this.elements.some(e => e.orderable_type === 'Table')) {
           this.confirmingArchive = true;
         } else {
           this.archiveStep();
@@ -728,21 +728,21 @@
         });
       },
       updateElement(element, skipRequest=false, callback) {
-        let index = this.elements.findIndex((e) => e.id === element.id);
+        let index = this.elements.findIndex((e) => e.id === element.id && e.orderable_type === element.orderable_type);
 
         if (!this.elements[index]) return;
 
-        this.elements[index].isNew = false;
+        element.isNew = false;
 
-        if (skipRequest || !element.attributes.orderable?.urls?.update_url) {
-          this.elements[index].attributes.orderable = element.attributes.orderable;
+        if (skipRequest || !element.urls?.update_url) {
+          this.elements.splice(index, 1, element);
           this.$emit('stepUpdated');
         } else {
           axios.put(
-            element.attributes.orderable.urls.update_url,
-            element.attributes.orderable
+            element.urls.update_url,
+            element
           ).then((result) => {
-              this.elements[index].attributes.orderable = result.data.data.attributes;
+              this.elements.splice(index, 1, result.data.data.attributes);
               this.$emit('stepUpdated');
 
               // optional callback after successful update
@@ -756,14 +756,14 @@
       },
       updateElementOrder(orderedElements) {
         orderedElements.forEach((element, position) => {
-          let index = this.elements.findIndex((e) => e.id === element.id);
-          this.elements[index].attributes.position = position;
+          let index = this.elements.findIndex((e) => e.id === element.id && e.orderable_type === element.attributes.orderable_type);
+          this.elements[index].orderable_element.position = position;
         });
 
         let elementPositions =
           {
             step_orderable_element_positions: this.elements.map(
-              (element) => [element.attributes.step_orderable_element_id, element.attributes.position]
+              (element) => [element.orderable_element.id, element.orderable_element.position]
             )
           };
 
@@ -805,8 +805,9 @@
         let plateTemplate = tableDimensions != null;
         tableDimensions ||= [5, 8];
         $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate, name: name, form_id: formId }, (result) => {
-          result.data.isNew = true;
-          this.elements.push(result.data)
+          const element = result.data.attributes;
+          element.isNew = true;
+          this.elements.push(element)
 
           if (this.isCollapsed) {
             this.clickToggleButton();
@@ -867,10 +868,10 @@
           );
       },
       insertElement(element) {
-        let position = element.attributes.position;
+        let position = element.orderable_element.position;
         this.elements = this.elements.map( s => {
-          if (s.attributes.position >= position) {
-              s.attributes.position += 1;
+          if (s.orderable_element.position >= position) {
+              s.orderable_element.position += 1;
           }
           return s;
         })
@@ -880,8 +881,8 @@
       moveElement(position, target_id) {
         this.elements.splice(position, 1)
         let unorderedElements = this.elements.map( e => {
-          if (e.attributes.position >= position) {
-            e.attributes.position -= 1;
+          if (e.orderable_element.position >= position) {
+            e.orderable_element.position -= 1;
           }
           return e;
         })
@@ -897,14 +898,12 @@
         $.post(this.urls.duplicate_step_url, (result) => {
           let step = result.data;
           step.attachments = [];
-          step.elements = [];
           result.included?.forEach((included) => {
             if (included.type === 'assets') {
               step.attachments.push(included);
-            } else if (included.type === 'step_orderable_elements') {
-              step.elements.push(included);
             }
           });
+          step.elements = step.attributes.elements || [];
           this.$emit('step:insert', result.data);
           HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplicated'), 'success');
         }).fail(() => {

@@ -18,7 +18,7 @@ export default {
   },
   computed: {
     orderedElements() {
-      return this.elements.sort((a, b) => a.attributes.position - b.attributes.position);
+      return this.elements.sort((a, b) => (a.orderable_element.position) - (b.orderable_element.position));
     },
     urls() {
       return this.step.attributes.urls || {};
@@ -69,14 +69,15 @@ export default {
       this.$emit('step:collapsed');
       axios.put(user_setting_path('task_step_states'), {user_setting: settings});
     },
-    removeElement(id) {
-      const position = this.elements.find(el => el.id == id)?.attributes?.position;
+    removeElement({ id, orderable_type }) {
+      const isRemoved = (el) => el.id === id && el.orderable_type === orderable_type;
+      const position = this.elements.find(isRemoved)?.orderable_element?.position;
 
       this.elements = this.elements
-                          .filter(el => el.id !== id)
+                          .filter(el => !isRemoved(el))
                           .map(el => {
-                            if (el.attributes.position >= position) {
-                              el.attributes.position--;
+                            if (el.orderable_element && el.orderable_element.position >= position) {
+                              el.orderable_element.position--;
                             }
                             return el;
                           });

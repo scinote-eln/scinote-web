@@ -5,7 +5,7 @@ class StepFormResponseSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
   attributes :id, :created_at, :form_id, :urls, :submitted_by_full_name, :status, :submitted_at, :parent_type, :in_repository,
-             :icon, :name, :archived, :archived_by, :archived_on, :locked
+             :icon, :name, :archived, :archived_by, :archived_on, :locked, :orderable_element, :orderable_type
 
   has_one :form, serializer: FormSerializer
 
@@ -51,6 +51,14 @@ class StepFormResponseSerializer < ActiveModel::Serializer
 
   def submitted_at
     I18n.l(object.submitted_at, format: :full) if object.submitted_at
+  end
+
+  def orderable_element
+    object.step_orderable_element
+  end
+
+  def orderable_type
+    object.class.name
   end
 
   def urls

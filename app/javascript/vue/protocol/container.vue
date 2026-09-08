@@ -479,10 +479,7 @@ export default {
         step.attachments.push(response.data.included.find((a) => a.id === asset.id && a.type === 'assets'));
       });
 
-      step.elements = [];
-      step.relationships.step_orderable_elements.data.forEach((element) => {
-        step.elements.push(response.data.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
-      });
+      step.elements = step.attributes.elements;
     },
     loadSteps() {
       axios.get(this.urls.steps_url).then((response) => {
