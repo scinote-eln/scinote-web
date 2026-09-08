@@ -25,7 +25,7 @@
                   ref="eventNameInput"
                   v-model="event.event_name"
                   :placeholder="i18n.t('equipment_bookings.index.manage_modal.event_name')"
-                  data-e2e="e2e-IF-equipmentBooking-manageEvent-title"
+                  data-e2e="e2e-IF-equipmentBooking-manageEvent-name"
                 />
               </div>
             </div>
