@@ -18,12 +18,12 @@
   </div>
 </div>
 <div class="tab-group mb-4">
-  <%= link_to t("users.settings.teams.navigation.details"), team_path(@team), class: "tab-item #{ 'active' if @active_tab == :details } #{ 'disabled' unless can_read_team?(@team) }"%>
-  <%= link_to t("users.settings.teams.navigation.members"), members_users_settings_team_path(@team), class: "tab-item #{ 'active' if @active_tab == :members }"%>
-  <%= link_to t("users.settings.teams.navigation.groups"), users_settings_team_user_groups_path(@team), class: "tab-item #{ 'active' if @active_tab == :user_groups } #{ 'disabled' unless can_manage_team?(@team) }"%>
-  <%= link_to t("users.settings.sidebar.account_nav.automations"), automations_team_path(@team), class: "tab-item #{ 'active' if @active_tab == :automations } #{ 'disabled' unless can_manage_team?(@team) }"%>
-  <%= link_to t("users.settings.teams.navigation.tags"), users_settings_team_tags_path(@team), class: "tab-item #{ 'active' if @active_tab == :tags } #{ 'disabled' unless can_delete_tags?(@team) }"%>
+  <%= link_to t("users.settings.teams.navigation.details"), team_path(@team), class: "tab-item #{ 'active' if @active_tab == :details } #{ 'disabled' unless can_read_team?(@team) }", data: {'e2e' => 'e2e-BT-workspaceSettings-tab-details'}%>
+  <%= link_to t("users.settings.teams.navigation.members"), members_users_settings_team_path(@team), class: "tab-item #{ 'active' if @active_tab == :members }", data: {'e2e' => 'e2e-BT-workspaceSettings-tab-members'}%>
+  <%= link_to t("users.settings.teams.navigation.groups"), users_settings_team_user_groups_path(@team), class: "tab-item #{ 'active' if @active_tab == :user_groups } #{ 'disabled' unless can_manage_team?(@team) }", data: {'e2e' => 'e2e-BT-workspaceSettings-tab-groups'}%>
+  <%= link_to t("users.settings.sidebar.account_nav.automations"), automations_team_path(@team), class: "tab-item #{ 'active' if @active_tab == :automations } #{ 'disabled' unless can_manage_team?(@team) }", data: {'e2e' => 'e2e-BT-workspaceSettings-tab-automations'}%>
+  <%= link_to t("users.settings.teams.navigation.tags"), users_settings_team_tags_path(@team), class: "tab-item #{ 'active' if @active_tab == :tags } #{ 'disabled' unless can_delete_tags?(@team) }", data: {'e2e' => 'e2e-BT-workspaceSettings-tab-tags'}%>
   <% if Team.deletion_prevention_enabled? %>
-    <%= link_to t("users.settings.teams.navigation.data_integrity"), data_integrity_users_settings_team_path(@team), class: "tab-item #{ 'active' if @active_tab == :data_integrity } #{ 'disabled' unless can_manage_team?(@team) }"%>
+    <%= link_to t("users.settings.teams.navigation.data_integrity"), data_integrity_users_settings_team_path(@team), class: "tab-item #{ 'active' if @active_tab == :data_integrity } #{ 'disabled' unless can_manage_team?(@team) }", data: {'e2e' => 'e2e-BT-workspaceSettings-tab-dataIntegrity'}%>
   <% end %>
 </div>
