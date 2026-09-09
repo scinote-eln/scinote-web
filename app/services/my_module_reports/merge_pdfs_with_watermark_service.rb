@@ -5,10 +5,10 @@ module MyModuleReports
     include Canaid::Helpers::PermissionsHelper
     PDFUNITE_ENCRYPTED_PDF_ERROR_STRING = 'Unimplemented Feature: Could not merge encrypted files'
 
-    def initialize(user, my_module_report, asset_ids, header_text, footer_text, add_numarization, add_blank_page)
+    def initialize(user, analytical_report, asset_ids, header_text, footer_text, add_numarization, add_blank_page)
       @user = user
-      @my_module_report = my_module_report
-      @my_module = @my_module_report.my_module
+      @analytical_report = analytical_report
+      @my_module = @analytical_report.reference
       @asset_ids = asset_ids
       @header_text = header_text
       @footer_text = footer_text
@@ -30,7 +30,7 @@ module MyModuleReports
       end
 
       File.open(@report) do |file|
-        @my_module_report.report.attach(io: file, filename: @original_filename)
+        @analytical_report.report.attach(io: file, filename: @original_filename)
       end
     ensure
       @tempfiles.each do |tempfile|
@@ -44,9 +44,9 @@ module MyModuleReports
     private
 
     def load_report!
-      @original_filename = @my_module_report.report.filename.to_s
+      @original_filename = @analytical_report.report.filename.to_s
       report_tempfile = new_tempfile(File.basename(@original_filename, '.*'), File.extname(@original_filename))
-      @my_module_report.report.download { |chunk| report_tempfile.write(chunk) }
+      @analytical_report.report.download { |chunk| report_tempfile.write(chunk) }
       report_tempfile.flush
       report_tempfile.rewind
       @report = report_tempfile.path
@@ -152,8 +152,8 @@ module MyModuleReports
       _stdout, stderr, status = run_command('pdfunite', *paths, merged_file.path)
 
       if stderr.include?(PDFUNITE_ENCRYPTED_PDF_ERROR_STRING)
-        Rails.logger.warn("Cannot merge encrypted PDF #{head_path}, skipping!")
-        return tail_path
+        Rails.logger.warn('Cannot merge encrypted PDF, skipping!')
+        return paths.first
       elsif !status.success? || !File.file?(merged_file.path) || File.empty?(merged_file.path)
         raise StandardError, "There was an error merging report and PDF file preview (#{stderr})"
       end

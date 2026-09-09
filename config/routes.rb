@@ -514,6 +514,12 @@ Rails.application.routes.draw do
         post :unfavorite
       end
 
+      resources :my_module_reports, only: %i(index create destroy) do
+        member do
+          get :download
+        end
+      end
+
       resources :my_modules, path: '/modules', only: [:index, :create]
     end
 
@@ -621,7 +627,7 @@ Rails.application.routes.draw do
 
       resources :my_module_reports, only: %i(index create destroy) do
         collection do
-          get :generated_reports
+          get :report_templates
           get :pdfs
         end
 

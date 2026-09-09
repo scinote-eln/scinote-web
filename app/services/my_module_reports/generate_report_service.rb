@@ -15,7 +15,7 @@ module MyModuleReports
       @tiny_mce_assets = []
     end
 
-    def call(my_module_report)
+    def call(analytical_report)
       original_blob = @report_template.odt_template_file.blob
       output = Tempfile.new(['report', '.odt'])
 
@@ -32,7 +32,7 @@ module MyModuleReports
         end
 
         report.generate(output.path)
-        my_module_report.report.attach(io: File.open(output.path), filename: original_blob.filename, content_type: original_blob.content_type)
+        analytical_report.report.attach(io: File.open(output.path), filename: original_blob.filename, content_type: original_blob.content_type)
       end
     ensure
       @tiny_mce_assets.each do |tiny_mce_asset|

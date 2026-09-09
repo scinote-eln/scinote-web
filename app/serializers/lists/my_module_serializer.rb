@@ -79,8 +79,8 @@ module Lists
       urls_list[:update_due_date] = my_module_path(object, user, format: :json) if can_update_my_module_due_date?(object)
       urls_list[:update_start_date] = my_module_path(object, user, format: :json) if can_update_my_module_start_date?(object)
 
-      if ReportTemplate.analytical_reporting_enabled? && object.last_my_module_report
-        urls_list[:report] = preview_my_module_my_module_report_path(object, object.last_my_module_report)
+      if ReportTemplate.analytical_reporting_enabled? && object.last_analytical_report
+        urls_list[:report] = preview_my_module_my_module_report_path(object, object.last_analytical_report)
       end
 
       urls_list
@@ -128,7 +128,7 @@ module Lists
     end
 
     def analytical_report
-      object.last_my_module_report&.name if ReportTemplate.analytical_reporting_enabled?
+      object.last_analytical_report&.name if ReportTemplate.analytical_reporting_enabled?
     end
 
     def project_id
