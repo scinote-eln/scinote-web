@@ -4,20 +4,21 @@ class ExperimentReportsController < ApplicationController
   before_action :load_experiment
   before_action :check_view_permissions, except: %i(create destroy)
   before_action :check_manage_permissions, only: %i(create destroy)
-  before_action :load_analytical_report, only: %i(download destroy)
+  before_action :load_analytical_report, only: %i(download destroy preview)
 
   def index
-    @analytical_reports = @experiment.analytical_reports.where(generating_status: :done).order(:created_at)
+    @analytical_reports = @experiment.analytical_reports.where(generating_status: :done).order(created_at: :desc)
   end
 
   def create
     analytical_report = AnalyticalReport.create!(
       name: create_params[:name],
       generating_status: :in_progress,
-      reference: @experiment
+      reference: @experiment,
+      created_by: current_user
     )
 
-    Experiments::GenerateReportJob.perform_later(analytical_report.id, create_params[:task_ids], user_id: current_user.id)
+    Experiments::GenerateReportJob.perform_later(analytical_report.id, create_params[:task_ids])
   end
 
   def destroy
@@ -26,7 +27,18 @@ class ExperimentReportsController < ApplicationController
   end
 
   def download
-    redirect_to rails_blob_path(analytical_report.report, disposition: 'attachment')
+    redirect_to rails_blob_path(@analytical_report.report, disposition: 'attachment')
+  end
+
+  def preview
+    render json: { html: render_to_string(
+      partial: 'analytical_reports/preview',
+      locals: {
+        report: @analytical_report,
+        download_url: download_experiment_experiment_report_path(@experiment.id, @analytical_report)
+      },
+      formats: :html
+    ) }
   end
 
   private

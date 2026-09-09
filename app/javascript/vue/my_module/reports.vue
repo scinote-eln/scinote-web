@@ -38,7 +38,6 @@
              :id="`modal_link${report.id}`"
              data-no-turbolink="true"
              :data-id="report.id"
-             :data-gallery-view-id="myModuleId"
              :data-preview-url="report.preview">{{ report.name }}</a>
         </div>
         <div class="flex items-center gap-2">

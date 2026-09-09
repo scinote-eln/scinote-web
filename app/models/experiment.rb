@@ -38,6 +38,12 @@ class Experiment < ApplicationRecord
   # Associations for old activity type
   has_many :activities, inverse_of: :experiment
 
+  has_many :analytical_reports, as: :reference, dependent: :destroy
+  has_one :last_analytical_report,
+          -> { order(created_at: :desc) },
+          class_name: 'AnalyticalReport',
+          as: :reference
+
   has_one_attached :workflowimg
 
   auto_strip_attributes :name, :description, nullify: false

@@ -2,7 +2,7 @@
 
 module MyModules
   class GenerateReportJob < ApplicationJob
-    def perform(analytical_report_id, params, user_id:, team_id:)
+    def perform(analytical_report_id, params, team_id:)
       asset_ids = params[:asset_ids]
       header_text = params[:header]
       footer_text = params[:footer]
@@ -10,7 +10,7 @@ module MyModules
       add_blank_page = params[:add_blank_page]
 
       analytical_report = AnalyticalReport.find(analytical_report_id)
-      user = User.find(user_id)
+      user = analytical_report.created_by
       team = Team.find(team_id)
 
       I18n.backend.date_format = user.settings[:date_format]
