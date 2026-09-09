@@ -144,14 +144,18 @@ class Table < ApplicationRecord
       if step_table
         Table.joins(step_table: { step: :protocol }).where(protocols: { id: step_table.step.protocol_id })
       elsif result_table&.result.is_a?(Result)
-        Table.joins(:result_table).where(result_table: { result_id: result_table.result.my_module.results.select(:id) })
+        Table.joins(result_table: :result).where(result_table: { result_id: result_table.result.my_module.results.select(:id) })
       elsif result_table&.result.is_a?(ResultTemplate)
-        Table.joins(:result_table).where(result_table: { result_id: result_table.result.protocol.results.select(:id) })
+        Table.joins(result_table: :result).where(result_table: { result_id: result_table.result.protocol.results.select(:id) })
       else
-        Table.none
+        return Table.none
       end
 
-    base_query.where.not(id: id).where(archived: archived)
+    parent_archived_column = step_table ? 'steps.archived' : 'results.archived'
+    in_archive = archived? || (step || result)&.archived.present?
+
+    base_query.where.not(id: id)
+              .where("(tables.archived OR #{parent_archived_column}) = ?", in_archive)
   end
 
   def duplicate_sheet_name_tables

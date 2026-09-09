@@ -434,7 +434,7 @@ class Protocol < ApplicationRecord
 
       # Copy results
       results_scope.order(:created_at).each do |result|
-        new_result = clone_result(dest, current_user, result)
+        new_result = clone_result(dest, current_user, result, load_mode: load_mode)
         results_map[result.id] = new_result.id
       end
 
