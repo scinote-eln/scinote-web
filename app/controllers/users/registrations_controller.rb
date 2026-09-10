@@ -188,8 +188,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     user = current_user || User.find_by(id: session[:otp_user_id])
     if user.valid_otp?(params[:submit_code])
       recovery_codes = user.enable_2fa!
-      sign_in(user) unless current_user
-      render json: { recovery_codes: recovery_codes }
+      sign_in(user, event: :authentication) unless current_user
+      render json: { recovery_codes: recovery_codes, csrf_token: form_authenticity_token }
     else
       render json: { error: t('users.registrations.edit.2fa_errors.wrong_submit_code') }, status: :unprocessable_entity
     end

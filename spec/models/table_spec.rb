@@ -35,6 +35,101 @@ describe Table, type: :model do
     it { should have_many :report_elements }
   end
 
+  describe '#sibling_tables' do
+    it 'returns Table.none when the table belongs to neither a step nor a result' do
+      expect(table.sibling_tables).to eq(Table.none)
+    end
+
+    context 'when table belongs to a step' do
+      let(:protocol) { create :protocol }
+      let(:step) { create :step, protocol: protocol }
+      let(:table) { step.tables.create!(name: Faker::Name.unique.name, contents: '{}') }
+
+      it 'includes other tables belonging to steps in the same protocol' do
+        sibling = create(:step, protocol: protocol).tables.create!(name: Faker::Name.unique.name, contents: '{}')
+
+        expect(table.sibling_tables).to contain_exactly(sibling)
+      end
+
+      it 'does not include the table itself' do
+        expect(table.sibling_tables).not_to include(table)
+      end
+
+      it 'does not include tables belonging to steps in a different protocol' do
+        create(:step).tables.create!(name: Faker::Name.unique.name, contents: '{}')
+
+        expect(table.sibling_tables).to be_empty
+      end
+
+      it 'only includes siblings whose archived state matches the table own context' do
+        active_sibling = create(:step, protocol: protocol).tables.create!(
+          name: Faker::Name.unique.name, contents: '{}'
+        )
+        archived_table_sibling = create(:step, protocol: protocol).tables.create!(
+          name: Faker::Name.unique.name, contents: '{}', archived: true
+        )
+        archived_step = create(:step, protocol: protocol, archived: true)
+        archived_step_sibling = archived_step.tables.create!(name: Faker::Name.unique.name, contents: '{}')
+
+        expect(table.sibling_tables).to contain_exactly(active_sibling)
+
+        table.update_column(:archived, true)
+        expect(table.sibling_tables).to contain_exactly(archived_table_sibling, archived_step_sibling)
+      end
+    end
+
+    context 'when table belongs to a result' do
+      let(:my_module) { create :my_module }
+      let(:result) { create :result, my_module: my_module }
+      let(:table) { result.tables.create!(name: Faker::Name.unique.name, contents: '{}') }
+
+      it 'includes other tables belonging to results in the same my_module' do
+        sibling = create(:result, my_module: my_module).tables.create!(
+          name: Faker::Name.unique.name, contents: '{}'
+        )
+
+        expect(table.sibling_tables).to contain_exactly(sibling)
+      end
+
+      it 'does not include tables belonging to results in a different my_module' do
+        create(:result).tables.create!(name: Faker::Name.unique.name, contents: '{}')
+
+        expect(table.sibling_tables).to be_empty
+      end
+
+      it 'only includes siblings whose archived state matches the table own context' do
+        active_sibling = create(:result, my_module: my_module).tables.create!(
+          name: Faker::Name.unique.name, contents: '{}'
+        )
+        create(:result, :archived, my_module: my_module).tables.create!(
+          name: Faker::Name.unique.name, contents: '{}'
+        )
+
+        expect(table.sibling_tables).to contain_exactly(active_sibling)
+      end
+    end
+
+    context 'when table belongs to a result template' do
+      let(:protocol) { create :protocol }
+      let(:result_template) { create :result_template, protocol: protocol }
+      let(:table) { result_template.tables.create!(name: Faker::Name.unique.name, contents: '{}') }
+
+      it 'includes other tables belonging to result templates in the same protocol' do
+        sibling = create(:result_template, protocol: protocol).tables.create!(
+          name: Faker::Name.unique.name, contents: '{}'
+        )
+
+        expect(table.sibling_tables).to contain_exactly(sibling)
+      end
+
+      it 'does not include tables belonging to result templates in a different protocol' do
+        create(:result_template).tables.create!(name: Faker::Name.unique.name, contents: '{}')
+
+        expect(table.sibling_tables).to be_empty
+      end
+    end
+  end
+
   describe 'Validations' do
     describe '#contents' do
       it { is_expected.to validate_presence_of :contents }
@@ -43,6 +138,99 @@ describe Table, type: :model do
 
     describe '#name' do
       it { is_expected.to validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH) }
+    end
+
+    describe '#sheet_name' do
+      def table_attrs(sheet_name = nil)
+        { name: Faker::Name.unique.name,
+          contents: { data: [%w(A B C)] }.to_json,
+          metadata: (sheet_name ? { sheet_name: sheet_name } : {}) }
+      end
+
+      context 'when table belongs to a step' do
+        let(:protocol) { create :protocol }
+        let(:step) { create :step, protocol: protocol }
+
+        it 'is invalid when sheet_name is not unique within the protocol' do
+          step.tables.create!(table_attrs('Sheet1'))
+          table = create(:step, protocol: protocol).tables.create!(table_attrs('Sheet2'))
+
+          table.metadata = { sheet_name: 'Sheet1' }
+
+          expect(table).not_to be_valid
+          expect(table.errors[:sheet_name]).to include(
+            I18n.t('activerecord.errors.models.table.attributes.sheet_name.not_unique_in_context',
+                   parent_class: Protocol, parent_id: protocol.id)
+          )
+        end
+
+        it 'is valid when sheet_name is unique within the protocol' do
+          step.tables.create!(table_attrs('Sheet1'))
+          table = step.tables.create!(table_attrs('Sheet2'))
+
+          expect(table).to be_valid
+        end
+
+        it 'is valid when sheet_name duplicates a table belonging to a different protocol' do
+          step.tables.create!(table_attrs('Sheet1'))
+          table = create(:step).tables.create!(table_attrs('Sheet2'))
+
+          table.metadata = { sheet_name: 'Sheet1' }
+
+          expect(table).to be_valid
+        end
+      end
+
+      context 'when table belongs to a result' do
+        let(:my_module) { create :my_module }
+
+        it 'is invalid when sheet_name is not unique within the my_module' do
+          create(:result, my_module: my_module).tables.create!(table_attrs('Sheet1'))
+          table = create(:result, my_module: my_module).tables.create!(table_attrs('Sheet2'))
+
+          table.metadata = { sheet_name: 'Sheet1' }
+
+          expect(table).not_to be_valid
+          expect(table.errors[:sheet_name]).to include(
+            I18n.t('activerecord.errors.models.table.attributes.sheet_name.not_unique_in_context',
+                   parent_class: MyModule, parent_id: my_module.id)
+          )
+        end
+
+        it 'is valid when sheet_name duplicates a table belonging to a different my_module' do
+          create(:result, my_module: my_module).tables.create!(table_attrs('Sheet1'))
+          table = create(:result).tables.create!(table_attrs('Sheet2'))
+
+          table.metadata = { sheet_name: 'Sheet1' }
+
+          expect(table).to be_valid
+        end
+      end
+
+      context 'when table belongs to a result template' do
+        let(:protocol) { create :protocol }
+
+        it 'is invalid when sheet_name is not unique within the protocol' do
+          create(:result_template, protocol: protocol).tables.create!(table_attrs('Sheet1'))
+          table = create(:result_template, protocol: protocol).tables.create!(table_attrs('Sheet2'))
+
+          table.metadata = { sheet_name: 'Sheet1' }
+
+          expect(table).not_to be_valid
+          expect(table.errors[:sheet_name]).to include(
+            I18n.t('activerecord.errors.models.table.attributes.sheet_name.not_unique_in_context',
+                   parent_class: Protocol, parent_id: protocol.id)
+          )
+        end
+      end
+
+      it 'is valid without a sheet_name even if a duplicate exists in the same context' do
+        step = create :step
+        step.tables.create!(table_attrs('Sheet1'))
+        table = step.tables.create!(table_attrs)
+
+        expect(table).to be_valid
+      end
     end
   end
 end

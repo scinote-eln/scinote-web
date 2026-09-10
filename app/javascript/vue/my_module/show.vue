@@ -1,5 +1,8 @@
 <template>
   <div v-if="myModule">
+    <div v-if="myModule.attributes.read_only_description" class="bg-white px-4 my-4 task-section">
+      <div class="py-4" v-html="myModule.attributes.read_only_description"></div>
+    </div>
     <my-module-details :myModule="myModule" :detailsKey="detailsKey" @reloadMyModule="fetchMyModule" @reloadSubject="fetchMyModule"></my-module-details>
     <my-module-description
       :myModule="myModule"

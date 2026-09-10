@@ -169,6 +169,15 @@ RSpec.describe 'Api::V2::ResultsController', type: :request do
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body['errors'][0]).to include(status: 404)
     end
+
+    context 'when result attachments are locked' do
+      let(:result_valid) { valid_task.results.first.tap { |result| result.update!(attachments_locked: true) } }
+
+      it 'includes attachments_locked status' do
+        get api_path, headers: valid_headers
+        expect(json[:data][:attributes][:attachments_locked]).to be(true)
+      end
+    end
   end
 
   describe 'POST result, #create' do

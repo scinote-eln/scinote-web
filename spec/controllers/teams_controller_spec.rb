@@ -13,14 +13,17 @@ describe TeamsController, type: :controller do
       view_response = '<div class="content-pane" id="report-new"><div class="report-container"><div id="report-content"></div></div></div>'
       proxy_manager = Warden::Manager.new({})
       proxy = Warden::Proxy.new({}, proxy_manager)
-      renderer_double = double('Renderer', render: view_response.dup)
+
+      renderer_double = instance_double(ActionController::Renderer,
+                                        render: view_response.dup,
+                                        render_to_string: view_response.dup)
 
       allow(Warden::Manager).to receive(:new).and_return(proxy_manager)
       allow(Warden::Proxy).to receive(:new).with({}, proxy_manager).and_return(proxy)
       allow(ApplicationController.renderer).to receive(:new).with({ warden: proxy }).and_return(renderer_double)
       allow(ApplicationController).to receive(:render)
     end
-  
+
     let!(:first_project) { create :project, team: team, created_by: user }
     let!(:second_project) { create :project, team: team, created_by: user }
     let(:params) do

@@ -4,7 +4,7 @@ module Api
   module V2
     class ResultSerializer < ActiveModel::Serializer
       type :results
-      attributes :name, :archived
+      attributes :name, :archived, :attachments_locked
       belongs_to :user, serializer: Api::V1::UserSerializer
 
       has_many :result_comments, key: :comments, serializer: Api::V1::CommentSerializer

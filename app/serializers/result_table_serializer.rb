@@ -4,7 +4,11 @@ class ResultTableSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
-  attributes :name, :contents, :urls, :icon, :metadata, :parent_type, :archived, :archived_by, :archived_on, :locked
+  attributes :name, :contents, :urls, :icon, :metadata, :parent_type, :archived, :archived_by, :archived_on, :locked, :sheet_name_not_unique
+
+  def sheet_name_not_unique
+    object.duplicate_sheet_name_tables.any?
+  end
 
   def contents
     object.contents_utf_8

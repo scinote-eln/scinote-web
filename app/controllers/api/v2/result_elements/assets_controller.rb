@@ -53,7 +53,7 @@ module Api
         end
 
         def check_create_permissions
-          raise PermissionError.new(Result, :manage) unless can_manage_result?(@result)
+          raise PermissionError.new(Result, :manage) unless can_manage_result_attachments?(@result)
         end
 
         def check_delete_permissions

@@ -141,8 +141,9 @@ class CanvasController < ApplicationController
     if update_params[:cloned].present?
       clones = update_params[:cloned].split(';')
       (clones.collect { |v| v.split(',') }).each do |val|
-        if val.length == 2 && is_int?(val[0]) && val[1].is_a?(String) &&
-           to_add.any? { |m| m[:id] == val[1] }
+        if val.length == 2 && is_int?(val[0]) && val[1].is_a?(String) && to_add.any? { |m| m[:id] == val[1] }
+          return render_403 unless can_read_my_module?(@experiment.my_modules.find(val[0]))
+
           to_clone[val[1]] = val[0]
         else
           return render_403

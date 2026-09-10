@@ -371,14 +371,16 @@ class ProtocolsController < ApplicationController
     cloned = nil
     Protocol.transaction do
       cloned = @original.deep_clone_repository(current_user)
-    rescue StandardError
+    rescue StandardError => e
+      @error_message = sheet_name_error_message(e, 'protocols.index.clone.error_flash', original: @original.name)
+
       raise ActiveRecord::Rollback
     end
 
     if cloned.present?
       render json: { message: t('protocols.index.clone.success_flash', original: @original.name, new: cloned.name) }
     else
-      render json: { message: t('protocols.index.clone.error_flash', original: @original.name) },
+      render json: { error: @error_message },
              status: :bad_request
     end
   end
@@ -386,6 +388,7 @@ class ProtocolsController < ApplicationController
   def copy_to_repository
     respond_to do |format|
       transaction_error = false
+
       Protocol.transaction do
         @new_protocol = @protocol.copy_to_repository(
           Protocol.new(create_params),
@@ -397,6 +400,7 @@ class ProtocolsController < ApplicationController
         create_team_assignment(@new_protocol, :protocol_template_access_granted_all_team_members)
       rescue StandardError => e
         transaction_error = true
+        @error_message = sheet_name_error_message(e, 'my_modules.protocols.copy_to_repository_modal.error_400')
         Rails.logger.error(e.message)
         Rails.logger.error(e.backtrace.join("\n"))
         raise ActiveRecord::Rollback
@@ -406,7 +410,7 @@ class ProtocolsController < ApplicationController
         if transaction_error
           # Bad request error
           render json: {
-            message: t('my_modules.protocols.copy_to_repository_modal.error_400')
+            error: @error_message
           },
           status: :bad_request
         elsif @new_protocol.invalid?
@@ -434,6 +438,13 @@ class ProtocolsController < ApplicationController
         log_activity(:protocol_template_draft_created, nil, protocol: @protocol.id)
         render json: { url: protocol_path(draft) }
       end
+    rescue ActiveRecord::RecordInvalid => e
+      @error_message = sheet_name_error_message(e, 'my_modules.protocols.copy_to_repository_modal.error_400')
+      Rails.logger.error(e.message)
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: { error: @error_message }, status: :unprocessable_entity
+
+      raise ActiveRecord::Rollback
     rescue StandardError => e
       Rails.logger.error(e.message)
       Rails.logger.error(e.backtrace.join("\n"))
@@ -446,17 +457,20 @@ class ProtocolsController < ApplicationController
     render_403 and return unless can_unlink_protocol?(@protocol)
 
     transaction_error = false
+
     Protocol.transaction do
       @protocol.unlink
-    rescue StandardError
+    rescue StandardError => e
       transaction_error = true
+      @error_message = sheet_name_error_message(e, 'my_modules.protocols.unlink_error')
+
       raise ActiveRecord::Rollback
     end
 
     if transaction_error
       # Bad request error
       render json: {
-        message: t('my_modules.protocols.unlink_error')
+        error: @error_message
       }, status: :bad_request
     else
       # Everything good, display flash & render 200
@@ -477,15 +491,18 @@ class ProtocolsController < ApplicationController
       Protocol.transaction do
         # Revert is basically update from parent
         @protocol.load_from_repository(parent, current_user, params[:load_mode])
-      rescue StandardError
+      rescue StandardError => e
         transaction_error = true
+
+        @error_message = sheet_name_error_message(e, 'my_modules.protocols.revert_error')
+
         raise ActiveRecord::Rollback
       end
 
       if transaction_error
         # Bad request error
         render json: {
-          message: t('my_modules.protocols.revert_error')
+          message: @error_message
         },
         status: :bad_request
       else
@@ -520,8 +537,11 @@ class ProtocolsController < ApplicationController
                           @protocol.parent.parent
                         end
         @protocol.load_from_repository(source_parent.latest_published_version_or_self, current_user, params[:load_mode])
-      rescue StandardError
+      rescue StandardError => e
         transaction_error = true
+
+        @error_message = sheet_name_error_message(e, 'my_modules.protocols.update_from_parent_error')
+
         raise ActiveRecord::Rollback
       end
     end
@@ -529,7 +549,7 @@ class ProtocolsController < ApplicationController
     if !protocol_can_destroy
       render json: { message: t('my_modules.protocols.update_from_parent_error_locked') }, status: :bad_request
     elsif transaction_error
-      render json: { message: t('my_modules.protocols.update_from_parent_error') }, status: :bad_request
+      render json: { message: @error_message }, status: :bad_request
     else
       log_activity(:update_protocol_in_task_from_repository,
                    @protocol.my_module.experiment.project,
@@ -548,6 +568,8 @@ class ProtocolsController < ApplicationController
       Protocol.transaction do
         @protocol.load_from_repository(@source, current_user, params[:load_mode])
       rescue StandardError => e
+        @error_message = sheet_name_error_message(e, 'my_modules.protocols.load_from_repository_error')
+
         Rails.logger.error(e.message)
         Rails.logger.error(e.backtrace.join("\n"))
         transaction_error = true
@@ -556,7 +578,7 @@ class ProtocolsController < ApplicationController
 
       if transaction_error
         # Bad request error
-        render json: { message: t('my_modules.protocols.load_from_repository_error') }, status: :bad_request
+        render json: { message: @error_message }, status: :bad_request
       else
         # Everything good, record activity, display flash & render 200
         load_mode = params[:load_mode] || 'replace'
@@ -932,6 +954,14 @@ class ProtocolsController < ApplicationController
   end
 
   private
+
+  def sheet_name_error_message(exception, fallback_key, **fallback_args)
+    if exception.is_a?(ActiveRecord::RecordInvalid) && exception.record.errors[:sheet_name]
+      t('activerecord.errors.models.table.attributes.sheet_name.not_unique_in_context_long')
+    else
+      t(fallback_key, **fallback_args)
+    end
+  end
 
   def set_importer
     case params.dig('protocol', 'elnVersion')

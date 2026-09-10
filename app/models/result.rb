@@ -80,17 +80,6 @@ class Result < ResultBase
     joins(my_module: { experiment: :project }).where(my_module: { experiments: { projects: { team: teams } } })
   end
 
-  def active_elements
-    result_texts.active + tables.active
-  end
-
-  def active_elements_ordered
-    (
-      result_texts.joins(:result_orderable_element).active.select('result_texts.*, result_orderable_elements.position as position') +
-      tables.joins(result_table: :result_orderable_element).active.select('tables.*, result_orderable_elements.position as position')
-    ).sort_by(&:position)
-  end
-
   def archived_elements
     result_texts.archived + tables.archived
   end

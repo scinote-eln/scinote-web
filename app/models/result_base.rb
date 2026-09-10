@@ -37,6 +37,17 @@ class ResultBase < ApplicationRecord
     (position.to_f / per_page).ceil
   end
 
+  def active_elements
+    result_texts.active + tables.active
+  end
+
+  def active_elements_ordered
+    (
+      result_texts.joins(:result_orderable_element).active.select('result_texts.*, result_orderable_elements.position as position') +
+      tables.joins(result_table: :result_orderable_element).active.select('tables.*, result_orderable_elements.position as position')
+    ).sort_by(&:position)
+  end
+
   def duplicate(object, user, result_name: nil)
     ActiveRecord::Base.transaction do
       target_object = if object.is_a?(Protocol) && object.in_module?

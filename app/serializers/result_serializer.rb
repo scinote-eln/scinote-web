@@ -42,7 +42,7 @@ class ResultSerializer < ResultBaseSerializer
     if @instance_options[:view_mode] == 'archived'
       false
     else
-      can_manage_result?(object)
+      can_manage_result_attachments?(object)
     end
   end
 

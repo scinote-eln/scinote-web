@@ -18,9 +18,7 @@
             </h4>
           </div>
           <div class="modal-body">
-            <p class="mb-6" data-e2e="e2e-TX-protocol-addProtocolStepsModal-description">
-              {{ i18n.t('protocols.steps.modals.add_protocol_steps.description')}}
-            </p>
+            <div class="mb-6" data-e2e="e2e-TX-protocol-addProtocolStepsModal-description" v-html="i18n.t('protocols.steps.modals.add_protocol_steps.description_html')"></div>
             <div class="mb-6">
               <label class="sci-label">{{ i18n.t('protocols.steps.modals.add_protocol_steps.protocol_label') }}</label>
               <SelectDropdown

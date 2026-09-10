@@ -220,5 +220,33 @@ RSpec.describe 'Api::V2::StepElements::AssetsController', type: :request do
         expect(response).to have_http_status(400)
       end
     end
+
+    context 'when step attachments are locked' do
+      let(:locked_step) { create(:step, protocol: @protocol, attachments_locked: true) }
+      let(:file) { Rack::Test::UploadedFile.new(file_fixture('test.jpg').open) }
+      let(:attributes) { { file: file } }
+      let(:action) do
+        post(api_v2_team_project_experiment_task_protocol_step_assets_path(
+          team_id: @team.id,
+          project_id: @project.id,
+          experiment_id: @experiment.id,
+          task_id: @task.id,
+          protocol_id: @protocol.id,
+          step_id: locked_step.id
+        ),
+             params: request_body,
+             headers: @valid_headers)
+      end
+
+      it 'renders 403' do
+        action
+
+        expect(response).to have_http_status(403)
+      end
+
+      it 'does not create new asset' do
+        expect { action }.not_to(change { Asset.count })
+      end
+    end
   end
 end

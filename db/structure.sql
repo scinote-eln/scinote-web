@@ -678,7 +678,8 @@ CREATE TABLE public.experiments (
     due_date date,
     start_date date,
     metadata jsonb,
-    due_date_notification_sent boolean DEFAULT false NOT NULL
+    due_date_notification_sent boolean DEFAULT false NOT NULL,
+    read_only_description text
 );
 
 
@@ -1301,7 +1302,8 @@ CREATE TABLE public.my_modules (
     last_transition_error jsonb,
     provisioning_status integer,
     due_date_notification_sent boolean DEFAULT false,
-    metadata jsonb
+    metadata jsonb,
+    read_only_description text
 );
 
 
@@ -1538,7 +1540,8 @@ CREATE TABLE public.projects (
     start_date date,
     description text,
     supervised_by_id bigint,
-    due_date_notification_sent boolean DEFAULT false NOT NULL
+    due_date_notification_sent boolean DEFAULT false NOT NULL,
+    read_only_description text
 );
 
 
@@ -6278,6 +6281,13 @@ CREATE INDEX index_experiments_on_project_id ON public.experiments USING btree (
 
 
 --
+-- Name: index_experiments_on_read_only_description; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_experiments_on_read_only_description ON public.experiments USING gin (public.trim_html_tags(read_only_description) public.gin_trgm_ops);
+
+
+--
 -- Name: index_experiments_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6684,6 +6694,13 @@ CREATE INDEX index_my_modules_on_name ON public.my_modules USING gin (public.tri
 
 
 --
+-- Name: index_my_modules_on_read_only_description; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_modules_on_read_only_description ON public.my_modules USING gin (public.trim_html_tags(read_only_description) public.gin_trgm_ops);
+
+
+--
 -- Name: index_my_modules_on_restored_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6877,6 +6894,13 @@ CREATE INDEX index_projects_on_project_code ON public.projects USING gin ((('PR'
 --
 
 CREATE INDEX index_projects_on_project_folder_id ON public.projects USING btree (project_folder_id);
+
+
+--
+-- Name: index_projects_on_read_only_description; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_read_only_description ON public.projects USING gin (public.trim_html_tags(read_only_description) public.gin_trgm_ops);
 
 
 --
@@ -10847,6 +10871,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260708142245'),
 ('20260616085134'),
 ('20260615135346'),
+('20260528135903'),
 ('20260526000000'),
 ('20260515130015'),
 ('20260514114311'),

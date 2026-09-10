@@ -156,9 +156,9 @@
                   <LockedTag v-if="protocol.attributes.description_locked" />
                   <a v-if="urls.update_description_locked_url"
                     class="btn icon-btn"
-                    data-e2e="e2e-BT-protocol-templateDescription-lock"
                     :data-sn-tooltip="protocol.attributes.description_locked ? i18n.t('protocols.header.unlock_description') : i18n.t('protocols.header.lock_description')"
                     @click="toggleDescriptionLock"
+                    data-e2e="e2e-BT-protocolTemplate-protocolDescription-lockToggle"
                     tabindex="0">
                     <i class="sn-icon" :class="{ 'sn-icon-unlocked': !protocol.attributes.description_locked, 'sn-icon-locked-fill': protocol.attributes.description_locked }" aria-hidden="true"></i>
                   </a>
@@ -279,6 +279,7 @@
                 </template>
               </div>
             </div>
+            <div v-if="inRepository && steps.length > 0" class="sci-divider pb-4"></div>
             <div :class="{
                 'tw-hidden': loadingOverlay
               }"

@@ -154,7 +154,26 @@
             {{ step.attributes.comments_count }}
           </span>
         </a>
-
+        <a v-if="this.step.attributes.urls.lock_url && !this.step.attributes.locked"
+          class="btn btn-light icon-btn e2e-BT-protocol-step-stepOptions-manage"
+          data-toggle="modal"
+          :data-e2e="`e2e-BT-protocol-step${this.step.id}-stepOptions-manage`"
+          :data-sn-tooltip="i18n.t('protocols.steps.manage_content')"
+          @click="openReorderModal()"
+          @keyup.enter="openReorderModal()"
+          tabindex="0">
+          <i class="sn-icon sn-icon-steps-manage" aria-hidden="true"></i>
+        </a>
+        <a v-else-if="this.urls.reorder_elements_url && !this.step.attributes.locked && this.elements.length > 1"
+          class="btn btn-light icon-btn e2e-BT-protocol-step-stepOptions-reorder"
+          data-toggle="modal"
+          :data-e2e="`e2e-BT-protocol-step${this.step.id}-stepOptions-reorder`"
+          :data-sn-tooltip="i18n.t('protocols.steps.rearrange_content')"
+          @click="openReorderModal()"
+          @keyup.enter="openReorderModal"
+          tabindex="0" >
+          <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
+        </a>
         <MenuDropdown
           v-if="!(step.attributes.locked && !inRepository)"
           :listItems="this.actionsMenu"
@@ -162,7 +181,6 @@
           :position="'right'"
           :btnIcon="'sn-icon sn-icon-more-hori'"
           :dataE2e="`e2e-DD-protocol-step${step.id}-options`"
-          @reorder="openReorderModal"
           @duplicate="duplicateStep"
           @archive="showArchiveModal"
           @delete="showDeleteModal"
@@ -236,13 +254,14 @@
         @toggle-lock="toggleItemLock"
         @toggle-lock-attachments="toggleAttachmentsLock"
         @close="closeReorderModal"
+        dataE2e="protocol-step-manage"
       ></ManageItemsModal>
     </template>
     <template v-else>
       <ReorderableItemsModal v-if="reordering"
         :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
         :items="reorderableElements"
-        :dataE2e="`protocol-step${step.id}-reorder`"
+        dataE2e="protocol-step-reorder"
         @reorder="updateElementOrder"
         @close="closeReorderModal"
       />
@@ -535,21 +554,6 @@
       },
       actionsMenu() {
         let menu = [];
-        if (this.step.attributes.urls.lock_url) {
-          menu = menu.concat([{
-            text: this.i18n.t('protocols.steps.options_dropdown.manage_step'),
-            emit: 'reorder',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-manageStep`,
-            e2e_class: 'e2e-BT-protocol-step-stepOptions-manageStep'
-          }]);
-        } else if (this.urls.reorder_elements_url && this.elements.length > 1) {
-          menu = menu.concat([{
-            text: this.i18n.t('protocols.steps.options_dropdown.rearrange'),
-            emit: 'reorder',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-rearrange`,
-            e2e_class: 'e2e-BT-protocol-step-stepOptions-rearrange'
-          }]);
-        }
         if (this.urls.duplicate_step_url) {
           menu = menu.concat([{
             text: this.i18n.t('protocols.steps.options_dropdown.duplicate'),

@@ -118,7 +118,7 @@ class StepSerializer < ActiveModel::Serializer
     if @instance_options[:view_mode] == 'archived'
       false
     else
-      can_manage_step?(object)
+      can_manage_step_attachments?(object)
     end
   end
 

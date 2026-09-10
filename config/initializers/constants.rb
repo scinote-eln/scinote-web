@@ -437,7 +437,7 @@ class Constants
   TINY_MCE_ASSET_REGEX = /data-mce-token="(\w+)"/
 
   # Team name for default admin user
-  DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze
+  DEFAULT_PRIVATE_WORKSPACE_NAME = ENV.fetch('SCINOTE_DEFAULT_WORKSPACE_NAME', 'My projects').freeze
 
   TEMPLATES_PROJECT_NAME = 'SciNote Examples'.freeze
 

@@ -41,7 +41,7 @@ describe AssetsController, type: :controller do
     let(:action) { get :file_preview, params: { id: step_asset.asset.id }, format: :json }
 
     it 'file preview returned' do
-      action  
+      action
       expect_success_json
     end
   end
@@ -50,7 +50,7 @@ describe AssetsController, type: :controller do
     let(:action) { patch :toggle_view_mode, params: { id: step_asset.asset.id, asset: {view_mode: 'inline'} }, format: :json }
 
     it 'change asset view mode' do
-      action  
+      action
       expect_success_json
     end
   end
@@ -132,7 +132,7 @@ describe AssetsController, type: :controller do
     let(:action) { get :file_url, params: { id: step_asset.asset.id } }
 
     it 'file url returned' do
-      action  
+      action
       expect(response).to have_http_status(:success)
       expect(response.media_type).to eq 'text/plain'
       expect(response.body).not_to be_empty
@@ -143,7 +143,7 @@ describe AssetsController, type: :controller do
     let(:action) { get :download, params: { id: step_asset.asset.id } }
 
     it 'file download url returned' do
-      action  
+      action
       expect(response).to have_http_status(:redirect)
       expect(response.media_type).to eq 'text/html'
     end
@@ -153,7 +153,7 @@ describe AssetsController, type: :controller do
     let(:action) { get :show, params: { id: step_asset.asset.id } }
 
     it 'file show' do
-      action  
+      action
       expect_success_json
     end
   end
@@ -166,7 +166,7 @@ describe AssetsController, type: :controller do
       let(:element_type) { 'Step' }
       let(:element_id) { step_asset.step }
       it 'create wopi file' do
-        action  
+        action
         expect_success_json
       end
     end
@@ -175,7 +175,7 @@ describe AssetsController, type: :controller do
       let(:element_type) { 'Result' }
       let(:element_id) { result_asset.result }
       it 'create wopi file' do
-        action  
+        action
         expect_success_json
       end
     end
@@ -188,7 +188,7 @@ describe AssetsController, type: :controller do
       let(:element_id) { step_asset.asset.id }
       let(:asset_name) { Faker::Name.unique.name }
       it 'rename file' do
-        action  
+        action
         expect_success_json
       end
     end
@@ -197,7 +197,7 @@ describe AssetsController, type: :controller do
       let(:element_id) { step_asset.asset.id }
       let(:asset_name) { '' }
       it 'rename file' do
-        action  
+        action
         expect_unprocessable_json
       end
     end
@@ -206,7 +206,7 @@ describe AssetsController, type: :controller do
       let(:element_id) { step_asset.asset.id }
       let(:asset_name) { Faker::Lorem.characters(number: Constants::NAME_MAX_LENGTH + 1) }
       it 'rename file' do
-        action  
+        action
         expect_unprocessable_json
       end
     end
@@ -215,7 +215,7 @@ describe AssetsController, type: :controller do
       let(:element_id) { result_asset.asset.id }
       let(:asset_name) { Faker::Name.unique.name }
       it 'rename file' do
-        action  
+        action
         expect_success_json
       end
     end
@@ -227,7 +227,7 @@ describe AssetsController, type: :controller do
     context 'when in task step' do
       let(:element_id) { step_asset.asset.id }
       it 'update image' do
-        action  
+        action
         expect_success_json
       end
     end
@@ -235,8 +235,26 @@ describe AssetsController, type: :controller do
     context 'when in task result' do
       let(:element_id) { result_asset.asset.id }
       it 'update image' do
-        action  
+        action
         expect_success_json
+      end
+    end
+
+    context 'when in task step with locked attachments' do
+      let(:element_id) { step_asset.asset.id }
+      it 'cannot update image' do
+        step_asset.step.update_column(:attachments_locked, true)
+        action
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'when in task result with locked attachments' do
+      let(:element_id) { result_asset.asset.id }
+      it 'cannot update image' do
+        result_asset.result.update_column(:attachments_locked, true)
+        action
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
@@ -245,7 +263,7 @@ describe AssetsController, type: :controller do
     let(:action) { get :versions, params: { id: step_asset.asset.id } }
 
     it 'file versions returned' do
-      action  
+      action
       expect_success_json
     end
   end
@@ -254,7 +272,7 @@ describe AssetsController, type: :controller do
     let(:action) { get :checksum, params: { id: step_asset.asset.id } }
 
     it 'checksum returned' do
-      action  
+      action
       expect_success_json
     end
   end
@@ -265,7 +283,7 @@ describe AssetsController, type: :controller do
     context 'when in task step' do
       let(:element_id) { step_asset.asset.id }
       it 'duplicate' do
-        action  
+        action
         expect_success_json
       end
     end
@@ -273,7 +291,7 @@ describe AssetsController, type: :controller do
     context 'when in task result' do
       let(:element_id) { result_asset.asset.id }
       it 'duplicate' do
-        action  
+        action
         expect_success_json
       end
     end
@@ -290,7 +308,7 @@ describe AssetsController, type: :controller do
     context 'when in task step' do
       let(:element_id) { step_asset.asset.id }
       it 'restore version' do
-        action  
+        action
         expect_success_json
       end
     end
@@ -298,7 +316,7 @@ describe AssetsController, type: :controller do
     context 'when in task result' do
       let(:element_id) { result_asset.asset.id }
       it 'restore version' do
-        action  
+        action
         expect_success_json
       end
     end
@@ -306,7 +324,7 @@ describe AssetsController, type: :controller do
     context 'when in protocol' do
       let(:element_id) { step_asset_in_repository.asset.id }
       it 'restore version' do
-        action  
+        action
         expect_success_json
       end
     end

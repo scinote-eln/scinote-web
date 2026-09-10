@@ -5,6 +5,7 @@ module Api
     class ProjectSerializer < ActiveModel::Serializer
       type :projects
       attributes :name, :status, :visibility, :archived, :started_at, :done_at, :start_date, :due_date, :description
+      attribute :read_only_description, if: -> { object.read_only_description }
       attribute :metadata, if: -> { scope && scope[:metadata] == true }
 
       belongs_to :project_folder, serializer: ProjectFolderSerializer

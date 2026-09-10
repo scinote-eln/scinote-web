@@ -835,6 +835,10 @@ function importProtocolFromFile(
       type: stepElementNode.attr('type')
     };
 
+    if (stepElementNode.attr('locked') !== undefined) {
+      json.locked = stepElementNode.attr('locked');
+    }
+
     switch (json.type) {
       case 'ResultTable':
         json.elnTable = tableJson(stepElementNode.find('elnTable'));
@@ -1001,6 +1005,9 @@ function importProtocolFromFile(
         var resultTablesJson = [];
         resultJson.id = resultId;
         resultJson.name = $(this).children('name').text();
+        if ($(this).attr('attachments_locked') !== undefined) {
+          resultJson.attachments_locked = $(this).attr('attachments_locked');
+        }
 
         $(this).find('assets > asset').each(function() {
           var resultAssetJson = {};

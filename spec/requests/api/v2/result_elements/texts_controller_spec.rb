@@ -84,6 +84,23 @@ RSpec.describe 'Api::V2::ResultElements::TextsController', type: :request do
         )
       end
     end
+
+    context 'when result_text is locked' do
+      let(:result_text) { create(:result_text, result: result, locked: true) }
+
+      it 'includes locked status' do
+        get api_v2_team_project_experiment_task_result_text_path(
+          team_id: team.id,
+          project_id: project.id,
+          experiment_id: experiment.id,
+          task_id: task.id,
+          result_id: result.id,
+          id: result_text.id
+        ), headers: valid_headers
+
+        expect(json[:data][:attributes][:locked]).to be(true)
+      end
+    end
   end
 
   describe 'POST result_text, #create' do

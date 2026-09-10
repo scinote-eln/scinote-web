@@ -17,8 +17,8 @@ class AssetsController < ApplicationController
   helper_method :wopi_file_edit_button_status
 
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode archive restore lock unlock)
-  before_action :check_manage_permission, only: %i(edit duplicate rename toggle_view_mode archive)
+  before_action :check_read_permission, except: %i(edit destroy update_image duplicate create_wopi_file toggle_view_mode archive restore lock unlock)
+  before_action :check_manage_permission, only: %i(edit duplicate update_image rename toggle_view_mode archive)
   before_action :check_restore_permission, only: :restore
   before_action :check_destroy_permission, only: :destroy
   before_action :check_restore_version_permission, only: :restore_version

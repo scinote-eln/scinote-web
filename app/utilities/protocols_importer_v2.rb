@@ -113,12 +113,14 @@ class ProtocolsImporterV2
         user: @user
       )
 
+      set_result_locks(result_template, result_json)
+
       result_json['resultElements']&.values&.each do |element_params|
         case element_params['type']
         when 'ResultText'
-          create_result_text(result_template, element_params['resultText'])
+          create_result_text(result_template, element_params['resultText'], element_params['locked'])
         when 'ResultTable'
-          create_result_table(result_template, element_params['elnTable'])
+          create_result_table(result_template, element_params['elnTable'], element_params['locked'])
         end
       end
 
@@ -167,7 +169,7 @@ class ProtocolsImporterV2
     set_lock(step_text, locked)
   end
 
-  def create_result_text(result, params)
+  def create_result_text(result, params, locked = nil)
     result_text = ResultText.create!(
       result: result
     )
@@ -175,6 +177,7 @@ class ProtocolsImporterV2
     result_text.update!(text: populate_rte(params, result_text), name: params[:name])
 
     create_in_result!(result, result_text)
+    set_lock(result_text, locked)
   end
 
   def create_step_table(step, params, locked = nil)
@@ -194,7 +197,7 @@ class ProtocolsImporterV2
     set_lock(step_table.table, locked)
   end
 
-  def create_result_table(result, params)
+  def create_result_table(result, params, locked = nil)
     result_table = ResultTable.new(
       result: result,
       table: Table.new(
@@ -208,6 +211,7 @@ class ProtocolsImporterV2
     )
 
     create_in_result!(result, result_table)
+    set_lock(result_table.table, locked)
   end
 
   def create_checklist(step, params, locked = nil)
@@ -302,6 +306,15 @@ class ProtocolsImporterV2
     updates[:adding_items_allowed] = step_json['adding_items_allowed'] if step_json.key?('adding_items_allowed')
 
     step.update!(updates) if updates.any?
+  end
+
+  def set_result_locks(result, result_json)
+    return unless Protocol.content_locking_enabled?
+
+    updates = {}
+    updates[:attachments_locked] = result_json['attachments_locked'] if result_json.key?('attachments_locked')
+
+    result.update!(updates) if updates.any?
   end
 
   def set_lock(record, locked)

@@ -7,7 +7,7 @@ class ProjectSerializer < ActiveModel::Serializer
   include InputSanitizeHelper
 
   attributes :name, :code, :created_at, :archived_on, :users, :urls, :hidden, :default_public_user_role_id, :supervised_by,
-             :comments, :updated_at, :due_date_cell, :start_date_cell, :description, :status, :permissions
+             :comments, :updated_at, :due_date_cell, :start_date_cell, :description, :read_only_description, :status, :permissions
 
   def hidden
     object.hidden?

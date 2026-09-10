@@ -13,14 +13,20 @@ module ResultElements
     end
 
     def lock
-      @element.update!(locked: true)
+      ActiveRecord::Base.transaction do
+        @element.update!(locked: true)
+        log_lock_activity("lock_result_template_#{content_block_type}") if @element.saved_change_to_locked?
+      end
       head :ok
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
 
     def unlock
-      @element.update!(locked: false)
+      ActiveRecord::Base.transaction do
+        @element.update!(locked: false)
+        log_lock_activity("unlock_result_template_#{content_block_type}") if @element.saved_change_to_locked?
+      end
       head :ok
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
@@ -33,7 +39,13 @@ module ResultElements
       end
       head :ok
     rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
+      error_message =
+        if @element.errors[:sheet_name]
+          t('activerecord.errors.models.table.attributes.sheet_name.not_unique_in_context_long')
+        else
+          t('general.error')
+        end
+      render json: { error: error_message }, status: :unprocessable_entity
     end
 
     def restore
@@ -43,7 +55,13 @@ module ResultElements
       end
       restore_response
     rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
+      error_message =
+        if @element.errors[:sheet_name]
+          t('activerecord.errors.models.table.attributes.sheet_name.not_unique_in_context_long')
+        else
+          t('general.error')
+        end
+      render json: { error: error_message }, status: :unprocessable_entity
     end
 
     private
@@ -72,6 +90,10 @@ module ResultElements
     def log_archive_activity; end
 
     def log_restore_activity; end
+
+    def content_block_type
+      raise NotImplementedError
+    end
 
     def restore_response
       head :ok
@@ -107,6 +129,19 @@ module ResultElements
         subject: @result,
         project: @parent.is_a?(MyModule) ? @parent.experiment.project : nil,
         message_items: message_items
+      )
+    end
+
+    def log_lock_activity(activity_type)
+      Activities::CreateActivityService.call(
+        activity_type: activity_type,
+        owner: current_user,
+        team: @parent.team,
+        subject: @result,
+        message_items: {
+          result_template: @result.id,
+          protocol: @parent.id
+        }
       )
     end
   end

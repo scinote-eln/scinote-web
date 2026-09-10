@@ -88,6 +88,31 @@ describe StepsController, type: :controller do
       end
     end
 
+    context 'when locking the attachments section in protocol repository' do
+      let(:params) do
+        { id: step_repo.id, protocol_id: protocol_repo.id, step: { attachments_locked: true } }
+      end
+
+      it 'calls create activity for locking step files' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: :lock_protocol_step_files)))
+        action
+      end
+    end
+
+    context 'when unlocking the attachments section in protocol repository' do
+      let(:step_repo) { create :step, protocol: protocol_repo, attachments_locked: true }
+      let(:params) do
+        { id: step_repo.id, protocol_id: protocol_repo.id, step: { attachments_locked: false } }
+      end
+
+      it 'calls create activity for unlocking step files' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: :unlock_protocol_step_files)))
+        action
+      end
+    end
+
     context 'when in protocol on task' do
       let(:params) do
         { id: step.id,

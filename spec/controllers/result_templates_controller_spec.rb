@@ -31,6 +31,43 @@ describe ResultTemplatesController, type: :controller do
       result_template.reload
       expect(result_template.name).to eq('Updated Name')
     end
+
+    it 'calls create activity for editing the result template' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call).with(hash_including(activity_type: :edit_result_template)))
+      put :update, params: { protocol_id: result_template.protocol.id,
+                             id: result_template.id,
+                             result: { name: 'Updated Name' } }
+    end
+
+    context 'when locking the attachments section' do
+      let(:action) do
+        put :update, params: { protocol_id: result_template.protocol.id,
+                               id: result_template.id,
+                               result: { attachments_locked: true } }
+      end
+
+      it 'calls create activity for locking result files' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: :lock_result_template_files)))
+        action
+      end
+    end
+
+    context 'when unlocking the attachments section' do
+      let!(:result_template) { create :result_template, protocol: protocol, user: user, attachments_locked: true }
+      let(:action) do
+        put :update, params: { protocol_id: result_template.protocol.id,
+                               id: result_template.id,
+                               result: { attachments_locked: false } }
+      end
+
+      it 'calls create activity for unlocking result files' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: :unlock_result_template_files)))
+        action
+      end
+    end
   end
 
   describe 'POST duplicate' do

@@ -46,6 +46,10 @@ module Experiments
       track_activity if succeed?
 
       self
+    rescue MyModule::InvalidContentError => e
+      @errors[:invalid_content] = [e.message]
+      @c_exp = nil
+      self
     end
 
     def succeed?

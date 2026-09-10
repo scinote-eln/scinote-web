@@ -103,7 +103,7 @@ module Reports
       @report.pdf_file.attach(io: @file, filename: 'report.pdf')
       @report.pdf_ready!
     end
-    
+
     def create_notification_for_user
       DeliveryNotification.send_notifications(
         {

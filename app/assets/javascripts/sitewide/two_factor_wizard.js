@@ -20,6 +20,14 @@ $(document).on('turbolinks:load', function() {
   $('#twoFactorAuthenticationModal .2fa-enable-form').on('ajax:error', function(e, data) {
     $(this).find('.submit-code-field').addClass('error').attr('data-error-text', data.responseJSON.error);
   }).on('ajax:success', function(e, data) {
+    // Enabling 2FA re-authenticates the session, which rotates the CSRF token server-side.
+    // Refresh the token client-side so subsequent requests on this page don't 422.
+    if (data.csrf_token) {
+      var metaTag = document.querySelector('meta[name="csrf-token"]');
+      if (metaTag) { metaTag.setAttribute('content', data.csrf_token); }
+      document.querySelectorAll('input[type="hidden"][name="authenticity_token"]')
+        .forEach(function(input) { input.value = data.csrf_token; });
+    }
     var blob = new Blob([data.recovery_codes.join('\r\n')], { type: 'text/plain;charset=utf-8' });
     $('#twoFactorAuthenticationModal').find('.recovery-codes').html(data.recovery_codes.join('<br>'));
     $('#twoFactorAuthenticationModal').find('[href="#2fa-step-4"]').tab('show');

@@ -21,7 +21,7 @@ module Api
       end
 
       def create
-        raise PermissionError.new(Asset, :create) unless can_manage_protocol_in_module?(@protocol)
+        raise PermissionError.new(Asset, :create) unless can_manage_step_attachments?(@step)
 
         asset = attach_blob!(@step)
 

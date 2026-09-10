@@ -100,7 +100,8 @@ module Api
 
         params.require(:data)
               .require(:attributes)
-              .permit(:name, :visibility, :supervised_by_id, :archived, :project_folder_id, :start_date, :due_date, :status, :description, metadata: {})
+              .permit(:name, :visibility, :supervised_by_id, :archived, :project_folder_id,
+                      :start_date, :due_date, :status, :description, :read_only_description, metadata: {})
       end
 
       def permitted_includes

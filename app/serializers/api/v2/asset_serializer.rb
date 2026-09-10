@@ -14,7 +14,13 @@ module Api
       end
 
       def locked
-        object.step&.attachments_locked || object.step&.locked || false
+        if object.step
+          object.step.attachments_locked || object.step.locked
+        elsif object.result
+          object.result.attachments_locked
+        else
+          false
+        end
       end
 
       def file_url

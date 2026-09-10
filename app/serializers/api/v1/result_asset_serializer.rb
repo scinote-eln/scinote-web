@@ -4,10 +4,18 @@ module Api
   module V1
     class ResultAssetSerializer < ActiveModel::Serializer
       type :result_files
-      attributes :file_id, :file_name, :file_size, :url
+      attributes :file_id, :file_name, :file_size, :url, :archived, :locked
 
       def file_id
         object.asset&.id
+      end
+
+      def archived
+        object.asset&.archived
+      end
+
+      def locked
+        object.asset&.result&.attachments_locked || false
       end
 
       def file_name

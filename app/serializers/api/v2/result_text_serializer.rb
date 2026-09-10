@@ -4,7 +4,7 @@ module Api
   module V2
     class ResultTextSerializer < ActiveModel::Serializer
       type :result_texts
-      attributes :name, :text, :archived
+      attributes :name, :text, :archived, :locked
 
       def text
         object.tinymce_render('text')
