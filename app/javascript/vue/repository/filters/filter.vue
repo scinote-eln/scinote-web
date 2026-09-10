@@ -11,7 +11,7 @@
           @filter:update="updateFilter" />
       </div>
       <div class="filter-remove" :data-e2e="'e2e-BT-invInventoryFilterCO-remove'+filter.column.id">
-        <button class="btn btn-light icon-btn" @click="$emit('filter:delete')">
+        <button v-if="filtersCount > 1" class="btn btn-light icon-btn" @click="$emit('filter:delete')">
           <i class="sn-icon sn-icon-delete"></i>
         </button>
       </div>
@@ -44,7 +44,8 @@ export default {
   props: {
     repositoryId: Number,
     filter: Object,
-    my_modules: Array
+    my_modules: Array,
+    filtersCount: Number
   },
   components: {
     RepositoryNonEmptyTextValue,

@@ -9,7 +9,7 @@
         @change="updateOperator"
       />
     </div>
-    <div v-if="users" class="users-filter-dropdown max-w-[360px]">
+    <div v-if="users" class="users-filter-dropdown">
       <SelectDropdown
         :multiple="true"
         :withCheckboxes="true"

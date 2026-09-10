@@ -2,18 +2,25 @@
   <div >
     <div class="group relative flex items-center group-hover:marker text-xs h-full w-full leading-[unset]">
       <div ref="descripitonBox" class="flex gap-2 w-full items-center text-sm leading-[unset]">
-        <span v-if="textValue && textValue.length > 0" class="cursor-pointer line-clamp-1 leading-[unset]"
-              @click.stop="showTextCellModal">
-          {{ textValue}}
-        </span>
-        <span v-if="textValue && textValue.length > 0"
-              @click.stop="showTextCellModal"
-              class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
-          {{ i18n.t('repositories.table.text.more') }}
-        </span>
-        <span v-else-if="canManage" @click.stop="showTextCellModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
-          {{ i18n.t('repositories.table.text.add_text') }}
-        </span>
+        <template v-if="sanitizedTextValue && sanitizedTextValue.length > 0">
+          <span class="cursor-pointer line-clamp-1 leading-[unset]"
+            @click.stop v-html="sanitizedTextValue">
+          </span>
+        </template>
+        <template v-else-if="textValue && textValue.length > 0">
+          <span class="cursor-pointer line-clamp-1 leading-[unset]"
+                @click.stop="showTextCellModal">
+            {{ textValue}}
+          </span>
+          <span @click.stop="showTextCellModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
+            {{ i18n.t('repositories.table.text.more') }}
+          </span>
+        </template>
+        <template v-else-if="canManage">
+          <span @click.stop="showTextCellModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
+            {{ i18n.t('repositories.table.text.add_text') }}
+          </span>
+        </template>
       </div>
     </div>
   </div>
@@ -35,6 +42,9 @@ export default {
   computed: {
     textValue() {
       return this.params?.value?.value?.edit || '';
+    },
+    sanitizedTextValue() {
+      return this.params?.value?.value?.view_sanitized || '';
     },
     canManage() {
       return this.params?.data?.permissions?.manage || false;

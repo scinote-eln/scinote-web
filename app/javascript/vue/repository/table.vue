@@ -232,6 +232,7 @@ export default {
           name: 'manageColumns',
           icon: 'sn-icon sn-icon-add-columns',
           type: 'emit',
+          tooltip: this.i18n.t('libraries.repository_columns.button_tooltip'),
           buttonStyle: 'btn btn-light icon-btn btn-black'
         })
       }

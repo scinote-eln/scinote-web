@@ -216,11 +216,23 @@ var RepositoryColumns = (function() {
     var scrollPosition = $columnsList.scrollTop();
     // Clear the list
 
+
+
     const columns = window.repositoryTableComponent.$refs.tableContainer.legacyColumnsHTML()
 
-    columns.forEach((column, index) => {
-      $columnsList.append(column);
-    })
+    $columnsList.html = '';
+
+    if (columns.length > 0) {
+      columns.forEach((column, index) => {
+        $columnsList.append(column);
+      })
+    } else {
+      $columnsList.append(
+        `<li class="w-full text-center pt-10">
+          ${I18n.t('libraries.repository_columns.empty_placeholder')}
+        </li>`
+      )
+    }
 
     $columnsList.scrollTop(scrollPosition);
   }

@@ -41,7 +41,7 @@ module Lists
     end
 
     def created_by
-      object[:created_by_full_name]
+      object[:created_by_full_name] || object.created_by&.name
     end
 
     def updated_at
@@ -49,7 +49,7 @@ module Lists
     end
 
     def last_modified_by
-      object[:last_modified_by_full_name]
+      object[:last_modified_by_full_name] || object.last_modified_by&.name
     end
 
     def archived
