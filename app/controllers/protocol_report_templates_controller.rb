@@ -47,12 +47,7 @@ class ProtocolReportTemplatesController < ApplicationController
       end
 
       protocol_report_template.save!
-
-      if is_docx
-        ReportTemplates::ConvertDocxToOdtJob.perform_later(protocol_report_template.id)
-      else
-        protocol_report_template.generate_preview!
-      end
+      protocol_report_template.generate_preview!
     end
   end
 
