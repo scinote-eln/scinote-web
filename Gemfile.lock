@@ -18,6 +18,15 @@ GIT
       tilt (>= 1.4)
 
 GIT
+  remote: https://github.com/scinote-eln/docx-templating
+  revision: eb40187eeba32b59f9f6af3c6079dd64738c2e3b
+  branch: main
+  specs:
+    docx-templating (0.1.0)
+      nokogiri (>= 1.12)
+      rubyzip (>= 2.0, < 3.0)
+
+GIT
   remote: https://github.com/scinote-eln/img2zpl
   revision: 23d61cfc3e90ac4caa62dd08546fa0d7590a5140
   specs:
@@ -920,6 +929,7 @@ DEPENDENCIES
   devise (~> 5.0.4)
   devise_invitable
   discard
+  docx-templating!
   doorkeeper (>= 4.6)
   down (~> 5.0)
   factory_bot_rails

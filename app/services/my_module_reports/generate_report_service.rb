@@ -13,14 +13,17 @@ module MyModuleReports
       @team = team
       @user = user
       @tiny_mce_assets = []
+      @template_format = @report_template.docx_template_file.attached? ? :docx : :odt
+      @templater = @template_format == :docx ? DocxTemplating::Document : ODFReport::Report
     end
 
     def call(analytical_report)
-      original_blob = @report_template.odt_template_file.blob
-      output = Tempfile.new(['report', '.odt'])
+      template = @template_format == :docx ? @report_template.docx_template_file : @report_template.odt_template_file
+      original_blob = template.blob
+      output = Tempfile.new(['report', ".#{@template_format}"])
 
-      @report_template.odt_template_file.open do |odt_template_file|
-        report = ODFReport::Report.new(odt_template_file.path) do |r|
+      template.open do |template_file|
+        report = @templater.new(template_file.path) do |r|
           render_general(r)
           render_steps(r)
           render_results(r)
