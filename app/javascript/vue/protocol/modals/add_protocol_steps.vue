@@ -134,16 +134,13 @@ export default {
         const steps = response.data.data;
         steps.forEach((step) => {
           step.attachments = [];
-          step.elements = [];
           response.data.included.forEach((included) => {
             if (included.type === 'assets' &&
                 step.relationships.assets.data.some((attachment) => attachment.id === included.id)) {
               step.attachments.push(included);
-            } else if (included.type === 'step_orderable_elements' &&
-                       step.relationships.step_orderable_elements.data.some((element) => element.id === included.id)) {
-              step.elements.push(included);
             }
           });
+          step.elements = step.attributes.elements || [];
         });
         this.$emit('confirm', steps);
         this.close();

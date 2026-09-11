@@ -6,10 +6,23 @@ class ResultTextSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :urls, :text_view, :icon, :placeholder, :name, :parent_type, :archived, :archived_by, :archived_on, :locked
+  attributes :id, :text, :urls, :text_view, :icon, :placeholder, :name, :parent_type, :archived, :archived_by, :archived_on, :locked,
+             :position, :orderable_element_id, :type
 
   def updated_at
     object.updated_at.to_i
+  end
+
+  def position
+    object.result_orderable_element&.position
+  end
+
+  def orderable_element_id
+    object.result_orderable_element&.id
+  end
+
+  def type
+    object.class.name
   end
 
   def placeholder

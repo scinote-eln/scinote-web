@@ -1,24 +1,24 @@
 <template>
   <div class="content__form-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-formElement${element.id}`">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
-    <div :class="{'!bg-sn-background-brittlebush p-4': element.attributes.orderable.archived}">
+    <div :class="{'!bg-sn-background-brittlebush p-4': element.archived}">
       <div class="flex items-center gap-4">
-        <template v-if="element.attributes.orderable.archived">
+        <template v-if="element.archived">
           <div class="sci-tag bg-sn-alert-brittlebush pointer-events-none text-sn-black">
             {{ i18n.t('my_modules.results.archived') }}
             <span class="sn-icon sn-icon-archived"></span>
           </div>
           <span class="text-xs ">
             {{ i18n.t('protocols.steps.timestamp_archived', {
-              date: element.attributes.orderable.archived_on,
-              user: element.attributes.orderable.archived_by
+              date: element.archived_on,
+              user: element.archived_by
             }) }}
           </span>
         </template>
         <div class="ml-auto flex items gap-4">
-          <LockedTag v-if="element.attributes.orderable.locked" />
+          <LockedTag v-if="element.locked" />
           <button
-            v-if="this.element.attributes.orderable.urls.restore_url"
+            v-if="this.element.urls.restore_url"
             :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-formElement-options-restore`]"
             @click="confirmingRestore = true"
             :title="i18n.t('general.restore')"
@@ -27,7 +27,7 @@
             <i class="sn-icon sn-icon-restore"></i>
           </button>
           <button
-            v-if="this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url"
+            v-if="this.element.archived && this.element.urls.delete_url"
             :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-formElement-options-delete`]"
             @click="showDeleteModal"
             :title="i18n.t('general.delete')"
@@ -36,7 +36,7 @@
             <i class="sn-icon sn-icon-delete"></i>
           </button>
           <MenuDropdown
-            v-if="inRepository || !this.element.attributes.orderable.locked"
+            v-if="inRepository || !this.element.locked"
             class="ml-auto"
             :listItems="this.actionMenu"
             :btnClasses="'btn btn-light icon-btn btn-sm'"
@@ -100,13 +100,13 @@
     </div>
     <deleteElementModal v-if="confirmingDelete" :inRepository="inRepository" @confirm="deleteElement($event)" @close="closeDeleteModal"/>
     <RestoreModal v-if="confirmingRestore"
-                  :parentType="element.attributes.orderable.parent_type"
+                  :parentType="element.parent_type"
                   :element="'form_response'"
                   @confirm="restoreElement"
                   @close="confirmingRestore = false"/>
     <moveElementModal v-if="movingElement"
-                      :parent_type="element.attributes.orderable.parent_type"
-                      :targets_url="element.attributes.orderable.urls.move_targets_url"
+                      :parent_type="element.parent_type"
+                      :targets_url="element.urls.move_targets_url"
                       @confirm="moveElement($event)" @cancel="closeMoveModal"/>
     <ConfirmationModal
       :title="i18n.t('forms.response.edit_modal.title')"
@@ -169,12 +169,12 @@ export default {
   },
   data() {
     return {
-      form: this.element.attributes.orderable.form,
-      formResponse: this.element.attributes.orderable,
-      formFieldValues: this.element.attributes.orderable.form_field_values,
-      deleteUrl: this.element.attributes.orderable.urls.delete_url,
-      moveUrl: this.element.attributes.orderable.urls.move_url,
-      archiveUrl: this.element.attributes.orderable.urls.archive_url,
+      form: this.element.form,
+      formResponse: this.element,
+      formFieldValues: this.element.form_field_values,
+      deleteUrl: this.element.urls.delete_url,
+      moveUrl: this.element.urls.move_url,
+      archiveUrl: this.element.urls.archive_url,
       isValid: false,
       submitting: false,
       confirmingRestore: false
@@ -199,7 +199,7 @@ export default {
       });
     },
     formFields() {
-      return this.element.attributes.orderable.form_fields.map((field) => ({
+      return this.element.form_fields.map((field) => ({
         id: field.id,
         attributes: field,
         field_value: this.formFieldValues.find((value) => value.form_field_id === field.id)
@@ -207,7 +207,7 @@ export default {
     },
     actionMenu() {
       const menu = [];
-      if (this.element.attributes.orderable.urls.move_targets_url) {
+      if (this.element.urls.move_targets_url) {
         menu.push({
           text: I18n.t('general.move'),
           emit: 'move',
@@ -215,7 +215,7 @@ export default {
           e2e_class: `e2e-BT-${this.e2eClass}-formElement-options-move`
         });
       }
-      if (!this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url) {
+      if (!this.element.archived && this.element.urls.delete_url) {
         menu.push({
           text: I18n.t('general.delete'),
           emit: 'delete',
@@ -224,7 +224,7 @@ export default {
         });
       }
 
-      if (this.element.attributes.orderable.urls.archive_url) {
+      if (this.element.urls.archive_url) {
         menu.push({
           text: I18n.t('general.archive'),
           emit: 'archive',
@@ -263,11 +263,10 @@ export default {
 
       this.submitting = true;
       axios.post(this.formResponse.urls.submit).then((response) => {
-        const { attributes } = response.data.data;
-        this.formResponse = attributes.orderable;
-        this.deleteUrl = attributes.orderable.urls.delete_url;
-        this.moveUrl = attributes.orderable.urls.move_url;
-        this.archiveUrl = attributes.orderable.urls.archive_url;
+        this.formResponse = response.data.data.attributes;
+        this.deleteUrl = this.formResponse.urls.delete_url;
+        this.moveUrl = this.formResponse.urls.move_url;
+        this.archiveUrl = this.formResponse.urls.archive_url;
       }).finally(() => {
         this.submitting = false;
       });
@@ -282,11 +281,10 @@ export default {
 
         this.submitting = true;
         axios.post(this.formResponse.urls.reset).then((response) => {
-          const { attributes } = response.data.data;
-          this.formResponse = attributes.orderable;
-          this.deleteUrl = attributes.orderable.urls.delete_url;
-          this.moveUrl = attributes.orderable.urls.move_url;
-          this.archiveUrl = attributes.orderable.urls.archive_url;
+          this.formResponse = response.data.data.attributes;
+          this.deleteUrl = this.formResponse.urls.delete_url;
+          this.moveUrl = this.formResponse.urls.move_url;
+          this.archiveUrl = this.formResponse.urls.archive_url;
         }).finally(() => {
           this.submitting = false;
         });

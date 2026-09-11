@@ -36,7 +36,7 @@ class StepsController < ApplicationController
 
     render json: @steps,
            each_serializer: StepSerializer,
-           include: %i(step_orderable_elements assets),
+           include: %i(assets),
            user: current_user,
            meta: { sort: @sort_preference },
            view_mode: view_mode
@@ -53,9 +53,20 @@ class StepsController < ApplicationController
                  @step.active_elements_ordered
                end
 
-    render json: elements,
-           each_serializer: StepOrderableElementSerializer,
-           user: current_user
+    serialized_elements = elements.map do |element|
+      case element
+      when Checklist
+        ChecklistSerializer.new(element, scope: { user: current_user }, include: :checklist_item).as_json
+      when Table
+        TableSerializer.new(element, scope: { user: current_user }).as_json
+      when StepText
+        StepTextSerializer.new(element, scope: { user: current_user }).as_json
+      when FormResponse
+        StepFormResponseSerializer.new(element, scope: { user: current_user }).as_json
+      end
+    end
+
+    render json: { data: serialized_elements }
   end
 
   def attachments
@@ -200,7 +211,7 @@ class StepsController < ApplicationController
         )
       end
 
-      render json: new_step, serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
+      render json: new_step, serializer: StepSerializer, include: %i(assets), user: current_user
     end
   rescue ActiveRecord::RecordInvalid
     head :unprocessable_entity
@@ -247,7 +258,7 @@ class StepsController < ApplicationController
     if @step.has_archived_element? || @step.assets.archived.any?
       render json: @step,
              serializer: StepSerializer,
-             include: %i(step_orderable_elements assets),
+             include: %i(assets),
              user: current_user,
              view_mode: 'archived'
     else
@@ -262,7 +273,7 @@ class StepsController < ApplicationController
         log_activity(:lock_all_protocol_steps, nil, protocol: @protocol.id) if @protocol.steps.where(locked: false).none?
       end
     end
-    render json: @step, serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
+    render json: @step, serializer: StepSerializer, include: %i(assets), user: current_user
   rescue ActiveRecord::RecordInvalid
     head :unprocessable_entity
   end
@@ -275,7 +286,7 @@ class StepsController < ApplicationController
         log_activity(:unlock_all_protocol_steps, nil, protocol: @protocol.id) if @protocol.steps.where(locked: true).none?
       end
     end
-    render json: @step, serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
+    render json: @step, serializer: StepSerializer, include: %i(assets), user: current_user
   rescue ActiveRecord::RecordInvalid
     head :unprocessable_entity
   end
@@ -492,7 +503,7 @@ class StepsController < ApplicationController
         log_activity(:protocol_steps_loaded_from_template, nil, message_items)
       end
 
-      render json: steps, each_serializer: StepSerializer, include: %i(step_orderable_elements assets), user: current_user
+      render json: steps, each_serializer: StepSerializer, include: %i(assets), user: current_user
     end
   end
 

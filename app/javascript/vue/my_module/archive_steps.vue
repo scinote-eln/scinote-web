@@ -98,10 +98,7 @@ export default {
               step.attachments.push(result.included.find((a) => a.id === asset.id && a.type === 'assets'));
             });
 
-            step.elements = [];
-            step.relationships.step_orderable_elements.data.forEach((element) => {
-              step.elements.push(result.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
-            });
+            step.elements = step.attributes.elements || [];
           });
           this.sort = response.data.meta.sort;
 
@@ -146,10 +143,7 @@ export default {
           stepData.data.relationships.assets.data.forEach((asset) => {
             stepData.data.attachments.push(stepData.included.find((a) => a.id === asset.id && a.type === 'assets'));
           });
-          stepData.data.elements = [];
-          stepData.data.relationships.step_orderable_elements.data.forEach((element) => {
-            stepData.data.elements.push(stepData.included.find((e) => e.id === element.id && e.type === 'step_orderable_elements'));
-          });
+          stepData.data.elements = stepData.data.attributes.elements || [];
           stepData.data._updateKey = Date.now();
           this.steps.splice(stepIndex, 1, stepData.data);
         }

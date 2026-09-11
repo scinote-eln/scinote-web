@@ -108,10 +108,6 @@ module StepElements
       end
     end
 
-    def render_step_orderable_element(orderable)
-      render json: orderable, serializer: StepOrderableElementSerializer, user: current_user
-    end
-
     def log_step_activity(element_type_of, message_items)
       message_items[:my_module] = @protocol.my_module.id if @protocol.in_module?
 
