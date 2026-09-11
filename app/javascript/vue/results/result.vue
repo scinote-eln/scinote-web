@@ -210,9 +210,9 @@
         />
       </template>
       <div class="collapse in pl-10" :id="'resultBody' + result.id">
-        <div v-for="(element, index) in orderedElements" :key="`${element.id}-${element.orderable_type}`">
+        <div v-for="(element, index) in orderedElements" :key="`${element.id}-${element.type}`">
           <component
-            :is="elements[index].orderable_type"
+            :is="elements[index].type"
             class="result-element"
             ref="resultComponent"
             :element.sync="elements[index]"
@@ -512,13 +512,13 @@ export default {
     },
     updateElementOrder(orderedElements) {
       orderedElements.forEach((element, position) => {
-        const index = this.elements.findIndex((e) => e.id === element.id && e.orderable_type === element.attributes.orderable_type);
-        this.elements[index].orderable_element.position = position;
+        const index = this.elements.findIndex((e) => e.id === element.id && e.type === element.attributes.type);
+        this.elements[index].position = position;
       });
 
       const elementPositions = {
         result_orderable_element_positions: this.elements.map(
-          (element) => [element.orderable_element.id, element.orderable_element.position]
+          (element) => [element.orderable_element_id, element.position]
         )
       };
 
@@ -536,7 +536,7 @@ export default {
         });
     },
     updateElement(element, skipRequest = false, callback) {
-      let index = this.elements.findIndex((e) => e.id === element.id && e.orderable_type === element.orderable_type);
+      let index = this.elements.findIndex((e) => e.id === element.id && e.type === element.type);
 
       if (!this.elements[index]) return;
 
@@ -563,10 +563,10 @@ export default {
       }
     },
     insertElement(element) {
-      const { position } = element.orderable_element;
+      const { position } = element;
       this.elements = this.elements.map((s) => {
-        if (s.orderable_element.position >= position) {
-          s.orderable_element.position += 1;
+        if (s.position >= position) {
+          s.position += 1;
         }
         return s;
       });
@@ -613,7 +613,7 @@ export default {
       this.customWellPlate = false;
     },
     showArchiveModal() {
-      if (this.elements.some(e => e.orderable_type === 'Table')) {
+      if (this.elements.some(e => e.type === 'Table')) {
         this.confirmingArchive = true;
       } else {
         this.archiveResult();
@@ -645,8 +645,8 @@ export default {
     moveElement(position, target_id) {
       this.elements.splice(position, 1);
       this.elements.map((e) => {
-        if (e.orderable_element.position >= position) {
-          e.orderable_element.position -= 1;
+        if (e.position >= position) {
+          e.position -= 1;
         }
         return e;
       });

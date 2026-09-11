@@ -113,9 +113,9 @@
         @close="closeRestoreModal"/>
 
       <div class="collapse in pl-10" :id="'resultBody' + result.id">
-        <div v-for="(element, index) in orderedElements" :key="`${element.id}-${element.orderable_type}`">
+        <div v-for="(element, index) in orderedElements" :key="`${element.id}-${element.type}`">
           <component
-            :is="elements[index].orderable_type"
+            :is="elements[index].type"
             class="result-element"
             :element.sync="elements[index]"
             :inRepository="false"

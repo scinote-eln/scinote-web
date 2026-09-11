@@ -42,7 +42,7 @@ export default {
   },
   computed: {
     defaultName() {
-      return this.i18n.t('protocols.steps.table.default_name', { position: this.element.attributes.position + 1 });
+      return this.i18n.t('protocols.steps.table.default_name', { position: this.element.position + 1 });
     },
     error() {
       return !this.name;

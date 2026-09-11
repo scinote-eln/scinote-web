@@ -194,8 +194,8 @@
         <component
           v-for="(element, index) in orderedElements"
           :ref="'stepComponent'"
-          :is="elements[index].orderable_type"
-          :key="`${element.id}-${element.orderable_type}`"
+          :is="elements[index].type"
+          :key="`${element.id}-${element.type}`"
           class="step-element"
           :element.sync="elements[index]"
           :inRepository="inRepository"
@@ -454,7 +454,7 @@
         return this.orderedElements.map((e) => { return { id: e.id, attributes: e } })
       },
       orderedElements() {
-        return this.elements.sort((a, b) => (a.orderable_element.position) - (b.orderable_element.position));
+        return this.elements.sort((a, b) => (a.position) - (b.position));
       },
       urls() {
         return this.step.attributes.urls || {}
@@ -643,7 +643,7 @@
         });
       },
       showArchiveModal() {
-        if (this.elements.some(e => e.orderable_type === 'Table')) {
+        if (this.elements.some(e => e.type === 'Table')) {
           this.confirmingArchive = true;
         } else {
           this.archiveStep();
@@ -728,7 +728,7 @@
         });
       },
       updateElement(element, skipRequest=false, callback) {
-        let index = this.elements.findIndex((e) => e.id === element.id && e.orderable_type === element.orderable_type);
+        let index = this.elements.findIndex((e) => e.id === element.id && e.type === element.type);
 
         if (!this.elements[index]) return;
 
@@ -756,14 +756,14 @@
       },
       updateElementOrder(orderedElements) {
         orderedElements.forEach((element, position) => {
-          let index = this.elements.findIndex((e) => e.id === element.id && e.orderable_type === element.attributes.orderable_type);
-          this.elements[index].orderable_element.position = position;
+          let index = this.elements.findIndex((e) => e.id === element.id && e.type === element.attributes.type);
+          this.elements[index].position = position;
         });
 
         let elementPositions =
           {
             step_orderable_element_positions: this.elements.map(
-              (element) => [element.orderable_element.id, element.orderable_element.position]
+              (element) => [element.step_orderable_element_id, element.position]
             )
           };
 
@@ -868,10 +868,10 @@
           );
       },
       insertElement(element) {
-        let position = element.orderable_element.position;
+        let position = element.position;
         this.elements = this.elements.map( s => {
-          if (s.orderable_element.position >= position) {
-              s.orderable_element.position += 1;
+          if (s.position >= position) {
+              s.position += 1;
           }
           return s;
         })
@@ -881,8 +881,8 @@
       moveElement(position, target_id) {
         this.elements.splice(position, 1)
         let unorderedElements = this.elements.map( e => {
-          if (e.orderable_element.position >= position) {
-            e.orderable_element.position -= 1;
+          if (e.position >= position) {
+            e.position -= 1;
           }
           return e;
         })

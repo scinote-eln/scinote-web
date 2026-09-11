@@ -18,7 +18,7 @@ export default {
         .then((result) => {
           this.$emit(
             'component:delete',
-            { id: this.element.id, orderable_type: this.element.orderable_type }
+            { id: this.element.id, type: this.element.type }
           );
         });
     }

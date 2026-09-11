@@ -7,7 +7,7 @@ export default {
         .then((result) => {
           this.$emit(
             'component:archive',
-            { id: this.element.id, orderable_type: this.element.orderable_type }
+            { id: this.element.id, type: this.element.type }
           );
         }).catch((error) => {
           HelperModule.flashAlertMsg(error.response?.data?.error || this.i18n.t('general.archive_error'), 'danger');
@@ -18,14 +18,14 @@ export default {
         .then((result) => {
           this.$emit(
             'component:restore',
-            { id: this.element.id, orderable_type: this.element.orderable_type }
+            { id: this.element.id, type: this.element.type }
           );
 
           if(result.data.message) {
             HelperModule.flashAlertMsg(result.data.message, 'success');
           } else {
             HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.modals.restore_modal.restore_element_general',
-                                       { content_type: this.element.orderable_type }), 'success');
+                                       { content_type: this.element.type }), 'success');
           }
         }).catch((error) => {
           HelperModule.flashAlertMsg(error.response?.data?.error || this.i18n.t('protocols.steps.modals.restore_modal.restore_error'), 'danger');

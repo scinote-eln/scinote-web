@@ -17,7 +17,7 @@ export default {
       axios.post(this.moveUrl || this.element.urls.move_url, { target_id: targetId })
         .then(() => {
           this.movingElement = false;
-          this.$emit('moved', this.element.orderable_element?.position, targetId);
+          this.$emit('moved', this.element.position, targetId);
         });
     }
   }
