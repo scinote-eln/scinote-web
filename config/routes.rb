@@ -514,9 +514,10 @@ Rails.application.routes.draw do
         post :unfavorite
       end
 
-      resources :my_module_reports, only: %i(index create destroy) do
+      resources :experiment_reports, only: %i(index create destroy) do
         member do
           get :download
+          get :preview
         end
       end
 

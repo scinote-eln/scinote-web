@@ -32,10 +32,11 @@ class MyModuleReportsController < ApplicationController
       name: @report_template.name,
       generating_status: :in_progress,
       reference: @my_module,
+      created_by: current_user,
       report_template_id: @report_template.id
     )
 
-    MyModules::GenerateReportJob.perform_later(analytical_report.id, create_params, user_id: current_user.id, team_id: current_team.id)
+    MyModules::GenerateReportJob.perform_later(analytical_report.id, create_params, team_id: current_team.id)
   end
 
   def report_templates
@@ -65,10 +66,10 @@ class MyModuleReportsController < ApplicationController
 
   def preview
     render json: { html: render_to_string(
-      partial: 'my_module_reports/preview',
+      partial: 'analytical_reports/preview',
       locals: {
-        my_module_id: @my_module.id,
-        report: @analytical_report
+        report: @analytical_report,
+        download_url: download_my_module_my_module_report_path(@my_module.id, @analytical_report)
       },
       formats: :html
     ) }

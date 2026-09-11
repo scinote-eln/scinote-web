@@ -2348,6 +2348,13 @@ en:
       no_archived_modules: "This experiment has no archived tasks."
       no_active_modules: "This experiment has no active tasks."
       no_active_modules_archived_branch: "This experiment is archived and can’t have active tasks."
+    reports:
+      generate_button: "Generate report"
+      reports_modal:
+        title: "Analytical reports"
+        date: "%{date}"
+        created_by: "%{created_by}"
+        file_size: "Size: %{size}"
 
   shareable_links:
     modal:

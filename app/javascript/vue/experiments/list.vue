@@ -28,6 +28,7 @@
     @updateStartDate="updateStartDate"
     @changeStatus="changeStatus"
     @updateFavorite="updateFavorite"
+    @openReportModal="openReportModal"
   >
     <template #card="data">
       <ExperimentCard :params="data.params" :dtComponent="data.dtComponent" ></ExperimentCard>
@@ -63,6 +64,10 @@
     :createUrl="createUrl"
     @close="newModalOpen = false"
     @create="updateTable"/>
+  <ReportsModal
+    v-if="reportObjectModal"
+    :experiment="reportObjectModal"
+    @close="reportObjectModal = null" />
   <AccessModal v-if="accessModalParams" :params="accessModalParams"
               @close="accessModalParams = null" @refresh="this.reloadingTable = true" />
 </template>
@@ -87,6 +92,8 @@ import DueDateRenderer from '../shared/datatable/renderers/date.vue';
 import StartDateRenderer from '../shared/datatable/renderers/date.vue';
 import ExperimentCard from './card.vue';
 import FavoriteRenderer from '../shared/datatable/renderers/favorite.vue';
+import ReportRenderer from './renderers/report.vue';
+import ReportsModal from './modals/reports.vue';
 
 export default {
   name: 'ExperimentsList',
@@ -103,7 +110,9 @@ export default {
     StatusRenderer,
     StartDateRenderer,
     DueDateRenderer,
-    FavoriteRenderer
+    FavoriteRenderer,
+    ReportRenderer,
+    ReportsModal
   },
   props: {
     dataSource: { type: String, required: true },
@@ -126,6 +135,7 @@ export default {
       duplicateModalObject: null,
       descriptionModalObject: null,
       showProjectDescription: false,
+      reportObjectModal: null,
       project: null,
       reloadingTable: false,
       statusesList: [
@@ -163,6 +173,15 @@ export default {
           headerName: this.i18n.t('experiments.id'),
           sortable: true,
           minWidth: 80
+        },
+        {
+          field: 'report',
+          headerName: this.i18n.t('experiments.table.column.report_html'),
+          sortable: true,
+          cellRenderer: ReportRenderer,
+          cellRendererParams: {
+            emitAction: 'openReportModal'
+          }
         },
         {
           field: 'status',
@@ -415,6 +434,9 @@ export default {
       axios.post(url).then(() => {
         this.updateTable();
       });
+    },
+    openReportModal(experiment) {
+      this.reportObjectModal = experiment;
     }
   }
 };

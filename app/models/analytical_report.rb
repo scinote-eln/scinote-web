@@ -3,6 +3,7 @@
 class AnalyticalReport < ApplicationRecord
   belongs_to :reference, polymorphic: true
   belongs_to :report_template, optional: true
+  belongs_to :created_by, class_name: 'User', optional: true
 
   enum :generating_status, { done: 0, in_progress: 1, failed: 2 }
 

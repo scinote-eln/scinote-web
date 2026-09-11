@@ -237,6 +237,7 @@ CREATE TABLE public.analytical_reports (
     reference_type character varying,
     reference_id bigint,
     report_template_id bigint,
+    created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -6029,6 +6030,13 @@ CREATE INDEX index_activities_on_type_of ON public.activities USING btree (type_
 
 
 --
+-- Name: index_analytical_reports_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_analytical_reports_on_created_by_id ON public.analytical_reports USING btree (created_by_id);
+
+
+--
 -- Name: index_analytical_reports_on_reference; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -9320,6 +9328,14 @@ ALTER TABLE ONLY public.repository_text_values
 
 ALTER TABLE ONLY public.asset_text_data
     ADD CONSTRAINT fk_rails_2e588e7391 FOREIGN KEY (asset_id) REFERENCES public.assets(id);
+
+
+--
+-- Name: analytical_reports fk_rails_2fe0f59b48; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.analytical_reports
+    ADD CONSTRAINT fk_rails_2fe0f59b48 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --

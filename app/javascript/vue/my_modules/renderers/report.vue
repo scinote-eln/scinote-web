@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import axios from '../../../packs/custom_axios.js';
 
 export default {
   name: 'ReportRenderer',
