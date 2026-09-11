@@ -1,6 +1,13 @@
 /* global I18n GLOBAL_CONSTANTS HelperModule SmartAnnotation TinyMCE */
 
 import tinyMCE from 'tinymce/tinymce';
+
+// Required whenever license_key is a real (non-'gpl') key, regardless of whether any
+// premium plugin is enabled - TinyMCE 8 gates the whole editor on this, not just
+// premium-plugin usage. Vendored here (not in addons/Common) because it must load
+// unconditionally, independent of TINYMCE_PRO_ENABLED.
+import '../vendor/tinymce/plugins/licensekeymanager/plugin';
+
 import 'tinymce/models/dom';
 import 'tinymce/icons/default';
 import 'tinymce/themes/silver';
@@ -42,6 +49,12 @@ import contentUiCss from '!!raw-loader!tinymce/skins/ui/tinymce-5/content.min.cs
 
 import axios from '../packs/custom_axios.js';
 import { rails_direct_uploads_path } from '../routes.js';
+
+// TinyMCE auto-detects its own baseURL from a <script src="tinymce.min.js"> tag, which
+// doesn't exist when TinyMCE is bundled via ESM imports. Without this, the commercial
+// licensekeymanager plugin can't resolve a base path for its runtime-fetched validation
+// script and fails with "license key could not be validated" even with a valid key.
+tinyMCE.baseURL = '/vendor/tinymce';
 
 window.uploadedTinyMCEImages = [];
 
@@ -253,7 +266,8 @@ window.TinyMCE = (() => {
         });
 
         return tinyMCE.init({
-          cache_suffix: '?v=6.5.1-19', // This suffix should be changed any time library is updated
+          cache_suffix: '?v=8.8.2', // This suffix should be changed any time library is updated
+          license_key: GLOBAL_CONSTANTS.TINYMCE_LICENSE_KEY,
           selector,
           skin: false,
           editimage_fetch_image: img => new Promise((resolve) => {

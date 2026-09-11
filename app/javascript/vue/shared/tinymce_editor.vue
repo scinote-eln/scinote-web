@@ -5,9 +5,16 @@
 </template>
 
 <script>
-/* global SmartAnnotation */
+/* global GLOBAL_CONSTANTS SmartAnnotation */
 
 import tinyMCE from 'tinymce/tinymce';
+
+// Required whenever license_key is a real (non-'gpl') key, regardless of whether any
+// premium plugin is enabled - TinyMCE 8 gates the whole editor on this, not just
+// premium-plugin usage. Vendored here (not in addons/Common) because it must load
+// unconditionally, independent of TINYMCE_PRO_ENABLED.
+import '../../vendor/tinymce/plugins/licensekeymanager/plugin';
+
 import 'tinymce/models/dom';
 import 'tinymce/icons/default';
 import 'tinymce/themes/silver';
@@ -45,6 +52,12 @@ import './external_tinymce_plugins.js'; // Load external plugins
 import 'raw-loader';
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/tinymce-5/content.min.css';
+
+// TinyMCE auto-detects its own baseURL from a <script src="tinymce.min.js"> tag, which
+// doesn't exist when TinyMCE is bundled via ESM imports. Without this, the commercial
+// licensekeymanager plugin can't resolve a base path for its runtime-fetched validation
+// script and fails with "license key could not be validated" even with a valid key.
+tinyMCE.baseURL = '/vendor/tinymce';
 
 const contentPStyle = 'p { margin: 0; padding: 0;}';
 const contentBodyStyle = 'body { font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif }';
@@ -87,6 +100,7 @@ export default {
   mounted() {
     tinyMCE.init({
       selector: `#${this.textareaId}`,
+      license_key: GLOBAL_CONSTANTS.TINYMCE_LICENSE_KEY,
       plugins: `${this.plugins} ${window.extraTinyMcePlugins || ''}`,
       menubar: this.menubar,
       skin: false,
