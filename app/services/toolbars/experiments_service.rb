@@ -128,7 +128,7 @@ module Toolbars
       return unless can_manage_experiment?(experiment)
 
       {
-        name: 'report',
+        name: 'generateReport',
         label: I18n.t('experiments.reports.generate_button'),
         icon: 'sn-icon sn-icon-reports',
         type: :emit

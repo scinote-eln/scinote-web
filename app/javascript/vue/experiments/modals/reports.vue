@@ -56,7 +56,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.close') }}</button>
-          <button class="btn btn-primary" @click=""> {{  i18n.t('experiments.reports.generate_button') }} </button>
+          <button class="btn btn-primary" @click="openGenerateReportModal"> {{  i18n.t('experiments.reports.generate_button') }} </button>
         </div>
       </div>
     </div>
@@ -126,9 +126,12 @@ export default {
         });
       }
     },
-     download_url(reportId) {
+    download_url(reportId) {
       return download_experiment_experiment_report_path(this.experiment.id, reportId);
     },
+    openGenerateReportModal() {
+      this.$emit('openGenerateReportModal', null, [this.experiment]);
+    }
   }
 };
 </script>

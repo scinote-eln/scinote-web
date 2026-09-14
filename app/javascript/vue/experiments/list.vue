@@ -17,6 +17,7 @@
     @tableReloaded="reloadingTable = false"
     @archive="archive"
     @restore="restore"
+    @generateReport="openGenerateReportModal"
     @showDescription="showDescription"
     @showProjectDescription="showProjectDescription = true"
     @duplicate="duplicate"
@@ -29,6 +30,7 @@
     @changeStatus="changeStatus"
     @updateFavorite="updateFavorite"
     @openReportModal="openReportModal"
+    @openGenerateReportModal="openGenerateReportModal"
   >
     <template #card="data">
       <ExperimentCard :params="data.params" :dtComponent="data.dtComponent" ></ExperimentCard>
@@ -66,8 +68,13 @@
     @create="updateTable"/>
   <ReportsModal
     v-if="reportObjectModal"
-    :experiment="reportObjectModal"
-    @close="reportObjectModal = null" />
+    :experiment = "reportObjectModal"
+    @openGenerateReportModal = "openGenerateReportModal"
+    @close = "reportObjectModal = null" />
+  <GenerateReportModal
+    v-if="generateReportObjectModal"
+    :experiment="generateReportObjectModal"
+    @close="generateReportObjectModal = null" />
   <AccessModal v-if="accessModalParams" :params="accessModalParams"
               @close="accessModalParams = null" @refresh="this.reloadingTable = true" />
 </template>
@@ -94,6 +101,7 @@ import ExperimentCard from './card.vue';
 import FavoriteRenderer from '../shared/datatable/renderers/favorite.vue';
 import ReportRenderer from './renderers/report.vue';
 import ReportsModal from './modals/reports.vue';
+import GenerateReportModal from './modals/generate_report.vue';
 
 export default {
   name: 'ExperimentsList',
@@ -112,7 +120,8 @@ export default {
     DueDateRenderer,
     FavoriteRenderer,
     ReportRenderer,
-    ReportsModal
+    ReportsModal,
+    GenerateReportModal
   },
   props: {
     dataSource: { type: String, required: true },
@@ -136,6 +145,7 @@ export default {
       descriptionModalObject: null,
       showProjectDescription: false,
       reportObjectModal: null,
+      generateReportObjectModal: null,
       project: null,
       reloadingTable: false,
       statusesList: [
@@ -180,7 +190,8 @@ export default {
           sortable: true,
           cellRenderer: ReportRenderer,
           cellRendererParams: {
-            emitAction: 'openReportModal'
+            emitAction: 'openReportModal',
+            emitAction: 'openGenerateReportModal'
           }
         },
         {
@@ -437,6 +448,10 @@ export default {
     },
     openReportModal(experiment) {
       this.reportObjectModal = experiment;
+    },
+    openGenerateReportModal(_, rows) {
+      this.generateReportObjectModal = rows[0];
+      this.reportObjectModal = null;
     }
   }
 };

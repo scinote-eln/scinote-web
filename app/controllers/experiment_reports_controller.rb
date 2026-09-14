@@ -2,8 +2,8 @@
 
 class ExperimentReportsController < ApplicationController
   before_action :load_experiment
-  before_action :check_view_permissions, except: %i(create destroy)
-  before_action :check_manage_permissions, only: %i(create destroy)
+  before_action :check_view_permissions, except: %i(create destroy my_modules)
+  before_action :check_manage_permissions, only: %i(create destroy my_modules)
   before_action :load_analytical_report, only: %i(download destroy preview)
 
   def index
@@ -39,6 +39,10 @@ class ExperimentReportsController < ApplicationController
       },
       formats: :html
     ) }
+  end
+
+  def my_modules
+    @my_modules = @experiment.my_modules.readable_by_user(current_user).joins(:analytical_reports).distinct
   end
 
   private
