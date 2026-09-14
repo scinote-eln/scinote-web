@@ -6,7 +6,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <h4 class="modal-title truncate !block" id="edit-project-modal-label">
+          <h4 class="modal-title truncate !block" id="generate-report-modal-label">
             {{ i18n.t('experiments.reports.generate_modal.title') }}
           </h4>
           <div class="basis-full">

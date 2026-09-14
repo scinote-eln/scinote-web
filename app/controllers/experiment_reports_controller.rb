@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ExperimentReportsController < ApplicationController
+  before_action :check_experiment_reporting_enabled
   before_action :load_experiment
   before_action :check_view_permissions, except: %i(create destroy my_modules)
   before_action :check_manage_permissions, only: %i(create destroy my_modules)
@@ -46,6 +47,10 @@ class ExperimentReportsController < ApplicationController
   end
 
   private
+
+  def check_experiment_reporting_enabled
+    render_403 unless AnalyticalReport.experiment_reporting_enabled?
+  end
 
   def load_experiment
     @experiment = Experiment.find_by(id: params[:experiment_id])

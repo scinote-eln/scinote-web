@@ -133,7 +133,8 @@ export default {
     userRolesUrl: { type: String, required: true },
     archived: { type: Boolean },
     projectUrl: { type: String, required: true },
-    statusFilter: { type: String, required: false }
+    statusFilter: { type: String, required: false },
+    experimentReportsEnabled: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -183,17 +184,21 @@ export default {
           headerName: this.i18n.t('experiments.id'),
           sortable: true,
           minWidth: 80
-        },
-        {
-          field: 'report',
-          headerName: this.i18n.t('experiments.table.column.report_html'),
-          sortable: true,
-          cellRenderer: ReportRenderer,
-          cellRendererParams: {
-            emitAction: 'openReportModal',
-            emitAction: 'openGenerateReportModal'
+        }
+      ]
+
+      if (this.experimentReportsEnabled) {
+        columns.push(
+          {
+            field: 'report',
+            headerName: this.i18n.t('experiments.table.column.report_html'),
+            sortable: true,
+            cellRenderer: ReportRenderer
           }
-        },
+        );
+      }
+
+      columns.push(
         {
           field: 'status',
           headerName: this.i18n.t('experiments.table.column.status_html'),
@@ -245,7 +250,7 @@ export default {
           sortable: true,
           minWidth: 110
         }
-      ];
+      );
 
       if (this.currentViewMode === 'archived') {
         columns.push({

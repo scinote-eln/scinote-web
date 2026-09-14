@@ -122,6 +122,7 @@ module Toolbars
 
     def generate_report_action
       return unless @single
+      return unless AnalyticalReport.experiment_reporting_enabled?
 
       experiment = @experiments.first
 
