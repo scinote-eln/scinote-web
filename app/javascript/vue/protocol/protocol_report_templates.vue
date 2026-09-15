@@ -51,7 +51,7 @@
   </div>
   <CreateProtocolReportTemplateModal v-if="protocolReportTemplateModal"
                                        :protocolId="protocolId"
-                                       @templateCreated="reloadTemplates()"
+                                       @templateCreated="reloadTemplates($event)"
                                        @close="protocolReportTemplateModal = false"/>
   <DeleteModal
     :title="deleteTitle"
@@ -63,7 +63,10 @@
 </template>
 
 <script>
+/* global HelperModule */
+
 import axios from '../../packs/custom_axios.js';
+import consumer from '../../channels/consumer';
 import ProtocolReportTemplateDataInputs from './protocol_report_templates/data_inputs.vue';
 import CreateProtocolReportTemplateModal from './modals/create_protocol_report_template.vue'
 import DeleteModal from '../shared/confirmation_modal.vue';
@@ -106,16 +109,37 @@ export default {
   },
   methods: {
     fetchTemplates() {
-      axios.get(this.loadUrl).then((response) => {
+      return axios.get(this.loadUrl).then((response) => {
         this.templates = response.data.templates;
       });
     },
     download_url(protocolTemplateId) {
       return download_protocol_protocol_report_template_path(this.protocolId, protocolTemplateId);
     },
-    reloadTemplates() {
+    reloadTemplates(newTemplateId) {
       this.protocolReportTemplateModal = false;
-      this.fetchTemplates();
+      this.fetchTemplates().then(() => {
+        if (!newTemplateId) return;
+
+        this.watchTemplatePreview(newTemplateId);
+      });
+    },
+    watchTemplatePreview(templateId) {
+      const subscription = consumer.subscriptions.create(
+        { channel: 'ReportTemplatePreviewChannel', report_template_id: templateId },
+        {
+          received: (data) => {
+            if (data.status === 'processing') return;
+
+            consumer.subscriptions.remove(subscription);
+
+            if (data.status === 'failed') {
+              HelperModule.flashAlertMsg(this.i18n.t('protocols.report_template.preview_failed'), 'danger');
+            }
+          },
+          rejected: () => consumer.subscriptions.remove(subscription)
+        }
+      );
     },
     async deleteTemplate(template) {
       this.deleteTitle = this.i18n.t('protocols.report_template.delete.title', { name: template.name })

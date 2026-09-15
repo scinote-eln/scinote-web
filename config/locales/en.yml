@@ -4347,6 +4347,7 @@ en:
     report_template:
       title: "Report templates"
       new_template: "New template"
+      preview_failed: "Something went wrong while generating the preview for this template."
       data_inputs:
         title: "Data inputs"
         banner: "Copy & paste these codes into your .DOCX file where you want to populate fields."

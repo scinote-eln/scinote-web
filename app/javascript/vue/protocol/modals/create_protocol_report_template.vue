@@ -139,7 +139,7 @@ export default {
           })
             .then((response) => {
               this.submitting = false;
-              this.$emit('templateCreated');
+              this.$emit('templateCreated', response.data.id);
             })
             .catch(() => {
               this.submitting = false;
