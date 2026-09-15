@@ -6,7 +6,7 @@
     </a>
   </div>
   <div v-else-if="params.data.permissions.manage ">
-    <a href="#" @click.prevent="">
+    <a href="#" @click.prevent="openGenerateReportModal(params.data)">
       {{ i18n.t('experiments.reports.generate_button') }}
     </a>
   </div>
@@ -23,6 +23,9 @@ export default {
   methods: {
     openReportModal(value) {
       this.params.dtComponent.$emit('openReportModal', value);
+    },
+    openGenerateReportModal(value) {
+      this.params.dtComponent.$emit('openGenerateReportModal', null, [value]);
     }
   }
 };

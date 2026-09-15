@@ -515,6 +515,9 @@ Rails.application.routes.draw do
       end
 
       resources :experiment_reports, only: %i(index create destroy) do
+        collection do
+          get :my_modules
+        end
         member do
           get :download
           get :preview

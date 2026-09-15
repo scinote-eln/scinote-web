@@ -11,6 +11,10 @@ class AnalyticalReport < ApplicationRecord
 
   after_update :broadcast_generating_status_change, if: :saved_change_to_generating_status?
 
+  def self.experiment_reporting_enabled?
+    ApplicationSettings.instance.values['experiment_reporting_enabled?'] == true
+  end
+
   private
 
   def broadcast_generating_status_change

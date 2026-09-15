@@ -13,6 +13,7 @@
       current-view-mode="<%= params[:view_mode] || :active %>"
       :archived="<%= @project.archived?%>"
       :status-filter="<%= params[:status_filter]&.to_json %>"
+      :experiment-reports-enabled="<%= AnalyticalReport.experiment_reporting_enabled? %>"
     />
   </div>
 

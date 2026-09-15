@@ -122,13 +122,14 @@ module Toolbars
 
     def generate_report_action
       return unless @single
+      return unless AnalyticalReport.experiment_reporting_enabled?
 
       experiment = @experiments.first
 
       return unless can_manage_experiment?(experiment)
 
       {
-        name: 'report',
+        name: 'generateReport',
         label: I18n.t('experiments.reports.generate_button'),
         icon: 'sn-icon sn-icon-reports',
         type: :emit
