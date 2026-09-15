@@ -13,11 +13,11 @@ class ReportTemplate < ApplicationRecord
   end
 
   def preview_status
-    return 'ready' if odt_template_file_preview.attached?
-    return 'failed' if preview_failed?
-    return 'not_previewable' if odt_template_file.attached? && !ActiveStorageFileUtil.previewable_document?(odt_template_file.blob)
+    return :ready if odt_template_file_preview.attached?
+    return :failed if preview_failed?
+    return :not_previewable if odt_template_file.attached? && !ActiveStorageFileUtil.previewable_document?(odt_template_file.blob)
 
-    'processing'
+    :processing
   end
 
   def preview_failed?
