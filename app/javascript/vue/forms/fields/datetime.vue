@@ -101,7 +101,7 @@ export default {
         return;
       }
 
-      return new Date(this.field.attributes.current_datetime);
+      return new Date(this.field.attributes.current_datetime.replace(/(Z|[+-]\d{2}:\d{2})$/, ''));
     },
     validValue() {
       if (this.fieldDisabled) return true;
