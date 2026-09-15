@@ -471,7 +471,6 @@ class Protocol < ApplicationRecord
 
       new_report_template.save!
       new_report_template.generate_preview!
-      ReportTemplates::ConvertOdtToDocxJob.perform_later(new_report_template.id) if report_template.docx_template_file.attached?
     end
   end
 

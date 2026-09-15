@@ -11,11 +11,14 @@ module ProtocolReportTemplates
     end
 
     def replace_tags(src_report_template, dest_report_template, src_object, include_results: true)
-      original_blob = src_report_template.odt_template_file.blob
-      output = Tempfile.new(['report', '.odt'])
+      template_format = src_report_template.docx_template_file.attached? ? :docx : :odt
+      templater = template_format == :docx ? DocxTemplating::Document : ODFReport::Report
+      template = template_format == :docx ? src_report_template.docx_template_file : src_report_template.odt_template_file
+      original_blob = template.blob
+      output = Tempfile.new(['report', ".#{template_format}"])
 
-      src_report_template.odt_template_file.open do |odt_template_file|
-        report = ODFReport::Report.new(odt_template_file.path) do |r|
+      template.open do |template_file|
+        report = templater.new(template_file.path) do |r|
           src_object.steps.order(:position).zip(@protocol.steps.order(:position)) do |src_step, dest_step|
             r.add_field(build_tag('step', src_step.id, delimiter: false).to_sym, build_tag('step', dest_step.id))
 
@@ -48,7 +51,7 @@ module ProtocolReportTemplates
           filename: original_blob.filename,
           content_type: original_blob.content_type
         )
-        dest_report_template.odt_template_file.attach(blob)
+        template_format == :docx ? dest_report_template.docx_template_file.attach(blob) : dest_report_template.odt_template_file.attach(blob)
       end
     ensure
       output.close
@@ -56,16 +59,19 @@ module ProtocolReportTemplates
     end
 
     def replace_form_response_tags(report_template, src_form_response, dest_form_response)
-      original_blob = report_template.odt_template_file.blob
-      output = Tempfile.new(['report', '.odt'])
+      template_format = report_template.docx_template_file.attached? ? :docx : :odt
+      templater = template_format == :docx ? DocxTemplating::Document : ODFReport::Report
+      template = template_format == :docx ? report_template.docx_template_file : report_template.odt_template_file
+      original_blob = template.blob
+      output = Tempfile.new(['report', ".#{template_format}"])
 
-      report_template.odt_template_file.open do |odt_template_file|
-        report = ODFReport::Report.new(odt_template_file.path) do |r|
+      template.open do |template_file|
+        report = templater.new(template_file.path) do |r|
           replace_form_response(r, src_form_response, dest_form_response)
         end
         report.generate(output.path)
 
-        report_template.odt_template_file.attach(io: File.open(output.path), filename: original_blob.filename, content_type: original_blob.content_type)
+        template.attach(io: File.open(output.path), filename: original_blob.filename, content_type: original_blob.content_type)
       end
     ensure
       output.close

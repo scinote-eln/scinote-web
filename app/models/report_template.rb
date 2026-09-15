@@ -7,6 +7,7 @@ class ReportTemplate < ApplicationRecord
   has_one_attached :odt_template_file
   has_one_attached :docx_template_file
   has_one_attached :odt_template_file_preview
+  has_one_attached :docx_template_file_preview
 
   def generate_preview!
     ReportTemplates::ReportTemplatePreviewJob.perform_later(id)
