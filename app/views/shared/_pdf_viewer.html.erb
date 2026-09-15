@@ -5,6 +5,10 @@
   elsif defined?(report_template) && report_template
     pdf_url = asset.odt_template_file_preview.present? ? rails_blob_path(asset.odt_template_file_preview, disposition: 'attachment') : pdf_preview_path_protocol_protocol_report_template_path(asset.subject, asset)
     pdf_size = asset.odt_template_file_preview.present? ? asset.odt_template_file_preview&.blob&.byte_size : asset.odt_template_file&.blob&.byte_size
+    if pdf_size.nil?
+      pdf_url = pdf_preview_path_protocol_protocol_report_template_path(asset.subject, asset)
+      pdf_size = asset.docx_template_file&.blob&.byte_size
+    end
   elsif report_document
     pdf_url = rails_blob_path(asset, disposition: 'attachment')
     pdf_size = asset.blob.byte_size
