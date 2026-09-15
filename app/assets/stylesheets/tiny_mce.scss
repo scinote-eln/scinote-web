@@ -223,6 +223,7 @@
   }
 
   .tox-pop__dialog {
+    background: $brand-primary !important;
     border: 0;
     border-radius: 0 0 3px 3px;
     box-shadow: none;
@@ -233,6 +234,7 @@
     top: -10px;
 
     button {
+      background: transparent !important;
       color: $color-white;
     }
 
