@@ -45,6 +45,10 @@ Canaid::Permissions.register_for(MyModule) do
     my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
+  can :manage_my_module_reports do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
+  end
+
   can :share_my_module do |user, my_module|
     my_module.team.shareable_links_enabled? && my_module.permission_granted?(user, MyModulePermissions::SHARE)
   end

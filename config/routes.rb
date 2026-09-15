@@ -514,6 +514,16 @@ Rails.application.routes.draw do
         post :unfavorite
       end
 
+      resources :experiment_reports, only: %i(index create destroy) do
+        collection do
+          get :my_modules
+        end
+        member do
+          get :download
+          get :preview
+        end
+      end
+
       resources :my_modules, path: '/modules', only: [:index, :create]
     end
 
@@ -618,6 +628,18 @@ Rails.application.routes.draw do
       end
 
       post :select_default_snapshot, to: 'my_module_repository_snapshots#select'
+
+      resources :my_module_reports, only: %i(index create destroy) do
+        collection do
+          get :report_templates
+          get :pdfs
+        end
+
+        member do
+          get :download
+          get :preview
+        end
+      end
 
       member do
         # AJAX popup accessed from full-zoom canvas for single module,
@@ -829,6 +851,18 @@ Rails.application.routes.draw do
           get :repository_rows
           post :actions_toolbar
           post :batch_destroy
+        end
+      end
+
+      resources :protocol_report_templates, only: %i(index create destroy) do
+        collection do
+          get :input_tags
+        end
+
+        member do
+          get :download
+          get :preview
+          get :pdf_preview_path
         end
       end
 

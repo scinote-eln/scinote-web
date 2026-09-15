@@ -82,6 +82,7 @@ RUN \
   awscli \
   netcat-openbsd \
   poppler-utils \
+  qpdf \
   librsvg2-2 \
   libvips42 \
   graphviz \

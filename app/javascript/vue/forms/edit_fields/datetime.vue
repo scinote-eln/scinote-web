@@ -26,6 +26,19 @@
     {{ i18n.t('forms.show.range_label') }}
   </div>
   <hr class="my-4 w-full">
+  <div class="bg-sn-super-light-grey rounded p-4">
+    <div class="flex items-center gap-4">
+      <h5>{{ i18n.t('forms.show.validations.future_dates.title') }}</h5>
+      <span class="sci-toggle-checkbox-container">
+        <input type="checkbox"
+               class="sci-toggle-checkbox"
+               @change="$emit('updateField')"
+               v-model="editField.attributes.data.validations.disabled_future_dates" />
+        <span class="sci-toggle-checkbox-label"></span>
+      </span>
+    </div>
+    <div>{{ i18n.t('forms.show.validations.future_dates.description') }}</div>
+  </div>
   </div>
 </template>
 

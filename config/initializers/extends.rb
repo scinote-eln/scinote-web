@@ -924,6 +924,8 @@ class Extends
     my_modules/archive
     teams/data_integrity
     equipment_bookings/index
+    protocol_report_templates/index
+    my_module_reports/index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
@@ -1026,6 +1028,13 @@ class Extends
       }
     }
   }
+
+  DEFAULT_REPORT_TEMPLATE_PLACEHOLDERS = [
+    {
+      label: 'General task data',
+      inputs: %w(task_name task_due_date task_tags task_protocol)
+    }
+  ]
 end
 
 # rubocop:enable Style/MutableConstant

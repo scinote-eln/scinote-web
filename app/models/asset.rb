@@ -55,6 +55,11 @@ class Asset < ApplicationRecord
     joins(file_attachment: :blob).order(sort)
   }
 
+  scope :pdfs, lambda {
+    joins(file_attachment: :blob)
+      .where(active_storage_blobs: { content_type: 'application/pdf' })
+  }
+
   attr_accessor :file_content, :file_info, :snapshot
 
   before_save :reset_file_processing, if: -> { file.new_record? }
