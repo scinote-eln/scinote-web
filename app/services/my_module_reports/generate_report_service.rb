@@ -55,13 +55,15 @@ module MyModuleReports
     end
 
     def render_steps(report)
-      @my_module.steps.ordered.each do |step|
+      @my_module.steps.active.ordered.each do |step|
         report.add_field build_tag('step', step.id).to_sym, step.name
 
         # for full protocol tag
         report.add_text PROTOCOL_TAG, "<div>#{step.position_plus_one}. #{step.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
 
         step.step_orderable_elements.order(:position).each do |element|
+          next if element.orderable.archived
+
           element_type = element.orderable_type
           element_tag = build_tag(element_type.underscore, element_id(element))
 
@@ -82,10 +84,12 @@ module MyModuleReports
     end
 
     def render_results(report)
-      @my_module.results.order(:created_at).each do |result|
+      @my_module.results.active.order(:created_at).each do |result|
         report.add_field build_tag('result', result.id).to_sym, result.name
 
         result.result_orderable_elements.order(:position).each do |element|
+          next if element.orderable.archived
+
           element_type = element.orderable_type
           element_tag = build_tag(element_type.underscore, element_id(element))
 
