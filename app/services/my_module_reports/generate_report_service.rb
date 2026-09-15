@@ -119,7 +119,7 @@ module MyModuleReports
 
       # for full protocol tag
       if with_protocol
-        protocol_table_tag = :PROTOCOL_TABLE
+        protocol_table_tag = :"PROTOCOL_TABLE_#{table_tag}"
         report.add_text PROTOCOL_TAG, "<div>#{table.name}</div><div>{{#{protocol_table_tag}}}</div><div>{{#{PROTOCOL_TAG}}}</div>"
         report.add_table_from_data protocol_table_tag, table_data
       end
