@@ -48,6 +48,8 @@ class ProtocolReportTemplatesController < ApplicationController
 
       protocol_report_template.save!
 
+      log_activity(:report_template_added, protocol_report_template)
+
       if is_docx
         ReportTemplates::ConvertDocxToOdtJob.perform_later(protocol_report_template.id)
       else
@@ -66,8 +68,14 @@ class ProtocolReportTemplatesController < ApplicationController
   end
 
   def destroy
-    @protocol_report_template.destroy!
-    render body: nil, status: :ok
+    ActiveRecord::Base.transaction do
+      log_activity(:report_template_deleted, @protocol_report_template)
+      @protocol_report_template.destroy!
+      render body: nil, status: :ok
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: e.message }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
   end
 
   def preview
@@ -145,5 +153,20 @@ class ProtocolReportTemplatesController < ApplicationController
       field_to_udpate: 'name',
       path_to_update: name_protocol_path(@protocol)
     }
+  end
+
+  def log_activity(type_of, report_template)
+    protocol = report_template.subject
+
+    Activities::CreateActivityService.call(
+      activity_type: type_of,
+      owner: current_user,
+      team: protocol.team,
+      subject: protocol,
+      message_items: {
+        report_template: report_template.id,
+        protocol: protocol.id
+      }
+    )
   end
 end

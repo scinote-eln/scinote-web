@@ -23,8 +23,14 @@ class ExperimentReportsController < ApplicationController
   end
 
   def destroy
-    @analytical_report.destroy!
-    render body: nil, status: :ok
+    ActiveRecord::Base.transaction do
+      log_activity(:experiment_analytical_report_deleted)
+      @analytical_report.destroy!
+      render body: nil, status: :ok
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: e.message }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
   end
 
   def download
@@ -76,5 +82,17 @@ class ExperimentReportsController < ApplicationController
     @analytical_report = @experiment.analytical_reports.find_by(id: params[:id])
 
     render_404 unless @analytical_report
+  end
+
+  def log_activity(type_of)
+    experiment = @analytical_report.reference
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: @analytical_report.created_by,
+            team: experiment.team,
+            project: experiment.project,
+            subject: experiment,
+            message_items: { analytical_report: @analytical_report.id,
+                             experiment: experiment.id })
   end
 end

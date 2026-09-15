@@ -56,8 +56,14 @@ class MyModuleReportsController < ApplicationController
   end
 
   def destroy
-    @analytical_report.destroy!
-    render body: nil, status: :ok
+    ActiveRecord::Base.transaction do
+      log_activity(:task_analytical_report_deleted)
+      @analytical_report.destroy!
+      render body: nil, status: :ok
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: e.message }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
   end
 
   def download
@@ -131,5 +137,17 @@ class MyModuleReportsController < ApplicationController
       field_to_udpate: 'name',
       path_to_update: my_module_path(@my_module)
     }
+  end
+
+  def log_activity(type_of)
+    my_module = @analytical_report.reference
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: my_module.team,
+            project: my_module.project,
+            subject: my_module,
+            message_items: { analytical_report: @analytical_report.id,
+                             my_module: my_module.id })
   end
 end
