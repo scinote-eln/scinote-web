@@ -19,9 +19,10 @@ class AnalyticalReport < ApplicationRecord
 
   def broadcast_generating_status_change
     if reference.is_a?(MyModule)
-      MyModuleReportGenerationsChannel.broadcast_to(reference, generating_report: generating_status == :done, report_template_id: report_template.id)
+      MyModuleReportGenerationsChannel.broadcast_to(reference, generating_report: generating_status != 'done', report_template_id: report_template.id)
     elsif reference.is_a?(Experiment)
-      ExperimentReportGenerationsChannel.broadcast_to(reference, generating_report: generating_status == :done)
+      ExperimentReportGenerationsChannel.broadcast_to(reference, generating_report: generating_status != 'done', 
+                                                      preview: Rails.application.routes.url_helpers.preview_experiment_experiment_report_path(reference, self))
     end
   end
 end
