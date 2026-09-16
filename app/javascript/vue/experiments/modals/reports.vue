@@ -10,7 +10,7 @@
             {{ i18n.t('experiments.reports.reports_modal.title') }}
           </h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body max-h-[600px] overflow-y-auto">
           <div v-if="loading" class="h-full flex items-center justify-center">
             <div class="sci-loader"></div>
           </div>

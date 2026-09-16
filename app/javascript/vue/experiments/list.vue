@@ -74,7 +74,8 @@
   <GenerateReportModal
     v-if="generateReportObjectModal"
     :experiment="generateReportObjectModal"
-    @close="generateReportObjectModal = null" />
+    @close="generateReportObjectModal = null"
+    @create="updateTable" />
   <AccessModal v-if="accessModalParams" :params="accessModalParams"
               @close="accessModalParams = null" @refresh="this.reloadingTable = true" />
 </template>
