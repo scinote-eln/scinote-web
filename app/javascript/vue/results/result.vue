@@ -225,6 +225,8 @@
             @component:delete="removeElement"
             @component:archive="removeElement"
             @component:restore="removeElement"
+            @component:editing-start="createEditingFlag"
+            @component:editing-end="destroyEditingFlag"
             @update="updateElement"
             @reorder="openReorderModal"
             @component:insert="insertElement"
@@ -291,6 +293,7 @@ import ManageItemsModal from '../shared/manage_items_modal.vue'
 import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
 import archiveResultModal from './modals/archive_result.vue';
 import deleteResultModal from './delete_result.vue';
+import EditingTag from '../shared/snippets/editing_tag.vue';
 
 import AttachmentsMixin from '../shared/content/mixins/attachments.js';
 import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js';
@@ -298,6 +301,7 @@ import OveMixin from '../shared/content/attachments/mixins/ove.js';
 import UtilsMixin from '../mixins/utils.js';
 import ResultCommonMixin from './mixins/result_common.js';
 import DeleteMixin from '../shared/content/mixins/delete.js';
+import EditingFlagMixin from '../shared/content/mixins/editing_flag.js';
 import StorageUsage from '../shared/content/attachments/storage_usage.vue';
 
 export default {
@@ -364,7 +368,7 @@ export default {
       editingName: false
     };
   },
-  mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, ResultCommonMixin, DeleteMixin],
+  mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, ResultCommonMixin, DeleteMixin, EditingFlagMixin],
   components: {
     ReorderableItemsModal,
     Table,
@@ -379,7 +383,8 @@ export default {
     GeneralDropdown,
     archiveResultModal,
     deleteResultModal,
-    ManageItemsModal
+    ManageItemsModal,
+    EditingTag
   },
   watch: {
     activeDragResult() {
