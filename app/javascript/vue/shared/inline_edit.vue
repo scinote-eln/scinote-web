@@ -46,6 +46,7 @@
       <span :class="{'truncate py-1': singleLine }" :title="sa_value || placeholder" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
       <span :class="{'truncate py-1': singleLine}" :title="newValue || placeholder" v-else>{{newValue || placeholder}}</span>
     </div>
+    <slot v-if="!editing" name="suffix"></slot>
 
     <div
       class="mt-3 whitespace-nowrap truncate text-xs font-normal absolute bottom-[-1rem] w-full"

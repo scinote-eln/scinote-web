@@ -13,7 +13,7 @@ describe EditingFlagCleanupJob, type: :job do
   end
 
   context 'when an expired flag is orphaned (its subject was already destroyed)' do
-    let!(:orphaned_subject) { create :step }
+    let!(:orphaned_subject) { create :step_text }
     let!(:orphaned_editing_flag) { create :editing_flag, subject: orphaned_subject, timeout_at: 1.minute.ago }
 
     before { orphaned_subject.destroy }
