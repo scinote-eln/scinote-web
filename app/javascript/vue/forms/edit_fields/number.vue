@@ -96,7 +96,7 @@ export default {
       return [['between', 'Between']];
     },
     responseValidationIsValid() {
-      return (this.responseValidation?.min && this.responseValidation?.max && this.responseValidation?.min < this.responseValidation?.max)
+      return (this.responseValidation?.min != null && this.responseValidation?.max != null && this.responseValidation?.min < this.responseValidation?.max)
         || !this.responseValidationEnabled;
     },
     validField() {

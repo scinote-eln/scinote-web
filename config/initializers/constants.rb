@@ -437,7 +437,7 @@ class Constants
   TINY_MCE_ASSET_REGEX = /data-mce-token="(\w+)"/
 
   # Team name for default admin user
-  DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze
+  DEFAULT_PRIVATE_WORKSPACE_NAME = ENV.fetch('SCINOTE_DEFAULT_WORKSPACE_NAME', 'My projects').freeze
 
   TEMPLATES_PROJECT_NAME = 'SciNote Examples'.freeze
 
@@ -479,6 +479,11 @@ class Constants
   QUICK_SEARCH_LIMIT = 5
   QUICK_SEARCH_SEARCHABLE_OBJECTS = %w(project experiment my_module protocol repository_row
                                        report project_folder result label_template).freeze
+
+  # my module report limits
+  MY_MODULE_REPORT_HEADER_MAX_LENGTH = 140
+  MY_MODULE_REPORT_HEADER_MAX_LINES = 3
+  MY_MODULE_REPORT_FOOTER_MAX_LENGTH = 80
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\

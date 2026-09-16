@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:  url('fonts/SN-icon-font.eot?ns3gju');
-  src:  url('fonts/SN-icon-font.eot?ns3gju#iefix') format('embedded-opentype'),
-    url('fonts/SN-icon-font.woff2?ns3gju') format('woff2'),
-    url('fonts/SN-icon-font.ttf?ns3gju') format('truetype'),
-    url('fonts/SN-icon-font.woff?ns3gju') format('woff'),
-    url('fonts/SN-icon-font.svg?ns3gju#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?nhyizw');
+  src:  url('fonts/SN-icon-font.eot?nhyizw#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?nhyizw') format('woff2'),
+    url('fonts/SN-icon-font.ttf?nhyizw') format('truetype'),
+    url('fonts/SN-icon-font.woff?nhyizw') format('woff'),
+    url('fonts/SN-icon-font.svg?nhyizw#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -733,4 +733,13 @@
 }
 .sn-icon-equipment-scheduling:before {
   content: "\e9eb";
+}
+.sn-icon-copyclipboard:before {
+  content: "\e9ec";
+}
+.sn-icon-sn-icon-reason-change-off:before {
+  content: "\e9ed";
+}
+.sn-icon-sn-icon-reason-change-on:before {
+  content: "\e9ee";
 }

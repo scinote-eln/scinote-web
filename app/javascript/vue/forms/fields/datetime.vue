@@ -28,20 +28,28 @@
           ref="endDatepicker"
         />
       </div>
-      <span v-if="!validValue" class="text-xs text-sn-delete-red block absolute -bottom-3.5">
+      <span v-if="!validFutureDate" class="text-xs text-sn-delete-red block absolute -bottom-3.5">
+        {{ i18n.t('forms.fields.not_valid_future_date') }}
+      </span>
+      <span v-else-if="!validValue" class="text-xs text-sn-delete-red block absolute -bottom-3.5">
         {{ i18n.t('forms.fields.not_valid_range') }}
       </span>
     </template>
-    <DateTimePicker
-      v-else
-      @change="updateDate"
-      :defaultValue="value"
-      :mode="mode"
-      :disabled="fieldDisabled"
-      :clearable="true"
-      :placeholder="fieldDisabled ? '' : i18n.t(`forms.fields.add_${mode}`)"
-      :dataE2e="`e2e-TP-${dataE2e}-dateTime`"
-    />
+    <template v-else>
+      <DateTimePicker
+        @change="updateDate"
+        :defaultValue="value"
+        :mode="mode"
+        :disabled="fieldDisabled"
+        :clearable="true"
+        :placeholder="fieldDisabled ? '' : i18n.t(`forms.fields.add_${mode}`)"
+         :class="{'error': !validFutureDate}"
+        :dataE2e="`e2e-TP-${dataE2e}-dateTime`"
+      />
+      <span v-if="!validFutureDate" class="text-xs text-sn-delete-red block absolute -bottom-3.5">
+        {{ i18n.t('forms.fields.not_valid_future_date') }}
+      </span>
+    </template>
   </div>
 </template>
 
@@ -88,8 +96,16 @@ export default {
     range() {
       return this.field.attributes.data.range;
     },
-    validValue() {      
+    currentDatetime() {
+      if (!this.field?.attributes?.current_datetime) {
+        return;
+      }
+
+      return new Date(this.field.attributes.current_datetime.replace(/(Z|[+-]\d{2}:\d{2})$/, ''));
+    },
+    validValue() {
       if (this.fieldDisabled) return true;
+      if (!this.validFutureDate) return false;
 
       if (this.range) {
         return Boolean(this.fromValue) === Boolean(this.toValue) &&
@@ -100,6 +116,16 @@ export default {
       }
 
       return true;
+    },
+    validFutureDate() {
+      if (!this.currentDatetime) return true;
+
+      if (this.range) {
+        return (!this.fromValue || new Date(this.fromValue) <= this.currentDatetime) &&
+               (!this.toValue || new Date(this.toValue) <= this.currentDatetime);
+      }
+
+      return !this.value || new Date(this.value) <= this.currentDatetime;
     }
   },
   watch: {
@@ -114,7 +140,9 @@ export default {
   methods: {
     updateDate(date) {
       this.value = date;
-      this.$emit('save', this.value);
+      if (this.validFutureDate) {
+        this.$emit('save', this.value);
+      }
     },
     updateFromDate(date) {
       this.fromValue = date;
@@ -129,7 +157,9 @@ export default {
       }
     },
     rangeIsValid() {
-      return this.$refs.endDatepicker?.value >= this.$refs.startDatepicker?.value
+      const start = this.$refs.startDatepicker?.value ?? this.fromValue;
+      const end = this.$refs.endDatepicker?.value ?? this.toValue;
+      return new Date(end) >= new Date(start);
     }
   }
 };

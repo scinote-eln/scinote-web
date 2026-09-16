@@ -26,7 +26,7 @@ module StepElements
         log_step_activity(:checklist_added, { checklist_name: checklist.name })
         checklist_name_annotation(@step, checklist)
       end
-      render_step_orderable_element(checklist)
+      render json: checklist, serializer: ChecklistSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -87,7 +87,7 @@ module StepElements
         @checklist.name += ' (1)'
         new_checklist = @checklist.duplicate(@step, current_user, position + 1)
         log_step_activity(:checklist_duplicated, { checklist_name: @checklist.name })
-        render_step_orderable_element(new_checklist)
+        render json: new_checklist, serializer: ChecklistSerializer, user: current_user
       end
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity

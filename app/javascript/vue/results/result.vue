@@ -151,10 +151,9 @@
             <i class="sn-icon sn-icon-pinned"></i>
           </button>
           <a v-if="!locked &&  this.result.attributes.lock_enabled"
-            class="btn btn-light icon-btn"
+            class="btn btn-light icon-btn e2e-BT-protocol-result-resultOptions-manage"
             data-toggle="modal"
-            data_e2e: `e2e-BT-protocol-result${this.result.id}-stepOptions-rearrange`
-            e2e_class: `e2e-BT-protocol-result-stepOptions-rearrange`
+            :data-e2e="`e2e-BT-protocol-result${this.result.id}-resultOptions-manage`"
             :data-sn-tooltip="i18n.t('my_modules.results.actions.edit_content')"
             @click="openReorderModal()"
             @keyup.enter="openReorderModal()"
@@ -162,10 +161,9 @@
             <i class="sn-icon sn-icon-steps-manage" aria-hidden="true"></i>
           </a>
           <a v-else-if="!locked && this.result.attributes.urls.reorder_elements_url && this.elements.length > 1"
-            class="btn btn-light icon-btn"
+            class="btn btn-light icon-btn e2e-BT-protocol-result-resultOptions-reorder"
             data-toggle="modal"
-            data_e2e: `e2e-BT-protocol-result${this.result.id}-stepOptions-manageResult`
-            e2e_class: `e2e-BT-protocol-result-stepOptions-manageResult`
+            :data-e2e="`e2e-BT-protocol-result${this.result.id}-resultOptions-reorder`"
             :data-sn-tooltip="i18n.t('my_modules.results.actions.rearrange_content')"
             @click="openReorderModal()"
             @keyup.enter="openReorderModal"
@@ -198,24 +196,22 @@
           @toggle-lock="toggleItemLock"
           @toggle-lock-attachments="toggleAttachmentsLock"
           @close="closeReorderModal"
+          dataE2e="protocol-result-manage"
         ></ManageItemsModal>
       </template>
       <template v-else>
         <ReorderableItemsModal v-if="reordering"
           :title="i18n.t('my_modules.modals.reorder_results.title')"
           :items="reorderableElements"
-          :dataE2e="`task-result${result.id}-reorder`"
+          dataE2e="protocol-result-reorder"
           @reorder="updateElementOrder"
           @close="closeReorderModal"
         />
       </template>
       <div class="collapse in pl-10" :id="'resultBody' + result.id">
-        <div v-for="(element, index) in orderedElements" :key="element.id" class="relative">
-          <div v-if="editingFlagsFor(element.id).length" class="absolute -bottom-4 left-0 z-10 flex gap-1">
-            <EditingTag v-for="flag in editingFlagsFor(element.id)" :key="flag.id" :user="flag.attributes.user" />
-          </div>
+        <div v-for="(element, index) in orderedElements" :key="`${element.id}-${element.type}`">
           <component
-            :is="elements[index].attributes.orderable_type"
+            :is="elements[index].type"
             class="result-element"
             ref="resultComponent"
             :element.sync="elements[index]"
@@ -399,7 +395,7 @@ export default {
   },
   computed: {
     reorderableElements() {
-      return this.orderedElements.map((e) => ({ id: e.id, attributes: e.attributes.orderable }));
+      return this.orderedElements.map((e) => ({ id: e.id, attributes: e }));
     },
     cantUploadFiles() {
       return (this.result.type == 'results' && this.result.attributes.attachments_locked);
@@ -520,13 +516,13 @@ export default {
     },
     updateElementOrder(orderedElements) {
       orderedElements.forEach((element, position) => {
-        const index = this.elements.findIndex((e) => e.id === element.id);
-        this.elements[index].attributes.position = position;
+        const index = this.elements.findIndex((e) => e.id === element.id && e.type === element.attributes.type);
+        this.elements[index].position = position;
       });
 
       const elementPositions = {
         result_orderable_element_positions: this.elements.map(
-          (element) => [element.attributes.result_orderable_element_id, element.attributes.position]
+          (element) => [element.orderable_element_id, element.position]
         )
       };
 
@@ -544,21 +540,21 @@ export default {
         });
     },
     updateElement(element, skipRequest = false, callback) {
-      let index = this.elements.findIndex((e) => e.id === element.id);
+      let index = this.elements.findIndex((e) => e.id === element.id && e.type === element.type);
 
       if (!this.elements[index]) return;
 
-      this.elements[index].isNew = false;
+      element.isNew = false;
 
-      if (skipRequest || !element.attributes.orderable?.urls?.update_url) {
-        this.elements[index].attributes.orderable = element.attributes.orderable;
+      if (skipRequest || !element.urls?.update_url) {
+        this.elements.splice(index, 1, element);
         this.$emit('resultUpdated');
       } else {
         axios.put(
-          element.attributes.orderable.urls.update_url,
-          element.attributes.orderable
+          element.urls.update_url,
+          element
         ).then((result) => {
-            this.elements[index].attributes.orderable = result.data.data.attributes;
+            this.elements.splice(index, 1, result.data.data.attributes);
             this.$emit('resultUpdated');
 
             // optional callback after successful update
@@ -571,10 +567,10 @@ export default {
       }
     },
     insertElement(element) {
-      const { position } = element.attributes;
+      const { position } = element;
       this.elements = this.elements.map((s) => {
-        if (s.attributes.position >= position) {
-          s.attributes.position += 1;
+        if (s.position >= position) {
+          s.position += 1;
         }
         return s;
       });
@@ -591,8 +587,9 @@ export default {
       tableDimensions ||= [5, 8];
 
       $.post(this.urls[`create_${elementType}_url`], { tableDimensions, plateTemplate, name }, (result) => {
-        result.data.isNew = true;
-        this.elements.push(result.data);
+        const element = result.data.attributes;
+        element.isNew = true;
+        this.elements.push(element);
 
         if (this.isCollapsed) {
           this.$refs.toggleElement.click();
@@ -620,7 +617,7 @@ export default {
       this.customWellPlate = false;
     },
     showArchiveModal() {
-      if (this.elements.some(e => e.attributes.orderable_type === 'Table')) {
+      if (this.elements.some(e => e.type === 'Table')) {
         this.confirmingArchive = true;
       } else {
         this.archiveResult();
@@ -652,8 +649,8 @@ export default {
     moveElement(position, target_id) {
       this.elements.splice(position, 1);
       this.elements.map((e) => {
-        if (e.attributes.position >= position) {
-          e.attributes.position -= 1;
+        if (e.position >= position) {
+          e.position -= 1;
         }
         return e;
       });

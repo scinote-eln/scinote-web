@@ -148,10 +148,7 @@ export default {
             result.relationships.assets.data.forEach((asset) => {
               result.attachments.push(response.data.included.find((a) => a.id === asset.id && a.type === 'assets'));
             });
-            result.elements = [];
-            result.relationships.result_orderable_elements.data.forEach((element) => {
-              result.elements.push(response.data.included.find((e) => e.id === element.id && e.type === 'result_orderable_elements'));
-            });
+            result.elements = result.attributes.elements || [];
           });
           this.sort = response.data.meta.sort;
           this.nextPageUrl = response.data.links.next;
@@ -196,10 +193,7 @@ export default {
           resultData.data.relationships.assets.data.forEach((asset) => {
             resultData.data.attachments.push(resultData.included.find((a) => a.id === asset.id && a.type === 'assets'));
           });
-          resultData.data.elements = [];
-          resultData.data.relationships.result_orderable_elements.data.forEach((element) => {
-            resultData.data.elements.push(resultData.included.find((e) => e.id === element.id && e.type === 'result_orderable_elements'));
-          });
+          resultData.data.elements = resultData.data.attributes.elements || [];
           resultData.data._updateKey = Date.now();
           this.results.splice(resultIndex, 1, resultData.data);
         }

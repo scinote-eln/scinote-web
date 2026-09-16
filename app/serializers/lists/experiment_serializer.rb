@@ -10,7 +10,7 @@ module Lists
 
     attributes :name, :code, :created_at, :updated_at, :workflow_img, :description, :read_only_description, :completed_tasks,
                :total_tasks, :archived_on, :urls, :sa_description, :default_public_user_role_id, :team, :permissions,
-               :top_level_assignable, :hidden, :archived, :project_id, :due_date_cell, :start_date_cell, :status_cell, :favorite
+               :top_level_assignable, :hidden, :archived, :project_id, :due_date_cell, :start_date_cell, :status_cell, :favorite, :analytical_report
 
     def created_at
       I18n.l(object.created_at, format: :full_date)
@@ -80,7 +80,8 @@ module Lists
         favorite: favorite_experiment_url(object),
         unfavorite: unfavorite_experiment_url(object),
         user_roles: user_roles_access_permissions_experiment_path(object),
-        user_group_members: users_users_settings_team_user_groups_path(team_id: object.team.id)
+        user_group_members: users_users_settings_team_user_groups_path(team_id: object.team.id),
+        reports: experiment_experiment_reports_path(object)
       }
 
       urls_list[:update_access] = access_permissions_experiment_path(object) if can_manage_experiment_users?(object)
@@ -122,6 +123,14 @@ module Lists
     def permissions
       {
         manage: can_manage_experiment?(object)
+      }
+    end
+
+    def analytical_report
+      analytical_report = object.last_analytical_report
+      {
+        id: analytical_report&.id,
+        name: analytical_report&.name
       }
     end
   end

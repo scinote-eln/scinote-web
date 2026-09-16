@@ -22,7 +22,7 @@ class ResultBaseController < ApplicationController
         @results = @results.includes(:assets, result_orderable_elements: :orderable).page(params.dig(:page, :number) || 1)
         render json: @results,
                each_serializer: result_serializer,
-               include: %i(result_orderable_elements assets),
+               include: %i(assets),
                user: current_user,
                view_mode: view_mode,
                meta: { sort: @sort_preference }
@@ -42,7 +42,7 @@ class ResultBaseController < ApplicationController
 
     render json: @result,
            serializer: result_serializer,
-           include: %i(result_orderable_elements assets),
+           include: %i(assets),
            user: current_user
   end
 
@@ -55,7 +55,7 @@ class ResultBaseController < ApplicationController
     end
     render json: @result,
            serializer: result_serializer,
-           include: %i(result_orderable_elements assets),
+           include: %i(assets),
            user: current_user
   end
 
@@ -65,9 +65,17 @@ class ResultBaseController < ApplicationController
                else
                  @result.active_elements_ordered
                end
-    render json: elements,
-           each_serializer: ResultOrderableElementSerializer,
-           user: current_user
+
+    serialized_elements = elements.map do |element|
+      case element
+      when Table
+        ResultTableSerializer.new(element, scope: { user: current_user }).as_json
+      when ResultText
+        ResultTextSerializer.new(element, scope: { user: current_user }).as_json
+      end
+    end
+
+    render json: { data: serialized_elements }
   end
 
   def upload_attachment
@@ -131,7 +139,7 @@ class ResultBaseController < ApplicationController
       log_activity(:"#{model_parameter}_duplicated", { "#{model_parameter}": @result })
       render json: new_result,
              serializer: result_serializer,
-             include: %i(result_orderable_elements assets),
+             include: %i(assets),
              user: current_user
     end
   end

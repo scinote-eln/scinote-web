@@ -27,7 +27,7 @@ module ResultElements
         log_result_activity(:text_added, { text_name: result_text.name })
       end
 
-      render_result_orderable_element(result_text)
+      render json: result_text, serializer: ResultTextSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid => e
       logger.error "Failed to create ResultText: #{e.message}"
       head :unprocessable_entity
@@ -88,7 +88,7 @@ module ResultElements
         end
         new_result_text = @result_text.duplicate(@result, position + 1)
         log_result_activity(:text_duplicated, { text_name: new_result_text.name })
-        render_result_orderable_element(new_result_text)
+        render json: new_result_text, serializer: ResultTextSerializer, user: current_user
       end
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity

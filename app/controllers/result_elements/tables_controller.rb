@@ -43,7 +43,7 @@ module ResultElements
         log_result_activity(:table_added, { table_name: result_table.table.name })
       end
 
-      render_result_orderable_element(result_table.table)
+      render json: result_table.table, serializer: ResultTableSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -117,7 +117,7 @@ module ResultElements
         @table.name += ' (1)'
         new_table = @table.duplicate(@result, current_user, position + 1)
         log_result_activity(:table_duplicated, { table_name: new_table.name })
-        render_result_orderable_element(new_table.result_table.table)
+        render json: new_table.result_table.table, serializer: ResultTableSerializer, user: current_user
       end
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error(e.message)

@@ -437,6 +437,7 @@ en:
       activities: "Activity"
       assigned_items: "Assigned items"
       archive: "Archive"
+      analytical_reports: "Analytical report"
 
   smart_annotations:
     private:
@@ -1228,6 +1229,7 @@ en:
       add_date: "Add date"
       add_datetime: "Add date & time"
       not_valid_range: "Range is not valid"
+      not_valid_future_date: "Future dates not allowed"
       no_selection: "No options selected"
       mark_as_completed: "Mark as completed"
     index:
@@ -1288,6 +1290,9 @@ en:
           min_placeholder: 'Add min. value'
           max_placeholder: 'Add max. value'
           message_placeholder: 'Add a custom warning message'
+        future_dates:
+          title: "Future dates not allowed"
+          description: "Turning this setting on will not allow users to select dates in the future"
       blocks:
         TextField: 'Text'
         NumberField: 'Number'
@@ -1658,12 +1663,12 @@ en:
         unlink_message: "This will stop tracking changes of protocol templates. We can’t link it back once you unlink it."
         unlink_btn_text: "Yes, unlink it"
         revert_title: "Revert protocol on task"
-        revert_message_html: "Choose how to <strong>revert</strong> changes you made to this task:"
+        revert_message_html: "Clicking the Revert button will overwrite existing task content with the current protocol template version: Protocol steps, Items, and Results will replace any existing ones on Task."
         revert_option_merge_html: "<strong>Keep existing task content</strong> and append selected template content (Template will get unlinked; current protocol name and description stay unchanged)."
         revert_option_replace_html: "<strong>Overwrite existing task content</strong> with the current protocol template version: Protocol steps, Items, and Results will replace any existing ones on Task."
-        revert_btn_text: "Update"
+        revert_btn_text: "Revert"
         update_self_title: "Update protocol on task"
-        update_self_message_html: "Choose how to <strong>update</strong> this task with the latest protocol template version:"
+        update_self_message_html: "Clicking the Update button will overwrite existing task content with the current protocol template version: Protocol steps, Items, and Results will replace any existing ones on Task."
         update_self_option_merge_html: "<strong>Keep existing task content</strong> and append the new version as additional content (Template will get unlinked; current protocol name and description stay unchanged)."
         update_self_option_replace_html: "<strong>Overwrite existing task content</strong> with the latest protocol template version: Protocol steps, Items, and Results will replace any existing ones on Task."
         update_self_btn_text: "Update"
@@ -1699,10 +1704,11 @@ en:
         confirm_modal:
           description: "This task already contains %{steps_count} steps, %{results_count} results and %{rows_count} assigned items."
           load_description: "Choose how to load the selected protocol template:"
-          option_merge_html: "<strong>Keep existing task content</strong> and append selected template content (Template will get unlinked; current protocol name and description stay unchanged)."
+          option_merge_html: "<strong>Keep existing task content</strong> and append the new version as additional content. <strong>Warning</strong>: Template will get unlinked; current protocol name and description stay unchanged; if the template you are loading contains tables with references, we suggest using “Overwrite existing task content”, as tables sheet names will be renamed, which may result in cross-references in newly loaded tables not working properly."
           option_replace_html: "<strong>Overwrite existing task content</strong> with the template: Protocol steps, Items, and Results will replace any existing ones on Task."
           confirmation_description_html: "<strong>This action cannot be undone. Are you sure you want to continue?</strong>"
           load: "Load template"
+          load_message: "Clicking the Load template button will overwrite existing task content with the current protocol template version: Protocol steps, Items, and Results will replace any existing ones on Task."
       copy_to_repository_modal:
         title: "Save to protocol templates"
         name_label: "Templates protocol name"
@@ -1976,6 +1982,48 @@ en:
     status_error:
       general: "Status transition failed"
       repository_snapshot: "Snapshot failed in %{repository} inventory"
+    reports:
+      no_reports: "No reports were generated yet."
+      generated_title: "Generated reports"
+      generate_button: "Generate report"
+      generating: "Generating report"
+      cretated: "Created: %{date}"
+      empty_page: "This page is intentionally blank."
+      delete:
+        title: "Delete report %{name}"
+        description_html: "You are trying to delete a report.<br><br>This action cannot be undone."
+      wizard:
+        actions:
+          cancel: 'Cancel'
+          next: 'Next step'
+        title: "How to"
+        description: "Follow these steps to define report attachments."
+        first_step:
+          title: "Step 1: Select files for your report attachment"
+          label: "Step 1"
+          description:  "Select files you want to include into your report as attachment and define their order."
+          no_assets: "Task contains no PDF attachments."
+          asset_from_result: "Result: %{name}"
+          asset_from_step: "Step: %{name}"
+        second_step:
+          title: "Step 2: Add attachment information"
+          label: "Step 2"
+          description: "Add additional information such as  header and footer text for report attachment."
+          form: 
+            header:
+              label: "Header"
+              placeholder: "Maximum 3 rows, 140 characters"
+              error_rows: "Maximum 3 rows allowed"
+              error_size: "Header is too long (maximum number is 140 characters)"
+            footer:
+              label: "Footer"
+              placeholder: "1 row, 80 characters"
+              error_size: "Footer is too long (maximum number is 80 characters)"
+            numarization_checkbox: "Add numerization after footer text"
+            blank_page_checkbox: "Add a blank page after attachments"
+        third_step:
+          description: "Header and footer will appear on each page of the attachment section. If left empty, no header and footer will be added."
+
   experiments:
     id: "ID"
     experiment_id: "Experiment ID"
@@ -2097,6 +2145,7 @@ en:
         no_due_date: 'not set'
         no_start_date_placeholder: "+ Add starting date"
         favorite: 'Favorites'
+        report_html: 'Analytical reports'
         status:
           not_started: 'Not started'
           in_progress: 'In progress'
@@ -2299,6 +2348,20 @@ en:
       no_archived_modules: "This experiment has no archived tasks."
       no_active_modules: "This experiment has no active tasks."
       no_active_modules_archived_branch: "This experiment is archived and can’t have active tasks."
+    reports:
+      generate_button: "Generate report"
+      generate_modal:
+        title: "Generate report"
+        description: "Combine the Task reports into a single document"
+        report_name: "Report name"
+        report_name_placeholder: "Add report name"
+        task_label: "Tasks included"
+        no_tasks: "No tasks with reports available"
+      reports_modal:
+        title: "Analytical reports"
+        date: "%{date}"
+        created_by: "%{created_by}"
+        file_size: "Size: %{size}"
 
   shareable_links:
     modal:
@@ -4114,6 +4177,7 @@ en:
       protocol: "Protocol"
       results: "Results [%{count}]"
       repository_rows: "Items [%{count}]"
+      protocol_report_templates: "Analytical report [%{count}]"
       draft_with_from_version: 'Draft (from Version %{nr})'
       protocol_description: 'Protocol description'
       lock_description: "Lock title and description"
@@ -4287,7 +4351,47 @@ en:
         title: "Remove assigned items"
         description_html: "You are about to remove %{count} item(s) from this protocol template.<br></br>You can always add items back to this template."
         confirm: "Remove"
-
+    report_template:
+      title: "Report templates"
+      new_template: "New template"
+      data_inputs:
+        title: "Data inputs"
+        banner: "Copy & paste these codes into your .DOCX file where you want to populate fields."
+        codes:
+          task_name: "Task name"
+          task_due_date: "Due date"
+          task_tags: "Tags"
+          task_protocol: "All protocol steps"
+          task_name_code: "{{TASKNAME}}"
+          task_due_date_code: "{{TASKDUEDATE}}"
+          task_tags_code: "{{TASKTAGS}}"
+          task_protocol_code: "{{PROTOCOL}}"
+          tag_content_code: "{{%{content_type}_%{id}}}"
+          tag_content: "%{content_type}_%{id}"
+          tag_form_field_code: "{{FORM_%{form_id}_FIELD_%{id}}}"
+          tag_form_field: "FORM_%{form_id}_FIELD_%{id}"
+          type:
+            step: "STEP"
+            result: "RESULT"
+            step_text: "STEP_TEXT"
+            result_text: "RESULT_TEXT"
+            step_table: "STEP_TABLE"
+            result_table: "RESULT_TABLE"
+            checklist: "CHECKLIST"
+            form_response: "FORM"
+      create_modal:
+        title: "Create report template"
+        description: "Upload your .DOCX file with all the fields mapped"
+        name_label: "Template name"
+        name_placeholder: "Add a template name"
+        import_label: "File import"
+        drag_and_drop_supporting_text: ".docx or .odt file"
+        create_button: "Create template"
+        errors:
+          max_length: "Template name is too long (maximum is %{max_length} characters)"
+      delete:
+        title: "Delete report template %{name}"
+        description_html: "You are trying to delete a report template.<br><br>This action cannot be undone."
     steps:
       label: "Step %{position} - %{name}"
       placeholder: 'Step name'
@@ -4498,7 +4602,7 @@ en:
           dimension_label: 'Dimensions (rows x columns)'
         add_protocol_steps:
           title: "Add steps from another template"
-          description: "Select one or more steps from a different protocol template to add them as new steps at the end of your current protocol."
+          description_html: "<p>Select one or more steps from a different protocol template to add them as new steps at the end of your current protocol.</p><p><strong>Warning</strong>: If the steps you are loading contain tables with references, the references may not work properly as the tables' sheet names will be renamed.</p>"
           confirm: "Add steps"
           protocol_label: "Protocol"
           protocol_placeholder: "Select protocol template"
@@ -5183,6 +5287,7 @@ en:
     archived: "Archived"
     archive_error: "There was a problem trying to archive this element."
     invalid_params: "Invalid params"
+    preview: "Preview"
     sort:
       title: "Sorting"
       new_html: "Started last"

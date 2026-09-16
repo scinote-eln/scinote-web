@@ -7,23 +7,34 @@ class StepSerializer < ActiveModel::Serializer
   include CommentHelper
   include InputSanitizeHelper
 
-  has_many :step_orderable_elements, serializer: StepOrderableElementSerializer
   has_many :assets, serializer: AssetSerializer
 
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode,
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
              :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
              :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id, :skipped_at,
-             :archived_by, :archived_on, :archived, :locked, :attachments_locked, :adding_items_allowed, :permissions
+             :archived_by, :archived_on, :archived, :locked, :attachments_locked, :adding_items_allowed, :permissions, :elements
 
-  def step_orderable_elements
-    return object.all_elements if object.archived?
+  def elements
+    elements = if object.archived?
+                 object.all_elements
+               elsif @instance_options[:view_mode] == 'archived'
+                 object.archived_elements
+               else
+                 object.active_elements
+               end
 
-    view_mode = @instance_options[:view_mode]
-    if view_mode == 'archived'
-      object.archived_elements
-    else
-      object.active_elements
+    elements.map do |element|
+      case element
+      when Checklist
+        ChecklistSerializer.new(element, scope: { user: @instance_options[:user] }, include: :checklist_item).as_json
+      when Table
+        TableSerializer.new(element, scope: { user: @instance_options[:user] }).as_json
+      when StepText
+        StepTextSerializer.new(element, scope: { user: @instance_options[:user] }).as_json
+      when FormResponse
+        StepFormResponseSerializer.new(element, scope: { user: @instance_options[:user] }).as_json
+      end
     end
   end
 

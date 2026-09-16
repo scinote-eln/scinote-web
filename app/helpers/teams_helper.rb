@@ -19,6 +19,7 @@ module TeamsHelper
   end
 
   def switch_team_with_param
-    current_team_switch(current_user.teams.find_by(id: params[:team])) if params[:team]
+    team_id = params[:team] || params[:team_id]
+    current_team_switch(current_user.teams.find_by(id: team_id)) if team_id.present?
   end
 end

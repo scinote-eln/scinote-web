@@ -28,7 +28,7 @@ if User.count.zero?
     admin_email,
     admin_password,
     true,
-    Constants::DEFAULT_PRIVATE_TEAM_NAME,
+    Constants::DEFAULT_PRIVATE_WORKSPACE_NAME,
     [],
     Extends::INITIAL_USER_OPTIONS
   )

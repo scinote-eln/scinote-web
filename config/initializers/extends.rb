@@ -260,7 +260,7 @@ class Extends
   ACTIVITY_MESSAGE_ITEMS_TYPES =
     ACTIVITY_SUBJECT_TYPES + %w(
       User Tag RepositoryColumn RepositoryRow Step Result Asset TinyMceAsset
-      Repository MyModuleStatus RepositorySnapshot UserGroup ResultTemplate
+      Repository MyModuleStatus RepositorySnapshot UserGroup ResultTemplate ReportTemplate AnalyticalReport
     ).freeze
 
   ACTIVITY_TYPES = {
@@ -747,7 +747,13 @@ class Extends
     lock_result_template_files: 516,
     unlock_result_template_files: 517,
     lock_protocol_step_files: 518,
-    unlock_protocol_step_files: 519
+    unlock_protocol_step_files: 519,
+    report_template_added: 520,
+    report_template_deleted: 521,
+    task_analytical_report_generated: 522,
+    task_analytical_report_deleted: 523,
+    experiment_analytical_report_generated: 524,
+    experiment_analytical_report_deleted: 525
   }
 
   ACTIVITY_GROUPS = {
@@ -766,13 +772,15 @@ class Extends
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
                           *237..240, *253..256, *279..283, 300, 304, 307, 330, *353..355, 360, *387..389, 409, *416..450,
-                          *498..519],
+                          *498..519, 520, 521],
     team: [92, 94, 93, 97, 104, 244, 245, *379..383, *412..415, *487..492],
     label_templates: [*216..219],
     storage_locations: [*309..315, 361],
     container_storage_locations: [*316..322, 326, 362],
     storage_location_repository_rows: [*323..325],
-    forms: [331, 332, 333, 334, 335, 336, *337..346, 356, 357, 358, *384..386]
+    forms: [331, 332, 333, 334, 335, 336, *337..346, 356, 357, 358, *384..386],
+    task_analytical_report: [522, 523],
+    experiment_analytical_report: [524, 525]
   }
 
   TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository Form).freeze
@@ -924,6 +932,8 @@ class Extends
     my_modules/archive
     teams/data_integrity
     equipment_bookings/index
+    protocol_report_templates/index
+    my_module_reports/index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
@@ -1026,6 +1036,13 @@ class Extends
       }
     }
   }
+
+  DEFAULT_REPORT_TEMPLATE_PLACEHOLDERS = [
+    {
+      label: 'General task data',
+      inputs: %w(task_name task_due_date task_tags task_protocol)
+    }
+  ]
 end
 
 # rubocop:enable Style/MutableConstant
