@@ -92,7 +92,7 @@ class ProtocolReportTemplatesController < ApplicationController
     return render plain: '', status: :not_acceptable unless previewable_document?(@protocol_report_template.odt_template_file.blob)
     return render plain: '', status: :accepted if @protocol_report_template.odt_template_file_preview.blank?
 
-    redirect_to @protocol_report_template.odt_template_file_preview.url
+    redirect_to rails_blob_path(@protocol_report_template.odt_template_file_preview)
   end
 
   private
