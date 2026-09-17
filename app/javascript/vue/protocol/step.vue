@@ -190,12 +190,9 @@
     <div class="collapse in" :id="'stepBody' + step.id">
       <div class="step-elements">
         <div v-for="(element, index) in orderedElements" :key="element.id" class="relative">
-          <div v-if="editingFlagsFor(element.id).length" class="absolute -bottom-4 left-0 z-10 flex gap-1">
-            <EditingTag v-for="flag in editingFlagsFor(element.id)" :key="flag.id" :user="flag.attributes.user" />
-          </div>
           <component
             :ref="'stepComponent'"
-            :is="elements[index].attributes.orderable_type"
+            :is="elements[index].type"
             class="step-element"
             :element.sync="elements[index]"
             :inRepository="inRepository"
@@ -204,6 +201,7 @@
             :isNew="element.isNew"
             :dataE2e="`protocol-step${step.id}`"
             e2eClass="protocol-step"
+            :editingFlags="editingFlagsFor(element.id)"
             @component:adding-content="($event) => addingContent = $event"
             @component:delete="removeElement"
             @component:archive="removeElement"
@@ -813,6 +811,7 @@
         tableDimensions ||= [5, 8];
         $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate, name: name, form_id: formId }, (result) => {
           const element = result.data.attributes;
+          element.id = result.data.id;
           element.isNew = true;
           this.elements.push(element)
 

@@ -21,7 +21,18 @@
             @editingEnabled="enableNameEdit"
             @editingDisabled="disableNameEdit"
             @update="updateName"
-          />
+          >
+            <template v-if="editingFlags.length" #suffix>
+              <div class="flex items-center shrink-0 ml-2">
+                <EditingTag
+                  v-for="(flag, index) in editingFlags"
+                  :key="flag.id"
+                  :user="flag.attributes.user"
+                  :class="{ '-mr-1': index !== editingFlags.length - 1 }"
+                />
+              </div>
+            </template>
+          </InlineEdit>
         </div>
         <template v-if="this.element.archived">
           <div class="sci-tag bg-sn-alert-brittlebush pointer-events-none text-sn-black">
@@ -89,6 +100,7 @@
           :lastUpdated="element.updated_at"
           :assignableMyModuleId="assignableMyModuleId"
           :characterLimit="1000000"
+          :editingFlags="editingFlags"
           @update="updateText"
           @editingDisabled="disableEditMode"
           @editingEnabled="enableEditMode"
@@ -126,11 +138,12 @@ import MenuDropdown from '../menu_dropdown.vue';
 import axios from '../../../packs/custom_axios';
 import tooltipMixin from '../../mixins/tooltipMixin.js';
 import LockedTag from '../snippets/locked_tag.vue';
+import EditingTag from '../snippets/editing_tag.vue';
 
 export default {
   name: 'TextContent',
   components: {
-    deleteElementModal, Tinymce, moveElementModal, InlineEdit, MenuDropdown, RestoreModal, LockedTag
+    deleteElementModal, Tinymce, moveElementModal, InlineEdit, MenuDropdown, RestoreModal, LockedTag, EditingTag
   },
   mixins: [DeleteMixin, DuplicateMixin, MoveMixin, ArchiveMixin, tooltipMixin],
   props: {
@@ -160,6 +173,10 @@ export default {
     e2eClass: {
       type: String,
       default: ''
+    },
+    editingFlags: {
+      type: Array,
+      default: () => []
     }
   },
   data() {

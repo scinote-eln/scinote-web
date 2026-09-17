@@ -221,6 +221,7 @@
             :isNew="element.isNew"
             :dataE2e="`task-result${result.id}`"
             e2eClass="task-result"
+            :editingFlags="editingFlagsFor(element.id)"
             @component:adding-content="($event) => addingContent = $event"
             @component:delete="removeElement"
             @component:archive="removeElement"
@@ -588,6 +589,7 @@ export default {
 
       $.post(this.urls[`create_${elementType}_url`], { tableDimensions, plateTemplate, name }, (result) => {
         const element = result.data.attributes;
+        element.id = result.data.id;
         element.isNew = true;
         this.elements.push(element);
 
