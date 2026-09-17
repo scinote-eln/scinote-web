@@ -24,7 +24,7 @@ module StepElements
         log_step_activity(:text_added, { text_name: step_text.name })
       end
 
-      render json: step_text, serializer: StepTextSerializer, user: current_user
+      render_element(StepTextSerializer, step_text)
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -38,7 +38,7 @@ module StepElements
         step_text_annotation(@step, @step_text, old_text)
       end
 
-      render json: @step_text, serializer: StepTextSerializer, user: current_user
+      render_element(StepTextSerializer, @step_text)
     rescue ActiveRecord::RecordInvalid
       render json: @step_text.errors, status: :unprocessable_entity
     end
@@ -62,7 +62,7 @@ module StepElements
           }
         )
 
-        render json: @step_text, serializer: StepTextSerializer, user: current_user
+        render_element(StepTextSerializer, @step_text)
       rescue ActiveRecord::RecordInvalid
         render json: @step_text.errors, status: :unprocessable_entity
       end
@@ -85,7 +85,7 @@ module StepElements
         end
         new_step_text = @step_text.duplicate(@step, position + 1)
         log_step_activity(:text_duplicated, { text_name: new_step_text.name })
-        render json: new_step_text, serializer: StepTextSerializer, user: current_user
+        render_element(StepTextSerializer, new_step_text)
       end
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity

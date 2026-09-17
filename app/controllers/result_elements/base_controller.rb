@@ -2,6 +2,8 @@
 
 module ResultElements
   class BaseController < ApplicationController
+    include RendersFlattenedElement
+
     before_action :load_result_and_parent
 
     def move_targets
