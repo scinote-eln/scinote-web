@@ -288,7 +288,7 @@ class MyModuleRepositoriesController < ApplicationController
         activity_type: :export_inventory_items_assigned_to_task,
         owner: current_user,
         subject: @my_module,
-        team: @repository.team,
+        team: @my_module.experiment.project.team,
         message_items: {
           my_module: @my_module.id,
           repository: @repository.parent_id || @repository.id
@@ -449,7 +449,7 @@ class MyModuleRepositoriesController < ApplicationController
       .call(activity_type: :task_inventory_item_stock_consumed,
             owner: current_user,
             subject: @my_module,
-            team: @repository.team,
+            team: @my_module.experiment.project.team,
             project: @my_module.project,
             message_items: {
               repository: @repository.id,
