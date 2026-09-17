@@ -34,7 +34,7 @@ describe StepElements::FormResponsesController, type: :controller do
         expect { action }.to change(FormResponse, :count).by(1)
         expect(response).to have_http_status(:success)
         response_body = JSON.parse(response.body)
-        expect(response_body.dig('data', 'attributes', 'orderable', 'form', 'id')).to eq form.id
+        expect(response_body.dig('data', 'attributes', 'form_id')).to eq form.id
       end
     end
 

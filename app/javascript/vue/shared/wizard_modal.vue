@@ -11,32 +11,32 @@
           </div>
           <div class="flex flex-col mt-4">
             <div v-for="(step, index) in config.steps" :key="step.id">
-              <div v-if="index > 0"
+              <div v-if="index > 0 && !step.disableStepLine"
                 class="ml-0.5 left-4 relative h-8 w-0 border border-r-0 border-solid"
                 :class="{
-                    '!border-sn-dark-grey': index <= activeStep,
-                    '!border-sn-sleepy-grey': index > activeStep
+                    '!border-sn-dark-grey': step.alwaysActive || index <= activeStep,
+                    '!border-sn-sleepy-grey': !step.alwaysActive && index > activeStep
                   }"
               ></div>
-              <div class="flex items-center gap-3">
-                <div class="rounded bg-white border border-sn-sleepy-grey p-1.5">
+              <div class="flex items-stretch gap-3" :class="{'mt-4': index > 0 && step.disableStepLine }">
+                <div class="rounded bg-white border border-sn-sleepy-grey p-1.5 self-start">
                   <i :class="[
                     step.icon,
                     {
-                      'text-sn-dark-grey': index <= activeStep,
-                      'text-sn-grey': index > activeStep
+                      'text-sn-dark-grey': step.alwaysActive || index <= activeStep,
+                      'text-sn-grey': !step.alwaysActive && index > activeStep
                     }
                   ]"></i>
                 </div>
-                <span
-                  class="font-bold text-xs"
+                <div class="text-xs flex flex-col justify-center gap-2"
                   :class="{
-                    'text-sn-dark-grey': index <= activeStep,
-                    'text-sn-grey': index > activeStep
+                    'text-sn-dark-grey': step.alwaysActive || index <= activeStep,
+                    'text-sn-grey': !step.alwaysActive && index > activeStep
                   }"
                 >
-                  {{ step.label }}
-                </span>
+                  <h3 v-if="step.label" class="my-0 !text-xs">{{ step.label }}</h3>
+                  <p v-if="step.description" class="m-0">{{ step.description }}</p>
+                </div>
               </div>
             </div>
           </div>

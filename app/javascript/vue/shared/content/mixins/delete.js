@@ -14,11 +14,11 @@ export default {
       this.confirmingDelete = false;
     },
     deleteElement() {
-      axios.delete(this.deleteUrl || this.element.attributes.orderable.urls.delete_url)
+      axios.delete(this.deleteUrl || this.element.urls.delete_url)
         .then((result) => {
           this.$emit(
             'component:delete',
-            this.element.id
+            { id: this.element.id, type: this.element.type }
           );
         });
     }

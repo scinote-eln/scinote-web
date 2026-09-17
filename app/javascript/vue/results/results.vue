@@ -176,10 +176,7 @@ export default {
               result.attachments.push(response.data.included.find((a) => a.id === asset.id && a.type === 'assets'));
             });
 
-            result.elements = [];
-            result.relationships.result_orderable_elements.data.forEach((element) => {
-              result.elements.push(response.data.included.find((e) => e.id === element.id && e.type === 'result_orderable_elements'));
-            });
+            result.elements = result.attributes.elements || [];
           });
           this.sort = response.data.meta.sort;
           this.nextPageUrl = response.data.links.next;

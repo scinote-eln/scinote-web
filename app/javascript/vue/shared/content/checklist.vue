@@ -1,14 +1,14 @@
 <template>
   <div class="content__checklist-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-checklist${element.id}`">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
-    <div :class="{'!bg-sn-background-brittlebush p-4': element.attributes.orderable.archived}">
+    <div :class="{'!bg-sn-background-brittlebush p-4': element.archived}">
       <div class="checklist-header flex rounded gap-2 mb-1 items-center relative w-full group/checklist-header"
-        :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
-        <div class="grow-1 text-ellipsis whitespace-nowrap my-1 font-bold" :class="{ 'grow': !element.attributes.orderable.archived }">
+        :class="{ 'editing-name': editingName, 'locked': !element.urls.update_url }">
+        <div class="grow-1 text-ellipsis whitespace-nowrap my-1 font-bold" :class="{ 'grow': !element.archived }">
           <InlineEdit
-            :class="{ 'pointer-events-none': !element.attributes.orderable.urls.update_url }"
-            :value="element.attributes.orderable.name"
-            :sa_value="element.attributes.orderable.sa_name"
+            :class="{ 'pointer-events-none': !element.urls.update_url }"
+            :value="element.name"
+            :sa_value="element.sa_name"
             :characterLimit="10000"
             :placeholder="i18n.t('protocols.steps.checklist.placeholder')"
             :allowBlank="false"
@@ -21,22 +21,22 @@
             @update="updateName"
           />
         </div>
-        <template v-if="element.attributes.orderable.archived">
+        <template v-if="element.archived">
           <div class="sci-tag bg-sn-alert-brittlebush pointer-events-none text-sn-black">
             {{ i18n.t('my_modules.results.archived') }}
             <span class="sn-icon sn-icon-archived"></span>
           </div>
           <span class="text-xs ">
             {{ i18n.t('protocols.steps.timestamp_archived', {
-              date: element.attributes.orderable.archived_on,
-              user: element.attributes.orderable.archived_by
+              date: element.archived_on,
+              user: element.archived_by
             }) }}
           </span>
         </template>
-        <LockedTag v-if="element.attributes.orderable.locked" />
+        <LockedTag v-if="element.locked" />
         <div class="ml-auto flex items gap-4">
           <button
-            v-if="this.element.attributes.orderable.urls.restore_url"
+            v-if="this.element.urls.restore_url"
             :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-checklist-options-restore`]"
             @click="confirmingRestore = true"
             :title="i18n.t('general.restore')"
@@ -45,7 +45,7 @@
             <i class="sn-icon sn-icon-restore"></i>
           </button>
           <button
-            v-if="this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url"
+            v-if="this.element.archived && this.element.urls.delete_url"
             :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-checklist-options-delete`]"
             @click="showDeleteModal"
             :title="i18n.t('general.delete')"
@@ -54,7 +54,7 @@
             <i class="sn-icon sn-icon-delete"></i>
           </button>
           <MenuDropdown 
-            v-if="inRepository || !this.element.attributes.orderable.locked"
+            v-if="inRepository || !this.element.locked"
             class="ml-auto"
             :listItems="this.actionMenu"
             :btnClasses="'btn btn-light icon-btn  btn-sm'"
@@ -69,7 +69,7 @@
           ></MenuDropdown>
         </div>
       </div>
-      <div v-if="element.attributes.orderable.urls.create_item_url || checklistItems.length > 0" :class="{ 'pointer-events-none': locked }">
+      <div v-if="element.urls.create_item_url || checklistItems.length > 0" :class="{ 'pointer-events-none': locked }">
         <Draggable
           v-model="checklistItems"
           :ghostClass="'checklist-item-ghost'"
@@ -78,7 +78,7 @@
           :forceFallback="true"
           :handle="'.element-grip'"
           item-key="id"
-          :disabled="editingItem || checklistItems.length < 2 || !element.attributes.orderable.urls.reorder_url"
+          :disabled="editingItem || checklistItems.length < 2 || !element.urls.reorder_url"
           @start="startReorder"
           @end="endReorder"
         >
@@ -87,7 +87,7 @@
               :checklistItem="element"
               :locked="locked"
               :reordering="reordering"
-              :reorderChecklistItemUrl="this.element.attributes.orderable.urls.reorder_url"
+              :reorderChecklistItemUrl="this.element.urls.reorder_url"
               :inRepository="inRepository"
               :draggable="checklistItems.length > 1"
               :data-e2e="`${dataE2e}-checklistItem${element.id}`"
@@ -103,7 +103,7 @@
             />
           </template>
         </Draggable>
-        <div v-if="element.attributes.orderable.urls.create_item_url && !addingNewItem"
+        <div v-if="element.urls.create_item_url && !addingNewItem"
             class="flex items-center gap-1 text-sn-blue cursor-pointer mb-2 mt-1 "
             tabindex="0"
             :data-e2e="`e2e-BT-${dataE2e}-checklist${element.id}-addNew`"
@@ -119,13 +119,13 @@
     </div>
     <deleteElementModal v-if="confirmingDelete" :inRepository="inRepository" @confirm="deleteElement" @close="closeDeleteModal"/>
     <RestoreModal v-if="confirmingRestore"
-                  :parentType="element.attributes.orderable.parent_type"
+                  :parentType="element.parent_type"
                   :element="'checklist'"
                   @confirm="restoreElement"
                   @close="confirmingRestore = false"/>
     <moveElementModal v-if="movingElement"
-                      :parent_type="element.attributes.orderable.parent_type"
-                      :targets_url="element.attributes.orderable.urls.move_targets_url"
+                      :parent_type="element.parent_type"
+                      :targets_url="element.urls.move_targets_url"
                       @confirm="moveElement($event)" @cancel="closeMoveModal"/>
   </div>
 </template>
@@ -197,7 +197,7 @@ export default {
     if (this.isNew) {
       this.addItem();
     } else {
-      this.checklistItems = this.element.attributes.orderable.checklist_items.map((item) => ({
+      this.checklistItems = this.element.checklist_items.map((item) => ({
         id: item.id,
         attributes: {
           ...item,
@@ -212,14 +212,14 @@ export default {
   },
   computed: {
     locked() {
-      return this.editingName || !this.element.attributes.orderable.urls.update_url || this.element.attributes.orderable.archived;
+      return this.editingName || !this.element.urls.update_url || this.element.archived;
     },
     addingNewItem() {
       return this.checklistItems.find((item) => item.attributes.isNew);
     },
     actionMenu() {
       const menu = [];
-      if (this.element.attributes.orderable.urls.update_url) {
+      if (this.element.urls.update_url) {
         menu.push({
           text: I18n.t('general.edit'),
           emit: 'edit',
@@ -227,7 +227,7 @@ export default {
           e2e_class: `e2e-BT-${this.e2eClass}-checklist-options-edit`
         });
       }
-      if (this.element.attributes.orderable.urls.duplicate_url) {
+      if (this.element.urls.duplicate_url) {
         menu.push({
           text: I18n.t('general.duplicate'),
           emit: 'duplicate',
@@ -235,7 +235,7 @@ export default {
           e2e_class: `e2e-BT-${this.e2eClass}-checklist-options-duplicate`
         });
       }
-      if (this.element.attributes.orderable.urls.move_targets_url) {
+      if (this.element.urls.move_targets_url) {
         menu.push({
           text: I18n.t('general.move'),
           emit: 'move',
@@ -243,7 +243,7 @@ export default {
           e2e_class: `e2e-BT-${this.e2eClass}-checklist-options-move`
         });
       }
-      if (!this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url) {
+      if (!this.element.archived && this.element.urls.delete_url) {
         menu.push({
           text: I18n.t('general.delete'),
           emit: 'delete',
@@ -252,7 +252,7 @@ export default {
         });
       }
 
-      if (this.element.attributes.orderable.urls.archive_url) {
+      if (this.element.urls.archive_url) {
         menu.push({
           text: I18n.t('general.archive'),
           emit: 'archive',
@@ -271,7 +271,7 @@ export default {
       this.$emit('update', this.element, true);
     },
     loadChecklistItems(insertAfter) {
-      axios.get(this.element.attributes.orderable.urls.checklist_items_url).then((response) => {
+      axios.get(this.element.urls.checklist_items_url).then((response) => {
         this.checklistItems = response.data.data;
         if (insertAfter) {
           this.addItem(insertAfter);
@@ -279,7 +279,7 @@ export default {
       });
     },
     updateName(name) {
-      this.element.attributes.orderable.name = name;
+      this.element.name = name;
       this.editingName = false;
       this.update();
     },
@@ -289,7 +289,7 @@ export default {
       if (position > 0) {
         afterId = this.checklistItems[position - 1].id;
       }
-      axios.post(this.element.attributes.orderable.urls.create_item_url, {
+      axios.post(this.element.urls.create_item_url, {
         attributes: item.attributes,
         after_id: afterId
       }).then((result) => {
@@ -360,7 +360,7 @@ export default {
       }
     },
     saveItemOrder(id, afterId) {
-      axios.post(this.element.attributes.orderable.urls.reorder_url, {
+      axios.post(this.element.urls.reorder_url, {
         id,
         after_id: afterId
       }).then(() => {

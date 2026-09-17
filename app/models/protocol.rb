@@ -143,6 +143,7 @@ class Protocol < ApplicationRecord
   has_many :repository_rows, through: :protocol_repository_rows, dependent: :destroy
   has_many :steps, inverse_of: :protocol, dependent: :destroy
   has_many :original_steps, class_name: 'Step', foreign_key: :original_protocol_id, inverse_of: :original_protocol, dependent: :nullify
+  has_many :report_templates, as: :subject, dependent: :destroy
 
   def self.search(user,
                   include_archived,
@@ -461,6 +462,17 @@ class Protocol < ApplicationRecord
         dest_scope.create!(attrs)
       end
     end
+
+    src.report_templates.each do |report_template|
+      new_report_template = report_template.dup
+      new_report_template.subject = dest
+
+      ProtocolReportTemplates::TagService.new(dest).replace_tags(report_template, new_report_template, src.in_module? ? src.my_module : src, include_results: include_results)
+
+      new_report_template.save!
+      new_report_template.generate_preview!
+      ReportTemplates::ConvertOdtToDocxJob.perform_later(new_report_template.id) if report_template.docx_template_file.attached?
+    end
   end
 
   def self.clone_step(protocol_dest, current_user, step, include_file_versions, load_mode: 'replace')
@@ -628,6 +640,8 @@ class Protocol < ApplicationRecord
     ActiveRecord::Base.no_touching do
       # First, destroy step and results contents
       destroy_contents(current_user) if mode == 'replace'
+
+      report_templates.destroy_all
 
       # Now, clone source's step and result contents
       Protocol.clone_contents(

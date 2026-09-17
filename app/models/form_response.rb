@@ -96,6 +96,15 @@ class FormResponse < ApplicationRecord
 
       self&.step_orderable_element&.update!(orderable: new_form_response)
 
+      if parent.is_a?(Step)
+        protocol = parent.protocol
+        protocol.report_templates.each do |report_template|
+          ProtocolReportTemplates::TagService.new(protocol).replace_form_response_tags(report_template, self, new_form_response)
+          report_template.save!
+          report_template.generate_preview!
+        end
+      end
+
       new_form_response
     end
   end

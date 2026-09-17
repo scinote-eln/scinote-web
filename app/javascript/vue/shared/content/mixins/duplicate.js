@@ -6,9 +6,9 @@ export default {
   methods: {
     duplicateElement() {
       this.$emit('component:adding-content', true);
-      axios.post(this.element.attributes.orderable.urls.duplicate_url)
+      axios.post(this.element.urls.duplicate_url)
         .then((result) => {
-          this.$emit('component:insert', result.data.data);
+          this.$emit('component:insert', result.data.data.attributes);
           HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.component_duplicated'), 'success');
         })
         .catch(() => {

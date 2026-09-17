@@ -227,6 +227,42 @@ ALTER SEQUENCE public.activity_filters_id_seq OWNED BY public.activity_filters.i
 
 
 --
+-- Name: analytical_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.analytical_reports (
+    id bigint NOT NULL,
+    name character varying,
+    generating_status integer DEFAULT 0 NOT NULL,
+    reference_type character varying,
+    reference_id bigint,
+    report_template_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: analytical_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.analytical_reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: analytical_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.analytical_reports_id_seq OWNED BY public.analytical_reports.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1796,6 +1832,39 @@ CREATE SEQUENCE public.report_template_values_id_seq
 --
 
 ALTER SEQUENCE public.report_template_values_id_seq OWNED BY public.report_template_values.id;
+
+
+--
+-- Name: report_templates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.report_templates (
+    id bigint NOT NULL,
+    name character varying,
+    subject_type character varying NOT NULL,
+    subject_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: report_templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.report_templates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: report_templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.report_templates_id_seq OWNED BY public.report_templates.id;
 
 
 --
@@ -4181,6 +4250,13 @@ ALTER TABLE ONLY public.activity_filters ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: analytical_reports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.analytical_reports ALTER COLUMN id SET DEFAULT nextval('public.analytical_reports_id_seq'::regclass);
+
+
+--
 -- Name: asset_sync_tokens id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4458,6 +4534,13 @@ ALTER TABLE ONLY public.report_elements ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.report_template_values ALTER COLUMN id SET DEFAULT nextval('public.report_template_values_id_seq'::regclass);
+
+
+--
+-- Name: report_templates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.report_templates ALTER COLUMN id SET DEFAULT nextval('public.report_templates_id_seq'::regclass);
 
 
 --
@@ -4956,6 +5039,14 @@ ALTER TABLE ONLY public.activity_filters
 
 
 --
+-- Name: analytical_reports analytical_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.analytical_reports
+    ADD CONSTRAINT analytical_reports_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5281,6 +5372,14 @@ ALTER TABLE ONLY public.report_elements
 
 ALTER TABLE ONLY public.report_template_values
     ADD CONSTRAINT report_template_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: report_templates report_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.report_templates
+    ADD CONSTRAINT report_templates_pkey PRIMARY KEY (id);
 
 
 --
@@ -5928,6 +6027,27 @@ CREATE INDEX index_activities_on_team_id ON public.activities USING btree (team_
 --
 
 CREATE INDEX index_activities_on_type_of ON public.activities USING btree (type_of);
+
+
+--
+-- Name: index_analytical_reports_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_analytical_reports_on_created_by_id ON public.analytical_reports USING btree (created_by_id);
+
+
+--
+-- Name: index_analytical_reports_on_reference; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_analytical_reports_on_reference ON public.analytical_reports USING btree (reference_type, reference_id);
+
+
+--
+-- Name: index_analytical_reports_on_report_template_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_analytical_reports_on_report_template_id ON public.analytical_reports USING btree (report_template_id);
 
 
 --
@@ -7181,6 +7301,13 @@ CREATE INDEX index_report_template_values_on_report_id ON public.report_template
 --
 
 CREATE INDEX index_report_template_values_on_view_component_name ON public.report_template_values USING btree (view_component, name);
+
+
+--
+-- Name: index_report_templates_on_subject; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_report_templates_on_subject ON public.report_templates USING btree (subject_type, subject_id);
 
 
 --
@@ -8932,6 +9059,14 @@ ALTER TABLE ONLY public.my_modules
 
 
 --
+-- Name: analytical_reports fk_rails_0dc66591b3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.analytical_reports
+    ADD CONSTRAINT fk_rails_0dc66591b3 FOREIGN KEY (report_template_id) REFERENCES public.report_templates(id);
+
+
+--
 -- Name: steps fk_rails_0f28e70afa; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9193,6 +9328,14 @@ ALTER TABLE ONLY public.repository_text_values
 
 ALTER TABLE ONLY public.asset_text_data
     ADD CONSTRAINT fk_rails_2e588e7391 FOREIGN KEY (asset_id) REFERENCES public.assets(id);
+
+
+--
+-- Name: analytical_reports fk_rails_2fe0f59b48; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.analytical_reports
+    ADD CONSTRAINT fk_rails_2fe0f59b48 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -10866,10 +11009,13 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260907114439'),
 ('20260828093032'),
+('20260729082431'),
 ('20260715121739'),
 ('20260714101739'),
 ('20260708142245'),
+('20260707140106'),
 ('20260616085134'),
 ('20260615135346'),
 ('20260528135903'),

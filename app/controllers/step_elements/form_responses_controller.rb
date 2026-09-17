@@ -25,7 +25,7 @@ module StepElements
         log_step_form_activity(:form_added, { form: @form.id })
       end
 
-      render_step_orderable_element(@form_response)
+      render json: @form_response, serializer: StepFormResponseSerializer, user: current_user
     end
 
     def submit
@@ -34,7 +34,7 @@ module StepElements
       @form_response.submit!(current_user)
       log_step_form_activity(:form_field_submitted, { form: @form_response.form.id })
 
-      render_step_orderable_element(@form_response)
+      render json: @form_response, serializer: StepFormResponseSerializer, user: current_user
     end
 
     def reset
@@ -43,7 +43,7 @@ module StepElements
       new_form_response = @form_response.reset!(current_user)
       log_step_form_activity(:form_field_reopened, { form: @form_response.form.id })
 
-      render_step_orderable_element(new_form_response)
+      render json: new_form_response, serializer: StepFormResponseSerializer, user: current_user
     end
 
     def move
@@ -61,7 +61,7 @@ module StepElements
                                  step_destination: target.id
                                })
 
-        render_step_orderable_element(@form_response)
+        render json: @form_response, serializer: StepFormResponseSerializer, user: current_user
       end
     end
 

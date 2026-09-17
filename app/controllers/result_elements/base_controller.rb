@@ -113,10 +113,6 @@ module ResultElements
       end
     end
 
-    def render_result_orderable_element(orderable)
-      render json: orderable, serializer: ResultOrderableElementSerializer, user: current_user
-    end
-
     def log_result_activity(element_type_of, message_items)
       model_key = @result.class.model_name.param_key
       key = @parent.is_a?(MyModule) ? :my_module : :protocol

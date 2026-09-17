@@ -66,7 +66,7 @@ class ResultsController < ResultBaseController
       if @result.has_archived_element? || @result.assets.archived.any?
         render json: @result,
                serializer: ResultSerializer,
-               include: %i(result_orderable_elements assets),
+               include: %i(assets),
                user: current_user,
                view_mode: 'archived'
       else

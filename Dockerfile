@@ -16,6 +16,7 @@ RUN apt-get update -qq && \
   postgresql-client-18 \
   default-jre-headless \
   poppler-utils \
+  qpdf \
   librsvg2-2 \
   libvips42 \
   graphviz  \

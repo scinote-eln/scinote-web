@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FormNumberFieldValue < FormFieldValue
+  include ActionView::Helpers::NumberHelper
+
   def value=(val)
     self.unit = form_field.data['unit']
 
@@ -13,7 +15,11 @@ class FormNumberFieldValue < FormFieldValue
   end
 
   def value
-    range? ? [number, number_to] : number
+    if range?
+      [number_with_precision(number, strip_insignificant_zeros: true), number_with_precision(number_to, strip_insignificant_zeros: true)] 
+    else 
+      number_with_precision(number, strip_insignificant_zeros: true)
+    end
   end
 
   def range?
@@ -21,8 +27,8 @@ class FormNumberFieldValue < FormFieldValue
   end
 
   def formatted
-    number_with_unit = "#{number} #{unit}"
-    range? ? "#{number_with_unit} - #{number_to} #{unit}" : number_with_unit
+    number_with_unit = "#{number_with_precision(number, strip_insignificant_zeros: true)} #{unit}"
+    range? ? "#{number_with_unit} - #{number_with_precision(number_to, strip_insignificant_zeros: true)} #{unit}" : number_with_unit
   end
 
   def value_in_range?

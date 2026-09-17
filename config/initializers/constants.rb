@@ -480,6 +480,11 @@ class Constants
   QUICK_SEARCH_SEARCHABLE_OBJECTS = %w(project experiment my_module protocol repository_row
                                        report project_folder result label_template).freeze
 
+  # my module report limits
+  MY_MODULE_REPORT_HEADER_MAX_LENGTH = 140
+  MY_MODULE_REPORT_HEADER_MAX_LINES = 3
+  MY_MODULE_REPORT_FOOTER_MAX_LENGTH = 80
+
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\
   #   *                       / | \    (/\|/\)   / | \                      *
