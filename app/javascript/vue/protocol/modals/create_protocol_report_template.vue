@@ -61,6 +61,7 @@
               class="btn btn-primary"
               :disabled="submitting || !validObject"
               type="submit"
+              data-e2e="e2e-BT-protocolTemplate-analyticalReport-createModal-create"
             >{{ i18n.t('protocols.report_template.create_modal.create_button') }}
             </button>
           </div>

@@ -9,7 +9,12 @@
     <div class="flex flex-col bg-sn-white p-4 rounded-lg gap-4">
       <div class="flex justify-between items-center">
         <div class="text-xl font-semibold"> {{ i18n.t('protocols.report_template.title') }}</div>
-        <button v-if="editable" class="btn btn-primary icon-btn" @click="protocolReportTemplateModal = true">
+        <button
+          v-if="editable"
+          class="btn btn-primary icon-btn"
+          @click="protocolReportTemplateModal = true"
+          data-e2e="e2e-BT-protocolTemplate-analyticalReport-newTemplate"
+        >
           <i class="sn-icon sn-icon-new-task"></i>
           {{ i18n.t('protocols.report_template.new_template') }}
         </button>
