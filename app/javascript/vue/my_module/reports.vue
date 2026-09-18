@@ -18,7 +18,13 @@
             >
             <i class="sn-icon sn-icon-visibility-show"></i>
           </button>
-          <button v-if="editable" :disabled="template.generating_report" class="btn btn-primary icon-btn" @click="openWizard(template.id)">
+          <button
+            v-if="editable"
+            :disabled="template.generating_report"
+            class="btn btn-primary icon-btn e2e-BT-task-analyticalReport-generate"
+            @click="openWizard(template.id)"
+            :data-e2e="`e2e-BT-task-analyticalReport${template.id}-generate`"
+          >
             <div v-if="template.generating_report" class="sci-loader-inline relative"></div>
             <i v-else class="sn-icon sn-icon-reports"></i>
             {{ reportButtonLabel(template) }}
