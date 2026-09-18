@@ -26,7 +26,7 @@ module StepElements
         log_step_activity(:checklist_added, { checklist_name: checklist.name })
         checklist_name_annotation(@step, checklist)
       end
-      render json: checklist, serializer: ChecklistSerializer, user: current_user
+      render json: ChecklistSerializer.new(checklist, scope: { user: current_user }).as_json
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -39,7 +39,7 @@ module StepElements
         checklist_name_annotation(@step, @checklist, old_name)
       end
 
-      render json: @checklist, serializer: ChecklistSerializer, user: current_user
+      render json: ChecklistSerializer.new(@checklist, scope: { user: current_user }).as_json
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -63,7 +63,7 @@ module StepElements
           }
         )
 
-        render json: @checklist, serializer: ChecklistSerializer, user: current_user
+        render json: ChecklistSerializer.new(@checklist, scope: { user: current_user }).as_json
       rescue ActiveRecord::RecordInvalid
         render json: @checklist.errors, status: :unprocessable_entity
       end
@@ -87,7 +87,7 @@ module StepElements
         @checklist.name += ' (1)'
         new_checklist = @checklist.duplicate(@step, current_user, position + 1)
         log_step_activity(:checklist_duplicated, { checklist_name: @checklist.name })
-        render json: new_checklist, serializer: ChecklistSerializer, user: current_user
+        render json: ChecklistSerializer.new(new_checklist, scope: { user: current_user }).as_json
       end
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
