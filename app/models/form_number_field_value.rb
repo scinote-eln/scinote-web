@@ -16,9 +16,12 @@ class FormNumberFieldValue < FormFieldValue
 
   def value
     if range?
-      [number_with_precision(number, strip_insignificant_zeros: true), number_with_precision(number_to, strip_insignificant_zeros: true)] 
-    else 
-      number_with_precision(number, strip_insignificant_zeros: true)
+      [
+        cast_number(number),
+        cast_number(number_to)
+      ]
+    else
+      cast_number(number)
     end
   end
 
@@ -27,8 +30,8 @@ class FormNumberFieldValue < FormFieldValue
   end
 
   def formatted
-    number_with_unit = "#{number_with_precision(number, strip_insignificant_zeros: true)} #{unit}"
-    range? ? "#{number_with_unit} - #{number_with_precision(number_to, strip_insignificant_zeros: true)} #{unit}" : number_with_unit
+    number_with_unit = "#{cast_number(number)} #{unit}"
+    range? ? "#{number_with_unit} - #{cast_number(number_to)} #{unit}" : number_with_unit
   end
 
   def value_in_range?
@@ -42,5 +45,13 @@ class FormNumberFieldValue < FormFieldValue
     max_value = validation_params['max']
 
     !((min_value.present? && min_value > number) || (max_value.present? && max_value < number))
+  end
+
+  private
+
+  def cast_number(big_decimal_number)
+    return big_decimal_number.to_i if big_decimal_number.frac.zero?
+
+    big_decimal_number
   end
 end
