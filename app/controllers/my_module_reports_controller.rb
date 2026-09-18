@@ -49,9 +49,11 @@ class MyModuleReportsController < ApplicationController
   end
 
   def pdfs
-    step_assets = @my_module.assets_in_steps.pdfs.order('steps.position ASC, active_storage_blobs.filename ASC')
+    step_assets = @my_module.assets_in_steps.pdfs.active.with_active_step
+                            .order('steps.position ASC, active_storage_blobs.filename ASC')
 
-    result_assets = @my_module.assets_in_results.pdfs.order('results.created_at DESC, active_storage_blobs.filename ASC')
+    result_assets = @my_module.assets_in_results.pdfs.active.with_active_result
+                              .order('results.created_at DESC, active_storage_blobs.filename ASC')
     @assets = (step_assets + result_assets)
   end
 
