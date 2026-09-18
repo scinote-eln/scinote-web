@@ -18,7 +18,7 @@ class MyModuleReportsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        @analytical_reports = @my_module.analytical_reports.where(generating_status: :done).order(:created_at)
+        @analytical_reports = @my_module.analytical_reports.where(generating_status: :done).order(created_at: :desc)
       end
 
       format.html do
@@ -45,7 +45,7 @@ class MyModuleReportsController < ApplicationController
                                           .distinct
                                           .pluck(:report_template_id)
                                           .to_set
-    @report_templates = @my_module.protocol.report_templates.order(:created_at)
+    @report_templates = @my_module.protocol.report_templates.order(created_at: :desc)
   end
 
   def pdfs

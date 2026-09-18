@@ -51,7 +51,7 @@ module MyModuleReports
 
       tags = @my_module.tags.order(:id).map(&:name)
 
-      report.add_text :TASKTAGS, tags ? "<p>#{tags.join(' ')}</p>" : ''
+      report.add_text :TASKTAGS, "<p>#{tags.join(', ')}</p>"
     end
 
     def render_steps(report)
