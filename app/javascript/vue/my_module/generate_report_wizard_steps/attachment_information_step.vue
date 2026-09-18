@@ -46,7 +46,12 @@
     <button class="btn btn-secondary focus:border-sn-blue-hover" @click="$emit('close')" :disabled="submitting">
       {{ i18n.t('my_modules.reports.wizard.actions.cancel') }}
     </button>
-    <button class="btn btn-primary focus:bg-sn-blue-hover" @click="setUp" :disabled="!validHeader || !validFooter || submitting">
+    <button
+      class="btn btn-primary focus:bg-sn-blue-hover"
+      @click="setUp"
+      :disabled="!validHeader || !validFooter || submitting"
+      data-e2e="e2e-BT-task-analyticalReport-generateReportModal-generate"
+    >
       {{ i18n.t('my_modules.reports.generate_button') }}
     </button>
   </div>

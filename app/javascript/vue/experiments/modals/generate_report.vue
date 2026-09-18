@@ -77,7 +77,12 @@
             <div class="sci-loader h-6 w-6 bg-contain"></div>
             {{ i18n.t('experiments.reports.generate_modal.generating_button') }}
           </button>
-          <button v-else class="btn btn-primary" @click="generateReport" :disabled="!validName || !validTask"> {{ i18n.t('experiments.reports.generate_button') }} </button>
+          <button
+            v-else class="btn btn-primary"
+            @click="generateReport"
+            :disabled="!validName || !validTask"
+            data-e2e="e2e-BT-experiment-generateAnaylticalReportModal-generate"
+          > {{ i18n.t('experiments.reports.generate_button') }} </button>
         </div>
       </div>
     </div>
