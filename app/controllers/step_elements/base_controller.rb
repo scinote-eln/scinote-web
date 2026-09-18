@@ -2,8 +2,6 @@
 
 module StepElements
   class BaseController < ApplicationController
-    include RendersFlattenedElement
-
     before_action :load_step_and_protocol
 
     def move_targets

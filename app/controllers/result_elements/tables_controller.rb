@@ -43,7 +43,7 @@ module ResultElements
         log_result_activity(:table_added, { table_name: result_table.table.name })
       end
 
-      render_element(ResultTableSerializer, result_table.table)
+      render json: ResultTableSerializer.new(result_table.table, scope: { user: current_user }).as_json
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -67,7 +67,7 @@ module ResultElements
         end
       end
 
-      render_element(ResultTableSerializer, @table)
+      render json: ResultTableSerializer.new(@table, scope: { user: current_user }).as_json
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -93,7 +93,7 @@ module ResultElements
           }.merge({ "#{model_key}_original": @result.id, "#{model_key}_destination": target.id })
         )
 
-        render_element(ResultTableSerializer, @table)
+        render json: ResultTableSerializer.new(@table, scope: { user: current_user }).as_json
       rescue ActiveRecord::RecordInvalid
         render json: result_table.errors, status: :unprocessable_entity
       end
@@ -117,7 +117,7 @@ module ResultElements
         @table.name += ' (1)'
         new_table = @table.duplicate(@result, current_user, position + 1)
         log_result_activity(:table_duplicated, { table_name: new_table.name })
-        render_element(ResultTableSerializer, new_table.result_table.table)
+        render json: ResultTableSerializer.new(new_table.result_table.table, scope: { user: current_user }).as_json
       end
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error(e.message)

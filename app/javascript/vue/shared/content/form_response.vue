@@ -263,7 +263,7 @@ export default {
 
       this.submitting = true;
       axios.post(this.formResponse.urls.submit).then((response) => {
-        this.formResponse = response.data.data.attributes;
+        this.formResponse = response.data;
         this.deleteUrl = this.formResponse.urls.delete_url;
         this.moveUrl = this.formResponse.urls.move_url;
         this.archiveUrl = this.formResponse.urls.archive_url;
@@ -281,7 +281,7 @@ export default {
 
         this.submitting = true;
         axios.post(this.formResponse.urls.reset).then((response) => {
-          this.formResponse = response.data.data.attributes;
+          this.formResponse = response.data;
           this.deleteUrl = this.formResponse.urls.delete_url;
           this.moveUrl = this.formResponse.urls.move_url;
           this.archiveUrl = this.formResponse.urls.archive_url;

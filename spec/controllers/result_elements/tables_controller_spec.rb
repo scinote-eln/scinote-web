@@ -23,7 +23,7 @@ describe ResultElements::TablesController, type: :controller do
   describe 'PUT update' do
     it 'updates an existing result element table' do
       put :update, params: { result_id: result_template.id,
-                             id: result_table.id,
+                             id: result_table.table.id,
                              name: 'Updated Name' }
 
       expect(response).to have_http_status(:success)
@@ -36,7 +36,7 @@ describe ResultElements::TablesController, type: :controller do
     let!(:target_result) { create :result_template, protocol: protocol, user: user }
     it 'moves an existing result element table to another result' do
       post :move, params: { result_id: result_template.id,
-                            id: result_table.id,
+                            id: result_table.table.id,
                             target_id: target_result.id }
 
       expect(response).to have_http_status(:success)
@@ -49,7 +49,7 @@ describe ResultElements::TablesController, type: :controller do
     it 'duplicates an existing result element table' do
       expect {
         post :duplicate, params: { result_id: result_template.id,
-                                  id: result_table.id }
+                                  id: result_table.table.id }
       }.to change(ResultTable, :count).by(1)
       expect(response).to have_http_status(:success)
     end
@@ -59,7 +59,7 @@ describe ResultElements::TablesController, type: :controller do
     it 'deletes an existing result element text' do
       expect {
         delete :destroy, params: { result_id: result_template.id,
-                                   id: result_table.id }
+                                   id: result_table.table.id }
       }.to change(ResultTable, :count).by(-1)
 
       expect(response).to have_http_status(:success)
