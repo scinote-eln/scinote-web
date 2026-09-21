@@ -52,7 +52,7 @@ class ExperimentReportsController < ApplicationController
   end
 
   def my_modules
-    @my_modules = @experiment.my_modules.readable_by_user(current_user).joins(:analytical_reports).distinct
+    @my_modules = @experiment.my_modules.active.readable_by_user(current_user).joins(:analytical_reports).distinct
   end
 
   private
