@@ -50,6 +50,7 @@ class FormNumberFieldValue < FormFieldValue
   private
 
   def cast_number(big_decimal_number)
+    return unless big_decimal_number
     return big_decimal_number.to_i if big_decimal_number.frac.zero?
 
     big_decimal_number

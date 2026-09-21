@@ -190,7 +190,8 @@ export default {
     validResponse() {
       return this.formFields.every((field) => {
         if (field.attributes.required) {
-          return field.field_value?.value
+          return typeof(field.field_value?.value) === 'number'
+            || field.field_value?.value
             || field.field_value?.datetime
             || field.field_value?.datetime_to
             || field.field_value?.not_applicable;
