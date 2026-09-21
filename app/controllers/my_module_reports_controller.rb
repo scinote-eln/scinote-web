@@ -33,10 +33,11 @@ class MyModuleReportsController < ApplicationController
       generating_status: :in_progress,
       reference: @my_module,
       created_by: current_user,
-      report_template_id: @report_template.id
+      report_template_id: @report_template.id,
+      params: create_params
     )
 
-    MyModules::GenerateReportJob.perform_later(analytical_report.id, create_params, team_id: current_team.id)
+    MyModules::GenerateReportJob.perform_later(analytical_report.id, team_id: current_team.id)
   end
 
   def report_templates
