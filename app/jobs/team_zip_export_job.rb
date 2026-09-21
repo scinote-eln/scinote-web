@@ -56,6 +56,13 @@ class TeamZipExportJob < ZipExportJob
         idx = experiment.archived ? (ex_archive_idx += 1) : (ex_idx += 1)
         experiment_path = make_model_dir(project_path, experiment, idx)
 
+        experiment_reports_path = "#{experiment_path}/Analytical reports"
+        FileUtils.mkdir_p(experiment_reports_path)
+        export_analytical_reports(
+          experiment.analytical_reports.where(generating_status: :done).order(:created_at),
+          experiment_reports_path
+        )
+
         # Include all modules
         mod_pos = mod_archive_pos = 0
         experiment.my_modules.readable_by_user(@user).order(:workflow_order).find_each do |my_module|
@@ -65,8 +72,10 @@ class TeamZipExportJob < ZipExportJob
           # Create upper directories for both elements
           protocol_path = "#{my_module_path}/Protocol attachments"
           result_path = "#{my_module_path}/Result attachments"
+          module_reports_path = "#{my_module_path}/Analytical reports"
           FileUtils.mkdir_p(protocol_path)
           FileUtils.mkdir_p(result_path)
+          FileUtils.mkdir_p(module_reports_path)
 
           # Export protocols
           steps = my_module.protocols.map(&:steps).flatten
@@ -99,6 +108,11 @@ class TeamZipExportJob < ZipExportJob
               )
             )
           end
+
+          export_analytical_reports(
+            my_module.analytical_reports.where(generating_status: :done).order(:created_at),
+            module_reports_path
+          )
         end
       end
 
@@ -246,6 +260,25 @@ class TeamZipExportJob < ZipExportJob
     end
 
     table_indexes
+  end
+
+  # Helper method to save analytical reports to the directory
+  def export_analytical_reports(analytical_reports, directory)
+    index = 1
+    analytical_reports.each do |analytical_report|
+      next unless analytical_report.report.attached?
+
+      report_name = to_filesystem_name(analytical_report.name.presence || 'Analytical report')
+      ext = File.extname(analytical_report.report.filename.to_s)
+      file_name = append_file_suffix("#{report_name}#{ext}", "_#{index}")
+
+      begin
+        File.binwrite("#{directory}/#{file_name}", analytical_report.report.download)
+      rescue ActiveStorage::FileNotFoundError
+        next
+      end
+      index += 1
+    end
   end
 
   # Helper method for saving inventories to CSV
