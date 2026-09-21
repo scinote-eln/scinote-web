@@ -396,9 +396,22 @@ class RepositoriesController < ApplicationController
   end
 
   def export_empty_repository
-    col_ids = [-3, -4, -5, -6, -7, -8, -9, -10]
-    col_ids << -11 if Repository.repository_row_connections_enabled?
-    col_ids += @repository.repository_columns.map(&:id)
+    legacy_mapping = Repository::REPOSITORY_LEGACY_COLUMNS_MAPPING.dup
+    legacy_mapping[:connections_count] = -11 if Repository.repository_row_connections_enabled?
+    @repository.repository_columns.each do |column|
+      legacy_mapping["col_#{column.id}".to_sym] = column.id
+    end
+
+    user_settings = current_user.user_settings.find_by(key: "repository_table_#{@repository.id}_active_table_state")
+
+    col_ids = []
+    if user_settings.present? && user_settings.value.present?
+      user_settings.value['columnsState'].each do |column_state|
+        col_ids << legacy_mapping[column_state['colId'].to_sym]
+      end
+    else
+      col_ids = legacy_mapping.map { |_k, v| v }
+    end
 
     xlsx = RepositoryXlsxExport.to_empty_xlsx(@repository, col_ids)
 

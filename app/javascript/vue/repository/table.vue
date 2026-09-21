@@ -377,12 +377,7 @@ export default {
     exportRows(_e, rows) {
       const rowIds = rows.map((row) => row.id);
 
-      const headerIDs = [];
-      this.repositoryColumnsDef.forEach((column) => {
-        if (column.cellRendererParams?.legacyId) {
-          headerIDs.push(column.cellRendererParams.legacyId);
-        }
-      });
+      const headerIDs = this.legacyColumnIds();
 
       this.exportParams = {
         rows: rowIds,

@@ -48,11 +48,24 @@ class RepositoriesExportJob < ApplicationJob
     # File creation
     repository_items_file_name = FileUtils.touch("#{path}/#{repository_name}.#{@file_type}").first
 
-    # Define headers and columns IDs
-    col_ids = [-3, -4, -5, -6, -7, -8, -9, -10]
-    col_ids << -11 if Repository.repository_row_connections_enabled?
+    legacy_mapping = Repository::REPOSITORY_LEGACY_COLUMNS_MAPPING.dup
+    legacy_mapping[:connections_count] = -11 if Repository.repository_row_connections_enabled?
+    repository.repository_columns.each do |column|
+      legacy_mapping["col_#{column.id}".to_sym] = column.id
+    end
+
+    user_settings = @user.user_settings.find_by(key: "repository_table_#{repository.id}_active_table_state")
+
+    col_ids = []
+    if user_settings.present? && user_settings.value.present?
+      user_settings.value['columnsState'].each do |column_state|
+        col_ids << legacy_mapping[column_state['colId'].to_sym]
+      end
+    else
+      col_ids = legacy_mapping.map { |k, v| v }
+    end
+
     col_ids << -12 if StorageLocation.storage_locations_enabled?
-    col_ids += repository.repository_columns.map(&:id)
 
     # Define callback function for file name
     assets = {}
