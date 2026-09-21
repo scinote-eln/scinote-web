@@ -5,6 +5,17 @@ class RepositoryBase < ApplicationRecord
 
   self.table_name = 'repositories'
 
+  REPOSITORY_LEGACY_COLUMNS_MAPPING = {
+    code: -3,
+    name: -4,
+    created_by: -5,
+    created_at: -6,
+    updated_at: -7,
+    last_modified_by: -8,
+    archived_on: -9,
+    archived_by: -10
+  }
+
   attribute :discarded_by_id, :integer
 
   belongs_to :team

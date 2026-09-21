@@ -96,6 +96,44 @@ export default {
           legacyId: -5
         },
       });
+      columns.push({
+        field: 'updated_at',
+        headerName: this.i18n.t('repositories.table.updated_on'),
+        sortable: true,
+        hide: this.columnHidden,
+        cellRendererParams: {
+          legacyId: -7
+        },
+      });
+      columns.push({
+        field: 'last_modified_by',
+        headerName: this.i18n.t('repositories.table.updated_by'),
+        sortable: true,
+        hide: this.columnHidden,
+        cellRendererParams: {
+          legacyId: -8
+        },
+      });
+      if (this.currentViewMode === 'archived') {
+        columns.push({
+          field: 'archived_on',
+          headerName: this.i18n.t('repositories.table.archived_on'),
+          sortable: true,
+          hide: this.columnHidden,
+          cellRendererParams: {
+            legacyId: -9
+          },
+        });
+        columns.push({
+          field: 'archived_by',
+          headerName: this.i18n.t('repositories.table.archived_by'),
+          sortable: true,
+          hide: this.columnHidden,
+          cellRendererParams: {
+            legacyId: -10
+          },
+        });
+      }
       return columns;
     },
     minWidth() {
@@ -115,6 +153,22 @@ export default {
     }
   },
   methods: {
+    legacyColumnIds() {
+      const headerIDs = [];
+      const activeConfig = this.$refs.repositoryTable.gridApi?.getColumnState();
+
+      if (activeConfig) {
+        activeConfig.forEach((column) => {
+          const legacyId = this.repositoryColumnsDef.find((col) => col.field == column.colId)?.cellRendererParams?.legacyId;
+          print('legacyId', legacyId);
+          if (legacyId) {
+            headerIDs.push(legacyId);
+          }
+        });
+      }
+
+      return headerIDs;
+    },
     loadRepositoryColumns() {
       axios.get(index_new_repository_repository_columns_path(this.repositoryVersion.id))
         .then((response) => {
