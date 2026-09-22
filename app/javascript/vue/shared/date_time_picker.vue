@@ -25,6 +25,7 @@
       :input-attrs="{
         clearable: this.clearable
       }"
+      :time-picker="mode == 'time'"
       :time-config="{
        timePickerInline: mode == 'datetime',
        startTime: (mode == 'time' ? null : { hours: 0, minutes: 0, seconds: 0 }),
