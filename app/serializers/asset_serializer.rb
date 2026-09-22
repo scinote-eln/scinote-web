@@ -8,7 +8,7 @@ class AssetSerializer < ActiveModel::Serializer
   include InputSanitizeHelper
   include ApplicationHelper
 
-  attributes :file_name, :file_extension, :view_mode, :icon, :urls, :updated_at_formatted,
+  attributes :id, :file_name, :file_extension, :view_mode, :icon, :urls, :updated_at_formatted,
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi, :file_name_without_extension,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
              :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type,
@@ -188,7 +188,6 @@ class AssetSerializer < ActiveModel::Serializer
       urls[:open_locally] = asset_sync_show_path(object)
       urls[:open_locally_api] = Constants::ASSET_SYNC_URL
       urls[:asset_show] = asset_show_path(object)
-      urls[:asset_checksum] = asset_checksum_path(object)
     end
 
     urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi && can_read_asset?(user, object)

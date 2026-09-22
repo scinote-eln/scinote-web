@@ -15,8 +15,7 @@ export default {
       showNoPredefinedAppModal: false,
       showRestrictedExtensionModal: false,
       showUpdateVersionModal: false,
-      editAppModal: false,
-      pollingInterval: null
+      editAppModal: false
     };
   },
   components: {
@@ -35,9 +34,6 @@ export default {
              && this.attributes.asset_type !== 'gene_sequence'
              && this.attributes.asset_type !== 'marvinjs';
     }
-  },
-  beforeUnmount() {
-    this.stopPolling();
   },
   methods: {
     async checkScinoteEditRunning() {
@@ -119,7 +115,6 @@ export default {
 
       this.editAppModal = true;
       try {
-        this.startPolling();
         const { data } = await axios.get(this.attributes.urls.open_locally);
         await axios.post(`${this.attributes.urls.open_locally_api}/download`, data);
       } catch (error) {
@@ -129,33 +124,6 @@ export default {
     isWrongVersion(version) {
       const { min, max } = this.attributes.edit_version_range;
       return !satisfies(version, `${min} - ${max}`);
-    },
-    async pollForChanges() {
-      try {
-        const checksumResponse = await axios.get(this.attributes.urls.asset_checksum);
-
-        if (checksumResponse.status === 200) {
-          const currentChecksum = checksumResponse.data.checksum;
-
-          if (currentChecksum !== this.attributes.checksum) {
-            this.$emit('attachment:changed', this.attachment.id);
-          }
-        }
-      } catch (error) {
-        console.error('Error polling for changes:', error);
-        this.stopPolling();
-      }
-    },
-    startPolling() {
-      if (this.pollingInterval === null) {
-        this.pollingInterval = setInterval(this.pollForChanges, GLOBAL_CONSTANTS.ASSET_POLLING_INTERVAL);
-      }
-    },
-    stopPolling() {
-      if (this.pollingInterval !== null) {
-        clearInterval(this.pollingInterval);
-        this.pollingInterval = null;
-      }
     }
   }
 }

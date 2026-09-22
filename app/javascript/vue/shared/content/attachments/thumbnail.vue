@@ -74,7 +74,6 @@
           @attachment:moved="attachmentMoved"
           @attachment:uploaded="reloadAttachments"
           @attachment:versionRestored="reloadAttachments"
-          @attachment:changed="$emit('attachment:changed', $event)"
           @attachment:update="$emit('attachment:update', $event)"
           @attachment:toggle_menu="toggleMenu"
           @attachment:move_modal="showMoveModal"
@@ -119,7 +118,6 @@ import MenuDropdown from '../../../shared/menu_dropdown.vue';
 import MoveAssetModal from '../modal/move.vue';
 import MoveMixin from './mixins/move.js';
 import PreviewStatusMixin from './mixins/preview_status.js';
-import OpenMenu from './open_menu.vue';
 import AttachmentActions from './attachment_actions.vue';
 import { vOnClickOutside } from '@vueuse/components';
 import LockedTag from '../../snippets/locked_tag.vue';
@@ -132,7 +130,6 @@ export default {
     deleteAttachmentModal,
     MoveAssetModal,
     MenuDropdown,
-    OpenMenu,
     AttachmentActions,
     LockedTag
   },
