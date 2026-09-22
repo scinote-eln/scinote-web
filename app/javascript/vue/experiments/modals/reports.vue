@@ -56,7 +56,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.close') }}</button>
-          <button class="btn btn-primary" @click="openGenerateReportModal"> {{  i18n.t('experiments.reports.generate_button') }} </button>
+          <button v-if="editable" class="btn btn-primary" @click="openGenerateReportModal"> {{  i18n.t('experiments.reports.generate_button') }} </button>
         </div>
       </div>
     </div>

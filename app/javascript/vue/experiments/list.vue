@@ -194,7 +194,8 @@ export default {
             field: 'report',
             headerName: this.i18n.t('experiments.table.column.report_html'),
             sortable: true,
-            cellRenderer: ReportRenderer
+            cellRenderer: ReportRenderer,
+            suppressColumnsToolPanel: true
           }
         );
       }
