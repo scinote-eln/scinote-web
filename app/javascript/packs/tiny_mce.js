@@ -59,35 +59,70 @@ const tagUploadedTinyMCEImages = (editor) => {
   };
 };
 
-const image_upload_handler = (blobInfo, _progress) =>
-  new Promise((resolve, reject) => {
-    if (!blobInfo) resolve();
-
-    let blob = blobInfo.blob();
-
-    // ensure blob has filename, for direct uploads
-    if (blob.name === undefined) blob.name = blobInfo.filename();
-
-    const upload = new ActiveStorage.DirectUpload(blob, rails_direct_uploads_path());
-
-    upload.create((error, blob) => {
-      if (error) {
-        reject(`ActiveStorage upload failed: ${error}`);
-      } else {
-        axios.post('/tiny_mce_assets', {
-          files: [{blob_id: blob.signed_id}]
-        })
-        .then((response) => {
-          resolve(response.data.images[0].url);
-
-          window.uploadedTinyMCEImages.push(response.data.images[0]);
-        })
-        .catch((error) => {
-          reject(`Failed to create TinyMCE asset: ${error}`);
-        });
-      }
-    });
+const directUpload = (blob) => new Promise((resolve, reject) => {
+  new ActiveStorage.DirectUpload(blob, rails_direct_uploads_path()).create((error, uploadedBlob) => {
+    if (error) reject(error);
+    else resolve(uploadedBlob);
   });
+});
+
+const createTinyMceAsset = (blob) =>
+  directUpload(blob)
+    .then((uploadedBlob) => axios.post('/tiny_mce_assets', { files: [{ blob_id: uploadedBlob.signed_id }] }))
+    .then((response) => response.data.images[0]);
+
+const image_upload_handler = (blobInfo, _progress) => {
+  if (!blobInfo) return Promise.resolve();
+
+  const blob = blobInfo.blob();
+
+  // ensure blob has filename, for direct uploads
+  if (blob.name === undefined) blob.name = blobInfo.filename();
+
+  return createTinyMceAsset(blob)
+    .then((image) => {
+      window.uploadedTinyMCEImages.push(image);
+      return image.url;
+    })
+    .catch((error) => { throw new Error(`Failed to upload image: ${error}`); });
+};
+
+const findEditorImageBySrc = (editor, src) => {
+  const iframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe').contents()[0];
+  return iframe && iframe.querySelector(`img[src="${src}"]`);
+};
+
+const extractAndUploadElementImage = async (editor, imageElement) => {
+  const src = imageElement.getAttribute('src');
+
+  // pasting an image from the clipboard inserts a blob: src
+  if (!/^https?:\/\//i.test(src || '')) return;
+
+  try {
+    const response = await axios.get(src, { responseType: 'blob' });
+    const blob = response.data;
+    const contentType = (response.headers['content-type'] || '').split(';')[0].trim();
+
+    if (!contentType.startsWith('image/')) throw new Error();
+    if (blob.size > GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024) throw new Error();
+
+    blob.name = `image.${contentType.split('image/')[1] || 'png'}`;
+
+    const image = await createTinyMceAsset(blob);
+    const liveElement = findEditorImageBySrc(editor, src);
+
+    if (!liveElement) return;
+
+    liveElement.setAttribute('src', image.url);
+    liveElement.setAttribute('data-mce-token', image.token);
+    liveElement.setAttribute('alt', `description-${image.token}`);
+    liveElement.setAttribute('class', 'img-responsive');
+  } catch(error) {
+    // remove the image so it's obvious to the user that the pasted image didn't come through
+    findEditorImageBySrc(editor, src)?.remove();
+    console.error(`Error uploading image: ${error}`);
+  }
+};
 
 const contentPStyle = `p { margin: 0; padding: 0;}`;
 const contentBodyStyle = `body { font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif }`;
@@ -499,6 +534,10 @@ window.TinyMCE = (() => {
 
             editor.on('init', () => {
               restoreDraftNotification(selector, editor);
+            });
+
+            editor.on('PastePostProcess', (e) => {
+              $(e.node).find('img').each((_i, imageElement) => extractAndUploadElementImage(editor, imageElement));
             });
 
             editor.on('BeforeSetContent GetContent', function(e) {
