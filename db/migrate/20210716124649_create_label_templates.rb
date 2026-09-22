@@ -2,7 +2,7 @@
 
 class CreateLabelTemplates < ActiveRecord::Migration[6.1]
   class LabelTemplate < ApplicationRecord
-    enum language_type: { zpl: 0 }
+    enum :language_type, { zpl: 0 }
   end
 
   def change

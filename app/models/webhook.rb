@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Webhook < ApplicationRecord
-  enum http_method: { get: 0, post: 1, patch: 2 }
+  enum :http_method, { get: 0, post: 1, patch: 2 }
 
   belongs_to :activity_filter
   validates :http_method, presence: true

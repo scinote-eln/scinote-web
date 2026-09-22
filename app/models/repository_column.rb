@@ -24,7 +24,7 @@ class RepositoryColumn < ApplicationRecord
   accepts_nested_attributes_for :repository_checklist_items, allow_destroy: true
   accepts_nested_attributes_for :repository_stock_unit_items, allow_destroy: true
 
-  enum data_type: Extends::REPOSITORY_DATA_TYPES
+  enum :data_type, Extends::REPOSITORY_DATA_TYPES
 
   store_accessor :metadata, %i(reminder_value reminder_unit reminder_message)
 

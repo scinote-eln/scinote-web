@@ -11,7 +11,7 @@ class Step < ApplicationRecord
 
   attr_accessor :skip_position_adjust # to be used in bulk deletion
 
-  enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
+  enum :assets_view_mode, { thumbnail: 0, list: 1, inline: 2 }
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
