@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col mb-5">
-    <h2>{{ i18n.t(`users.settings.teams.preferences.title.${mode}`) }}</h2>
+    <h2 :data-e2e="`e2e-TX-workspaceSettings-title-${mode}`">{{ i18n.t(`users.settings.teams.preferences.title.${mode}`) }}</h2>
     <div>
       <div v-for="(items, sectionKey) in settings" :key="`section-${sectionKey}`" class="flex flex-col bg-sn-white gap-4 p-4 w-full rounded">
-        <h5>{{ i18n.t(`users.settings.teams.preferences.sections.${sectionKey}.title`)}}
+        <h5 :data-e2e="`e2e-TX-workspaceSettings-title-${sectionKey}`">{{ i18n.t(`users.settings.teams.preferences.sections.${sectionKey}.title`)}}
           <i v-if="sectionKey == 'deletion'" class="sn-icon sn-icon-info" :data-sn-tooltip="i18n.t(`users.settings.teams.preferences.sections.${sectionKey}.message`)"></i>
         </h5>
 
@@ -21,6 +21,7 @@
                   type="checkbox"
                   :checked="!!item.value"
                   :disabled="!item.can_update || loadingSettings"
+                  :data-e2e="`e2e-CB-workspaceSettings-${sectionKey}-${itemKey}`"
                   @change="handleToggleChange(sectionKey, itemKey, item, $event)" />
                 <span class="sci-toggle-checkbox-label"></span>
               </div>

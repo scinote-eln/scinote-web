@@ -151,10 +151,9 @@
             <i class="sn-icon sn-icon-pinned"></i>
           </button>
           <a v-if="!locked &&  this.result.attributes.lock_enabled"
-            class="btn btn-light icon-btn"
+            class="btn btn-light icon-btn e2e-BT-protocol-result-resultOptions-manage"
             data-toggle="modal"
-            data_e2e: `e2e-BT-protocol-result${this.result.id}-stepOptions-rearrange`
-            e2e_class: `e2e-BT-protocol-result-stepOptions-rearrange`
+            :data-e2e="`e2e-BT-protocol-result${this.result.id}-resultOptions-manage`"
             :data-sn-tooltip="i18n.t('my_modules.results.actions.edit_content')"
             @click="openReorderModal()"
             @keyup.enter="openReorderModal()"
@@ -162,10 +161,9 @@
             <i class="sn-icon sn-icon-steps-manage" aria-hidden="true"></i>
           </a>
           <a v-else-if="!locked && this.result.attributes.urls.reorder_elements_url && this.elements.length > 1"
-            class="btn btn-light icon-btn"
+            class="btn btn-light icon-btn e2e-BT-protocol-result-resultOptions-reorder"
             data-toggle="modal"
-            data_e2e: `e2e-BT-protocol-result${this.result.id}-stepOptions-manageResult`
-            e2e_class: `e2e-BT-protocol-result-stepOptions-manageResult`
+            :data-e2e="`e2e-BT-protocol-result${this.result.id}-resultOptions-reorder`"
             :data-sn-tooltip="i18n.t('my_modules.results.actions.rearrange_content')"
             @click="openReorderModal()"
             @keyup.enter="openReorderModal"
@@ -198,13 +196,14 @@
           @toggle-lock="toggleItemLock"
           @toggle-lock-attachments="toggleAttachmentsLock"
           @close="closeReorderModal"
+          dataE2e="protocol-result-manage"
         ></ManageItemsModal>
       </template>
       <template v-else>
         <ReorderableItemsModal v-if="reordering"
           :title="i18n.t('my_modules.modals.reorder_results.title')"
           :items="reorderableElements"
-          :dataE2e="`task-result${result.id}-reorder`"
+          dataE2e="protocol-result-reorder"
           @reorder="updateElementOrder"
           @close="closeReorderModal"
         />
