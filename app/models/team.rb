@@ -101,8 +101,38 @@ class Team < ApplicationRecord
                                      .where(tiny_mce_assets: { team_id: id })
                                      .select('active_storage_blobs.byte_size')
 
+    by_analytical_reports_my_module =
+      AnalyticalReport.joins(:report_blob)
+                      .joins("INNER JOIN my_modules ON my_modules.id = analytical_reports.reference_id
+                               AND analytical_reports.reference_type = 'MyModule'")
+                      .joins('INNER JOIN experiments ON experiments.id = my_modules.experiment_id')
+                      .joins('INNER JOIN projects ON projects.id = experiments.project_id')
+                      .where(projects: { team_id: id })
+                      .select('active_storage_blobs.byte_size')
+
+    by_analytical_reports_experiment =
+      AnalyticalReport.joins(:report_blob)
+                      .joins("INNER JOIN experiments ON experiments.id = analytical_reports.reference_id
+                               AND analytical_reports.reference_type = 'Experiment'")
+                      .joins('INNER JOIN projects ON projects.id = experiments.project_id')
+                      .where(projects: { team_id: id })
+                      .select('active_storage_blobs.byte_size')
+
+    by_report_templates =
+      ActiveStorage::Attachment
+      .joins(:blob)
+      .where(record_type: 'ReportTemplate',
+              name: %w[odt_template_file docx_template_file odt_template_file_preview])
+      .joins('INNER JOIN report_templates ON report_templates.id = active_storage_attachments.record_id')
+      .joins("INNER JOIN protocols ON protocols.id = report_templates.subject_id
+              AND report_templates.subject_type = 'Protocol'")
+      .where(protocols: { team_id: id })
+      .select('active_storage_blobs.byte_size')
+
     ActiveStorage::Blob
-      .from("((#{by_assets.to_sql}) UNION ALL (#{by_tiny_mce_assets.to_sql})) AS active_storage_blobs")
+      .from("((#{by_assets.to_sql}) UNION ALL (#{by_tiny_mce_assets.to_sql}) UNION ALL " \
+            "(#{by_analytical_reports_my_module.to_sql}) UNION ALL (#{by_analytical_reports_experiment.to_sql}) UNION ALL " \
+            "(#{by_report_templates.to_sql})) AS active_storage_blobs")
       .sum(:byte_size)
   end
 
