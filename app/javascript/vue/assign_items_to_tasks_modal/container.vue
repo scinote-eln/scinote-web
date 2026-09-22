@@ -130,6 +130,7 @@
 
 <script>
 /* global HelperModule */
+import axios from '../../packs/custom_axios';
 import SelectDropdown from "../shared/select_dropdown.vue";
 
 export default {
@@ -159,13 +160,14 @@ export default {
     $(this.$refs.modal).on('shown.bs.modal', () => {
       this.projectsLoading = true;
 
-      $.get(this.projectURL, (data) => {
+      axios.get(this.projectURL).then((response) => {
+        const data = response.data;
         if (Array.isArray(data)) {
           this.projects = data;
           return false;
         }
         this.projects = [];
-      }).always(() => {
+      }).finally(() => {
         this.projectsLoading = false;
       });
     });
@@ -233,13 +235,14 @@ export default {
       this.resetTaskSelector();
 
       this.experimentsLoading = true;
-      $.get(this.experimentURL, (data) => {
+      axios.get(this.experimentURL).then((response) => {
+        const data = response.data;
         if (Array.isArray(data)) {
           this.experiments = data;
           return false;
         }
         this.experiments = [];
-      }).always(() => {
+      }).finally(() => {
         this.experimentsLoading = false;
       });
     },
@@ -248,13 +251,14 @@ export default {
       this.resetTaskSelector();
 
       this.tasksLoading = true;
-      $.get(this.taskURL, (data) => {
+      axios.get(this.taskURL).then((response) => {
+        const data = response.data;
         if (Array.isArray(data)) {
           this.tasks = data;
           return false;
         }
         this.tasks = [];
-      }).always(() => {
+      }).finally(() => {
         this.tasksLoading = false;
       });
     },
@@ -281,15 +285,11 @@ export default {
     assign() {
       if (!this.selectedTasks.length) return;
 
-      $.ajax({
-        url: this.urls.assign,
-        type: 'POST',
-        dataType: 'json',
-        data: {
-          rows_to_assign: this.rowsToAssign,
-          my_module_ids: this.selectedTasks
-        }
-      }).done(({ assigned_count: assignedCount, skipped_count: skippedCount }) => {
+      axios.post(this.urls.assign, {
+        rows_to_assign: this.rowsToAssign,
+        my_module_ids: this.selectedTasks
+      }).then((response) => {
+        const { assigned_count: assignedCount, skipped_count: skippedCount } = response.data;
         if (skippedCount) {
           HelperModule.flashAlertMsg(
             this.i18n.t(
@@ -307,9 +307,9 @@ export default {
             'success'
           );
         }
-      }).fail(() => {
+      }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_assignments_failure'), 'danger');
-      }).always(() => {
+      }).finally(() => {
         this.resetSelectors();
         this.reloadTable();
         window.repositoryItemSidebarComponent.reload();

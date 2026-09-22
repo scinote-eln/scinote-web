@@ -86,6 +86,7 @@ import MenuDropdown from '../shared/menu_dropdown.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
 import QuickSearch from './quick_search.vue';
 import ActionCableConsumer from '../../channels/consumer';
+import axios from '../../packs/custom_axios.js';
 
 export default {
   name: 'TopMenuContainer',
@@ -172,7 +173,8 @@ export default {
   },
   methods: {
     fetchData() {
-      $.get(this.url, (result) => {
+      axios.get(this.url).then((response) => {
+        const result = response.data;
         this.rootUrl = result.root_url;
         this.teamSwitchUrl = result.team_switch_url;
         this.currentTeam = result.current_team;
@@ -192,12 +194,13 @@ export default {
 
       if (!newTeam) return;
 
-      $.post(this.teamSwitchUrl, { team_id: team }, (result) => {
+      axios.post(this.teamSwitchUrl, { team_id: team }).then((response) => {
+        const result = response.data;
         this.currentTeam = result.current_team;
         $('body').attr('data-current-team-id', this.currentTeam);
         window.open(this.rootUrl, '_self');
-      }).fail((msg) => {
-        HelperModule.flashAlertMsg(msg.responseJSON.message, 'danger');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response?.data.message, 'danger');
       });
     },
     searchValue(e) {

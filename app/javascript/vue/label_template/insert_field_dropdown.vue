@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import axios from '../../packs/custom_axios';
 import LogoInsertModal from './components/logo_insert_modal.vue';
 
 export default {
@@ -127,7 +128,8 @@ export default {
     }
   },
   mounted() {
-    $.get(this.labelTemplate.attributes.urls.fields, (result) => {
+    axios.get(this.labelTemplate.attributes.urls.fields).then((response) => {
+      const result = response.data;
       result.default.map((value) => {
         value.key = this.i18n.t(`label_templates.default_columns.${value.key}`);
         return value;

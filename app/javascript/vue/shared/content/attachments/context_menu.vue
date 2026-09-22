@@ -184,11 +184,8 @@ export default {
   methods: {
     changeViewMode(viewMode) {
       this.$emit('attachment:viewMode', viewMode);
-      $.ajax({
-        url: this.attachment.attributes.urls.toggle_view_mode,
-        type: 'PATCH',
-        dataType: 'json',
-        data: { asset: { view_mode: viewMode } }
+      axios.patch(this.attachment.attributes.urls.toggle_view_mode, { asset: { view_mode: viewMode } }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     duplicate() {

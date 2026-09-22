@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import axios from '../../packs/custom_axios.js';
+
 export default {
   name: 'NavigatorItem',
   props: {
@@ -143,7 +145,8 @@ export default {
       if (this.childrenExpanded) this.loadChildren();
     },
     loadChildren() {
-      $.get(this.item.children_url, { archived: this.archived }, (data) => {
+      axios.get(this.item.children_url, { params: { archived: this.archived } }).then((response) => {
+        const data = response.data;
         this.children = data.items;
         this.childrenLoaded = true;
       });

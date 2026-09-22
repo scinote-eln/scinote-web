@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import axios from '../../packs/custom_axios';
 import SelectDropdown from '../shared/select_dropdown.vue';
 import RepositoryRowSelector from '../shared/repository_row_selector.vue';
 
@@ -171,21 +172,18 @@ export default {
     },
     addRelation(relation) {
       const $this = this;
-      $.ajax({
-        url: this.createConnectionUrl,
-        method: 'POST',
-        dataType: 'json',
-        data: {
-          repository_row_connection: {
-            relation: this.selectedRelationshipValue,
-            relation_ids: this.selectedItemValues,
-            connection_repository_id: this.selectedInventoryValue
-          }
-        },
-        success: (result) => {
-          $this.addRelationCallback(result, relation);
-          if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
+      axios.post(this.createConnectionUrl, {
+        repository_row_connection: {
+          relation: this.selectedRelationshipValue,
+          relation_ids: this.selectedItemValues,
+          connection_repository_id: this.selectedInventoryValue
         }
+      }).then((response) => {
+        const result = response.data;
+        $this.addRelationCallback(result, relation);
+        if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
+      }).catch(() => {
+        HelperModule.flashAlertMsg($this.i18n.t('errors.general'), 'danger');
       });
       this.close();
     }

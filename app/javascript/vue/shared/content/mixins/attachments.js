@@ -1,4 +1,5 @@
 /* global ActiveStorage GLOBAL_CONSTANTS Promise I18n */
+import axios from '../../../../packs/custom_axios.js';
 
 export default {
   data() {
@@ -113,13 +114,14 @@ export default {
               reject(error);
             } else {
               const signedId = blob.signed_id;
-              $.post(this.attachmentsParent.attributes.urls.upload_attachment_url, {
+              axios.post(this.attachmentsParent.attributes.urls.upload_attachment_url, {
                 signed_blob_id: signedId
-              }, (result) => {
+              }).then((response) => {
+                const result = response.data;
                 fileObject.id = result.data.id;
                 fileObject.attributes = result.data.attributes;
                 this.attachments = this.attachments.with(filePosition, fileObject);
-              }).fail(() => {
+              }).catch(() => {
                 fileObject.error = I18n.t('attachments.new.general_error');
                 this.attachments = this.attachments.with(filePosition, fileObject);
               });
@@ -137,7 +139,7 @@ export default {
     },
     changeAttachmentsOrder(order) {
       this.attachmentsParent.attributes.assets_order = order;
-      $.post(this.attachmentsParent.attributes.urls.update_view_state_url, {
+      axios.post(this.attachmentsParent.attributes.urls.update_view_state_url, {
         assets: { order }
       });
     },
@@ -147,7 +149,7 @@ export default {
         attachment.attributes['view_mode'] = viewMode;
         attachment.attributes['asset_order'] = this.viewModeOrder[viewMode];
       });
-      $.post(this.attachmentsParent.attributes.urls.update_asset_view_mode_url, {
+      axios.post(this.attachmentsParent.attributes.urls.update_asset_view_mode_url, {
         assets_view_mode: viewMode
       });
     },

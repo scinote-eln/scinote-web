@@ -75,6 +75,8 @@
 </template>
 
 <script>
+import axios from '../../packs/custom_axios.js';
+
 export default {
   name: 'ScinoteEditDownload',
   props: {
@@ -114,8 +116,8 @@ export default {
   },
   methods: {
     fetchData() {
-      $.get(GLOBAL_CONSTANTS.SCINOTE_EDIT_LATEST_JSON_URL, (result) => {
-        this.responseData = result;
+      axios.get(GLOBAL_CONSTANTS.SCINOTE_EDIT_LATEST_JSON_URL).then((response) => {
+        this.responseData = response.data;
       });
     }
   }

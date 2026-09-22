@@ -593,7 +593,9 @@ export default {
         checkboxColumn.pinned = 'left';
       }
 
-      axios.put(user_setting_path(this.stateKey), { user_setting: { value: tableState } });
+      axios.put(user_setting_path(this.stateKey), { user_setting: { value: tableState } }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
       this.tableState = tableState;
     },
     getRowClass() {

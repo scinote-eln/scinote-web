@@ -67,6 +67,9 @@ export default {
         this.actions = response.data.actions;
         this.loading = false;
         this.loaded = true;
+      }).catch(() => {
+        this.loading = false;
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     doAction(action, event) {

@@ -166,6 +166,7 @@
 
 <script>
 import Decimal from 'decimal.js';
+import axios from '../../packs/custom_axios';
 import Select from '../shared/legacy/select.vue';
 import Input from '../shared/legacy/input.vue';
 
@@ -245,29 +246,25 @@ export default {
     },
     fetchStockValueData(stockValueUrl) {
       if (!stockValueUrl) return;
-      $.ajax({
-        method: 'GET',
-        url: stockValueUrl,
-        dataType: 'json',
-        success: (result) => {
-          this.repositoryRowName = result.repository_row_name;
-          this.stockValue = result.stock_value;
-          this.amount = this.stockValue?.amount && Number(new Decimal(this.stockValue.amount));
-          this.units = result.stock_value.units;
-          this.unit = result.stock_value.unit;
-          this.reminderEnabled = result.stock_value.reminder_enabled;
-          this.lowStockTreshold = result.stock_value.low_stock_treshold;
-          this.operation = 'set';
-          this.stockUrl = result.stock_url;
-          /* eslint-disable no-undef */
-          this.operations = [
-            ['set', `${I18n.t('repository_stock_values.manage_modal.set')}`],
-            ['add', `${I18n.t('repository_stock_values.manage_modal.add')}`],
-            ['remove', `${I18n.t('repository_stock_values.manage_modal.remove')}`]
-          ];
-          /* eslint-enable no-undef */
-          this.errors = {};
-        }
+      axios.get(stockValueUrl).then((response) => {
+        const result = response.data;
+        this.repositoryRowName = result.repository_row_name;
+        this.stockValue = result.stock_value;
+        this.amount = this.stockValue?.amount && Number(new Decimal(this.stockValue.amount));
+        this.units = result.stock_value.units;
+        this.unit = result.stock_value.unit;
+        this.reminderEnabled = result.stock_value.reminder_enabled;
+        this.lowStockTreshold = result.stock_value.low_stock_treshold;
+        this.operation = 'set';
+        this.stockUrl = result.stock_url;
+        /* eslint-disable no-undef */
+        this.operations = [
+          ['set', `${I18n.t('repository_stock_values.manage_modal.set')}`],
+          ['add', `${I18n.t('repository_stock_values.manage_modal.add')}`],
+          ['remove', `${I18n.t('repository_stock_values.manage_modal.remove')}`]
+        ];
+        /* eslint-enable no-undef */
+        this.errors = {};
       });
     },
     closeModal() {
@@ -296,30 +293,28 @@ export default {
       this.isSaving = true;
 
       const $this = this;
-      $.ajax({
-        method: 'POST',
-        url: this.stockUrl,
-        dataType: 'json',
-        data: {
-          repository_stock_value: {
-            unit_item_id: this.unit,
-            amount: this.newAmount,
-            comment: this.comment,
-            low_stock_threshold: this.reminderEnabled ? this.lowStockTreshold : null
-          },
-          operator: this.operations.find((operation) => operation[0] == this.operation)?.[0],
-          change_amount: Math.abs(this.amount)
-
+      axios.post(this.stockUrl, {
+        repository_stock_value: {
+          unit_item_id: this.unit,
+          amount: this.newAmount,
+          comment: this.comment,
+          low_stock_threshold: this.reminderEnabled ? this.lowStockTreshold : null
         },
-        success: (result) => {
-          $this.stockValue = null;
-          $this.isSaving = false;
-          $this.closeModal();
-          $this.closeCallback && $this.closeCallback(result);
-          if (window.assignedItemsTable) {
-            window.assignedItemsTable.$refs.assignedItems.loadAssingedRepositories();
-          }
+        operator: this.operations.find((operation) => operation[0] == this.operation)?.[0],
+        change_amount: Math.abs(this.amount)
+
+      }).then((response) => {
+        const result = response.data;
+        $this.stockValue = null;
+        $this.isSaving = false;
+        $this.closeModal();
+        $this.closeCallback && $this.closeCallback(result);
+        if (window.assignedItemsTable) {
+          window.assignedItemsTable.$refs.assignedItems.loadAssingedRepositories();
         }
+      }).catch(() => {
+        $this.isSaving = false;
+        HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
       });
     }
   }

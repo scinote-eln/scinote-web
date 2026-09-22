@@ -92,6 +92,7 @@
 
 <script>
 /* global HelperModule */
+import axios from '../../packs/custom_axios';
 import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
 import LabelPreview from '../label_template/components/label_preview.vue';
 
@@ -125,12 +126,14 @@ export default {
   mounted() {
     $(this.$refs.modal).on('show.bs.modal', () => {
       if (!this.fetchedPrintersAndTemplates) {
-        $.get(this.urls.labelTemplates, (result) => {
+        axios.get(this.urls.labelTemplates).then((response) => {
+          const result = response.data;
           this.templates = result.data;
           this.selectDefaultLabelTemplate();
         });
 
-        $.get(this.urls.printers, (result) => {
+        axios.get(this.urls.printers).then((response) => {
+          const result = response.data;
           this.printers = result.data;
         });
         this.fetchedPrintersAndTemplates = true;
@@ -177,7 +180,8 @@ export default {
       }
     },
     row_ids() {
-      $.get(this.urls.rows, { repository_id: this.repository_id, row_ids: this.row_ids }, (result) => {
+      axios.get(this.urls.rows, { params: { repository_id: this.repository_id, row_ids: this.row_ids } }).then((response) => {
+        const result = response.data;
         this.rows = result.data;
       });
     }
@@ -205,17 +209,19 @@ export default {
     validateTemplate() {
       if (!this.selectedTemplate || this.row_ids.length == 0) return;
 
-      $.post(this.urls.printValidation, {
+      axios.post(this.urls.printValidation, {
         repository_id: this.repository_id,
         label_template_id: this.selectedTemplate.id,
         row_ids: this.row_ids
-      }, (result) => {
+      }).then((response) => {
+        const result = response.data;
         this.labelTemplateError = null;
         this.labelTemplateCode = result.label_code;
-      }).fail((result) => {
-        if (result.responseJSON) {
-          this.labelTemplateError = result.responseJSON.error;
-          this.labelTemplateCode = result.responseJSON.label_code;
+      }).catch((error) => {
+        const responseJSON = error.response?.data;
+        if (responseJSON) {
+          this.labelTemplateError = responseJSON.error;
+          this.labelTemplateCode = responseJSON.label_code;
         } else {
           this.labelTemplateError = null;
           this.labelTemplateCode = null;
@@ -244,18 +250,19 @@ export default {
             }
           );
         } else {
-          $.post(this.urls.print, {
+          axios.post(this.urls.print, {
             row_ids: this.row_ids,
             repository_id: this.repository_id,
             label_printer_id: this.selectedPrinter.id,
             label_template_id: this.selectedTemplate.id,
             copies: this.copies
-          }, (data) => {
+          }).then((response) => {
+            const data = response.data;
             $(this.$refs.modal).modal('hide');
             this.$emit('close');
             this.submitting = false;
             PrintProgressModal.init(data);
-          }).fail(() => {
+          }).catch(() => {
             this.submitting = false;
             HelperModule.flashAlertMsg(this.i18n.t('repository_row.modal_print_label.general_error'), 'danger');
           });

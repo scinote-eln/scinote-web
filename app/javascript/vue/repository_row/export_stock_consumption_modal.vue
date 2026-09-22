@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import axios from '../../packs/custom_axios';
+
 export default {
   name: 'ExportStockConsumptionModal',
   props: {
@@ -53,22 +55,22 @@ export default {
   },
   methods: {
     exportConsumption() {
-      $.post(this.repository.export_consumption_url, { row_ids: this.selectedRows })
-        .done((data) => {
-          HelperModule.flashAlertMsg(data.message, 'success');
+      axios.post(this.repository.export_consumption_url, { row_ids: this.selectedRows })
+        .then((response) => {
+          HelperModule.flashAlertMsg(response.data.message, 'success');
         })
-        .fail((data) => {
-          HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+        .catch((error) => {
+          HelperModule.flashAlertMsg(error.response?.data.message, 'danger');
         })
-        .always(() => {
+        .finally(() => {
           this.closeModal();
         });
     },
     fetchRepositoryData(selectedRows, params) {
       this.selectedRows = selectedRows;
-      $.get(this.exportUrl, params)
-        .done((data) => {
-          this.repository = data;
+      axios.get(this.exportUrl, { params })
+        .then((response) => {
+          this.repository = response.data;
           this.showModal();
         });
     },

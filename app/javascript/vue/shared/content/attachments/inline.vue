@@ -114,6 +114,7 @@ import OpenLocallyMixin from './mixins/open_locally.js';
 import AttachmentActions from './attachment_actions.vue';
 import OpenMenu from './open_menu.vue';
 import LockedTag from '../../snippets/locked_tag.vue';
+import axios from '../../../../packs/custom_axios.js';
 
 export default {
   name: 'inlineAttachment',
@@ -161,16 +162,14 @@ export default {
   },
   methods: {
     reloadAsset() {
-      $.ajax({
-        method: 'GET',
-        url: this.attachment.attributes.urls.load_asset,
-        data: {
+      axios.get(this.attachment.attributes.urls.load_asset, {
+        params: {
           asset: { view_mode: this.attachment.attributes.view_mode }
-        },
-        success: (data) => {
-          if (!(data.html.includes('empty-office-file'))) {
-            this.showWopi = true;
-          }
+        }
+      }).then((response) => {
+        const data = response.data;
+        if (!(data.html.includes('empty-office-file'))) {
+          this.showWopi = true;
         }
       });
     },
