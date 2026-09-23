@@ -37,7 +37,7 @@
       <div class="flex mb-2">
         <div class="text-xl font-semibold"> {{ i18n.t('my_modules.reports.generated_title') }} </div>
       </div>
-      <div v-for="report in reports" class="flex items-center justify-between border border-sn-light-grey rounded px-2">
+      <div v-for="report in reports" :key="report.id" class="flex items-center justify-between border border-sn-light-grey rounded px-2">
         <div class="flex items-center gap-2">
           <i class="sn-icon sn-icon-file-pdf text-sn-grey"></i>
           <a class="file-preview-link file-name"
