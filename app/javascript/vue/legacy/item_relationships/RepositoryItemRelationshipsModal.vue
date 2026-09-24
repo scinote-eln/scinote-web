@@ -86,8 +86,8 @@
 </template>
 
 <script>
-import SelectDropdown from '../shared/select_dropdown.vue';
-import RepositoryRowSelector from '../shared/repository_row_selector.vue';
+import SelectDropdown from '../../shared/select_dropdown.vue';
+import RepositoryRowSelector from '../../shared/repository_row_selector.vue';
 
 export default {
   name: 'RepositoryItemRelationshipsModal',

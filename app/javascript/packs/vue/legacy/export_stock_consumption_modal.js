@@ -1,7 +1,7 @@
 /* global notTurbolinksPreview */
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
-import ExportStockConsumptionModal from '../../vue/repository_row/export_stock_consumption_modal.vue';
-import { mountWithTurbolinks } from './helpers/turbolinks.js';
+import ExportStockConsumptionModal from '../../vue/legacy/repository_row/export_stock_consumption_modal.vue';
+import { mountWithTurbolinks } from '../helpers/turbolinks.js';
 
 window.initExportStockConsumptionModal = () => {
   if (window.exportStockConsumptionModalComponent) return;

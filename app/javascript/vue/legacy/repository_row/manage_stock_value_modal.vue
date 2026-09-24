@@ -166,8 +166,8 @@
 
 <script>
 import Decimal from 'decimal.js';
-import Select from '../shared/legacy/select.vue';
-import Input from '../shared/legacy/input.vue';
+import Select from '../../shared/legacy/select.vue';
+import Input from '../../shared/legacy/input.vue';
 
 export default {
   name: 'ManageStockValueModal',

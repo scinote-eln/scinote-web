@@ -130,7 +130,7 @@
 
 <script>
 /* global HelperModule */
-import SelectDropdown from "../shared/select_dropdown.vue";
+import SelectDropdown from "../../shared/select_dropdown.vue";
 
 export default {
   name: 'AssignItemsToTaskModalContainer',
