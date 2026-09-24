@@ -8,7 +8,7 @@ class MyModuleRepositoriesController < ApplicationController
   before_action :load_my_module, except: :assign_my_modules
   before_action :load_repository, except: %i(index actions_toolbar repositories_dropdown_list repositories_list_html repositories_list create)
   before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption assign_my_modules batch_destroy)
-  before_action :check_repository_view_permissions, except: %i(index actions_toolbar index_dt index_ag repositories_dropdown_list
+  before_action :check_repository_view_permissions, except: %i(index actions_toolbar index_ag repositories_dropdown_list
                                                                repositories_list_html repositories_list create batch_destroy)
   before_action :check_repository_row_consumption_permissions, only: %i(consume_modal update_consumption)
   before_action :check_assign_repository_records_permissions, only: %i(update create batch_destroy)
@@ -18,36 +18,6 @@ class MyModuleRepositoriesController < ApplicationController
   before_action :set_inline_name_editing, only: %i(index)
 
   def index; end
-
-  def index_dt
-    @draw = params[:draw].to_i
-    per_page = params[:length].to_i < 1 ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
-    page = (params[:start].to_i / per_page) + 1
-    if params[:simple_view]
-      rows_view = 'repository_rows/simple_view_index'
-      preload_cells = false
-    else
-      return render_403 unless can_read_repository?(@repository)
-
-      rows_view = 'repository_rows/index'
-      preload_cells = true
-    end
-    datatable_service = RepositoryDatatableService.new(@repository, params, current_user, @my_module, preload_cells: preload_cells)
-
-    @datatable_params = {
-      view_mode: params[:view_mode],
-      my_module: @my_module,
-      include_stock_consumption: @repository.has_stock_management? && params[:assigned].present?,
-      disable_stock_management: true # stock management is always disabled in MyModule context
-    }
-
-    @all_rows_count = datatable_service.all_count
-    @filtered_rows_count = datatable_service.filtered_count
-    @columns_mappings = datatable_service.mappings
-    repository_rows = datatable_service.repository_rows
-    @repository_rows = repository_rows.page(page).per(per_page)
-    render rows_view
-  end
 
   def index_ag
     repository_rows = Lists::RepositoryRowsService.new(@repository,

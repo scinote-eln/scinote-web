@@ -1,6 +1,6 @@
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
-import PrintModalContainer from '../../vue/repository_print_modal/container.vue';
-import { mountWithTurbolinks } from './helpers/turbolinks.js';
+import PrintModalContainer from '../../vue/legacy/repository_print_modal/container.vue';
+import { mountWithTurbolinks } from '../helpers/turbolinks.js';
 
 function initPrintModalComponent() {
   const container = $('.print-label-modal-container');

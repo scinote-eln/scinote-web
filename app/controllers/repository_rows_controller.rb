@@ -3,7 +3,6 @@ class RepositoryRowsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
   include MyModulesHelper
-  include RepositoryDatatableHelper
   include StorageLocationsHelper
   include EquipmentBookingHelper
 
@@ -57,24 +56,6 @@ class RepositoryRowsController < ApplicationController
   rescue Lists::RepositoryFilters::ColumnNotFoundException
     render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }
   rescue Lists::RepositoryFilters::ValueNotFoundException
-    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.value_not_found') }
-  end
-
-  def index
-    @draw = params[:draw].to_i
-    per_page = params[:length] == '-1' ? 100 : params[:length].to_i
-    page = (params[:start].to_i / per_page) + 1
-    datatable_service = RepositoryDatatableService.new(@repository, params, current_user)
-
-    @all_rows_count = datatable_service.all_count
-    @filtered_rows_count = datatable_service.filtered_count
-    @columns_mappings = datatable_service.mappings
-    repository_rows = datatable_service.repository_rows
-    repository_rows = repository_rows.where(archived: params[:archived]) unless @repository.archived?
-    @repository_rows = repository_rows.page(page).per(per_page)
-  rescue RepositoryFilters::ColumnNotFoundException
-    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }
-  rescue RepositoryFilters::ValueNotFoundException
     render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.value_not_found') }
   end
 

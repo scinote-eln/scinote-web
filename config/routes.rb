@@ -588,7 +588,6 @@ Rails.application.routes.draw do
       resources :repositories, controller: :my_module_repositories, only: %i(index show update create) do
         member do
           get :full_view_table
-          post :index_dt, defaults: { format: 'json' }
           post :index_ag, defaults: { format: 'json' }
           post :unassigned_rows, defaults: { format: 'json' }
           post :export_repository

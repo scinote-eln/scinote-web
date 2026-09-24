@@ -2,11 +2,11 @@
 
 class RepositoriesController < ApplicationController
   include InventoriesHelper
+  include InputSanitizeHelper
   include ActionView::Helpers::TagHelper
   include ActionView::Context
   include IconsHelper
   include TeamsHelper
-  include RepositoriesDatatableHelper
   include MyModulesHelper
   include UserRolesHelper
   include TeamAssignmentsActions
