@@ -43,6 +43,7 @@ describe User, type: :model do
     it { should have_db_column :variables }
     it { should have_db_column :current_team_id }
     it { should have_db_column :authentication_token }
+    it { should have_db_column(:avatar_color).of_type(:string).with_options(limit: 7, null: false) }
   end
 
   describe 'Relations' do
