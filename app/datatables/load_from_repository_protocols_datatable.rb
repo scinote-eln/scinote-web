@@ -52,6 +52,7 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
       {
         DT_RowId: parent.id,
         DT_AddingStepsAllowed: record.adding_steps_allowed?,
+        DT_HasReportTemplates: record.report_templates.any?,
         '0': escape_input(record.name),
         '1': record.version_number,
         '2': parent.code,

@@ -16,10 +16,13 @@ class ExperimentReportsController < ApplicationController
       name: create_params[:name],
       generating_status: :in_progress,
       reference: @experiment,
-      created_by: current_user
+      created_by: current_user,
+      params: {
+        my_module_ids: create_params[:my_module_ids]
+      }
     )
 
-    Experiments::GenerateReportJob.perform_later(analytical_report.id, create_params[:task_ids])
+    Experiments::GenerateReportJob.perform_later(analytical_report.id)
   end
 
   def destroy
@@ -49,7 +52,7 @@ class ExperimentReportsController < ApplicationController
   end
 
   def my_modules
-    @my_modules = @experiment.my_modules.readable_by_user(current_user).joins(:analytical_reports).distinct
+    @my_modules = @experiment.my_modules.active.readable_by_user(current_user).joins(:analytical_reports).distinct
   end
 
   private
@@ -67,7 +70,7 @@ class ExperimentReportsController < ApplicationController
   end
 
   def create_params
-    params.permit(:name, task_ids: [])
+    params.permit(:name, my_module_ids: [])
   end
 
   def check_view_permissions

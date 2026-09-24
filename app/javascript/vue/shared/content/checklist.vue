@@ -98,7 +98,6 @@
               @editEnd="editingItem = false"
               @update="saveItem"
               @toggle="saveItemChecked"
-              @removeItem="removeItem"
               @component:delete="removeItem"
             />
           </template>
@@ -333,7 +332,7 @@ export default {
         }
       );
     },
-    removeItem(id) {
+    removeItem({ id }) {
       this.checklistItems = this.checklistItems.filter((item) => item.id !== id);
       this.updatedChecklistItem();
     },

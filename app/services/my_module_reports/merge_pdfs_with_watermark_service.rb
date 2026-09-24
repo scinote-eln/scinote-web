@@ -20,8 +20,8 @@ module MyModuleReports
     def generate!
       load_report!
 
-      assets = (@my_module.assets_in_steps.pdfs.where(id: @asset_ids) +
-                @my_module.assets_in_results.pdfs.where(id: @asset_ids)).in_order_of(:id, @asset_ids)
+      assets = (@my_module.assets_in_steps.pdfs.active.with_active_step.where(id: @asset_ids) +
+                @my_module.assets_in_results.pdfs.active.with_active_result.where(id: @asset_ids)).in_order_of(:id, @asset_ids)
 
       assets.each do |asset|
         next unless can_read_asset?(@user, asset)

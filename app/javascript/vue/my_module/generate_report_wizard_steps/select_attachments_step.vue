@@ -22,7 +22,7 @@
       >
         <template #item="{element}">
           <div class="flex items-center gap-2 py-2 hover:bg-sn-super-light-grey group">
-            <div class="widget-element-grip cursor-pointer opacity-0 group-hover:opacity-100 px-2">
+            <div class="widget-element-grip cursor-pointer px-2">
               <i class="sn-icon sn-icon-drag"></i>
             </div>
             <span class="sci-checkbox-container">

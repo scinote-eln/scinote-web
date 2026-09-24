@@ -18,7 +18,7 @@ class MyModuleReportsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        @analytical_reports = @my_module.analytical_reports.where(generating_status: :done).order(:created_at)
+        @analytical_reports = @my_module.analytical_reports.where(generating_status: :done).order(created_at: :desc)
       end
 
       format.html do
@@ -33,10 +33,11 @@ class MyModuleReportsController < ApplicationController
       generating_status: :in_progress,
       reference: @my_module,
       created_by: current_user,
-      report_template_id: @report_template.id
+      report_template_id: @report_template.id,
+      params: create_params
     )
 
-    MyModules::GenerateReportJob.perform_later(analytical_report.id, create_params, team_id: current_team.id)
+    MyModules::GenerateReportJob.perform_later(analytical_report.id, team_id: current_team.id)
   end
 
   def report_templates
@@ -45,13 +46,15 @@ class MyModuleReportsController < ApplicationController
                                           .distinct
                                           .pluck(:report_template_id)
                                           .to_set
-    @report_templates = @my_module.protocol.report_templates.order(:created_at)
+    @report_templates = @my_module.protocol.report_templates.order(created_at: :desc)
   end
 
   def pdfs
-    step_assets = @my_module.assets_in_steps.pdfs.order('steps.position ASC, active_storage_blobs.filename ASC')
+    step_assets = @my_module.assets_in_steps.pdfs.active.with_active_step
+                            .order('steps.position ASC, active_storage_blobs.filename ASC')
 
-    result_assets = @my_module.assets_in_results.pdfs.order('results.created_at DESC, active_storage_blobs.filename ASC')
+    result_assets = @my_module.assets_in_results.pdfs.active.with_active_result
+                              .order('results.created_at DESC, active_storage_blobs.filename ASC')
     @assets = (step_assets + result_assets)
   end
 

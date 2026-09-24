@@ -42,7 +42,7 @@ module StepElements
         log_step_activity(:table_added, { table_name: step_table.table.name })
       end
 
-      render json: step_table.table, serializer: TableSerializer, user: current_user
+      render json: TableSerializer.new(step_table.table, scope: { user: current_user }).as_json
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -66,7 +66,7 @@ module StepElements
         end
       end
 
-      render json: @table, serializer: TableSerializer, user: current_user
+      render json: TableSerializer.new(@table, scope: { user: current_user }).as_json
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -78,7 +78,7 @@ module StepElements
         step_table.update!(step: target)
         step_table.step_orderable_element.update!(step: target, position: target.next_element_position)
         @step.normalize_elements_position
-        render json: @table, serializer: TableSerializer, user: current_user
+        render json: TableSerializer.new(@table, scope: { user: current_user }).as_json
 
         log_step_activity(
           :table_moved,
@@ -115,7 +115,7 @@ module StepElements
         @table.name += ' (1)'
         new_table = @table.duplicate(@step, current_user, position + 1)
         log_step_activity(:table_duplicated, { table_name: new_table.name })
-        render json: new_table.step_table.table, serializer: TableSerializer, user: current_user
+        render json: TableSerializer.new(new_table.step_table.table, scope: { user: current_user }).as_json
       end
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity

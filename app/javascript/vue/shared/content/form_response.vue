@@ -190,7 +190,8 @@ export default {
     validResponse() {
       return this.formFields.every((field) => {
         if (field.attributes.required) {
-          return field.field_value?.value
+          return typeof(field.field_value?.value) === 'number'
+            || field.field_value?.value
             || field.field_value?.datetime
             || field.field_value?.datetime_to
             || field.field_value?.not_applicable;
@@ -263,7 +264,7 @@ export default {
 
       this.submitting = true;
       axios.post(this.formResponse.urls.submit).then((response) => {
-        this.formResponse = response.data.data.attributes;
+        this.formResponse = response.data;
         this.deleteUrl = this.formResponse.urls.delete_url;
         this.moveUrl = this.formResponse.urls.move_url;
         this.archiveUrl = this.formResponse.urls.archive_url;
@@ -281,7 +282,7 @@ export default {
 
         this.submitting = true;
         axios.post(this.formResponse.urls.reset).then((response) => {
-          this.formResponse = response.data.data.attributes;
+          this.formResponse = response.data;
           this.deleteUrl = this.formResponse.urls.delete_url;
           this.moveUrl = this.formResponse.urls.move_url;
           this.archiveUrl = this.formResponse.urls.archive_url;

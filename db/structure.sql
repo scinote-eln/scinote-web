@@ -237,6 +237,7 @@ CREATE TABLE public.analytical_reports (
     reference_type character varying,
     reference_id bigint,
     report_template_id bigint,
+    params jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -11440,4 +11441,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20150713071921'),
 ('20150713063224'),
 ('20150713060702');
-
