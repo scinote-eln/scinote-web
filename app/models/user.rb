@@ -334,6 +334,7 @@ class User < ApplicationRecord
   has_many :favorites, dependent: :destroy
 
   before_validation :downcase_email!
+  before_create :assign_avatar_color, if: -> { avatar_color.blank? }
   after_create :create_default_notifications_settings
 
   def name
@@ -371,6 +372,8 @@ class User < ApplicationRecord
   end
 
   def avatar_url(style)
+    return Rails.application.routes.url_helpers.avatar_path(self, style) unless avatar.attached?
+
     Rails.application.routes.url_helpers.url_for(avatar_variant(style))
   end
 
@@ -657,6 +660,10 @@ class User < ApplicationRecord
 
   def clear_view_cache
     Rails.cache.delete_matched(%r{^views\/users\/#{id}-})
+  end
+
+  def assign_avatar_color
+    self.avatar_color = Constants::USER_AVATAR_COLORS.sample
   end
 
   def create_default_notifications_settings
