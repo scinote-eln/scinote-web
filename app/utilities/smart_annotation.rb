@@ -56,8 +56,8 @@ class SmartAnnotation
       rep_item = {}
       rep_item[:id] = rep_row.id
       rep_item[:id_encoded] = rep_row.id.base62_encode
-      rep_item[:name] = escape_input(rep_row.name)
-      rep_item[:code] = escape_input(rep_row.code)
+      rep_item[:name] = sanitize_input(rep_row.name)
+      rep_item[:code] = sanitize_input(rep_row.code)
       if my_module_id.present?
         rep_item[:row_assigned] = rep_row&.row_assigned
         rep_item[:my_module_id] = my_module_id
