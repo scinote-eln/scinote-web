@@ -354,6 +354,8 @@ class Constants
   config[:attributes]['img'] << 'data-source-type'
   config[:attributes]['a'] << 'data-turbolinks'
   config[:protocols]['img']['src'] << 'data'
+  (config[:attributes]['span'] ||= []).concat(%w(class data-latex))
+
   INPUT_SANITIZE_CONFIG = Sanitize::Config.freeze_config(config)
 
   REPOSITORY_DEFAULT_PAGE_SIZE = 10

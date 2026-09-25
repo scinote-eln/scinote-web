@@ -1,4 +1,4 @@
-import { texToSvgNode } from '../../mathjax.js';
+import { texToPngDataUrl } from '../../mathjax.js';
 
 tinymce.PluginManager.add('mathequation', function (editor) {
 
@@ -7,14 +7,18 @@ tinymce.PluginManager.add('mathequation', function (editor) {
     const spans = doc.querySelectorAll('.math-tex[data-latex]');
     spans.forEach((span) => {
       const latex = span.getAttribute('data-latex');
-      if (span.querySelector('svg')) return;
-      try {
-        const svgNode = texToSvgNode(latex, false);
+      if (span.querySelector('img')) return;
+      texToPngDataUrl(latex, false).then(({ dataUrl, width, height }) => {
+        const img = doc.createElement('img');
+        img.src = dataUrl;
+        img.width = width;
+        img.height = height;
+        img.alt = latex;
         span.innerHTML = '';
-        span.appendChild(doc.importNode(svgNode, true));
-      } catch (err) {
+        span.appendChild(img);
+      }).catch(() => {
         span.textContent = `[Invalid LaTeX: ${latex}]`;
-      }
+      });
     });
   }
 
