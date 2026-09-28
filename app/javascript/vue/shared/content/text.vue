@@ -2,16 +2,16 @@
   <div class="content__text-container pr-8"
     :data-e2e="`e2e-CO-${dataE2e}-textElement${element.id}`">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
-    <div :class="{'!bg-sn-background-brittlebush p-4': element.attributes.orderable.archived}">
+    <div :class="{'!bg-sn-background-brittlebush p-4': element.archived}">
       <div class="text-header h-9 flex rounded mb-1 gap-2 items-center relative w-full group/text-header"
         :class="{ 'editing-name': editingName,
-        'locked': !element.attributes.orderable.urls.update_url }">
-        <div v-if="element.attributes.orderable.urls.update_url || element.attributes.orderable.name"
+        'locked': !element.urls.update_url }">
+        <div v-if="element.urls.update_url || element.name"
             class="text-ellipsis whitespace-nowrap my-1 font-bold"
-            :class="{'grow': !this.element.attributes.orderable.archived,
+            :class="{'grow': !this.element.archived,
                      'pointer-events-none': locked}">
           <InlineEdit
-            :value="element.attributes.orderable.name"
+            :value="element.name"
             :characterLimit="255"
             :placeholder="i18n.t('protocols.steps.text.text_name')"
             :allowBlank="true"
@@ -23,22 +23,22 @@
             @update="updateName"
           />
         </div>
-        <template v-if="this.element.attributes.orderable.archived">
+        <template v-if="this.element.archived">
           <div class="sci-tag bg-sn-alert-brittlebush pointer-events-none text-sn-black">
             {{ i18n.t('my_modules.results.archived') }}
             <span class="sn-icon sn-icon-archived"></span>
           </div>
           <span class="text-xs ">
             {{ i18n.t('protocols.steps.timestamp_archived', {
-              date: this.element.attributes.orderable.archived_on,
-              user: this.element.attributes.orderable.archived_by
+              date: this.element.archived_on,
+              user: this.element.archived_by
             }) }}
           </span>
         </template>
         <div class="ml-auto flex items gap-4">
-          <LockedTag v-if="element.attributes.orderable.locked" />
+          <LockedTag v-if="element.locked" />
           <button
-            v-if="this.element.attributes.orderable.urls.restore_url"
+            v-if="this.element.urls.restore_url"
             :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-textElement-options-restore`]"
             @click="confirmingRestore = true"
             :title="i18n.t('general.restore')"
@@ -47,7 +47,7 @@
             <i class="sn-icon sn-icon-restore"></i>
           </button>
           <button
-            v-if="this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url"
+            v-if="this.element.archived && this.element.urls.delete_url"
             :class="['btn icon-btn btn-light', `e2e-BT-${this.e2eClass}-textElement-options-delete`]"
             @click="showDeleteModal"
             :title="i18n.t('general.delete')"
@@ -56,7 +56,7 @@
             <i class="sn-icon sn-icon-delete"></i>
           </button>
           <MenuDropdown
-            v-if="inRepository || !this.element.attributes.orderable.locked"
+            v-if="inRepository || !this.element.locked"
             :listItems="this.actionMenu"
             :btnClasses="'btn btn-light icon-btn btn-sm'"
             :position="'right'"
@@ -72,28 +72,28 @@
         </div>
       </div>
       <div class="flex rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body"
-        :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }"
+        :class="{ 'edit': inEditMode, 'component__element--locked': !element.urls.update_url }"
         :data-e2e="`e2e-IF-${dataE2e}-textElement${element.id}-content`"
         @keyup.enter="enableEditMode($event)"
         tabindex="0">
         <Tinymce
-          v-if="element.attributes.orderable.urls.update_url"
-          :value="element.attributes.orderable.text"
-          :value_html="element.attributes.orderable.text_view"
-          :placeholder="element.attributes.orderable.placeholder"
+          v-if="element.urls.update_url"
+          :value="element.text"
+          :value_html="element.text_view"
+          :placeholder="element.placeholder"
           :inEditMode="inEditMode || isNew"
-          :updateUrl="element.attributes.orderable.urls.update_url"
+          :updateUrl="element.urls.update_url"
           :objectType="'TextContent'"
-          :objectId="element.attributes.orderable.id"
+          :objectId="element.id"
           :fieldName="'text_component[text]'"
-          :lastUpdated="element.attributes.orderable.updated_at"
+          :lastUpdated="element.updated_at"
           :assignableMyModuleId="assignableMyModuleId"
           :characterLimit="1000000"
           @update="updateText"
           @editingDisabled="disableEditMode"
           @editingEnabled="enableEditMode"
         />
-        <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="wrappedTables" :data-e2e="`e2e-TX-${dataE2e}-textElement${element.id}`"></div>
+        <div class="view-text-element" v-else-if="element.text_view" v-html="wrappedTables" :data-e2e="`e2e-TX-${dataE2e}-textElement${element.id}`"></div>
         <div v-else class="text-sn-grey" :data-e2e="`e2e-TX-${dataE2e}-textElement${element.id}-empty`">
           {{ i18n.t("protocols.steps.text.empty_text") }}
         </div>
@@ -101,13 +101,13 @@
     </div>
     <deleteElementModal v-if="confirmingDelete" :inRepository="inRepository" @confirm="deleteElement($event)" @close="closeDeleteModal"/>
     <RestoreModal v-if="confirmingRestore"
-                  :parentType="element.attributes.orderable.parent_type"
+                  :parentType="element.parent_type"
                   :element="'text'"
                   @confirm="restoreElement"
                   @close="confirmingRestore = false"/>
     <moveElementModal v-if="movingElement"
-                      :parent_type="element.attributes.orderable.parent_type"
-                      :targets_url="element.attributes.orderable.urls.move_targets_url"
+                      :parent_type="element.parent_type"
+                      :targets_url="element.urls.move_targets_url"
                       @confirm="moveElement($event)" @cancel="closeMoveModal"/>
   </div>
 </template>
@@ -184,14 +184,14 @@ export default {
   },
   computed: {
     locked() {
-      return !this.element.attributes.orderable.urls.update_url;
+      return !this.element.urls.update_url;
     },
     wrappedTables() {
-      return window.wrapTables(this.element.attributes.orderable.text_view);
+      return window.wrapTables(this.element.text_view);
     },
     actionMenu() {
       const menu = [];
-      if (this.element.attributes.orderable.urls.update_url) {
+      if (this.element.urls.update_url) {
         menu.push({
           text: I18n.t('general.edit'),
           emit: 'edit',
@@ -199,7 +199,7 @@ export default {
           e2e_class: `e2e-BT-${this.e2eClass}-textElement-options-edit`
         });
       }
-      if (this.element.attributes.orderable.urls.duplicate_url) {
+      if (this.element.urls.duplicate_url) {
         menu.push({
           text: I18n.t('general.duplicate'),
           emit: 'duplicate',
@@ -207,7 +207,7 @@ export default {
           e2e_class: `e2e-BT-${this.e2eClass}-textElement-options-duplicate`
         });
       }
-      if (this.element.attributes.orderable.urls.move_targets_url) {
+      if (this.element.urls.move_targets_url) {
         menu.push({
           text: I18n.t('general.move'),
           emit: 'move',
@@ -215,7 +215,7 @@ export default {
           e2e_class: `e2e-BT-${this.e2eClass}-textElement-options-move`
         });
       }
-      if (this.element.attributes.orderable.urls.archive_url) {
+      if (this.element.urls.archive_url) {
         menu.push({
           text: I18n.t('general.archive'),
           emit: 'archive',
@@ -223,7 +223,7 @@ export default {
           e2e_class: `e2e-BT-${this.e2eClass}-textElement-options-archive`
         });
       }
-      if (!this.element.attributes.orderable.archived && this.element.attributes.orderable.urls.delete_url) {
+      if (!this.element.archived && this.element.urls.delete_url) {
         menu.push({
           text: this.i18n.t('general.delete'),
           emit: 'delete',
@@ -236,7 +236,7 @@ export default {
   },
   methods: {
     enableEditMode() {
-      if (!this.element.attributes.orderable.urls.update_url) return;
+      if (!this.element.urls.update_url) return;
       if (this.inEditMode) return;
       this.inEditMode = true;
     },
@@ -250,18 +250,18 @@ export default {
       this.editingName = false;
     },
     updateName(name) {
-      this.element.attributes.orderable.name = name;
-      axios.put(this.element.attributes.orderable.urls.update_url, {
+      this.element.name = name;
+      axios.put(this.element.urls.update_url, {
         text_component: { name }
       }).then(() => {
         this.$emit('update', this.element, true);
       });
     },
     updateText(data) {
-      this.element.attributes.orderable.text_view = data.attributes.text_view;
-      this.element.attributes.orderable.text = data.attributes.text;
-      this.element.attributes.orderable.name = data.attributes.name;
-      this.element.attributes.orderable.updated_at = data.attributes.updated_at;
+      this.element.text_view = data.attributes.text_view;
+      this.element.text = data.attributes.text;
+      this.element.name = data.attributes.name;
+      this.element.updated_at = data.attributes.updated_at;
       this.$emit('update', this.element, true);
     },
     highlightText(textElToHighlight) {

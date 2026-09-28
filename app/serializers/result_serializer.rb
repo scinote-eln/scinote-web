@@ -3,14 +3,22 @@
 class ResultSerializer < ResultBaseSerializer
   attributes :my_module_id, :archived, :comments_count, :archived_by, :archived_on, :attachments_locked
 
-  def result_orderable_elements
-    return object.all_elements if object.archived?
+  def elements
+    elements = if object.archived?
+                 object.all_elements
+               elsif @instance_options[:view_mode] == 'archived'
+                 object.archived_elements
+               else
+                 object.active_elements
+               end
 
-    view_mode = @instance_options[:view_mode]
-    if view_mode == 'archived'
-      object.archived_elements
-    else
-      object.active_elements
+    elements.map do |element|
+      case element
+      when Table
+        ResultTableSerializer.new(element, scope: { user: @instance_options[:user] }).as_json
+      when ResultText
+        ResultTextSerializer.new(element, scope: { user: @instance_options[:user] }).as_json
+      end
     end
   end
 

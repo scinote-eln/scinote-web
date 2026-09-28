@@ -5,10 +5,14 @@ class FormFieldSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
   attributes :id, :name, :description, :updated_at, :type, :required,
-             :allow_not_applicable, :uid, :position, :urls, :data
+             :allow_not_applicable, :uid, :position, :urls, :data, :current_datetime
 
   def type
     object.data['type']
+  end
+
+  def current_datetime
+    30.minutes.from_now if object.data.dig('validations', 'disabled_future_dates')
   end
 
   def urls

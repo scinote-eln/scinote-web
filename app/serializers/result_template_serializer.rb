@@ -3,8 +3,15 @@
 class ResultTemplateSerializer < ResultBaseSerializer
   attributes :protocol_id, :lock_enabled, :attachments_locked
 
-  def result_orderable_elements
-    object.all_elements
+  def elements
+    object.all_elements.map do |element|
+      case element
+      when Table
+        ResultTableSerializer.new(element, scope: { user: @instance_options[:user] }).as_json
+      when ResultText
+        ResultTextSerializer.new(element, scope: { user: @instance_options[:user] }).as_json
+      end
+    end
   end
 
   def lock_enabled

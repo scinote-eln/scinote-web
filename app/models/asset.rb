@@ -55,6 +55,14 @@ class Asset < ApplicationRecord
     joins(file_attachment: :blob).order(sort)
   }
 
+  scope :pdfs, lambda {
+    joins(file_attachment: :blob)
+      .where(active_storage_blobs: { content_type: 'application/pdf' })
+  }
+
+  scope :with_active_step, -> { where(steps: { archived: false }) }
+  scope :with_active_result, -> { where(results: { archived: false }) }
+
   attr_accessor :file_content, :file_info, :snapshot
 
   before_save :reset_file_processing, if: -> { file.new_record? }
@@ -69,7 +77,7 @@ class Asset < ApplicationRecord
     assets_in_steps = Asset.joins(:step)
                            .where(steps: { protocol: Protocol.search(user, include_archived, nil, teams) })
                            .select(:id)
-    assets_in_steps = assets_in_steps.where(archived: false, steps: { archived: false }) unless include_archived
+    assets_in_steps = assets_in_steps.active.with_active_step unless include_archived
 
     assets_in_template_steps =
       Asset.joins(:step)
@@ -80,7 +88,7 @@ class Asset < ApplicationRecord
                              .where(results: { id: Result.search(user, include_archived, nil, teams) })
                              .select(:id)
 
-    assets_in_results = assets_in_results.where(archived: false, results: { archived: false }) unless include_archived
+    assets_in_results = assets_in_results.active.with_active_result unless include_archived
 
     assets_in_inventories = Asset.joins(repository_cell: { repository_column: :repository })
                                  .where(repositories: {

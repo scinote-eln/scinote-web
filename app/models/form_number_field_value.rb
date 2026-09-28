@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FormNumberFieldValue < FormFieldValue
+  include ActionView::Helpers::NumberHelper
+
   def value=(val)
     self.unit = form_field.data['unit']
 
@@ -13,7 +15,14 @@ class FormNumberFieldValue < FormFieldValue
   end
 
   def value
-    range? ? [number, number_to] : number
+    if range?
+      [
+        cast_number(number),
+        cast_number(number_to)
+      ]
+    else
+      cast_number(number)
+    end
   end
 
   def range?
@@ -21,8 +30,8 @@ class FormNumberFieldValue < FormFieldValue
   end
 
   def formatted
-    number_with_unit = "#{number} #{unit}"
-    range? ? "#{number_with_unit} - #{number_to} #{unit}" : number_with_unit
+    number_with_unit = "#{cast_number(number)} #{unit}"
+    range? ? "#{number_with_unit} - #{cast_number(number_to)} #{unit}" : number_with_unit
   end
 
   def value_in_range?
@@ -36,5 +45,14 @@ class FormNumberFieldValue < FormFieldValue
     max_value = validation_params['max']
 
     !((min_value.present? && min_value > number) || (max_value.present? && max_value < number))
+  end
+
+  private
+
+  def cast_number(big_decimal_number)
+    return unless big_decimal_number
+    return big_decimal_number.to_i if big_decimal_number.frac.zero?
+
+    big_decimal_number
   end
 end

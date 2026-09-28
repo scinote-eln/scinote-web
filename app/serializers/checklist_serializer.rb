@@ -6,9 +6,22 @@ class ChecklistSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :name, :urls, :icon, :sa_name, :parent_type, :archived, :archived_by, :archived_on, :locked
+  attributes :id, :name, :urls, :icon, :sa_name, :parent_type, :archived, :archived_by, :archived_on, :locked,
+             :position, :step_orderable_element_id, :type
 
   has_many :checklist_items, serializer: ChecklistItemSerializer
+
+  def position
+    object.step_orderable_element&.position
+  end
+
+  def step_orderable_element_id
+    object.step_orderable_element&.id
+  end
+
+  def type
+    object.class.name
+  end
 
   def archived_by
     object.archived_by&.full_name

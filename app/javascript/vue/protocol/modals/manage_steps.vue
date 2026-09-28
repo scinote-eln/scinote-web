@@ -16,7 +16,7 @@
 
             <a
               class="btn icon-btn ml-auto"
-              data-e2e="e2e-BT-protocol-templateSteps-lockStep"
+              data-e2e="e2e-BT-protocol-manageSteps-lockAllSteps"
               :data-sn-tooltip="allStepsLocked ? i18n.t('protocols.unlock_all_steps') : i18n.t('protocols.lock_all_steps')"
               @click="toggleLockAll(!this.allStepsLocked)"
               tabindex="0" >
@@ -34,7 +34,7 @@
             <template #item="{element, index}">
               <div class="step-element-header flex items-center">
                 <div class="step-element-grip step-element-grip--draggable">
-                  <i class="sn-icon sn-icon-drag" :data-e2e="`e2e-BT-manageSteps-element${index + 1}-drag`"></i>
+                  <i class="sn-icon sn-icon-drag" :data-e2e="`e2e-BT-protocol-manageSteps-element${index + 1}-drag`"></i>
                 </div>
                 <div class="step-element-name text-center flex items-center gap-2 w-full">
                   <strong class="step-element-number" :data-e2e="`e2e-TX-manageSteps-element${index + 1}-position`">
@@ -49,8 +49,8 @@
                     {{ element.attributes.name }}
                   </span>
                   <a
-                    class="btn icon-btn ml-auto"
-                    data-e2e="e2e-BT-protocol-templateSteps-lockStep"
+                    class="btn icon-btn ml-auto e2e-BT-protocol-manageSteps-step-lock"
+                    :data-e2e="`e2e-BT-protocol-manageSteps-step${index + 1}-lock`"
                     :data-sn-tooltip="element.attributes.locked ? i18n.t('protocols.unlock_step') : i18n.t('protocols.lock_step')"
                     @click="toggleLock(element)"
                     tabindex="0" >

@@ -26,7 +26,8 @@ module Toolbars
         access_action,
         move_action,
         duplicate_action,
-        archive_action
+        archive_action,
+        generate_report_action
       ].compact
     end
 
@@ -115,6 +116,22 @@ module Toolbars
         label: I18n.t('experiments.toolbar.archive_button'),
         icon: 'sn-icon sn-icon-archive',
         path: archive_group_project_experiments_path(project_id: @experiments.first.project_id),
+        type: :emit
+      }
+    end
+
+    def generate_report_action
+      return unless @single
+      return unless AnalyticalReport.experiment_reporting_enabled?
+
+      experiment = @experiments.first
+
+      return unless can_manage_experiment?(experiment)
+
+      {
+        name: 'generateReport',
+        label: I18n.t('experiments.reports.generate_button'),
+        icon: 'sn-icon sn-icon-reports',
         type: :emit
       }
     end

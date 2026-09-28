@@ -4,10 +4,23 @@ class TableSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
-  attributes :name, :contents, :urls, :icon, :metadata, :parent_type, :archived, :archived_by, :archived_on, :locked, :sheet_name_not_unique
+  attributes :id, :name, :contents, :urls, :icon, :metadata, :parent_type, :archived, :archived_by, :archived_on, :locked,
+             :sheet_name_not_unique, :position, :step_orderable_element_id, :type
 
   def sheet_name_not_unique
     object.duplicate_sheet_name_tables.any?
+  end
+
+  def position
+    object.step_table&.step_orderable_element&.position
+  end
+
+  def step_orderable_element_id
+    object.step_table&.step_orderable_element&.id
+  end
+
+  def type
+    object.class.name
   end
 
   def contents

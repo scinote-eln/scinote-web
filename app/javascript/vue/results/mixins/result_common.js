@@ -18,7 +18,7 @@ export default {
   },
   computed: {
     orderedElements() {
-      return this.elements.sort((a, b) => a.attributes.position - b.attributes.position);
+      return this.elements.sort((a, b) => (a.position) - (b.position));
     },
     urls() {
       return this.result.attributes.urls || {};
@@ -85,14 +85,15 @@ export default {
 
       this.$emit('result:collapsed');
     },
-    removeElement(id) {
-      const position = this.elements.find(el => el.id == id)?.attributes?.position;
+    removeElement({ id, type }) {
+      const isRemoved = (el) => el.id === id && el.type === type;
+      const position = this.elements.find(isRemoved)?.position;
 
       this.elements = this.elements
-                          .filter(el => el.id !== id)
+                          .filter(el => !isRemoved(el))
                           .map(el => {
-                            if (el.attributes.position >= position) {
-                              el.attributes.position--;
+                            if (el.position >= position) {
+                              el.position--;
                             }
                             return el;
                           });

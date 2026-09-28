@@ -6,7 +6,8 @@ class StepTextSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :urls, :text_view, :updated_at, :icon, :name, :placeholder, :parent_type, :archived, :archived_by, :archived_on, :locked
+  attributes :id, :text, :urls, :text_view, :updated_at, :icon, :name, :placeholder, :parent_type, :archived, :archived_by, :archived_on, :locked,
+             :position, :step_orderable_element_id, :type
 
   def updated_at
     object.updated_at.to_i
@@ -45,7 +46,19 @@ class StepTextSerializer < ActiveModel::Serializer
   end
 
   def locked
-   object.locked || object.step.locked
+    object.locked || object.step.locked
+  end
+
+  def position
+    object.step_orderable_element&.position
+  end
+
+  def step_orderable_element_id
+    object.step_orderable_element&.id
+  end
+
+  def type
+    object.class.name
   end
 
   def urls

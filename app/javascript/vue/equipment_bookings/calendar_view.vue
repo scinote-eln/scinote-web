@@ -5,6 +5,7 @@
       :custom-components="customComponents"
       :calendar-app="calendarApp"
       class="w-full h-full"
+      data-e2e="e2e-EL-equipmentBooking-calendar"
     />
     <ManageModal
       v-if="selectedEvent"

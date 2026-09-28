@@ -55,7 +55,7 @@ namespace :db do
             user_hash['email'],
             password,
             true,
-            create_teams ? Constants::DEFAULT_PRIVATE_TEAM_NAME : nil,
+            create_teams ? Constants::DEFAULT_PRIVATE_WORKSPACE_NAME : nil,
             team_ids
           )
 
@@ -111,7 +111,7 @@ namespace :db do
           email,
           password,
           true,
-          create_team ? Constants::DEFAULT_PRIVATE_TEAM_NAME : nil,
+          create_team ? Constants::DEFAULT_PRIVATE_WORKSPACE_NAME : nil,
           team_ids
         )
 

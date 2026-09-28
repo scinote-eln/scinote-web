@@ -10,6 +10,7 @@ Canaid::Permissions.register_for(MyModule) do
      manage_my_module_designated_users
      assign_my_module_repository_rows
      manage_my_module_repository_rows
+     manage_my_module_reports
      create_results
      create_my_module_comments
      create_comments_in_my_module_steps
@@ -42,6 +43,10 @@ Canaid::Permissions.register_for(MyModule) do
   end
 
   can :manage_my_module do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
+  end
+
+  can :manage_my_module_reports do |user, my_module|
     my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 

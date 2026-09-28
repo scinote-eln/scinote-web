@@ -35,6 +35,101 @@ describe Table, type: :model do
     it { should have_many :report_elements }
   end
 
+  describe '#sibling_tables' do
+    it 'returns Table.none when the table belongs to neither a step nor a result' do
+      expect(table.sibling_tables).to eq(Table.none)
+    end
+
+    context 'when table belongs to a step' do
+      let(:protocol) { create :protocol }
+      let(:step) { create :step, protocol: protocol }
+      let(:table) { step.tables.create!(name: Faker::Name.unique.name, contents: '{}') }
+
+      it 'includes other tables belonging to steps in the same protocol' do
+        sibling = create(:step, protocol: protocol).tables.create!(name: Faker::Name.unique.name, contents: '{}')
+
+        expect(table.sibling_tables).to contain_exactly(sibling)
+      end
+
+      it 'does not include the table itself' do
+        expect(table.sibling_tables).not_to include(table)
+      end
+
+      it 'does not include tables belonging to steps in a different protocol' do
+        create(:step).tables.create!(name: Faker::Name.unique.name, contents: '{}')
+
+        expect(table.sibling_tables).to be_empty
+      end
+
+      it 'only includes siblings whose archived state matches the table own context' do
+        active_sibling = create(:step, protocol: protocol).tables.create!(
+          name: Faker::Name.unique.name, contents: '{}'
+        )
+        archived_table_sibling = create(:step, protocol: protocol).tables.create!(
+          name: Faker::Name.unique.name, contents: '{}', archived: true
+        )
+        archived_step = create(:step, protocol: protocol, archived: true)
+        archived_step_sibling = archived_step.tables.create!(name: Faker::Name.unique.name, contents: '{}')
+
+        expect(table.sibling_tables).to contain_exactly(active_sibling)
+
+        table.update_column(:archived, true)
+        expect(table.sibling_tables).to contain_exactly(archived_table_sibling, archived_step_sibling)
+      end
+    end
+
+    context 'when table belongs to a result' do
+      let(:my_module) { create :my_module }
+      let(:result) { create :result, my_module: my_module }
+      let(:table) { result.tables.create!(name: Faker::Name.unique.name, contents: '{}') }
+
+      it 'includes other tables belonging to results in the same my_module' do
+        sibling = create(:result, my_module: my_module).tables.create!(
+          name: Faker::Name.unique.name, contents: '{}'
+        )
+
+        expect(table.sibling_tables).to contain_exactly(sibling)
+      end
+
+      it 'does not include tables belonging to results in a different my_module' do
+        create(:result).tables.create!(name: Faker::Name.unique.name, contents: '{}')
+
+        expect(table.sibling_tables).to be_empty
+      end
+
+      it 'only includes siblings whose archived state matches the table own context' do
+        active_sibling = create(:result, my_module: my_module).tables.create!(
+          name: Faker::Name.unique.name, contents: '{}'
+        )
+        create(:result, :archived, my_module: my_module).tables.create!(
+          name: Faker::Name.unique.name, contents: '{}'
+        )
+
+        expect(table.sibling_tables).to contain_exactly(active_sibling)
+      end
+    end
+
+    context 'when table belongs to a result template' do
+      let(:protocol) { create :protocol }
+      let(:result_template) { create :result_template, protocol: protocol }
+      let(:table) { result_template.tables.create!(name: Faker::Name.unique.name, contents: '{}') }
+
+      it 'includes other tables belonging to result templates in the same protocol' do
+        sibling = create(:result_template, protocol: protocol).tables.create!(
+          name: Faker::Name.unique.name, contents: '{}'
+        )
+
+        expect(table.sibling_tables).to contain_exactly(sibling)
+      end
+
+      it 'does not include tables belonging to result templates in a different protocol' do
+        create(:result_template).tables.create!(name: Faker::Name.unique.name, contents: '{}')
+
+        expect(table.sibling_tables).to be_empty
+      end
+    end
+  end
+
   describe 'Validations' do
     describe '#contents' do
       it { is_expected.to validate_presence_of :contents }

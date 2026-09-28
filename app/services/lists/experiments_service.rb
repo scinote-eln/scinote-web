@@ -100,7 +100,8 @@ module Lists
         start_date: 'start_date',
         due_date: 'due_date',
         status: 'status',
-        favorite: 'favorite'
+        favorite: 'favorite',
+        report: 'report'
       }
     end
 
@@ -123,6 +124,15 @@ module Lists
                                            WHEN experiments.started_at IS NULL AND experiments.done_at IS NULL THEN -1
                                            WHEN experiments.done_at IS NULL THEN 0
                                            ELSE 1 END #{sort_direction(order_params)}"))
+                 when 'report'
+                   @records.joins("LEFT JOIN (
+                      SELECT DISTINCT ON (reference_id) reference_id, name AS latest_report_name, created_at
+                      FROM analytical_reports
+                      WHERE analytical_reports.reference_type = 'Experiment'
+                      ORDER BY reference_id, created_at DESC
+                    ) latest_reports ON latest_reports.reference_id = experiments.id")
+                           .order("latest_reports.latest_report_name #{sort_direction(order_params)}")
+                           .group('latest_reports.latest_report_name')
                  else
                    sort_by = "#{sortable_columns[order_params[:column].to_sym]} #{sort_direction(order_params)}"
                    @records.order(sort_by)
