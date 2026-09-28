@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MyModuleStatusFlow < ApplicationRecord
-  enum visibility: { global: 0, in_team: 1 }
+  enum :visibility, { global: 0, in_team: 1 }
 
   has_many :my_module_statuses, dependent: :destroy
   belongs_to :team, optional: true

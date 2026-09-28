@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RepositorySnapshot < RepositoryBase
-  enum status: { provisioning: 0, ready: 1, failed: 2 }
+  enum :status, { provisioning: 0, ready: 1, failed: 2 }
   after_save :refresh_report_references, if: :saved_change_to_selected
   before_destroy :refresh_report_references_on_destroy, prepend: true
 

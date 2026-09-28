@@ -97,18 +97,6 @@ describe MyModulesController, type: :controller do
     end
   end
 
-  describe 'GET current_status' do
-    let(:action) { get :current_status, params: { id: my_module.id }, format: :json }
-    it 'returns http success' do
-      action
-      expect(response).to have_http_status(:success)
-      expect(response.content_type).to eq('application/json; charset=utf-8')
-      expect(response.body).not_to be_empty
-      expect(JSON.parse(response.body)["my_module_status_id"])
-        .to be_eql(my_module.my_module_status_id)
-    end
-  end
-
   describe 'GET status_state' do
     let(:action) { get :status_state, params: { id: my_module.id }, format: :json }
     it 'returns http success' do

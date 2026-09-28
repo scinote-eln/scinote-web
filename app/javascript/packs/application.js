@@ -15,6 +15,9 @@ require('bootstrap-select/js/bootstrap-select');
 import '@vuepic/vue-datepicker/dist/main.css';
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 import axios from './custom_axios.js';
+import ActionCableConsumer from '../channels/consumer.js';
+
+window.ActionCableConsumer = ActionCableConsumer;
 
 window.bwipjs = require('bwip-js');
 window.Decimal = require('decimal.js');

@@ -106,4 +106,30 @@ describe MyModule, type: :model do
       it { is_expected.to validate_presence_of :experiment }
     end
   end
+
+  describe 'status change broadcasts' do
+    let(:status_flow) { create :my_module_status_flow }
+    let!(:initial_status) { create :my_module_status, my_module_status_flow: status_flow }
+    let!(:next_status) do
+      create :my_module_status, my_module_status_flow: status_flow, previous_status: initial_status
+    end
+    let!(:task) { create :my_module, my_module_status: initial_status }
+
+    it 'broadcasts to the task when its status changes' do
+      expect { task.update!(my_module_status_id: next_status.id) }
+        .to have_broadcasted_to(task).from_channel(MyModuleStatusChannel)
+    end
+
+    it 'does not broadcast when an unrelated attribute changes' do
+      expect { task.update!(name: 'Renamed task') }
+        .not_to have_broadcasted_to(task).from_channel(MyModuleStatusChannel)
+    end
+
+    it 'broadcasts when a transition error is recorded' do
+      expect { task.update!(last_transition_error: { 'type' => 'general', 'message' => 'boom' }) }
+        .to have_broadcasted_to(task).from_channel(MyModuleStatusChannel)
+
+      expect(task.status_broadcast_payload).to include(transition_failed: true)
+    end
+  end
 end

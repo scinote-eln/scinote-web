@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TeamSharedObject < ApplicationRecord
-  enum permission_level: Extends::SHARED_OBJECTS_PERMISSION_LEVELS.except(:not_shared)
+  enum :permission_level, Extends::SHARED_OBJECTS_PERMISSION_LEVELS.except(:not_shared)
 
   belongs_to :team
   belongs_to :shared_object, polymorphic: true, inverse_of: :team_shared_objects
