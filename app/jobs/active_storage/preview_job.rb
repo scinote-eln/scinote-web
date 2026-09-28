@@ -8,11 +8,13 @@ class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
 
   discard_on StandardError do |job, error|
     blob = ActiveStorage::Blob.find_by(id: job.arguments.first)
+    asset = blob&.attachments&.take&.record
     ActiveRecord::Base.no_touching do
-      blob&.attachments&.take&.record&.update!(file_processing: false)
+      asset&.update!(file_processing: false)
       blob.metadata['preview_failed'] = true
-      blob.save!
+      blob.update_column(:metadata, blob.metadata)
     end
+    AssetPreviewChannel.broadcast_to(asset, status: 'failed')
     Rails.logger.error "Couldn't generate preview for Blob with id: #{job.arguments.first}. Error:\n #{error}"
   end
 
@@ -25,14 +27,21 @@ class ActiveStorage::PreviewJob < ActiveStorage::BaseJob
       blob = ActiveStorage::Blob.find(blob_id)
       asset = blob.attachments.take.record
       preview = asset.medium_preview.processed
-      Rails.logger.info "Preview for the Blod with id: #{blob.id} - successfully generated.\n" \
+      Rails.logger.info "Preview for the Blob with id: #{blob.id} - successfully generated.\n" \
                         "Transformations applied: #{preview.variation.transformations}"
 
       preview = asset.large_preview.processed
-      Rails.logger.info "Preview for the Blod with id: #{blob.id} - successfully generated.\n" \
+      Rails.logger.info "Preview for the Blob with id: #{blob.id} - successfully generated.\n" \
                         "Transformations applied: #{preview.variation.transformations}"
 
+      # Cleanup successful preview generation on retry
+      if blob.metadata['preview_failed']
+        blob.metadata.delete('preview_failed')
+        blob.update_column(:metadata, blob.metadata)
+      end
+
       asset.update(file_processing: false)
+      AssetPreviewChannel.broadcast_to(asset, status: 'ready')
     end
   end
 end

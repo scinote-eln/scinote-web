@@ -27,6 +27,8 @@ module Activities
     def serialized_subject
       return { type: @activity.subject_type, id: @activity.subject_id } unless @webhook.include_serialized_subject
 
+      return { type: @activity.subject_type, id: @activity.subject_id, error: I18n.t('api.webhooks.errors.subject_not_exist') } unless @activity.subject
+
       serializer_name = Extends::ACTIVITY_SUBJECT_TYPE_API_SERIALIZER_MAP[@activity.subject_type]
 
       unless serializer_name

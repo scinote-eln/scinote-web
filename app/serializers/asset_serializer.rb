@@ -12,7 +12,7 @@ class AssetSerializer < ActiveModel::Serializer
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi, :file_name_without_extension,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
              :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type,
-             :edit_version_range, :archived, :archived_by, :archived_on, :locked
+             :edit_version_range, :archived, :archived_by, :archived_on, :locked, :preview_status
   attribute :checksum, if: :sync_url_present?
 
   def icon

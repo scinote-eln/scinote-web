@@ -125,33 +125,16 @@ module TinyMceImages
         image_id = image['data-mce-token'] || image['alt']&.split('-')&.last
         asset = image_id.presence && image_id.match?(/\A[0-9a-zA-Z]+\z/) && TinyMceAsset.find_by(id: Base62.decode(image_id))
 
-        if asset
-          if asset.object == self && parsed_asset_ids.exclude?(asset.id)
-            parsed_asset_ids << asset.id
-            next
-          end
+        next unless asset
 
-          user.permission_team = asset.team
-
-          next unless asset.can_read?(user)
-        else
-          image_type = nil
-          begin
-            uri = URI.parse(image['src'])
-            if uri.scheme != 'https'
-              uri.scheme = Rails.application.config.force_ssl ? 'https' : 'http'
-            end
-            image_type = FastImage.type(uri.to_s).to_s
-            next unless image_type
-
-            new_image = Down.download(uri.to_s, max_size: Rails.configuration.x.file_max_size_mb.megabytes)
-          rescue StandardError => e
-            Rails.logger.error e.message
-            next
-          end
-
-          new_image_filename = Asset.generate_unique_secure_token + '.' + image_type
+        if asset.object == self && parsed_asset_ids.exclude?(asset.id)
+          parsed_asset_ids << asset.id
+          next
         end
+
+        user.permission_team = asset.team
+
+        next unless asset.can_read?(user)
 
         new_asset = TinyMceAsset.create(
           object: self,
@@ -160,11 +143,7 @@ module TinyMceImages
 
         new_asset.transaction do
           new_asset.save!
-          if asset
-            asset.duplicate_file(new_asset)
-          else
-            new_asset.image.attach(io: new_image, filename: new_image_filename)
-          end
+          asset.duplicate_file(new_asset)
         end
 
         image['src'] = ''

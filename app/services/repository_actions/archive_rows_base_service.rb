@@ -48,7 +48,7 @@ module RepositoryActions
       succeed?
     end
 
-    def log_activity(type, row)
+    def log_activity(type, row, message_items = {})
       Activities::CreateActivityService
         .call(activity_type: type,
               owner: @user,
@@ -56,7 +56,7 @@ module RepositoryActions
               team: @team,
               message_items: {
                 repository_row: row.id
-              })
+              }.merge(message_items))
     end
   end
 end

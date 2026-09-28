@@ -1,6 +1,6 @@
  <div class="task-sharing-and-flows flex items-center gap-2 pl-3">
     <% if @my_module.my_module_status_flow %>
-      <div id="status-container" class="flex items-center gap-2" data-current-status-id="<%= @my_module.my_module_status_id %>" data-current-status-url="<%= current_status_my_module_path(@my_module) %>" data-status-partial-url="<%= status_partial_my_module_path(@my_module) %>">
+      <div id="status-container" class="flex items-center gap-2" data-my-module-id="<%= @my_module.id %>" data-current-status-id="<%= @my_module.my_module_status_id %>" data-status-partial-url="<%= status_partial_my_module_path(@my_module) %>">
         <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } %>
       </div>
     <% end %>

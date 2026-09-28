@@ -1,6 +1,15 @@
-/* global animateSpinner $ GLOBAL_CONSTANTS  */
+/* global animateSpinner $ ActionCableConsumer HelperModule I18n */
 
 (function() {
+  var $statusContainer = $('#status-container');
+  var renderedWhileChanging = !!$statusContainer.find('.status-flow-dropdown').data('status-changing');
+  var displayedState = {
+    my_module_status_id: $statusContainer.data('current-status-id'),
+    status_changing: renderedWhileChanging,
+    transition_failed: $statusContainer.find('.status-transition-error').length > 0
+  };
+  var reloadPending = false;
+
   function initStatusFlowModal() {
     $('.task-sharing-and-flows').on('click', '#viewTaskFlow', function() {
       $('#statusFlowModal').off('shown.bs.modal').on('shown.bs.modal', function() {
@@ -16,20 +25,7 @@
     });
   }
 
-  function checkStatusState() {
-    $.getJSON($('.status-flow-dropdown').data('status-check-url'), (statusData) => {
-      if (statusData.status_changing) {
-        setTimeout(() => { checkStatusState(); }, GLOBAL_CONSTANTS.FAST_STATUS_POLLING_INTERVAL);
-      } else {
-        location.reload();
-      }
-    });
-  }
-
   function applyTaskStatusChangeCallBack() {
-    if ($('.status-flow-dropdown').data('status-changing')) {
-      setTimeout(() => { checkStatusState(); }, GLOBAL_CONSTANTS.FAST_STATUS_POLLING_INTERVAL);
-    }
     $('.task-sharing-and-flows').on('click', '#dropdownTaskFlowList > li[data-state-id]', function() {
       var list = $('#dropdownTaskFlowList');
       var item = $(this);
@@ -62,30 +58,83 @@
     });
   }
 
-  function checkCurrentStatus() {
-    if (window.myModuleStatusPollingTimeout) {
-      clearTimeout(window.myModuleStatusPollingTimeout);
-      window.myModuleStatusPollingTimeout = null;
-    }
-    if (!$('#status-container').data('current-status-url')) return;
+  function reloadWhenTransitionEnds() {
+    if (reloadPending) return;
 
-    $.get($('#status-container').data('current-status-url'), (statusData) => {
-      if ($('#status-container').data('current-status-id') !== statusData.my_module_status_id) {
-        $.get($('#status-container').data('status-partial-url'), (partialData) => {
-          $('#status-container').data('current-status-id', statusData.my_module_status_id);
-          $('#status-container').html(partialData.html);
-          $('#status-container').trigger('statusChanged');
-        });
-      } else {
-        window.myModuleStatusPollingTimeout = setTimeout(() => { checkCurrentStatus(); }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
+    reloadPending = true;
+    $.getJSON($statusContainer.find('.status-flow-dropdown').data('status-check-url'), (statusData) => {
+      if (statusData.status_changing) {
+        reloadPending = false;
+        return;
       }
+      location.reload();
+    }).fail(() => { reloadPending = false; });
+  }
+
+  function refreshStatus(state) {
+    $.get($statusContainer.data('status-partial-url'), (partialData) => {
+      var statusIdChanged = state.my_module_status_id !== displayedState.my_module_status_id;
+
+      displayedState = state;
+      $statusContainer.data('current-status-id', state.my_module_status_id);
+      $statusContainer.html(partialData.html);
+      if (statusIdChanged) $statusContainer.trigger('statusChanged');
     });
+  }
+
+  function handleStatusState(state) {
+    if (!state || !$statusContainer.length) return;
+
+    if (renderedWhileChanging) {
+      if (!state.status_changing) reloadWhenTransitionEnds();
+      return;
+    }
+
+    if (state.my_module_status_id === displayedState.my_module_status_id
+        && state.status_changing === displayedState.status_changing
+        && state.transition_failed === displayedState.transition_failed) return;
+
+    refreshStatus(state);
+  }
+
+  function unsubscribeFromStatusChannel() {
+    if (!window.myModuleStatusSubscription) return;
+
+    ActionCableConsumer.subscriptions.remove(window.myModuleStatusSubscription);
+    window.myModuleStatusSubscription = null;
+  }
+
+  function subscribeToStatusChannel() {
+    if (!$statusContainer.length || !window.ActionCableConsumer) return;
+
+    var myModuleId = $statusContainer.data('my-module-id');
+
+    // Turbolinks re-runs this script on every visit without rebooting the JS
+    // runtime, so an earlier subscription would otherwise stay alive and act on
+    // a page it no longer belongs to.
+    unsubscribeFromStatusChannel();
+
+    window.myModuleStatusSubscription = ActionCableConsumer.subscriptions.create(
+      { channel: 'MyModuleStatusChannel', my_module_id: myModuleId },
+      {
+        connected: function() {
+          this.perform('sync');
+        },
+        received: (state) => {
+          if ($('#status-container').data('my-module-id') !== myModuleId) return;
+
+          handleStatusState(state);
+        }
+      }
+    );
+
+    $(document).one('turbolinks:before-cache', unsubscribeFromStatusChannel);
   }
 
   function initStatus() {
     initStatusFlowModal();
-    checkCurrentStatus();
     applyTaskStatusChangeCallBack();
+    subscribeToStatusChannel();
   }
 
   initStatus();
