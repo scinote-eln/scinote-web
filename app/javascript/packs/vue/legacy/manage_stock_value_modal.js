@@ -1,6 +1,6 @@
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
-import ManageStockValueModal from '../../vue/legacy/repository_row/manage_stock_value_modal.vue';
+import ManageStockValueModal from '../../../vue/legacy/repository_row/manage_stock_value_modal.vue';
 import { mountWithTurbolinks } from '../helpers/turbolinks.js';
 
 
