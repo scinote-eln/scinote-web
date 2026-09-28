@@ -13,7 +13,7 @@ class ResultBase < ApplicationRecord
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
 
-  enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
+  enum :assets_view_mode, { thumbnail: 0, list: 1, inline: 2 }
 
   belongs_to :user, inverse_of: :results
   belongs_to :last_modified_by, class_name: 'User', optional: true

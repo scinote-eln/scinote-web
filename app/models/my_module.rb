@@ -21,8 +21,8 @@ class MyModule < ApplicationRecord
 
   attr_accessor :transition_error_rollback, :status_changed_by
 
-  enum state: Extends::TASKS_STATES
-  enum provisioning_status: { done: 0, in_progress: 1, failed: 2 }
+  enum :state, Extends::TASKS_STATES
+  enum :provisioning_status, { done: 0, in_progress: 1, failed: 2 }
 
   before_validation :archiving_and_restoring_extras, on: :update, if: :archived_changed?
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && experiment_id_changed? }

@@ -9,9 +9,7 @@ class CalendarEvent < ApplicationRecord
 
   before_save :reset_reminder_sent, if: -> { start_date_changed? || start_datetime_changed? }
 
-  enum event_type: {
-    equipment_booking: 0
-  }
+  enum :event_type, { equipment_booking: 0 }
 
   scope :repository_rows_filter, ->(subject_ids) { where(subject_type: 'RepositoryRow', subject_id: subject_ids) }
   scope :repository_filter, ->(repository_id) {

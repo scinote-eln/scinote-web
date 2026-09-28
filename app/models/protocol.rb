@@ -18,8 +18,8 @@ class Protocol < ApplicationRecord
 
   before_create -> { self.skip_user_assignments = true }, if: -> { in_module? }
 
-  enum visibility: { hidden: 0, visible: 1 }
-  enum protocol_type: {
+  enum :visibility, { hidden: 0, visible: 1 }
+  enum :protocol_type, {
     unlinked: 0,
     linked: 1,
     in_repository_private: 2, # Deprecated
