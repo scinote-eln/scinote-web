@@ -820,10 +820,8 @@ GEM
     sys-uname (1.5.1)
       ffi (~> 1.1)
       memoist3 (~> 1.0.0)
-    tailwindcss-rails (4.6.0)
+    tailwindcss-rails (2.7.9)
       railties (>= 7.0.0)
-      tailwindcss-ruby (~> 4.0)
-    tailwindcss-ruby (4.3.3-x86_64-linux-gnu)
     thor (1.5.0)
     tilt (2.9.0)
     timecop (0.9.11)
@@ -980,7 +978,7 @@ DEPENDENCIES
   simplecov
   solid_cable (~> 4.0)
   sprockets-rails
-  tailwindcss-rails
+  tailwindcss-rails (~> 2.4)
   timecop
   turbolinks (~> 5.2.0)
   tzinfo-data

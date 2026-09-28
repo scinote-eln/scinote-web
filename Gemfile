@@ -87,7 +87,7 @@ gem 'cssbundling-rails'
 gem 'jsbundling-rails'
 gem 'js-routes'
 
-gem 'tailwindcss-rails'
+gem 'tailwindcss-rails', '~> 2.4'
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
