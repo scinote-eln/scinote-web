@@ -16,7 +16,7 @@ module ProtocolReportTemplates
 
       src_report_template.odt_template_file.open do |odt_template_file|
         report = ODFReport::Report.new(odt_template_file.path) do |r|
-          src_object.steps.order(:position).zip(@protocol.steps.order(:position)) do |src_step, dest_step|
+          src_object.steps.active.order(:position).zip(@protocol.steps.active.order(:position)) do |src_step, dest_step|
             r.add_field(build_tag('step', src_step.id, delimiter: false).to_sym, build_tag('step', dest_step.id))
 
             src_step.step_orderable_elements.order(:position).zip(dest_step.step_orderable_elements.order(:position)) do |src_element, dest_element|
@@ -31,7 +31,7 @@ module ProtocolReportTemplates
 
           if include_results
             dest_object = @protocol.in_module? ? @protocol.my_module : @protocol
-            src_object.results.order(:created_at).zip(dest_object.results.order(:created_at)) do |src_step, dest_step|
+            src_object.results.active.order(:created_at).zip(dest_object.results.active.order(:created_at)) do |src_step, dest_step|
               r.add_field(build_tag('result', src_step.id, delimiter: false).to_sym, build_tag('result', dest_step.id))
 
               src_step.result_orderable_elements.order(:position).zip(dest_step.result_orderable_elements.order(:position)) do |src_element, dest_element|

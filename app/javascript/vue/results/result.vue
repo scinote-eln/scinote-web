@@ -549,7 +549,7 @@ export default {
           element.urls.update_url,
           element
         ).then((result) => {
-            this.elements.splice(index, 1, result.data.data.attributes);
+            this.elements.splice(index, 1, result.data);
             this.$emit('resultUpdated');
 
             // optional callback after successful update
@@ -582,9 +582,8 @@ export default {
       tableDimensions ||= [5, 8];
 
       $.post(this.urls[`create_${elementType}_url`], { tableDimensions, plateTemplate, name }, (result) => {
-        const element = result.data.attributes;
-        element.isNew = true;
-        this.elements.push(element);
+        result.isNew = true;
+        this.elements.push(result);
 
         if (this.isCollapsed) {
           this.$refs.toggleElement.click();

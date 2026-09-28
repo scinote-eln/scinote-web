@@ -167,7 +167,7 @@ export default {
       if (this.deleteUrl) {
         this.deleteElement();
       } else {
-        this.$emit('removeItem', this.checklistItem.id);
+        this.$emit('component:delete', { id: this.checklistItem.id });
       }
     },
     update(withKey) {

@@ -9,6 +9,7 @@ class CreateAnalyticalReports < ActiveRecord::Migration[7.2]
       t.column :generating_status, :integer, null: false, default: 0
       t.references :reference, polymorphic: true, index: true
       t.references :report_template, index: true, foreign_key: true
+      t.jsonb :params, null: false, default: {}
       t.references :created_by, foreign_key: { to_table: :users }
       t.timestamps
     end

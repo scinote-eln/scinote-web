@@ -23,7 +23,7 @@
           <div class="flex flex-col gap-1">
             <label class="sci-label">{{ i18n.t('experiments.reports.generate_modal.report_name') }}</label>
             <div class="sci-input-container-v2">
-              <input type="text" 
+              <input type="text"
                 v-model="reportName"
                 class="sci-input-field"
                 :placeholder="i18n.t('experiments.reports.generate_modal.report_name_placeholder')"
@@ -77,7 +77,12 @@
             <div class="sci-loader h-6 w-6 bg-contain"></div>
             {{ i18n.t('experiments.reports.generate_modal.generating_button') }}
           </button>
-          <button v-else class="btn btn-primary" @click="generateReport" :disabled="!validName || !validTask"> {{ i18n.t('experiments.reports.generate_button') }} </button>
+          <button
+            v-else class="btn btn-primary"
+            @click="generateReport"
+            :disabled="!validName || !validTask"
+            data-e2e="e2e-BT-experiment-generateAnaylticalReportModal-generate"
+          > {{ i18n.t('experiments.reports.generate_button') }} </button>
         </div>
       </div>
     </div>
@@ -151,7 +156,7 @@ export default {
       const taskIds = this.tasks.filter(task => task.checked).map(task => task.id);
        axios.post(experiment_experiment_reports_path(this.experiment), {
         name: this.reportName,
-        task_ids: taskIds
+        my_module_ids: taskIds
       }).then((response) => {
         this.$emit('create');
         if (!this.experimentReportGenerationsChannel) {
