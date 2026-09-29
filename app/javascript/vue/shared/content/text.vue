@@ -255,6 +255,8 @@ export default {
         text_component: { name }
       }).then(() => {
         this.$emit('update', this.element, true);
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     updateText(data) {

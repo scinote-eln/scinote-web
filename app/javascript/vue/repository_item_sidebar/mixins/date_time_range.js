@@ -1,3 +1,5 @@
+import axios from '../../../packs/custom_axios';
+
 export default {
   data() {
     return {
@@ -56,26 +58,21 @@ export default {
       }
       Object.assign(this.$data, { isSaving: true, errorMessage: null });
       const $this = this;
-      $.ajax({
-        method: 'PUT',
-        url: $this.cellUpdatePath,
-        dataType: 'json',
-        data: { repository_cells: $this.params },
-        success: (result) => {
-          const cellValue = result?.value;
-          switch (true) {
-            case ['date', 'dateTime', 'time'].includes(this.dateType):
-              this.values = cellValue
-              this.initDate = cellValue?.datetime
-            case ['dateRange', 'dateTimeRange', 'timeRange'].includes(this.dateType):
-              this.initStartDate = cellValue?.start_time?.datetime;
-              this.initEndDate = cellValue?.end_time?.datetime;
-            default:
-              break;
-          }
-          Object.assign($this.$data, { isEditing: false, isSaving: false, values: result?.value });
-          if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
+      axios.put($this.cellUpdatePath, { repository_cells: $this.params }).then((response) => {
+        const result = response.data;
+        const cellValue = result?.value;
+        switch (true) {
+          case ['date', 'dateTime', 'time'].includes(this.dateType):
+            this.values = cellValue
+            this.initDate = cellValue?.datetime
+          case ['dateRange', 'dateTimeRange', 'timeRange'].includes(this.dateType):
+            this.initStartDate = cellValue?.start_time?.datetime;
+            this.initEndDate = cellValue?.end_time?.datetime;
+          default:
+            break;
         }
+        Object.assign($this.$data, { isEditing: false, isSaving: false, values: result?.value });
+        if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
       });
     },
     setParams() {

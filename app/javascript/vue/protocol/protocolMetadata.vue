@@ -94,6 +94,7 @@
 /* global HelperModule */
 import InlineEdit from '../shared/inline_edit.vue';
 import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
+import axios from '../../packs/custom_axios.js';
 
 export default {
   name: 'ProtocolMetadata',
@@ -121,33 +122,26 @@ export default {
   },
   methods: {
     updateAuthors(authors) {
-      $.ajax({
-        type: 'PATCH',
-        url: this.protocol.attributes.urls.update_protocol_authors_url,
-        data: { protocol: { authors } },
-        success: (result) => {
-          this.$emit('update', result.data.attributes);
-        },
-        error: (data) => {
-          let message;
-          if (data.responseJSON) {
-            message = Object.values(data.responseJSON).join(', ');
-          } else {
-            message = this.i18n.t('errors.general');
-          }
-          HelperModule.flashAlertMsg(message);
+      axios.patch(this.protocol.attributes.urls.update_protocol_authors_url, { protocol: { authors } }).then((response) => {
+        const result = response.data;
+        this.$emit('update', result.data.attributes);
+      }).catch((error) => {
+        let message;
+        if (error.response?.data) {
+          message = Object.values(error.response.data).join(', ');
+        } else {
+          message = this.i18n.t('errors.general');
         }
+        HelperModule.flashAlertMsg(message);
       });
     },
     updateKeywords(keywords) {
       const uniqueKeywords = [...new Set(keywords.map((kw) => kw.trim()).filter((kw) => !!kw))];
-      $.ajax({
-        type: 'PATCH',
-        url: this.protocol.attributes.urls.update_protocol_keywords_url,
-        data: { keywords: uniqueKeywords },
-        success: (result) => {
-          this.$emit('update', result.data.attributes);
-        }
+      axios.patch(this.protocol.attributes.urls.update_protocol_keywords_url, { keywords: uniqueKeywords }).then((response) => {
+        const result = response.data;
+        this.$emit('update', result.data.attributes);
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     }
   }
