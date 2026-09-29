@@ -64,33 +64,6 @@ module MyModulesHelper
     end
   end
 
-  def assigned_repository_full_view_table_path(my_module, repository)
-    if repository.is_a?(RepositorySnapshot)
-      return full_view_table_my_module_repository_snapshot_path(my_module, repository)
-    end
-
-    full_view_table_my_module_repository_path(my_module, repository)
-  end
-
-  def assigned_repository_simple_view_index_path(my_module, repository)
-    return index_dt_my_module_repository_snapshot_path(my_module, repository) if repository.is_a?(RepositorySnapshot)
-
-    index_dt_my_module_repository_path(my_module, repository)
-  end
-
-  def assigned_repository_simple_view_footer_label(repository)
-    if repository.is_a?(RepositorySnapshot)
-      return I18n.t('my_modules.repository.snapshots.simple_view.snapshot_bottom_label',
-                    date_time: I18n.l(repository.created_at, format: :full))
-    end
-
-    I18n.t('my_modules.repository.snapshots.simple_view.live_bottom_label')
-  end
-
-  def assigned_repository_simple_view_name_column_id(repository)
-    repository.is_a?(RepositorySnapshot) ? 2 : 3
-  end
-
   def my_module_archived_on(my_module)
     if my_module.archived?
       my_module.archived_on
