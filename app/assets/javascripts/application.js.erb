@@ -284,7 +284,7 @@ function notTurbolinksPreview() {
   return !document.documentElement.hasAttribute("data-turbolinks-preview");
 }
 
-const windowScrollEvents = {};
+window.windowScrollEvents = {};
 $(window).scroll(function() {
   $.each(windowScrollEvents, function(key, scroll_function){
     scroll_function();
@@ -336,8 +336,8 @@ $(document).on('show.bs.modal', '.modal', function() {
 });
 
 // User Name popover sitewide support
-let userNamePopover;
-const renderUserNamePopover = (url, fullName, email, html) => {
+window.userNamePopover = null;
+window.renderUserNamePopover = (url, fullName, email, html) => {
   return `<div class="user-name-popover-wrapper">
             <div class='col-xs-3'>
               <img

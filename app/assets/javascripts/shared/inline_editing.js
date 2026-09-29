@@ -1,7 +1,7 @@
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "initInlineEditing" }]*/
 /* global SmartAnnotation HelperModule I18n */
 
-let inlineEditing = (function() {
+window.inlineEditing = (function() {
   const SIDEBAR_ITEM_TYPES = ['project', 'experiment', 'my_module', 'repository'];
 
   const editBlocks = '.inline-init-handler';

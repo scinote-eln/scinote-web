@@ -1,4 +1,4 @@
-const loadPlaceHolder = function($cardsWrapper, $placeholderTemplate, placeholder, options = { gridGap: 25, rowsPerCard: 4, minPlaceholderCardHeight: 50 }) {
+window.loadPlaceHolder = function($cardsWrapper, $placeholderTemplate, placeholder, options = { gridGap: 25, rowsPerCard: 4, minPlaceholderCardHeight: 50 }) {
   const { gridGap, rowsPerCard, minPlaceholderCardHeight } = options;
   const windowHeight = window.innerHeight;
   const placeholderHTML = $placeholderTemplate.html();
