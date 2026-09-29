@@ -39,7 +39,7 @@ import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
 
 import {
-  export_repository_stock_items_team_path
+  export_repository_stock_items_repository_path
 } from '../../../routes.js';
 
 
@@ -52,7 +52,7 @@ export default {
   mixins: [modalMixin],
   methods: {
     exportConsumption() {
-      axios.get(export_repository_stock_items_team_path(this.repository.attributes.team_id), {
+      axios.get(export_repository_stock_items_repository_path(this.repository.id), {
         params: { row_ids: this.rows }
       })
         .then((response) => {

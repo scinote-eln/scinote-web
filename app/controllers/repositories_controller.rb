@@ -475,7 +475,7 @@ class RepositoriesController < ApplicationController
 
   def export_repository_stock_items_modal
     render json: {
-      export_consumption_url: export_repository_stock_items_team_path(@repository),
+      export_consumption_url: export_repository_stock_items_repository_path(@repository),
       name: @repository.name
     }
   end
