@@ -608,7 +608,6 @@ Rails.application.routes.draw do
       resources :repository_snapshots, controller: :my_module_repository_snapshots, only: %i(destroy show) do
         member do
           get :full_view_table
-          post :index_dt, defaults: { format: 'json' }
           post :export_repository_snapshot
           get :status
         end
