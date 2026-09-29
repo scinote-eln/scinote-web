@@ -99,6 +99,10 @@ export default {
   methods: {
     updateValue(newValue) {
       this.value = newValue;
+
+      if (this.value == '' || this.value == null) {
+        this.saveValue();
+      }
     },
     saveValue() {
       let valueToSend;
