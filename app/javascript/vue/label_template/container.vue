@@ -109,6 +109,7 @@
 
 <script>
 
+import axios from '../../packs/custom_axios';
 import InlineEdit from '../shared/inline_edit.vue';
 import InsertFieldDropdown from './insert_field_dropdown.vue';
 import LabelPreview from './components/label_preview.vue';
@@ -162,7 +163,8 @@ export default {
   },
   components: { InlineEdit, InsertFieldDropdown, LabelPreview },
   created() {
-    $.get(this.labelTemplateUrl, (result) => {
+    axios.get(this.labelTemplateUrl).then((response) => {
+      const result = response.data;
       this.labelTemplate = result.data;
       this.newContent = this.labelTemplate.attributes.content;
       this.previewContent = this.labelTemplate.attributes.content;
@@ -200,23 +202,19 @@ export default {
       this.previewContent = this.labelTemplate.attributes.content;
     },
     updateName(newName) {
-      $.ajax({
-        url: this.labelTemplate.attributes.urls.update,
-        type: 'PATCH',
-        data: { label_template: { name: newName } },
-        success: (result) => {
-          this.labelTemplate.attributes.name = result.data.attributes.name;
-        }
+      axios.patch(this.labelTemplate.attributes.urls.update, { label_template: { name: newName } }).then((response) => {
+        const result = response.data;
+        this.labelTemplate.attributes.name = result.data.attributes.name;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     updateDescription(newDescription) {
-      $.ajax({
-        url: this.labelTemplate.attributes.urls.update,
-        type: 'PATCH',
-        data: { label_template: { description: newDescription } },
-        success: (result) => {
-          this.labelTemplate.attributes.description = result.data.attributes.description;
-        }
+      axios.patch(this.labelTemplate.attributes.urls.update, { label_template: { description: newDescription } }).then((response) => {
+        const result = response.data;
+        this.labelTemplate.attributes.description = result.data.attributes.description;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     updateContent() {
@@ -234,18 +232,16 @@ export default {
       this.$nextTick(() => {
         if (this.hasError) return;
 
-        $.ajax({
-          url: this.labelTemplate.attributes.urls.update,
-          type: 'PATCH',
-          data: {
-            label_template: {
-              content: this.newContent
-            }
-          },
-          success: (result) => {
-            this.labelTemplate.attributes.content = result.data.attributes.content;
-            this.editingContent = false;
+        axios.patch(this.labelTemplate.attributes.urls.update, {
+          label_template: {
+            content: this.newContent
           }
+        }).then((response) => {
+          const result = response.data;
+          this.labelTemplate.attributes.content = result.data.attributes.content;
+          this.editingContent = false;
+        }).catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
       });
     },
@@ -257,23 +253,21 @@ export default {
         return;
       }
 
-      $.ajax({
-        url: this.labelTemplate.attributes.urls.update,
-        type: 'PATCH',
-        data: {
-          label_template: {
-            width_mm: this.newLabelWidth,
-            height_mm: this.newLabelHeight,
-            density: this.newLabelDensity,
-            unit: this.newLabelUnit
-          }
-        },
-        success: (result) => {
-          this.labelTemplate.attributes.width_mm = result.data.attributes.width_mm;
-          this.labelTemplate.attributes.height_mm = result.data.attributes.height_mm;
-          this.labelTemplate.attributes.density = result.data.attributes.density;
-          this.labelTemplate.attributes.unit = result.data.attributes.unit;
+      axios.patch(this.labelTemplate.attributes.urls.update, {
+        label_template: {
+          width_mm: this.newLabelWidth,
+          height_mm: this.newLabelHeight,
+          density: this.newLabelDensity,
+          unit: this.newLabelUnit
         }
+      }).then((response) => {
+        const result = response.data;
+        this.labelTemplate.attributes.width_mm = result.data.attributes.width_mm;
+        this.labelTemplate.attributes.height_mm = result.data.attributes.height_mm;
+        this.labelTemplate.attributes.density = result.data.attributes.density;
+        this.labelTemplate.attributes.unit = result.data.attributes.unit;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     generatePreview(skipSave = false) {

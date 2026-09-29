@@ -33,6 +33,7 @@
 
 <script>
 import twemoji from 'twemoji';
+import axios from '../../../packs/custom_axios';
 import SelectDropdown from '../../shared/select_dropdown.vue';
 import repositoryValueMixin from './mixins/repository_value.js';
 
@@ -72,7 +73,8 @@ export default {
   mounted() {
     this.isLoading = true;
 
-    $.get(this.optionsPath, (data) => {
+    axios.get(this.optionsPath).then((response) => {
+      const data = response.data;
       if (Array.isArray(data)) {
         this.options = data.map((option) => {
           const { value, label } = option;
@@ -81,7 +83,7 @@ export default {
         return false;
       }
       this.options = [];
-    }).always(() => {
+    }).finally(() => {
       this.isLoading = false;
       this.selected = this.id;
     });

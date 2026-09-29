@@ -91,6 +91,7 @@ const DPMM_RESOLUTION_OPTIONS = [
   { value: 24, label: '24 dpmm (600 dpi)' }
 ];
 
+import axios from '../../../packs/custom_axios';
 import DropdownSelector from '../../shared/legacy/dropdown_selector.vue'
 
 export default {
@@ -167,28 +168,24 @@ export default {
 
       this.base64Image = null;
 
-      $.ajax({
-        url: this.previewUrl,
-        type: 'GET',
-        data: {
+      axios.get(this.previewUrl, {
+        params: {
           zpl: this.zpl,
           width: this.widthMm,
           height: this.heightMm,
           density: this.density
-        },
-        success: (result) => {
-          this.base64Image = result.base64_preview;
-          if (this.base64Image.length > 0) {
-            this.$emit('preview:valid');
-          } else {
-            this.$emit('preview:invalid');
-          }
-        },
-        error: (result) => {
-          this.base64Image = '';
+        }
+      }).then((response) => {
+        const result = response.data;
+        this.base64Image = result.base64_preview;
+        if (this.base64Image.length > 0) {
+          this.$emit('preview:valid');
+        } else {
           this.$emit('preview:invalid');
         }
-
+      }).catch(() => {
+        this.base64Image = '';
+        this.$emit('preview:invalid');
       });
     },
     updateUnit(unit) {

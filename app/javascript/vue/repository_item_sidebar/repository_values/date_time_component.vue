@@ -186,6 +186,8 @@ export default {
           id: this.repositoryRowId,
           [`col_${this.colId}`]: response.data
         });
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     }
   }
