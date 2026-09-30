@@ -62,12 +62,7 @@ module Lists
             # don't load reminders for archived repositories or snapshots
             @records.select('0 AS active_reminders_count')
           else
-            @records.select("(#{RepositoryCell.with_active_reminder(@user)
-                                             .joins(:repository_column)
-                                             .where(repository_column: { repository: @repository })
-                                             .where('repository_cells.repository_row_id = repository_rows.id')
-                                             .select('COUNT(repository_cells.id)')
-                                             .to_sql}) AS active_reminders_count")
+            @records.select("#{active_reminders_count_sql} AS active_reminders_count")
           end
       end
 
@@ -484,6 +479,17 @@ module Lists
 
     # Sorting logic
 
+    def active_reminders_count_sql
+      return '0' if !Repository.reminders_enabled? || @disable_reminders || @repository.archived? || @is_snapshot
+
+      "(#{RepositoryCell.with_active_reminder(@user)
+                        .joins(:repository_column)
+                        .where(repository_column: { repository: @repository })
+                        .where('repository_cells.repository_row_id = repository_rows.id')
+                        .select('COUNT(repository_cells.id)')
+                        .to_sql})"
+    end
+
     def sort_column
       default_sortable_column = 'repository_rows.id'
       column = @params.dig(:order, :column)
@@ -504,6 +510,8 @@ module Lists
         'repository_rows.id'
       when 'consumed_stock'
         'SUM(DISTINCT my_module_repository_rows.stock_consumption)'
+      when 'active_reminders_count'
+        active_reminders_count_sql
       when /^col_[1-9]\d*\z/, 'stock'
         'values.value'
       else
@@ -545,6 +553,8 @@ module Lists
         sort_by_custom_repository_column(sorting_column)
       when 'connections_count'
         @records.select('COALESCE(repository_rows.parent_connections_count, 0) + COALESCE(repository_rows.child_connections_count, 0) AS "connections_count"')
+      when 'active_reminders_count'
+        @records
       else
         sorting_column = sortable_columns_map(column)
         return unless sortable_columns.include?(sorting_column)
