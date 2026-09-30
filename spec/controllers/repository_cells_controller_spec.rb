@@ -46,7 +46,7 @@ describe RepositoryCellsController, type: :controller do
 
       it 'logs an edit_item_inventory activity' do
         expect(Activities::CreateActivityService)
-          .to(receive(:call).with(hash_including(activity_type: :edit_item_inventory)))
+          .to(receive(:call).with(hash_including(activity_type: :edit_item_field_inventory)))
 
         action
       end
@@ -94,7 +94,7 @@ describe RepositoryCellsController, type: :controller do
 
         it 'logs an edit_item_inventory activity' do
           expect(Activities::CreateActivityService)
-            .to(receive(:call).with(hash_including(activity_type: :edit_item_inventory)))
+            .to(receive(:call).with(hash_including(activity_type: :edit_item_field_inventory)))
 
           action
         end
@@ -116,7 +116,7 @@ describe RepositoryCellsController, type: :controller do
 
         it 'logs an edit_item_inventory activity' do
           expect(Activities::CreateActivityService)
-            .to(receive(:call).with(hash_including(activity_type: :edit_item_inventory)))
+            .to(receive(:call).with(hash_including(activity_type: :edit_item_field_inventory)))
 
           action
         end
