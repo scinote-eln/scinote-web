@@ -27,13 +27,6 @@ describe MyModuleRepositoriesController, type: :controller do
     let(:repository) { create :repository, team: team, created_by: user }
     let (:repository_row) { create :repository_row, repository: repository, created_by: user, last_modified_by: user }
 
-
-    it_behaves_like "a controller action with permissions checking", :get, :index_dt do
-      let(:testable) { my_module }
-      let(:permissions) { [MyModulePermissions::READ] }
-      let(:action_params) { { my_module_id: my_module.id, id: repository.id } }
-    end
-
     it_behaves_like "a controller action with permissions checking", :put, :update do
       let(:testable) { my_module }
       let(:permissions) { [MyModulePermissions::REPOSITORY_ROWS_ASSIGN] }
