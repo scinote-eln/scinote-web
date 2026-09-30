@@ -71,6 +71,33 @@ RSpec.describe Lists::RepositoryRowsService do
 
         expect(repository_rows.first.name).to eq('ZZZZZ')
       end
+
+      context 'when ordering by active_reminders_count' do
+        before do
+          allow(ApplicationSettings).to receive(:instance)
+            .and_return(double(values: { 'stock_management_enabled' => true }))
+
+          stock_column = create(:repository_column, :stock_type, repository: repository, created_by: user)
+
+          create(:repository_stock_value, amount: 0, low_stock_threshold: 5,
+                 repository_cell_attributes: { repository_row: repository_rows.first, repository_column: stock_column })
+          create(:repository_stock_value, amount: 1000, low_stock_threshold: 5,
+                 repository_cell_attributes: { repository_row: repository_rows.second, repository_column: stock_column })
+        end
+
+        it 'is ordered by active reminders count desc' do
+          params[:order] = { column: 'active_reminders_count', dir: 'desc' }
+
+          expect(service.call.first.id).to eq(repository_rows.first.id)
+        end
+
+        it 'is ordered by active reminders count asc' do
+          params[:order] = { column: 'active_reminders_count', dir: 'asc' }
+          params[:per_page] = repository_rows.count
+
+          expect(service.call.last.id).to eq(repository_rows.first.id)
+        end
+      end
     end
 
     context 'when search param is present' do
