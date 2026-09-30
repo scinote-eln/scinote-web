@@ -454,7 +454,7 @@ window.TinyMCE = (() => {
             editor.isBlurTempDisabled = false;
 
             editor.on('keydown', (e) => {
-              if (e.key === 'Enter' && $(editor.contentDocument.activeElement).atwho('isSelecting')) {
+              if (e.key === 'Enter' && window.SmartAnnotation.isSelecting(editor.contentDocument.activeElement)) {
                 return false;
               }
               return true;

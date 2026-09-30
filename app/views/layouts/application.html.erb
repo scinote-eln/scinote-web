@@ -144,6 +144,10 @@
       <%= render "shared/export_stock_consumption_modal" %>
       <!-- Manage Stock Modal -->
       <%= render partial: 'shared/manage_stock_value_modal' %>
+      <div id="smartAnnotationFlyoutContainer">
+        <smart-annotation-flyout></smart-annotation-flyout>
+      </div>
+      <%= javascript_include_tag 'vue_smart_annotation_flyout' %>
     <% end %>
 
     <span style="display: none;" data-hook="application-body-end-html"></span>
