@@ -90,6 +90,7 @@
         v-if="createEventModalRow"
         :repositoryId="repositoryId"
         :repositoryRowId="createEventModalRow"
+        @event:created="createEventModalRow = null"
         @close="createEventModalRow = null"/>
     </teleport>
     <button ref="legacyManageColumns" class="hidden manage-repo-column-index"
