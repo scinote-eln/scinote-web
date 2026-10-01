@@ -2,6 +2,7 @@
 
 class EditingFlag < ApplicationRecord
   DEFAULT_DURATION = 30.seconds
+  SUBJECT_TYPES = %w(StepText ResultText).freeze
 
   belongs_to :user
   belongs_to :subject, polymorphic: true
