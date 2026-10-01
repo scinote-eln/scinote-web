@@ -89,6 +89,11 @@
         ref="warningModal"
         :e2eValue="'task-assignedItems-outOfStockModal'"
       ></ConfirmationModal>
+      <ExportConsumptionModal
+        v-if="exportStockConsumptionRows"
+        :repository="repositoryVersion"
+        :rows="exportStockConsumptionRows"
+        @close="exportStockConsumptionRows = null"/>
       <UnassignItemModal
         v-if="showUnassignModal"
         :myModuleId="myModuleId"
@@ -123,6 +128,7 @@ import DataTable from '../../shared/datatable/table.vue';
 import axios from '../../../packs/custom_axios.js';
 import ConsumeModal from './modals/consume.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
+import ExportConsumptionModal from '../../repository/modals/export_stock_consumption_modal.vue';
 import ColumnsMixin from '../../repository/columns_mixin.js';
 import UserStateMixin from '../../mixins/user_state_mixin.js';
 import CreateItemModal from '../assigned_items/modals/new_item.vue';
@@ -156,6 +162,7 @@ export default {
     ConsumeModal,
     ConfirmationModal,
     CreateItemModal,
+    ExportConsumptionModal,
     AssignItemModal,
     UnassignItemModal,
     VersionDropdown,
@@ -176,7 +183,8 @@ export default {
     openCreateItemModal: false,
     repositoryVersion: null,
     textCellModalObject: null,
-    activeFilter: []
+    activeFilter: [],
+    exportStockConsumptionRows: null
   }),
   watch: {
     sectionOpened() {
@@ -364,14 +372,7 @@ export default {
         });
     },
     exportConsumption(_e, rows) {
-      window.initExportStockConsumptionModal();
-
-      if (window.exportStockConsumptionModalComponent) {
-        window.exportStockConsumptionModalComponent.fetchRepositoryData(
-          rows.map(row => row.id),
-          { repository_id: this.repositoryVersion.id }
-        );
-      }
+     this.exportStockConsumptionRows = rows.map((row) => ( row.id ));
     },
     showTextCellModal(_e, rows, colDef) {
       this.textCellModalObject = {
