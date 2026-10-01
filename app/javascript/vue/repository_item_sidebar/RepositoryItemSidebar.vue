@@ -512,6 +512,14 @@ export default {
   computed: {
     repositoryRowName() {
       return this.defaultColumns?.archived ? `${I18n.t('labels.archived')} ${this.defaultColumns?.name}` : this.defaultColumns?.name;
+    },
+    isSameRepository() {
+      const openedRepositoryId = window.repositoryAssignTable?.repository?.id || window.repositoryTable?.repositoryId;
+
+      if (openedRepositoryId) {
+        return this.repository?.id === openedRepositoryId;
+      }
+      return false;
     }
   },
   watch: {
@@ -552,16 +560,18 @@ export default {
           this.childrenCount = data.children.length;
           this.children = data.children;
         }
-        if (window.repositoryAssignTable) {
-          window.repositoryAssignTable.updateRowData({
-            id: this.repositoryRowId,
-            connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
-          });
-        } else {
-          window.repositoryTable?.updateRowData({
-            id: this.repositoryRowId,
-            connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
-          });
+        if (this.isSameRepository) {
+          if (window.repositoryAssignTable) {
+            window.repositoryAssignTable.updateRowData({
+              id: this.repositoryRowId,
+              connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+            });
+          } else {
+            window.repositoryTable?.updateRowData({
+              id: this.repositoryRowId,
+              connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+            });
+          }
         }
 
       };
@@ -713,12 +723,14 @@ export default {
       ).then((response) => {
         const row = response.data.data;
         if (this.defaultColumns) this.defaultColumns.name = row.attributes.name;
-        if (window.repositoryAssignTable) {
-          window.repositoryAssignTable.updateRowData(row);
-        } else {
-          window.repositoryTable?.updateRowData(row);
+        if (this.isSameRepository) {
+          if (window.repositoryAssignTable) {
+            window.repositoryAssignTable.updateRowData(row);
+          } else {
+            window.repositoryTable?.updateRowData(row);
+          }
+          window.assignedItemsTable?.$refs?.assignedItems?.loadAssingedRepositories();
         }
-        window.assignedItemsTable?.$refs?.assignedItems?.loadAssingedRepositories();
       });
     },
     updateCustomColumn(params) {
@@ -735,13 +747,14 @@ export default {
       ).then((response) => {
         const result = response.data;
         this.customColumns = this.customColumns.map((col) => (String(col.id) === String(colId) ? { ...col, ...result } : col));
-        if (window.repositoryAssignTable) {
-          window.repositoryAssignTable.updateRowData({ id: this.repositoryRowId, [`col_${colId}`]: result });
-        } else {
-          window.repositoryTable?.updateRowData({ id: this.repositoryRowId, [`col_${colId}`]: result });
+        if (this.isSameRepository) {
+          if (window.repositoryAssignTable) {
+            window.repositoryAssignTable.updateRowData({ id: this.repositoryRowId, [`col_${colId}`]: result });
+          } else {
+            window.repositoryTable?.updateRowData({ id: this.repositoryRowId, [`col_${colId}`]: result });
+          }
+          window.assignedItemsTable?.$refs?.assignedItems?.loadAssingedRepositories();
         }
-
-        window.assignedItemsTable?.$refs?.assignedItems?.loadAssingedRepositories();
       });
     },
     updateOpenState(code, isOpen) {
@@ -764,16 +777,18 @@ export default {
           'success'
         );
         await this.loadRepositoryRow(this.currentItemUrl);
-        if (window.repositoryAssignTable) {
-          window.repositoryAssignTable?.updateRowData({
-            id: this.repositoryRowId,
-            connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
-          });
-        } else {
-          window.repositoryTable?.updateRowData({
-            id: this.repositoryRowId,
-            connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
-        });
+        if (this.isSameRepository) {
+          if (window.repositoryAssignTable) {
+            window.repositoryAssignTable?.updateRowData({
+              id: this.repositoryRowId,
+              connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+            });
+          } else {
+            window.repositoryTable?.updateRowData({
+              id: this.repositoryRowId,
+              connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+            });
+          }
         }
 
         if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
