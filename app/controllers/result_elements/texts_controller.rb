@@ -9,14 +9,19 @@ module ResultElements
 
     # rubocop:disable Rails/LexicallyScopedActionFilter
     before_action :check_manage_result_permissions, only: %i(create move_targets)
-    before_action :load_result_text, only: %i(update destroy duplicate move archive restore lock unlock)
-    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets lock unlock)
+    before_action :load_result_text, only: %i(show update destroy duplicate move archive restore lock unlock)
+    before_action :check_read_permissions, only: :show
+    before_action :check_manage_permissions, except: %i(show create archive restore destroy move_targets lock unlock)
     before_action :check_archive_permissions, only: :archive
     before_action :check_restore_permissions, only: :restore
     before_action :check_lock_permissions, only: :lock
     before_action :check_unlock_permissions, only: :unlock
     before_action :check_delete_permissions, only: :destroy
     # rubocop:enable Rails/LexicallyScopedActionFilter
+
+    def show
+      render json: ResultTextSerializer.new(@result_text, scope: { user: current_user }).as_json
+    end
 
     def create
       result_text = ResultText.build
@@ -105,6 +110,10 @@ module ResultElements
       return render_404 unless @result_text
 
       @element = @result_text
+    end
+
+    def check_read_permissions
+      render_403 unless can_read_result?(@result)
     end
 
     def check_manage_permissions

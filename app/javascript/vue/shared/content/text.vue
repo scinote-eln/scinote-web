@@ -11,6 +11,7 @@
             :class="{'grow': !this.element.archived,
                      'pointer-events-none': locked}">
           <InlineEdit
+            ref="nameInlineEdit"
             :value="element.name"
             :characterLimit="255"
             :placeholder="i18n.t('protocols.steps.text.text_name')"
@@ -78,6 +79,7 @@
         tabindex="0">
         <Tinymce
           v-if="element.urls.update_url"
+          ref="tinymce"
           :value="element.text"
           :value_html="element.text_view"
           :placeholder="element.placeholder"
@@ -160,14 +162,37 @@ export default {
     e2eClass: {
       type: String,
       default: ''
+    },
+    remoteVersion: {
+      type: Object,
+      default: null
     }
   },
   data() {
     return {
       inEditMode: false,
       editingName: false,
-      confirmingRestore: false
+      confirmingRestore: false,
+      pendingRemoteReload: false,
+      reloadRequestSeq: 0
     };
+  },
+  watch: {
+    remoteVersion(newVersion) {
+      if (!newVersion) return;
+
+      if (this.inEditMode) {
+        // SCI-13486: the "new version available" banner for an open editor wil lbee here.
+        return;
+      }
+
+      if (this.nameEditOpen()) {
+        this.pendingRemoteReload = true;
+        return;
+      }
+
+      this.reloadLatest();
+    }
   },
   mounted() {
     if (this.isNew) {
@@ -244,12 +269,59 @@ export default {
     disableEditMode() {
       this.inEditMode = false;
       this.$emit('component:editing-end', this.element);
+      // SCI-13486: update remote when the editing ends.
     },
     enableNameEdit() {
       this.editingName = true;
     },
     disableNameEdit() {
       this.editingName = false;
+
+      if (this.pendingRemoteReload) {
+        this.pendingRemoteReload = false;
+        this.reloadLatest();
+      }
+    },
+    nameEditOpen() {
+      return this.editingName && Boolean(this.$refs.nameInlineEdit?.editing);
+    },
+    reloadLatest() {
+      if (!this.element.urls.show_url) return;
+
+      this.reloadRequestSeq += 1;
+      const requestSeq = this.reloadRequestSeq;
+
+      axios.get(this.element.urls.show_url).then(({ data }) => {
+        if (requestSeq !== this.reloadRequestSeq) return;
+        
+        if (this.inEditMode || this.nameEditOpen()) {
+          this.pendingRemoteReload = true;
+          return;
+        }
+
+        const textViewChanged = data.text_view !== this.element.text_view;
+        this.element.text = data.text;
+        this.element.text_view = data.text_view;
+        this.element.name = data.name;
+        this.element.updated_at = data.updated_at;
+        this.element.urls = data.urls;
+        this.element.locked = data.locked;
+        this.$emit('update', this.element, true);
+        if (textViewChanged) this.$nextTick(this.refreshTextView);
+      }).catch(() => {
+        // Keep this here, because the text may have been deleted or moved
+      });
+    },
+    refreshTextView() {
+
+      if (this.$refs.tinymce) {
+        this.$refs.tinymce.wrapTables();
+        this.$refs.tinymce.initCodeHighlight();
+        return;
+      }
+
+      const textElement = this.$el.querySelector('.view-text-element');
+      if (textElement) this.highlightText(textElement);
     },
     updateName(name) {
       this.element.name = name;

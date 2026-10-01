@@ -20,6 +20,7 @@ class ResultText < ApplicationRecord
   has_one :result_orderable_element, as: :orderable, dependent: :destroy
 
   after_save :manage_orderable_element_on_archive, if: -> { saved_change_to_archived? }
+  after_update_commit :broadcast_content_updated, if: -> { saved_change_to_text? || saved_change_to_name? }
 
   delegate :team, to: :result
 
@@ -63,5 +64,17 @@ class ResultText < ApplicationRecord
     elsif result_orderable_element.blank?
       create_result_orderable_element!(result: result, position: result.next_element_position)
     end
+  end
+
+  def broadcast_content_updated
+    EditingFlagsChannel.broadcast_to(
+      self,
+      action: 'content_updated',
+      subject_type: self.class.name,
+      subject_id: id,
+      updated_at: updated_at.to_i
+    )
+  rescue StandardError => e
+    Rails.logger.error("#{self.class.name} #{id} content_updated broadcast failed: #{e.message}")
   end
 end

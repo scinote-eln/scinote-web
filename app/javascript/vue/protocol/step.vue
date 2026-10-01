@@ -204,6 +204,7 @@
             :isNew="element.isNew"
             :dataE2e="`protocol-step${step.id}`"
             e2eClass="protocol-step"
+            :remoteVersion="remoteVersionFor(element.id)"
             @component:adding-content="($event) => addingContent = $event"
             @component:delete="removeElement"
             @component:archive="removeElement"
