@@ -2350,6 +2350,7 @@ en:
       no_active_modules_archived_branch: "This experiment is archived and can’t have active tasks."
     reports:
       generate_button: "Generate report"
+      generating_label: "Generating report..."
       generate_modal:
         title: "Generate report"
         description: "Combine the Task reports into a single document"
@@ -2357,6 +2358,8 @@ en:
         report_name_placeholder: "Add report name"
         task_label: "Tasks included"
         no_tasks: "No tasks with reports available"
+        generating_button: "Generating report"
+        generating: "Your report is being generated. It will open here when finished."
       reports_modal:
         title: "Analytical reports"
         date: "%{date}"

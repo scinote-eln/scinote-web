@@ -785,7 +785,7 @@ class Protocol < ApplicationRecord
     st = space_taken
 
     steps.active.order(position: :desc).find_each do |step|
-      if step.has_archived_element?
+      if step.has_archived_element? || step.assets.archived.any?
         step.active_elements_ordered.each(&:destroy)
         step.assets.active.find_each(&:destroy)
         step.position = nil
@@ -797,7 +797,7 @@ class Protocol < ApplicationRecord
 
     if in_module?
       my_module.results.active.find_each do |result|
-        if result.has_archived_element?
+        if result.has_archived_element? || result.assets.archived.any?
           result.active_elements_ordered.each(&:destroy)
           result.assets.active.find_each(&:destroy)
           result.archive!(user)

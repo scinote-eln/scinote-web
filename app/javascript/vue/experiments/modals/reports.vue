@@ -10,7 +10,7 @@
             {{ i18n.t('experiments.reports.reports_modal.title') }}
           </h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body max-h-[600px] overflow-y-auto">
           <div v-if="loading" class="h-full flex items-center justify-center">
             <div class="sci-loader"></div>
           </div>
@@ -56,7 +56,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.close') }}</button>
-          <button class="btn btn-primary" @click="openGenerateReportModal"> {{  i18n.t('experiments.reports.generate_button') }} </button>
+          <button v-if="editable" class="btn btn-primary" @click="openGenerateReportModal"> {{  i18n.t('experiments.reports.generate_button') }} </button>
         </div>
       </div>
     </div>

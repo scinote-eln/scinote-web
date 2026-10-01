@@ -27,7 +27,7 @@ module ResultElements
         log_result_activity(:text_added, { text_name: result_text.name })
       end
 
-      render json: result_text, serializer: ResultTextSerializer, user: current_user
+      render json: ResultTextSerializer.new(result_text, scope: { user: current_user }).as_json
     rescue ActiveRecord::RecordInvalid => e
       logger.error "Failed to create ResultText: #{e.message}"
       head :unprocessable_entity
@@ -42,7 +42,7 @@ module ResultElements
         result_annotation_notification(old_text)
       end
 
-      render json: @result_text, serializer: ResultTextSerializer, user: current_user
+      render json: { data: { attributes: ResultTextSerializer.new(@result_text, scope: { user: current_user }).as_json } }
     rescue ActiveRecord::RecordInvalid
       render json: @result_text.errors, status: :unprocessable_entity
     end
@@ -55,7 +55,7 @@ module ResultElements
         @result_text.update!(result: target)
         @result_text.result_orderable_element.update!(result: target, position: target.next_element_position)
         @result.normalize_elements_position
-        render json: @result_text, serializer: ResultTextSerializer, user: current_user
+        render json: ResultTextSerializer.new(@result_text, scope: { user: current_user }).as_json
 
         model_key = @result.class.model_name.param_key
 
@@ -88,7 +88,7 @@ module ResultElements
         end
         new_result_text = @result_text.duplicate(@result, position + 1)
         log_result_activity(:text_duplicated, { text_name: new_result_text.name })
-        render json: new_result_text, serializer: ResultTextSerializer, user: current_user
+        render json: ResultTextSerializer.new(new_result_text, scope: { user: current_user }).as_json
       end
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity

@@ -134,7 +134,7 @@ export default {
         const steps = response.data.data;
         steps.forEach((step) => {
           step.attachments = [];
-          response.data.included.forEach((included) => {
+          response.data.included?.forEach((included) => {
             if (included.type === 'assets' &&
                 step.relationships.assets.data.some((attachment) => attachment.id === included.id)) {
               step.attachments.push(included);

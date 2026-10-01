@@ -747,7 +747,7 @@
             element.urls.update_url,
             element
           ).then((result) => {
-              this.elements.splice(index, 1, result.data.data.attributes);
+              this.elements.splice(index, 1, result.data);
               this.$emit('stepUpdated');
 
               // optional callback after successful update
@@ -810,10 +810,8 @@
         let plateTemplate = tableDimensions != null;
         tableDimensions ||= [5, 8];
         $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate, name: name, form_id: formId }, (result) => {
-          const element = result.data.attributes;
-          element.id = result.data.id;
-          element.isNew = true;
-          this.elements.push(element)
+          result.isNew = true;
+          this.elements.push(result)
 
           if (this.isCollapsed) {
             this.clickToggleButton();

@@ -8,6 +8,7 @@
 // Currently selected row in "load from protocol" modal
 var selectedRow = null;
 var addingStepsAllowed = null;
+var hasReportTemplates = false;
 
 
 function initLinkUpdate() {
@@ -162,6 +163,7 @@ function initLoadFromRepositoryTable(content) {
       var rowId = data.DT_RowId;
       $(row).attr('data-row-id', rowId);
       $(row).attr('data-adding-steps-allowed', data.DT_AddingStepsAllowed);
+      $(row).attr('data-has-report-templates', data.DT_HasReportTemplates);
     },
     fnDrawCallback: function() {
       animateSpinner(this, false);
@@ -190,6 +192,7 @@ function initLoadFromRepositoryTable(content) {
     // Select the current row
     selectedRow = datatable.row($(this)).data().DT_RowId;
     addingStepsAllowed = datatable.row($(this)).data().DT_AddingStepsAllowed;
+    hasReportTemplates = datatable.row($(this)).data().DT_HasReportTemplates;
     $(this).addClass('selected');
 
     // Enable load btn
@@ -234,6 +237,20 @@ function loadFromRepositoryWarning() {
   var modal = $('#load-from-repository-warning-modal');
   var loadBtn = modal.find(".modal-footer [data-action='submit']");
 
+  var taskHasTemplates = modal.data('has-report-templates') === true;
+  var hasTemplates = hasReportTemplates || taskHasTemplates;
+
+  modal.find('.load-message').toggleClass('hidden', !hasTemplates);
+  modal.find('.load-options').toggleClass('hidden', hasTemplates);
+
+  var mergeRadio = modal.find("input[name='load_option'][value='merge']");
+  var replaceRadio = modal.find("input[name='load_option'][value='replace']");
+
+  if (hasTemplates) {
+    replaceRadio.prop('checked', true);
+  } else {
+    mergeRadio.prop('checked', true);
+  }
 
   modal.modal('show');
   $('#load-from-repository-modal').modal('hide');

@@ -8,7 +8,7 @@ export default {
       this.$emit('component:adding-content', true);
       axios.post(this.element.urls.duplicate_url)
         .then((result) => {
-          this.$emit('component:insert', result.data.data.attributes);
+          this.$emit('component:insert', result.data);
           HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.component_duplicated'), 'success');
         })
         .catch(() => {

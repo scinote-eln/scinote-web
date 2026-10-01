@@ -130,7 +130,8 @@ module Lists
       analytical_report = object.last_analytical_report
       {
         id: analytical_report&.id,
-        name: analytical_report&.name
+        name: analytical_report&.name,
+        generating: analytical_report.present? && analytical_report.generating_status != 'done'
       }
     end
   end

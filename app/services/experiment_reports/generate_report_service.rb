@@ -11,11 +11,11 @@ module ExperimentReports
       @tempfiles = []
     end
 
-    def call(my_module_ids)
+    def call
       my_modules = @experiment.my_modules
                               .readable_by_user(@user)
-                              .where(id: my_module_ids)
-                              .in_order_of(:id, my_module_ids)
+                              .where(id: @analytical_report.params["my_module_ids"])
+                              .in_order_of(:id, @analytical_report.params["my_module_ids"])
 
       report_files_paths = my_modules.filter_map do |my_module|
         report = my_module.last_analytical_report

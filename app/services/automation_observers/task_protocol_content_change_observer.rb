@@ -10,7 +10,7 @@ module AutomationObservers
       ChecklistItem: %w(text position checked),
       Table: %w(name contents metadata),
       StepAsset: %w(step_id asset_id),
-      StepOrderableElement: %w(step_id position archived),
+      StepOrderableElement: %w(step_id position),
       'ActiveStorage::Blob': %w(filename checksum),
       Comment: %w(message),
       FormFieldValue: %w(not_applicable datetime datetime_to number number_to unit text selection flag data latest),

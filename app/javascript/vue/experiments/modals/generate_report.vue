@@ -14,10 +14,16 @@
           </div>
         </div>
         <div class="modal-body flex flex-col gap-4">
+          <div  v-if="submitting" class="absolute inset-0 z-50 bg-white/90 flex items-center justify-center">
+            <div class="px-6 py-4 flex items-center gap-4 border !border-transparent bg-sn-super-light-blue">
+              <div class="sci-loader h-6 w-6 bg-contain"></div>
+              <span>{{ i18n.t('experiments.reports.generate_modal.generating') }}</span>
+            </div>
+          </div >
           <div class="flex flex-col gap-1">
             <label class="sci-label">{{ i18n.t('experiments.reports.generate_modal.report_name') }}</label>
             <div class="sci-input-container-v2">
-              <input type="text" 
+              <input type="text"
                 v-model="reportName"
                 class="sci-input-field"
                 :placeholder="i18n.t('experiments.reports.generate_modal.report_name_placeholder')"
@@ -31,7 +37,7 @@
             <div v-if="loading" class="h-full flex items-center justify-center">
               <div class="sci-loader"></div>
             </div>
-            <div v-else-if="tasks.length > 0">
+            <div v-else-if="tasks.length > 0" class="max-h-[400px] overflow-y-auto">
               <Draggable
                 v-model="tasks"
                 :ghostClass="'step-checklist-item-ghost'"
@@ -42,7 +48,7 @@
               >
                 <template #item="{element}">
                   <div class="flex items-center gap-2 my-2 hover:bg-sn-super-light-grey group">
-                    <div class="widget-element-grip cursor-pointer opacity-0 group-hover:opacity-100 px-2">
+                    <div class="widget-element-grip cursor-pointer px-2">
                       <i class="sn-icon sn-icon-drag"></i>
                     </div>
                     <div class="flex items-center gap-2 p-3 bg-sn-super-light-grey w-full font-semibold">
@@ -67,9 +73,24 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.close') }}</button>
-          <button class="btn btn-primary" @click="generateReport" :disabled="!validName || !validTask || submitting"> {{ i18n.t('experiments.reports.generate_button') }} </button>
+          <button v-if="submitting" class="btn btn-primary" :disabled="true">
+            <div class="sci-loader h-6 w-6 bg-contain"></div>
+            {{ i18n.t('experiments.reports.generate_modal.generating_button') }}
+          </button>
+          <button
+            v-else class="btn btn-primary"
+            @click="generateReport"
+            :disabled="!validName || !validTask"
+            data-e2e="e2e-BT-experiment-generateAnaylticalReportModal-generate"
+          > {{ i18n.t('experiments.reports.generate_button') }} </button>
         </div>
       </div>
+    </div>
+
+    <div class="flex items-center asset hidden">
+      <a class="file-preview-link file-name text-base"
+        ref="previewLinkRef"
+        :data-preview-url="previewLink"></a>
     </div>
   </div>
 </template>
@@ -79,6 +100,7 @@
 import modalMixin from '../../shared/modal_mixin';
 import axios from '../../../packs/custom_axios.js';
 import Draggable from 'vuedraggable';
+import ActionCableConsumer from '../../../channels/consumer';
 
 import {
   my_modules_experiment_experiment_reports_path,
@@ -97,11 +119,19 @@ export default {
       loading: true,
       tasks: [],
       reportName: '',
-      submitting: false
+      submitting: false,
+      experimentReportGenerationsChannel: null,
+      previewLink: null
     }
   },
   created() {
+    this.experiment.generating = true;
     this.loadTasks();
+  },
+  beforeUnmount() {
+    if (this.experimentReportGenerationsChannel) {
+      ActionCableConsumer.subscriptions.remove(this.experimentReportGenerationsChannel);
+    }
   },
   computed: {
     validName() {
@@ -126,8 +156,26 @@ export default {
       const taskIds = this.tasks.filter(task => task.checked).map(task => task.id);
        axios.post(experiment_experiment_reports_path(this.experiment), {
         name: this.reportName,
-        task_ids: taskIds
-      }).then((response) => {});
+        my_module_ids: taskIds
+      }).then((response) => {
+        this.$emit('create');
+        if (!this.experimentReportGenerationsChannel) {
+          this.experimentReportGenerationsChannel = ActionCableConsumer.subscriptions.create(
+            { channel: 'ExperimentReportGenerationsChannel', experiment_id: this.experiment.id },
+            {
+              received: (data) => {
+                if(data?.preview !== undefined) {
+                  this.previewLink = data.preview;
+                  this.$nextTick(() => {
+                    this.$refs.previewLinkRef.click();
+                    this.$emit('close');
+                  });
+                }
+              }
+            }
+          );
+        }
+      });
     }
   }
 };
