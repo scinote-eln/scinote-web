@@ -28,4 +28,27 @@ describe ResultText, type: :model do
       it { is_expected.to validate_length_of(:text).is_at_most(Constants::RICH_TEXT_MAX_LENGTH) }
     end
   end
+
+  describe 'content update broadcasting' do
+    let!(:result_text) { create :result_text, result: create(:result) }
+
+    it 'broadcasts content_updated to the subject stream when the text changes' do
+      expect { result_text.update!(text: 'Updated text') }
+        .to have_broadcasted_to(result_text)
+        .from_channel(EditingFlagsChannel)
+        .with(hash_including('action' => 'content_updated', 'subject_type' => 'ResultText', 'subject_id' => result_text.id))
+    end
+
+    it 'broadcasts content_updated to the subject stream when the name changes' do
+      expect { result_text.update!(name: 'Updated name') }
+        .to have_broadcasted_to(result_text)
+        .from_channel(EditingFlagsChannel)
+        .with(hash_including('action' => 'content_updated'))
+    end
+
+    it 'does not broadcast when an unrelated attribute changes' do
+      expect { result_text.update!(locked: true) }
+        .not_to have_broadcasted_to(result_text).from_channel(EditingFlagsChannel)
+    end
+  end
 end
