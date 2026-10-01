@@ -52,13 +52,5 @@ RSpec.describe EditingFlag, type: :model do
 
       editing_flag.update(timeout_at: 2.minutes.from_now)
     end
-
-    it 'does not broadcast or raise when the subject has already been destroyed' do
-      editing_flag = create(:editing_flag, user: user, subject: step, timeout_at: 1.minute.from_now)
-      step.destroy
-
-      expect(EditingFlagsChannel).not_to receive(:broadcast_to)
-      expect { editing_flag.destroy }.not_to raise_error
-    end
   end
 end

@@ -708,7 +708,7 @@ Rails.application.routes.draw do
           post :unlock
         end
       end
-      resources :texts, controller: 'step_elements/texts', only: %i(create destroy update) do
+      resources :texts, controller: 'step_elements/texts', only: %i(show create destroy update) do
         member do
           get :move_targets
           post :move
@@ -898,7 +898,7 @@ Rails.application.routes.draw do
           post :unlock
         end
       end
-      resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
+      resources :texts, controller: 'result_elements/texts', only: %i(show create destroy update) do
         member do
           get :move_targets
           post :move
