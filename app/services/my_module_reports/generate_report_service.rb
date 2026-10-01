@@ -59,7 +59,7 @@ module MyModuleReports
         report.add_field build_tag('step', step.id).to_sym, step.name
 
         # for full protocol tag
-        report.add_text PROTOCOL_TAG, "<div>#{step.position_plus_one}. #{step.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        add_block_text(report, PROTOCOL_TAG, "<div>#{step.position_plus_one}. #{step.name}</div><div>{{#{PROTOCOL_TAG}}}</div>")
 
         step.step_orderable_elements.order(:position).each do |element|
           next if element.orderable.archived
@@ -104,13 +104,13 @@ module MyModuleReports
     end
 
     def render_text_element(report, text_tag, text_element, with_protocol: false)
-      report.add_text text_tag, "<div>#{text_element.name}</div><div>{{#{text_tag}}}</div>"
-      report.add_text text_tag, insert_tiny_mce_asset_placeholders(text_element.text, text_element.tiny_mce_assets)
+      add_block_text(report, text_tag, "<div>#{text_element.name}</div><div>{{#{text_tag}}}</div>")
+      add_block_text(report, text_tag, insert_tiny_mce_asset_placeholders(text_element.text, text_element.tiny_mce_assets))
 
       # for full protocol tag
       if with_protocol
-        report.add_text PROTOCOL_TAG, "<div>#{text_element.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
-        report.add_text PROTOCOL_TAG, "<div>#{insert_tiny_mce_asset_placeholders(text_element.text, text_element.tiny_mce_assets)}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        add_block_text(report, PROTOCOL_TAG, "<div>#{text_element.name}</div><div>{{#{PROTOCOL_TAG}}}</div>")
+        add_block_text(report, PROTOCOL_TAG, "<div>#{insert_tiny_mce_asset_placeholders(text_element.text, text_element.tiny_mce_assets)}</div><div>{{#{PROTOCOL_TAG}}}</div>")
       end
     end
 
@@ -118,13 +118,13 @@ module MyModuleReports
       table_data = table.table_data
       table_data[:table_name] = table.name
 
-      report.add_text table_tag, "<div>#{table.name}</div><div>{{#{table_tag}}}</div>"
+      add_block_text(report, table_tag, "<div>#{table.name}</div><div>{{#{table_tag}}}</div>")
       report.add_table_from_data table_tag, table_data
 
       # for full protocol tag
       if with_protocol
         protocol_table_tag = :"PROTOCOL_TABLE_#{table_tag}"
-        report.add_text PROTOCOL_TAG, "<div>#{table.name}</div><div>{{#{protocol_table_tag}}}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+        add_block_text(report, PROTOCOL_TAG, "<div>#{table.name}</div><div>{{#{protocol_table_tag}}}</div><div>{{#{PROTOCOL_TAG}}}</div>")
         report.add_table_from_data protocol_table_tag, table_data
       end
     end
@@ -134,12 +134,12 @@ module MyModuleReports
       checklist_items_pairs = checklist_items&.map { |item| [item[:text], item[:checked]] }
       checklist_name_div = checklist ? "<div>#{checklist.name}</div>" : ''
 
-      report.add_text checklist_tag, "#{checklist_name_div}<div>{{#{checklist_tag}}}</div>"
+      add_block_text(report, checklist_tag, "#{checklist_name_div}<div>{{#{checklist_tag}}}</div>")
       report.add_checklist(checklist_tag, checklist_items_pairs, checked_symbol: checklist_checked_simbol)
 
       # for full protocol tag
       protocol_checklist_tag = :PROTOCOL_CHECKLIST
-      report.add_text PROTOCOL_TAG, "#{checklist_name_div}<div>{{#{protocol_checklist_tag}}}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+      add_block_text(report, PROTOCOL_TAG, "#{checklist_name_div}<div>{{#{protocol_checklist_tag}}}</div><div>{{#{PROTOCOL_TAG}}}</div>")
       report.add_checklist(protocol_checklist_tag, checklist_items_pairs, checked_symbol: checklist_checked_simbol)
     end
 
@@ -147,7 +147,7 @@ module MyModuleReports
       report.add_field form_response_tag, form_response.form.name
 
       # for full protocol tag
-      report.add_text PROTOCOL_TAG, "<div>#{form_response.form.name}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+      add_block_text(report, PROTOCOL_TAG, "<div>#{form_response.form.name}</div><div>{{#{PROTOCOL_TAG}}}</div>")
 
       form_fields = form_response.form.form_fields.order(:position)
       form_field_values = form_response.form_field_values
@@ -176,7 +176,7 @@ module MyModuleReports
           render_checklist(report, tag, nil, value)
         else
           report.add_field tag, value
-          report.add_text PROTOCOL_TAG, "<div>#{value}</div><div>{{#{PROTOCOL_TAG}}}</div>"
+          add_block_text(report, PROTOCOL_TAG, "<div>#{value}</div><div>{{#{PROTOCOL_TAG}}}</div>")
         end
       end
     end
@@ -233,6 +233,12 @@ module MyModuleReports
       else
         element.orderable.name
       end
+    end
+
+    # Protocol, text, table, checklist and form content always starts on its own line,
+    # even when its tag is placed inline in the template
+    def add_block_text(report, tag, html)
+      report.add_text tag, html, display: :block
     end
 
     def build_tag(type, id)
