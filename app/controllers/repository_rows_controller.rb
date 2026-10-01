@@ -227,6 +227,7 @@ class RepositoryRowsController < ApplicationController
     render json: {
       html: render_to_string(
         partial: 'label_printers/print_progress_modal',
+        formats: :html,
         locals: { starting_item_count: label_printer.current_print_job_ids.length,
                   label_printer: label_printer }
       )
