@@ -158,9 +158,12 @@ export default {
       const activeConfig = this.$refs.repositoryTable.gridApi?.getColumnState();
 
       if (activeConfig) {
-        activeConfig.forEach((column) => {
+        activeConfig.sort((a, b) => {
+          if (a.pinned === 'left' && b.pinned !== 'left') return -1;
+          if (a.pinned !== 'left' && b.pinned === 'left') return 1;
+          return 0;
+        }).forEach((column) => {
           const legacyId = this.repositoryColumnsDef.find((col) => col.field == column.colId)?.cellRendererParams?.legacyId;
-          print('legacyId', legacyId);
           if (legacyId) {
             headerIDs.push(legacyId);
           }
