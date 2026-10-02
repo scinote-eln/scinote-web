@@ -215,6 +215,10 @@
   }
 }
 
+.dp--selection-preview {
+  display: none;
+}
+
 .dp--theme-light {
   --dp-background-color: var(--sn-white);
   --dp-text-color: var(--sn-black);
