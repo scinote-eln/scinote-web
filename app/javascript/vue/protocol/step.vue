@@ -195,7 +195,7 @@
           </div>
           <component
             :ref="'stepComponent'"
-            :is="elements[index].attributes.orderable_type"
+            :is="elements[index].type"
             class="step-element"
             :element.sync="elements[index]"
             :inRepository="inRepository"

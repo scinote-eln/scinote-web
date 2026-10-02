@@ -64,8 +64,8 @@ export default {
         [element.id]: ActionCableConsumer.subscriptions.create(
           {
             channel: 'EditingFlagsChannel',
-            subject_type: element.attributes.orderable_type,
-            subject_id: element.attributes.orderable.id
+            subject_type: element.type,
+            subject_id: element.id
           },
           {
             received: (message) => this.receiveEditingFlag(element.id, message)
@@ -78,8 +78,8 @@ export default {
     loadEditingFlags(element) {
       axios.get('/editing_flags', {
         params: {
-          subject_type: element.attributes.orderable_type,
-          subject_id: element.attributes.orderable.id
+          subject_type: element.type,
+          subject_id: element.id
         }
       }).then((response) => {
         const elementFlags = { ...(this.editingFlags[element.id] || {}) };
@@ -148,8 +148,8 @@ export default {
       this.editingIntentByElementId = { ...this.editingIntentByElementId, [element.id]: true };
 
       axios.post('/editing_flags', {
-        subject_type: element.attributes.orderable_type,
-        subject_id: element.attributes.orderable.id
+        subject_type: element.type,
+        subject_id: element.id
       }).then((response) => {
         const editingFlagId = response.data.data.id;
 

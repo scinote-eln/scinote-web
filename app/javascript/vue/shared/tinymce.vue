@@ -5,6 +5,7 @@
         <input type="hidden" name="_method" value="patch">
         <input type="hidden" name="format" value="json">
         <input type="hidden" name="output" value="object">
+        <input v-if="textDigest" type="hidden" name="base_text_digest" :value="submitDigest">
         <div class="hidden tinymce-cancel-button tox-mbtn" tabindex="-1">
         <button type="button" tabindex="-1">
           <span class="sn-icon sn-icon-close"></span>
@@ -52,6 +53,21 @@
     <div v-if="active && error" class="tinymce-error">
       {{ error }}
     </div>
+    <Teleport v-if="editorHeader && newVersionAvailable" :to="editorHeader">
+      <div class="tinymce-new-version-banner col-span-full flex items-center gap-3 !px-4 !py-2 !text-sm
+                  !bg-sn-background-brittlebush !border-0 !border-b !border-solid !border-sn-alert-brittlebush"
+           data-e2e="e2e-CO-tinymce-newVersionBanner"
+           @mousedown.prevent>
+        <i class="sn-icon sn-icon-alert-warning !text-sn-alert-brittlebush"></i>
+        <span class="grow">{{ i18n.t('protocols.steps.text.new_version.banner') }}</span>
+        <button type="button"
+                class="btn btn-secondary btn-sm !border !border-solid !cursor-pointer !whitespace-nowrap"
+                data-e2e="e2e-BT-tinymce-newVersion-seeLatest"
+                @click="$emit('showLatestVersion')">
+          {{ i18n.t('protocols.steps.text.new_version.see_latest') }}
+        </button>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -71,6 +87,14 @@ export default {
     lastUpdated: Number,
     inEditMode: Boolean,
     assignableMyModuleId: Number,
+    textDigest: {
+      type: String,
+      default: null
+    },
+    newVersionAvailable: {
+      type: Boolean,
+      default: false
+    },
     characterLimit: {
       type: Number,
       default: null
@@ -80,7 +104,12 @@ export default {
     return {
       characterCount: 0,
       blurEventHandler: null,
-      active: false
+      active: false,
+      saving: false,
+      initializing: false,
+      baseDigest: null,
+      submitDigest: null,
+      editorHeader: null
     };
   },
   mixins: [UtilsMixin],
@@ -93,6 +122,12 @@ export default {
       }
 
       this.initCodeHighlight();
+    },
+    newVersionAvailable() {
+      this.refreshStickyHeader();
+    },
+    editorHeader() {
+      if (this.newVersionAvailable) this.refreshStickyHeader();
     },
     characterCount() {
       if (this.editorInstance()) {
@@ -112,6 +147,13 @@ export default {
     }
   },
   mounted() {
+    $(this.$el).find('form.tiny-mce-editor')
+      .on('ajax:send.coEditing', () => { this.saving = true; })
+      .on('ajax:complete.coEditing', (_ev, xhr) => {
+        this.saving = false;
+        if (xhr.status !== 200 && xhr.status !== 409) this.$emit('saveFailed');
+      });
+
     if (this.inEditMode) {
       this.initTinymce();
     } else {
@@ -119,6 +161,9 @@ export default {
     }
 
     this.initCodeHighlight();
+  },
+  beforeUnmount() {
+    $(this.$el).find('form.tiny-mce-editor').off('.coEditing');
   },
   methods: {
     initTinymce(e) {
@@ -131,6 +176,10 @@ export default {
       if (e && $(e.target).parent().hasClass('record-info-link')) return;
       if (e && $(e.target).parent().hasClass('atwho-inserted')) return;
 
+      this.initializing = true;
+      this.baseDigest = this.textDigest;
+      this.submitDigest = this.textDigest;
+
       TinyMCE.init(textArea, {
         onSaveCallback: (data) => {
           if (data.data) {
@@ -140,8 +189,11 @@ export default {
           this.wrapTables();
           this.initCodeHighlight();
         },
+        onConflictCallback: this.textDigest ? (json) => { this.$emit('conflict', json); } : null,
         afterInitCallback: () => {
           this.active = true;
+          this.initializing = false;
+          this.initEditorHeader();
           this.initCharacterCount();
           this.$emit('editingEnabled');
         },
@@ -175,8 +227,38 @@ export default {
         this.characterCount = 0;
       });
     },
+    initEditorHeader() {
+      const editor = this.editorInstance();
+      if (!editor) return;
+
+      this.editorHeader = editor.getContainer()?.querySelector('.tox-editor-header') || null;
+      editor.on('remove', () => {
+        this.editorHeader = null;
+        this.initializing = false;
+      });
+    },
+    refreshStickyHeader() {
+      this.$nextTick(() => {
+        const editor = this.editorInstance();
+        if (editor && this.editorHeader) {
+          editor.dispatch('ResizeEditor');
+          editor.execCommand('mceAutoResize');
+        }
+      });
+    },
+    overwrite(digest) {
+      this.submitDigest = digest;
+      this.$nextTick(() => {
+        const editor = this.editorInstance();
+        if (editor) TinyMCE.save(editor);
+      });
+    },
+    focusEditor() {
+      const editor = this.editorInstance();
+      if (editor) editor.focus();
+    },
     editorInstance() {
-      return tinyMCE.activeEditor;
+      return tinyMCE.get(`${this.objectType}_textarea_${this.objectId}`);
     },
     initCodeHighlight() {
       this.$nextTick(() => {

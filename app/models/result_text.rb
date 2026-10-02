@@ -17,6 +17,7 @@ class ResultText < ApplicationRecord
   belongs_to :result, inverse_of: :result_texts, touch: true, class_name: 'ResultBase'
   belongs_to :archived_by, class_name: 'User', optional: true
   belongs_to :restored_by, class_name: 'User', optional: true
+  belongs_to :last_modified_by, class_name: 'User', optional: true
   has_one :result_orderable_element, as: :orderable, dependent: :destroy
 
   after_save :manage_orderable_element_on_archive, if: -> { saved_change_to_archived? }
@@ -49,6 +50,11 @@ class ResultText < ApplicationRecord
 
       new_result_text
     end
+  end
+
+  def text_digest
+    # Hash the value stored in the DB: rendering (tinymce_render) rewrites legacy image tokens in the in-memory `text`
+    Digest::SHA256.hexdigest(text_in_database.to_s)
   end
 
   private

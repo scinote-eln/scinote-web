@@ -22,6 +22,7 @@ describe ResultElements::TextsController, type: :controller do
         expect(body).not_to have_key('data')
         expect(body['id']).to eq(result_text.id)
         expect(body).to include('text_view', 'updated_at')
+        expect(body['text_digest']).to eq(result_text.text_digest)
         expect(body.dig('urls', 'show_url')).to eq(result_text_path(result_template, result_text))
       end
 
@@ -29,6 +30,14 @@ describe ResultElements::TextsController, type: :controller do
         allow(controller).to receive(:can_manage_result_text?).and_return(false)
         action
         expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns the digest of the stored text when it still has a legacy image token' do
+        legacy_text = 'Legacy [~tiny_mce_id:999999999] text'
+        result_text.update_column(:text, legacy_text)
+        action
+
+        expect(response.parsed_body['text_digest']).to eq(Digest::SHA256.hexdigest(legacy_text))
       end
     end
 
@@ -64,6 +73,99 @@ describe ResultElements::TextsController, type: :controller do
       result_text.reload
       expect(result_text.text).to eq('Updated Text')
       expect(result_text.name).to eq('Updated Name')
+    end
+
+    it 'updates the text when the base digest matches the saved version' do
+      put :update, params: { result_id: result_template.id,
+                             id: result_text.id,
+                             text_component: { text: 'Updated Text' },
+                             base_text_digest: result_text.text_digest }
+
+      expect(response).to have_http_status(:success)
+      expect(result_text.reload.text).to eq('Updated Text')
+      expect(response.parsed_body.dig('data', 'attributes', 'text_digest')).to eq(Digest::SHA256.hexdigest('Updated Text'))
+    end
+
+    it 'records who saved the text and returns it with the time' do
+      put :update, params: { result_id: result_template.id,
+                             id: result_text.id,
+                             text_component: { text: 'Updated Text' } }
+
+      expect(result_text.reload.last_modified_by).to eq(user)
+      attributes = response.parsed_body.dig('data', 'attributes')
+      expect(attributes['last_modified_by']).to eq(user.full_name)
+      expect(attributes['last_modified_on']).to eq(I18n.l(result_text.updated_at, format: :full))
+    end
+
+    it 'updates only the name when no base digest is sent' do
+      original_text = result_text.text
+      put :update, params: { result_id: result_template.id,
+                             id: result_text.id,
+                             text_component: { name: 'Updated Name' } }
+
+      expect(response).to have_http_status(:success)
+      result_text.reload
+      expect(result_text.name).to eq('Updated Name')
+      expect(result_text.text).to eq(original_text)
+    end
+
+    it 'accepts the digest of a stored text that still has a legacy image token' do
+      legacy_text = 'Legacy [~tiny_mce_id:999999999] text'
+      result_text.update_column(:text, legacy_text)
+      put :update, params: { result_id: result_template.id,
+                             id: result_text.id,
+                             text_component: { text: 'Updated Text' },
+                             base_text_digest: Digest::SHA256.hexdigest(legacy_text) }
+
+      expect(response).to have_http_status(:success)
+      expect(result_text.reload.text).to eq('Updated Text')
+    end
+
+    context 'when the text was saved by someone else after the base version' do
+      let!(:stale_digest) { result_text.text_digest }
+
+      before { result_text.update!(text: 'Text saved by another user') }
+
+      it 'returns conflict with the latest version and does not save' do
+        allow(Activities::CreateActivityService).to receive(:call)
+        allow(TinyMceAsset).to receive(:update_images)
+        put :update, params: { result_id: result_template.id,
+                               id: result_text.id,
+                               text_component: { text: 'Updated Text' },
+                               base_text_digest: stale_digest }
+
+        expect(response).to have_http_status(:conflict)
+        expect(result_text.reload.text).to eq('Text saved by another user')
+
+        latest = response.parsed_body['latest']
+        expect(latest['id']).to eq(result_text.id)
+        expect(latest['text_digest']).to eq(result_text.text_digest)
+        expect(latest).to include('text', 'text_view', 'name', 'updated_at', 'urls')
+        expect(Activities::CreateActivityService).not_to have_received(:call)
+        expect(TinyMceAsset).not_to have_received(:update_images)
+      end
+
+      it 'saves over it when the base digest is blank' do
+        put :update, params: { result_id: result_template.id,
+                               id: result_text.id,
+                               text_component: { text: 'Updated Text' },
+                               base_text_digest: '' }
+
+        expect(response).to have_http_status(:success)
+        expect(result_text.reload.text).to eq('Updated Text')
+      end
+
+      it 'returns forbidden without the latest version when the user cannot manage the text' do
+        allow(controller).to receive(:can_manage_result_text?).and_return(false)
+        put :update, params: { result_id: result_template.id,
+                               id: result_text.id,
+                               text_component: { text: 'Updated Text' },
+                               base_text_digest: stale_digest }, format: :json
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body).not_to have_key('latest')
+        expect(result_text.reload.text).to eq('Text saved by another user')
+      end
     end
   end
 

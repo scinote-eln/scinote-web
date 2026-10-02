@@ -21,6 +21,7 @@ class StepText < ApplicationRecord
   belongs_to :step, inverse_of: :step_texts, touch: true
   belongs_to :archived_by, class_name: 'User', optional: true
   belongs_to :restored_by, class_name: 'User', optional: true
+  belongs_to :last_modified_by, class_name: 'User', optional: true
   has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
   delegate :team, to: :step
@@ -48,6 +49,11 @@ class StepText < ApplicationRecord
 
       new_step_text
     end
+  end
+
+  def text_digest
+    # Hash the value stored in the DB: rendering (tinymce_render) rewrites legacy image tokens in the in-memory `text`
+    Digest::SHA256.hexdigest(text_in_database.to_s)
   end
 
   private

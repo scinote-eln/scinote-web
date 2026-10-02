@@ -22,7 +22,7 @@ module StepElements
     end
 
     def create
-      step_text = @step.step_texts.build
+      step_text = @step.step_texts.build(last_modified_by: current_user)
 
       ActiveRecord::Base.transaction do
         create_in_step!(@step, step_text)
@@ -35,13 +35,18 @@ module StepElements
     end
 
     def update
-      old_text = @step_text.text
-      ActiveRecord::Base.transaction do
-        @step_text.update!(step_text_params)
+      conflict = false
+      @step_text.with_lock do
+        conflict = text_version_conflict?
+        next if conflict
+
+        old_text = @step_text.text
+        @step_text.update!(step_text_params.merge(last_modified_by: current_user))
         TinyMceAsset.update_images(@step_text, params[:tiny_mce_images], current_user)
         log_step_activity(:text_edited, { text_name: @step_text.name })
         step_text_annotation(@step, @step_text, old_text)
       end
+      return render_text_version_conflict if conflict
 
       render json: { data: { attributes: StepTextSerializer.new(@step_text, scope: { user: current_user }).as_json } }
     rescue ActiveRecord::RecordInvalid
@@ -100,6 +105,14 @@ module StepElements
 
     def step_text_params
       params.require(:text_component).permit(:text, :name)
+    end
+
+    def text_version_conflict?
+      params[:base_text_digest].present? && params[:base_text_digest] != @step_text.text_digest
+    end
+
+    def render_text_version_conflict
+      render json: { latest: StepTextSerializer.new(@step_text, scope: { user: current_user }).as_json }, status: :conflict
     end
 
     def load_step_text
