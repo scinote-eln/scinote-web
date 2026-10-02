@@ -1,4 +1,4 @@
-/* global I18n GLOBAL_CONSTANTS HelperModule SmartAnnotation TinyMCE */
+/* global I18n GLOBAL_CONSTANTS HelperModule SmartAnnotation TinyMCE Turbolinks */
 
 import tinyMCE from 'tinymce/tinymce';
 import 'tinymce/models/dom';
@@ -297,6 +297,7 @@ window.TinyMCE = (() => {
           browser_spellcheck: true,
           branding: false,
           fixed_toolbar_container: '#mytoolbar',
+          custom_ui_selector: '.tinymce-co-editing-ui',
           autosave_restore_when_empty: false,
           autosave_interval: '1s',
           autosave_retention: '1440m',
@@ -394,7 +395,16 @@ window.TinyMCE = (() => {
 
             // After save action
             editorForm
-              .on('ajax:success', (_ev, data) => {
+              .off('ajax:send.tinymce ajax:complete.tinymce ajax:success.tinymce ajax:error.tinymce')
+              .on('ajax:send.tinymce', () => {
+                // A save that can come back as a conflict keeps its editor (and the page) until it settles
+                if (options.onConflictCallback) editor.savePending = true;
+              })
+              .on('ajax:complete.tinymce', () => {
+                editor.savePending = false;
+                editor.visitAfterSave = null;
+              })
+              .on('ajax:success.tinymce', (_ev, data) => {
                 editor.save();
                 editor.setProgressState(0);
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
@@ -404,7 +414,16 @@ window.TinyMCE = (() => {
                 editor.plugins.autosave.removeDraft();
                 removeDraft(editor, textAreaObject);
                 if (options.onSaveCallback) { options.onSaveCallback(data); }
-              }).on('ajax:error', (_ev, data) => {
+                if (editor.visitAfterSave) Turbolinks.visit(editor.visitAfterSave);
+              }).on('ajax:error.tinymce', (_ev, data) => {
+                if (data.status === 409 && options.onConflictCallback) {
+                  editor.setProgressState(0);
+                  // saveAction's editor.save() marked the draft as saved, which it isn't
+                  editor.setDirty(true);
+                  options.onConflictCallback(data.responseJSON);
+                  return;
+                }
+
                 const model = editor.getElement().dataset.objectType;
                 let form = $(editor.getElement().closest('.form-group'));
                 form.renderFormErrors(model, data.responseJSON);
@@ -484,7 +503,7 @@ window.TinyMCE = (() => {
             });
 
             editor.on('blur', () => {
-              if (editor.isBlurTempDisabled || editor.blurDisabled) return false;
+              if (editor.isBlurTempDisabled || editor.blurDisabled || editor.savePending) return false;
 
               if ($('.atwho-view:visible').length || $('#MarvinJsModal:visible').length) return false;
               setTimeout(() => {
@@ -540,6 +559,9 @@ window.TinyMCE = (() => {
     makeItDirty: (editor) => {
       makeItDirty(editor);
     },
+    save: (editor) => {
+      saveAction(editor);
+    },
     wrapTables: (container) => {
       container.find('table').toArray().forEach((table) => {
         if ($(table).parents('table').length === 0) {
@@ -552,6 +574,13 @@ window.TinyMCE = (() => {
 })();
 
 $(document).on('turbolinks:before-visit', (e) => {
+  const savingEditor = tinyMCE.get().find((ed) => ed.savePending);
+  if (savingEditor) {
+    savingEditor.visitAfterSave = e.originalEvent.data.url;
+    e.preventDefault();
+    return false;
+  }
+
   const editor = tinyMCE.activeEditor;
 
   if (editor === null) return true;

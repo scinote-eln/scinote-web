@@ -4,6 +4,7 @@ import ActionCableConsumer from '../../../../channels/consumer';
 // Keep this comfortably below EditingFlag::DEFAULT_DURATION (30s) server-side, so a single
 // missed heartbeat (network blip, tab throttled in the background) doesn't expire the flag.
 const REFRESH_INTERVAL_MS = 10000;
+const CO_EDITABLE_TYPES = ['StepText', 'ResultText'];
 
 export default {
   data() {
@@ -12,7 +13,8 @@ export default {
       ownEditingFlagIds: {},
       editingFlagSubscriptions: {},
       editingFlagRefreshIntervals: {},
-      editingIntentByElementId: {}
+      editingIntentByElementId: {},
+      remoteVersions: {}
     };
   },
   watch: {
@@ -41,14 +43,18 @@ export default {
     editingFlagsFor(elementId) {
       return Object.values(this.editingFlags[elementId] || {});
     },
+    remoteVersionFor(elementId) {
+      return this.remoteVersions[elementId] || null;
+    },
     syncEditingFlagSubscriptions(elements) {
-      const elementIds = elements.map((element) => String(element.id));
+      const textElements = elements.filter((element) => CO_EDITABLE_TYPES.includes(element.type));
+      const elementIds = textElements.map((element) => String(element.id));
 
       Object.keys(this.editingFlagSubscriptions)
         .filter((elementId) => !elementIds.includes(elementId))
         .forEach((elementId) => this.unsubscribeFromEditingFlags(elementId));
 
-      elements.forEach((element) => this.subscribeToEditingFlags(element));
+      textElements.forEach((element) => this.subscribeToEditingFlags(element));
     },
     subscribeToEditingFlags(element) {
       if (this.editingFlagSubscriptions[element.id]) return;
@@ -58,8 +64,8 @@ export default {
         [element.id]: ActionCableConsumer.subscriptions.create(
           {
             channel: 'EditingFlagsChannel',
-            subject_type: element.attributes.orderable_type,
-            subject_id: element.attributes.orderable.id
+            subject_type: element.type,
+            subject_id: element.id
           },
           {
             received: (message) => this.receiveEditingFlag(element.id, message)
@@ -72,8 +78,8 @@ export default {
     loadEditingFlags(element) {
       axios.get('/editing_flags', {
         params: {
-          subject_type: element.attributes.orderable_type,
-          subject_id: element.attributes.orderable.id
+          subject_type: element.type,
+          subject_id: element.id
         }
       }).then((response) => {
         const elementFlags = { ...(this.editingFlags[element.id] || {}) };
@@ -95,6 +101,10 @@ export default {
       delete editingFlags[elementId];
       this.editingFlags = editingFlags;
 
+      const remoteVersions = { ...this.remoteVersions };
+      delete remoteVersions[elementId];
+      this.remoteVersions = remoteVersions;
+
       // The element (step/result orderable) is gone from our list, e.g. deleted, archived
       // or moved elsewhere while it was still being edited - make sure we don't leave a
       // heartbeat running or an orphaned flag behind for it.
@@ -114,6 +124,15 @@ export default {
       }
     },
     receiveEditingFlag(elementId, message) {
+      if (message.action === 'content_updated') {
+        const prev = this.remoteVersions[elementId];
+        this.remoteVersions = {
+          ...this.remoteVersions,
+          [elementId]: { updatedAt: message.updated_at, seq: (prev ? prev.seq : 0) + 1 }
+        };
+        return;
+      }
+
       const flag = message.editing_flag.data;
       const elementFlags = { ...(this.editingFlags[elementId] || {}) };
 
@@ -129,8 +148,8 @@ export default {
       this.editingIntentByElementId = { ...this.editingIntentByElementId, [element.id]: true };
 
       axios.post('/editing_flags', {
-        subject_type: element.attributes.orderable_type,
-        subject_id: element.attributes.orderable.id
+        subject_type: element.type,
+        subject_id: element.id
       }).then((response) => {
         const editingFlagId = response.data.data.id;
 

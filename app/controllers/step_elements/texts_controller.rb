@@ -7,8 +7,9 @@ module StepElements
 
     # rubocop:disable Rails/LexicallyScopedActionFilter
     before_action :check_manage_step_permissions, only: %i(create move_targets)
-    before_action :load_step_text, only: %i(update destroy duplicate move archive restore lock unlock)
-    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets lock unlock)
+    before_action :load_step_text, only: %i(show update destroy duplicate move archive restore lock unlock)
+    before_action :check_read_permissions, only: :show
+    before_action :check_manage_permissions, except: %i(show create archive restore destroy move_targets lock unlock)
     before_action :check_archive_permissions, only: :archive
     before_action :check_restore_permissions, only: :restore
     before_action :check_lock_permissions, only: :lock
@@ -16,8 +17,12 @@ module StepElements
     before_action :check_delete_permissions, only: :destroy
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
+    def show
+      render json: StepTextSerializer.new(@step_text, scope: { user: current_user }).as_json
+    end
+
     def create
-      step_text = @step.step_texts.build
+      step_text = @step.step_texts.build(last_modified_by: current_user)
 
       ActiveRecord::Base.transaction do
         create_in_step!(@step, step_text)
@@ -30,13 +35,18 @@ module StepElements
     end
 
     def update
-      old_text = @step_text.text
-      ActiveRecord::Base.transaction do
-        @step_text.update!(step_text_params)
+      conflict = false
+      @step_text.with_lock do
+        conflict = text_version_conflict?
+        next if conflict
+
+        old_text = @step_text.text
+        @step_text.update!(step_text_params.merge(last_modified_by: current_user))
         TinyMceAsset.update_images(@step_text, params[:tiny_mce_images], current_user)
         log_step_activity(:text_edited, { text_name: @step_text.name })
         step_text_annotation(@step, @step_text, old_text)
       end
+      return render_text_version_conflict if conflict
 
       render json: { data: { attributes: StepTextSerializer.new(@step_text, scope: { user: current_user }).as_json } }
     rescue ActiveRecord::RecordInvalid
@@ -97,11 +107,23 @@ module StepElements
       params.require(:text_component).permit(:text, :name)
     end
 
+    def text_version_conflict?
+      params[:base_text_digest].present? && params[:base_text_digest] != @step_text.text_digest
+    end
+
+    def render_text_version_conflict
+      render json: { latest: StepTextSerializer.new(@step_text, scope: { user: current_user }).as_json }, status: :conflict
+    end
+
     def load_step_text
       @step_text = @step.step_texts.find_by(id: params[:id])
       return render_404 unless @step_text
 
       @element = @step_text
+    end
+
+    def check_read_permissions
+      render_403 unless can_read_protocol_in_module?(@protocol) || can_read_protocol_in_repository?(@protocol)
     end
 
     def check_manage_permissions

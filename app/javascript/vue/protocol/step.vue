@@ -195,7 +195,7 @@
           </div>
           <component
             :ref="'stepComponent'"
-            :is="elements[index].attributes.orderable_type"
+            :is="elements[index].type"
             class="step-element"
             :element.sync="elements[index]"
             :inRepository="inRepository"
@@ -204,6 +204,7 @@
             :isNew="element.isNew"
             :dataE2e="`protocol-step${step.id}`"
             e2eClass="protocol-step"
+            :remoteVersion="remoteVersionFor(element.id)"
             @component:adding-content="($event) => addingContent = $event"
             @component:delete="removeElement"
             @component:archive="removeElement"

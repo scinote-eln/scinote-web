@@ -17,9 +17,11 @@ class ResultText < ApplicationRecord
   belongs_to :result, inverse_of: :result_texts, touch: true, class_name: 'ResultBase'
   belongs_to :archived_by, class_name: 'User', optional: true
   belongs_to :restored_by, class_name: 'User', optional: true
+  belongs_to :last_modified_by, class_name: 'User', optional: true
   has_one :result_orderable_element, as: :orderable, dependent: :destroy
 
   after_save :manage_orderable_element_on_archive, if: -> { saved_change_to_archived? }
+  after_update_commit :broadcast_content_updated, if: -> { saved_change_to_text? || saved_change_to_name? }
 
   delegate :team, to: :result
 
@@ -50,6 +52,11 @@ class ResultText < ApplicationRecord
     end
   end
 
+  def text_digest
+    # Hash the value stored in the DB: rendering (tinymce_render) rewrites legacy image tokens in the in-memory `text`
+    Digest::SHA256.hexdigest(text_in_database.to_s)
+  end
+
   private
 
   # Override for ObservableModel
@@ -63,5 +70,17 @@ class ResultText < ApplicationRecord
     elsif result_orderable_element.blank?
       create_result_orderable_element!(result: result, position: result.next_element_position)
     end
+  end
+
+  def broadcast_content_updated
+    EditingFlagsChannel.broadcast_to(
+      self,
+      action: 'content_updated',
+      subject_type: self.class.name,
+      subject_id: id,
+      updated_at: updated_at.to_i
+    )
+  rescue StandardError => e
+    Rails.logger.error("#{self.class.name} #{id} content_updated broadcast failed: #{e.message}")
   end
 end

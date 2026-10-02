@@ -6,8 +6,9 @@ class ResultTextSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :urls, :text_view, :icon, :placeholder, :name, :parent_type, :archived, :archived_by, :archived_on, :locked,
-             :position, :orderable_element_id, :type
+  attributes :id, :text, :urls, :text_view, :updated_at, :icon, :placeholder, :name, :parent_type, :archived, :archived_by, :archived_on, :locked,
+             :position, :orderable_element_id, :type, :text_digest,
+             :last_modified_by, :last_modified_on
 
   def updated_at
     object.updated_at.to_i
@@ -46,6 +47,14 @@ class ResultTextSerializer < ActiveModel::Serializer
     object.archived_by&.full_name
   end
 
+  def last_modified_by
+    object.last_modified_by&.full_name
+  end
+
+  def last_modified_on
+    I18n.l(object.updated_at, format: :full) if object.updated_at.present?
+  end
+
   def archived_on
     I18n.l(object.archived_on, format: :full) if object.archived_on.present?
   end
@@ -67,11 +76,11 @@ class ResultTextSerializer < ActiveModel::Serializer
 
     if can_manage_result_text?(user, object)
       url_list.merge!({
-                        duplicate_url: duplicate_result_text_path(result, object),
-                        update_url: result_text_path(result, object),
-                        move_targets_url: move_targets_result_text_path(result, object),
-                        move_url: move_result_text_path(result, object)
-                      })
+        duplicate_url: duplicate_result_text_path(result, object),
+        update_url: result_text_path(result, object),
+        move_targets_url: move_targets_result_text_path(result, object),
+        move_url: move_result_text_path(result, object)
+      })
     end
 
     url_list[:archive_url] = archive_result_text_path(result, object) if can_archive_result_text?(user, object)
@@ -79,6 +88,7 @@ class ResultTextSerializer < ActiveModel::Serializer
     url_list[:delete_url] = result_text_path(result, object) if can_delete_result_text?(user, object)
     url_list[:lock_url] = lock_result_text_path(result, object) if can_lock_result_text?(user, object)
     url_list[:unlock_url] = unlock_result_text_path(result, object) if can_unlock_result_text?(user, object)
+    url_list[:show_url] = result_text_path(result, object) if can_read_result?(user, result)
 
     url_list
   end

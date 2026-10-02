@@ -9,8 +9,9 @@ module ResultElements
 
     # rubocop:disable Rails/LexicallyScopedActionFilter
     before_action :check_manage_result_permissions, only: %i(create move_targets)
-    before_action :load_result_text, only: %i(update destroy duplicate move archive restore lock unlock)
-    before_action :check_manage_permissions, except: %i(create archive restore destroy move_targets lock unlock)
+    before_action :load_result_text, only: %i(show update destroy duplicate move archive restore lock unlock)
+    before_action :check_read_permissions, only: :show
+    before_action :check_manage_permissions, except: %i(show create archive restore destroy move_targets lock unlock)
     before_action :check_archive_permissions, only: :archive
     before_action :check_restore_permissions, only: :restore
     before_action :check_lock_permissions, only: :lock
@@ -18,8 +19,12 @@ module ResultElements
     before_action :check_delete_permissions, only: :destroy
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
+    def show
+      render json: ResultTextSerializer.new(@result_text, scope: { user: current_user }).as_json
+    end
+
     def create
-      result_text = ResultText.build
+      result_text = ResultText.build(last_modified_by: current_user)
       result_text.result_id = @result.id
 
       ActiveRecord::Base.transaction do
@@ -34,13 +39,18 @@ module ResultElements
     end
 
     def update
-      old_text = @result_text.text
-      ActiveRecord::Base.transaction do
-        @result_text.update!(result_text_params)
+      conflict = false
+      @result_text.with_lock do
+        conflict = text_version_conflict?
+        next if conflict
+
+        old_text = @result_text.text
+        @result_text.update!(result_text_params.merge(last_modified_by: current_user))
         TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
         log_result_activity(:text_edited, { text_name: @result_text.name })
         result_annotation_notification(old_text)
       end
+      return render_text_version_conflict if conflict
 
       render json: { data: { attributes: ResultTextSerializer.new(@result_text, scope: { user: current_user }).as_json } }
     rescue ActiveRecord::RecordInvalid
@@ -100,11 +110,23 @@ module ResultElements
       params.require(:text_component).permit(:text, :name)
     end
 
+    def text_version_conflict?
+      params[:base_text_digest].present? && params[:base_text_digest] != @result_text.text_digest
+    end
+
+    def render_text_version_conflict
+      render json: { latest: ResultTextSerializer.new(@result_text, scope: { user: current_user }).as_json }, status: :conflict
+    end
+
     def load_result_text
       @result_text = @result.result_texts.find_by(id: params[:id])
       return render_404 unless @result_text
 
       @element = @result_text
+    end
+
+    def check_read_permissions
+      render_403 unless can_read_result?(@result)
     end
 
     def check_manage_permissions
