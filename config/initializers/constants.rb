@@ -196,6 +196,30 @@ class Constants
     #DCE0E7
   ).freeze
 
+  USER_AVATAR_DARK_TEXT_COLORS = %w(
+    #C4D3A0
+    #5EC66F
+    #46C3C8
+    #A3CCE4
+    #3B99FD
+    #FF69B4
+    #FF5C00
+    #E9A845
+    #98A2B3
+    #DCE0E7
+  ).freeze
+
+  USER_AVATAR_LIGHT_TEXT_COLORS = %w(
+    #104DA9
+    #6F2DC1
+    #DF3562
+    #B06500
+    #663300
+    #1D2939
+  ).freeze
+
+  USER_AVATAR_COLORS = (USER_AVATAR_DARK_TEXT_COLORS + USER_AVATAR_LIGHT_TEXT_COLORS).freeze
+
   # Theme colors
   BRAND_PRIMARY = '#104da9'.freeze # $brand-primary
 

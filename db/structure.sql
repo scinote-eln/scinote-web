@@ -4021,7 +4021,8 @@ CREATE TABLE public.users (
     unlock_token character varying,
     api_key character varying,
     api_key_expires_at timestamp without time zone,
-    api_key_created_at timestamp without time zone
+    api_key_created_at timestamp without time zone,
+    avatar_color character varying(7) NOT NULL
 );
 
 
@@ -11095,8 +11096,9 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20260729083813'),
+('20260923100000'),
 ('20260907114439'),
+('20260729083813'),
 ('20260729082431'),
 ('20260715121739'),
 ('20260714101739'),
@@ -11441,3 +11443,4 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20150713071921'),
 ('20150713063224'),
 ('20150713060702');
+

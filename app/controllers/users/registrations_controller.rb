@@ -10,9 +10,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
   layout :layout
 
   def avatar
-    user = User.find_by_id(params[:id]) || current_user
-    style = params[:style] || :icon_small
-    redirect_to user.avatar_url(style)
+    user = User.find_by(id: params[:id]) || current_user
+    style = params[:style].to_sym || :icon_small
+
+    return redirect_to(user.avatar_url(style)) if user&.avatar&.attached?
+    return redirect_to(default_avatar_path(style)) unless user && user_signed_in?
+
+    # Opened directly, the SVG renders as a page on our domain, so block all active content.
+    response.headers['Content-Security-Policy'] = "default-src 'none'"
+    # return already cached avatar
+    return unless stale?(etag: [user.id, user.initials, user.avatar_color, style])
+
+    render body: Users::InitialsAvatarService.new(user, style).call, content_type: 'image/svg+xml'
   end
 
   def update_resource(resource, params)
@@ -278,6 +287,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def layout
     'fluid' if action_name == 'edit'
+  end
+
+  def default_avatar_path(style)
+    Constants::DEFAULT_AVATAR_URL.gsub(':style', style.to_s)
   end
 
   def check_captcha
