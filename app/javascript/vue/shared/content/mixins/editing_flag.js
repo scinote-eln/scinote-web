@@ -5,6 +5,8 @@ import ActionCableConsumer from '../../../../channels/consumer';
 // missed heartbeat (network blip, tab throttled in the background) doesn't expire the flag.
 const REFRESH_INTERVAL_MS = 10000;
 
+const CURRENT_USER_ID = parseInt($('meta[name="current-user-id"]').attr('content'), 10);
+
 export default {
   data() {
     return {
@@ -25,8 +27,11 @@ export default {
   },
   mounted() {
     this.syncEditingFlagSubscriptions(this.elements || []);
+    window.addEventListener('pagehide', this.cleanupEditingFlagsOnPageHide);
   },
   beforeUnmount() {
+    window.removeEventListener('pagehide', this.cleanupEditingFlagsOnPageHide);
+
     Object.values(this.editingFlagSubscriptions).forEach((subscription) => {
       ActionCableConsumer.subscriptions.remove(subscription);
     });
@@ -39,7 +44,16 @@ export default {
   },
   methods: {
     editingFlagsFor(elementId) {
-      return Object.values(this.editingFlags[elementId] || {});
+      return Object.values(this.editingFlags[elementId] || {})
+        .filter((flag) => flag.attributes.user.id !== CURRENT_USER_ID);
+    },
+    cleanupEditingFlagsOnPageHide() {
+      Object.values(this.ownEditingFlagIds).forEach((editingFlagId) => {
+        axios.delete(`/editing_flags/${editingFlagId}`, {
+          adapter: 'fetch',
+          fetchOptions: { keepalive: true, credentials: 'same-origin' }
+        }).catch(() => {});
+      });
     },
     syncEditingFlagSubscriptions(elements) {
       const elementIds = elements.map((element) => String(element.id));
@@ -58,8 +72,8 @@ export default {
         [element.id]: ActionCableConsumer.subscriptions.create(
           {
             channel: 'EditingFlagsChannel',
-            subject_type: element.attributes.orderable_type,
-            subject_id: element.attributes.orderable.id
+            subject_type: element.type,
+            subject_id: element.id
           },
           {
             received: (message) => this.receiveEditingFlag(element.id, message)
@@ -72,8 +86,8 @@ export default {
     loadEditingFlags(element) {
       axios.get('/editing_flags', {
         params: {
-          subject_type: element.attributes.orderable_type,
-          subject_id: element.attributes.orderable.id
+          subject_type: element.type,
+          subject_id: element.id
         }
       }).then((response) => {
         const elementFlags = { ...(this.editingFlags[element.id] || {}) };
@@ -129,8 +143,8 @@ export default {
       this.editingIntentByElementId = { ...this.editingIntentByElementId, [element.id]: true };
 
       axios.post('/editing_flags', {
-        subject_type: element.attributes.orderable_type,
-        subject_id: element.attributes.orderable.id
+        subject_type: element.type,
+        subject_id: element.id
       }).then((response) => {
         const editingFlagId = response.data.data.id;
 

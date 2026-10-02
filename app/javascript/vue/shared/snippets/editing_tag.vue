@@ -1,6 +1,6 @@
 <template>
   <span
-    class="w-6 h-6 cursor-pointer rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
+    class="w-6 h-6 cursor-pointer rounded-full flex items-center justify-center text-[10px] text-sn-black shrink-0"
     :style="{ backgroundColor: color }"
     :data-sn-tooltip="i18n.t('general.editing_tag', { user: user.name })"
   >

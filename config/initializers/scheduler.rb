@@ -51,7 +51,7 @@ if ENV['SCINOTE_SCHEDULER_ENABLED'] == 'true'
     NotificationCleanupJob.perform_now
   end
 
-  scheduler.every '1m' do
-    ActiveRecord::Base.connection_pool.with_connection { EditingFlagCleanupJob.perform_now }
+  schedule_task(scheduler, '1m') do
+    EditingFlagCleanupJob.perform_now
   end
 end

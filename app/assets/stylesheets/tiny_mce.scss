@@ -260,6 +260,29 @@
   z-index: 2 !important;
 }
 
+.editing-flags-active {
+  .tox-menubar {
+    border-top: 1px solid var(--sn-alert-brittlebush);
+  }
+
+  .editing-flags-tag {
+    // flex it to the center of the menubar and
+    // move it to the right not to cover the menu
+    margin: auto !important;
+    align-self: center;
+    z-index: 3;
+    height: 24px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 400;
+    color: $color-black;
+    background-color: var(--sn-alert-brittlebush);
+    white-space: nowrap;
+  }
+}
+
 .tox-dialog-wrap {
   .tox-dialog__body-nav {
     .tox-dialog__body-nav-item:nth-child(3) {
