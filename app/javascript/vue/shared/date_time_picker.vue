@@ -34,7 +34,7 @@
       :flow="{
         partial: true,
       }"
-      :auto-apply="true"
+      :auto-apply="!range"
       :markers="markers"
       :range="range"
       week-start="0"
