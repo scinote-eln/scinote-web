@@ -15,7 +15,7 @@
             <textarea v-model="textValue" ref="input" class="sci-input-field w-full "></textarea>
           </div>
           <div v-else ref="textContainer" class="[&_.atwho-user-container]:!whitespace-normal whitespace-pre-wrap">
-            {{ textValue }}
+            <span>{{ textValue }}</span>
           </div>
         </div>
         <div class="modal-footer">
