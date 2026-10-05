@@ -17,7 +17,7 @@
             <hr class="m-0">
             <div v-if="activeFilter && !activeFilter.id" class="flex items-center p-3 gap-1 bg-sn-super-light-blue">
               <span>{{ i18n.t('repositories.show.filters.active_filter') }}</span>
-              <button class="btn btn-light icon-btn ml-auto" @click="openSaveFilterModal">
+              <button v-if="params.canManageFilters" class="btn btn-light icon-btn ml-auto" @click="openSaveFilterModal">
                 <i class="sn-icon sn-icon-save"></i>
               </button>
             </div>
@@ -26,10 +26,10 @@
                  :class="{ 'bg-sn-super-light-blue': activeFilter && activeFilter.id === filter.id }"
             >
               <div class="grow h-10 leading-10" @click="loadFilter(filter)">{{ filter.attributes.name }}</div>
-              <button class="btn btn-light icon-btn ml-auto" @click="editFilters(filter)">
+              <button v-if="params.canManageFilters" class="btn btn-light icon-btn ml-auto" @click="editFilters(filter)">
                 <i class="sn-icon sn-icon-edit"></i>
               </button>
-              <button class="btn btn-light icon-btn" @click="deleteFilter(filter)">
+              <button v-if="params.canManageFilters" class="btn btn-light icon-btn" @click="deleteFilter(filter)">
                 <i class="sn-icon sn-icon-delete"></i>
               </button>
             </div>
