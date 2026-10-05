@@ -202,6 +202,7 @@
             :dataE2e="`protocol-step${step.id}`"
             e2eClass="protocol-step"
             :editingFlags="editingFlagsFor(element.id)"
+            :remoteVersion="remoteVersionFor(element.id)"
             @component:adding-content="($event) => addingContent = $event"
             @component:delete="removeElement"
             @component:archive="removeElement"

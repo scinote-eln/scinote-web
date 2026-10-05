@@ -10,6 +10,40 @@ describe ResultElements::TextsController, type: :controller do
   let!(:result_text) { create :result_text, result: result_template  }
   let!(:result_orderable_element) { create :result_orderable_element, result: result_template, orderable: result_text, position: 3}
 
+  describe 'GET show' do
+    let(:action) { get :show, params: { result_id: result_template.id, id: result_text.id }, format: :json }
+
+    context 'when user can read the result' do
+      it 'returns the flat serialized result text' do
+        action
+        expect(response).to have_http_status(:ok)
+
+        body = response.parsed_body
+        expect(body).not_to have_key('data')
+        expect(body['id']).to eq(result_text.id)
+        expect(body).to include('text_view', 'updated_at')
+        expect(body.dig('urls', 'show_url')).to eq(result_text_path(result_template, result_text))
+      end
+
+      it 'does not require manage permissions' do
+        allow(controller).to receive(:can_manage_result_text?).and_return(false)
+        action
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when user cannot read the result' do
+      let(:other_protocol) { create :protocol, :in_repository_draft, added_by: create(:user) }
+      let(:other_result_template) { create :result_template, protocol: other_protocol, user: other_protocol.added_by }
+      let(:other_result_text) { create :result_text, result: other_result_template }
+
+      it 'returns forbidden' do
+        get :show, params: { result_id: other_result_template.id, id: other_result_text.id }, format: :json
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
   describe 'POST create' do
     it 'creates a new result element text' do
       expect {

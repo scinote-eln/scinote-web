@@ -70,11 +70,11 @@ class StepTextSerializer < ActiveModel::Serializer
 
     if can_manage_step_text?(user, object)
       url_list.merge!({
-                        duplicate_url: duplicate_step_text_path(step, object),
-                        update_url: step_text_path(step, object),
-                        move_url: move_step_text_path(step, object),
-                        move_targets_url: move_targets_step_text_path(step, object)
-                      })
+        duplicate_url: duplicate_step_text_path(step, object),
+        update_url: step_text_path(step, object),
+        move_url: move_step_text_path(step, object),
+        move_targets_url: move_targets_step_text_path(step, object)
+      })
     end
 
     url_list[:archive_url] = archive_step_text_path(step, object) if can_archive_step_text?(user, object)
@@ -82,6 +82,7 @@ class StepTextSerializer < ActiveModel::Serializer
     url_list[:delete_url] = step_text_path(step, object) if can_delete_step_text?(user, object)
     url_list[:lock_url] = lock_step_text_path(step, object) if can_lock_step_text?(user, object)
     url_list[:unlock_url] = unlock_step_text_path(step, object) if can_unlock_step_text?(user, object)
+    url_list[:show_url] = step_text_path(step, object) if can_read_protocol_in_module?(user, step.protocol) || can_read_protocol_in_repository?(user, step.protocol)
 
     url_list
   end

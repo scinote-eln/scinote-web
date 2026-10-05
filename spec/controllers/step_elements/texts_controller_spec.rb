@@ -11,6 +11,39 @@ describe StepElements::TextsController, type: :controller do
   let!(:step) { create :step, protocol: protocol }
   let!(:step_text) { create :step_text, step: step }
 
+  describe 'GET show' do
+    let(:action) { get :show, params: { step_id: step.id, id: step_text.id }, format: :json }
+
+    context 'when user can read the protocol' do
+      it 'returns the flat serialized step text' do
+        action
+        expect(response).to have_http_status(:ok)
+
+        body = response.parsed_body
+        expect(body).not_to have_key('data')
+        expect(body['id']).to eq(step_text.id)
+        expect(body).to include('text_view', 'updated_at')
+        expect(body.dig('urls', 'show_url')).to eq(step_text_path(step, step_text))
+      end
+
+      it 'does not require manage permissions' do
+        allow(controller).to receive(:can_manage_step_text?).and_return(false)
+        action
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when user cannot read the protocol' do
+      let(:other_step) { create :step, protocol: create(:protocol, :in_repository_draft, added_by: create(:user)) }
+      let(:other_step_text) { create :step_text, step: other_step }
+
+      it 'returns forbidden' do
+        get :show, params: { step_id: other_step.id, id: other_step_text.id }, format: :json
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
   describe 'POST lock' do
     let(:action) { post :lock, params: { step_id: step.id, id: step_text.id } }
 

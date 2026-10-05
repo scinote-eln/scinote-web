@@ -26,6 +26,7 @@ class StepText < ApplicationRecord
   delegate :team, to: :step
 
   after_save :manage_orderable_element_on_archive, if: -> { saved_change_to_archived? }
+  after_update_commit :broadcast_content_updated, if: -> { saved_change_to_text? || saved_change_to_name? }
 
   scope :asc, -> { order('step_texts.created_at ASC') }
 
@@ -62,5 +63,17 @@ class StepText < ApplicationRecord
     elsif step_orderable_element.blank?
       create_step_orderable_element!(step: step, position: step.next_element_position)
     end
+  end
+
+  def broadcast_content_updated
+    EditingFlagsChannel.broadcast_to(
+      self,
+      action: 'content_updated',
+      subject_type: self.class.name,
+      subject_id: id,
+      updated_at: updated_at.to_i
+    )
+  rescue StandardError => e
+    Rails.logger.error("#{self.class.name} #{id} content_updated broadcast failed: #{e.message}")
   end
 end
