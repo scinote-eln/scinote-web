@@ -52,7 +52,9 @@ export default {
         axios.delete(`/editing_flags/${editingFlagId}`, {
           adapter: 'fetch',
           fetchOptions: { keepalive: true, credentials: 'same-origin' }
-        }).catch(() => {});
+        }).catch((error) => {
+          console.log('Failed to clean up editing flag on pagehide', error)
+        });
       });
     },
     syncEditingFlagSubscriptions(elements) {
