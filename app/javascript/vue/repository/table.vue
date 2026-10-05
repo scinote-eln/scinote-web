@@ -139,7 +139,8 @@ export default {
     activePageUrl: String,
     archivedPageUrl: String,
     currentViewMode: { type: String, default: 'active' },
-    canManageRepository: { type: Boolean, default: false }
+    canManageRepository: { type: Boolean, default: false },
+    canManageFilters: { type: Boolean, default: false }
   },
   components: {
     DataTable,
@@ -224,7 +225,8 @@ export default {
         type: 'component',
         params: {
           componentRenderer: RepositoryFilters,
-          repositoryId: this.repositoryId
+          repositoryId: this.repositoryId,
+          canManageFilters: this.canManageFilters
         }
       });
 
