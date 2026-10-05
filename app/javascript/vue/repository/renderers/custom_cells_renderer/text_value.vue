@@ -3,12 +3,12 @@
     <div class="group relative flex items-center group-hover:marker text-xs h-full w-full leading-[unset]">
       <div ref="descripitonBox" class="flex gap-2 w-full items-center text-sm leading-[unset]">
         <template v-if="sanitizedTextValue && sanitizedTextValue.length > 0">
-          <span class="cursor-pointer line-clamp-1 leading-[unset]"
+          <span class="cursor-pointer line-clamp-1 leading-[unset] truncate"
             @click.stop v-html="sanitizedTextValue">
           </span>
         </template>
         <template v-else-if="textValue && textValue.length > 0">
-          <span class="cursor-pointer line-clamp-1 leading-[unset]"
+          <span class="cursor-pointer line-clamp-1 leading-[unset] truncate"
                 @click.stop="showTextCellModal">
             {{ textValue}}
           </span>
