@@ -5,7 +5,6 @@
       v-model="newValue"
       type="text"
       :placeholder="(isFocused ? '' : i18n.t('repositories.table.number.enter_number'))"
-      :style="{ textAlign: (newValue || isFocused) ? 'right' : 'left' }"
       @keydown.enter="saveValue"
       @keydown.esc="cancelEdit"
       @focus="isFocused = true"
@@ -14,7 +13,7 @@
       class="sci-table-input-v2 !border-transparent !bg-transparent placeholder:text-sn-grey"
     />
   </div>
-  <div v-else class="align-right">
+  <div v-else>
     {{ this.newValue }}
   </div>
 </template>
