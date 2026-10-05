@@ -98,6 +98,10 @@ export default {
     characterLimit: {
       type: Number,
       default: null
+    },
+    editingFlags: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -133,6 +137,9 @@ export default {
       if (this.editorInstance()) {
         this.editorInstance().blurDisabled = this.error != false;
       }
+    },
+    editingFlags() {
+      this.toggleEditingIndicator();
     }
   },
   computed: {
@@ -195,6 +202,7 @@ export default {
           this.initializing = false;
           this.initEditorHeader();
           this.initCharacterCount();
+          this.toggleEditingIndicator();
           this.$emit('editingEnabled');
         },
         onInput: () => {
@@ -258,7 +266,31 @@ export default {
       if (editor) editor.focus();
     },
     editorInstance() {
+      // Not tinyMCE.activeEditor: that's a page-wide singleton that points at whichever editor
+      // currently has focus, so a watcher reacting to *this* component's own props (e.g. a
+      // remote editingFlags update while the user has since focused a different field) would
+      // otherwise mutate a completely different editor's toolbar.
       return tinyMCE.get(`${this.objectType}_textarea_${this.objectId}`);
+    },
+    toggleEditingIndicator() {
+      if (!this.editorInstance()) return;
+
+      const container = $(this.editorInstance().container);
+      const active = this.editingFlags.length > 0;
+
+      container.toggleClass('editing-flags-active', active);
+
+      const menubar = container.find('.tox-menubar');
+      let tag = menubar.find('.editing-flags-tag');
+
+      if (active && !tag.length) {
+        // Inserted before the save/cancel controls (a normal flex sibling, not absolutely
+        // positioned) so it can never overlap the menu items - at narrow widths it just sits
+        // wherever flex layout puts it instead of overlapping "Insert"/"Format" etc.
+        menubar.find('.tinymce-save-controls').before(`<div class="editing-flags-tag">${this.i18n.t('general.currently_being_edited')}</div>`);
+      } else if (!active) {
+        tag.remove();
+      }
     },
     initCodeHighlight() {
       this.$nextTick(() => {

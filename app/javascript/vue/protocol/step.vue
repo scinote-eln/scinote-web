@@ -190,9 +190,6 @@
     <div class="collapse in" :id="'stepBody' + step.id">
       <div class="step-elements">
         <div v-for="(element, index) in orderedElements" :key="element.id" class="relative">
-          <div v-if="editingFlagsFor(element.id).length" class="absolute -bottom-4 left-0 z-10 flex gap-1">
-            <EditingTag v-for="flag in editingFlagsFor(element.id)" :key="flag.id" :user="flag.attributes.user" />
-          </div>
           <component
             :ref="'stepComponent'"
             :is="elements[index].type"
@@ -204,6 +201,7 @@
             :isNew="element.isNew"
             :dataE2e="`protocol-step${step.id}`"
             e2eClass="protocol-step"
+            :editingFlags="editingFlagsFor(element.id)"
             :remoteVersion="remoteVersionFor(element.id)"
             @component:adding-content="($event) => addingContent = $event"
             @component:delete="removeElement"

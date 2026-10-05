@@ -9,6 +9,7 @@ class EditingFlag < ApplicationRecord
 
   validates :timeout_at, presence: true
   validates :user_id, uniqueness: { scope: %i(subject_type subject_id) }
+  validates :subject_type, inclusion: { in: SUBJECT_TYPES }
 
   scope :active, -> { where(timeout_at: Time.current..) }
   scope :expired, -> { where(timeout_at: ...Time.current) }

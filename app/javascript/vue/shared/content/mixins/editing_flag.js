@@ -6,6 +6,8 @@ import ActionCableConsumer from '../../../../channels/consumer';
 const REFRESH_INTERVAL_MS = 10000;
 const CO_EDITABLE_TYPES = ['StepText', 'ResultText'];
 
+const CURRENT_USER_ID = parseInt($('meta[name="current-user-id"]').attr('content'), 10);
+
 export default {
   data() {
     return {
@@ -27,8 +29,11 @@ export default {
   },
   mounted() {
     this.syncEditingFlagSubscriptions(this.elements || []);
+    window.addEventListener('pagehide', this.cleanupEditingFlagsOnPageHide);
   },
   beforeUnmount() {
+    window.removeEventListener('pagehide', this.cleanupEditingFlagsOnPageHide);
+
     Object.values(this.editingFlagSubscriptions).forEach((subscription) => {
       ActionCableConsumer.subscriptions.remove(subscription);
     });
@@ -41,7 +46,21 @@ export default {
   },
   methods: {
     editingFlagsFor(elementId) {
-      return Object.values(this.editingFlags[elementId] || {});
+      return Object.values(this.editingFlags[elementId] || {})
+        .filter((flag) => flag.attributes.user.id !== CURRENT_USER_ID);
+    },
+    cleanupEditingFlagsOnPageHide() {
+      Object.values(this.ownEditingFlagIds).forEach((editingFlagId) => {
+        axios.delete(`/editing_flags/${editingFlagId}`, {
+          adapter: 'fetch',
+          fetchOptions: { keepalive: true, credentials: 'same-origin' }
+        }).catch((error) => {
+          console.log('Failed to clean up editing flag on pagehide', error)
+        });
+      });
+    },
+    remoteVersionFor(elementId) {
+      return this.remoteVersions[elementId] || null;
     },
     remoteVersionFor(elementId) {
       return this.remoteVersions[elementId] || null;
