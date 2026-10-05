@@ -371,7 +371,13 @@ class User < ApplicationRecord
   end
 
   def avatar_url(style)
+    return Rails.application.routes.url_helpers.avatar_path(self, style) unless avatar.attached?
+
     Rails.application.routes.url_helpers.url_for(avatar_variant(style))
+  end
+
+  def avatar_color
+    Constants::USER_AVATAR_COLORS[id % Constants::USER_AVATAR_COLORS.size]
   end
 
   def date_format

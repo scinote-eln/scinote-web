@@ -58,7 +58,6 @@ RSpec.describe EditingFlag, type: :model do
 
       editing_flag.update(timeout_at: 2.minutes.from_now)
     end
-
     it 'does not broadcast or raise when the subject has already been destroyed' do
       editing_flag = create(:editing_flag, user: user, subject: step_text, timeout_at: 1.minute.from_now)
       step_text.destroy
