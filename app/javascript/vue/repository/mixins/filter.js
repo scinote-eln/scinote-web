@@ -15,7 +15,12 @@ export default {
     // load value from parameters
     const keys = Object.keys(this.parameters);
     if (keys.length) {
-      this.value = keys.length == 1 ? this.parameters[keys[0]] : { ...this.parameters };
+      if (this.filter.column.id === 'assigned') {
+        this.value = this.parameters.my_module_ids;
+        this.selectedProject = this.parameters.project_id;
+      } else {
+        this.value = keys.length == 1 ? this.parameters[keys[0]] : { ...this.parameters };
+      }
     }
   },
   methods: {
