@@ -35,7 +35,6 @@
 <script>
 import FilterMixin from '../mixins/filter.js';
 import SelectDropdown from '../../shared/select_dropdown.vue';
-import { update } from 'lodash';
 
 export default {
   name: 'RepositoryMyModuleValue',
@@ -57,7 +56,7 @@ export default {
   },
   watch: {
     value() {
-      this.parameters = { my_module_ids: this.value };
+      this.parameters = { my_module_ids: this.value, project_id: this.selectedProject };
       this.updateFilter();
     }
   },
