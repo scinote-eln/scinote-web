@@ -15,7 +15,10 @@
       />
     </div>
     <div v-else>
-      <template v-if="selectedOptions.length == 1">
+      <template v-if="selectedOptions.length == 0">
+        <span>—</span>
+      </template>
+      <template v-else-if="selectedOptions.length == 1">
         <span>{{ selectedOptions[0][1] }}</span>
       </template>
       <GeneralDropdown v-else>

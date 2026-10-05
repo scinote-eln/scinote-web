@@ -9,7 +9,7 @@
         </template>
         <template v-else-if="textValue && textValue.length > 0">
           <span class="cursor-pointer line-clamp-1 leading-[unset] truncate"
-                @click.stop="showTextCellModal">
+                @click="showTextCellModal">
             {{ textValue}}
           </span>
           <span @click.stop="showTextCellModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'TextCellRenderer',
   props: {
@@ -35,9 +36,7 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      window.renderElementSmartAnnotations(this.$refs.descripitonBox, 'span');
-    });
+    window.renderElementSmartAnnotations(this.$refs.descripitonBox, 'span');
   },
   computed: {
     textValue() {
@@ -51,7 +50,12 @@ export default {
     }
   },
   methods: {
-    showTextCellModal() {
+    showTextCellModal(e) {
+      // handle smart annotations
+      if (['atwho-user-popover', 'sa-name', 'sa-link', 'atwho-inserted'].some((c) => e.target.classList.contains(c))) {
+        return;
+      }
+
       this.params.dtComponent.$emit('showTextCell', null, [this.params.data], this.params.colDef);
     }
   }
