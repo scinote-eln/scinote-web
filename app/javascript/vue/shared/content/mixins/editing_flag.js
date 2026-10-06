@@ -62,9 +62,6 @@ export default {
     remoteVersionFor(elementId) {
       return this.remoteVersions[elementId] || null;
     },
-    remoteVersionFor(elementId) {
-      return this.remoteVersions[elementId] || null;
-    },
     syncEditingFlagSubscriptions(elements) {
       const textElements = elements.filter((element) => CO_EDITABLE_TYPES.includes(element.type));
       const elementIds = textElements.map((element) => String(element.id));

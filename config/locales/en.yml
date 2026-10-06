@@ -4510,6 +4510,17 @@ en:
           description_1_result: 'The text will be restored to the bottom of the result it belonged to previously.'
           description_2: 'Are you sure you want to continue?'
           confirm: 'Restore'
+        new_version:
+          banner: "A new version is available for this text field"
+          see_latest: "See latest version"
+          title: "%{name} New text version"
+          title_unnamed: "New text version"
+          subtitle: "Last update by %{user} at %{time}"
+          overwrite: "Overwrite"
+          confirm_title: "Overwrite current version"
+          confirm_line_1: "Saving your version will overwrite the latest version last updated by %{user} at %{time}."
+          confirm_line_2: "You can see all changes later in this workspace's audit trails."
+          confirm_line_3: "Do you wish to save your version?"
       plate:
         default_name: "Plate %{position}"
       form_response:

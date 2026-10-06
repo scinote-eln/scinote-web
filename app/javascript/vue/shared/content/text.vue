@@ -154,7 +154,7 @@ import EditingTag from '../snippets/editing_tag.vue';
 
 export default {
   name: 'TextContent',
-  components: { 
+  components: {
     deleteElementModal, Tinymce, moveElementModal, InlineEdit, MenuDropdown, RestoreModal, LockedTag, EditingTag, NewVersionModal
   },
   mixins: [DeleteMixin, DuplicateMixin, MoveMixin, ArchiveMixin, tooltipMixin],
@@ -204,8 +204,7 @@ export default {
       reloadRequestSeq: 0,
       latestVersion: null,
       showingNewVersionModal: false,
-      pendingOverwriteDigest: null.
-      reloadRequestSeq: 0
+      pendingOverwriteDigest: null
     };
   },
   watch: {

@@ -23,9 +23,8 @@ class EditingFlag < ApplicationRecord
   # The subject (e.g. a StepText) may have been deleted while this flag was still active -
   # nothing cascades that deletion to here, so broadcasting would try to stream to a nil
   # subject and raise. Skip it; the orphaned row still expires and gets cleaned up normally.
-  # A cached association can still hold the destroyed in-memory record, so check destroyed? too.
   def subject_present?
-    subject.present? && !subject.destroyed?
+    subject_type.constantize.exists?(subject_id)
   end
 
   def broadcast_create
