@@ -1,5 +1,132 @@
-<html>
-  <body>
-    <%= yield %>
-  </body>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<title>SciNote</title>
+<!--[if mso]>
+<noscript>
+<xml>
+<o:OfficeDocumentSettings>
+<o:PixelsPerInch>96</o:PixelsPerInch>
+</o:OfficeDocumentSettings>
+</xml>
+</noscript>
+<style>
+table { border-collapse: collapse; }
+td, th { mso-line-height-rule: exactly; }
+</style>
+<![endif]-->
+<style>
+  body, table, td { font-family: Arial, Helvetica, sans-serif; }
+  @media only screen and (max-width: 620px) {
+    .email-container { width: 100% !important; }
+    .fluid-padding { padding-left: 16px !important; padding-right: 16px !important; }
+  }
+  /* Formatting for mailer view content, which carries no inline styles */
+  .email-content p {
+    margin: 0 0 16px 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    line-height: 24px;
+    color: #333333;
+  }
+  .email-content p:last-child { margin-bottom: 0; }
+  .email-content a { color: #1a5fa8; text-decoration: underline; }
+  .email-content ul, .email-content ol {
+    margin: 0 0 16px 0;
+    padding-left: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    line-height: 24px;
+    color: #333333;
+  }
+  .email-content strong { color: #1a1a1a; }
+</style>
+</head>
+<body style="margin:0; padding:0; background-color:#ebebeb; -webkit-text-size-adjust:100%; mso-line-height-rule:exactly;">
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ebebeb; mso-line-height-rule:exactly;">
+<tr>
+<td align="center" style="padding:32px 12px;">
+
+<!--[if mso]>
+<table role="presentation" align="center" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td>
+<![endif]-->
+<table role="presentation" class="email-container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px; background-color:#ffffff; mso-line-height-rule:exactly;">
+
+<!-- Top accent bar -->
+<tr>
+<td style="background-color:#1a1a1a; font-size:0; line-height:0; height:4px;">&nbsp;</td>
+</tr>
+
+<!-- Header -->
+<tr>
+<td class="fluid-padding" style="background-color:#ffffff; padding:26px 32px 22px 32px; mso-line-height-rule:exactly;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td style="font-family:Arial, Helvetica, sans-serif; font-size:24px; line-height:28px; font-weight:bold; color:#1a5fa8; letter-spacing:0.2px;">
+SciNote
+</td>
+</tr>
+<tr>
+<td style="font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; color:#767676; padding-top:4px;">
+<%= t('mailer.layout.subtitle') %>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="background-color:#ffffff; font-size:0; line-height:0; border-bottom:1px solid #e2e2e2;">&nbsp;</td>
+</tr>
+
+<!-- Content -->
+<tr>
+<td class="fluid-padding email-content" style="padding:36px 32px 32px 32px; font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:24px; color:#333333;">
+<%= yield %>
+</td>
+</tr>
+
+<!-- Divider to footer -->
+<tr>
+<td style="border-top:1px solid #ebebeb; font-size:0; line-height:0;">&nbsp;</td>
+</tr>
+
+<!-- Footer -->
+<tr>
+<td class="fluid-padding" style="padding:24px 32px 32px 32px; background-color:#ffffff;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td style="font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:19px; color:#767676;">
+<%= t('mailer.layout.automated_message') %>
+</td>
+</tr>
+<% server_url = ENV['WEB_SERVER_URL'].presence || ENV['MAIL_SERVER_URL'].presence %>
+<% if server_url %>
+<tr>
+<td style="font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:19px; color:#767676; padding-top:10px;">
+<%= t('mailer.layout.instance') %>: <a href="<%= server_url %>" target="_blank" style="color:#1a5fa8; text-decoration:underline;"><%= server_url %></a>
+</td>
+</tr>
+<% end %>
+</table>
+</td>
+</tr>
+
+</table>
+<!--[if mso]>
+</td></tr></table>
+<![endif]-->
+
+</td>
+</tr>
+</table>
+
+</body>
 </html>
