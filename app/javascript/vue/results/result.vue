@@ -215,7 +215,7 @@
             class="result-element"
             ref="resultComponent"
             :element.sync="elements[index]"
-            :inRepository="false"
+            :inRepository="inRepository"
             :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
             :assignableMyModuleId="result.attributes.my_module_id"
             :isNew="element.isNew"
@@ -394,6 +394,9 @@ export default {
     },
     cantUploadFiles() {
       return (this.result.type == 'results' && this.result.attributes.attachments_locked);
+    },
+    inRepository() {
+      return this.result.type === 'result_templates';
     },
     filesMenu() {
       let menu = [];
