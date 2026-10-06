@@ -188,6 +188,8 @@ module TinyMceImages
       parsed_description.css('img[data-mce-token]').each do |image|
         image['src'] = ''
         image['class'] = 'img-responsive'
+        # keep generated alt in sync with the token, as copied images can carry the alt of the original
+        image['alt'] = "description-#{image['data-mce-token']}" if image['alt']&.start_with?('description-')
         image_changed = true
       end
       self[object_field] = parsed_description.to_html.strip if image_changed
