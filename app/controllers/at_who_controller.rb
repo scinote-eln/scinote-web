@@ -8,45 +8,20 @@ class AtWhoController < ApplicationController
     @limit_reached = limit_reached?(scope)
   end
 
-  def menu_items
-    @res = SmartAnnotation.new(current_user, current_team, @query)
-  end
+  # Unified '#' reference search: no `parent_type` -> cross-type search; `parent_type` alone ->
+  # root listing of that type; `parent_type` + `parent_id` -> that specific object's children
+  # (a drill-down step). See SmartAnnotation#search/#global_search for the dispatch.
+  def search
+    annotation = SmartAnnotation.new(current_user, current_team, @query)
+    result = if params[:parent_type].present?
+               annotation.search(parent_type: params[:parent_type], parent_id: params[:parent_id],
+                                  assignable_my_module_id: assignable_my_module_id)
+             else
+               annotation.global_search(assignable_my_module_id: assignable_my_module_id)
+             end
 
-  def rep_items
-    repository = resolve_repository(params[:repository_id])
-    rows = []
-    @repository_id = nil
-
-    if repository && can_read_repository?(repository)
-      rows = SmartAnnotation.new(current_user, current_team, @query)
-                            .repository_rows(repository, assignable_my_module_id)
-      @repository_id = repository.id
-    end
-
-    @rows = rows.take(Constants::ATWHO_SEARCH_LIMIT)
-    @limit_reached = limit_reached?(rows)
-  end
-
-  def menu
-    @repositories = Repository.active.readable_by_user(current_user, @team)
-  end
-
-  def projects
-    scope = SmartAnnotation.new(current_user, current_team, @query).projects
-    @projects = scope.limit(Constants::ATWHO_SEARCH_LIMIT)
-    @limit_reached = limit_reached?(scope)
-  end
-
-  def experiments
-    scope = SmartAnnotation.new(current_user, current_team, @query).experiments
-    @groups = group_by_project(scope.limit(Constants::ATWHO_SEARCH_LIMIT))
-    @limit_reached = limit_reached?(scope)
-  end
-
-  def my_modules
-    scope = SmartAnnotation.new(current_user, current_team, @query).my_modules
-    @groups = group_by_project_and_experiment(scope.limit(Constants::ATWHO_SEARCH_LIMIT))
-    @limit_reached = limit_reached?(scope)
+    @items = result[:items]
+    @limit_reached = result[:limit_reached]
   end
 
   private
@@ -66,33 +41,9 @@ class AtWhoController < ApplicationController
     collection.length == Constants::ATWHO_SEARCH_LIMIT + 1
   end
 
-  def resolve_repository(repository_id)
-    if repository_id.present?
-      Repository.find_by(id: repository_id)
-    else
-      Repository.active.readable_by_user(current_user, @team).first
-    end
-  end
-
   def assignable_my_module_id
     return unless params[:assignable_my_module_id].present?
 
     MyModule.readable_by_user(current_user, @team).find_by(id: params[:assignable_my_module_id])&.id
-  end
-
-  def group_by_project(records)
-    records.joins(:project)
-           .select('projects.name AS project_name', "#{records.table_name}.*")
-           .group_by(&:project_name)
-           .map { |project_name, group_records| { project_name: project_name, records: group_records } }
-  end
-
-  def group_by_project_and_experiment(records)
-    records.joins(experiment: :project)
-           .select('projects.name AS project_name', 'experiments.name AS experiment_name', "#{records.table_name}.*")
-           .group_by { |record| [record.project_name, record.experiment_name] }
-           .map do |(project_name, experiment_name), group_records|
-      { project_name: project_name, experiment_name: experiment_name, records: group_records }
-    end
   end
 end

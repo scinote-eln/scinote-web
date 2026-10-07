@@ -1,103 +1,25 @@
-/* global HelperModule AtWhoFieldAdapter AtWhoMatchers */
+/* global AtWhoFieldAdapter AtWhoMatchers */
 
 // Smart annotation ("@mention"/"#reference") autocomplete controller. This module owns trigger
-// matching, caret tracking, keyboard navigation and text insertion (see atwho_field_adapter.js
-// and atwho_matchers.js), while the popup itself is rendered by a globally-mounted Vue component
-// (app/javascript/vue/shared/smart_annotation_flyout.vue), driven imperatively through
-// `window.SmartAnnotationFlyout` - see app/javascript/packs/vue/smart_annotation_flyout.js.
-//
-// The backend (app/controllers/at_who_controller.rb) returns plain JSON - no HTML fragments are
-// fetched or injected; the Vue component renders every list/tab/item straight from that data.
+// matching, caret tracking and text insertion (see atwho_field_adapter.js and
+// atwho_matchers.js). Searching, browsing, selection, building the inserted tag text and
+// "assign to task" all happen inside the popup itself, a globally-mounted Vue component
+// (app/javascript/vue/shared/smart_annotation_flyout.vue) driven imperatively through
+// `window.SmartAnnotationFlyout` - see app/javascript/packs/vue/smart_annotation_flyout.js. This
+// module only ever receives back a ready-made string to insert - it has no knowledge of item
+// shape, tag format, or backend routes/requests.
 var SmartAnnotation = (function() {
   'use strict';
 
   var REPOSITION_INTERVAL_MS = 50;
 
-  var filterTypeEnum = null;
-  var cachedMenuDataPromise = null;
-  var session = null; // { adapter, field, flag, query, matchLength, assignableMyModuleId }
+  var session = null; // { adapter, field, flag, matchLength }
   var repositionTimer = null;
 
-  function getFilterTypeEnum() {
-    if (!filterTypeEnum) {
-      var body = document.body;
-      filterTypeEnum = Object.freeze({
-        USER: { tag: 'users', dataUrl: body.getAttribute('data-atwho-users-url') },
-        TASK: { tag: 'sa-tasks', dataUrl: body.getAttribute('data-atwho-task-url') },
-        PROJECT: { tag: 'sa-projects', dataUrl: body.getAttribute('data-atwho-project-url') },
-        EXPERIMENT: { tag: 'sa-experiments', dataUrl: body.getAttribute('data-atwho-experiment-url') },
-        REPOSITORY: { tag: 'sa-repositories', dataUrl: body.getAttribute('data-atwho-rep-items-url') }
-      });
-    }
-    return filterTypeEnum;
-  }
-
-  function getCsrfToken() {
-    var meta = document.querySelector('meta[name="csrf-token"]');
-    return meta ? meta.content : null;
-  }
-
-  function fetchJson(url, params) {
-    var searchParams = new URLSearchParams();
-    Object.keys(params || {}).forEach(function(key) {
-      var value = params[key];
-      if (value !== undefined && value !== null) searchParams.set(key, value);
-    });
-
-    var query = searchParams.toString();
-    return fetch(url + (query ? '?' + query : ''), {
-      headers: { Accept: 'application/json' },
-      credentials: 'same-origin'
-    }).then(function(response) { return response.json(); });
-  }
-
-  // Lazily fetches the '#' menu data (available repositories, for the tab header) once per page
-  // load, cached from then on - every field on the page shares the same team/repository list.
-  function getMenuData() {
-    if (!cachedMenuDataPromise) {
-      cachedMenuDataPromise = fetchJson(document.body.getAttribute('data-atwho-repositories-url'));
-    }
-    return cachedMenuDataPromise;
-  }
-
-  function queryUsers(params) {
-    return fetchJson(getFilterTypeEnum().USER.dataUrl, { query: params.query }).then(function(data) {
-      return { users: data.users, limitReached: data.limit_reached };
-    });
-  }
-
-  function queryReference(params) {
-    var filterType = getFilterTypeEnum()[params.tabType];
-    if (!filterType) return Promise.resolve({ items: [], groups: [] });
-
-    var fetchParams = { query: params.query };
-    if (filterType.tag === 'sa-repositories') {
-      fetchParams.assignable_my_module_id = session && session.assignableMyModuleId;
-      if (params.activeRepositoryId) fetchParams.repository_id = params.activeRepositoryId;
-    }
-
-    return fetchJson(filterType.dataUrl, fetchParams).then(function(data) {
-      if (data.team) {
-        localStorage.setItem('smart_annotation_states/teams/' + data.team, JSON.stringify({
-          tag: filterType.tag,
-          repository: data.repository
-        }));
-      }
-      return {
-        items: data.items || null,
-        groups: data.groups || null,
-        limitReached: data.limit_reached,
-        repositoryId: data.repository || null,
-        teamId: data.team || null
-      };
-    });
-  }
-
-  function buildOnQuery(flag) {
-    return flag === '@' ? queryUsers : queryReference;
-  }
-
   // ---- session (currently open flyout) -------------------------------------------------------
+  // `session` is a singleton: only one field can have an open flyout at a time. There's no more
+  // "update the open session in place" case (see openFlyout below) - the query is typed into the
+  // flyout's own search box now, not the host field, so every trigger keystroke is a fresh open.
 
   function stopRepositionLoop() {
     if (repositionTimer) {
@@ -121,56 +43,23 @@ var SmartAnnotation = (function() {
     session = null;
   }
 
-  // `item` is one of the plain objects the flyout was handed (a user, or a project/experiment/
-  // task/repository-row) - see AtWhoController's *_json builders for the exact shape.
-  function confirmSelection(item) {
-    if (!session || !item) return;
-
-    var coreText = session.flag === '@'
-      ? '[@' + item.full_name + '~' + item.id + ']'
-      : '[#' + item.name + '~' + item.type + '~' + item.id + ']';
+  // `tagText` is the ready-made string to insert (e.g. '[@Jane Doe~42]' or '[#Sample~tsk~7]') -
+  // the flyout built it, this just places it in the field.
+  function confirmSelection(tagText) {
+    if (!session || !tagText) return;
 
     var adapter = session.adapter;
-    adapter.insertAtCaret(coreText, session.matchLength);
+    adapter.insertAtCaret(tagText, session.matchLength);
     closeSession();
     adapter.focus();
   }
 
-  function assignRow(item) {
-    if (!item) return;
-
-    fetch(item.assign_url, {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'X-CSRF-Token': getCsrfToken()
-      },
-      body: JSON.stringify({ repository_row_id: item.repository_row_id })
-    })
-      .then(function(response) {
-        return response.json().then(function(data) { return { ok: response.ok, data: data }; });
-      })
-      .then(function(result) {
-        HelperModule.flashAlertMsg(result.data.flash, result.ok ? 'success' : 'danger');
-      });
-  }
-
-  // True when `session` is currently primed for exactly this field+flag combination.
-  function isSessionCurrent(field, flag) {
-    return !!(session && session.field === field && session.flag === flag);
-  }
-
-  function openOrUpdateFlyout(adapter, field, flag, query, matchLength, assignableMyModuleId) {
-    var isNewSession = !isSessionCurrent(field, flag);
+  function openFlyout(adapter, field, flag, assignableMyModuleId) {
     session = {
       adapter: adapter,
       field: field,
       flag: flag,
-      query: query,
-      matchLength: matchLength,
-      assignableMyModuleId: assignableMyModuleId
+      matchLength: flag.length
     };
 
     var rect = adapter.getCaretRect();
@@ -178,30 +67,15 @@ var SmartAnnotation = (function() {
 
     if (!window.SmartAnnotationFlyout) return; // pack not mounted yet - defensive no-op
 
-    if (!isNewSession) {
-      window.SmartAnnotationFlyout.updateQuery(query);
-      window.SmartAnnotationFlyout.reposition(rect);
-      return;
-    }
-
-    var menuDataPromise = flag === '#' ? getMenuData() : Promise.resolve(null);
-    menuDataPromise.then(function(menuData) {
-      // The session may have moved on (field/flag switched, or closed) while this was in flight.
-      if (!isSessionCurrent(field, flag)) return;
-
-      window.SmartAnnotationFlyout.open({
-        flag: flag,
-        fieldEl: field,
-        position: rect,
-        repositories: menuData ? menuData.repositories : [],
-        teamId: document.body.getAttribute('data-current-team-id'),
-        onQuery: buildOnQuery(flag),
-        onSelect: confirmSelection,
-        onAssign: assignRow,
-        onClose: function() { session = null; stopRepositionLoop(); }
-      });
-      startRepositionLoop();
+    window.SmartAnnotationFlyout.open({
+      flag: flag,
+      fieldEl: field,
+      position: rect,
+      assignableMyModuleId: assignableMyModuleId,
+      onInsert: confirmSelection,
+      onClose: function() { session = null; stopRepositionLoop(); }
     });
+    startRepositionLoop();
   }
 
   // ---- per-field keystroke controller ---------------------------------------------------------
@@ -215,68 +89,26 @@ var SmartAnnotation = (function() {
     return isSessionFor(field) && !!window.SmartAnnotationFlyout && window.SmartAnnotationFlyout.isOpenFor(field);
   }
 
+  // Once a trigger is detected, searching/selecting all happen inside the flyout itself (it owns
+  // its own search input - see smart_annotation_flyout.vue). Opening the flyout moves focus
+  // there, which blurs `field` - so, unlike the old at.js-style behavior, a field blur is an
+  // expected side effect of opening, not a signal to close.
   function bindField(adapter, field, assignableMyModuleId) {
     var composing = false;
 
     function evaluateMatch() {
       var subtext = adapter.getSubtext();
-      var hashQuery = AtWhoMatchers.referenceMatcher('#', subtext, true);
-      var atQuery = AtWhoMatchers.defaultMatcher('@', subtext, false);
+      var flag = AtWhoMatchers.isTriggerFlag('#', subtext, true)
+        ? '#'
+        : (AtWhoMatchers.isTriggerFlag('@', subtext, false) ? '@' : null);
 
-      var active = hashQuery != null
-        ? { flag: '#', query: hashQuery }
-        : (atQuery != null ? { flag: '@', query: atQuery } : null);
-
-      if (!active) {
-        if (isSessionFor(field)) closeSession();
-        return;
-      }
-
-      var matchLength = active.flag.length + active.query.length;
-      openOrUpdateFlyout(adapter, field, active.flag, active.query, matchLength, assignableMyModuleId);
+      if (!flag) return;
+      openFlyout(adapter, field, flag, assignableMyModuleId);
     }
 
     field.addEventListener('input', function() { if (!composing) evaluateMatch(); });
     field.addEventListener('compositionstart', function() { composing = true; });
     field.addEventListener('compositionend', function() { composing = false; evaluateMatch(); });
-    field.addEventListener('click', function() { if (isSessionFor(field)) evaluateMatch(); });
-
-    field.addEventListener('keydown', function(e) {
-      if (!isFlyoutOpenFor(field)) return;
-
-      switch (e.key) {
-        case 'Escape':
-          e.preventDefault();
-          closeSession();
-          break;
-        case 'ArrowUp':
-          e.preventDefault();
-          window.SmartAnnotationFlyout.moveHighlight(-1);
-          break;
-        case 'ArrowDown':
-          e.preventDefault();
-          window.SmartAnnotationFlyout.moveHighlight(1);
-          break;
-        case 'Enter':
-        case 'Tab':
-          if (window.SmartAnnotationFlyout.hasHighlighted()) {
-            e.preventDefault();
-            window.SmartAnnotationFlyout.confirmHighlighted();
-          } else {
-            closeSession();
-          }
-          break;
-        default:
-          break;
-      }
-    });
-
-    // The flyout's own interactive elements call preventDefault() on `mousedown` so clicking
-    // them never blurs the field in the first place - so a genuine blur here always means focus
-    // moved elsewhere, and the flyout should close.
-    field.addEventListener('blur', function() {
-      if (isSessionFor(field)) closeSession();
-    });
   }
 
   function initField(field, deferred, assignableMyModuleId) {

@@ -1,56 +1,23 @@
-// Reimplements the two trigger-matching regexes that used to live inside the vendored at.js
-// plugin. `subtext` is the field's text content from its start up to the current caret.
-// Both return the matched query string (without the flag character) or null when there's no
-// active match ending exactly at the caret.
+// Trigger-boundary check for the '#' reference and '@' mention flags. The query itself is no
+// longer typed into the host field (it's typed into the flyout's own search box - see
+// smart_annotation_flyout.vue), so all this needs to answer is "was `flag` just typed at a valid
+// boundary position, ending exactly at the caret".
 var AtWhoMatchers = (function() {
   'use strict';
 
-  var UNICODE_RANGE_START = decodeURI('%C3%80');
-  var UNICODE_RANGE_END = decodeURI('%C3%BF');
+  // '#' only triggers at the start of the field or after whitespace; '@' triggers anywhere,
+  // including mid-word. This reproduces the previous matchers' trigger rules exactly (the '@'
+  // case preserves a long-standing quirk - see git history around SCI-13558 - where a misspelled
+  // at.js option name meant `startWithSpace` was never actually enabled for '@').
+  function isTriggerFlag(flag, subtext, requireLeadingSpace) {
+    if (!subtext || subtext.charAt(subtext.length - 1) !== flag) return false;
+    if (!requireLeadingSpace) return true;
 
-  function escapeFlag(flag) {
-    return flag.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
-  }
-
-  // Reproduces at.js's built-in default matcher, used for the '@' user-mention trigger. Note
-  // `shouldStartWithSpace` is intentionally passed as `false` for '@' by the caller: the previous
-  // config (`startsWithSpace: true`) used a misspelled at.js option name, so the real
-  // `startWithSpace` behavior was never actually enabled for '@' - only for '#'. Preserved as-is.
-  function defaultMatcher(flag, subtext, shouldStartWithSpace) {
-    var cleanedFlag = escapeFlag(flag);
-    if (shouldStartWithSpace) cleanedFlag = '(?:^|\\s)' + cleanedFlag;
-
-    var regexp = new RegExp(
-      cleanedFlag + '([A-Za-z' + UNICODE_RANGE_START + '-' + UNICODE_RANGE_END + '0-9_+-]*)$|' +
-      cleanedFlag + '([^\\x00-\\xff]*)$', 'gi'
-    );
-    var match = regexp.exec(subtext);
-    if (match) return match[1] || match[2] || '';
-    return null;
-  }
-
-  // Custom matcher for the '#' reference-menu trigger, ported verbatim from the previous
-  // implementation (character class allows letters/digits/underscore/slash/colon/whitespace/
-  // parens/dot/plus/hyphen, so multi-word queries with spaces keep matching). Only `match[1]` is
-  // ever read here, exactly as before - the third alternative (non-Latin query text) is
-  // intentionally left unread, reproducing an existing quirk where a unicode query after '#' is
-  // detected but returns an empty query string rather than the actual typed text.
-  function referenceMatcher(flag, subtext, shouldStartWithSpace) {
-    var cleanedFlag = escapeFlag(flag);
-    if (shouldStartWithSpace) cleanedFlag = '(?:^|\\s)' + cleanedFlag;
-
-    var regexp = new RegExp(
-      cleanedFlag + '$|' +
-      cleanedFlag + '(\\S[A-Za-z' + UNICODE_RANGE_START + '-' + UNICODE_RANGE_END + '0-9_/:\\s)(.+-]*)$|' +
-      cleanedFlag + '(\\S[^\\x00-\\xff]*)$', 'gi'
-    );
-    var match = regexp.exec(subtext);
-    if (match) return (match[1] || '').trim();
-    return null;
+    var charBefore = subtext.charAt(subtext.length - 2);
+    return charBefore === '' || /\s/.test(charBefore);
   }
 
   return {
-    defaultMatcher: defaultMatcher,
-    referenceMatcher: referenceMatcher
+    isTriggerFlag: isTriggerFlag
   };
 }());

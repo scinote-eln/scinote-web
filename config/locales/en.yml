@@ -2009,7 +2009,7 @@ en:
           title: "Step 2: Add attachment information"
           label: "Step 2"
           description: "Add additional information such as  header and footer text for report attachment."
-          form: 
+          form:
             header:
               label: "Header"
               placeholder: "Maximum 3 rows, 140 characters"
@@ -5022,24 +5022,32 @@ en:
 
   atwho:
     no_results:
+      no_matches_html: "No matches for <b>%{query}</b>"
+      no_matches_hint: "Try an ID like IT42453, or part of a name."
       projects: "Projects with this name/ID were not found"
       experiments: "Experiments with this name/ID were not found"
       my_modules: "Tasks with this name/ID were not found"
       repository_rows: "This inventory is currently empty."
       users: "Users with this name were not found"
+      mixed: "Nothing found"
       description: "Once you create items in the inventory, they will appear here."
     buttons:
-      insert: "Insert"
+      add: "Add"
       assign: "Assign to task"
-    projects: PROJECTS
-    experiments: EXPERIMENTS
-    tasks: TASKS
-    inventories: INVENTORIES
+    navigate: "Navigate"
+    projects: Projects
+    experiments: Experiments
+    tasks: Tasks
+    inventories: Inventories
     more_results: To get other results, please type more
+    search_placeholder: "Search"
+    search_placeholder_reference: "Assign anything"
+    search_placeholder_users: "Search for users"
+    search_placeholder_in: "Search in %{name}"
     users:
       title: "People"
       header: "Type the name or email of the user you want to mention (they will be notified)"
-      help: "Navigate: ↑ ↓    •    Insert: Enter / Tab    •    Dismiss: Esc"
+      help: "Insert: Click    •    Dismiss: Esc"
       not_in_this_team: 'Not in this workspace'
       popover_html: "<span class='silver'>Workspace:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
     res:
