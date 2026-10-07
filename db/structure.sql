@@ -2910,7 +2910,8 @@ CREATE TABLE public.result_texts (
     restored_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    locked boolean DEFAULT false NOT NULL
+    locked boolean DEFAULT false NOT NULL,
+    last_modified_by_id bigint
 );
 
 
@@ -3235,7 +3236,8 @@ CREATE TABLE public.step_texts (
     restored_on timestamp(6) without time zone,
     archived_by_id bigint,
     restored_by_id bigint,
-    locked boolean DEFAULT false NOT NULL
+    locked boolean DEFAULT false NOT NULL,
+    last_modified_by_id bigint
 );
 
 
@@ -8047,6 +8049,13 @@ CREATE INDEX index_result_texts_on_archived_by_id ON public.result_texts USING b
 
 
 --
+-- Name: index_result_texts_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_result_texts_on_last_modified_by_id ON public.result_texts USING btree (last_modified_by_id);
+
+
+--
 -- Name: index_result_texts_on_locked; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8282,6 +8291,13 @@ CREATE INDEX index_step_texts_on_archived ON public.step_texts USING btree (arch
 --
 
 CREATE INDEX index_step_texts_on_archived_by_id ON public.step_texts USING btree (archived_by_id);
+
+
+--
+-- Name: index_step_texts_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_step_texts_on_last_modified_by_id ON public.step_texts USING btree (last_modified_by_id);
 
 
 --
@@ -10849,6 +10865,22 @@ ALTER TABLE ONLY public.storage_locations
 
 
 --
+-- Name: step_texts fk_rails_dbe5afc8b2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.step_texts
+    ADD CONSTRAINT fk_rails_dbe5afc8b2 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: result_texts fk_rails_dc9a230785; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.result_texts
+    ADD CONSTRAINT fk_rails_dc9a230785 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: protocols fk_rails_dcb4ab6aa9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11095,8 +11127,9 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20260729083813'),
+('20261002090000'),
 ('20260907114439'),
+('20260729083813'),
 ('20260729082431'),
 ('20260715121739'),
 ('20260714101739'),

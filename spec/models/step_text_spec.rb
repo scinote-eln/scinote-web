@@ -25,4 +25,27 @@ describe StepText, type: :model do
         .not_to have_broadcasted_to(step_text).from_channel(EditingFlagsChannel)
     end
   end
+
+  describe '#text_digest' do
+    it 'is the SHA256 hex digest of the text' do
+      expect(step_text.text_digest).to eq(Digest::SHA256.hexdigest('Original text'))
+    end
+
+    it 'changes when the text changes' do
+      expect { step_text.update!(text: 'Updated text') }
+        .to change(step_text, :text_digest).to(Digest::SHA256.hexdigest('Updated text'))
+    end
+
+    it 'is the digest of an empty string when the text is nil' do
+      expect(build(:step_text, text: nil).text_digest).to eq(Digest::SHA256.hexdigest(''))
+    end
+
+    it 'stays the digest of the stored text after rendering rewrote a legacy image token in memory' do
+      legacy_text = 'Legacy [~tiny_mce_id:999999999] text'
+      step_text.update_column(:text, legacy_text)
+      step_text.reload.tinymce_render('text')
+
+      expect(step_text.text_digest).to eq(Digest::SHA256.hexdigest(legacy_text))
+    end
+  end
 end

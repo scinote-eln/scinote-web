@@ -6,8 +6,11 @@ class ResultText < ApplicationRecord
   include ObservableModel
   include ArchivableModel
   include ActionView::Helpers::TextHelper
+  include FieldWithDigest
 
   SEARCHABLE_ATTRIBUTES = ['result_texts.name', 'result_texts.text'].freeze
+
+  field_with_digest :text
 
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
@@ -17,6 +20,7 @@ class ResultText < ApplicationRecord
   belongs_to :result, inverse_of: :result_texts, touch: true, class_name: 'ResultBase'
   belongs_to :archived_by, class_name: 'User', optional: true
   belongs_to :restored_by, class_name: 'User', optional: true
+  belongs_to :last_modified_by, class_name: 'User', optional: true
   has_one :result_orderable_element, as: :orderable, dependent: :destroy
 
   after_save :manage_orderable_element_on_archive, if: -> { saved_change_to_archived? }

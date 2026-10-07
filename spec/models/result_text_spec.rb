@@ -51,4 +51,29 @@ describe ResultText, type: :model do
         .not_to have_broadcasted_to(result_text).from_channel(EditingFlagsChannel)
     end
   end
+
+  describe '#text_digest' do
+    let!(:result_text) { create :result_text, text: 'Original text', result: create(:result) }
+
+    it 'is the SHA256 hex digest of the text' do
+      expect(result_text.text_digest).to eq(Digest::SHA256.hexdigest('Original text'))
+    end
+
+    it 'changes when the text changes' do
+      expect { result_text.update!(text: 'Updated text') }
+        .to change(result_text, :text_digest).to(Digest::SHA256.hexdigest('Updated text'))
+    end
+
+    it 'is the digest of an empty string when the text is nil' do
+      expect(build(:result_text, text: nil).text_digest).to eq(Digest::SHA256.hexdigest(''))
+    end
+
+    it 'stays the digest of the stored text after rendering rewrote a legacy image token in memory' do
+      legacy_text = 'Legacy [~tiny_mce_id:999999999] text'
+      result_text.update_column(:text, legacy_text)
+      result_text.reload.tinymce_render('text')
+
+      expect(result_text.text_digest).to eq(Digest::SHA256.hexdigest(legacy_text))
+    end
+  end
 end

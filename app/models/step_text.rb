@@ -6,8 +6,11 @@ class StepText < ApplicationRecord
   include SearchableModel
   include ArchivableModel
   include ActionView::Helpers::TextHelper
+  include FieldWithDigest
 
   SEARCHABLE_ATTRIBUTES = ['step_texts.name', 'step_texts.text'].freeze
+
+  field_with_digest :text
 
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
@@ -21,6 +24,7 @@ class StepText < ApplicationRecord
   belongs_to :step, inverse_of: :step_texts, touch: true
   belongs_to :archived_by, class_name: 'User', optional: true
   belongs_to :restored_by, class_name: 'User', optional: true
+  belongs_to :last_modified_by, class_name: 'User', optional: true
   has_one :step_orderable_element, as: :orderable, dependent: :destroy
 
   delegate :team, to: :step
