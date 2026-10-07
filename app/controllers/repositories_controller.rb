@@ -406,7 +406,8 @@ class RepositoriesController < ApplicationController
 
     col_ids = []
     if user_settings.present? && user_settings.value.present?
-      user_settings.value['columnsState'].sort_by { |column_state| column_state['pinned'] == 'left' ? 0 : 1 }.each do |column_state|
+      pinned_sorted = user_settings.value['columnsState'].select { |column_state| column_state['pinned'] == 'left' }.concat(user_settings.value['columnsState'].reject { |column_state| column_state['pinned'] == 'left' })
+      pinned_sorted.each do |column_state|
         col_ids << legacy_mapping[column_state['colId'].to_sym]
       end
     else
