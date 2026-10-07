@@ -19,6 +19,7 @@
 </template>
 
 <script>
+/* global GLOBAL_CONSTANTS */
 export default {
   name: 'NumberValue',
   props: {
@@ -42,7 +43,7 @@ export default {
   },
   methods: {
     validateFormat() {
-      const decimals = this.params?.colDef?.cellRendererParams?.metadata?.decimals || 0;
+      const decimals = this.params?.colDef?.cellRendererParams?.metadata?.decimals ?? GLOBAL_CONSTANTS.REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS;
       const regexp = decimals === 0 ? /[^-0-9]/g : /[^-0-9.]/g;
       const decimalsRegex = new RegExp(`^-?\\d*(\\.\\d{0,${decimals}})?`);
       let value = this.newValue;

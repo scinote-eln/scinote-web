@@ -49,7 +49,8 @@ class RepositoryTemplate < ApplicationRecord
         },
         {
           column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryNumberValue],
-          params: { name: I18n.t('repository_templates.template_columns.passage_number') }
+          params: { name: I18n.t('repository_templates.template_columns.passage_number'),
+                    metadata: { decimals: 0 } }
         },
         {
           column_type: Extends::REPOSITORY_DATA_TYPES[:RepositoryTextValue],
