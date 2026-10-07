@@ -6,8 +6,11 @@ class StepText < ApplicationRecord
   include SearchableModel
   include ArchivableModel
   include ActionView::Helpers::TextHelper
+  include FieldWithDigest
 
   SEARCHABLE_ATTRIBUTES = ['step_texts.name', 'step_texts.text'].freeze
+
+  field_with_digest :text
 
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
@@ -49,11 +52,6 @@ class StepText < ApplicationRecord
 
       new_step_text
     end
-  end
-
-  def text_digest
-    # Hash the value stored in the DB: rendering (tinymce_render) rewrites legacy image tokens in the in-memory `text`
-    Digest::SHA256.hexdigest(text_in_database.to_s)
   end
 
   private
