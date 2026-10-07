@@ -12,9 +12,10 @@ class CalendarEventReminderJob < ApplicationJob
 
     now = DateTime.current
     CalendarEvent
+      .with_active_repository_rows
       .where(event_type: :equipment_booking, reminder_sent: false)
-      .where('COALESCE(start_datetime, start_date) > ?', now - BUFFER)
-      .where('COALESCE(start_datetime, start_date) <= ?', now + REMINDER_WINDOW)
+      .where('COALESCE(calendar_events.start_datetime, calendar_events.start_date) > ?', now - BUFFER)
+      .where('COALESCE(calendar_events.start_datetime, calendar_events.start_date) <= ?', now + REMINDER_WINDOW)
       .find_each do |event|
         # we need to store some params in case of deleted events
         EquipmentBookingReminderNotification.send_notifications(
