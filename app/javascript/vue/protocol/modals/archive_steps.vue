@@ -1,5 +1,5 @@
 <template>
-  <div ref="modal" @keydown.esc="cancel" class="modal archive-steps-modal" tabindex="-1" role="dialog">
+  <div ref="modal" @keydown.esc="close" class="modal archive-steps-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content" data-e2e="e2e-MD-task-protocol-archiveAllSteps">
         <div class="modal-header">
@@ -27,7 +27,7 @@
         <div class="modal-footer">
           <button
             class="btn btn-secondary"
-            @click="cancel"
+            @click="close"
             data-e2e="e2e-BT-task-protocol-archiveAllStepsModal-cancel"
           >
             {{ i18n.t('general.cancel') }}
