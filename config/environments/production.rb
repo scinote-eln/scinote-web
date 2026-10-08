@@ -38,14 +38,17 @@ Rails.application.configure do
       address: ENV.fetch('SMTP_ADDRESS'),
       port: ENV.fetch('SMTP_PORT', '587'),
       domain: ENV.fetch('SMTP_DOMAIN'),
-      authentication: ENV.fetch('SMTP_AUTH_METHOD', 'plain'),
       enable_starttls_auto: true,
-      user_name: ENV.fetch('SMTP_USERNAME', nil),
-      password: ENV.fetch('SMTP_PASSWORD', nil),
       openssl_verify_mode: ENV.fetch('SMTP_OPENSSL_VERIFY_MODE', 'peer'),
       ca_path: ENV.fetch('SMTP_OPENSSL_CA_PATH', '/etc/ssl/certs'),
       ca_file: ENV.fetch('SMTP_OPENSSL_CA_FILE', '/etc/ssl/certs/ca-certificates.crt')
     }
+
+    if ENV['SMTP_USERNAME'].present? && ENV['SMTP_PASSWORD'].present?
+      config.action_mailer.smtp_settings[:authentication] = ENV.fetch('SMTP_AUTH_METHOD', 'plain')
+      config.action_mailer.smtp_settings[:user_name] = ENV['SMTP_USERNAME']
+      config.action_mailer.smtp_settings[:password] = ENV['SMTP_PASSWORD']
+    end
   end
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
