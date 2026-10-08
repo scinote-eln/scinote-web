@@ -6189,7 +6189,7 @@ __metadata:
     sass: "npm:^1.89.2"
     sass-loader: "npm:^10.5.2"
     temporal-polyfill: "npm:^0.3.2"
-    tinymce: "npm:^6.8.5"
+    tinymce: "npm:8.8.2"
     tui-code-snippet: "npm:^1.5.0"
     tui-color-picker: "npm:^2.2.0"
     tui-image-editor: "github:scinote-eln/tui.image-editor#3_15_2_updated"
@@ -6717,10 +6717,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tinymce@npm:^6.8.5":
-  version: 6.8.6
-  resolution: "tinymce@npm:6.8.6"
-  checksum: 10c0/69d48677366fa95dc7126f8474db92f2903ebc8b1f287541ac0c3a19e9fcd0eee8515278d6424a4a4c9fb7e6313de985c00dc37fcaa01ae676139634d793e2ee
+"tinymce@npm:8.8.2":
+  version: 8.8.2
+  resolution: "tinymce@npm:8.8.2"
+  checksum: 10c0/74540d4c12bc804676784059e1c7d1c20989c91c17d40868b0ea7187b17165203a8ee4c90b8fac0f1451ff49e25f658f7145fb161a00c43fccc8889dd8cacd30
   languageName: node
   linkType: hard
 
