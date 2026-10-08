@@ -258,7 +258,7 @@ window.TinyMCE = (() => {
         });
 
         return tinyMCE.init({
-          cache_suffix: '?v=8.8.2', // This suffix should be changed any time library is updated
+          cache_suffix: '?v=8.9.3', // This suffix should be changed any time library is updated
           license_key: GLOBAL_CONSTANTS.TINYMCE_LICENSE_KEY,
           selector,
           skin: false,
