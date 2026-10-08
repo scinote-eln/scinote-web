@@ -251,7 +251,7 @@ class TeamImporter
     return false if text.nil?
 
     updated = false
-    %w(prj exp tsk rep_item).each do |name|
+    %w(prj exp tsk rep_item rep).each do |name|
       text.scan(/~#{name}~\w+\]/).each do |text_match|
         orig_id_encoded = text_match.match(/~#{name}~(\w+)\]/)[1]
         orig_id = orig_id_encoded.base62_decode
@@ -265,6 +265,8 @@ class TeamImporter
             @my_module_mappings[orig_id]
           when 'rep_item'
             @repository_row_mappings[orig_id]
+          when 'rep'
+            @repository_mappings[orig_id]
           end
         next unless new_id
 

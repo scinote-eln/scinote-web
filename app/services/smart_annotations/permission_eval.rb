@@ -26,6 +26,10 @@ module SmartAnnotations
       def validate_rep_item_permissions(user, object)
         can_read_repository?(user, object.repository)
       end
+
+      def validate_rep_permissions(user, object)
+        can_read_repository?(user, object)
+      end
     end
   end
 end
