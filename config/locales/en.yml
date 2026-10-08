@@ -445,6 +445,7 @@ en:
       experiment: "#private experiment"
       my_module: "#private task"
       repository_row: "#private inventory item"
+      repository: "#private inventory"
       object: "#private object"
 
   attachments:

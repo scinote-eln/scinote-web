@@ -57,6 +57,8 @@ class SmartAnnotationsController < ApplicationController
             MyModule
           when 'rep_item'
             RepositoryRow
+          when 'rep'
+            Repository
           end
         return render_404 unless resource_class && resource_id
 
@@ -67,7 +69,14 @@ class SmartAnnotationsController < ApplicationController
   end
 
   def resource_tag
-    @resource.is_a?(RepositoryRow) ? repository_acronym(@resource.repository) : @sa_tag
+    case @resource
+    when RepositoryRow
+      repository_acronym(@resource.repository)
+    when Repository
+      :INV
+    else
+      @sa_tag
+    end
   end
 
   def resource_readable?
@@ -89,6 +98,8 @@ class SmartAnnotationsController < ApplicationController
       protocols_my_module_path(@resource)
     when RepositoryRow
       repository_repository_row_path(@resource.repository, @resource, my_module_id: params[:my_module_id])
+    when Repository
+      repository_path(@resource)
     end
   end
 

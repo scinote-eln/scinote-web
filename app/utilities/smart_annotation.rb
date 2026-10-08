@@ -131,7 +131,7 @@ class SmartAnnotation
   end
 
   def serialize_repositories(scope)
-    scope.map { |r| base_item(r, 'repository') }
+    scope.map { |r| base_item(r, 'rep') }
   end
 
   def serialize_repository_rows(scope, assignable_my_module_id)

@@ -1,6 +1,6 @@
 /* global I18n */
 
-const SA_REGEX = /\[@([^~\]]+)~([0-9a-zA-Z]+)\]|\[#(.*?)~(rep_item|prj|exp|tsk)~([0-9a-zA-Z]+)\]/g;
+const SA_REGEX = /\[@([^~\]]+)~([0-9a-zA-Z]+)\]|\[#(.*?)~(rep_item|rep|prj|exp|tsk)~([0-9a-zA-Z]+)\]/g;
 
 const escapeHtml = (unsafe) => (
   unsafe.replaceAll('&', '&amp;')

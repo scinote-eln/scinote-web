@@ -38,6 +38,13 @@ module SmartAnnotations
         end
         "#{name} #{I18n.t('atwho.res.deleted')}"
       end
+
+      def generate_rep_snippet(name, object)
+        return "#{name} #{I18n.t('atwho.res.deleted')}" if object.nil?
+        return "#{object.name} #{I18n.t('atwho.res.archived')}" if object.archived?
+
+        object.name
+      end
     end
   end
 end

@@ -53,7 +53,7 @@
             <span class="truncate" v-html="highlightMatch(item.name)"></span>
             <span v-if="isDrillable(item)" @click.stop="addToStack(item)" class="sn-icon sn-icon-arrow-right text-sn-grey-700 shrink-0"></span>
             <span class="tw-hidden group-hover:flex items-center gap-1.5 shrink-0 ml-auto">
-              <button v-if="isInsertable(item)" type="button" class="btn btn-xs btn-light" @click.stop="selectItem(item)">
+              <button type="button" class="btn btn-xs btn-light" @click.stop="selectItem(item)">
                 <i class="sn-icon sn-icon-assign"></i>
                 {{ i18n.t('atwho.buttons.add') }}
               </button>
@@ -94,7 +94,7 @@ import {
   my_module_repositories_path
 } from '../../routes.js';
 
-const CHILD_TAG = { prj: 'sa-projects', exp: 'sa-experiments', repository: 'sa-repositories' };
+const CHILD_TAG = { prj: 'sa-projects', exp: 'sa-experiments', rep: 'sa-repositories' };
 const NO_RESULTS_KEY = {
   'sa-projects': 'projects',
   'sa-experiments': 'experiments',
@@ -188,13 +188,8 @@ export default {
     isDrillable(item) {
       return this.flag === '#' && !!CHILD_TAG[item.type];
     },
-    isInsertable(item) {
-      return item.type !== 'repository';
-    },
     rowClick(item) {
-      if (this.isInsertable(item)) {
-        this.selectItem(item);
-      }
+      this.selectItem(item);
     },
     addToStack(item) {
       this.navStack.push({ tag: CHILD_TAG[item.type], id: item.id, code: item.code });

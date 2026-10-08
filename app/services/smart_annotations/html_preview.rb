@@ -5,7 +5,7 @@ module SmartAnnotations
     class << self
       def html(name, type, object, preview_repository = false)
         if preview_repository
-          send('generate_rep_snippet', name, object)
+          send('generate_rep_item_print_snippet', name, object)
         else
           send("generate_#{type}_snippet", name, object)
         end
@@ -51,7 +51,7 @@ module SmartAnnotations
         end
       end
 
-      def generate_rep_snippet(name, object)
+      def generate_rep_item_print_snippet(name, object)
         if object&.repository
           repository_name = fetch_repository_name(object)
           "<a class='sa-link' href='#{ROUTES.repository_path(object.repository)}' " \
@@ -60,6 +60,18 @@ module SmartAnnotations
         else
           "<span class='sa-type'>Inv</span> #{name} #{I18n.t('atwho.res.deleted')}"
         end
+      end
+
+      # The repository (inventory) itself. `object` is nil when the repository no longer exists.
+      def generate_rep_snippet(name, object)
+        return "<span class='sa-type'>Inv</span> #{name} #{I18n.t('atwho.res.deleted')}" if object.nil?
+
+        if object.archived?
+          return "<span class='sa-type'>Inv</span>#{object.name} #{I18n.t('atwho.res.archived')}"
+        end
+
+        "<a class='sa-link' href='#{ROUTES.repository_path(object)}'>" \
+          "<span class='sa-type'>Inv</span>#{object.name}</a>"
       end
 
       def trim_repository_name(name)

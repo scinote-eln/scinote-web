@@ -3,7 +3,7 @@
 module SmartAnnotations
   class TagToText
     USER_REGEX = /\[@(.*?)~([0-9a-zA-Z]+)\]/
-    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item)~([0-9a-zA-Z]+)\]/
+    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item|rep)~([0-9a-zA-Z]+)\]/
 
     attr_reader :text
 
@@ -17,7 +17,8 @@ module SmartAnnotations
     OBJECT_MAPPINGS = { prj: Project,
                         exp: Experiment,
                         tsk: MyModule,
-                        rep_item: RepositoryRow }.freeze
+                        rep_item: RepositoryRow,
+                        rep: Repository }.freeze
 
     def parse_items_annotations(user, team, text, is_shared_object)
       @text = text.gsub(ITEMS_REGEX) do |el|
@@ -28,6 +29,8 @@ module SmartAnnotations
           # handle repository_items edge case
           if type == 'rep_item'
             repository_item(value[:name], user, team, type, object, is_shared_object)
+          elsif type == 'rep'
+            repository(value[:name], user, type, object, is_shared_object)
           else
             if object && (is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object))
               SmartAnnotations::TextPreview.text(nil, type, object)
@@ -65,6 +68,16 @@ module SmartAnnotations
       SmartAnnotations::TextPreview.text(name, type, object)
     end
 
+    # Repository (inventory) itself, as opposed to a repository_item (row).
+    def repository(name, user, type, object, is_shared_object)
+      if object
+        return private_placeholder(object) unless is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object)
+
+        return SmartAnnotations::TextPreview.text(name, type, object)
+      end
+      SmartAnnotations::TextPreview.text(name, type, object)
+    end
+
     def extract_values(element)
       match = element.match(ITEMS_REGEX)
       {
@@ -91,6 +104,8 @@ module SmartAnnotations
         I18n.t('smart_annotations.private.my_module')
       when RepositoryRow
         I18n.t('smart_annotations.private.repository_row')
+      when Repository
+        I18n.t('smart_annotations.private.repository')
       else
         I18n.t('smart_annotations.private.object')
       end
