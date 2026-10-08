@@ -291,12 +291,7 @@ Rails.application.routes.draw do
         get 'disable_tasks_sharing_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
-        get 'atwho_menu', to: 'at_who#menu'
-        get 'atwho_rep_items', to: 'at_who#rep_items'
-        get 'atwho_projects', to: 'at_who#projects'
-        get 'atwho_experiments', to: 'at_who#experiments'
-        get 'atwho_my_modules', to: 'at_who#my_modules'
-        get 'atwho_menu_items', to: 'at_who#menu_items'
+        get 'atwho_search', to: 'at_who#search'
         get :automations
         get :automation_settings
         put :update_automation_settings

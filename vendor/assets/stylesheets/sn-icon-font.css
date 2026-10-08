@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:  url('fonts/SN-icon-font.eot?nhyizw');
-  src:  url('fonts/SN-icon-font.eot?nhyizw#iefix') format('embedded-opentype'),
-    url('fonts/SN-icon-font.woff2?nhyizw') format('woff2'),
-    url('fonts/SN-icon-font.ttf?nhyizw') format('truetype'),
-    url('fonts/SN-icon-font.woff?nhyizw') format('woff'),
-    url('fonts/SN-icon-font.svg?nhyizw#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?9igqa4');
+  src:  url('fonts/SN-icon-font.eot?9igqa4#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?9igqa4') format('woff2'),
+    url('fonts/SN-icon-font.ttf?9igqa4') format('truetype'),
+    url('fonts/SN-icon-font.woff?9igqa4') format('woff'),
+    url('fonts/SN-icon-font.svg?9igqa4#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -742,4 +742,28 @@
 }
 .sn-icon-sn-icon-reason-change-on:before {
   content: "\e9ee";
+}
+.sn-icon-add-columns:before {
+  content: "\e9ef";
+}
+.sn-icon-roadmap:before {
+  content: "\e9f0";
+}
+.sn-icon-required-columns-on:before {
+  content: "\e9f1";
+}
+.sn-icon-required-columns-off:before {
+  content: "\e9f2";
+}
+.sn-icon-assign:before {
+  content: "\e9f3";
+}
+.sn-icon-mention:before {
+  content: "\e9f4";
+}
+.sn-icon-equation-add:before {
+  content: "\e9f5";
+}
+.sn-icon-draft:before {
+  content: "\e9f6";
 }

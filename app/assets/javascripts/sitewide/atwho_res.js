@@ -1,286 +1,171 @@
-/* global PerfectScrollbar HelperModule _ */
+/* global AtWhoFieldAdapter AtWhoMatchers */
 
+// Smart annotation ("@mention"/"#reference") autocomplete controller. This module owns trigger
+// matching, caret tracking and text insertion (see atwho_field_adapter.js and
+// atwho_matchers.js). Searching, browsing, selection, building the inserted tag text and
+// "assign to task" all happen inside the popup itself, a globally-mounted Vue component
+// (app/javascript/vue/shared/smart_annotation_flyout.vue) driven imperatively through
+// `window.SmartAnnotationFlyout` - see app/javascript/packs/vue/smart_annotation_flyout.js. This
+// module only ever receives back a ready-made string to insert - it has no knowledge of item
+// shape, tag format, or backend routes/requests.
 var SmartAnnotation = (function() {
   'use strict';
 
-  // stop the user annotation popover on click propagation
-  function atwhoStopPropagation(element) {
-    $(element).on('click', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-    });
+  var REPOSITION_INTERVAL_MS = 50;
+
+  var session = null; // { adapter, field, flag, matchLength }
+  var repositionTimer = null;
+
+  // ---- session (currently open flyout) -------------------------------------------------------
+  // `session` is a singleton: only one field can have an open flyout at a time. There's no more
+  // "update the open session in place" case (see openFlyout below) - the query is typed into the
+  // flyout's own search box now, not the host field, so every trigger keystroke is a fresh open.
+
+  function stopRepositionLoop() {
+    if (repositionTimer) {
+      clearInterval(repositionTimer);
+      repositionTimer = null;
+    }
   }
 
-  function SetAtWho(field, deferred, assignableMyModuleId) {
-    var FilterTypeEnum = Object.freeze({
-      USER: { tag: 'users', dataUrl: $(document.body).attr('data-atwho-users-url') },
-      TASK: { tag: 'sa-tasks', dataUrl: $(document.body).attr('data-atwho-task-url') },
-      PROJECT: { tag: 'sa-projects', dataUrl: $(document.body).attr('data-atwho-project-url') },
-      EXPERIMENT: { tag: 'sa-experiments', dataUrl: $(document.body).attr('data-atwho-experiment-url') },
-      REPOSITORY: { tag: 'sa-repositories', dataUrl: $(document.body).attr('data-atwho-rep-items-url') },
-      MENU: { tag: 'menu', dataUrl: $(document.body).attr('data-atwho-menu-items') }
-    });
-    var DEFAULT_SEARCH_FILTER = FilterTypeEnum.REPOSITORY;
+  function startRepositionLoop() {
+    stopRepositionLoop();
+    repositionTimer = setInterval(function() {
+      if (!session || !window.SmartAnnotationFlyout) return;
+      var rect = session.adapter.getCaretRect();
+      if (rect) window.SmartAnnotationFlyout.reposition(rect);
+    }, REPOSITION_INTERVAL_MS);
+  }
 
-    function matchHighlighter(html, query) {
-      var $html = $(html);
-      var $liText = $html.find('.item-text, .sa-type');
-      if ($liText.length === 0 || !query) return html;
-      const highlightRegex = new RegExp(query.replace(/[()]/g, '\\$&')
-        .split(' ')
-        .join('|'), 'gi');
+  function closeSession() {
+    stopRepositionLoop();
+    if (session && window.SmartAnnotationFlyout) window.SmartAnnotationFlyout.close();
+    session = null;
+  }
 
-      $.each($liText, function(_i, item) {
-        $(item).html($(item).text().replace(highlightRegex, '<span class="atwho-highlight">$&</span>'));
-      });
+  // `tagText` is the ready-made string to insert (e.g. '[@Jane Doe~42]' or '[#Sample~tsk~7]') -
+  // the flyout built it, this just places it in the field.
+  function confirmSelection(tagText) {
+    if (!session || !tagText) return;
 
-      return $html;
-    }
+    var adapter = session.adapter;
+    adapter.insertAtCaret(tagText, session.matchLength);
+    closeSession();
+    adapter.focus();
+  }
 
-    // Generates suggestion dropdown filter
-    function generateFilterMenu() {
-      var menu = '';
-      $.ajax({
-        async: false,
-        dataType: 'json',
-        url: $(document.body).attr('data-atwho-repositories-url'),
-        success: function(data) {
-          menu = data.html;
-        }
-      });
-      return menu;
-    }
-
-    function atWhoSettings(at) {
-      return {
-        at: at,
-        callbacks: {
-          remoteFilter: function(query, callback) {
-
-            // show loader after .25 seconds and block other tab clicks
-            var loaderTimeout = setTimeout(function() {
-              $('.atwho-scroll-container').css({ height: '100px' });
-              $('.atwho-scroll-container').html('<div class="loading-overlay" style="padding: 20px"></div>');
-              $('.atwho-header-res').css({ 'pointer-events': 'none' });
-            }, 250);
-
-            var $currentAtWho = $(`.atwho-view[data-at-who-id=${$(field).attr('data-smart-annotation')}]`).last();
-            var filterType;
-            var params = { query: query };
-            filterType = FilterTypeEnum[$currentAtWho.find('.tab-pane.active').data('object-type')];
-            if (!filterType) {
-              clearTimeout(loaderTimeout);
-              $('.atwho-header-res').css({ 'pointer-events': '' });
-
-              callback([{ name: '' }]);
-              return false;
-            }
-            if (filterType.tag === 'sa-repositories') {
-              let repositoryTab = $currentAtWho.find('[data-object-type="REPOSITORY"]');
-              let activeRepository = repositoryTab.find('.btn-primary');
-              params.assignable_my_module_id = assignableMyModuleId;
-              if (activeRepository.length) {
-                params.repository_id = activeRepository.data('object-id');
-              }
-            }
-            $.getJSON(filterType.dataUrl, params, function(data) {
-              clearTimeout(loaderTimeout);
-              $('.atwho-header-res').css({ 'pointer-events': '' });
-
-              localStorage.setItem('smart_annotation_states/teams/' + data.team, JSON.stringify({
-                tag: filterType.tag,
-                repository: data.repository
-              }));
-
-              callback(data.res);
-
-              if (data.repository) {
-                $currentAtWho.find(`.repository-object[data-object-id="${data.repository}"]`)
-                  .addClass('btn-primary').removeClass('btn-light');
-              }
-              if ($('.atwho-scroll-container').last()[0]) {
-                // eslint-disable-next-line no-new
-                new PerfectScrollbar($('.atwho-scroll-container').last()[0]);
-              }
-            });
-            return true;
-          },
-          tplEval: function(_tpl, items) {
-            var $items = $(items.name);
-            $items.find('li').data('item-data', { 'atwho-at': at }); // Emulate at.js insertContentFor method
-            return $items;
-          },
-          highlighter: function(li, query) {
-            return matchHighlighter(li, query);
-          },
-          beforeInsert: function(value, li) {
-            return `[#${li.attr('data-name')}~${li.attr('data-type')}~${li.attr('data-id')}]`;
-          },
-          matcher: function(flag, subtext, shouldStartWithSpace) {
-            var a;
-            var y;
-            var match;
-            var regexp;
-            var cleanedFlag = flag.replace(/[-[]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-            if (shouldStartWithSpace) {
-              cleanedFlag = '(?:^|\\s)' + cleanedFlag;
-            }
-            a = decodeURI('%C3%80');
-            y = decodeURI('%C3%BF');
-            regexp = new RegExp(`${cleanedFlag}$|` +
-                                `${cleanedFlag}(\\S[A-Za-z${a}-${y}0-9_/:\\s\\)\\(.+-]*)$|` +
-                                `${cleanedFlag}(\\S[^\\x00-\\xff]*)$`, 'gi');
-            match = regexp.exec(subtext);
-            if (match) {
-              return (match[1] || '').trim();
-            }
-            return null;
-          }
-        },
-        headerTpl: generateFilterMenu(),
-        startWithSpace: true,
-        acceptSpaceBar: true,
-        displayTimeout: 120000
-      };
-    }
-
-    function initAtwho() {
-      if ($(this).data('atwho-initialized')) return;
-
-      $(field).on('shown.atwho', function() {
-        if ($(field).data('smart-annotation')) return;
-
-        var $currentAtWho = $('.atwho-view[style]:not(.old)');
-        var atWhoId = $currentAtWho.find('.atwho-header-res').data('at-who-key');
-        $currentAtWho.addClass('old').attr('data-at-who-id', atWhoId);
-        $(field).attr('data-smart-annotation', atWhoId);
-
-        $currentAtWho.find('.tab-button').off().on('shown.bs.tab', function() {
-          $(field).click().focus();
-          $(this).closest('.nav-tabs').find('.tab-button').removeClass('active');
-          $(this).addClass('active');
-        });
-        $currentAtWho.find('.repository-object').off().on('click', function() {
-          $(this).parent().find('.repository-object').removeClass('btn-primary')
-            .addClass('btn-light');
-          $(this).addClass('btn-primary').removeClass('btn-light');
-          $(field).click().focus();
-        });
-        $currentAtWho.on('click', '.atwho-assign-button', function() {
-          let el = $(this);
-          $.ajax({
-            method: 'POST',
-            url: el.data('assign-url'),
-            data: { repository_row_id: el.data('repository-row-id') },
-            dataType: 'json',
-            success: function(data) {
-              HelperModule.flashAlertMsg(data.flash, 'success');
-            },
-            error: function(response) {
-              HelperModule.flashAlertMsg(response.responseJSON.flash, 'danger');
-            }
-          });
-        });
-
-        if ($currentAtWho.find('.tab-pane.active').length === 0) {
-          let filterType = DEFAULT_SEARCH_FILTER.tag;
-          let teamId = $currentAtWho.find('.atwho-header-res').data('team-id');
-          let remeberedState = localStorage.getItem('smart_annotation_states/teams/' + teamId);
-          if (remeberedState) {
-            try {
-              remeberedState = JSON.parse(remeberedState);
-              filterType = remeberedState.tag;
-              $currentAtWho.find(`.repository-object[data-object-id=${remeberedState.repository}]`)
-                .addClass('btn-primary');
-            } catch (error) {
-              console.error(error);
-            }
-          }
-          $currentAtWho.find(`.${filterType}`).click();
-        }
-      }).on('reposition.atwho', function(event, flag, query) {
-        let inputFieldLeft = query.$inputor.offset().left;
-        if (inputFieldLeft > $(window).width()) {
-          let leftPosition;
-          if (inputFieldLeft < flag.left + $(window).scrollLeft()) {
-            leftPosition = inputFieldLeft;
-          } else {
-            leftPosition = flag.left + $(window).scrollLeft();
-          }
-          query.$el.find('.atwho-view').css('left', leftPosition + 'px');
-        }
-        if ($('.repository-show').length) {
-          query.$el.find('.atwho-view').css('top', flag.top + 'px');
-        }
-      }).atwho({
-        at: '@',
-        callbacks: {
-          remoteFilter: function(query, callback) {
-            $.getJSON(FilterTypeEnum.USER.dataUrl, { query: query }, function(data) {
-              callback(data.users);
-            });
-          },
-          tplEval: function(_tpl, items) {
-            var $items = $(items.name);
-            $items.find('li').data('item-data', { 'atwho-at': '@' }); // Emulate at.js insertContentFor method
-            return $items;
-          },
-          highlighter: function(li, query) {
-            return matchHighlighter(li, query);
-          },
-          beforeInsert: function(value, li) {
-            return `[@${li.attr('data-full-name')}~${li.attr('data-id')}]`;
-          }
-        },
-        startsWithSpace: true,
-        acceptSpaceBar: true,
-        displayTimeout: 120000
-      })
-        .atwho(atWhoSettings('#'));
-
-      $(this).data('atwho-initialized', true);
-    }
-
-    function init() {
-      if (deferred) {
-        $(field).on('focus', initAtwho);
-      } else {
-        initAtwho();
-      }
-    }
-
-    return {
-      init: init
+  function openFlyout(adapter, field, flag, assignableMyModuleId) {
+    session = {
+      adapter: adapter,
+      field: field,
+      flag: flag,
+      matchLength: flag.length
     };
-  }
-  // Closes the atwho popup * needed in repositories to close the popup
-  // if nothing is selected and the user leaves the form *
-  function closePopup() {
-    $('.atwho-header-res').find('.sn-icon-close').click();
+
+    var rect = adapter.getCaretRect();
+    if (!rect) { closeSession(); return; }
+
+    if (!window.SmartAnnotationFlyout) return; // pack not mounted yet - defensive no-op
+
+    window.SmartAnnotationFlyout.open({
+      flag: flag,
+      fieldEl: field,
+      position: rect,
+      assignableMyModuleId: assignableMyModuleId,
+      onInsert: confirmSelection,
+      onClose: function() { session = null; stopRepositionLoop(); }
+    });
+    startRepositionLoop();
   }
 
-  function initialize(field, deferred, assignableMyModuleId) {
-    var atWho = new SetAtWho(field, deferred, assignableMyModuleId);
-    atWho.init();
+  // ---- per-field keystroke controller ---------------------------------------------------------
+
+  // True when `field` is the one the currently-open (or just-closed) session belongs to.
+  function isSessionFor(field) {
+    return !!(session && session.field === field);
+  }
+
+  function isFlyoutOpenFor(field) {
+    return isSessionFor(field) && !!window.SmartAnnotationFlyout && window.SmartAnnotationFlyout.isOpenFor(field);
+  }
+
+  // Once a trigger is detected, searching/selecting all happen inside the flyout itself (it owns
+  // its own search input - see smart_annotation_flyout.vue). Opening the flyout moves focus
+  // there, which blurs `field` - so, unlike the old at.js-style behavior, a field blur is an
+  // expected side effect of opening, not a signal to close.
+  function bindField(adapter, field, assignableMyModuleId) {
+    var composing = false;
+
+    function evaluateMatch() {
+      var subtext = adapter.getSubtext();
+      var flag = AtWhoMatchers.isTriggerFlag('#', subtext, true)
+        ? '#'
+        : (AtWhoMatchers.isTriggerFlag('@', subtext, false) ? '@' : null);
+
+      if (!flag) return;
+      openFlyout(adapter, field, flag, assignableMyModuleId);
+    }
+
+    field.addEventListener('input', function() { if (!composing) evaluateMatch(); });
+    field.addEventListener('compositionstart', function() { composing = true; });
+    field.addEventListener('compositionend', function() { composing = false; evaluateMatch(); });
+  }
+
+  function initField(field, deferred, assignableMyModuleId) {
+    var el = AtWhoFieldAdapter.toElement(field);
+    if (!el) return;
+
+    var adapter = AtWhoFieldAdapter.create(el);
+
+    function start() {
+      if (el.__atwhoInitialized) return;
+      el.__atwhoInitialized = true;
+      bindField(adapter, el, assignableMyModuleId);
+    }
+
+    if (deferred) {
+      el.addEventListener('focus', start);
+    } else {
+      start();
+    }
+  }
+
+  function preventPropagation(target) {
+    var elements = typeof target === 'string'
+      ? document.querySelectorAll(target)
+      : [AtWhoFieldAdapter.toElement(target)];
+
+    elements.forEach(function(el) {
+      if (!el) return;
+      el.addEventListener('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+      });
+    });
+  }
+
+  function closePopup() {
+    closeSession();
+  }
+
+  function isSelecting(field) {
+    return isFlyoutOpenFor(AtWhoFieldAdapter.toElement(field));
   }
 
   return Object.freeze({
-    init: initialize,
-    preventPropagation: atwhoStopPropagation,
-    closePopup: closePopup
+    init: initField,
+    preventPropagation: preventPropagation,
+    closePopup: closePopup,
+    isSelecting: isSelecting
   });
 }());
 
-
-// initialize the smart annotations
-(function() {
-  $(document).on('focus', '[data-atwho-edit]', function() {
-    if (_.isUndefined($(this).data('atwho'))) {
-      SmartAnnotation.init(this, false);
-    }
-  });
-
-  $(document).on('click', '.atwho-view .dismiss', function() {
-    $(this).closest('.atwho-view').hide();
-  });
-}());
+// Initialize smart annotation for any field that opts in declaratively via `data-atwho-edit`.
+// Uses `focusin` (which bubbles), matching how jQuery's delegated `.on('focus', selector, fn)`
+// is implemented under the hood - plain `focus` does not bubble.
+document.addEventListener('focusin', function(e) {
+  var target = e.target;
+  if (target && target.matches && target.matches('[data-atwho-edit]')) {
+    SmartAnnotation.init(target, false);
+  }
+});
