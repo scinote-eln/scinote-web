@@ -3,7 +3,7 @@
 module SmartAnnotations
   class TagToText
     USER_REGEX = /\[@(.*?)~([0-9a-zA-Z]+)\]/
-    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item|rep)~([0-9a-zA-Z]+)\]/
+    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item|rep|file)~([0-9a-zA-Z]+)\]/
 
     attr_reader :text
 
@@ -18,7 +18,8 @@ module SmartAnnotations
                         exp: Experiment,
                         tsk: MyModule,
                         rep_item: RepositoryRow,
-                        rep: Repository }.freeze
+                        rep: Repository,
+                        file: Asset }.freeze
 
     def parse_items_annotations(user, team, text, is_shared_object)
       @text = text.gsub(ITEMS_REGEX) do |el|
@@ -106,6 +107,8 @@ module SmartAnnotations
         I18n.t('smart_annotations.private.repository_row')
       when Repository
         I18n.t('smart_annotations.private.repository')
+      when Asset
+        I18n.t('smart_annotations.private.file')
       else
         I18n.t('smart_annotations.private.object')
       end

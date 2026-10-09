@@ -446,6 +446,7 @@ en:
       my_module: "#private task"
       repository_row: "#private inventory item"
       repository: "#private inventory"
+      file: "#private file"
       object: "#private object"
 
   attachments:
@@ -5030,6 +5031,7 @@ en:
       experiments: "Experiments with this name/ID were not found"
       my_modules: "Tasks with this name/ID were not found"
       repository_rows: "This inventory is currently empty."
+      files: "Files with this name/code were not found"
       users: "Users with this name were not found"
       mixed: "Nothing found"
       description: "Once you create items in the inventory, they will appear here."

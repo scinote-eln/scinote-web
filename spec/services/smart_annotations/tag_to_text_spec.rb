@@ -17,6 +17,21 @@ describe SmartAnnotations::TagToText do
     end
   end
 
+  describe 'Parsed text with file annotation' do
+    let!(:experiment) { create :experiment, project: project, created_by: user }
+    let!(:task) { create :my_module, experiment: experiment, created_by: user }
+    let!(:protocol) { create :protocol, team: team, my_module: task }
+    let!(:step) { create :step, protocol: protocol }
+    let!(:step_asset) { create :step_asset, step: step }
+    let(:asset) { Asset.find(step_asset.asset_id) }
+    let(:text) { "File: [##{asset.file_name}~file~#{asset.id.base62_encode}]" }
+    let(:subject) { described_class.new(user, team, text) }
+
+    it 'returns a string with the file name' do
+      expect(subject.text).to eq("File: #{asset.file_name}")
+    end
+  end
+
   describe '#extract_values/1' do
     it 'returns a parsed hash of smart annotation' do
       values = subject.send(:extract_values, '[#my project~prj~1]')

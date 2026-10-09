@@ -27,6 +27,8 @@ class SmartAnnotation
       when 'sa-repositories'
         parent_id ? serialize_repository_rows(repository_rows_of(find_repository(parent_id)), assignable_my_module_id)
                   : serialize_repositories(repositories)
+      when 'sa-task-files'
+        serialize_files(files_of(find_my_module(parent_id)))
       else
         []
       end
@@ -40,7 +42,8 @@ class SmartAnnotation
       serialize_experiments(experiments) +
       serialize_my_modules(my_modules) +
       serialize_repositories(repositories) +
-      serialize_repository_rows(repository_rows, assignable_my_module_id)
+      serialize_repository_rows(repository_rows, assignable_my_module_id) +
+      serialize_files(files)
     ).sort_by { |item| item[:updated_at] }.reverse
 
     cap(items)
@@ -84,6 +87,13 @@ class SmartAnnotation
                  .where(repositories: { archived: false })
   end
 
+  def files
+    filter_files_by_query(
+      Asset.where('assets.id IN (?) OR assets.id IN (?)', assets_in_readable_steps, assets_in_readable_results)
+           .joins(file_attachment: :blob)
+    ).order(updated_at: :desc).limit(LIMIT + 1)
+  end
+
   # ---- parent resolution + children (drill-down) ---------------------------------------------
 
   def find_project(id)
@@ -96,6 +106,14 @@ class SmartAnnotation
 
   def find_repository(id)
     Repository.active.readable_by_user(@current_user, @current_team).find_by(id: id)
+  end
+
+  def find_my_module(id)
+    MyModule.active
+            .readable_by_user(@current_user, @current_team)
+            .joins(experiment: :project)
+            .where(projects: { archived: false }, experiments: { archived: false })
+            .find_by(id: id)
   end
 
   def experiments_of(project)
@@ -114,6 +132,44 @@ class SmartAnnotation
     return RepositoryRow.none unless repository
 
     repository.repository_rows.active.search_by_name_and_id(@current_user, @current_team, @query, limit: LIMIT + 1)
+  end
+
+  def files_of(my_module)
+    return Asset.none unless my_module
+
+    step_asset_ids = my_module.assets_in_steps.select(:id)
+    result_asset_ids = my_module.assets_in_results.select(:id)
+
+    filter_files_by_query(
+      Asset.where('assets.id IN (?) OR assets.id IN (?)', step_asset_ids, result_asset_ids)
+           .joins(file_attachment: :blob)
+    ).order(updated_at: :desc).limit(LIMIT + 1)
+  end
+
+  def readable_my_module_ids
+    MyModule.active
+            .readable_by_user(@current_user, @current_team)
+            .joins(experiment: :project)
+            .where(projects: { archived: false }, experiments: { archived: false })
+            .select(:id)
+  end
+
+  def assets_in_readable_steps
+    Asset.joins(step: :protocol).where(protocols: { my_module_id: readable_my_module_ids }).select(:id)
+  end
+
+  def assets_in_readable_results
+    Asset.joins(:result).where(results: { my_module_id: readable_my_module_ids }).select(:id)
+  end
+
+  def filter_files_by_query(scope)
+    return scope if @query.blank?
+
+    sanitized_query = ActiveRecord::Base.sanitize_sql_like(@query)
+    scope.where(
+      "active_storage_blobs.filename ILIKE :q OR (#{Asset::PREFIXED_ID_SQL}) ILIKE :q",
+      q: "%#{sanitized_query}%"
+    )
   end
 
   # ---- serialization ---------------------------------------------------------------------------
@@ -144,6 +200,19 @@ class SmartAnnotation
         my_module_id: assignable_my_module_id,
         repository_row_id: r.id
       )
+    end
+  end
+
+  def serialize_files(scope)
+    scope.map do |asset|
+      {
+        id: asset.id,
+        id_encoded: asset.id.base62_encode,
+        name: sanitize_input(asset.file_name),
+        code: asset.code,
+        type: 'file',
+        updated_at: asset.updated_at
+      }
     end
   end
 

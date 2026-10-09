@@ -35,6 +35,18 @@ describe SmartAnnotations::TextPreview do
     end
   end
 
+  context 'Asset annotations with type file' do
+    let(:protocol) { create :protocol, my_module: task }
+    let(:step) { create :step, protocol: protocol }
+    let(:step_asset) { create :step_asset, step: step }
+    let(:asset) { Asset.find(step_asset.asset_id) }
+
+    it 'returns a text snippet' do
+      snippet = subject.text(nil, 'file', asset)
+      expect(snippet).to eq(asset.file_name)
+    end
+  end
+
   context 'Repository item annotations with type rep_item' do
     it 'returns a html snippet' do
       snippet = subject.text('my item', 'rep_item', nil)
