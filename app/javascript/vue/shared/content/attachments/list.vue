@@ -28,6 +28,7 @@
             @load="ActiveStoragePreviews.showPreview"/>
     </div>
     <div class="flex items-center gap-2 text-xs text-sn-grey overflow-hidden ml-auto">
+      <div class=" text-sn-grey-700">{{ attachment.attributes.code }}</div>
       <span v-if="!attachment.attributes.archived" class="truncate" :title="i18n.t('assets.placeholder.modified_label') + ' ' + attachment.attributes.updated_at_formatted">
           {{ i18n.t('assets.placeholder.modified_label') }}
           {{ attachment.attributes.updated_at_formatted }}

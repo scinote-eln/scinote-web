@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Asset < ApplicationRecord
+  ID_PREFIX = 'FL'
+
+  include PrefixedIdModel
   include SearchableModel
   include DatabaseHelper
   include WopiUtil

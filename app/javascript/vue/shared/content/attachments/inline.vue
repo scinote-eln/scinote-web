@@ -23,6 +23,7 @@
           </span>
         </a>
         <div class="file-metadata">
+          <div class=" text-sn-grey-700">{{ attachment.attributes.code }}</div>
           <span v-if="!attachment.attributes.archived">
             {{ attachment.attributes.updated_at_formatted }}
           </span>
