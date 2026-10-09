@@ -11,8 +11,8 @@ class StepsController < ApplicationController
   before_action :convert_table_contents_to_utf8, only: %i(create update)
 
   before_action :check_protocol_manage_permissions, only: %i(reorder add_protocol_steps)
-  before_action :check_view_permissions, only: %i(show index list attachments elements list_protocol_steps)
-  before_action :check_create_permissions, only: %i(create)
+  before_action :check_view_permissions, except: %i(create update update_view_state update_asset_view_mode destroy toggle_step_state upload_attachment)
+  before_action :check_create_permissions, only: %i(create duplicate)
   before_action :check_manage_permissions, only: %i(update destroy
                                                     update_view_state update_asset_view_mode upload_attachment)
   before_action :check_complete_and_checkbox_permissions, only: %i(toggle_step_state)
