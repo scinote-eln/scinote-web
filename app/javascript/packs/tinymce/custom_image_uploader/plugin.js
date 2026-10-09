@@ -15,6 +15,12 @@ tinymce.PluginManager.add('customimageuploader', (editor) => {
     $('#tinymce_current_upload').remove();
     $fileInput = $('<input type="file" multiple accept="image/*" id="tinymce_current_upload" style="display: none;">')
       .prependTo(editor.container);
+    // The OS file dialog takes focus from the page, which fires blur and would close the editor
+    editor.isBlurTempDisabled = true;
+    $fileInput.on('change cancel', () => {
+      editor.isBlurTempDisabled = false;
+      editor.focus();
+    });
     $fileInput.click();
 
     $fileInput.change(function() {
@@ -117,7 +123,6 @@ tinymce.PluginManager.add('customimageuploader', (editor) => {
   editor.ui.registry.addMenuItem('customimageuploader', {
     text: I18n.t('tiny_mce.upload_window_label'),
     icon: 'image',
-    context: 'insert',
     onAction: loadFiles
   });
 

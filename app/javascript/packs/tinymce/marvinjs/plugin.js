@@ -29,7 +29,6 @@ tinymce.PluginManager.add('marvinjs', (editor) => {
   editor.ui.registry.addMenuItem('marvinjs', {
     text: I18n.t('marvinjs.new_button'),
     icon: 'marvinjs',
-    context: 'insert',
     onAction: openMarvinJs
   });
 
