@@ -205,6 +205,11 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :re
         expect(response).to have_http_status(400)
       end
     end
+
+    it_behaves_like 'an API update with archived attribute', 'step_texts', { name: 'Archived step text name' } do
+      let(:archivable) { step_text }
+      let(:archiving_user) { @user }
+    end
   end
 
   describe 'DELETE step_text, #destroy' do

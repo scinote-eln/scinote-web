@@ -55,4 +55,45 @@ describe Step, type: :model do
     end
     it { should validate_inclusion_of(:completed).in_array([true, false]) }
   end
+
+  describe 'Positions on archive and restore' do
+    let(:user) { create :user }
+    let(:protocol) { create :protocol }
+    let!(:steps) { (0..3).map { |position| create :step, protocol: protocol, position: position } }
+
+    it 'clears the position of the archived step and closes the gap' do
+      steps[1].archive!(user)
+
+      expect(steps[1].reload.position).to be_nil
+      expect(steps.values_at(0, 2, 3).map { |step| step.reload.position }).to eq [0, 1, 2]
+    end
+
+    it 'keeps positions consistent when archiving stale step instances' do
+      steps.each { |step| step.archive!(user) }
+
+      expect(protocol.steps.reload.map(&:position)).to all(be_nil)
+    end
+
+    it 'restores the step at the end' do
+      steps[1].archive!(user)
+      steps[1].reload.restore!(user)
+
+      expect(steps[1].reload.position).to eq 3
+      expect(steps.values_at(0, 2, 3).map { |step| step.reload.position }).to eq [0, 1, 2]
+    end
+
+    it 'does not change positions when creating an archived step' do
+      archived_step = create :step, protocol: protocol, position: 7, archived: true
+
+      expect(archived_step.reload.position).to eq 7
+      expect(steps.map { |step| step.reload.position }).to eq [0, 1, 2, 3]
+    end
+
+    it 'restores the step at position 0 when there are no active steps' do
+      steps.each { |step| step.reload.archive!(user) }
+      steps[2].reload.restore!(user)
+
+      expect(steps[2].reload.position).to eq 0
+    end
+  end
 end

@@ -346,6 +346,11 @@ RSpec.describe 'Api::V2::ResultElements::TextsController', type: :request do
         expect(ResultText.last.text).to include "data-mce-token=\"#{Base62.encode(TinyMceAsset.last.id)}\""
       end
     end
+
+    it_behaves_like 'an API update with archived attribute', 'result_texts', { name: 'Archived result text name' } do
+      let(:archivable) { result_text }
+      let(:archiving_user) { user }
+    end
   end
 
   describe 'DELETE result_text, #destroy' do

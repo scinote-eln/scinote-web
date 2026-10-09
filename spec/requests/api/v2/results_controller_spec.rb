@@ -332,6 +332,11 @@ RSpec.describe 'Api::V2::ResultsController', type: :request do
         expect(response).to have_http_status 403
       end
     end
+
+    it_behaves_like 'an API update with archived attribute', 'results', { name: 'Archived result name' } do
+      let(:archivable) { result_valid }
+      let(:archiving_user) { user }
+    end
   end
 
   describe 'DELETE result, #destroy' do

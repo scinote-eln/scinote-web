@@ -208,8 +208,6 @@ class StepsController < ApplicationController
 
   def archive
     ActiveRecord::Base.transaction do
-      position = @step.position
-      @step.position = nil
       @step.archive!(current_user)
 
       log_activity(
@@ -222,10 +220,6 @@ class StepsController < ApplicationController
                            value_for: 'position_plus_one' }
         }
       )
-
-      @protocol.steps.where('position > ?', position).order(:position).each do |step|
-        step.update(position: step.position - 1)
-      end
     end
 
     render json: @step, serializer: StepSerializer, user: current_user
@@ -233,8 +227,6 @@ class StepsController < ApplicationController
 
   def restore
     ActiveRecord::Base.transaction do
-      position = @protocol.steps.active.maximum(:position)
-      @step.position = position ? position + 1 : 0
       @step.restore!(current_user)
 
       log_activity(

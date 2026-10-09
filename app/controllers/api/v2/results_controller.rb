@@ -9,7 +9,7 @@ module Api
       end
       before_action :check_create_permissions, only: :create
       before_action :check_delete_permissions, only: :destroy
-      before_action :check_update_permissions, only: :update
+      before_action :check_update_permissions, only: :update, unless: :archived_only_update?
 
       def index
         results = timestamps_filter(@task.results)
@@ -34,9 +34,11 @@ module Api
       end
 
       def update
-        @result.assign_attributes(result_params)
+        @result.assign_attributes(result_params.except(:archived))
+        update_archived!(@result, result_params[:archived], :result)
+        @result.save! if @result.changed?
 
-        if @result.changed? && @result.save!
+        if @result.saved_changes?
           render jsonapi: @result, serializer: ResultSerializer
         else
           render body: nil, status: :no_content
@@ -69,7 +71,7 @@ module Api
       def result_params
         raise TypeError unless params.require(:data).require(:type) == 'results'
 
-        params.require(:data).require(:attributes).require(:name)
+        params.require(:data).require(:attributes).require(:name) if action_name == 'create'
         params.require(:data).permit(attributes: %i(name archived))[:attributes]
       end
     end

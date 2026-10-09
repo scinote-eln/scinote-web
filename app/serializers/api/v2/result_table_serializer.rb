@@ -6,6 +6,11 @@ module Api
       type :tables
       attributes :table_id, :table_contents, :table_metadata, :archived, :locked
 
+      # Tables are addressed by table id in the result table endpoints
+      def id
+        object.table_id
+      end
+
       def table_id
         object.table&.id
       end
