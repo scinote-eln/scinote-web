@@ -94,12 +94,13 @@ import {
   my_module_repositories_path
 } from '../../routes.js';
 
-const CHILD_TAG = { prj: 'sa-projects', exp: 'sa-experiments', rep: 'sa-repositories' };
+const CHILD_TAG = { prj: 'sa-projects', exp: 'sa-experiments', tsk: 'sa-task-files', rep: 'sa-repositories' };
 const NO_RESULTS_KEY = {
   'sa-projects': 'projects',
   'sa-experiments': 'experiments',
   'sa-tasks': 'my_modules',
-  'sa-repositories': 'repository_rows'
+  'sa-repositories': 'repository_rows',
+  'sa-task-files': 'files'
 };
 
 export default {

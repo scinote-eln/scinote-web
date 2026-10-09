@@ -74,6 +74,22 @@ module SmartAnnotations
           "<span class='sa-type'>Inv</span>#{object.name}</a>"
       end
 
+      def generate_file_snippet(_, object)
+        return "<span class='sa-type'>Fl</span> #{I18n.t('atwho.res.deleted')}" if object.nil?
+        return "<span class='sa-type'>Fl</span>#{object.file_name} #{I18n.t('atwho.res.archived')}" if object.archived? || file_my_module_archived?(object)
+
+        "<a class='sa-link file-preview-link file-name' href='#{ROUTES.rails_blob_path(object.file, disposition: 'attachment')}' " \
+          "data-no-turbolink='true' data-id='#{object.id}' data-preview-url='#{ROUTES.asset_file_preview_path(object, preview: true)}'>" \
+          "<span class='sa-type'>Fl</span>#{object.file_name}</a>"
+      end
+
+      def file_my_module_archived?(object)
+        my_module = object.my_module
+        return false unless my_module
+
+        my_module.archived? || my_module.experiment.archived? || my_module.experiment.project.archived?
+      end
+
       def trim_repository_name(name)
         splited_name = name.split
         size = splited_name.size

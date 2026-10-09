@@ -64,6 +64,28 @@ describe SmartAnnotations::PermissionEval do
     end
   end
 
+  describe '#validate_file_permissions/2' do
+    let(:protocol) { create :protocol, my_module: task }
+    let(:step) { create :step, protocol: protocol }
+    let(:step_asset) { create :step_asset, step: step }
+    let(:asset) { Asset.find(step_asset.asset_id) }
+
+    it 'returns a boolean' do
+      value = subject.__send__(:validate_file_permissions, user, asset)
+      expect(value).to be_in([true, false])
+    end
+
+    it 'returns true on the same team' do
+      value = subject.__send__(:validate_file_permissions, user, asset)
+      expect(value).to be true
+    end
+
+    it 'returns false on wrong user' do
+      value = subject.__send__(:validate_file_permissions, another_user, asset)
+      expect(value).to be false
+    end
+  end
+
   describe '#validate_rep_item_permissions/2' do
     it 'returns a boolean' do
       value = subject.__send__(:validate_rep_item_permissions, user, repository_item)

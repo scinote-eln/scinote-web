@@ -30,6 +30,10 @@ module SmartAnnotations
       def validate_rep_permissions(user, object)
         can_read_repository?(user, object)
       end
+
+      def validate_file_permissions(user, object)
+        object.my_module.present? && can_read_my_module?(user, object.my_module)
+      end
     end
   end
 end
