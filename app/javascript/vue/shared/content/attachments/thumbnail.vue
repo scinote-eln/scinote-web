@@ -49,8 +49,10 @@
         :data-gallery-view-id="parentId"
         :data-preview-url="attachment.attributes.urls.preview"
       >
-        {{ attachment.attributes.file_name }}
+        {{ attachment.attributes.file_name }}<br>
+        <div class=" text-sn-grey-700">{{ attachment.attributes.code }}</div>
       </a>
+
       <div class="absolute bottom-16 text-sn-grey">
         <div v-if="attachment.attributes.archived">
           {{ i18n.t('assets.placeholder.archived_on_label', {
