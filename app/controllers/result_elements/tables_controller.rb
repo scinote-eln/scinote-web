@@ -19,7 +19,7 @@ module ResultElements
       predefined_table_dimensions = create_table_params[:tableDimensions].map(&:to_i)
       name = if create_table_params[:name].present?
                create_table_params[:name]
-             elsif create_table_params[:plateTemplate] == 'true'
+             elsif create_table_params[:plateTemplate]
                t('protocols.steps.plate.default_name',
                  position: @result.result_tables.length + 1)
              else
@@ -31,7 +31,7 @@ module ResultElements
           name: name,
           contents: { data: Array.new(predefined_table_dimensions[0],
                                       Array.new(predefined_table_dimensions[1], '')) }.to_json,
-          metadata: { plateTemplate: create_table_params[:plateTemplate] == 'true' },
+          metadata: { plateTemplate: create_table_params[:plateTemplate] },
           created_by: current_user,
           team: @parent.team
         ))

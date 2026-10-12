@@ -109,7 +109,7 @@ class RepositoryStockValue < ApplicationRecord
   end
 
   def update_data!(new_data, user, preview: false)
-    self.low_stock_threshold = new_data[:low_stock_threshold].presence if new_data[:low_stock_threshold]
+    self.low_stock_threshold = new_data[:low_stock_threshold].presence if new_data.key?(:low_stock_threshold)
     self.repository_stock_unit_item = repository_cell
                                       .repository_column
                                       .repository_stock_unit_items
