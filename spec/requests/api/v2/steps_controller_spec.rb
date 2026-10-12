@@ -249,6 +249,30 @@ RSpec.describe 'Api::V2::StepsController', type: :request do
         expect(response).to have_http_status(400)
       end
     end
+
+    it_behaves_like 'an API update with archived attribute', 'steps', { name: 'Archived step name' } do
+      let(:archivable) { step }
+      let(:archiving_user) { @user }
+    end
+
+    context 'when user can complete but not manage steps' do
+      let(:request_body) { { data: { type: 'steps', attributes: { completed: false, archived: false } } } }
+
+      before do
+        # permission helpers are resolved through Canaid's method_missing
+        without_partial_double_verification do
+          allow_any_instance_of(Api::V2::StepsController).to receive(:can_manage_step?).and_return(false)
+          allow_any_instance_of(Api::V2::StepsController).to receive(:can_uncomplete_my_module_steps?).and_return(true)
+        end
+      end
+
+      it 'allows completion changes with an unchanged archived attribute' do
+        action
+
+        expect(response).to have_http_status 200
+        expect(step.reload.completed).to be false
+      end
+    end
   end
 
   describe 'DELETE step, #destroy' do

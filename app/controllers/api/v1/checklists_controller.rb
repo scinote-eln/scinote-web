@@ -8,7 +8,7 @@ module Api
         load_checklist(:id)
       end
       before_action :check_create_permissions, only: :create
-      before_action :check_manage_permissions, only: :update
+      before_action :check_manage_permissions, only: :update, unless: :archived_only_update?
       before_action :check_delete_permissions, only: :destroy
 
       def index
@@ -24,7 +24,7 @@ module Api
       end
 
       def create
-        checklist = @step.checklists.new(checklist_params.merge!(created_by: current_user))
+        checklist = @step.checklists.new(checklist_params.except(:archived).merge!(created_by: current_user))
         @step.with_lock do
           checklist.save!
           @step.step_orderable_elements.create!(
@@ -37,9 +37,11 @@ module Api
       end
 
       def update
-        @checklist.assign_attributes(checklist_params)
+        @checklist.assign_attributes(checklist_params.except(:archived))
+        update_archived!(@checklist, checklist_params[:archived], :step_checklist)
+        @checklist.save! if @checklist.changed?
 
-        if @checklist.changed? && @checklist.save!
+        if @checklist.saved_changes?
           render jsonapi: @checklist, serializer: ChecklistSerializer, status: :ok
         else
           render body: nil, status: :no_content
@@ -56,7 +58,7 @@ module Api
       def checklist_params
         raise TypeError unless params.require(:data).require(:type) == 'checklists'
 
-        params.require(:data).require(:attributes).permit(:name)
+        params.require(:data).require(:attributes).permit(:name, :archived)
       end
 
       def permitted_includes

@@ -9,7 +9,7 @@ module Api
         def step_text_params
           raise TypeError unless params.require(:data).require(:type) == 'step_texts'
 
-          params.require(:data).require(:attributes).permit(:name, :text)
+          params.require(:data).require(:attributes).permit(:name, :text, :archived)
         end
       end
     end

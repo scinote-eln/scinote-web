@@ -25,6 +25,8 @@ class Step < ApplicationRecord
 
   before_validation :set_completed_on, if: :completed_changed?
   before_save :set_last_modified_by
+  before_update :set_position_on_archive_change, if: :archived_changed?
+  after_update :adjust_positions_after_archive, if: -> { saved_change_to_archived?(to: true) }
   before_destroy :cascade_before_destroy
   after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust || archived }
   after_save :change_protocol_adding_steps_allowed
@@ -316,6 +318,16 @@ class Step < ApplicationRecord
   def change_protocol_adding_steps_allowed
     # if the protocol has any locked steps, disallow adding new steps, otherwise allow it
     protocol.update!(adding_steps_allowed: protocol.steps.locked.none?)
+  end
+
+  def set_position_on_archive_change
+    self.position = archived? ? nil : (protocol.steps.active.maximum(:position) || -1) + 1
+  end
+
+  def adjust_positions_after_archive
+    protocol.steps.active.order(:position).each_with_index do |step, index|
+      step.update!(position: index) if step.position != index
+    end
   end
 
   def adjust_positions_after_destroy

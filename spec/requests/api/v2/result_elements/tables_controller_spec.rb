@@ -145,6 +145,14 @@ RSpec.describe 'Api::V2::ResultElements::TablesController', type: :request do
           )['data']
         )
       end
+
+      it 'returns an id that can be used to address the table' do
+        action
+
+        expect(json[:data][:id]).to eq ResultTable.last.table_id.to_s
+        get("#{api_path}/#{json[:data][:id]}", headers: valid_headers)
+        expect(response).to have_http_status 200
+      end
     end
 
     context 'when has missing param' do
@@ -259,6 +267,11 @@ RSpec.describe 'Api::V2::ResultElements::TablesController', type: :request do
 
         expect(response).to have_http_status(403)
       end
+    end
+
+    it_behaves_like 'an API update with archived attribute', 'tables', { name: 'Archived table name' } do
+      let(:archivable) { result_table.table }
+      let(:archiving_user) { user }
     end
   end
 

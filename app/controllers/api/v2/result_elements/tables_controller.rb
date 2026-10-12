@@ -9,7 +9,7 @@ module Api
           load_result_table(:id)
         end
         before_action :check_create_permissions, only: :create
-        before_action :check_manage_permissions, only: :update
+        before_action :check_manage_permissions, only: :update, unless: :archived_only_update?
         before_action :check_delete_permissions, only: :destroy
 
         def index
@@ -25,7 +25,7 @@ module Api
         end
 
         def create
-          table = @result.tables.new(table_params.merge!(team: @team, created_by: current_user))
+          table = @result.tables.new(table_params.except(:archived).merge!(team: @team, created_by: current_user))
 
           @result.with_lock do
             @result.result_orderable_elements.create!(
@@ -40,9 +40,11 @@ module Api
         end
 
         def update
-          @table.assign_attributes(table_params)
+          @table.assign_attributes(table_params.except(:archived))
+          update_archived!(@table, table_params[:archived], :result_table)
+          @table.save! if @table.changed?
 
-          if @table.changed? && @table.save!
+          if @table.saved_changes?
             render jsonapi: @table.result_table, serializer: ResultTableSerializer
           else
             render body: nil, status: :no_content
@@ -80,6 +82,7 @@ module Api
           attributes_params = params.require(:data).require(:attributes).permit(
             :name,
             :contents,
+            :archived,
             metadata: [
               :plateTemplate,
               { cells: %i(col row className) }

@@ -205,6 +205,11 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TablesController', type: :r
         expect(response).to have_http_status(400)
       end
     end
+
+    it_behaves_like 'an API update with archived attribute', 'tables', { name: 'Archived table name' } do
+      let(:archivable) { table }
+      let(:archiving_user) { @user }
+    end
   end
 
   describe 'DELETE table, #destroy' do

@@ -201,6 +201,11 @@ RSpec.describe 'Api::V1::ChecklistsController', type: :request do
         expect(response).to have_http_status(400)
       end
     end
+
+    it_behaves_like 'an API update with archived attribute', 'checklists', { name: 'Archived checklist name' } do
+      let(:archivable) { checklist }
+      let(:archiving_user) { @user }
+    end
   end
 
   describe 'DELETE checklist, #destroy' do

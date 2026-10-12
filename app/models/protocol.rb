@@ -774,7 +774,6 @@ class Protocol < ApplicationRecord
       if step.has_archived_element? || step.assets.archived.any?
         step.active_elements_ordered.each(&:destroy)
         step.assets.active.find_each(&:destroy)
-        step.position = nil
         step.archive!(user)
       else
         step.destroy

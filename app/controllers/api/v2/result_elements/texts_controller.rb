@@ -9,7 +9,7 @@ module Api
           load_result_text(:id)
         end
         before_action :check_create_permissions, only: :create
-        before_action :check_manage_permissions, only: :update
+        before_action :check_manage_permissions, only: :update, unless: :archived_only_update?
         before_action :check_delete_permissions, only: :destroy
 
         def index
@@ -25,7 +25,7 @@ module Api
         end
 
         def create
-          result_text = @result.result_texts.new(result_text_params)
+          result_text = @result.result_texts.new(result_text_params.except(:archived))
 
           @result.with_lock do
             @result.result_orderable_elements.create!(
@@ -40,9 +40,11 @@ module Api
         end
 
         def update
-          @result_text.assign_attributes(result_text_params)
+          @result_text.assign_attributes(result_text_params.except(:archived))
+          update_archived!(@result_text, result_text_params[:archived], :result_text)
+          @result_text.save! if @result_text.changed?
 
-          if @result_text.changed? && @result_text.save!
+          if @result_text.saved_changes?
             render jsonapi: @result_text, serializer: ResultTextSerializer, status: :ok
           else
             render body: nil, status: :no_content
@@ -71,7 +73,7 @@ module Api
         def result_text_params
           raise TypeError unless params.require(:data).require(:type) == 'result_texts'
 
-          params.require(:data).require(:attributes).permit(:text, :name)
+          params.require(:data).require(:attributes).permit(:text, :name, :archived)
         end
       end
     end

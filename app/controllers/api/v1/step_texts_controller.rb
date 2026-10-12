@@ -8,7 +8,7 @@ module Api
         load_step_text(:id)
       end
       before_action :check_create_permissions, only: :create
-      before_action :check_manage_permissions, only: :update
+      before_action :check_manage_permissions, only: :update, unless: :archived_only_update?
       before_action :check_delete_permissions, only: :destroy
 
       def index
@@ -24,7 +24,7 @@ module Api
       end
 
       def create
-        step_text = @step.step_texts.new(step_text_params)
+        step_text = @step.step_texts.new(step_text_params.except(:archived))
         @step.with_lock do
           step_text.save!
           @step.step_orderable_elements.create!(
@@ -37,9 +37,11 @@ module Api
       end
 
       def update
-        @step_text.assign_attributes(step_text_params)
+        @step_text.assign_attributes(step_text_params.except(:archived))
+        update_archived!(@step_text, step_text_params[:archived], :step_text)
+        @step_text.save! if @step_text.changed?
 
-        if @step_text.changed? && @step_text.save!
+        if @step_text.saved_changes?
           render jsonapi: @step_text, serializer: StepTextSerializer, status: :ok
         else
           render body: nil, status: :no_content
@@ -56,7 +58,7 @@ module Api
       def step_text_params
         raise TypeError unless params.require(:data).require(:type) == 'step_texts'
 
-        params.require(:data).require(:attributes).permit(:text)
+        params.require(:data).require(:attributes).permit(:text, :archived)
       end
 
       def check_create_permissions

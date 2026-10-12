@@ -264,6 +264,20 @@ module Api
         end
       end
 
+      def archived_only_update?
+        params.dig(:data, :attributes)&.keys == %w(archived)
+      end
+
+      def update_archived!(archivable, archived, permission_subject)
+        archived = ActiveModel::Type::Boolean.new.cast(archived)
+        return if archived.nil? || archived == archivable.archived?
+
+        action = archived ? :archive : :restore
+        raise PermissionError.new(archivable.class, action) unless public_send("can_#{action}_#{permission_subject}?", archivable)
+
+        archived ? archivable.archive!(current_user) : archivable.restore!(current_user)
+      end
+
       def timestamps_filter(records)
         created_at_from = Date.parse(params.dig(:filter, :created_at, :from)) if
           params.dig(:filter, :created_at, :from).present?

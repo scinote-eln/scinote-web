@@ -3,6 +3,8 @@
 module Api
   module V2
     class StepsController < ::Api::V1::StepsController
+      skip_before_action :check_manage_permissions, if: :archived_only_update?
+
       def index
         steps = timestamps_filter(@protocol.steps)
         steps = archived_filter(steps, default_to_active: true)
@@ -26,35 +28,41 @@ module Api
 
         @protocol.transaction do
           @step = @protocol.steps.create!(
-            step_params.merge!(completed: false,
-                               user: current_user,
-                               position: @protocol.number_of_steps,
-                               last_modified_by_id: current_user.id)
+            step_params.except(:archived).merge!(completed: false,
+                                                 user: current_user,
+                                                 position: @protocol.number_of_steps,
+                                                 last_modified_by_id: current_user.id)
           )
         end
         render jsonapi: @step, serializer: Api::V2::StepSerializer, status: :created
       end
 
       def update
-        @step.assign_attributes(
-          step_params.merge!(last_modified_by_id: current_user.id).merge!(parse_completed_attribute(step_params[:completed]))
-        )
+        ActiveRecord::Base.transaction do
+          unless archived_only_update?
+            @step.assign_attributes(
+              step_params.except(:archived).merge!(last_modified_by_id: current_user.id).merge!(parse_completed_attribute(step_params[:completed]))
+            )
+          end
 
-        return render body: nil, status: :no_content unless @step.changed?
+          update_archived!(@step, step_params[:archived], :step)
+          @step.save! if @step.changed?
 
-        @step.save!
-        if @step.saved_change_to_attribute?(:completed) || @step.saved_change_to_attribute?(:skipped_at)
-          type_of = if step_params[:completed] == 'skipped'
-                      :skip_step
-                    else
-                      @step.saved_change_to_attribute(:completed).last ? :complete_step : :uncomplete_step
-                    end
+          if @step.saved_change_to_attribute?(:completed) || @step.saved_change_to_attribute?(:skipped_at)
+            type_of = if step_params[:completed] == 'skipped'
+                        :skip_step
+                      else
+                        @step.saved_change_to_attribute(:completed).last ? :complete_step : :uncomplete_step
+                      end
 
-          log_activity(type_of, my_module: @task.id,
-                                num_completed: @protocol.steps.where(completed: true).count.to_s,
-                                num_all: @protocol.steps.count.to_s,
-                                num_skipped: @protocol.steps.where.not(skipped_at: nil).count.to_s)
+            log_activity(type_of, my_module: @task.id,
+                                  num_completed: @protocol.steps.where(completed: true).count.to_s,
+                                  num_all: @protocol.steps.count.to_s,
+                                  num_skipped: @protocol.steps.where.not(skipped_at: nil).count.to_s)
+          end
         end
+
+        return render body: nil, status: :no_content unless @step.saved_changes?
 
         render jsonapi: @step, serializer: Api::V2::StepSerializer, status: :ok
       end
@@ -64,7 +72,7 @@ module Api
       def step_params
         raise TypeError unless params.require(:data).require(:type) == 'steps'
 
-        params.require(:data).require(:attributes).permit(:name, :completed)
+        params.require(:data).require(:attributes).permit(:name, :archived, :completed)
       end
 
       def permitted_includes
@@ -72,7 +80,7 @@ module Api
       end
 
       def check_manage_permissions
-        if step_params.key?(:completed) && step_params.except(:completed).blank?
+        if step_params.key?(:completed) && step_params.except(:completed, :archived).blank?
           completed_bool = ActiveModel::Type::Boolean.new.cast(step_params[:completed])
           permission = if step_params[:completed] == 'skipped'
                          can_skip_my_module_steps(@step.my_module)
