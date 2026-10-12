@@ -51,11 +51,15 @@ class MyModuleReportsController < ApplicationController
 
   def pdfs
     step_assets = @my_module.assets_in_steps.pdfs.active.with_active_step
+                            .preload(:step, file_attachment: :blob)
                             .order('steps.position ASC, active_storage_blobs.filename ASC')
 
     result_assets = @my_module.assets_in_results.pdfs.active.with_active_result
+                              .preload(:result, file_attachment: :blob)
                               .order('results.created_at DESC, active_storage_blobs.filename ASC')
-    @assets = (step_assets + result_assets)
+
+    @asset_groups = step_assets.group_by(&:step).map { |step, assets| { type: 'step', parent: step, assets: assets } } +
+                    result_assets.group_by(&:result).map { |result, assets| { type: 'result', parent: result, assets: assets } }
   end
 
   def destroy
@@ -99,7 +103,8 @@ class MyModuleReportsController < ApplicationController
   end
 
   def create_params
-    params.permit(:header, :footer, :add_numarization, :add_blank_page, asset_ids: [])
+    params.permit(:header, :display_attachment_references, :add_reference_page_numbers, :display_attachment_groups, :add_group_numeration, :add_blank_page_after_group,
+                  asset_groups: [:type, :id, { asset_ids: [] }])
   end
 
   def load_analytical_report
