@@ -376,7 +376,7 @@ class StepsController < ApplicationController
 
   # Complete/uncomplete step
   def toggle_step_state
-    @step.completed = params[:completed] == 'true'
+    @step.completed = params[:completed]
     @step.skipped_at = nil
     @step.last_modified_by = current_user
 
@@ -411,7 +411,7 @@ class StepsController < ApplicationController
   end
 
   def toggle_step_skip_state
-    @step.skipped_at = params[:skipped] == 'true' && DateTime.now
+    @step.skipped_at = params[:skipped] ? DateTime.now : nil
     @step.completed = false
     @step.last_modified_by = current_user
 
