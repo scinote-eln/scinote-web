@@ -84,7 +84,7 @@ export default {
   },
   computed: {
     previewUrl() {
-      return asset_file_preview_path(this.params.value.value.id, { preview: true });
+      return asset_file_preview_path(this.params.value.value.id);
     },
     canManage() {
       return this.params?.data?.permissions?.manage || false;
