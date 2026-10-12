@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div v-if="showPills" class="px-3 py-2">
+    <div v-if="showPills" class="p-4">
       <div class="text-xs font-semibold text-sn-grey-700 mb-1.5">{{ i18n.t('atwho.navigate') }}</div>
       <div class="flex flex-wrap gap-1.5">
         <span v-for="(pill, index) in pills" :key="pill.tag" type="button"
@@ -33,8 +33,10 @@
       </div>
     </div>
 
-    <div v-else class="max-h-[270px] overflow-y-auto p-2 relative">
-      <div v-if="loading" class="loading-overlay p-5"></div>
+    <div v-else class="max-h-[270px] overflow-y-auto relative">
+      <div v-if="loading" class="p-5 flex items-center justify-center  w-full h-48">
+        <img src="/images/medium/loading.svg" alt="Loading" />
+      </div>
       <template v-else>
         <div v-for="(item, index) in (items || [])" :key="item.type + '-' + item.id"
              class="group flex items-center gap-2 px-2 min-h-10 rounded cursor-pointer leading-[2.25em] hover:bg-sn-super-light-grey"
@@ -46,6 +48,12 @@
               <div class="truncate" v-html="highlightMatch(item.full_name)"></div>
               <div class="truncate text-xs text-sn-grey-700" v-html="highlightMatch(item.email)"></div>
             </div>
+            <span class="tw-hidden group-hover:flex items-center gap-1.5 shrink-0 ml-auto">
+              <button type="button" class="btn btn-xs btn-light" @click.stop="selectItem(item)">
+                <i class="sn-icon sn-icon-mention"></i>
+                {{ i18n.t('atwho.buttons.mention') }}
+              </button>
+            </span>
           </template>
           <template v-else>
             <span class="text-[0.625rem] font-semibold uppercase text-sn-grey-700 shrink-0" v-html="highlightMatch(item.code)"></span>
@@ -65,18 +73,19 @@
             </span>
           </template>
         </div>
+        <template v-if="!loading">
+          <div v-if="limitReached" class="text-sn-grey-700 text-sm py-1 px-2">{{ i18n.t('atwho.more_results') }}</div>
 
-        <div v-if="limitReached" class="text-sn-grey-700 text-sm py-1 px-2">{{ i18n.t('atwho.more_results') }}</div>
-
-        <div v-if="items && items.length === 0 && query" class="py-6 px-8 text-center text-sn-grey-700">
-          <h1 class="text-sm font-semibold text-sn-black"
-              v-html="i18n.t('atwho.no_results.no_matches_html', { query: escapeHtml(query) })"></h1>
-          <div class="text-sm mt-2">{{ i18n.t('atwho.no_results.no_matches_hint') }}</div>
-        </div>
-        <div v-else-if="items && items.length === 0" class="py-6 px-8 text-center text-sn-grey-700">
-          <h1 class="text-sm font-semibold text-sn-black">{{ i18n.t(`atwho.no_results.${noResultsKey}`) }}</h1>
-          <div class="text-sm mt-2">{{ i18n.t('atwho.no_results.description') }}</div>
-        </div>
+          <div v-if="items && items.length === 0 && query" class="py-6 px-8 text-center text-sn-grey-700">
+            <h1 class="text-sm font-semibold text-sn-black"
+                v-html="i18n.t('atwho.no_results.no_matches_html', { query: escapeHtml(query) })"></h1>
+            <div class="text-sm mt-2">{{ i18n.t('atwho.no_results.no_matches_hint') }}</div>
+          </div>
+          <div v-else-if="items && items.length === 0" class="py-6 px-8 text-center text-sn-grey-700">
+            <h1 class="text-sm font-semibold text-sn-black">{{ i18n.t(`atwho.no_results.${noResultsKey}`) }}</h1>
+            <div class="text-sm mt-2">{{ i18n.t('atwho.no_results.description') }}</div>
+          </div>
+        </template>
       </template>
     </div>
   </div>
@@ -115,8 +124,12 @@ export default {
       items: null,
       navStack: [],
       assignableMyModuleId: null,
-      onInsert: null
+      onInsert: null,
+      searchDebounceTimer: null
     };
+  },
+  beforeDestroy() {
+    clearTimeout(this.searchDebounceTimer);
   },
   computed: {
     pills() {
@@ -154,11 +167,10 @@ export default {
       const teamId = this.teamId();
       if (!teamId) return;
 
-      const loaderTimeout = setTimeout(() => { this.loading = true; }, 250);
+      this.loading = true;
       const request = this.flag === '@' ? this.fetchUsers(teamId) : this.fetchReference(teamId);
 
       request.then((result) => {
-        clearTimeout(loaderTimeout);
         this.loading = false;
 
         this.items = result.items;
@@ -231,7 +243,10 @@ export default {
     },
     onSearchInput(e) {
       this.query = e.target.value;
-      this.runQuery();
+      clearTimeout(this.searchDebounceTimer);
+      this.searchDebounceTimer = setTimeout(() => {
+        this.runQuery();
+      }, 300);
     },
     onSearchKeydown(e) {
       if (e.key === 'Escape') {

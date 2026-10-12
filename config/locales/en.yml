@@ -5037,6 +5037,7 @@ en:
       description: "Once you create items in the inventory, they will appear here."
     buttons:
       add: "Add"
+      mention: "Mention"
       assign: "Assign to task"
     navigate: "Navigate"
     projects: Projects
