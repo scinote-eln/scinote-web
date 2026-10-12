@@ -21,7 +21,8 @@ class MyModulesController < ApplicationController
   before_action :check_read_permissions, except: %i(create update update_description
                                                     inventory_assigning_my_module_filter
                                                     update_protocol_description restore_group
-                                                    actions_toolbar index)
+                                                    actions_toolbar index status_partial)
+  before_action :check_status_partial_permissions, only: :status_partial
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols activities archive index)
   before_action :load_experiment_my_modules, only: %i(protocols activities archive)
@@ -471,6 +472,10 @@ class MyModulesController < ApplicationController
   def check_read_permissions
     current_team_switch(@project.team) if current_team != @project.team
     render_403 unless can_read_my_module?(@my_module)
+  end
+
+  def check_status_partial_permissions
+    render_403 unless current_team == @project.team && can_read_my_module?(@my_module)
   end
 
   def check_update_state_permissions
