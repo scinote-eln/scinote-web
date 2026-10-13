@@ -78,6 +78,32 @@ describe RepositoryRowsController, type: :controller do
       expect(ids).to include(archived_repository_row.id)
       expect(ids).not_to include(active_repository_row.id)
     end
+
+    context 'when reminders are enabled' do
+      # Repository.reminders_enabled? delegates to stock management
+      before { allow(RepositoryBase).to receive(:stock_management_enabled?).and_return(true) }
+
+      let!(:date_column) do
+        create :repository_column, :date_type, repository: repository,
+                                               created_by: user,
+                                               metadata: { 'reminder_value' => '5',
+                                                           'reminder_unit' => '86400',
+                                                           'reminder_message' => 'Check expiry' }
+      end
+      let!(:date_value) do
+        create :repository_date_value, data: Date.current + 2.days,
+                                       repository_cell_attributes: { repository_row: active_repository_row,
+                                                                     repository_column: date_column }
+      end
+
+      it 'flags the reminder of a date cell inside the reminder window' do
+        get :index_ag, params: { repository_id: repository.id, per_page: 20, page: 1 }, format: :json
+        response_body = JSON.parse(response.body)
+        row = response_body['data'].find { |r| r['id'].to_i == active_repository_row.id }
+
+        expect(row.dig('attributes', "col_#{date_column.id}", 'value', 'reminder')).to be(true)
+      end
+    end
   end
 
   describe 'POST #copy_records' do
@@ -129,6 +155,45 @@ describe RepositoryRowsController, type: :controller do
     it 'adds activity in DB' do
       expect { action }
         .to(change { Activity.count })
+    end
+
+    context 'when reminders are enabled' do
+      # Repository.reminders_enabled? delegates to stock management
+      before { allow(RepositoryBase).to receive(:stock_management_enabled?).and_return(true) }
+
+      let!(:date_column) do
+        create :repository_column, :date_type, repository: repository,
+                                               created_by: user,
+                                               metadata: { 'reminder_value' => '5',
+                                                           'reminder_unit' => '86400',
+                                                           'reminder_message' => 'Check expiry' }
+      end
+      let!(:date_value) do
+        create :repository_date_value, data: date,
+                                       repository_cell_attributes: { repository_row: repository_row,
+                                                                     repository_column: date_column }
+      end
+      let(:active_reminders_count) { JSON.parse(response.body).dig('data', 'attributes', 'active_reminders_count') }
+
+      context 'when the row has an active date reminder' do
+        let(:date) { Date.current + 2.days }
+
+        it 'renders the active reminders count' do
+          action
+
+          expect(active_reminders_count).to eq(1)
+        end
+      end
+
+      context 'when the row has no active reminder' do
+        let(:date) { Date.current + 30.days }
+
+        it 'renders zero active reminders instead of null' do
+          action
+
+          expect(active_reminders_count).to eq(0)
+        end
+      end
     end
   end
 

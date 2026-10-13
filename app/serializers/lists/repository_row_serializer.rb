@@ -13,9 +13,9 @@ module Lists
     attribute :consumed_stock, if: -> { instance_options[:with_stock_management] && instance_options[:my_module] }
 
     def attributes(requested_attrs = nil, reload = false)
-      data = super(requested_attrs, reload)
+      data = super
       repository = object.repository
-      reminders_enabled = instance_options[:reminders_enabled]
+      reminders_enabled = instance_options[:with_reminders]
       custom_cells = object.repository_cells
       custom_cells = custom_cells.filter { |cell| cell.value_type != 'RepositoryStockValue' } if instance_options[:with_stock_management]
 
@@ -36,7 +36,7 @@ module Lists
 
     def permissions
       {
-        manage: instance_options[:can_manage_repository_rows],
+        manage: instance_options[:can_manage_repository_rows]
       }
     end
 
@@ -73,7 +73,10 @@ module Lists
     end
 
     def active_reminders_count
-      object[:active_reminders_count]
+      # Return active reminders count if it is already preloaded from service, otherwise calculate it.
+      return object[:active_reminders_count] if object.has_attribute?(:active_reminders_count)
+
+      object.repository_cells.with_active_reminder(current_user).count
     end
 
     def stock
@@ -82,7 +85,7 @@ module Lists
 
       stock_object =
         if stock_cell.present?
-          serialize_repository_cell_value(stock_cell, repository.team, repository)
+          serialize_repository_cell_value(stock_cell, repository.team, repository, reminders_enabled: instance_options[:with_reminders])
         else
           { value: {
             stock_url: Rails.application.routes.url_helpers.new_repository_stock_repository_repository_row_url(repository, object)

@@ -174,6 +174,65 @@ describe RepositoryCellsController, type: :controller do
       end
     end
 
+    context 'when the column is a date column with a reminder and reminders are enabled' do
+      # Noon UTC keeps the rounded-up days_left away from day boundaries
+      around do |example|
+        Timecop.freeze(Time.utc(2025, 1, 15, 12, 0, 0)) do
+          example.run
+        end
+      end
+
+      # Repository.reminders_enabled? delegates to stock management
+      before { allow(RepositoryBase).to receive(:stock_management_enabled?).and_return(true) }
+
+      let!(:date_column) do
+        create :repository_column, :date_type, repository: repository,
+                                               created_by: user,
+                                               metadata: { 'reminder_value' => '5',
+                                                           'reminder_unit' => '86400',
+                                                           'reminder_message' => 'Check expiry' }
+      end
+      let(:params) do
+        {
+          repository_id: repository.id,
+          repository_row_id: repository_row.id,
+          repository_column_id: date_column.id,
+          value: date
+        }
+      end
+      let(:response_value) { JSON.parse(response.body)['value'] }
+
+      context 'and the date is inside the reminder window' do
+        let(:date) { '2025-01-17' }
+
+        it 'renders an active reminder with the days left' do
+          action
+          expect(response_value).to include('reminder' => true, 'days_left' => 2, 'reminder_message' => 'Check expiry')
+          expect(response_value['reminder_text']).to be_present
+        end
+      end
+
+      context 'and the date has passed' do
+        let(:date) { '2025-01-12' }
+
+        it 'renders an expired reminder' do
+          action
+          expect(response_value['reminder']).to be(true)
+          expect(response_value).not_to have_key('days_left')
+          expect(response_value['reminder_text']).to eq(I18n.t('repositories.item_card.reminders.item_expired'))
+        end
+      end
+
+      context 'and the date is outside the reminder window' do
+        let(:date) { '2025-02-14' }
+
+        it 'renders an inactive reminder' do
+          action
+          expect(response_value['reminder']).to be(false)
+        end
+      end
+    end
+
     context 'when the repository is not visible to the user' do
       let(:params) do
         {

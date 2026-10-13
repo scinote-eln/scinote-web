@@ -128,7 +128,8 @@ import {
   repository_copy_records_path,
   repository_archive_records_path,
   repository_restore_records_path,
-  repository_delete_records_path
+  repository_delete_records_path,
+  active_reminder_repository_cells_repository_repository_row_path
 } from '../../routes.js';
 
 export default {
@@ -260,7 +261,14 @@ export default {
   },
   methods: {
     updateRowData(row) {
+      // DataTable prepends unknown rows, so skip pushes for rows that aren't loaded
+      if (!this.findLoadedRow(row.id)) return;
+
       this.$refs.repositoryTable.updateRowData(row);
+      if ((row.attributes || row).active_reminders_count > 0) this.hasActiveReminders = true;
+    },
+    findLoadedRow(rowId) {
+      return this.$refs.repositoryTable?.rowData?.find((r) => String(r.id) === String(rowId));
     },
     loadRepository() {
       axios.get(this.repositoryUrl)
@@ -398,10 +406,11 @@ export default {
       });
     },
     updateCell(row, columnDef, value) {
+      const columnId = columnDef.field.split('_')[1];
       axios.post(repository_repository_row_repository_cell_path({
         repository_id: row.repository_id,
         repository_row_id: row.id,
-        repository_column_id: columnDef.field.split('_')[1] }), {
+        repository_column_id: columnId }), {
         value: value
       }).then((response) => {
         const updatedRow = {
@@ -410,6 +419,7 @@ export default {
         updatedRow[columnDef.field] = response.data;
         this.$refs.repositoryTable.updateRowData(updatedRow);
         this.textCellModalObject = null;
+        this.refreshRemindersCount(row.id, columnId);
       }).catch(() => {
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
         textCellModalObject = null;
@@ -421,6 +431,7 @@ export default {
     updateStock(row) {
       this.stockValueModalUrl = null;
       this.$refs.repositoryTable.updateRowData(row);
+      if (row.attributes?.active_reminders_count > 0) this.hasActiveReminders = true;
     },
     updateRemindersCount(row, count) {
       const updatedRow = {
@@ -428,6 +439,26 @@ export default {
       }
       updatedRow['active_reminders_count'] = count;
       this.$refs.repositoryTable.updateRowData(updatedRow);
+      if (count > 0) this.hasActiveReminders = true;
+    },
+
+    refreshRemindersCount(rowId, columnId) {
+      const row = this.findLoadedRow(rowId);
+      // The key is only serialized when reminders are enabled
+      if (!row || !('active_reminders_count' in row)) return;
+
+      const columnDef = this.repositoryColumnsDef.find((col) => col.field === `col_${columnId}`);
+      if (!columnDef?.cellRendererParams?.metadata?.reminder_value) return;
+
+      axios.get(active_reminder_repository_cells_repository_repository_row_path(this.repositoryId, rowId))
+        .then((response) => {
+          if (!this.findLoadedRow(rowId)) return;
+
+          this.updateRemindersCount({ id: rowId }, response.data.reminders.length);
+        })
+        .catch(() => {
+          // Ignore errors because the count will be updated on the next reload
+        });
     },
     openManageColumnsModal() {
       this.$refs.legacyManageColumns.click();

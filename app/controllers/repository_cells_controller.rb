@@ -32,7 +32,7 @@ class RepositoryCellsController < ApplicationController
 
     return head :no_content if @cell.blank?
 
-    render json: serialize_repository_cell_value(@cell.reload, current_team, @repository)
+    render json: serialize_repository_cell_value(@cell.reload, current_team, @repository, reminders_enabled: Repository.reminders_enabled?)
   rescue ActiveRecord::RecordInvalid => e
     render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
   end

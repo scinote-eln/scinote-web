@@ -298,6 +298,9 @@ export default {
   },
   methods: {
     updateRowData(row) {
+      // DataTable prepends unknown rows, so skip pushes for rows that aren't loaded
+      if (!this.$refs.repositoryTable?.rowData?.some((r) => String(r.id) === String(row.id))) return;
+
       this.$refs.repositoryTable.updateRowData(row);
     },
     assignRows(rowIds, repositoryId, assignToDownstream = false) {
