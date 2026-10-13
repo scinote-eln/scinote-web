@@ -15,20 +15,20 @@
       v-model="value"
       :teleport="teleport"
       :no-today="true"
-      :format="format"
-      :month-change-on-scroll="false"
+      :formats="{ input: format }"
       :six-weeks="true"
       :disabled="disabled"
       :config="{
         monthChangeOnScroll: false
       }"
       :input-attrs="{
-        clearable: this.clearable
+        clearable: this.clearable,
+        hideInputIcon: true
       }"
       :time-picker="mode == 'time'"
       :time-config="{
        timePickerInline: mode == 'datetime',
-       startTime: (mode == 'time' ? null : { hours: 0, minutes: 0, seconds: 0 }),
+       startTime: startTime,
        enableTimePicker: mode == 'datetime'
       }"
       :flow="{
@@ -38,7 +38,6 @@
       :markers="markers"
       :range="range"
       week-start="0"
-      :hide-input-icon="noIcons"
       :placeholder="placeholder" >
         <template #arrow-right>
             <img class="slot-icon" src="/images/calendar/navigate_next.svg"/>
@@ -97,14 +96,7 @@ export default {
   },
   data() {
     return {
-      value: null,
-      markers: [
-        {
-          date: new Date(),
-          type: 'dot',
-          color: '#3B99FD'
-        }
-      ]
+      value: null
     };
   },
   created() {
@@ -119,6 +111,22 @@ export default {
     }
   },
   computed: {
+    // moved from data() because it cant't clone maker for today's date
+    markers() {
+      return [
+        {
+          date: new Date(),
+          type: 'dot',
+          color: '#3B99FD'
+        }
+      ];
+    },
+    startTime() {
+      if (this.mode === 'time') return null;
+
+      const midnight = { hours: 0, minutes: 0, seconds: 0 };
+      return this.range ? [midnight, midnight] : midnight;
+    },
     format() {
       if (this.mode === 'time') return 'HH:mm';
       if (this.mode === 'date') return document.body.dataset.datetimePickerFormatVue;
