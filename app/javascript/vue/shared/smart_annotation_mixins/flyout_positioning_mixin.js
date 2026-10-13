@@ -61,6 +61,7 @@ export default {
       reposition: this.reposition,
       isOpenFor: this.isOpenFor
     };
+    this.patchBootstrapModalFocus();
     this.styleObserver = new MutationObserver(() => {
       if (this.isOpen && this.$refs.flyout && this.$refs.flyout.style.display === 'none') {
         this.close();
@@ -74,6 +75,27 @@ export default {
     delete window.SmartAnnotationFlyout;
   },
   methods: {
+    patchBootstrapModalFocus() {
+      if (!window.$ || !$.fn.modal || !$.fn.modal.Constructor) return;
+
+      const Modal = $.fn.modal.Constructor;
+      if (Modal.prototype.__atwhoFocusPatched) return;
+      Modal.prototype.__atwhoFocusPatched = true;
+
+      Modal.prototype.enforceFocus = function () {
+        const modal = this;
+        $(document)
+          .off('focusin.bs.modal')
+          .on('focusin.bs.modal', (e) => {
+            if (document !== e.target
+              && modal.$element[0] !== e.target
+              && !modal.$element.has(e.target).length
+              && !$(e.target).closest('.atwho-view').length) {
+              modal.$element.trigger('focus');
+            }
+          });
+      };
+    },
     reposition(position) {
       this.position = position;
     },
