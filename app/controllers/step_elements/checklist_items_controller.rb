@@ -6,9 +6,10 @@ module StepElements
     include StepsActions
 
     before_action :load_vars
-    before_action :load_checklist_item, only: %i(update toggle destroy)
+    before_action :check_view_permissions, only: %i(index)
     before_action :check_toggle_permissions, only: %i(toggle)
-    before_action :check_manage_permissions, only: %i(create update destroy)
+    before_action :check_manage_permissions, except: %i(index toggle)
+    before_action :load_checklist_item, only: %i(update toggle destroy)
 
     def index
       render json: @checklist.checklist_items, each_serializer: ChecklistItemSerializer, user: current_user
@@ -120,6 +121,10 @@ module StepElements
       else
         render_403 unless can_uncheck_my_module_steps?(@step.protocol.my_module)
       end
+    end
+
+    def check_view_permissions
+      render_403 unless can_read_protocol_in_module?(@step.protocol) || can_read_protocol_in_repository?(@step.protocol)
     end
 
     def check_manage_permissions
