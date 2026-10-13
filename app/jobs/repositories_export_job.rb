@@ -51,7 +51,11 @@ class RepositoriesExportJob < ApplicationJob
     legacy_mapping = Repository::REPOSITORY_LEGACY_COLUMNS_MAPPING.dup
     legacy_mapping[:connections_count] = -11 if Repository.repository_row_connections_enabled?
     repository.repository_columns.each do |column|
-      legacy_mapping["col_#{column.id}".to_sym] = column.id
+      if column.data_type == 'RepositoryStockValue'
+        legacy_mapping[:stock] = column.id
+      else
+        legacy_mapping["col_#{column.id}".to_sym] = column.id
+      end
     end
 
     user_settings = @user.user_settings.find_by(key: "repository_table_#{repository.id}_active_table_state")
