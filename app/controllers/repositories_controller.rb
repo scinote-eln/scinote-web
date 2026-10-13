@@ -357,14 +357,14 @@ class RepositoriesController < ApplicationController
   end
 
   def import_records
-    render_403 unless can_create_repository_rows?(Repository.readable_by_user(current_user)
-                                                            .find_by(id: import_params[:id]))
+    return render_403 unless can_create_repository_rows?(@repository)
+
     # Check if there exist mapping for repository record (it's mandatory)
     if import_params[:mappings].present? && import_params[:mappings].value?('-1')
       status = ImportRepository::ImportRecords
                .new(
                  temp_file: TempFile.find_by(id: import_params[:file_id]),
-                 repository: Repository.readable_by_user(current_user).find_by(id: import_params[:id]),
+                 repository: @repository,
                  mappings: import_params[:mappings],
                  session: session,
                  user: current_user,
@@ -600,7 +600,7 @@ class RepositoriesController < ApplicationController
   end
 
   def import_params
-    params.permit(:id, :file, :file_id, :preview, :can_edit_existing_items,
+    params.permit(:file, :file_id, :preview, :can_edit_existing_items,
                   :should_overwrite_with_empty_cells, :preview, mappings: {}).to_h
   end
 
