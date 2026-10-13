@@ -5,10 +5,10 @@ module MyModuleReports
     include FormFieldValuesHelper
 
     PROTOCOL_TAG = :PROTOCOL
+    CHECKED_SYMBOL = "\u22A0"
 
     def initialize(protocol, report_template, team, user)
       @report_template = report_template
-      @protocol = protocol
       @my_module = protocol.my_module
       @team = team
       @user = user
@@ -28,19 +28,15 @@ module MyModuleReports
 
         # Finally insert all TinyMCE images into the report
         @tiny_mce_assets.each do |tiny_mce_asset|
-          report.add_inline_image "TINY_MCE_ASSET_#{tiny_mce_asset[:id]}".to_sym, tiny_mce_asset[:file].path, width: tiny_mce_asset[:width], height: tiny_mce_asset[:height]
+          report.add_inline_image :"TINY_MCE_ASSET_#{tiny_mce_asset[:id]}", tiny_mce_asset[:file].path, width: tiny_mce_asset[:width], height: tiny_mce_asset[:height]
         end
 
         report.generate(output.path)
         analytical_report.report.attach(io: File.open(output.path), filename: original_blob.filename, content_type: original_blob.content_type)
       end
     ensure
-      @tiny_mce_assets.each do |tiny_mce_asset|
-        tiny_mce_asset[:file]&.close
-        tiny_mce_asset[:file]&.unlink
-      end
-      output.close
-      output.unlink
+      @tiny_mce_assets.each { |tiny_mce_asset| tiny_mce_asset[:file]&.close! }
+      output.close!
     end
 
     private
@@ -48,112 +44,106 @@ module MyModuleReports
     def render_general(report)
       report.add_field :TASKNAME, @my_module.name
       report.add_field :TASKDUEDATE, @my_module.due_date ? I18n.l(@my_module.due_date, format: :full) : ''
-
-      tags = @my_module.tags.order(:id).map(&:name)
-
-      report.add_text :TASKTAGS, "<p>#{tags.join(', ')}</p>"
+      report.add_text :TASKTAGS, "<p>#{@my_module.tags.order(:id).map(&:name).join(', ')}</p>"
     end
 
     def render_steps(report)
       @my_module.steps.active.ordered.each do |step|
-        report.add_field build_tag('step', step.id).to_sym, step.name
+        step_tag = build_tag('step', step.id)
+        title = "<div>#{step.position_plus_one}. #{step.name}</div><div>{{#{step_tag}}}</div>"
+        add_block_text(report, step_tag, title)
 
         # for full protocol tag
-        add_block_text(report, PROTOCOL_TAG, "<div>#{step.position_plus_one}. #{step.name}</div><div>{{#{PROTOCOL_TAG}}}</div>")
+        add_block_text(report, PROTOCOL_TAG, title)
 
-        step.step_orderable_elements.order(:position).each do |element|
-          next if element.orderable.archived
-
-          element_type = element.orderable_type
-          element_tag = build_tag(element_type.underscore, element_id(element))
-
-          case element.orderable_type
-          when 'StepText'
-            render_text_element(report, element_tag, element.orderable, with_protocol: true)
-          when 'StepTable'
-            render_table(report, element_tag, element.orderable.table, with_protocol: true)
-          when 'Checklist'
-            render_checklist(report, element_tag, element.orderable, element.orderable.checklist_items)
-          when 'FormResponse'
-            render_form_response(report, element_tag, element.orderable)
-          end
-        end
-
-        report.add_field PROTOCOL_TAG, ''
+        render_elements(report, step.step_orderable_elements, [PROTOCOL_TAG, step_tag])
+        clear_tags(report, PROTOCOL_TAG, step_tag)
       end
     end
 
     def render_results(report)
       @my_module.results.active.order(:created_at).each do |result|
-        report.add_field build_tag('result', result.id).to_sym, result.name
+        result_tag = build_tag('result', result.id)
+        add_block_text(report, result_tag, "<div>#{result.name}</div><div>{{#{result_tag}}}</div>")
+        render_elements(report, result.result_orderable_elements, [result_tag])
+        clear_tags(report, result_tag)
+      end
+    end
 
-        result.result_orderable_elements.order(:position).each do |element|
-          next if element.orderable.archived
+    def render_elements(report, elements, block_element)
+      elements.order(:position).each do |element|
+        orderable = element.orderable
+        next if orderable.archived
 
-          element_type = element.orderable_type
-          element_tag = build_tag(element_type.underscore, element_id(element))
+        element_tag = build_tag(element.orderable_type.underscore, element_id(element))
 
-          case element.orderable_type
-          when 'ResultText'
-            render_text_element(report, element_tag, element.orderable)
-          when 'ResultTable'
-            render_table(report, element_tag, element.orderable.table)
-          end
+        case element.orderable_type
+        when 'StepText', 'ResultText'
+          render_text_element(report, element_tag, orderable, block_element)
+        when 'StepTable', 'ResultTable'
+          render_table(report, element_tag, orderable.table, block_element)
+        when 'Checklist'
+          render_checklist(report, element_tag, orderable, orderable.checklist_items, block_element)
+        when 'FormResponse'
+          render_form_response(report, orderable, block_element + [element_tag])
+          clear_tags(report, element_tag)
         end
       end
     end
 
-    def render_text_element(report, text_tag, text_element, with_protocol: false)
-      add_block_text(report, text_tag, "<div>#{text_element.name}</div><div>{{#{text_tag}}}</div>")
-      add_block_text(report, text_tag, insert_tiny_mce_asset_placeholders(text_element.text, text_element.tiny_mce_assets))
+    def render_text_element(report, text_tag, text_element, block_element)
+      text = insert_tiny_mce_asset_placeholders(text_element.text, text_element.tiny_mce_assets)
 
-      # for full protocol tag
-      if with_protocol
-        add_block_text(report, PROTOCOL_TAG, "<div>#{text_element.name}</div><div>{{#{PROTOCOL_TAG}}}</div>")
-        add_block_text(report, PROTOCOL_TAG, "<div>#{insert_tiny_mce_asset_placeholders(text_element.text, text_element.tiny_mce_assets)}</div><div>{{#{PROTOCOL_TAG}}}</div>")
+      # Specific element placeholder
+      add_block_text(report, text_tag, "<div>#{text_element.name}</div><div>{{#{text_tag}}}</div>")
+      add_block_text(report, text_tag, text)
+
+      # Add element to block element like PROTOCOL, STEP or RESULT
+      block_element.each do |element|
+        add_block_text(report, element, "<div>#{text_element.name}</div><div>{{#{element}}}</div>")
+        add_block_text(report, element, "<div>#{text}</div><div>{{#{element}}}</div>")
       end
     end
 
-    def render_table(report, table_tag, table, with_protocol: false)
-      table_data = table.table_data
-      table_data[:table_name] = table.name
+    def render_table(report, table_tag, table, block_element)
+      table_data = table.table_data.merge(table_name: table.name)
 
+      # Specific element placeholder
       add_block_text(report, table_tag, "<div>#{table.name}</div><div>{{#{table_tag}}}</div>")
       report.add_table_from_data table_tag, table_data
 
-      # for full protocol tag
-      if with_protocol
-        protocol_table_tag = :"PROTOCOL_TABLE_#{table_tag}"
-        add_block_text(report, PROTOCOL_TAG, "<div>#{table.name}</div><div>{{#{protocol_table_tag}}}</div><div>{{#{PROTOCOL_TAG}}}</div>")
-        report.add_table_from_data protocol_table_tag, table_data
+      # Add element to block element like PROTOCOL, STEP or RESULT
+      block_element.each do |element|
+        nested = nested_tag(element, table_tag)
+        add_block_text(report, element, "<div>#{table.name}</div><div>{{#{nested}}}</div><div>{{#{element}}}</div>")
+        report.add_table_from_data nested, table_data
       end
     end
 
-    def render_checklist(report, checklist_tag, checklist, checklist_items)
-      checklist_checked_simbol = "\u22A0"
+    def render_checklist(report, checklist_tag, checklist, checklist_items, block_element)
       checklist_items_pairs = checklist_items&.map { |item| [item[:text], item[:checked]] }
       checklist_name_div = checklist ? "<div>#{checklist.name}</div>" : ''
 
+      # Specific element placeholder
       add_block_text(report, checklist_tag, "#{checklist_name_div}<div>{{#{checklist_tag}}}</div>")
-      report.add_checklist(checklist_tag, checklist_items_pairs, checked_symbol: checklist_checked_simbol)
+      report.add_checklist(checklist_tag, checklist_items_pairs, checked_symbol: CHECKED_SYMBOL)
 
-      # for full protocol tag
-      protocol_checklist_tag = :PROTOCOL_CHECKLIST
-      add_block_text(report, PROTOCOL_TAG, "#{checklist_name_div}<div>{{#{protocol_checklist_tag}}}</div><div>{{#{PROTOCOL_TAG}}}</div>")
-      report.add_checklist(protocol_checklist_tag, checklist_items_pairs, checked_symbol: checklist_checked_simbol)
+      # Add element to block element like PROTOCOL, STEP or FORM
+      block_element.each do |element|
+        nested = nested_tag(element, checklist_tag)
+        add_block_text(report, element, "#{checklist_name_div}<div>{{#{nested}}}</div><div>{{#{element}}}</div>")
+        report.add_checklist(nested, checklist_items_pairs, checked_symbol: CHECKED_SYMBOL)
+      end
     end
 
-    def render_form_response(report, form_response_tag, form_response)
-      report.add_field form_response_tag, form_response.form.name
+    def render_form_response(report, form_response, block_element)
+      # Add element to block element like PROTOCOL, STEP or FORM
+      block_element.each { |element| add_block_text(report, element, "<div>#{form_response.form.name}</div><div>{{#{element}}}</div>") }
 
-      # for full protocol tag
-      add_block_text(report, PROTOCOL_TAG, "<div>#{form_response.form.name}</div><div>{{#{PROTOCOL_TAG}}}</div>")
+      form_field_values = form_response.form_field_values.where(latest: true).index_by(&:form_field_id)
 
-      form_fields = form_response.form.form_fields.order(:position)
-      form_field_values = form_response.form_field_values
-
-      form_fields&.each do |form_field|
-        form_field_value = form_field_values.find_by(form_field_id: form_field.id, latest: true)
+      form_response.form.form_fields.order(:position)&.each do |form_field|
+        form_field_value = form_field_values[form_field.id]
         tag = I18n.t('protocols.report_template.data_inputs.codes.tag_form_field', form_id: form_response.id, id: form_field.id).to_sym
 
         value = if form_field_value&.not_applicable
@@ -173,10 +163,15 @@ module MyModuleReports
                 end
 
         if !form_field_value&.not_applicable && %w(MultipleChoiceField SingleChoiceField).include?(form_field[:data]['type'])
-          render_checklist(report, tag, nil, value)
+          render_checklist(report, tag, nil, value, block_element)
         else
+          # Specific element placeholder
           report.add_field tag, value
-          add_block_text(report, PROTOCOL_TAG, "<div>#{value}</div><div>{{#{PROTOCOL_TAG}}}</div>")
+
+          # Add element to block element like PROTOCOL, STEP or FORM
+          block_element.each do |element|
+            add_block_text(report, element, "<div>#{value}</div><div>{{#{element}}}</div>")
+          end
         end
       end
     end
@@ -226,15 +221,6 @@ module MyModuleReports
       end
     end
 
-    def element_label(element)
-      case element.orderable_type
-      when 'StepTable', 'ResultTable'
-        element.orderable.table.name
-      else
-        element.orderable.name
-      end
-    end
-
     # Protocol, text, table, checklist and form content always starts on its own line,
     # even when its tag is placed inline in the template
     def add_block_text(report, tag, html)
@@ -242,7 +228,15 @@ module MyModuleReports
     end
 
     def build_tag(type, id)
-      I18n.t('protocols.report_template.data_inputs.codes.tag_content', content_type: I18n.t("protocols.report_template.data_inputs.codes.type.#{type}"), id: id)
+      I18n.t('protocols.report_template.data_inputs.codes.tag_content', content_type: I18n.t("protocols.report_template.data_inputs.codes.type.#{type}"), id: id).to_sym
+    end
+
+    def nested_tag(element, tag)
+      :"#{element}_#{tag}"
+    end
+
+    def clear_tags(report, *tags)
+      tags.each { |tag| report.add_field tag, '' }
     end
   end
 end
