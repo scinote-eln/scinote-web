@@ -8,8 +8,11 @@
     </h4>
   </div>
   <div class="modal-body flex flex-col gap-4">
-    <div>
-      <label class="sci-label">{{ i18n.t('my_modules.reports.wizard.second_step.form.header.label') }}</label>
+    <div class="flex flex-col gap-1">
+      <div class="text-base font-semibold">
+        {{ i18n.t('my_modules.reports.wizard.second_step.form.header.label') }}
+      </div>
+      <label class="sci-label">{{ i18n.t('my_modules.reports.wizard.second_step.form.header.description') }}</label>
       <div class="sci-input-container-v2 h-28" :class="{'error': !validHeader}" :data-error="headerFieldErrors" >
         <textarea v-model="header"
           class="sci-input-field"
@@ -17,29 +20,67 @@
         ></textarea>
       </div>
     </div>
-    <div>
-      <label class="sci-label">{{ i18n.t('my_modules.reports.wizard.second_step.form.footer.label') }}</label>
-      <div class="sci-input-container-v2" :class="{'error': !validFooter}" :data-error="footerFieldErrors" >
-        <input type="text" 
-          v-model="footer"
-          class="sci-input-field"
-          :placeholder="i18n.t('my_modules.reports.wizard.second_step.form.footer.placeholder')"
-        />
+
+    <div class="flex flex-col gap-2">
+      <div class="text-base font-semibold">
+        {{ i18n.t('my_modules.reports.wizard.second_step.form.footer.label') }}
       </div>
-    </div>
-    <div class="flex items-center gap-2">
-      <span class="sci-checkbox-container">
-        <input type="checkbox" class="sci-checkbox" v-model="addNumarization" />
-        <span class="sci-checkbox-label"></span>
-      </span>
-      <span class="sci-label">{{ i18n.t('my_modules.reports.wizard.second_step.form.numarization_checkbox') }}</span>
-    </div>
-     <div class="flex items-center gap-2">
-      <span class="sci-checkbox-container">
-        <input type="checkbox" class="sci-checkbox" v-model="addBlankPage" />
-        <span class="sci-checkbox-label"></span>
-      </span>
-      <span class="sci-label">{{ i18n.t('my_modules.reports.wizard.second_step.form.blank_page_checkbox') }}</span>
+      <div class="flex flex-col gap-3 bg-sn-super-light-grey p-3 rounded">
+        <div class="flex items-center gap-4">
+          <span class="sci-label font-semibold">{{ i18n.t('my_modules.reports.wizard.second_step.form.footer.display_attachment_references') }}</span>
+          <div class="sci-toggle-checkbox-container">
+            <input type="checkbox"
+                  class="sci-toggle-checkbox"
+                  v-model="displayAttachmentReferences"
+                  data-e2e="e2e-TG-task-analyticalReport-generateReportModal-displayAttachmentReferences" />
+            <span class="sci-toggle-checkbox-label"></span>
+          </div>
+        </div>
+        <div v-if="displayAttachmentReferences" class="flex items-center gap-4">
+          <span class="sci-label">{{ i18n.t('my_modules.reports.wizard.second_step.form.footer.add_reference_page_numbers') }}</span>
+          <div class="sci-toggle-checkbox-container">
+            <input type="checkbox"
+                  class="sci-toggle-checkbox"
+                  v-model="addReferencePageNumbers"
+                  data-e2e="e2e-TG-task-analyticalReport-generateReportModal-addReferencePageNumbers" />
+            <span class="sci-toggle-checkbox-label"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-3 bg-sn-super-light-grey p-3 rounded">
+        <div class="flex items-center gap-4">
+          <span class="sci-label font-semibold">{{ i18n.t('my_modules.reports.wizard.second_step.form.footer.display_attachment_groups') }}</span>
+          <div class="sci-toggle-checkbox-container">
+            <input type="checkbox"
+                  class="sci-toggle-checkbox"
+                  v-model="displayAttachmentGroups"
+                  data-e2e="e2e-TG-task-analyticalReport-generateReportModal-displayAttachmentGroups" />
+            <span class="sci-toggle-checkbox-label"></span>
+          </div>
+        </div>
+        <div v-if="displayAttachmentGroups" class="flex items-center gap-4">
+          <span class="sci-label">{{ i18n.t('my_modules.reports.wizard.second_step.form.footer.add_group_numeration') }}</span>
+          <div class="sci-toggle-checkbox-container">
+            <input type="checkbox"
+                  class="sci-toggle-checkbox"
+                  v-model="addGroupNumeration"
+                  data-e2e="e2e-TG-task-analyticalReport-generateReportModal-addGroupNumeration" />
+            <span class="sci-toggle-checkbox-label"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 bg-sn-super-light-grey p-3 rounded">
+        <span class="sci-label font-semibold">{{ i18n.t('my_modules.reports.wizard.second_step.form.footer.blank_page_after_group') }}</span>
+        <div class="sci-toggle-checkbox-container">
+          <input type="checkbox"
+                class="sci-toggle-checkbox"
+                v-model="addBlankPageAfterGroup"
+                data-e2e="e2e-TG-task-analyticalReport-generateReportModal-addBlankPageAfterGroup" />
+          <span class="sci-toggle-checkbox-label"></span>
+        </div>
+      </div>
     </div>
   </div>
   <div class="modal-footer">
@@ -49,7 +90,7 @@
     <button
       class="btn btn-primary focus:bg-sn-blue-hover"
       @click="setUp"
-      :disabled="!validHeader || !validFooter || submitting"
+      :disabled="!validHeader || submitting"
       data-e2e="e2e-BT-task-analyticalReport-generateReportModal-generate"
     >
       {{ i18n.t('my_modules.reports.generate_button') }}
@@ -81,18 +122,25 @@ export default {
   data() {
     return {
       header: '',
-      footer: '',
-      addNumarization: false,
-      addBlankPage: false,
+      displayAttachmentReferences: false,
+      addReferencePageNumbers: false,
+      displayAttachmentGroups: false,
+      addGroupNumeration: false,
+      addBlankPageAfterGroup: false,
       submitting: false
+    }
+  },
+  watch: {
+    displayAttachmentReferences(value) {
+      this.addReferencePageNumbers = value;
+    },
+    displayAttachmentGroups(value) {
+      this.addGroupNumeration = value;
     }
   },
   computed: {
     validHeader() {
       return this.validHeaderTextLengthLimit && this.validHeaderLineLengthLimit;
-    },
-    validFooter() {
-      return this.footer.length <= GLOBAL_CONSTANTS.MY_MODULE_REPORT_FOOTER_MAX_LENGTH;
     },
     validHeaderTextLengthLimit() {
       return this.header.length <= GLOBAL_CONSTANTS.MY_MODULE_REPORT_HEADER_MAX_LENGTH;
@@ -103,15 +151,8 @@ export default {
     headerFieldErrors() {
       if (!this.validHeaderTextLengthLimit) {
         return this.i18n.t('my_modules.reports.wizard.second_step.form.header.error_size');
-      } else if(!this.validHeaderLineLengthLimit) {
+      } else if (!this.validHeaderLineLengthLimit) {
         return this.i18n.t('my_modules.reports.wizard.second_step.form.header.error_rows');
-      }
-
-      return '';
-    },
-    footerFieldErrors() {
-      if (!this.validFooter) {
-        return this.i18n.t('my_modules.reports.wizard.second_step.form.footer.error_size');
       }
 
       return '';
@@ -124,17 +165,19 @@ export default {
       const reportTemplateParams = {
         ...this.params,
         header: this.header,
-        footer: this.footer,
-        add_numarization: this.addNumarization,
-        add_blank_page: this.addBlankPage
+        display_attachment_references: this.displayAttachmentReferences,
+        add_reference_page_numbers: this.displayAttachmentReferences && this.addReferencePageNumbers,
+        display_attachment_groups: this.displayAttachmentGroups,
+        add_group_numeration: this.displayAttachmentGroups && this.addGroupNumeration,
+        add_blank_page_after_group: this.addBlankPageAfterGroup
       }
 
       this.wizardComponent.$emit('reportStatus', reportTemplateParams.report_template_id, true);
 
-      axios.post(my_module_my_module_reports_path(reportTemplateParams.myModuleId), reportTemplateParams).then((response) => {
+      axios.post(my_module_my_module_reports_path(reportTemplateParams.myModuleId), reportTemplateParams).then(() => {
         this.submitting = false;
         this.$emit('close');
-      }).catch((error) => {
+      }).catch(() => {
         this.wizardComponent.$emit('reportStatus', reportTemplateParams.report_template_id, false);
         this.submitting = false;
         HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');

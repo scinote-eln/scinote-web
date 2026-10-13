@@ -2,7 +2,7 @@
 
   <WizardModal
     @close="close"
-    @set-asset-ids="(params) => setAssetIds(params)"
+    @set-asset-groups="(params) => setAssetGroups(params)"
     :params="wizardParams"
     :config="wizardConfig"
   />
@@ -64,19 +64,21 @@ export default {
         ]
       },
       wizardParams: {
-        asset_ids: [],
+        asset_groups: [],
         myModuleId: this.myModuleId,
         report_template_id: this.templateId,
         header: '',
-        footer: '',
-        add_numarization: false,
-        add_blank_page: false
+        display_attachment_references: false,
+        add_reference_page_numbers: false,
+        display_attachment_groups: false,
+        add_group_numeration: false,
+        add_blank_page_after_group: false
       }
     };
   },
   methods: {
-    setAssetIds(assetIds) {
-      this.wizardParams.asset_ids = assetIds;
+    setAssetGroups(assetGroups) {
+      this.wizardParams.asset_groups = assetGroups;
     }
   }
 };

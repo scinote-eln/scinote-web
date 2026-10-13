@@ -2006,8 +2006,8 @@ en:
           label: "Step 1"
           description:  "Select files you want to include into your report as attachment and define their order."
           no_assets: "Task contains no PDF attachments."
-          asset_from_result: "Result: %{name}"
-          asset_from_step: "Step: %{name}"
+          result_group: "Result: %{name}"
+          step_group: "Step: %{name}"
         second_step:
           title: "Step 2: Add attachment information"
           label: "Step 2"
@@ -2015,15 +2015,17 @@ en:
           form:
             header:
               label: "Header"
+              description: "Header text"
               placeholder: "Maximum 3 rows, 140 characters"
               error_rows: "Maximum 3 rows allowed"
               error_size: "Header is too long (maximum number is 140 characters)"
             footer:
               label: "Footer"
-              placeholder: "1 row, 80 characters"
-              error_size: "Footer is too long (maximum number is 80 characters)"
-            numarization_checkbox: "Add numerization after footer text"
-            blank_page_checkbox: "Add a blank page after attachments"
+              display_attachment_references: "Display attachment references"
+              add_reference_page_numbers: "Add page numbers for attachment references"
+              display_attachment_groups: "Display the attachment groups"
+              add_group_numeration: "Add numeration after attachment groups"
+              blank_page_after_group: "Add a blank page after attachment group"
         third_step:
           description: "Header and footer will appear on each page of the attachment section. If left empty, no header and footer will be added."
 

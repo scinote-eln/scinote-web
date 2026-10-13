@@ -486,7 +486,6 @@ class Constants
   # my module report limits
   MY_MODULE_REPORT_HEADER_MAX_LENGTH = 140
   MY_MODULE_REPORT_HEADER_MAX_LINES = 3
-  MY_MODULE_REPORT_FOOTER_MAX_LENGTH = 80
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\
