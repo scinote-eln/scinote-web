@@ -454,12 +454,12 @@ export default {
             typeName
           }</span>
           <span class="sci-btn-group manage-controls pull-right" data-view-mode="active">
-            <button class="btn icon-btn btn-light btn-xs edit-repo-column manage-repo-column"
+            <button class="btn icon-btn btn-light btn-black btn-xs edit-repo-column manage-repo-column"
                     data-action="edit"
                     data-modal-url="${editUrl}">
               <span class="sn-icon sn-icon-edit" title="Edit"  data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-edit"></span>
             </button>
-            <button class="btn icon-btn btn-light btn-xs delete-repo-column manage-repo-column"
+            <button class="btn icon-btn btn-light btn-black btn-xs delete-repo-column manage-repo-column"
                     data-action="destroy"
                     data-modal-url="${destroyUrl}">
                     <span class="sn-icon sn-icon-delete" title="Delete" data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-delete"></span>
