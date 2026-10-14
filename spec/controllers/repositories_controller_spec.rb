@@ -315,6 +315,22 @@ describe RepositoriesController, type: :controller do
     end
     let(:action) { post :import_records, params: params, format: :json }
 
+    it 'returns 403 and halts when user cannot create repository rows' do
+      allow(controller).to receive(:can_create_repository_rows?).and_return(false)
+
+      action
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'does not call ImportRecords when user cannot create repository rows' do
+      allow(controller).to receive(:can_create_repository_rows?).and_return(false)
+
+      expect(ImportRepository::ImportRecords).not_to receive(:new)
+
+      action
+    end
+
     it 'calls create activity for importing inventory items' do
       allow_any_instance_of(ImportRepository::ImportRecords)
         .to receive(:import!).and_return({ status: :ok, created_rows_count: 1, updated_rows_count: 1 })
